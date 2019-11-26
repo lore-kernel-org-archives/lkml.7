@@ -2,218 +2,244 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B933C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C65C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEC0520674
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 172E2206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="Qcqygajn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fqE4x64h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfKZXKe (ORCPT
+        id S1727033AbfKZXKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 18:10:34 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46321 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfKZXKd (ORCPT
+        Tue, 26 Nov 2019 18:10:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28531 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726200AbfKZXKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 18:10:33 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 193so9930464pfc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 15:10:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=KBpvCHEa5sLELqT+roIOkYleYG/FrG+DhoT0SoH7wto=;
-        b=QcqygajnmtxaddE8/+AVs9ixIiq/T+dAFkPCspbbuZ7uTZB05Nwtu5lcic9Sg8WP4R
-         Xo+tgNd9z2hVN4Tp1KW/2rr7Kavy4k/VAzPhkgzC6bcYQepqYVBhj//ESPxcNPKBEFe+
-         kOHAoPJY+D49wBam22nG743QpapWP8hQmkY3OGJU6cMdmZYEWDvBUcH9Ni6Ymd5lUAeT
-         BBwfxcLulCDgZda5ti3fY9z4uFQVbB4DPtgRNvoOD2nzBl5p1Iz4xR4OVya5qAy7k7nQ
-         G2mf0521nk7tnXeuWYhRYMvWDjk0j3oC1+9AxnM6w55AsKBFqosPI3nGSp5yn2haHK1z
-         WFjQ==
+        Tue, 26 Nov 2019 18:10:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574809841;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UV/NQ5f0seWf1WcGiet+f3Jl6IUuzX9/tcYHoRhFa38=;
+        b=fqE4x64hOkVLxO1zlOwvzpW4Anfwy4DVUSeqpNw5ve1LOIqQAud4USLU/w+GH3m6HV/eEH
+        CR3pxEmxgPIfHpggnRGjv4WKr6o7LSRKbtNgZ5D/UPqrFrUxt7oyFkO0wgC976biaqiE+3
+        CLOpjQ7loC6RkWQ3zK3WYybmMl6cjlY=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-PZOwNsA9NDW3KGJdatiCCg-1; Tue, 26 Nov 2019 18:10:40 -0500
+Received: by mail-qt1-f198.google.com with SMTP id 2so13556595qtg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 15:10:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=KBpvCHEa5sLELqT+roIOkYleYG/FrG+DhoT0SoH7wto=;
-        b=lqZVHjlLBmSdwSh5z2QS+WMjR2vUdylXZbyg6sz3uTQXcJIITuWccMKHu0wlgyLKdo
-         FgThs1DdQDtOJJArC4p89J79Rzb8Ve0SXGqF+/OPccE2mAGhUZpKOQ9JyVUKItWXLYi/
-         fnhGT5sSX0wdqt40cb2R3b9YkE64PnX9Mg1y98y/d5sfHdsSTz/HYk574v2r9M/Bj7za
-         sS7wxwbmtvADbSbReOtH0Hb4kpP6DvjXu4tU3WDqtaU3AzkKF3gYR6hvWde7MxPZAgHi
-         ihfezfwTam7SMKEc7jS0vto7kVPYecZCUMBBksRBUOMBDKD43ZIFv/+pxfe4pzy1CY6L
-         spAg==
-X-Gm-Message-State: APjAAAX0DBq2RWIkQJ1FtCiPHoiVPGwdNVxCdfbI/gsX24JMjT0MJG6y
-        AF3aFAjSQdt8Hsq+TOJ9xrIDNw==
-X-Google-Smtp-Source: APXvYqzBYAFQIZHabnmN7XFlslj/eCfFqTCFvh934/aSie59lir3EYOcytq0kCJwg6n6vjGE1hVHeg==
-X-Received: by 2002:a63:190a:: with SMTP id z10mr1111375pgl.153.1574809832264;
-        Tue, 26 Nov 2019 15:10:32 -0800 (PST)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id 206sm15686831pfu.45.2019.11.26.15.10.31
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=UV/NQ5f0seWf1WcGiet+f3Jl6IUuzX9/tcYHoRhFa38=;
+        b=ipt8ErVwm0+o3SK4X/VQ3CWoPbwN744XaMRcXPGncurfWR90vWBrdKxMAzDzMLessk
+         MlySicavkOwK3dj2tsJi70KZA7/NnzwS5dvtbwL0SV2zDM/vdDYaMVJCGwaELetNAII/
+         MrBeURCzU04e05Xh/2hCyMFM9WOZp7cjGv2bc2xbeClPJMc9E8G1n8qwzuRibaig1Qfe
+         yMGBI155nPyT9XtrqjhWWytlMB9vQKIoN/v7/AGkC8JzEM9movpkxLryT+n9ufcZZVWj
+         BdlmPd/QZp7W/TKk0fKZJKZ68DZ2dzZCAK7yvZ6ExM1BCkhSm00NvKTgbR4foZZm6QzE
+         PaFw==
+X-Gm-Message-State: APjAAAU61fXbysJrvpR6vrtWNW8KieAw+dBM3K3Pfi+nT84N2yVYRXK3
+        pknJTlV6G7KP2zRwPJ3DFZhc1+cDLSBAezXLkUji4cKaREl2pbO2FYei4f+WyMZUvqVt0CfsDHd
+        TRfRAaM87a6Tyq4faIXwGyWr4
+X-Received: by 2002:a37:8a05:: with SMTP id m5mr982371qkd.181.1574809839601;
+        Tue, 26 Nov 2019 15:10:39 -0800 (PST)
+X-Google-Smtp-Source: APXvYqznyM00BT7/k/MdWTTGUiiaeayBJLR99zKoLo7NNmQtMjgBk3fcXO+bjDTRndnJbHifOoRjog==
+X-Received: by 2002:a37:8a05:: with SMTP id m5mr982327qkd.181.1574809839106;
+        Tue, 26 Nov 2019 15:10:39 -0800 (PST)
+Received: from dhcp-10-20-1-90.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id a3sm5751585qkf.76.2019.11.26.15.10.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 15:10:31 -0800 (PST)
-Date:   Tue, 26 Nov 2019 15:10:30 -0800
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
-Message-ID: <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net>
-References: <20191126151045.GB19483@kernel.org>
- <20191126154836.GC19483@kernel.org>
- <87imn6y4n9.fsf@toke.dk>
- <20191126183451.GC29071@kernel.org>
- <87d0dexyij.fsf@toke.dk>
- <20191126190450.GD29071@kernel.org>
- <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
- <20191126221018.GA22719@kernel.org>
- <20191126221733.GB22719@kernel.org>
- <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+        Tue, 26 Nov 2019 15:10:37 -0800 (PST)
+Message-ID: <e0eeddf4214f54dfac08e428dfb30cbd39f20680.camel@redhat.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+From:   Lyude Paul <lyude@redhat.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Karol Herbst <kherbst@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Date:   Tue, 26 Nov 2019 18:10:36 -0500
+In-Reply-To: <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
+References: <20191120120913.GE11621@lahna.fi.intel.com>
+         <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+         <20191120151542.GH11621@lahna.fi.intel.com>
+         <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+         <20191120155301.GL11621@lahna.fi.intel.com>
+         <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
+         <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
+         <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
+         <20191121112821.GU11621@lahna.fi.intel.com>
+         <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
+         <20191121114610.GW11621@lahna.fi.intel.com>
+         <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
+         <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
+         <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
+         <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
+Organization: Red Hat
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-MC-Unique: PZOwNsA9NDW3KGJdatiCCg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/26, Andrii Nakryiko wrote:
-> On Tue, Nov 26, 2019 at 2:17 PM Arnaldo Carvalho de Melo
-> <arnaldo.melo@gmail.com> wrote:
-> >
-> > Em Tue, Nov 26, 2019 at 07:10:18PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Tue, Nov 26, 2019 at 02:05:41PM -0800, Andrii Nakryiko escreveu:
-> > > > On Tue, Nov 26, 2019 at 11:12 AM Arnaldo Carvalho de Melo
-> > > > <arnaldo.melo@gmail.com> wrote:
-> > > > >
-> > > > > Em Tue, Nov 26, 2019 at 07:50:44PM +0100, Toke Høiland-Jørgensen escreveu:
-> > > > > > Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> writes:
-> > > > > >
-> > > > > > > Em Tue, Nov 26, 2019 at 05:38:18PM +0100, Toke Høiland-Jørgensen escreveu:
-> > > > > > >> Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> writes:
-> > > > > > >>
-> > > > > > >> > Em Tue, Nov 26, 2019 at 12:10:45PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > > > >> >> Hi guys,
-> > > > > > >> >>
-> > > > > > >> >>    While merging perf/core with mainline I found the problem below for
-> > > > > > >> >> which I'm adding this patch to my perf/core branch, that soon will go
-> > > > > > >> >> Ingo's way, etc. Please let me know if you think this should be handled
-> > > > > > >> >> some other way,
-> > > > > > >> >
-> > > > > > >> > This is still not enough, fails building in a container where all we
-> > > > > > >> > have is the tarball contents, will try to fix later.
-> > > > > > >>
-> > > > > > >> Wouldn't the right thing to do not be to just run the script, and then
-> > > > > > >> put the generated bpf_helper_defs.h into the tarball?
-> > > > >
-> > > > > > > I would rather continue just running tar and have the build process
-> > > > > > > in-tree or outside be the same.
-> > > > > >
-> > > > > > Hmm, right. Well that Python script basically just parses
-> > > > > > include/uapi/linux/bpf.h; and it can be given the path of that file with
-> > > > > > the --filename argument. So as long as that file is present, it should
-> > > > > > be possible to make it work, I guess?
-> > > > >
-> > > > > > However, isn't the point of the tarball to make a "stand-alone" source
-> > > > > > distribution?
-> > > > >
-> > > > > Yes, it is, and as far as possible without any prep, just include the
-> > > > > in-source tree files needed to build it.
-> > > > >
-> > > > > > I'd argue that it makes more sense to just include the
-> > > > > > generated header, then: The point of the Python script is specifically
-> > > > > > to extract the latest version of the helper definitions from the kernel
-> > > > > > source tree. And if you're "freezing" a version into a tarball, doesn't
-> > > > > > it make more sense to also freeze the list of BPF helpers?
-> > > > >
-> > > > > Your suggestion may well even be the only solution, as older systems
-> > > > > don't have python3, and that script requires it :-\
-> > > > >
-> > > > > Some containers were showing this:
-> > > > >
-> > > > > /bin/sh: 1: /git/linux/scripts/bpf_helpers_doc.py: not found
-> > > > > Makefile:184: recipe for target 'bpf_helper_defs.h' failed
-> > > > > make[3]: *** [bpf_helper_defs.h] Error 127
-> > > > > make[3]: *** Deleting file 'bpf_helper_defs.h'
-> > > > > Makefile.perf:778: recipe for target '/tmp/build/perf/libbpf.a' failed
-> > > > >
-> > > > > That "not found" doesn't mean what it looks from staring at the above,
-> > > > > its just that:
-> > > > >
-> > > > > nobody@1fb841e33ba3:/tmp/perf-5.4.0$ head -1 /tmp/perf-5.4.0/scripts/bpf_helpers_doc.py
-> > > > > #!/usr/bin/python3
-> > > > > nobody@1fb841e33ba3:/tmp/perf-5.4.0$ ls -la /usr/bin/python3
-> > > > > ls: cannot access /usr/bin/python3: No such file or directory
-> > > > > nobody@1fb841e33ba3:/tmp/perf-5.4.0$
-> > > > >
-> > > > > So, for now, I'll keep my fix and start modifying the containers where
-> > > > > this fails and disable testing libbpf/perf integration with BPF on those
-> > > > > containers :-\
-> > > >
-> > > > I don't think there is anything Python3-specific in that script. I
-> > > > changed first line to
-> > > >
-> > > > #!/usr/bin/env python
-> > > >
-> > > > and it worked just fine. Do you mind adding this fix and make those
-> > > > older containers happy(-ier?).
-> > >
-> > > I'll try it, was trying the other way around, i.e. adding python3 to
-> > > those containers and they got happier, but fatter, so I'll remove that
-> > > and try your way, thanks!
-> > >
-> > > I didn't try it that way due to what comes right after the interpreter
-> > > line:
-> > >
-> > > #!/usr/bin/python3
-> > > # SPDX-License-Identifier: GPL-2.0-only
-> > > #
-> > > # Copyright (C) 2018-2019 Netronome Systems, Inc.
-> > >
-> > > # In case user attempts to run with Python 2.
-> > > from __future__ import print_function
-> >
-> > And that is why I think you got it working, that script uses things
-> > like:
-> >
-> >         print('Parsed description of %d helper function(s)' % len(self.helpers),
-> >               file=sys.stderr)
-> >
-> > That python2 thinks its science fiction, what tuple is that? Can't
-> > understand, print isn't a function back then.
+[big snip]
+> There is a sysfs attribute called "d3cold_allowed" which can be used
+> for "blocking" D3cold, so can you please retest using that?
 > 
-> Not a Python expert (or even regular user), but quick googling showed
-> that this import is the way to go to use Python3 semantics of print
-> within Python2, so seems like that's fine. But maybe Quentin has
-> anything to say about this.
-We are using this script with python2.7, works just fine :-)
-So maybe doing s/python3/python/ is the way to go, whatever
-default python is installed, it should work with that.
 
-> > https://sebastianraschka.com/Articles/2014_python_2_3_key_diff.html#the-print-function
-> >
-> > I've been adding python3  to where it is available and not yet in the
-> > container images, most are working after that, some don't need because
-> > they need other packages for BPF to work and those are not available, so
-> > nevermind, lets have just the fix I provided, I'll add python3 and life
-> > goes on.
-> >
-> > - Arnaldo
+Hey-this is almost certainly not the right place in this thread to respond,
+but this thread has gotten so deep evolution can't push the subject further to
+the right, heh. So I'll just respond here.
+
+I've been following this and helping out Karol with testing here and there.
+They had me test Bjorn's PCI branch on the X1 Extreme 2nd generation, which
+has a turing GPU and 8086:1901 PCI bridge.
+
+I was about to say "the patch fixed things, hooray!" but it seems that after
+trying runtime suspend/resume a couple times things fall apart again:
+
+[   27.680433] nouveau 0000:01:00.0: enabling device (0000 -> 0003)
+[   27.680578] nouveau 0000:01:00.0: NVIDIA TU117 (167000a1)
+[   27.763967] nouveau 0000:01:00.0: bios: version 90.17.20.00.16
+[   27.764664] nouveau 0000:01:00.0: fb: 4096 MiB GDDR5
+[   27.806115] vga_switcheroo: enabled
+[   27.806221] [TTM] Zone  kernel: Available graphics memory: 16244510 KiB
+[   27.806222] [TTM] Zone   dma32: Available graphics memory: 2097152 KiB
+[   27.806222] [TTM] Initializing pool allocator
+[   27.806224] [TTM] Initializing DMA pool allocator
+[   27.806249] nouveau 0000:01:00.0: DRM: VRAM: 4096 MiB
+[   27.806249] nouveau 0000:01:00.0: DRM: GART: 536870912 MiB
+[   27.806250] nouveau 0000:01:00.0: DRM: BIT table 'A' not found
+[   27.806251] nouveau 0000:01:00.0: DRM: BIT table 'L' not found
+[   27.806251] nouveau 0000:01:00.0: DRM: TMDS table version 2.0
+[   27.806252] nouveau 0000:01:00.0: DRM: DCB version 4.1
+[   27.806253] nouveau 0000:01:00.0: DRM: DCB outp 00: 02800f66 04600020
+[   27.806253] nouveau 0000:01:00.0: DRM: DCB outp 01: 02011f52 00020010
+[   27.806254] nouveau 0000:01:00.0: DRM: DCB outp 02: 01022f36 04600010
+[   27.806254] nouveau 0000:01:00.0: DRM: DCB outp 03: 01033f46 04600020
+[   27.806255] nouveau 0000:01:00.0: DRM: DCB conn 00: 00020047
+[   27.806255] nouveau 0000:01:00.0: DRM: DCB conn 01: 00010161
+[   27.806256] nouveau 0000:01:00.0: DRM: DCB conn 02: 00001248
+[   27.806256] nouveau 0000:01:00.0: DRM: DCB conn 03: 00002348
+[   27.806257] nouveau 0000:01:00.0: DRM: Pointer to flat panel table invalid
+[   27.806415] nouveau 0000:01:00.0: DRM: failed to create kernel channel, -22
+[   27.806530] nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
+[   28.114808] nouveau 0000:01:00.0: DRM: unknown connector type 48
+[   28.114943] nouveau 0000:01:00.0: DRM: unknown connector type 48
+[   28.115026] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[   28.115027] [drm] Driver supports precise vblank timestamp query.
+[   28.116611] [drm] Cannot find any crtc or sizes
+[   28.117452] [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
+[   28.118074] [drm] Cannot find any crtc or sizes
+[   28.119523] [drm] Cannot find any crtc or sizes
+[   34.081503] nouveau 0000:01:00.0: DRM: suspending console...
+[   34.081508] nouveau 0000:01:00.0: DRM: suspending display...
+[   34.081528] nouveau 0000:01:00.0: DRM: evicting buffers...
+[   34.081531] nouveau 0000:01:00.0: DRM: waiting for kernel channels to go idle...
+[   34.081551] nouveau 0000:01:00.0: DRM: suspending fence...
+[   34.091173] nouveau 0000:01:00.0: DRM: suspending object tree...
+[   37.729746] nouveau 0000:01:00.0: DRM: resuming object tree...
+[   38.042076] nouveau 0000:01:00.0: DRM: resuming fence...
+[   38.042167] nouveau 0000:01:00.0: DRM: resuming display...
+[   38.042175] nouveau 0000:01:00.0: DRM: resuming console...
+[   44.309325] nouveau 0000:01:00.0: DRM: suspending console...
+[   44.309331] nouveau 0000:01:00.0: DRM: suspending display...
+[   44.309349] nouveau 0000:01:00.0: DRM: evicting buffers...
+[   44.309352] nouveau 0000:01:00.0: DRM: waiting for kernel channels to go idle...
+[   44.309371] nouveau 0000:01:00.0: DRM: suspending fence...
+[   44.318938] nouveau 0000:01:00.0: DRM: suspending object tree...
+[   76.577644] nouveau 0000:01:00.0: DRM: resuming object tree...
+[   76.890266] nouveau 0000:01:00.0: DRM: resuming fence...
+[   76.890362] nouveau 0000:01:00.0: DRM: resuming display...
+[   76.890379] nouveau 0000:01:00.0: DRM: resuming console...
+[   82.721356] nouveau 0000:01:00.0: DRM: suspending console...
+[   82.721361] nouveau 0000:01:00.0: DRM: suspending display...
+[   82.721380] nouveau 0000:01:00.0: DRM: evicting buffers...
+[   82.721383] nouveau 0000:01:00.0: DRM: waiting for kernel channels to go idle...
+[   82.721403] nouveau 0000:01:00.0: DRM: suspending fence...
+[   82.730483] nouveau 0000:01:00.0: DRM: suspending object tree...
+[  681.369950] nouveau 0000:01:00.0: DRM: resuming object tree...
+[  681.690464] nouveau 0000:01:00.0: DRM: resuming fence...
+[  681.690555] nouveau 0000:01:00.0: DRM: resuming display...
+[  681.690568] nouveau 0000:01:00.0: DRM: resuming console...
+[  686.873629] nouveau 0000:01:00.0: DRM: suspending console...
+[  686.873634] nouveau 0000:01:00.0: DRM: suspending display...
+[  686.873653] nouveau 0000:01:00.0: DRM: evicting buffers...
+[  686.873656] nouveau 0000:01:00.0: DRM: waiting for kernel channels to go idle...
+[  686.873676] nouveau 0000:01:00.0: DRM: suspending fence...
+[  686.883247] nouveau 0000:01:00.0: DRM: suspending object tree...
+[  752.866484] ACPI Error: Aborting method \_SB.PCI0.PEG0.PEGP.NVPO due to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
+[  752.866508] ACPI Error: Aborting method \_SB.PCI0.PGON due to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
+[  752.866521] ACPI Error: Aborting method \_SB.PCI0.PEG0.PG00._ON due to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
+[  752.866542] acpi device:00: Failed to change power state to D0
+[  754.209030] video LNXVIDEO:00: Cannot transition to power state D0 for parent in (unknown)
+[  755.848894] nouveau 0000:01:00.0: not ready 1023ms after Switch to D0; waiting
+[  756.936876] nouveau 0000:01:00.0: not ready 2047ms after Switch to D0; waiting
+[  759.048849] nouveau 0000:01:00.0: not ready 4095ms after Switch to D0; waiting
+[  763.208807] nouveau 0000:01:00.0: not ready 8191ms after Switch to D0; waiting
+[  771.912692] nouveau 0000:01:00.0: not ready 16383ms after Switch to D0; waiting
+[  788.808505] nouveau 0000:01:00.0: not ready 32767ms after Switch to D0; waiting
+
+752.866542 is where I start trying to resume the GPU. lspci -nn:
+
+00:00.0 Host bridge [0600]: Intel Corporation Device [8086:3e20] (rev 0d)
+00:01.0 PCI bridge [0604]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16) [8086:1901] (rev 0d)
+00:02.0 VGA compatible controller [0300]: Intel Corporation UHD Graphics 630 (Mobile) [8086:3e9b] (rev 02)
+00:04.0 Signal processing controller [1180]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903] (rev 0d)
+00:08.0 System peripheral [0880]: Intel Corporation Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th/8th Gen Core Processor Gaussian Mixture Model [8086:1911]
+00:12.0 Signal processing controller [1180]: Intel Corporation Cannon Lake PCH Thermal Controller [8086:a379] (rev 10)
+00:14.0 USB controller [0c03]: Intel Corporation Cannon Lake PCH USB 3.1 xHCI Host Controller [8086:a36d] (rev 10)
+00:14.2 RAM memory [0500]: Intel Corporation Cannon Lake PCH Shared SRAM [8086:a36f] (rev 10)
+00:15.0 Serial bus controller [0c80]: Intel Corporation Cannon Lake PCH Serial IO I2C Controller #0 [8086:a368] (rev 10)
+00:16.0 Communication controller [0780]: Intel Corporation Cannon Lake PCH HECI Controller [8086:a360] (rev 10)
+00:1b.0 PCI bridge [0604]: Intel Corporation Cannon Lake PCH PCI Express Root Port #17 [8086:a340] (rev f0)
+00:1b.4 PCI bridge [0604]: Intel Corporation Cannon Lake PCH PCI Express Root Port #21 [8086:a32c] (rev f0)
+00:1c.0 PCI bridge [0604]: Intel Corporation Cannon Lake PCH PCI Express Root Port #1 [8086:a338] (rev f0)
+00:1d.0 PCI bridge [0604]: Intel Corporation Cannon Lake PCH PCI Express Root Port #9 [8086:a330] (rev f0)
+00:1d.6 PCI bridge [0604]: Intel Corporation Cannon Lake PCH PCI Express Root Port #15 [8086:a336] (rev f0)
+00:1e.0 Communication controller [0780]: Intel Corporation Device [8086:a328] (rev 10)
+00:1f.0 ISA bridge [0601]: Intel Corporation Device [8086:a30e] (rev 10)
+00:1f.3 Audio device [0403]: Intel Corporation Cannon Lake PCH cAVS [8086:a348] (rev 10)
+00:1f.4 SMBus [0c05]: Intel Corporation Cannon Lake PCH SMBus Controller [8086:a323] (rev 10)
+00:1f.5 Serial bus controller [0c80]: Intel Corporation Cannon Lake PCH SPI Controller [8086:a324] (rev 10)
+00:1f.6 Ethernet controller [0200]: Intel Corporation Ethernet Connection (7) I219-LM [8086:15bb] (rev 10)
+01:00.0 VGA compatible controller [0300]: NVIDIA Corporation Device [10de:1f91] (rev a1)
+01:00.1 Audio device [0403]: NVIDIA Corporation Device [10de:10fa] (rev a1)
+02:00.0 Non-Volatile memory controller [0108]: Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983 [144d:a808]
+04:00.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] [8086:15ea] (rev 06)
+05:00.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] [8086:15ea] (rev 06)
+05:01.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] [8086:15ea] (rev 06)
+05:02.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] [8086:15ea] (rev 06)
+05:04.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] [8086:15ea] (rev 06)
+06:00.0 System peripheral [0880]: Intel Corporation JHL7540 Thunderbolt 3 NHI [Titan Ridge 4C 2018] [8086:15eb] (rev 06)
+2c:00.0 USB controller [0c03]: Intel Corporation JHL7540 Thunderbolt 3 USB Controller [Titan Ridge 4C 2018] [8086:15ec] (rev 06)
+52:00.0 Network controller [0280]: Intel Corporation Wi-Fi 6 AX200 [8086:2723] (rev 1a)
+53:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS525A PCI Express Card Reader [10ec:525a] (rev 01)
+-- 
+Cheers,
+	Lyude Paul
+
