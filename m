@@ -2,90 +2,98 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81E7C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7768C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90DF12075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:02:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xDShlhvS"
+	by mail.kernel.org (Postfix) with ESMTP id B7CDA20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574798637;
+	bh=GvBmm/lPJT2kFklkBI0TYRVrGb21DGTV1ozEfQc4wUY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LNRZjXmTwrjX7LZ0XZ9zu0aTZLVamxcJqIsABZy46+HUihARmZql0//FErvDc3/Ws
+	 w/Dq0q/jtmr5/d7sEJI6hEASrMFcpQGP8MIuCowIyDYWTT0pLqkqUF0TykB5uHDqHN
+	 7v83QLkLMQFeSgneZu46Kyj3a8aphvGG7U1hUMl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfKZUCo (ORCPT
+        id S1727110AbfKZUD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:02:44 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36563 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfKZUCo (ORCPT
+        Tue, 26 Nov 2019 15:03:56 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43646 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbfKZUD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:02:44 -0500
-Received: by mail-pf1-f193.google.com with SMTP id b19so9714876pfd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 12:02:43 -0800 (PST)
+        Tue, 26 Nov 2019 15:03:56 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y23so21679047ljh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 12:03:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=u14rKrT7Gow4r3xJ5+yGHcKuDYb4mqLZkkuJ6ycM4oc=;
-        b=xDShlhvSye5Zjqy2OEBbxnyTI45hBoOOC636NoFBL3dM3CKjYDgcN+K9emJHE6bzPC
-         A1PYOfGxjdXnr5qQk5/EhAnGG+SWzcdoDJPIuPe8x/VnqW2gZyvVmX0b8rht8KI3cEwk
-         owv6RgZcmOCyjTSvqJxmthQFXCd1iZzB3uK8nMxzaX4EaTnUuFzDKDTGU8pJ9He2n6It
-         /BGtlVzkw9roHeq1hpZ+oX8v+qBdR0sYO0jEJT34lzhhgVlnYwzrTU5QKzFamvZvy6jl
-         PAM+ORzbKpOji2gBCRQxO7/yZB6NSoD3BYtd90qkst24B/LJFlJNUaAdHcNvHyzNOxhM
-         6huQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tWV9arggnPlqa0lazxpcwxfW6DO0FvZ1dHAsZFOz/2Q=;
+        b=WsPvXjG5t74MPCFoRSj5L+BalU5zqcKRAVt7HyQM8jo02n6sA2b1cJrmb3EV7BYp3n
+         du2/QOrTOQFvmdBWqbFNwITB5p5iP9gO1lvitMNJM7sKQCZ4Lkhyj0cOkbV15nePagsQ
+         oxnsIpG0jie9HZxKh87rV4lPw8f0at7/W135w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=u14rKrT7Gow4r3xJ5+yGHcKuDYb4mqLZkkuJ6ycM4oc=;
-        b=G2hsqnO6o/D3B9/BQN9YPos3jsiYGravZ4G9r6BplRkR53qRFIcKM7FuGQPxszVExC
-         kA8J1H4uqvyFwTgY6bXrJPs5LQulp+I9iBaVHVXLNGPK9Q3N0m1dWXyecHkXEFSvAQN3
-         EckRrCq9c3s/dF3T5zVFPMjCc+0TeT58M9DgFbS+Uctu0O0wgmdw4XR9ekdyztfmyyRq
-         sPnei3jQ8S0Jj0CtTVX3U//Nhb9U+GQj+aa39ANj/4VCCeIvNR4YrwlOp471R+AEGxec
-         5XCnb8+1JeJT7mk8V6jE9jSwkGKRZ28GXg5Tsfxvj5cK2ucRCDnmodjkcg8lduHWNnYV
-         LZtg==
-X-Gm-Message-State: APjAAAWpuxfuKCmmnrxIwYpAcgz6GWtevJh3QRcGlKZSYQ6sYuFA66fK
-        gszfjisDFnCKk42wMneWAcbZMQ==
-X-Google-Smtp-Source: APXvYqy5sX/6Bv3pIcN1ZNgFGddQH9UStznfWcfBQntq1x7+WA9EqR1VQvQOMLUmrsjectVQip60Aw==
-X-Received: by 2002:a63:c103:: with SMTP id w3mr226644pgf.275.1574798563184;
-        Tue, 26 Nov 2019 12:02:43 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id y4sm13749935pgy.27.2019.11.26.12.02.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Nov 2019 12:02:42 -0800 (PST)
-Subject: Re: [PATCH 1/2] cdrom: respect device capabilities during opening
- action
-To:     =?UTF-8?Q?Diego_Elio_Petten=c3=b2?= <flameeyes@flameeyes.com>
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20191119213709.10900-1-flameeyes@flameeyes.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <7df6dd1b-7c3c-9178-e391-aac71a10e1b8@kernel.dk>
-Date:   Tue, 26 Nov 2019 13:02:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tWV9arggnPlqa0lazxpcwxfW6DO0FvZ1dHAsZFOz/2Q=;
+        b=cZ1r+Vre1mSApw3tNWDW7jmp/GcEWS9apEmbdVuASax9ugrZFOB1oKcJN+J+RR91jy
+         LUs6CDBt63VxWs1mmwKcXxfkHJijJINSi7F0ko/65TgrTzERVo2lY4xK91Ux5PPXEWbs
+         G3zMyqMdg+wv6Gpqs653N5dKjdBtjJh+8Dc+B4nu33jRK0axD8oMceDFmUFg9My0f+wq
+         U/7ph0AocVmkhIXkHF87hobSW30jMfNjNSkZw6acK1dfSRqQVf55dkemcQuDupyWeBZi
+         Ty9O+jUbS4n8/S9pRbcro2o3dsYZRiw+jnzcCRnF/MCNUojQJNmN12HWY+lDezeqM+It
+         XgBA==
+X-Gm-Message-State: APjAAAWIIYtbB/rg2k1p0HMOfY/mr4Kax0Y73Wqlz5cipTJAAbyYmwfp
+        jhVYU1siVF59LTMkadlTn0N6Ou4tpXE=
+X-Google-Smtp-Source: APXvYqx1xSDS0YHVYnalXtstJpWWcFQN42eO7Lna7hiJkpOi0cCb6roUytOfBEBEFW7Yqir7/RaE7w==
+X-Received: by 2002:a2e:9cc4:: with SMTP id g4mr24809885ljj.99.1574798634109;
+        Tue, 26 Nov 2019 12:03:54 -0800 (PST)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id y6sm5918969ljn.40.2019.11.26.12.03.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2019 12:03:53 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id e10so12536434ljj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 12:03:53 -0800 (PST)
+X-Received: by 2002:a2e:84d0:: with SMTP id q16mr16849464ljh.48.1574798632799;
+ Tue, 26 Nov 2019 12:03:52 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191119213709.10900-1-flameeyes@flameeyes.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <alpine.DEB.2.21.1911251322160.2408@hp-x360n> <CAHk-=wj_nbDN3piDJBEteUrjyrZCTA+CCk15NfV=5D2xFfGJGw@mail.gmail.com>
+ <CAHk-=whn2Dp44tjUpLo9ogs=p-v-Vn7c2Xdo4p+2V=d1hTaiuA@mail.gmail.com>
+ <CAHk-=wj3YSFT+C3n=7CTsB-8U0NUpTpT3xEH866H4-1qbQGw7Q@mail.gmail.com> <CAHk-=whYSnvfZNN1_Nr-S5C+a8-SkSMZO4Rf3NDAO046+rTNXQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whYSnvfZNN1_Nr-S5C+a8-SkSMZO4Rf3NDAO046+rTNXQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 26 Nov 2019 12:03:36 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wh6w6U5FgZZXq-Eo8+aH1Y6ffp+Nwr_6GzmuzjVuGXmNw@mail.gmail.com>
+Message-ID: <CAHk-=wh6w6U5FgZZXq-Eo8+aH1Y6ffp+Nwr_6GzmuzjVuGXmNw@mail.gmail.com>
+Subject: Re: Commit 0be0ee71 ("fs: properly and reliably lock f_pos in
+ fdget_pos()") breaking userspace
+To:     "Kenneth R. Crudup" <kenny@panix.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kirill Smelkov <kirr@nexedi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 2:37 PM, Diego Elio Pettenò wrote:
-> Reading the TOC only works if the device can play audio, otherwise
-> these commands fail (and possibly bring the device to an unhealthy
-> state.)
-> 
-> Similarly, cdrom_mmc3_profile() should only be called if the device
-> supports generic packet commands.
+On Mon, Nov 25, 2019 at 7:39 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> I think I'll have to revert that trial commit. I'll give it another
+> day in case somebody has a better idea, but it looks like it's too
+> early to do that nice cleanup as things are now.
 
-Applied 1-2, thanks.
+I've reverted it for now,
 
--- 
-Jens Axboe
+I don't want this problem to cause people to report known bugs during
+the merge window. The fact that I saw no issues obviously is just a
+matter of my workloads being too simple.
 
+               Linus
