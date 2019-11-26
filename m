@@ -2,105 +2,151 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31841C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DCCC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F88B2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C9A22084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:23:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dQKartIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfKZVQd (ORCPT
+        id S1726947AbfKZVXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 16:16:33 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:57517 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfKZVQc (ORCPT
+        Tue, 26 Nov 2019 16:23:00 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41007 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfKZVXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 16:16:32 -0500
-X-Originating-IP: 90.65.92.102
-Received: from localhost (lfbn-1-1723-102.w90-65.abo.wanadoo.fr [90.65.92.102])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 50F5B1C0002;
-        Tue, 26 Nov 2019 21:16:30 +0000 (UTC)
-Date:   Tue, 26 Nov 2019 22:16:29 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Joshua Kinard <kumba@gentoo.org>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/8] rtc: ds1685: fix build error with make W=1
-Message-ID: <20191126211629.GP299836@piout.net>
-References: <20191122102212.400158-1-alexandre.belloni@bootlin.com>
- <20191122102212.400158-5-alexandre.belloni@bootlin.com>
- <bee6cf44-a3e5-f217-388c-47165f1d5f90@gentoo.org>
+        Tue, 26 Nov 2019 16:23:00 -0500
+Received: by mail-pf1-f194.google.com with SMTP id s18so1239100pfd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 13:22:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6/C6I0i87/WZnXIrmrosa90/eAl9LYlEh8C0iWOtu10=;
+        b=dQKartIzq9lcDOeMZSrCdPu+Yi2YLj6S1/i5r+r3Z3CmlM3Um0R+5E9S+TUfrXu+IQ
+         Njvy16TFycCN2Bh5R1dcR4Hu93XeMjXF0VyoxFEt5gEpQ7HXeZrUO+h4iKEDsIvcGugV
+         Afm6BC1zXhozTaIh+c5Eb2Gn/YAgy55BSz5tG3LrqgTB+3W3cxsbssoW73Zh7sV9hqsV
+         65ueX0gbdQbTJhBab7QyqVvHii+DDpSbz1VJ7qzSkgBN1/DJnTdiCAI95mVbKqwkFwrx
+         khfrKjsTzH8jCPIiqYbZn1TkrfArjIhixC5u4eHN/vi40i1cqd3Gvsr5yA/3npLif6y+
+         9e3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6/C6I0i87/WZnXIrmrosa90/eAl9LYlEh8C0iWOtu10=;
+        b=X1fiYNbVNseH0apdkw82q5SBjAWKchdv533XXXzrZAb7ri7LE1xVHcKejpaZgeEjC1
+         ERscFJrqK47DmHkNGtZojb9di4rB5/IsuD40zeodGbbIC8cPePmjU93fFgcF8WvOB5qI
+         tQp5CRefuofT4AZYGYgSFck8qETYOkejwWbnj4QkSBkLMLMyxbEfA4UF/nog/FzL4Dzn
+         /ml2WnoBhwIMOfHH+enHxiwLE8YiDcQlHrNRIm0heowILuxV115ivv4A+2Ghn0Kiat6P
+         H4dxgJB7zutOLyou3xcPi+QnUP0TUVnXQoWTJGtTIYZtx4BZq33tHMa0CKu8qjuypOHq
+         ehQQ==
+X-Gm-Message-State: APjAAAVeMwos4SV1SOu2omM0JWlCLblTmzTawdOOPieYh2R3sIO7V2jF
+        9G59oh4bDN6gJ+caSoQ4NICeEZvdNp2paUH5y74c+w==
+X-Google-Smtp-Source: APXvYqyM2tWhpkF/12V6DFQdzF+HZF4mPyfBy3JXMF5Ph+w11uqrKP+IoH06RmM6rIuMg+X8ziQzgixJ3GwZuwbSUf0=
+X-Received: by 2002:a65:590f:: with SMTP id f15mr560009pgu.381.1574803378796;
+ Tue, 26 Nov 2019 13:22:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bee6cf44-a3e5-f217-388c-47165f1d5f90@gentoo.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191126201226.51857-1-natechancellor@gmail.com>
+In-Reply-To: <20191126201226.51857-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 26 Nov 2019 13:22:47 -0800
+Message-ID: <CAKwvOdk5wZF6BHR0_xSL=H=tmSFT42qmn23etO3uV6w-PPgaqA@mail.gmail.com>
+Subject: Re: [PATCH] netfilter: nf_flow_table_offload: Don't use offset
+ uninitialized in flow_offload_port_{d,s}nat
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/11/2019 00:19:45-0500, Joshua Kinard wrote:
-> On 11/22/2019 05:22, Alexandre Belloni wrote:
-> > Fix the following parsing errors when building with W=1:
-> > drivers/rtc/rtc-ds1685.c:1053: error: Cannot parse struct or union!
-> > drivers/rtc/rtc-ds1685.c:1062: error: Cannot parse struct or union!
-> > drivers/rtc/rtc-ds1685.c:1363: warning: cannot understand function prototype: 'struct platform_driver ds1685_rtc_driver = '
-> > 
-> > Cc: Joshua Kinard <kumba@gentoo.org>
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > ---
-> >  drivers/rtc/rtc-ds1685.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-ds1685.c b/drivers/rtc/rtc-ds1685.c
-> > index 8419595e7da7..56c670af2e50 100644
-> > --- a/drivers/rtc/rtc-ds1685.c
-> > +++ b/drivers/rtc/rtc-ds1685.c
-> > @@ -1039,7 +1039,7 @@ ds1685_rtc_sysfs_serial_show(struct device *dev,
-> >  }
-> >  static DEVICE_ATTR(serial, S_IRUGO, ds1685_rtc_sysfs_serial_show, NULL);
-> >  
-> > -/**
-> > +/*
-> >   * struct ds1685_rtc_sysfs_misc_attrs - list for misc RTC features.
-> >   */
-> >  static struct attribute*
-> > @@ -1050,7 +1050,7 @@ ds1685_rtc_sysfs_misc_attrs[] = {
-> >  	NULL,
-> >  };
-> >  
-> > -/**
-> > +/*
-> >   * struct ds1685_rtc_sysfs_misc_grp - attr group for misc RTC features.
-> >   */
-> >  static const struct attribute_group
-> > @@ -1355,7 +1355,7 @@ ds1685_rtc_remove(struct platform_device *pdev)
-> >  	return 0;
-> >  }
-> >  
-> > -/**
-> > +/*
-> >   * ds1685_rtc_driver - rtc driver properties.
-> >   */
-> >  static struct platform_driver ds1685_rtc_driver = {
-> > 
-> 
-> /** is for kerneldoc comments.  Is this a bug in kbuild's W=1 implementation
-> of not parsing kerneldoc on a struct correctly?  I'm sure I got that syntax
-> for structs out of the kerneldoc guide, unless it changed at some point.
-> 
+On Tue, Nov 26, 2019 at 12:13 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns (trimmed the second warning for brevity):
+>
+> ../net/netfilter/nf_flow_table_offload.c:342:2: warning: variable
+> 'offset' is used uninitialized whenever switch default is taken
+> [-Wsometimes-uninitialized]
+>         default:
+>         ^~~~~~~
+> ../net/netfilter/nf_flow_table_offload.c:346:57: note: uninitialized use
+> occurs here
+>         flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
+>                                                                ^~~~~~
+> ../net/netfilter/nf_flow_table_offload.c:331:12: note: initialize the
+> variable 'offset' to silence this warning
+>         u32 offset;
+>                   ^
+>                    = 0
+>
+> Match what was done in the flow_offload_ipv{4,6}_{d,s}nat functions and
+> just return in the default case, since port would also be uninitialized.
 
-I would think it is gcc that is choking on that, probably because the
-members are not described.
+Thanks for the patch. I have a report of this from kernelci bot, would
+you mind crediting it:
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Looks like `port` is uninitialized (prior to your patch), too.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+These two functions look identical except for the mask. The
+maintainers should consider reusing more code between them and passing
+in the mask.
+
+>
+> Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/780
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  net/netfilter/nf_flow_table_offload.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
+> index c54c9a6cc981..a77a6e1cfd64 100644
+> --- a/net/netfilter/nf_flow_table_offload.c
+> +++ b/net/netfilter/nf_flow_table_offload.c
+> @@ -340,7 +340,7 @@ static void flow_offload_port_snat(struct net *net,
+>                 offset = 0; /* offsetof(struct tcphdr, dest); */
+>                 break;
+>         default:
+> -               break;
+> +               return;
+>         }
+>
+>         flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
+> @@ -367,7 +367,7 @@ static void flow_offload_port_dnat(struct net *net,
+>                 offset = 0; /* offsetof(struct tcphdr, dest); */
+>                 break;
+>         default:
+> -               break;
+> +               return;
+>         }
+>
+>         flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
+> --
+> 2.24.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191126201226.51857-1-natechancellor%40gmail.com.
+
 
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+~Nick Desaulniers
