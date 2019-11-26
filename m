@@ -2,210 +2,113 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E117C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 00:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E0CC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 00:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAEC20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 00:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m5xHGr4g"
+	by mail.kernel.org (Postfix) with ESMTP id 4E84F207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 00:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574727072;
+	bh=jJS9jbYP1/zWBCwOWNXMbLgoYZJ2eLtU8Jol3wQrP1c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=u+2d6zSa5BuOdgNxLOxWgEgaU3n+USr28fmmiO/vB8LzQFT74a0C8N+zGsooUUa6A
+	 y+jcVlAlCRk5EwJrhjN3AroCBBTxpvjbdhCDmi+g5U6ofwsMkqr+bejvfkfS4SQEJZ
+	 54FnI5/TOtL5JJmacMqNUpJZ8RgFjc1NxBN97bqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfKZAFR (ORCPT
+        id S1727008AbfKZALL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 19:05:17 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:53030 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfKZAFQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 19:05:16 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAQ04t2S098452;
-        Tue, 26 Nov 2019 00:05:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=mHXanxHdP89INCbUw8YABR16c/whANpUfRsLAPuh01A=;
- b=m5xHGr4g40ZJdiTPttDJBElLhud2J2DhoU1Ixt/I8KETzr0Dy3UBnO+yFzOygDoXtuRy
- YPxAiCoG3nGJfj8q7P+njVUsI42z/iHXthO8REKiLUtS7Ly0aScuvnzGeBvlZBQ+AKjV
- IhoX/l/j9XJiJUIb9/awfG5kN8RkT2JJERpBup8RR7qIAL32Da+M6la7Lw4bRY4JrBOr
- iYWVXWBOqZGQMsLqPSIS0vz91cUNLV0pYBEVjeLiCV/e/4h/ei+3Eho4cOtl+YVnpcZW
- 7W/opzCZQgmgt+f1qjYa4f8oW/tPZFoV4KGuw/Bpm/OQnzJrBp8IT5tEEh4vrrSb/TCe lA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2wewdr2vus-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Nov 2019 00:05:09 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAQ03Vuf020608;
-        Tue, 26 Nov 2019 00:05:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2wfewbbd8q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Nov 2019 00:05:08 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAQ057Dq005014;
-        Tue, 26 Nov 2019 00:05:07 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 25 Nov 2019 16:05:07 -0800
-Subject: Re: [PATCH v8 2/9] hugetlb_cgroup: add interface for charge/uncharge
- hugetlb reservations
-To:     Mina Almasry <almasrymina@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        David Rientjes <rientjes@google.com>
-Cc:     shuah <shuah@kernel.org>, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
-References: <20191030013701.39647-1-almasrymina@google.com>
- <20191030013701.39647-2-almasrymina@google.com>
- <9e10c273-f0ab-4173-570e-26c314b989fb@oracle.com>
- <CAHS8izMMK2cQMSmnteXA7YTFp2ZoZEm5kUwf8=+6nA+BC49XAQ@mail.gmail.com>
- <3f30658c-0e3d-7d5c-4de9-1526b9bac3ce@oracle.com>
- <CAHS8izNgRZxJKgOfAkDAG9j_=TB=2v0hQyYpQQKCf8xb3rQkVg@mail.gmail.com>
- <d94501f3-66cf-95b1-1159-e003207e3969@oracle.com>
- <CAHS8izMFAYTgxym-Hzb_JmkTK1N_S9tGN71uS6MFV+R7swYu5A@mail.gmail.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <3b65b0ac-54ed-6e0d-706c-358d85057403@oracle.com>
-Date:   Mon, 25 Nov 2019 16:05:06 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <CAHS8izMFAYTgxym-Hzb_JmkTK1N_S9tGN71uS6MFV+R7swYu5A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 25 Nov 2019 19:11:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbfKZALL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 19:11:11 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BEDC20409;
+        Tue, 26 Nov 2019 00:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574727070;
+        bh=jJS9jbYP1/zWBCwOWNXMbLgoYZJ2eLtU8Jol3wQrP1c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nVKsvE1l1vfX+76KBqPj2yOSXGXkTmQdrNszwn4bLAwOky1yITvTvAsLxwW+6LVJf
+         w0HGxOfjTOvY/T8udn1+qPjTnKSogwZKfGF9Fdexo2flkwwccm29v4W2MCd1gQKabz
+         S0GAfuox34KRptyzbdCh/V7696v7+FE+Y0oXwjxg=
+Date:   Tue, 26 Nov 2019 09:11:04 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
+        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
+        jpoimboe@redhat.com, jeyu@kernel.org, alexei.starovoitov@gmail.com
+Subject: Re: [PATCH -v5 00/17] Rewrite x86/ftrace to use text_poke (and
+ more)
+Message-Id: <20191126091104.5e0cdc61e3b143fae4ed4cfd@kernel.org>
+In-Reply-To: <20191125123245.5ae9cb60@gandalf.local.home>
+References: <20191111131252.921588318@infradead.org>
+        <20191125125534.2aaaccf00c38a9a25dee623a@kernel.org>
+        <20191125123245.5ae9cb60@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9452 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911250187
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9452 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911250187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/25/19 12:26 PM, Mina Almasry wrote:
-> On Fri, Nov 8, 2019 at 4:46 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->>
->> On 11/8/19 4:40 PM, Mina Almasry wrote:
->>> On Fri, Nov 8, 2019 at 4:01 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->>>>
->>>> On 11/8/19 3:48 PM, Mina Almasry wrote:
->>>>> On Thu, Nov 7, 2019 at 4:57 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->>>>>>
->>>>>> On 10/29/19 6:36 PM, Mina Almasry wrote:
->>>>>>>
->>>>>>> +static void hugetlb_cgroup_move_parent_reservation(int idx,
->>>>>>> +                                                struct hugetlb_cgroup *h_cg)
->>>>>>> +{
->>>>>>> +     struct hugetlb_cgroup *parent = parent_hugetlb_cgroup(h_cg);
->>>>>>> +
->>>>>>> +     /* Move the reservation counters. */
->>>>>>> +     if (!parent_hugetlb_cgroup(h_cg)) {
->>>>>>> +             parent = root_h_cgroup;
->>>>>>> +             /* root has no limit */
->>>>>>> +             page_counter_charge(
->>>>>>> +                     &root_h_cgroup->reserved_hugepage[idx],
->>>>>>> +                     page_counter_read(
->>>>>>> +                             hugetlb_cgroup_get_counter(h_cg, idx, true)));
->>>>>>> +     }
->>>>>>> +
->>>>>>> +     /* Take the pages off the local counter */
->>>>>>> +     page_counter_cancel(
->>>>>>> +             hugetlb_cgroup_get_counter(h_cg, idx, true),
->>>>>>> +             page_counter_read(hugetlb_cgroup_get_counter(h_cg, idx, true)));
->>>>>>> +}
->>>>>>
->>>>>> I know next to nothing about cgroups and am just comparing this to the
->>>>>> existing hugetlb_cgroup_move_parent() routine.  hugetlb_cgroup_move_parent
->>>>>> updates the cgroup pointer in each page being moved.  Do we need to do
->>>>>> something similar for reservations being moved (move pointer in reservation)?
->>>>>>
->>>>>
->>>>> Oh, good catch. Yes I need to be doing that. I should probably
->>>>> consolidate those routines so the code doesn't miss things like this.
->>>>
->>>> This might get a bit ugly/complicated?  Seems like you will need to examine
->>>> all hugetlbfs inodes and vma's mapping those inodes.
->>>>
->>>
->>> Hmm yes on closer look it does seem like this is not straightforward.
->>> I'll write a test that does this reparenting so I can start running
->>> into the issue and poke for solutions. Off the top of my head, I think
->>> maybe we can just not reparent the hugetlb reservations - the
->>> hugetlb_cgroup stays alive until all its memory is uncharged. That
->>> shouldn't be too bad. Today, I think memcg doesn't reparent memory
->>> when it gets offlined.
->>>
->>> I'll poke at this a bit and come back with suggestions, you may want
->>> to hold off reviewing the rest of the patches until then.
->>
->>
->> Ok, if we start considering what the correct cgroup reparenting semantics
->> should be it would be good to get input from others with more cgroup
->> experience.
->>
-> 
-> So I looked into this and prototyped a couple of solutions:
-> 
-> 1. We could repartent the hugetlb reservation using the same approach
-> that today we repartent hugetlb faults. Basically today faulted
-> hugetlb pages live on hstate->hugepage_activelist. When a hugetlb
-> cgroup gets offlined, this list is transversed and any pages on it
-> that point to the cgroup being offlined and reparented. hugetlb_lock
-> is used to make sure cgroup offlining doesn't race with a page being
-> freed. I can add another list, but one that has pointers to the
-> reservations made. When the cgroup is being offlined, it transverses
-> this list, and reparents any reservations (which will need to acquire
-> the proper resv_map->lock to do the parenting). hugetlb_lock needs
-> also to be acquired here to make sure that resv_map release doesn't
-> race with another thread reparenting the memory in that resv map.
-> 
-> Pros: Maintains current parenting behavior, and makes sure that
-> reparenting of reservations works exactly the same way as reparenting
-> of hugetlb faults.
-> Cons: Code is a bit complex. There may be subtle object lifetime bugs,
-> since I'm not 100% sure acquiring hugetlb_lock removes all races.
-> 
-> 2. We could just not reparent hugetlb reservations. I.e. on hugetlb
-> cgroup offlining, the hugetlb faults get reparented (which maintains
-> current user facing behavior), but hugetlb reservation charges remain
-> charged to the hugetlb cgroup. The cgroup lives as a zombie until all
-> the reservations are uncharged.
-> 
-> Pros: Much easier implementation. Converges behavior of memcg and
-> hugetlb cgroup, since memcg also doesn't reparent memory charged to
-> it.
-> Cons: Behavior change as hugetlb cgroups will become zombies if there
-> are reservations charged to them. I've discussed offlist with Shakeel,
-> and AFAICT there are absolutely no user facing behavior change to
-> zombie cgroups. Only if the user is specifically detecting for
-> zombies.
-> 
-> I'm torn between these 2 options right now, but leaning towards #2. I
-> think I will propose #2 in a patch for review, and if anyone is broken
-> by that (again, my understanding is that is very unlikely), then I
-> propose a patch that reverts the changes in #2 and implements the
-> changes in #1.
+On Mon, 25 Nov 2019 12:32:45 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-I of course like option #2 because it introduces fewer (if any) additional
-changes to the hugetlb reservation code for non-cgroup users. :)
+> On Mon, 25 Nov 2019 12:55:34 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
+> > ...
+> >         on_each_cpu(do_sync_core, NULL, 1);
+> >         /*
+> >          * sync_core() implies an smp_mb() and orders this store against
+> >          * the writing of the new instruction.
+> >          */
+> >         bp_patching.vec = NULL;
+> >         bp_patching.nr_entries = 0;
+> > }
+> > -----
+> > 
+> > I think the "on_each_cpu(do_sync_core, NULL, 1);" can sync the pipeline
+> > but doesn't ensure all ongoing int3 handling is done. Thus, we may need a
+> 
+> How does it not ensure all ongoing int3 handling is done? int3 is done
+> with interrupts disabled, and the on_each_cpu() requires all CPUs to
+> have had their interrupts enabled, thus int3 handling should be
+> completed. Perhaps we need another sync core?
+> 
+> 	on_each_cpu(do_sync_core, NULL, 1);
+> 	bp_patching.nr_entries = 0;
+> 	on_each_cpu(do_sync_core, NULL, 1);
+> 	bp_patching.vec = NULL;
 
-> Any feedback from Shakeel or other people with cgroup expertise
-> (especially for hugetlb cgroup or memcg)  is very useful here.
+OK, let me check.
 
-Yes, that would be very helpful.
+The 1st sync_core will ensure the poking "int3" is removed. Thus any
+int3-hit address (ip) should NOT match the bp_patching.vec[*].addr after
+that. At this point, "if (likely(!bp_patching.nr_entries))" check does not
+work.
+
+And the 2nd sync_core will ensure all poke_int3_handler() will see the
+bp_patching.nr_entries = 0.
+After this point, "if (likely(!bp_patching.nr_entries))" works and
+poke_int3_handler() will exit soon. (before touching bp_patching.vec)
+
+So this looks good to me.
+
+Thank you!
 
 -- 
-Mike Kravetz
+Masami Hiramatsu <mhiramat@kernel.org>
