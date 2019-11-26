@@ -2,267 +2,118 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201CAC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB0FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF682075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:43:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hkifk1G9"
+	by mail.kernel.org (Postfix) with ESMTP id C0F692075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574790654;
+	bh=nZpd9q5SU3HFqSPagqBPYxJM48oxzd+k39bvp0A4HI4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c9cjl99dpZRuxlvAUQdAmAPL50mgfYxR9ZGntgqebHpdCPQOto/FaLH+7ZZI61Hih
+	 3nlnJCUs1hWN9Lc25JmbbFDZKmN8yiejE/FFEnV2ZvbmMIcKvWrIjAHFWaDMvzMC2K
+	 MF6rjlKrcDazzEt86/Y7KrDnVQ3fXtL6oE7hCqgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbfKZRnc (ORCPT
+        id S1726437AbfKZRuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:43:32 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:34838 "EHLO pegase1.c-s.fr"
+        Tue, 26 Nov 2019 12:50:44 -0500
+Received: from foss.arm.com ([217.140.110.172]:37558 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfKZRnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:43:32 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47Mrq461YPz9ty2c;
-        Tue, 26 Nov 2019 18:43:28 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=hkifk1G9; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id YnnBfpl8RO2W; Tue, 26 Nov 2019 18:43:28 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47Mrq44t0zz9ty2Y;
-        Tue, 26 Nov 2019 18:43:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1574790208; bh=m0aiphzXsLV8MFDpVGE+DZGy/eAZvjSQu0FaIgxpnvg=;
-        h=From:Subject:To:Cc:Date:From;
-        b=hkifk1G9JpLdhz6pmBZ8Yxj50jyOjV6x7eQmTB2hl/JH3ixxZfPlxvUfiERkd+v4G
-         WdVTX1JMBn3v5GjfI/omgrns1XsL6noEdo1p+TyL7FeOiXNNgnjgRYgl4gzrjYTbZS
-         tXwkWDjK7FpXFS3okBSgka2aED5JcfyMcl5l22tU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5F2078B825;
-        Tue, 26 Nov 2019 18:43:30 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id jmirWul1SeLN; Tue, 26 Nov 2019 18:43:30 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1918C8B81A;
-        Tue, 26 Nov 2019 18:43:30 +0100 (CET)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id AA65A6B76D; Tue, 26 Nov 2019 17:43:29 +0000 (UTC)
-Message-Id: <05105deeaf63bc02151aea2cdeaf525534e0e9d4.1574790198.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 1/2] powerpc/hw_breakpoints: Rewrite 8xx breakpoints to
- allow any address range size.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        ravi.bangoria@linux.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 26 Nov 2019 17:43:29 +0000 (UTC)
+        id S1726005AbfKZRun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 12:50:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E74AB30E;
+        Tue, 26 Nov 2019 09:50:42 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CC813F52E;
+        Tue, 26 Nov 2019 09:50:42 -0800 (PST)
+Date:   Tue, 26 Nov 2019 17:50:40 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@collabora.com" <kernel@collabora.com>
+Subject: Re: [PATCHv2 6/6] ASoC: da7213: Add default clock handling
+Message-ID: <20191126175040.GD4205@sirena.org.uk>
+References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
+ <20191120152406.2744-7-sebastian.reichel@collabora.com>
+ <AM5PR1001MB0994720A0D615339A978E35C804E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <AM5PR1001MB0994E628439F021F97B872D480450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191126170841.GC4205@sirena.org.uk>
+ <AM5PR1001MB09949D557742E8817545637F80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eheScQNz3K90DVRs"
+Content-Disposition: inline
+In-Reply-To: <AM5PR1001MB09949D557742E8817545637F80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+X-Cookie: Where's SANDY DUNCAN?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike standard powerpc, Powerpc 8xx doesn't have SPRN_DABR, but
-it has a breakpoint support based on a set of comparators which
-allow more flexibility.
 
-Commit 4ad8622dc548 ("powerpc/8xx: Implement hw_breakpoint")
-implemented breakpoints by emulating the DABR behaviour. It did
-this by setting one comparator the match 4 bytes at breakpoint address
-and the other comparator to match 4 bytes at breakpoint address + 4.
+--eheScQNz3K90DVRs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rewrite 8xx hw_breakpoint to make breakpoints match all addresses
-defined by the breakpoint address and length by making full use of
-comparators.
+On Tue, Nov 26, 2019 at 05:39:45PM +0000, Adam Thomson wrote:
+> On 26 November 2019 17:09, Mark Brown wrote:
 
-Now, comparator E is set to match any address greater than breakpoint
-address minus one. Comparator F is set to match any address lower than
-breakpoint address plus breakpoint length. Addresses are aligned
-to 32 bits.
+> > If we're special casing simple-card we're doing it wrong - there's
+> > nothing stopping any other machine driver behaving in the same way.
 
-When the breakpoint range starts at address 0, the breakpoint is set
-to match comparator F only. When the breakpoint range end at address
-0xffffffff, the breakpoint is set to match comparator E only.
-Otherwise the breakpoint is set to match comparator E and F.
+> Ok, what's being proposed here is for the codec to automatically control =
+the PLL
+> rather than leaving it to the machine driver as is the case right now. In=
+ the
+> possible scenario where this is done using a card level widget to enable/=
+disable
 
-At the same time, use registers bit names instead of hardcoded values.
+Wasn't the proposal to add a new mode where the machine driver *could*
+choose to delgate PLL selection to the CODEC driver rather than do so
+unconditionally? =20
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> the PLL we will conflict with that using the current suggested approach f=
+or the
+> da7213 driver, albeit with no real consequence other than configuring the=
+ PLL
+> twice the first time a stream is started. It's a case of how to determine=
+ who's
+> in control of the PLL here; machine driver or codec?
 
----
-v2: rebased on today's powerpc/next ; added 32 bit alignment
----
- arch/powerpc/include/asm/hw_breakpoint.h |  4 +++
- arch/powerpc/include/asm/reg_8xx.h       | 14 ++++++++
- arch/powerpc/kernel/hw_breakpoint.c      | 15 +++++----
- arch/powerpc/kernel/process.c            | 57 ++++++++++++++++++++------------
- 4 files changed, 61 insertions(+), 29 deletions(-)
+The patch looked like the idea was that as soon as the machine driver
+configures the PLL the CODEC driver will stop touching it which looked
+like a reasonable way of doing it, you could also do it with an explicit
+SYSCLK value (which would have to be 0 for generic machine drivers to
+pick it up) but this works just as well and may even be better.  Perhaps
+I misread it though.
 
-diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
-index 27ac6f5d2891..f2f8d8aa8e3b 100644
---- a/arch/powerpc/include/asm/hw_breakpoint.h
-+++ b/arch/powerpc/include/asm/hw_breakpoint.h
-@@ -34,7 +34,11 @@ struct arch_hw_breakpoint {
- #define HW_BRK_TYPE_PRIV_ALL	(HW_BRK_TYPE_USER | HW_BRK_TYPE_KERNEL | \
- 				 HW_BRK_TYPE_HYP)
- 
-+#ifdef CONFIG_PPC_8xx
-+#define HW_BREAKPOINT_ALIGN 0x3
-+#else
- #define HW_BREAKPOINT_ALIGN 0x7
-+#endif
- 
- #define DABR_MAX_LEN	8
- #define DAWR_MAX_LEN	512
-diff --git a/arch/powerpc/include/asm/reg_8xx.h b/arch/powerpc/include/asm/reg_8xx.h
-index 07df35ee8cbc..299ee7be0f67 100644
---- a/arch/powerpc/include/asm/reg_8xx.h
-+++ b/arch/powerpc/include/asm/reg_8xx.h
-@@ -35,7 +35,21 @@
- #define SPRN_CMPE	152
- #define SPRN_CMPF	153
- #define SPRN_LCTRL1	156
-+#define   LCTRL1_CTE_GT		0xc0000000
-+#define   LCTRL1_CTF_LT		0x14000000
-+#define   LCTRL1_CRWE_RW	0x00000000
-+#define   LCTRL1_CRWE_RO	0x00040000
-+#define   LCTRL1_CRWE_WO	0x000c0000
-+#define   LCTRL1_CRWF_RW	0x00000000
-+#define   LCTRL1_CRWF_RO	0x00010000
-+#define   LCTRL1_CRWF_WO	0x00030000
- #define SPRN_LCTRL2	157
-+#define   LCTRL2_LW0EN		0x80000000
-+#define   LCTRL2_LW0LA_E	0x00000000
-+#define   LCTRL2_LW0LA_F	0x04000000
-+#define   LCTRL2_LW0LA_EandF	0x08000000
-+#define   LCTRL2_LW0LADC	0x02000000
-+#define   LCTRL2_SLW0EN		0x00000002
- #ifdef CONFIG_PPC_8xx
- #define SPRN_ICTRL	158
- #endif
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 58ce3d37c2a3..2462cd7c565c 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -160,6 +160,9 @@ static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
- 		/* DAWR region can't cross 512 bytes boundary */
- 		if ((start_addr >> 9) != (end_addr >> 9))
- 			return -EINVAL;
-+	} else if (IS_ENABLED(CONFIG_PPC_8xx)) {
-+		/* 8xx can setup a range without limitation */
-+		max_len = U16_MAX;
- 	}
- 
- 	if (hw_len > max_len)
-@@ -328,13 +331,11 @@ int hw_breakpoint_handler(struct die_args *args)
- 	}
- 
- 	info->type &= ~HW_BRK_TYPE_EXTRANEOUS_IRQ;
--	if (IS_ENABLED(CONFIG_PPC_8xx)) {
--		if (!dar_within_range(regs->dar, info))
--			info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
--	} else {
--		if (!stepping_handler(regs, bp, info))
--			goto out;
--	}
-+	if (!dar_within_range(regs->dar, info))
-+		info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
-+
-+	if (!IS_ENABLED(CONFIG_PPC_8xx) && !stepping_handler(regs, bp, info))
-+		goto out;
- 
- 	/*
- 	 * As a policy, the callback is invoked in a 'trigger-after-execute'
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 4df94b6e2f32..7fcf72e58826 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -740,28 +740,6 @@ static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
- 		mtspr(SPRN_DABRX, dabrx);
- 	return 0;
- }
--#elif defined(CONFIG_PPC_8xx)
--static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
--{
--	unsigned long addr = dabr & ~HW_BRK_TYPE_DABR;
--	unsigned long lctrl1 = 0x90000000; /* compare type: equal on E & F */
--	unsigned long lctrl2 = 0x8e000002; /* watchpoint 1 on cmp E | F */
--
--	if ((dabr & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_READ)
--		lctrl1 |= 0xa0000;
--	else if ((dabr & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_WRITE)
--		lctrl1 |= 0xf0000;
--	else if ((dabr & HW_BRK_TYPE_RDWR) == 0)
--		lctrl2 = 0;
--
--	mtspr(SPRN_LCTRL2, 0);
--	mtspr(SPRN_CMPE, addr);
--	mtspr(SPRN_CMPF, addr + 4);
--	mtspr(SPRN_LCTRL1, lctrl1);
--	mtspr(SPRN_LCTRL2, lctrl2);
--
--	return 0;
--}
- #else
- static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
- {
-@@ -782,6 +760,39 @@ static inline int set_dabr(struct arch_hw_breakpoint *brk)
- 	return __set_dabr(dabr, dabrx);
- }
- 
-+static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
-+{
-+	unsigned long lctrl1 = LCTRL1_CTE_GT | LCTRL1_CTF_LT | LCTRL1_CRWE_RW |
-+			       LCTRL1_CRWF_RW;
-+	unsigned long lctrl2 = LCTRL2_LW0EN | LCTRL2_LW0LADC | LCTRL2_SLW0EN;
-+	unsigned long start_addr = brk->address & ~HW_BREAKPOINT_ALIGN;
-+	unsigned long end_addr = (brk->address + brk->len - 1) | HW_BREAKPOINT_ALIGN;
-+
-+	if (start_addr == 0)
-+		lctrl2 |= LCTRL2_LW0LA_F;
-+	else if (end_addr == ~0U)
-+		lctrl2 |= LCTRL2_LW0LA_E;
-+	else
-+		lctrl2 |= LCTRL2_LW0LA_EandF;
-+
-+	mtspr(SPRN_LCTRL2, 0);
-+
-+	if ((brk->type & HW_BRK_TYPE_RDWR) == 0)
-+		return 0;
-+
-+	if ((brk->type & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_READ)
-+		lctrl1 |= LCTRL1_CRWE_RO | LCTRL1_CRWF_RO;
-+	if ((brk->type & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_WRITE)
-+		lctrl1 |= LCTRL1_CRWE_WO | LCTRL1_CRWF_WO;
-+
-+	mtspr(SPRN_CMPE, start_addr - 1);
-+	mtspr(SPRN_CMPF, end_addr + 1);
-+	mtspr(SPRN_LCTRL1, lctrl1);
-+	mtspr(SPRN_LCTRL2, lctrl2);
-+
-+	return 0;
-+}
-+
- void __set_breakpoint(struct arch_hw_breakpoint *brk)
- {
- 	memcpy(this_cpu_ptr(&current_brk), brk, sizeof(*brk));
-@@ -789,6 +800,8 @@ void __set_breakpoint(struct arch_hw_breakpoint *brk)
- 	if (dawr_enabled())
- 		// Power8 or later
- 		set_dawr(brk);
-+	else if (IS_ENABLED(CONFIG_PPC_8xx))
-+		set_breakpoint_8xx(brk);
- 	else if (!cpu_has_feature(CPU_FTR_ARCH_207S))
- 		// Power7 or earlier
- 		set_dabr(brk);
--- 
-2.13.3
+--eheScQNz3K90DVRs
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3dZfAACgkQJNaLcl1U
+h9CwfAf/YV/EIozE9EzDMFY5bhh24HCl54wOPeRj11gAdUc9Dgos5WcUBUp1OKGF
+fMWwffNUQQ6pttjnObQRNpgbEYALQbgmriiDqKa6l7m/jBgm0vaXtF+rdbyHEt7Z
+VGEZcUDDUYjL3lYLHpmCMIxuON1NceLHNn6UjNWc3ukHuKOZTDVKANSoAiskfvuH
+dpcZX/A6I71lUtLq54+uVGh28k7/5cOL2sE/syHjQyA25LcH71hjFVhaByUcx8EC
+AjV8phIVnDYDzwAQhrz0MfXCySpsaq0oPNWHkr9S4d4RZvVaqI5DFVVRGxUivZOM
+auolGphSGFR7UvpNFLu9qItUxlTZxA==
+=SdHM
+-----END PGP SIGNATURE-----
+
+--eheScQNz3K90DVRs--
