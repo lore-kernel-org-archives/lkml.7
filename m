@@ -2,205 +2,146 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE8BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE1AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF63F2080F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574762118;
-	bh=MzKgqKCa7NaA8Djx5qejgsOtT2+/H2cyYVcKH3ql0Zk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nc+TjbMFTWJNrau9W1uM9GiVRL6myaPhvHTTKCh3Nydu5/Zhb7plmY3wfkBjpC11G
-	 SjbGl7WfWXlMWxhVknEoktnxqB/2bOwklZgKSQvcJnOpqwW5idGaEhtfz4uQiGVnKb
-	 NpoGiLan5ig1LD650H9YL+lGvoOt9McM2q9VWcQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 9D8602075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfKZJzS (ORCPT
+        id S1727690AbfKZJ4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:55:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727557AbfKZJzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:55:17 -0500
-Received: from linux-8ccs (x2f7fc62.dyn.telefonica.de [2.247.252.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE5C42075C;
-        Tue, 26 Nov 2019 09:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574762116;
-        bh=MzKgqKCa7NaA8Djx5qejgsOtT2+/H2cyYVcKH3ql0Zk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GdGD6tkDzZas/Y4hkk9UHE5NsbTPmf86gXupJNtx0Vgt/WN0rWMS2sPrKZn6FTvsU
-         OvbZzZSB6HJaXSD9T+iiGNpButycABEAI1g/M/MQzp0B3sYbMyjRp9eLUVVAPQ21VE
-         bwQAAEdaHAlwa5MOVaClVN2R424QphdxVNm0kRoU=
-Date:   Tue, 26 Nov 2019 10:55:10 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Maennich <maennich@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] export.h: reduce __ksymtab_strings string duplication
- by using "MS" section flags
-Message-ID: <20191126095510.GA30181@linux-8ccs>
-References: <20191120145110.8397-1-jeyu@kernel.org>
- <20191125154217.18640-1-jeyu@kernel.org>
- <CAK7LNASU9YysYNXuBKSU4WeUyE=2itfLDYzCupXL-49GUZuGnQ@mail.gmail.com>
+        Tue, 26 Nov 2019 04:56:45 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47132 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfKZJ4p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:56:45 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 7419A28D903
+Subject: Re: [PATCH v4] mfd / platform: cros_ec: Query EC protocol version if
+ EC transitions between RO/RW
+To:     Yicheng Li <yichengli@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     bleung@chromium.org, gwendal@chromium.org
+References: <0f223903-ec93-a5ec-e858-fa0e2e282cf3@collabora.com>
+ <20191125221517.91611-1-yichengli@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <5fd3e86c-21ac-82fb-c3c5-4ff1f43e0219@collabora.com>
+Date:   Tue, 26 Nov 2019 10:56:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAK7LNASU9YysYNXuBKSU4WeUyE=2itfLDYzCupXL-49GUZuGnQ@mail.gmail.com>
-X-OS:   Linux linux-8ccs 5.4.0-rc5-lp150.12.61-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191125221517.91611-1-yichengli@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Masahiro Yamada [26/11/19 17:32 +0900]:
->On Tue, Nov 26, 2019 at 12:42 AM Jessica Yu <jeyu@kernel.org> wrote:
->>
->> Commit c3a6cf19e695 ("export: avoid code duplication in
->> include/linux/export.h") refactors export.h quite nicely, but introduces
->> a slight increase in memory usage due to using the empty string ""
->> instead of NULL to indicate that an exported symbol has no namespace. As
->> mentioned in that commit, this meant an increase of 1 byte per exported
->> symbol without a namespace. For example, if a kernel configuration has
->> about 10k exported symbols, this would mean that the size of
->> __ksymtab_strings would increase by roughly 10kB.
->>
->> We can alleviate this situation by utilizing the SHF_MERGE and
->> SHF_STRING section flags. SHF_MERGE|SHF_STRING indicate to the linker
->> that the data in the section are null-terminated strings that can be
->> merged to eliminate duplication. More specifically, from the binutils
->> documentation - "for sections with both M and S, a string which is a
->> suffix of a larger string is considered a duplicate. Thus "def" will be
->> merged with "abcdef"; A reference to the first "def" will be changed to
->> a reference to "abcdef"+3". Thus, all the empty strings would be merged
->> as well as any strings that can be merged according to the cited method
->> above. For example, "memset" and "__memset" would be merged to just
->> "__memset" in __ksymtab_strings.
->>
->> As of v5.4-rc5, the following statistics were gathered with x86
->> defconfig with approximately 10.7k exported symbols.
->>
->> Size of __ksymtab_strings in vmlinux:
->> -------------------------------------
->> v5.4-rc5: 213834 bytes
->> v5.4-rc5 with commit c3a6cf19e695: 224455 bytes
->> v5.4-rc5 with this patch: 205759 bytes
->>
->> So, we already see memory savings of ~8kB compared to vanilla -rc5 and
->> savings of nearly 18.7kB compared to -rc5 with commit c3a6cf19e695 on top.
->>
->> Unfortunately, as of this writing, strings will not get deduplicated for
->> kernel modules, as ld does not do the deduplication for
->> SHF_MERGE|SHF_STRINGS sections for relocatable files (ld -r), which
->> kernel modules are. A patch for ld is currently being worked on to
->> hopefully allow for string deduplication in relocatable files in the
->> future.
->>
->> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
->> Signed-off-by: Jessica Yu <jeyu@kernel.org>
->> ---
->>
->> v2: use %progbits throughout and document the oddity in a comment.
->>
->>  include/asm-generic/export.h |  8 +++++---
->>  include/linux/export.h       | 27 +++++++++++++++++++++------
->>  2 files changed, 26 insertions(+), 9 deletions(-)
->>
->> diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
->> index fa577978fbbd..23bc98e97a66 100644
->> --- a/include/asm-generic/export.h
->> +++ b/include/asm-generic/export.h
->> @@ -26,9 +26,11 @@
->>  .endm
->>
->>  /*
->> - * note on .section use: @progbits vs %progbits nastiness doesn't matter,
->> - * since we immediately emit into those sections anyway.
->> + * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
->> + * section flag requires it. Use '%progbits' instead of '@progbits' since the
->> + * former apparently works on all arches according to the binutils source.
->>   */
->> +
->>  .macro ___EXPORT_SYMBOL name,val,sec
->>  #ifdef CONFIG_MODULES
->>         .globl __ksymtab_\name
->> @@ -37,7 +39,7 @@
->>  __ksymtab_\name:
->>         __put \val, __kstrtab_\name
->>         .previous
->> -       .section __ksymtab_strings,"a"
->> +       .section __ksymtab_strings,"aMS",%progbits,1
->>  __kstrtab_\name:
->>         .asciz "\name"
->>         .previous
->> diff --git a/include/linux/export.h b/include/linux/export.h
->> index 201262793369..3d835ca34d33 100644
->> --- a/include/linux/export.h
->> +++ b/include/linux/export.h
->> @@ -81,16 +81,31 @@ struct kernel_symbol {
->>
->>  #else
->>
->> +/*
->> + * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
->> + * section flag requires it. Use '%progbits' instead of '@progbits' since the
->> + * former apparently works on all arches according to the binutils source.
->> + */
->> +#define __KSTRTAB_ENTRY(sym)                                                   \
->> +       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
->> +           "__kstrtab_" #sym ":                                        \n"     \
->> +           "   .asciz  \"" #sym "\"                                    \n"     \
->> +           "   .previous                                               \n")
->> +
->> +#define __KSTRTAB_NS_ENTRY(sym, ns)                                            \
->> +       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
->> +           "__kstrtabns_" #sym ":                                      \n"     \
->> +           "   .asciz  " #ns "                                         \n"     \
->
->
->Hmm, it took some time for me to how this code works.
->
->ns is already a C string, then you added # to it,
->then I was confused.
->
->Personally, I prefer this code:
->" .asciz \"" ns "\" \n"
->
->so it looks in the same way as __KSTRTAB_ENTRY().
->
->
->
->BTW, you duplicated \"aMS\",%progbits,1" and ".previous"
->
->
->I would write it shorter, like this:
->
->
->#define ___EXPORT_SYMBOL(sym, sec, ns) \
->        extern typeof(sym) sym; \
->        extern const char __kstrtab_##sym[]; \
->        extern const char __kstrtabns_##sym[]; \
->        __CRC_SYMBOL(sym, sec); \
->        asm("    .section \"__ksymtab_strings\",\"aMS\",%progbits,1\n" \
->            "__kstrtab_" #sym ": \n" \
->            "     .asciz \"" #sym "\" \n" \
->            "__kstrtabns_" #sym ": \n" \
->            "     .asciz \"" ns "\" \n" \
->            "     .previous \n");    \
->       __KSYMTAB_ENTRY(sym, sec)
->
+Hi Yicheng,
 
-Sure, I can change that. Just thought it'd be easier to read with the
-separate macros. Thanks for your comments!
+I looked at this patch deeply and I have a question.
 
+On 25/11/19 23:15, Yicheng Li wrote:
+> RO and RW of EC may have different EC protocol version. If EC transitions
+> between RO and RW, but AP does not reboot (this is true for fingerprint
+> microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
+> still uses the protocol version queried before transition, which can
+> cause problems. In the case of fingerprint microcontroller, this causes
+> AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
+> interrupt handler, which in turn prevents RO to clear the interrupt
+> line to AP, in an infinite loop.
+> 
+> Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
+> might have been a transition between RO and RW, so re-query the protocol.
+> 
+> Signed-off-by: Yicheng Li <yichengli@chromium.org>
+> ---
+>  drivers/platform/chrome/cros_ec.c           | 24 +++++++++++++++++++++
+>  include/linux/platform_data/cros_ec_proto.h |  3 +++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+> index 9b2d07422e17..38ec1fb409a5 100644
+> --- a/drivers/platform/chrome/cros_ec.c
+> +++ b/drivers/platform/chrome/cros_ec.c
+> @@ -104,6 +104,23 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+>  	return ret;
+>  }
+>  
+> +static int cros_ec_ready_event(struct notifier_block *nb,
+> +	unsigned long queued_during_suspend, void *_notify)
+> +{
+> +	struct cros_ec_device *ec_dev = container_of(nb, struct cros_ec_device,
+> +						     notifier_ready);
+> +	u32 host_event = cros_ec_get_host_event(ec_dev);
+> +
+> +	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
+> +		mutex_lock(&ec_dev->lock);
+> +		cros_ec_query_all(ec_dev);
+
+I am wondering if instead of calling cros_ec_query_all we can just set the proto
+version to unknown:
+
+   ec_dev->proto_version == EC_PROTO_VERSION_UNKNOWN
+
+and let the cros_ec_cmd_xfer function do its magic.
+
+Should that work?
+
+Thanks,
+ Enric
+
+> +		mutex_unlock(&ec_dev->lock);
+> +		return NOTIFY_OK;
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+>  /**
+>   * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
+>   * @ec_dev: Device to register.
+> @@ -201,6 +218,13 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+>  		dev_dbg(ec_dev->dev, "Error %d clearing sleep event to ec",
+>  			err);
+>  
+> +	/* Register the notifier for EC_HOST_EVENT_INTERFACE_READY event. */
+> +	ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
+> +	err = blocking_notifier_chain_register(&ec_dev->event_notifier,
+> +					       &ec_dev->notifier_ready);
+> +	if (err)
+> +		return err;
+> +
+>  	dev_info(dev, "Chrome EC device registered\n");
+>  
+>  	return 0;
+> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> index 0d4e4aaed37a..a1c545c464e7 100644
+> --- a/include/linux/platform_data/cros_ec_proto.h
+> +++ b/include/linux/platform_data/cros_ec_proto.h
+> @@ -121,6 +121,8 @@ struct cros_ec_command {
+>   * @event_data: Raw payload transferred with the MKBP event.
+>   * @event_size: Size in bytes of the event data.
+>   * @host_event_wake_mask: Mask of host events that cause wake from suspend.
+> + * @notifier_ready: The notifier_block to let the kernel re-query EC
+> + *      communication protocol when the EC sends EC_HOST_EVENT_INTERFACE_READY.
+>   * @ec: The platform_device used by the mfd driver to interface with the
+>   *      main EC.
+>   * @pd: The platform_device used by the mfd driver to interface with the
+> @@ -161,6 +163,7 @@ struct cros_ec_device {
+>  	int event_size;
+>  	u32 host_event_wake_mask;
+>  	u32 last_resume_result;
+> +	struct notifier_block notifier_ready;
+>  
+>  	/* The platform devices used by the mfd driver */
+>  	struct platform_device *ec;
+> 
