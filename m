@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92718C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376C3C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C1D20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0433D20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfKZUOP (ORCPT
+        id S1727232AbfKZUOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:14:15 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46102 "EHLO mx1.suse.de"
+        Tue, 26 Nov 2019 15:14:17 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45838 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727138AbfKZUOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:14:11 -0500
+        id S1727097AbfKZUOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:14:09 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DA842B147;
-        Tue, 26 Nov 2019 20:14:09 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 5C9A5AC69;
+        Tue, 26 Nov 2019 20:14:05 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 07/35] powerpc/64s/exception: Remove old INT_COMMON macro
-Date:   Tue, 26 Nov 2019 21:13:21 +0100
-Message-Id: <229a46517d86a0ba3cfdc11ac3d86d693939f396.1574798487.git.msuchanek@suse.de>
+Subject: [PATCH v2 04/35] powerpc/64s/exception: Expand EXC_COMMON and EXC_COMMON_ASYNC macros
+Date:   Tue, 26 Nov 2019 21:13:18 +0100
+Message-Id: <ce76fa502ab8a5d1c48624f7bcdc16fb126423cc.1574798487.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574798487.git.msuchanek@suse.de>
 References: <cover.1574798487.git.msuchanek@suse.de>
@@ -81,138 +81,323 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
+These don't provide a large amount of code sharing. Removing them
+makes code easier to shuffle around. For example, some of the common
+instructions will be moved into the common code gen macro.
+
+No generated code change.
+
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 51 +++++++++++++---------------
- 1 file changed, 24 insertions(+), 27 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 160 ++++++++++++++++++++-------
+ 1 file changed, 117 insertions(+), 43 deletions(-)
 
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index ba2dcd91aaaf..f318869607db 100644
+index 0e39e98ef719..828fa4df15cf 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -591,8 +591,8 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
-  * If stack=0, then the stack is already set in r1, and r1 is saved in r10.
-  * PPR save and CPU accounting is not done for the !stack case (XXX why not?)
-  */
--.macro INT_COMMON vec, area, stack, kaup, reconcile, dar, dsisr
--	.if \stack
-+.macro GEN_COMMON name
-+	.if ISTACK
- 	andi.	r10,r12,MSR_PR		/* See if coming from user	*/
- 	mr	r10,r1			/* Save r1			*/
- 	subi	r1,r1,INT_FRAME_SIZE	/* alloc frame on kernel stack	*/
-@@ -609,54 +609,54 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	std	r0,GPR0(r1)		/* save r0 in stackframe	*/
- 	std	r10,GPR1(r1)		/* save r1 in stackframe	*/
+@@ -757,28 +757,6 @@ END_FTR_SECTION_IFSET(CPU_FTR_CAN_NAP)
+ #define FINISH_NAP
+ #endif
  
--	.if \stack
--	.if \kaup
-+	.if ISTACK
-+	.if IKUAP
- 	kuap_save_amr_and_lock r9, r10, cr1, cr0
- 	.endif
- 	beq	101f			/* if from kernel mode		*/
- 	ACCOUNT_CPU_USER_ENTRY(r13, r9, r10)
--	SAVE_PPR(\area, r9)
-+	SAVE_PPR(IAREA, r9)
- 101:
- 	.else
--	.if \kaup
-+	.if IKUAP
- 	kuap_save_amr_and_lock r9, r10, cr1
- 	.endif
- 	.endif
- 
- 	/* Save original regs values from save area to stack frame. */
--	ld	r9,\area+EX_R9(r13)	/* move r9, r10 to stackframe	*/
--	ld	r10,\area+EX_R10(r13)
-+	ld	r9,IAREA+EX_R9(r13)	/* move r9, r10 to stackframe	*/
-+	ld	r10,IAREA+EX_R10(r13)
- 	std	r9,GPR9(r1)
- 	std	r10,GPR10(r1)
--	ld	r9,\area+EX_R11(r13)	/* move r11 - r13 to stackframe	*/
--	ld	r10,\area+EX_R12(r13)
--	ld	r11,\area+EX_R13(r13)
-+	ld	r9,IAREA+EX_R11(r13)	/* move r11 - r13 to stackframe	*/
-+	ld	r10,IAREA+EX_R12(r13)
-+	ld	r11,IAREA+EX_R13(r13)
- 	std	r9,GPR11(r1)
- 	std	r10,GPR12(r1)
- 	std	r11,GPR13(r1)
--	.if \dar
--	.if \dar == 2
-+	.if IDAR
-+	.if IDAR == 2
- 	ld	r10,_NIP(r1)
- 	.else
--	ld	r10,\area+EX_DAR(r13)
-+	ld	r10,IAREA+EX_DAR(r13)
- 	.endif
- 	std	r10,_DAR(r1)
- 	.endif
--	.if \dsisr
--	.if \dsisr == 2
-+	.if IDSISR
-+	.if IDSISR == 2
- 	ld	r10,_MSR(r1)
- 	lis	r11,DSISR_SRR1_MATCH_64S@h
- 	and	r10,r10,r11
- 	.else
--	lwz	r10,\area+EX_DSISR(r13)
-+	lwz	r10,IAREA+EX_DSISR(r13)
- 	.endif
- 	std	r10,_DSISR(r1)
- 	.endif
- BEGIN_FTR_SECTION_NESTED(66)
--	ld	r10,\area+EX_CFAR(r13)
-+	ld	r10,IAREA+EX_CFAR(r13)
- 	std	r10,ORIG_GPR3(r1)
- END_FTR_SECTION_NESTED(CPU_FTR_CFAR, CPU_FTR_CFAR, 66)
--	GET_CTR(r10, \area)
-+	GET_CTR(r10, IAREA)
- 	std	r10,_CTR(r1)
- 	std	r2,GPR2(r1)		/* save r2 in stackframe	*/
- 	SAVE_4GPRS(3, r1)		/* save r3 - r6 in stackframe   */
-@@ -668,26 +668,22 @@ END_FTR_SECTION_NESTED(CPU_FTR_CFAR, CPU_FTR_CFAR, 66)
- 	mfspr	r11,SPRN_XER		/* save XER in stackframe	*/
- 	std	r10,SOFTE(r1)
- 	std	r11,_XER(r1)
--	li	r9,(\vec)+1
-+	li	r9,(IVEC)+1
- 	std	r9,_TRAP(r1)		/* set trap number		*/
- 	li	r10,0
- 	ld	r11,exception_marker@toc(r2)
- 	std	r10,RESULT(r1)		/* clear regs->result		*/
- 	std	r11,STACK_FRAME_OVERHEAD-16(r1) /* mark the frame	*/
- 
--	.if \stack
-+	.if ISTACK
- 	ACCOUNT_STOLEN_TIME
- 	.endif
- 
--	.if \reconcile
-+	.if IRECONCILE
- 	RECONCILE_IRQ_STATE(r10, r11)
- 	.endif
- .endm
- 
--.macro GEN_COMMON name
--	INT_COMMON IVEC, IAREA, ISTACK, IKUAP, IRECONCILE, IDAR, IDSISR
--.endm
+-#define EXC_COMMON(name, realvec, hdlr)					\
+-	EXC_COMMON_BEGIN(name);						\
+-	INT_COMMON realvec, PACA_EXGEN, 1, 1, 1, 0, 0 ;			\
+-	bl	save_nvgprs;						\
+-	addi	r3,r1,STACK_FRAME_OVERHEAD;				\
+-	bl	hdlr;							\
+-	b	ret_from_except
+-
+-/*
+- * Like EXC_COMMON, but for exceptions that can occur in the idle task and
+- * therefore need the special idle handling (finish nap and runlatch)
+- */
+-#define EXC_COMMON_ASYNC(name, realvec, hdlr)				\
+-	EXC_COMMON_BEGIN(name);						\
+-	INT_COMMON realvec, PACA_EXGEN, 1, 1, 1, 0, 0 ;			\
+-	FINISH_NAP;							\
+-	RUNLATCH_ON;							\
+-	addi	r3,r1,STACK_FRAME_OVERHEAD;				\
+-	bl	hdlr;							\
+-	b	ret_from_except_lite
+-
 -
  /*
-  * Restore all registers including H/SRR0/1 saved in a stack frame of a
-  * standard exception.
-@@ -2400,7 +2396,8 @@ EXC_COMMON_BEGIN(soft_nmi_common)
- 	mr	r10,r1
- 	ld	r1,PACAEMERGSP(r13)
- 	subi	r1,r1,INT_FRAME_SIZE
--	INT_COMMON 0x900, PACA_EXGEN, 0, 1, 1, 0, 0
-+	__ISTACK(decrementer)=0
-+	GEN_COMMON decrementer
- 	bl	save_nvgprs
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	soft_nmi_interrupt
+  * There are a few constraints to be concerned with.
+  * - Real mode exceptions code/data must be located at their physical location.
+@@ -1349,7 +1327,13 @@ EXC_VIRT_BEGIN(hardware_interrupt, 0x4500, 0x100)
+ 	INT_HANDLER hardware_interrupt, 0x500, virt=1, hsrr=EXC_HV_OR_STD, bitmask=IRQS_DISABLED, kvm=1
+ EXC_VIRT_END(hardware_interrupt, 0x4500, 0x100)
+ INT_KVM_HANDLER hardware_interrupt, 0x500, EXC_HV_OR_STD, PACA_EXGEN, 0
+-EXC_COMMON_ASYNC(hardware_interrupt_common, 0x500, do_IRQ)
++EXC_COMMON_BEGIN(hardware_interrupt_common)
++	INT_COMMON 0x500, PACA_EXGEN, 1, 1, 1, 0, 0
++	FINISH_NAP
++	RUNLATCH_ON
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	do_IRQ
++	b	ret_from_except_lite
+ 
+ 
+ EXC_REAL_BEGIN(alignment, 0x600, 0x100)
+@@ -1455,7 +1439,13 @@ EXC_VIRT_BEGIN(decrementer, 0x4900, 0x80)
+ 	INT_HANDLER decrementer, 0x900, virt=1, bitmask=IRQS_DISABLED
+ EXC_VIRT_END(decrementer, 0x4900, 0x80)
+ INT_KVM_HANDLER decrementer, 0x900, EXC_STD, PACA_EXGEN, 0
+-EXC_COMMON_ASYNC(decrementer_common, 0x900, timer_interrupt)
++EXC_COMMON_BEGIN(decrementer_common)
++	INT_COMMON 0x900, PACA_EXGEN, 1, 1, 1, 0, 0
++	FINISH_NAP
++	RUNLATCH_ON
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	timer_interrupt
++	b	ret_from_except_lite
+ 
+ 
+ EXC_REAL_BEGIN(hdecrementer, 0x980, 0x80)
+@@ -1465,7 +1455,12 @@ EXC_VIRT_BEGIN(hdecrementer, 0x4980, 0x80)
+ 	INT_HANDLER hdecrementer, 0x980, virt=1, hsrr=EXC_HV, kvm=1
+ EXC_VIRT_END(hdecrementer, 0x4980, 0x80)
+ INT_KVM_HANDLER hdecrementer, 0x980, EXC_HV, PACA_EXGEN, 0
+-EXC_COMMON(hdecrementer_common, 0x980, hdec_interrupt)
++EXC_COMMON_BEGIN(hdecrementer_common)
++	INT_COMMON 0x980, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	hdec_interrupt
++	b	ret_from_except
+ 
+ 
+ EXC_REAL_BEGIN(doorbell_super, 0xa00, 0x100)
+@@ -1475,11 +1470,17 @@ EXC_VIRT_BEGIN(doorbell_super, 0x4a00, 0x100)
+ 	INT_HANDLER doorbell_super, 0xa00, virt=1, bitmask=IRQS_DISABLED
+ EXC_VIRT_END(doorbell_super, 0x4a00, 0x100)
+ INT_KVM_HANDLER doorbell_super, 0xa00, EXC_STD, PACA_EXGEN, 0
++EXC_COMMON_BEGIN(doorbell_super_common)
++	INT_COMMON 0xa00, PACA_EXGEN, 1, 1, 1, 0, 0
++	FINISH_NAP
++	RUNLATCH_ON
++	addi	r3,r1,STACK_FRAME_OVERHEAD
+ #ifdef CONFIG_PPC_DOORBELL
+-EXC_COMMON_ASYNC(doorbell_super_common, 0xa00, doorbell_exception)
++	bl	doorbell_exception
+ #else
+-EXC_COMMON_ASYNC(doorbell_super_common, 0xa00, unknown_exception)
++	bl	unknown_exception
+ #endif
++	b	ret_from_except_lite
+ 
+ 
+ EXC_REAL_NONE(0xb00, 0x100)
+@@ -1623,7 +1624,12 @@ EXC_VIRT_BEGIN(single_step, 0x4d00, 0x100)
+ 	INT_HANDLER single_step, 0xd00, virt=1
+ EXC_VIRT_END(single_step, 0x4d00, 0x100)
+ INT_KVM_HANDLER single_step, 0xd00, EXC_STD, PACA_EXGEN, 0
+-EXC_COMMON(single_step_common, 0xd00, single_step_exception)
++EXC_COMMON_BEGIN(single_step_common)
++	INT_COMMON 0xd00, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	single_step_exception
++	b	ret_from_except
+ 
+ 
+ EXC_REAL_BEGIN(h_data_storage, 0xe00, 0x20)
+@@ -1654,7 +1660,12 @@ EXC_VIRT_BEGIN(h_instr_storage, 0x4e20, 0x20)
+ 	INT_HANDLER h_instr_storage, 0xe20, ool=1, virt=1, hsrr=EXC_HV, kvm=1
+ EXC_VIRT_END(h_instr_storage, 0x4e20, 0x20)
+ INT_KVM_HANDLER h_instr_storage, 0xe20, EXC_HV, PACA_EXGEN, 0
+-EXC_COMMON(h_instr_storage_common, 0xe20, unknown_exception)
++EXC_COMMON_BEGIN(h_instr_storage_common)
++	INT_COMMON 0xe20, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	unknown_exception
++	b	ret_from_except
+ 
+ 
+ EXC_REAL_BEGIN(emulation_assist, 0xe40, 0x20)
+@@ -1664,7 +1675,12 @@ EXC_VIRT_BEGIN(emulation_assist, 0x4e40, 0x20)
+ 	INT_HANDLER emulation_assist, 0xe40, ool=1, virt=1, hsrr=EXC_HV, kvm=1
+ EXC_VIRT_END(emulation_assist, 0x4e40, 0x20)
+ INT_KVM_HANDLER emulation_assist, 0xe40, EXC_HV, PACA_EXGEN, 0
+-EXC_COMMON(emulation_assist_common, 0xe40, emulation_assist_interrupt)
++EXC_COMMON_BEGIN(emulation_assist_common)
++	INT_COMMON 0xe40, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	emulation_assist_interrupt
++	b	ret_from_except
+ 
+ 
+ /*
+@@ -1721,11 +1737,17 @@ EXC_VIRT_BEGIN(h_doorbell, 0x4e80, 0x20)
+ 	INT_HANDLER h_doorbell, 0xe80, ool=1, virt=1, hsrr=EXC_HV, bitmask=IRQS_DISABLED, kvm=1
+ EXC_VIRT_END(h_doorbell, 0x4e80, 0x20)
+ INT_KVM_HANDLER h_doorbell, 0xe80, EXC_HV, PACA_EXGEN, 0
++EXC_COMMON_BEGIN(h_doorbell_common)
++	INT_COMMON 0xe80, PACA_EXGEN, 1, 1, 1, 0, 0
++	FINISH_NAP
++	RUNLATCH_ON
++	addi	r3,r1,STACK_FRAME_OVERHEAD
+ #ifdef CONFIG_PPC_DOORBELL
+-EXC_COMMON_ASYNC(h_doorbell_common, 0xe80, doorbell_exception)
++	bl	doorbell_exception
+ #else
+-EXC_COMMON_ASYNC(h_doorbell_common, 0xe80, unknown_exception)
++	bl	unknown_exception
+ #endif
++	b	ret_from_except_lite
+ 
+ 
+ EXC_REAL_BEGIN(h_virt_irq, 0xea0, 0x20)
+@@ -1735,7 +1757,13 @@ EXC_VIRT_BEGIN(h_virt_irq, 0x4ea0, 0x20)
+ 	INT_HANDLER h_virt_irq, 0xea0, ool=1, virt=1, hsrr=EXC_HV, bitmask=IRQS_DISABLED, kvm=1
+ EXC_VIRT_END(h_virt_irq, 0x4ea0, 0x20)
+ INT_KVM_HANDLER h_virt_irq, 0xea0, EXC_HV, PACA_EXGEN, 0
+-EXC_COMMON_ASYNC(h_virt_irq_common, 0xea0, do_IRQ)
++EXC_COMMON_BEGIN(h_virt_irq_common)
++	INT_COMMON 0xea0, PACA_EXGEN, 1, 1, 1, 0, 0
++	FINISH_NAP
++	RUNLATCH_ON
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	do_IRQ
++	b	ret_from_except_lite
+ 
+ 
+ EXC_REAL_NONE(0xec0, 0x20)
+@@ -1751,7 +1779,13 @@ EXC_VIRT_BEGIN(performance_monitor, 0x4f00, 0x20)
+ 	INT_HANDLER performance_monitor, 0xf00, ool=1, virt=1, bitmask=IRQS_PMI_DISABLED
+ EXC_VIRT_END(performance_monitor, 0x4f00, 0x20)
+ INT_KVM_HANDLER performance_monitor, 0xf00, EXC_STD, PACA_EXGEN, 0
+-EXC_COMMON_ASYNC(performance_monitor_common, 0xf00, performance_monitor_exception)
++EXC_COMMON_BEGIN(performance_monitor_common)
++	INT_COMMON 0xf00, PACA_EXGEN, 1, 1, 1, 0, 0
++	FINISH_NAP
++	RUNLATCH_ON
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	performance_monitor_exception
++	b	ret_from_except_lite
+ 
+ 
+ EXC_REAL_BEGIN(altivec_unavailable, 0xf20, 0x20)
+@@ -1842,7 +1876,12 @@ EXC_VIRT_BEGIN(facility_unavailable, 0x4f60, 0x20)
+ 	INT_HANDLER facility_unavailable, 0xf60, ool=1, virt=1
+ EXC_VIRT_END(facility_unavailable, 0x4f60, 0x20)
+ INT_KVM_HANDLER facility_unavailable, 0xf60, EXC_STD, PACA_EXGEN, 0
+-EXC_COMMON(facility_unavailable_common, 0xf60, facility_unavailable_exception)
++EXC_COMMON_BEGIN(facility_unavailable_common)
++	INT_COMMON 0xf60, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	facility_unavailable_exception
++	b	ret_from_except
+ 
+ 
+ EXC_REAL_BEGIN(h_facility_unavailable, 0xf80, 0x20)
+@@ -1852,7 +1891,12 @@ EXC_VIRT_BEGIN(h_facility_unavailable, 0x4f80, 0x20)
+ 	INT_HANDLER h_facility_unavailable, 0xf80, ool=1, virt=1, hsrr=EXC_HV, kvm=1
+ EXC_VIRT_END(h_facility_unavailable, 0x4f80, 0x20)
+ INT_KVM_HANDLER h_facility_unavailable, 0xf80, EXC_HV, PACA_EXGEN, 0
+-EXC_COMMON(h_facility_unavailable_common, 0xf80, facility_unavailable_exception)
++EXC_COMMON_BEGIN(h_facility_unavailable_common)
++	INT_COMMON 0xf80, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	facility_unavailable_exception
++	b	ret_from_except
+ 
+ 
+ EXC_REAL_NONE(0xfa0, 0x20)
+@@ -1873,7 +1917,12 @@ EXC_REAL_BEGIN(cbe_system_error, 0x1200, 0x100)
+ EXC_REAL_END(cbe_system_error, 0x1200, 0x100)
+ EXC_VIRT_NONE(0x5200, 0x100)
+ INT_KVM_HANDLER cbe_system_error, 0x1200, EXC_HV, PACA_EXGEN, 1
+-EXC_COMMON(cbe_system_error_common, 0x1200, cbe_system_error_exception)
++EXC_COMMON_BEGIN(cbe_system_error_common)
++	INT_COMMON 0x1200, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	cbe_system_error_exception
++	b	ret_from_except
+ #else /* CONFIG_CBE_RAS */
+ EXC_REAL_NONE(0x1200, 0x100)
+ EXC_VIRT_NONE(0x5200, 0x100)
+@@ -1887,7 +1936,12 @@ EXC_VIRT_BEGIN(instruction_breakpoint, 0x5300, 0x100)
+ 	INT_HANDLER instruction_breakpoint, 0x1300, virt=1
+ EXC_VIRT_END(instruction_breakpoint, 0x5300, 0x100)
+ INT_KVM_HANDLER instruction_breakpoint, 0x1300, EXC_STD, PACA_EXGEN, 1
+-EXC_COMMON(instruction_breakpoint_common, 0x1300, instruction_breakpoint_exception)
++EXC_COMMON_BEGIN(instruction_breakpoint_common)
++	INT_COMMON 0x1300, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	instruction_breakpoint_exception
++	b	ret_from_except
+ 
+ 
+ EXC_REAL_NONE(0x1400, 0x100)
+@@ -1987,7 +2041,12 @@ END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
+ 	b	.
+ #endif
+ 
+-EXC_COMMON(denorm_common, 0x1500, unknown_exception)
++EXC_COMMON_BEGIN(denorm_common)
++	INT_COMMON 0x1500, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	unknown_exception
++	b	ret_from_except
+ 
+ 
+ #ifdef CONFIG_CBE_RAS
+@@ -1996,7 +2055,12 @@ EXC_REAL_BEGIN(cbe_maintenance, 0x1600, 0x100)
+ EXC_REAL_END(cbe_maintenance, 0x1600, 0x100)
+ EXC_VIRT_NONE(0x5600, 0x100)
+ INT_KVM_HANDLER cbe_maintenance, 0x1600, EXC_HV, PACA_EXGEN, 1
+-EXC_COMMON(cbe_maintenance_common, 0x1600, cbe_maintenance_exception)
++EXC_COMMON_BEGIN(cbe_maintenance_common)
++	INT_COMMON 0x1600, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	cbe_maintenance_exception
++	b	ret_from_except
+ #else /* CONFIG_CBE_RAS */
+ EXC_REAL_NONE(0x1600, 0x100)
+ EXC_VIRT_NONE(0x5600, 0x100)
+@@ -2010,11 +2074,16 @@ EXC_VIRT_BEGIN(altivec_assist, 0x5700, 0x100)
+ 	INT_HANDLER altivec_assist, 0x1700, virt=1
+ EXC_VIRT_END(altivec_assist, 0x5700, 0x100)
+ INT_KVM_HANDLER altivec_assist, 0x1700, EXC_STD, PACA_EXGEN, 0
++EXC_COMMON_BEGIN(altivec_assist_common)
++	INT_COMMON 0x1700, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
+ #ifdef CONFIG_ALTIVEC
+-EXC_COMMON(altivec_assist_common, 0x1700, altivec_assist_exception)
++	bl	altivec_assist_exception
+ #else
+-EXC_COMMON(altivec_assist_common, 0x1700, unknown_exception)
++	bl	unknown_exception
+ #endif
++	b	ret_from_except
+ 
+ 
+ #ifdef CONFIG_CBE_RAS
+@@ -2023,7 +2092,12 @@ EXC_REAL_BEGIN(cbe_thermal, 0x1800, 0x100)
+ EXC_REAL_END(cbe_thermal, 0x1800, 0x100)
+ EXC_VIRT_NONE(0x5800, 0x100)
+ INT_KVM_HANDLER cbe_thermal, 0x1800, EXC_HV, PACA_EXGEN, 1
+-EXC_COMMON(cbe_thermal_common, 0x1800, cbe_thermal_exception)
++EXC_COMMON_BEGIN(cbe_thermal_common)
++	INT_COMMON 0x1800, PACA_EXGEN, 1, 1, 1, 0, 0
++	bl	save_nvgprs
++	addi	r3,r1,STACK_FRAME_OVERHEAD
++	bl	cbe_thermal_exception
++	b	ret_from_except
+ #else /* CONFIG_CBE_RAS */
+ EXC_REAL_NONE(0x1800, 0x100)
+ EXC_VIRT_NONE(0x5800, 0x100)
 -- 
 2.23.0
 
