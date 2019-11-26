@@ -2,189 +2,262 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3079C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B916AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA8B620727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:26:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ckigHzDJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8A46B20727
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfKZO0S (ORCPT
+        id S1727988AbfKZO0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 09:26:18 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40009 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfKZO0S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 09:26:18 -0500
-Received: by mail-wm1-f66.google.com with SMTP id y5so3530248wmi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 06:26:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hDBMx84MNQ4JO1hOAPTWtTE8IwzW6f/UIE56/wZs544=;
-        b=ckigHzDJM2lagyXYX15JNGg4QSX3se9I/QNfqOg+vB//dBNRthqtxEyOZJjEelqAng
-         GySlW0UuMvc7r+pIVgtzr83Wsngpci+bO1KR5nFd2PgFsWbcKGZ0TcdLsdTIA9RRBaWs
-         hMwjTMprb4aeW3Q/dFVa5lBxDSViMoulM9PV0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=hDBMx84MNQ4JO1hOAPTWtTE8IwzW6f/UIE56/wZs544=;
-        b=W3trPHTmIlLJOPrCZWgcxFtuAPkBEB4UNxm6Igh8M70OQ/OEK8qjC7bZjEtp2Gvpe0
-         oZ2BptXvRghvgmtQU5EkCTygBU2FPWNzrdWaD5E017ClIu1GqMwVAPcGVjh+MBcVqwov
-         o4x60OJsc5zMZWB3t+PlIJk9kO001iXpyrpZzj92C6DCuucnJ2AqLfz5lMV5q4NHh+kJ
-         SQFRhYYKk+EzTEAXJzUBhqNkvVCOdamyD+rpDMH7wmdJZVsNnKvqIbLp6vr4vACzJrod
-         81wY4xyJf8ZA3rabP8IMIvJHurSZdLbxw9D850vCxeByvSAxQiYMncHsSrNl7e1O60FL
-         QfIg==
-X-Gm-Message-State: APjAAAV3lFroj0FOMd97zoUD+xNAEWfPO6wRSAlL3hEPh9waQpaweM0a
-        V1bqMnkw5NPaIB5EnGOLjCdAUQ==
-X-Google-Smtp-Source: APXvYqw3mMqV/EKHUOc8n4CFqdLeiNZt0HctyQ9zHZyM94EzbolvWs2Jy8VO1O3B47x0kHSq8nFgKg==
-X-Received: by 2002:a1c:ca:: with SMTP id 193mr4532398wma.111.1574778373388;
-        Tue, 26 Nov 2019 06:26:13 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id j10sm14979375wrx.30.2019.11.26.06.26.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 06:26:12 -0800 (PST)
-Date:   Tue, 26 Nov 2019 15:26:10 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/30] drm: Introduce drm_bridge_init()
-Message-ID: <20191126142610.GV29965@phenom.ffwll.local>
-Mail-Followup-To: Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191126131541.47393-1-mihail.atanassov@arm.com>
- <20191126131541.47393-2-mihail.atanassov@arm.com>
+        Tue, 26 Nov 2019 09:26:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35390 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727016AbfKZO0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 09:26:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7F061ABC4;
+        Tue, 26 Nov 2019 14:26:50 +0000 (UTC)
+Subject: Re: [PATCH 0/2] arm64: Introduce boot parameter to disable TLB flush
+ instruction within the same inner shareable domain
+To:     Will Deacon <will@kernel.org>,
+        "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>
+Cc:     "tokamoto@jp.fujitsu.com" <tokamoto@jp.fujitsu.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "maeda.naoaki@fujitsu.com" <maeda.naoaki@fujitsu.com>,
+        "misono.tomohiro@fujitsu.com" <misono.tomohiro@fujitsu.com>,
+        Itaru Kitayama <itaru.kitayama@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "indou.takao@fujitsu.com" <indou.takao@fujitsu.com>,
+        Robert Richter <rrichter@marvell.com>
+References: <20190617143255.10462-1-indou.takao@jp.fujitsu.com>
+ <93009dbd-b31c-7364-86d2-21f0fac36676@jp.fujitsu.com>
+ <20191101172851.GC3983@willie-the-truck>
+From:   Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
+ mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
+ fL3eT7ZsYV5nur7zctmJ+vbszoOASXUpfq8M+S5hU2w7sBaVk5rpH9yW8CUWz2+ZpQXPJcFa
+ OhLZuSKB1F5JcvLbETRjNzNU7B3TdS2+zkgQQdEyt7Ij2HXGLJ2w+yG2GuR9/iyCJRf10Okq
+ gTh//XESJZ8S6KlOWbLXRE+yfkKDXQx2Jr1XuVvM3zPqH5FMg8reRVFsQ+vI0b+OlyekT/Xe
+ 0Hwvqkev95GG6x7yseJwI+2ydDH6M5O7fPKFW5mzAdDE2g/K9B4e2tYK6/rA7Fq4cqiAw1+u
+ EgO44+eFgv082xtBez5WNkGn18vtw0LW3ESmKh19u6kEGoi0WZwslCNaGFrS4M7OH+aOJeqK
+ fx5dIv2CEbxc6xnHY7dwkcHikTA4QdbdFeUSuj4YhIZ+0QlDVtS1QEXyvZbZky7ur9rHkZvP
+ ZqlUsLJ2nOqsmahMTIQ8Mgx9SLEShWqD4kOF4zNfPJsgEMB49KbS2o9jxbGB+JKupjNddfxZ
+ HlH1KF8QwCMZEYaTNogrVazuEJzx6JdRpR3sFda/0x5qjTadwIW6Cl9tkqe2h391dOGX1eOA
+ 1ntn9O/39KqSrWNGvm+1raHK+Ev1yPtn0Wxn+0oy1tl67TxUjQARAQABtCRNYXR0aGlhcyBC
+ cnVnZ2VyIDxtYnJ1Z2dlckBzdXNlLmNvbT6JAjgEEwECACIFAlV6iM0CGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAAAoJENkUC7JWEwLx6isQAIMGBgJnFWovDS7ClZtjz1LgoY8skcMU
+ ghUZY4Z/rwwPqmMPbY8KYDdOFA+kMTEiAHOR+IyOVe2+HlMrXv/qYH4pRoxQKm8H9FbdZXgL
+ bG8IPlBu80ZSOwWjVH+tG62KHW4RzssVrgXEFR1ZPTdbfN+9Gtf7kKxcGxWnurRJFzBEZi4s
+ RfTSulQKqTxJ/sewOb/0kfGOJYPAt/QN5SUaWa6ILa5QFg8bLAj6bZ81CDStswDt/zJmAWp0
+ 08NOnhrZaTQdRU7mTMddUph5YVNXEXd3ThOl8PetTyoSCt04PPTDDmyeMgB5C3INLo1AXhEp
+ NTdu+okvD56MqCxgMfexXiqYOkEWs/wv4LWC8V8EI3Z+DQ0YuoymI5MFPsW39aPmmBhSiacx
+ diC+7cQVQRwBR6Oz/k9oLc+0/15mc+XlbvyYfscGWs6CEeidDQyNKE/yX75KjLUSvOXYV4d4
+ UdaNrSoEcK/5XlW5IJNM9yae6ZOL8vZrs5u1+/w7pAlCDAAokz/As0vZ7xWiePrI+kTzuOt5
+ psfJOdEoMKQWWFGd/9olX5ZAyh9iXk9TQprGUOaX6sFjDrsTRycmmD9i4PdQTawObEEiAfzx
+ 1m2MwiDs2nppsRr7qwAjyRhCq2TOAh0EDRNgYaSlbIXX/zp38FpK/9DMbtH14vVvG6FXog75
+ HBoOuQINBF3VOQcBEAC3UEGmZof7Sj515LImi2SunNlmRtKznKAGeIJQZCpelaqCtztSj+q3
+ E4Uv3W46x1fX++yck70XJS/dk0jZOHA1UYJO8I/0Tq7iBJK7ER9XJVOEJI+9EkcIbasL4QwA
+ 5QynGiRxf0zZvtsERtxKN4/8TgpNrf2r4klJ5aWJqCFR8xdd2KZP+7Gk/kBrb8P+9xRQYct6
+ V/1PKKEfIGiF3I3N4QXe/2uruR2pqZkiFv5ZisOKj9LOpN3WD7Cc8lue7jnOShCti0G7nyfu
+ 7yij6lS6aY65NHZvp1yyIH3MlqJVEiA6ovyncrZ+cTwTDCfogoectPLHlP+vZnSKTI56KMO6
+ ZnRU488tOfCZvvzQ3KbctbU5QyJ4q2cje/kbNnJLzc2ie2+yJF3ig8ZANEFPf2MDIGvy8NGX
+ /dGksq7BYEVOzVtgwu7SxhqvCjA7Pz4yf4JEVS9GtfGhyLDmfQ/U+Anu9B7Lia4JnhXKcfVJ
+ 5Vvcpnn3NxAeSwq2nPPY4qG1fwUJ5U6Ydb27jHyz+hRUxkJcSr1CuZWF0i8mcEKqr7VuHlQL
+ ZF+Ob+8sfC3mF6zQcOy1sLMvKIDQtMgAN0/vtE3Y4lvMGQK5YTbVgJMu1zyRNCU/4bybbcrn
+ DyTaOV4JIq6amsKv/mo/I2WSJ7UcLgQYQB918364uwXDqo/NICya6QARAQABiQRsBBgBCAAg
+ FiEE5rmSGMDywyUcLDoX2RQLslYTAvEFAl3VOQcCGwICQAkQ2RQLslYTAvHBdCAEGQEIAB0W
+ IQRR28oeHOqtRg8H+7wvbX5N9sKofgUCXdU5BwAKCRAvbX5N9sKofv1FEAC2VvqgAv3Lwkzl
+ HVPe/TZMcWKnw4yHti8QkKd7OV70CmoLpXHbpFJCMFXUnBIG/oGmAME1dqtMYI9dyt7ooZ9f
+ y7WvqGdcAdk0c/tsUYlCIG/lGoYV/jk6E6FuNcLIdzSOuc2NjgzaNORQL4oi47Nqy+CBT3vm
+ eiULwyJoGp+AwHZpvlb7ESJNw0I6Df7VJGzn9mRDSLLJtrYWKFJ5LDeNNSM+wkEXXnGd17Gh
+ z2OmLREq68+InX3VdrenM2e0jGmzGpxmRLUdKo8jrf+6s17N5J6MHNbRfPYGL9v/lH0enGnU
+ AQLc7Nps4EBNj/UGaHZ4BUrfGk3YV7VmPsetOCbMGZJ58xxJc3SgpBYQjm0e0FvDldSPQ3Di
+ EyFS2Ix8TYcCpxqjOwvfiwTOLd562Fki8qcg5OaWWwMUxs4FryhRKho2DsbORZIonn1r2o8m
+ SiP+Emqp7IRcX5ZMJS/oVwDwG0EmZV8WmkXMsUz9DMXl+ANmZ+Nz1zONEkcAYdEwydCVbzyJ
+ ZqaNhXJ7nuys2r2lSqXoDiUhMXvDTQHk9cg0WTSUxw1R2RaKm7bgfqsmE47rFI/ifo6sIJwa
+ xewBHmgfd3hPMD2I9iuZ9cBcP6FOnzaz7twRtOwIn0wyrT38ZMJ6uhNCKqSnnRRpHQC+G491
+ +MnBVhl+YxLX7khcD8pjoNsYEACzm2IArSJ6hmUK/9jE5IwLPXQRBYzKYPaCCGPGiN/iLAHY
+ xsanxQ3j776gosfP7aP4gvTyt3aKgU1gIkEUNWgNGkX9SetDwuwfnlRkEe67lfIyR0nMxodF
+ VBzWvN+W6rH7Rr8JDoJvarsnZ3jmdjHyMxIKwaPX+JT9sqMwG26H3WGxt1YLExFbQmcZfFwR
+ SSVuEDm4aPdbhVgJ9NDHAromJW3sliltfsl1EojKreIwNyxNeLt2GHCqy21BHBsFyLRR0UYA
+ biNPmnq7rkwwNVNcSBh9nLTrvg/Tqp+5LJ9/veK/C8tHTblqTMm6LwwtTbetZHLBc7JMg3Py
+ ew8VPhlIZPWGvlWcgGz96yT/bIWZWhwUDGzVoE7b2IeaMnwPzgQm85wp+H1Ep5bzJ4E0pcet
+ w5Xgxsw62z36+kmAEUOcl4sVA+1Me4iRBdPj7IsO/A5UBb0w8t9weVzOr8D+eEZVob5EpYN8
+ lY1K7+ZuGpRC3gn5EWl/HWCYvfJXw03slcAE+Lkz3s94p3Hqpz9zWjegQcfyIGRZkhgxL193
+ qu0CpXf4ofk6uzu1BW3BQgNgS+22Z46J++lbpT/hq7jMFh++9dqBvJcmEb2Zm/P6M3VyvT8b
+ ZkL3chuMUXBSYe1dLi21Dilutfp+NN6Wrm+ZE6OJaKulkab5YDdXH1BGOp8x1LkCDQRd1TlI
+ ARAAm78mTny44HwdIYNK4ZQH6U5pxcJtU45LLBmSr4DK/7er9chpvJ5pgzCGuI25ceNTEg5F
+ ChYcgfNMKqwCAekkV9Iegzi6UK448W1eOp8QeQDS6sHpLSOe8np6/zvmUvhiLokk7tZBhGz+
+ Xs5qQmJPXcag7AMifuEcf88ZSpChmUB3WflJV2DpxF3sSon5Ew2i53umXLqdRIJEw1Zs2puD
+ JaMqwP3wIyMdrfdIH1ZBBJDIWV/53P52mKtYQ0Khje+/AolpKl96opi6o9VLGeqkpeqrKM2c
+ b1bjo5Zmn4lXl6NvJRH/ZT68zBtOKUtwhSlOB2bE8IDonQZCOYo2w0opiAgyfpbij8uiI7si
+ BE6bWx2fQpsmi4JrZBmhDT6n/uYleGW0DRcZmE2UjeekPWUumN13jaVZuhThV65SnhU05chZ
+ T8vU1nATAwirMVeXgeZGLwxhscduk3nNb5VSsV95EM/KOtilrH69ZL6Xrnw88f6xaaGPdVyU
+ igBTWc/fcWuw1+nkGJDNqjfSvB7ie114R08Q28aYt8LCJRXYM1WuYloTcIhRSXUohGgHmh7u
+ sl469/Ra5CFaMhT3yCVciuHdZh3u+x+O1sRcOhaFW3BkxKEy+ntxw8J7ZzhgFOgi2HGkOGgM
+ 9R03A6ywc0sPwbgkgF7HCLirshP2U/qxWy3C8DkAEQEAAYkCNgQYAQgAIBYhBOa5khjA8sMl
+ HCw6F9kUC7JWEwLxBQJd1TlIAhsMAAoJENkUC7JWEwLxtdcP/jHJ9vI8adFi1HQoWUKCQbZd
+ Z5ZJHayFKIzU9kZE/FHzzzMDZYFgcCTs2kmUVyGloStXpZ0WtdCMMB31jBoQe5x9LtICHEip
+ 0irNXm80WsyPCEHU3wx91QkOmDJftm6T8+F3lqhlc3CwJGpoPY7AVlevzXNJfATZR0+Yh9Nh
+ ON5Ww4AjsZntqQKxE8rrieLRd+he57ZdRKtRRNGKZOS4wetNhodjfnjhr4Z25BAssD5q+x4u
+ aO8ofGxTjOdrSnRhvhzPCgmP7BKRUZA0wNvFxjboIw8rbTiOFGb1Ebrzuqrrr3WFuK4C1YAF
+ 4CyXUBL6Z1Lto//i44ziQUK9diAgfE/8GhXP0JlMwRUBlXNtErJgItR/XAuFwfO6BOI43P19
+ YwEsuyQq+rubW2WvrWY2Bj2dXDAKUxS4TuLUf2v/b9Rct36ljzbNxeEWt+Yq4IOY6QHnE+w4
+ xVAkfwjT+Vup8sCp+zFJv9fVUpo/bjePOL4PMP1y+PYrp4PmPmRwoklBpy1ep8m8XURv46fG
+ UHUEIsTwPWs2Q87k7vjYyrcyAOarX2X5pvMQvpAMADGf2Z3wrCsDdG25w2HztweUNd9QEprt
+ JG8GNNzMOD4cQ82Ta7eGvPWPeXauWJDLVR9jHtWT9Ot3BQgmApLxACvwvD1a69jaFKov28SP
+ HxUCQ9Y1Y/Ct
+Message-ID: <adac2265-2e40-bc2f-a6e2-8d6013b9416c@suse.com>
+Date:   Tue, 26 Nov 2019 15:26:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126131541.47393-2-mihail.atanassov@arm.com>
-X-Operating-System: Linux phenom 5.3.0-2-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191101172851.GC3983@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 01:15:59PM +0000, Mihail Atanassov wrote:
-> A simple convenience function to initialize the struct drm_bridge.
+
+
+On 01/11/2019 18:28, Will Deacon wrote:
+> Hi,
 > 
-> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
-
-The commit message here leaves figuring out why we need this to the
-reader. Reading ahead the reasons seems to be to roll out bridge->dev
-setting for everyone, so that we can set the device_link. Please explain
-that in the commit message so the patch is properly motivated.
-
-> ---
->  drivers/gpu/drm/drm_bridge.c | 29 +++++++++++++++++++++++++++++
->  include/drm/drm_bridge.h     |  4 ++++
->  2 files changed, 33 insertions(+)
+> [please note that my email address has changed and the old one doesn't work
+>  any more]
 > 
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index cba537c99e43..cbe680aa6eac 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -89,6 +89,35 @@ void drm_bridge_remove(struct drm_bridge *bridge)
->  }
->  EXPORT_SYMBOL(drm_bridge_remove);
->  
-> +/**
-> + * drm_bridge_init - initialise a drm_bridge structure
-> + *
-> + * @bridge: bridge control structure
-> + * @funcs: control functions
-> + * @dev: device
-> + * @timings: timing specification for the bridge; optional (may be NULL)
-> + * @driver_private: pointer to the bridge driver internal context (may be NULL)
-
-Please also sprinkle some links to this new function to relevant places,
-I'd add at least:
-
-"Drivers should call drm_bridge_init() first." to the kerneldoc for
-drm_bridge_add. drm_bridge_add should also mention drm_bridge_remove as
-the undo function.
-
-And perhaps a longer paragraph to &struct drm_bridge:
-
-"Bridge drivers should call drm_bridge_init() to initialized a bridge
-driver, and then register it with drm_bridge_add().
-
-"Users of bridges link a bridge driver into their overall display output
-pipeline by calling drm_bridge_attach()."
-
-> + */
-> +void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
-> +		     const struct drm_bridge_funcs *funcs,
-> +		     const struct drm_bridge_timings *timings,
-> +		     void *driver_private)
-> +{
-> +	WARN_ON(!funcs);
-> +
-> +	bridge->dev = NULL;
-
-Given that the goal here is to get bridge->dev set up, why not
-
-	WARN_ON(!dev);
-	bridge->dev = dev;
-
-That should help us to really move forward with all this.
--Daniel
-
-> +	bridge->encoder = NULL;
-> +	bridge->next = NULL;
-> +
-> +#ifdef CONFIG_OF
-> +	bridge->of_node = dev->of_node;
-> +#endif
-> +	bridge->timings = timings;
-> +	bridge->funcs = funcs;
-> +	bridge->driver_private = driver_private;
-> +}
-> +EXPORT_SYMBOL(drm_bridge_init);
-> +
->  /**
->   * drm_bridge_attach - attach the bridge to an encoder's chain
->   *
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index c0a2286a81e9..d6d9d5301551 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -402,6 +402,10 @@ struct drm_bridge {
->  
->  void drm_bridge_add(struct drm_bridge *bridge);
->  void drm_bridge_remove(struct drm_bridge *bridge);
-> +void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
-> +		     const struct drm_bridge_funcs *funcs,
-> +		     const struct drm_bridge_timings *timings,
-> +		     void *driver_private);
->  struct drm_bridge *of_drm_find_bridge(struct device_node *np);
->  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->  		      struct drm_bridge *previous);
-> -- 
-> 2.23.0
+> On Fri, Nov 01, 2019 at 09:56:05AM +0000, qi.fuli@fujitsu.com wrote:
+>> First of all thanks for the comments for the patch.
+>>
+>> I'm still struggling with this problem to find out the solution.
+>> As a result of an investigation on this problem, after all, I think it 
+>> is necessary to improve TLB flush mechanism of the kernel to fix this 
+>> problem completely.
+>>
+>> So, I'd like to restart a discussion. At first, I summarize this problem 
+>> to recall what was the problem and then I want to discuss how to fix it.
+>>
+>> Summary of the problem:
+>> A few months ago I proposed patches to solve a performance problem due 
+>> to TLB flush.[1]
+>>
+>> A problem is that TLB flush on a core affects all other cores even if 
+>> all other cores do not need actual flush, and it causes performance 
+>> degradation.
+>>
+>> In this thread, I explained that:
+>> * I found a performance problem which is caused by TLBI-is instruction.
+>> * The problem occurs like this:
+>>   1) On a core, OS tries to flush TLB using TLBI-is instruction
+>>   2) TLBI-is instruction causes a broadcast to all other cores, and
+>>   each core received hard-wired signal
+>>   3) Each core check if there are TLB entries which have the specified 
+>> ASID/VA
+> 
+> For those following along at home, my understanding is that this "check"
+> effectively stalls the pipeline as though it is being performed in software.
+> 
+> Some questions:
+> 
+> Does this mean a malicious virtual machine can effectively DoS the system?
+> What about a malicious application calling mprotect()?
+> 
+> Do all broadcast TLBI instructions cause this expensive check, or are
+> some significantly slower than others?
+> 
+>>   4) This check causes performance degradation
+>> * We ran FWQ[2] and detected OS jitter due to this problem, this noise
+>>   is serious for HPC usage.
+>>
+>> The noise means here a difference between maximum time and minimum time 
+>> which the same work takes.
+>>
+>> How to fix:
+>> I think the cause is TLB flush by TLBI-is because the instruction 
+>> affects cores that are not related to its flush.
+> 
+> Does broadcast I-cache maintenance cause the same problem?
+> 
+>> So the previous patch I posted is
+>> * Use mm_cpumask in mm_struct to find appropriate CPUs for TLB flush
+>> * Exec TLBI instead of TLBI-is only to CPUs specified by mm_cpumask
+>>   (This is the same behavior as arm32 and x86)
+>>
+>> And after the discussion about this patch, I got the following comments.
+>> 1) This patch switches the behavior (original flush by TLBI-is and new 
+>> flush by TLBI) by boot parameter, this implementation is not acceptable 
+>> due to bad maintainability.
+>> 2) Even if this patch fixes this problem, it may cause another 
+>> performance problem.
+>>
+>> I'd like to start over the implementation by considering these points.
+>> For the second comment above, I will run a benchmark test to analyze the 
+>> impact on performance.
+>> Please let me know if there are other points I should take into 
+>> consideration.
+> 
+> I think it's worth bearing in mind that I have little sympathy for the
+> problem that you are seeing. As far as I can tell, you've done the
+> following:
+> 
+>   1. You designed a CPU micro-architecture that stalls whenever it receives
+>      a TLB invalidation request.
+> 
+>   2. You integrated said CPU design into a system where broadcast TLB
+>      invalidation is not filtered and therefore stalls every CPU every
+>      time that /any/ TLB invalidation is broadcast.
+> 
+>   3. You deployed a mixture of Linux and jitter-sensitive software on
+>      this system, and now you're failing to meet your performance
+>      requirements.
+> 
+> Have I got that right?
+> 
+> If so, given that your CPU design isn't widely available, nobody else
+> appears to have made this mistake and jitter hasn't been reported as an
+> issue for any other systems, it's very unlikely that we're going to make
+> invasive upstream kernel changes to support you. I'm sorry, but all I can
+> suggest is that you check that your micro-architecture and performance
+> requirements are aligned with the design of Linux *before* building another
+> machine like this in future.
 > 
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+I just wanted to note that the cover letter states that they have also seen this
+on Thunderx1 and Thunderx2.
+
+Not sure about other machines, like the Huawei TaiShan 200 series.
+
+What I want to say, it seems not to be something that only affects Fujitsu but
+also other vendors. So maybe we should consider adding an erratum like the one
+for the repeated TLBI on Qualcomm SoCs.
+
+Regards,
+Matthias
+
+> I hate to be blunt, but I also don't want to waste your time.
+> 
+> Thanks,
+> 
+> Will
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
