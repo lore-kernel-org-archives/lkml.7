@@ -2,203 +2,228 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD678C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DC9C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846C120727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 340712071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="owN/OM/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfKZWhB (ORCPT
+        id S1727150AbfKZWim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 17:37:01 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6486 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726333AbfKZWg6 (ORCPT
+        Tue, 26 Nov 2019 17:38:42 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41182 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbfKZWim (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 17:36:58 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQMX3Ea055152;
-        Tue, 26 Nov 2019 17:36:46 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2whcxng341-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 Nov 2019 17:36:45 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAQMYwEZ009446;
-        Tue, 26 Nov 2019 22:36:50 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma01wdc.us.ibm.com with ESMTP id 2wevd679pm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 Nov 2019 22:36:50 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAQMaijY45220286
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Nov 2019 22:36:45 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E04FFAC05B;
-        Tue, 26 Nov 2019 22:36:44 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C342FAC059;
-        Tue, 26 Nov 2019 22:36:43 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.137])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 26 Nov 2019 22:36:43 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] powerpc/kvm/book3s: Replace current->mm by kvm->mm
-Date:   Tue, 26 Nov 2019 19:36:30 -0300
-Message-Id: <20191126223631.389779-2-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191126223631.389779-1-leonardo@linux.ibm.com>
-References: <20191126223631.389779-1-leonardo@linux.ibm.com>
+        Tue, 26 Nov 2019 17:38:42 -0500
+Received: by mail-qt1-f195.google.com with SMTP id 59so17729654qtg.8;
+        Tue, 26 Nov 2019 14:38:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Cuckp8xLFQCsFXXaZnTlFMiRntZZABnlhdtpodYvu3Q=;
+        b=owN/OM/FYLq33X8taJaKH7rWaqSx3+Qpg/qjnQMMpmIyUj2rnpTJdJBLvlcrpwjh6l
+         6k0ToHrP4dbFBaiyoWDIQHtMLWHGhM6t5giRZj0vngYptIbGFSs/G6xc2IFmrE8x9Pv8
+         BlhU5zgiDDT5oUjsbQkmeDNpkA1FsKtf1vgzOxIKr4wjkUoEiPoSj2xr+DH5pjghIThX
+         ORteHFjY/RL6nozvpPSkR6kgpWOFcDfoMd0mju57w3Q2T+8qUk7uC7K07pyd4RkgIm4w
+         dPoaF2eejwRp36H50n3DI4Lq5v5CiGkyXjpTOIPoD873MMFGeg+EgSAs3I2yWFB6P65q
+         eDag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Cuckp8xLFQCsFXXaZnTlFMiRntZZABnlhdtpodYvu3Q=;
+        b=PaP0UllNTlplvWWcr2Jbif7/ktac6kaDWtNLUaKkQCm/SFPZhLGkLOfn7owOEc4lvz
+         Y87R92PWXu+GCAPq/bPTBylCtRnTh70D5kwkcedYQRC6a+7sgBqkUXozcH3Fd/rcuVCR
+         bf9LnFAIMjTgn+mk7UhgDmtg5Xoho604neNmLhON7J1scx9FtBjwx9ZkVaAqseEcGOl/
+         d4urpJt0FWJbpd2gPqS2eU1rxrHQGUd6d7cDJV/pWdM5xkC9gVmLp0MnATIJwaV2/hoY
+         gTW3oe5YQdtA4QiqgvBky9Epah6CvQ56mJMWNQispa0ILpLjEiS28G99dVZ8FjYine2v
+         IWGA==
+X-Gm-Message-State: APjAAAUoCNa4T35eR2XzLz7OeIBpXLAhuQuCJRnnOReL8IEroNnsQb3F
+        hk0myJZhOSSSJDHCdhZ+wg2nurQv6z2QkAwSXVU=
+X-Google-Smtp-Source: APXvYqxHNDC9Cz2So5gx4c1a1krT1PGyI05u9GQYoWmBrpnFFWa+aXYO2juHVa1LyxgZVtaqoZpTvMqgW9cr3c8CfDY=
+X-Received: by 2002:ac8:5457:: with SMTP id d23mr3975020qtq.93.1574807920220;
+ Tue, 26 Nov 2019 14:38:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-26_07:2019-11-26,2019-11-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- impostorscore=0 suspectscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 mlxlogscore=873 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1911260191
+References: <20191126151045.GB19483@kernel.org> <20191126154836.GC19483@kernel.org>
+ <87imn6y4n9.fsf@toke.dk> <20191126183451.GC29071@kernel.org>
+ <87d0dexyij.fsf@toke.dk> <20191126190450.GD29071@kernel.org>
+ <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
+ <20191126221018.GA22719@kernel.org> <20191126221733.GB22719@kernel.org>
+In-Reply-To: <20191126221733.GB22719@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 26 Nov 2019 14:38:29 -0800
+Message-ID: <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Given that in kvm_create_vm() there is:
-kvm->mm = current->mm;
+On Tue, Nov 26, 2019 at 2:17 PM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Tue, Nov 26, 2019 at 07:10:18PM -0300, Arnaldo Carvalho de Melo escrev=
+eu:
+> > Em Tue, Nov 26, 2019 at 02:05:41PM -0800, Andrii Nakryiko escreveu:
+> > > On Tue, Nov 26, 2019 at 11:12 AM Arnaldo Carvalho de Melo
+> > > <arnaldo.melo@gmail.com> wrote:
+> > > >
+> > > > Em Tue, Nov 26, 2019 at 07:50:44PM +0100, Toke H=C3=B8iland-J=C3=B8=
+rgensen escreveu:
+> > > > > Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> writes:
+> > > > >
+> > > > > > Em Tue, Nov 26, 2019 at 05:38:18PM +0100, Toke H=C3=B8iland-J=
+=C3=B8rgensen escreveu:
+> > > > > >> Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> writes:
+> > > > > >>
+> > > > > >> > Em Tue, Nov 26, 2019 at 12:10:45PM -0300, Arnaldo Carvalho d=
+e Melo escreveu:
+> > > > > >> >> Hi guys,
+> > > > > >> >>
+> > > > > >> >>    While merging perf/core with mainline I found the proble=
+m below for
+> > > > > >> >> which I'm adding this patch to my perf/core branch, that so=
+on will go
+> > > > > >> >> Ingo's way, etc. Please let me know if you think this shoul=
+d be handled
+> > > > > >> >> some other way,
+> > > > > >> >
+> > > > > >> > This is still not enough, fails building in a container wher=
+e all we
+> > > > > >> > have is the tarball contents, will try to fix later.
+> > > > > >>
+> > > > > >> Wouldn't the right thing to do not be to just run the script, =
+and then
+> > > > > >> put the generated bpf_helper_defs.h into the tarball?
+> > > >
+> > > > > > I would rather continue just running tar and have the build pro=
+cess
+> > > > > > in-tree or outside be the same.
+> > > > >
+> > > > > Hmm, right. Well that Python script basically just parses
+> > > > > include/uapi/linux/bpf.h; and it can be given the path of that fi=
+le with
+> > > > > the --filename argument. So as long as that file is present, it s=
+hould
+> > > > > be possible to make it work, I guess?
+> > > >
+> > > > > However, isn't the point of the tarball to make a "stand-alone" s=
+ource
+> > > > > distribution?
+> > > >
+> > > > Yes, it is, and as far as possible without any prep, just include t=
+he
+> > > > in-source tree files needed to build it.
+> > > >
+> > > > > I'd argue that it makes more sense to just include the
+> > > > > generated header, then: The point of the Python script is specifi=
+cally
+> > > > > to extract the latest version of the helper definitions from the =
+kernel
+> > > > > source tree. And if you're "freezing" a version into a tarball, d=
+oesn't
+> > > > > it make more sense to also freeze the list of BPF helpers?
+> > > >
+> > > > Your suggestion may well even be the only solution, as older system=
+s
+> > > > don't have python3, and that script requires it :-\
+> > > >
+> > > > Some containers were showing this:
+> > > >
+> > > > /bin/sh: 1: /git/linux/scripts/bpf_helpers_doc.py: not found
+> > > > Makefile:184: recipe for target 'bpf_helper_defs.h' failed
+> > > > make[3]: *** [bpf_helper_defs.h] Error 127
+> > > > make[3]: *** Deleting file 'bpf_helper_defs.h'
+> > > > Makefile.perf:778: recipe for target '/tmp/build/perf/libbpf.a' fai=
+led
+> > > >
+> > > > That "not found" doesn't mean what it looks from staring at the abo=
+ve,
+> > > > its just that:
+> > > >
+> > > > nobody@1fb841e33ba3:/tmp/perf-5.4.0$ head -1 /tmp/perf-5.4.0/script=
+s/bpf_helpers_doc.py
+> > > > #!/usr/bin/python3
+> > > > nobody@1fb841e33ba3:/tmp/perf-5.4.0$ ls -la /usr/bin/python3
+> > > > ls: cannot access /usr/bin/python3: No such file or directory
+> > > > nobody@1fb841e33ba3:/tmp/perf-5.4.0$
+> > > >
+> > > > So, for now, I'll keep my fix and start modifying the containers wh=
+ere
+> > > > this fails and disable testing libbpf/perf integration with BPF on =
+those
+> > > > containers :-\
+> > >
+> > > I don't think there is anything Python3-specific in that script. I
+> > > changed first line to
+> > >
+> > > #!/usr/bin/env python
+> > >
+> > > and it worked just fine. Do you mind adding this fix and make those
+> > > older containers happy(-ier?).
+> >
+> > I'll try it, was trying the other way around, i.e. adding python3 to
+> > those containers and they got happier, but fatter, so I'll remove that
+> > and try your way, thanks!
+> >
+> > I didn't try it that way due to what comes right after the interpreter
+> > line:
+> >
+> > #!/usr/bin/python3
+> > # SPDX-License-Identifier: GPL-2.0-only
+> > #
+> > # Copyright (C) 2018-2019 Netronome Systems, Inc.
+> >
+> > # In case user attempts to run with Python 2.
+> > from __future__ import print_function
+>
+> And that is why I think you got it working, that script uses things
+> like:
+>
+>         print('Parsed description of %d helper function(s)' % len(self.he=
+lpers),
+>               file=3Dsys.stderr)
+>
+> That python2 thinks its science fiction, what tuple is that? Can't
+> understand, print isn't a function back then.
 
-And that on every kvm_*_ioctl we have:
-if (kvm->mm != current->mm)
-	return -EIO;
+Not a Python expert (or even regular user), but quick googling showed
+that this import is the way to go to use Python3 semantics of print
+within Python2, so seems like that's fine. But maybe Quentin has
+anything to say about this.
 
-I see no reason to keep using current->mm instead of kvm->mm.
 
-By doing so, we would reduce the use of 'global' variables on code, relying
-more in the contents of kvm struct.
-
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- arch/powerpc/kvm/book3s_64_mmu_hv.c |  4 ++--
- arch/powerpc/kvm/book3s_64_vio.c    | 10 ++++++----
- arch/powerpc/kvm/book3s_hv.c        | 10 +++++-----
- 3 files changed, 13 insertions(+), 11 deletions(-)
-
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-index d381526c5c9b..6c372f5c61b6 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-@@ -284,7 +284,7 @@ static long kvmppc_virtmode_do_h_enter(struct kvm *kvm, unsigned long flags,
- 	/* Protect linux PTE lookup from page table destruction */
- 	rcu_read_lock_sched();	/* this disables preemption too */
- 	ret = kvmppc_do_h_enter(kvm, flags, pte_index, pteh, ptel,
--				current->mm->pgd, false, pte_idx_ret);
-+				kvm->mm->pgd, false, pte_idx_ret);
- 	rcu_read_unlock_sched();
- 	if (ret == H_TOO_HARD) {
- 		/* this can't happen */
-@@ -573,7 +573,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 	is_ci = false;
- 	pfn = 0;
- 	page = NULL;
--	mm = current->mm;
-+	mm = kvm->mm;
- 	pte_size = PAGE_SIZE;
- 	writing = (dsisr & DSISR_ISSTORE) != 0;
- 	/* If writing != 0, then the HPTE must allow writing, if we get here */
-diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
-index 883a66e76638..ee6c103bb7d5 100644
---- a/arch/powerpc/kvm/book3s_64_vio.c
-+++ b/arch/powerpc/kvm/book3s_64_vio.c
-@@ -253,10 +253,11 @@ static int kvm_spapr_tce_release(struct inode *inode, struct file *filp)
- 		}
- 	}
- 
-+	account_locked_vm(kvm->mm,
-+		kvmppc_stt_pages(kvmppc_tce_pages(stt->size)), false);
-+
- 	kvm_put_kvm(stt->kvm);
- 
--	account_locked_vm(current->mm,
--		kvmppc_stt_pages(kvmppc_tce_pages(stt->size)), false);
- 	call_rcu(&stt->rcu, release_spapr_tce_table);
- 
- 	return 0;
-@@ -272,6 +273,7 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
- {
- 	struct kvmppc_spapr_tce_table *stt = NULL;
- 	struct kvmppc_spapr_tce_table *siter;
-+	struct mm_struct *mm = kvm->mm;
- 	unsigned long npages, size = args->size;
- 	int ret = -ENOMEM;
- 
-@@ -280,7 +282,7 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
- 		return -EINVAL;
- 
- 	npages = kvmppc_tce_pages(size);
--	ret = account_locked_vm(current->mm, kvmppc_stt_pages(npages), true);
-+	ret = account_locked_vm(mm, kvmppc_stt_pages(npages), true);
- 	if (ret)
- 		return ret;
- 
-@@ -326,7 +328,7 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
- 
- 	kfree(stt);
-  fail_acct:
--	account_locked_vm(current->mm, kvmppc_stt_pages(npages), false);
-+	account_locked_vm(mm, kvmppc_stt_pages(npages), false);
- 	return ret;
- }
- 
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index ec5c0379296a..d3baa23396e6 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -4263,7 +4263,7 @@ static int kvmppc_vcpu_run_hv(struct kvm_run *run, struct kvm_vcpu *vcpu)
- 	user_vrsave = mfspr(SPRN_VRSAVE);
- 
- 	vcpu->arch.wqp = &vcpu->arch.vcore->wq;
--	vcpu->arch.pgdir = current->mm->pgd;
-+	vcpu->arch.pgdir = kvm->mm->pgd;
- 	vcpu->arch.state = KVMPPC_VCPU_BUSY_IN_HOST;
- 
- 	do {
-@@ -4595,14 +4595,14 @@ static int kvmppc_hv_setup_htab_rma(struct kvm_vcpu *vcpu)
- 
- 	/* Look up the VMA for the start of this memory slot */
- 	hva = memslot->userspace_addr;
--	down_read(&current->mm->mmap_sem);
--	vma = find_vma(current->mm, hva);
-+	down_read(&kvm->mm->mmap_sem);
-+	vma = find_vma(kvm->mm, hva);
- 	if (!vma || vma->vm_start > hva || (vma->vm_flags & VM_IO))
- 		goto up_out;
- 
- 	psize = vma_kernel_pagesize(vma);
- 
--	up_read(&current->mm->mmap_sem);
-+	up_read(&kvm->mm->mmap_sem);
- 
- 	/* We can handle 4k, 64k or 16M pages in the VRMA */
- 	if (psize >= 0x1000000)
-@@ -4635,7 +4635,7 @@ static int kvmppc_hv_setup_htab_rma(struct kvm_vcpu *vcpu)
- 	return err;
- 
-  up_out:
--	up_read(&current->mm->mmap_sem);
-+	up_read(&kvm->mm->mmap_sem);
- 	goto out_srcu;
- }
- 
--- 
-2.23.0
-
+>
+> https://sebastianraschka.com/Articles/2014_python_2_3_key_diff.html#the-p=
+rint-function
+>
+> I've been adding python3  to where it is available and not yet in the
+> container images, most are working after that, some don't need because
+> they need other packages for BPF to work and those are not available, so
+> nevermind, lets have just the fix I provided, I'll add python3 and life
+> goes on.
+>
+> - Arnaldo
