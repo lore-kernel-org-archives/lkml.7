@@ -2,103 +2,137 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9943C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66090C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2D6220722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:08:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574788126;
-	bh=7lVFbzhJh2zoE2B3dgEn9/Eh6L1BY1gOyCJeJ9Ml5xg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kJFOzZHMlpLxQ03FyFyE8lb7LyPcRmgNirFSkDBfzKS/VV+AnMuspx4by50x4FDiq
-	 CINVdjHSjIZQSNbWvZDsdPUT+udYjUVD3oAwqF61xRL7+1FRh+DuFKlA/oxWT3VG1c
-	 ekPA74STItWdnV0Er4Ip/s/n97zkEPGdCFWOc29s=
+	by mail.kernel.org (Postfix) with ESMTP id 3ECA620722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="o1ZuI51i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbfKZRIp (ORCPT
+        id S1728699AbfKZRJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:08:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:37030 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727309AbfKZRIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:08:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04A0130E;
-        Tue, 26 Nov 2019 09:08:43 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 800953F68E;
-        Tue, 26 Nov 2019 09:08:42 -0800 (PST)
-Date:   Tue, 26 Nov 2019 17:08:41 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>
-Subject: Re: [PATCHv2 6/6] ASoC: da7213: Add default clock handling
-Message-ID: <20191126170841.GC4205@sirena.org.uk>
-References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
- <20191120152406.2744-7-sebastian.reichel@collabora.com>
- <AM5PR1001MB0994720A0D615339A978E35C804E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <AM5PR1001MB0994E628439F021F97B872D480450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f+W+jCU1fRNres8c"
-Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB0994E628439F021F97B872D480450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Cookie: Where's SANDY DUNCAN?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 26 Nov 2019 12:09:04 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25820 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbfKZRJE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 12:09:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574788036; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=QK7pbJO1Ne/E4pwdjS9AExdTRN2pTWfSdKXCPItt5C2avHPzxLa9yUI7t0S2hhhOTS8uXVqNqHIvl5KUqRJ1hcqjN/bTZd3hXNmXuM8MolgCvKJOXxkO2rO6RKQphzMbi9wlXZvlPFLO0HyqXIhtYID8iMw/DR+7Hs/2WZOOYNY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574788036; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
+        bh=+bwMuYTaEcOpuJOWhY2SWQ2bbePhtqOfnXH4gaS8oyk=; 
+        b=ihKb4k/nR3iDkGLIOinwL8AxWKqUz8G4iGeu8I2xEqXqQS4tq97Z0wX4wRpnP3d1Nwkzo+iRs64zGXuFbQ9yrilu69CQvTo58jl9nWjDJw/AjpRmPHxjerQq6hwNbE4GegpgMi/IW8bygWy4yqriFvrYFuivvMGQEvyMZGqChbg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=dCTEbCaHfzZXUq+xbgv9hW9vIIc25xUrSBKlKAHKc0PasNi3ntbHg7in6/XYt2b9USILYnzZ7bB6
+    bLMztT4NcNiP/csCNaFmFH6Tb93iSTGHjsEv8CqJeyqmGhS5Pw+9  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574788036;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=+bwMuYTaEcOpuJOWhY2SWQ2bbePhtqOfnXH4gaS8oyk=;
+        b=o1ZuI51iyZkWoqdlGnMRjIyOESjCsP+1ZYfVXXo0nl1Q8K2t8akGudmupqlADsEt
+        tdRnSkxyCS7ex8ImrlWAJGOX9br/oDLwRrTmjuJ3sGfAJgYx5kFblEAvTi3BW+EeccK
+        71NhsQutCdRlc850GlotkfFpTmjXzGfOgjlbZPHM=
+Received: from zhouyanjie-virtual-machine.localdomain (171.221.112.214 [171.221.112.214]) by mx.zohomail.com
+        with SMTPS id 1574788035230260.8063431722685; Tue, 26 Nov 2019 09:07:15 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+Subject: [PATCH v4 3/6] dt-bindings: MIPS: Add Ingenic XBurst based boards.
+Date:   Wed, 27 Nov 2019 01:06:11 +0800
+Message-Id: <1574787974-58040-4-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
+References: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add Ingenic XBurst based boards, prepare for later dts.
 
---f+W+jCU1fRNres8c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+---
 
-On Tue, Nov 26, 2019 at 04:55:39PM +0000, Adam Thomson wrote:
-> On 21 November 2019 21:49, Adam Thomson wrote:
-> > On 20 November 2019 15:24, Sebastian Reichel wrote:
+Notes:
+    v1->v2:
+    No change.
+    
+    v2->v3:
+    No change.
+    
+    v3->v4:
+    Adjust the description to make it more reasonable.
 
-> > I've thought more about this and for the scenario where a machine driver
-> > controls the PLL through a DAPM widget associated with this codec (like some
-> > Intel boards do), then the PLL will be configured once here and then again
-> > when the relevant widget is called. I don't think that will matter but I will
-> > take a further look just in case this might cause some oddities.
+ .../devicetree/bindings/mips/ingenic/devices.yaml  | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/ingenic/devices.yaml
 
-> So I don't see any issues per say with the PLL function being called twice in
-> the example I mentioned. However it still feels a bit clunky; You either live
-> with it or you have something in the machine driver to call the codec's PLL
-> function early doors to prevent the bias_level() code of the codec controlling
-> the PLL automatically. Am wondering though if there would be some use in having
-> an indicator that simple-card is being used so we can avoid this? I guess we
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
+new file mode 100644
+index 00000000..a6f5056
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/ingenic/devices.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ingenic XBurst based Platforms Device Tree Bindings
++
++maintainers:
++  - Zhou Yanjie <zhouyanjie@zoho.com>
++description: |
++  Devices with a Ingenic XBurst CPU shall have the following properties.
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++
++      - description: Qi Hardware Ben NanoNote
++        items:
++          - const: qi,lb60
++
++      - description: Game Consoles Worldwide GCW Zero
++        items:
++          - const: gcw,zero
++
++      - description: MIPS Creator CI20
++        items:
++          - const: img,ci20
++
++      - description: YSH & ATIL General Board CU Neo
++        items:
++          - const: yna,cu1000
++...
+-- 
+2.7.4
 
-If we're special casing simple-card we're doing it wrong - there's
-nothing stopping any other machine driver behaving in the same way.
 
---f+W+jCU1fRNres8c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3dXBgACgkQJNaLcl1U
-h9CGSAf+LVy+9NSiyoXjsLLoc8cSA/mrUCloLSTGTbZmeYMjFxcMmLGZU83yPOT1
-pbOynF8/SzqFJP0ILcAZ4WEAGePxP/6s33wOsw/PTyJcEH7Ito93TSlDurN3VkeS
-/2PAlSBjzr9L65Kf5N6RnIeQsMTAVExjD/4wCtAkWFxisxBniStEhpyY/EArqYRq
-NC8z+mwcYkwT8J1nzraxN+g9orGfymaB/YIy9eK2Y+nySshJMjeoj9KOlRSnbQup
-xm5VspRQrvuxWQtv3sE0NQ91dJRon3pYUK1u8Ay3i9kVkpQmIQQDW9AHfBQXGPqP
-+rD5yHvOs4/hcFBOCC/q8/5d7uZ/XQ==
-=vlo0
------END PGP SIGNATURE-----
-
---f+W+jCU1fRNres8c--
