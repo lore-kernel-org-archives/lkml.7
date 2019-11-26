@@ -2,124 +2,154 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A96EC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AD9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D20C2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:50:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATWoCaDT"
+	by mail.kernel.org (Postfix) with ESMTP id AC35A20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKZRu5 (ORCPT
+        id S1727051AbfKZRwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:50:57 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40327 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfKZRu5 (ORCPT
+        Tue, 26 Nov 2019 12:52:43 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4936 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726005AbfKZRwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:50:57 -0500
-Received: by mail-il1-f194.google.com with SMTP id v17so14560248ilg.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:50:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t54fAVQIi9k5/AbZql5pbL2ivaJ6crm1GO25m9MjvJc=;
-        b=ATWoCaDTK3L62Ae6m3HNV6BKsPyvxBQuhyHHaO3QgvSSWyqbykVd4bX5NAIBjRvMio
-         kLER7x38kNXm/78aAQD5HSJb0mAsWFcSkOF6txn5eWOPWmNF6bEpn1Y+ijU2c0ixBD2d
-         zXol2/FurfuSesv7zr5bTxT+Z+bf0idq3SSf1/ekhPTSqbd11/HiKSUgGHn550ywg3IP
-         SVdneLDrtS97GYycmry5pvAFNM0NQqSzN3GnJ94X3zA/7tnmLffKOKe+zLFLzLIoo4+B
-         muMPEUw4KrHEh20uX9lRjQTtLEU9oGaCdZWkcxvYbZqKYd08cMN4Ol8cd8+MSJWH8lEU
-         Fp2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t54fAVQIi9k5/AbZql5pbL2ivaJ6crm1GO25m9MjvJc=;
-        b=apxpRyUBKyqtg36Uu42fuNVSxZpaYOQ+CPC6qPf47VR4OSsl50sjnyoX/x9NPGFYPQ
-         4cuvoxOisrMDlj/qPMGWZub4lI9Lc3YRfoGlYRCk5RLZe1xjEReUOD4L90y4wruFhfDj
-         +ppZ39NbaSxbfxS5OIH6oWM8TXD0n1nh/48t0meCIRmv5BfIalnchXcoddt6WWD6ZUIm
-         uqxsccKUe4xzqRdG1W29o4bNWrh9BNQoDGtJc0GAzV9/MjEt09krRp7oXwn6mONEKSVF
-         hX4Uh7XGodPfWhV9y63RMMCz0sFPJeDV8je0IBAKnS6Ot9N6aSbfNbiqNtQ5qjwfmcaf
-         JDWw==
-X-Gm-Message-State: APjAAAV86ehFR7/UZZxjIpyNjKOZbqTdHRsU1BFRrFFd4ATWDEfvMHcl
-        9ab0/w3R8noSmxKe2QCLaCKtX/ZhZh1Nax0kJJI=
-X-Google-Smtp-Source: APXvYqzm+6ORS3XPlQiKQzGWc5cG6OGpwMxeH1DU1CV56GkeNnwJblQL5RnEH0Uzo1SDohsp1pKp20tjI2IdfLHxu5A=
-X-Received: by 2002:a92:ca8b:: with SMTP id t11mr26640081ilo.227.1574790656094;
- Tue, 26 Nov 2019 09:50:56 -0800 (PST)
+        Tue, 26 Nov 2019 12:52:43 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQHnISc145507;
+        Tue, 26 Nov 2019 12:52:24 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wh4yrb92v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 Nov 2019 12:52:24 -0500
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xAQHnNLg145900;
+        Tue, 26 Nov 2019 12:52:24 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wh4yrb92c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 Nov 2019 12:52:23 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAQHpCNQ029315;
+        Tue, 26 Nov 2019 17:52:23 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma03dal.us.ibm.com with ESMTP id 2wevd6mk8s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 Nov 2019 17:52:23 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAQHqLow36438320
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Nov 2019 17:52:21 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C22A0C6055;
+        Tue, 26 Nov 2019 17:52:21 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E9B2C6059;
+        Tue, 26 Nov 2019 17:52:19 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.137])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 26 Nov 2019 17:52:19 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH 1/1] powerpc/kvm/book3s: Fixes possible 'use after release' of kvm
+Date:   Tue, 26 Nov 2019 14:52:12 -0300
+Message-Id: <20191126175212.377171-1-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191021211449.9104-1-navid.emamdoost@gmail.com> <CAEkB2ERA6Rx9fZiwXH+m8_OV8to0TuLJRVRiUKfKtSoeoT0uJw@mail.gmail.com>
-In-Reply-To: <CAEkB2ERA6Rx9fZiwXH+m8_OV8to0TuLJRVRiUKfKtSoeoT0uJw@mail.gmail.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Tue, 26 Nov 2019 11:50:44 -0600
-Message-ID: <CAEkB2ER4dof02PcH6BDQoFNhkkds=zrPf+5-rSygUh=XU8H0zQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/nouveau: Fix memory leak in nouveau_bo_alloc
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-26_05:2019-11-26,2019-11-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=2
+ adultscore=0 mlxlogscore=999 impostorscore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 malwarescore=0
+ spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911260149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping...
+Fixes a possible 'use after free' of kvm variable.
+It does use mutex_unlock(&kvm->lock) after possible freeing a variable
+with kvm_put_kvm(kvm).
 
-On Thu, Nov 21, 2019 at 12:09 PM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
->
-> On Mon, Oct 21, 2019 at 4:14 PM Navid Emamdoost
-> <navid.emamdoost@gmail.com> wrote:
-> >
-> > In the implementation of nouveau_bo_alloc() if it fails to determine the
-> > target page size via pi, then the allocated memory for nvbo should be
-> > released.
-> >
-> > Fixes: 019cbd4a4feb ("drm/nouveau: Initialize GEM object before TTM object")
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
->
-> Would you please review this patch?
->
->
-> Thanks,
-> Navid.
->
-> > ---
-> >  drivers/gpu/drm/nouveau/nouveau_bo.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/nouveau/nouveau_bo.c b/drivers/gpu/drm/nouveau/nouveau_bo.c
-> > index f8015e0318d7..18857cf44068 100644
-> > --- a/drivers/gpu/drm/nouveau/nouveau_bo.c
-> > +++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
-> > @@ -276,8 +276,10 @@ nouveau_bo_alloc(struct nouveau_cli *cli, u64 *size, int *align, u32 flags,
-> >                         break;
-> >         }
-> >
-> > -       if (WARN_ON(pi < 0))
-> > +       if (WARN_ON(pi < 0)) {
-> > +               kfree(nvbo);
-> >                 return ERR_PTR(-EINVAL);
-> > +       }
-> >
-> >         /* Disable compression if suitable settings couldn't be found. */
-> >         if (nvbo->comp && !vmm->page[pi].comp) {
-> > --
-> > 2.17.1
-> >
->
->
-> --
-> Navid.
+Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+---
+ arch/powerpc/kvm/book3s_64_vio.c | 3 +--
+ virt/kvm/kvm_main.c              | 8 ++++----
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-
-
+diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
+index 5834db0a54c6..a402ead833b6 100644
+--- a/arch/powerpc/kvm/book3s_64_vio.c
++++ b/arch/powerpc/kvm/book3s_64_vio.c
+@@ -316,14 +316,13 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
+ 
+ 	if (ret >= 0)
+ 		list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
+-	else
+-		kvm_put_kvm(kvm);
+ 
+ 	mutex_unlock(&kvm->lock);
+ 
+ 	if (ret >= 0)
+ 		return ret;
+ 
++	kvm_put_kvm(kvm);
+ 	kfree(stt);
+  fail_acct:
+ 	account_locked_vm(current->mm, kvmppc_stt_pages(npages), false);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 13efc291b1c7..f37089b60d09 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2744,10 +2744,8 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
+ 	/* Now it's all set up, let userspace reach it */
+ 	kvm_get_kvm(kvm);
+ 	r = create_vcpu_fd(vcpu);
+-	if (r < 0) {
+-		kvm_put_kvm(kvm);
++	if (r < 0)
+ 		goto unlock_vcpu_destroy;
+-	}
+ 
+ 	kvm->vcpus[atomic_read(&kvm->online_vcpus)] = vcpu;
+ 
+@@ -2771,6 +2769,8 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
+ 	mutex_lock(&kvm->lock);
+ 	kvm->created_vcpus--;
+ 	mutex_unlock(&kvm->lock);
++	if (r < 0)
++		kvm_put_kvm(kvm);
+ 	return r;
+ }
+ 
+@@ -3183,10 +3183,10 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 	kvm_get_kvm(kvm);
+ 	ret = anon_inode_getfd(ops->name, &kvm_device_fops, dev, O_RDWR | O_CLOEXEC);
+ 	if (ret < 0) {
+-		kvm_put_kvm(kvm);
+ 		mutex_lock(&kvm->lock);
+ 		list_del(&dev->vm_node);
+ 		mutex_unlock(&kvm->lock);
++		kvm_put_kvm(kvm);
+ 		ops->destroy(dev);
+ 		return ret;
+ 	}
 -- 
-Navid.
+2.23.0
+
