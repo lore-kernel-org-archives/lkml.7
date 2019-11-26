@@ -2,107 +2,119 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44116C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24154C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153672073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD362073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CqrsA06l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfKZJon (ORCPT
+        id S1727687AbfKZJpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:44:43 -0500
-Received: from mga02.intel.com ([134.134.136.20]:61239 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfKZJom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:44:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 01:44:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,245,1571727600"; 
-   d="scan'208";a="220576352"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.155])
-  by orsmga002.jf.intel.com with ESMTP; 26 Nov 2019 01:44:40 -0800
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [char-misc-next] mei: bus: use simple sprintf for sysfs
-Date:   Tue, 26 Nov 2019 14:30:02 +0200
-Message-Id: <20191126123002.4835-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 26 Nov 2019 04:45:20 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43807 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727482AbfKZJpT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:45:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574761518;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IRJ710zkAyfJD6QqUIPwoV2ssg6YDFq0ZY1Mig39iiw=;
+        b=CqrsA06lMSBUM9S5mgrt9KdPd+4zAd+FiP8GMJ5DRQBa7EjVWuWRw+U2VD39ggtd6vCBm1
+        8227pf4BSlLsHXECeCmXcUBbqELAreNhPzB7/Kg7TY3NLduNEw0cPbe+GFkOd9Uq0+66oz
+        NpR5ZLEQ+PCmTTBGxlfkZVG4ua6sySM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-430-NQKwfCZINaGQ3dqQ-tfdJA-1; Tue, 26 Nov 2019 04:45:15 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AEE27800C74;
+        Tue, 26 Nov 2019 09:45:14 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D821819481;
+        Tue, 26 Nov 2019 09:45:08 +0000 (UTC)
+Date:   Tue, 26 Nov 2019 10:45:08 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] perf: support multiple debug options separated by
+ ','
+Message-ID: <20191126094508.GB32367@krava>
+References: <20191125151446.10948-1-changbin.du@gmail.com>
+ <20191125151446.10948-2-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191125151446.10948-2-changbin.du@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: NQKwfCZINaGQ3dqQ-tfdJA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace scnprintf with simple sprintf for sysfs files.
-it is implicitly known that the buffer is big enough
-for the variables to fit in.
+On Mon, Nov 25, 2019 at 11:14:45PM +0800, Changbin Du wrote:
+> This patch adds support for multiple debug options separated by ',' and
+> non-int values.
+> =09--debug verbose=3D2,stderr
+>=20
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  tools/perf/Documentation/perf.txt | 13 +++--
+>  tools/perf/util/debug.c           | 89 ++++++++++++++++---------------
+>  2 files changed, 53 insertions(+), 49 deletions(-)
+>=20
+> diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation=
+/perf.txt
+> index 3f37ded13f8c..fd8d790f68a7 100644
+> --- a/tools/perf/Documentation/perf.txt
+> +++ b/tools/perf/Documentation/perf.txt
+> @@ -19,13 +19,12 @@ OPTIONS
+>  =09  --debug verbose=3D2 # sets verbose =3D 2
+> =20
+>  =09List of debug variables allowed to set:
+> -=09  verbose          - general debug messages
+> -=09  ordered-events   - ordered events object debug messages
+> -=09  data-convert     - data convert command debug messages
+> -=09  stderr           - write debug output (option -v) to stderr
+> -=09                     in browser mode
+> -=09  perf-event-open  - Print perf_event_open() arguments and
+> -=09=09=09     return value
+> +=09  verbose=3Dlevel=09=09- general debug messages
+> +=09  ordered-events=3Dlevel=09- ordered events object debug messages
+> +=09  data-convert=3Dlevel=09- data convert command debug messages
+> +=09  stderr=09=09- write debug output (option -v) to stderr
+> +=09  perf-event-open=09- Print perf_event_open() arguments and
+> +=09                          return value in browser mode
 
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
----
- drivers/misc/mei/bus.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+it's just the list and the doc says user can use values
+there, so no need for the '=3Dlevel' there
 
-diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
-index a0a495c95e3c..8d468e0a950a 100644
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -765,7 +765,7 @@ static ssize_t uuid_show(struct device *dev, struct device_attribute *a,
- 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
- 	const uuid_le *uuid = mei_me_cl_uuid(cldev->me_cl);
- 
--	return scnprintf(buf, PAGE_SIZE, "%pUl", uuid);
-+	return sprintf(buf, "%pUl", uuid);
- }
- static DEVICE_ATTR_RO(uuid);
- 
-@@ -775,7 +775,7 @@ static ssize_t version_show(struct device *dev, struct device_attribute *a,
- 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
- 	u8 version = mei_me_cl_ver(cldev->me_cl);
- 
--	return scnprintf(buf, PAGE_SIZE, "%02X", version);
-+	return sprintf(buf, "%02X", version);
- }
- static DEVICE_ATTR_RO(version);
- 
-@@ -797,7 +797,7 @@ static ssize_t max_conn_show(struct device *dev, struct device_attribute *a,
- 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
- 	u8 maxconn = mei_me_cl_max_conn(cldev->me_cl);
- 
--	return scnprintf(buf, PAGE_SIZE, "%d", maxconn);
-+	return sprintf(buf, "%d", maxconn);
- }
- static DEVICE_ATTR_RO(max_conn);
- 
-@@ -807,7 +807,7 @@ static ssize_t fixed_show(struct device *dev, struct device_attribute *a,
- 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
- 	u8 fixed = mei_me_cl_fixed(cldev->me_cl);
- 
--	return scnprintf(buf, PAGE_SIZE, "%d", fixed);
-+	return sprintf(buf, "%d", fixed);
- }
- static DEVICE_ATTR_RO(fixed);
- 
-@@ -817,7 +817,7 @@ static ssize_t max_len_show(struct device *dev, struct device_attribute *a,
- 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
- 	u32 maxlen = mei_me_cl_max_len(cldev->me_cl);
- 
--	return scnprintf(buf, PAGE_SIZE, "%u", maxlen);
-+	return sprintf(buf, "%u", maxlen);
- }
- static DEVICE_ATTR_RO(max_len);
- 
--- 
-2.21.0
+also we allow this:
+  perf --debug stderr=3D9 record ls
+
+so I thinks we should keep it general in documentation,
+eventhough it will always mean just stderr=3Dtrue for any
+value
+
+jirka
 
