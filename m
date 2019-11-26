@@ -2,111 +2,144 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60BAC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA2EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94352075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB5A2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfKZJ6H (ORCPT
+        id S1727707AbfKZJ6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:58:07 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2114 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727397AbfKZJ6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:58:06 -0500
-Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 3CA6618EE8A6A8A0B4E8;
-        Tue, 26 Nov 2019 09:58:03 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 26 Nov 2019 09:57:57 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 26 Nov
- 2019 09:57:57 +0000
-Subject: Re: [PATCH] EDAC/ghes: Do not warn when incrementing refcount on 0
-To:     Borislav Petkov <bp@alien8.de>,
-        Robert Richter <rrichter@marvell.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "huangming23@huawei.com" <huangming23@huawei.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "tanxiaofei@huawei.com" <tanxiaofei@huawei.com>,
-        "wanghuiqiang@huawei.com" <wanghuiqiang@huawei.com>
-References: <4ff7631f-fbb7-e45f-87dd-9223beca4da7@huawei.com>
- <20191121213628.21244-1-rrichter@marvell.com> <20191122090123.GB6289@zn.tnic>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <cf60a616-35e4-3938-3cdd-19ea22deb487@huawei.com>
-Date:   Tue, 26 Nov 2019 09:57:56 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 26 Nov 2019 04:58:14 -0500
+Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:32276 "EHLO
+        ironport.ite.com.tw" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727397AbfKZJ6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:58:14 -0500
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 26 Nov 2019 17:58:12 +0800
+Received: from csbcas.internal.ite.com.tw (csbcas2.internal.ite.com.tw [192.168.65.47])
+        by mse.ite.com.tw with ESMTP id xAQ9w0kU081586;
+        Tue, 26 Nov 2019 17:58:00 +0800 (GMT-8)
+        (envelope-from allen.chen@ite.com.tw)
+Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
+ csbcas2.internal.ite.com.tw (192.168.65.45) with Microsoft SMTP Server (TLS)
+ id 14.3.352.0; Tue, 26 Nov 2019 17:58:01 +0800
+From:   allen <allen.chen@ite.com.tw>
+CC:     Allen Chen <allen.chen@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking timings logic
+Date:   Tue, 26 Nov 2019 17:46:12 +0800
+Message-ID: <1574761572-26585-1-git-send-email-allen.chen@ite.com.tw>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191122090123.GB6289@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Originating-IP: [192.168.70.14]
+X-MAIL: mse.ite.com.tw xAQ9w0kU081586
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/11/2019 09:01, Borislav Petkov wrote:
-> On Thu, Nov 21, 2019 at 09:36:57PM +0000, Robert Richter wrote:
->> Following warning from the refcount framework is seen during ghes
->> initialization:
->>
->>   EDAC MC0: Giving out device to module ghes_edac.c controller ghes_edac: DEV ghes (INTERRUPT)
->>   ------------[ cut here ]------------
->>   refcount_t: increment on 0; use-after-free.
->>   WARNING: CPU: 36 PID: 1 at lib/refcount.c:156 refcount_inc_checked+0x44/0x50
->> [...]
->>   Call trace:
->>    refcount_inc_checked+0x44/0x50
->>    ghes_edac_register+0x258/0x388
->>    ghes_probe+0x28c/0x5f0
->>
->> It warns if the refcount is incremented from zero. This warning is
->> reasonable as a kernel object is typically created with a refcount of
->> one and freed once the refcount is zero. Afterwards the object would
->> be "used-after-free".
->>
->> For ghes the refcount is initialized with zero, and that is why this
->> message is seen when initializing the first instance. However,
->> whenever the refcount is zero, the device will be allocated and
->> registered. Since the ghes_reg_mutex protects the refcount and
->> serializes allocation and freeing of ghes devices, a use-after-free
->> cannot happen here.
->>
->> Instead of using refcount_inc() for the first instance, use
->> refcount_set(). This can be used here because the refcount is zero at
->> this point and can not change due to its protection by the mutex.
->>
->> Reported-by: John Garry <john.garry@huawei.com>
->> Tested-by: John Garry <john.garry@huawei.com>
+According to VESA ENHANCED EXTENDED DISPLAY IDENTIFICATION DATA STANDARD
+(Defines EDID Structure Version 1, Revision 4) page: 39
+How to determine whether the monitor support RB timing or not?
+EDID 1.4
+First:  read detailed timing descriptor and make sure byte 0 = 0x00,
+	byte 1 = 0x00, byte 2 = 0x00 and byte 3 = 0xFD
+Second: read EDID bit 0 in feature support byte at address 18h = 1
+	and detailed timing descriptor byte 10 = 0x04
+Third:  if EDID bit 0 in feature support byte = 1 &&
+	detailed timing descriptor byte 10 = 0x04
+	then we can check byte 15, if bit 4 in byte 15 = 1 is support RB
+        if EDID bit 0 in feature support byte != 1 ||
+	detailed timing descriptor byte 10 != 0x04,
+	then byte 15 can not be used
 
-According to kernel dev process Doc, this should be explicitly granted, so:
-Tested-by: John Garry <john.garry@huawei.com>
+The linux code is_rb function not follow the VESA's rule
 
-Thanks,
-John
+Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+Reported-by: kbuild test robot <lkp@intel.com>
+---
+ drivers/gpu/drm/drm_edid.c | 36 ++++++++++++++++++++++++++++++------
+ 1 file changed, 30 insertions(+), 6 deletions(-)
 
->> Signed-off-by: Robert Richter <rrichter@marvell.com>
->> ---
->>   drivers/edac/ghes_edac.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> Queued, thanks.
-> 
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index f5926bf..e11e585 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -93,6 +93,12 @@ struct detailed_mode_closure {
+ 	int modes;
+ };
+ 
++struct edid_support_rb_closure {
++	struct edid *edid;
++	bool valid_support_rb;
++	bool support_rb;
++};
++
+ #define LEVEL_DMT	0
+ #define LEVEL_GTF	1
+ #define LEVEL_GTF2	2
+@@ -2017,23 +2023,41 @@ struct drm_display_mode *drm_mode_find_dmt(struct drm_device *dev,
+ 	}
+ }
+ 
++static bool
++is_display_descriptor(const u8 *r, u8 tag)
++{
++	return (!r[0] && !r[1] && !r[2] && r[3] == tag) ? true : false;
++}
++
+ static void
+ is_rb(struct detailed_timing *t, void *data)
+ {
+ 	u8 *r = (u8 *)t;
+-	if (r[3] == EDID_DETAIL_MONITOR_RANGE)
+-		if (r[15] & 0x10)
+-			*(bool *)data = true;
++	struct edid_support_rb_closure *closure = data;
++	struct edid *edid = closure->edid;
++
++	if (is_display_descriptor(r, EDID_DETAIL_MONITOR_RANGE)) {
++		if (edid->features & BIT(0) && r[10] == BIT(2)) {
++			closure->valid_support_rb = true;
++			closure->support_rb = (r[15] & 0x10) ? true : false;
++		}
++	}
+ }
+ 
+ /* EDID 1.4 defines this explicitly.  For EDID 1.3, we guess, badly. */
+ static bool
+ drm_monitor_supports_rb(struct edid *edid)
+ {
++	struct edid_support_rb_closure closure = {
++		.edid = edid,
++		.valid_support_rb = false,
++		.support_rb = false,
++	};
++
+ 	if (edid->revision >= 4) {
+-		bool ret = false;
+-		drm_for_each_detailed_block((u8 *)edid, is_rb, &ret);
+-		return ret;
++		drm_for_each_detailed_block((u8 *)edid, is_rb, &closure);
++		if (closure.valid_support_rb)
++			return closure.support_rb;
+ 	}
+ 
+ 	return ((edid->input & DRM_EDID_INPUT_DIGITAL) != 0);
+-- 
+1.9.1
 
