@@ -2,125 +2,130 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7402CC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418C7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C26207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A26A2080F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kYQJO1E4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pLKc4Sgt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfKZUHd (ORCPT
+        id S1726689AbfKZUNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:07:33 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44821 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbfKZUHc (ORCPT
+        Tue, 26 Nov 2019 15:13:04 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44485 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfKZUNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:07:32 -0500
-Received: by mail-pg1-f195.google.com with SMTP id e6so9522632pgi.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 12:07:32 -0800 (PST)
+        Tue, 26 Nov 2019 15:13:04 -0500
+Received: by mail-oi1-f195.google.com with SMTP id s71so17836908oih.11;
+        Tue, 26 Nov 2019 12:13:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a6GxmKDvAw1vLMbaYf9F6fSma425avbz24o+1odQiW8=;
-        b=kYQJO1E4W2uuHPL5Xt55wCQ3MWajDBCrm0jA7QZ4dZUbiy0qykLO8o+veIsaLEoxXt
-         pfjt817CQHNp6x+6IYPeeQmlFOtcfeIKHgQNugJd3twsD93I50yh8E0fYn0cLrJ1rlPn
-         sooicOrr2ZAZmlh8o1KYEIqSBd2YEObh3DNg304EXxtvw3bYk3FywkGYpp3pFvdooshg
-         TDdpxONLvxs5yE9jjCutSaWrN4ZdvyZgBr2G6TI/LMbhmdftq3K+5rpVuCHgb3pzkqcF
-         iICNCzYY5a3tDZpRBnNgpXtApSnFF15lDLdvJwSQ9aZ/NBFBxA/NMHBa+gnXAFtkRS61
-         AuMQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nWXvBe8iHv2e1HrWC91gojWLhn523EghSo2ykxPHbqU=;
+        b=pLKc4Sgt83cCty7y3uDo50AVWsudPf7KjkxbiFHhdSHn3c2hRoSBDM2JLYBUxV1tSP
+         SLjy0cv/dPXBO8Vs8FKEIDZnVBIoHAEtnVBgLry7mAN/WID2pmhomxJBagLj3D/VaWLe
+         V8EuElcIdHPotR99lG1+4W8PNp+U0cLUrvdQ+zSHq+OUZbu0Yir3HR1jHnu1NZaUQg6J
+         MjxXW/8lZ9B429oBOYF2wEwI4Qrr7wYFuLAab+t/KtrPBCCptxD2zD3r7sFWo3mpun3d
+         hSbpTmnkFt2Kd87raS0SmtOz2I3jZtEODnjulXNoBvTmbwOzV0nkU8h7tYq+PUPSR57Z
+         1qDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a6GxmKDvAw1vLMbaYf9F6fSma425avbz24o+1odQiW8=;
-        b=WTGa+gZpKmcyh6MVmnoV1v8nniJsxLfGbFp1p3Ron2HzMQwoY8uDTHbQ13ZYujfxAS
-         IhM7kWKL/FNPgD5jSJnxio6h8eYzqgBba3y/uCUu9tnHqdzQ3CLjRF/Si0Ym1jeQC/C8
-         sns+umfP6NJTQtkeTQE7Oa7wkP08Dyh6n/LXHfE8OZvj7ca61EOnwfc/5O4TW1uOrnF/
-         Fngv9hdmtZ2dF/ccjnet9MbtfsbqfnjOyueeEcBOE7YNHnXAFjJ0o9Oiia8e25JGotn+
-         8tdsvyl4vq5Lu2gTgbnyKad8ZukVXvopnjsUkMV+VWJi3zoSbLydnlQAH6JaPumR3iqq
-         xcFA==
-X-Gm-Message-State: APjAAAXxzZef/GNJkLbnZVyrybswbK7niqJe0vYti0rGV1zvlJUQc/Ku
-        +Hc/8N2ixOebq0gpl70ngxSIEXRKEtHJVTb3k+nIlA==
-X-Google-Smtp-Source: APXvYqzhtGrx/0AcsUJbNg7CQUdEUUrMdQwSTawPgXjZzKBWJVP5yRg+BPnmr84AYEutaBxY/BaDAxaZQcbnb3V98uw=
-X-Received: by 2002:a63:4721:: with SMTP id u33mr274648pga.159.1574798851462;
- Tue, 26 Nov 2019 12:07:31 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nWXvBe8iHv2e1HrWC91gojWLhn523EghSo2ykxPHbqU=;
+        b=AVodZ39JcWjvxEntNYvXQSazb4V83j8Hbi6n9QKGzju+upwrmD1JPc/pNiztz8p3gJ
+         0jgmgGXLsS4TxcaehyaDTr69hbvAt8I51/RQtaDjicffErUMUvMGjhn4tEFpHd9bfDV7
+         I6hHAnk8O6yf7ZEuglK/d1FHrkxvOS5FMwFe+hx0P/LPltkvCH8abBdKc9hTysveVIng
+         F/JsX38fC+nyUll2zo4ofnoN4lF7txPjFqGtWFCa158dxK8NhY5nbQWBnvL+4Qj3qTKs
+         codFw972H8PTJnLfo3dEn+1So9FpuDc+xHw93gQwdYV4vaxNViFhoSgQhE0vG/hJI6Di
+         Usjg==
+X-Gm-Message-State: APjAAAU9EkgA9BNc+OjEgeVR/IvOWpX1N9InhvZBPtK0nwyAdG47vYKQ
+        0BNto77ZnUwQPfyYTVcjjNXXU5+r
+X-Google-Smtp-Source: APXvYqz0+3tinyCTs/QonbBWOqSQwEdVYtN5Yuzp6nAaQo4LzvHIgPVdiRQM9CHSHWbw68sfN07ywA==
+X-Received: by 2002:aca:b708:: with SMTP id h8mr787878oif.126.1574799182939;
+        Tue, 26 Nov 2019 12:13:02 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::7])
+        by smtp.gmail.com with ESMTPSA id e186sm4033064oia.47.2019.11.26.12.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 12:13:02 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] netfilter: nf_flow_table_offload: Don't use offset uninitialized in flow_offload_port_{d,s}nat
+Date:   Tue, 26 Nov 2019 13:12:26 -0700
+Message-Id: <20191126201226.51857-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191126193313.44181-1-heidifahim@google.com>
-In-Reply-To: <20191126193313.44181-1-heidifahim@google.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 26 Nov 2019 12:07:20 -0800
-Message-ID: <CAFd5g450f1Ds1oeEKoVxmcA1Demxx3jDH5QJ4vpmk8JpkhgDZA@mail.gmail.com>
-Subject: Re: [PATCH] kunit: test: Improve error messages for kunit_tool when
- kunitconfig is invalid
-To:     Heidi Fahim <heidifahim@google.com>,
-        David Gow <davidgow@google.com>
-Cc:     shuah <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+David Gow
+Clang warns (trimmed the second warning for brevity):
 
-On Tue, Nov 26, 2019 at 11:33 AM 'Heidi Fahim' via KUnit Development
-<kunit-dev@googlegroups.com> wrote:
->
-> Previous error message for invalid kunitconfig was vague. Added to it so
-> that it lists invalid fields and prompts for them to be removed.  Added
-> validate_config function returning whether or not this kconfig is valid.
->
-> Signed-off-by: Heidi Fahim <heidifahim@google.com>
+../net/netfilter/nf_flow_table_offload.c:342:2: warning: variable
+'offset' is used uninitialized whenever switch default is taken
+[-Wsometimes-uninitialized]
+        default:
+        ^~~~~~~
+../net/netfilter/nf_flow_table_offload.c:346:57: note: uninitialized use
+occurs here
+        flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
+                                                               ^~~~~~
+../net/netfilter/nf_flow_table_offload.c:331:12: note: initialize the
+variable 'offset' to silence this warning
+        u32 offset;
+                  ^
+                   = 0
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
+Match what was done in the flow_offload_ipv{4,6}_{d,s}nat functions and
+just return in the default case, since port would also be uninitialized.
 
-Looks good to me other than one minor nit below.
+Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
+Link: https://github.com/ClangBuiltLinux/linux/issues/780
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ net/netfilter/nf_flow_table_offload.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> ---
->  tools/testing/kunit/kunit_kernel.py | 27 +++++++++++++++------------
->  1 file changed, 15 insertions(+), 12 deletions(-)
->
-> diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-> index bf3876835331..010d3f5030d2 100644
-> --- a/tools/testing/kunit/kunit_kernel.py
-> +++ b/tools/testing/kunit/kunit_kernel.py
-> @@ -93,6 +93,19 @@ class LinuxSourceTree(object):
->                         return False
->                 return True
->
-> +       def validate_config(self, build_dir):
-> +               kconfig_path = get_kconfig_path(build_dir)
-> +               validated_kconfig = kunit_config.Kconfig()
-> +               validated_kconfig.read_from_file(kconfig_path)
-> +               if not self._kconfig.is_subset_of(validated_kconfig):
-> +                       invalid = self._kconfig.entries() - validated_kconfig.entries()
-> +                       message = 'Provided Kconfig is not contained in validated .config. Invalid fields found in kunitconfig: %s' % (
+diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
+index c54c9a6cc981..a77a6e1cfd64 100644
+--- a/net/netfilter/nf_flow_table_offload.c
++++ b/net/netfilter/nf_flow_table_offload.c
+@@ -340,7 +340,7 @@ static void flow_offload_port_snat(struct net *net,
+ 		offset = 0; /* offsetof(struct tcphdr, dest); */
+ 		break;
+ 	default:
+-		break;
++		return;
+ 	}
+ 
+ 	flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
+@@ -367,7 +367,7 @@ static void flow_offload_port_dnat(struct net *net,
+ 		offset = 0; /* offsetof(struct tcphdr, dest); */
+ 		break;
+ 	default:
+-		break;
++		return;
+ 	}
+ 
+ 	flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
+-- 
+2.24.0
 
-nit: Rather than "Invalid fields found in kunitconfig", how about
-something like "Following fields found in kunitconfig, but not
-.config:"?
-
-> +                               ', '.join([str(e) for e in invalid])
-> +                       )
-> +                       logging.error(message)
-> +                       return False
-> +               return True
-> +
->         def build_config(self, build_dir):
->                 kconfig_path = get_kconfig_path(build_dir)
->                 if build_dir and not os.path.exists(build_dir):
-
-Thanks for the patch!
