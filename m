@@ -2,307 +2,98 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95081C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59557C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375F220727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574782323;
-	bh=Nt081fGxNxtH531Mbja/jxORqkwwmeE4JUg1dtDT5sg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S/ZqfFWhY5Txyk3gmmnqANWl4YKtzVoUFbNq4SO/20PPkbzmnsnoRCNLQWA/q0Zlb
-	 iMk3OIrz3tf2EoqT9/7MpYX+fUloRhQylqxVN1//zJFAv01j+5qtFm579RVZUMEYqu
-	 cFW2tRDrUzoemkmsRtmSZ2Crxnt/PIeTJZlMbalE=
+	by mail.kernel.org (Postfix) with ESMTP id 1F9D32073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:32:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ReBaqs3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbfKZPcC (ORCPT
+        id S1728516AbfKZPcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 26 Nov 2019 10:32:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbfKZPcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:32:02 -0500
-Received: from linux-8ccs (x2f7ff09.dyn.telefonica.de [2.247.255.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22D0F2075C;
-        Tue, 26 Nov 2019 15:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574782320;
-        bh=Nt081fGxNxtH531Mbja/jxORqkwwmeE4JUg1dtDT5sg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eEf6K/U/pK6XszfFu7WH4LwgaL6caR25qU5KFhvfK76CJpGBFOhqPiCA88mLKVpaL
-         XKvalPBwu2Ez1YsyXORWGH4z62b8Ln4trQrYQWRnWIfn+n0txtXUP/q5IsHO+cT6YR
-         eLADQoUL3C7AoOtHChQniIz1JFqQniHqvKmTqBCM=
-Date:   Tue, 26 Nov 2019 16:31:54 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] export.h: reduce __ksymtab_strings string duplication
- by using "MS" section flags
-Message-ID: <20191126153153.GA3495@linux-8ccs>
-References: <20191120145110.8397-1-jeyu@kernel.org>
- <20191125154217.18640-1-jeyu@kernel.org>
- <CAK7LNASU9YysYNXuBKSU4WeUyE=2itfLDYzCupXL-49GUZuGnQ@mail.gmail.com>
- <20191126135620.GA38845@google.com>
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27814 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728479AbfKZPcB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 10:32:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574782320;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1B5z3ocoUnAb+PeLyD8I97QacT7fRBDt6WO9TjOiZjQ=;
+        b=ReBaqs3k9hxgc//6t9Rd/+3YOKBpjpONidmvm0F83Hy3yFf/j06gelMtiNRh1r5PP08DvP
+        i04/8JU45SkVISSVnZlcT7N6B5Neq+GjBnGQII516ir7O+3JVRGYUWApCyrs+wWeigfLUm
+        b3gtUfiM8JwYIoC0EeedYBtxlhnq+mA=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-s1CmBi2DP1-3BTLketZoqw-1; Tue, 26 Nov 2019 10:31:59 -0500
+Received: by mail-pj1-f70.google.com with SMTP id o34so51848pjb.15
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 07:31:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=1B5z3ocoUnAb+PeLyD8I97QacT7fRBDt6WO9TjOiZjQ=;
+        b=Zj+fHAArpsHzUxrG7PY5sgl+qF/Qg4RoBl1gtKH4WXv3h3Lr5FHaUKHkVuoePSdEg7
+         zmjgFyUvOvBzVwDPvqja2rSrlgTYpmtMCcicj+7YvnyNcW0qP+XdszxeQOXE5neU6795
+         9TOwsOLhNZ5zSiFKE3/fmXlkWMGM83UM2dWmxbvurNDQJlaQ8O83P67hg7DP/Ct0KwF0
+         X1vP7jOLE+XuJk1iE+ZiMbfC4RirJj8/9WLBC3Fy6tkZspyz++1JfUJQA8NLrXIixTne
+         BXhNW4oUhhVKgfAz3/wbGJOVz3JiSPqtTzmP54RhnayDZ3QxGw+gsGVl6FQMpeeHaE9e
+         8irA==
+X-Gm-Message-State: APjAAAXl3fjjNoVg9XNTKw9c4eLywGsECxgGBJKQIdgAVO2eQZ66gKXD
+        hC0lL8lTYXsgzv8XqkZGu3AVBO2dDyARCHG5FWWmH1fAXgEltLbZ02/6Q/ylEGwVvxUVWVrvcXH
+        eYviWR2w2m2a/x6QFPMJj+982
+X-Received: by 2002:a17:90a:3522:: with SMTP id q31mr7781090pjb.18.1574782318075;
+        Tue, 26 Nov 2019 07:31:58 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxfmv0tx5D0C/j5BQozTzoh1DEGYoaqkhONpxCb2xxJIi2vBrAwOCHCbdTIbW3eUHnO3MyYWQ==
+X-Received: by 2002:a17:90a:3522:: with SMTP id q31mr7781055pjb.18.1574782317801;
+        Tue, 26 Nov 2019 07:31:57 -0800 (PST)
+Received: from trix.remote.csb ([75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id 136sm13292798pfb.49.2019.11.26.07.31.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2019 07:31:57 -0800 (PST)
+Subject: Re: [PATCH RT v3] net/xfrm/input: Protect queue with lock
+To:     Joerg Vehlow <lkml@jv-coder.de>, linux-kernel@vger.kernel.org,
+        bigeasy@linutronix.de
+Cc:     Joerg Vehlow <joerg.vehlow@aox-tech.de>
+References: <20191126071335.34661-1-lkml@jv-coder.de>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <46d5e7ea-011b-a384-ac7a-9ba63bbe9ea5@redhat.com>
+Date:   Tue, 26 Nov 2019 07:31:56 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191126135620.GA38845@google.com>
-X-OS:   Linux linux-8ccs 5.4.0-rc5-lp150.12.61-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191126071335.34661-1-lkml@jv-coder.de>
+Content-Language: en-US
+X-MC-Unique: s1CmBi2DP1-3BTLketZoqw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Matthias Maennich [26/11/19 13:56 +0000]:
->On Tue, Nov 26, 2019 at 05:32:59PM +0900, Masahiro Yamada wrote:
->>On Tue, Nov 26, 2019 at 12:42 AM Jessica Yu <jeyu@kernel.org> wrote:
->>>
->>>Commit c3a6cf19e695 ("export: avoid code duplication in
->>>include/linux/export.h") refactors export.h quite nicely, but introduces
->>>a slight increase in memory usage due to using the empty string ""
->>>instead of NULL to indicate that an exported symbol has no namespace. As
->>>mentioned in that commit, this meant an increase of 1 byte per exported
->>>symbol without a namespace. For example, if a kernel configuration has
->>>about 10k exported symbols, this would mean that the size of
->>>__ksymtab_strings would increase by roughly 10kB.
->>>
->>>We can alleviate this situation by utilizing the SHF_MERGE and
->>>SHF_STRING section flags. SHF_MERGE|SHF_STRING indicate to the linker
->>>that the data in the section are null-terminated strings that can be
->>>merged to eliminate duplication. More specifically, from the binutils
->>>documentation - "for sections with both M and S, a string which is a
->>>suffix of a larger string is considered a duplicate. Thus "def" will be
->>>merged with "abcdef"; A reference to the first "def" will be changed to
->>>a reference to "abcdef"+3". Thus, all the empty strings would be merged
->>>as well as any strings that can be merged according to the cited method
->>>above. For example, "memset" and "__memset" would be merged to just
->>>"__memset" in __ksymtab_strings.
->>>
->>>As of v5.4-rc5, the following statistics were gathered with x86
->>>defconfig with approximately 10.7k exported symbols.
->>>
->>>Size of __ksymtab_strings in vmlinux:
->>>-------------------------------------
->>>v5.4-rc5: 213834 bytes
->>>v5.4-rc5 with commit c3a6cf19e695: 224455 bytes
->>>v5.4-rc5 with this patch: 205759 bytes
->>>
->>>So, we already see memory savings of ~8kB compared to vanilla -rc5 and
->>>savings of nearly 18.7kB compared to -rc5 with commit c3a6cf19e695 on top.
->>>
->>>Unfortunately, as of this writing, strings will not get deduplicated for
->>>kernel modules, as ld does not do the deduplication for
->>>SHF_MERGE|SHF_STRINGS sections for relocatable files (ld -r), which
->>>kernel modules are. A patch for ld is currently being worked on to
->>>hopefully allow for string deduplication in relocatable files in the
->>>future.
->>>
->
->Thanks for working on this!
->
->>>Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
->>>Signed-off-by: Jessica Yu <jeyu@kernel.org>
->>>---
->>>
->>>v2: use %progbits throughout and document the oddity in a comment.
->>>
->>> include/asm-generic/export.h |  8 +++++---
->>> include/linux/export.h       | 27 +++++++++++++++++++++------
->>> 2 files changed, 26 insertions(+), 9 deletions(-)
->>>
->>>diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
->>>index fa577978fbbd..23bc98e97a66 100644
->>>--- a/include/asm-generic/export.h
->>>+++ b/include/asm-generic/export.h
->>>@@ -26,9 +26,11 @@
->>> .endm
->>>
->>> /*
->>>- * note on .section use: @progbits vs %progbits nastiness doesn't matter,
->>>- * since we immediately emit into those sections anyway.
->>>+ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
->>>+ * section flag requires it. Use '%progbits' instead of '@progbits' since the
->>>+ * former apparently works on all arches according to the binutils source.
->>>  */
->>>+
->>> .macro ___EXPORT_SYMBOL name,val,sec
->>> #ifdef CONFIG_MODULES
->>>        .globl __ksymtab_\name
->>>@@ -37,7 +39,7 @@
->>> __ksymtab_\name:
->>>        __put \val, __kstrtab_\name
->>>        .previous
->>>-       .section __ksymtab_strings,"a"
->>>+       .section __ksymtab_strings,"aMS",%progbits,1
->>> __kstrtab_\name:
->>>        .asciz "\name"
->>>        .previous
->>>diff --git a/include/linux/export.h b/include/linux/export.h
->>>index 201262793369..3d835ca34d33 100644
->>>--- a/include/linux/export.h
->>>+++ b/include/linux/export.h
->>>@@ -81,16 +81,31 @@ struct kernel_symbol {
->>>
->>> #else
->>>
->>>+/*
->>>+ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
->>>+ * section flag requires it. Use '%progbits' instead of '@progbits' since the
->>>+ * former apparently works on all arches according to the binutils source.
->>>+ */
->>>+#define __KSTRTAB_ENTRY(sym)                                                   \
->>>+       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
->>>+           "__kstrtab_" #sym ":                                        \n"     \
->>>+           "   .asciz  \"" #sym "\"                                    \n"     \
->>>+           "   .previous                                               \n")
->>>+
->>>+#define __KSTRTAB_NS_ENTRY(sym, ns)                                            \
->>>+       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
->>>+           "__kstrtabns_" #sym ":                                      \n"     \
->>>+           "   .asciz  " #ns "                                         \n"     \
->>
->>
->>Hmm, it took some time for me to how this code works.
->>
->>ns is already a C string, then you added # to it,
->>then I was confused.
->>
->>Personally, I prefer this code:
->>" .asciz \"" ns "\" \n"
->>
->>so it looks in the same way as __KSTRTAB_ENTRY().
->
->I agree with this, these entries should be consistent.
->
->>
->>
->>
->>BTW, you duplicated \"aMS\",%progbits,1" and ".previous"
->>
->>
->>I would write it shorter, like this:
->>
->>
->>#define ___EXPORT_SYMBOL(sym, sec, ns) \
->>       extern typeof(sym) sym; \
->>       extern const char __kstrtab_##sym[]; \
->>       extern const char __kstrtabns_##sym[]; \
->>       __CRC_SYMBOL(sym, sec); \
->>       asm("    .section \"__ksymtab_strings\",\"aMS\",%progbits,1\n" \
->>           "__kstrtab_" #sym ": \n" \
->>           "     .asciz \"" #sym "\" \n" \
->>           "__kstrtabns_" #sym ": \n" \
->>           "     .asciz \"" ns "\" \n" \
->>           "     .previous \n");    \
->>      __KSYMTAB_ENTRY(sym, sec)
->>
->
->I would prefer the separate macros though (as initially proposed) as I
->find them much more readable. The code is already a bit tricky to reason
->about and I don't think the shorter version is enough of a gain.
+Why remove the #ifdef CONFIG_PREEMPT.. ?
 
-Yeah, the macros were more readable IMO. But I could just squash them into one
-__KSTRTAB_ENTRY macro as a compromise for Masahiro maybe?
 
-Is this any better?
+> +	spin_lock_irqsave(&trans->queue.lock, flags);
+>  	skb_queue_splice_init(&trans->queue, &queue);
+> +	spin_unlock_irqrestore(&trans->queue.lock, flags);
+>  
 
-diff --git a/include/linux/export.h b/include/linux/export.h
-index 201262793369..f4a8fc798a1b 100644
---- a/include/linux/export.h
-+++ b/include/linux/export.h
-@@ -81,16 +81,30 @@ struct kernel_symbol {
- 
- #else
- 
-+/*
-+ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
-+ * section flag requires it. Use '%progbits' instead of '@progbits' since the
-+ * former apparently works on all arches according to the binutils source.
-+ *
-+ * This basically corresponds to:
-+ * const char __kstrtab_##sym[] __attribute__((section("__ksymtab_strings")) = #sym;
-+ * const char __kstrtabns_##sym[] __attribute__((section("__ksymtab_strings")) = ns;
-+ */
-+#define __KSTRTAB_ENTRY(sym, ns)                                               \
-+       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
-+           "__kstrtab_" #sym ":                                        \n"     \
-+           "   .asciz  \"" #sym "\"                                    \n"     \
-+           "__kstrtabns_" #sym ":                                      \n"     \
-+           "   .asciz  \"" ns "\"                                      \n"     \
-+           "   .previous                                               \n")
-+
- /* For every exported symbol, place a struct in the __ksymtab section */
- #define ___EXPORT_SYMBOL(sym, sec, ns)                                 \
-        extern typeof(sym) sym;                                         \
-+       extern const char __kstrtab_##sym[];                            \
-+       extern const char __kstrtabns_##sym[];                          \
-        __CRC_SYMBOL(sym, sec);                                         \
--       static const char __kstrtab_##sym[]                             \
--       __attribute__((section("__ksymtab_strings"), used, aligned(1))) \
--       = #sym;                                                         \
--       static const char __kstrtabns_##sym[]                           \
--       __attribute__((section("__ksymtab_strings"), used, aligned(1))) \
--       = ns;                                                           \
-+       __KSTRTAB_ENTRY(sym, ns);                                       \
-        __KSYMTAB_ENTRY(sym, sec)
- 
- #endif
+Fine otherwise.
 
->>
->>
->>
->>
->>
->>
->>
->>>+           "   .previous                                               \n")
->>>+
->>> /* For every exported symbol, place a struct in the __ksymtab section */
->>> #define ___EXPORT_SYMBOL(sym, sec, ns)                                 \
->>>        extern typeof(sym) sym;                                         \
->>>+       extern const char __kstrtab_##sym[];                            \
->>>+       extern const char __kstrtabns_##sym[];                          \
->>>        __CRC_SYMBOL(sym, sec);                                         \
->>>-       static const char __kstrtab_##sym[]                             \
->>>-       __attribute__((section("__ksymtab_strings"), used, aligned(1))) \
->>>-       = #sym;                                                         \
->
->You could keep simplified versions of these statements as comment for
->the above macros to increase readability.
->
->>>-       static const char __kstrtabns_##sym[]                           \
->>>-       __attribute__((section("__ksymtab_strings"), used, aligned(1))) \
->>>-       = ns;                                                           \
->>>+       __KSTRTAB_ENTRY(sym);                                           \
->>>+       __KSTRTAB_NS_ENTRY(sym, ns);                                    \
->>>        __KSYMTAB_ENTRY(sym, sec)
->>>
->>> #endif
->>>--
->>>2.16.4
->>>
->
->With the above addressed, please feel free to add
->
->Reviewed-by: Matthias Maennich <maennich@google.com>
->
->Cheers,
->Matthias
->
->>
->>
->>-- 
->>Best Regards
->>Masahiro Yamada
+Tom
+
+
