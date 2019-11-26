@@ -2,262 +2,199 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C0BC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD6C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C042075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:08:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ftFJPVEt"
+	by mail.kernel.org (Postfix) with ESMTP id E99F320862
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:09:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574770184;
+	bh=/SbrLZpyJJ7X5Bos7DrIFqUfse/MchttoWTj+JKEi1s=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=syw4/tL1ZdDwIZG7yaK9rADaJde7JmJ1+3p1vHcLqKXwubZ89liLjWR3tNTPw9hA/
+	 33ZseapPCEzBzcxgcTUUhIYBEEWwZTtkVMDfP4ZUWhXZav0wM7ZD+ZGislgTi73oyV
+	 NAd/fX+FjxVK2KtPlLYoOLlKwt75r1YCLUvNLKy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfKZMIN (ORCPT
+        id S1728235AbfKZMJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 07:08:13 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45909 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727547AbfKZMIN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 07:08:13 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z10so22070905wrs.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 04:08:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VQjjqFDsNM/6pE1oM/K01ML2mXuln8XPZDY4RZUivOc=;
-        b=ftFJPVEttEP3GedBZ2x5HGNphCA2lsPKmm8UDIb+ofgtvrD6/sjW3i5b9NvBmdc+cl
-         Q5yrnsC8K8rc1xA6pkrK2R0gaBfGM69vg1Xm7pCgBwXZntobK3Og7Wit2uTfM13ZwA04
-         OQsBfBLFsgI67RfAezmcLQ5hd0LOFzwJtWdFk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=VQjjqFDsNM/6pE1oM/K01ML2mXuln8XPZDY4RZUivOc=;
-        b=eb1O5e8gspazT9eBHHxI1N4gNyjLRj431D6uwrlFXFK3d4R9P7/f9Jk0+U+lXfc1hy
-         bhlSk9Q2uDiq7otMEvQO1LPMOEN24Zm1lVDkLvVnq1M6nABGiZMerFeV0G5tJtdEIx2l
-         9la9zvetzWBIbvTLlpITiV+rJTS04DQblBhI053HQWJ+j+fDWZIDKJlmlIDOFSxhJxCg
-         24xK8JhG6i04fYm3+6FMwmIqGaLW3xwAe+/U5Dlcw0hkp8XsLC/js0Nyg3d0QqKlSshM
-         74vbW5cMwtQGMyAnvF4/RPrrXxFBemxAuYkAHvgkdRpJ6xDdErif0RHtz+horvpO2xBR
-         NJBA==
-X-Gm-Message-State: APjAAAVledWr+IkM6BLF/YZU1Vsb1E5FW7wtQTjfiVOrOWyVh9IYRz0t
-        qf+UqNJEoIq2xpmLEt21WV+ntQ==
-X-Google-Smtp-Source: APXvYqyCVzH+f7yqTMpfD8vYQ/DrJUuOIE2WH3AwCdN2GqBS6WDrLDj1/zSPULNRsndeZMxFounfcA==
-X-Received: by 2002:a5d:530f:: with SMTP id e15mr38041522wrv.119.1574770088328;
-        Tue, 26 Nov 2019 04:08:08 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id k1sm15080399wrp.29.2019.11.26.04.08.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 04:08:07 -0800 (PST)
-Date:   Tue, 26 Nov 2019 13:08:05 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>, nd <nd@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ben Davis <Ben.Davis@arm.com>
-Subject: Re: [PATCH v1 2/2] drm/komeda: Refactor sysfs node "config_id"
-Message-ID: <20191126120805.GU29965@phenom.ffwll.local>
-Mail-Followup-To: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>, nd <nd@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ben Davis <Ben.Davis@arm.com>
-References: <20191126105412.5978-1-james.qian.wang@arm.com>
- <20191126105412.5978-3-james.qian.wang@arm.com>
+        Tue, 26 Nov 2019 07:09:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727488AbfKZMJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 07:09:42 -0500
+Received: from earth.universe (unknown [89.248.140.17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C40AC2075C;
+        Tue, 26 Nov 2019 12:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574770181;
+        bh=/SbrLZpyJJ7X5Bos7DrIFqUfse/MchttoWTj+JKEi1s=;
+        h=Date:From:To:Cc:Subject:From;
+        b=M+wdGTOaYCCakG/Q8cgES8yggcNRazT9m+u5hBDVCVneZoSU7f7GCX7QrsjFgqq68
+         8Wb1Hms7qZu/rjpwRJpl08HZlnQfPDeDYCjebir4WB5r7/AVP0T4/zBbYajJDhj6kM
+         zM4k6lURnw8fvMnTeQZ+XuscI46lgKf/UEzhm2ao=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 043373C0C71; Tue, 26 Nov 2019 13:09:40 +0100 (CET)
+Date:   Tue, 26 Nov 2019 13:09:40 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [GIT PULL] power-supply changes for 5.5
+Message-ID: <20191126120940.sjiiqdngnbez2a7x@earth.universe>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3ffj6i4c5c3znzmz"
 Content-Disposition: inline
-In-Reply-To: <20191126105412.5978-3-james.qian.wang@arm.com>
-X-Operating-System: Linux phenom 5.3.0-2-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 10:54:47AM +0000, james qian wang (Arm Technology China) wrote:
-> From: "James Qian Wang (Arm Technology China)" <james.qian.wang@arm.com>
-> 
-> Split sysfs config_id bitfiles to multiple separated sysfs files.
-> 
-> Signed-off-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
 
-I guess Dave&my questions werent quite clear, this looks like uapi that's
-consumed by hwc, so the userspace needs to be open source. Plus it needs
-to be discussed/reviewed like any other kms uapi extensions, with a
-critical eye whether this makes sense to add to a supposedly cross-vendor
-interface.
+--3ffj6i4c5c3znzmz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I suspect the right thing to do here is to push the revert. From a quick
-look at git history this landed together with the other kms properties in
-komeda which we reverted already.
--Daniel
+Hi Linus,
 
-> ---
->  .../drm/arm/display/include/malidp_product.h  | 13 ---
->  .../gpu/drm/arm/display/komeda/komeda_sysfs.c | 80 ++++++++++++++-----
->  2 files changed, 62 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/arm/display/include/malidp_product.h b/drivers/gpu/drm/arm/display/include/malidp_product.h
-> index dbd3d4765065..b21f4aa15c95 100644
-> --- a/drivers/gpu/drm/arm/display/include/malidp_product.h
-> +++ b/drivers/gpu/drm/arm/display/include/malidp_product.h
-> @@ -21,17 +21,4 @@
->  #define MALIDP_D71_PRODUCT_ID	0x0071
->  #define MALIDP_D32_PRODUCT_ID	0x0032
->  
-> -union komeda_config_id {
-> -	struct {
-> -		__u32	max_line_sz:16,
-> -			n_pipelines:2,
-> -			n_scalers:2, /* number of scalers per pipeline */
-> -			n_layers:3, /* number of layers per pipeline */
-> -			n_richs:3, /* number of rich layers per pipeline */
-> -			side_by_side:1, /* if HW works on side_by_side mode */
-> -			reserved_bits:5;
-> -	};
-> -	__u32 value;
-> -};
-> -
->  #endif /* _MALIDP_PRODUCT_H_ */
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_sysfs.c b/drivers/gpu/drm/arm/display/komeda/komeda_sysfs.c
-> index 740f095b4ca5..5effab795dc1 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_sysfs.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_sysfs.c
-> @@ -18,28 +18,67 @@ core_id_show(struct device *dev, struct device_attribute *attr, char *buf)
->  static DEVICE_ATTR_RO(core_id);
->  
->  static ssize_t
-> -config_id_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +line_size_show(struct device *dev, struct device_attribute *attr, char *buf)
->  {
->  	struct komeda_dev *mdev = dev_to_mdev(dev);
->  	struct komeda_pipeline *pipe = mdev->pipelines[0];
-> -	union komeda_config_id config_id;
-> -	int i;
-> -
-> -	memset(&config_id, 0, sizeof(config_id));
-> -
-> -	config_id.max_line_sz = pipe->layers[0]->hsize_in.end;
-> -	config_id.side_by_side = mdev->side_by_side;
-> -	config_id.n_pipelines = mdev->n_pipelines;
-> -	config_id.n_scalers = pipe->n_scalers;
-> -	config_id.n_layers = pipe->n_layers;
-> -	config_id.n_richs = 0;
-> -	for (i = 0; i < pipe->n_layers; i++) {
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%d\n", pipe->layers[0]->hsize_in.end);
-> +}
-> +static DEVICE_ATTR_RO(line_size);
-> +
-> +static ssize_t
-> +n_pipelines_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct komeda_dev *mdev = dev_to_mdev(dev);
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%d\n", mdev->n_pipelines);
-> +}
-> +static DEVICE_ATTR_RO(n_pipelines);
-> +
-> +static ssize_t
-> +n_layers_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct komeda_dev *mdev = dev_to_mdev(dev);
-> +	struct komeda_pipeline *pipe = mdev->pipelines[0];
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%d\n", pipe->n_layers);
-> +}
-> +static DEVICE_ATTR_RO(n_layers);
-> +
-> +static ssize_t
-> +n_rich_layers_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct komeda_dev *mdev = dev_to_mdev(dev);
-> +	struct komeda_pipeline *pipe = mdev->pipelines[0];
-> +	int i, n_richs = 0;
-> +
-> +	for (i = 0; i < pipe->n_layers; i++)
->  		if (pipe->layers[i]->layer_type == KOMEDA_FMT_RICH_LAYER)
-> -			config_id.n_richs++;
-> -	}
-> -	return snprintf(buf, PAGE_SIZE, "0x%08x\n", config_id.value);
-> +			n_richs++;
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%d\n", n_richs);
-> +}
-> +static DEVICE_ATTR_RO(n_rich_layers);
-> +
-> +static ssize_t
-> +n_scalers_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct komeda_dev *mdev = dev_to_mdev(dev);
-> +	struct komeda_pipeline *pipe = mdev->pipelines[0];
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%d\n", pipe->n_scalers);
-> +}
-> +static DEVICE_ATTR_RO(n_scalers);
-> +
-> +static ssize_t
-> +side_by_side_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct komeda_dev *mdev = dev_to_mdev(dev);
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%d\n", mdev->side_by_side);
->  }
-> -static DEVICE_ATTR_RO(config_id);
-> +static DEVICE_ATTR_RO(side_by_side);
->  
->  static ssize_t
->  aclk_hz_show(struct device *dev, struct device_attribute *attr, char *buf)
-> @@ -52,7 +91,12 @@ static DEVICE_ATTR_RO(aclk_hz);
->  
->  static struct attribute *komeda_sysfs_entries[] = {
->  	&dev_attr_core_id.attr,
-> -	&dev_attr_config_id.attr,
-> +	&dev_attr_line_size.attr,
-> +	&dev_attr_n_pipelines.attr,
-> +	&dev_attr_n_layers.attr,
-> +	&dev_attr_n_rich_layers.attr,
-> +	&dev_attr_n_scalers.attr,
-> +	&dev_attr_side_by_side.attr,
->  	&dev_attr_aclk_hz.attr,
->  	NULL,
->  };
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+The pull-request contains immutable branches shared with IIO for the
+ab8500 changes and with ARM for the cpcap changes. I don't expect
+any issues, since all patches have been in linux-next for roughly 4
+weeks.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+-- Sebastian
+
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v5.5
+
+for you to fetch changes up to 9480029fe5c24d482efad38dc631bd555fc7afe2:
+
+  power: supply: bd70528: Add MODULE_ALIAS to allow module auto loading (2019-10-27 22:33:44 +0100)
+
+----------------------------------------------------------------
+power supply and reset changes for the v5.5 series
+
+Drivers:
+ * test_power: add support for current and charge_counter
+ * cpcap-charger: improve charge calculation and limit default charge voltage
+ * ab8500: convert to IIO
+ * misc. small fixes all over drivers
+
+----------------------------------------------------------------
+Ben Dooks (Codethink) (1):
+      power: reset: at91: fix __le32 cast in reset code
+
+Claudiu Beznea (1):
+      power: reset: at91-poweroff: lookup for proper PMC DT node
+
+Gustavo A. R. Silva (1):
+      power: supply: ab8500_charger: Fix inconsistent IS_ERR and PTR_ERR
+
+Icenowy Zheng (1):
+      power: supply: axp20x_usb_power: enable USB BC detection on AXP813
+
+Krzysztof Kozlowski (3):
+      power: supply: ab8500: Cleanup probe in reverse order
+      power: supply: ab8500_fg: Do not free non-requested IRQs in probe's error path
+      power: supply: ab8500: Handle invalid IRQ from platform_get_irq_byname()
+
+Linus Walleij (7):
+      power: supply: ab8500_btemp: Convert to IIO ADC
+      power: supply: ab8500_charger: Convert to IIO ADC
+      power: supply: ab8500_fg: Convert to IIO ADC
+      hwmon: ab8500: Convert to IIO ADC
+      mfd: ab8500: Augment DT bindings
+      iio: adc: New driver for the AB8500 GPADC
+      mfd: Switch the AB8500 GPADC to IIO
+
+Madhuparna Bhowmik (1):
+      power: supply: abx500_chargalg: Fix code indentation
+
+Matti Vaittinen (1):
+      power: supply: bd70528: Add MODULE_ALIAS to allow module auto loading
+
+Sebastian Reichel (2):
+      Merge remote-tracking branch 'ib-ab8500-5.4-rc1' into for-next
+      Merge tag 'psy-cpcap-charge-volt-limit-signed' into psy-next
+
+Tony Lindgren (10):
+      power: supply: cpcap-charger: Limit voltage to 4.2V for battery
+      power: supply: cpcap-battery: Check voltage before orderly_poweroff
+      power: supply: cpcap-charger: Improve battery detection
+      power: supply: cpcap-battery: Fix handling of lowered charger voltage
+      power: supply: cpcap-charger: Allow changing constant charge voltage
+      power: supply: cpcap-battery: Move coulomb counter units per lsb to ddata
+      power: supply: cpcap-battery: Simplify coulomb counter calculation with div_s64
+      power: supply: cpcap-battery: Simplify short term power average calculation
+      power: supply: cpcap-battery: Read and save integrator register CCI
+      power: supply: cpcap-battery: Add basic coulomb counter calibrate support
+
+kbuild test robot (1):
+      power: supply: cpcap-charger: cpcap_charger_voltage_to_regval() can be static
+
+lecopzer@gmail.com (2):
+      test_power: Add CHARGE_COUNTER properties
+      test_power: Add CURRENT properties
+
+ Documentation/devicetree/bindings/mfd/ab8500.txt   |  119 ++
+ .../bindings/power/supply/cpcap-charger.txt        |    9 +-
+ MAINTAINERS                                        |    1 +
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi     |    6 +-
+ drivers/hwmon/Kconfig                              |    3 +-
+ drivers/hwmon/ab8500.c                             |   65 +-
+ drivers/iio/adc/Kconfig                            |   10 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/ab8500-gpadc.c                     | 1218 ++++++++++++++++++++
+ drivers/mfd/Kconfig                                |    7 -
+ drivers/mfd/Makefile                               |    1 -
+ drivers/mfd/ab8500-debugfs.c                       |  715 ------------
+ drivers/mfd/ab8500-gpadc.c                         | 1075 -----------------
+ drivers/power/reset/at91-reset.c                   |    6 +-
+ drivers/power/reset/at91-sama5d2_shdwc.c           |    8 +-
+ drivers/power/supply/Kconfig                       |    2 +-
+ drivers/power/supply/ab8500_btemp.c                |   50 +-
+ drivers/power/supply/ab8500_charger.c              |   83 +-
+ drivers/power/supply/ab8500_fg.c                   |   49 +-
+ drivers/power/supply/abx500_chargalg.c             |    8 +-
+ drivers/power/supply/axp20x_usb_power.c            |    8 +
+ drivers/power/supply/bd70528-charger.c             |    1 +
+ drivers/power/supply/cpcap-battery.c               |  271 ++++-
+ drivers/power/supply/cpcap-charger.c               |  222 +++-
+ drivers/power/supply/test_power.c                  |   61 +
+ include/linux/mfd/abx500/ab8500-gpadc.h            |   75 --
+ 26 files changed, 2044 insertions(+), 2030 deletions(-)
+ create mode 100644 drivers/iio/adc/ab8500-gpadc.c
+ delete mode 100644 drivers/mfd/ab8500-gpadc.c
+ delete mode 100644 include/linux/mfd/abx500/ab8500-gpadc.h
+
+--3ffj6i4c5c3znzmz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3dFgMACgkQ2O7X88g7
++pqbLA//YgSLmh30GUiXxGj0F+UASNSKlkJnpgQnjfG/Jkdi0Ft6nT3n4tHFY4wY
+EYzMZ6DDW/DAClOyeXZyNQ73ZITBo5Ff1/aMYPTUbXPXSAn8bb3QyZRp5YnjHMH1
+dLqxCKgBv+rfobTbx6NasmOezhOEP9vtMrXK6bHoN9NyLIdbTJ3rZXXvBVgqBkDO
+LeOXAKt/NvScRKlAVQ/bae9IihBFD149Qr3RvpE+qwueAITiIGFPkWOsDro5AHu4
+amShlPVUz/Vwvb7ot/c8rBkF27XkUDjzOeX/OFUBPzLzp+MeyOpBR0AjBeLQWfgT
+eB127zLSGY/INDC98N6prrtJQ96ghCs4XbshdviWK3PlcP/bdACsW7zwD5QcMT18
+bQUFkFokeXs1Jpc/6hQGYqrV1idgKLi4CfUHFwxej8oZdhxTtd0CVBcTsnFoGq6N
+IgUqf1uS9z2DcG0ig0243gWJRPzUPxfmMMGJ6C5T/mAExPuCx3/aM7rM7gSU7HJc
+G8PdRdMY0pPjHoYtulrhuzVDQzgSVV+ArrPAEDDikw6sDAn8wSYqAB7cXum6HGTq
+bxZXYlFbziBi6LY0Vu8XTQn73uQdhij7g8GkaUOpOVo9/Kd9Lyno4U/CR2coz7Ch
+hrXgmY0nGUVpqe4AP2874uLtL86ThsYDzsdmDbKmuvXu7jYEppk=
+=XB6W
+-----END PGP SIGNATURE-----
+
+--3ffj6i4c5c3znzmz--
