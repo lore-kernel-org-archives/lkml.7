@@ -2,89 +2,152 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033C0C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C665C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5502071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27A682068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:54:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Lexmark.com header.i=@Lexmark.com header.b="kiwgZJe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfKZOxb (ORCPT
+        id S1728182AbfKZOyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 09:53:31 -0500
-Received: from mga11.intel.com ([192.55.52.93]:60015 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfKZOxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 09:53:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 06:53:30 -0800
-X-IronPort-AV: E=Sophos;i="5.69,246,1571727600"; 
-   d="scan'208";a="202740122"
-Received: from pmaziarx-mobl.ger.corp.intel.com (HELO [10.237.142.147]) ([10.237.142.147])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 26 Nov 2019 06:53:28 -0800
-Subject: Re: [PATCH v2 2/2] tracing: Use seq_buf_hex_dump() to dump buffers
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        andriy.shevchenko@intel.com, cezary.rojewski@intel.com,
-        gustaw.lewandowski@intel.com
-References: <1573130738-29390-1-git-send-email-piotrx.maziarz@linux.intel.com>
- <1573130738-29390-2-git-send-email-piotrx.maziarz@linux.intel.com>
- <20191113160922.1b1f0fc0@gandalf.local.home>
-From:   Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Message-ID: <61e34d88-bbf7-a2ff-e983-64dc9be1a482@linux.intel.com>
-Date:   Tue, 26 Nov 2019 15:53:26 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191113160922.1b1f0fc0@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 26 Nov 2019 09:54:15 -0500
+Received: from mail-eopbgr770139.outbound.protection.outlook.com ([40.107.77.139]:3502
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728056AbfKZOyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 09:54:14 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OMfs2nMezD2y3s+RykUfxt1qfrtpNF3f+Jab5mEUef0jKjI+fcB8Do3HiuvyevkmdB2BzA3I761e3gZQmPhnucxbR4Drx/QjhEXCVUg4Heq9npa37fzZ78w3YCzi65tbjY1DDfhAtTWPeKEIS0zsGXlK8tVCy6lH4yl4sYkgzUyt60hLw1vNwSlFjEBn267LhRjRJ410vphG1RFWixiqlKXiVuNKGK6iMd1OcPVLWGvpa25BSo+PDenLDYISq+SBU8wzgN80L5iRy7ck6ZrgCGmxTIAOfoqSfAsTosTMMR1GpdRzsW2YLGu811YQkvfvcNFZ+gw301sp3nMpIMHBBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OCCgt1trB2OJrilvW8rjGr4V9YnFNJ+O6+izJctTlAQ=;
+ b=SeMZtNy3SeE6aW+y1CTG3K4z0RHpVdJH5fD+Y4U7pa89R4zNYQi+GnSxLjBI4UZS4qXLXneHAfWNZ7n0CrkrYD4TpnM/5rH+OWZp+NqPH5i5sIxCRWTV09AYAQoiKsJdNCcvwtZLOJEEI+37z8TQ4dtdXEp3XH5IsTueptN28yc+IswS7G+IDg/tuoeAYFtgJIZZDW6OCQxFpVsj6/JKq3roPnoENkVWHTHUFou6OLGBJY0lkNGqrer7BRFPEitEm8JLc9hYkOCxmlppwbmSf6oC3gY1lBBwtoVFRVWJH6G2v+rWu1RozCNeGoWsLTIK/M3qy2Arij8/jrZRBBS74A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=lexmark.com; dmarc=pass action=none header.from=lexmark.com;
+ dkim=pass header.d=lexmark.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Lexmark.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OCCgt1trB2OJrilvW8rjGr4V9YnFNJ+O6+izJctTlAQ=;
+ b=kiwgZJe4tG/7AvOa/MW+j03J4/PJn4dNTdRnqm3x2WqQ/8O611udg2G4d6gER0UpEK7qVSHdgeMTFmKgwJd4voeZ720v1jUT1q++s/1v6VsSIJViHKXnxyRQXTqAiSJ3fO+tQfwzgjhSdZ3cGvnBQ5Ohbf//BdFmlET5TtUqBEs=
+Received: from MWHPR10MB1343.namprd10.prod.outlook.com (10.169.233.144) by
+ MWHPR10MB1328.namprd10.prod.outlook.com (10.169.232.137) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.16; Tue, 26 Nov 2019 14:54:11 +0000
+Received: from MWHPR10MB1343.namprd10.prod.outlook.com
+ ([fe80::f806:6c17:ea13:b9e2]) by MWHPR10MB1343.namprd10.prod.outlook.com
+ ([fe80::f806:6c17:ea13:b9e2%11]) with mapi id 15.20.2474.023; Tue, 26 Nov
+ 2019 14:54:11 +0000
+From:   Zak Hays <zak.hays@lexmark.com>
+To:     Zak Hays <zak.hays@lexmark.com>
+CC:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/2] thermal: armada-thermal: clear reset in armadaxp_init
+Thread-Topic: [PATCH 2/2] thermal: armada-thermal: clear reset in
+ armadaxp_init
+Thread-Index: AQHVo+iA1kyC2QuZu06OWcaFrvNw2qedirjR
+Date:   Tue, 26 Nov 2019 14:54:11 +0000
+Message-ID: <MWHPR10MB13435C92C02136EE4582B1218C450@MWHPR10MB1343.namprd10.prod.outlook.com>
+References: <1574721077-29892-1-git-send-email-zhays@lexmark.com>,<1574721077-29892-2-git-send-email-zhays@lexmark.com>
+In-Reply-To: <1574721077-29892-2-git-send-email-zhays@lexmark.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zak.hays@lexmark.com; 
+x-originating-ip: [192.146.101.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a67b891f-6569-46cb-a393-08d772807f78
+x-ms-traffictypediagnostic: MWHPR10MB1328:|MWHPR10MB1328:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR10MB1328A528F053F288C185E8C58C450@MWHPR10MB1328.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0233768B38
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(396003)(376002)(366004)(39860400002)(199004)(189003)(305945005)(7736002)(4744005)(86362001)(186003)(2906002)(3846002)(6116002)(81166006)(74316002)(6200100001)(99286004)(6436002)(102836004)(14454004)(44832011)(25786009)(6506007)(81156014)(478600001)(8936002)(54906003)(52536014)(71190400001)(26005)(256004)(316002)(5660300002)(8676002)(9686003)(76176011)(71200400001)(7696005)(11346002)(4326008)(6862004)(66066001)(446003)(66446008)(55016002)(76116006)(64756008)(66556008)(33656002)(66476007)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR10MB1328;H:MWHPR10MB1343.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: lexmark.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CINjPW5wipwRljh7/ISKtX+7Nwz3GU8ZXH3uAGqIHynvarcbC9I9q9mqsYzi9q1GXQ3nzAc8Bl8z9+R49/P3IWVzgIAUzwU7g8jf32anzndx/LszXKOmnDJw513bfVYVAC+lL+vosipIHXATudNQWpBaasMqIjzrR59Jj7kpjiKLUsk/aA4IFpCPV6/ENtKBkLjt4Vf+OC7gRaqglj2WVvD30mBYYP+uC6joa2V/AiXjF03Q4fumOcYwYN3ad9THnsMg+Ef3Kqufq26zEKMWMqm6kWLJteiy3JbbLKSvRhxMuefQTzPRcwKY8NseNgWXoZhPXFLQGQWpzF51qq5XCJAhz3G36Fyx9uhMCVfD2iY17+n7UKkXbzKQBWnyHUQH3D35oHAUVfbqzS+8lIeXpjpFRLtvwuM/54xKqqV2u6kOG0MIQ3/p5tkF9gt21K7P
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Lexmark.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a67b891f-6569-46cb-a393-08d772807f78
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 14:54:11.4708
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 12709065-6e6c-41c9-9e4d-fb0a436969ce
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WOf8Hc5zd4LWz9wZ9INliEWARDSEhVbrrbm32tQy2qTmJQY6GiI0xnfGbXAoxT+R7muh8HyVsFzsFqA1zuD8Ig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR10MB1328
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-13 22:09, Steven Rostedt wrote:
-> OK, so the __print_hex_dump() will be exported to the format files.
-> 
-> Would you be willing to add a function to handle __print_hex_dump() in
-> tools/lib/traceevent/event-parse.c, like __print_flags(),
-> __print_symbolic(), and other __print_*() functions are handled. This
-> will allow trace-cmd and perf to be able to parse the data when you
-> used it via the userspace tools.
-> 
-> This can be a separate patch, but ideally before any trace events start
-> using this.
-> 
-> Thanks,
-> 
-> -- Steve
-> 
-
-Hello Steven,
-
-I'm writing handle in event-parse and I came across some technical 
-problems. I have an event which print function looks like that:
-TP_printk("%s",
-	  __print_hex_dump("", DUMP_PREFIX_OFFSET, 16, 4,
-			   __get_dynamic_array(buf),
-			   __get_dynamic_array_len(buf), false))
-It works properly when printing events to debugfs.
-I'm testing my implementation with trace-cmd and it has problem with 
-parsing DUMP_PREFIX_OFFSET and false (I'm using 
-alloc_and_process_delim()). Instead of having numerical values 
-tep_print_args are of type TEP_PRINT_ATOM and have char array 
-"DUMP_PREFIX_OFFSET" or "true".
-Am I doing something incorrect? Parsing it this way is problematic 
-because instead of false someone may use 0 or logic expression. And 
-writing it to support all possible scenarios may be tedious and prone to 
-errors.
-
-Best regards,
-Piotr Maziarz
+The reset bit needs to be cleared in the init sequence otherwise it=0A=
+=0A=
+holds the block in reset.=0A=
+=0A=
+---=0A=
+=0A=
+=A0drivers/thermal/armada_thermal.c | 3 +++=0A=
+=0A=
+=A01 file changed, 3 insertions(+)=0A=
+=0A=
+=0A=
+=0A=
+diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_ther=
+mal.c=0A=
+=0A=
+index 88363812033c..8c4d1244ee7a 100644=0A=
+=0A=
+--- a/drivers/thermal/armada_thermal.c=0A=
+=0A=
++++ b/drivers/thermal/armada_thermal.c=0A=
+=0A=
+@@ -155,6 +155,9 @@ static void armadaxp_init(struct platform_device *pdev,=
+=0A=
+=0A=
+=A0=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 regmap_write(priv->syscon, data->syscon_control1_o=
+ff, reg);=0A=
+=0A=
+=A0=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 reg &=3D ~PMU_TDC0_SW_RST_MASK;=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 regmap_write(priv->syscon, data->syscon_control1_off, r=
+eg);=0A=
+=0A=
++=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 /* Enable the sensor */=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 regmap_read(priv->syscon, data->syscon_status_off,=
+ &reg);=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 reg &=3D ~PMU_TM_DISABLE_MASK;=0A=
+=0A=
+-- =0A=
+=0A=
+2.7.4=0A=
+=0A=
+=0A=
+=0A=
