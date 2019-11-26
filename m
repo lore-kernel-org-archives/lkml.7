@@ -2,248 +2,217 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291DEC43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A409DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3105206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1F6206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D8uPLtYb"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="DCVKv5M/";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="DCVKv5M/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfKZI3j (ORCPT
+        id S1727432AbfKZIbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 03:29:39 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55100 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727356AbfKZI3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 03:29:38 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAQ8TIGd113992;
-        Tue, 26 Nov 2019 02:29:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574756958;
-        bh=sOlBif7gK5pnyCr+lDdyRLduRMavJKYGdPrcVdrE3vk=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=D8uPLtYb5/IfCiXlyv90/OI9+s3XAyzzegnbexNxyBmMAlhDsyMh32hGIKoAflM3P
-         OYs0ZDbdS0Yrxvcvm8v2hWOsK8Kh9wV3g4wyAHG6M0B8AqVszRrkgWG0kvn+JOomMz
-         7eA37MHwzghpLHmPgFCVCY1D3Ckmpb0WRtkKJEvw=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAQ8TInK027696
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 Nov 2019 02:29:18 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 26
- Nov 2019 02:29:17 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 26 Nov 2019 02:29:17 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAQ8TDfx099514;
-        Tue, 26 Nov 2019 02:29:14 -0600
-Subject: Re: [PATCH v4 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Nishanth Menon <nm@ti.com>, <devicetree@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>,
+        Tue, 26 Nov 2019 03:31:15 -0500
+Received: from mail-eopbgr140080.outbound.protection.outlook.com ([40.107.14.80]:22151
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726121AbfKZIbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 03:31:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2gh7o1PaB51MDokxlVtsTJm7/H2ENFR/NWoNxMTPOxs=;
+ b=DCVKv5M/wH6YlXPtrsh8Dt2sanLV2PkpVMYdW3soc2FK/ZaXznYGWBL2SSRoYvKtyeCdp+NxzaEEAOwMgj2mlS00O/51aDdLcqW9tcScQErb40x9+SBgw52WoWXX1m3CWwRIjW1r839+QLdaozLaXTw0xfyRH6quwDWTRLRvDg4=
+Received: from AM4PR08CA0055.eurprd08.prod.outlook.com (2603:10a6:205:2::26)
+ by AM6PR08MB3029.eurprd08.prod.outlook.com (2603:10a6:209:48::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.17; Tue, 26 Nov
+ 2019 08:31:05 +0000
+Received: from VE1EUR03FT008.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::209) by AM4PR08CA0055.outlook.office365.com
+ (2603:10a6:205:2::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.16 via Frontend
+ Transport; Tue, 26 Nov 2019 08:31:05 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT008.mail.protection.outlook.com (10.152.18.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.17 via Frontend Transport; Tue, 26 Nov 2019 08:31:05 +0000
+Received: ("Tessian outbound f7868d7ede10:v33"); Tue, 26 Nov 2019 08:31:04 +0000
+X-CR-MTA-TID: 64aa7808
+Received: from 473ca04911d7.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.2.50])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id B4020F65-33DE-4F9F-B1FD-73763AF0D7A7.1;
+        Tue, 26 Nov 2019 08:30:59 +0000
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01lp2050.outbound.protection.outlook.com [104.47.2.50])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 473ca04911d7.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Tue, 26 Nov 2019 08:30:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MRyOHXukHH1RgaX9E1kcvZBTzlU7yhZypQYK+Sv6LDmM4qY0IKAGOFQLTastCRE9FjEUkDmjv2sFvFRXX5bRVzRMYIRabjz7wxAlQ24kdcgePubvZDgktoXTsVB97cFz98+zBy386xVAkuNeRmqNl4ejAwdzRN//QEdo/ay+DzfYBcMOJO7HWYVUGzj1DELWsrnTn4dpFGa/mDBF9EpBRPpElGnoYCDuM/flej3glhWk2aylNb3gQhguoFUTsIqrRas/Z/BmoYWXfIcA/PmN4GEf90Y4q9Z1L+34hfUVpPu1an8fUkHNOeO8W8vXuXb0ujfXgFE3isRUs1ulb+e0Pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2gh7o1PaB51MDokxlVtsTJm7/H2ENFR/NWoNxMTPOxs=;
+ b=TjAXW8tHInpEMrP8lpeX3qtZ5ALjgqzIdmOvxH6gQRIp4Zt19vIMK6xj9CUi7uYT2ArFDngG2oVnUhq5YWdkT+lrQvARLKNdC9WDSv+hI4EMl+JEYttZuUzRcXER/c7yfBgW41EIvOwlzJE7+WND3LlW9Gf69oooGHthhvjwNvZi3Y5Kphl/PoJ8Rb9RISW1xruaEALErLkqUGFSVOJQmiQaVd+0v2Hkm6Egq3GgyBTlB7Yg2tOQUyTJQu/nCrY9vg4pdzQf+7FMuwZmXOVaGbk7yeNa+oZscVCCdt/taX8Doou8MrRabQhnOr/daAl249qkVoHBVbPhIhTJ20eleA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2gh7o1PaB51MDokxlVtsTJm7/H2ENFR/NWoNxMTPOxs=;
+ b=DCVKv5M/wH6YlXPtrsh8Dt2sanLV2PkpVMYdW3soc2FK/ZaXznYGWBL2SSRoYvKtyeCdp+NxzaEEAOwMgj2mlS00O/51aDdLcqW9tcScQErb40x9+SBgw52WoWXX1m3CWwRIjW1r839+QLdaozLaXTw0xfyRH6quwDWTRLRvDg4=
+Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com (10.168.146.150) by
+ HE1PR0801MB2090.eurprd08.prod.outlook.com (10.168.93.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.19; Tue, 26 Nov 2019 08:30:57 +0000
+Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com
+ ([fe80::453c:d9b6:5398:2294]) by HE1PR0801MB1676.eurprd08.prod.outlook.com
+ ([fe80::453c:d9b6:5398:2294%8]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
+ 08:30:56 +0000
+From:   "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Vinod <vkoul@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-9-peter.ujfalusi@ti.com> <20191105021900.GA17829@bogus>
- <fc1ea525-54f1-ff1a-7e1c-61b54f5be862@ti.com>
- <CAL_JsqJbV7Zd40admW-x2SSveMqMkG0tM6RFTwjCJyYxX4Cxtw@mail.gmail.com>
- <b4705f2e-b2fb-f00f-7d4d-bd440fe89135@ti.com>
-Message-ID: <f2f4a4f5-335d-9a20-b410-91a7619fb84d@ti.com>
-Date:   Tue, 26 Nov 2019 10:29:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <b4705f2e-b2fb-f00f-7d4d-bd440fe89135@ti.com>
-Content-Type: text/plain; charset="utf-8"
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
+        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
+        nd <nd@arm.com>
+Subject: RE: [RFC PATCH v8 3/8] ptp: Reorganize ptp_kvm modules to make it
+ arch-independent.
+Thread-Topic: [RFC PATCH v8 3/8] ptp: Reorganize ptp_kvm modules to make it
+ arch-independent.
+Thread-Index: AQHVo32GHa+cuSKk4Ea1AvmwxiCr5KecCFoAgAEQ+AA=
+Date:   Tue, 26 Nov 2019 08:30:56 +0000
+Message-ID: <HE1PR0801MB1676DCFA2490D1DB58C14A4AF4450@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+References: <20191125104506.36850-1-jianyong.wu@arm.com>
+ <20191125104506.36850-4-jianyong.wu@arm.com>
+ <a13a4f9554f36a46781308358fc63519@www.loen.fr>
+In-Reply-To: <a13a4f9554f36a46781308358fc63519@www.loen.fr>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ts-tracking-id: eab09f93-49f9-45f2-95e1-7cc5d9b54db5.1
+x-checkrecipientchecked: true
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Jianyong.Wu@arm.com; 
+x-originating-ip: [113.29.88.7]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ea278ce1-b61c-470a-5f99-08d7724afab0
+X-MS-TrafficTypeDiagnostic: HE1PR0801MB2090:|HE1PR0801MB2090:|AM6PR08MB3029:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR08MB30299B0DA6654447B9A905B3F4450@AM6PR08MB3029.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:1169;OLM:1169;
+x-forefront-prvs: 0233768B38
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(136003)(396003)(366004)(13464003)(189003)(199004)(7696005)(4326008)(5660300002)(76116006)(186003)(76176011)(66476007)(99286004)(66446008)(64756008)(66556008)(66946007)(55016002)(52536014)(9686003)(25786009)(316002)(6436002)(256004)(446003)(11346002)(81156014)(71200400001)(7416002)(8936002)(478600001)(6916009)(54906003)(66066001)(74316002)(3846002)(33656002)(7736002)(6116002)(55236004)(102836004)(6506007)(4001150100001)(53546011)(6246003)(81166006)(8676002)(26005)(14454004)(86362001)(229853002)(305945005)(2906002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0801MB2090;H:HE1PR0801MB1676.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: KfWg/d16QuwQByxjM04tH7Spmgy7WBbpSnXmDQaCEVoDPEVb5MKKK1e+Sm6477D0CTkFbgQxI8ZP/UoAcYl+SQImeDlvjf/tErzKpouv32vArq4erj3MQtbP03kuhiDHO51zFogk02JrBmyhDQ83OBYMZbU1ot8J1qEHYaC17WPPkaCw42FuojYx3H3La31DDLp/YgXYYWDnt28nr/nhPqIvD28ttBbRez1TMXTOh+UJQ66v7wlCFyO10KqmbrakBH49nPAvyFidsQwpIvN4UjbKqUBzPXve1O9TOM4B76cPkkXZah3QEAUd8k6pZjbGAmh3CWxFm/7PmpxhwzF2I/e5p17SpswBZAtmha4SbpOtn5n+mCz8KeJ5Kk2l74pUepKHmTjaox2t66bMi2pV9YPB0oLc8wLdqd5xgfxkBboikmScyn4EzPcHy8wWnqLX
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB2090
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Jianyong.Wu@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT008.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(396003)(136003)(199004)(13464003)(189003)(2906002)(305945005)(99286004)(7736002)(66066001)(14454004)(36906005)(26826003)(74316002)(316002)(25786009)(33656002)(22756006)(54906003)(186003)(478600001)(106002)(6506007)(53546011)(102836004)(76176011)(7696005)(47776003)(2486003)(50466002)(26005)(23676004)(81166006)(81156014)(336012)(86362001)(6246003)(55016002)(9686003)(446003)(436003)(11346002)(4326008)(6862004)(229853002)(76130400001)(450100002)(4001150100001)(70206006)(70586007)(52536014)(8676002)(8936002)(356004)(3846002)(6116002)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR08MB3029;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 019346ed-ce47-4a0e-81ff-08d7724af583
+NoDisclaimer: True
+X-Forefront-PRVS: 0233768B38
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: b19Poqe4kSjwUYE6KoyCEcnVB15S1o8tQ6bOZfH5tGYTxeyyBJkZukkbVI2faHHVOKu9sRRvFnZw4g9uKtp1yHk7rRDtH+tJCY6CA0q6ce8dN5VOAhOPgpYnFmJGEiusgVLbypWE9d4VTfLcOsln6NgJ2GyPB7EsvfnPDLmOob7Ua0n2Z+X75zqLQSV2NwWhbngEL5HRgXdrizmjNExFpQUbS6pfZgmXUz/wFxw0Eg1cOlcE+CvFCSbuN/omz+P/awEfbMRMaz1MVq96tjz39Lga+P/lFd3Do6wSVe1H/2sxawqqqYHxDPfsMBB7JaXim7OPZlwuV7Uq7CtUIHQ2cVMxJQeAmiGTyGFmdwjGvUSuHNzhRCRRFTpCvuV+Zdeu7QINype8ASlZwJqsXkAJIW/1i39t9kfxKvBaDzj9lA1rrEtRL3pIWW0Stf4lDWzR
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2019 08:31:05.3422
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea278ce1-b61c-470a-5f99-08d7724afab0
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob,
-
-On 15/11/2019 11.45, Peter Ujfalusi wrote:
-> Rob,
-> 
-> On 14/11/2019 19.53, Rob Herring wrote:
->> On Tue, Nov 5, 2019 at 4:07 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>
->>>
->>>
->>> On 05/11/2019 4.19, Rob Herring wrote:
->>>> On Fri, Nov 01, 2019 at 10:41:28AM +0200, Peter Ujfalusi wrote:
->>>>> New binding document for
->>>>> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
->>>>>
->>>>> UDMA-P is introduced as part of the K3 architecture and can be found in
->>>>> AM654 and j721e.
->>>>>
->>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>>> ---
->>>>> Rob,
->>>>>
->>>>> can you give me some hint on how to fix these two warnings from dt_binding_check:
->>>>>
->>>>>   DTC     Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
->>>>> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dts:23.13-72: Warning (ranges_format): /example-0/interconnect@30800000:ranges: "ranges" property has invalid length (24 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 2)
->>>>>   CHECK   Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
->>>>
->>>> The default #address-cells is 1 for examples. So you need to
->>>> either override it or change ranges parent address size.
->>>
->>> wrapping the cbass_main_navss inside:
->>> cbass_main {
->>>     #address-cells = <2>;
->>>     #size-cells = <2>;
->>>     ...
->>> };
->>>
->>> fixes it.
->>>
->>>>>
->>>>> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml: interconnect@30800000: $nodename:0: 'interconnect@30800000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
->>>>
->>>> Use 'bus' for the node name of 'simple-bus'.
->>>
->>> I took the navss node from the upstream dts (I'm going to fix it there
->>> as well).
->>> It has simple-bus for the navss, which is not quite right as NAVSS is
->>> not a bus, but a big subsystem with multiple components (UDMAP, ringacc,
->>> INTA, INTR, timers, etc).
->>>
->>> What about to change the binding doc to simple-mfd like this
->>
->> That's really for things not memory-mapped (I'm sure you can probably
->> find an example to contradict me), so better to keep simple-bus if all
->> the child nodes have addresses.
-> 
-> According to Documentation/devicetree/bindings/mfd/mfd.txt:
-> - A range of memory registers containing "miscellaneous system
->   registers" also known as a system controller "syscon" or any other
->   memory range containing a mix of unrelated hardware devices.
-> 
-> NAVSS (NAVigator SubSystem) falls in the later case, it contains
-> unrelated blocks, like the UDMAP, ringacc, mailboxes, spinlocks,
-> interrupt aggregator, interrupt router, etc.
-> 
-> - compatible : "simple-mfd" - this signifies that the operating system
->   should consider all subnodes of the MFD device as separate devices
->   akin to how "simple-bus" indicates when to see subnodes as children
->   for a simple memory-mapped bus.
-> 
-> This is a bit confusing, but NAVSS is not really a bus, everything in it
-> can be accessed by the CPU via memory mapped registers (some sub devices
-> does not have registers defined, they are controlled via system firmware).
-> 
->> Do you need the node name to be 'navss' for some reason? If so, then
->> better have a compatible string in there to identify it. If not, just
->> use 'bus' and be done with it.
-> 
-> We don't need unique compatible for the NAVSS itself as there is not
-> much we can configure on the top level, it is 'just' a big subsystem
-> with all sorts of things.
-> 
-> I like to keep the 'navss' as node name as it gives human understandable
-> representation of it in /sys for example, easier to see the topology.
-> 
-> I just feel that the 'bus' does not really apply to what NAVSS is.
-> Probably my view of simple-bus is not correct.
-
-Can you advice on how to proceed? I would like to send v6 so Vinod can
-pick it for next after 5.5-rc1 is tagged.
-This is the only thing which I need to close on to be able to do that.
-
-> 
->>> cbass_main_navss: navss@30800000 {
->>>     compatible = "simple-mfd";
->>>     #address-cells = <2>;
->>>     #size-cells = <2>;
->>>     ...
->>> };
->>>
->>> and fix up the DT when I got to the point when I can send the patches to
->>> enable DMA for am654 and j721e?
->>
->> There's no requirement yet for DTS files to not have warnings.
-> 
-> Sure, but it does not hurt if they are clean ;)
-> 
->>>>> +  compatible:
->>>>> +    oneOf:
->>>>> +      - const: ti,am654-navss-main-udmap
->>>>> +      - const: ti,am654-navss-mcu-udmap
->>>>> +      - const: ti,j721e-navss-main-udmap
->>>>> +      - const: ti,j721e-navss-mcu-udmap
->>>>
->>>> enum works better than oneOf+const. Better error messages.
->>>
->>> Like this:
->>>   compatible:
->>>     oneOf:
->>>       - description: for AM654
->>>         items:
->>>           - enum:
->>>               - ti,am654-navss-main-udmap
->>>               - ti,am654-navss-mcu-udmap
->>>
->>>       - description: for J721E
->>>         items:
->>>           - enum:
->>>               - ti,j721e-navss-main-udmap
->>>               - ti,j721e-navss-mcu-udmap
->>
->> If the 'description' was useful, but it's not. Just:
->>
->> compatible:
->>   enum:
->>     - ti,am654-navss-main-udmap
->>     - ti,am654-navss-mcu-udmap
->>     - ti,j721e-navss-main-udmap
->>     - ti,j721e-navss-mcu-udmap
-> 
-> OK, can I keep your Reviewed-by you have given to v5 if I do this change
-> for v6?
-> 
->>
->>
->> Rob
->>
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGkgTWFyYywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJjIFp5
+bmdpZXIgPG1hekBrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIE5vdmVtYmVyIDI1LCAyMDE5
+IDExOjQ4IFBNDQo+IFRvOiBKaWFueW9uZyBXdSAoQXJtIFRlY2hub2xvZ3kgQ2hpbmEpIDxKaWFu
+eW9uZy5XdUBhcm0uY29tPg0KPiBDYzogbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgeWFuZ2JvLmx1
+QG54cC5jb207IGpvaG4uc3R1bHR6QGxpbmFyby5vcmc7DQo+IHRnbHhAbGludXRyb25peC5kZTsg
+cGJvbnppbmlAcmVkaGF0LmNvbTsgc2Vhbi5qLmNocmlzdG9waGVyc29uQGludGVsLmNvbTsNCj4g
+cmljaGFyZGNvY2hyYW5AZ21haWwuY29tOyBNYXJrIFJ1dGxhbmQgPE1hcmsuUnV0bGFuZEBhcm0u
+Y29tPjsNCj4gd2lsbEBrZXJuZWwub3JnOyBTdXp1a2kgUG91bG9zZSA8U3V6dWtpLlBvdWxvc2VA
+YXJtLmNvbT47IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGt2bWFybUBsaXN0cy5jcy5jb2x1bWJpYS5lZHU7
+IGt2bUB2Z2VyLmtlcm5lbC5vcmc7IFN0ZXZlIENhcHBlcg0KPiA8U3RldmUuQ2FwcGVyQGFybS5j
+b20+OyBLYWx5IFhpbiAoQXJtIFRlY2hub2xvZ3kgQ2hpbmEpDQo+IDxLYWx5LlhpbkBhcm0uY29t
+PjsgSnVzdGluIEhlIChBcm0gVGVjaG5vbG9neSBDaGluYSkNCj4gPEp1c3Rpbi5IZUBhcm0uY29t
+PjsgbmQgPG5kQGFybS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIHY4IDMvOF0gcHRw
+OiBSZW9yZ2FuaXplIHB0cF9rdm0gbW9kdWxlcyB0byBtYWtlIGl0DQo+IGFyY2gtaW5kZXBlbmRl
+bnQuDQo+IA0KPiBPbiAyMDE5LTExLTI1IDEwOjQ1LCBKaWFueW9uZyBXdSB3cm90ZToNCj4gPiBD
+dXJyZW50bHksIHB0cF9rdm0gbW9kdWxlcyBpbXBsZW1lbnRhdGlvbiBpcyBvbmx5IGZvciB4ODYg
+d2hpY2gNCj4gPiBpbmNsdWRzIGxhcmdlIHBhcnQgb2YgYXJjaC1zcGVjaWZpYyBjb2RlLiAgVGhp
+cyBwYXRjaCBtb3ZlIGFsbCBvZg0KPiA+IHRob3NlIGNvZGUgaW50byBuZXcgYXJjaCByZWxhdGVk
+IGZpbGUgaW4gdGhlIHNhbWUgZGlyZWN0b3J5Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSmlh
+bnlvbmcgV3UgPGppYW55b25nLnd1QGFybS5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcHRw
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgfCAgMSArDQo+ID4gIGRyaXZlcnMvcHRw
+L3twdHBfa3ZtLmMgPT4gcHRwX2t2bV9jb21tb24uY30gfCA3NyArKysrKy0tLS0tLS0tLS0tLS0N
+Cj4gPiAgZHJpdmVycy9wdHAvcHRwX2t2bV94ODYuYyAgICAgICAgICAgICAgICAgICB8IDg3DQo+
+ID4gKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGluY2x1ZGUvYXNtLWdlbmVyaWMvcHRwX2t2
+bS5oICAgICAgICAgICAgICAgfCAxMiArKysNCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAxMTggaW5z
+ZXJ0aW9ucygrKSwgNTkgZGVsZXRpb25zKC0pICByZW5hbWUNCj4gPiBkcml2ZXJzL3B0cC97cHRw
+X2t2bS5jID0+IHB0cF9rdm1fY29tbW9uLmN9ICg2MyUpICBjcmVhdGUgbW9kZQ0KPiAxMDA2NDQN
+Cj4gPiBkcml2ZXJzL3B0cC9wdHBfa3ZtX3g4Ni5jICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBp
+bmNsdWRlL2FzbS1nZW5lcmljL3B0cF9rdm0uaA0KPiANCj4gWy4uLl0NCj4gDQo+ID4gZGlmZiAt
+LWdpdCBhL2luY2x1ZGUvYXNtLWdlbmVyaWMvcHRwX2t2bS5oDQo+ID4gYi9pbmNsdWRlL2FzbS1n
+ZW5lcmljL3B0cF9rdm0uaCBuZXcgZmlsZSBtb2RlIDEwMDY0NCBpbmRleA0KPiA+IDAwMDAwMDAw
+MDAwMC4uZTVkZDM4NmY2NjY0DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2luY2x1ZGUv
+YXNtLWdlbmVyaWMvcHRwX2t2bS5oDQo+ID4gQEAgLTAsMCArMSwxMiBAQA0KPiA+ICsvKiBTUERY
+LUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5ICovDQo+ID4gKy8qDQo+ID4gKyAqICBW
+aXJ0dWFsIFBUUCAxNTg4IGNsb2NrIGZvciB1c2Ugd2l0aCBLVk0gZ3Vlc3RzDQo+ID4gKyAqDQo+
+ID4gKyAqICBDb3B5cmlnaHQgKEMpIDIwMTkgQVJNIEx0ZC4NCj4gDQo+IEkgdGhpbmsgeW91IHNo
+b3VsZCBsaXZlIHRoZSBvcmlnaW5hbCBjb3B5cmlnaHQgYXNzaWdubWVudCBoZXJlLg0KPiBUaGlz
+IHJlYWxseSBpc24ndCBhbnl0aGluZyBuZXcuDQo+IA0KDQpPaywNCg0KPiA+ICsgKiAgQWxsIFJp
+Z2h0cyBSZXNlcnZlZA0KPiA+ICsgKi8NCj4gPiArDQo+ID4gK2ludCBrdm1fYXJjaF9wdHBfaW5p
+dCh2b2lkKTsNCj4gPiAraW50IGt2bV9hcmNoX3B0cF9nZXRfY2xvY2soc3RydWN0IHRpbWVzcGVj
+NjQgKnRzKTsgaW50DQo+ID4gK2t2bV9hcmNoX3B0cF9nZXRfY3Jvc3N0c3RhbXAodW5zaWduZWQg
+bG9uZyAqY3ljbGUsDQo+ID4gKwkJc3RydWN0IHRpbWVzcGVjNjQgKnRzcGVjLCB2b2lkICpjcyk7
+DQo+IA0KPiBXaHkgaXMgdGhpcyBpbmNsdWRlIGZpbGUgaW4gYXNtLWdlbmVyaWM/IFRoaXMgaXNu
+J3QgYSBrZXJuZWwtd2lkZSBBUEkuDQo+IA0KPiBJIHRoaW5rIGl0IHNob3VsZCBiZSBzaXR0aW5n
+IGluIGRyaXZlcnMvcHRwLCBhcyBpdCBpcyBvbmx5IHNoYXJlZCBiZXR3ZWVuIHRoZQ0KPiBnZW5l
+cmljIGFuZCBhcmNoLXNwZWNpZmljIHN0dWZmLg0KDQpPaywgYWxsIHRoZXNlIEFQSXMgdXNlZCB1
+bmRlciBkcml2ZXIvcHRwLCBzbyBpdCdzIGJldHRlciB0byBtb3ZlIHRoYXQgaGVhZGVyIGZpbGUg
+aW50byBpdC4NCg0KVGhhbmtzDQpKaWFueW9uZw0KPiANCj4gVGhhbmtzLA0KPiANCj4gICAgICAg
+ICAgTS4NCj4gLS0NCj4gSmF6eiBpcyBub3QgZGVhZC4gSXQganVzdCBzbWVsbHMgZnVubnkuLi4N
+Cg==
