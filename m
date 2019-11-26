@@ -2,245 +2,197 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4BAC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910DFC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B854B2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:35:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="K8BKL5ng"
+	by mail.kernel.org (Postfix) with ESMTP id 41ADF20727
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:37:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574779027;
+	bh=1GOQJQR55sXQeEjNnRz1avvc58d8sV4zCuT8LyQZ/Rs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q4XbZRuQmlo0Gkz2a1Y3Viw8VyHlmbzfX5Ap+e+HYNkvxohIbUvyzxywIs3mwB0sE
+	 JxTfP8txx5E/lQpZZUlgpT7PECMr2IudI/n6CAcsmZgFGw9LP3cYNMEJ/Ud+fDsHxM
+	 hfd+IlT0lF+fSKd0FNBGQ2QoNtvIR1GMrjcEUVrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfKZOfj (ORCPT
+        id S1727721AbfKZOhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 09:35:39 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56038 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfKZOfj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 09:35:39 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b11so3435440wmb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 06:35:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tTh3/Ue9+Bd/S+4Qjg7rRHgrBCqsmuaM2m1qVNN+rXM=;
-        b=K8BKL5ng6W/sTJDdwwzFnVvRSSJdz0Ersv9Drs+4vB6hl6Q9O7PHxOsVzqZliHSz3F
-         BfLABQLoNxG3behx7JOFco8vei5l8QDEWBz6+E7V7WmAvCGhMIulGybkLJkGWAVQfw4S
-         iIefzzOJgunuhyGY+YUeexOj6m4KwlbGSk79s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=tTh3/Ue9+Bd/S+4Qjg7rRHgrBCqsmuaM2m1qVNN+rXM=;
-        b=glthpgpt4VKg2p9jmKjvTxC9WzJmJ3svaucTqKbyckND60rUH4LMgRdlyhJZDhiUFA
-         8x5y2yDxgrid134lvJfLEoMqtnUFUlR0j7UQRlr6KOGv1r4F6DYZMqasvUDqK79owxoK
-         Bojptk6JdsFEz/1mMWMoHRsZFOyo4+e3men/WfBHbXPNKiuZI20e1lc43HBByXfhHfqE
-         fnCVIhbeXUnWtfeJgAw+01hDmPR1QFWaToQYMILKk+R9MJk/ht3W5e49Nj4hYlO5LYLF
-         1xNlKURqqZwuoipjGVZxE8EXVV0UT3MTyXtq1kGCqbRaSc9TWR4MVLnzdzYQ0HG/4iO9
-         pTfg==
-X-Gm-Message-State: APjAAAUl4aNFWPhCEZzR+S8QPCJp8Bs8NzOY+pSfj8blPglaBO9MxEQx
-        KtJ/2IacHIdo+KqQBs5fIQOx0w==
-X-Google-Smtp-Source: APXvYqxwwHxSf01sW4NjpO4UPUnU6bELFb8Pk+GebU1lihLOImY6wYeT9Gd2cGTOwPwKXjXKcBic7w==
-X-Received: by 2002:a7b:ca57:: with SMTP id m23mr4533786wml.65.1574778936879;
-        Tue, 26 Nov 2019 06:35:36 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id 60sm14559560wrn.86.2019.11.26.06.35.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 06:35:36 -0800 (PST)
-Date:   Tue, 26 Nov 2019 15:35:34 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Tue, 26 Nov 2019 09:37:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfKZOhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 09:37:06 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1573020656;
+        Tue, 26 Nov 2019 14:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574779024;
+        bh=1GOQJQR55sXQeEjNnRz1avvc58d8sV4zCuT8LyQZ/Rs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j0X3TsrBziLGJqhV/e3mEWvXCmApDyvMKfe4joOQs9BxecsQaTM8Tkmiqfdfr3ZnY
+         u0byS9MAwd2qlsK5qXdW7mE9keBn7/dWIpog72IPhYiD1wH3oW/XzJYGJGHU8TuVvK
+         RmnA0y9UHPicrhSSG2pETRoZBzXAH3dDrrJ2jnRs=
+Date:   Tue, 26 Nov 2019 14:36:58 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Matthias Brugger <mbrugger@suse.com>
+Cc:     "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>,
+        "tokamoto@jp.fujitsu.com" <tokamoto@jp.fujitsu.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: Re: [PATCH 29/30] drm/bridge: add support for device links to bridge
-Message-ID: <20191126143534.GW29965@phenom.ffwll.local>
-Mail-Followup-To: Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-References: <20191126131541.47393-1-mihail.atanassov@arm.com>
- <20191126131541.47393-30-mihail.atanassov@arm.com>
+        "maeda.naoaki@fujitsu.com" <maeda.naoaki@fujitsu.com>,
+        "misono.tomohiro@fujitsu.com" <misono.tomohiro@fujitsu.com>,
+        Itaru Kitayama <itaru.kitayama@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "indou.takao@fujitsu.com" <indou.takao@fujitsu.com>,
+        Robert Richter <rrichter@marvell.com>
+Subject: Re: [PATCH 0/2] arm64: Introduce boot parameter to disable TLB flush
+ instruction within the same inner shareable domain
+Message-ID: <20191126143657.GA9395@willie-the-truck>
+References: <20190617143255.10462-1-indou.takao@jp.fujitsu.com>
+ <93009dbd-b31c-7364-86d2-21f0fac36676@jp.fujitsu.com>
+ <20191101172851.GC3983@willie-the-truck>
+ <adac2265-2e40-bc2f-a6e2-8d6013b9416c@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191126131541.47393-30-mihail.atanassov@arm.com>
-X-Operating-System: Linux phenom 5.3.0-2-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <adac2265-2e40-bc2f-a6e2-8d6013b9416c@suse.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 01:16:26PM +0000, Mihail Atanassov wrote:
-> From: Russell King <rmk+kernel@armlinux.org.uk>
+On Tue, Nov 26, 2019 at 03:26:48PM +0100, Matthias Brugger wrote:
+> On 01/11/2019 18:28, Will Deacon wrote:
+> > On Fri, Nov 01, 2019 at 09:56:05AM +0000, qi.fuli@fujitsu.com wrote:
+> >> First of all thanks for the comments for the patch.
+> >>
+> >> I'm still struggling with this problem to find out the solution.
+> >> As a result of an investigation on this problem, after all, I think it 
+> >> is necessary to improve TLB flush mechanism of the kernel to fix this 
+> >> problem completely.
+> >>
+> >> So, I'd like to restart a discussion. At first, I summarize this problem 
+> >> to recall what was the problem and then I want to discuss how to fix it.
+> >>
+> >> Summary of the problem:
+> >> A few months ago I proposed patches to solve a performance problem due 
+> >> to TLB flush.[1]
+> >>
+> >> A problem is that TLB flush on a core affects all other cores even if 
+> >> all other cores do not need actual flush, and it causes performance 
+> >> degradation.
+> >>
+> >> In this thread, I explained that:
+> >> * I found a performance problem which is caused by TLBI-is instruction.
+> >> * The problem occurs like this:
+> >>   1) On a core, OS tries to flush TLB using TLBI-is instruction
+> >>   2) TLBI-is instruction causes a broadcast to all other cores, and
+> >>   each core received hard-wired signal
+> >>   3) Each core check if there are TLB entries which have the specified 
+> >> ASID/VA
+> > 
+> > For those following along at home, my understanding is that this "check"
+> > effectively stalls the pipeline as though it is being performed in software.
+> > 
+> > Some questions:
+> > 
+> > Does this mean a malicious virtual machine can effectively DoS the system?
+> > What about a malicious application calling mprotect()?
+> > 
+> > Do all broadcast TLBI instructions cause this expensive check, or are
+> > some significantly slower than others?
+> > 
+> >>   4) This check causes performance degradation
+> >> * We ran FWQ[2] and detected OS jitter due to this problem, this noise
+> >>   is serious for HPC usage.
+> >>
+> >> The noise means here a difference between maximum time and minimum time 
+> >> which the same work takes.
+> >>
+> >> How to fix:
+> >> I think the cause is TLB flush by TLBI-is because the instruction 
+> >> affects cores that are not related to its flush.
+> > 
+> > Does broadcast I-cache maintenance cause the same problem?
+> > 
+> >> So the previous patch I posted is
+> >> * Use mm_cpumask in mm_struct to find appropriate CPUs for TLB flush
+> >> * Exec TLBI instead of TLBI-is only to CPUs specified by mm_cpumask
+> >>   (This is the same behavior as arm32 and x86)
+> >>
+> >> And after the discussion about this patch, I got the following comments.
+> >> 1) This patch switches the behavior (original flush by TLBI-is and new 
+> >> flush by TLBI) by boot parameter, this implementation is not acceptable 
+> >> due to bad maintainability.
+> >> 2) Even if this patch fixes this problem, it may cause another 
+> >> performance problem.
+> >>
+> >> I'd like to start over the implementation by considering these points.
+> >> For the second comment above, I will run a benchmark test to analyze the 
+> >> impact on performance.
+> >> Please let me know if there are other points I should take into 
+> >> consideration.
+> > 
+> > I think it's worth bearing in mind that I have little sympathy for the
+> > problem that you are seeing. As far as I can tell, you've done the
+> > following:
+> > 
+> >   1. You designed a CPU micro-architecture that stalls whenever it receives
+> >      a TLB invalidation request.
+> > 
+> >   2. You integrated said CPU design into a system where broadcast TLB
+> >      invalidation is not filtered and therefore stalls every CPU every
+> >      time that /any/ TLB invalidation is broadcast.
+> > 
+> >   3. You deployed a mixture of Linux and jitter-sensitive software on
+> >      this system, and now you're failing to meet your performance
+> >      requirements.
+> > 
+> > Have I got that right?
+> > 
+> > If so, given that your CPU design isn't widely available, nobody else
+> > appears to have made this mistake and jitter hasn't been reported as an
+> > issue for any other systems, it's very unlikely that we're going to make
+> > invasive upstream kernel changes to support you. I'm sorry, but all I can
+> > suggest is that you check that your micro-architecture and performance
+> > requirements are aligned with the design of Linux *before* building another
+> > machine like this in future.
+> > 
 > 
-> Bridge devices have been a potential for kernel oops as their lifetime
-> is independent of the DRM device that they are bound to.  Hence, if a
-> bridge device is unbound while the parent DRM device is using them, the
-> parent happily continues to use the bridge device, calling the driver
-> and accessing its objects that have been freed.
+> I just wanted to note that the cover letter states that they have also seen this
+> on Thunderx1 and Thunderx2.
 > 
-> This can cause kernel memory corruption and kernel oops.
+> Not sure about other machines, like the Huawei TaiShan 200 series.
 > 
-> To control this, use device links to ensure that the parent DRM device
-> is unbound when the bridge device is unbound, and when the bridge
-> device is re-bound, automatically rebind the parent DRM device.
-> 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> Tested-by: Mihail Atanassov <mihail.atanassov@arm.com>
-> [reworked to use drm_bridge_init() for setting bridge->device]
-> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+> What I want to say, it seems not to be something that only affects Fujitsu but
+> also other vendors. So maybe we should consider adding an erratum like the one
+> for the repeated TLBI on Qualcomm SoCs.
 
-So I thought the big plan was to put the device_link setup into
-drm_bridge_attach, so that it's done for everyone. And we could then
-slowly go through the existing drivers that use the component framework to
-get this handled correctly.
+Careful here -- we're talking about a reported performance issue, not a
+correctness one. The "repeated TLBI" sequence is very much a workaround for
+the latter.
 
-So my questions:
-- is there a problem if we add the device_link for everyone?
-- is there an issue if we only add it at drm_bridge_attach time? I kinda
-  assumed that it's not needed before that (EPROBE_DEFER should handle
-  load dependencies as before), but it could be that some drivers ask for
-  a bridge and then check more stuff and then drop the bridge without
-  calling drm_bridge_attach. We probably don't have a case like this yet,
-  but better robust than sorry.
+In the case of TX1/TX2, I can imagine the "let's sit in a loop of mprotect()
+calls" scaling poorly, which is what the cover letter is referring to, but
+that's not really a workload that we need to optimise for. However, the case
+that Fujitsu are reporting seems to go beyond that because of the design of
+their CPU micro-architecture, where even just a single TLB invalidation
+message stalls all of the other CPUs in the system. I don't have any reason
+to believe that particular problem affects other CPU designs.
 
-Anyway, I scrolled through the bridge patches, looked all good, huge
-thanks for tackling this! Once we have some agreement on the bigger
-questions here I'll try to go through them and review.
+Thanks,
 
-Cheers, Daniel
-> ---
->  drivers/gpu/drm/drm_bridge.c | 49 ++++++++++++++++++++++++++----------
->  include/drm/drm_bridge.h     |  4 +++
->  2 files changed, 40 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index cbe680aa6eac..e1f8db84651a 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -26,6 +26,7 @@
->  #include <linux/mutex.h>
->  
->  #include <drm/drm_bridge.h>
-> +#include <drm/drm_device.h>
->  #include <drm/drm_encoder.h>
->  
->  #include "drm_crtc_internal.h"
-> @@ -109,6 +110,7 @@ void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
->  	bridge->encoder = NULL;
->  	bridge->next = NULL;
->  
-> +	bridge->device = dev;
->  #ifdef CONFIG_OF
->  	bridge->of_node = dev->of_node;
->  #endif
-> @@ -492,6 +494,32 @@ void drm_atomic_bridge_enable(struct drm_bridge *bridge,
->  EXPORT_SYMBOL(drm_atomic_bridge_enable);
->  
->  #ifdef CONFIG_OF
-> +static struct drm_bridge *drm_bridge_find(struct drm_device *dev,
-> +					  struct device_node *np, bool link)
-> +{
-> +	struct drm_bridge *bridge, *found = NULL;
-> +	struct device_link *dl;
-> +
-> +	mutex_lock(&bridge_lock);
-> +
-> +	list_for_each_entry(bridge, &bridge_list, list)
-> +		if (bridge->of_node == np) {
-> +			found = bridge;
-> +			break;
-> +		}
-> +
-> +	if (found && link) {
-> +		dl = device_link_add(dev->dev, found->device,
-> +				     DL_FLAG_AUTOPROBE_CONSUMER);
-> +		if (!dl)
-> +			found = NULL;
-> +	}
-> +
-> +	mutex_unlock(&bridge_lock);
-> +
-> +	return found;
-> +}
-> +
->  /**
->   * of_drm_find_bridge - find the bridge corresponding to the device node in
->   *			the global bridge list
-> @@ -503,21 +531,16 @@ EXPORT_SYMBOL(drm_atomic_bridge_enable);
->   */
->  struct drm_bridge *of_drm_find_bridge(struct device_node *np)
->  {
-> -	struct drm_bridge *bridge;
-> -
-> -	mutex_lock(&bridge_lock);
-> -
-> -	list_for_each_entry(bridge, &bridge_list, list) {
-> -		if (bridge->of_node == np) {
-> -			mutex_unlock(&bridge_lock);
-> -			return bridge;
-> -		}
-> -	}
-> -
-> -	mutex_unlock(&bridge_lock);
-> -	return NULL;
-> +	return drm_bridge_find(NULL, np, false);
->  }
->  EXPORT_SYMBOL(of_drm_find_bridge);
-> +
-> +struct drm_bridge *of_drm_find_bridge_devlink(struct drm_device *dev,
-> +					      struct device_node *np)
-> +{
-> +	return drm_bridge_find(dev, np, true);
-> +}
-> +EXPORT_SYMBOL(of_drm_find_bridge_devlink);
->  #endif
->  
->  MODULE_AUTHOR("Ajay Kumar <ajaykumar.rs@samsung.com>");
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index d6d9d5301551..68b27c69cc3d 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -382,6 +382,8 @@ struct drm_bridge {
->  	struct drm_encoder *encoder;
->  	/** @next: the next bridge in the encoder chain */
->  	struct drm_bridge *next;
-> +	/** @device: Linux driver model device */
-> +	struct device *device;
->  #ifdef CONFIG_OF
->  	/** @of_node: device node pointer to the bridge */
->  	struct device_node *of_node;
-> @@ -407,6 +409,8 @@ void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
->  		     const struct drm_bridge_timings *timings,
->  		     void *driver_private);
->  struct drm_bridge *of_drm_find_bridge(struct device_node *np);
-> +struct drm_bridge *of_drm_find_bridge_devlink(struct drm_device *dev,
-> +					      struct device_node *np);
->  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->  		      struct drm_bridge *previous);
->  
-> -- 
-> 2.23.0
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Will
