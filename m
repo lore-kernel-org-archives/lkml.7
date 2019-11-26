@@ -2,123 +2,147 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF0BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A87CC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B3E20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA672071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:53:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2TOTmIs"
+	dkim=pass (1024-bit key) header.d=Lexmark.com header.i=@Lexmark.com header.b="fYM/7E4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfKZOqq (ORCPT
+        id S1727716AbfKZOx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 09:46:46 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37551 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfKZOqq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 09:46:46 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g7so2086075wrw.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 06:46:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Z4d670MtFAZBRVHDDr7y0hwhh3jdjrRCwzJNRcQEIpE=;
-        b=b2TOTmIssjHAdfu33yethPu4DPKpr4YhsGK0jiWYpI4rByPGN6vKrELD6l/eWkO5Pj
-         JwsxE59R4krfQTwhLW/J2sVsJvp0r616lQcwOq/fprrfZMYtnFFUpWcLQdCEX/ehF8wO
-         VULG/somi6ZYO+lGfnZgzyHswOwE1dgdrO67woKr/PF/4CXPGntHp6PDq+Ao0yoeDW43
-         Q/UvWkHMNQ2A9sLohyiUJZTaFjfA7V1NyMYDRy0O209j42zNyjU9icdjwiD8ShXQJUZ+
-         ss9v9JtpHF6BP598vF/Oe/BxVVBihnbjK33XmDbS9QQp/F/ZgepjPbrv1MB2nCvpSVZy
-         UONg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Z4d670MtFAZBRVHDDr7y0hwhh3jdjrRCwzJNRcQEIpE=;
-        b=B4Bv9eLG81iyirk5zHV4/+WfmH7EPSB6oBZFTH5k+buErmkzZQtF6lAs2cwcFIR8Q6
-         TSPHJBJd94NYeGtkSIz55rXq2UjzcrfR8zgDSnNKyPhpXgvZRm6b9Yihl3hnnTPkFF0K
-         KM7HFSCJu2e7uK+wV3RHWkLRBNeCSm35e2uDmphVBw3yAVY3xbInZ3yXL0T2JyyxOJAI
-         9Qc0YHm2ZB5BjeZsGEmxdzT0WznsM8NyWEAxorWOLX3vfkRZNbcxSLiSYcSXr2bpe1cE
-         5GWdB3J/ZQom8FQC1bBcAwRkmtS56aQ6BG8c2rjnBrx9ZtFQLJl5pD4dy86OH/11MtN+
-         GqjQ==
-X-Gm-Message-State: APjAAAU27YEriN0yZFLQ3pkz7zy5uG4BLvg54Sc3iRIviWKqqGW5a0uX
-        CZdJfO8ThZKSCMndAxlWVlM8x3THDfk=
-X-Google-Smtp-Source: APXvYqz7zA8LG92MJSyDd2eRIISQ4Qcp/e84JCJxgZqxCKET9zDZXwoc5lrMqJeg6GKWYIPxTIWQKw==
-X-Received: by 2002:a05:6000:12:: with SMTP id h18mr14314290wrx.87.1574779604252;
-        Tue, 26 Nov 2019 06:46:44 -0800 (PST)
-Received: from localhost.localdomain ([2a02:a58:8166:7500:6c1e:69e9:a832:6384])
-        by smtp.gmail.com with ESMTPSA id s82sm3325380wms.28.2019.11.26.06.46.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 06:46:43 -0800 (PST)
-From:   Ilie Halip <ilie.halip@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>, Andy <luto@kernel.org>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH v3] x86/boot: discard .eh_frame sections
-Date:   Tue, 26 Nov 2019 16:45:44 +0200
-Message-Id: <20191126144545.19354-1-ilie.halip@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191118175223.GM6363@zn.tnic>
-References: <20191118175223.GM6363@zn.tnic>
+        Tue, 26 Nov 2019 09:53:28 -0500
+Received: from mail-eopbgr760103.outbound.protection.outlook.com ([40.107.76.103]:42888
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726049AbfKZOx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 09:53:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CsZ1G5GFowrNkECKxQV++ULROzHVRtyxT78kCl8s8DLdt+WS5akFK8w+6CI5lVb8GgmJAB8K+NA/8fLEtRpRXBYBy53soRH2BV2dv1yXB9g4PsAY7iqbLRRuPs79Yhiw9/vsPpYjyjUDT0rOWIUEmu9udC0PXmFtDpWLV7z8/wC6k5dK0GOCfKBmdlsENupNpvE2RYpC65W2zqncuv4j55lIskhc2aaVXEHHYA02jhoZftWRNVXAPqIe21LoDAZLfdaCmNKyQO5t2tZ/vCTI6ifr6+WpWYr1UV2j2xRrwzpSDOYTnsMUE8Cg3qXH8sLCnKjuCYQadFQhAD/hjShe4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w/7iKUHmPJhqvYXlcTbsxv0a7URUhOY+4dWVhFYRAGI=;
+ b=ipn9hnz7iUjUh6KfWm89XNprkhRE5SlC0pePFBDk0auSYw07bIfQjgjRDEcS85UKw3sk9Fo341h2dtCEGlvFzsAPpQatv5+0WzwPyZd+tWKHphChbcqVuovt0v3AV07WQB4ICyqCO5Bh3lh/BcdjzHLFM5WLHDtKAQhOd611iUnp3NFwr/vGz0bFKFxQFCMxH1hIX2te9JNCbqKbPOoJcTf65YPlpNbT8gl42v87HJD2N23s4qW+MoY0qLMMdzvKrgq/Brt2FOcdSNzUXQrL0DwlsLZ9Jpsaxn0pw+WQXijM9y3RWnnh+yrNYPCGNq8QhbhWCK9qAzPQk4L9Obr3ag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=lexmark.com; dmarc=pass action=none header.from=lexmark.com;
+ dkim=pass header.d=lexmark.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Lexmark.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w/7iKUHmPJhqvYXlcTbsxv0a7URUhOY+4dWVhFYRAGI=;
+ b=fYM/7E4fmHW90JkA1xMg09sCV2PI1tMPEpUdop3KNwn90XT0LKbmD+8GTgjEa2+erFUVyaDXv188SmcKxpjPjzMNIfsLJQ2NHZv6HepqAVSYRn4qOBfOqypzQai6wCPpmPxg1kQ3zrQkY4WOjABQggK9wONFI3Ofb2aDeZJPiZ4=
+Received: from MWHPR10MB1343.namprd10.prod.outlook.com (10.169.233.144) by
+ MWHPR10MB1328.namprd10.prod.outlook.com (10.169.232.137) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.16; Tue, 26 Nov 2019 14:53:25 +0000
+Received: from MWHPR10MB1343.namprd10.prod.outlook.com
+ ([fe80::f806:6c17:ea13:b9e2]) by MWHPR10MB1343.namprd10.prod.outlook.com
+ ([fe80::f806:6c17:ea13:b9e2%11]) with mapi id 15.20.2474.023; Tue, 26 Nov
+ 2019 14:53:24 +0000
+From:   Zak Hays <zak.hays@lexmark.com>
+To:     Zak Hays <zak.hays@lexmark.com>
+CC:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] thermal: armada-thermal: fix register offsets for AXP
+Thread-Topic: [PATCH 1/2] thermal: armada-thermal: fix register offsets for
+ AXP
+Thread-Index: AQHVo+iA/kMgO33t3k+uGX+0amwVlKedigab
+Date:   Tue, 26 Nov 2019 14:53:24 +0000
+Message-ID: <MWHPR10MB1343E9F9A2AE7FAC27DEDC758C450@MWHPR10MB1343.namprd10.prod.outlook.com>
+References: <1574721077-29892-1-git-send-email-zhays@lexmark.com>
+In-Reply-To: <1574721077-29892-1-git-send-email-zhays@lexmark.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zak.hays@lexmark.com; 
+x-originating-ip: [192.146.101.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b9eb2263-c123-48b8-1af4-08d7728063a1
+x-ms-traffictypediagnostic: MWHPR10MB1328:|MWHPR10MB1328:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR10MB13284D86F5A5A91AD1CF9D418C450@MWHPR10MB1328.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0233768B38
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(396003)(376002)(366004)(39860400002)(199004)(189003)(305945005)(7736002)(4744005)(86362001)(186003)(2906002)(3846002)(6116002)(81166006)(74316002)(6200100001)(99286004)(6436002)(102836004)(14454004)(44832011)(25786009)(6506007)(81156014)(478600001)(8936002)(54906003)(52536014)(71190400001)(14444005)(26005)(256004)(316002)(5660300002)(8676002)(9686003)(76176011)(71200400001)(7696005)(11346002)(4326008)(6862004)(66066001)(446003)(66446008)(55016002)(76116006)(64756008)(66556008)(33656002)(66476007)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR10MB1328;H:MWHPR10MB1343.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: lexmark.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /v7Ug79h2QvPmho8LqGlYdVhCZOX6s3QmQAXeJQa5JTiM4UWO4wtR5YsAhINIW4YQCWJDVOPMy9RuYNb0YNhVmmBZixYd/Mrfm4hK61GrFnNr6VqIk4qgriMHPr/YttDpXuyxYK6rClLU/otOJaMjZKfmzzEplmUY5GsvZjQbhAO81SeMFH7+ijutjnHnWi2tKh69lKdK6l1m9JX8FDdF70+lJumZh78rCXa9osHOFRjLWtNivvSZ3nE7FOAuhQaDU3W7c3P/kuq4Wsyv7beLhLQG4VVIJrpAbB4uJ1nH549270m9Ef0Adf33i9MuUQgRggVCnz35N0hxQaR6a4JMq9FgUAEfmzI3YDMWF7+SvExP6gPL48CVbrazSZSpgPVN+qGADLaTi+bbWLSeowdDChTPxlOKBcWaOR6oNt2/8yA4L1higZ7hFWKWxibSHEr
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Lexmark.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9eb2263-c123-48b8-1af4-08d7728063a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 14:53:24.6468
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 12709065-6e6c-41c9-9e4d-fb0a436969ce
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SSTyo4w+BQr/RrsHsvSDTYwbM1nyFW9sG8euFPsbthak+Mik/peLrSDAdSJPZQ4thB7OI8RMnd1ir4mcQxTCJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR10MB1328
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using GCC as compiler and LLVM's lld as linker, linking
-setup.elf fails:
-      LD      arch/x86/boot/setup.elf
-    ld.lld: error: init sections too big!
-
-This happens because GCC generates .eh_frame sections for most
-of the files in that directory, then ld.lld places the merged
-section before __end_init, triggering an assert in the linker
-script.
-
-Fix this by discarding the .eh_frame sections, as suggested by
-Boris. The kernel proper linker script discards them too.
-
-Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
-Link: https://lore.kernel.org/lkml/20191118175223.GM6363@zn.tnic/
-Link: https://github.com/ClangBuiltLinux/linux/issues/760
-Suggested-by: Borislav Petkov <bp@alien8.de>
----
-
-Changes in V3:
- * discard .eh_frame instead of placing it after .rodata
-
-Changes in V2:
- * removed wildcard for input sections (.eh_frame* -> .eh_frame)
-
- arch/x86/boot/setup.ld | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
-index 0149e41d42c2..3da1c37c6dd5 100644
---- a/arch/x86/boot/setup.ld
-+++ b/arch/x86/boot/setup.ld
-@@ -51,7 +51,10 @@ SECTIONS
- 	. = ALIGN(16);
- 	_end = .;
- 
--	/DISCARD/ : { *(.note*) }
-+	/DISCARD/	: {
-+		*(.eh_frame)
-+		*(.note*)
-+	}
- 
- 	/*
- 	 * The ASSERT() sink to . is intentional, for binutils 2.14 compatibility:
--- 
-2.17.1
-
+As shown in its device tree, Armada XP has the control1 register at=0A=
+=0A=
+0x184d0, not 0x182d0.=0A=
+=0A=
+---=0A=
+=0A=
+=A0drivers/thermal/armada_thermal.c | 2 +-=0A=
+=0A=
+=A01 file changed, 1 insertion(+), 1 deletion(-)=0A=
+=0A=
+=0A=
+=0A=
+diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_ther=
+mal.c=0A=
+=0A=
+index 709a22f455e9..88363812033c 100644=0A=
+=0A=
+--- a/drivers/thermal/armada_thermal.c=0A=
+=0A=
++++ b/drivers/thermal/armada_thermal.c=0A=
+=0A=
+@@ -578,7 +578,7 @@ static const struct armada_thermal_data armadaxp_data =
+=3D {=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 .coef_m =3D 10000000ULL,=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 .coef_div =3D 13825,=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 .syscon_status_off =3D 0xb0,=0A=
+=0A=
+-=A0=A0=A0=A0=A0=A0 .syscon_control1_off =3D 0xd0,=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 .syscon_control1_off =3D 0x2d0,=0A=
+=0A=
+=A0};=0A=
+=0A=
+=A0=0A=
+=0A=
+=A0static const struct armada_thermal_data armada370_data =3D {=0A=
+=0A=
+-- =0A=
+=0A=
+2.7.4=0A=
+=0A=
+=0A=
+=0A=
