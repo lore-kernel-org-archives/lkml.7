@@ -4,27 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA82DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DA8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD3372071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC8A2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfKZNNd (ORCPT
+        id S1727961AbfKZNNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:13:33 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:27105 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfKZNNd (ORCPT
+        Tue, 26 Nov 2019 08:13:37 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:58371 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfKZNNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:13:33 -0500
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+        Tue, 26 Nov 2019 08:13:36 -0500
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
   Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="Claudiu.Beznea@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -32,40 +31,40 @@ Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: dQHoTT3u2HAnNhTaMHS0q1kedxCFf1FU5AgzsWoy1pXzy7CUmOnQDmkHUuWzuX5kl4XzaOs3J6
- MFNxuSTJCY/zGAh4DKLiu5jkxVEOSgbdqM8sMpVJXrYg1ondQZdJxVhLxHmsChiI7yBJ2+Oi3Y
- lnTbyJ9a/Ggnd/krfSxbLJH9dqLgmwmeEuN67Z1evdzR2Bd1IvuXLdAMglykDqBxeLfJl3bhDV
- VjGu5ah3POFE9IZOSNDVz1EkJq2mUKruM0nHBXVcSXzxVI0hvqMWe+3pkLqJhDpQR74I0Z/1CK
- biI=
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: JI9eXQ6zyNY11tbaNslGTcZfXL6Ow1Aw/m1Ola8M/mt7GU8RoPZ+qFssCBrbX2I6qz72UA84Uq
+ /bwHrWJ4VQBwG7L3lX72pqujOg5/3BhRDZLkYpY748JGX3XzkkRiPHsuBygdLtW951T03lT9vZ
+ qyKtq+Uta/SxTfZlMlXfADrJr2UsKrbjrnUEsovAZ4nmA6W0OAzPp+AFZ1DBSZRMucdR48WLSO
+ eX0gv5IroxOP8YY/2G3c08jg2K0pbVKOOnTZl/Z/cTGRm8/uW0L+iLdg+kGNhaVCEDe5lsGJwX
+ s4o=
 X-IronPort-AV: E=Sophos;i="5.69,245,1571727600"; 
-   d="scan'208";a="56669112"
+   d="scan'208";a="59777343"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Nov 2019 06:13:32 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Nov 2019 06:13:15 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 26 Nov 2019 06:13:30 -0700
+ 15.1.1713.5; Tue, 26 Nov 2019 06:13:05 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 26 Nov 2019 06:13:27 -0700
+ 15.1.1713.5 via Frontend Transport; Tue, 26 Nov 2019 06:13:03 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
         <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
         <sre@kernel.org>
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH v2 14/17] ARM: at91/defconfig: enable config flag for audio PROTO board
-Date:   Tue, 26 Nov 2019 15:12:18 +0200
-Message-ID: <1574773941-20649-15-git-send-email-claudiu.beznea@microchip.com>
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v2 05/17] drivers: soc: atmel: select POWER_RESET_AT91_SAMA5D2_SHDWC for sam9x60
+Date:   Tue, 26 Nov 2019 15:12:09 +0200
+Message-ID: <1574773941-20649-6-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
@@ -76,28 +75,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Select POWER_RESET_AT91_SAMA5D2_SHDWC for SAM9X60 SoC.
 
-Enable config flag for audio proto board. This can be used with I2S
-Multi-channel available on SAM9X60 SoC.
-
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/configs/at91_dt_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/power/reset/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
-index 7cc27fad0114..b76e9741909c 100644
---- a/arch/arm/configs/at91_dt_defconfig
-+++ b/arch/arm/configs/at91_dt_defconfig
-@@ -140,6 +140,7 @@ CONFIG_SND_ATMEL_SOC=y
- CONFIG_SND_AT91_SOC_SAM9G20_WM8731=y
- CONFIG_SND_ATMEL_SOC_WM8904=y
- CONFIG_SND_AT91_SOC_SAM9X5_WM8731=y
-+CONFIG_SND_SOC_MIKROE_PROTO=m
- CONFIG_SND_MCHP_SOC_I2S_MCC=y
- CONFIG_USB=y
- CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index 886e60017f4d..ff81d02740c2 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -34,7 +34,7 @@ config POWER_RESET_AT91_RESET
+ config POWER_RESET_AT91_SAMA5D2_SHDWC
+ 	tristate "Atmel AT91 SAMA5D2-Compatible shutdown controller driver"
+ 	depends on ARCH_AT91
+-	default SOC_SAMA5
++	default SOC_SAM9X60 || SOC_SAMA5
+ 	help
+ 	  This driver supports the alternate shutdown controller for some Atmel
+ 	  SAMA5 SoCs. It is present for example on SAMA5D2 SoC.
 -- 
 2.7.4
 
