@@ -2,150 +2,138 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED895C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8477207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB4C2080F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="FgztwZwN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rh+OBdrv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfKZC2T (ORCPT
+        id S1727332AbfKZCdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 21:28:19 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54947 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbfKZC2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 21:28:19 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 25 Nov 2019 21:33:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47738 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727282AbfKZCdO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 21:33:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574735593;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RbRdWBhJ4blUfXgXJEf9JYkRJ6P4wp0pBcRs6Ey3L2A=;
+        b=Rh+OBdrvCtzDEVg+MCC9o7M1sKXNbTTmOpNyacKyQC+weHEyOOkXiP5FzzmRczJRHoWMv0
+        k1Ro25J+L9DXDayoJirNDCkmfz3jQet7rwUniZ0Y1tBaeTpV5EF7l26ZSCkMeZxBvh/os4
+        B/6WUDXbLNsqBSeiv+tftOCKYAM8eR0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-151-ATDMGVSrPGWP4Ti-y8ZjIw-1; Mon, 25 Nov 2019 21:33:10 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47MSW10MKdz9sPT;
-        Tue, 26 Nov 2019 13:28:13 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1574735296;
-        bh=bDpBpExv22RYZg9+7U2ew6DFKYXTfeM4Kl6AcYjAgzY=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=FgztwZwNJDiZ7EM+Yr9+ALlLY8vEMT2mnd8WXWdEpCdnNkQw4xADD7XKzgrAvyTT6
-         Cv8gvnycwfKKIrTHQap0Kk81nvKOZy4ya9O9B5p54sNMtFw6gB+KXD740JrhoRBVBb
-         6596F6YHpp7MSRpyBiawhr2fkyofqG43h728IvxqU1zbTSj1FMKsCNqxnKsOUNtlmQ
-         SnW8YYx/zorrarGVZl5iN4E3DNR8RtnqVkgL+HMW28EN0QoLZqjzZNbtfHCdxoh2d2
-         emHH3FOjfo12nuIt9IUJuHvMDOUxHV3MfmfnjhuDRR71JXglFzeMO+YefJWdIkS+rF
-         sfXYWJPnubq8Q==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Gustavo Walbon <gwalbon@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     benh@kernel.crashing.org, paulus@samba.org, diana.craciun@nxp.com,
-        gwalbon@linux.ibm.com, jkosina@suse.cz, jpoimboe@redhat.com,
-        geert+renesas@glider.be, cmr@informatik.wtf, yuehaibing@huawei.com,
-        linux-kernel@vger.kernel.org, maurosr@linux.ibm.com
-Subject: Re: [PATCH][v2] powerpc: Set right value of Speculation_Store_Bypass in /proc/<pid>/status
-In-Reply-To: <20191123230235.11888-1-gwalbon@linux.ibm.com>
-References: <20191123230235.11888-1-gwalbon@linux.ibm.com>
-Date:   Tue, 26 Nov 2019 13:28:10 +1100
-Message-ID: <87v9r79xs5.fsf@mpe.ellerman.id.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 153B5100550D;
+        Tue, 26 Nov 2019 02:33:08 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-20.pek2.redhat.com [10.72.8.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7A0C95C1D8;
+        Tue, 26 Nov 2019 02:32:57 +0000 (UTC)
+Date:   Tue, 26 Nov 2019 10:32:53 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191126023253.GA24501@ming.t460p>
+References: <20191109222828.GA30568@ming.t460p>
+ <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>
+ <20191123072726.GC25356@ming.t460p>
+ <a9ffcca93657cbbb56819fd883c474a702423b41.camel@unipv.it>
+ <20191125035437.GA3806@ming.t460p>
+ <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>
+ <20191125102928.GA20489@ming.t460p>
+ <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
+ <20191125151535.GA8044@ming.t460p>
+ <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: ATDMGVSrPGWP4Ti-y8ZjIw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gustavo Walbon <gwalbon@linux.ibm.com> writes:
-> The issue has showed the value of status of Speculation_Store_Bypass in the
-> /proc/<pid>/status as `unknown` for PowerPC systems.
->
-> The patch fix the checking of the mitigation status of Speculation, and
-> can be reported as "not vulnerable", "globally mitigated" or "vulnerable".
->
-> Link: https://github.com/linuxppc/issues/issues/255
->
-> Changelog:
-> Rebase on v5.4-rc8
->
-> Signed-off-by: Gustavo Walbon <gwalbon@linux.ibm.com>
-> ---
->  arch/powerpc/kernel/security.c | 25 ++++++++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
+On Mon, Nov 25, 2019 at 07:51:33PM +0100, Andrea Vai wrote:
+> Il giorno lun, 25/11/2019 alle 23.15 +0800, Ming Lei ha scritto:
+> > On Mon, Nov 25, 2019 at 03:58:34PM +0100, Andrea Vai wrote:
+> >=20
+> > [...]
+> >=20
+> > > What to try next?
+> >=20
+> > 1) cat /sys/kernel/debug/block/$DISK/hctx0/flags
+> result:
+>=20
+> alloc_policy=3DFIFO SHOULD_MERGE|2
+>=20
+> >=20
+> >=20
+> > 2) echo 128 > /sys/block/$DISK/queue/nr_requests and run your copy
+> > 1GB
+> > test again.
+>=20
+> done, and still fails. What to try next?
 
-On further thoughts I don't think this logic (which I suggested) is
-right >:(
+I just run 256M cp test to one USB storage device on patched kernel,
+and WRITE data IO is really in ascending order. The filesystem is ext4,
+and mount without '-o sync'. From previous discussion, looks that is
+exactly your test setting. The order can be observed via the following scri=
+pt:
 
-I commented on the issue:
+#!/bin/sh
+MAJ=3D$1
+MIN=3D$2
+MAJ=3D$(( $MAJ << 20 ))
+DEV=3D$(( $MAJ | $MIN ))
+/usr/share/bcc/tools/trace -t -C \
+  't:block:block_rq_issue (args->dev =3D=3D '$DEV') "%s %d %d", args->rwbs,=
+ args->sector, args->nr_sector'
 
-  I think my original suggestion on this was wrong.
-  
-  Our mitigation is not global, ie. it's a barrier that must be used in
-  the right location. We have kernel code to insert the barrier on
-  kernel entry/exit, but that doesn't protect userspace against itself
-  (ie. sandboxes).
-  
-  There's no way to express that with the current values as far as I can
-  see.
-  
-  I think all we can do for now is:
-  
-  if stf_enabled_flush_types == STF_BARRIER_NONE:
-    return PR_SPEC_NOT_AFFECTED // "not vulnerable"
-  else
-    return PR_SPEC_ENABLE // "vulnerable"
-  
-  To express the situation properly we'd need another value, something
-  like PR_SPEC_MITIGATION_AVAILABLE (??) which says that there is a
-  mitigation available but it must be used. That still has the problem
-  that it doesn't tell userspace what the mitigation is, userspace would
-  have to know.
+$MAJ & $MIN can be retrieved via lsblk for your USB storage disk.
 
-cheers
+So I think we need to check if the patch is applied correctly first.
 
-> diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-> index 7d4b2080a658..04e566026bbc 100644
-> --- a/arch/powerpc/kernel/security.c
-> +++ b/arch/powerpc/kernel/security.c
-> @@ -14,7 +14,7 @@
->  #include <asm/debugfs.h>
->  #include <asm/security_features.h>
->  #include <asm/setup.h>
-> -
-> +#include <linux/prctl.h>
->  
->  u64 powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
->  
-> @@ -344,6 +344,29 @@ ssize_t cpu_show_spec_store_bypass(struct device *dev, struct device_attribute *
->  	return sprintf(buf, "Vulnerable\n");
->  }
->  
-> +static int ssb_prctl_get(struct task_struct *task)
-> +{
-> +	if (stf_barrier) {
-> +		if (stf_enabled_flush_types == STF_BARRIER_NONE)
-> +			return PR_SPEC_NOT_AFFECTED;
-> +		else
-> +			return PR_SPEC_DISABLE;
-> +	} else
-> +		return PR_SPEC_DISABLE_NOEXEC;
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +int arch_prctl_spec_ctrl_get(struct task_struct *task, unsigned long which)
-> +{
-> +	switch (which) {
-> +	case PR_SPEC_STORE_BYPASS:
-> +		return ssb_prctl_get(task);
-> +	default:
-> +		return -ENODEV;
-> +	}
-> +}
-> +
->  #ifdef CONFIG_DEBUG_FS
->  static int stf_barrier_set(void *data, u64 val)
->  {
-> -- 
-> 2.19.1
+If your kernel tree is managed via git, please post 'git diff'.
+Otherwise, share us your kernel version, and I will send you one
+backported patch on the kernel version.
+
+Meantime, you can collect IO order log via the above script as you did last
+time, then send us the log.
+
+Thanks,
+Ming
+
