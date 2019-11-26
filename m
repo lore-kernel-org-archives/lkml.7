@@ -2,44 +2,45 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D4EC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE56C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855182075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BA6207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfKZJUi (ORCPT
+        id S1727608AbfKZJUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:20:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47876 "EHLO mx1.suse.de"
+        Tue, 26 Nov 2019 04:20:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47934 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727150AbfKZJUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:20:38 -0500
+        id S1727150AbfKZJUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:20:40 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 853D2BA60;
-        Tue, 26 Nov 2019 09:20:35 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 50643BAB1;
+        Tue, 26 Nov 2019 09:20:38 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     andrew.murray@arm.com, maz@kernel.org, linux-kernel@vger.kernel.org
+To:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
 Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
+        f.fainelli@gmail.com, phil@raspberrypi.org, jeremy.linton@arm.com,
+        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH v3 0/7] Raspberry Pi 4 PCIe support
-Date:   Tue, 26 Nov 2019 10:19:38 +0100
-Message-Id: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 3/7] ARM: dts: bcm2711: Enable PCIe controller
+Date:   Tue, 26 Nov 2019 10:19:41 +0100
+Message-Id: <20191126091946.7970-4-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,74 +48,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series aims at providing support for Raspberry Pi 4's PCIe
-controller, which is also shared with the Broadcom STB family of
-devices.
+This enables bcm2711's PCIe bus, which is hardwired to a VIA
+Technologies XHCI USB 3.0 controller.
 
-There was a previous attempt to upstream this some years ago[1] but was
-blocked as most STB PCIe integrations have a sparse DMA mapping[2] which
-is something currently not supported by the kernel.  Luckily this is not
-the case for the Raspberry Pi 4.
-
-Note that the driver code is to be based on top of Rob Herring's series
-simplifying inbound and outbound range parsing.
-
-[1] https://patchwork.kernel.org/cover/10605933/
-[2] https://patchwork.kernel.org/patch/10605957/
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
 ---
 
+This will likely need a rebase once the RPi GENET patches land.
+
 Changes since v2:
-  - Redo register access in driver avoiding indirection while keeping
-    the naming intact
-  - Add patch editing ARM64's config
-  - Last MSI cleanups, notably removing MSIX flag
-  - Got rid of all _RB writes
-  - Got rid of all of_data
-  - Overall churn removal
-  - Address the rest of Andrew's comments
+  - Remove unused interrupt-map
+  - correct dma-ranges to it's full size, non power of 2 bus DMA
+    constraints now supported in linux-next[1]
+  - add device_type
+  - rename alias from pcie_0 to pcie0
 
 Changes since v1:
-  - add generic rounddown/roundup_pow_two64() patch
-  - Add MAINTAINERS patch
-  - Fix Kconfig
-  - Cleanup probe, use up to date APIs, exit on MSI failure
-  - Get rid of linux,pci-domain and other unused constructs
-  - Use edge triggered setup for MSI
-  - Cleanup MSI implementation
-  - Fix multiple cosmetic issues
-  - Remove supend/resume code
+  - remove linux,pci-domain
 
-Jim Quinlan (3):
-  dt-bindings: PCI: Add bindings for brcmstb's PCIe device
-  PCI: brcmstb: add Broadcom STB PCIe host controller driver
-  PCI: brcmstb: add MSI capability
+[1] https://lkml.org/lkml/2019/11/21/235
 
-Nicolas Saenz Julienne (4):
-  linux/log2.h: Add roundup/rounddown_pow_two64() family of functions
-  ARM: dts: bcm2711: Enable PCIe controller
-  MAINTAINERS: Add brcmstb PCIe controller
-  arm64: defconfig: Enable Broadcom's STB PCIe controller
+ arch/arm/boot/dts/bcm2711.dtsi | 41 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
- .../bindings/pci/brcm,stb-pcie.yaml           |   97 ++
- MAINTAINERS                                   |    4 +
- arch/arm/boot/dts/bcm2711.dtsi                |   41 +
- arch/arm64/configs/defconfig                  |    1 +
- drivers/acpi/arm64/iort.c                     |    2 +-
- drivers/net/ethernet/mellanox/mlx4/en_clock.c |    3 +-
- drivers/of/device.c                           |    2 +-
- drivers/pci/controller/Kconfig                |    9 +
- drivers/pci/controller/Makefile               |    1 +
- .../pci/controller/cadence/pcie-cadence-ep.c  |    7 +-
- drivers/pci/controller/cadence/pcie-cadence.c |    7 +-
- drivers/pci/controller/pcie-brcmstb.c         | 1012 +++++++++++++++++
- drivers/pci/controller/pcie-rockchip-ep.c     |    9 +-
- include/linux/log2.h                          |   52 +
- kernel/dma/direct.c                           |    3 +-
- 15 files changed, 1230 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
- create mode 100644 drivers/pci/controller/pcie-brcmstb.c
-
+diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+index 667658497898..2e121fc8b3d0 100644
+--- a/arch/arm/boot/dts/bcm2711.dtsi
++++ b/arch/arm/boot/dts/bcm2711.dtsi
+@@ -288,6 +288,47 @@ IRQ_TYPE_LEVEL_LOW)>,
+ 		arm,cpu-registers-not-fw-configured;
+ 	};
+ 
++	scb {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <1>;
++
++		ranges = <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
++			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
++
++		pcie0: pcie@7d500000 {
++			compatible = "brcm,bcm2711-pcie";
++			reg = <0x0 0x7d500000 0x9310>;
++			device_type = "pci";
++			#address-cells = <3>;
++			#interrupt-cells = <1>;
++			#size-cells = <2>;
++			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "pcie", "msi";
++			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++			interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143
++							IRQ_TYPE_LEVEL_HIGH>;
++			msi-controller;
++			msi-parent = <&pcie0>;
++
++			ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000
++				  0x0 0x04000000>;
++			/*
++			 * The wrapper around the PCIe block has a bug
++			 * preventing it from accessing beyond the first 3GB of
++			 * memory. As the bus DMA mask is rounded up to the
++			 * closest power of two of the dma-range size, we're
++			 * forced to set the limit at 2GB. This can be
++			 * harmlessly changed in the future once the DMA code
++			 * handles non power of two DMA limits.
++			 */
++			dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000
++				      0x0 0xc0000000>;
++			brcm,enable-ssc;
++		};
++	};
++
+ 	cpus: cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 2.24.0
 
