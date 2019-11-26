@@ -2,132 +2,93 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED3AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD915C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE05220722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:43:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hMcqqG4G"
+	by mail.kernel.org (Postfix) with ESMTP id ACC9420727
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfKZWn4 (ORCPT
+        id S1726876AbfKZWyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 17:43:56 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50447 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726103AbfKZWn4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 17:43:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574808235;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=BDiy4464Umn5P4mtuCmXuryCcZFijTYcLQRYOPE+8D8=;
-        b=hMcqqG4GTYWrCs3n3NeCMuqStlsrOoZQtmlBzQ9GGpLwgg35fnAoKa2cJohBMxk/Lms9ap
-        3NklCingt4JNFm94z4oG4ZdpsZYw8YdKWJ0R9iE39Zlw/8joAP4n+xJZlZq9E1Jq3GKLQj
-        3t6riq6z4nM695D5RJ8Ualr5J3j2rHM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-277-UhEfoINhPkm7Z_9hqYNzmA-1; Tue, 26 Nov 2019 17:43:52 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE1B9800C76;
-        Tue, 26 Nov 2019 22:43:50 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-161.rdu2.redhat.com [10.10.120.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C22EB60BE2;
-        Tue, 26 Nov 2019 22:43:48 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] afs: Minor cleanups and a minor bugfix
+        Tue, 26 Nov 2019 17:54:49 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:36506 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbfKZWyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 17:54:49 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E30720092F;
+        Tue, 26 Nov 2019 23:54:47 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 20BF6200645;
+        Tue, 26 Nov 2019 23:54:47 +0100 (CET)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 8221B20507;
+        Tue, 26 Nov 2019 23:54:46 +0100 (CET)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Alison Wang <alison.wang@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>
+Subject: [PATCH v3] crypto: caam - do not reset pointer size from MCFGR register
+Date:   Wed, 27 Nov 2019 00:54:26 +0200
+Message-Id: <1574808866-16764-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
 MIME-Version: 1.0
-Content-ID: <27496.1574808228.1@warthog.procyon.org.uk>
-Date:   Tue, 26 Nov 2019 22:43:48 +0000
-Message-ID: <27497.1574808228@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: UhEfoINhPkm7Z_9hqYNzmA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+In commit 'a1cf573ee95 ("crypto: caam - select DMA address size at runtime")'
+CAAM pointer size (caam_ptr_size) is changed from
+sizeof(dma_addr_t) to runtime value computed from MCFGR register.
+Therefore, do not reset MCFGR[PS].
 
-Can you pull these AFS patches please?  They are:
-
- (1) Minor fix to make some debugging statements display information from
-     the correct iov_iter.
-
- (2,3) Rename some members and variables to make things more obvious or
-     consistent.
-
- (4) Provide a helper to wrap increments of the usage count on the afs_read
-     struct.
-
- (5) Use scnprintf() to print into a stack buffer rather than sprintf().
-
- (6,7) Remove some set but unused variables.
-
-There should be no functional changes from (2) - (7).
-
-Thanks,
-David
+Fixes: a1cf573ee95 ("crypto: caam - select DMA address size at runtime")
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc: <stable@vger.kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Alison Wang <alison.wang@nxp.com>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
 ---
-The following changes since commit a99d8080aaf358d5d23581244e5da23b35e340b9=
-:
+Changes since v2:
+- update description so the referred commit is not split on 2 lines;
+- added Reviewed-by.
 
-  Linux 5.4-rc6 (2019-11-03 14:07:26 -0800)
+ drivers/crypto/caam/ctrl.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/=
-afs-next-20191121
-
-for you to fetch changes up to 4fe171bb81b13b40bf568330ec3716dfb304ced1:
-
-  afs: Remove set but not used variable 'ret' (2019-11-21 20:36:04 +0000)
-
-----------------------------------------------------------------
-AFS development
-
-----------------------------------------------------------------
-David Howells (4):
-      afs: Use call->_iter not &call->iter in debugging statements
-      afs: Switch the naming of call->iter and call->_iter
-      afs: Rename desc -> req in afs_fetch_data()
-      afs: Introduce an afs_get_read() refcount helper
-
-Mark Salyzyn (1):
-      afs: xattr: use scnprintf
-
-zhengbin (2):
-      afs: Remove set but not used variables 'before', 'after'
-      afs: Remove set but not used variable 'ret'
-
- fs/afs/cmservice.c |  6 +++---
- fs/afs/dir_edit.c  | 12 ++----------
- fs/afs/file.c      |  6 +++---
- fs/afs/fsclient.c  | 16 +++++++---------
- fs/afs/internal.h  | 16 +++++++++++-----
- fs/afs/rxrpc.c     | 12 ++++++------
- fs/afs/server.c    |  3 +--
- fs/afs/vlclient.c  |  6 +++---
- fs/afs/xattr.c     | 16 +++++++++-------
- fs/afs/yfsclient.c | 11 +++++------
- 10 files changed, 50 insertions(+), 54 deletions(-)
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index d7c3c38..3e811fc 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -671,11 +671,9 @@ static int caam_probe(struct platform_device *pdev)
+ 	of_node_put(np);
+ 
+ 	if (!ctrlpriv->mc_en)
+-		clrsetbits_32(&ctrl->mcr, MCFGR_AWCACHE_MASK | MCFGR_LONG_PTR,
++		clrsetbits_32(&ctrl->mcr, MCFGR_AWCACHE_MASK,
+ 			      MCFGR_AWCACHE_CACH | MCFGR_AWCACHE_BUFF |
+-			      MCFGR_WDENABLE | MCFGR_LARGE_BURST |
+-			      (sizeof(dma_addr_t) == sizeof(u64) ?
+-			       MCFGR_LONG_PTR : 0));
++			      MCFGR_WDENABLE | MCFGR_LARGE_BURST);
+ 
+ 	handle_imx6_err005766(&ctrl->mcr);
+ 
+-- 
+2.1.0
 
