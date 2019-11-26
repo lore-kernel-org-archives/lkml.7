@@ -2,165 +2,176 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED28FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE0BC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90922073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:05:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="EfY/OBOl"
+	by mail.kernel.org (Postfix) with ESMTP id 266A42073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbfKZRFj (ORCPT
+        id S1728593AbfKZRHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:05:39 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.6]:49682 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727309AbfKZRFj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:05:39 -0500
-Received: from [46.226.52.108] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-6.bemta.az-a.eu-west-1.aws.symcld.net id 22/97-05312-06B5DDD5; Tue, 26 Nov 2019 17:05:36 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WSf0wbZRjHeXvX60GovpQiLw1srrI/hlyhuCy
-  H2XQKxv6hyBJJgFnxGCdtLEftHaw1iw5kZuV3onMM+dFNREWJDEYCTCV0iEDkhy1ER0YctGaD
-  jTjAjA0nsdeDqf99vs/3m+d53jcPiakWCQ3J2gXWxjEWLRGGm5JkNJV3dN6Y/NtaAj3zs1tGn
-  1nwE3TPZLWcvjtzWkZ7B5oI2jlQJ6fnb2XQXRud4DBp6FovJwx9823A0N84rzB0dzgJw/cr7Y
-  Thm0uzuGG9e1emIldu5vKL7W/ITXdnaWuVwj6+OCQ/Ce7JK0EYCeBnGLo4MiqTxAiOrngWtkU
-  PQH/V3CdEgcNRDLX1uzBRqODHMvRT9QNCEgsA1bV+oKgEoSQBafTh6PWgoYZLAM32NQTHYHAV
-  oOFrk3IxFQmfR52nvYEpZCCVhprGzWJZDVOQ98e/gcg43ItmT12WiayEDCr3DAZZBU+gyUutw
-  TahMB0NXfkumAcwDv1Z9hUmMgaj0Zy/NZhHEKK2b6cwiaPQkm9LLuVZNFb+K5DqiWjiF/82a1
-  FL8/A2xyFPa9U2v4ycNQ3YTt7lXcYlplFb1SlcfAqC8WjL7ZDKVtThrCak8l7kbaekcixaHpo
-  Kfi+CPjka8kzL60FS43+2ljgw4fIaIfGTqP38Lawx+BMRaOycH3cBvAPQ+TZzoUkoYswWSp+c
-  TOn1KZQ+dT+lP5CsY96hGB1bQh1neYHS65jjvI53FB2zFOg4VugGgXMrsLpdfeDM2orODWJIm
-  TZKeUQxb1Q9kl9c4DAxvCnPVmJheTeIJUktUk7nBLwIG1vI2t80WwJHu2MjMlyrVlblBmwlb2
-  WKeHOhZI0Diqxfar6AqXCumGM10UpMDEExZCrhHrbYOX0PiNNEKkFISIgq3MraiszC//1lEE0
-  CbaSSFruEmznh4aTlwBKywBKyc3PiEgLzr6U5KUu8MXgYDGZ9ERKbvf55c2/21xkvfDlz03/w
-  /vQf6ereyUOtOLbHcZto0oYfirDPnddmPRrDNXyC2Tdvbrzvc8XbE5wjH/mMTp7KqIMTm3PPh
-  g3U754q7U3EclKT7sw92N9ZRVn8KSExpbefi3si+93co3eWnupcWZnWVdjLNBvOrdW4t+vULT
-  fGCnsyyw7aGtaFq68YHjMnG7DVtPeihOa80Mrd+7oyIUNXCPzVs03N3b7pghfdxnupx1biF9P
-  IHId616sL10q9TNbjr3EvXTzgrT0bVWSsGKzL/vStiR+431s46wlX1vDi05vPIEVN7VS/0PH6
-  PsGxpza91qeMue7R4ryJ0SdgNp75B9sekfd1BAAA
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-3.tower-272.messagelabs.com!1574787935!781!1
-X-Originating-IP: [104.47.2.56]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 5515 invoked from network); 26 Nov 2019 17:05:35 -0000
-Received: from mail-db5eur01lp2056.outbound.protection.outlook.com (HELO EUR01-DB5-obe.outbound.protection.outlook.com) (104.47.2.56)
-  by server-3.tower-272.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 26 Nov 2019 17:05:35 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EMRETXGDE/mGT/B19QQI/N0zGkpqq1phioNk0e/wzE6lgpFgjqbpzCfQjT2+KlENreSqboFJtZzhxMaRoCZ+HbB3EjrcuwH6lrmeH/OYYKSOsewZ040AkIPP0jc11UrLq7zTsWf1n8OMkV1IZ37n1Bkd1pt/4bEdzbCT0nSHtEfMOl7YMW+6+QSBkGWhLTSx/UDDHqatNdf43udMb8KFRom2Qg3ScRyCIFmZlbKiI1isC1abcRww8A2+INm9lKzzV5R5fWH63Jg7EbfxPmyS0kCleHQ6lHgSt+AR/aJFoGFPtYRW8veYWAvnq8Wp/w1feSw66QEqDNb/Wwy+qL2cvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0ljmhcn1J2mLKTCkAMF5DWYK2knem6+UE0h80w6JgrU=;
- b=QZ2TyrGRILmQhKFd+BG8B6mUXcxa2//+QhDTiBs9WsYe3KXNsRF4V7oXrLO5ihV4bQlbz9JnmG2OsyAvPCZBAd6QwsK2nVem+er6RqhDeKnzSTeUBjFVj6U+WbmtyawQ1vDNBILLxs6FcAWfQmMQetuclFeuIzlQRr6wR5MtPw+Ofeac1ufU6QgBTmDJQ/PtwCJJM6ufTq4FhdGeMCXWk5TDoQfiH/8fQGp4NGSTzZVa1996nBuvR9qWhvyEnFxuD0nNBxbjPembTR6VzlwL7fw7y216cX7lgxE08DQeHlFJ0nmAF07oCocBHwXwmA7SJqh9ztsgDyXHb4mM90h1rQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0ljmhcn1J2mLKTCkAMF5DWYK2knem6+UE0h80w6JgrU=;
- b=EfY/OBOlNPYZMvMfWcA42oYCTMbty+Q5uoCAVfcY8s6qeRlX8lUhzngDlj6GD9rA3zgxNqmcZOKk0e0Tv1yTFrGrwLGwto3lrB1rF7l7T95RlOd1so4VklakOQSevoE44cQyE4oqQ1twJhb0wQoBmUmKSai0Oc/13G53zQLgwTQ=
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
- AM5PR1001MB1170.EURPRD10.PROD.OUTLOOK.COM (10.169.155.138) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.19; Tue, 26 Nov 2019 17:05:34 +0000
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
- 17:05:34 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>
-Subject: RE: [PATCHv2 3/6] ASoC: da7213: Provide selectable option
-Thread-Topic: [PATCHv2 3/6] ASoC: da7213: Provide selectable option
-Thread-Index: AQHVn7aW3HRPJHTGr0K/Z65q+crSuKedt65g
-Date:   Tue, 26 Nov 2019 17:05:34 +0000
-Message-ID: <AM5PR1001MB09942FC6CA1144DBC8C7BC2A80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
- <20191120152406.2744-4-sebastian.reichel@collabora.com>
-In-Reply-To: <20191120152406.2744-4-sebastian.reichel@collabora.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 02fbdf9d-9b66-4787-481f-08d77292da1a
-x-ms-traffictypediagnostic: AM5PR1001MB1170:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR1001MB117096CC86F7756B4F49DDF1A7450@AM5PR1001MB1170.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:569;
-x-forefront-prvs: 0233768B38
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(396003)(39860400002)(136003)(199004)(189003)(86362001)(52536014)(6506007)(55236004)(71200400001)(53546011)(26005)(4744005)(76116006)(7696005)(71190400001)(6436002)(64756008)(66446008)(102836004)(9686003)(54906003)(25786009)(110136005)(55016002)(446003)(11346002)(8936002)(2906002)(186003)(6116002)(66476007)(99286004)(66946007)(3846002)(66556008)(5660300002)(66066001)(33656002)(6246003)(14444005)(256004)(74316002)(305945005)(7736002)(8676002)(81166006)(229853002)(81156014)(76176011)(316002)(478600001)(4326008)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1170;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: O5RcapkVKAKS7NqCRiR/4F7zHnSRppttCCOPmW//D5KQJgNBL+UNJFiqw3xjkKYGmnlbTjzAmwaKr/WFtgUfdMWrFOVAsYWz2cGz4fJ+9Dx8IBDxWOfiQqWjU+trBi58K7jzM85u7fShtxFWLL6KYYOhYQEpfeE12x35RQXbTIwLB/nWVf9DtWj7DK6IQ8xGZullPRFN3DT4AJHw7XlawNr7L0bkLuu6LzbsGFfbdwF/dHzUdPHhZiwXSnVIAv2iamLn86LNaM7I07z2eZLUtLbeZu31ylIAkRM1K8Qj9xsGe2+GQn4zZWXJN9pPC1d6IaGp4YLJw0G9+cFybM5XmKyf4OGgwCxFAGAXxLPAVFr0eSowV8rn7B1ru/1Vg2qi80T0VNWx7OJZVRDKVRstgeL2t3XF1WS4Liq3goJxwC9JdYI9wQ2LD3e74ezeV09j
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 26 Nov 2019 12:07:04 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:52650 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727756AbfKZRHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 12:07:03 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iZeIk-0004un-K7; Tue, 26 Nov 2019 10:06:59 -0700
+To:     James Sewart <jamessewart@arista.com>, linux-pci@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <20191120193228.GA103670@google.com>
+ <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <3cd1d36f-a8ba-92dc-f991-19e2f9196eba@deltatee.com>
+Date:   Tue, 26 Nov 2019 10:06:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02fbdf9d-9b66-4787-481f-08d77292da1a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 17:05:34.4912
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ofwMV23JbsEbvcQIDdXH859b8GBpAoDp+IIVLkDWLwg97FwNDsCN7jIQLU71xY4j5d5KZdroFbQDqzBgBlZ0zomYIY8lEw3DmyJ8PGK5/1Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1170
+In-Reply-To: <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, alex.williamson@redhat.com, dima@arista.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, 0x7f454c46@gmail.com, linux-pci@vger.kernel.org, jamessewart@arista.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v2] PCI: Add DMA alias quirk for PLX PEX NTB
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20 November 2019 15:24, Sebastian Reichel wrote:
 
-> This commit adds the Dialog DA7213 audio codec as a selectable option
-> in the kernel config. Currently the driver can only be selected for
-> Intel Baytrail/Cherrytrail devices or if SND_SOC_ALL_CODECS is enabled.
->=20
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+On 2019-11-26 10:03 a.m., James Sewart wrote:
+> The PLX PEX NTB forwards DMA transactions using Requester ID's that
+> don't exist as PCI devices. The devfn for a transaction is used as an
+> index into a lookup table storing the origin of a transaction on the
+> other side of the bridge.
+> 
+> Add helper pci_add_dma_alias_range that can alias a range of devfns in 
+> dma_alias_mask.
+> 
+> This patch aliases all possible devfn's to the NTB device so that any
+> transaction coming in is governed by the mappings for the NTB.
+> 
+> Signed-off-by: James Sewart <jamessewart@arista.com>
+
+Looks good to me, save a nit below; and you may want to split this into
+two patches: one that introduces the new interface and one that uses it.
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
 > ---
->  sound/soc/codecs/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-> index 229cc89f8c5a..1d44fbc3d407 100644
-> --- a/sound/soc/codecs/Kconfig
-> +++ b/sound/soc/codecs/Kconfig
-> @@ -646,7 +646,8 @@ config SND_SOC_DA7210
->          tristate
->=20
->  config SND_SOC_DA7213
-> -        tristate
-> +	tristate "Dialog DA7213 CODEC"
-> +	depends on I2C
->=20
->  config SND_SOC_DA7218
->  	tristate
-> --
-> 2.24.0
+>  drivers/pci/pci.c    | 29 ++++++++++++++++++++++-------
+>  drivers/pci/quirks.c | 15 +++++++++++++++
+>  include/linux/pci.h  |  1 +
+>  3 files changed, 38 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index a97e2571a527..f502af1b5d10 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5854,6 +5854,18 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>  	return 0;
+>  }
+>  
+> +int _pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int len)
+> +{
+> +	if (!dev->dma_alias_mask)
+> +		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
+> +	if (!dev->dma_alias_mask) {
+> +		pci_warn(dev, "Unable to allocate DMA alias mask\n");
+> +		return -ENOMEM;
+> +	}
+> +	bitmap_set(dev->dma_alias_mask, devfn_from, len);
+> +	return 0;
+> +}
+> +
+>  /**
+>   * pci_add_dma_alias - Add a DMA devfn alias for a device
+>   * @dev: the PCI device for which alias is added
+> @@ -5875,18 +5887,21 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>   */
+>  void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+>  {
+> -	if (!dev->dma_alias_mask)
+> -		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
+> -	if (!dev->dma_alias_mask) {
+> -		pci_warn(dev, "Unable to allocate DMA alias mask\n");
+> +	if (_pci_add_dma_alias_range(dev, devfn, 1) != 0)
+>  		return;
+> -	}
+> -
+> -	set_bit(devfn, dev->dma_alias_mask);
+>  	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+>  		 PCI_SLOT(devfn), PCI_FUNC(devfn));
+>  }
+>  
+> +void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int len)
+> +{
+> +	int devfn_to = devfn_from + len - 1;
 
+Nit: there should be a blank line between the variable declarations and
+the code in the functions.
+
+> +	if (_pci_add_dma_alias_range(dev, devfn_from, len) != 0)
+> +		return;
+> +	pci_info(dev, "Enabling fixed DMA alias for devfn range from %02x.%d to %02x.%d\n",
+> +		 PCI_SLOT(devfn_from), PCI_FUNC(devfn_from), PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
+> +}
+> +
+>  bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2)
+>  {
+>  	return (dev1->dma_alias_mask &&
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 320255e5e8f8..1ed230f739a4 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5315,6 +5315,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+>  SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+>  SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+>  
+> +/*
+> + * PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints. These IDs
+> + * are used to forward responses to the originator on the other side of the
+> + * NTB. Alias all possible IDs to the NTB to permit access when the IOMMU is
+> + * turned on.
+> + */
+> +static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
+> +{
+> +	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
+> +	/* PLX NTB may use all 256 devfns */
+> +	pci_add_dma_alias_range(pdev, 0, 256);
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, quirk_plx_ntb_dma_alias);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, quirk_plx_ntb_dma_alias);
+> +
+>  /*
+>   * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
+>   * not always reset the secondary Nvidia GPU between reboots if the system
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 1a6cf19eac2d..6765f3d0102b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2324,6 +2324,7 @@ static inline struct eeh_dev *pci_dev_to_eeh_dev(struct pci_dev *pdev)
+>  #endif
+>  
+>  void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
+> +void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int len);
+>  bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2);
+>  int pci_for_each_dma_alias(struct pci_dev *pdev,
+>  			   int (*fn)(struct pci_dev *pdev,
+> 
