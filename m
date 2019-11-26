@@ -2,98 +2,101 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0958C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A3A2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449EE2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:43:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="VKQR+Zj0"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="twpQAMdj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbfKZRnA (ORCPT
+        id S1728819AbfKZRnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:43:00 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:52988 "EHLO mail.andi.de1.cc"
+        Tue, 26 Nov 2019 12:43:33 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:26850 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfKZRm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:42:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UJNRgJYokU+UFBwtU2ynndrvNCEKdJJFP6ze1hNesKA=; b=VKQR+Zj0Q2r4WCNqxVBEMXCJjm
-        RRPVV3THF0fJGtGADLnmC3BHkJB8U1LtDHLaPwPHJlAQBz3ItPNT3J7gDYOaFtND5sNia0Ae0EW1+
-        NYUDqVaIHwiA2ZCjoGEkaup2w7a6HGwXYfTWOgZ30upF+ndNyu9OCENAbVNv71gvbTbQ=;
-Received: from p200300ccff0be6001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0b:e600:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iZerL-0001ZJ-Vf; Tue, 26 Nov 2019 18:42:44 +0100
-Date:   Tue, 26 Nov 2019 18:42:42 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel@pyra-handheld.com, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [Letux-kernel] [PATCH 0/2] net: wireless: ti: wl1251: sdio:
- remove ti, power-gpio
-Message-ID: <20191126184242.365603a2@aktux>
-In-Reply-To: <0101016ea8691109-5beadf07-b3ba-4d31-a516-c7f3015f2316-000000@us-west-2.amazonses.com>
-References: <cover.1574591746.git.hns@goldelico.com>
-        <0101016ea8691109-5beadf07-b3ba-4d31-a516-c7f3015f2316-000000@us-west-2.amazonses.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1727642AbfKZRnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 12:43:32 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47Mrq56Ldsz9ty2b;
+        Tue, 26 Nov 2019 18:43:29 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=twpQAMdj; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id kXcPbgiquUQG; Tue, 26 Nov 2019 18:43:29 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47Mrq55GWNz9ty2Y;
+        Tue, 26 Nov 2019 18:43:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1574790209; bh=Nm8voP3roRsSJAwpWrKFutNy5/buSvyuxten1tQ9gTY=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=twpQAMdj6a4+f20pV4DPDuYjHyRUb/LjKbcEh4ouigrnW0V8x6XCySPnGgAeK0EST
+         k4aCausfd1kvRKYBzfgdeKiKY4V2CLEREHbBDsD2Vknlgau3FDGYx2ekGuZzdnhDhH
+         UIYAEfaPuxzUib/oq0qgEKSghZqmoU9mG2yg7Ybc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 69C578B81A;
+        Tue, 26 Nov 2019 18:43:31 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id AG6IN_c4oP0K; Tue, 26 Nov 2019 18:43:31 +0100 (CET)
+Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 021B08B825;
+        Tue, 26 Nov 2019 18:43:30 +0100 (CET)
+Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id B1F0A6B76D; Tue, 26 Nov 2019 17:43:30 +0000 (UTC)
+Message-Id: <081e3b4e3a17a8ec9fdac46b505e3a29ca15f209.1574790198.git.christophe.leroy@c-s.fr>
+In-Reply-To: <05105deeaf63bc02151aea2cdeaf525534e0e9d4.1574790198.git.christophe.leroy@c-s.fr>
+References: <05105deeaf63bc02151aea2cdeaf525534e0e9d4.1574790198.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 2/2] selftests/powerpc: enable range tests on 8xx in
+ ptrace-hwbreak.c selftest
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        ravi.bangoria@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 26 Nov 2019 17:43:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019 15:51:28 +0000
-Kalle Valo <kvalo@codeaurora.org> wrote:
+8xx is now able to support any range length so range tests can be enabled.
 
-> "H. Nikolaus Schaller" <hns@goldelico.com> writes:
-> 
-> > The driver has been updated to use the mmc/sdio core
-> > which does full power control. So we do no longer need
-> > the power control gipo.
-> >
-> > Note that it is still needed for the SPI based interface
-> > (N900).
-> >
-> > Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
-> > Tested by: H. Nikolaus Schaller <hns@goldelico.com> # OpenPandora 600MHz
-> >
-> > H. Nikolaus Schaller (2):
-> >   DTS: bindings: wl1251: mark ti,power-gpio as optional
-> >   net: wireless: ti: wl1251: sdio: remove ti,power-gpio
-> >
-> >  .../bindings/net/wireless/ti,wl1251.txt       |  3 +-
-> >  drivers/net/wireless/ti/wl1251/sdio.c         | 30 -------------------
-> >  2 files changed, 2 insertions(+), 31 deletions(-)  
-> 
-> Via which tree are these planned to go? Please always document that in
-> the cover letter so that maintainers don't need to guess.
-> 
-Hmm, this is about bisect issues and the former misc pandora
-fix/cleanup series now in linux-next that make you doubt it should go
-via wireless/net?
-So the question is whether it depends on that?
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Regards,
-Andreas
+---
+v2: new
+---
+ tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c b/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c
+index 7deedbc16b0b..fc477dfe86a2 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c
+@@ -455,9 +455,8 @@ run_tests(pid_t child_pid, struct ppc_debug_info *dbginfo, bool dawr)
+ 	if (dbginfo->features & PPC_DEBUG_FEATURE_DATA_BP_RANGE) {
+ 		test_sethwdebug_exact(child_pid);
+ 
+-		if (!is_8xx)
+-			test_sethwdebug_range_aligned(child_pid);
+-		if (dawr && !is_8xx) {
++		test_sethwdebug_range_aligned(child_pid);
++		if (dawr || is_8xx) {
+ 			test_sethwdebug_range_unaligned(child_pid);
+ 			test_sethwdebug_range_unaligned_dar(child_pid);
+ 			test_sethwdebug_dawr_max_range(child_pid);
+-- 
+2.13.3
+
