@@ -2,61 +2,104 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50701C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2497C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3005920722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD64920722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfKZPSI (ORCPT
+        id S1728452AbfKZPTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:18:08 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:40338 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727879AbfKZPSI (ORCPT
+        Tue, 26 Nov 2019 10:19:40 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:48361 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727532AbfKZPTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:18:08 -0500
-Received: (qmail 1786 invoked by uid 2102); 26 Nov 2019 10:18:07 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 26 Nov 2019 10:18:07 -0500
-Date:   Tue, 26 Nov 2019 10:18:07 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Jiri Kosina <jikos@kernel.org>
-cc:     syzbot <syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com>,
-        <andreyknvl@google.com>, <benjamin.tissoires@redhat.com>,
-        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: INFO: rcu detected stall in hub_event
-In-Reply-To: <nycvar.YFH.7.76.1911260848090.1799@cbobk.fhfr.pm>
-Message-ID: <Pine.LNX.4.44L0.1911261008430.1508-100000@iolanthe.rowland.org>
+        Tue, 26 Nov 2019 10:19:40 -0500
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N18I8-1hq5I03i5S-012UMW; Tue, 26 Nov 2019 16:19:39 +0100
+Received: by mail-qk1-f172.google.com with SMTP id b8so1459199qkk.5;
+        Tue, 26 Nov 2019 07:19:38 -0800 (PST)
+X-Gm-Message-State: APjAAAX1bw1LdLbu9guADta0uV8K96uqlfn0Ru39rha4XxxPNlUmNpxc
+        JK4nAr9A7K7C2r/xv9TTCDG3EsH2huJp8o+TX/s=
+X-Google-Smtp-Source: APXvYqxkJM9lYV6ySiCqqwmdO8XRdUFW/0iwCM8k71faNi0k7M+UF9EcV3qyWKGQNF7hE1x+4/qErH4knwLOBFrAgZI=
+X-Received: by 2002:a37:84a:: with SMTP id 71mr15651038qki.138.1574781577640;
+ Tue, 26 Nov 2019 07:19:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20191111203835.2260382-1-arnd@arndb.de> <20191111203835.2260382-6-arnd@arndb.de>
+ <272c471b-a7a9-c830-e19b-d1f19ee47073@xs4all.nl> <CAK8P3a3vHWBJU6EiUbRKJ01Zsv5E5Yfr+=h2Dg95atjvaHZ+Rg@mail.gmail.com>
+ <15a1a26c-b3ad-7449-4508-1207527ab21f@xs4all.nl>
+In-Reply-To: <15a1a26c-b3ad-7449-4508-1207527ab21f@xs4all.nl>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 26 Nov 2019 16:19:21 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1xZZNYtOgyGg8hcUKNdXHhT9CyTbD1PkyXqfXSdy5mUA@mail.gmail.com>
+Message-ID: <CAK8P3a1xZZNYtOgyGg8hcUKNdXHhT9CyTbD1PkyXqfXSdy5mUA@mail.gmail.com>
+Subject: Re: [PATCH v4 5/8] media: v4l2-core: fix VIDIOC_DQEVENT for time64 ABI
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:TeslaUHoW7jHFuz2vZBZoWUXU6BPhPCjmeT5eJndrpAPBnqnGyA
+ PVM5VJKQuFvk/CLaFPIMSuGVXcC4725e9428bUWB6j7MJbPX+ClTiUMn1zzg6EUSYZgLQTt
+ DmhtlVXnq6MPyvShBmrmN/TO0hAoX+eKPBnpWxW+PsFFePs55CfmyPFD+mv14hR/kQ3xqmz
+ QakJocJN5f3gi7rF0NFcg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KV2i6mp1x5E=:lbVqwXsT3kIEt4Smtc5p5d
+ o9wOEtlSTktEYVPi/cf8TVD7umMlASIlHnu/YDt4/7RLeNkBR0mQivX7ueyDCaTcW3+9PWjxD
+ 1tmCvLgplOZB+lzFlWBUhlAhOiu2euFaarC1f7Iv6QsXEQfQlkUhf0AzVFyVKW2zABsb/jCn1
+ qb5HiRchenlmZB5AY7kHnZhRRVE+gg0llefoJ1LhgE7whFg1+ed4gbvPyo0caKz6HMTR0m+mF
+ HikB6kEHruCMr/5u3YC5bRDXwbpBPOgQ5zZa7skVVWvIcQkS7RXSbzHeDC4uRapS/JYO4CM7d
+ 0CWWGuxA+TYVqWI3cjXbHHKjaec1gzOTJD7ssuJd5SIQpldKMR8YNB999gOeVX/wX/huP9VYl
+ MprTB7MfJUZWGkfLSOg6KR3ZL5fgKRt+hqVym2aIfIClln/q419gMHwE/lSr1dXVHoDgy4RvZ
+ eNf0oNrf0yVYvf+6sHZkGKLS3RQ9q/a+zL0D3gfaYTdCSnb6vPoyQs/m/ivh8hmV65iNRQkkz
+ ASaPism5CP/hsa9QAHkWGLaDud+2ixQedmn5qBpzg5Dc2SHc8A/Co0IgSzKAj6QBlMdTIcVhH
+ jUafmTlmiaP3O/yaxn8lW+JxqS0BG5iqr0OWnuph0L3OXCjXpmFECN8GqmxQcG4yGQ4Fyxj7k
+ ydInHRJ086M1z7pKSXXfQxT49gzvm9HxVVJAKwioxmlqcVwVm1sotj84dWBTWDZg4IWMAXS+8
+ iLF66qfyAHpiY8TyoiXnhcVeyMJKwHthALV6BCBhOL5LqwpoliEZnfFvcA+psboYWbJRPYpbi
+ Oh7EeTnEbnP15DRZGoqT6wGimYH/dDe1XyW/jvPD5sGDQs2OXFWi7UyDXZ84ZG8lkR3My0UjG
+ 4E11tAxyOLUCZXPEXJZw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019, Jiri Kosina wrote:
+On Tue, Nov 26, 2019 at 4:10 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> On 11/26/19 3:43 PM, Arnd Bergmann wrote:
+> > On Mon, Nov 25, 2019 at 3:40 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> >> On 11/11/19 9:38 PM, Arnd Bergmann wrote:
+> >                 struct v4l2_event *ev = parg;
+> >                 struct v4l2_event_time32 ev32 = {
+> >                         .type           = ev->type,
+> >                         .pending        = ev->pending,
+> >                         .sequence       = ev->sequence,
+> >                         .timestamp.tv_sec  = ev->timestamp.tv_sec,
+> >                         .timestamp.tv_nsec = ev->timestamp.tv_nsec,
+> >                         .id             = ev->id,
+> >                 };
+> >
+> >                 memcpy(ev32.u, ev->u, sizeof(ev->u));
+> >                 memcpy(ev32.reserved, ev->reserved, sizeof(ev->reserved));
+> >
+> >                 if (copy_to_user(arg, &ev32, sizeof(ev32)))
+> >                         return -EFAULT;
+> >
+> > Unfortunately this is a little uglier because it still requires the two
+> > memcpy() for the arrays, but I think it's good enough.
+>
+> I agree.
+>
+> Hmm, can't you do .u = ev->u ? Or is that not allowed by this syntax?
 
-> On Mon, 25 Nov 2019, Alan Stern wrote:
-> 
-> > #syz test: https://github.com/google/kasan.git 46178223
-> 
-> Alan, did you get a test result from syzbot on this patch? My mailbox 
-> doesn't seem to have it.
+No, that doesn't work here since the two unions are considered
+different types despite being defined identically. It would work by
+giving the union a name, but that name would also become visible
+to user space without adding more hacks.
 
-No response, not yet.  syzbot seems to be very slow testing the patches
-for this bug report.  The earlier ones I submitted also took over a day
-to finish.
-
-BTW, even if this patch fixes the problem, I don't think setting 
-collection[0].parent_idx to -1 is a very good solution.  It's brittle 
-and doesn't address the underlying ambiguity.
-
-Alan Stern
-
+       Arnd
