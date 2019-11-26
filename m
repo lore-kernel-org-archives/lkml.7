@@ -2,102 +2,70 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF221C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434DBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876ED2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:08:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7cCrpCr"
+	by mail.kernel.org (Postfix) with ESMTP id 242A320678
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfKZJI0 (ORCPT
+        id S1727430AbfKZJIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:08:26 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46770 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfKZJI0 (ORCPT
+        Tue, 26 Nov 2019 04:08:30 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:56458 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfKZJI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:08:26 -0500
-Received: by mail-io1-f66.google.com with SMTP id i11so19625614iol.13;
-        Tue, 26 Nov 2019 01:08:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DYoUaVnx+KyGsEJ9h6ubFDzA7o1Y91HlvowSyIB4u6g=;
-        b=M7cCrpCrIZ4LCbZ4UhLXRenmizp3UHCd+p/bh+2mYkjZ6GR4ahA72n3SVUpdsuAvFR
-         psm3NYTD6uX2K9VQ0NOMAk4bO/0VkWe5PJWn38Qfk/ADdSDHuiknaYAY34ZzzXv8nPG8
-         sq0SbTDToltYVqXZZ83v/cNxwt7Ke1tsHPoW+ehaB5x9zsl6fgymolxzEa0VdqA8BfcN
-         z2vTqzcaZ4bBxvEIintl3J1iMOOGJeD8+RwU9uRvndkyMTfTGR5+ZfjqETQzJ/KR4llJ
-         j3MIwMhmjvV3fcGs/dXIzLyZPdE/ObYxIUbNjX75i9hxf5yUChqGdT/5pJ6XLaZLCK0K
-         RgWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DYoUaVnx+KyGsEJ9h6ubFDzA7o1Y91HlvowSyIB4u6g=;
-        b=oJI0Ohom0Rtzs5YT51Yd77ZoXtAnTXM5NDyRAICqMGfDcWUcD25aAo2JTHRfgg5iU9
-         dI9SEsB1aUjTJPM5bROG0olsHn7IBAAdAEmGHlyTZUdDGGkGYwzf8iSPsAFAPmsMoirY
-         pwwl4VvhDUjM3nDlIYjwEbU8elxqwBxySTIK+WzI6PyuFvU3ihoZ8l6fEesvGDqAo0sF
-         Sozq2rlnB6DK7LTLrKEfjULkDi2aoTxmX3d8lpyv8H7OPAnoBcSyLraZlH+ZfwGu73lA
-         cwOZVwaWHyrobQvHh2pdqZdDeyVH+0we2gCtb+wCx7mQo2KLHscbqQ9Vi7E8TAUg++01
-         iA7g==
-X-Gm-Message-State: APjAAAUj4b086nCzabXTPOVHHjXkAG5SK4FZsNzBWYAuETLsaMlRlZ6D
-        T4baD3dBWu4a5SF/jLGPnCxMrmeGLKnGkgxqfrE=
-X-Google-Smtp-Source: APXvYqyfjbm1xD9vJMPlCm9jiMuFO96a0z+melj0FGo+2YH0IFHnWzUAVKCPm12COPj5QhPmhZ6Ldd257xh8VpSNgoI=
-X-Received: by 2002:a02:3403:: with SMTP id x3mr31741578jae.117.1574759303686;
- Tue, 26 Nov 2019 01:08:23 -0800 (PST)
+        Tue, 26 Nov 2019 04:08:29 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 180BF1C20DF; Tue, 26 Nov 2019 10:08:26 +0100 (CET)
+Date:   Tue, 26 Nov 2019 10:08:26 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: next-20191119 on x86-32: fails to boot -- NX protecting kernel
+ data, then oops
+Message-ID: <20191126090826.4ekii5stepqknfjp@ucw.cz>
+References: <20191125144946.GA6628@duo.ucw.cz>
+ <CALCETrW85=toRrxe5w6a+AFmpTygR24K7rbDyvbmMLSsMO80XQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191122235324.17245-1-agruenba@redhat.com> <20191122235324.17245-4-agruenba@redhat.com>
- <20191125091508.3265wtfzpoupv2lj@box>
-In-Reply-To: <20191125091508.3265wtfzpoupv2lj@box>
-From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date:   Tue, 26 Nov 2019 10:08:12 +0100
-Message-ID: <CAHpGcMJO_bzsc+9Ta7VoKkszR2_v1BqqBZ4=7re=j7OxcX-R1w@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] gfs2: Rework read and page fault locking
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        cluster-devel <cluster-devel@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <sfrench@samba.org>,
-        Bob Peterson <rpeterso@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrW85=toRrxe5w6a+AFmpTygR24K7rbDyvbmMLSsMO80XQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mo., 25. Nov. 2019 um 10:16 Uhr schrieb Kirill A. Shutemov
-<kirill@shutemov.name>:
-> On Sat, Nov 23, 2019 at 12:53:24AM +0100, Andreas Gruenbacher wrote:
-> > @@ -778,15 +804,51 @@ static ssize_t gfs2_file_direct_write(struct kiocb *iocb, struct iov_iter *from)
+Hi!
+
+> > Machine is thinkpad x60, that's x86-32. It fails to boot:
 > >
-> >  static ssize_t gfs2_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
-> >  {
-> > +     struct gfs2_inode *ip;
-> > +     struct gfs2_holder gh;
-> > +     size_t written = 0;
->
-> 'written' in a read routine?
+> > EIP: ptdump_pte_entry+0x9
+> >
+> > call trace
+> > ? ptdump_pmd_entry
+> > walk_pgd_range
+> > ...
+> > mark_rodata_ro
+> > ? rest_init
+> > kernel_init
+> >
+> 
+> Can you send a .config?
 
-It's a bit weird, but it's the same as in generic_file_buffered_read.
+Provided in separate email. Let me know if you need something else.
 
-> --
->  Kirill A. Shutemov
+Do you have x86-32 configs that work with -next?
 
-Thanks,
-Andreas
+Best regards,
+								Pavel
