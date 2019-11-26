@@ -2,28 +2,27 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D4BC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E6FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2032084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF6F20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:15:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfKZUOy (ORCPT
+        id S1727595AbfKZUPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:14:54 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47708 "EHLO mx1.suse.de"
+        Tue, 26 Nov 2019 15:15:07 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48474 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727465AbfKZUOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:14:44 -0500
+        id S1727529AbfKZUOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:14:53 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0E229B35C;
-        Tue, 26 Nov 2019 20:14:43 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id CD258B2B7;
+        Tue, 26 Nov 2019 20:14:51 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -67,9 +66,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 29/35] powerpc/perf: remove current_is_64bit()
-Date:   Tue, 26 Nov 2019 21:13:43 +0100
-Message-Id: <83795e9690ad8b51a2d991919bc102351a3bbb20.1574798487.git.msuchanek@suse.de>
+Subject: [PATCH v2 35/35] MAINTAINERS: perf: Add pattern that matches ppc perf to the perf entry.
+Date:   Tue, 26 Nov 2019 21:13:49 +0100
+Message-Id: <162e074f40d974d49bad6001ea88a2033f029b2d.1574798487.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574798487.git.msuchanek@suse.de>
 References: <cover.1574798487.git.msuchanek@suse.de>
@@ -80,62 +79,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
-current_is_64bit() is quivalent to !is_32bit_task().
-Remove the redundant function.
-
-Link: https://github.com/linuxppc/issues/issues/275
-Link: https://lkml.org/lkml/2019/9/12/540
-
-Fixes: linuxppc#275
-Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- arch/powerpc/perf/callchain.c | 17 +----------------
- 1 file changed, 1 insertion(+), 16 deletions(-)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index c84bbd4298a0..35d542515faf 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -284,16 +284,6 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
- 	}
- }
- 
--static inline int current_is_64bit(void)
--{
--	/*
--	 * We can't use test_thread_flag() here because we may be on an
--	 * interrupt stack, and the thread flags don't get copied over
--	 * from the thread_info on the main stack to the interrupt stack.
--	 */
--	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
--}
--
- #else  /* CONFIG_PPC64 */
- /*
-  * On 32-bit we just access the address and let hash_page create a
-@@ -321,11 +311,6 @@ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry
- {
- }
- 
--static inline int current_is_64bit(void)
--{
--	return 0;
--}
--
- static inline int valid_user_sp(unsigned long sp, int is_64)
- {
- 	if (!sp || (sp & 7) || sp > TASK_SIZE - 32)
-@@ -486,7 +471,7 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
- void
- perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
- {
--	if (current_is_64bit())
-+	if (!is_32bit_task())
- 		perf_callchain_user_64(entry, regs);
- 	else
- 		perf_callchain_user_32(entry, regs);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 66cc549ac327..853690adb36f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12842,6 +12842,8 @@ F:	arch/*/kernel/*/perf_event*.c
+ F:	arch/*/kernel/*/*/perf_event*.c
+ F:	arch/*/include/asm/perf_event.h
+ F:	arch/*/kernel/perf_callchain.c
++F:	arch/*/perf/*
++F:	arch/*/perf/*/*
+ F:	arch/*/events/*
+ F:	arch/*/events/*/*
+ F:	tools/perf/
 -- 
 2.23.0
 
