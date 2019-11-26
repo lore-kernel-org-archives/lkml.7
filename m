@@ -3,158 +3,242 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEA2C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 06:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4886EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 06:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670932071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 06:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95592071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 06:43:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qz5Muqb6"
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="dX4Rvw0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfKZGkj (ORCPT
+        id S1727029AbfKZGnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 01:40:39 -0500
-Received: from mail-eopbgr00061.outbound.protection.outlook.com ([40.107.0.61]:13379
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725765AbfKZGkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 01:40:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HU/gZ9wxJQL38NNdV/OSPSYi0Z2RQQvIscQ5Sj/DnfIK2sq3l+dCh3rW4U8xKeqXYxQGieCP+V5VCcX9GRL8oeHaZ4E4hubQbpm7luBEnNSUZz9V1jhQHAavSmEbY3R032yVMLF/PyxVmpKLFBeOcDqndwZP2bT12BY1UeiHXRjz5FJEKW4Vj9VWTnsLuF5Z+JMePsQsw1ghB+o1BmKkPuaY9fFSP0FegKeXID1CHVsUr0EE+9fmbhuoFDMPnQAAZ8G+X/3RnpNJDve9Lfx4G1PIt7u3NQMSWRRho0SJhCPmuC0lLxKu7cC2OlpjcClWQu00I1fVLPwwjWwoSf2meg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=52rtOMTt2c/ADnIHWHA2V9HzE4XC4KC1ODKDDBSQWj0=;
- b=FvXvnFhbIXf1rckQx4C27zwFA0H55pe6IaefqE569QC7tJTAZPSRh/EoiSFbyJDZUr0/auFCrZzek0r91jOcl+4G9sKgP3VN0ILZsrwXgvCrptEdq4slOn5np4U8Hrg/4P0Jvv8U4jKIb0B7k8MpFBjeP5L21nWCs7xCmuz3TlrwwT4aIwGGnzVJNPLiu81TjLcJ4JAaKIYsOh/RUe6uiNv7IM/Pj9aGAEVMR4WjWXoGEldCimd/6+05H7/oubd18coXN914KzKKQEluBX2X8RY2NKc7X24vTSadD6Vs7KB3tBRZo0Y+KAy5AWhv89NjehBCEMqSpDuL5gORYMVmmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=52rtOMTt2c/ADnIHWHA2V9HzE4XC4KC1ODKDDBSQWj0=;
- b=qz5Muqb6cuG5g5aGRVcr80p/8liGqOy3N1Myrv/9n6IJ5veo8hh+y7xuZ7clpGnmFXF6KkzElYNxp29ke7b7HLjl8u4MzBvj4nON7fAqLxkmI4SKMYvhdHGeQqJ4DA9JrF23gQsfYiOJHH7hKdrgxUMbM3gkDL0jQPG7axixfQA=
-Received: from AM0PR0402MB3556.eurprd04.prod.outlook.com (52.133.43.147) by
- AM0PR0402MB3572.eurprd04.prod.outlook.com (52.133.49.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17; Tue, 26 Nov 2019 06:40:35 +0000
-Received: from AM0PR0402MB3556.eurprd04.prod.outlook.com
- ([fe80::e885:ac97:fca8:c4e]) by AM0PR0402MB3556.eurprd04.prod.outlook.com
- ([fe80::e885:ac97:fca8:c4e%3]) with mapi id 15.20.2495.014; Tue, 26 Nov 2019
- 06:40:35 +0000
-From:   Kuldeep Singh <kuldeep.singh@nxp.com>
-To:     Michael Walle <michael@walle.cc>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: RE: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
-Thread-Topic: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
-Thread-Index: AQHVojp/XO5z0jeXk0+aNgRvimpOIKedAjsw
-Date:   Tue, 26 Nov 2019 06:40:35 +0000
-Message-ID: <AM0PR0402MB3556804FB47D182173C6A7AAE0450@AM0PR0402MB3556.eurprd04.prod.outlook.com>
-References: <20191123201317.25861-1-michael@walle.cc>
- <20191123201317.25861-4-michael@walle.cc>
-In-Reply-To: <20191123201317.25861-4-michael@walle.cc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=kuldeep.singh@nxp.com; 
-x-originating-ip: [92.120.1.70]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3a78e5f2-cd68-42e5-19b4-08d7723b8ae8
-x-ms-traffictypediagnostic: AM0PR0402MB3572:|AM0PR0402MB3572:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR0402MB3572F3C370FE82794A5AFAFEE0450@AM0PR0402MB3572.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:758;
-x-forefront-prvs: 0233768B38
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(366004)(346002)(136003)(13464003)(189003)(199004)(76116006)(66556008)(66476007)(66946007)(64756008)(66446008)(52536014)(5660300002)(229853002)(6506007)(81156014)(8676002)(81166006)(6436002)(11346002)(2201001)(53546011)(44832011)(446003)(7696005)(74316002)(71200400001)(55016002)(4326008)(6116002)(99286004)(14454004)(186003)(33656002)(102836004)(14444005)(8936002)(256004)(2501003)(305945005)(76176011)(6306002)(316002)(966005)(3846002)(25786009)(54906003)(26005)(7736002)(2906002)(9686003)(110136005)(478600001)(6246003)(86362001)(71190400001)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3572;H:AM0PR0402MB3556.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Y8T5SxB0zouHsUyMMcG1hZjNgyrxcpXIBKNOqYVdbjAiZJ9f3yGn3Thsbuu7i+HTT8hQDHAdpXm2UtBPtBu8cfin8BppFot/PHFlhcdnYsrC1b30+F7LT4AdWncbMtG/O0XRzn17x3IhkvWLJQ4Lcpb+2FvFekCY1f8TApO7RBeHsde3OpmhNjO+Bt+ftGUcAuuKJIn/DHune+PiEwvcz313JXHlgf4QcGmsXjB7Kw/low+R4UtIVr3KgDDw1aJT5t40z+z6VbQ3COsaT9iVjkGbncBXrNs2HFcVZEB0b3DAQGkNEo0CAkCoUl9+xW7JAbwNSBcrT487lQ9kssMUmDcbGpcJu4U+mE6II3C1eLtsOe8qKwg2NTi+VRlNva2v82RDOAIrXfAIzMOQyX+eAmFP0x21PwSnuwolAfB2JFgRceDmpKBQ5jjeQdtNIfBb/0pe7Fy60fQb2GHBftQLyx163JVhNLycLfQnxyTGplA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 26 Nov 2019 01:43:21 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38743 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfKZGnV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 01:43:21 -0500
+Received: by mail-wm1-f65.google.com with SMTP id z19so1928253wmk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 22:43:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ETIUHJ3AzvG4MKmyof7txYs57MBd5qafDNDNbagrVYo=;
+        b=dX4Rvw0zMtqYThfHdUPz31/4100BIND9a4FPEmcE1DdsM/Bw9snYmkdu6kGFMeaooB
+         4LUn+RA5g0N/Ja4DRzXrpQawFoSGE5/tU6WH5A5aSWrgNAkx++6pQNDS21JUUFLH9twS
+         WntUKQKv/HabwTmvMpjIDJ6eNDpgbILdz9TmTLKB9i15G3PgwVOUc8gPVLr1iVRcL0MP
+         vXnUtUxyufSJuaW9dVSPtZuiDelOZTBLtjPGKQKHTvUFndoRY5LxhmnAXUZr3/OBL1Jx
+         tJAzoPg3QVVTR8FDMhXk+0rRwi2TYxFC3g6gXCD3Gtvqp/QHDND9cW/DhAwEwfDBhaYK
+         ukUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ETIUHJ3AzvG4MKmyof7txYs57MBd5qafDNDNbagrVYo=;
+        b=LLq6bP0wPAleA8pgsiyBS/Ma5IodqX0w4KerMb01qTxMJeVVKCnJZJ6FXB8nS6dCW6
+         Z9pbN/JHdjUtMs7kqTQ/qcOjqvh33EOl0WdIkC2BXVcq/e0Rh5awJ9vbYBpIeNRI846b
+         0stA4hwjYpAmwDJhWqYTue9rgW3GIcfxI8abQ14j6wX9p9pp81qjR4FEugAjhw5iubON
+         zbMcUpPHJPSUVGG046c39XH/CIeD8qHTUtyK4GcyUvxKjmb8clv26CDunmnm9dzp4tn7
+         Rtu6aQyL1yIrb4nKYI8RHVh1HAyn+CfP3HVIvgoDCIJfXVT7BSc+sscYPyRA4cZl0psV
+         gttA==
+X-Gm-Message-State: APjAAAX5s0zlV2WgFW5enR/NcLURXwicUYQmT29H8DV00y+OtZuj4rO+
+        TUrphhIdCGF1bPDY59XckOWctQ==
+X-Google-Smtp-Source: APXvYqzfVhP4yywet9AudY12rs64ANWPmJoVuQ67NV89zaHmlmFhFFpY/La8bZ5ByNzdPWUk92hg3Q==
+X-Received: by 2002:a7b:ce92:: with SMTP id q18mr2612740wmj.164.1574750597913;
+        Mon, 25 Nov 2019 22:43:17 -0800 (PST)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id s9sm1870420wmj.22.2019.11.25.22.43.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 22:43:17 -0800 (PST)
+Date:   Tue, 26 Nov 2019 07:43:16 +0100
+From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+        "yuchao0@huawei.com" <yuchao0@huawei.com>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Javier =?utf-8?B?R29uesOhbGV6?= <javier.gonz@samsung.com>,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: Re: [PATCH] f2fs: disble physical prealloc in LSF mount
+Message-ID: <20191126064316.ly4sfdcmyxtccnss@mpHalley.local>
+References: <20191122085952.12754-1-javier@javigon.com>
+ <BYAPR04MB58166AE029D919C6610D8404E74A0@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <20191125190320.g7beal27nc5ubju7@mpHalley>
+ <BYAPR04MB58161C14246FA30366B69B9DE7450@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <20191126035726.xj7pierxsck6adow@mpHalley>
+ <BYAPR04MB581676157DCF909EDF1AAAFCE7450@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <BYAPR04MB5816F0BB42891E49C5AB42DDE7450@BYAPR04MB5816.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a78e5f2-cd68-42e5-19b4-08d7723b8ae8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 06:40:35.4338
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AZboRJDuOpG3N6HjkZ1RVHq3/Jk6/TzS5onn5bAPYQsnYiLvqYsfc8QHyFrvy00wIic8Xi2AzqTs4i2zgVVEJw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3572
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BYAPR04MB5816F0BB42891E49C5AB42DDE7450@BYAPR04MB5816.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+On 26.11.2019 06:20, Damien Le Moal wrote:
+>+ Shin'Ichiro
+>
+>On 2019/11/26 15:19, Damien Le Moal wrote:
+>> On 2019/11/26 12:58, Javier González wrote:
+>>> On 26.11.2019 02:06, Damien Le Moal wrote:
+>>>> On 2019/11/26 4:03, Javier González wrote:
+>>>>> On 25.11.2019 00:48, Damien Le Moal wrote:
+>>>>>> On 2019/11/22 18:00, Javier González wrote:
+>>>>>>> From: Javier González <javier.gonz@samsung.com>
+>>>>>>>
+>>>>>>> Fix file system corruption when using LFS mount (e.g., in zoned
+>>>>>>> devices). Seems like the fallback into buffered I/O creates an
+>>>>>>> inconsistency if the application is assuming both read and write DIO. I
+>>>>>>> can easily reproduce a corruption with a simple RocksDB test.
+>>>>>>>
+>>>>>>> Might be that the f2fs_forced_buffered_io path brings some problems too,
+>>>>>>> but I have not seen other failures besides this one.
+>>>>>>>
+>>>>>>> Problem reproducible without a zoned block device, simply by forcing
+>>>>>>> LFS mount:
+>>>>>>>
+>>>>>>>   $ sudo mkfs.f2fs -f -m /dev/nvme0n1
+>>>>>>>   $ sudo mount /dev/nvme0n1 /mnt/f2fs
+>>>>>>>   $ sudo  /opt/rocksdb/db_bench  --benchmarks=fillseq --use_existing_db=0
+>>>>>>>   --use_direct_reads=true --use_direct_io_for_flush_and_compaction=true
+>>>>>>>   --db=/mnt/f2fs --num=5000 --value_size=1048576 --verify_checksum=1
+>>>>>>>   --block_size=65536
+>>>>>>>
+>>>>>>> Note that the options that cause the problem are:
+>>>>>>>   --use_direct_reads=true --use_direct_io_for_flush_and_compaction=true
+>>>>>>>
+>>>>>>> Fixes: f9d6d0597698 ("f2fs: fix out-place-update DIO write")
+>>>>>>>
+>>>>>>> Signed-off-by: Javier González <javier.gonz@samsung.com>
+>>>>>>> ---
+>>>>>>>  fs/f2fs/data.c | 3 ---
+>>>>>>>  1 file changed, 3 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>>>>>>> index 5755e897a5f0..b045dd6ab632 100644
+>>>>>>> --- a/fs/f2fs/data.c
+>>>>>>> +++ b/fs/f2fs/data.c
+>>>>>>> @@ -1081,9 +1081,6 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
+>>>>>>>  			return err;
+>>>>>>>  	}
+>>>>>>>
+>>>>>>> -	if (direct_io && allow_outplace_dio(inode, iocb, from))
+>>>>>>> -		return 0;
+>>>>>>
+>>>>>> Since for LFS mode, all DIOs can end up out of place, I think that it
+>>>>>> may be better to change allow_outplace_dio() to always return true in
+>>>>>> the case of LFS mode. So may be something like:
+>>>>>>
+>>>>>> static inline int allow_outplace_dio(struct inode *inode,
+>>>>>> 			struct kiocb *iocb, struct iov_iter *iter)
+>>>>>> {
+>>>>>> 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>>>>>> 	int rw = iov_iter_rw(iter);
+>>>>>>
+>>>>>> 	return test_opt(sbi, LFS) ||
+>>>>>> 	 	(rw == WRITE && !block_unaligned_IO(inode, iocb, iter));
+>>>>>> }
+>>>>>>
+>>>>>> instead of the original:
+>>>>>>
+>>>>>> static inline int allow_outplace_dio(struct inode *inode,
+>>>>>> 			struct kiocb *iocb, struct iov_iter *iter)
+>>>>>> {
+>>>>>> 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>>>>>> 	int rw = iov_iter_rw(iter);
+>>>>>>
+>>>>>> 	return (test_opt(sbi, LFS) && (rw == WRITE) &&
+>>>>>> 				!block_unaligned_IO(inode, iocb, iter));
+>>>>>> }
+>>>>>>
+>>>>>> Thoughts ?
+>>>>>>
+>>>>>
+>>>>> I see what you mean and it makes sense. However, the problem I am seeing
+>>>>> occurs when allow_outplace_dio() returns true, as this is what creates
+>>>>> the inconsistency between the write being buffered and the read being
+>>>>> DIO.
+>>>>
+>>>> But if the write is switched to buffered, the DIO read should use the
+>>>> buffered path too, no ? Since this is all happening under VFS, the
+>>>> generic DIO read path will not ensure that the buffered writes are
+>>>> flushed to disk before issuing the direct read, I think. So that would
+>>>> explain your data corruption, i.e. you are reading stale data on the
+>>>> device before the buffered writes make it to the media.
+>>>>
+>>>
+>>> As far as I can see, the read is always sent DIO, so yes, I also believe
+>>> that we are reading stale data. This is why the corruption is not seen
+>>> if preventing allow_outplace_dio() from sending the write to the
+>>> buffered path.
+>>>
+>>> What surprises me is that this is very easy to trigger (see commit), so
+>>> I assume you must have seen this with SMR in the past.
+>>
+>> We just did. Shin'Ichiro in my team finally succeeded in recreating the
+>> problem. The cause seems to be:
+>>
+>> bool direct_io = iocb->ki_flags & IOCB_DIRECT;
+>>
+>> being true on entry of f2fs_preallocate_blocks() whereas
+>> f2fs_direct_IO() forces buffered IO path for DIO on zoned devices with:
+>>
+>> if (f2fs_force_buffered_io(inode, iocb, iter))
+>> 		return 0;
+>>
+>> which has:
+>>
+>> 	if (f2fs_sb_has_blkzoned(sbi))
+>> 		return true;
+>>
+>> So the top DIO code says "do buffered IOs", but lower in the write path,
+>> the IO is still assumed to be a DIO because of the iocb flag... That's
+>> inconsistent.
+>>
+>> Note that for the non-zoned device LFS case, f2fs_force_buffered_io()
+>> returns true only for unaligned write DIOs... But that will still trip
+>> on the iocb flag test. So the proper fix is likely something like:
+>>
+>> int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
+>> {
+>> 	struct inode *inode = file_inode(iocb->ki_filp);
+>> 	struct f2fs_map_blocks map;
+>> 	int flag;
+>> 	int err = 0;
+>> -	bool direct_io = iocb->ki_flags & IOCB_DIRECT;
+>> +	bool direct_io = (iocb->ki_flags & IOCB_DIRECT) &&
+>> +		!2fs_force_buffered_io(inode, iocb, iter);
+>>
+>> 	/* convert inline data for Direct I/O*/
+>> 	if (direct_io) {
+>> 		err = f2fs_convert_inline_inode(inode);
+>> 		if (err)
+>> 			return err;
+>> 	}
+>>
+>> Shin'Ichiro tried this on SMR disks and the failure is gone...
+>>
+>> Cheers.
+>>
 
-> -----Original Message-----
-> From: devicetree-owner@vger.kernel.org <devicetree-owner@vger.kernel.org>
-> On Behalf Of Michael Walle
-> Sent: Sunday, November 24, 2019 1:43 AM
-> To: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; lin=
-ux-
-> kernel@vger.kernel.org
-> Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
-> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> Michael Walle <michael@walle.cc>
-> Subject: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
+Yes! This is it. I originally though that the problem was on
+f2fs_force_buffered_io(), but could not hit the problem there. Thanks
+for the analysis; it makes sense now.
 
-There's already a patch[1] sent upstream and is under review.
-It includes dts(i) entries for LS1028. I will be sending the next version
+Just tested your patch on our drives and the problem is gone too. Guess
+you can send a new patch an ignore this one. You can set my reviewed-by
+on it.
 
-[1] https://patchwork.kernel.org/patch/11139365/
->=20
-> Caution: EXT Email
->=20
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 6730922c2d47..650b277ddd66 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -260,6 +260,19 @@
->                         status =3D "disabled";
->                 };
->=20
-> +               fspi: spi@20c0000 {
-> +                       compatible =3D "nxp,lx2160a-fspi";
-> +                       #address-cells =3D <1>;
-> +                       #size-cells =3D <0>;
-> +                       reg =3D <0x0 0x20c0000 0x0 0x10000>,
-> +                             <0x0 0x20000000 0x0 0x10000000>;
-> +                       reg-names =3D "fspi_base", "fspi_mmap";
-> +                       interrupts =3D <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks =3D <&clockgen 4 3>, <&clockgen 4 3>;
-> +                       clock-names =3D "fspi_en", "fspi";
-> +                       status =3D "disabled";
-> +               };
-> +
->                 esdhc: mmc@2140000 {
->                         compatible =3D "fsl,ls1028a-esdhc", "fsl,esdhc";
->                         reg =3D <0x0 0x2140000 0x0 0x10000>;
-> --
-> 2.20.1
-
-Regards
-Kuldeep
-
+Thanks Damien!
+Javier
