@@ -2,74 +2,115 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA194C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF79C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6DD220835
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574796646;
-	bh=UgMaUYoIK8dPAKJto5xGhqRewgw61BkbIL0aadTaOFs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=kGwckDqClq8pX5rNqEa0zlu65zJbktMB5+ZWOEUYSvo5gnkZYRT3pasnoEQqb0IJb
-	 GaOtuEZI4rwpRXKFBEQxd50JtS6wrM7No9M2H3PTlhB9WSrd5Gn3GB+fif7hi9KlhP
-	 RSWwy1HyBvdRNAp/Kpy6/P45dIEjui7lFKMNdWU0=
+	by mail.kernel.org (Postfix) with ESMTP id 67F7520835
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:30:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH9OE1is"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfKZTap (ORCPT
+        id S1727330AbfKZTat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:30:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbfKZTaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:30:18 -0500
-Subject: Re: [GIT PULL] x86/mm changes for v5.5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574796617;
-        bh=UgMaUYoIK8dPAKJto5xGhqRewgw61BkbIL0aadTaOFs=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=0yVqswPoeEuojqa3q3EaPYmJoh47gUgesawsjlhOt6lZC91c5akyOZHHPjQExAa2y
-         Uo15jXbLl77lESIFu0GVjBMtatKIBTZnZVCNtk/btmvOBzvfP6JKPwpFk0g43YPNOd
-         zwPqjdQoeT44j7J1LgcxPOfPEZflLIjKmftTdZUc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191125142130.GA25523@gmail.com>
-References: <20191125142130.GA25523@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191125142130.GA25523@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-mm-for-linus
-X-PR-Tracked-Commit-Id: 7f264dab5b60343358e788d4c939c166c22ea4a2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1c134b198daa81cb689f881dcf2900061914085a
-Message-Id: <157479661767.2359.11161708196018142777.pr-tracker-bot@kernel.org>
-Date:   Tue, 26 Nov 2019 19:30:17 +0000
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
+        Tue, 26 Nov 2019 14:30:49 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42995 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727312AbfKZTaq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 14:30:46 -0500
+Received: by mail-lj1-f193.google.com with SMTP id n5so21574835ljc.9;
+        Tue, 26 Nov 2019 11:30:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N1fma/rzZbsK0KgJkH5gDE4TEHvO2HL1ft3nAMVM09o=;
+        b=DH9OE1isC9wMnuJMDGOHRni1GwxOUfsJU0ywmLSPLdfWPuomlkUHP8ykBHs1KwwoNZ
+         IJftDyO+OQGKxgrWaR0Bird2WXdpg7JQ9WPQTWKm7kLMz5l8yTUSlLy9lR6+twon3BEh
+         EB6ZMe5P7AwiA+ntl+Nn8ygQu1ODMZv5/opG4sn7DXVu57YHDoSxUbWgOblojTYE5OiK
+         6bpufoW/OvY8x5WIF4Ugk/rykcm4PGNjfe4M7+WT1L9t2ngWMLGuZy5LhvaJbQV+cYRT
+         865N738hDX8lXfnjCAPGvdp10UKPvPSQjjmjkLYLAW8NOmVywCz/EaS7QwF/z0HlnYgV
+         sXUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N1fma/rzZbsK0KgJkH5gDE4TEHvO2HL1ft3nAMVM09o=;
+        b=HCpTZltzV4WqwYmTjJrkfsa72bpQysuzKFjlxARVOH20xsiF8+mzNhEr8QqpIEIyie
+         XbwLau1cDvjvJaqaOXsak+inpX96WbgNEgGq54nvYp2KfPFhG9PXEwGBzgFOow8hfPFp
+         S9XFi+VVF/D8Zpwz1wVJxSAONYk4mCl1/urMD1M8Mr5WMq5sgifeDHoJt+GR3R3zSZbO
+         FObWoTjRQhhYnkNw5jlwIrMbWjm8bIugIep2YX8agUVil8j57qO7Fl+tDlGCEQ+z1OVI
+         aiWkBhiZvjOr6+fRMavY5Z5QF8QnhXXTguXF90iYUx4UqOdOPeJjeWBpewJndxLsyw1H
+         ZfOA==
+X-Gm-Message-State: APjAAAWuSrIa00Y7qChAI4lXUP+0aW23WCVIvi5vcYJUcZadpMq5E+Pq
+        x9lusRPmlJmKxbTAlGZa2l8=
+X-Google-Smtp-Source: APXvYqx9/2noQaJq7x/KWqh0xaR3KlZk66kcGXCNzZVnDIkbRFG0nnLsPyaQcfSma3Bx0Mn7mgvzSg==
+X-Received: by 2002:a2e:894b:: with SMTP id b11mr28263730ljk.118.1574796643636;
+        Tue, 26 Nov 2019 11:30:43 -0800 (PST)
+Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id m18sm6134434ljg.3.2019.11.26.11.30.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 11:30:43 -0800 (PST)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     linux-xtensa@linux-xtensa.org
+Cc:     Chris Zankel <chris@zankel.net>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Max Filippov <jcmvbkbc@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH] drivers/gpio/gpio-xtensa: fix driver build
+Date:   Tue, 26 Nov 2019 11:30:27 -0800
+Message-Id: <20191126193027.11970-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 25 Nov 2019 15:21:30 +0100:
+Commit cad6fade6e78 ("xtensa: clean up WSR*/RSR*/get_sr/set_sr") removed
+{RSR,WSR}_CPENABLE from xtensa code, but did not fix up all users,
+breaking gpio-xtensa driver build.
+Update gpio-xtensa to use new xtensa_{get,set}_sr API.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-mm-for-linus
+Cc: stable@vger.kernel.org # v5.0+
+Fixes: cad6fade6e78 ("xtensa: clean up WSR*/RSR*/get_sr/set_sr")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+---
+ drivers/gpio/gpio-xtensa.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1c134b198daa81cb689f881dcf2900061914085a
-
-Thank you!
-
+diff --git a/drivers/gpio/gpio-xtensa.c b/drivers/gpio/gpio-xtensa.c
+index 43d3fa5f511a..0fb2211f9573 100644
+--- a/drivers/gpio/gpio-xtensa.c
++++ b/drivers/gpio/gpio-xtensa.c
+@@ -44,15 +44,14 @@ static inline unsigned long enable_cp(unsigned long *cpenable)
+ 	unsigned long flags;
+ 
+ 	local_irq_save(flags);
+-	RSR_CPENABLE(*cpenable);
+-	WSR_CPENABLE(*cpenable | BIT(XCHAL_CP_ID_XTIOP));
+-
++	*cpenable = xtensa_get_sr(cpenable);
++	xtensa_set_sr(*cpenable | BIT(XCHAL_CP_ID_XTIOP), cpenable);
+ 	return flags;
+ }
+ 
+ static inline void disable_cp(unsigned long flags, unsigned long cpenable)
+ {
+-	WSR_CPENABLE(cpenable);
++	xtensa_set_sr(cpenable, cpenable);
+ 	local_irq_restore(flags);
+ }
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1
+
