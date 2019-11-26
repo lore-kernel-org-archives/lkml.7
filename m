@@ -2,219 +2,274 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDE8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EA7C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08F52071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9851E206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:37:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KL+/WaCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfKZNdO (ORCPT
+        id S1727638AbfKZNhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:33:14 -0500
-Received: from smtprelay0142.hostedemail.com ([216.40.44.142]:59889 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725900AbfKZNdO (ORCPT
+        Tue, 26 Nov 2019 08:37:46 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41461 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbfKZNhq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:33:14 -0500
-X-Greylist: delayed 468 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 Nov 2019 08:33:13 EST
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave04.hostedemail.com (Postfix) with ESMTP id 94C3E1802623B;
-        Tue, 26 Nov 2019 13:25:25 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 5A9C41800BEAB;
-        Tue, 26 Nov 2019 13:25:24 +0000 (UTC)
-X-Session-Marker: 7368656140736865616C6576792E636F6D
-X-HE-Tag: actor99_69506a9204f19
-X-Filterd-Recvd-Size: 6817
-Received: from localhost (unknown [75.112.159.170])
-        (Authenticated sender: shea@shealevy.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 26 Nov 2019 13:25:23 +0000 (UTC)
-From:   Shea Levy <shea@shealevy.com>
-To:     =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Cc:     linux-riscv@lists.infradead.org, albert@sifive.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH] RISC-V: Load modules within relative jump range of the kernel text.
-In-Reply-To: <CAJ+HfNhoJnGon-L9OwSfrMbmUt1ZPBB_=A8ZFrg1CgEq3ua-Sg@mail.gmail.com>
-References: <mhng-0a2f9574-9b23-4f26-ae76-18ed7f2c8533@palmer-si-x1c4> <87d0yoizv9.fsf@xps13.shealevy.com> <87zi19gjof.fsf@xps13.shealevy.com> <CAJ+HfNhoJnGon-L9OwSfrMbmUt1ZPBB_=A8ZFrg1CgEq3ua-Sg@mail.gmail.com>
-Date:   Tue, 26 Nov 2019 08:25:21 -0500
-Message-ID: <87o8wyojlq.fsf@xps13.shealevy.com>
+        Tue, 26 Nov 2019 08:37:46 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s18so644756pfd.8;
+        Tue, 26 Nov 2019 05:37:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=PJJmAn9+iiP+EIIPXeCfCU5GCKc3tnqtF9QuTwOAxck=;
+        b=KL+/WaCkMRk4NvtjYC0qrnhtkEiQIlg2VPXwQ2mtmFHFUQEJS20Nz4f3NJbHrR2tyO
+         YeiN5ZhzlkkbcKnBOkzbHI9j6E4oud9db8/3TLfxPqIiGNqHQNxZGFDqCzPzFfgeCgAl
+         e8AQvrtw/ZhrE6lXlr3mSQfg7HXQrwxsFUs3QLyeJENp0rIeuQLwugjImN+Varj14NMz
+         2J9suJyLA9RMZupwPP6txwfMEX9/cGi9yBR0MPK/7ThWyQeqRfi/JSzRnlO8qtB9fM/K
+         kPqj2mIuLzFhhV8GrcF5JMMFk998OAhazyVvp19RSmqTc7aOCLicuqFqHcxEyH6t0/pU
+         jYrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=PJJmAn9+iiP+EIIPXeCfCU5GCKc3tnqtF9QuTwOAxck=;
+        b=uMDaWDpATLCdC8fn2qdmPFSIYDc+rttGdcW10yubRi3x0++eLD1gyfdxonqKGsp7MJ
+         UvJSi2V7LmeuTghuMlRJbQRDoyClv+dhytzvSWbUnYrmmUIZBM++xXNsXJnF4tCRc2Pu
+         5Rr/C3je40vNlh2RQv3KhfpHI0zlvZtLFqq93esx4dg8kOkBTu3wx34LiDyVswA5pAfa
+         5tTCpUHCTYdU6umcFGWg9bf7IgMPDUvDp5xFvHE6msZVicDRSbjq2j+bA0NYkX/xPvz2
+         LGw1IIUO6Mppn6Z9fbAQNwJqXweyoeF9KiJSYpaefy3Onc1BvKE9sBFao+U+WecS0LhD
+         vULw==
+X-Gm-Message-State: APjAAAVG46sFC2KjZsHiQ2LnwiTGa89mZrfNkEMhduwrtYC4Oj4lSq/F
+        sH9c4dpLpQ0BipznOyn9qY0=
+X-Google-Smtp-Source: APXvYqwDp/TSNy31xwRpQsSSAIa1D75XoUXADWcKxaaZNigp8t9SyGGfJHWvoaSTa1WNrk5aVzL6hw==
+X-Received: by 2002:a65:4387:: with SMTP id m7mr31094525pgp.449.1574775465335;
+        Tue, 26 Nov 2019 05:37:45 -0800 (PST)
+Received: from cnn ([2402:3a80:473:c4b3:a194:63c9:69fb:ee71])
+        by smtp.gmail.com with ESMTPSA id s18sm13210501pfc.120.2019.11.26.05.37.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Nov 2019 05:37:44 -0800 (PST)
+Date:   Tue, 26 Nov 2019 19:07:26 +0530
+From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
+To:     Vijay Khemka <vijaykhemka@fb.com>
+Cc:     andrew@aj.id.au, joel@jms.id.au, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: Re: [PATCH v3] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Message-ID: <20191126133726.GA2578@cnn>
+References: <20191125130420.GA24018@cnn>
+ <7F15A2E0-14C7-4C86-B589-35619A390B72@fb.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7F15A2E0-14C7-4C86-B589-35619A390B72@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 25, 2019 at 07:23:32PM +0000, Vijay Khemka wrote:
+> 
+> ﻿On 11/25/19, 5:04 AM, "manikandan-e" <manikandan.hcl.ers.epl@gmail.com> wrote:
+> 
+>     The Yosemite V2 is a facebook multi-node server
+>     platform that host four OCP server. The BMC
+>     in the Yosemite V2 platorm based on AST2500 SoC.
+>     
+>     This patch adds linux device tree entry related to
+>     Yosemite V2 specific devices connected to BMC SoC.
+> Nit: comments inline. Otherwise
+> Reviewed-by: Vijay Khemka <vijaykhemka@fb.com>
+>     
+> 
+>     Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+>     ---
+>      .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 151 +++++++++++++++++++++
+>      1 file changed, 151 insertions(+)
+>      create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+>     
+>     diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+>     new file mode 100644
+>     index 0000000..09bffcd
+>     --- /dev/null
+>     +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+>     @@ -0,0 +1,151 @@
+>     +// SPDX-License-Identifier: GPL-2.0+
+>     +// Copyright (c) 2018 Facebook Inc.
+>     +/dts-v1/;
+>     +
+>     +#include "aspeed-g5.dtsi"
+>     +#include <dt-bindings/gpio/aspeed-gpio.h>
+>     +
+>     +/ {
+>     +	model = "Facebook Yosemitev2 BMC";
+>     +	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
+>     +	aliases {
+>     +		serial4 = &uart5;
+>     +	};
+>     +	chosen {
+>     +		stdout-path = &uart5;
+>     +		bootargs = "console=ttyS4,115200 earlyprintk";
+> bootargs are not required as it is overwritten by uboot. And baud rate is 57600
+           
+          As of now SPL and U-boot Baudrate based 115200 baudrate. Do we need to change it there. I understand that we can use SERIAL_CONSOLES           in meta-facebook.
+          Do i need to remove 'console=ttyS4.115200' or complete bootargs . If we remove bootargs, how can add any bootargs params in future.
 
-Hi Bj=C3=B6rn,
+>     +	};
+>     +
+>     +	memory@80000000 {
+>     +		reg = <0x80000000 0x20000000>;
+>     +	};
+>     +
+>     +	iio-hwmon {
+>     +		// VOLATAGE SENSOR
+>     +		compatible = "iio-hwmon";
+>     +		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
+>     +		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
+>     +		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
+>     +		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
+>     +	};
+>     +};
+>     +
+>     +&fmc {
+>     +	status = "okay";
+>     +	flash@0 {
+>     +		status = "okay";
+>     +		m25p,fast-read;
+>     +#include "openbmc-flash-layout.dtsi"
+>     +	};
+>     +};
+>     +
+>     +&spi1 {
+>     +	status = "okay";
+>     +	pinctrl-names = "default";
+>     +	pinctrl-0 = <&pinctrl_spi1_default>;
+>     +	flash@0 {
+>     +		status = "okay";
+>     +		m25p,fast-read;
+>     +		label = "pnor";
+>     +	};
+>     +};
+>     +
+>     +&uart5 {
+>     +	// BMC Console
+>     +	status = "okay";
+>     +};
+>     +
+>     +&mac0 {
+>     +	status = "okay";
+>     +	pinctrl-names = "default";
+>     +	pinctrl-0 = <&pinctrl_rmii1_default>;
+>     +	use-ncsi;
+>     +};
+>     +
+>     +&adc {
+>     +	status = "okay";
+>     +        pinctrl-names = "default";
+> Use tab for alignment
 
-Unfortunately I'm not sure what more is needed to get this in, and I'm
-in the middle of a move and won't have easy access to my RISC-V setup
-for testing. I don't think you can count on me for this one.
 
-Thanks,
-Shea
+Checkpatch didn't shown any issue warning .As i checked in many dts file , format is same.
+It will helpful if i get more clarification. 
 
-Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com> writes:
-
-> On Wed, 9 May 2018 at 13:22, Shea Levy <shea@shealevy.com> wrote:
->>
->> Hi Palmer,
->>
->> Shea Levy <shea@shealevy.com> writes:
->>
->> > Hi Palmer,
->> >
->> > Palmer Dabbelt <palmer@sifive.com> writes:
->> >
->> >> On Sun, 22 Apr 2018 05:53:56 PDT (-0700), shea@shealevy.com wrote:
->> >>> Hi Palmer,
->> >>>
->> >>> Shea Levy <shea@shealevy.com> writes:
->> >>>
->> >>>> Signed-off-by: Shea Levy <shea@shealevy.com>
->> >>>> ---
->> >>>>
->> >>>> Note that this patch worked in my old modules patchset and seems to=
- be
->> >>>> working now, but my kernel boot locks up on top of
->> >>>> riscv-for-linus-4.17-mw0 and I don't know if it's due to this patch=
- or
->> >>>> something else that's changed in the mean time.
->> >>>>
->> >>>> ---
->> >>>>  arch/riscv/include/asm/pgtable.h |  9 +++++++++
->> >>>>  arch/riscv/kernel/module.c       | 11 +++++++++++
->> >>>>  2 files changed, 20 insertions(+)
->> >>>>
->> >>>> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/=
-asm/pgtable.h
->> >>>> index 16301966d65b..b08ded13364a 100644
->> >>>> --- a/arch/riscv/include/asm/pgtable.h
->> >>>> +++ b/arch/riscv/include/asm/pgtable.h
->> >>>> @@ -25,6 +25,7 @@
->> >>>>  #include <asm/page.h>
->> >>>>  #include <asm/tlbflush.h>
->> >>>>  #include <linux/mm_types.h>
->> >>>> +#include <linux/sizes.h>
->> >>>>
->> >>>>  #ifdef CONFIG_64BIT
->> >>>>  #include <asm/pgtable-64.h>
->> >>>> @@ -425,6 +426,14 @@ static inline void pgtable_cache_init(void)
->> >>>>  #define TASK_SIZE VMALLOC_START
->> >>>>  #endif
->> >>>>
->> >>>> +/*
->> >>>> + * The module space lives between the addresses given by TASK_SIZE
->> >>>> + * and PAGE_OFFSET - it must be within 2G of the kernel text.
->> >>>> + */
->> >>>> +#define MODULES_SIZE              (SZ_128M)
->> >>>> +#define MODULES_VADDR             (PAGE_OFFSET - MODULES_SIZE)
->> >>>> +#define MODULES_END               (VMALLOC_END)
->> >>>> +
->> >>>>  #include <asm-generic/pgtable.h>
->> >>>>
->> >>>>  #endif /* !__ASSEMBLY__ */
->> >>>> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
->> >>>> index 5dddba301d0a..1b382c7de095 100644
->> >>>> --- a/arch/riscv/kernel/module.c
->> >>>> +++ b/arch/riscv/kernel/module.c
->> >>>> @@ -16,6 +16,8 @@
->> >>>>  #include <linux/err.h>
->> >>>>  #include <linux/errno.h>
->> >>>>  #include <linux/moduleloader.h>
->> >>>> +#include <linux/vmalloc.h>
->> >>>> +#include <asm/pgtable.h>
->> >>>>
->> >>>>  static int apply_r_riscv_64_rela(struct module *me, u32 *location,=
- Elf_Addr v)
->> >>>>  {
->> >>>> @@ -382,3 +384,12 @@ int apply_relocate_add(Elf_Shdr *sechdrs, cons=
-t char *strtab,
->> >>>>
->> >>>>    return 0;
->> >>>>  }
->> >>>> +
->> >>>> +void *module_alloc(unsigned long size)
->> >>>> +{
->> >>>> +  return __vmalloc_node_range(size, 1, MODULES_VADDR,
->> >>>> +                              MODULES_END, GFP_KERNEL,
->> >>>> +                              PAGE_KERNEL_EXEC, 0,
->> >>>> +                              NUMA_NO_NODE,
->> >>>> +                              __builtin_return_address(0));
->> >>>> +}
->> >>>> --
->> >>>> 2.16.2
->> >>>
->> >>> Any thoughts on this?
->> >>
->> >> The concept looks good, but does this actually keep the modules withi=
-n 2GiB of
->> >> the text if PAGE_OFFSET is large?
->> >
->> > It's been some time since I wrote this, but I thought PAGE_OFFSET was
->> > where the kernel text *started*? So unless the text itself is bigger
->> > than 2G - 128 M, in which case we're SOL anyway, it seems like this
->> > should work. Is there something better we can do, without a large memo=
-ry
->> > model?
->> >
->> > Thanks,
->> > Shea
->>
->> Any further thoughts on this?
->>
->> Thanks,
->> Shea
->
-> Shea,
->
-> Waking up the dead (threads)!
->
-> I'm hacking on call improvements for the RISC-V BPF JIT.
-> module_alloc() is used under the hood of bpf_jit_binary_alloc(), which
-> in turn is used to allocate the JIT image. The current JIT
-> implementation has to to "load imm64 + jalr" to call kernel syms,
-> since the relative offset is >32b. With your patch, I can use regular
-> jal/auipc+jalr instead. IOW, it would be great if it could be merged.
-> ;-) I'd prefer not having the patch in my BPF JIT series, since that
-> will go through a different tree than Paul's RV one.
->
-> Wdyt about brushing of the dust of the patch, and re-send it?
->
->
-> Thanks!
-> Bj=C3=B6rn
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE6ESKvwKkwnxgMLnaXAvWlX2G/icFAl3dJ8EACgkQXAvWlX2G
-/iegUw//RFoBh407tMvoG6prgim8nj0qW2gGKFCKiCAaVK0h2XP/oQmMFT9LKQf+
-ZjzdWx6TStG29g+JPBnHPgdIaXHDmFB6DK4z4rZkBgufog1k6kkIBsWaEu6q7/lP
-cOX31sGO+r4yljFg2f5KLQV0qkyd1sFFDxNwLTjwBLPV3PsGw2fjfMxCiLYgPg9N
-G1mcp/7PscyZErrgaysfBUOZ2sYyhjM9xFh8BJxq3vIVXEqf94zMgHD63mgVC1x8
-gcv/3Fbe1pN/nXr7otX0XR16h04xIOojrnKnuZlDPqqppv4ywao4yci7SYQvM0lL
-xeuy7nTdu7CGNd+o8icrvQia8K5Hcbb5OqeESRKUg7z+TrftdK1r5Khny+fLIa1r
-QqK+at8W2t4JDkli+45IkL9KYPkPkdf1I/xEvksADLOjXFYKL1bwYAE7iyPdds37
-uvXqWGOdio4pOyq34UM95AdDjbG0CrO4aTeTQBSDGTcSwfEPoVpPrF5zIsqQtmHr
-VULez79njycJMJaIsIABp2gpkFM5GvY3iFPudqbtcHOs/z2vTO/zVE8MwTP/AhAV
-l8PZ2dsD4csFAk0IHLoqLw4LERAtA9sT0veDJEcU2ikOwHe5a+6Br3zU7hvjNkR9
-OOLJHeVePytK4GR3yJjDjZ1/B+9ihhOeKfqPefCLV3Dht7vmUAk=
-=thWq
------END PGP SIGNATURE-----
---=-=-=--
+>     +	pinctrl-0 = <&pinctrl_adc0_default
+>     +			&pinctrl_adc1_default
+>     +			&pinctrl_adc2_default
+>     +			&pinctrl_adc3_default
+>     +			&pinctrl_adc4_default
+>     +			&pinctrl_adc5_default
+>     +			&pinctrl_adc6_default
+>     +			&pinctrl_adc7_default
+>     +			&pinctrl_adc8_default
+>     +			&pinctrl_adc9_default
+>     +			&pinctrl_adc10_default
+>     +			&pinctrl_adc11_default
+>     +			&pinctrl_adc12_default
+>     +			&pinctrl_adc13_default
+>     +			&pinctrl_adc14_default
+>     +			&pinctrl_adc15_default>;
+>     +};
+>     +
+>     +&i2c8 {
+>     +	status = "okay";
+>     +	//FRU EEPROM
+>     +	eeprom@51 {
+>     +		compatible = "atmel,24c64";
+>     +		reg = <0x51>;
+>     +		pagesize = <32>;
+>     +	};
+>     +};
+>     +
+>     +&i2c9 {
+>     +	status = "okay";
+>     +	tmp421@4e {
+>     +	//INLET TEMP
+>     +		compatible = "ti,tmp421";
+>     +		reg = <0x4e>;
+>     +	};
+>     +	//OUTLET TEMP
+>     +	tmp421@4f {
+>     +		compatible = "ti,tmp421";
+>     +		reg = <0x4f>;
+>     +	};
+>     +};
+>     +
+>     +&i2c10 {
+>     +	status = "okay";
+>     +	//HSC
+>     +	adm1278@40 {
+>     +		compatible = "adi,adm1278";
+>     +		reg = <0x40>;
+>     +	};
+>     +};
+>     +
+>     +&i2c11 {
+>     +	status = "okay";
+>     +	//MEZZ_TEMP_SENSOR
+>     +	tmp421@1f {
+>     +		compatible = "ti,tmp421";
+>     +		reg = <0x1f>;
+>     +	};
+>     +};
+>     +
+>     +&i2c12 {
+>     +	status = "okay";
+>     +	//MEZZ_FRU
+>     +	eeprom@51 {
+>     +		compatible = "atmel,24c64";
+>     +		reg = <0x51>;
+>     +		pagesize = <32>;
+>     +	};
+>     +};
+>     +
+>     +&pwm_tacho {
+>     +	status = "okay";
+>     +	//FSC
+>     +	pinctrl-names = "default";
+>     +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+>     +	fan@0 {
+>     +		reg = <0x00>;
+>     +		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+>     +	};
+>     +	fan@1 {
+>     +		reg = <0x01>;
+>     +		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
+>     +	};
+>     +};
+>     -- 
+>     2.7.4
+>     
+>     
+> 
