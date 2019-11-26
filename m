@@ -2,109 +2,72 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7BEC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 05:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18179C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 05:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97BB207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 05:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D367920637
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 05:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="asIamyGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbfKZFaS (ORCPT
+        id S1726445AbfKZFed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 00:30:18 -0500
-Received: from mga06.intel.com ([134.134.136.31]:60136 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfKZFaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 00:30:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 21:30:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,244,1571727600"; 
-   d="scan'208";a="211308351"
-Received: from lipengxi-mobl.amr.corp.intel.com ([10.255.28.133])
-  by orsmga006.jf.intel.com with ESMTP; 25 Nov 2019 21:30:13 -0800
-Message-ID: <b146b35e4434a0bf57dfd8052b2b455f06fa46ab.camel@intel.com>
-Subject: Re: [PATCH] MAINTAINERS: thermal: Eduardo's email is bouncing
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, eduval@amazon.com,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Date:   Tue, 26 Nov 2019 13:29:04 +0800
-In-Reply-To: <CAHLCerPKQSLrgybYhhFDxjXu56BD+iAyz1OYF14rTbjotEkD7g@mail.gmail.com>
-References: <20191123154303.2202-1-f.fainelli@gmail.com>
-         <CAHLCerPKQSLrgybYhhFDxjXu56BD+iAyz1OYF14rTbjotEkD7g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 26 Nov 2019 00:34:33 -0500
+Received: from sender4-pp-o97.zoho.com ([136.143.188.97]:25759 "EHLO
+        sender4-pp-o97.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfKZFec (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 00:34:32 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574746459; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Hk/o5YBhVkhivrYE6M8Jj8WdI2Ibg1xQm9VeORTlsFbyiShjfeHD/uKj2Sa7B01eWm9+SZaBiscDd0SDPr75ptOhBH8PLPXSDCcNwiX7H9lp9bbkvKPRKbmdmuXDjsvJjwTn3KeXYzscVmklPH6mBCIDBYkjk7bnZ7myFqdbpkE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574746459; h=Cc:Date:From:Message-ID:Subject:To; 
+        bh=B3Byg1E6dN5pQwW3/kQ65XwbC3TKftBlzTGMq8uWcxc=; 
+        b=HO9BPhP+4pN7wCxSuPS6Nwnux3UIXJ5nvd92sCAJYfEz1FT1vSw1KXlHSUQFPdRECYLOLkjmk7adPJ648RmxbySu79XxXP4r0qsYzZQcuVzXrRHHr+zIpEwqlNCNQcmRYS/Q+SnZEEkOvQHXcNcRJgt6dKoir2wMhkyJO2gM6bk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=QJTcWFa9EPDmbx2p4B+2puOQ1EXhuk+mp0PaeJHJgPIOYq2Txad2q0vTOxVEFr2ixoQ+4WF9keRO
+    iqBXZXdebnq5GTes1nn8wnhJxeKJd8X0HRstr7xkNtvVTXdcEzp6  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574746459;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=B3Byg1E6dN5pQwW3/kQ65XwbC3TKftBlzTGMq8uWcxc=;
+        b=asIamyGh+k5KSTcm08B985ZMuaUdnaVk4RUQ70mxwqPEmXxxqRPj978a/vrPnF9Z
+        V9DFwg3yp27/b3OK5tiZUkq9CKEAHjWyJYoDVWczNZkRjBCqOa3oGV5fzscFmBGVOd4
+        gOtMP4dihAU75o3s6XOs7FZpzkyfw7d4zTGWUxcg=
+Received: from zhouyanjie-virtual-machine.localdomain (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
+        with SMTPS id 157474645824479.72030377729016; Mon, 25 Nov 2019 21:34:18 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mark.rutland@arm.com, syq@debian.org
+Subject: Fix bugs in X1000/X1500 and add X1830 pinctrl driver v6.
+Date:   Tue, 26 Nov 2019 13:33:52 +0800
+Message-Id: <1574746436-80066-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-11-25 at 15:27 +0530, Amit Kucheria wrote:
-> On Sat, Nov 23, 2019 at 9:13 PM Florian Fainelli <
-> f.fainelli@gmail.com> wrote:
-> > 
-> > The last two emails to Eduardo were returned with:
-> > 
-> > 452 4.2.2 The email account that you tried to reach is over quota.
-> > Please direct the recipient to
-> > https://support.google.com/mail/?p=OverQuotaTemp j17sor626162wrq.49
-> > -
-> > gsmtp
-> 
-> Right, I've been seeing the same for the last week for all my
-> postings.
+v5->v6:
+1.Remove duplicates "ssi-ce0-d".
+2.Use local variables to streamline code.
+3.Rename "GPIO_HIZ" to "GPIO_PULL_DIS", and adjust
+  related code.
 
-okay, I will queue this patch.
-
-> 
-> Rui, will you please send the pull request to Linus for 5.5 (and
-> going
-> forward) with all the contents of thermal/next[1]? Otherwise, the
-> thermal soc patches will unnecessarily miss the merge window. They've
-> been baking in linux-next for a while.
-
-yes, all the patches in thermal/next are for 5.5-rc1.
-
-thanks,
-rui
-
-> 
-> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> [1] 
-> https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/log/?h=thermal/next
-> 
-> 
-> 
-> > ---
-> >  MAINTAINERS | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index e4f170d8bc29..84e8bdae4beb 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -16085,7 +16085,6 @@ F:      drivers/media/radio/radio-
-> > raremono.c
-> > 
-> >  THERMAL
-> >  M:     Zhang Rui <rui.zhang@intel.com>
-> > -M:     Eduardo Valentin <edubezval@gmail.com>
-> >  R:     Daniel Lezcano <daniel.lezcano@linaro.org>
-> >  R:     Amit Kucheria <amit.kucheria@verdurent.com>
-> >  L:     linux-pm@vger.kernel.org
-> > --
-> > 2.17.1
-> > 
 
