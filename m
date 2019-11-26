@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0589C432C3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8804C43215
 	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F80720863
+	by mail.kernel.org (Postfix) with ESMTP id ACE2820866
 	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:27:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="qpJ41IGY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="poRKj6I8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfKZU1r (ORCPT
+        id S1726947AbfKZU1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:27:47 -0500
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:38938 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfKZU1r (ORCPT
+        Tue, 26 Nov 2019 15:27:48 -0500
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:37737 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfKZU1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Nov 2019 15:27:47 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 06A683F4D5;
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 575903F656;
         Tue, 26 Nov 2019 21:27:44 +0100 (CET)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=qpJ41IGY;
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=poRKj6I8;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8IU7PcDgXycM; Tue, 26 Nov 2019 21:27:42 +0100 (CET)
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZkFTzor5INdG; Tue, 26 Nov 2019 21:27:42 +0100 (CET)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 0E6513F405;
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id EEE623F382;
         Tue, 26 Nov 2019 21:27:39 +0100 (CET)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 43D3436255A;
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 24C7B36016C;
         Tue, 26 Nov 2019 21:27:39 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1574800059; bh=Bx2EU0zusKy11L8wJb7DQjvk6SeHUT9blg8g1L1Gfmg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qpJ41IGYAJvRuO3fIaMTAVxhwZ5AmjCjiqwZkg+eKDzd1zuq18UP/keVGzN4JSZTq
-         bzoz64P/C0ivs0Qmn/1JFl00sux0UXaXYfV8Lh40r3+uc2xoivXjxv6NV3j3R0LJMC
-         Jq5i9S1W7WkosUMhoyAyWwyQ3nKHKdAAt6mx9wQw=
+        t=1574800059; bh=j/BRuQJcx6Py9MS5lniFvxHGWs39VGoBsA+SEpAzptQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=poRKj6I8rSz6ts04cSbe3jhLXal6GPoSPgtvmmNXwuJf5JfYbmwOJ77qnsuFoveH9
+         52jmShLTdgE0errbv8A4+Ktso8VbF9t3F9WzoFLRO7PbwEQOyi9KvsWwgmwwnWsfjN
+         aBkCbGa7AbEp+wADG8tfrP3aIuUYus8Xt8iQeCVQ=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
@@ -58,12 +58,10 @@ Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
         Ralph Campbell <rcampbell@nvidia.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: [PATCH 2/2] drm/ttm: Fix vm page protection handling
-Date:   Tue, 26 Nov 2019 21:27:17 +0100
-Message-Id: <20191126202717.30762-2-thomas_os@shipmail.org>
+Subject: [PATCH 1/2] mm: Add and export vmf_insert_mixed_prot()
+Date:   Tue, 26 Nov 2019 21:27:16 +0100
+Message-Id: <20191126202717.30762-1-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191126202717.30762-1-thomas_os@shipmail.org>
-References: <20191126202717.30762-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -74,13 +72,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-We were using an ugly hack to set the page protection correctly.
-Fix that and instead use vmf_insert_mixed_prot() and / or
-vmf_insert_pfn_prot().
-Also get the default page protection from
-struct vm_area_struct::vm_page_prot rather than using vm_get_page_prot().
-This way we catch modifications done by the vm system for drivers that
-want write-notification.
+The TTM module today uses a hack to be able to set a different page
+protection than struct vm_area_struct::vm_page_prot. To be able to do
+this properly, add and export vmf_insert_mixed_prot().
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -91,63 +85,67 @@ Cc: "Jérôme Glisse" <jglisse@redhat.com>
 Cc: "Christian König" <christian.koenig@amd.com>
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 ---
- drivers/gpu/drm/ttm/ttm_bo_vm.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ include/linux/mm.h |  2 ++
+ mm/memory.c        | 15 +++++++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-index e6495ca2630b..2098f8d4dfc5 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -173,7 +173,6 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
- 				    pgoff_t num_prefault)
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index cc292273e6ba..29575d3c1e47 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2548,6 +2548,8 @@ vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
+ 			unsigned long pfn, pgprot_t pgprot);
+ vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
+ 			pfn_t pfn);
++vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
++			pfn_t pfn, pgprot_t pgprot);
+ vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
+ 		unsigned long addr, pfn_t pfn);
+ int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long len);
+diff --git a/mm/memory.c b/mm/memory.c
+index b1ca51a079f2..28f162e28144 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1719,9 +1719,9 @@ static bool vm_mixed_ok(struct vm_area_struct *vma, pfn_t pfn)
+ }
+ 
+ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
+-		unsigned long addr, pfn_t pfn, bool mkwrite)
++		unsigned long addr, pfn_t pfn, pgprot_t pgprot,
++		bool mkwrite)
  {
- 	struct vm_area_struct *vma = vmf->vma;
--	struct vm_area_struct cvma = *vma;
- 	struct ttm_buffer_object *bo = vma->vm_private_data;
- 	struct ttm_bo_device *bdev = bo->bdev;
- 	unsigned long page_offset;
-@@ -244,7 +243,7 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
- 		goto out_io_unlock;
- 	}
+-	pgprot_t pgprot = vma->vm_page_prot;
+ 	int err;
  
--	cvma.vm_page_prot = ttm_io_prot(bo->mem.placement, prot);
-+	prot = ttm_io_prot(bo->mem.placement, prot);
- 	if (!bo->mem.bus.is_iomem) {
- 		struct ttm_operation_ctx ctx = {
- 			.interruptible = false,
-@@ -260,7 +259,7 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
- 		}
- 	} else {
- 		/* Iomem should not be marked encrypted */
--		cvma.vm_page_prot = pgprot_decrypted(cvma.vm_page_prot);
-+		prot = pgprot_decrypted(prot);
- 	}
+ 	BUG_ON(!vm_mixed_ok(vma, pfn));
+@@ -1764,10 +1764,17 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
+ 	return VM_FAULT_NOPAGE;
+ }
  
- 	/*
-@@ -284,10 +283,11 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
- 		}
++vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
++				 pfn_t pfn, pgprot_t pgprot)
++{
++	return __vm_insert_mixed(vma, addr, pfn, pgprot, false);
++}
++EXPORT_SYMBOL(vmf_insert_mixed_prot);
++
+ vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
+ 		pfn_t pfn)
+ {
+-	return __vm_insert_mixed(vma, addr, pfn, false);
++	return __vm_insert_mixed(vma, addr, pfn, vma->vm_page_prot, false);
+ }
+ EXPORT_SYMBOL(vmf_insert_mixed);
  
- 		if (vma->vm_flags & VM_MIXEDMAP)
--			ret = vmf_insert_mixed(&cvma, address,
--					__pfn_to_pfn_t(pfn, PFN_DEV));
-+			ret = vmf_insert_mixed_prot(vma, address,
-+						    __pfn_to_pfn_t(pfn, PFN_DEV),
-+						    prot);
- 		else
--			ret = vmf_insert_pfn(&cvma, address, pfn);
-+			ret = vmf_insert_pfn_prot(vma, address, pfn, prot);
+@@ -1779,7 +1786,7 @@ EXPORT_SYMBOL(vmf_insert_mixed);
+ vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
+ 		unsigned long addr, pfn_t pfn)
+ {
+-	return __vm_insert_mixed(vma, addr, pfn, true);
++	return __vm_insert_mixed(vma, addr, pfn, vma->vm_page_prot, true);
+ }
+ EXPORT_SYMBOL(vmf_insert_mixed_mkwrite);
  
- 		/* Never error on prefaulted PTEs */
- 		if (unlikely((ret & VM_FAULT_ERROR))) {
-@@ -319,7 +319,7 @@ vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- 	if (ret)
- 		return ret;
- 
--	prot = vm_get_page_prot(vma->vm_flags);
-+	prot = vma->vm_page_prot;
- 	ret = ttm_bo_vm_fault_reserved(vmf, prot, TTM_BO_VM_NUM_PREFAULT);
- 	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
- 		return ret;
 -- 
 2.21.0
 
