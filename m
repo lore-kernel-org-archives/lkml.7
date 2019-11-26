@@ -2,264 +2,172 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9418C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5742DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D432075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A662075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:36:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Mnkk/0t0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfKZReC (ORCPT
+        id S1728678AbfKZRgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:34:02 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55572 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727674AbfKZReC (ORCPT
+        Tue, 26 Nov 2019 12:36:19 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45541 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728200AbfKZRgS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:34:02 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 65A2228F75C
-Received: by earth.universe (Postfix, from userid 1000)
-        id 9CC2B3C0C71; Tue, 26 Nov 2019 15:52:00 +0100 (CET)
-Date:   Tue, 26 Nov 2019 15:52:00 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        lee.jones@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/5] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-Message-ID: <20191126145200.xqtvfrm6qc6yuutb@earth.universe>
-References: <20191117141335.23404-1-matheus@castello.eng.br>
- <20191117141335.23404-5-matheus@castello.eng.br>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="p63jbpjrfe7ezmc2"
-Content-Disposition: inline
-In-Reply-To: <20191117141335.23404-5-matheus@castello.eng.br>
+        Tue, 26 Nov 2019 12:36:18 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z10so23398202wrs.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:36:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=oQnkvcGSn3FnEJK1c4dN5xwxykVF7o2DUxDzMF/X+eI=;
+        b=Mnkk/0t0RTn7IldxKQ3Eup+9Qromr30JeG+ClpG/lEi7SvhU08fLh3sTUwi3fRXn8o
+         voqfByxV6S1yQs7duEUcBQ+otoKhhYWSzZo1+I1m10ZThT3NnZjbg0OTRaF5BkOhlixk
+         kua+SDFmNUIKqGyx4nkaK4GfJ8JSvs72ytszQfmqdcfr0nbPSHMJ4HZSMUx2L/hrj4RR
+         mVRLHqw2Vs4pYWOHyD33y+RKWFglL1Yy1zoVn3HVpdRAy2/ztShsyHvkLHpz5lSv4Bcu
+         eaoAMINu4XfTT7/oouyZoP2thSGXxNQJrJl0VRILeMb8Rc6Gmt/mlb8Ut9EY7Toj61q7
+         lo/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=oQnkvcGSn3FnEJK1c4dN5xwxykVF7o2DUxDzMF/X+eI=;
+        b=KncsmEnLcEQIuzfViwzCdwgFnpRpJ3toabYz+SC7vdpvAdo3G4AJUBdoFzQENTLLuY
+         ISb6r5MJE8rX7XMaJALitowqTlhMnFMUbWTWzEvTaPGhSceRKKjyJ/4HyxyEdKK08p1E
+         vnlRZfkjPcJsWysvx+UZznQSOIgaVniS2IxSu+nvdd24/IbJOgAhc22Lrbipjipd0U+W
+         6ZvzpSUNRuBSFVaY51dQ1cLgw0/NcRC+iKIJrVE8T0pFHoakNpejqFh5m+/ZoxGKzupK
+         322GmPIWM3QrJH34kXw4/3+/n+YS57em30/7vAWRXrwp/7xUFoYFMLEaz8YXRqynp8vV
+         N4/g==
+X-Gm-Message-State: APjAAAVCq2Gu0U0E2DD6chYNDDfsGWMMYwTf7oBCQ5qtdBx2mcpVDqXt
+        Jz1szCYMdDDu/nGC9JXb5cTmi3cYo/1jjyM4
+X-Google-Smtp-Source: APXvYqwwyrGNIbRS/1qiWBQIFeTr+lTeHiS5H7x0RANPsRpLXbMnbMrkarvfrwaOtJUga4n5tQr3WQ==
+X-Received: by 2002:adf:f80b:: with SMTP id s11mr29615883wrp.12.1574789774900;
+        Tue, 26 Nov 2019 09:36:14 -0800 (PST)
+Received: from [10.83.36.220] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id m9sm15092174wro.66.2019.11.26.09.36.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Nov 2019 09:36:14 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: [PATCH v3 1/2] PCI: Add helper pci_add_dma_alias_range
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <3cd1d36f-a8ba-92dc-f991-19e2f9196eba@deltatee.com>
+Date:   Tue, 26 Nov 2019 17:36:13 +0000
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8855EF11-4B75-4D09-B1E3-CD668DE94C27@arista.com>
+References: <20191120193228.GA103670@google.com>
+ <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+ <3cd1d36f-a8ba-92dc-f991-19e2f9196eba@deltatee.com>
+To:     linux-pci@vger.kernel.org
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+pci_add_dma_alias_range can be used to create a dma alias for range of
+devfns.
 
---p63jbpjrfe7ezmc2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: James Sewart <jamessewart@arista.com>
+---
+ drivers/pci/pci.c   | 30 +++++++++++++++++++++++-------
+ include/linux/pci.h |  1 +
+ 2 files changed, 24 insertions(+), 7 deletions(-)
 
-Hi,
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a97e2571a527..68339309c0f4 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5854,6 +5854,18 @@ int pci_set_vga_state(struct pci_dev *dev, bool =
+decode,
+ 	return 0;
+ }
+=20
++int _pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int =
+len)
++{
++	if (!dev->dma_alias_mask)
++		dev->dma_alias_mask =3D bitmap_zalloc(U8_MAX, =
+GFP_KERNEL);
++	if (!dev->dma_alias_mask) {
++		pci_warn(dev, "Unable to allocate DMA alias mask\n");
++		return -ENOMEM;
++	}
++	bitmap_set(dev->dma_alias_mask, devfn_from, len);
++	return 0;
++}
++
+ /**
+  * pci_add_dma_alias - Add a DMA devfn alias for a device
+  * @dev: the PCI device for which alias is added
+@@ -5875,18 +5887,22 @@ int pci_set_vga_state(struct pci_dev *dev, bool =
+decode,
+  */
+ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+ {
+-	if (!dev->dma_alias_mask)
+-		dev->dma_alias_mask =3D bitmap_zalloc(U8_MAX, =
+GFP_KERNEL);
+-	if (!dev->dma_alias_mask) {
+-		pci_warn(dev, "Unable to allocate DMA alias mask\n");
++	if (_pci_add_dma_alias_range(dev, devfn, 1) !=3D 0)
+ 		return;
+-	}
+-
+-	set_bit(devfn, dev->dma_alias_mask);
+ 	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+ 		 PCI_SLOT(devfn), PCI_FUNC(devfn));
+ }
+=20
++void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int =
+len)
++{
++	int devfn_to =3D devfn_from + len - 1;
++
++	if (_pci_add_dma_alias_range(dev, devfn_from, len) !=3D 0)
++		return;
++	pci_info(dev, "Enabling fixed DMA alias for devfn range from =
+%02x.%d to %02x.%d\n",
++		 PCI_SLOT(devfn_from), PCI_FUNC(devfn_from), =
+PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
++}
++
+ bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev =
+*dev2)
+ {
+ 	return (dev1->dma_alias_mask &&
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 1a6cf19eac2d..6765f3d0102b 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2324,6 +2324,7 @@ static inline struct eeh_dev =
+*pci_dev_to_eeh_dev(struct pci_dev *pdev)
+ #endif
+=20
+ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
++void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int =
+len);
+ bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev =
+*dev2);
+ int pci_for_each_dma_alias(struct pci_dev *pdev,
+ 			   int (*fn)(struct pci_dev *pdev,
+--=20
+2.24.0
 
-On Sun, Nov 17, 2019 at 11:13:34AM -0300, Matheus Castello wrote:
-> For configuration of fuel gauge alert for a low level state of charge
-> interrupt we add a function to config level threshold and a device tree
-> binding property to set it in flatned device tree node.
->=20
-> Now we can use "maxim,alert-low-soc-level" property with the values from
-> 1% up to 32% to configure alert interrupt threshold.
->=20
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  drivers/power/supply/max17040_battery.c | 75 ++++++++++++++++++++++---
->  1 file changed, 67 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supp=
-ly/max17040_battery.c
-> index 9909f8cd7b5d..3fc9e1c7b257 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -29,6 +29,9 @@
->  #define MAX17040_DELAY		1000
->  #define MAX17040_BATTERY_FULL	95
->=20
-> +#define MAX17040_ATHD_MASK		0xFFC0
-> +#define MAX17040_ATHD_DEFAULT_POWER_UP	4
-> +
->  struct max17040_chip {
->  	struct i2c_client		*client;
->  	struct delayed_work		work;
-> @@ -43,6 +46,8 @@ struct max17040_chip {
->  	int soc;
->  	/* State Of Charge */
->  	int status;
-> +	/* Low alert threshold from 32% to 1% of the State of Charge */
-> +	u32 low_soc_alert;
->  };
->=20
->  static int max17040_get_property(struct power_supply *psy,
-> @@ -99,6 +104,21 @@ static void max17040_reset(struct i2c_client *client)
->  	max17040_write_reg(client, MAX17040_CMD, 0x0054);
->  }
->=20
-> +static int max17040_set_low_soc_alert(struct i2c_client *client, u32 lev=
-el)
-> +{
-> +	int ret;
-> +	u16 data;
-> +
-> +	level =3D 32 - level;
-> +	data =3D max17040_read_reg(client, MAX17040_RCOMP);
-> +	/* clear the alrt bit and set LSb 5 bits */
-> +	data &=3D MAX17040_ATHD_MASK;
-> +	data |=3D level;
-> +	ret =3D max17040_write_reg(client, MAX17040_RCOMP, data);
-> +
-> +	return ret;
-> +}
-> +
->  static void max17040_get_vcell(struct i2c_client *client)
->  {
->  	struct max17040_chip *chip =3D i2c_get_clientdata(client);
-> @@ -115,7 +135,6 @@ static void max17040_get_soc(struct i2c_client *clien=
-t)
->  	u16 soc;
->=20
->  	soc =3D max17040_read_reg(client, MAX17040_SOC);
-> -
-
-unrelated change.
-
->  	chip->soc =3D (soc >> 8);
->  }
->=20
-> @@ -161,6 +180,24 @@ static void max17040_get_status(struct i2c_client *c=
-lient)
->  		chip->status =3D POWER_SUPPLY_STATUS_FULL;
->  }
->=20
-> +static int max17040_get_of_data(struct max17040_chip *chip)
-> +{
-> +	struct device *dev =3D &chip->client->dev;
-> +	struct device_node *np =3D dev->of_node;
-> +	int ret =3D 0;
-> +
-> +	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
-> +				 &chip->low_soc_alert)) {
-> +		chip->low_soc_alert =3D MAX17040_ATHD_DEFAULT_POWER_UP;
-> +	} else if (chip->low_soc_alert <=3D 0 ||
-> +			chip->low_soc_alert >=3D 33) {
-> +		/* low_soc_alert is not between 1% and 32% */
-> +		ret =3D -EINVAL;
-> +	}
-
-use device_property_read_u32(), which is not DT specific. Also
-code can be simplified a bit:
-
-chip->low_soc_alert =3D MAX17040_ATHD_DEFAULT_POWER_UP;
-device_property_read_u32(dev, "maxim,alert-low-soc-level", &chip->low_soc_a=
-lert);
-if (chip->low_soc_alert <=3D 0 || chip->low_soc_alert >=3D 33)
-    return -EINVAL;
-return 0;
-
-> +
-> +	return ret;
-> +}
-> +
->  static void max17040_check_changes(struct i2c_client *client)
->  {
->  	max17040_get_vcell(client);
-> @@ -192,6 +229,9 @@ static irqreturn_t max17040_thread_handler(int id, vo=
-id *dev)
->  	/* send uevent */
->  	power_supply_changed(chip->battery);
->=20
-> +	/* reset alert bit */
-> +	max17040_set_low_soc_alert(client, chip->low_soc_alert);
-> +
->  	return IRQ_HANDLED;
->  }
->=20
-> @@ -230,6 +270,7 @@ static int max17040_probe(struct i2c_client *client,
->  	struct i2c_adapter *adapter =3D client->adapter;
->  	struct power_supply_config psy_cfg =3D {};
->  	struct max17040_chip *chip;
-> +	int ret;
->=20
->  	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
->  		return -EIO;
-> @@ -240,6 +281,12 @@ static int max17040_probe(struct i2c_client *client,
->=20
->  	chip->client =3D client;
->  	chip->pdata =3D client->dev.platform_data;
-> +	ret =3D max17040_get_of_data(chip);
-> +	if (ret) {
-> +		dev_err(&client->dev,
-> +			"failed: low SOC alert OF data out of bounds\n");
-> +		return ret;
-> +	}
->=20
->  	i2c_set_clientdata(client, chip);
->  	psy_cfg.drv_data =3D chip;
-> @@ -256,14 +303,26 @@ static int max17040_probe(struct i2c_client *client,
->=20
->  	/* check interrupt */
->  	if (client->irq) {
-> -		int ret;
-> -
-> -		ret =3D max17040_enable_alert_irq(chip);
-> -
-> -		if (ret) {
-> -			client->irq =3D 0;
-> +		if (of_device_is_compatible(client->dev.of_node,
-> +					    "maxim,max77836-battery")) {
-> +			ret =3D max17040_set_low_soc_alert(client,
-> +							 chip->low_soc_alert);
-> +			if (ret) {
-> +				dev_err(&client->dev,
-> +					"Failed to set low SOC alert: err %d\n",
-> +					ret);
-> +				return ret;
-> +			}
-> +
-> +			ret =3D max17040_enable_alert_irq(chip);
-> +			if (ret) {
-> +				client->irq =3D 0;
-> +				dev_warn(&client->dev,
-> +					 "Failed to get IRQ err %d\n", ret);
-> +			}
-> +		} else {
->  			dev_warn(&client->dev,
-> -				 "Failed to get IRQ err %d\n", ret);
-> +				 "Device not compatible for IRQ");
-
-Something is odd here. Either this should be part of the first
-patch ("max17040: Add IRQ handler for low SOC alert"), or both
-device types support the IRQ and this check should be removed.
-
--- Sebastian
-
->  		}
->  	}
->=20
-> --
-> 2.24.0.rc2
->=20
-
---p63jbpjrfe7ezmc2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3dPAwACgkQ2O7X88g7
-+pqVnA/9HJ25z3TU/8d6ZS5s5PMtCNv+RCE4DKSeiKRcopdAcUJNjIz6gbR19bzQ
-/0D4Vm8uXUfFtJRCC/tQ7cFZlXEhMRZs8eUo/6mYeHLu3ZPOO42/OVLU+72ai0OK
-SK52O/pMnJCS3U626WL4f1AfcGcXDynVCtnJ8WP7rcTzwcIoCTQAJZ9zrhAf/Kvo
-4wJyUqdJPTujLwqp9Xv1RWUMFirPLkNkk0CW8lB2kQJ9tC3ntFi7jQvn2Po9js49
-98okoy1ZnNA39iRaYPJ4Xv2lI0Jhgd0FUgF5o8yzcqcbcTMhF4hll4zUVXA6Sjk7
-xwEX9Q9X7H62RliKvCZ+QtEvv8ryI7UFJgKfRSOpJRKn/pGgo9GC5NKpFbRuQ0x8
-Wgz6TWuWGt8AHehBhXfc69D5mm6sddq35gnLwhaTPgB+w2SBfLydc3c8xOuN1Ze+
-vPwnWAphJE1Ek/kK7/u/0aOUb2njRdEhKWMVFbamoQ+X0PZELbxgrrJiwpRUdmEm
-08/pZKwL5lUsedvfQ/MBn/6qo2OpXWB6js9T3nebF5Q0c1xMWtiLMFeoFr4fGYZ6
-gm0hb755UotmIVxSStYj/pEz2vluve1djROKafrOSdxIjYzRaBjxasj1wLopkQBt
-Nx5+4WNsMzieHaOmCfem10kmtNLXNxw7tRh4Mdol52UD1qVY2+4=
-=W72K
------END PGP SIGNATURE-----
-
---p63jbpjrfe7ezmc2--
