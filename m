@@ -2,104 +2,92 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6527DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4BAC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AADF204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71C320656
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EfGYhmMK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kU2gHuxU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbfKZNxo (ORCPT
+        id S1728023AbfKZNy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:53:44 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:39724 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727374AbfKZNxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:53:43 -0500
-Received: from zn.tnic (p200300EC2F0EC2004C218550ABF865B7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:c200:4c21:8550:abf8:65b7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 838561EC0CC9;
-        Tue, 26 Nov 2019 14:53:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574776422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=yYVg4n91flpvNftEr6bER0DSitlLkMNVnW8X+eq28JQ=;
-        b=EfGYhmMKkzziEqxtddBTe2Cod4+mjp2qSbJiB1PQPuw+OLcqULqMAUxe7VwYqLkit5Ovea
-        JBctUxU0kulh0A/Gx7pjq9KSDTYC//uUd4Wo5eKmy10OVePGWw9Cpwnyhk6+HS/HXh8Nal
-        5VFrs1V8Pb0AkHD5m6NmXjfE6Tv8keE=
-Date:   Tue, 26 Nov 2019 14:53:30 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        hpa@zytor.com, mingo@redhat.com
-Subject: Re: [PATCH] cpu: microcode: replace 0 with NULL
-Message-ID: <20191126135330.GE31379@zn.tnic>
-References: <20191126002734.121905-1-jbi.octave@gmail.com>
+        Tue, 26 Nov 2019 08:54:28 -0500
+Received: from mail-pf1-f176.google.com ([209.85.210.176]:38937 "EHLO
+        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727374AbfKZNy2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 08:54:28 -0500
+Received: by mail-pf1-f176.google.com with SMTP id x28so9230037pfo.6;
+        Tue, 26 Nov 2019 05:54:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+6y5ljhdOSEpbqDLsf7WOjQHYlWu0KOnTNgfdKfFZjM=;
+        b=kU2gHuxUF6SZJBNCach5U8PnIYmJSzZd9R8HVCNwCEBVo7Qcyllx6sRO43guXWfR4D
+         v8SmxuQM0xYoK7RgxjB0jkvNGZCXVcagtNpRGh+fKt6rvlz67geafk3RtpmngEWuQzgj
+         gWxp1yKDha+ld8KIMa320nZxhw6BcVwOpXlzSiVdPX7LLNHxaIGUmkJomy1ISJFAat82
+         Ce/zecMrbpCdN5Nj5gakkI2UzOEs4IOgu5sWKWZgIXwlttnAdpR2M+kdr9ptL+9qQvy9
+         qw7+jHqx3DRK/ND/oHjWPe5pKagJ8JKzXIXM+MkTY7TqpRytSJv8IKZ1TjCpymJi3t+9
+         f3pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+6y5ljhdOSEpbqDLsf7WOjQHYlWu0KOnTNgfdKfFZjM=;
+        b=Hkd/IHgkYHCuU6/PBg0GxgVWab7mDGAUal0xcymuAqsvP8cCLhbc9eJVRRwlEE2cz0
+         RhRpGNJkSj3qzhMQu2YjbilSy29jxCGOtFdddtDATYqlRBX4fFdVm692aGClxIkwwbp8
+         djEioUaXZggadkbxZqxo1LdS7wNZ5pYJzp9Cytxg6CPHOe9iPqBbGus+fiinEO8ab6P0
+         8F/tuSjt8XWAoNHYGYHR1rFyI+UTYx1hfpCMwowRa4Ejjr8JBieuNiqysL/8mxlw6uVD
+         g3Vo6nUj34aDOTikZTPQZ9uq/5XE7p4lf4n/v0h56e4A5tmoeFFSfOEBHpXRltcwo2aT
+         UQ5A==
+X-Gm-Message-State: APjAAAX8xr9cxz62dtn/NaTZDuj9mTQO5O2cez9l0AofDDOVsONkEZkG
+        UZ1RCoZVz8WVUpbF26OMXPY=
+X-Google-Smtp-Source: APXvYqw34TPsTUE7JT5v2meXhZ9ChV9KIXsII3gjoonQhOCrfLFeqihISKTXSc0AiL/PHJ25/TflFA==
+X-Received: by 2002:aa7:9d9c:: with SMTP id f28mr21912265pfq.20.1574776467580;
+        Tue, 26 Nov 2019 05:54:27 -0800 (PST)
+Received: from debian.net.fpt ([2405:4800:58f7:2f79:ce3b:4b9:a68f:959f])
+        by smtp.gmail.com with ESMTPSA id v3sm13018499pfi.26.2019.11.26.05.54.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 05:54:26 -0800 (PST)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     davem@davemloft.net
+Cc:     alexios.zavras@intel.com, allison@lohutok.net, benquike@gmail.com,
+        gregkh@linuxfoundation.org, johan@kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, oneukum@suse.com, tglx@linutronix.de,
+        tranmanphong@gmail.com
+Subject: [Patch v2 0/2] Fix -Wcast-function-type usb net drivers
+Date:   Tue, 26 Nov 2019 20:54:11 +0700
+Message-Id: <20191126135413.19929-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191125.110708.76766634808358006.davem@davemloft.net>
+References: <20191125.110708.76766634808358006.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191126002734.121905-1-jbi.octave@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 12:27:34AM +0000, Jules Irenge wrote:
-> Replace 0 with NULL to fix sparse tool  warning
->  warning: Using plain integer as NULL pointer
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  arch/x86/kernel/cpu/microcode/amd.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-> index a0e52bd00ecc..4934aa7c94e7 100644
-> --- a/arch/x86/kernel/cpu/microcode/amd.c
-> +++ b/arch/x86/kernel/cpu/microcode/amd.c
-> @@ -418,7 +418,7 @@ static int __apply_microcode_amd(struct microcode_amd *mc)
->  static bool
->  apply_microcode_early_amd(u32 cpuid_1_eax, void *ucode, size_t size, bool save_patch)
->  {
-> -	struct cont_desc desc = { 0 };
-> +	struct cont_desc desc = { NULL };
+Change log with v1:
+ - Modify suffix of patch subject.
+ - Did the checkpatch.pl (remove the space, add a blank line).
 
-So my gcc guy says that 0 and NULL are equivalent as designated
-initializers in this case. And if you look at the resulting asm, it
-doesn't change:
+Phong Tran (2):
+  net: hso: Fix -Wcast-function-type
+  net: usbnet: Fix -Wcast-function-type
 
-# arch/x86/kernel/cpu/microcode/amd.c:421: 	struct cont_desc desc = { 0 };
-	movq	$0, 8(%rsp)	#, desc
-	movq	$0, (%rsp)	#, desc
-	movq	$0, 16(%rsp)	#, desc
-	movq	$0, 24(%rsp)	#, desc
-
-But what I'd prefer actually is, if you do them like this:
-
-			... = { 0,  };
-
-because:
-
-1. It is clear that the memory for the struct is being cleared
-2. The following ones - the ones after "," are missing too, on purpose,
-   because they're being cleared too.
-
-Also pls add that explanation to the commit message.
-
-Thx.
+ drivers/net/usb/hso.c    | 5 +++--
+ drivers/net/usb/usbnet.c | 9 ++++++++-
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
