@@ -2,115 +2,121 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BA5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8AAC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D8D20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0967A20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:30:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CBhYcMif"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TKzABNkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKZU2a (ORCPT
+        id S1727051AbfKZUaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:28:30 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39754 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfKZU23 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:28:29 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v138so17922919oif.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 12:28:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/XSZa4W/M2aE/Tb/1KifHz0unDdEO/TbPc4sPZEojwc=;
-        b=CBhYcMifwObV8FiaLv3qnDm8tmxQesbOiKmpfYuLwQcoURmaoskF1BM3VvvuJsOxEg
-         FeS4PEx1RfrQfekKtivjkgF7pV4uIh0nmFJIkzU+WBK1uEM80zbJa80xMaETFFZjGlva
-         4jz3NvIlnC3RdVDU0YgJOoe+Ksz95PefmhbLQK2Er0F5wZZXWu1YtF8I64NxENNF3vG9
-         f4F3WKam+EMzAwKbkar25ZPTlk/l3cK0HaHyZUbAJsyZaSckG4r44N/f88GEKvx4k8NE
-         Kxv+bW0pCp6LKZVFQriQBDAFdj6bVkWKsjR52Mu1HC/KAImOfK+rNMbhfqVdA2byccjd
-         3KLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/XSZa4W/M2aE/Tb/1KifHz0unDdEO/TbPc4sPZEojwc=;
-        b=Qg8kF4G75p3qtsG+5Gjq+xyyQSYqY0hW6BG7gTi7Q8Q/mE46jvEDAdskG7a8R+CVa6
-         QsqzikjPyQTe0XFurfO+6x1hoRisLUccm3BlKdYev3oikWB0LsJCY7PCJIjl7A6izmfD
-         V74eu1SzImJsUW9JgXle4BfugZg/tpZHHYdovano4iYzpGzbT5BpOyXM5BJOceR3QKju
-         IWX//yRc08UQRiNc6IRDk/op+AH2VudA/vlFS6TDrq6rtB/xbhlJ0ZdPTP2+tn1cqWX4
-         WhEeCcYMKSAHt79qDCHxyT0e6hl5OBKltv6Pz+I6baSaREnQ9i4YOZWS0U5KoefhXBry
-         XdPw==
-X-Gm-Message-State: APjAAAXA7vzLLbpTskClm0VPqxRiwB6C05Yl1x+VdnNlz7yrxZdfMDxh
-        +lSttDYbD+WMxw1sHQfU253jKNs+ircOesnKlR0t1g==
-X-Google-Smtp-Source: APXvYqwYoqI9ebTNGSoRQFaPjS4xFGjozMV1PMYVPuvzl4n6+yfP1MFkD0UBucO5QOZTVwhOiGWpwNsqbdfl5iQJkQ4=
-X-Received: by 2002:a05:6808:611:: with SMTP id y17mr814072oih.24.1574800108635;
- Tue, 26 Nov 2019 12:28:28 -0800 (PST)
+        Tue, 26 Nov 2019 15:30:25 -0500
+Received: from ozlabs.org ([203.11.71.1]:41871 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbfKZUaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:30:24 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47MwWc65Ggz9sRH;
+        Wed, 27 Nov 2019 07:30:20 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574800222;
+        bh=afsoIn2XZqK4fz9PBhl5G8eJamsDD10MBu3yEOVkQg8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TKzABNkdBIRhUZFn4xtDqf6vrgHyPebdBu5IUD+MvfkmYZMgZg7Cco0hnih0elLP9
+         VW+VreZXiZHRRREL+NGCLQFEcMgBViOXdzHFxLqr1ENpZ00Q/nBDo1L3dq3cMKInyY
+         OdSqThyXGmBSancMCwEAXGasHUSPUTg3I5cSh8KTf69L9Eqp76yTiKCpT6JFdpFJQK
+         klitAcJed/p9q59cu4SGI7Erf1Z1uA9Qc50F8r7TvYfblKspO8lMNh3NJQc0emggyA
+         cTMB4yhkdu+Ix7wVStamc5y37tcji7+OhLJuz+aYJSxnNhITQoiOGCKDQnvBnqXvhv
+         nyN6CY9NPTU/Q==
+Date:   Wed, 27 Nov 2019 07:30:19 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Christoffer Dall <cdall@cs.columbia.edu>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM <kvm@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the kvm-arm tree with the kbuild
+ tree
+Message-ID: <20191127073019.41c44ae7@canb.auug.org.au>
+In-Reply-To: <20191125135811.4a3d71da@canb.auug.org.au>
+References: <20191118143842.2e7ad24d@canb.auug.org.au>
+        <20191125135811.4a3d71da@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191121114918.2293-1-will@kernel.org> <20191121114918.2293-10-will@kernel.org>
- <5c91d467-5e59-482b-8f4f-e0cfa3db9028@huawei.com>
-In-Reply-To: <5c91d467-5e59-482b-8f4f-e0cfa3db9028@huawei.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 26 Nov 2019 12:27:52 -0800
-Message-ID: <CAGETcx8Hkta6scFdiG=eQypsQ--jrR1YisaOQATCbMiu+aG8sg@mail.gmail.com>
-Subject: Re: [PATCH v3 09/14] iommu/arm-smmu: Prevent forced unbinding of Arm
- SMMU drivers
-To:     John Garry <john.garry@huawei.com>
-Cc:     Will Deacon <will@kernel.org>, iommu@lists.linuxfoundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/mO/2s2aVXGsrv_8fZYouSu1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 1:13 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 21/11/2019 11:49, Will Deacon wrote:
-> > Forcefully unbinding the Arm SMMU drivers is a pretty dangerous operation,
-> > since it will likely lead to catastrophic failure for any DMA devices
-> > mastering through the SMMU being unbound. When the driver then attempts
-> > to "handle" the fatal faults, it's very easy to trip over dead data
-> > structures, leading to use-after-free.
-> >
-> > On John's machine, he reports that the machine was "unusable" due to
-> > loss of the storage controller following a forced unbind of the SMMUv3
-> > driver:
-> >
-> >    | # cd ./bus/platform/drivers/arm-smmu-v3
-> >    | # echo arm-smmu-v3.0.auto > unbind
-> >    | hisi_sas_v2_hw HISI0162:01: CQE_AXI_W_ERR (0x800) found!
-> >    | platform arm-smmu-v3.0.auto: CMD_SYNC timeout at 0x00000146
-> >    | [hwprod 0x00000146, hwcons 0x00000000]
-> >
-> > Prevent this forced unbinding of the drivers by setting "suppress_bind_attrs"
-> > to true.
->
-> This seems a reasonable approach for now.
->
-> BTW, I'll give this series a spin this week, which again looks to be
-> your iommu/module branch, excluding the new IORT patch.
+--Sig_/mO/2s2aVXGsrv_8fZYouSu1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Is this on a platform where of_devlink creates device links between
-the iommu device and its suppliers? I'm guessing no? Because device
-links should for unbinding of all the consumers before unbinding the
-supplier.
+Hi all,
 
-Looks like it'll still allow the supplier to unbind if the consumers
-don't allow unbinding. Is that the case here?
+On Mon, 25 Nov 2019 13:58:11 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Mon, 18 Nov 2019 14:38:42 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > Today's linux-next merge of the kvm-arm tree got a conflict in:
+> >=20
+> >   include/Kbuild
+> >=20
+> > between commit:
+> >=20
+> >   fcbb8461fd23 ("kbuild: remove header compile test")
+> >=20
+> > from the kbuild tree and commit:
+> >=20
+> >   55009c6ed2d2 ("KVM: arm/arm64: Factor out hypercall handling from PSC=
+I code")
+> >=20
+> > from the kvm-arm tree.
+> >=20
+> > I fixed it up (I just removed the file) and can carry the fix as necess=
+ary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts. =20
+>=20
+> This is now a conflict between the kvm tree and the kbuild tree.
 
--Saravana
+And now between the kbuild tree and Linus' tree.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/mO/2s2aVXGsrv_8fZYouSu1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3di1sACgkQAVBC80lX
+0GxKWgf/XqDJya979/i/Ee6kkS9stH/cuZLB0qgcdM0OJksaN6vsHD1mj6sv2qdx
+h0qVO1ycAOLoM1Z3JGcbwvbJloYHG/lwejHc1yazpwdq+59pxBfqM1wCW100x+pH
+BFUXLlChcdcwzLRe0aXSQeNMH2BMM/UMjGlZ0QtIg/7pGtJyKbpj8/JsvB2CD6a7
+ptVB0dyrIVeC3kGo4O0F7M+P1hd0CoA+6X/syMRhdFAOKGYcBsdkVdbE+EIDMdeZ
+3jrnJToTlIJVA6i0sGW3Px9mZfdHGfvK3M8ZPvTkixzp2YhliRa9JP7c4Cn7pywI
+5oYRSi/GfCtGEsN1HD/VX9i80F0muw==
+=MaQE
+-----END PGP SIGNATURE-----
+
+--Sig_/mO/2s2aVXGsrv_8fZYouSu1--
