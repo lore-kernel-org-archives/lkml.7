@@ -2,94 +2,132 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192D6C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068D7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D757320872
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C984D2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:33:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="XfUYt5Ax"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S8pmopzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbfKZTbG (ORCPT
+        id S1727455AbfKZTdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:31:06 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:28268 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfKZTbG (ORCPT
+        Tue, 26 Nov 2019 14:33:32 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:37618 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727233AbfKZTdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:31:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574796664;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ZFKAqYpbbjnGol8k3VcaYvgyvKkNLTdKc+1X7uXlroE=;
-        b=XfUYt5AxuLESQ5gMBtfHO18ZAOWzUflCUigM7aHSjLFM4nL6uhZUsgWMsL6apnH+ri
-        zyIJMXBnmWdFZxWTWCLEvDCvcytbZXSLqzQ5GWClhG5K4kh8/aicXLHQNEv0W9oK6x20
-        wpDn2IThg6OguDbQB18zUoS9L6WPWbl1oJUZeMBCCYj9gORJlsWSJQUbR8nSNdzre2CR
-        NRWrvS192g8wdW6UA39DlcdHFDPGykSPxKWf1BSTkOkponaELxg805e7Kl34wWT0RgoS
-        B81ca9c7PQxXDFY9Xi5Ko766TnUVWNOcVGUiYaU5cKBdevmQiybqbQ2sRcIja4ukuvzO
-        odSA==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaJvScdGvN"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id m074f2vAQJRY80E
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 26 Nov 2019 20:27:34 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, kbuild-all@lists.01.org
-Subject: Re: [PATCH v26 12/12] LRNG - add interface for gathering of raw entropy (fwd)
-Date:   Tue, 26 Nov 2019 20:27:33 +0100
-Message-ID: <3845228.ihUtNFa0QL@tauon.chronox.de>
-In-Reply-To: <alpine.DEB.2.21.1911261903060.2605@hadrien>
-References: <alpine.DEB.2.21.1911261903060.2605@hadrien>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 26 Nov 2019 14:33:31 -0500
+Received: by mail-pj1-f74.google.com with SMTP id a31so656170pje.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 11:33:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=LZgbozaMv2++Eabt+iViPasyBMAegYsg5oYTvMeHf7E=;
+        b=S8pmopzzBG0rNok5vDN976cFoAR0A7Q+p/o8pCLnSXixM+5boO1hXI9m0F7yA6sPVV
+         IZyY5dqJw+zD9pjkQsCFWgDYz5wF+P5eNiXGqXXFMv+aRYKwpt3F8UawnB7gMei0i6YK
+         4d66jyCvy//Wa3Vusi8E+3lZBlUxR6yn31REPHhWKiHXldKjuVnLzFRabBqqG5gAGZtG
+         t2QH8dhE+35YRcXlL8MfSG9W6j2mdR4uGOafC5ful+3LPMSrTawaYmujJHXzrggLSV6H
+         9lTVl+5Wl79xSAYJW8Mc3QEXtAmUzLcvXtgiiSy/iJjtsjTonesbzCbeMh7TzIaZ0qEV
+         VqSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=LZgbozaMv2++Eabt+iViPasyBMAegYsg5oYTvMeHf7E=;
+        b=RISRLvB0YxRBNCKsHALG7LKDUuMN0p0pxwz+O9jrA1u80nSdrwRTOJleh+FyK7KntR
+         zCtWYdpPQwSq6w87OPHIelxyvcgoqSXrImRNUjZMeKVr3xvBP9gMAiyPy+oI2cAGP6Gc
+         nVX+/9ATCPfVTJjsbbX0xci5LYDvpP6nzlVz2Cg/71htIKF/IyKEGsLfCRqkpg7BwVQ5
+         CUGg03HP9JgL6/KdOc4J8o6AaRiaBUL1z60PddAeI2HCRYHGySd1ar/8Muljuem+QFb5
+         0khNA91jYmiJ1UunkDbIFjDXzQQB9oEvnpTG97Mh1Yw49nbEjdDYu5JnvtXGD5/RXeH0
+         Kv3w==
+X-Gm-Message-State: APjAAAUBmhK1I2apySbBB60lanmU7/Xn6SR8NWMNz47EmgBAdI91NZSH
+        Gg4dasKSMxKElT1ArnIgIDFCe+i1YJsYuWKm
+X-Google-Smtp-Source: APXvYqwlu7Ul/+3EqoijwO89c+WDCiAnYLTJIkWSIHVcFHz5+Auv/4L5M6KXbDaJdlS2PHvKtwCyeDHSuT1v47PK
+X-Received: by 2002:a63:c606:: with SMTP id w6mr156681pgg.133.1574796809308;
+ Tue, 26 Nov 2019 11:33:29 -0800 (PST)
+Date:   Tue, 26 Nov 2019 11:33:13 -0800
+Message-Id: <20191126193313.44181-1-heidifahim@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH] kunit: test: Improve error messages for kunit_tool when
+ kunitconfig is invalid
+From:   Heidi Fahim <heidifahim@google.com>
+To:     brendanhiggins@google.com, shuah@kernel.org
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, Heidi Fahim <heidifahim@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 26. November 2019, 19:04:10 CET schrieb Julia Lawall:
+Previous error message for invalid kunitconfig was vague. Added to it so
+that it lists invalid fields and prompts for them to be removed.  Added
+validate_config function returning whether or not this kconfig is valid.
 
-Hi Julia,
+Signed-off-by: Heidi Fahim <heidifahim@google.com>
+---
+ tools/testing/kunit/kunit_kernel.py | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-> Hello,
-> 
-> Should something be done about the lock on line 162?
-
-Yes, thank you for the report. There should be an unlock, naturally.
-
-Ciao
-Stephan
-
+diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
+index bf3876835331..010d3f5030d2 100644
+--- a/tools/testing/kunit/kunit_kernel.py
++++ b/tools/testing/kunit/kunit_kernel.py
+@@ -93,6 +93,19 @@ class LinuxSourceTree(object):
+ 			return False
+ 		return True
+ 
++	def validate_config(self, build_dir):
++		kconfig_path = get_kconfig_path(build_dir)
++		validated_kconfig = kunit_config.Kconfig()
++		validated_kconfig.read_from_file(kconfig_path)
++		if not self._kconfig.is_subset_of(validated_kconfig):
++			invalid = self._kconfig.entries() - validated_kconfig.entries()
++			message = 'Provided Kconfig is not contained in validated .config. Invalid fields found in kunitconfig: %s' % (
++				', '.join([str(e) for e in invalid])
++			)
++			logging.error(message)
++			return False
++		return True
++
+ 	def build_config(self, build_dir):
+ 		kconfig_path = get_kconfig_path(build_dir)
+ 		if build_dir and not os.path.exists(build_dir):
+@@ -103,12 +116,7 @@ class LinuxSourceTree(object):
+ 		except ConfigError as e:
+ 			logging.error(e)
+ 			return False
+-		validated_kconfig = kunit_config.Kconfig()
+-		validated_kconfig.read_from_file(kconfig_path)
+-		if not self._kconfig.is_subset_of(validated_kconfig):
+-			logging.error('Provided Kconfig is not contained in validated .config!')
+-			return False
+-		return True
++		return self.validate_config(build_dir)
+ 
+ 	def build_reconfig(self, build_dir):
+ 		"""Creates a new .config if it is not a subset of the kunitconfig."""
+@@ -133,12 +141,7 @@ class LinuxSourceTree(object):
+ 		except (ConfigError, BuildError) as e:
+ 			logging.error(e)
+ 			return False
+-		used_kconfig = kunit_config.Kconfig()
+-		used_kconfig.read_from_file(get_kconfig_path(build_dir))
+-		if not self._kconfig.is_subset_of(used_kconfig):
+-			logging.error('Provided Kconfig is not contained in final config!')
+-			return False
+-		return True
++		return self.validate_config(build_dir)
+ 
+ 	def run_kernel(self, args=[], timeout=None, build_dir=None):
+ 		args.extend(['mem=256M'])
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
