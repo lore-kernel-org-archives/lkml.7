@@ -2,146 +2,124 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67857C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 18:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8368C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 18:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F3F20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 18:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE9620727
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 18:17:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="YtJgMBkM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfKZSOH (ORCPT
+        id S1726294AbfKZSRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 13:14:07 -0500
-Received: from mga01.intel.com ([192.55.52.88]:35839 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfKZSOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 13:14:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 10:14:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,246,1571727600"; 
-   d="scan'208";a="211493575"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga006.jf.intel.com with ESMTP; 26 Nov 2019 10:14:06 -0800
-Date:   Tue, 26 Nov 2019 10:14:06 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH 1/1] powerpc/kvm/book3s: Fixes possible 'use after
- release' of kvm
-Message-ID: <20191126181406.GC22233@linux.intel.com>
-References: <20191126175212.377171-1-leonardo@linux.ibm.com>
+        Tue, 26 Nov 2019 13:17:12 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45747 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfKZSRM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 13:17:12 -0500
+Received: by mail-pf1-f194.google.com with SMTP id z4so9559874pfn.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 10:17:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9h7U+x++jdUZb4s45/RCLZWEaWGQ6wogzBkHa5vWa1c=;
+        b=YtJgMBkMNLBBUyohAKOr2QoA8hcEAC6cOCr86aCbV9SLFPrvzs48B0wVURW8hx7jwg
+         S7NemHWmKB/ZO25Fr+7To27zSD3sPMLbnJzC6irFe7w4JHamjhZ2oHaPycvFYrEJ7lZV
+         ytAItYERiAI4RUpXtGCh3g8asJbFtaabSeXn5YOfcCPIgQDF8krHH1U9+zIn15oI6ERB
+         Om8HC9dbwRrWCSwWpRFwljfRTMEUbzi2Z2T5cJKbG/XMd8UGU3BuBuSiU9yMw/DYU9z8
+         uhkIobyyHdOhgEhC8QtWnKHLc2dgfY/oE44cyoxa+ZHufFpm2+U7CNBkUiMXRdoZWPRC
+         OwIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9h7U+x++jdUZb4s45/RCLZWEaWGQ6wogzBkHa5vWa1c=;
+        b=G+OTc9B9wRxC+bOgynuOWuDYhMK29Oh16w1frb60UazQunE/pbRza7FzJ7EH7p8Ojh
+         UtjgJGETubp7nIpMEQCDrIwT5C6ObwoUHDYlXfCXzt8a9V/1qFPNm4Yri+AXL+ParA22
+         JGpiQpivyMEK+y7+rBN1M63Zuw1sCL0cxA8xQLJcgtxVn+1akOGfpyNy8FJ9A2RVvFN2
+         DkNGqr9tXYGyASN0WHNQeqLYHQjWicIHb80pyB+EUaJ7Fkkv7TkceCXQSkUdnd5I6YsU
+         B/Fh+GyC9fYN4n5UjRLXUZ4Yk3cT8f3U4Z51+VRODHOjNNAhtesID317YIVglSZuIi1r
+         Le2Q==
+X-Gm-Message-State: APjAAAUyVBQ69D2ICJ9287gppEE16SE0BMVXibBQsCYTt8cdmm10bP0M
+        heHvJlZU0WM4CXCP9y8MAMeicaz4I+bWtA==
+X-Google-Smtp-Source: APXvYqzY85TIWjylJTTxHR8+Y1AIgEMNdTmM1zegjeA2L2+lHzTO4vxHHYtJw9wRX8NEN8DhDJt5XQ==
+X-Received: by 2002:a63:364d:: with SMTP id d74mr40556554pga.408.1574792229426;
+        Tue, 26 Nov 2019 10:17:09 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id q70sm4342162pjq.26.2019.11.26.10.17.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Nov 2019 10:17:08 -0800 (PST)
+Subject: Re: [PATCH] io-wq: fix handling of NUMA node IDs
+To:     Jann Horn <jannh@google.com>
+Cc:     io-uring@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
+References: <20191126181020.17593-1-jannh@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a61b62a2-8530-59ab-f96c-ccb4ad274d4a@kernel.dk>
+Date:   Tue, 26 Nov 2019 11:17:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126175212.377171-1-leonardo@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191126181020.17593-1-jannh@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 02:52:12PM -0300, Leonardo Bras wrote:
-> Fixes a possible 'use after free' of kvm variable.
-> It does use mutex_unlock(&kvm->lock) after possible freeing a variable
-> with kvm_put_kvm(kvm).
-
-Moving the calls to kvm_put_kvm() to the end of the functions doesn't
-actually fix a use-after-free.  In these flows, the reference being
-released is a borrowed reference that KVM takes on behalf of the entity it
-is creating, e.g. device, vcpu, or spapr tce.  The caller of these create
-helpers must also hold its own reference to @kvm on top of the borrowed
-reference, i.e. these kvm_put_kvm() calls will never free @kvm (assuming
-there are no refcounting bugs elsewhere in KVM).
-
-If one these kvm_put_kvm() calls did unexpectedly free @kvm (due to a bug
-somewhere else), KVM would still hit a use-after-free scenario as the
-caller still thinks @kvm is valid.  Currently, this would only happen on a
-subsequent ioctl() on the caller's file descriptor (which holds a pointer
-to @kvm), as the callers of these functions don't directly dereference
-@kvm after the functions return.  But, not deferencing @kvm isn't deliberate
-or functionally required, it's just how the code happens to be written.
-
-The intent of adding kvm_put_kvm_no_destroy() was primarily to document
-that under no circumstance should the to-be-put reference be the *last*
-reference to @kvm.  Moving the call to kvm_put_kvm{_no_destroy}() doesn't
-change that
-
-> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+On 11/26/19 11:10 AM, Jann Horn wrote:
+> There are several things that can go wrong in the current code on NUMA
+> systems, especially if not all nodes are online all the time:
+> 
+>   - If the identifiers of the online nodes do not form a single contiguous
+>     block starting at zero, wq->wqes will be too small, and OOB memory
+>     accesses will occur e.g. in the loop in io_wq_create().
+>   - If a node comes online between the call to num_online_nodes() and the
+>     for_each_node() loop in io_wq_create(), an OOB write will occur.
+>   - If a node comes online between io_wq_create() and io_wq_enqueue(), a
+>     lookup is performed for an element that doesn't exist, and an OOB read
+>     will probably occur.
+> 
+> Fix it by:
+> 
+>   - using nr_node_ids instead of num_online_nodes() for the allocation size;
+>     nr_node_ids is calculated by setup_nr_node_ids() to be bigger than the
+>     highest node ID that could possibly come online at some point, even if
+>     those nodes' identifiers are not a contiguous block
+>   - creating workers for all possible CPUs, not just all online ones
+> 
+> This is basically what the normal workqueue code also does, as far as I can
+> tell.
+> 
+> Signed-off-by: Jann Horn <jannh@google.com>
 > ---
->  arch/powerpc/kvm/book3s_64_vio.c | 3 +--
->  virt/kvm/kvm_main.c              | 8 ++++----
->  2 files changed, 5 insertions(+), 6 deletions(-)
 > 
-> diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
-> index 5834db0a54c6..a402ead833b6 100644
-> --- a/arch/powerpc/kvm/book3s_64_vio.c
-> +++ b/arch/powerpc/kvm/book3s_64_vio.c
-> @@ -316,14 +316,13 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
->  
->  	if (ret >= 0)
->  		list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
-> -	else
-> -		kvm_put_kvm(kvm);
->  
->  	mutex_unlock(&kvm->lock);
->  
->  	if (ret >= 0)
->  		return ret;
->  
-> +	kvm_put_kvm(kvm);
->  	kfree(stt);
->   fail_acct:
->  	account_locked_vm(current->mm, kvmppc_stt_pages(npages), false);
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 13efc291b1c7..f37089b60d09 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2744,10 +2744,8 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
->  	/* Now it's all set up, let userspace reach it */
->  	kvm_get_kvm(kvm);
->  	r = create_vcpu_fd(vcpu);
-> -	if (r < 0) {
-> -		kvm_put_kvm(kvm);
-> +	if (r < 0)
->  		goto unlock_vcpu_destroy;
-> -	}
->  
->  	kvm->vcpus[atomic_read(&kvm->online_vcpus)] = vcpu;
->  
-> @@ -2771,6 +2769,8 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
->  	mutex_lock(&kvm->lock);
->  	kvm->created_vcpus--;
->  	mutex_unlock(&kvm->lock);
-> +	if (r < 0)
-> +		kvm_put_kvm(kvm);
->  	return r;
->  }
->  
-> @@ -3183,10 +3183,10 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
->  	kvm_get_kvm(kvm);
->  	ret = anon_inode_getfd(ops->name, &kvm_device_fops, dev, O_RDWR | O_CLOEXEC);
->  	if (ret < 0) {
-> -		kvm_put_kvm(kvm);
->  		mutex_lock(&kvm->lock);
->  		list_del(&dev->vm_node);
->  		mutex_unlock(&kvm->lock);
-> +		kvm_put_kvm(kvm);
->  		ops->destroy(dev);
->  		return ret;
->  	}
-> -- 
-> 2.23.0
-> 
+> Notes:
+>      compile-tested only.
+>      
+>      While I think I probably got this stuff right, it might be good if
+>      someone more familiar with the NUMA logic could give an opinion on this.
+>      
+>      An alternative might be to only allocate workers for online nodes, but
+>      then we'd have to either fiddle together logic to create more workers
+>      on demand or punt requests on newly-onlined nodes over to older nodes.
+>      Both of those don't seem very nice to me.
+
+I don't think caring about not-online nodes in terms of savings is worth
+the trouble. I'll run this through the regular testing I have with no
+and 2 nodes, thanks.
+
+-- 
+Jens Axboe
+
