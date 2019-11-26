@@ -2,137 +2,99 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1B1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF986C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19A72073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:24:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Lc/4Sx56"
+	by mail.kernel.org (Postfix) with ESMTP id AFC8A20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbfKZPYO (ORCPT
+        id S1728493AbfKZP3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:24:14 -0500
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:34971 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728451AbfKZPYO (ORCPT
+        Tue, 26 Nov 2019 10:29:20 -0500
+Received: from smtpq3.tb.mail.iss.as9143.net ([212.54.42.166]:41006 "EHLO
+        smtpq3.tb.mail.iss.as9143.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727135AbfKZP3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:24:14 -0500
-Received: from [IPv6:2001:420:44c1:2577:f03d:3627:b74f:a4d0]
- ([IPv6:2001:420:44c1:2577:f03d:3627:b74f:a4d0])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id ZchEiaf9pksqeZchHiYk5M; Tue, 26 Nov 2019 16:24:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1574781852; bh=4gxx5oTkKbDKoObq38O2EkaB3+LM3MYuZWGfE12bztI=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Lc/4Sx56axK2WoXAa9kSEXqJgNkssOO05yJtLwFjv/G5nVhg+vrHm59EpCRZCfNH3
-         BIGK3FbPhUciQ3CS1TggZVniP5N6jf1eN+vL8rdnCaW/+UJeKL4kVdLNbraG95DxgO
-         trt/ul9AmFzII5hOwcQFLKjPXQxFCjcwEQ4MuEa4JkRxowZHY2LiBYo9WXNmcgxaW0
-         Abreiv+23VCw3PdGbOud8jvRgmraT9Awtp2tEYxc5wXWwE6vt3nzKajnbPyojjthPs
-         CamxbPoYDMu4Zomus4ifPcA1B7IJJib9ngkDGO5QZeS4nGpOHYewt0U0tNQ98qoitP
-         x93PodJhbf8SQ==
-Subject: Re: [PATCH v4 6/8] media: v4l2-core: fix v4l2_buffer handling for
- time64 ABI
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
-References: <20191111203835.2260382-1-arnd@arndb.de>
- <20191111203835.2260382-7-arnd@arndb.de>
- <d54c82b5-21b7-2d5e-ad0b-206527ad2768@xs4all.nl>
- <CAK8P3a0rom6x4X8eH0zknfZ5=6_rrXGKGR4H+RiY4SWKbXfp=g@mail.gmail.com>
- <2271665b-f890-802f-eba8-0da43867d81f@xs4all.nl>
- <CAK8P3a35r0hEnjKOc8LQRr+v3xo-kxWQ5VhxZoT=tjQHcs4-yA@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <c06ea07c-953a-e512-3d2b-3672d804cc82@xs4all.nl>
-Date:   Tue, 26 Nov 2019 16:24:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 26 Nov 2019 10:29:20 -0500
+Received: from [212.54.42.137] (helo=smtp6.tb.mail.iss.as9143.net)
+        by smtpq3.tb.mail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <jongk@linux-m68k.org>)
+        id 1iZcmD-0000kO-Ni; Tue, 26 Nov 2019 16:29:17 +0100
+Received: from mail-wm1-f45.google.com ([209.85.128.45])
+        by smtp6.tb.mail.iss.as9143.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <jongk@linux-m68k.org>)
+        id 1iZcmD-0001Np-JO; Tue, 26 Nov 2019 16:29:17 +0100
+Received: by mail-wm1-f45.google.com with SMTP id g206so3674734wme.1;
+        Tue, 26 Nov 2019 07:29:17 -0800 (PST)
+X-Gm-Message-State: APjAAAUA+aMOBioXdI8sBwCaCLpNMXEfzYftgM+LYUBINjz1tMC8DlQe
+        zMMzdU8k6pUOQmGm5Ae6nqhZyB87oRbnfJb6abQ=
+X-Google-Smtp-Source: APXvYqyOkLS0wJVUdJYu1Q6ijkEqKlbukKX/UBClH3eTiS7tBWK60bcawei/HX132m5hCWHGlr/BiqgzqpW/wWbt0N8=
+X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr4581717wmm.35.1574782157366;
+ Tue, 26 Nov 2019 07:29:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a35r0hEnjKOc8LQRr+v3xo-kxWQ5VhxZoT=tjQHcs4-yA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMo8e49wZQjSzKPBuJzZYMQbg0THdf3vb6M4bv+ZyNrhexmkDoUtkp5lsqIC8STnw+F/uRir3VtGq4S3HqH33jiKOoe9BsYavqmBRHmpDQ2B7ff1kjPH
- 4uRSQw7upy035u9l59Qiby3ZQpYxhSxOR0Kl5dwRAboikyZbpBHUR7hfm64xb2qK60yZJu6rB0KegZh12nTKvXbL1g88JZal3rzFiFbUTiROaClcuSqt9qfg
- 9n1MX87+MQ2qbSdSQkldxzi7JTiJFBAX5c+eohEkD13hV82V4B3H8a+92W3R6Mcl2HC7G8m/waAIdjrMmGUOPDeu7sgv6P9KgSfARgP1xm/1v6OMlTsGQADr
- smoRbOW7/CCeJhzxAY58SI87t+uGQDi8j1jnjsD9+nPkbIjedYB6DC6awtbafkY7PmCcn1OH
+References: <20191124195225.31230-1-jongk@linux-m68k.org> <CAMuHMdVv9FU+kTf7RDd=AFKL12tJxzmGbX4jZZ8Av3VCZUzwhA@mail.gmail.com>
+ <20191126144121.kzkujr27ga36gqnf@wittgenstein>
+In-Reply-To: <20191126144121.kzkujr27ga36gqnf@wittgenstein>
+From:   Kars de Jong <jongk@linux-m68k.org>
+Date:   Tue, 26 Nov 2019 16:29:06 +0100
+X-Gmail-Original-Message-ID: <CACz-3riWp1fWCaAJtMgRx9VRVAJ+ktdbAqHBobQUXR9XpHrVcQ@mail.gmail.com>
+Message-ID: <CACz-3riWp1fWCaAJtMgRx9VRVAJ+ktdbAqHBobQUXR9XpHrVcQ@mail.gmail.com>
+Subject: Re: [PATCH] m68k: Wire up clone3() syscall
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Linux/m68k" <linux-m68k@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-SourceIP: 209.85.128.45
+X-Authenticated-Sender: karsdejong@home.nl (via SMTP)
+X-Ziggo-spambar: /
+X-Ziggo-spamscore: 0.0
+X-Ziggo-spamreport: CMAE Analysis: v=2.3 cv=WMwBoUkR c=1 sm=1 tr=0 a=9+rZDBEiDlHhcck0kWbJtElFXBc=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=MeAgGD-zjQ4A:10 a=fxJcL_dCAAAA:8 a=tBb2bbeoAAAA:8 a=VwQbUJbxAAAA:8 a=WQa4lTAXJXru5Gui9GYA:9 a=QEXdDO2ut3YA:10 a=Oj-tNtZlA1e06AYgeCfH:22 a=AjGcO6oz07-iQ99wixmX:22
+X-Ziggo-Spam-Status: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/26/19 4:17 PM, Arnd Bergmann wrote:
-> On Tue, Nov 26, 2019 at 3:15 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> Then use that in the struct v4l2_buffer definition:
->>
->> struct v4l2_buffer {
->> ...
->> #ifdef __KERNEL__
->>         struct __kernel_v4l2_timeval timestamp;
->> #else
->>         struct timeval               timestamp;
->> #endif
->>
->> That keeps struct v4l2_buffer fairly clean. And it also makes it
->> possible to have a bit more extensive documentation for the
->> struct __kernel_v4l2_timeval without polluting the actual struct
->> v4l2_buffer definition.
-> 
-> Yes, good idea. I've added this version now:
-> 
-> #ifdef __KERNEL__
-> /*
->  * This corresponds to the user space version of timeval
->  * for 64-bit time_t. sparc64 is different from everyone
->  * else, using the microseconds in the wrong half of the
->  * second 64-bit word.
->  */
-> struct __kernel_v4l2_timeval {
->         long long       tv_sec;
-> #if defined(__sparc__) && defined(__arch64__)
->         int             tv_usec;
->         int             __pad;
-> #else
->         long long       tv_usec;
-> #endif
-> };
-> #endif
-> 
-> I briefly considered using #else #define __kernel_v4l2_timeval timeval
-> to avoid the second #ifdef, but went back to your version again
-> for clarify.
-> 
->> The videodev2.h header is something users of the API look at a
->> lot and having this really ugly kernel timestamp in there is
->> not acceptably IMHO. But splitting it off should work.
-> 
-> Do you also mean moving it into a separate header file, or
-> just outside of struct v4l2_buffer? Since it's hidden in #ifdef
-> __KERNEL__, it could be moved to media/ioctl.h or elsewhere.
+Hi Christian!
 
-I've thought about that, but that risks having to change drivers
-since they would now have to include another header to get the
-right timeval definition. In the end I don't think it is worth the
-effort.
+Op di 26 nov. 2019 om 15:41 schreef Christian Brauner
+<christian.brauner@ubuntu.com>:
+>
+> On Mon, Nov 25, 2019 at 10:12:25AM +0100, Geert Uytterhoeven wrote:
+> > Hi Kars,
+> >
+> > On Sun, Nov 24, 2019 at 8:52 PM Kars de Jong <jongk@linux-m68k.org> wrote:
+> > > Wire up the clone3() syscall for m68k. The special entry point is done in
+> > > assembler as was done for clone() as well. This is needed because all
+> > > registers need to be saved. The C wrapper then calls the generic
+> > > sys_clone3() with the correct arguments.
+> > >
+> > > Tested on A1200 using the simple test program from:
+> > >
+> > >   https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
+>
+> Please note that we now have a growing test-suite for the clone3()
+> syscall under
+> tools/testing/selftests/clone3/*
+>
+> You can test on a suitable kernel with
+>
+> make TARGETS=clone3 kselftest
 
-I think it is best to define __kernel_v4l2_timeval just before
-the struct v4l2_requestbuffers definition rather than before the
-struct v4l2_buffer. That way it doesn't interfere with the
-userspace structs for the buffer API.
+I'm afraid my user space is almost prehistoric. I have a homebrewn
+root filesystem of about 2001 vintage, and another one with Debian
+3.1.
+So until I have bootstrapped a more recent one, I'll leave that to others ;-)
 
-Regards,
+Thanks for checking!
 
-	Hans
+Kind regards,
 
-> 
->       Arnd
-> 
-
+Kars.
