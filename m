@@ -2,127 +2,96 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3665C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1360FC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A623420733
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFEE920836
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:58:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=generalsoftwareinc-com.20150623.gappssmtp.com header.i=@generalsoftwareinc-com.20150623.gappssmtp.com header.b="i0RI/OVo"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="RKn4e8WA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wSZXJb38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfKYXuB (ORCPT
+        id S1726984AbfKYX6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 18:50:01 -0500
-Received: from mail-vs1-f50.google.com ([209.85.217.50]:40056 "EHLO
-        mail-vs1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfKYXuB (ORCPT
+        Mon, 25 Nov 2019 18:58:51 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:57283 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbfKYX6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 18:50:01 -0500
-Received: by mail-vs1-f50.google.com with SMTP id m9so11448769vsq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 15:49:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=generalsoftwareinc-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rvY24eePNZt+ycJ3AFHByDgIP1Rv1kswbJLitykNPsM=;
-        b=i0RI/OVoO7H3VElF3DlRBwGuB3cfc8g9JH8Uw3W07sxlXmrk86lAYmebUQPbd5jguf
-         lkmeffv+K/+4Oqcti7XGhYWjIclq6r88iI7Dk37KxTTIMJMgYGCILYmXFyUkZ0Dmv0cy
-         ch41cP7PD8jkpkdM36QQWaCzzJDgtxySyhRSb7emi2vrKAtewWDm/xZ70UOJ2tT+q/n2
-         iQNblP857cmJkw9m/GB3WuM9KXviy4YTFVHZYu20ujMl/zfDgn4udKZjgqr5YI0g95hT
-         NY4oS35utxZZlxsWY02jvIBWVoNJgKTXrY/rA/IFhYgdsPYgmg23o+8KZ3PlzvxVXO4P
-         +9fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rvY24eePNZt+ycJ3AFHByDgIP1Rv1kswbJLitykNPsM=;
-        b=G4Wmt6hlC3g3i3JJVElT4IIHJC8c5DWHXKgOSXDOXNZI7QGETqW1i84G1L8/va5PUs
-         M2fM9OxlMAa5Dt3qZyE/BMW7lwSn9050x9qpKrZgZI+t76jYYWHNhY0V4N1VD9yEFubq
-         /rMSpT4JnO7xy6I04yKGElfqpIXmgywGETVmCghJaSGt0txOXRalqxoeKug2RuKAgvF3
-         ignqr5FXnaLecdzwrU+CkCcR8oCSNT2V2HevxpsJPoFAKiCpIKRQ3rgZW6hFsyEx0JxY
-         8ciO4pMcBhoEb2WqIdt/1wlWiM0CMpVQ7ih95w3htqz53t+JEuCbJp4aFU/a4tucTzRy
-         mUyQ==
-X-Gm-Message-State: APjAAAVJYW6lr5R0CTvN7pGNwJNW0fZax6LuaAx1R58FcikPVvD4IY6+
-        k3d44BnQaqv7N4WzX1XOBGm63Q==
-X-Google-Smtp-Source: APXvYqxeCabpQ+se9Zi1Mbc6QyxyiLZn11MsE8kypk/KmsdPdLqn4Mtl7URGnbPmK7vVazhUDvW8Ew==
-X-Received: by 2002:a05:6102:c3:: with SMTP id u3mr20993889vsp.41.1574725798720;
-        Mon, 25 Nov 2019 15:49:58 -0800 (PST)
-Received: from ubuntu1804-desktop ([172.97.41.74])
-        by smtp.gmail.com with ESMTPSA id c21sm2606280vko.45.2019.11.25.15.49.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 15:49:58 -0800 (PST)
-Date:   Mon, 25 Nov 2019 18:49:57 -0500
-From:   "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, saiprakash.ranjan@codeaurora.org
-Subject: Re: [RFC v2 2/2] docs: ftrace: Fix typos
-Message-ID: <20191125234957.nwbzz72aarbhdni2@ubuntu1804-desktop>
-References: <cover.1574655670.git.frank@generalsoftwareinc.com>
- <a843617511989679b29fbd62b1b8b3e991f2101e.1574655670.git.frank@generalsoftwareinc.com>
- <20191125123709.5eff70a9@gandalf.local.home>
- <20191125164625.01101109@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191125164625.01101109@gandalf.local.home>
-User-Agent: NeoMutt/20171215
+        Mon, 25 Nov 2019 18:58:50 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id B3FCE227E7;
+        Mon, 25 Nov 2019 18:58:49 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Mon, 25 Nov 2019 18:58:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=uAocx9y1gw6K1vU7ec8ZFYtLT+FTX7p
+        LzUEnRUhE+Io=; b=RKn4e8WAMvltzcv9zoc0Mif0i7TY5VxDeczY2asdJNmEBVR
+        NfXK+oxI2PFiaRAm4o/RuUdGgxAgKtFJe6wzl7l3O1+91bxSzm1LBXc6TFpP5toi
+        dDPuPzH4HaigtgxQc0ph0KAziWqIut9sv6JEKh+kvOsyB121b6Nk5misvzVGKmW7
+        9qdFfmXBEQuDZnW2AiRXr6tEyBc5ND/sh2LQEuG+3ww9m+fqEHazQ/3YBEIKN/zl
+        kK31GDiQCjJpsWnctu99luHGL0jA70kUeyuCOaepoyRbemD/bdeBedGPDu+YGXBe
+        sePZePKPTQBW/6bvc8+mMbPxDXhEH6dg53P+fWQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=uAocx9
+        y1gw6K1vU7ec8ZFYtLT+FTX7pLzUEnRUhE+Io=; b=wSZXJb380Dy2W1S4zNtBzC
+        ObLNLJQIB74ltyoBq+/up8UO9rz7bWBcqJwh4+VdhYjhS+tyPdGJUVpKymb1A89o
+        YLNhhRmjyZEDGNh3EXwfvZaponAoAKDVzOesylFYG4H1DfziW6jnLj6+efydhYrD
+        nsEi2IFm7cVBxzo8icAwUM+JBL6PsVZGHQwhPqNOmF0AX+QhUjiEKh+jSWPesjKM
+        Ch0Brfk2zGRThlMvdAPigtlYgBWAo3+AY/QcPPCJKp9TAC8hGm5XqeW1i05KhPo6
+        1Pj/XlOGronmvsJU2/uw7XMX8o8q3g4PAPOQwNZgPxS3BM60Pa2adhdLTF7mTIYQ
+        ==
+X-ME-Sender: <xms:t2rcXTkhGZI12cC68mbQIVXNK2nj9XctAWgoGB4UDt8G-siDCXU16A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeivddgudeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:t2rcXaFjlgvXFeexOQXfEi1rSV_qaEVJO0Yc5CA-pv_HJOBxju-Bmg>
+    <xmx:t2rcXTGVwWv06sB0eUCEMok0ofGBBPJlICOnoElb5ZlML0v8TsW3pw>
+    <xmx:t2rcXXMHBD8fYafTHBgYkF8J4U8MlC7mZFlUCPF1M8TH52zCKM2F7Q>
+    <xmx:uWrcXXvAPMIaH3Ilw_D06RyPobF5pzdans1r9UqkrhJP4YxeizPYqA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id E1E14E00A2; Mon, 25 Nov 2019 18:58:47 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
+Mime-Version: 1.0
+Message-Id: <3232fa33-559f-4086-a605-7186d81ee3f7@www.fastmail.com>
+In-Reply-To: <20191125130420.GA24018@cnn>
+References: <20191125130420.GA24018@cnn>
+Date:   Tue, 26 Nov 2019 10:30:15 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+Cc:     "Joel Stanley" <joel@jms.id.au>,
+        "Vijay Khemka" <vijaykhemka@fb.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: Re: [PATCH v3] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 04:46:25PM -0500, Steven Rostedt wrote:
-> On Mon, 25 Nov 2019 12:37:09 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+
+
+On Mon, 25 Nov 2019, at 23:34, manikandan-e wrote:
+> The Yosemite V2 is a facebook multi-node server
+> platform that host four OCP server. The BMC
+> in the Yosemite V2 platorm based on AST2500 SoC.
 > 
-> > On Sun, 24 Nov 2019 23:38:41 -0500
-> > "Frank A. Cancio Bello" <frank@generalsoftwareinc.com> wrote:
-> > 
-> > > --- a/Documentation/trace/ring-buffer-design.txt
-> > > +++ b/Documentation/trace/ring-buffer-design.txt
-> > > @@ -37,7 +37,7 @@ commit_page - a pointer to the page with the last finished non-nested write.
-> > >  
-> > >  cmpxchg - hardware-assisted atomic transaction that performs the following:
-> > >  
-> > > -   A = B iff previous A == C
-> > > +   A = B if previous A == C  
-> > 
-> > This wasn't a typo. "iff" means "if and only if" which is a standard
-> > notation. That is, this is shorthand for:
-> > 
-> >   A = B if previous A == C
-> >   previous A == C if A = B
+> This patch adds linux device tree entry related to
+> Yosemite V2 specific devices connected to BMC SoC.
 > 
-> Although thinking about this more, this may not be correct. If
-> previous A == B, then A = B, thus the "iff" notation is not actually
-> accurate.
-> 
-> This wouldn't then be a typo fix, but a real fix to the logic ;-)
-> 
+> Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
 
-What are the odds ;)
-
-I knew about the concept https://en.wikipedia.org/wiki/If_and_only_if
-from school math but didn't remember the notation. For me was
-suspicious so, I  looked in "the cmpxchg doc" and nothing referring
-to "iff" was there, then I decided to classified it as a typo.
-
-Now thinking more deeply, I agreed with you that was not a typo but
-a "logic mistake", even not for the same reason ;)
-
-Being not 100% sure of what I'm about to say, I will say it
-anyway because you have been kind enough to write the second email.
-
-"if and only if (shortened as iff) is a biconditional logical
-connective between statements" and A = B can't be considered a
-logical statement in the context of that definition (math/logic),
-even it could be in C.
-
-Thank you Steven one more time for such a quick reply!
-frank a.
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
