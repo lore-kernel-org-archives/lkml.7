@@ -6,65 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877D9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C389DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8F920836
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9616A20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574796608;
-	bh=IGtTu0orrfzxf9eTzVogs+bdlJDBKPO0OXuAhFzr5GA=;
+	s=default; t=1574796611;
+	bh=hs1LMd790UFV2/Bhn6ASrIjC7uvLcIM9FJ5wBoAouIc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=TDVeg0U23eaY2EVm/rcF1tTGx5JZ1qb1CGw4U+j27RNViRkt/3aPQSdwWjZScXscn
-	 Fu0rZXHnhRKrpxQxZzE7PJqTmAwvmJKu+GRNQenTQfhmtRyvmEUoY15eYQnX8wWwEM
-	 25X0OyIVZa5oeUhWMnnH1t7unLQCQmQk8ea8MV44=
+	b=Kx3ZXbeNTN/Tm7cbaESXMjfkHk8Ekw5yrvyrvY0qKIUqGdVPVX8jp/oIXu4nZv1E9
+	 fKI1+K+kqOEhodRJ+tE7XwpgGNVX0t9TRQnasr3S5bjH35fCrheFZRuuQ7vwky9Lv2
+	 +UGfC3Y8sthja3cfg2LoXqJ1YwpLO7x0cSEzcYac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbfKZTaH (ORCPT
+        id S1726970AbfKZTaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:30:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33708 "EHLO mail.kernel.org"
+        Tue, 26 Nov 2019 14:30:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbfKZTaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:30:06 -0500
-Subject: Re: [GIT PULL] x86/decoder change for v5.5
+        id S1726077AbfKZTaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 14:30:09 -0500
+Subject: Re: [GIT PULL] x86/boot changes for v5.5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574796606;
-        bh=IGtTu0orrfzxf9eTzVogs+bdlJDBKPO0OXuAhFzr5GA=;
+        s=default; t=1574796608;
+        bh=hs1LMd790UFV2/Bhn6ASrIjC7uvLcIM9FJ5wBoAouIc=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=QGs1jwh7wBj445mPwEuRJ5fdI3j+a6yI5V1+HQo13TojX9c29l8wipKnHhxNfh6+X
-         T1QsOUcag2aIMqaGHCwFUG1xHh2LEIgqFlq/8SNZwnHWzfPu8u2lnAAlWLMHtAIk7u
-         GbB/1nFpILi096oEahyhv1LpsbBEp0Zd/V+AjJaw=
+        b=A9T1Z0CPp32h8Mc2hJMRySdJj6/DKoR5lfwreS5+Q5ZT8kgJPt5NNJDS1p11pJEhj
+         kqj6LTDU/l0iE9zhnKjCVbbsMCH3XspWtqBgxk1UoVX8QCAO58JRpas7kMlF/+QTyv
+         T50SysWjQkKKNh3Vv4uzQMql0mPD4uA8g4+uliio=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191125102959.GA107197@gmail.com>
-References: <20191125102959.GA107197@gmail.com>
+In-Reply-To: <20191125132346.GA82640@gmail.com>
+References: <20191125132346.GA82640@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191125102959.GA107197@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- core-objtool-for-linus
-X-PR-Tracked-Commit-Id: 700c1018b86d0d4b3f1f2d459708c0cdf42b521d
+X-PR-Tracked-Message-Id: <20191125132346.GA82640@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-for-linus
+X-PR-Tracked-Commit-Id: b3c72fc9a78e74161f9d05ef7191706060628f8c
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fd2615908dfd0586ea40692a99c44e34b7e869bc
-Message-Id: <157479660617.2359.17525412411713413934.pr-tracker-bot@kernel.org>
-Date:   Tue, 26 Nov 2019 19:30:06 +0000
+X-PR-Merge-Commit-Id: 85fbf15bc9ac458f014fe70b38fa5773ee6aca9d
+Message-Id: <157479660868.2359.1862131032912808682.pr-tracker-bot@kernel.org>
+Date:   Tue, 26 Nov 2019 19:30:08 +0000
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 25 Nov 2019 11:29:59 +0100:
+The pull request you sent on Mon, 25 Nov 2019 14:23:46 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-objtool-for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fd2615908dfd0586ea40692a99c44e34b7e869bc
+https://git.kernel.org/torvalds/c/85fbf15bc9ac458f014fe70b38fa5773ee6aca9d
 
 Thank you!
 
