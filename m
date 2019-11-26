@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299AEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B6EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072CD20684
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74EF20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbfKZNN6 (ORCPT
+        id S1727930AbfKZNNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:13:58 -0500
+        Tue, 26 Nov 2019 08:13:37 -0500
 Received: from esa1.microchip.iphmx.com ([68.232.147.91]:58371 "EHLO
         esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfKZNNi (ORCPT
+        with ESMTP id S1727304AbfKZNNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:13:38 -0500
+        Tue, 26 Nov 2019 08:13:35 -0500
 Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
   Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
@@ -39,22 +39,22 @@ Received-SPF: None (esa1.microchip.iphmx.com: no sender
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
 Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: kqwlt/mhjvdp9xuiX/7x8GmbrLW8q+nC3Yu8ZXtfXldmXRKrS0m7a+0cGrUU4HS+tbhSFRc2qD
- 2EGVNedPWEpw0m0vBzOBB8P6a8pw0spIXoMUhM3dP9hUrDFb0c/BTmWLzhZyxBiyRK0AhK3Z36
- +1faI2dYNA9+vikyJtc0PkSWmy58lRou811y6SUBxKJyz4u6nYs47Co+fixCwI0xNMvJpzxolg
- t0SBcXb3vGqL9q83cDE6Ry7LqvSRB0e0+fu0j/dBOjDKXUK4+snBVvN0NcOZd33KpegcuIWqVk
- nsM=
+IronPort-SDR: AQzjhkv+SaQLIPoobzzor6IBEarP1+46b50vziCMwO1f4M3BBMmvrEWVA1lGOtBdf4R81jyuAR
+ jXzoaTy8qr4k5gFLpTAs2ov0AtSxEgNFD83/UU8B4scIUTqS61Ph4KIw+7uE2HprqOP0rhr25j
+ UAywhlTQ5cdYLtOc/bvHAlsFj0L1QYUX37ugU93gk4YxNpkcPAK4vkKE3S2Lb+1MudY6lTdjAE
+ 9TWH6MtLhu8qAm2fft8wGwDGnwOfQ9DIo0R5rdZZox6/p5PnxZd8hT1ZoNA97seN559uVeI5GG
+ FcM=
 X-IronPort-AV: E=Sophos;i="5.69,245,1571727600"; 
-   d="scan'208";a="59777394"
+   d="scan'208";a="59777355"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Nov 2019 06:13:29 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Nov 2019 06:13:19 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 26 Nov 2019 06:13:21 -0700
+ 15.1.1713.5; Tue, 26 Nov 2019 06:13:08 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 26 Nov 2019 06:13:19 -0700
+ 15.1.1713.5 via Frontend Transport; Tue, 26 Nov 2019 06:13:05 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
         <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
@@ -62,9 +62,9 @@ To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 11/17] ARM: at91/defconfig: enable config flag for flexcom
-Date:   Tue, 26 Nov 2019 15:12:15 +0200
-Message-ID: <1574773941-20649-12-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 06/17] ARM: debug-ll: select DEBUG_AT91_RM9200_DBGU for sam9x60
+Date:   Tue, 26 Nov 2019 15:12:10 +0200
+Message-ID: <1574773941-20649-7-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
@@ -75,25 +75,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable config flag for flexcom. This IP is available on SAM9X60 SoC.
+Select DEBUG_AT91_RM9200_DBGU for SAM9X60 SoC.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/configs/at91_dt_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/Kconfig.debug | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
-index c3305e563742..7603efe5809e 100644
---- a/arch/arm/configs/at91_dt_defconfig
-+++ b/arch/arm/configs/at91_dt_defconfig
-@@ -116,6 +116,7 @@ CONFIG_POWER_SUPPLY=y
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=y
- CONFIG_AT91SAM9X_WATCHDOG=y
-+CONFIG_MFD_ATMEL_FLEXCOM=y
- CONFIG_MFD_ATMEL_HLCDC=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 8bcbd0cd739b..b70d7debf5ca 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -147,14 +147,14 @@ choice
+ 		    0x80024000      | 0xf0024000     | UART9
+ 
+ 	config DEBUG_AT91_RM9200_DBGU
+-		bool "Kernel low-level debugging on AT91RM9200, AT91SAM9 DBGU"
++		bool "Kernel low-level debugging on AT91RM9200, AT91SAM9, SAM9X60 DBGU"
+ 		select DEBUG_AT91_UART
+-		depends on SOC_AT91RM9200 || SOC_AT91SAM9
++		depends on SOC_AT91RM9200 || SOC_AT91SAM9 || SOC_SAM9X60
+ 		help
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on the DBGU port of:
+ 		    at91rm9200, at91sam9260, at91sam9g20, at91sam9261,
+-		    at91sam9g10, at91sam9n12, at91sam9rl64, at91sam9x5
++		    at91sam9g10, at91sam9n12, at91sam9rl64, at91sam9x5, sam9x60
+ 
+ 	config DEBUG_AT91_SAM9263_DBGU
+ 		bool "Kernel low-level debugging on AT91SAM{9263,9G45,A5D3} DBGU"
 -- 
 2.7.4
 
