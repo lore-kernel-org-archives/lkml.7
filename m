@@ -2,91 +2,234 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D6EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3960C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5BC2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:13:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574755985;
-	bh=K4/HkReIZHrO5EOLAYxEYM72msVBHQIR4SGBUnnMj+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CWw9/Gg/i8WrkIbQD/en4ikWBgJIoQa19A0od50TFclZwV84h6Cehagh4N7eA2p2i
-	 rCI3u2DaxfAetVwkTbvaCoq5Hri8giHE2qgUpudK651ad/rHsQwNeZ70GLW7y+omtW
-	 jUmhWWpE/RcE5Et9RCzOtmLG+b3WvAThkf1m3c/g=
+	by mail.kernel.org (Postfix) with ESMTP id A12832073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:13:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="MPkfXtz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfKZINC (ORCPT
+        id S1727339AbfKZINc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 03:13:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
+        Tue, 26 Nov 2019 03:13:32 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:42412 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbfKZINC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 03:13:02 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 279CE2073F;
-        Tue, 26 Nov 2019 08:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574755980;
-        bh=K4/HkReIZHrO5EOLAYxEYM72msVBHQIR4SGBUnnMj+g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0J/UfMLdTXQOEdPa8OBVc2zM5FSC0jOWmtISPlva5y3Rkl5I4VEFoie7afPQmLucJ
-         FuD9S6AXb5BAnFrt5dlO0hXk4nVbCmC+7jFjh3oHi8UPZEA6js4fkWFqGDQ+YoGdhS
-         KCXdocgCSWUnoLRMkYJwpkN5hTQFfpNnDkrCPHR0=
-Date:   Tue, 26 Nov 2019 09:12:58 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Tomas Bortoli <tomasbortoli@gmail.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>,
-        syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
-Subject: Re: [PATCH] Fix invalid-free in bcsp_close()
-Message-ID: <20191126081258.GA1233188@kroah.com>
-References: <000000000000109f9605964acf6c@google.com>
- <20191101204244.14509-1-tomasbortoli@gmail.com>
- <E16896E5-B946-450F-BF42-04665D219EEA@holtmann.org>
- <CAG_fn=Xqb1KoAvV==F5sODUYHDsxCxaz72n6qucdkR70XGCkig@mail.gmail.com>
- <8376D008-EA21-49EA-AF5A-DDDCB179EAC5@holtmann.org>
+        id S1725933AbfKZINb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 03:13:31 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47Mc9N6dNWz9tybD;
+        Tue, 26 Nov 2019 09:13:28 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=MPkfXtz+; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id CKxTymBTLFVX; Tue, 26 Nov 2019 09:13:28 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47Mc9N5GFMz9tybB;
+        Tue, 26 Nov 2019 09:13:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1574756008; bh=lP+6ufsqX2zuMN9m3nNVIMGpzbr9PeIQSzO4jLnYSZc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MPkfXtz+Y69nLJpN/cUXRuJf5EPEpua/aPXkACaUsgScQaD5mPUqXrTh/7EZ8kc1A
+         HvU+y05BQTgqEB3uzK9+WcEGoCZRgPnIWv60i5IPxnKhfo4oRxiCA2p0Uep0TiBDKT
+         IqSPWW+Nk3jMlPC4KY3P5vcLVYaiymS4X9Ede7k4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B02688B7D8;
+        Tue, 26 Nov 2019 09:13:29 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 0-ZfisYBtVh2; Tue, 26 Nov 2019 09:13:29 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C4D198B771;
+        Tue, 26 Nov 2019 09:13:28 +0100 (CET)
+Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiBsb29wIG5lc3RpbmcgaW4gYWxpZ25t?=
+ =?UTF-8?Q?ent_exception_and_machine_check?=
+To:     "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Cc:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "alistair@popple.id.au" <alistair@popple.id.au>,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        Xiexiuqi <xiexiuqi@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "oss@buserror.net" <oss@buserror.net>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "Libin (Huawei)" <huawei.libin@huawei.com>,
+        "agust@denx.de" <agust@denx.de>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <D44062DC474617438D5181ADFE2B2C21016DE42A@dggemi529-mbs.china.huawei.com>
+ <8215aeb3-57dd-223a-29d3-45ca22b0543c@c-s.fr>
+ <D44062DC474617438D5181ADFE2B2C21016E9EAA@dggemi529-mbs.china.huawei.com>
+ <ef93fa2f-d98f-2e94-322e-0ae095626e75@c-s.fr>
+ <D44062DC474617438D5181ADFE2B2C21016ED78D@dggemi529-mbs.china.huawei.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a77f2266-b654-087c-7af8-78c745a52b37@c-s.fr>
+Date:   Tue, 26 Nov 2019 09:13:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8376D008-EA21-49EA-AF5A-DDDCB179EAC5@holtmann.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <D44062DC474617438D5181ADFE2B2C21016ED78D@dggemi529-mbs.china.huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 07:18:46AM +0100, Marcel Holtmann wrote:
-> Hi Alexander,
-> 
-> >>> Syzbot reported an invalid-free that I introduced fixing a memleak.
-> >>> 
-> >>> bcsp_recv() also frees bcsp->rx_skb but never nullifies its value.
-> >>> Nullify bcsp->rx_skb every time it is freed.
-> >>> 
-> >>> Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-> >>> Reported-by: syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
-> >>> ---
-> >>> drivers/bluetooth/hci_bcsp.c | 3 +++
-> >>> 1 file changed, 3 insertions(+)
-> >> 
-> >> patch has been applied to bluetooth-next tree.
-> > I believe this bug requires stable tags, as it can potentially provide
-> > an arbitrary write (via __skb_unlink) and is triggerable locally with
-> > user privileges.
-> 
-> I do not have a reproducer for it, but if you do, feel free to propose it for -stable inclusion.
+Hi,
 
-Now queued up, thanks.
+Le 01/11/2019 à 02:57, Wangshaobo (bobo) a écrit :
+> Hi, Christophe
+> 
+> 	I am sorry that we are in some troubles for some unpredictable problems when we replay and haven't given you a quick reply.
+> 	
+> 	I also want to ask does the phenomeon(use memcpy_toio when copy ioremap_address) only occurs in powerpc ? does any other
+> arch also has the same problem ? we are in persuit of asking why this phenomenon happened. Our linux kernel version is 4.4.
 
-greg k-h
+It's not a problem ... it's a feature.
+
+I have no idea whether the same kind of issue can happen on other 
+arches, sorry.
+
+Christophe
+
+> 	
+> 	thanks very much.
+> 
+> -----邮件原件-----
+> 发件人: Christophe Leroy [mailto:christophe.leroy@c-s.fr]
+> 发送时间: 2019年10月31日 19:13
+> 收件人: Wangshaobo (bobo) <bobo.shaobowang@huawei.com>
+> 抄送: chengjian (D) <cj.chengjian@huawei.com>; Libin (Huawei) <huawei.libin@huawei.com>; Xiexiuqi <xiexiuqi@huawei.com>; zhangyi (F) <yi.zhang@huawei.com>
+> 主题: Re: 答复: loop nesting in alignment exception and machine check
+> 
+> Hi,
+> 
+> Did you try ? Does it work ?
+> 
+> Christophe
+> 
+> Le 28/10/2019 à 06:57, Wangshaobo (bobo) a écrit :
+>> Hi,Christophe
+>>
+>> Thank you for your quick reply. I will try to use memcpy_toio() instead of memcpy().
+>>
+>> -----邮件原件-----
+>> 发件人: Christophe Leroy [mailto:christophe.leroy@c-s.fr]
+>> 发送时间: 2019年10月26日 19:20
+>> 收件人: Wangshaobo (bobo) <bobo.shaobowang@huawei.com>
+>> 抄送: linux-arch@vger.kernel.org; alistair@popple.id.au; chengjian (D)
+>> <cj.chengjian@huawei.com>; Xiexiuqi <xiexiuqi@huawei.com>;
+>> linux-kernel@vger.kernel.org; oss@buserror.net; paulus@samba.org;
+>> Libin (Huawei) <huawei.libin@huawei.com>; agust@denx.de;
+>> linuxppc-dev@lists.ozlabs.org
+>> 主题: Re: loop nesting in alignment exception and machine check
+>>
+>> Hi,
+>>
+>> Le 26/10/2019 à 09:23, Wangshaobo (bobo) a écrit :
+>>> Hi,
+>>>
+>>> I encountered a problem about a loop nesting occurred in
+>>> manufacturing the alignment exception in machine check, trigger background is :
+>>>
+>>> problem:
+>>>
+>>> machine checkout or critical interrupt ->…->kbox_write[for recording
+>>> last words] -> memcpy(irremap_addr, src,size):_GLOBAL(memcpy)…
+>>>
+>>> when we enter memcpy,a command ‘dcbz r11,r6’ will cause a alignment
+>>> exception, in this situation,r11 loads the ioremap address,which
+>>> leads to the alignment exception,
+>>
+>> You can't use memcpy() on something else than memory.
+>>
+>> For an ioremapped area, you have to use memcpy_toio()
+>>
+>> Christophe
+>>
+>>>
+>>> then the command can not be process successfully,as we still in
+>>> machine check.at the end ,it triggers a new irq machine check in irq
+>>> handler function,a loop nesting begins.
+>>>
+>>> analysis:
+>>>
+>>> We have analysed a lot,but it still can not come to a reasonable
+>>> description,in common,the alignment triggered in machine check
+>>> context can still be collected into the Kbox
+>>>
+>>> after alignment exception be handled by handler function, but how
+>>> does the machine checkout can be triggered in the handler fucntion
+>>> for any causes? We print relevant registers
+>>>
+>>> as follow when first enter machine check and alignment exception
+>>> handler
+>>> function:
+>>>
+>>>             MSR:0x2      MSR:0x0
+>>>
+>>>             SRR1:0x2      SRR1:0x21002
+>>>
+>>>             But the manual says SRR1 should be set to MSR(0x2),why
+>>> that happened ?
+>>>
+>>>             Then a branch in handler function copy the SRR1 to
+>>> MSR,this enble MSR[ME] and MSR[CE],system collapses.
+>>>
+>>> Conclusion:
+>>>
+>>>             1)  why the alignment exception can not be handled in
+>>> machine check ?
+>>>
+>>>             2)  besides memcpy,any other function can cause the
+>>> alignment exception ?
+>>>
+>>> We still recurrent it, the line as follows:
+>>>
+>>>             Cpu dead lock->watch log->trigger
+>>> fiq->kbox_write->memcpy->alignment exception->print last words.
+>>>
+>>>             but for those problems as below,what the kbox printed is empty.
+>>>
+>>> ------------------kbox restart:[   10.147594]----------------
+>>>
+>>> kbox verify fs magic fail
+>>>
+>>> kbox mem mabye destroyed, format it
+>>>
+>>> kbox: load OK
+>>>
+>>> lock-task: major[249] minor[0]
+>>>
+>>> -----start show_destroyed_kbox_mem_head----
+>>>
+>>> 00000000: 00000000 00000000 00000000 00000000  ................
+>>>
+>>> 00000010: 00000000 00000000 00000000 00000000  ................
+>>>
+>>> 00000020: 00000000 00000000 00000000 00000000  ................
+>>>
+>>> 00000030: 00000000 00000000 00000000 00000000  ................
+>>>
+>>> 00000040: 00000000 00000000 00000000 00000000  ................
+>>>
+>>> 00000050: 00000000 00000000 00000000 00000000  ................
+>>>
+>>> 00000060: 00000000 00000000 00000000 00000000  ................
+>>>
+>>> 00000070: 00000000 00000000 00000000 00000000  ................
+>>>
+>>> 00000080: 00000000 00000000 00000000 00000000  ................
+>>>
+>>> 00000090: 00000000 00000000 00000000 00000000  ................
+>>>
