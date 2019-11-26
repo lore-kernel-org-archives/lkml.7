@@ -2,97 +2,91 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1214C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D6EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797872073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:12:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a0QKsNgA"
+	by mail.kernel.org (Postfix) with ESMTP id 8E5BC2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574755985;
+	bh=K4/HkReIZHrO5EOLAYxEYM72msVBHQIR4SGBUnnMj+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CWw9/Gg/i8WrkIbQD/en4ikWBgJIoQa19A0od50TFclZwV84h6Cehagh4N7eA2p2i
+	 rCI3u2DaxfAetVwkTbvaCoq5Hri8giHE2qgUpudK651ad/rHsQwNeZ70GLW7y+omtW
+	 jUmhWWpE/RcE5Et9RCzOtmLG+b3WvAThkf1m3c/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfKZIMc (ORCPT
+        id S1727287AbfKZINC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 03:12:32 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41919 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfKZIMb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 03:12:31 -0500
-Received: by mail-pl1-f194.google.com with SMTP id t8so7714269plr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 00:12:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DVaWy603oUgN7+ym76FRzfbBXkNuYdOb34CAh09at2g=;
-        b=a0QKsNgAc0xhS1/HHSJku1+HZeTfFPMvtF2f6lL5szloz0xAIxkqqEILxPghyrnmpE
-         bPfJg604nTsvXgVrhbRcbvQP7F+Z9/Z61dIxwUWfL2UF7ZUpgbT+RjoGfVS2WWs/Fdy6
-         Qcf9dLC8DvMmc7idmOKs5mazZZDzwnfJf5K34=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DVaWy603oUgN7+ym76FRzfbBXkNuYdOb34CAh09at2g=;
-        b=faQFU2aAaqkf849I22YszyW9AsRPwo5nkn8bA6ykzgk08IL74jQt1VP/EdlCyPhxbL
-         mbNH42uJ4Z9h2px08J+DOHGpQGhPqge0LPSkN6NPTglA/rCsDC6xhHo/QT1EuoZ/vekm
-         QsOzEkk8WQP+ROAeu8AgdVZdkRNE8MHWQtaDtYIWTnegAJ0X9sAC1/rOUlAFsi/cnd5c
-         zStKp+GOGzwgDyfNBrMKSW+k98bowJD/KIsMknsb+U7LozMXhFCg/dicxrQWpkhXfrS0
-         7UHBegaKOKVtF3w+IcANZiZQGpYgNiJVHaJQjRz234uKqGmfGI9yB/FbuagTQ3NY4EXk
-         8Q6A==
-X-Gm-Message-State: APjAAAWrLlZIoyKLTdMfPFY6yaJ8RuGTyewli/6OnZkJ9440QO11obU/
-        iNy1HZtFAcH4a6/4VZ+fimwFng==
-X-Google-Smtp-Source: APXvYqzlUZ+9C7m7m5CpGUh162E018hPpl0WMdqaQkDUtVNy6LA8Zmg7oNWA8oecjNRNy+qUNu4sNA==
-X-Received: by 2002:a17:90a:d152:: with SMTP id t18mr5073904pjw.119.1574755949910;
-        Tue, 26 Nov 2019 00:12:29 -0800 (PST)
-Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:93d9:de4d:e834:3086])
-        by smtp.gmail.com with ESMTPSA id z23sm11061487pgj.43.2019.11.26.00.12.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 00:12:29 -0800 (PST)
-From:   Alexandre Courbot <acourbot@chromium.org>
-To:     Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH] media: videobuf2-core: fix dprintk level
-Date:   Tue, 26 Nov 2019 17:12:17 +0900
-Message-Id: <20191126081217.197762-1-acourbot@chromium.org>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+        Tue, 26 Nov 2019 03:13:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727016AbfKZINC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 03:13:02 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 279CE2073F;
+        Tue, 26 Nov 2019 08:13:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574755980;
+        bh=K4/HkReIZHrO5EOLAYxEYM72msVBHQIR4SGBUnnMj+g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0J/UfMLdTXQOEdPa8OBVc2zM5FSC0jOWmtISPlva5y3Rkl5I4VEFoie7afPQmLucJ
+         FuD9S6AXb5BAnFrt5dlO0hXk4nVbCmC+7jFjh3oHi8UPZEA6js4fkWFqGDQ+YoGdhS
+         KCXdocgCSWUnoLRMkYJwpkN5hTQFfpNnDkrCPHR0=
+Date:   Tue, 26 Nov 2019 09:12:58 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Tomas Bortoli <tomasbortoli@gmail.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>,
+        syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
+Subject: Re: [PATCH] Fix invalid-free in bcsp_close()
+Message-ID: <20191126081258.GA1233188@kroah.com>
+References: <000000000000109f9605964acf6c@google.com>
+ <20191101204244.14509-1-tomasbortoli@gmail.com>
+ <E16896E5-B946-450F-BF42-04665D219EEA@holtmann.org>
+ <CAG_fn=Xqb1KoAvV==F5sODUYHDsxCxaz72n6qucdkR70XGCkig@mail.gmail.com>
+ <8376D008-EA21-49EA-AF5A-DDDCB179EAC5@holtmann.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8376D008-EA21-49EA-AF5A-DDDCB179EAC5@holtmann.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This dprintk is supposed to be informational, not an error. Set it to
-the same level as the other messages related to memory allocations so
-the kernel log does not get filled by messages during normal operation.
+On Tue, Nov 26, 2019 at 07:18:46AM +0100, Marcel Holtmann wrote:
+> Hi Alexander,
+> 
+> >>> Syzbot reported an invalid-free that I introduced fixing a memleak.
+> >>> 
+> >>> bcsp_recv() also frees bcsp->rx_skb but never nullifies its value.
+> >>> Nullify bcsp->rx_skb every time it is freed.
+> >>> 
+> >>> Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+> >>> Reported-by: syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
+> >>> ---
+> >>> drivers/bluetooth/hci_bcsp.c | 3 +++
+> >>> 1 file changed, 3 insertions(+)
+> >> 
+> >> patch has been applied to bluetooth-next tree.
+> > I believe this bug requires stable tags, as it can potentially provide
+> > an arbitrary write (via __skb_unlink) and is triggerable locally with
+> > user privileges.
+> 
+> I do not have a reproducer for it, but if you do, feel free to propose it for -stable inclusion.
 
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
----
- drivers/media/common/videobuf2/videobuf2-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Now queued up, thanks.
 
-diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-index 4489744fbbd9..f53f77c62afc 100644
---- a/drivers/media/common/videobuf2/videobuf2-core.c
-+++ b/drivers/media/common/videobuf2/videobuf2-core.c
-@@ -393,7 +393,7 @@ static int __vb2_queue_alloc(struct vb2_queue *q, enum vb2_memory memory,
- 		}
- 	}
- 
--	dprintk(1, "allocated %d buffers, %d plane(s) each\n",
-+	dprintk(3, "allocated %d buffers, %d plane(s) each\n",
- 			buffer, num_planes);
- 
- 	return buffer;
--- 
-2.24.0.432.g9d3f5f5b63-goog
-
+greg k-h
