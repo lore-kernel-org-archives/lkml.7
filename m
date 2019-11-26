@@ -2,135 +2,123 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B9DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D08C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A699208C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574762997;
-	bh=W8z6/CvP89Pad21EqU9fSyCJstx4Pa0nSnFzYyzFJ/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mVKD2uvHMhc1kup2S1wYtY0bDeQ9W90t9olS7zwA2Ds5eZQW2wvLY57aelMfIAQ7M
-	 qGtleZKfcrgvxuUdKwD0cdElE3yrkrd1om1XPMiDrBCU4f/MlB9YFD0iUBwWs4SOxq
-	 kniXk4AbKMR/ZdZh57KObI4u2fChaZ6xDBnPNwiE=
+	by mail.kernel.org (Postfix) with ESMTP id D3EE1208CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:10:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="y0bxBgC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbfKZKJ4 (ORCPT
+        id S1728000AbfKZKJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 05:09:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727959AbfKZKJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 05:09:52 -0500
-Received: from localhost (unknown [84.241.194.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B17422089D;
-        Tue, 26 Nov 2019 10:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574762991;
-        bh=W8z6/CvP89Pad21EqU9fSyCJstx4Pa0nSnFzYyzFJ/A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tHQX1/KJxc1aHFQUhFjWoMTDjvGa/2EEkdZ7jgfwJeYOrdNNA4VquithjBM+YN+0V
-         xHodewXPd2hT6rkc/2jVWlilTC8NBw3XvLaksbMdEUFE0vbSN1Cv6CgKKdU5rjQTiK
-         y2fOTscxAWzspJfrsuqCJApvtFHjFeO7pbg7/F18=
-Date:   Tue, 26 Nov 2019 11:09:48 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     KVM list <kvm@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Peter Feiner <pfeiner@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: "statsfs" API design
-Message-ID: <20191126100948.GB1416107@kroah.com>
-References: <5d6cdcb1-d8ad-7ae6-7351-3544e2fa366d@redhat.com>
- <20191109154952.GA1365674@kroah.com>
- <cb52053e-eac0-cbb9-1633-646c7f71b8b3@redhat.com>
+        Tue, 26 Nov 2019 05:09:59 -0500
+Received: from mail-eopbgr720051.outbound.protection.outlook.com ([40.107.72.51]:14560
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727965AbfKZKJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 05:09:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J7Dl7aVR7ysR0iwO7ZXXDeKPLPnUQEJfT8necFTMQw2zi+AgjyWr4qq6eBEK6luCLrtH5izBfHv6hR1hsNVg9aYQ6iBeemdRL1SSQ+tRyEiWLk/k928KAC9rQaZCaNmq4Ap2NMpo7M6pN0KJ5Be6Fgm4l9gU9CDDI5xOobVA/fEyfFRjTQT3g11LPvA4F3Ifp1oYltA1iHObM2fyttax/tP2UCmmFzD+6sNML42YJb2rGJK14v2XpcUsScuIFP+XqVZ3dFhYOlepMDYjClcxz96uj1qFZNSGLuC0WM4rKxDrUJCcez3L7HJdoovnLvOhMRWfhUyl4+R0qLOl4tBx3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GJ+MGMXb0UedodssqnjhqVgVK7bUeLr+Cr4qM01sjpM=;
+ b=Wa2IWLW31hrcbNhKAt/PuUJTdPWCQ4C9HlyZiO3TBfIcP2r9hxsXcbWPqMn1XNIyvj8V8wO+UaODZYVlAsPh7RSk7Fd8SC4tPWPSXMkCtTdpJbwtYoltzLvvPb/QMc0pou99NeSi41cWdtsb/tBHaskNjmPHxLG6c7K5JKsbLz9fOClgCr7Tun2aQ2HHqav9gJ/dGWppTzhP3j/tQNCPrWBwMG/IWH2vV62uuvrkKXVMuHkrzkiV5cjpcPZTgsR/EnRJOxhpRh5prwXmSXpNLe/fGIKGBSIuCy14nyGkJLp+tKSsrNJ8QZUSCtgWSnloDrsdqYdsEHfcJT/2rQWbvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GJ+MGMXb0UedodssqnjhqVgVK7bUeLr+Cr4qM01sjpM=;
+ b=y0bxBgC+0o6R/WL8cqvLe8IKorK5ZCaTw5IsCjn33Yy6H57RYqi9Dh0JVQhpTpO6cO6aywBJaKOprBo3HopgV/UWQDQaHwW+/mQqi1q22dPICLn8/4MWLv8BYYxq8E8XlYXyWRLNDAFaFP6MdJFgPLvmvpFp3HeZKSj4+HnulDM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
+ DM5PR12MB1163.namprd12.prod.outlook.com (10.168.240.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.22; Tue, 26 Nov 2019 10:09:53 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::e5e7:96f0:ad90:d933]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::e5e7:96f0:ad90:d933%7]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
+ 10:09:53 +0000
+Subject: Re: [PATCH] drm: radeon: replace 0 with NULL
+To:     Jules Irenge <jbi.octave@gmail.com>, alexander.deucher@amd.com
+Cc:     David1.Zhou@amd.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, daniel@ffwll.ch, airlied@linux.ie,
+        amd-gfx@lists.freedesktop.org
+References: <20191126003514.133692-1-jbi.octave@gmail.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <9a585a20-b885-680f-d561-8713afe53fa1@amd.com>
+Date:   Tue, 26 Nov 2019 11:09:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <20191126003514.133692-1-jbi.octave@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: BN6PR19CA0079.namprd19.prod.outlook.com
+ (2603:10b6:404:133::17) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb52053e-eac0-cbb9-1633-646c7f71b8b3@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7389ca2b-be8c-4bcb-40c9-08d77258c7a4
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1163:|DM5PR12MB1163:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1163CE0AB5D8D01D1C4B5D7883450@DM5PR12MB1163.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:428;
+X-Forefront-PRVS: 0233768B38
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(136003)(39860400002)(346002)(189003)(199004)(6512007)(31686004)(305945005)(65806001)(11346002)(65956001)(58126008)(8676002)(8936002)(81166006)(81156014)(6436002)(36756003)(2616005)(14454004)(6666004)(66476007)(66556008)(66946007)(186003)(86362001)(31696002)(4326008)(229853002)(2870700001)(2906002)(47776003)(66574012)(6246003)(76176011)(2486003)(23676004)(52116002)(4744005)(7736002)(6506007)(386003)(316002)(5660300002)(6636002)(25786009)(14444005)(99286004)(446003)(50466002)(46003)(478600001)(6116002)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1163;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TrF5NH/184EvolwwmWfSAojMjAPP86MnekjMtl2wUBrutXgLZfNMieJ8OwszPQLgIe+phZfTwwjkP6PhH7aeDVeOqCVEJLcVl3V/e/odWqGkG1XE4p/oLEwj+Rga01qKtKsxDsoXYgfpSjTga8QtyWlALbfNFM9mY0Evion6ntg+tp1g2Ko61WpqULEvFNezKjN8uj8TGb6A1W8/uY17RR2SHcsCgY1HWaDxiPR5nfIsXk7sC0qTYL/BM7TlQV92B0ku7nj6qvyL76uzMK1tO2k5RnNT4Dp9N2cnFnx6JqpsbRqRxcVyP5rc8R/4LE0O1OULTgQ6CUP9NJSWelgQ2zJ4ZW6Rjxh84H0VCQtUhQo2V4QpU4xV9m4EU1Eox6kKm5WFhbXbr/s0rIbCQCZmgUgkV82SsoFdYR8x3vUPj03QZSKjYQA0a15+rPEDb4Dk
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7389ca2b-be8c-4bcb-40c9-08d77258c7a4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2019 10:09:53.0192
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: q1QCdniQXbxhLrhbtzVe4+UJLZIKH7hHkGDjSvrSYio3pmrMOlyiliwRC1N/Thuv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 02:04:58PM +0100, Paolo Bonzini wrote:
-> On 09/11/19 16:49, Greg Kroah-Hartman wrote:
-> > On Wed, Nov 06, 2019 at 04:56:25PM +0100, Paolo Bonzini wrote:
-> >> Hi all,
-> >>
-> >> statsfs is a proposal for a new Linux kernel synthetic filesystem, to be
-> >> mounted in /sys/kernel/stats, which exposes subsystem-level statistics
-> >> in sysfs.  Reading need not be particularly lightweight, but writing
-> >> must be fast.  Therefore, statistics are gathered at a fine-grain level
-> >> in order to avoid locking or atomic operations, and then aggregated by
-> >> statsfs until the desired granularity.
-> > 
-> > Wait, reading a statistic from userspace can be slow, but writing to it
-> > from userspace has to be fast?  Or do you mean the speed is all for
-> > reading/writing the value within the kernel?
-> 
-> Reading/writing from the kernel.  Reads from a userspace are a superset
-> of reading from the kernel, writes from userspace are irrelevant.
-> 
-> [...]
-> 
-> >> As you can see, values are basically integers stored somewhere in a
-> >> struct.   The statsfs_value struct also includes information on which
-> >> operations (for example sum, min, max, average, count nonzero) it makes
-> >> sense to expose when the values are aggregated.
-> > 
-> > What can userspace do with that info?
-> 
-> The basic usage is logging.  A turbostat-like tool that is able to use
-> both debugfs and tracepoints is already in tools/kvm/kvm_stat.
-> 
-> > I have some old notes somewhere about what people really want when it
-> > comes to a good "statistics" datatype, that I was thinking of building
-> > off of, but that seems independant of what you are doing here, right?
-> > This is just exporting existing values to userspace in a semi-sane way?
-> 
-> For KVM yes.  But while I'm at it, I'd like the subsystem to be useful
-> for others so if you can dig out those notes I can integrate that.
-> 
-> > Anyway, I like the idea, but what about how this is exposed to
-> > userspace?  The criticism of sysfs for statistics is that it is too slow
-> > to open/read/close lots of files and tough to get "at this moment in
-> > time these are all the different values" snapshots easily.  How will
-> > this be addressed here?
-> 
-> Individual files in sysfs *should* be the first format to export
-> statsfs, since quick scripts are an important usecase.  However, another
-> advantage of having a higher-level API is that other ways to access the
-> stats can be added transparently.
-> 
-> The main requirement for that is self-descriptiveness, blindly passing
-> structs to userspace is certainly the worst format of all.  But I don't
-> like the idea of JSON or anything ASCII; that adds overhead to both
-> production and parsing, for no particular reason.   Tracepoints already
-> do something like that to export arguments, so perhaps there is room to
-> reuse code or at least some ideas.  It could be binary sysfs files
-> (again like tracing) or netlink, I haven't thought about it at all.
+Am 26.11.19 um 01:35 schrieb Jules Irenge:
+> Replace 0 with NULL to fix sparse tool  warning
+>   warning: Using plain integer as NULL pointer
+>
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 
-So I think there are two different things here:
-	- a simple data structure for in-kernel users of statistics
-	- a way to export statistics to userspace
+Acked-by: Christian König <christian.koenig@amd.com>
 
-Now if they both can be solved with the same "solution", wonderful!  But
-don't think that you have to do both of these at the same time.
+> ---
+>   drivers/gpu/drm/radeon/radeon_audio.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/radeon/radeon_audio.c b/drivers/gpu/drm/radeon/radeon_audio.c
+> index b9aea5776d3d..2269cfced788 100644
+> --- a/drivers/gpu/drm/radeon/radeon_audio.c
+> +++ b/drivers/gpu/drm/radeon/radeon_audio.c
+> @@ -288,7 +288,7 @@ static void radeon_audio_interface_init(struct radeon_device *rdev)
+>   	} else {
+>   		rdev->audio.funcs = &r600_funcs;
+>   		rdev->audio.hdmi_funcs = &r600_hdmi_funcs;
+> -		rdev->audio.dp_funcs = 0;
+> +		rdev->audio.dp_funcs = NULL;
+>   	}
+>   }
+>   
 
-Which one are you trying to solve here, I can't figure it out.  Is it
-the second one?
-
-thanks,
-
-greg k-h
