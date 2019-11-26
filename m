@@ -2,95 +2,87 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959F1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A16DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3CDD2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:46:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Z3qXzv/O"
+	by mail.kernel.org (Postfix) with ESMTP id 1AECB2068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574805026;
+	bh=fviU4DYleNx/9leEWr8KlLRaZcRV5/31mbcIkscLwXI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=1qd9wytlnls2Kz9X06WTs4+GnGOgekEAMO0nKOXPhHzmin9C2Hw35ukjsg96ujrLM
+	 fbU68hwTAnP/d5zKO/RyLNXarMfArrJtHGwjbI5i/KKApldyuY5I8DqxxGa5chJ8aS
+	 mTHbjMzrW/DjT/n2AXOSzcSHdivajY35osrZR0oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfKZVp7 (ORCPT
+        id S1726984AbfKZVuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 16:45:59 -0500
-Received: from vps.xff.cz ([195.181.215.36]:45622 "EHLO vps.xff.cz"
+        Tue, 26 Nov 2019 16:50:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfKZVp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 16:45:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1574804757; bh=ayuTHAY+hrJkpnkLRJINl7ENLTS1Zur7p3Jq1ISHp2Q=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=Z3qXzv/O3SYbEixrKlvHyyL09gNT5vLKKJjl/vq4otAMu+mlquQJ8a5wAj/cJVsWm
-         ETm6Op5i2/z21fDH0kyV3qIJebXojimVr9xu4wTr5oKJdVdBFNHgZTERYd1M92RN11
-         1nuZ4j/aPHycRyuJDFoiPjjx1Xv2F3TK/cjuRU+U=
-Date:   Tue, 26 Nov 2019 22:45:57 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] arm: Fix topology setup in case of CPU hotplug for
- CONFIG_SCHED_MC
-Message-ID: <20191126214557.53afmorihwqimq2n@core.my.home>
-Mail-Followup-To: Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <20191120104212.14791-1-dietmar.eggemann@arm.com>
- <20191124214753.m6lwcdemnddltctw@core.my.home>
- <50dfafee-55c3-767c-55f4-7d263feafe87@arm.com>
+        id S1726180AbfKZVuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 16:50:24 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A4D32064B;
+        Tue, 26 Nov 2019 21:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574805023;
+        bh=fviU4DYleNx/9leEWr8KlLRaZcRV5/31mbcIkscLwXI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uUIlGVPyKOrvuHVpQv/b+ruVHCQDTlDu1+qzEemw7EkSDCS8/n4JPZHteVMdX0WFZ
+         91sGaPq8CDozUc+9UqG1loem0V7LuABz1cFlkueEdKM8Bnyqsc6Xkrw3oMKIRDoyoo
+         AdKDLXRSe79ve81TcXBrMFWSSipAW0nQkoXOLgX0=
+Date:   Tue, 26 Nov 2019 15:50:21 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, james.quinlan@broadcom.com,
+        mbrugger@suse.com, f.fainelli@gmail.com, phil@raspberrypi.org,
+        wahrenst@gmx.net, jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v3 0/7] Raspberry Pi 4 PCIe support
+Message-ID: <20191126215020.GA191414@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <50dfafee-55c3-767c-55f4-7d263feafe87@arm.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 11:42:02AM +0100, Dietmar Eggemann wrote:
-> On 24/11/2019 22:47, Ondřej Jirman wrote:
-> > Hello,
-> > 
-> > On Wed, Nov 20, 2019 at 10:42:12AM +0000, Dietmar Eggemann wrote:
-> 
-> [...]
-> 
-> >> Fixes: ca74b316df96 ("arm: Use common cpu_topology structure and functions")
-> >> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> > 
-> > This fixes CPU hotplug and correspondent suspend to ram/resume failures (that
-> > disables and re-enables non-boot CPUs) on A83T SoC, that I've seen since
-> > 5.4-rc1.
-> > 
-> > Tested-by: Ondrej Jirman <megous@megous.com>
-> 
-> Thanks for testing! Which Cpufreq driver is your system using?
+On Tue, Nov 26, 2019 at 10:19:38AM +0100, Nicolas Saenz Julienne wrote:
+> This series aims at providing support for Raspberry Pi 4's PCIe
+> controller, which is also shared with the Broadcom STB family of
+> devices.
 
-Hello,
+> Jim Quinlan (3):
+>   dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+>   PCI: brcmstb: add Broadcom STB PCIe host controller driver
+>   PCI: brcmstb: add MSI capability
 
-it's using cpufreq-dt.
+Please update these subjects to match the others, i.e., capitalize
+"Add".  Also, I think "Add MSI capability" really means "Add support
+for MSI ..."; in PCIe terms the "MSI Capability" is a structure in
+config space and it's there whether the OS supports it or not.
 
-regards,
-	o.
+No need to repost just for this.
 
-> [...]
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Nicolas Saenz Julienne (4):
+>   linux/log2.h: Add roundup/rounddown_pow_two64() family of functions
+>   ARM: dts: bcm2711: Enable PCIe controller
+>   MAINTAINERS: Add brcmstb PCIe controller
+>   arm64: defconfig: Enable Broadcom's STB PCIe controller
