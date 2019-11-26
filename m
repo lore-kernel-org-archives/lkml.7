@@ -2,147 +2,193 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96469C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3B2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6182073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="ZjtgOV/p"
+	by mail.kernel.org (Postfix) with ESMTP id 121B120722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfKZJCc (ORCPT
+        id S1727404AbfKZJFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:02:32 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38089 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbfKZJCb (ORCPT
+        Tue, 26 Nov 2019 04:05:09 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:41854 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfKZJFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:02:31 -0500
-Received: by mail-il1-f193.google.com with SMTP id u17so16942012ilq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 01:02:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=t3siywQMic4+3G/dPDeE17s5VtxexJ2M1JK1S3ouM4A=;
-        b=ZjtgOV/pr8z2qVPm7aKOTj8vneLya3QFAGjk+lNJj/QRunSEptXSIUv964TfpaXgRB
-         F3OKkiaNaSAD62pS0zHb9Avv1FbKH8LTbkug33+fFZwVSPcIVSdPG2OaYPJFu6GUkPs5
-         HoFCyAmD5YbmF23GK7W1JsY6CkqiKro/Yg565+jxX4ce1wygC+VMaUuGF6dJtlaxI4Ym
-         sNzF1zkjllRTjDM+OqPE2rH++4EddtYqGSSZV4suxjs7Ed8/0bKxHOkaSpDWp3HMBmY5
-         SkPvXeknRMoR9EGxWpz6IMr/+rKYOyJpDqQC4eL5FSrnbZKGvVFqx9l0IZDWAjuVtzsh
-         3xLg==
+        Tue, 26 Nov 2019 04:05:08 -0500
+Received: by mail-il1-f197.google.com with SMTP id o185so15971501ila.8
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 01:05:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=t3siywQMic4+3G/dPDeE17s5VtxexJ2M1JK1S3ouM4A=;
-        b=MFrBgapIPj/GyqgFX7O76QnycwUUnn7UAdqYxeagOealIru/yYUFBBFGq9V5HeaxxE
-         igfiyg28xO5L8aI5Q3pHuAuDFRMdkMpgIGKERW4vYodQnup/wbxP/FkzjvXhRMNVKjC1
-         EAsC4w97ttgJMtvLDCSmGaJopRZef6rxJIWzAFi11g0miM+Tzyba4mbZPIQLSrI65zfy
-         aZYKiog0ZJPGIcrwqSJlWc6DLR7bvd2zyEDYQW99SHkoqXWoehtgZkF1+ktjqLKDS4w4
-         VWwg5sA8pFeA52UalqyJVdgV4pMwaQYSxx0uWRB9tio4R887PIFCxzx5fmWh6QHhutBT
-         tfmw==
-X-Gm-Message-State: APjAAAUdH+PvrMkw66bdxjhIZW72xTj+Ewu+1bOUXZ6Pi4qqmb2mfd3l
-        Nxd1ANuX3FEpoFmx/Kk62PAO10oXPwWgx90OF8wfsQ==
-X-Google-Smtp-Source: APXvYqy4JJs4tw+DQhFyc6W+aR+iSnEHpG2/S9kZTb9FNJ0ZfmIWFBpeEsmr/idfvM6lF5Zm2kkdOgUlGH9+yBjM+B0=
-X-Received: by 2002:a05:6e02:4d2:: with SMTP id f18mr37130431ils.270.1574758949256;
- Tue, 26 Nov 2019 01:02:29 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=OFHVSlfS2yDF527fhuEXlXOXPa5EQL6IyHToLAgPneA=;
+        b=IMAwq9mtf4LTa/FU+Tshpl+MMaTcaeyP7rEFBCrVPnV4eplsfba2/HPC7OTn+pFJxm
+         rOEex1r68AMvpXTKY/iNkxCr/nUgEmw6O6gXZvHx0OCfcfUB65ZzRVuzVrM9L//ckoma
+         E01ppDCWTFDde+kGTiboPI668mAakigXltapKWLFfjj23SXELs9DRnnqsQXElU6ifVgJ
+         b8geByAHFBQlL6Q0lgucMY61B7uU8n0LCx87oJGjIX2bnDpKerZJ701IdGZe7fwDx44M
+         83+rILssf+8nEu637cVR23nnEFsoHQ4yZIgTBGLp3RJXih4hPdyaw/FkgGnsOL8zxxfR
+         6qAg==
+X-Gm-Message-State: APjAAAVk/2F+4A3whD8CHTdr9A5GNlX88w2tKWvi+zz41KHmzTqLj7SO
+        nfAtRqZfqyxFtyzS5Y3E5PC75iDlDI0ciYoO/m8Fe5FldrOZ
+X-Google-Smtp-Source: APXvYqzleiyVjiPoRdaLBXB+zjhmA6LiBl49k5vct0dNHB/1NvyCK+e1PzihY8x9fRjMVPYynqu/mdouOAIPlgXcuEQRx4qKddyd
 MIME-Version: 1.0
-References: <20191023114634.13657-0-mholenko@antmicro.com> <20191023114634.13657-2-mholenko@antmicro.com>
- <20191120192648.GA3087498@kroah.com>
-In-Reply-To: <20191120192648.GA3087498@kroah.com>
-From:   Mateusz Holenko <mholenko@antmicro.com>
-Date:   Tue, 26 Nov 2019 10:02:18 +0100
-Message-ID: <CAPk366QgcOYPZJXM46o3Gn8ksFYYoNwJvnunUe7y0aLNgJuSRg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a92:1d52:: with SMTP id d79mr36776177ild.185.1574759107701;
+ Tue, 26 Nov 2019 01:05:07 -0800 (PST)
+Date:   Tue, 26 Nov 2019 01:05:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000038b5c205983c2df4@google.com>
+Subject: WARNING in mark_lock (3)
+From:   syzbot <syzbot+a229d8d995b74f8c4b6c@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 20 lis 2019 o 20:26 Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> napisa=C5=82(a):
->
-> On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
-> > +#ifdef __LITTLE_ENDIAN
-> > +# define LITEX_READ_REG(addr)                  ioread32(addr)
-> > +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off)
-> > +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr)
-> > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr + o=
-ff)
-> > +#else
-> > +# define LITEX_READ_REG(addr)                  ioread32be(addr)
-> > +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + off)
-> > +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, addr)
-> > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, addr +=
- off)
-> > +#endif
->
-> I just noticed this.
->
-> Ick, this is not good.  You will run into problems in the future with
-> this, I can guarantee it.  What about systems where the CPU is one
-> endian and the hardware in the other?  It will happen trust us.
+Hello,
 
-As mentioned in the previous comment, LiteX CSRs are guaranteed to be
-always little-endian - this includes configurations with both
-big-endian and little-endian CPUs.
+syzbot found the following crash on:
 
-The aim of including the ifdef section was exactly to target situation
-where endianness is different for CPU and devices. As such this
-approach *should* work.
+HEAD commit:    81429eb8 Merge tag 'arm64-fixes' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=171edaf2e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=56f109a734a2de32
+dashboard link: https://syzkaller.appspot.com/bug?extid=a229d8d995b74f8c4b6c
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13ee1f3ce00000
 
-> Make these real functions (inline is nice) and pass in the pointer to
-> the device so you can test for it and call the correct function based on
-> the cpu/hardware type.
->
-> And what about bitfields?  What endian are they for your
-> system/hardware?
->
-> Almost no kernel code should EVER be testing __LITTLE_ENDIAN, don't add
-> to it as it is not a good idea.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a229d8d995b74f8c4b6c@syzkaller.appspotmail.com
 
-If I understand correctly, you suggest to replace compile-time
-ifdefing with probing the endianness in the runtime (by reading some
-register that should return a known value, say 1, and testing how bits
-are arranged). This is a good idea, as it protects against breaking an
-always-little-endian property of LiteX CSRs in the future.
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 0 PID: 8024 at kernel/locking/lockdep.c:167 hlock_class  
+kernel/locking/lockdep.c:167 [inline]
+WARNING: CPU: 0 PID: 8024 at kernel/locking/lockdep.c:167  
+mark_lock+0x8d2/0x1650 kernel/locking/lockdep.c:3643
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8024 Comm: udevd Not tainted 5.4.0-rc8-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+  panic+0x264/0x7a9 kernel/panic.c:221
+  __warn+0x20e/0x210 kernel/panic.c:582
+  report_bug+0x1b6/0x2f0 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:hlock_class kernel/locking/lockdep.c:167 [inline]
+RIP: 0010:mark_lock+0x8d2/0x1650 kernel/locking/lockdep.c:3643
+Code: 0f 85 af 02 00 00 83 3d 8f 7a 65 07 00 0f 85 7a f8 ff ff 31 db 48 c7  
+c7 24 71 36 88 48 c7 c6 3c 2f 3b 88 31 c0 e8 be f4 ec ff <0f> 0b e9 6e f8  
+ff ff 4c 69 f3 b0 00 00 00 48 c7 c0 d0 f4 1c 89 4c
+RSP: 0018:ffff8880aea09520 EFLAGS: 00010046
+RAX: 7cc85c2266612300 RBX: 0000000000000000 RCX: ffff88809907a480
+RDX: 0000000080000502 RSI: 0000000000000001 RDI: ffffffff815cbf54
+RBP: ffff8880aea09620 R08: ffffffff8178fcea R09: fffffbfff111a493
+R10: fffffbfff111a493 R11: 0000000000000000 R12: 1ffff1101320f5c5
+R13: dffffc0000000000 R14: 0000000000000004 R15: 0000000000000010
+  mark_usage kernel/locking/lockdep.c:3566 [inline]
+  __lock_acquire+0x5a0/0x1be0 kernel/locking/lockdep.c:3909
+  lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+  _raw_spin_lock+0x2d/0x40 kernel/locking/spinlock.c:151
+  spin_lock include/linux/spinlock.h:338 [inline]
+  __netif_tx_lock include/linux/netdevice.h:3897 [inline]
+  sch_direct_xmit+0x154/0xd50 net/sched/sch_generic.c:311
+  __dev_xmit_skb net/core/dev.c:3400 [inline]
+  __dev_queue_xmit+0x1bf7/0x3010 net/core/dev.c:3761
+  dev_queue_xmit+0x17/0x20 net/core/dev.c:3825
+  neigh_hh_output include/net/neighbour.h:500 [inline]
+  neigh_output include/net/neighbour.h:509 [inline]
+  ip6_finish_output2+0xff2/0x13b0 net/ipv6/ip6_output.c:116
+  __ip6_finish_output+0x693/0x8c0 net/ipv6/ip6_output.c:142
+  ip6_finish_output+0x52/0x1e0 net/ipv6/ip6_output.c:152
+  NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+  ip6_output+0x26f/0x370 net/ipv6/ip6_output.c:175
+  dst_output include/net/dst.h:436 [inline]
+  NF_HOOK include/linux/netfilter.h:305 [inline]
+  mld_sendpack+0x770/0xb80 net/ipv6/mcast.c:1682
+  mld_send_initial_cr+0x24c/0x2c0 net/ipv6/mcast.c:2099
+  mld_dad_timer_expire+0x2e/0x350 net/ipv6/mcast.c:2118
+  call_timer_fn+0x95/0x170 kernel/time/timer.c:1404
+  expire_timers kernel/time/timer.c:1449 [inline]
+  __run_timers+0x7b6/0x990 kernel/time/timer.c:1773
+  run_timer_softirq+0x4a/0x90 kernel/time/timer.c:1786
+  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:766
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0x227/0x230 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0x113/0x280 arch/x86/kernel/apic/apic.c:1137
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+  </IRQ>
+RIP: 0010:update_stack_state+0x3c/0x530 arch/x86/kernel/unwind_frame.c:196
+Code: 00 00 49 89 f5 49 89 ff 65 48 8b 04 25 28 00 00 00 48 89 45 d0 48 bb  
+00 00 00 00 00 fc ff df 48 89 f8 48 c1 e8 03 48 89 45 a8 <8a> 04 18 84 c0  
+0f 85 71 03 00 00 41 8b 07 89 45 a4 4d 8d 67 58 4c
+RSP: 0018:ffff888097ae7520 EFLAGS: 00000a02 ORIG_RAX: ffffffffffffff13
+RAX: 1ffff11012f5ced0 RBX: dffffc0000000000 RCX: 0000000000000000
+RDX: 0000000000000009 RSI: ffff888097ae7f48 RDI: ffff888097ae7680
+RBP: ffff888097ae75c8 R08: ffffffff81629dbd R09: ffff888097ae7680
+R10: ffffed1012f5cedc R11: 0000000000000000 R12: ffff888097ae7f48
+R13: ffff888097ae7f48 R14: ffff888097ae76d0 R15: ffff888097ae7680
+  unwind_next_frame+0x3f1/0x7a0 arch/x86/kernel/unwind_frame.c:311
+  arch_stack_walk+0xb4/0xe0 arch/x86/kernel/stacktrace.c:25
+  stack_trace_save+0xb6/0x150 kernel/stacktrace.c:123
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:510
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  __do_kmalloc_node mm/slab.c:3615 [inline]
+  __kmalloc_node_track_caller+0x4d/0x60 mm/slab.c:3629
+  __kmalloc_reserve net/core/skbuff.c:141 [inline]
+  __alloc_skb+0xe8/0x500 net/core/skbuff.c:209
+  alloc_skb include/linux/skbuff.h:1049 [inline]
+  alloc_skb_with_frags+0xb6/0x600 net/core/skbuff.c:5662
+  sock_alloc_send_pskb+0x7cc/0xbc0 net/core/sock.c:2244
+  unix_dgram_sendmsg+0x612/0x2460 net/unix/af_unix.c:1625
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg net/socket.c:657 [inline]
+  __sys_sendto+0x442/0x5e0 net/socket.c:1952
+  __do_sys_sendto net/socket.c:1964 [inline]
+  __se_sys_sendto net/socket.c:1960 [inline]
+  __x64_sys_sendto+0xe5/0x100 net/socket.c:1960
+  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f31c173d282
+Code: 48 83 c8 ff eb ea 90 90 53 48 83 ec 20 8b 05 81 d3 2a 00 85 c0 75 21  
+45 31 c9 45 31 c0 4c 63 d1 48 63 ff b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff  
+ff 77 61 48 83 c4 20 5b c3 48 89 54 24 08 89 0c 24
+RSP: 002b:00007ffdbd60f5e0 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 000000000063a3c0 RCX: 00007f31c173d282
+RDX: 0000000000000008 RSI: 00007ffdbd60f630 RDI: 0000000000000009
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 000000000063d8f0 R14: 000000000063a250 R15: 000000000000000b
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-I'll include this in the next version of the patchset.
 
-> thanks,
->
-> greg k-h
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Thanks for your comments!
-
---=20
-Mateusz Holenko
-Antmicro Ltd | www.antmicro.com
-Roosevelta 22, 60-829 Poznan, Poland
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
