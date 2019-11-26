@@ -2,151 +2,135 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA795C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B9DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 936C4206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:08:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="dFxXPlxc"
+	by mail.kernel.org (Postfix) with ESMTP id 5A699208C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574762997;
+	bh=W8z6/CvP89Pad21EqU9fSyCJstx4Pa0nSnFzYyzFJ/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mVKD2uvHMhc1kup2S1wYtY0bDeQ9W90t9olS7zwA2Ds5eZQW2wvLY57aelMfIAQ7M
+	 qGtleZKfcrgvxuUdKwD0cdElE3yrkrd1om1XPMiDrBCU4f/MlB9YFD0iUBwWs4SOxq
+	 kniXk4AbKMR/ZdZh57KObI4u2fChaZ6xDBnPNwiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfKZKIG (ORCPT
+        id S1728003AbfKZKJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 05:08:06 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:52403 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727482AbfKZKIG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 05:08:06 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        Tue, 26 Nov 2019 05:09:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727959AbfKZKJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 05:09:52 -0500
+Received: from localhost (unknown [84.241.194.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E7C5C230D1;
-        Tue, 26 Nov 2019 11:08:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1574762882;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y3hXqvgd2MuTcuqEB4nE4yu26xVNMub4dFPnjjzwuFc=;
-        b=dFxXPlxcs5wRBFdPEc6cdNVDsDXU/Kllf1DAfc65g3QCmnFm7rxn7VkV6HW6eniMyCLORP
-        0ffkpCIJM3wk6wAdij5MW5XC8KcmV0IMV1KlrYdE+7SwIYNPlVr7geT1jC9WQ/DwXMhBU9
-        +/u3dIrPZ8oKDR05yic5hLRaapCXt9c=
+        by mail.kernel.org (Postfix) with ESMTPSA id B17422089D;
+        Tue, 26 Nov 2019 10:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574762991;
+        bh=W8z6/CvP89Pad21EqU9fSyCJstx4Pa0nSnFzYyzFJ/A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tHQX1/KJxc1aHFQUhFjWoMTDjvGa/2EEkdZ7jgfwJeYOrdNNA4VquithjBM+YN+0V
+         xHodewXPd2hT6rkc/2jVWlilTC8NBw3XvLaksbMdEUFE0vbSN1Cv6CgKKdU5rjQTiK
+         y2fOTscxAWzspJfrsuqCJApvtFHjFeO7pbg7/F18=
+Date:   Tue, 26 Nov 2019 11:09:48 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     KVM list <kvm@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Peter Feiner <pfeiner@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: "statsfs" API design
+Message-ID: <20191126100948.GB1416107@kroah.com>
+References: <5d6cdcb1-d8ad-7ae6-7351-3544e2fa366d@redhat.com>
+ <20191109154952.GA1365674@kroah.com>
+ <cb52053e-eac0-cbb9-1633-646c7f71b8b3@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 26 Nov 2019 11:08:01 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Kuldeep Singh <kuldeep.singh@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
-In-Reply-To: <AM0PR0402MB3556804FB47D182173C6A7AAE0450@AM0PR0402MB3556.eurprd04.prod.outlook.com>
-References: <20191123201317.25861-1-michael@walle.cc>
- <20191123201317.25861-4-michael@walle.cc>
- <AM0PR0402MB3556804FB47D182173C6A7AAE0450@AM0PR0402MB3556.eurprd04.prod.outlook.com>
-Message-ID: <afde04b888418e9e4f4fdb946a579e70@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: E7C5C230D1
-X-Spamd-Result: default: False [1.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.32.167.96:email];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.385];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb52053e-eac0-cbb9-1633-646c7f71b8b3@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kuldeep,
-
-Am 2019-11-26 07:40, schrieb Kuldeep Singh:
-> Hi Michael,
+On Sun, Nov 10, 2019 at 02:04:58PM +0100, Paolo Bonzini wrote:
+> On 09/11/19 16:49, Greg Kroah-Hartman wrote:
+> > On Wed, Nov 06, 2019 at 04:56:25PM +0100, Paolo Bonzini wrote:
+> >> Hi all,
+> >>
+> >> statsfs is a proposal for a new Linux kernel synthetic filesystem, to be
+> >> mounted in /sys/kernel/stats, which exposes subsystem-level statistics
+> >> in sysfs.  Reading need not be particularly lightweight, but writing
+> >> must be fast.  Therefore, statistics are gathered at a fine-grain level
+> >> in order to avoid locking or atomic operations, and then aggregated by
+> >> statsfs until the desired granularity.
+> > 
+> > Wait, reading a statistic from userspace can be slow, but writing to it
+> > from userspace has to be fast?  Or do you mean the speed is all for
+> > reading/writing the value within the kernel?
 > 
->> -----Original Message-----
->> From: devicetree-owner@vger.kernel.org 
->> <devicetree-owner@vger.kernel.org>
->> On Behalf Of Michael Walle
->> Sent: Sunday, November 24, 2019 1:43 AM
->> To: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; 
->> linux-
->> kernel@vger.kernel.org
->> Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
->> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
->> Michael Walle <michael@walle.cc>
->> Subject: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
+> Reading/writing from the kernel.  Reads from a userspace are a superset
+> of reading from the kernel, writes from userspace are irrelevant.
 > 
-> There's already a patch[1] sent upstream and is under review.
-> It includes dts(i) entries for LS1028. I will be sending the next 
-> version
-
-I've seen that, but there wasn't any reply for almost two months now. 
-But
-if you're sending your next version, this patch can be dropped from this
-series.
-
--michael
-
+> [...]
 > 
-> [1] https://patchwork.kernel.org/patch/11139365/
->> 
->> Caution: EXT Email
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> index 6730922c2d47..650b277ddd66 100644
->> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> @@ -260,6 +260,19 @@
->>                         status = "disabled";
->>                 };
->> 
->> +               fspi: spi@20c0000 {
->> +                       compatible = "nxp,lx2160a-fspi";
->> +                       #address-cells = <1>;
->> +                       #size-cells = <0>;
->> +                       reg = <0x0 0x20c0000 0x0 0x10000>,
->> +                             <0x0 0x20000000 0x0 0x10000000>;
->> +                       reg-names = "fspi_base", "fspi_mmap";
->> +                       interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
->> +                       clocks = <&clockgen 4 3>, <&clockgen 4 3>;
->> +                       clock-names = "fspi_en", "fspi";
->> +                       status = "disabled";
->> +               };
->> +
->>                 esdhc: mmc@2140000 {
->>                         compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
->>                         reg = <0x0 0x2140000 0x0 0x10000>;
->> --
->> 2.20.1
+> >> As you can see, values are basically integers stored somewhere in a
+> >> struct.   The statsfs_value struct also includes information on which
+> >> operations (for example sum, min, max, average, count nonzero) it makes
+> >> sense to expose when the values are aggregated.
+> > 
+> > What can userspace do with that info?
 > 
-> Regards
-> Kuldeep
+> The basic usage is logging.  A turbostat-like tool that is able to use
+> both debugfs and tracepoints is already in tools/kvm/kvm_stat.
+> 
+> > I have some old notes somewhere about what people really want when it
+> > comes to a good "statistics" datatype, that I was thinking of building
+> > off of, but that seems independant of what you are doing here, right?
+> > This is just exporting existing values to userspace in a semi-sane way?
+> 
+> For KVM yes.  But while I'm at it, I'd like the subsystem to be useful
+> for others so if you can dig out those notes I can integrate that.
+> 
+> > Anyway, I like the idea, but what about how this is exposed to
+> > userspace?  The criticism of sysfs for statistics is that it is too slow
+> > to open/read/close lots of files and tough to get "at this moment in
+> > time these are all the different values" snapshots easily.  How will
+> > this be addressed here?
+> 
+> Individual files in sysfs *should* be the first format to export
+> statsfs, since quick scripts are an important usecase.  However, another
+> advantage of having a higher-level API is that other ways to access the
+> stats can be added transparently.
+> 
+> The main requirement for that is self-descriptiveness, blindly passing
+> structs to userspace is certainly the worst format of all.  But I don't
+> like the idea of JSON or anything ASCII; that adds overhead to both
+> production and parsing, for no particular reason.   Tracepoints already
+> do something like that to export arguments, so perhaps there is room to
+> reuse code or at least some ideas.  It could be binary sysfs files
+> (again like tracing) or netlink, I haven't thought about it at all.
+
+So I think there are two different things here:
+	- a simple data structure for in-kernel users of statistics
+	- a way to export statistics to userspace
+
+Now if they both can be solved with the same "solution", wonderful!  But
+don't think that you have to do both of these at the same time.
+
+Which one are you trying to solve here, I can't figure it out.  Is it
+the second one?
+
+thanks,
+
+greg k-h
