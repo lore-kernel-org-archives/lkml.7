@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6A5C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908C5C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7A720722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A6620722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfKZIAf (ORCPT
+        id S1727369AbfKZIA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 03:00:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41038 "EHLO
+        Tue, 26 Nov 2019 03:00:27 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:41019 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727400AbfKZIAc (ORCPT
+        with ESMTP id S1727313AbfKZIAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 03:00:32 -0500
+        Tue, 26 Nov 2019 03:00:25 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iZVlc-00034P-7L; Tue, 26 Nov 2019 09:00:12 +0100
+        id 1iZVlc-00034V-L0; Tue, 26 Nov 2019 09:00:12 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6AC811C1D91;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 918271C1D92;
         Tue, 26 Nov 2019 09:00:10 +0100 (CET)
 Date:   Tue, 26 Nov 2019 08:00:10 -0000
 From:   "tip-bot2 for Sean Christopherson" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/headers] x86/ACPI/sleep: Remove an unnecessary include of
- asm/realmode.h
+Subject: [tip: core/headers] ASoC: Intel: Skylake: Explicitly include
+ linux/io.h for virt_to_phys()
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Borislav Petkov <bp@alien8.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191119002121.4107-11-sean.j.christopherson@intel.com>
-References: <20191119002121.4107-11-sean.j.christopherson@intel.com>
+In-Reply-To: <20191119002121.4107-10-sean.j.christopherson@intel.com>
+References: <20191119002121.4107-10-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Message-ID: <157475521034.21853.5656770422738416818.tip-bot2@tip-bot2>
+Message-ID: <157475521050.21853.1897962495187818342.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,41 +62,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/headers branch of tip:
 
-Commit-ID:     25466d56fbadb785a1342aae4b2147ea1781d55a
-Gitweb:        https://git.kernel.org/tip/25466d56fbadb785a1342aae4b2147ea1781d55a
+Commit-ID:     6d1002c4229fa3cfdb5b73a2c8a45a4b6090ba0a
+Gitweb:        https://git.kernel.org/tip/6d1002c4229fa3cfdb5b73a2c8a45a4b6090ba0a
 Author:        Sean Christopherson <sean.j.christopherson@intel.com>
-AuthorDate:    Mon, 18 Nov 2019 16:21:19 -08:00
+AuthorDate:    Mon, 18 Nov 2019 16:21:18 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Tue, 19 Nov 2019 17:50:27 +01:00
 
-x86/ACPI/sleep: Remove an unnecessary include of asm/realmode.h
+ASoC: Intel: Skylake: Explicitly include linux/io.h for virt_to_phys()
 
-None of the declarations in x86's acpi/sleep.h are in any way dependent
-on the real mode boot code.  Remove sleep.h's include of asm/realmode.h
-to limit the dependencies on realmode.h to code that actually interacts
-with the boot code.
+Through a labyrinthian sequence of includes, usage of virt_to_phys() is
+dependent on the include of asm/io.h in x86's asm/realmode.h, which is
+included in x86's asm/acpi.h and thus by linux/acpi.h.  Explicitly
+include linux/io.h to break the dependency on realmode.h so that a
+future patch can remove the realmode.h include from acpi.h without
+breaking the build.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Acked-by: Mark Brown <broonie@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191119002121.4107-11-sean.j.christopherson@intel.com
+Link: https://lkml.kernel.org/r/20191119002121.4107-10-sean.j.christopherson@intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/acpi/sleep.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/intel/skylake/skl-sst-cldma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/acpi/sleep.h b/arch/x86/kernel/acpi/sleep.h
-index fbb60ca..d06c207 100644
---- a/arch/x86/kernel/acpi/sleep.h
-+++ b/arch/x86/kernel/acpi/sleep.h
-@@ -3,7 +3,7 @@
-  *	Variables and functions used by the code in sleep.c
+diff --git a/sound/soc/intel/skylake/skl-sst-cldma.c b/sound/soc/intel/skylake/skl-sst-cldma.c
+index 5a2c35f..36f697c 100644
+--- a/sound/soc/intel/skylake/skl-sst-cldma.c
++++ b/sound/soc/intel/skylake/skl-sst-cldma.c
+@@ -8,6 +8,7 @@
   */
  
--#include <asm/realmode.h>
-+#include <linux/linkage.h>
- 
- extern unsigned long saved_video_mode;
- extern long saved_magic;
+ #include <linux/device.h>
++#include <linux/io.h>
+ #include <linux/mm.h>
+ #include <linux/delay.h>
+ #include "../common/sst-dsp.h"
