@@ -2,129 +2,109 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CEDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 04:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7BEC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 05:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69C1204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 04:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574743553;
-	bh=P7JZP8kJ96uw813GsugjfM/jpsA5+dfDymDZrXgKasM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0ZGBQ8JlekrumVJqjCgbSpJTR7AQNY5ND5Ovvo4edhM3lJplqmZZnRbarBmrtduCv
-	 xDCzIuHujDsDxWI57MwFPIYNghiZ1JV+5YuEx4s+5Sv9BxlgQmXvi+QwYQdYP2Lj66
-	 YxNSJrIH5iZ3AL3TXpt9X/bCEVBWZiX70DnHjz58=
+	by mail.kernel.org (Postfix) with ESMTP id B97BB207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 05:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbfKZEpx (ORCPT
+        id S1726077AbfKZFaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 23:45:53 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:60457 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729172AbfKZEpw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 23:45:52 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iZSjN-0003Ml-3g; Tue, 26 Nov 2019 05:45:41 +0100
-Date:   Tue, 26 Nov 2019 04:45:33 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     "Andrew Jeffery" <andrew@aj.id.au>
-Cc:     "Roy van Doormaal" <roy.van.doormaal@prodrive-technologies.com>,
-        "Brendan Higgins" <brendanhiggins@google.com>,
-        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Jason Cooper" <jason@lakedaemon.net>, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Subject: Re: [PATCH] irqchip/aspeed-i2c-ic: Fix irq domain name memory leak
-Message-ID: <20191126044533.20d84e37@why>
-In-Reply-To: <ff44cecd-7e05-4e5d-b88f-2d6af6fd8b8b@www.fastmail.com>
-References: <20191125202937.23133-1-roy.van.doormaal@prodrive-technologies.com>
-        <ff44cecd-7e05-4e5d-b88f-2d6af6fd8b8b@www.fastmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 26 Nov 2019 00:30:18 -0500
+Received: from mga06.intel.com ([134.134.136.31]:60136 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbfKZFaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 00:30:17 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 21:30:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,244,1571727600"; 
+   d="scan'208";a="211308351"
+Received: from lipengxi-mobl.amr.corp.intel.com ([10.255.28.133])
+  by orsmga006.jf.intel.com with ESMTP; 25 Nov 2019 21:30:13 -0800
+Message-ID: <b146b35e4434a0bf57dfd8052b2b455f06fa46ab.camel@intel.com>
+Subject: Re: [PATCH] MAINTAINERS: thermal: Eduardo's email is bouncing
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, eduval@amazon.com,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Date:   Tue, 26 Nov 2019 13:29:04 +0800
+In-Reply-To: <CAHLCerPKQSLrgybYhhFDxjXu56BD+iAyz1OYF14rTbjotEkD7g@mail.gmail.com>
+References: <20191123154303.2202-1-f.fainelli@gmail.com>
+         <CAHLCerPKQSLrgybYhhFDxjXu56BD+iAyz1OYF14rTbjotEkD7g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: andrew@aj.id.au, roy.van.doormaal@prodrive-technologies.com, brendanhiggins@google.com, benh@kernel.crashing.org, joel@jms.id.au, tglx@linutronix.de, jason@lakedaemon.net, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019 10:08:36 +1030
-"Andrew Jeffery" <andrew@aj.id.au> wrote:
+On Mon, 2019-11-25 at 15:27 +0530, Amit Kucheria wrote:
+> On Sat, Nov 23, 2019 at 9:13 PM Florian Fainelli <
+> f.fainelli@gmail.com> wrote:
+> > 
+> > The last two emails to Eduardo were returned with:
+> > 
+> > 452 4.2.2 The email account that you tried to reach is over quota.
+> > Please direct the recipient to
+> > https://support.google.com/mail/?p=OverQuotaTemp j17sor626162wrq.49
+> > -
+> > gsmtp
+> 
+> Right, I've been seeing the same for the last week for all my
+> postings.
 
-> On Tue, 26 Nov 2019, at 06:59, Roy van Doormaal wrote:
-> > The aspeed irqchip driver overwrites the default irq domain name,
-> > but doesn't free the existing domain name.
-> > This patch frees the irq domain name before overwriting it.
-> > 
-> > kmemleak trace:
-> > 
-> > unreferenced object 0xb8004c40 (size 64):
-> > comm "swapper", pid 0, jiffies 4294937303 (age 747.660s)
-> > hex dump (first 32 bytes):
-> > 3a 61 68 62 3a 61 70 62 3a 62 75 73 40 31 65 37 :ahb:apb:bus@1e7
-> > 38 61 30 30 30 3a 69 6e 74 65 72 72 75 70 74 2d 8a000:interrupt-
-> > backtrace:
-> > [<086b59b8>] kmemleak_alloc+0xa8/0xc0
-> > [<b5a3490c>] __kmalloc_track_caller+0x118/0x1a0
-> > [<f59c7ced>] kvasprintf+0x5c/0xc0
-> > [<49275eec>] kasprintf+0x30/0x50
-> > [<5713064b>] __irq_domain_add+0x184/0x25c
-> > [<53c594d0>] aspeed_i2c_ic_of_init+0x9c/0x128
-> > [<d8d7017e>] of_irq_init+0x1ec/0x314
-> > [<f8405bf1>] irqchip_init+0x1c/0x24
-> > [<7ef974b3>] init_IRQ+0x30/0x90
-> > [<87a1438f>] start_kernel+0x28c/0x458
-> > [< (null)>] (null)
-> > [<f0763fdf>] 0xffffffff
-> > 
-> > Signed-off-by: Roy van Doormaal <roy.van.doormaal@prodrive-technologies.com>
+okay, I will queue this patch.
+
+> 
+> Rui, will you please send the pull request to Linus for 5.5 (and
+> going
+> forward) with all the contents of thermal/next[1]? Otherwise, the
+> thermal soc patches will unnecessarily miss the merge window. They've
+> been baking in linux-next for a while.
+
+yes, all the patches in thermal/next are for 5.5-rc1.
+
+thanks,
+rui
+
+> 
+> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> [1] 
+> https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/log/?h=thermal/next
+> 
+> 
+> 
 > > ---
-> >  drivers/irqchip/irq-aspeed-i2c-ic.c | 2 ++
-> >  1 file changed, 2 insertions(+)
+> >  MAINTAINERS | 1 -
+> >  1 file changed, 1 deletion(-)
 > > 
-> > diff --git a/drivers/irqchip/irq-aspeed-i2c-ic.c 
-> > b/drivers/irqchip/irq-aspeed-i2c-ic.c
-> > index 8d591c179f81..8081b8483a79 100644
-> > --- a/drivers/irqchip/irq-aspeed-i2c-ic.c
-> > +++ b/drivers/irqchip/irq-aspeed-i2c-ic.c
-> > @@ -92,6 +92,8 @@ static int __init aspeed_i2c_ic_of_init(struct 
-> > device_node *node,
-> >  		goto err_iounmap;
-> >  	}
-> >  
-> > +	if (i2c_ic->irq_domain->flags & IRQ_DOMAIN_NAME_ALLOCATED)
-> > +		kfree(i2c_ic->irq_domain->name);
-> >  	i2c_ic->irq_domain->name = "aspeed-i2c-domain";  
-> 
-> Given that the name is no-longer allocated I think you need to clear the
-> IRQ_DOMAIN_NAME_ALLOCATED bit from flags to avoid attempting to
-> free the const string in irq_domain_remove():
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/irq/irqdomain.c?h=v5.4#n263
-> 
-> Or do a kstrdup().
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index e4f170d8bc29..84e8bdae4beb 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -16085,7 +16085,6 @@ F:      drivers/media/radio/radio-
+> > raremono.c
+> > 
+> >  THERMAL
+> >  M:     Zhang Rui <rui.zhang@intel.com>
+> > -M:     Eduardo Valentin <edubezval@gmail.com>
+> >  R:     Daniel Lezcano <daniel.lezcano@linaro.org>
+> >  R:     Amit Kucheria <amit.kucheria@verdurent.com>
+> >  L:     linux-pm@vger.kernel.org
+> > --
+> > 2.17.1
+> > 
 
-Or even better, drop the whole domain name assignment, which is pretty
-pointless and makes debugging pointlessly difficult (see how the name
-is used to build the irq debugfs).
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
