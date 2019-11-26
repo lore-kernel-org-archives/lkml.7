@@ -2,175 +2,210 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56492C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8861DC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DD8207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5525F2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="kPsfkTV/"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Y8HjHE2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbfKZL5R (ORCPT
+        id S1728217AbfKZL5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 06:57:17 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:15743 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727545AbfKZL5R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 06:57:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574769432;
-        s=strato-dkim-0002; d=xenosoft.de;
-        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=OiXIPkAa+jo3JWZau1B2Ey3v2wblVpCTuGCnmx5s9Rg=;
-        b=kPsfkTV/+0nWDnwAhqKgkB9HK7WKUvDz4aZCvLDQhkd89WXqsTVz8zf0LaN7f1WyFT
-        LQgUbMZ+nTEsXS2BWy2uVy2cR5ieujjwtmgyKWdZ7ftK5aOqKLQn3LTO7ioufK8QZ3yB
-        vx8XCJwE5HcGCzf4oMHyDNu8JEAClm4vNP9Uj0dr4j0DxCaQFcIjbprzYgzRNnuEL18a
-        3LBfbJzzwnLS2g2vuWq7zfNg9xA7/IXjN5WyEL0e6dj8TjiHT2f0hpfB0Fdtv+mrj9uJ
-        xWcx8DSTvSlrZe5mshEZcUGqUZ14MK/hsKnb8NCN3oEgpoMWtjc8KDlL8KIOhpBCVLyp
-        +QxQ==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPhSIh0PhkEvMsMre1rbZ/xz+jsR"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2a02:8109:89c0:ebfc:14bb:b5af:17db:dc1]
-        by smtp.strato.de (RZmta 45.0.2 AUTH)
-        with ESMTPSA id x0678cvAQBv38le
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 26 Nov 2019 12:57:03 +0100 (CET)
-Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board
- installed, unless RAM size limited to 3500M
-To:     Mike Rapoport <rppt@linux.ibm.com>, Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>, linux-arch@vger.kernel.org,
-        darren@stevens-zone.net, mad skateman <madskateman@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        paulus@samba.org, rtd2@xtra.co.nz,
-        "contact@a-eon.com" <contact@a-eon.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        nsaenzjulienne@suse.de
-References: <F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de>
- <20191121072943.GA24024@lst.de>
- <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
- <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de>
- <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com>
- <b3217742-2c0b-8447-c9ac-608b93265363@xenosoft.de>
- <20191121180226.GA3852@lst.de>
- <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
- <20191125073923.GA30168@lst.de> <20191125093159.GA23118@linux.ibm.com>
-From:   Christian Zigotzky <chzigotzky@xenosoft.de>
-Message-ID: <b668bc25-9268-d25e-f9a0-176bb4ce1d07@xenosoft.de>
-Date:   Tue, 26 Nov 2019 12:57:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 26 Nov 2019 06:57:21 -0500
+Received: from mail-eopbgr790055.outbound.protection.outlook.com ([40.107.79.55]:59808
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727250AbfKZL5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 06:57:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h5RUw7q0ndUpTWrrrcdCwgmEtGPUxIUI189c4GaJDHSVzRSPt0PLHMRXdiWMw95O3+D+rbvlypj+gcZxDo0O1GfHj+/MnD1CXZHSd5v8SLk/3Q9UJt0npIW+VoP9bRTV6bcveU8UGD5HOwc3eVTmrmcMVn/oWhVDKiOQ3+O9DkiBA8YgWO1Onyi9qnZ80++nUN99yS8sM73wsCGF/rrAJbxWHYWgv+PcFNzDXfrFbir280brBkQtkVV0GCCbpo6DZRhObLe4bN8TEbOrxn3JXrRkdzpusVNuypCwnV18qpW4/qor5F1e9F0TZLfTZWh8MERfcTY+KF/zAuwiDqB/rQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uoz0kP7TlyyO8x7+RhU2QNe28uAYxMWtipV31PkCT0k=;
+ b=bHx6hKpoutKIkx1wk+nFTYJE+SjAQFRiEACe/bdSsh2YXE1yiTggKcAHXeRdEDqvWvkq+JW2rCd2YFLxd1B+pkGDKI/L7gJ3OJdcY0f88rVMUx3mDej57csBzKvFSfzhT9YjnOBbP8D+4HuapdL7I3BbWHIPaWzOQHgXBNvqJP5eyCEz9XXoMxxRn5bNS4lEmPkQwJLwXw6FBB4s4+nReRB8fXIPUFrFIFI8rB9vsgZKNTrZLjjJGT7ZmlRCUF1P6FhNsf04opLE9S4FRq+iiOSP/amA+exPSSXx2jd3KySOPVkFS6kzoyD+Tj6Lhe9WcpsStWzadnavor9xmQNG7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uoz0kP7TlyyO8x7+RhU2QNe28uAYxMWtipV31PkCT0k=;
+ b=Y8HjHE2YaJE3kYJyDQhY3ki4AKAgZrlMd/wgufzTjZNNffRsKfTfLblagSj+ID7M800/Y0zwlO+BIVRVqiMbF/jObEfq5ytKZML8RLhcxw5EQLfJ/9CdH+tEyWhN1x9/NN2iloPNqXWF9q/6jUHkVB5ueTnaY78DFzsXPV7UWPw=
+Received: from BYAPR02MB4055.namprd02.prod.outlook.com (52.135.202.143) by
+ BYAPR02MB4696.namprd02.prod.outlook.com (52.135.235.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.17; Tue, 26 Nov 2019 11:56:37 +0000
+Received: from BYAPR02MB4055.namprd02.prod.outlook.com
+ ([fe80::fccc:d399:e650:9a9e]) by BYAPR02MB4055.namprd02.prod.outlook.com
+ ([fe80::fccc:d399:e650:9a9e%5]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
+ 11:56:36 +0000
+From:   Rajan Vaja <RAJANV@xilinx.com>
+To:     "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] drivers: clocksource: Use ttc driver as platform driver
+Thread-Topic: [PATCH] drivers: clocksource: Use ttc driver as platform driver
+Thread-Index: AQHVlVaOW+EHQwVffUWJv7WplPkHr6edcAHggAAGWTA=
+Date:   Tue, 26 Nov 2019 11:56:36 +0000
+Message-ID: <BYAPR02MB40553CE8C7355FBA8E659F22B7450@BYAPR02MB4055.namprd02.prod.outlook.com>
+References: <1573122659-13947-1-git-send-email-rajan.vaja@xilinx.com>
+ <BYAPR02MB4055F607B83F35B5FBF68CC6B7450@BYAPR02MB4055.namprd02.prod.outlook.com>
+In-Reply-To: <BYAPR02MB4055F607B83F35B5FBF68CC6B7450@BYAPR02MB4055.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=RAJANV@xilinx.com; 
+x-originating-ip: [14.142.15.114]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8258dc0f-0f8f-4d65-4eea-08d77267b0ce
+x-ms-traffictypediagnostic: BYAPR02MB4696:
+x-microsoft-antispam-prvs: <BYAPR02MB4696C40008F7EE939F514F56B7450@BYAPR02MB4696.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0233768B38
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(189003)(13464003)(199004)(478600001)(14454004)(8936002)(86362001)(66946007)(66476007)(66556008)(64756008)(55236004)(2501003)(76176011)(316002)(7696005)(6506007)(5660300002)(55016002)(66446008)(229853002)(256004)(14444005)(2906002)(33656002)(7736002)(305945005)(102836004)(74316002)(3846002)(26005)(186003)(71190400001)(6116002)(4326008)(71200400001)(52536014)(110136005)(53546011)(54906003)(99286004)(25786009)(76116006)(2940100002)(81156014)(9686003)(8676002)(66066001)(446003)(6436002)(6246003)(81166006)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4696;H:BYAPR02MB4055.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Cd09L+3NHlOri9vCPQS1U+EVyakNttCHioqctZRvSWN8AJeYde/E4cxohZ+DmqFysmaPGCv+wU/YPKyx/0JZMjwggtWaQZStm5ZQGjWXNTF7ST7I8nhBA8eambNwUKfwqIdKz0LdofjE0KYKwhgzPdl5jp+vR3bO5YjFX7LRkJZS6TeHyheIY1WYHPE04jx4lm0o+5khTMIdj7BRsAia8nEmbFwNcfymOLFHUduOdg+r3eAEtLFg986DeQdZMxk28p/1b69Isa7cGiusgTx1qO32TIgiC8xQ7UYpwp4MpDv0SAHH3dygKPs08ASbR68tCzOo73mtaEses5zKKY3l8MBnwSBWNubw1q2cCNBOyDzZe7KYGMpDXYqbV89RCF9ogkUnnXyF7qzsarrdnA7/m27H2W+41nO2SKgrr6JS8WPYS5BhOZKQgLpSxSKc90VZ
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20191125093159.GA23118@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: de-DE
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8258dc0f-0f8f-4d65-4eea-08d77267b0ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 11:56:36.8853
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +cGXQUABB1zs/9WRWPHSHi3m0HtnNJ8v1acP01rgR6tL4LWUaAqe7hp+mrZOL9M5ap+wQyrbsHahhLCsNvP2Nw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4696
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25 November 2019 at 10:32 am, Mike Rapoport wrote:
-> On Mon, Nov 25, 2019 at 08:39:23AM +0100, Christoph Hellwig wrote:
->> On Sat, Nov 23, 2019 at 12:42:27PM +0100, Christian Zigotzky wrote:
->>> Hello Christoph,
->>>
->>> Please find attached the dmesg of your Git kernel.
->> Thanks.  It looks like on your platform the swiotlb buffer isn't
->> actually addressable based on the bus dma mask limit, which is rather
->> interesting.  swiotlb_init uses memblock_alloc_low to allocate the
->> buffer, and I'll need some help from Mike and the powerpc maintainers
->> to figure out how that select where to allocate the buffer from, and
->> how we can move it to a lower address.  My gut feeling would be to try
->> to do what arm64 does and define a new ARCH_LOW_ADDRESS_LIMIT, preferably
->> without needing too much arch specific magic.
-> Presuming the problem is relevant for all CoreNet boards something like
-> this could work:
->   
-> diff --git a/arch/powerpc/include/asm/dma.h b/arch/powerpc/include/asm/dma.h
-> index 1b4f0254868f..7c6cfeeaff52 100644
-> --- a/arch/powerpc/include/asm/dma.h
-> +++ b/arch/powerpc/include/asm/dma.h
-> @@ -347,5 +347,11 @@ extern int isa_dma_bridge_buggy;
->   #define isa_dma_bridge_buggy	(0)
->   #endif
->   
-> +#ifdef CONFIG_CORENET_GENERIC
-> +extern phys_addr_t ppc_dma_phys_limit;
-> +#define ARCH_LOW_ADDRESS_LIMIT	(ppc_dma_phys_limit - 1)
-> +#endif
-> +
-> +
->   #endif /* __KERNEL__ */
->   #endif	/* _ASM_POWERPC_DMA_H */
-> diff --git a/arch/powerpc/platforms/85xx/common.c b/arch/powerpc/platforms/85xx/common.c
-> index fe0606439b5a..346b436b6d3f 100644
-> --- a/arch/powerpc/platforms/85xx/common.c
-> +++ b/arch/powerpc/platforms/85xx/common.c
-> @@ -126,3 +126,7 @@ void __init mpc85xx_qe_par_io_init(void)
->   	}
->   }
->   #endif
-> +
-> +#ifdef CONFIG_CORENET_GENERIC
-> +phys_addr_t ppc_dma_phys_limit = 0xffffffffUL;
-> +#endif
-> diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/powerpc/platforms/85xx/corenet_generic.c
-> index 7ee2c6628f64..673bcbdc7c75 100644
-> --- a/arch/powerpc/platforms/85xx/corenet_generic.c
-> +++ b/arch/powerpc/platforms/85xx/corenet_generic.c
-> @@ -64,7 +64,7 @@ void __init corenet_gen_setup_arch(void)
->   	mpc85xx_smp_init();
->   
->   	swiotlb_detect_4g();
-> -
-> +	ppc_dma_phys_limit = 0x0fffffffUL;
->   	pr_info("%s board\n", ppc_md.name);
->   
->   	mpc85xx_qe_init();
-Hello Mike,
-
-My PCI TV card works also with your patch! Before I had to add "#include 
-<asm/dma.h>" to the file "arch/powerpc/platforms/85xx/corenet_generic.c" 
-because of the following error:
-
-------
-
-   CC      arch/powerpc/platforms/85xx/corenet_generic.o
-   CC      ipc/util.o
-   CC      ipc/msgutil.o
-arch/powerpc/platforms/85xx/corenet_generic.c: In function 
-‘corenet_gen_setup_arch’:
-arch/powerpc/platforms/85xx/corenet_generic.c:77:2: error: 
-‘ppc_dma_phys_limit’ undeclared (first use in this function); did you 
-mean ‘cpu_to_phys_id’?
-   ppc_dma_phys_limit = 0x0fffffffUL;
-   ^~~~~~~~~~~~~~~~~~
-   cpu_to_phys_id
-arch/powerpc/platforms/85xx/corenet_generic.c:77:2: note: each 
-undeclared identifier is reported only once for each function it appears in
-scripts/Makefile.build:265: recipe for target 
-'arch/powerpc/platforms/85xx/corenet_generic.o' failed
-make[3]: *** [arch/powerpc/platforms/85xx/corenet_generic.o] Error 1
-scripts/Makefile.build:509: recipe for target 
-'arch/powerpc/platforms/85xx' failed
-make[2]: *** [arch/powerpc/platforms/85xx] Error 2
-scripts/Makefile.build:509: recipe for target 'arch/powerpc/platforms' 
-failed
-make[1]: *** [arch/powerpc/platforms] Error 2
-Makefile:1652: recipe for target 'arch/powerpc' failed
-make: *** [arch/powerpc] Error 2
-
-------
-
-After that I was able to compile the latest Git kernel with your patch.
+Please ignore this request.
 
 Thanks,
-Christian
+Rajan
+
+> -----Original Message-----
+> From: Rajan Vaja
+> Sent: 26 November 2019 05:06 PM
+> To: Rajan Vaja <RAJANV@xilinx.com>; ichal.simek@xilinx.com;
+> daniel.lezcano@linaro.org; tglx@linutronix.de
+> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: RE: [PATCH] drivers: clocksource: Use ttc driver as platform dri=
+ver
+>=20
+> Request for review.
+>=20
+> Thanks,
+> Rajan
+>=20
+> > -----Original Message-----
+> > From: Rajan Vaja <rajan.vaja@xilinx.com>
+> > Sent: 07 November 2019 04:01 PM
+> > To: ichal.simek@xilinx.com; daniel.lezcano@linaro.org; tglx@linutronix.=
+de
+> > Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;=
+ Rajan
+> Vaja
+> > <RAJANV@xilinx.com>
+> > Subject: [PATCH] drivers: clocksource: Use ttc driver as platform drive=
+r
+> >
+> > Currently TTC driver is TIMER_OF_DECLARE type driver. Because of
+> > that, TTC driver may be initialized before other clock drivers. If
+> > TTC driver is dependent on that clock driver then initialization of
+> > TTC driver will failed.
+> >
+> > So use TTC driver as platform driver instead of using
+> > TIMER_OF_DECLARE.
+> >
+> > Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> > ---
+> >  drivers/clocksource/timer-cadence-ttc.c | 26 ++++++++++++++++++-------=
+-
+> >  1 file changed, 18 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/clocksource/timer-cadence-ttc.c b/drivers/clocksou=
+rce/timer-
+> > cadence-ttc.c
+> > index 88fe2e9..38858e1 100644
+> > --- a/drivers/clocksource/timer-cadence-ttc.c
+> > +++ b/drivers/clocksource/timer-cadence-ttc.c
+> > @@ -15,6 +15,8 @@
+> >  #include <linux/of_irq.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/sched_clock.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_platform.h>
+> >
+> >  /*
+> >   * This driver configures the 2 16/32-bit count-up timers as follows:
+> > @@ -464,13 +466,7 @@ static int __init ttc_setup_clockevent(struct clk =
+*clk,
+> >  	return 0;
+> >  }
+> >
+> > -/**
+> > - * ttc_timer_init - Initialize the timer
+> > - *
+> > - * Initializes the timer hardware and register the clock source and cl=
+ock event
+> > - * timers with Linux kernal timer framework
+> > - */
+> > -static int __init ttc_timer_init(struct device_node *timer)
+> > +static int __init ttc_timer_probe(struct platform_device *pdev)
+> >  {
+> >  	unsigned int irq;
+> >  	void __iomem *timer_baseaddr;
+> > @@ -478,6 +474,7 @@ static int __init ttc_timer_init(struct device_node=
+ *timer)
+> >  	static int initialized;
+> >  	int clksel, ret;
+> >  	u32 timer_width =3D 16;
+> > +	struct device_node *timer =3D pdev->dev.of_node;
+> >
+> >  	if (initialized)
+> >  		return 0;
+> > @@ -532,4 +529,17 @@ static int __init ttc_timer_init(struct device_nod=
+e
+> *timer)
+> >  	return 0;
+> >  }
+> >
+> > -TIMER_OF_DECLARE(ttc, "cdns,ttc", ttc_timer_init);
+> > +static const struct of_device_id ttc_timer_of_match[] =3D {
+> > +	{.compatible =3D "cdns,ttc"},
+> > +	{},
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, ttc_timer_of_match);
+> > +
+> > +static struct platform_driver ttc_timer_driver =3D {
+> > +	.driver =3D {
+> > +		.name	=3D "cdns_ttc_timer",
+> > +		.of_match_table =3D ttc_timer_of_match,
+> > +	},
+> > +};
+> > +builtin_platform_driver_probe(ttc_timer_driver, ttc_timer_probe);
+> > --
+> > 2.7.4
+
