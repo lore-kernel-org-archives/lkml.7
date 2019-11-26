@@ -2,164 +2,129 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92534C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C676C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71329206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B64206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:43:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CJV6ZYyK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfKZIkr (ORCPT
+        id S1727166AbfKZIm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 03:40:47 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41161 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfKZIkr (ORCPT
+        Tue, 26 Nov 2019 03:42:59 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40915 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfKZIm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 03:40:47 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iZWOg-00046e-Go; Tue, 26 Nov 2019 09:40:34 +0100
-Date:   Tue, 26 Nov 2019 09:40:34 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Joerg Vehlow <lkml@jv-coder.de>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, trix@redhat.com,
-        Joerg Vehlow <joerg.vehlow@aox-tech.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Clark Williams <williams@redhat.com>, stable-rt@vger.kernel.org
-Subject: Re: [PATCH RT v3] net/xfrm/input: Protect queue with lock
-Message-ID: <20191126084034.g2fgdocw7qok3xcd@linutronix.de>
-References: <20191126071335.34661-1-lkml@jv-coder.de>
+        Tue, 26 Nov 2019 03:42:59 -0500
+Received: by mail-wr1-f66.google.com with SMTP id 4so18076659wro.7
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 00:42:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JHNZUTPIMG+8vm9Xx7nqvxw7Hrw7f/tddmrI9dcAnk8=;
+        b=CJV6ZYyKMABUO8sf/kvxRG1FphfBIzrIl/CVoIglL0z9uB6aMJrRc6kD0mwGKBlb5w
+         IqPm6qOrqH2nyG0KPUls1bgLf9VGY6Hv+QYX8BF0KfscBWJmjkuurdbFuAXutMeSvhMP
+         dG5tRgq7FJSADMvInlQA/GdDSbTK2HFx4h590=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=JHNZUTPIMG+8vm9Xx7nqvxw7Hrw7f/tddmrI9dcAnk8=;
+        b=RCcon9xderkfCShxTOBPF/3kDyK+kFXk/yOzKH7P5nikLPKC02iO//Sx9WSvW1qp1H
+         496YdOJ55Es67mkNIPx7JLEkMr22n1Dnp0PKE6f3mhwjeOJ74zhyCWGLB7a1xFzB26qz
+         80GYMFA3C4bcvRNWU3hWWdCajZFyzBqrk+H+SIMOja0krqPv3ZhPYJw+iQHH+0+tml05
+         o/XOg47WMNWtlyEpHhfpawTQMziwPLTM1f2kb1aaGJdHlF58Bigr5dRIx9WlOYbUqVRd
+         ZNiu4kVmOl6Lq5iQCExUqZnMGIBSxU/R6aM5BJVNQ4LE+NXyOgMPOQc9Ctfmpk+yNdK6
+         onXA==
+X-Gm-Message-State: APjAAAW10/i7xKQekAokiQKhYawSwU5rizRuoLJqmWb8rFUMpAf5QCnq
+        5MrEenmQs+51EKgy0ZMOgz8ulQ==
+X-Google-Smtp-Source: APXvYqyLSv+QdXGnFV3g1p8B1aJHrD8G2pitYUfElplL8wg7O0YAPimG7NTzRuqe30vr+WEPIOitpQ==
+X-Received: by 2002:adf:cf0a:: with SMTP id o10mr22353641wrj.340.1574757775944;
+        Tue, 26 Nov 2019 00:42:55 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id b1sm14040556wrs.74.2019.11.26.00.42.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 00:42:55 -0800 (PST)
+Date:   Tue, 26 Nov 2019 09:42:53 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     syzbot <syzbot+1e46a0864c1a6e9bd3d8@syzkaller.appspotmail.com>
+Cc:     airlied@linux.ie, chris@chris-wilson.co.uk,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        rafael.antognolli@intel.com, rodrigo.vivi@intel.com,
+        shli@kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in md_ioctl
+Message-ID: <20191126084253.GP29965@phenom.ffwll.local>
+Mail-Followup-To: syzbot <syzbot+1e46a0864c1a6e9bd3d8@syzkaller.appspotmail.com>,
+        airlied@linux.ie, chris@chris-wilson.co.uk,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        rafael.antognolli@intel.com, rodrigo.vivi@intel.com,
+        shli@kernel.org, syzkaller-bugs@googlegroups.com
+References: <000000000000a52337056b065fb3@google.com>
+ <000000000000f4160705983366e8@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191126071335.34661-1-lkml@jv-coder.de>
+In-Reply-To: <000000000000f4160705983366e8@google.com>
+X-Operating-System: Linux phenom 5.3.0-2-amd64 
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-26 08:13:35 [+0100], Joerg Vehlow wrote:
-> From: Joerg Vehlow <joerg.vehlow@aox-tech.de>
+On Mon, Nov 25, 2019 at 02:37:01PM -0800, syzbot wrote:
+> syzbot has bisected this bug to:
 > 
-> During the skb_queue_splice_init the tasklet could have been preempted
-> and_skb_queue_tail called, which led to an inconsistent queue.
+> commit 4b6ce6810a5dc0af387a238e8c852e0d3822381f
+> Author: Rafael Antognolli <rafael.antognolli@intel.com>
+> Date:   Mon Feb 5 23:33:30 2018 +0000
 > 
-> Affected are all rt kernels up to 5.0.19-rt11 (due to bh rework).
-> 
-> It was found using ipsec stress tests (e.g. ipcomp) in ltp suite.
-> Running them in a continous loop triggered the bug in qemu within 5-10 retries.
+>     drm/i915/cnl: WaPipeControlBefore3DStateSamplePattern
 
-Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+This seems very unlikely, the reproducer doesn't open a drm device, and
+I'd be surprised if your gcd instances have an actual i915 device in them
+(but I can't check because boot log isn't provided, didn't find it on the
+dashboard either).
 
-> [  139.717259] BUG: unable to handle kernel NULL pointer dereference at 0000000000000518
-> [  139.717260] PGD 0 P4D 0
-> [  139.717262] Oops: 0000 [#1] PREEMPT SMP PTI
-> [  139.717273] CPU: 2 PID: 11987 Comm: netstress Not tainted 4.19.59-rt24-preemt-rt #1
-> [  139.717274] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-> [  139.717306] RIP: 0010:xfrm_trans_reinject+0x97/0xd0
-> [  139.717307] Code: 42 eb 45 83 6d b0 01 31 f6 48 8b 42 08 48 c7 42 08 00 00 00 00 48 8b 0a 48 c7 02 00 00 00 00 48 89 41 08 48 89 08 48 8b 42 10 <48> 8b b8 18 05 00 00 48 8b 42 40 e8 d9 e1 4b 00 48 8b 55 a0 48 39
-> [  139.717307] RSP: 0018:ffffc900007b37e8 EFLAGS: 00010246
-> [  139.717308] RAX: 0000000000000000 RBX: ffffc900007b37e8 RCX: ffff88807db206a8
-> [  139.717309] RDX: ffff88807db206a8 RSI: 0000000000000000 RDI: 0000000000000000
-> [  139.717309] RBP: ffffc900007b3848 R08: 0000000000000001 R09: ffffc900007b35c8
-> [  139.717309] R10: ffffea0001dcfc00 R11: 00000000000890c4 R12: ffff88807db20680
-> [  139.717310] R13: 00000000000f4240 R14: 0000000000000000 R15: 0000000000000000
-> [  139.717310] FS:  00007f4643034700(0000) GS:ffff88807db00000(0000) knlGS:0000000000000000
-> [  139.717311] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  139.717337] CR2: 0000000000000518 CR3: 00000000769c6000 CR4: 00000000000006e0
-> [  139.717350] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  139.717350] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [  139.717350] Call Trace:
-> [  139.717387]  tasklet_action_common.isra.18+0x6d/0xd0
-> [  139.717388]  tasklet_action+0x1d/0x20
-> [  139.717389]  do_current_softirqs+0x196/0x360
-> [  139.717390]  __local_bh_enable+0x51/0x60
-> [  139.717397]  ip_finish_output2+0x18b/0x3f0
-> [  139.717408]  ? task_rq_lock+0x53/0xe0
-> [  139.717415]  ip_finish_output+0xbe/0x1b0
-> [  139.717416]  ip_output+0x72/0x100
-> [  139.717422]  ? ipcomp_output+0x5e/0x280
-> [  139.717424]  xfrm_output_resume+0x4b5/0x540
-> [  139.717436]  ? refcount_dec_and_test_checked+0x11/0x20
-> [  139.717443]  ? kfree_skbmem+0x33/0x80
-> [  139.717444]  xfrm_output+0xd7/0x110
-> [  139.717451]  xfrm4_output_finish+0x2b/0x30
-> [  139.717452]  __xfrm4_output+0x3a/0x50
-> [  139.717453]  xfrm4_output+0x40/0xe0
-> [  139.717454]  ? xfrm_dst_check+0x174/0x250
-> [  139.717455]  ? xfrm4_output+0x40/0xe0
-> [  139.717456]  ? xfrm_dst_check+0x174/0x250
-> [  139.717457]  ip_local_out+0x3b/0x50
-> [  139.717458]  __ip_queue_xmit+0x16b/0x420
-> [  139.717464]  ip_queue_xmit+0x10/0x20
-> [  139.717466]  __tcp_transmit_skb+0x566/0xad0
-> [  139.717467]  tcp_write_xmit+0x3a4/0x1050
-> [  139.717468]  __tcp_push_pending_frames+0x35/0xe0
-> [  139.717469]  tcp_push+0xdb/0x100
-> [  139.717469]  tcp_sendmsg_locked+0x491/0xd70
-> [  139.717470]  tcp_sendmsg+0x2c/0x50
-> [  139.717476]  inet_sendmsg+0x3e/0xf0
-> [  139.717483]  sock_sendmsg+0x3e/0x50
-> [  139.717484]  __sys_sendto+0x114/0x1a0
-> [  139.717491]  ? __rt_mutex_unlock+0xe/0x10
-> [  139.717492]  ? _mutex_unlock+0xe/0x10
-> [  139.717500]  ? ksys_write+0xc5/0xe0
-> [  139.717501]  __x64_sys_sendto+0x28/0x30
-> [  139.717503]  do_syscall_64+0x4d/0x110
-> [  139.717504]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Signed-off-by: Joerg Vehlow <joerg.vehlow@aox-tech.de>
-> ---
->  net/xfrm/xfrm_input.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
-> index 790b514f86b6..4c4e669fcd16 100644
-> --- a/net/xfrm/xfrm_input.c
-> +++ b/net/xfrm/xfrm_input.c
-> @@ -512,12 +512,15 @@ EXPORT_SYMBOL(xfrm_input_resume);
->  
->  static void xfrm_trans_reinject(unsigned long data)
->  {
-> +	unsigned long flags;
->  	struct xfrm_trans_tasklet *trans = (void *)data;
->  	struct sk_buff_head queue;
->  	struct sk_buff *skb;
->  
->  	__skb_queue_head_init(&queue);
-> +	spin_lock_irqsave(&trans->queue.lock, flags);
->  	skb_queue_splice_init(&trans->queue, &queue);
-> +	spin_unlock_irqrestore(&trans->queue.lock, flags);
->  
->  	while ((skb = __skb_dequeue(&queue)))
->  		XFRM_TRANS_SKB_CB(skb)->finish(dev_net(skb->dev), NULL, skb);
-> @@ -535,7 +538,7 @@ int xfrm_trans_queue(struct sk_buff *skb,
->  		return -ENOBUFS;
->  
->  	XFRM_TRANS_SKB_CB(skb)->finish = finish;
-> -	__skb_queue_tail(&trans->queue, skb);
-> +	skb_queue_tail(&trans->queue, skb);
->  	tasklet_schedule(&trans->tasklet);
->  	return 0;
->  }
-> @@ -560,7 +563,7 @@ void __init xfrm_input_init(void)
->  		struct xfrm_trans_tasklet *trans;
->  
->  		trans = &per_cpu(xfrm_trans_tasklet, i);
-> -		__skb_queue_head_init(&trans->queue);
-> +		skb_queue_head_init(&trans->queue);
->  		tasklet_init(&trans->tasklet, xfrm_trans_reinject,
->  			     (unsigned long)trans);
->  	}
-> -- 
-> 2.20.1
-> 
+Since i915 is built-in I suspect this simply moved something else in the
+kernel image around which provokes the bug.
+-Daniel
 
-Sebastian
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13aeb522e00000
+> start commit:   c61a56ab Merge branch 'x86-urgent-for-linus' of git://git...
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=106eb522e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17aeb522e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4013180e7c7a9ff9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1e46a0864c1a6e9bd3d8
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16bca207800000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14819a47800000
+> 
+> Reported-by: syzbot+1e46a0864c1a6e9bd3d8@syzkaller.appspotmail.com
+> Fixes: 4b6ce6810a5d ("drm/i915/cnl:
+> WaPipeControlBefore3DStateSamplePattern")
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
