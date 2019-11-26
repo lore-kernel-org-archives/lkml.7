@@ -6,273 +6,94 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E11C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98995C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEDD2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7693E2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbfKZQTC (ORCPT
+        id S1728829AbfKZQTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 11:19:02 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:42103 "EHLO
+        Tue, 26 Nov 2019 11:19:04 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:41601 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728740AbfKZQSm (ORCPT
+        with ESMTP id S1728146AbfKZQSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 11:18:42 -0500
+        Tue, 26 Nov 2019 11:18:41 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N3sNa-1hrk8h0iXo-00zkhP; Tue, 26 Nov 2019 17:18:35 +0100
+ 1MFL8J-1ibaYS3gVd-00Fkok; Tue, 26 Nov 2019 17:18:33 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v5 6/8] media: v4l2-core: fix v4l2_buffer handling for time64 ABI
-Date:   Tue, 26 Nov 2019 17:18:22 +0100
-Message-Id: <20191126161824.337724-7-arnd@arndb.de>
+Subject: [PATCH v5 1/8] media: documentation: fix video_event description
+Date:   Tue, 26 Nov 2019 17:18:17 +0100
+Message-Id: <20191126161824.337724-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191126161824.337724-1-arnd@arndb.de>
 References: <20191126161824.337724-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:MpJL5kq5Qh38TN+TsyjI3Z9+stjWek1mdImDxxdOkH2BzJv0ttG
- 8hXy4piwfh/1vPwu+yQY7GWmJlARXmO5DcpZH2I2ROW6QITtkUAgjyjwVnT3HndHrhRJoKM
- oGHKTQHs1u4sefpkkEnbjqiVrRXasBcJ7Vy9czGcYRNdHFdAOFAclvQfZMhJNxhxL771Jc3
- nmeNl/q1+UKvt4/5gEUMQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SSPchkp55RM=:CsLc8nmSzW3sXLHk8pL4yX
- ENNj6dJZx5/U0PjWlxrNjl/wjk4UFzP06dM0a9cqsO4N50megIk83AnhPv9w37Vc8E2LRr527
- MmHmhINHGU+p/ztef4MJ9FinEeiI+727lHcni0CRN1zsaw/G6eeeAdndeODOvxHHBjBuAo6wq
- DfeSjJAk7RbRRhlaGRlW3GJLwCFSYSNwfJ68BzuHmNCF/U9dlm/LBzU5KbBxH6CY4BrB/Sk0U
- NWjBU1rNAxnIz9lCXpi5EHrJ7TeBce2U2Z0uY3eII6ecJbncfCc739OxvSeDZw8zaYlpQBcDY
- iKTL9F5AswkS8THKnrQ2FBnuZmVW1RQeHdXqz/hOCU7phD0L2u2rGK7JVMQKLS+NBXcCogB/T
- pvRWXbyPbp4ecHEKtgAr3g/aYTg4YQ/e/Uos9PFpyyKLHdHqzZG2qwQjgAR3t1SN8J2Mo3T4V
- UUQpQuIl7EcOGOlpz51dAhjaiYP7ad2+K16UVdSTpTnDNVUKY49nBLSbZ9qNOZhu2Rj18sNif
- ynopbU72Y2TyOocyMs3ltJBdRbvMdybWyk7jEGZn4hjJdaMi0no1uqkVM+TieR8wx99Sdku+W
- sknBL11AU/KV++7DOId7OBbp0yFwcLUS+BuMHVXWt4BLEeWlv/UQ1fgkBGAp2lVJAAZ7jh711
- M1M3TlW6YHLC/Vmtx92fJD/uyiEULlQzYYl2VkLpQvCW36X4hXiq7+SOd+T/20zatTBMyMZjV
- 7cKuhYZ/40cuUd5Gj19dwqTX40uTfeBS/Px6LnYTOqcy3BFg9XL2Y7OuJhnyPk0bjn1Ah5xVa
- O8jeOIY5cKzgk54ehhgcMNL4C8C56ViJlMnWIFXV9aXrtiG2oIq/dJ+Qw8mVyvnRNvEEXc/BM
- ZEE5PSE+0ijk9aL24a9A==
+X-Provags-ID: V03:K1:O2/jQz6atdIoPkZzpfDsjDAz//w3xantCbjSR3tAaWYdZ8jpOKh
+ ZUgeen38z5h+pLVR5FP6sQ2W/xw/2kHgo6mlLhvRdIMGneVTVk3s0pI6QyXaW2qv2uQPXUI
+ T/l9xx+efbp61Juc/JdHbsPaEnWbrZ/fl2HVAoCdsxfKJHSlU/cfJAgPqaldX5DhucvZrz0
+ 3FGi6Aplfk1ciZMPybeiA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oum7zHKWCkI=:HupciVegc8wYBWgevpOL1Q
+ o4o4TBM5lxVo017HqjJaX1nkaA9kO8Ofd76KplJuR7e8O6edx6yffyfE/FTMIzdhLA5viYexn
+ kqjbqddnPEoMc2Gnp5kLbZl/Hpl2VN/TgrY0pyw0ZgHy1EkmIV6SjjM38tqsMDwzgUF8yR9Ol
+ oQx9C5a2xnuWjK1LDLj1AU+JG3MNKl2T77E55SjFJ4Hr5wG06k4WwE0ZzwTBEgVl6ybCLx4SM
+ 0r75I56TTtJS+DZpFlR5MaPbTu/XVxmB4C0JQuE2Qo1ihI2kMG9BGYXQL2Hrt63GkvWubtSFL
+ H7ZRUeSRWkEiw6PUxFCrkNj6Thn7FoAsbUMoiHsu/XuIL8R/VUZ8POqH+azuJwvFq1p4RZuWC
+ FB2U9pcIndXbXuY2KmEL8XRnv5wHzzRZ9Tje/T6X6bwmkU0MXJN1vZ0CFiH6RYrYQJILrSUm9
+ s0TXrz8TP/O8FRJAs+dNsRug3SpSjDYDRZRsoNQKFqxkxOcYlbVWem5JKjn7+7h7UG4BQqbN8
+ jhmFiX/ZhLBOKe20wp6xkKtWFTZPNCeCxq/8DE2UgYxMkQQm4zu3qRuna0Xdvnm8BJ688b8Up
+ sOvicaprRhlKAwh156sR62zNd8tyKfVI5Y4TsVvStIGAkin9wVFVmHgPXCSqFSW0Uta++dir8
+ OC0/s7y9M0ezWZbC/kTXOFpGEwWq342RI2ljICfd2S9twkNAwScly90jdCL8XWoWlJZ9/Md/c
+ NTzzOwNOe5SpdV/VcCzTnnRUWDYUw0m05fEy7+Nm2P9KHE7z0eU6UqX9rIXMI7h+4vx/240tG
+ pqDJ0WT7fJf2+tosrVekV/ACcNCvFOglAsWF1Rgkn0hDDHC+S9J+GMo1t6o5sev5lmzS78/fv
+ 9IRMSUwKjichLMLSMapQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The v4l2_buffer structure contains a 'struct timeval' member that is
-defined by the user space C library, creating an ABI incompatibility
-when that gets updated to a 64-bit time_t.
-
-As in v4l2_event, handle this with a special case in video_put_user()
-and video_get_user() to replace the memcpy there.
-
-Since the structure also contains a pointer, there are now two
-native versions (on 32-bit systems) as well as two compat versions
-(on 64-bit systems), which unfortunately complicates the compat
-handler quite a bit.
-
-Duplicating the existing handlers for the new types is a safe
-conversion for now, but unfortunately this may turn into a
-maintenance burden later. A larger-scale rework of the
-compat code might be a better alternative, but is out of scope
-of the y2038 work.
-
-Sparc64 needs a special case because of their special suseconds_t
-definition.
+The type for the timestamp in video_event was changed to
+'long' a long time ago, change the documentation to match.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c | 73 ++++++++++++++++++++++++++--
- include/media/v4l2-ioctl.h           | 30 ++++++++++++
- include/uapi/linux/videodev2.h       | 23 +++++++++
- 3 files changed, 122 insertions(+), 4 deletions(-)
+ Documentation/media/uapi/dvb/video-get-event.rst | 2 +-
+ Documentation/media/uapi/dvb/video_types.rst     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index 96aafb659783..4d611a847462 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -474,10 +474,10 @@ static void v4l_print_buffer(const void *arg, bool write_only)
- 	const struct v4l2_plane *plane;
- 	int i;
- 
--	pr_cont("%02ld:%02d:%02d.%08ld index=%d, type=%s, request_fd=%d, flags=0x%08x, field=%s, sequence=%d, memory=%s",
--			p->timestamp.tv_sec / 3600,
--			(int)(p->timestamp.tv_sec / 60) % 60,
--			(int)(p->timestamp.tv_sec % 60),
-+	pr_cont("%02d:%02d:%02d.%09ld index=%d, type=%s, request_fd=%d, flags=0x%08x, field=%s, sequence=%d, memory=%s",
-+			(int)p->timestamp.tv_sec / 3600,
-+			((int)p->timestamp.tv_sec / 60) % 60,
-+			((int)p->timestamp.tv_sec % 60),
- 			(long)p->timestamp.tv_usec,
- 			p->index,
- 			prt_names(p->type, v4l2_type_names), p->request_fd,
-@@ -3029,6 +3029,14 @@ static unsigned int video_translate_cmd(unsigned int cmd)
- #ifdef CONFIG_COMPAT_32BIT_TIME
- 	case VIDIOC_DQEVENT_TIME32:
- 		return VIDIOC_DQEVENT;
-+	case VIDIOC_QUERYBUF_TIME32:
-+		return VIDIOC_QUERYBUF;
-+	case VIDIOC_QBUF_TIME32:
-+		return VIDIOC_QBUF;
-+	case VIDIOC_DQBUF_TIME32:
-+		return VIDIOC_DQBUF;
-+	case VIDIOC_PREPARE_BUF_TIME32:
-+		return VIDIOC_PREPARE_BUF;
- #endif
- 	}
- 
-@@ -3047,6 +3055,39 @@ static int video_get_user(void __user *arg, void *parg, unsigned int cmd,
- 	}
- 
- 	switch (cmd) {
-+#ifdef COMPAT_32BIT_TIME
-+	case VIDIOC_QUERYBUF_TIME32:
-+	case VIDIOC_QBUF_TIME32:
-+	case VIDIOC_DQBUF_TIME32:
-+	case VIDIOC_PREPARE_BUF_TIME32: {
-+		struct v4l2_buffer_time32 vb32;
-+		struct v4l2_buffer *vb = parg;
-+
-+		if (copy_from_user(&vb32, arg, sizeof(vb32)))
-+			return -EFAULT;
-+
-+		*vb = (struct v4l2_buffer) {
-+			.index		= vb32.index,
-+			.type		= vb32.type,
-+			.bytesused	= vb32.bytesused,
-+			.flags		= vb32.flags,
-+			.field		= vb32.field,
-+			.timestamp.tv_sec	= vb32.timestamp.tv_sec,
-+			.timestamp.tv_usec	= vb32.timestamp.tv_usec,
-+			.timecode	= vb32.timecode,
-+			.memory		= vb32.memory,
-+			.m.userptr	= vb32.m.usercopy,
-+			.length		= vb32.length,
-+			.request_fd	= vb32.request_fd,
-+		};
-+
-+		if (cmd == VIDIOC_QUERYBUF_TIME32)
-+			memset(&vb->length, 0, sizeof(*vb) -
-+			       offsetof(struct v4l2_buffer, length));
-+
-+		break;
-+	}
-+#endif
- 	default:
- 		/*
- 		 * In some cases, only a few fields are used as input,
-@@ -3100,6 +3141,30 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
- 			return -EFAULT;
- 		break;
- 	}
-+	case VIDIOC_QUERYBUF_TIME32:
-+	case VIDIOC_QBUF_TIME32:
-+	case VIDIOC_DQBUF_TIME32:
-+	case VIDIOC_PREPARE_BUF_TIME32: {
-+		struct v4l2_buffer *vb = parg;
-+		struct v4l2_buffer_time32 vb32 = {
-+			.index		= vb->index,
-+			.type		= vb->type,
-+			.bytesused	= vb->bytesused,
-+			.flags		= vb->flags,
-+			.field		= vb->field,
-+			.timestamp.tv_sec	= vb->timestamp.tv_sec,
-+			.timestamp.tv_usec	= vb->timestamp.tv_usec,
-+			.timecode	= vb->timecode,
-+			.memory		= vb->memory,
-+			.m.userptr	= vb->m.userptr,
-+			.length		= vb->length,
-+			.request_fd	= vb->request_fd,
-+		};
-+
-+		if (copy_to_user(arg, &vb32, sizeof(vb32)))
-+			return -EFAULT;
-+		break;
-+	}
- #endif
- 	default:
- 		/*  Copy results into user buffer  */
-diff --git a/include/media/v4l2-ioctl.h b/include/media/v4l2-ioctl.h
-index 05c1ec93a911..86878fba332b 100644
---- a/include/media/v4l2-ioctl.h
-+++ b/include/media/v4l2-ioctl.h
-@@ -749,4 +749,34 @@ struct v4l2_event_time32 {
- 
- #define	VIDIOC_DQEVENT_TIME32	 _IOR('V', 89, struct v4l2_event_time32)
- 
-+struct v4l2_buffer_time32 {
-+	__u32			index;
-+	__u32			type;
-+	__u32			bytesused;
-+	__u32			flags;
-+	__u32			field;
-+	struct old_timeval32	timestamp;
-+	struct v4l2_timecode	timecode;
-+	__u32			sequence;
-+
-+	/* memory location */
-+	__u32			memory;
-+	union {
-+		__u32           offset;
-+		unsigned long   userptr;
-+		struct v4l2_plane *planes;
-+		__s32		fd;
-+	} m;
-+	__u32			length;
-+	__u32			reserved2;
-+	union {
-+		__s32		request_fd;
-+		__u32		reserved;
-+	};
-+};
-+#define VIDIOC_QUERYBUF_TIME32	_IOWR('V',  9, struct v4l2_buffer_time32)
-+#define VIDIOC_QBUF_TIME32	_IOWR('V', 15, struct v4l2_buffer_time32)
-+#define VIDIOC_DQBUF_TIME32	_IOWR('V', 17, struct v4l2_buffer_time32)
-+#define VIDIOC_PREPARE_BUF_TIME32 _IOWR('V', 93, struct v4l2_buffer_time32)
-+
- #endif /* _V4L2_IOCTL_H */
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index caf156d45842..5f9357dcb060 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -912,6 +912,25 @@ struct v4l2_jpegcompression {
- /*
-  *	M E M O R Y - M A P P I N G   B U F F E R S
-  */
-+
-+#ifdef __KERNEL__
-+/*
-+ * This corresponds to the user space version of timeval
-+ * for 64-bit time_t. sparc64 is different from everyone
-+ * else, using the microseconds in the wrong half of the
-+ * second 64-bit word.
-+ */
-+struct __kernel_v4l2_timeval {
-+	long long	tv_sec;
-+#if defined(__sparc__) && defined(__arch64__)
-+	int		tv_usec;
-+	int		__pad;
-+#else
-+	long long	tv_usec;
-+#endif
-+};
-+#endif
-+
- struct v4l2_requestbuffers {
- 	__u32			count;
- 	__u32			type;		/* enum v4l2_buf_type */
-@@ -997,7 +1016,11 @@ struct v4l2_buffer {
- 	__u32			bytesused;
- 	__u32			flags;
- 	__u32			field;
-+#ifdef __KERNEL__
-+	struct __kernel_v4l2_timeval timestamp;
-+#else
- 	struct timeval		timestamp;
-+#endif
- 	struct v4l2_timecode	timecode;
- 	__u32			sequence;
- 
+diff --git a/Documentation/media/uapi/dvb/video-get-event.rst b/Documentation/media/uapi/dvb/video-get-event.rst
+index def6c40db601..7f03fbe3d3b0 100644
+--- a/Documentation/media/uapi/dvb/video-get-event.rst
++++ b/Documentation/media/uapi/dvb/video-get-event.rst
+@@ -81,7 +81,7 @@ for this ioctl call.
+ 	#define VIDEO_EVENT_FRAME_RATE_CHANGED	2
+ 	#define VIDEO_EVENT_DECODER_STOPPED 	3
+ 	#define VIDEO_EVENT_VSYNC 		4
+-		__kernel_time_t timestamp;
++		long timestamp;
+ 		union {
+ 			video_size_t size;
+ 			unsigned int frame_rate;	/* in frames per 1000sec */
+diff --git a/Documentation/media/uapi/dvb/video_types.rst b/Documentation/media/uapi/dvb/video_types.rst
+index 479942ce6fb8..2697400ccf62 100644
+--- a/Documentation/media/uapi/dvb/video_types.rst
++++ b/Documentation/media/uapi/dvb/video_types.rst
+@@ -170,7 +170,7 @@ VIDEO_GET_EVENT call.
+     #define VIDEO_EVENT_FRAME_RATE_CHANGED  2
+     #define VIDEO_EVENT_DECODER_STOPPED     3
+     #define VIDEO_EVENT_VSYNC       4
+-	__kernel_time_t timestamp;
++	long timestamp;
+ 	union {
+ 	    video_size_t size;
+ 	    unsigned int frame_rate;    /* in frames per 1000sec */
 -- 
 2.20.0
 
