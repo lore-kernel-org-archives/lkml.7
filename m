@@ -2,90 +2,307 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99763C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95081C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 729BC20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:31:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="L2KfYkOR"
+	by mail.kernel.org (Postfix) with ESMTP id 375F220727
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574782323;
+	bh=Nt081fGxNxtH531Mbja/jxORqkwwmeE4JUg1dtDT5sg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S/ZqfFWhY5Txyk3gmmnqANWl4YKtzVoUFbNq4SO/20PPkbzmnsnoRCNLQWA/q0Zlb
+	 iMk3OIrz3tf2EoqT9/7MpYX+fUloRhQylqxVN1//zJFAv01j+5qtFm579RVZUMEYqu
+	 cFW2tRDrUzoemkmsRtmSZ2Crxnt/PIeTJZlMbalE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbfKZPa7 (ORCPT
+        id S1728529AbfKZPcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:30:59 -0500
-Received: from mail-qt1-f173.google.com ([209.85.160.173]:34758 "EHLO
-        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbfKZPa7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:30:59 -0500
-Received: by mail-qt1-f173.google.com with SMTP id i17so21846784qtq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 07:30:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=/g4ZXLwK+A/FE8q6bxvvagQJw9r1wy5JryPpTD2bgYs=;
-        b=L2KfYkORncPtySaCDV3j8U8ZveUxn1I4iVZHqEOd+98M22E+2ApAL/khtMjrwFYjcN
-         4iYqiXfoME0FEHXuiWXmE+khHzryThZwqUf/+15aJXF3OL9plyGRDdt01ZoR+nzZkWUD
-         79Fb99TyHE/3j7vjuvBiwAibbddIr2qCEQxPIwWTtzu8M3ecgKUeORIIzoOcOyrS1kU6
-         qXK2+fXwS+H+likVr1enJ+kqPg48VlRqP9oYZJwIlYe0QL7mgaZQH8k1ARfYCkFuyXvA
-         CsbGXt2EudbU3g3w/ZTk0zn0rYGScPi40zofpuVrzl1RYAy9FOMU+LjhoMERgQhHnJ7g
-         gu4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=/g4ZXLwK+A/FE8q6bxvvagQJw9r1wy5JryPpTD2bgYs=;
-        b=HWszbhjz7Dx5/snBGqi55pednUCULIzROd3OSAjzkry9XvZfdPitMXz8xxO6VnxGyw
-         E5r9QQIuB/yEkh1xKH09Y15SIbyLHfQX1nMS/I9YsZ90mI6IhJNwRPQvXyGsC+YjeqVa
-         dExJZPq9jUZ3Ts4WSvvuCPEb7oOJRYYbntenhs0zd9oWuc2kgnfxTfAvgTFgfW9KeWFQ
-         tWiVHp1TurtKgpKGmPHBLbfQENbqVEd3NPrzSoCoNZ7scWSpKejaNtoj17x8io5SD7dD
-         SqNrKq2RaEEBsywpJNBXsi9JXaEVo0TAfUPoXOp/YzB8pYqjprVdjAj3L40p/rOz6XXp
-         Ajww==
-X-Gm-Message-State: APjAAAWNkTofckPTKv+aHM05xEJMdb9jvMApW+4Rn5TVKbh7Xy2bjFoE
-        6S8g1q1DSxEnWv76XdlDGy1i+Q==
-X-Google-Smtp-Source: APXvYqyu3mbNFY1nQkQM19sadjdPy7gEJM5B0DZYlRvW5Ab3B0SS/OSkFigbO/5R6HLQ2R54qMbMCA==
-X-Received: by 2002:ac8:610d:: with SMTP id a13mr31421605qtm.21.1574782258240;
-        Tue, 26 Nov 2019 07:30:58 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r4sm6010520qtd.17.2019.11.26.07.30.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Nov 2019 07:30:57 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC v1 00/19] Modify zonelist to nodelist v1
-Date:   Tue, 26 Nov 2019 10:30:56 -0500
-Message-Id: <828BAB69-4B46-418F-A5E2-35B0756340D0@lca.pw>
-References: <20191125083948.GC31714@dhcp22.suse.cz>
-Cc:     Pengfei Li <fly@kernel.page>,
-        "lixinhai.lxh@gmail.com" <lixinhai.lxh@gmail.com>,
-        akpm <akpm@linux-foundation.org>,
-        mgorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>, cl <cl@linux.com>,
-        "iamjoonsoo.kim" <iamjoonsoo.kim@lge.com>, guro <guro@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-In-Reply-To: <20191125083948.GC31714@dhcp22.suse.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-X-Mailer: iPhone Mail (17A878)
+        Tue, 26 Nov 2019 10:32:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727768AbfKZPcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 10:32:02 -0500
+Received: from linux-8ccs (x2f7ff09.dyn.telefonica.de [2.247.255.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D0F2075C;
+        Tue, 26 Nov 2019 15:31:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574782320;
+        bh=Nt081fGxNxtH531Mbja/jxORqkwwmeE4JUg1dtDT5sg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eEf6K/U/pK6XszfFu7WH4LwgaL6caR25qU5KFhvfK76CJpGBFOhqPiCA88mLKVpaL
+         XKvalPBwu2Ez1YsyXORWGH4z62b8Ln4trQrYQWRnWIfn+n0txtXUP/q5IsHO+cT6YR
+         eLADQoUL3C7AoOtHChQniIz1JFqQniHqvKmTqBCM=
+Date:   Tue, 26 Nov 2019 16:31:54 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2] export.h: reduce __ksymtab_strings string duplication
+ by using "MS" section flags
+Message-ID: <20191126153153.GA3495@linux-8ccs>
+References: <20191120145110.8397-1-jeyu@kernel.org>
+ <20191125154217.18640-1-jeyu@kernel.org>
+ <CAK7LNASU9YysYNXuBKSU4WeUyE=2itfLDYzCupXL-49GUZuGnQ@mail.gmail.com>
+ <20191126135620.GA38845@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191126135620.GA38845@google.com>
+X-OS:   Linux linux-8ccs 5.4.0-rc5-lp150.12.61-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++++ Matthias Maennich [26/11/19 13:56 +0000]:
+>On Tue, Nov 26, 2019 at 05:32:59PM +0900, Masahiro Yamada wrote:
+>>On Tue, Nov 26, 2019 at 12:42 AM Jessica Yu <jeyu@kernel.org> wrote:
+>>>
+>>>Commit c3a6cf19e695 ("export: avoid code duplication in
+>>>include/linux/export.h") refactors export.h quite nicely, but introduces
+>>>a slight increase in memory usage due to using the empty string ""
+>>>instead of NULL to indicate that an exported symbol has no namespace. As
+>>>mentioned in that commit, this meant an increase of 1 byte per exported
+>>>symbol without a namespace. For example, if a kernel configuration has
+>>>about 10k exported symbols, this would mean that the size of
+>>>__ksymtab_strings would increase by roughly 10kB.
+>>>
+>>>We can alleviate this situation by utilizing the SHF_MERGE and
+>>>SHF_STRING section flags. SHF_MERGE|SHF_STRING indicate to the linker
+>>>that the data in the section are null-terminated strings that can be
+>>>merged to eliminate duplication. More specifically, from the binutils
+>>>documentation - "for sections with both M and S, a string which is a
+>>>suffix of a larger string is considered a duplicate. Thus "def" will be
+>>>merged with "abcdef"; A reference to the first "def" will be changed to
+>>>a reference to "abcdef"+3". Thus, all the empty strings would be merged
+>>>as well as any strings that can be merged according to the cited method
+>>>above. For example, "memset" and "__memset" would be merged to just
+>>>"__memset" in __ksymtab_strings.
+>>>
+>>>As of v5.4-rc5, the following statistics were gathered with x86
+>>>defconfig with approximately 10.7k exported symbols.
+>>>
+>>>Size of __ksymtab_strings in vmlinux:
+>>>-------------------------------------
+>>>v5.4-rc5: 213834 bytes
+>>>v5.4-rc5 with commit c3a6cf19e695: 224455 bytes
+>>>v5.4-rc5 with this patch: 205759 bytes
+>>>
+>>>So, we already see memory savings of ~8kB compared to vanilla -rc5 and
+>>>savings of nearly 18.7kB compared to -rc5 with commit c3a6cf19e695 on top.
+>>>
+>>>Unfortunately, as of this writing, strings will not get deduplicated for
+>>>kernel modules, as ld does not do the deduplication for
+>>>SHF_MERGE|SHF_STRINGS sections for relocatable files (ld -r), which
+>>>kernel modules are. A patch for ld is currently being worked on to
+>>>hopefully allow for string deduplication in relocatable files in the
+>>>future.
+>>>
+>
+>Thanks for working on this!
+>
+>>>Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>>>Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>>>---
+>>>
+>>>v2: use %progbits throughout and document the oddity in a comment.
+>>>
+>>> include/asm-generic/export.h |  8 +++++---
+>>> include/linux/export.h       | 27 +++++++++++++++++++++------
+>>> 2 files changed, 26 insertions(+), 9 deletions(-)
+>>>
+>>>diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
+>>>index fa577978fbbd..23bc98e97a66 100644
+>>>--- a/include/asm-generic/export.h
+>>>+++ b/include/asm-generic/export.h
+>>>@@ -26,9 +26,11 @@
+>>> .endm
+>>>
+>>> /*
+>>>- * note on .section use: @progbits vs %progbits nastiness doesn't matter,
+>>>- * since we immediately emit into those sections anyway.
+>>>+ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
+>>>+ * section flag requires it. Use '%progbits' instead of '@progbits' since the
+>>>+ * former apparently works on all arches according to the binutils source.
+>>>  */
+>>>+
+>>> .macro ___EXPORT_SYMBOL name,val,sec
+>>> #ifdef CONFIG_MODULES
+>>>        .globl __ksymtab_\name
+>>>@@ -37,7 +39,7 @@
+>>> __ksymtab_\name:
+>>>        __put \val, __kstrtab_\name
+>>>        .previous
+>>>-       .section __ksymtab_strings,"a"
+>>>+       .section __ksymtab_strings,"aMS",%progbits,1
+>>> __kstrtab_\name:
+>>>        .asciz "\name"
+>>>        .previous
+>>>diff --git a/include/linux/export.h b/include/linux/export.h
+>>>index 201262793369..3d835ca34d33 100644
+>>>--- a/include/linux/export.h
+>>>+++ b/include/linux/export.h
+>>>@@ -81,16 +81,31 @@ struct kernel_symbol {
+>>>
+>>> #else
+>>>
+>>>+/*
+>>>+ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
+>>>+ * section flag requires it. Use '%progbits' instead of '@progbits' since the
+>>>+ * former apparently works on all arches according to the binutils source.
+>>>+ */
+>>>+#define __KSTRTAB_ENTRY(sym)                                                   \
+>>>+       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
+>>>+           "__kstrtab_" #sym ":                                        \n"     \
+>>>+           "   .asciz  \"" #sym "\"                                    \n"     \
+>>>+           "   .previous                                               \n")
+>>>+
+>>>+#define __KSTRTAB_NS_ENTRY(sym, ns)                                            \
+>>>+       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
+>>>+           "__kstrtabns_" #sym ":                                      \n"     \
+>>>+           "   .asciz  " #ns "                                         \n"     \
+>>
+>>
+>>Hmm, it took some time for me to how this code works.
+>>
+>>ns is already a C string, then you added # to it,
+>>then I was confused.
+>>
+>>Personally, I prefer this code:
+>>" .asciz \"" ns "\" \n"
+>>
+>>so it looks in the same way as __KSTRTAB_ENTRY().
+>
+>I agree with this, these entries should be consistent.
+>
+>>
+>>
+>>
+>>BTW, you duplicated \"aMS\",%progbits,1" and ".previous"
+>>
+>>
+>>I would write it shorter, like this:
+>>
+>>
+>>#define ___EXPORT_SYMBOL(sym, sec, ns) \
+>>       extern typeof(sym) sym; \
+>>       extern const char __kstrtab_##sym[]; \
+>>       extern const char __kstrtabns_##sym[]; \
+>>       __CRC_SYMBOL(sym, sec); \
+>>       asm("    .section \"__ksymtab_strings\",\"aMS\",%progbits,1\n" \
+>>           "__kstrtab_" #sym ": \n" \
+>>           "     .asciz \"" #sym "\" \n" \
+>>           "__kstrtabns_" #sym ": \n" \
+>>           "     .asciz \"" ns "\" \n" \
+>>           "     .previous \n");    \
+>>      __KSYMTAB_ENTRY(sym, sec)
+>>
+>
+>I would prefer the separate macros though (as initially proposed) as I
+>find them much more readable. The code is already a bit tricky to reason
+>about and I don't think the shorter version is enough of a gain.
 
+Yeah, the macros were more readable IMO. But I could just squash them into one
+__KSTRTAB_ENTRY macro as a compromise for Masahiro maybe?
 
-> On Nov 25, 2019, at 3:39 AM, Michal Hocko <mhocko@kernel.org> wrote:
->=20
-> People do care about ZONE_MOVABLE and if there is a non-movable memory
-> sitting there then it is a bug. Please report that.
+Is this any better?
 
-It is trivial to test yourself if you ever care. Just pass kernelcore=3D to a=
-s many NUMA machines you could find, an then test if ever possible to offlin=
-e those memory.=
+diff --git a/include/linux/export.h b/include/linux/export.h
+index 201262793369..f4a8fc798a1b 100644
+--- a/include/linux/export.h
++++ b/include/linux/export.h
+@@ -81,16 +81,30 @@ struct kernel_symbol {
+ 
+ #else
+ 
++/*
++ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
++ * section flag requires it. Use '%progbits' instead of '@progbits' since the
++ * former apparently works on all arches according to the binutils source.
++ *
++ * This basically corresponds to:
++ * const char __kstrtab_##sym[] __attribute__((section("__ksymtab_strings")) = #sym;
++ * const char __kstrtabns_##sym[] __attribute__((section("__ksymtab_strings")) = ns;
++ */
++#define __KSTRTAB_ENTRY(sym, ns)                                               \
++       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
++           "__kstrtab_" #sym ":                                        \n"     \
++           "   .asciz  \"" #sym "\"                                    \n"     \
++           "__kstrtabns_" #sym ":                                      \n"     \
++           "   .asciz  \"" ns "\"                                      \n"     \
++           "   .previous                                               \n")
++
+ /* For every exported symbol, place a struct in the __ksymtab section */
+ #define ___EXPORT_SYMBOL(sym, sec, ns)                                 \
+        extern typeof(sym) sym;                                         \
++       extern const char __kstrtab_##sym[];                            \
++       extern const char __kstrtabns_##sym[];                          \
+        __CRC_SYMBOL(sym, sec);                                         \
+-       static const char __kstrtab_##sym[]                             \
+-       __attribute__((section("__ksymtab_strings"), used, aligned(1))) \
+-       = #sym;                                                         \
+-       static const char __kstrtabns_##sym[]                           \
+-       __attribute__((section("__ksymtab_strings"), used, aligned(1))) \
+-       = ns;                                                           \
++       __KSTRTAB_ENTRY(sym, ns);                                       \
+        __KSYMTAB_ENTRY(sym, sec)
+ 
+ #endif
+
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>>+           "   .previous                                               \n")
+>>>+
+>>> /* For every exported symbol, place a struct in the __ksymtab section */
+>>> #define ___EXPORT_SYMBOL(sym, sec, ns)                                 \
+>>>        extern typeof(sym) sym;                                         \
+>>>+       extern const char __kstrtab_##sym[];                            \
+>>>+       extern const char __kstrtabns_##sym[];                          \
+>>>        __CRC_SYMBOL(sym, sec);                                         \
+>>>-       static const char __kstrtab_##sym[]                             \
+>>>-       __attribute__((section("__ksymtab_strings"), used, aligned(1))) \
+>>>-       = #sym;                                                         \
+>
+>You could keep simplified versions of these statements as comment for
+>the above macros to increase readability.
+>
+>>>-       static const char __kstrtabns_##sym[]                           \
+>>>-       __attribute__((section("__ksymtab_strings"), used, aligned(1))) \
+>>>-       = ns;                                                           \
+>>>+       __KSTRTAB_ENTRY(sym);                                           \
+>>>+       __KSTRTAB_NS_ENTRY(sym, ns);                                    \
+>>>        __KSYMTAB_ENTRY(sym, sec)
+>>>
+>>> #endif
+>>>--
+>>>2.16.4
+>>>
+>
+>With the above addressed, please feel free to add
+>
+>Reviewed-by: Matthias Maennich <maennich@google.com>
+>
+>Cheers,
+>Matthias
+>
+>>
+>>
+>>-- 
+>>Best Regards
+>>Masahiro Yamada
