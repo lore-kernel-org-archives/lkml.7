@@ -2,79 +2,126 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96F3C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700DBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93986207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446C02075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574767944;
+	bh=OSY9MPR4cc6yP50/3oT9Bs5kF7MQIdAwcMgjSP/P8nc=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=BdmOyJXAzjRzmhDWML1U8w1+9PznUtglAF3GSzEQILyPCCJiBQeWC7xBWzdhE38KA
+	 lD1tqYqjVXgQjsXwY01Y6iwyO/coq1EAihiUUgq9qxRDcAMV/hLr+Ha3D022o7Lgw3
+	 TikeWi25i4WJQqhf1BB+lkzdXb7iKgV6axKsBj7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfKZL2v (ORCPT
+        id S1728130AbfKZLcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 06:28:51 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:43084 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727218AbfKZL2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 06:28:51 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iZZ1O-0001yf-OA; Tue, 26 Nov 2019 19:28:42 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iZZ1I-000449-Pn; Tue, 26 Nov 2019 19:28:36 +0800
-Date:   Tue, 26 Nov 2019 19:28:36 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [PATCH] crypto: talitos - Fix build error by selecting LIB_DES
-Message-ID: <20191126112836.tnim24tiafufe7z4@gondor.apana.org.au>
-References: <201911240718.6RqTEBvE%lkp@intel.com>
+        Tue, 26 Nov 2019 06:32:23 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:37126 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727218AbfKZLcX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 06:32:23 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iZZ4o-0007tn-89; Tue, 26 Nov 2019 12:32:14 +0100
+To:     Roy van Doormaal <roy.van.doormaal@prodrive-technologies.com>
+Subject: Re: [PATCH v2] irqchip/aspeed-i2c-ic: Fix irq domain name memory leak
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201911240718.6RqTEBvE%lkp@intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 26 Nov 2019 11:32:14 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Jeffery <andrew@aj.id.au>, <linux-i2c@vger.kernel.org>,
+        <openbmc@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>
+In-Reply-To: <20191126074025.5112-1-roy.van.doormaal@prodrive-technologies.com>
+References: <20191125202937.23133-1-roy.van.doormaal@prodrive-technologies.com>
+ <20191126074025.5112-1-roy.van.doormaal@prodrive-technologies.com>
+Message-ID: <a980578b688ab760697b44dab267ad2c@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: roy.van.doormaal@prodrive-technologies.com, brendanhiggins@google.com, benh@kernel.crashing.org, joel@jms.id.au, tglx@linutronix.de, jason@lakedaemon.net, andrew@aj.id.au, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 07:42:21AM +0800, kbuild test robot wrote:
+On 2019-11-26 07:40, Roy van Doormaal wrote:
+> The aspeed irqchip driver overwrites the default irq domain name,
+> but doesn't free the existing domain name.
+> This patch frees the irq domain name before overwriting it.
 >
-> All errors (new ones prefixed by >>):
-> 
->    drivers/crypto/talitos.o: In function `crypto_des_verify_key':
-> >> include/crypto/internal/des.h:31: undefined reference to `des_expand_key'
+> kmemleak trace:
+>
+> unreferenced object 0xb8004c40 (size 64):
+> comm "swapper", pid 0, jiffies 4294937303 (age 747.660s)
+> hex dump (first 32 bytes):
+> 3a 61 68 62 3a 61 70 62 3a 62 75 73 40 31 65 37 :ahb:apb:bus@1e7
+> 38 61 30 30 30 3a 69 6e 74 65 72 72 75 70 74 2d 8a000:interrupt-
+> backtrace:
+> [<086b59b8>] kmemleak_alloc+0xa8/0xc0
+> [<b5a3490c>] __kmalloc_track_caller+0x118/0x1a0
+> [<f59c7ced>] kvasprintf+0x5c/0xc0
+> [<49275eec>] kasprintf+0x30/0x50
+> [<5713064b>] __irq_domain_add+0x184/0x25c
+> [<53c594d0>] aspeed_i2c_ic_of_init+0x9c/0x128
+> [<d8d7017e>] of_irq_init+0x1ec/0x314
+> [<f8405bf1>] irqchip_init+0x1c/0x24
+> [<7ef974b3>] init_IRQ+0x30/0x90
+> [<87a1438f>] start_kernel+0x28c/0x458
+> [< (null)>] (null)
+> [<f0763fdf>] 0xffffffff
+>
+> Signed-off-by: Roy van Doormaal 
+> <roy.van.doormaal@prodrive-technologies.com>
+> ---
+> Changes in v2:
+> - drop irq domain name assignment by the aspeed irqchip driver
 
-This patch should fix it.
+Which is good, except that the commit message doesn't quite reflect
+what this patch does anymore.
 
----8<---
-The talitos driver needs to select LIB_DES as it needs calls
-des_expand_key.
+I'll fix it when picking it for -rc1.
 
-Fixes: 9d574ae8ebc1 ("crypto: talitos/des - switch to new...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Thanks,
 
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index 43ed1b621718..91eb768d4221 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -289,6 +289,7 @@ config CRYPTO_DEV_TALITOS
- 	select CRYPTO_AUTHENC
- 	select CRYPTO_SKCIPHER
- 	select CRYPTO_HASH
-+	select CRYPTO_LIB_DES
- 	select HW_RANDOM
- 	depends on FSL_SOC
- 	help
+         M.
+
+> ---
+>  drivers/irqchip/irq-aspeed-i2c-ic.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-aspeed-i2c-ic.c
+> b/drivers/irqchip/irq-aspeed-i2c-ic.c
+> index 8d591c179f81..0bd46f63a3c3 100644
+> --- a/drivers/irqchip/irq-aspeed-i2c-ic.c
+> +++ b/drivers/irqchip/irq-aspeed-i2c-ic.c
+> @@ -92,8 +92,6 @@ static int __init aspeed_i2c_ic_of_init(struct
+> device_node *node,
+>  		goto err_iounmap;
+>  	}
+>
+> -	i2c_ic->irq_domain->name = "aspeed-i2c-domain";
+> -
+>  	irq_set_chained_handler_and_data(i2c_ic->parent_irq,
+>  					 aspeed_i2c_ic_irq_handler, i2c_ic);
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Jazz is not dead. It just smells funny...
