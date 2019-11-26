@@ -2,213 +2,182 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD673C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B67C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943AA2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E3C20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfKZUPQ (ORCPT
+        id S1727633AbfKZUPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:15:16 -0500
-Received: from mga01.intel.com ([192.55.52.88]:45565 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727529AbfKZUPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:15:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 12:15:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,246,1571727600"; 
-   d="scan'208";a="206558824"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Nov 2019 12:15:10 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 28B11300B64; Tue, 26 Nov 2019 12:15:10 -0800 (PST)
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Borislav Petkov <bp@suse.de>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86: Filter MSR writes from luserspace
-References: <20191126112234.GA22393@zn.tnic>
-Date:   Tue, 26 Nov 2019 12:15:10 -0800
-In-Reply-To: <20191126112234.GA22393@zn.tnic> (Borislav Petkov's message of
-        "Tue, 26 Nov 2019 12:22:34 +0100")
-Message-ID: <87zhgie6nl.fsf@linux.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Tue, 26 Nov 2019 15:15:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47588 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727478AbfKZUOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:14:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7E2A7B37D;
+        Tue, 26 Nov 2019 20:14:44 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Breno Leitao <leitao@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Romero <gromero@linux.ibm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 30/35] powerpc/perf: consolidate read_user_stack_32
+Date:   Tue, 26 Nov 2019 21:13:44 +0100
+Message-Id: <26c42758fd1ac114263dd8f38427f300af9e9e5d.1574798487.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1574798487.git.msuchanek@suse.de>
+References: <cover.1574798487.git.msuchanek@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Borislav Petkov <bp@suse.de> writes:
-> +int msr_filter_write(u32 reg)
-> +{
-> +	/* all perf counter MSRs */
-> +	switch (reg) {
-> +	case MSR_K7_EVNTSEL0:
-> +	case MSR_K7_PERFCTR0:
-> +	case MSR_F15H_PERF_CTL:
-> +	case MSR_F15H_PERF_CTR:
-> +	case MSR_AMD64_IBSBRTARGET:
-> +	case MSR_AMD64_IBSCTL:
-> +	case MSR_AMD64_IBSFETCHCTL:
-> +	case MSR_AMD64_IBSOPCTL:
-> +	case MSR_AMD64_IBSOPDATA4:
-> +	case MSR_AMD64_IBSOP_REG_COUNT:
-> +	case MSR_AMD64_IBSOP_REG_MASK:
-> +	case MSR_AMD64_IBS_REG_COUNT_MAX:
-> +	case MSR_ARCH_PERFMON_EVENTSEL0:
-> +	case MSR_ARCH_PERFMON_FIXED_CTR0:
-> +	case MSR_ARCH_PERFMON_FIXED_CTR_CTRL:
-> +	case MSR_ARCH_PERFMON_PERFCTR0:
-> +	case MSR_CORE_C1_RES:
-> +	case MSR_CORE_C3_RESIDENCY:
-> +	case MSR_CORE_C6_RESIDENCY:
-> +	case MSR_CORE_C7_RESIDENCY:
-> +	case MSR_CORE_PERF_GLOBAL_CTRL:
-> +	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
-> +	case MSR_CORE_PERF_GLOBAL_STATUS:
-> +	case MSR_DRAM_ENERGY_STATUS:
-> +	case MSR_F15H_CU_MAX_PWR_ACCUMULATOR:
-> +	case MSR_F15H_CU_PWR_ACCUMULATOR:
-> +	case MSR_F15H_NB_PERF_CTL:
-> +	case MSR_F15H_PTSC:
-> +	case MSR_F16H_L2I_PERF_CTL:
-> +	case MSR_F17H_IRPERF:
-> +	case MSR_IA32_APERF:
-> +	case MSR_IA32_DEBUGCTLMSR:
-> +	case MSR_IA32_DS_AREA:
-> +	case MSR_IA32_MISC_ENABLE:
-> +	case MSR_IA32_MPERF:
-> +	case MSR_IA32_PEBS_ENABLE:
-> +	case MSR_IA32_PERF_CAPABILITIES:
-> +	case MSR_IA32_PMC0:
-> +	case MSR_IA32_RTIT_ADDR0_A:
-> +	case MSR_IA32_RTIT_ADDR0_B:
-> +	case MSR_IA32_RTIT_ADDR1_A:
-> +	case MSR_IA32_RTIT_ADDR1_B:
-> +	case MSR_IA32_RTIT_ADDR2_A:
-> +	case MSR_IA32_RTIT_ADDR2_B:
-> +	case MSR_IA32_RTIT_ADDR3_A:
-> +	case MSR_IA32_RTIT_ADDR3_B:
-> +	case MSR_IA32_RTIT_CTL:
-> +	case MSR_IA32_RTIT_OUTPUT_BASE:
-> +	case MSR_IA32_RTIT_OUTPUT_MASK:
-> +	case MSR_IA32_RTIT_STATUS:
-> +	case MSR_IA32_THERM_STATUS:
-> +	case MSR_IA32_VMX_MISC:
-> +	case MSR_KNC_EVNTSEL0:
-> +	case MSR_KNC_IA32_PERF_GLOBAL_CTRL:
-> +	case MSR_KNC_IA32_PERF_GLOBAL_OVF_CONTROL:
-> +	case MSR_KNC_IA32_PERF_GLOBAL_STATUS:
-> +	case MSR_KNC_PERFCTR0:
-> +	case MSR_KNL_CORE_C6_RESIDENCY:
-> +	case MSR_LBR_CORE_FROM:
-> +	case MSR_LBR_CORE_TO:
-> +	case MSR_LBR_INFO_0:
-> +	case MSR_LBR_NHM_FROM:
-> +	case MSR_LBR_NHM_TO:
-> +	case MSR_LBR_SELECT:
-> +	case MSR_LBR_TOS:
-> +	case MSR_OFFCORE_RSP_0:
-> +	case MSR_OFFCORE_RSP_1:
-> +	case MSR_P4_ALF_ESCR0:
-> +	case MSR_P4_ALF_ESCR1:
-> +	case MSR_P4_BPU_CCCR0:
-> +	case MSR_P4_BPU_ESCR0:
-> +	case MSR_P4_BPU_ESCR1:
-> +	case MSR_P4_BPU_PERFCTR0:
-> +	case MSR_P4_BSU_ESCR0:
-> +	case MSR_P4_BSU_ESCR1:
-> +	case MSR_P4_CRU_ESCR0:
-> +	case MSR_P4_CRU_ESCR1:
-> +	case MSR_P4_CRU_ESCR2:
-> +	case MSR_P4_CRU_ESCR3:
-> +	case MSR_P4_CRU_ESCR4:
-> +	case MSR_P4_CRU_ESCR5:
-> +	case MSR_P4_DAC_ESCR0:
-> +	case MSR_P4_DAC_ESCR1:
-> +	case MSR_P4_FIRM_ESCR0:
-> +	case MSR_P4_FIRM_ESCR1:
-> +	case MSR_P4_FLAME_ESCR0:
-> +	case MSR_P4_FLAME_ESCR1:
-> +	case MSR_P4_FSB_ESCR0:
-> +	case MSR_P4_FSB_ESCR1:
-> +	case MSR_P4_IQ_ESCR0:
-> +	case MSR_P4_IQ_ESCR1:
-> +	case MSR_P4_IS_ESCR0:
-> +	case MSR_P4_IS_ESCR1:
-> +	case MSR_P4_ITLB_ESCR0:
-> +	case MSR_P4_ITLB_ESCR1:
-> +	case MSR_P4_IX_ESCR0:
-> +	case MSR_P4_IX_ESCR1:
-> +	case MSR_P4_MOB_ESCR0:
-> +	case MSR_P4_MOB_ESCR1:
-> +	case MSR_P4_MS_ESCR0:
-> +	case MSR_P4_MS_ESCR1:
-> +	case MSR_P4_PEBS_MATRIX_VERT:
-> +	case MSR_P4_PMH_ESCR0:
-> +	case MSR_P4_PMH_ESCR1:
-> +	case MSR_P4_RAT_ESCR0:
-> +	case MSR_P4_RAT_ESCR1:
-> +	case MSR_P4_SAAT_ESCR0:
-> +	case MSR_P4_SAAT_ESCR1:
-> +	case MSR_P4_SSU_ESCR0:
-> +	case MSR_P4_SSU_ESCR1:
-> +	case MSR_P4_TBPU_ESCR0:
-> +	case MSR_P4_TBPU_ESCR1:
-> +	case MSR_P4_TC_ESCR0:
-> +	case MSR_P4_TC_ESCR1:
-> +	case MSR_P4_U2L_ESCR0:
-> +	case MSR_P4_U2L_ESCR1:
-> +	case MSR_PEBS_FRONTEND:
-> +	case MSR_PEBS_LD_LAT_THRESHOLD:
-> +	case MSR_PKG_C10_RESIDENCY:
-> +	case MSR_PKG_C2_RESIDENCY:
-> +	case MSR_PKG_C3_RESIDENCY:
-> +	case MSR_PKG_C6_RESIDENCY:
-> +	case MSR_PKG_C7_RESIDENCY:
-> +	case MSR_PKG_C8_RESIDENCY:
-> +	case MSR_PKG_C9_RESIDENCY:
-> +	case MSR_PKG_ENERGY_STATUS:
-> +	case MSR_PLATFORM_ENERGY_STATUS:
-> +	case MSR_PLATFORM_INFO:
-> +	case MSR_PP0_ENERGY_STATUS:
-> +	case MSR_PP1_ENERGY_STATUS:
-> +	case MSR_PPERF:
-> +	case MSR_RAPL_POWER_UNIT:
-> +	case MSR_SMI_COUNT:
-> +		return -EPERM;
+There are two almost identical copies for 32bit and 64bit.
 
+The function is used only in 32bit code which will be split out in next
+patch so consolidate to one function.
 
-This will break a bazillion of tools that rely on programing many of
-those MSRs from user space. Just do a search on github for all the MSR
-names you're blocking. PMU use from ring 3 is a fairly common use case.
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+v6: new patch
+v8: move the consolidated function out of the ifdef block.
+---
+ arch/powerpc/perf/callchain.c | 59 +++++++++++++++--------------------
+ 1 file changed, 25 insertions(+), 34 deletions(-)
 
-just from the top of my head:
+diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+index 35d542515faf..c6c4c609cc14 100644
+--- a/arch/powerpc/perf/callchain.c
++++ b/arch/powerpc/perf/callchain.c
+@@ -165,22 +165,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+ 	return read_user_stack_slow(ptr, ret, 8);
+ }
+ 
+-static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+-{
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+-	    ((unsigned long)ptr & 3))
+-		return -EFAULT;
+-
+-	pagefault_disable();
+-	if (!__get_user_inatomic(*ret, ptr)) {
+-		pagefault_enable();
+-		return 0;
+-	}
+-	pagefault_enable();
+-
+-	return read_user_stack_slow(ptr, ret, 4);
+-}
+-
+ static inline int valid_user_sp(unsigned long sp, int is_64)
+ {
+ 	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
+@@ -285,25 +269,9 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+ }
+ 
+ #else  /* CONFIG_PPC64 */
+-/*
+- * On 32-bit we just access the address and let hash_page create a
+- * HPTE if necessary, so there is no need to fall back to reading
+- * the page tables.  Since this is called at interrupt level,
+- * do_page_fault() won't treat a DSI as a page fault.
+- */
+-static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
++static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+ {
+-	int rc;
+-
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+-	    ((unsigned long)ptr & 3))
+-		return -EFAULT;
+-
+-	pagefault_disable();
+-	rc = __get_user_inatomic(*ret, ptr);
+-	pagefault_enable();
+-
+-	return rc;
++	return 0;
+ }
+ 
+ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+@@ -326,6 +294,29 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+ 
+ #endif /* CONFIG_PPC64 */
+ 
++/*
++ * On 32-bit we just access the address and let hash_page create a
++ * HPTE if necessary, so there is no need to fall back to reading
++ * the page tables.  Since this is called at interrupt level,
++ * do_page_fault() won't treat a DSI as a page fault.
++ */
++static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
++{
++	int rc;
++
++	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
++	    ((unsigned long)ptr & 3))
++		return -EFAULT;
++
++	pagefault_disable();
++	rc = __get_user_inatomic(*ret, ptr);
++	pagefault_enable();
++
++	if (IS_ENABLED(CONFIG_PPC64) && rc)
++		return read_user_stack_slow(ptr, ret, 4);
++	return rc;
++}
++
+ /*
+  * Layout for non-RT signal frames
+  */
+-- 
+2.23.0
 
-https://github.com/opcm/pcm
-https://github.com/RRZE-HPC/likwid
-... likely many more ...
-
-There were patches in the past to allow a user configurable list.
-Something like that can make sense for some use models.
-
-But a hard coded list is just a terrible bad idea.
-
-For a "locked down" kernel the only case that can make sense
-is to block write to MSRs that control memory writes. But that's only
-a small fraction of the MSRs (afaik only DS_BASE and RTIT_OUTPUT*
-from your list, but there are more I believe)
-
-Also if there are blocks they would need to be model specific,
-e.g. the P4_* MSRs often mean something different on other parts.
-
--Andi
