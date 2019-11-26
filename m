@@ -2,268 +2,203 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFFDC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40A1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0248520678
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574759752;
-	bh=xU5slxWEQomkNhOAgoIOnTbVrLTSUpdMjGZHUb5nLxY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ghbPDLCA+e0AVfoj4pOZ1UlfTun0eeR0YcK2VOa6jg7eISvTqKFXK9whPqaJw2BG8
-	 6COgCKjXAzi+z6771aaM/Ml2YUvThAzNdXepVy4zfiFyJNUgTPfHCYMlOmFFcgTUQN
-	 I8IRTkNERWi6+R8niLLZj6ST5rxhTJ0wpMniud9w=
+	by mail.kernel.org (Postfix) with ESMTP id 76A4C20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:16:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AgDm2kiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfKZJPv (ORCPT
+        id S1727577AbfKZJQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:15:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbfKZJPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:15:50 -0500
-Received: from localhost (unknown [84.241.194.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 26 Nov 2019 04:16:08 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56933 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727483AbfKZJQH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:16:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574759766;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sDiR6x502skzgd7KZE+66wFDi1pe8GsDdCG78UP81YM=;
+        b=AgDm2kiWRJgOmDro9LsK9cGalcW8CelO0cwk1+E+2zV16WhtArMDxq91nZCgavwFfd4F9L
+        pcFrvzohtc0nvVFVCHHWOnQZ8AXLAhw0Fm15BViG+wPJ8jaEJJeU/gfSjMDDAbl1YA1TR/
+        1SxNdLJrG45n/3cyVOrzW0y37Xfe77U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-6u8t5wWmNgOBNn6dYpFt4g-1; Tue, 26 Nov 2019 04:15:48 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C26620678;
-        Tue, 26 Nov 2019 09:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574759749;
-        bh=xU5slxWEQomkNhOAgoIOnTbVrLTSUpdMjGZHUb5nLxY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RcNYzeVk09+Vyahnw5p2Cl5Hb1Kp4DOa5hKlvajob7ZbGvsPs+0CYQF6Scne0h5aU
-         zIf5ngX7sTXuR0H26DY2udzHvDoMpGLLtqfoU5IRwgyOekatyrc1D6z11BDsgQXK9k
-         XHeo+iaTZYsyZdzgex5rx3EPa4JIevVWkX38ISKE=
-Date:   Tue, 26 Nov 2019 10:15:41 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rafael.j.wysocki@intel.com, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, chanwoo@kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v3] PM / devfreq: Add new name attribute for sysfs
-Message-ID: <20191126091541.GB1371943@kroah.com>
-References: <CGME20191125005755epcas1p2404d0f095e6ce543d36e55e2427282f8@epcas1p2.samsung.com>
- <20191125010357.27153-1-cw00.choi@samsung.com>
- <20191125085039.GA2301674@kroah.com>
- <48cadf42-4675-ffe1-a3d4-a97a37538955@samsung.com>
- <20191126075333.GA1231308@kroah.com>
- <c5c9dc78-8209-3b42-4b16-cb40b00b8508@samsung.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF562A0984;
+        Tue, 26 Nov 2019 09:15:45 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D5FA719C69;
+        Tue, 26 Nov 2019 09:15:38 +0000 (UTC)
+Date:   Tue, 26 Nov 2019 17:15:33 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191126091533.GB32135@ming.t460p>
+References: <20191123072726.GC25356@ming.t460p>
+ <a9ffcca93657cbbb56819fd883c474a702423b41.camel@unipv.it>
+ <20191125035437.GA3806@ming.t460p>
+ <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>
+ <20191125102928.GA20489@ming.t460p>
+ <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
+ <20191125151535.GA8044@ming.t460p>
+ <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>
+ <20191126023253.GA24501@ming.t460p>
+ <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
 MIME-Version: 1.0
+In-Reply-To: <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: 6u8t5wWmNgOBNn6dYpFt4g-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <c5c9dc78-8209-3b42-4b16-cb40b00b8508@samsung.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 05:35:28PM +0900, Chanwoo Choi wrote:
-> On 11/26/19 4:53 PM, Greg KH wrote:
-> > On Tue, Nov 26, 2019 at 12:08:18PM +0900, Chanwoo Choi wrote:
-> >> Hi Greg,
-> >>
-> >> On 11/25/19 5:50 PM, Greg KH wrote:
-> >>> On Mon, Nov 25, 2019 at 10:03:57AM +0900, Chanwoo Choi wrote:
-> >>>> The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
-> >>>> sysfs") changed the node name to devfreq(x). After this commit, it is not
-> >>>> possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
-> >>>>
-> >>>> Add new name attribute in order to get device name.
-> >>>>
-> >>>> Cc: stable@vger.kernel.org
-> >>>> Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
-> >>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> >>>> ---
-> >>>>  Changes from v2:
-> >>>> - Change the order of name_show() according to the sequence in devfreq_attrs[]
-> >>>>
-> >>>> Changes from v1:
-> >>>> - Update sysfs-class-devfreq documentation
-> >>>> - Show device name directly from 'devfreq->dev.parent'
-> >>>>
-> >>>
-> >>> Shouldn't you just revert the original patch here?  Why did the sysfs
-> >>> file change?
-> >>
-> >> The initial devfreq code used the parent device name for device name
-> >> corresponding to devfreq object instead of 'devfreq%d' style.
-> >> Before applied The commit 4585fbcb5331 ("PM / devfreq: Modify
-> >> the device name as devfreq(X) for sysfs"), the devfreq sysfs
-> >> showed the parent device name as following:
-> >>
-> >> For example on Odroid-XU3 board before applied the commit 4585fbcb5331,
-> >> 	/sys/class/devfreq/soc:bus_wcore
-> >> 	/sys/class/devfreq/soc:bus_noc
-> >> 	...(skip)
-> >>
-> >>
-> >> But, I think that devfreq subsystem had to show the consistent
-> >> sysfs entry name for devfreq device like input, thermal, hwmon subsystem.
-> >>
-> >> For example on Odroid-XU3 board,
-> >> - The input subsystem show the 'input%d' style for input device.
-> >> $root@localhost:/# ls /sys/class/input/                                         
-> >> event0  event1  input0  input1  mice  mouse0
-> >>
-> >> - The thermal subsystem show the 'cooling_device%d' style for thermal cooling device.
-> >> $ root@localhost:/# ls /sys/class/thermal/                                       
-> >> cooling_device0  cooling_device2  thermal_zone1  thermal_zone3
-> >> cooling_device1  thermal_zone0    thermal_zone2  thermal_zone4
-> >>
-> >> - The hwmon subsystem show the 'hwmon%d' style for h/w monitor device.
-> >> $root@localhost:/# ls /sys/class/hwmon/                                         
-> >> hwmon0
-> >>
-> >>
-> >> So, I tried to make the consistent sysfs entry name for devfreq device
-> >> by contributing commit 4585fbcb5331 ("PM / devfreq: Modify the device name as
-> >> devfreq(X) for sysfs"). But, The commit 4585fbcb5331 have missed that sysfs
-> >> interface had to provide the real device name. Some subsystem like thermal
-> >> and hwmon provide the device type or device name through sysfs interface.
-> >> It is possible to make the user to find their own specific device by iteration
-> >> on user-space.
-> >>
-> >> root@localhost:/# cat /sys/class/thermal/cooling_device0/type 
-> >> pwm-fan
-> >> root@localhost:/# cat /sys/class/thermal/cooling_device1/type                  
-> >> thermal-cpufreq-0
-> >> root@localhost:/# cat /sys/class/thermal/cooling_device2/type                  
-> >> thermal-cpufreq-1
-> >>
-> >> root@localhost:/# cat /sys/class/hwmon/hwmon0/name                             
-> >> pwmfan
-> >>
-> >>
-> >> So, I add the new 'name' attribute of sysfs for devfreq device.
-> >>
-> >>>
-> >>>> Documentation/ABI/testing/sysfs-class-devfreq | 7 +++++++
-> >>>>  drivers/devfreq/devfreq.c                     | 9 +++++++++
-> >>>>  2 files changed, 16 insertions(+)
-> >>>>
-> >>>> diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
-> >>>> index 01196e19afca..75897e2fde43 100644
-> >>>> --- a/Documentation/ABI/testing/sysfs-class-devfreq
-> >>>> +++ b/Documentation/ABI/testing/sysfs-class-devfreq
-> >>>> @@ -7,6 +7,13 @@ Description:
-> >>>>  		The name of devfreq object denoted as ... is same as the
-> >>>>  		name of device using devfreq.
-> >>>>  
-> >>>> +What:		/sys/class/devfreq/.../name
-> >>>> +Date:		November 2019
-> >>>> +Contact:	Chanwoo Choi <cw00.choi@samsung.com>
-> >>>> +Description:
-> >>>> +		The /sys/class/devfreq/.../name shows the name of device
-> >>>> +		of the corresponding devfreq object.
-> >>>> +
-> >>>>  What:		/sys/class/devfreq/.../governor
-> >>>>  Date:		September 2011
-> >>>>  Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
-> >>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> >>>> index 65a4b6cf3fa5..6f4d93d2a651 100644
-> >>>> --- a/drivers/devfreq/devfreq.c
-> >>>> +++ b/drivers/devfreq/devfreq.c
-> >>>> @@ -1169,6 +1169,14 @@ int devfreq_remove_governor(struct devfreq_governor *governor)
-> >>>>  }
-> >>>>  EXPORT_SYMBOL(devfreq_remove_governor);
-> >>>>  
-> >>>> +static ssize_t name_show(struct device *dev,
-> >>>> +			struct device_attribute *attr, char *buf)
-> >>>> +{
-> >>>> +	struct devfreq *devfreq = to_devfreq(dev);
-> >>>> +	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
-> >>>
-> >>> Why is the parent's name being set here, and not the device name?
-> >>
-> >> The device name style in struct devfreq is 'devfreq%d' instead of
-> >> parent device name in order to keep the consistent naming style for devfreq device
-> >> as I mentioned above. 'devfreq%d' name is consistent name style for devfreq device.
-> >> But, it don't show the real h/w device name. So, show the parent device name
-> >> which is specified on device-tree file.
-> > 
-> > I'm sorry, but I still do not understand.  Can you show me the directory
-> > tree before and after here?
-> > 
-> 
-> I'm sorry for not enough description. I add the following example on Odroid-XU3 board.
-> 
-> 
-> 1. Before applied commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X),
-> 
-> root@localhost:~# ls /sys/class/devfreq                                        
-> soc:bus_disp1       soc:bus_fsys_apb  soc:bus_gscl_scaler  soc:bus_mscl
-> soc:bus_disp1_fimd  soc:bus_g2d       soc:bus_jpeg         soc:bus_noc
-> soc:bus_fsys        soc:bus_g2d_acp   soc:bus_jpeg_apb     soc:bus_peri
-> soc:bus_fsys2       soc:bus_gen       soc:bus_mfc          soc:bus_wcore
-> 
-> root@localhost:~# ls -al /sys/class/devfreq
-> total 0
-> drwxr-xr-x  2 root root 0 Jan  1 09:00 .
-> drwxr-xr-x 52 root root 0 Jan  1 09:00 ..
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_disp1 -> ../../devices/platform/soc/soc:bus_disp1/devfreq/soc:bus_disp1
+On Tue, Nov 26, 2019 at 08:46:07AM +0100, Andrea Vai wrote:
+> Il giorno mar, 26/11/2019 alle 10.32 +0800, Ming Lei ha scritto:
+> > On Mon, Nov 25, 2019 at 07:51:33PM +0100, Andrea Vai wrote:
+> > > Il giorno lun, 25/11/2019 alle 23.15 +0800, Ming Lei ha scritto:
+> > > > On Mon, Nov 25, 2019 at 03:58:34PM +0100, Andrea Vai wrote:
+> > > >=20
+> > > > [...]
+> > > >=20
+> > > > > What to try next?
+> > > >=20
+> > > > 1) cat /sys/kernel/debug/block/$DISK/hctx0/flags
+> > > result:
+> > >=20
+> > > alloc_policy=3DFIFO SHOULD_MERGE|2
+> > >=20
+> > > >=20
+> > > >=20
+> > > > 2) echo 128 > /sys/block/$DISK/queue/nr_requests and run your
+> > copy
+> > > > 1GB
+> > > > test again.
+> > >=20
+> > > done, and still fails. What to try next?
+> >=20
+> > I just run 256M cp test
+>=20
+> I would like to point out that 256MB is a filesize that usually don't
+> trigger the issue (don't know if it matters, sorry).
 
-Ah, that's odd, ok.
+OK.
 
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_disp1_fimd -> ../../devices/platform/soc/soc:bus_disp1_fimd/devfreq/soc:bus_did
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_fsys -> ../../devices/platform/soc/soc:bus_fsys/devfreq/soc:bus_fsys
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_fsys2 -> ../../devices/platform/soc/soc:bus_fsys2/devfreq/soc:bus_fsys2
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_fsys_apb -> ../../devices/platform/soc/soc:bus_fsys_apb/devfreq/soc:bus_fsys_ab
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_g2d -> ../../devices/platform/soc/soc:bus_g2d/devfreq/soc:bus_g2d
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_g2d_acp -> ../../devices/platform/soc/soc:bus_g2d_acp/devfreq/soc:bus_g2d_acp
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_gen -> ../../devices/platform/soc/soc:bus_gen/devfreq/soc:bus_gen
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_gscl_scaler -> ../../devices/platform/soc/soc:bus_gscl_scaler/devfreq/soc:bus_r
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_jpeg -> ../../devices/platform/soc/soc:bus_jpeg/devfreq/soc:bus_jpeg
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_jpeg_apb -> ../../devices/platform/soc/soc:bus_jpeg_apb/devfreq/soc:bus_jpeg_ab
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_mfc -> ../../devices/platform/soc/soc:bus_mfc/devfreq/soc:bus_mfc
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_mscl -> ../../devices/platform/soc/soc:bus_mscl/devfreq/soc:bus_mscl
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_noc -> ../../devices/platform/soc/soc:bus_noc/devfreq/soc:bus_noc
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_peri -> ../../devices/platform/soc/soc:bus_peri/devfreq/soc:bus_peri
-> lrwxrwxrwx  1 root root 0 Jan  1 09:00 soc:bus_wcore -> ../../devices/platform/soc/soc:bus_wcore/devfreq/soc:bus_wcore
-> 
-> 
-> 
-> 2. After applied commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X),
-> 
-> root@localhost:~# ls  /sys/class/devfreq                                       
-> devfreq0   devfreq11  devfreq14  devfreq3  devfreq6  devfreq9
-> devfreq1   devfreq12  devfreq15  devfreq4  devfreq7
-> devfreq10  devfreq13  devfreq2   devfreq5  devfreq8
+I tested 256M because IO timeout is often triggered in case of
+qemu-ehci, and it is a long-term issue. When setting up the disk
+via xhci-qemu, the max request size is increased to 1MB from 120KB,
+and IO pattern changed too. When the disk is connected via uhci-qemu,
+the transfer is too slow(1MB/s) because max endpoint size is too small.
 
-That's better.
+However, I just waited 16min and collected all the 1GB IO log by
+connecting disk over uhci-qemu, but the sector of each data IO
+is still in order.
 
-> 
-> root@localhost:~# ls -al /sys/class/devfreq                                    
-> total 0
-> drwxr-xr-x  2 root root 0 Jan  1 09:02 .
-> drwxr-xr-x 52 root root 0 Jan  1 09:02 ..
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq0 -> ../../devices/platform/soc/soc:bus_wcore/devfreq/devfreq0
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq1 -> ../../devices/platform/soc/soc:bus_noc/devfreq/devfreq1
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq10 -> ../../devices/platform/soc/soc:bus_jpeg/devfreq/devfreq10
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq11 -> ../../devices/platform/soc/soc:bus_jpeg_apb/devfreq/devfreq11
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq12 -> ../../devices/platform/soc/soc:bus_disp1_fimd/devfreq/devfreq12
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq13 -> ../../devices/platform/soc/soc:bus_disp1/devfreq/devfreq13
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq14 -> ../../devices/platform/soc/soc:bus_gscl_scaler/devfreq/devfreq14
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq15 -> ../../devices/platform/soc/soc:bus_mscl/devfreq/devfreq15
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq2 -> ../../devices/platform/soc/soc:bus_fsys_apb/devfreq/devfreq2
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq3 -> ../../devices/platform/soc/soc:bus_fsys/devfreq/devfreq3
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq4 -> ../../devices/platform/soc/soc:bus_fsys2/devfreq/devfreq4
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq5 -> ../../devices/platform/soc/soc:bus_mfc/devfreq/devfreq5
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq6 -> ../../devices/platform/soc/soc:bus_gen/devfreq/devfreq6
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq7 -> ../../devices/platform/soc/soc:bus_peri/devfreq/devfreq7
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq8 -> ../../devices/platform/soc/soc:bus_g2d/devfreq/devfreq8
-> lrwxrwxrwx  1 root root 0 Jan  1 09:02 devfreq9 -> ../../devices/platform/soc/soc:bus_g2d_acp/devfreq/devfreq9
+>=20
+> Another info I would provide is about another strange behavior I
+> noticed: yesterday I ran the test two times (as usual with 1GB
+> filesize) and took 2370s, 1786s, and a third test was going on when I
+> stopped it. Then I started another set of 100 trials and let them run
+> tonight, and the first 10 trials were around 1000s, then gradually
+> decreased to ~300s, and finally settled around 200s with some trials
+> below 70-80s. This to say, times are extremely variable and for the
+> first time I noticed a sort of "performance increase" with time.
 
-Ok, this looks a bit better, but why is there the extra "devfreq"
-directory in there?  That was in the original as well, but that feels
-odd.
+The 'cp' test is buffered IO, can you reproduce it every time by
+running copy just after fresh mount on the USB disk?
 
-thanks,
+>=20
+> >  to one USB storage device on patched kernel,
+> > and WRITE data IO is really in ascending order. The filesystem is
+> > ext4,
+> > and mount without '-o sync'. From previous discussion, looks that is
+> > exactly your test setting. The order can be observed via the
+> > following script:
+> >=20
+> > #!/bin/sh
+> > MAJ=3D$1
+> > MIN=3D$2
+> > MAJ=3D$(( $MAJ << 20 ))
+> > DEV=3D$(( $MAJ | $MIN ))
+> > /usr/share/bcc/tools/trace -t -C \
+> >   't:block:block_rq_issue (args->dev =3D=3D '$DEV') "%s %d %d", args-
+> > >rwbs, args->sector, args->nr_sector'
+> >=20
+> > $MAJ & $MIN can be retrieved via lsblk for your USB storage disk.
+> >=20
+> > So I think we need to check if the patch is applied correctly first.
+> >=20
+> > If your kernel tree is managed via git,
+> yes it is,
+>=20
+> >  please post 'git diff'.
+> attached. Is it correctly patched? thanks.
 
-greg k-h
+Yeah, it should be correct except for the change on __blk_mq_delay_run_hw_q=
+ueue()
+is duplicated.
+
+>=20
+>=20
+> > Otherwise, share us your kernel version,
+> btw, is 5.4.0+
+>=20
+> >  and I will send you one
+> > backported patch on the kernel version.
+> >=20
+> > Meantime, you can collect IO order log via the above script as you
+> > did last
+> > time, then send us the log.
+>=20
+> ok, will try; is it just required to run it for a short period of time
+> (say, some seconds) during the copy, or should I run it before the
+> beginning (or before the mount?), and terminate it after the end of
+> the copy? (Please note that in the latter case a large amount of time
+> (and data, I suppose) would be involved, because, as said, to be sure
+> the problem triggers I have to use a large file... but we can try to
+> better understand and tune this. If it can help, you can get an ods
+> file with the complete statistic at [1] (look at the "prove_nov19"
+> sheet)).
+
+The data won't be very big, each line covers 120KB, and ~10K line
+is enough for cover 1GB transfer. Then ~300KB compressed file should
+hold all the trace.
+
+
+Thanks,=20
+Ming
+
