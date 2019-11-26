@@ -2,90 +2,97 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170D8C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 01:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA77C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 01:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C7E2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 01:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C6F52071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 01:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZsjGN9G3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UOZ61pA+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfKZBW2 (ORCPT
+        id S1727207AbfKZBXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 20:22:28 -0500
-Received: from mail-pg1-f180.google.com ([209.85.215.180]:36964 "EHLO
-        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfKZBW1 (ORCPT
+        Mon, 25 Nov 2019 20:23:45 -0500
+Received: from mail-qk1-f171.google.com ([209.85.222.171]:38492 "EHLO
+        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfKZBXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 20:22:27 -0500
-Received: by mail-pg1-f180.google.com with SMTP id b10so8119191pgd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 17:22:27 -0800 (PST)
+        Mon, 25 Nov 2019 20:23:44 -0500
+Received: by mail-qk1-f171.google.com with SMTP id e2so14711305qkn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 17:23:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=AtPRMYJsiWkwHiFFHZwBcUcKfK6FWEVPRzt0kULjoMk=;
-        b=ZsjGN9G3y6QPq/SuMUBdQdPjWMaaqGTsg369cIOxGzFWf76C6KhXoa28fC3PDPNsv+
-         7QWs10eF6lz9is8be53GzoigIeoomf7xOruNp1Y/bJBePCpSOXYLOA4H2/KJ77cRhk05
-         x0KvyJoRGbdZ9bbhy/XpP674iOcUGGYfS/H2W20tUStvBWi2ytsJmsFm0cuVxx0LrVhE
-         fJVgEsvqgV4FirojN5oa+BaOcKBvYRvapbjhDDbYa7cJEo8dtqNlxLA6y+V/jXxspakD
-         Spg4rGfGWHPFYnszQbpNq8GQ03LpilTeTOS2V8qw2dZ1gjduJRffPZoij6u5G0iQYIDa
-         y3mQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FsDRk4EAML9Y4QvMYiS6ndyIoyHisqLZs8klfxC7Kas=;
+        b=UOZ61pA+asCGex6uSWl3urkfZd9i0Q8+XGw4W2qdom7jSVsEQzUNTSu8Z1RMwHChs1
+         PCaLOzYuIZHseBv2x4Hz0cjO6qShOiWPNSCJ92/BGCCEdZ95xlithNLjOG/WZCnxkX5A
+         WHTrH50+23kjz0ckchWblfzz5qC76xnwgLOQg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=AtPRMYJsiWkwHiFFHZwBcUcKfK6FWEVPRzt0kULjoMk=;
-        b=OaJXs214OUSEfQmCosj+NZaYHxnyhNs1l7PCiAjKKZvNt8qrXnaaCjLuLtjWx2VNch
-         cDXInf6doZzxiX7F6uVLdfUfkI/agMK97ufc8RNmT0fmKxoEg/5SUTWoKj0LqwU7Th0q
-         4Ye3YEIBuNmUE5fU8+ieSTIQ3WaO9hqDBRcoOtUh8sQFag8f8ko0M5FVGXFNHg1rVKiI
-         Ps/kXFugVOcuMzAwpeMQ0rf+ofYME+YwDdTdTV9RpppluZLYNGE6ZqOWmVweu90I9xL9
-         jOBfAhdnefK3vODaFst1ce7+pJRMY9E1vFPxI+3eC3lpWDoYN8BSBtKP2Oy9Lwqniud+
-         WtXg==
-X-Gm-Message-State: APjAAAW20nh3yPpbEKL8ettCmhibKg51gCOOZL/b7EZ9H4M+lOLCJr20
-        wWjJ8/D9b+rQhvj22OESyTW5lqrUXCg=
-X-Google-Smtp-Source: APXvYqzCduZpVjmTaqiZExnNw3OMBfwJqTBjnW12KeeSXsvhWXRVkr9xrQzORP/oWCYG2oNVoKbw8g==
-X-Received: by 2002:a63:6a47:: with SMTP id f68mr35998951pgc.35.1574731346647;
-        Mon, 25 Nov 2019 17:22:26 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id r15sm9985094pfh.81.2019.11.25.17.22.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Nov 2019 17:22:25 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, robh+dt@kernel.org,
-        ulf.hansson@linaro.org
-Cc:     jianxin.pan@amlogic.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        lnykww@gmail.com, yinxin_1989@aliyun.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: Amlogic 32-bit Meson SoC SDHC MMC controller driver
-In-Reply-To: <20191117142716.154764-1-martin.blumenstingl@googlemail.com>
-References: <20191117142716.154764-1-martin.blumenstingl@googlemail.com>
-Date:   Mon, 25 Nov 2019 17:22:25 -0800
-Message-ID: <7htv6rh1ny.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FsDRk4EAML9Y4QvMYiS6ndyIoyHisqLZs8klfxC7Kas=;
+        b=uTvSLe6S4drHLXoSFbSOR2qCmXVMKXgVOPND3wVztihgzoX3qkpTLVGxd+JSK4AoK/
+         NMuRXHaF92KVqH7HbI0z+VZMt5uTD/M6WoyNS17wgjV5LMA+x+p51mjnwPvg2oMd6i1Y
+         1/0JeYG1Rmj4gKqCiZM0YLPonToPy5joCPzKmbUr/Zok3CTyLcKzSk2D3JQZE5qfFkR9
+         uuNp7kR+8+UFtCkOwoopxQx01fRvPGGmSr47uSaeXcGR7d6UHWrQbPC/14ue7jEjv3wL
+         5LQYXwwHpSUT++ZrcctQkpWmZFoWJXgz9CsrWbn9B18liVkhpeRO8Ct1j0qLn3w5AwkF
+         KDbA==
+X-Gm-Message-State: APjAAAUvbVh0mr+1MBY22QpBl6T5WwG/d+dH1OzYab5um4nbDUoXE/fi
+        KqVbR5b2YE8XH9dBbfSH/11kje6SN10=
+X-Google-Smtp-Source: APXvYqy/Ugnn6j+MQ7R7XIlsPXXFK0I8Xq8bjEbIQ52xfip20A8Chgc/S0ycYlVtU/VDCCkK5Id4Ww==
+X-Received: by 2002:a05:620a:13e2:: with SMTP id h2mr29713396qkl.114.1574731423118;
+        Mon, 25 Nov 2019 17:23:43 -0800 (PST)
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com. [209.85.160.170])
+        by smtp.gmail.com with ESMTPSA id n21sm5112977qtn.33.2019.11.25.17.23.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2019 17:23:42 -0800 (PST)
+Received: by mail-qt1-f170.google.com with SMTP id w47so15471229qtk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 17:23:41 -0800 (PST)
+X-Received: by 2002:ac8:53c4:: with SMTP id c4mr18110935qtq.305.1574731421193;
+ Mon, 25 Nov 2019 17:23:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191113005816.37084-1-briannorris@chromium.org>
+ <32422b2d-6cab-3ea2-aca3-3e74d68599a3@gmail.com> <20191123005054.GA116745@google.com>
+ <115a9e13-c7ae-a919-b61b-0ea05ed162d7@gmail.com>
+In-Reply-To: <115a9e13-c7ae-a919-b61b-0ea05ed162d7@gmail.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Mon, 25 Nov 2019 17:23:29 -0800
+X-Gmail-Original-Message-ID: <CA+ASDXO_-ZZ5iwDMGgaT9Ah3L8P63O2kwYO9Dv8erwQmYXKEGg@mail.gmail.com>
+Message-ID: <CA+ASDXO_-ZZ5iwDMGgaT9Ah3L8P63O2kwYO9Dv8erwQmYXKEGg@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] r8169: check for valid MAC before clobbering
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        Chun-Hao Lin <hau@realtek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+On Sat, Nov 23, 2019 at 1:59 AM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> Realtek doesn't provide any public datasheets, only very few leaked
+> old datasheets are available. Only public source of information is
+> the vendor drivers: r8168/r8101/r8125.
+> Check the vendor drivers for where they read the MAC from.
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+Thanks, I looked it up, and IIUC the chips I'm using would fall under
+the vendor driver's 'CFG_METHOD_21', which does indeed check the GMAC
+registers as a priority. (It's also even worse than the upstream
+driver here: although it reads out the active MAC register first, it
+doesn't end up using the value and instead just clobbers it, even if
+the GMAC value is empty/garbage.)
 
-> this is the first non-RFC version of the driver for the Amlogic "SDHC"
-> MMC controller found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
+So I guess the vendor driver "always" failed me in the same way, and
+it's just the Coreboot authors who were misinformed. :(
 
-This will need to be reviewed/merged by the MMC maintainers, but to get
-some broader testing (including in KernelCI) I've added this series to
-the 'testing' branch of my tree so it will be included in my 'integ'
-branch.
-
-Kevin
+Thanks for the pointers,
+Brian
