@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED45C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A852C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23B12073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2973D20727
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbfKZLUr (ORCPT
+        id S1728086AbfKZLVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 06:20:47 -0500
-Received: from mga14.intel.com ([192.55.52.115]:1628 "EHLO mga14.intel.com"
+        Tue, 26 Nov 2019 06:21:46 -0500
+Received: from mga09.intel.com ([134.134.136.24]:25466 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727339AbfKZLUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 06:20:46 -0500
+        id S1727218AbfKZLVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 06:21:46 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 03:20:46 -0800
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 03:21:46 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,245,1571727600"; 
-   d="scan'208";a="359136828"
+   d="scan'208";a="211322433"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 26 Nov 2019 03:20:46 -0800
+  by orsmga003.jf.intel.com with ESMTP; 26 Nov 2019 03:21:45 -0800
 Received: from [10.125.252.207] (abudanko-mobl.ccr.corp.intel.com [10.125.252.207])
-        by linux.intel.com (Postfix) with ESMTP id 104A7580409;
-        Tue, 26 Nov 2019 03:20:43 -0800 (PST)
-Subject: [PATCH v3 1/3] tools bitmap: implement bitmap_equal() operation at
- bitmap API
+        by linux.intel.com (Postfix) with ESMTP id B5117580332;
+        Tue, 26 Nov 2019 03:21:43 -0800 (PST)
+Subject: [PATCH v3 2/3] perf mmap: declare type for cpu mask of arbitrary
+ length
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
@@ -43,8 +43,8 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <6b2be869-28c1-ae9b-92e8-5ababf143308@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <6fe4f6c6-6990-a1fa-26e4-57e379aa9b8b@linux.intel.com>
-Date:   Tue, 26 Nov 2019 14:20:42 +0300
+Message-ID: <6f564c52-ffaf-0492-076b-10b752813313@linux.intel.com>
+Date:   Tue, 26 Nov 2019 14:21:42 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.1
 MIME-Version: 1.0
@@ -58,97 +58,73 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Extend tools bitmap API with bitmap_equal() implementation.
-The implementation has been derived from the kernel.
-
-Extend tools bitmap API with bitmap_free() implementation for
-symmetry with bitmap_alloc() function.
+Declare a dedicated struct map_cpu_mask type for cpu masks of
+arbitrary length. Mask is available thru bits pointer and the
+mask length is kept in nbits field. MMAP_CPU_MASK_BYTES() macro
+returns mask storage size in bytes. perf_mmap__print_cpu_mask()
+function can be used to log text representation of the mask.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
+Changes in v3:
+- implemented perf_mmap__print_cpu_mask() function
 Changes in v2:
-- implemented bitmap_free() for symmetry with bitmap_alloc()
+- capitalized MMAP_CPU_MASK_BYTES() macro
 ---
- tools/include/linux/bitmap.h | 30 ++++++++++++++++++++++++++++++
- tools/lib/bitmap.c           | 15 +++++++++++++++
- 2 files changed, 45 insertions(+)
+ tools/perf/util/mmap.c | 12 ++++++++++++
+ tools/perf/util/mmap.h | 11 +++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
-index 05dca5c203f3..477a1cae513f 100644
---- a/tools/include/linux/bitmap.h
-+++ b/tools/include/linux/bitmap.h
-@@ -15,6 +15,8 @@ void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
- 		 const unsigned long *bitmap2, int bits);
- int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
- 		 const unsigned long *bitmap2, unsigned int bits);
-+int __bitmap_equal(const unsigned long *bitmap1,
-+		   const unsigned long *bitmap2, unsigned int bits);
- void bitmap_clear(unsigned long *map, unsigned int start, int len);
- 
- #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
-@@ -123,6 +125,15 @@ static inline unsigned long *bitmap_alloc(int nbits)
- 	return calloc(1, BITS_TO_LONGS(nbits) * sizeof(unsigned long));
- }
- 
-+/*
-+ * bitmap_free - Free bitmap
-+ * @bitmap: pointer to bitmap
-+ */
-+static inline void bitmap_free(unsigned long *bitmap)
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 063d1b93c53d..30ff7aef06f2 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -23,6 +23,18 @@
+ #include "mmap.h"
+ #include "../perf.h"
+ #include <internal/lib.h> /* page_size */
++#include <linux/bitmap.h>
++
++#define MASK_SIZE 1023
++void perf_mmap__print_cpu_mask(struct mmap_cpu_mask *mask, const char *tag)
 +{
-+	free(bitmap);
-+}
++	char buf[MASK_SIZE + 1];
++	size_t len;
 +
- /*
-  * bitmap_scnprintf - print bitmap list into buffer
-  * @bitmap: bitmap
-@@ -148,4 +159,23 @@ static inline int bitmap_and(unsigned long *dst, const unsigned long *src1,
- 	return __bitmap_and(dst, src1, src2, nbits);
- }
++	len = bitmap_scnprintf(mask->bits, mask->nbits, buf, MASK_SIZE);
++	buf[len] = '\0';
++	pr_debug("%p: %s mask[%ld]: %s\n", mask, tag, mask->nbits, buf);
++}
  
-+#ifdef __LITTLE_ENDIAN
-+#define BITMAP_MEM_ALIGNMENT 8
-+#else
-+#define BITMAP_MEM_ALIGNMENT (8 * sizeof(unsigned long))
-+#endif
-+#define BITMAP_MEM_MASK (BITMAP_MEM_ALIGNMENT - 1)
-+#define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
+ size_t mmap__mmap_len(struct mmap *map)
+ {
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index bee4e83f7109..598e2def8a48 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -15,6 +15,15 @@
+ #include "event.h"
+ 
+ struct aiocb;
 +
-+static inline int bitmap_equal(const unsigned long *src1,
-+			const unsigned long *src2, unsigned int nbits)
-+{
-+	if (small_const_nbits(nbits))
-+		return !((*src1 ^ *src2) & BITMAP_LAST_WORD_MASK(nbits));
-+	if (__builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
-+	    IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
-+		return !memcmp(src1, src2, nbits / 8);
-+	return __bitmap_equal(src1, src2, nbits);
-+}
++struct mmap_cpu_mask {
++	unsigned long *bits;
++	size_t nbits;
++};
 +
- #endif /* _PERF_BITOPS_H */
-diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
-index 38494782be06..5043747ef6c5 100644
---- a/tools/lib/bitmap.c
-+++ b/tools/lib/bitmap.c
-@@ -71,3 +71,18 @@ int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
- 			   BITMAP_LAST_WORD_MASK(bits));
- 	return result != 0;
- }
++#define MMAP_CPU_MASK_BYTES(m) \
++	(BITS_TO_LONGS(((struct mmap_cpu_mask *)m)->nbits) * sizeof(unsigned long))
 +
-+int __bitmap_equal(const unsigned long *bitmap1,
-+		const unsigned long *bitmap2, unsigned int bits)
-+{
-+	unsigned int k, lim = bits/BITS_PER_LONG;
-+	for (k = 0; k < lim; ++k)
-+		if (bitmap1[k] != bitmap2[k])
-+			return 0;
+ /**
+  * struct mmap - perf's ring buffer mmap details
+  *
+@@ -52,4 +61,6 @@ int perf_mmap__push(struct mmap *md, void *to,
+ 
+ size_t mmap__mmap_len(struct mmap *map);
+ 
++void perf_mmap__print_cpu_mask(struct mmap_cpu_mask *mask, const char *tag);
 +
-+	if (bits % BITS_PER_LONG)
-+		if ((bitmap1[k] ^ bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
-+			return 0;
-+
-+	return 1;
-+}
+ #endif /*__PERF_MMAP_H */
 -- 
 2.20.1
 
