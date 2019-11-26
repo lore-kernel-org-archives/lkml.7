@@ -2,72 +2,75 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A84C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 06:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3FAC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 06:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08422064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 06:18:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="hdtv7kPF"
+	by mail.kernel.org (Postfix) with ESMTP id AF8C52064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 06:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfKZGSr (ORCPT
+        id S1727435AbfKZGSt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 01:18:47 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25815 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfKZGSr (ORCPT
+        Tue, 26 Nov 2019 01:18:49 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:42178 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfKZGSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 01:18:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574749096; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=LObZM9VFdF+cBLRpF0yhb4JQkKoHZd/KusW9r+M1Xwg9v/19XDo3eyXPrTfgf+sDKOTj0Jdub1W6ZVvSWuEqR98Fj78GyTS/NhrQI9wQMIEgF+yblHRVytTct90BYxMhX5iXT09glt0NuINGBd5xvr0x3MEu19gwASWaliCg3z8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574749096; h=Cc:Date:From:Message-ID:Subject:To; 
-        bh=dvZg84VkcqwBmc78zKOGCifweoOcK+GUFaohJDt5iZw=; 
-        b=QX6oF5doT2o29Ma7orehYiDhuyRkm51xGReo/kX0vI+psSDV4tNecS4C488CvGuc0E/G3ajgjq5MzHxf8TUdqQH3ha+kRMffVMmu6qq4JPwT13B8LZozpzO9U34PL4A7C5bdwKPy7NeDnDMtm1Y47N8B+7w4wNTmtIJgNfhfU0o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id; 
-  b=LjzlkTR+aUMFb5dxsKRfbcFueclvECvqatNCNufZYqF1J9GNE3VmCDFnEe8a6XvexP5JdDcS+onG
-    uB7DQ03i+fue4X1PkikdPQenvNqfyCbG0zQXb50b6n9rAiTlpuPG  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574749096;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id;
-        bh=dvZg84VkcqwBmc78zKOGCifweoOcK+GUFaohJDt5iZw=;
-        b=hdtv7kPFO/d2DHqve7u6ojWJRBMk4nCQ+2IqpazV/69L2E5NVJKhcTqKF+T383y6
-        X6bDCqzVVhPc+jAoP0r0KmEwIkuawGSBwiy+X2qh+F1fb7nSCm9VN+spnHLjQVgbw76
-        ESLW/YpCU4wsoqcGrWcR9jSgruh65/7G7PWpPxew=
-Received: from zhouyanjie-virtual-machine.localdomain (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
-        with SMTPS id 1574749094818297.2479841837486; Mon, 25 Nov 2019 22:18:14 -0800 (PST)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        fancer.lancer@gmail.com, syq@debian.org,
-        yamada.masahiro@socionext.com, tglx@linutronix.de,
-        malat@debian.org, paul@crapouillou.net, jiaxun.yang@flygoat.com,
-        sernia.zhou@foxmail.com
-Subject: Add Ingenic X1830 system type.
-Date:   Tue, 26 Nov 2019 14:17:54 +0800
-Message-Id: <1574749075-99329-1-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-X-ZohoMailClient: External
+        Tue, 26 Nov 2019 01:18:48 -0500
+Received: from marcel-macpro.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 59B6ECECF6;
+        Tue, 26 Nov 2019 07:27:54 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH] Fix invalid-free in bcsp_close()
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CAG_fn=Xqb1KoAvV==F5sODUYHDsxCxaz72n6qucdkR70XGCkig@mail.gmail.com>
+Date:   Tue, 26 Nov 2019 07:18:46 +0100
+Cc:     Tomas Bortoli <tomasbortoli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>,
+        syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <8376D008-EA21-49EA-AF5A-DDDCB179EAC5@holtmann.org>
+References: <000000000000109f9605964acf6c@google.com>
+ <20191101204244.14509-1-tomasbortoli@gmail.com>
+ <E16896E5-B946-450F-BF42-04665D219EEA@holtmann.org>
+ <CAG_fn=Xqb1KoAvV==F5sODUYHDsxCxaz72n6qucdkR70XGCkig@mail.gmail.com>
+To:     Alexander Potapenko <glider@google.com>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.Add X1830 system type for cat /proc/cpuinfo to give out X1830.
-2.Add "PRID_IMP_XBURST_REV2" (X1830 belongs PRID_IMP_XBURST_REV2)
-  and rename "PRID_IMP_XBURST" to "PRID_IMP_XBURST_REV1".
+Hi Alexander,
 
+>>> Syzbot reported an invalid-free that I introduced fixing a memleak.
+>>> 
+>>> bcsp_recv() also frees bcsp->rx_skb but never nullifies its value.
+>>> Nullify bcsp->rx_skb every time it is freed.
+>>> 
+>>> Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+>>> Reported-by: syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
+>>> ---
+>>> drivers/bluetooth/hci_bcsp.c | 3 +++
+>>> 1 file changed, 3 insertions(+)
+>> 
+>> patch has been applied to bluetooth-next tree.
+> I believe this bug requires stable tags, as it can potentially provide
+> an arbitrary write (via __skb_unlink) and is triggerable locally with
+> user privileges.
+
+I do not have a reproducer for it, but if you do, feel free to propose it for -stable inclusion.
+
+Regards
+
+Marcel
 
