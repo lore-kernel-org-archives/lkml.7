@@ -2,204 +2,153 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 881D6C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBDEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B822084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD8320722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:34:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nj3w38bZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sKDuA9BE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfKZOdx (ORCPT
+        id S1728314AbfKZOeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 09:33:53 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45561 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfKZOdx (ORCPT
+        Tue, 26 Nov 2019 09:34:13 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38517 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfKZOeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 09:33:53 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 14so16768741oir.12;
-        Tue, 26 Nov 2019 06:33:52 -0800 (PST)
+        Tue, 26 Nov 2019 09:34:13 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o8so3881175pls.5
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 06:34:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Ke9S+LOVhCSYY/a2D7Vlzb4JuZDRi+EFqSopQYxhvo=;
-        b=nj3w38bZg0AIusIt49/mQa4MqrbC8q2I1Gu83u5RhH7p+9zwD+Obg3mc8Ug/E3RIb/
-         +OpcBhlBKwiMWWTUHfcBQZyeyJz/QqfNgm/pXQV5UjZAycKx19JMKo1IcGDqKLKpF6bB
-         No4+dTgPNLBOUdswSF4JHl4Dco+G6DFR8+iujV3/usRywxvytpKcvu7kIqJoKLvNd29Z
-         Yi8AevjDxVXldLY7R688l+AMMCXFEMYWdSEr/v/cJg5qcQnIrNOGWI2F/Fm8A+qDaACI
-         ixM6YFWfxrFm2YmbDY5ct9hWCQlaGsMP5kzcnfllU6KHNE9RUkUrY0KoD6Qlxu31qLVC
-         zO/w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xYoGHjpKp+8s/nL6dlNazcq7lrq3Cxvj74Y8iazRXAQ=;
+        b=sKDuA9BEOY58bMIKrLdUG7xjnk6WJ6HbTPB2WYN8ZSR4Yn+RFLAD7arzXOTiRXRwWQ
+         Ea90ziHgangUL1ZpEwFLVXlhO7aBsVjuk+/64a6on+d/Y7GI8UtEeB3nFCgRdrJmGZgy
+         HEC8aUtwB8gVoCWdPIItXsDCkTPqlsVjuXfuJ0GYHemiwdxkpnNg68yxmWqKI13+wONl
+         gBVwQmP8O1QnB5t7Il2IXyx+AS/KRWkRMToF4ZZC2DN8JaH8Zv1D1egLevuISSanPulm
+         eN9cf8gTmCenFP0JWA8cGVGfZC6WhQbNw4VgWPO/8jgy/spHHClr390QuKGVC/sgSn78
+         OAng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Ke9S+LOVhCSYY/a2D7Vlzb4JuZDRi+EFqSopQYxhvo=;
-        b=t+Pm9UxCF1utiCD68wr5AjTUy4s72vesd+rqnTYY2/1d7lnvLhasJIuQ298ciRQqMj
-         VzCx19k6V5I6gvOS/KIwO9mEysB4VGJXcGi9Ckx8dvBWekrSwydQ8A0SPxkFfvMCdjiq
-         hqe1BaCoFoo7f13fW2r8U7LZhSw6Vp8ArhSUe0jmY9AAhrqeEKOxnYn5UOgxviOVJ3oc
-         S6UD7UZ28GZl4ONb3BKpCJgs6pPXEAVVKwrqvljEjNm3UhXB9wXexfLTDg7b0opFTX/S
-         nDmKouqmLuDeJ35btOtqylvomtVnZhWu33IIJI3kvpiBr1ZCiZKtHJ3W9BcnhonjkD1U
-         aVAg==
-X-Gm-Message-State: APjAAAU9HOGJE0SyJhRBMaOIt4y3Iqoe+svXRQCXz9zi9R95GlX3ZF99
-        zYDC7WOb6rWbtgFuR2SAQC1PMUtZ+2oVxGysENo=
-X-Google-Smtp-Source: APXvYqwdIx5fvcr/2eqn6PfsjTtnTEUauTJoJlXG+zzhycInNXig/nGBmY7EZu2DrNnThSLkOUcAJwQqVld3E5i8yP8=
-X-Received: by 2002:a05:6808:906:: with SMTP id w6mr3714280oih.162.1574778831671;
- Tue, 26 Nov 2019 06:33:51 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xYoGHjpKp+8s/nL6dlNazcq7lrq3Cxvj74Y8iazRXAQ=;
+        b=bNHWSutsFUBtUyOVN9MuVjB33ULgZl0qQJVz03oG1Bv7JqENX3HCxUGUVoQmN3VF8U
+         CozZZkw/jnHLGeMYRP7xPwMhEsJ5YDd+oePqtSOtvwRLXWjspwnaXLnA9ZwNUXqSZiYt
+         8iLoeQjfhmgY9Pm6AaRuzfrpBypxGNmqxNsj/bFDJ0foNoI0v7ZkZ6aLnQg5rihPPgG2
+         RsfAS9gj14tbxFixJhzSVcMqSA8KaC4edW2dAQxKENBGjUM3XSF03m67AO3YVh2j7CN5
+         mb+JNzUDMLWzyu6ImUcqkdxvfu3p6rMlJuhFIrEhO4Kbu039X6SyuXgS2V4N1ZpKeVGi
+         BdjA==
+X-Gm-Message-State: APjAAAVCAFH5dsDkuJf3IWjLbEbGb45hhwxid+NkRDST/F38F+5UcmID
+        u2bVPm3dOHusrRkFigBPwUQ=
+X-Google-Smtp-Source: APXvYqxUrhKfe8agYEAltCsd/SecLGnCZiyOR7dc1IS6k3LicFTDvP/8wjF/lPTqH/0Lz6iFGw+isA==
+X-Received: by 2002:a17:902:9f98:: with SMTP id g24mr29817984plq.325.1574778852812;
+        Tue, 26 Nov 2019 06:34:12 -0800 (PST)
+Received: from mail.google.com ([139.180.133.10])
+        by smtp.gmail.com with ESMTPSA id v63sm12969454pfb.181.2019.11.26.06.34.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 06:34:12 -0800 (PST)
+Date:   Tue, 26 Nov 2019 22:34:04 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] perf: support multiple debug options separated by
+ ','
+Message-ID: <20191126143402.yxb2djhlpm5tuahf@mail.google.com>
+References: <20191125151446.10948-1-changbin.du@gmail.com>
+ <20191125151446.10948-2-changbin.du@gmail.com>
+ <20191126094508.GB32367@krava>
 MIME-Version: 1.0
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 26 Nov 2019 14:33:25 +0000
-Message-ID: <CA+V-a8tVK7oUYggTb5Vi3agMp4CH8gtiKDHet09DzE5-LAfiew@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Add support for PCIe controller to work in endpoint
- mode on R-Car SoCs.
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126094508.GB32367@krava>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn/Kishon,
+On Tue, Nov 26, 2019 at 10:45:08AM +0100, Jiri Olsa wrote:
+> On Mon, Nov 25, 2019 at 11:14:45PM +0800, Changbin Du wrote:
+> > This patch adds support for multiple debug options separated by ',' and
+> > non-int values.
+> > 	--debug verbose=2,stderr
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  tools/perf/Documentation/perf.txt | 13 +++--
+> >  tools/perf/util/debug.c           | 89 ++++++++++++++++---------------
+> >  2 files changed, 53 insertions(+), 49 deletions(-)
+> > 
+> > diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
+> > index 3f37ded13f8c..fd8d790f68a7 100644
+> > --- a/tools/perf/Documentation/perf.txt
+> > +++ b/tools/perf/Documentation/perf.txt
+> > @@ -19,13 +19,12 @@ OPTIONS
+> >  	  --debug verbose=2 # sets verbose = 2
+> >  
+> >  	List of debug variables allowed to set:
+> > -	  verbose          - general debug messages
+> > -	  ordered-events   - ordered events object debug messages
+> > -	  data-convert     - data convert command debug messages
+> > -	  stderr           - write debug output (option -v) to stderr
+> > -	                     in browser mode
+> > -	  perf-event-open  - Print perf_event_open() arguments and
+> > -			     return value
+> > +	  verbose=level		- general debug messages
+> > +	  ordered-events=level	- ordered events object debug messages
+> > +	  data-convert=level	- data convert command debug messages
+> > +	  stderr		- write debug output (option -v) to stderr
+> > +	  perf-event-open	- Print perf_event_open() arguments and
+> > +	                          return value in browser mode
+> 
+> it's just the list and the doc says user can use values
+> there, so no need for the '=level' there
+> 
+> also we allow this:
+>   perf --debug stderr=9 record ls
+> 
+> so I thinks we should keep it general in documentation,
+> eventhough it will always mean just stderr=true for any
+> value
+>
+I changed them as below. For stderr and perf_event_open, the value is ignored
+even it is given.
 
-Gentle ping for this patch set.
+--debug::
+	Setup debug variable (see list below). The range of 'level' value
+	is (0, 10). Use like:
+	  --debug verbose   # sets verbose = 1
+	  --debug verbose=2,file=~/perf.log
+	                    # sets verbose = 2 and save log to file
 
-On Wed, Nov 6, 2019 at 7:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->
-> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> This patch series adds support for PCIe controller on rcar to work in endpoint mode,
-> this also extends the epf framework to handle multiple outbound regions.
->
+	List of debug variables allowed to set:
+	  verbose[=level]	- general debug messages
+	  ordered-events[=level]- ordered events object debug messages
+	  data-convert[=level]	- data convert command debug messages
+	  stderr		- write debug output (option -v) to stderr
+	                          in browser mode
+	  perf-event-open	- Print perf_event_open() arguments and
+	                          return value
+
+> jirka
+> 
+
+-- 
 Cheers,
---Prabhakar Lad
-
-
-> Note:
-> The cadence/rockchip/designware endpoint drivers are build tested only.
->
-> Endpoint configuration:
-> $ cd /sys/kernel/config/pci_ep
-> $ mkdir functions/pci_epf_test/func1
-> $ echo 0x1912 > functions/pci_epf_test/func1/vendorid
-> $ echo 0x002d > functions/pci_epf_test/func1/deviceid
-> $ echo 32 > functions/pci_epf_test/func1/msi_interrupts
-> $ ln -s functions/pci_epf_test/func1/ controllers/fe000000.pcie_ep/
-> $ echo 1 > controllers/fe000000.pcie_ep/start
->
-> Host side results:
-> lspci output:
-> 01:00.0 Unassigned class [ff00]: Renesas Technology Corp. Device 002d
->         Flags: bus master, fast devsel, latency 0, IRQ 103
->         Memory at fe200200 (64-bit, non-prefetchable) [size=128]
->         Memory at fe200000 (64-bit, non-prefetchable) [size=256]
->         Memory at fe200100 (64-bit, non-prefetchable) [size=256]
->         Capabilities: [40] Power Management version 3
->         Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
->         Capabilities: [70] Express Endpoint, MSI 00
->         Capabilities: [100] Virtual Channel
->         Kernel driver in use: pci-endpoint-test
->
-> pcitest results:
->
-> BAR tests
->
-> BAR0:           OKAY
-> BAR1:           NOT OKAY
-> BAR2:           OKAY
-> BAR3:           NOT OKAY
-> BAR4:           OKAY
-> BAR5:           NOT OKAY
->
-> Interrupt tests
->
-> SET IRQ TYPE TO LEGACY:         OKAY
-> LEGACY IRQ:     OKAY
-> Read Tests
->
-> SET IRQ TYPE TO LEGACY:         OKAY
-> READ (      1 bytes):           OKAY
-> READ (   1024 bytes):           OKAY
-> READ (   1025 bytes):           OKAY
-> READ (1024000 bytes):           OKAY
-> READ (1024001 bytes):           OKAY
->
-> Write Tests
->
-> WRITE (      1 bytes):          OKAY
-> WRITE (   1024 bytes):          OKAY
-> WRITE (   1025 bytes):          OKAY
-> WRITE (1024000 bytes):          OKAY
-> WRITE (1024001 bytes):          OKAY
->
-> Copy Tests
->
-> COPY (      1 bytes):           OKAY
-> COPY (   1024 bytes):           OKAY
-> COPY (   1025 bytes):           OKAY
-> COPY (1024000 bytes):           OKAY
-> COPY (1024001 bytes):           OKAY
->
-> BAR tests for 1/3/5 fail because its configured to use 64bit bars
->
-> Lad, Prabhakar (5):
->   pci: pcie-rcar: preparation for adding endpoint support
->   pci: endpoint: add support to handle multiple base for mapping
->     outbound memory
->   PCI: rcar: Add R-Car PCIe endpoint device tree bindings
->   pci: rcar: add support for rcar pcie controller in endpoint mode
->   misc: pci_endpoint_test: add device-id for RZ/G2 pcie controller
->
->  .../devicetree/bindings/pci/rcar-pci-ep.txt   |   43 +
->  arch/arm64/configs/defconfig                  |    2 +-
->  arch/arm64/configs/renesas_defconfig          |    2 +-
->  drivers/misc/pci_endpoint_test.c              |    3 +
->  drivers/pci/controller/Kconfig                |   11 +-
->  drivers/pci/controller/Makefile               |    3 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   |   30 +-
->  drivers/pci/controller/pcie-cadence-ep.c      |   11 +-
->  drivers/pci/controller/pcie-rcar-ep.c         |  483 +++++++
->  drivers/pci/controller/pcie-rcar-host.c       | 1058 ++++++++++++++
->  drivers/pci/controller/pcie-rcar.c            | 1231 +----------------
->  drivers/pci/controller/pcie-rcar.h            |  129 ++
->  drivers/pci/controller/pcie-rockchip-ep.c     |   13 +-
->  drivers/pci/endpoint/functions/pci-epf-test.c |   29 +-
->  drivers/pci/endpoint/pci-epc-core.c           |    7 +-
->  drivers/pci/endpoint/pci-epc-mem.c            |  189 ++-
->  include/linux/pci-epc.h                       |   43 +-
->  17 files changed, 2016 insertions(+), 1271 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
->  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
->  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
->  create mode 100644 drivers/pci/controller/pcie-rcar.h
->
-> --
-> 2.20.1
->
+Changbin Du
