@@ -2,98 +2,100 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF5BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FBAC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB7420637
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EBBE20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:53:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W5Y4mlNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfKZKwr (ORCPT
+        id S1727935AbfKZKxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 05:52:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43108 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727817AbfKZKwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 05:52:46 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AE4BDAD00;
-        Tue, 26 Nov 2019 10:52:44 +0000 (UTC)
-Date:   Tue, 26 Nov 2019 11:52:43 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Lei YU <mine260309@gmail.com>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] docs: i2c: Fix return value of i2c_smbus_xxx
- functions
-Message-ID: <20191126115243.673fc164@endymion>
-In-Reply-To: <20191125144857.GA2412@kunai>
-References: <1574162632-65848-1-git-send-email-mine260309@gmail.com>
-        <20191125144857.GA2412@kunai>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Tue, 26 Nov 2019 05:53:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37781 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727918AbfKZKxR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 05:53:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574765596;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RnmbUDDUqVr+GtJqX6llAqX+JxCSlgtk8y8KwLMGH8c=;
+        b=W5Y4mlNZVD5HAoPvFE61j/O2GzK3XAAd8QNq4Pn32zaSKV5061IssIgTHY87TnIKGl1aF7
+        itpt4Y35TN07a8wuESHCGZey63SWe5YKqbtVEerckq+o3J35zeNGEnk+7yarH6uMu+ECks
+        zVBn2oxxos7Q0ov5NXoWVcx2uu3bZMs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-76-ialD43iuM-y2-Dbz_gkc_w-1; Tue, 26 Nov 2019 05:53:15 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 132A0800D41;
+        Tue, 26 Nov 2019 10:53:14 +0000 (UTC)
+Received: from 10.255.255.10 (unknown [10.40.205.176])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 92B4E600C6;
+        Tue, 26 Nov 2019 10:53:12 +0000 (UTC)
+Date:   Tue, 26 Nov 2019 11:53:09 +0100
+From:   Karel Zak <kzak@redhat.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [MANPAGE] fsopen.2, fsmount.2
+Message-ID: <20191126105309.m4k2zpxgxq7tacy2@10.255.255.10>
+References: <10805.1570726908@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <10805.1570726908@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: ialD43iuM-y2-Dbz_gkc_w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Nov 2019 15:48:57 +0100, Wolfram Sang wrote:
-> On Tue, Nov 19, 2019 at 07:23:52PM +0800, Lei YU wrote:
-> > In i2c/dev-interface.rst it said
-> >   
-> > > All these transactions return -1 on failure  
-> > 
-> > But actually the i2c_smbus_xxx functions return negative error numbers
-> > on failure, instead of -1.
-> > 
-> > Fix the document and remove the following sentence.
-> > 
-> > Signed-off-by: Lei YU <mine260309@gmail.com>
-> > ---
-> >  Documentation/i2c/dev-interface.rst | 9 ++++-----
-> >  1 file changed, 4 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/i2c/dev-interface.rst b/Documentation/i2c/dev-interface.rst
-> > index 69c23a3..f2f2b28 100644
-> > --- a/Documentation/i2c/dev-interface.rst
-> > +++ b/Documentation/i2c/dev-interface.rst
-> > @@ -163,11 +163,10 @@ for details) through the following functions::
-> >    __s32 i2c_smbus_write_block_data(int file, __u8 command, __u8 length,
-> >                                     __u8 *values);
-> >  
-> > -All these transactions return -1 on failure; you can read errno to see
-> > -what happened. The 'write' transactions return 0 on success; the
-> > -'read' transactions return the read value, except for read_block, which
-> > -returns the number of values read. The block buffers need not be longer
-> > -than 32 bytes.
-> > +All these transactions return a negative error number on failure.
-> > +The 'write' transactions return 0 on success; the 'read' transactions
-> > +return the read value, except for read_block, which returns the number
-> > +of values read. The block buffers need not be longer than 32 bytes.  
-> 
-> I think the correct solution is to remove this paragraph entirely.
-> Because the returned value does not depend on the kernel but on the
-> libi2c version. Check this commit from 2012 in the i2c-tools repo:
-> 
-> 330bba2 ("libi2c: Properly propagate real error codes on read errors")
-> 
-> So, I think we should document it there. Jean, what do you think?
+On Thu, Oct 10, 2019 at 06:01:48PM +0100, David Howells wrote:
+> .SH EXAMPLES
+> To illustrate the process, here's an example whereby this can be used to =
+mount
+> an ext4 filesystem on /dev/sdb1 onto /mnt.
+> .PP
+> .in +4n
+> .nf
+> sfd =3D fsopen("ext4", FSOPEN_CLOEXEC);
+> fsconfig(sfd, FSCONFIG_SET_FLAG, "ro", NULL, 0);
+> fsconfig(sfd, FSCONFIG_SET_STRING, "source", "/dev/sdb1", 0);
+> fsconfig(sfd, FSCONFIG_SET_FLAG, "noatime", NULL, 0);
+> fsconfig(sfd, FSCONFIG_SET_FLAG, "acl", NULL, 0);
+> fsconfig(sfd, FSCONFIG_SET_FLAG, "user_attr", NULL, 0);
+> fsconfig(sfd, FSCONFIG_SET_FLAG, "iversion", NULL, 0);
+> fsconfig(sfd, FSCONFIG_CMD_CREATE, NULL, NULL, 0);
+> mfd =3D fsmount(sfd, FSMOUNT_CLOEXEC, MS_RELATIME);
+> move_mount(mfd, "", sfd, AT_FDCWD, "/mnt", MOVE_MOUNT_F_EMPTY_PATH);
+                      ^^^^^^^^^^^^
+ Seems too many arguments (file descriptors), probably should be:
 
-I would go further and move half of the document to i2c-tools. i2c-dev
-itself only provides the ioctls. Everything on top of that is in libi2c
-now, so the kernel documentation should point to libi2c and the
-detailed documentation should come with libi2c.
+    move_mount(mfd, "", AT_FDCWD, "/mnt", MOVE_MOUNT_F_EMPTY_PATH);
 
-So I guess I should review the whole document now to see what needs to
-be updated, what should stay, and what should move.
+...
+> move_mount(mfd, "", sfd, AT_FDCWD, "/mnt", MOVE_MOUNT_F_EMPTY_PATH);
 
--- 
-Jean Delvare
-SUSE L3 Support
+ Here too.
+
+    Karel
+
+--=20
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
+
