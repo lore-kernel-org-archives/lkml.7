@@ -2,76 +2,107 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7341CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECE9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB2C2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F7CB20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:21:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfKZUVC (ORCPT
+        id S1727091AbfKZUV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:21:02 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:35054 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfKZUVC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:21:02 -0500
-Received: by mail-il1-f198.google.com with SMTP id z10so1925725ilm.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 12:21:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Akqz/I3ZQjzJAvOshpOikoMNQL6Gvzwc2tf/r4zF6dU=;
-        b=j5RVFwLsS77GctFchzQv1swOagAI8V5HzpYrZbzGswRNZsGrmEBKCK2CZSpXju1KCN
-         BBWklC3W3ati3VayI+Dr2XLE1yWM/Ki1MgR0Lo7ME4Y+zfMWKogkSiv5cnkQFQy8HYd5
-         0UrY+9Kkd9k5wQLM1pqMGSJpJYo9Cj8HXdSRW1tnmp3KpeThKbnkVa0cSE1qnwHa0K2+
-         ttKjgYyrgoF5y7ohzlm9w9E3KbJTemMhKWDQnw/QcAWWujNgmZhg7eMkfxBNRxWDiqZg
-         zo0Ic3YTjjPaP8yku1MlwjDaoZi7w/N9F8gBXRxPmjcvSa3vw8faDoRVZrTJrv4rbank
-         YXFw==
-X-Gm-Message-State: APjAAAUhdlWjPojHuVrWpcm6vI6BR6/65NOxcTFfb7azgivuAryVPeuk
-        BIrNlonKtpcJ5KpPaGrzk2ergeeEMnzb7RSQOXfTWoIvRLQK
-X-Google-Smtp-Source: APXvYqxxt+AtVd7wJwjD/XwA+BiQAFWZyeEQ9AZkTAMgW35eXYOdSR6F9M34n0LFgQjt6IDNtDcVbmhTyrwMkTBoVKAOblxNDQnz
+        Tue, 26 Nov 2019 15:21:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52240 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726036AbfKZUV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:21:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D5F01B147;
+        Tue, 26 Nov 2019 20:21:53 +0000 (UTC)
+Date:   Tue, 26 Nov 2019 21:21:51 +0100
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biggers <ebiggers@google.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Hou Tao <houtao1@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, Hannes Reinecke <hare@suse.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v4 rebase 00/10] Fix cdrom autoclose
+Message-ID: <20191126202151.GY11661@kitsune.suse.cz>
+References: <cover.1574797504.git.msuchanek@suse.de>
+ <c6fe572c-530e-93eb-d62a-cb2f89c7b4ec@kernel.dk>
 MIME-Version: 1.0
-X-Received: by 2002:a02:ce51:: with SMTP id y17mr464455jar.1.1574799661213;
- Tue, 26 Nov 2019 12:21:01 -0800 (PST)
-Date:   Tue, 26 Nov 2019 12:21:01 -0800
-In-Reply-To: <Pine.LNX.4.44L0.1911251622420.1565-100000@iolanthe.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006630680598459e6e@google.com>
-Subject: Re: INFO: rcu detected stall in hub_event
-From:   syzbot <syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c6fe572c-530e-93eb-d62a-cb2f89c7b4ec@kernel.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Nov 26, 2019 at 01:01:42PM -0700, Jens Axboe wrote:
+> On 11/26/19 12:54 PM, Michal Suchanek wrote:
+> > Hello,
+> > 
+> > there is cdrom autoclose feature that is supposed to close the tray,
+> > wait for the disc to become ready, and then open the device.
+> > 
+> > This used to work in ancient times. Then in old times there was a hack
+> > in util-linux which worked around the breakage which probably resulted
+> > from switching to scsi emulation.
+> > 
+> > Currently util-linux maintainer refuses to merge another hack on the
+> > basis that kernel still has the feature so it should be fixed there.
+> > The code needs not be replicated in every userspace utility like mount
+> > or dd which has no business knowing which devices are CD-roms and where
+> > the autoclose setting is in the kernel.
+> > 
+> > This is rebase on top of current master.
+> > 
+> > Also it seems that most people think that this is fix for WMware because
+> > there is one patch dealing with WMware.
+> 
+> I think the main complaint with this is that it's kind of a stretch to
+> add core functionality for a device type that's barely being
+> manufactured anymore and is mostly used in a virtualized fashion. I
+> think it you could fix this without 10 patches of churn and without
+> adding a new ->open() addition to fops, then people would be a lot more
+> receptive to the idea of improving cdrom auto-close.
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+I see no way to do that cleanly.
 
-Reported-and-tested-by:  
-syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com
+There are two open modes for cdrom devices - blocking and non-blocking.
 
-Tested on:
+In blocking mode open() should analyze the medium so that it's ready
+when it returns. In non-blocking mode it should return immediately so
+long as you can talk to the device.
 
-commit:         46178223 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=99c88c44660624e7
-dashboard link: https://syzkaller.appspot.com/bug?extid=ec5f884c4a135aa0dbb9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1177cc0ee00000
+When waiting in open() with locks held the processes trying to open the
+device are locked out regradless of the mode they use.
 
-Note: testing is done by a robot and is best-effort only.
+The only way to solve this is to pretend that the device is open and do
+the wait afterwards with the device unlocked.
+
+Thanks
+
+Michal
