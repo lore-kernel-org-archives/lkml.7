@@ -2,157 +2,92 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965F4C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DA0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7FA20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:35:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOLm1AXk"
+	by mail.kernel.org (Postfix) with ESMTP id D39BA2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfKZTfz (ORCPT
+        id S1726987AbfKZTho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:35:55 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34686 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbfKZTfz (ORCPT
+        Tue, 26 Nov 2019 14:37:44 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:50594 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfKZTho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:35:55 -0500
-Received: by mail-ot1-f68.google.com with SMTP id w11so17006733ote.1;
-        Tue, 26 Nov 2019 11:35:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=HT2M1Xfv+tvpjG1ucYQkF2fvfzcdx/n3wzuhyYktctM=;
-        b=JOLm1AXku5RalOJtjRieB/kQKtK0udRdscDeEXxH1KAHd/fYWGsjz4xkUcLdpDNU4L
-         3LF5fe0fVVNNP+dspxrYrGnLoyux4FgkHnDl0YpGt74hEHT9r9fZ5SLTycjn5+fy07Lk
-         uq/Bkwg4bYsgKll9SLSzdzC1rkiciuWzGekJqBGenTIabcP8aqXBMUgPtuU1zOvRo6Iy
-         jg/61mts1Vg1P41pVsgPAVb+vVUfGFy+4WeI0e+EFwSdLoATYfQHsd+3/aR5alvw3+XX
-         Q0NpGmPM1EXKaiGqf9+ZtKOC735yL/I9wWudIFHWCSHwQqgLZhGZ1Y7V1blYW8MXGocZ
-         ZPyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=HT2M1Xfv+tvpjG1ucYQkF2fvfzcdx/n3wzuhyYktctM=;
-        b=cVuTbMj6s67HZHDKOvZ76HuKR08hMMA5nezvzq1WGi29TVQw4Oj3eHwt2M0fBQpzFJ
-         15Lh2WDo/BikQrft/s/ifq9qNB//50P/k5+POgpnAI/QWhkGbNkXgokB4sttgWStAnjO
-         53EFVJlJu4HzWWqYIiUeCiqgKKjTzOTMztFqgZ0IUiySJL4ahrJXuqelSYv1P8BTyQof
-         GGLx7fCOZBJMHAfct/fWNSJR4wPHQFb5FwCccy3SKWAIDE3TpWGrY8fEHV7V7qWl0lsM
-         xaQrmvQPR+OndBGsIhTTut4Tfhrux4k7MPckWRf0+62il9zpZaaYF5LZ7tmIYqQ6kK9A
-         Cndg==
-X-Gm-Message-State: APjAAAU19FacvlrlpALAxZwA1A2D9HdYrgoG4qNqIc0sL/sRNy2iPh2Q
-        bRKnPneV1sYqmHxk8SK9OEWOu6mUK1DBsrnQaN8=
-X-Google-Smtp-Source: APXvYqxwy2YH1zXRvoLZhDl2LwHUaPWwfU4ZwllfPWEY5VmEMkXSvMDIFkZLaOj3kJ+NneohsrgZgOhpJ7pdvQg1LaY=
-X-Received: by 2002:a9d:64ce:: with SMTP id n14mr472946otl.263.1574796954091;
- Tue, 26 Nov 2019 11:35:54 -0800 (PST)
+        Tue, 26 Nov 2019 14:37:44 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id A99EE20053;
+        Tue, 26 Nov 2019 20:37:41 +0100 (CET)
+Date:   Tue, 26 Nov 2019 20:37:40 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>, Vincent Abriou <vincent.abriou@st.com>
+Subject: Re: [PATCH 28/30] drm/sti: sti_vdo: Use drm_bridge_init()
+Message-ID: <20191126193740.GC2044@ravnborg.org>
+References: <20191126131541.47393-1-mihail.atanassov@arm.com>
+ <20191126131541.47393-29-mihail.atanassov@arm.com>
 MIME-Version: 1.0
-References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190901215214.f4vbxemdd7mf3gun@core.my.home>
- <20190902072735.zkrueocyz4glc26n@flea> <20190902105816.zurkkh2vjfexft7t@core.my.home>
-In-Reply-To: <20190902105816.zurkkh2vjfexft7t@core.my.home>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Tue, 26 Nov 2019 11:36:37 -0800
-Message-ID: <CA+E=qVdzHGZsazfeZYBA2YZBZv_rSpk7NsV5wbiAFH80cjxajQ@mail.gmail.com>
-Subject: Re: [PATCH v5 00/18] add thermal driver for h6
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126131541.47393-29-mihail.atanassov@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7CQSdrXTAAAA:8
+        a=6lCv3_9TmdkNs-__4ugA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
+        a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 3:58 AM Ond=C5=99ej Jirman <megous@megous.com> wrote=
-:
->
-> Hello Maxime,
->
-> On Mon, Sep 02, 2019 at 09:27:35AM +0200, Maxime Ripard wrote:
-> > Hi,
-> >
-> > On Sun, Sep 01, 2019 at 11:52:14PM +0200, Ond=C5=99ej Jirman wrote:
-> > > Hello Yangtao,
-> > >
-> > > On Sat, Aug 10, 2019 at 05:28:11AM +0000, Yangtao Li wrote:
-> > > > This patchset add support for A64, H3, H5, H6 and R40 thermal senso=
-r.
-> > > >
-> > > > Thx to Icenowy and Vasily.
-> > > >
-> > > > BTY, do a cleanup in thermal makfile.
+Hi Mihail.
 
-Hey Yangtao,
+On Tue, Nov 26, 2019 at 01:16:26PM +0000, Mihail Atanassov wrote:
+> No functional change.
+> 
+> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+> ---
+>  drivers/gpu/drm/sti/sti_dvo.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/sti/sti_dvo.c b/drivers/gpu/drm/sti/sti_dvo.c
+> index 68289b0b063a..20a3956b33bc 100644
+> --- a/drivers/gpu/drm/sti/sti_dvo.c
+> +++ b/drivers/gpu/drm/sti/sti_dvo.c
+> @@ -462,9 +462,7 @@ static int sti_dvo_bind(struct device *dev, struct device *master, void *data)
+>  	if (!bridge)
+>  		return -ENOMEM;
+>  
+> -	bridge->driver_private = dvo;
+> -	bridge->funcs = &sti_dvo_bridge_funcs;
+> -	bridge->of_node = dvo->dev.of_node;
+> +	drm_bridge_init(bridge, &dvo->dev, &sti_dvo_bridge_funcs, NULL, dvo);
+>  	drm_bridge_add(bridge);
+>  
+>  	err = drm_bridge_attach(encoder, bridge, NULL);
 
-Are there any plans for v6?
+I can see from grepping that bridge.driver_private is used
+in a couple of other files in sti/
 
-Regards,
-Vasily
+Like sti_hdmi.c:
+        bridge->driver_private = hdmi;
+        bridge->funcs = &sti_hdmi_bridge_funcs;
+        drm_bridge_attach(encoder, bridge, NULL);
 
-> > > I've added support for A83T and also some cleanups, according to my
-> > > feedback:
-> > >
-> > > https://megous.com/git/linux/log/?h=3Dths-5.3
-> > >
-> > > Feel free to pick up whatever you like from that tree.
-> > >
-> > > For others, there are also DTS patches in that tree for H3, H5, A83T,=
- and H6, so
-> > > that shoul make testing of this driver easier.
-> >
-> > I'm not convinced that always expanding the number of SoC supported is
-> > the best strategy to get this merged. Usually, keeping the same
-> > feature set across version, consolidating that, and then once it's in
-> > sending the new SoC support works best.
->
-> That's fine and all, but I've mostly added DT descriptions for already su=
-pported
-> SoCs and fixed bugs in the driver, so that people can actually test the e=
-xisting
-> driver.
->
-> I think adding DT changes will actually help get needed exposure for this
-> patch series.
->
-> A83T support that I added, was actually just a small change to the driver=
-.
->
-> regards,
->         o.
->
-> > Maxime
-> >
-> > --
-> > Maxime Ripard, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+I wonder if a drm_bridge_init() should be added there.
+I did not look closely - but it looked suspisiously.
+
+	Sam
