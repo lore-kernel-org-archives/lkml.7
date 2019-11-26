@@ -2,204 +2,130 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAC2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36E6C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B40F62071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:14:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTCV7l3j"
+	by mail.kernel.org (Postfix) with ESMTP id 976892071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbfKZNOg (ORCPT
+        id S1727655AbfKZNPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:14:36 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41304 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfKZNOg (ORCPT
+        Tue, 26 Nov 2019 08:15:18 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35692 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfKZNPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:14:36 -0500
-Received: by mail-qt1-f193.google.com with SMTP id 59so15805245qtg.8;
-        Tue, 26 Nov 2019 05:14:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cpPxka1Pl27l5pcH6nCC6OburpGArFz8nhEvihO8xNg=;
-        b=jTCV7l3jNyoKkSnavBxPWKG7xXbsf4keKse9VtmD0UNTC7nV5MSXLWHd0M21Su28JI
-         RpeGYfG41qyscMKZaydg8jOFeUnbC8By/o4moFV0MxKGBx+nGucowfb5GB0L3APzWQyq
-         9EGHVmXTkopcYKenWF9Wz3O7zkODFY1CUH9T7xHEEj6/BGMC57yPd2rGbwUYdnURqSO5
-         rIStZs8MhXX+xgyXc/vzRekBA7FhIvpi4pGN5YfNBQ6vUrw4vlRJJ4OK3E8FoqJMWqBk
-         BXvtjClTgFEqzClQ4/ndvqzvyxUVegh0KnhdNNxYGatBtVopF6N0lCOKbsw5MXCnn+aR
-         6Y6A==
+        Tue, 26 Nov 2019 08:15:18 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 23so14067882otf.2;
+        Tue, 26 Nov 2019 05:15:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cpPxka1Pl27l5pcH6nCC6OburpGArFz8nhEvihO8xNg=;
-        b=kDFWXknBSDU+gejcZQxQk1XmiMexRNwh7ZsHNzS6xNotHSrSJocNMxoHJzFhB45sn+
-         WkkWv+h6TzO02MvAdeQpNMaD0FbddhE/MYrVM2ds0GBSQ6pi+ZdBhJAavOd04Sf1S0vp
-         VKwTMcu6s00iiARQ5H19hkSYLvzO1wHntRc5h0ZSqThYGS9ESPKAHJ9iTo58x717nezG
-         RzTtNjDxWYRiysVxyd2IYHfV0FE66i90eokWs7z0mSiy9g8EBqu1VXcyZ3Qlo2T0IrYQ
-         PaaR6Pw1uYfVE4WTWgKAv+3Nbp9s/fPgktAUe4SZzhAJgvfw9C+A8hsipTqswZN7uFhy
-         7TzQ==
-X-Gm-Message-State: APjAAAVF5i2o8tu2nw89QA2CRSZgTCwZEMDL5Z7zaGqUwGv54K/4qBIO
-        8yj7U/0SZLrlFpsRJGO7MxdpAdaphVT6iZDTFtU=
-X-Google-Smtp-Source: APXvYqzvpjLjGloa05lw3i6I7fgHo/R4gvZ+aD1eq+3S4tCNKb5dQ6Noemh342gMN8vs6C7Xgr0E0nChjCjoOogvPVg=
-X-Received: by 2002:ac8:1bed:: with SMTP id m42mr17979158qtk.359.1574774074441;
- Tue, 26 Nov 2019 05:14:34 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=yOQdMjYPdVy6RkGpAIiWBTaVHjvFHI5z40O+OjylWNs=;
+        b=Y7SBgiosMNbIocrTGKprvCSws+0ObYjHUmi9MPGHi6rZX/KyiorLStVwUf5dtEzlTI
+         p+NwdZ48eEPygwn8gu2Wt0LOXDqXfT9QyZzPE6Y0e9Ke3c5qpQLEd4zJW3Au9fIJXxTs
+         JO5BF4Q+nINAZkwrisuLH1JgyvHi7eS71eqeCg60DZJCbq8cDv8WvRuj/iwjkQgWhYNj
+         9BB8S7QRvdO3d5U4OtcxoeNoNQwqD2IA8dST1rnMNx5GQPlwNKujD3jCIkeEs4Ty3sol
+         yqzl+S+LV+QuLnEhrnY9pdLQ8LJze9wNmvtedJ9QaHtkxboraU2r1kLCaX974/Mr6B+v
+         V7aQ==
+X-Gm-Message-State: APjAAAWyH87rCgrRc/y2y8FkegYqVEzCU9DYqDc1CSWbUyv9RW/enPYy
+        1HtE1rqh0qScKg3d5FCIwXFRgwLDomrbFEgU4L8=
+X-Google-Smtp-Source: APXvYqz82YvsMLNHpNEPX4+Kqba7XbryaMpz18cKmGgzjGviKvra31QS1PI2HBdwdHYm5Us9bXfm9nzi6w+g6zzmjdw=
+X-Received: by 2002:a9d:19ed:: with SMTP id k100mr1589639otk.297.1574774116545;
+ Tue, 26 Nov 2019 05:15:16 -0800 (PST)
 MIME-Version: 1.0
-References: <mhng-0a2f9574-9b23-4f26-ae76-18ed7f2c8533@palmer-si-x1c4>
- <87d0yoizv9.fsf@xps13.shealevy.com> <87zi19gjof.fsf@xps13.shealevy.com>
-In-Reply-To: <87zi19gjof.fsf@xps13.shealevy.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Tue, 26 Nov 2019 14:14:22 +0100
-Message-ID: <CAJ+HfNhoJnGon-L9OwSfrMbmUt1ZPBB_=A8ZFrg1CgEq3ua-Sg@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Load modules within relative jump range of the
- kernel text.
-To:     Shea Levy <shea@shealevy.com>
-Cc:     linux-riscv@lists.infradead.org, albert@sifive.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Netdev <netdev@vger.kernel.org>
+References: <git-mailbomb-linux-master-1cbeab1b242d16fdb22dc3dab6a7d6afe746ae6d@kernel.org>
+In-Reply-To: <git-mailbomb-linux-master-1cbeab1b242d16fdb22dc3dab6a7d6afe746ae6d@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 26 Nov 2019 14:15:04 +0100
+Message-ID: <CAMuHMdUoOWugmyAA3-dP=AAMYwLy7KPKpGzXwxRn_yTJugM+Ww@mail.gmail.com>
+Subject: Re: ext4: add kunit test for decoding extended timestamps
+To:     Iurii Zaikin <yzaikin@google.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Theodore Tso <tytso@mit.edu>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 May 2018 at 13:22, Shea Levy <shea@shealevy.com> wrote:
+Hi Lurii,
+
+On Tue, Nov 26, 2019 at 3:12 AM Linux Kernel Mailing List
+<linux-kernel@vger.kernel.org> wrote:
+> Commit:     1cbeab1b242d16fdb22dc3dab6a7d6afe746ae6d
+> Parent:     d460623c5fa126dc51bb2571dd7714ca75b0116c
+> Refname:    refs/heads/master
+> Web:        https://git.kernel.org/torvalds/c/1cbeab1b242d16fdb22dc3dab6a7d6afe746ae6d
+> Author:     Iurii Zaikin <yzaikin@google.com>
+> AuthorDate: Thu Oct 17 15:12:33 2019 -0700
+> Committer:  Shuah Khan <skhan@linuxfoundation.org>
+> CommitDate: Wed Oct 23 10:28:23 2019 -0600
 >
-> Hi Palmer,
+>     ext4: add kunit test for decoding extended timestamps
 >
-> Shea Levy <shea@shealevy.com> writes:
+>     KUnit tests for decoding extended 64 bit timestamps that verify the
+>     seconds part of [a/c/m] timestamps in ext4 inode structs are decoded
+>     correctly.
 >
-> > Hi Palmer,
-> >
-> > Palmer Dabbelt <palmer@sifive.com> writes:
-> >
-> >> On Sun, 22 Apr 2018 05:53:56 PDT (-0700), shea@shealevy.com wrote:
-> >>> Hi Palmer,
-> >>>
-> >>> Shea Levy <shea@shealevy.com> writes:
-> >>>
-> >>>> Signed-off-by: Shea Levy <shea@shealevy.com>
-> >>>> ---
-> >>>>
-> >>>> Note that this patch worked in my old modules patchset and seems to =
-be
-> >>>> working now, but my kernel boot locks up on top of
-> >>>> riscv-for-linus-4.17-mw0 and I don't know if it's due to this patch =
-or
-> >>>> something else that's changed in the mean time.
-> >>>>
-> >>>> ---
-> >>>>  arch/riscv/include/asm/pgtable.h |  9 +++++++++
-> >>>>  arch/riscv/kernel/module.c       | 11 +++++++++++
-> >>>>  2 files changed, 20 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/a=
-sm/pgtable.h
-> >>>> index 16301966d65b..b08ded13364a 100644
-> >>>> --- a/arch/riscv/include/asm/pgtable.h
-> >>>> +++ b/arch/riscv/include/asm/pgtable.h
-> >>>> @@ -25,6 +25,7 @@
-> >>>>  #include <asm/page.h>
-> >>>>  #include <asm/tlbflush.h>
-> >>>>  #include <linux/mm_types.h>
-> >>>> +#include <linux/sizes.h>
-> >>>>
-> >>>>  #ifdef CONFIG_64BIT
-> >>>>  #include <asm/pgtable-64.h>
-> >>>> @@ -425,6 +426,14 @@ static inline void pgtable_cache_init(void)
-> >>>>  #define TASK_SIZE VMALLOC_START
-> >>>>  #endif
-> >>>>
-> >>>> +/*
-> >>>> + * The module space lives between the addresses given by TASK_SIZE
-> >>>> + * and PAGE_OFFSET - it must be within 2G of the kernel text.
-> >>>> + */
-> >>>> +#define MODULES_SIZE              (SZ_128M)
-> >>>> +#define MODULES_VADDR             (PAGE_OFFSET - MODULES_SIZE)
-> >>>> +#define MODULES_END               (VMALLOC_END)
-> >>>> +
-> >>>>  #include <asm-generic/pgtable.h>
-> >>>>
-> >>>>  #endif /* !__ASSEMBLY__ */
-> >>>> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
-> >>>> index 5dddba301d0a..1b382c7de095 100644
-> >>>> --- a/arch/riscv/kernel/module.c
-> >>>> +++ b/arch/riscv/kernel/module.c
-> >>>> @@ -16,6 +16,8 @@
-> >>>>  #include <linux/err.h>
-> >>>>  #include <linux/errno.h>
-> >>>>  #include <linux/moduleloader.h>
-> >>>> +#include <linux/vmalloc.h>
-> >>>> +#include <asm/pgtable.h>
-> >>>>
-> >>>>  static int apply_r_riscv_64_rela(struct module *me, u32 *location, =
-Elf_Addr v)
-> >>>>  {
-> >>>> @@ -382,3 +384,12 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const=
- char *strtab,
-> >>>>
-> >>>>    return 0;
-> >>>>  }
-> >>>> +
-> >>>> +void *module_alloc(unsigned long size)
-> >>>> +{
-> >>>> +  return __vmalloc_node_range(size, 1, MODULES_VADDR,
-> >>>> +                              MODULES_END, GFP_KERNEL,
-> >>>> +                              PAGE_KERNEL_EXEC, 0,
-> >>>> +                              NUMA_NO_NODE,
-> >>>> +                              __builtin_return_address(0));
-> >>>> +}
-> >>>> --
-> >>>> 2.16.2
-> >>>
-> >>> Any thoughts on this?
-> >>
-> >> The concept looks good, but does this actually keep the modules within=
- 2GiB of
-> >> the text if PAGE_OFFSET is large?
-> >
-> > It's been some time since I wrote this, but I thought PAGE_OFFSET was
-> > where the kernel text *started*? So unless the text itself is bigger
-> > than 2G - 128 M, in which case we're SOL anyway, it seems like this
-> > should work. Is there something better we can do, without a large memor=
-y
-> > model?
-> >
-> > Thanks,
-> > Shea
+>     Test data is derived from the table in the Inode Timestamps section of
+>     Documentation/filesystems/ext4/inodes.rst.
 >
-> Any further thoughts on this?
+>     KUnit tests run during boot and output the results to the debug log
+>     in TAP format (http://testanything.org/). Only useful for kernel devs
+>     running KUnit test harness and are not for inclusion into a production
+>     build.
 >
-> Thanks,
-> Shea
+>     Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+>     Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+>     Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+>     Tested-by: Brendan Higgins <brendanhiggins@google.com>
+>     Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+>     Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Shea,
+While this test succeeds on arm64, it fails on m68k and arm32 (presumably
+all 32-bit platforms?):
 
-Waking up the dead (threads)!
+# Subtest: ext4_inode_test
+1..1
+# inode_test_xtimestamp_decoding: EXPECTATION FAILED at fs/ext4/inode-test.c:250
+Expected test_data[i].expected.tv_sec == timestamp.tv_sec, but
+test_data[i].expected.tv_sec == -2147483648
+timestamp.tv_sec == 2147483648
+1901-12-13 Lower bound of 32bit < 0 timestamp, no extra bits: msb:1
+lower_bound:1 extra_bits: 0
+# inode_test_xtimestamp_decoding: EXPECTATION FAILED at fs/ext4/inode-test.c:250
+Expected test_data[i].expected.tv_sec == timestamp.tv_sec, but
+test_data[i].expected.tv_sec == 2147483648
+timestamp.tv_sec == 6442450944
+2038-01-19 Lower bound of 32bit <0 timestamp, lo extra sec bit on:
+msb:1 lower_bound:1 extra_bits: 1
+# inode_test_xtimestamp_decoding: EXPECTATION FAILED at fs/ext4/inode-test.c:250
+Expected test_data[i].expected.tv_sec == timestamp.tv_sec, but
+test_data[i].expected.tv_sec == 6442450944
+timestamp.tv_sec == 10737418240
+2174-02-25 Lower bound of 32bit <0 timestamp, hi extra sec bit on:
+msb:1 lower_bound:1 extra_bits: 2
+not ok 1 - inode_test_xtimestamp_decoding
+not ok 1 - ext4_inode_test
 
-I'm hacking on call improvements for the RISC-V BPF JIT.
-module_alloc() is used under the hood of bpf_jit_binary_alloc(), which
-in turn is used to allocate the JIT image. The current JIT
-implementation has to to "load imm64 + jalr" to call kernel syms,
-since the relative offset is >32b. With your patch, I can use regular
-jal/auipc+jalr instead. IOW, it would be great if it could be merged.
-;-) I'd prefer not having the patch in my BPF JIT series, since that
-will go through a different tree than Paul's RV one.
+Gr{oetje,eeting}s,
 
-Wdyt about brushing of the dust of the patch, and re-send it?
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Thanks!
-Bj=C3=B6rn
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
