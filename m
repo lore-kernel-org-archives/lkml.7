@@ -2,60 +2,94 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F277FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374DBC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAEDD2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E942075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574772705;
+	bh=5nAvciWjljSlo0MRrEzGu4vA1rOXmiskCOHgf/ck+dw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k9QrAjJBW5/a+O966p3BNzls7VKe2dLVxJYj/wRp4pPHWCKp5j33DKN//TgzdrCUl
+	 NRXHW7LqKnsoT4zbG2G3r4jFIUH8cS8fX35FbzcreXJpBSYXRZ5ENxF8zowVtpMB1L
+	 CyOVpBAQohIdiiERJFuxHS/zv2D5oJ7Ht4Dnkbbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfKZMqn (ORCPT
+        id S1727495AbfKZMvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 07:46:43 -0500
-Received: from mailbackend.panix.com ([166.84.1.89]:61599 "EHLO
-        mailbackend.panix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfKZMqn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 07:46:43 -0500
-Received: from hp-x360n (c-73-241-154-233.hsd1.ca.comcast.net [73.241.154.233])
-        by mailbackend.panix.com (Postfix) with ESMTPSA id 47MkDc4hXJz1Gry;
-        Tue, 26 Nov 2019 07:46:40 -0500 (EST)
-Date:   Tue, 26 Nov 2019 04:46:39 -0800 (PST)
-From:   "Kenneth R. Crudup" <kenny@panix.com>
-Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
-To:     Kirill Smelkov <kirr@nexedi.com>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Commit 0be0ee71 ("fs: properly and reliably lock f_pos in
- fdget_pos()") breaking userspace
-In-Reply-To: <20191126100010.GA15941@deco.navytux.spb.ru>
-Message-ID: <alpine.DEB.2.21.1911260445170.6292@hp-x360n>
-References: <alpine.DEB.2.21.1911251322160.2408@hp-x360n> <CAHk-=wj_nbDN3piDJBEteUrjyrZCTA+CCk15NfV=5D2xFfGJGw@mail.gmail.com> <CAHk-=whn2Dp44tjUpLo9ogs=p-v-Vn7c2Xdo4p+2V=d1hTaiuA@mail.gmail.com> <CAHk-=wj3YSFT+C3n=7CTsB-8U0NUpTpT3xEH866H4-1qbQGw7Q@mail.gmail.com>
- <CAHk-=whYSnvfZNN1_Nr-S5C+a8-SkSMZO4Rf3NDAO046+rTNXQ@mail.gmail.com> <20191126100010.GA15941@deco.navytux.spb.ru>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 26 Nov 2019 07:51:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbfKZMvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 07:51:43 -0500
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69E61206BF;
+        Tue, 26 Nov 2019 12:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574772702;
+        bh=5nAvciWjljSlo0MRrEzGu4vA1rOXmiskCOHgf/ck+dw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RvVzSwrzBkQ8faXu4UMgM41piS9lOzszU7IBHz2T7OmjxLWK42N9HPWM4t8WYcewV
+         PUlUbBehr242PJuxMMaPAyqmIpZMmTP8A2xzlNoVjXorIj5w1xm/6m7g83zpY3rYyX
+         9x/57jz1HLZHD/qWHYTPD9Y14fFMXbPWmvXEBy20=
+Date:   Tue, 26 Nov 2019 14:51:37 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v3 1/7] linux/log2.h: Add roundup/rounddown_pow_two64()
+ family of functions
+Message-ID: <20191126125137.GA10331@unreal>
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+ <20191126091946.7970-2-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126091946.7970-2-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 26, 2019 at 10:19:39AM +0100, Nicolas Saenz Julienne wrote:
+> Some users need to make sure their rounding function accepts and returns
+> 64bit long variables regardless of the architecture. Sadly
+> roundup/rounddown_pow_two() takes and returns unsigned longs. Create a
+> new generic 64bit variant of the function and cleanup rougue custom
+> implementations.
 
-On Tue, 26 Nov 2019, Kirill Smelkov wrote:
+Is it possible to create general roundup/rounddown_pow_two() which will
+work correctly for any type of variables, instead of creating special
+variant for every type?
 
-> P.S. even though I was put into cc there, somehow I did not received any
-> notification email for commits d8e464ecc17b (vfs: mark pipes and sockets as
-> stream-like file descriptors) and 0be0ee71816b (vfs: properly and
-> reliably lock f_pos in fdget_pos()).
-
-That's my fault; the CC: list for those commits was pretty long and I was
-worried about it appearing like SPAMming anyone who'd signed off on it, so
-I'd punted and sent it to Linus and the LKML only.
-
-	-Kenny
-
--- 
-Kenneth R. Crudup  Sr. SW Engineer, Scott County Consulting, Silicon Valley
+Thanks
