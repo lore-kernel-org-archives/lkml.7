@@ -2,222 +2,111 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A951C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729ACC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8AE2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C6420836
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:16:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VXeCzyXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfKZUOD (ORCPT
+        id S1727099AbfKZUQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:14:03 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45626 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726299AbfKZUOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:14:02 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A87B6AB92;
-        Tue, 26 Nov 2019 20:14:00 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Breno Leitao <leitao@debian.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Diana Craciun <diana.craciun@nxp.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Neuling <mikey@neuling.org>,
-        Gustavo Romero <gromero@linux.ibm.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
-        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/35] powerpc/64s/exception: Introduce INT_DEFINE parameter block for code generation
-Date:   Tue, 26 Nov 2019 21:13:15 +0100
-Message-Id: <e52e8666fb88641f803b9d23ffea89e1ac187130.1574798487.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1574798487.git.msuchanek@suse.de>
-References: <cover.1574798487.git.msuchanek@suse.de>
+        Tue, 26 Nov 2019 15:16:25 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44714 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726180AbfKZUQY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:16:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574799383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tlkcBMz0aDkfjyZgidJYNXI4jyBSSwkGWerhRRVteAY=;
+        b=VXeCzyXPP/7NpwGn0fXRZdvNxDC7JuP/QvSq08Gr6WPO1M6cGs6cP+XSzdbbElaQGe0IAf
+        09SqMthrLPVnlUV+nkN4Q7VMJjSscueElnxs3pmFFXBzpCd2xdP2T447NieY4vdr2BPnrd
+        US3OPAOD4pEABdf+zoYHMsVd42hHKoU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-37-vyS4FXuhNRmseLIyxbB50w-1; Tue, 26 Nov 2019 15:16:19 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE27D1005512;
+        Tue, 26 Nov 2019 20:16:17 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 06A135D9CA;
+        Tue, 26 Nov 2019 20:16:14 +0000 (UTC)
+Date:   Tue, 26 Nov 2019 15:16:13 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Nikos Tsironis <ntsironis@arrikto.com>,
+        Ilias Tsitsimpis <iliastsi@arrikto.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: docs: device-mapper: Add dm-clone to documentation index
+Message-ID: <20191126201613.GA3750@redhat.com>
+References: <20191126185627.970-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191126185627.970-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: vyS4FXuhNRmseLIyxbB50w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+On Tue, Nov 26 2019 at  1:56pm -0500,
+Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 
-The code generation macro arguments are difficult to read, and
-defaults can't easily be used.
+> When the dm-clone documentation was added, it was not added to the
+> documentation index, leading to a warning when building the
+> documentation:
+>=20
+>     Documentation/admin-guide/device-mapper/dm-clone.rst: WARNING: docume=
+nt isn't included in any toctree
+>=20
+> Fixes: 7431b7835f554f86 ("dm: add clone target")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/admin-guide/device-mapper/index.rst | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/admin-guide/device-mapper/index.rst b/Document=
+ation/admin-guide/device-mapper/index.rst
+> index 4872fb6d29524593..ec62fcc8eeceed83 100644
+> --- a/Documentation/admin-guide/device-mapper/index.rst
+> +++ b/Documentation/admin-guide/device-mapper/index.rst
+> @@ -8,6 +8,7 @@ Device Mapper
+>      cache-policies
+>      cache
+>      delay
+> +    dm-clone
+>      dm-crypt
+>      dm-dust
+>      dm-flakey
+>=20
 
-This introduces a block where parameters can be set for interrupt
-handler code generation by the subsequent macros, and adds the first
-generation macro for interrupt entry.
+I already staged this for 5.5 here:
+https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/=
+commit/?h=3Ddm-5.5&id=3D484e0d2b11e1fdd0d17702b282eb2ed56148385f
 
-One interrupt handler is converted to the new macros to demonstrate
-the change, the rest will be coverted all at once.
+But I don't plan to send to Linus for a week or 2...
 
-No generated code change.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- arch/powerpc/kernel/exceptions-64s.S | 77 ++++++++++++++++++++++++++--
- 1 file changed, 73 insertions(+), 4 deletions(-)
-
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index d0018dd17e0a..e6ad6e6cf65e 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -193,6 +193,61 @@ END_FTR_SECTION_NESTED(ftr,ftr,943)
- 	mtctr	reg;							\
- 	bctr
- 
-+/*
-+ * Interrupt code generation macros
-+ */
-+#define IVEC		.L_IVEC_\name\()
-+#define IHSRR		.L_IHSRR_\name\()
-+#define IAREA		.L_IAREA_\name\()
-+#define IDAR		.L_IDAR_\name\()
-+#define IDSISR		.L_IDSISR_\name\()
-+#define ISET_RI		.L_ISET_RI_\name\()
-+#define IEARLY		.L_IEARLY_\name\()
-+#define IMASK		.L_IMASK_\name\()
-+#define IKVM_REAL	.L_IKVM_REAL_\name\()
-+#define IKVM_VIRT	.L_IKVM_VIRT_\name\()
-+
-+#define INT_DEFINE_BEGIN(n)						\
-+.macro int_define_ ## n name
-+
-+#define INT_DEFINE_END(n)						\
-+.endm ;									\
-+int_define_ ## n n ;							\
-+do_define_int n
-+
-+.macro do_define_int name
-+	.ifndef IVEC
-+		.error "IVEC not defined"
-+	.endif
-+	.ifndef IHSRR
-+		IHSRR=EXC_STD
-+	.endif
-+	.ifndef IAREA
-+		IAREA=PACA_EXGEN
-+	.endif
-+	.ifndef IDAR
-+		IDAR=0
-+	.endif
-+	.ifndef IDSISR
-+		IDSISR=0
-+	.endif
-+	.ifndef ISET_RI
-+		ISET_RI=1
-+	.endif
-+	.ifndef IEARLY
-+		IEARLY=0
-+	.endif
-+	.ifndef IMASK
-+		IMASK=0
-+	.endif
-+	.ifndef IKVM_REAL
-+		IKVM_REAL=0
-+	.endif
-+	.ifndef IKVM_VIRT
-+		IKVM_VIRT=0
-+	.endif
-+.endm
-+
- .macro INT_KVM_HANDLER name, vec, hsrr, area, skip
- 	TRAMP_KVM_BEGIN(\name\()_kvm)
- 	KVM_HANDLER \vec, \hsrr, \area, \skip
-@@ -474,7 +529,7 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	 */
- 	GET_SCRATCH0(r10)
- 	std	r10,\area\()+EX_R13(r13)
--	.if \dar
-+	.if \dar == 1
- 	.if \hsrr
- 	mfspr	r10,SPRN_HDAR
- 	.else
-@@ -482,7 +537,7 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	.endif
- 	std	r10,\area\()+EX_DAR(r13)
- 	.endif
--	.if \dsisr
-+	.if \dsisr == 1
- 	.if \hsrr
- 	mfspr	r10,SPRN_HDSISR
- 	.else
-@@ -506,6 +561,14 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	.endif
- .endm
- 
-+.macro GEN_INT_ENTRY name, virt, ool=0
-+	.if ! \virt
-+		INT_HANDLER \name, IVEC, \ool, IEARLY, \virt, IHSRR, IAREA, ISET_RI, IDAR, IDSISR, IMASK, IKVM_REAL
-+	.else
-+		INT_HANDLER \name, IVEC, \ool, IEARLY, \virt, IHSRR, IAREA, ISET_RI, IDAR, IDSISR, IMASK, IKVM_VIRT
-+	.endif
-+.endm
-+
- /*
-  * On entry r13 points to the paca, r9-r13 are saved in the paca,
-  * r9 contains the saved CR, r11 and r12 contain the saved SRR0 and
-@@ -1143,12 +1206,18 @@ END_FTR_SECTION_IFSET(CPU_FTR_HVMODE)
- 	bl	unrecoverable_exception
- 	b	.
- 
-+INT_DEFINE_BEGIN(data_access)
-+	IVEC=0x300
-+	IDAR=1
-+	IDSISR=1
-+	IKVM_REAL=1
-+INT_DEFINE_END(data_access)
- 
- EXC_REAL_BEGIN(data_access, 0x300, 0x80)
--	INT_HANDLER data_access, 0x300, ool=1, dar=1, dsisr=1, kvm=1
-+	GEN_INT_ENTRY data_access, virt=0, ool=1
- EXC_REAL_END(data_access, 0x300, 0x80)
- EXC_VIRT_BEGIN(data_access, 0x4300, 0x80)
--	INT_HANDLER data_access, 0x300, virt=1, dar=1, dsisr=1
-+	GEN_INT_ENTRY data_access, virt=1
- EXC_VIRT_END(data_access, 0x4300, 0x80)
- INT_KVM_HANDLER data_access, 0x300, EXC_STD, PACA_EXGEN, 1
- EXC_COMMON_BEGIN(data_access_common)
--- 
-2.23.0
+If Jon and/or someone else would like to send it along before then
+that'd be fine with me.
 
