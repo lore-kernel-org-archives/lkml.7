@@ -2,148 +2,92 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B5AC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 00:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BBFC43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 00:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9148720674
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 00:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 324D42080F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 00:59:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwSa7APQ"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="DIUUFeWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfKZA5B (ORCPT
+        id S1727139AbfKZA7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 19:57:01 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:32945 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfKZA47 (ORCPT
+        Mon, 25 Nov 2019 19:59:33 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45740 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfKZA7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 19:56:59 -0500
-Received: by mail-pf1-f196.google.com with SMTP id c184so8294078pfb.0;
-        Mon, 25 Nov 2019 16:56:59 -0800 (PST)
+        Mon, 25 Nov 2019 19:59:32 -0500
+Received: by mail-qk1-f195.google.com with SMTP id q70so14626509qke.12;
+        Mon, 25 Nov 2019 16:59:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aCAIdja2mecYCK657/1Jqa9rURX6PmMXn4wD/Vw979E=;
-        b=kwSa7APQRJdfgBr6xuHjt8qpSsOidjLh2f1EfpFC1k6MUt/Hq00QF1kkF7XMioI2us
-         dGCl4v2iqCz+C5YH8+0pyDOqiRDfE7gJ9qEB4dqOpD5kMLaurWMHXu8W2WN+vIi/+JE4
-         ia5srip814Kpj7jyVZmVLiJrQyqr98/AiCz9IcLt6j1Z7b3WXyQkgi07Lw59VL1K5Y3f
-         DHkzfg56kDkRutXmHfo8vgynpVm3h455kP9j0O9JkGzQoUCxvQ3o+KNCUhF9wtx8qmPH
-         DH938bz40POS/+96gixf4iJ33jRhQX+IcixjHTYQrzzjYg5l95p9y1F7binUi7vZojiN
-         MZSQ==
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m7XFzCWonYVHxuwP5fu1PxHNZ55RMRiDHqimUZntDh4=;
+        b=DIUUFeWUjfSEHzwzxtnqA+xNH2Id50fnNM/fiBRukFlSKzmoT5qSKQJFnv4GuHOpq6
+         71gU4R+PrKIedYDMQNEvHspR/u/S/UeN7YoHLzEi3ZRGmbuqRDp0szLHgOxQ2c+DuMdS
+         BmuAqg6Z2B73TF+Td/X7g38Qz0Klg/3Muk4Jo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aCAIdja2mecYCK657/1Jqa9rURX6PmMXn4wD/Vw979E=;
-        b=iJ3BE+owyOZkZrqVJQxLBRdSlJnFtelsW8cywjUmXS88gG+lrvBjxnaW5ZeMOHOQdB
-         2GYDe+vAVJEhTiK/kxQfZgiIg/yxmY0z0ta8uUsFZZkJh1FD4dN3VwRxReoCipDa2Uf0
-         Nqe9GUPAmLgOcBBi/qJnn9qAUbr+nayFCIdVGUAg8C4NGa0mLKH8TvhtLJWoxbn+VXnl
-         PADNjiFYnVGtkOdAtSuDxvqp+aGR/YUcI19Apxob0c+80rvwpD6CFzmhYcJB8ZrGMG2b
-         7yXdoyyC6uS+GzdcC0bhPlM/gP7AhqxreqVPVf82Gj67hePVSurpWbQRaUde28OacouM
-         Em4g==
-X-Gm-Message-State: APjAAAW+cQN4x+Tgk6kbI/Y01YBKMuFrp6e0FpXCHcdavpf7oovIECfn
-        DfgRLjbM6AGrAQXG2+3zP9Dd8Lyw
-X-Google-Smtp-Source: APXvYqwj3LGgoahwScqnP8gjni2SV5gkLqs/V2yP6dkcfl5NNv/m6knuu/y9Uhy41it+kTsfKjY/oQ==
-X-Received: by 2002:a63:e44b:: with SMTP id i11mr35553225pgk.437.1574729818327;
-        Mon, 25 Nov 2019 16:56:58 -0800 (PST)
-Received: from hephaestus.prv.suse.net ([186.212.48.108])
-        by smtp.gmail.com with ESMTPSA id w15sm9421223pfi.168.2019.11.25.16.56.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 16:56:57 -0800 (PST)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     dsterba@suse.com, linux-btrfs@vger.kernel.org,
-        anand.jain@oracle.com, Marcos Paulo de Souza <mpdesouza@suse.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH 2/2] btrfs: qgroup: Return -ENOTCONN instead of -EINVAL
-Date:   Mon, 25 Nov 2019 21:58:51 -0300
-Message-Id: <20191126005851.11813-3-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191126005851.11813-1-marcos.souza.org@gmail.com>
-References: <20191126005851.11813-1-marcos.souza.org@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m7XFzCWonYVHxuwP5fu1PxHNZ55RMRiDHqimUZntDh4=;
+        b=ZOqZQbdQIhDSlRF9pNVsG9/IXgpGqlkmAo1q9AJaUqEz4IsVNbFlUKkS0uYbU0kaTl
+         h6kVxY9CDynX05V+JnTg3mMHkMyv3OP/2/IiwtW3P7UJl0OtzU3t0C8KpJg0o/E3/iRs
+         FQmGvUvXimpx6S6iVU/eqUwRgPo4EXfKTizqSyqkDK8El092z3PDvSBYkzJlC+YEX61B
+         2p1C2Kt39dBLzzDMJynFvbz9fpBtVCMH+20j5x8ui3JYV40824IB0TbdYjnD0z0nrTHe
+         rEcpRryEmv3MrOmNjEmuayTUiyoUwTA7GZ5kPOmPQW8LDr2P/qCoog9QuRQ7tBOA6RhC
+         0gFQ==
+X-Gm-Message-State: APjAAAXFuA4kiAnjTqBp66d3bPrSvk1aTqcZvLBoX9/Mlazyb/R9ZISM
+        0SnPwX3ENR/TYmTBoVPW+UxepVIZMK9HArdeeRI=
+X-Google-Smtp-Source: APXvYqzxouakbsyDuepwnrAYMPQWMY5b7/QqbsrmtOXq9S445ZLuU58+ueka4h/ftWC1n2cYQWh+IaXs6/v0/YH2Je4=
+X-Received: by 2002:a37:ac05:: with SMTP id e5mr13396683qkm.414.1574729971439;
+ Mon, 25 Nov 2019 16:59:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191010020655.3776-1-andrew@aj.id.au> <20191010020655.3776-3-andrew@aj.id.au>
+ <CACPK8Xcrc_2itUcGw6caa8Fp3sJE8oHBO5LJgBtqScwmVAuHJw@mail.gmail.com>
+In-Reply-To: <CACPK8Xcrc_2itUcGw6caa8Fp3sJE8oHBO5LJgBtqScwmVAuHJw@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 26 Nov 2019 00:59:19 +0000
+Message-ID: <CACPK8XchwGdgE95jkdhwWbp0r+NHge7W3q6yQp-wzfxV3Kpajg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] clk: aspeed: Add RMII RCLK gates for both AST2500 MACs
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
+Hi Stephen,
 
-[PROBLEM]
-qgroup create/remove code is currently returning EINVAL when the user
-tries to create a qgroup on a subvolume without quota enabled. EINVAL is
-already being used for too many error scenarios so that is hard to depict
-what is the problem.
+On Thu, 10 Oct 2019 at 23:41, Joel Stanley <joel@jms.id.au> wrote:
+>
+> On Thu, 10 Oct 2019 at 02:06, Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> > RCLK is a fixed 50MHz clock derived from HPLL that is described by a
+> > single gate for each MAC.
+> >
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+>
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-[FIX]
-Currently scrub and balance code return -ENOTCONN when the user tries to
-cancel/pause and no scrub or balance is currently running for the desired
-subvolume. Do the same here by returning -ENOTCONN  when a user
-tries to create/delete/assing/list a qgroup on a subvolume without quota
-enabled.
+I noticed this one hasn't been applied to clk-next.
 
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
----
- fs/btrfs/qgroup.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Cheers,
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index 417fafb4b4f6..b046b04d7cce 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -1259,7 +1259,7 @@ int btrfs_add_qgroup_relation(struct btrfs_trans_handle *trans, u64 src,
- 
- 	mutex_lock(&fs_info->qgroup_ioctl_lock);
- 	if (!fs_info->quota_root) {
--		ret = -EINVAL;
-+		ret = -ENOTCONN;
- 		goto out;
- 	}
- 	member = find_qgroup_rb(fs_info, src);
-@@ -1318,7 +1318,7 @@ static int __del_qgroup_relation(struct btrfs_trans_handle *trans, u64 src,
- 		return -ENOMEM;
- 
- 	if (!fs_info->quota_root) {
--		ret = -EINVAL;
-+		ret = -ENOTCONN;
- 		goto out;
- 	}
- 
-@@ -1384,7 +1384,7 @@ int btrfs_create_qgroup(struct btrfs_trans_handle *trans, u64 qgroupid)
- 
- 	mutex_lock(&fs_info->qgroup_ioctl_lock);
- 	if (!fs_info->quota_root) {
--		ret = -EINVAL;
-+		ret = -ENOTCONN;
- 		goto out;
- 	}
- 	quota_root = fs_info->quota_root;
-@@ -1418,7 +1418,7 @@ int btrfs_remove_qgroup(struct btrfs_trans_handle *trans, u64 qgroupid)
- 
- 	mutex_lock(&fs_info->qgroup_ioctl_lock);
- 	if (!fs_info->quota_root) {
--		ret = -EINVAL;
-+		ret = -ENOTCONN;
- 		goto out;
- 	}
- 
-@@ -1469,7 +1469,7 @@ int btrfs_limit_qgroup(struct btrfs_trans_handle *trans, u64 qgroupid,
- 
- 	mutex_lock(&fs_info->qgroup_ioctl_lock);
- 	if (!fs_info->quota_root) {
--		ret = -EINVAL;
-+		ret = -ENOTCONN;
- 		goto out;
- 	}
- 
--- 
-2.23.0
-
+Joel
