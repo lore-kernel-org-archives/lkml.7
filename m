@@ -2,115 +2,100 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8539C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C40C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0C92073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:46:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574761561;
-	bh=C7ZNlXhgJ+7iYjYnxCq1Gk2Y8w/CxnWXco/QWQTC+aY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1/DQkpvYDMJ+w5+lXG2sCENxUiHWc4VJcdhf0E9l3JfRkYaPLP8Xza1nClE4oTo4j
-	 9XUL2MedTCWb1UryQpgXjHqwTLdkKvod0/MHj+8eoaVEXWTcILTFOQll71U0kxY43D
-	 3T3f6DOtPykqx07kWWKGtQF58aRCfZfZep/7JfxI=
+	by mail.kernel.org (Postfix) with ESMTP id CC79120659
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfKZJqA (ORCPT
+        id S1727638AbfKZJtN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:46:00 -0500
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:33126 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfKZJqA (ORCPT
+        Tue, 26 Nov 2019 04:49:13 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:53646 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727422AbfKZJtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:46:00 -0500
-Received: by mail-wr1-f46.google.com with SMTP id w9so21663784wrr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 01:45:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k+BtnFSMnRjQ8YYOOPZrpiqvm9HWBxF1S878IBj12ug=;
-        b=GXz3qg5o/QW/Dmv9EU/db6tEE79XUdmiFmDrBxtau+F/+RnojIXwdWorI81FlNzv6G
-         D0xJxWFa6EN4/TsCWOwCuhAaVPrvAsUPEWPA/3q/5Py1zBsxao+9XXI+YInvyjMvhG81
-         NSc0AIGbAfQ7XLF9OVx5RBJaqd9nHDtEMyG/uhaHF77Vg3xzLqKRcmltbpNp5ku/QEOo
-         EevUmZP0FYnKvolWMrmER/SMKblWjQwRrNaMTGiR6g/aBqiPPKHo5MRY5rdgLtkvidjC
-         JQQzxQ5cc8YzyeO6LJl92lX2Xt92ES+DQoBAUPv1a0taEG1UrVsSIzMoRO87kpW/awFn
-         gczw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k+BtnFSMnRjQ8YYOOPZrpiqvm9HWBxF1S878IBj12ug=;
-        b=MZg4wgWXLGJxdedzrqdJCZWj4sAYIK7AX7A+Jmk0BEwZaMhqAfxkbpl7PagrIlWljn
-         Yaqzw6lkYFTbZx+5KBZTrtZdFvVzJCum+oFGBFi1bmc/znEBcUm330J+fq6HKsxhZhlh
-         8VwwwQG16cajY0hLXk+sPxj/Hqktokl+duaTprKghNQ/SztqZU10N3AxeCUPQo+UhREr
-         AiMj/ZuPzPef9iJplAmUWaqFbuPi8A2IGWwxdRoHrLTneGrTql8VF5WKfN9pk6q0vpUD
-         3Lcz7Q1ojXkaIYlEAdQTNzH1BYxFeyrNVxAUO9CqflC5k1gm+j5VNP3oTqtU47oq8hEV
-         C27Q==
-X-Gm-Message-State: APjAAAUEgVhJi7ys23MgU464sd4La9eEf+XDkntcEjOH8rQN2KtZCCga
-        bAPcrGT0rlnvEOQ3vV0IQL8=
-X-Google-Smtp-Source: APXvYqxybMjr5GimfVXDM2FP+7xc7awNx2xcyYveS80RNO/cxOLZM/moc97qpoTatLU3PLiUYHjfiQ==
-X-Received: by 2002:a5d:5546:: with SMTP id g6mr14255018wrw.320.1574761556918;
-        Tue, 26 Nov 2019 01:45:56 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id b17sm14408420wrp.49.2019.11.26.01.45.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 01:45:56 -0800 (PST)
-Date:   Tue, 26 Nov 2019 10:45:54 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [GIT PULL] x86/iopl changes for v5.5
-Message-ID: <20191126094554.GA3017@gmail.com>
-References: <20191125161626.GA956@gmail.com>
- <20191125192456.GA46001@gmail.com>
+        Tue, 26 Nov 2019 04:49:13 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-111-dVxmoB-BOb-077JA22lhHQ-1; Tue, 26 Nov 2019 09:49:09 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 26 Nov 2019 09:49:08 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 26 Nov 2019 09:49:08 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Fenghua Yu' <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+CC:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: RE: [PATCH v2 1/4] drivers/net/b44: Change to non-atomic bit
+ operations
+Thread-Topic: [PATCH v2 1/4] drivers/net/b44: Change to non-atomic bit
+ operations
+Thread-Index: AQHVo8boYhlrH/hYn0umhpEaMdAbOKedM4/w
+Date:   Tue, 26 Nov 2019 09:49:08 +0000
+Message-ID: <7cbe0135c6234700bebdefd0fdaa4f6a@AcuMS.aculab.com>
+References: <1574710984-208305-1-git-send-email-fenghua.yu@intel.com>
+ <1574710984-208305-2-git-send-email-fenghua.yu@intel.com>
+In-Reply-To: <1574710984-208305-2-git-send-email-fenghua.yu@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191125192456.GA46001@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: dVxmoB-BOb-077JA22lhHQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Ingo Molnar <mingo@kernel.org> wrote:
-
-> Forgot to list the conflicts that may arise if you merge this after the 
-> other x86 bits.
+From: Fenghua Yu
+> Sent: 25 November 2019 19:43
+> From: Peter Zijlstra <peterz@infradead.org>
 > 
-> Firstly the symbol bits would conflict here:
+> Since "pwol_mask" is local and never exposed to concurrency, there is
+> no need to set bit in pwol_mask by costly atomic operations.
 > 
->             arch/x86/entry/entry_32.S
->             arch/x86/kernel/head_32.S
->             arch/x86/xen/xen-asm_32.S
+> Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> ---
+>  drivers/net/ethernet/broadcom/b44.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
+> index 97ab0dd25552..5738ab963dfb 100644
+> --- a/drivers/net/ethernet/broadcom/b44.c
+> +++ b/drivers/net/ethernet/broadcom/b44.c
+> @@ -1520,7 +1520,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+> 
+>  	memset(ppattern + offset, 0xff, magicsync);
+>  	for (j = 0; j < magicsync; j++)
+> -		set_bit(len++, (unsigned long *) pmask);
+> +		__set_bit(len++, (unsigned long *)pmask);
 
-Note that these conflicts will arise once you merge x86-asm-for-linus, 
-with an additional semantic conflict in arch/x86/crypto/blake2s-core.S, 
-see my merge conflict mail to that pull request.
+While this stops the misaligned locks, the code is still horribly borked on BE systems.
+The way pmask is used definitely wanst a u32[] not a u64[] one.
 
-> There's also a conflict in arch/x86/include/asm/pgtable_32_types.h.
+	David
 
-This asm/pgtable_32_types.h conflict will be the only conflict you'll see 
-when you merge x86-iopl-for-linus:
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-  <<<<<<< HEAD
-  #define CPU_ENTRY_AREA_PAGES    (NR_CPUS * 39)
-  =======
-  #define CPU_ENTRY_AREA_PAGES    (NR_CPUS * 41)
-  >>>>>>> e3cb0c7102f04c83bf1a7cb1d052e92749310b46
-
-And the correct resolution is to pick the '41' side.
-
-Thanks,
-
-	Ingo
