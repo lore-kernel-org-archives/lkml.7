@@ -2,199 +2,210 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD6C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD58C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99F320862
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF592075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574770184;
-	bh=/SbrLZpyJJ7X5Bos7DrIFqUfse/MchttoWTj+JKEi1s=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=syw4/tL1ZdDwIZG7yaK9rADaJde7JmJ1+3p1vHcLqKXwubZ89liLjWR3tNTPw9hA/
-	 33ZseapPCEzBzcxgcTUUhIYBEEWwZTtkVMDfP4ZUWhXZav0wM7ZD+ZGislgTi73oyV
-	 NAd/fX+FjxVK2KtPlLYoOLlKwt75r1YCLUvNLKy0=
+	s=default; t=1574770393;
+	bh=Rs4HXMcto03SyVG32tpBjRZdzHn+VYDPtYZa4E+fPrc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=EcTAU8+E/1cIH7b7fTKpGFB8gdahLPa9emfIPzxBkUfzBbcvMoLTgExDdmULu5lOp
+	 iNApnfWvVu18QpytiO4njUrPE3bJdOc+8qM12u2bdKWZBkM5O1aKwZKA5hpudny1Vx
+	 34euql+Gf0tGSIsNYntTncxikHYwovWV3Rz4y7gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfKZMJn (ORCPT
+        id S1728277AbfKZMNM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 07:09:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727488AbfKZMJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 07:09:42 -0500
-Received: from earth.universe (unknown [89.248.140.17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 26 Nov 2019 07:13:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52279 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728216AbfKZMNL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 07:13:11 -0500
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-Lf3LCucJOjqU-xrFJNGEEw-1; Tue, 26 Nov 2019 07:13:06 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C40AC2075C;
-        Tue, 26 Nov 2019 12:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574770181;
-        bh=/SbrLZpyJJ7X5Bos7DrIFqUfse/MchttoWTj+JKEi1s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=M+wdGTOaYCCakG/Q8cgES8yggcNRazT9m+u5hBDVCVneZoSU7f7GCX7QrsjFgqq68
-         8Wb1Hms7qZu/rjpwRJpl08HZlnQfPDeDYCjebir4WB5r7/AVP0T4/zBbYajJDhj6kM
-         zM4k6lURnw8fvMnTeQZ+XuscI46lgKf/UEzhm2ao=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 043373C0C71; Tue, 26 Nov 2019 13:09:40 +0100 (CET)
-Date:   Tue, 26 Nov 2019 13:09:40 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [GIT PULL] power-supply changes for 5.5
-Message-ID: <20191126120940.sjiiqdngnbez2a7x@earth.universe>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8BE1080058F;
+        Tue, 26 Nov 2019 12:13:04 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D0D160BEC;
+        Tue, 26 Nov 2019 12:12:54 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: [PATCH] perf tools: Allow to link with libbpf dynamicaly
+Date:   Tue, 26 Nov 2019 13:12:53 +0100
+Message-Id: <20191126121253.28253-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3ffj6i4c5c3znzmz"
-Content-Disposition: inline
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: Lf3LCucJOjqU-xrFJNGEEw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently we support only static linking with kernel's
+libbpf (tools/lib/bpf). This patch adds libbpf package
+detection and support to link perf with it dynamically.
 
---3ffj6i4c5c3znzmz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The libbpf package status is displayed with:
 
-Hi Linus,
+  $ make VF=1
+  Auto-detecting system features:
+  ...
+  ...                        libbpf: [ on  ]
 
-The pull-request contains immutable branches shared with IIO for the
-ab8500 changes and with ARM for the cpcap changes. I don't expect
-any issues, since all patches have been in linux-next for roughly 4
-weeks.
+It's not checked by default, because it's quite new.
+Once it's on most distros we can switch it on.
 
--- Sebastian
+For the same reason it's not added to the test-all check.
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+Perf does not need advanced version of libbpf, so we can
+check just for the base bpf_object__open function.
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+Adding new compile variable to detect libbpf package and
+link bpf dynamically:
 
-are available in the Git repository at:
+  $ make LIBBPF_DYNAMIC=1
+    ...
+    LINK     perf
+  $ ldd perf | grep bpf
+    libbpf.so.0 => /lib64/libbpf.so.0 (0x00007f46818bc000)
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v5.5
+If libbpf is not installed, build stops with:
 
-for you to fetch changes up to 9480029fe5c24d482efad38dc631bd555fc7afe2:
+  Makefile.config:486: *** Error: No libbpf devel library found,\
+  please install libbpf-devel.  Stop.
 
-  power: supply: bd70528: Add MODULE_ALIAS to allow module auto loading (2019-10-27 22:33:44 +0100)
+Link: http://lkml.kernel.org/n/tip-kjdr6k37nuoiwbl0yltla1nh@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/build/Makefile.feature      |  3 ++-
+ tools/build/feature/Makefile      |  4 ++++
+ tools/build/feature/test-libbpf.c |  7 +++++++
+ tools/perf/Makefile.config        | 10 ++++++++++
+ tools/perf/Makefile.perf          |  6 +++++-
+ 5 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 tools/build/feature/test-libbpf.c
 
-----------------------------------------------------------------
-power supply and reset changes for the v5.5 series
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 8a19753cc26a..574c2e0b9d20 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -96,7 +96,8 @@ FEATURE_TESTS_EXTRA :=                  \
+          cxx                            \
+          llvm                           \
+          llvm-version                   \
+-         clang
++         clang                          \
++         libbpf
+ 
+ FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
+ 
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 8499385365c0..f30a89046aa3 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -53,6 +53,7 @@ FILES=                                          \
+          test-zlib.bin                          \
+          test-lzma.bin                          \
+          test-bpf.bin                           \
++         test-libbpf.bin                        \
+          test-get_cpuid.bin                     \
+          test-sdt.bin                           \
+          test-cxx.bin                           \
+@@ -270,6 +271,9 @@ $(OUTPUT)test-get_cpuid.bin:
+ $(OUTPUT)test-bpf.bin:
+ 	$(BUILD)
+ 
++$(OUTPUT)test-libbpf.bin:
++	$(BUILD) -lbpf
++
+ $(OUTPUT)test-sdt.bin:
+ 	$(BUILD)
+ 
+diff --git a/tools/build/feature/test-libbpf.c b/tools/build/feature/test-libbpf.c
+new file mode 100644
+index 000000000000..a508756cf4cc
+--- /dev/null
++++ b/tools/build/feature/test-libbpf.c
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <bpf/libbpf.h>
++
++int main(void)
++{
++	return bpf_object__open("test") ? 0 : -1;
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 1783427da9b0..c90f4146e5a2 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -483,6 +483,16 @@ ifndef NO_LIBELF
+     ifeq ($(feature-bpf), 1)
+       CFLAGS += -DHAVE_LIBBPF_SUPPORT
+       $(call detected,CONFIG_LIBBPF)
++
++      # detecting libbpf without LIBBPF_DYNAMIC, so make VF=1 shows libbpf detection status
++      $(call feature_check,libbpf)
++      ifdef LIBBPF_DYNAMIC
++        ifeq ($(feature-libbpf), 1)
++          EXTLIBS += -lbpf
++        else
++          dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
++        endif
++      endif
+     endif
+ 
+     ifndef NO_DWARF
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 1cd294468a1f..eae5d5e95952 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -116,6 +116,8 @@ include ../scripts/utilities.mak
+ #
+ # Define TCMALLOC to enable tcmalloc heap profiling.
+ #
++# Define LIBBPF_DYNAMIC to enable libbpf dynamic linking.
++#
+ 
+ # As per kernel Makefile, avoid funny character set dependencies
+ unexport LC_ALL
+@@ -360,7 +362,9 @@ export PERL_PATH
+ 
+ PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD) $(LIBPERF)
+ ifndef NO_LIBBPF
+-  PERFLIBS += $(LIBBPF)
++  ifndef LIBBPF_DYNAMIC
++    PERFLIBS += $(LIBBPF)
++  endif
+ endif
+ 
+ # We choose to avoid "if .. else if .. else .. endif endif"
+-- 
+2.21.0
 
-Drivers:
- * test_power: add support for current and charge_counter
- * cpcap-charger: improve charge calculation and limit default charge voltage
- * ab8500: convert to IIO
- * misc. small fixes all over drivers
-
-----------------------------------------------------------------
-Ben Dooks (Codethink) (1):
-      power: reset: at91: fix __le32 cast in reset code
-
-Claudiu Beznea (1):
-      power: reset: at91-poweroff: lookup for proper PMC DT node
-
-Gustavo A. R. Silva (1):
-      power: supply: ab8500_charger: Fix inconsistent IS_ERR and PTR_ERR
-
-Icenowy Zheng (1):
-      power: supply: axp20x_usb_power: enable USB BC detection on AXP813
-
-Krzysztof Kozlowski (3):
-      power: supply: ab8500: Cleanup probe in reverse order
-      power: supply: ab8500_fg: Do not free non-requested IRQs in probe's error path
-      power: supply: ab8500: Handle invalid IRQ from platform_get_irq_byname()
-
-Linus Walleij (7):
-      power: supply: ab8500_btemp: Convert to IIO ADC
-      power: supply: ab8500_charger: Convert to IIO ADC
-      power: supply: ab8500_fg: Convert to IIO ADC
-      hwmon: ab8500: Convert to IIO ADC
-      mfd: ab8500: Augment DT bindings
-      iio: adc: New driver for the AB8500 GPADC
-      mfd: Switch the AB8500 GPADC to IIO
-
-Madhuparna Bhowmik (1):
-      power: supply: abx500_chargalg: Fix code indentation
-
-Matti Vaittinen (1):
-      power: supply: bd70528: Add MODULE_ALIAS to allow module auto loading
-
-Sebastian Reichel (2):
-      Merge remote-tracking branch 'ib-ab8500-5.4-rc1' into for-next
-      Merge tag 'psy-cpcap-charge-volt-limit-signed' into psy-next
-
-Tony Lindgren (10):
-      power: supply: cpcap-charger: Limit voltage to 4.2V for battery
-      power: supply: cpcap-battery: Check voltage before orderly_poweroff
-      power: supply: cpcap-charger: Improve battery detection
-      power: supply: cpcap-battery: Fix handling of lowered charger voltage
-      power: supply: cpcap-charger: Allow changing constant charge voltage
-      power: supply: cpcap-battery: Move coulomb counter units per lsb to ddata
-      power: supply: cpcap-battery: Simplify coulomb counter calculation with div_s64
-      power: supply: cpcap-battery: Simplify short term power average calculation
-      power: supply: cpcap-battery: Read and save integrator register CCI
-      power: supply: cpcap-battery: Add basic coulomb counter calibrate support
-
-kbuild test robot (1):
-      power: supply: cpcap-charger: cpcap_charger_voltage_to_regval() can be static
-
-lecopzer@gmail.com (2):
-      test_power: Add CHARGE_COUNTER properties
-      test_power: Add CURRENT properties
-
- Documentation/devicetree/bindings/mfd/ab8500.txt   |  119 ++
- .../bindings/power/supply/cpcap-charger.txt        |    9 +-
- MAINTAINERS                                        |    1 +
- arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi     |    6 +-
- drivers/hwmon/Kconfig                              |    3 +-
- drivers/hwmon/ab8500.c                             |   65 +-
- drivers/iio/adc/Kconfig                            |   10 +
- drivers/iio/adc/Makefile                           |    1 +
- drivers/iio/adc/ab8500-gpadc.c                     | 1218 ++++++++++++++++++++
- drivers/mfd/Kconfig                                |    7 -
- drivers/mfd/Makefile                               |    1 -
- drivers/mfd/ab8500-debugfs.c                       |  715 ------------
- drivers/mfd/ab8500-gpadc.c                         | 1075 -----------------
- drivers/power/reset/at91-reset.c                   |    6 +-
- drivers/power/reset/at91-sama5d2_shdwc.c           |    8 +-
- drivers/power/supply/Kconfig                       |    2 +-
- drivers/power/supply/ab8500_btemp.c                |   50 +-
- drivers/power/supply/ab8500_charger.c              |   83 +-
- drivers/power/supply/ab8500_fg.c                   |   49 +-
- drivers/power/supply/abx500_chargalg.c             |    8 +-
- drivers/power/supply/axp20x_usb_power.c            |    8 +
- drivers/power/supply/bd70528-charger.c             |    1 +
- drivers/power/supply/cpcap-battery.c               |  271 ++++-
- drivers/power/supply/cpcap-charger.c               |  222 +++-
- drivers/power/supply/test_power.c                  |   61 +
- include/linux/mfd/abx500/ab8500-gpadc.h            |   75 --
- 26 files changed, 2044 insertions(+), 2030 deletions(-)
- create mode 100644 drivers/iio/adc/ab8500-gpadc.c
- delete mode 100644 drivers/mfd/ab8500-gpadc.c
- delete mode 100644 include/linux/mfd/abx500/ab8500-gpadc.h
-
---3ffj6i4c5c3znzmz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3dFgMACgkQ2O7X88g7
-+pqbLA//YgSLmh30GUiXxGj0F+UASNSKlkJnpgQnjfG/Jkdi0Ft6nT3n4tHFY4wY
-EYzMZ6DDW/DAClOyeXZyNQ73ZITBo5Ff1/aMYPTUbXPXSAn8bb3QyZRp5YnjHMH1
-dLqxCKgBv+rfobTbx6NasmOezhOEP9vtMrXK6bHoN9NyLIdbTJ3rZXXvBVgqBkDO
-LeOXAKt/NvScRKlAVQ/bae9IihBFD149Qr3RvpE+qwueAITiIGFPkWOsDro5AHu4
-amShlPVUz/Vwvb7ot/c8rBkF27XkUDjzOeX/OFUBPzLzp+MeyOpBR0AjBeLQWfgT
-eB127zLSGY/INDC98N6prrtJQ96ghCs4XbshdviWK3PlcP/bdACsW7zwD5QcMT18
-bQUFkFokeXs1Jpc/6hQGYqrV1idgKLi4CfUHFwxej8oZdhxTtd0CVBcTsnFoGq6N
-IgUqf1uS9z2DcG0ig0243gWJRPzUPxfmMMGJ6C5T/mAExPuCx3/aM7rM7gSU7HJc
-G8PdRdMY0pPjHoYtulrhuzVDQzgSVV+ArrPAEDDikw6sDAn8wSYqAB7cXum6HGTq
-bxZXYlFbziBi6LY0Vu8XTQn73uQdhij7g8GkaUOpOVo9/Kd9Lyno4U/CR2coz7Ch
-hrXgmY0nGUVpqe4AP2874uLtL86ThsYDzsdmDbKmuvXu7jYEppk=
-=XB6W
------END PGP SIGNATURE-----
-
---3ffj6i4c5c3znzmz--
