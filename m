@@ -2,381 +2,196 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6823BC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3C6C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 242872075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F122920835
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BIjQ6zH2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1pKrMQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfKZTFj (ORCPT
+        id S1727107AbfKZTMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:05:39 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:62441 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbfKZTF3 (ORCPT
+        Tue, 26 Nov 2019 14:12:14 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45538 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfKZTMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:05:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1574795131; x=1606331131;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IyuuQKX2x4AZ7fDlm/EikZWZtC8AHNah2RduTzZv7oY=;
-  b=BIjQ6zH2G0w5lDr1xRHFUfn6SLryaQz3d4v3Fj8682y8bDqPCZkFb09+
-   g7VSJxqvJbi/A3OBADi2xp42MdGapjwR7oyTbTd8K2kMOS8aNH8A3bHjj
-   VL9bseh3Eif2pui7gGc5aa2PN9zfTBL881PidHC8iKV2HX8KPkJ+eFOwA
-   vPfHodouzhtelRi/4ob3AR+HW/K9u8VGhnZFvV4uOZJpL9ZHVbwyGc1oy
-   fJiMsNNaNh9wLf/2ieBGMwk5kZErsxETQx9y+RNZceWkaAhV6G6xK+WDe
-   LE+reWmiScOiuiVO/aJ2d+59N0yBqslKeJxE3k1Nzy7WCWfkeCBgIaEjw
-   g==;
-IronPort-SDR: iu3Xiz5kvIp6GtaNFzJBSw1AS/El0Mv7KGsgX1+ACbt3PKI8uAvFBtjyayYPYC9qyyvxX5ElL1
- MrZs1QljnhxpO6cLzy+qhMe9z9NFALcMQgY6V6+yt2NtkaL1WWiYBmlOUIiEnP1ARu2QZRdAAl
- RnmqWdikULNOD8PplBjKj9OM9U1JSYFgrRxgl7YJmIr0SE3hH27jhBsJqRrJ735iZ8oxNedJxP
- vDrbn2I5bvmI2srYajQdTp+rCDrbqmvo1nFG4vnDxMh3vvC4ebksP/zX6JalHxcUVLBKuOSU4O
- Tag=
-X-IronPort-AV: E=Sophos;i="5.69,246,1571673600"; 
-   d="scan'208";a="128481934"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Nov 2019 03:05:30 +0800
-IronPort-SDR: R1aGs8F/R4pIqP10aGa85lPwVUBY0zyXGDWLUIlkPzRH1ukTyhG4phmZeQqByc0kDWAlcibkE7
- bjZK/BBAmuknqDygd8ez87LBXIz6vUwt1eansUSJMNzWltCyALWHq8H7qyJP2zEy/grPgROvB9
- VJNo8josT/DrQjQYFPXx2ZiZDcV8oKGp0JhDEA5I/OjzE1B0blTviWCrlxsbkrPFffmRrFOo83
- HRS4qIrFzsVJpUoaX1kSv8qVO2aHgi6FamQCoxnCA+hXovk6xTIZT5/X+fXmpJb3+Mp/EXfTR0
- E/TzMNaW+eNNJxa9L9wOYT+R
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 11:00:07 -0800
-IronPort-SDR: IEiFUbY4ZdPKUePaDinsGOTtv69F0oBMJEb0LNoF59utgX5vLMwnQX+8wgVflRi0fovcCsYj6Q
- agzuoQnjXHOEj+UciJNZIzF1DXp4pxHQHTJWA1y88dE4EkeXJAioV4qJiQhfCmxSpFhxH+D7yh
- LNBS9xxdxYFOqndUvyhq6ZAyxeK02E6MY8eo1jj/nYXrOX9JDdGBEgCDF3xD+wvOYPdO4UY+uj
- jEhJclBQN1LU/N/yyrCTQL7kKAPPD2QTlltAMxc6T2Rd+HCNVu4BNq43Uxn1aBqkuCdXMsBeV3
- qt0=
-WDCIronportException: Internal
-Received: from usa003951.ad.shared (HELO yoda.hgst.com) ([10.86.50.226])
-  by uls-op-cesaip02.wdc.com with ESMTP; 26 Nov 2019 11:05:30 -0800
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v5 3/4] RISC-V: Introduce a new config for SBI v0.1
-Date:   Tue, 26 Nov 2019 11:05:02 -0800
-Message-Id: <20191126190503.19303-4-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191126190503.19303-1-atish.patra@wdc.com>
-References: <20191126190503.19303-1-atish.patra@wdc.com>
+        Tue, 26 Nov 2019 14:12:13 -0500
+Received: by mail-qt1-f193.google.com with SMTP id 30so22599210qtz.12;
+        Tue, 26 Nov 2019 11:12:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=KjGyaSiUKmJdB9E8MZospziw2v4nGOZn1672kkp9/8M=;
+        b=S1pKrMQrWEycS+aFsuMbpYub6ZnYzf7SsJd3Q+Fa2GlIxEHOscRAlMUNfY8UAjMHHr
+         NlLogQI1LKz2t29IPDNrXqS58k/PJP1wKBwHhExK5r+HfP8QWQVRyhgYnRFPAatNrqFq
+         OH8X3qGU8b3vEfOOiBuBGMk3ZjZgmK8sVYZjuiq1PjZfBXm1GhcKOpzDJmkxP6iQBPsQ
+         EzEVYAFpg8yrkNsH7mbg1qaipqgqOdrWZ6hvL4XuwPOHoNJSIq07XGArzqX0Ajjjop17
+         c8PTSyjfbPnAo4BLwGKM4kjK1PmUwrngmt09jTjIcpwM4Wscyb794IEBNn2KdEriAuMG
+         S0/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=KjGyaSiUKmJdB9E8MZospziw2v4nGOZn1672kkp9/8M=;
+        b=VfPPL87c4S+UoolWTQlCzVxfwetBpAJxERLgIUdsb5m0khHWWQ5XQJoyTzlwVriCOS
+         QKjcsfkssHlFpMWc4pU7iKjw+WJgRaRZAMjsaPxNUdiuBedfFvfYloyVpJBFb0/X2om/
+         6Rfw/xjFFuwb5c3Ko5fiwr3FzLq9vDp7tpS/NowedbtDpC3JgMwrKOM+ZZrC/ytQtmZ5
+         dTApAw88Uj2HG1xT76IPFa9Cy+PuLZKgj9hAV4bXDDbMlUbbme2qf9ARxKWGmJYItqh3
+         Wmng0PSa8Qy7VAEvg7wPzyfIkUAiwa+tAZSco8hEtLV5NcEwU5fIRFOm+0ojaIqGxlFj
+         O/rg==
+X-Gm-Message-State: APjAAAUeGilAvkDTGUNmWX09W1STrQ4jqU1SdAdrz+QddmS8fPMhnsfR
+        VOph9fz83nMdHn+MahJmxcA=
+X-Google-Smtp-Source: APXvYqyxkbb3ltVCzAL9ujSkpYmh+k+5SdSvHtIqfMfGyuWFbLc2sZLc6XDhsOZqn5+tHFPyY5rwAQ==
+X-Received: by 2002:ac8:73c6:: with SMTP id v6mr36967132qtp.137.1574795531820;
+        Tue, 26 Nov 2019 11:12:11 -0800 (PST)
+Received: from quaco.ghostprotocols.net (179-240-181-120.3g.claro.net.br. [179.240.181.120])
+        by smtp.gmail.com with ESMTPSA id z17sm6162363qtq.69.2019.11.26.11.12.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 11:12:11 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2ADDD40D3E; Tue, 26 Nov 2019 16:04:50 -0300 (-03)
+Date:   Tue, 26 Nov 2019 16:04:50 -0300
+To:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
+Message-ID: <20191126190450.GD29071@kernel.org>
+References: <20191126151045.GB19483@kernel.org>
+ <20191126154836.GC19483@kernel.org>
+ <87imn6y4n9.fsf@toke.dk>
+ <20191126183451.GC29071@kernel.org>
+ <87d0dexyij.fsf@toke.dk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <87d0dexyij.fsf@toke.dk>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We now have SBI v0.2 which is more scalable and extendable to handle
-future needs for RISC-V supervisor interfaces.
+Em Tue, Nov 26, 2019 at 07:50:44PM +0100, Toke Høiland-Jørgensen escreveu:
+> Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> writes:
+> 
+> > Em Tue, Nov 26, 2019 at 05:38:18PM +0100, Toke Høiland-Jørgensen escreveu:
+> >> Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> writes:
+> >> 
+> >> > Em Tue, Nov 26, 2019 at 12:10:45PM -0300, Arnaldo Carvalho de Melo escreveu:
+> >> >> Hi guys,
+> >> >> 
+> >> >>    While merging perf/core with mainline I found the problem below for
+> >> >> which I'm adding this patch to my perf/core branch, that soon will go
+> >> >> Ingo's way, etc. Please let me know if you think this should be handled
+> >> >> some other way,
+> >> >
+> >> > This is still not enough, fails building in a container where all we
+> >> > have is the tarball contents, will try to fix later.
+> >> 
+> >> Wouldn't the right thing to do not be to just run the script, and then
+> >> put the generated bpf_helper_defs.h into the tarball?
 
-Introduce a new config and move all SBI v0.1 code under that config.
-This allows to implement the new replacement SBI extensions cleanly
-and remove v0.1 extensions easily in future. Currently, the config
-is enabled by default. Once all M-mode software with v0.1 are no
-longer in use, this config option and all relevant code can be easily
-removed.
+> > I would rather continue just running tar and have the build process
+> > in-tree or outside be the same.
+> 
+> Hmm, right. Well that Python script basically just parses
+> include/uapi/linux/bpf.h; and it can be given the path of that file with
+> the --filename argument. So as long as that file is present, it should
+> be possible to make it work, I guess?
+ 
+> However, isn't the point of the tarball to make a "stand-alone" source
+> distribution?
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
----
- arch/riscv/Kconfig           |   6 ++
- arch/riscv/include/asm/sbi.h |   2 +
- arch/riscv/kernel/sbi.c      | 154 +++++++++++++++++++++++++++++------
- 3 files changed, 138 insertions(+), 24 deletions(-)
+Yes, it is, and as far as possible without any prep, just include the
+in-source tree files needed to build it.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index ca3b5541ae93..15c020d6837b 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -304,6 +304,12 @@ config SECCOMP
- 	  and the task is only allowed to execute a few safe syscalls
- 	  defined by each seccomp mode.
- 
-+config RISCV_SBI_V01
-+	bool "SBI v0.1 support"
-+	default y
-+	help
-+	  This config allows kernel to use SBI v0.1 APIs. This will be
-+	  deprecated in future once legacy M-mode software are no longer in use.
- endmenu
- 
- menu "Boot options"
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index 906438322932..cc82ae63f8e0 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -10,6 +10,7 @@
- 
- #ifdef CONFIG_RISCV_SBI
- enum sbi_ext_id {
-+#ifdef CONFIG_RISCV_SBI_V01
- 	SBI_EXT_0_1_SET_TIMER = 0x0,
- 	SBI_EXT_0_1_CONSOLE_PUTCHAR = 0x1,
- 	SBI_EXT_0_1_CONSOLE_GETCHAR = 0x2,
-@@ -19,6 +20,7 @@ enum sbi_ext_id {
- 	SBI_EXT_0_1_REMOTE_SFENCE_VMA = 0x6,
- 	SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID = 0x7,
- 	SBI_EXT_0_1_SHUTDOWN = 0x8,
-+#endif
- 	SBI_EXT_BASE = 0x10,
- };
- 
-diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-index a47e23c3a2e1..ee710bfe0b0e 100644
---- a/arch/riscv/kernel/sbi.c
-+++ b/arch/riscv/kernel/sbi.c
-@@ -8,6 +8,14 @@
- unsigned long sbi_spec_version = SBI_SPEC_VERSION_DEFAULT;
- EXPORT_SYMBOL(sbi_spec_version);
- 
-+static void (*__sbi_set_timer)(uint64_t stime);
-+static int (*__sbi_send_ipi)(const unsigned long *hart_mask);
-+static int (*__sbi_rfence)(unsigned long extid, unsigned long fid,
-+		  const unsigned long *hart_mask,
-+		  unsigned long hbase, unsigned long start,
-+		  unsigned long size, unsigned long arg4,
-+		  unsigned long arg5);
-+
- struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
- 			unsigned long arg1, unsigned long arg2,
- 			unsigned long arg3, unsigned long arg4,
-@@ -52,6 +60,32 @@ static int sbi_err_map_linux_errno(int err)
- 	};
- }
- 
-+static void __sbi_set_timer_dummy_warn(uint64_t stime_value)
-+{
-+	pr_warn("Timer extension is not available in SBI v%lu.%lu\n",
-+		sbi_major_version(), sbi_minor_version());
-+}
-+
-+static int __sbi_send_ipi_dummy_warn(const unsigned long *hart_mask)
-+{
-+	pr_warn("IPI extension is not available in SBI v%lu.%lu\n",
-+		sbi_major_version(), sbi_minor_version());
-+	return 0;
-+}
-+
-+static int __sbi_rfence_dummy_warn(unsigned long extid,
-+			     unsigned long fid,
-+			     const unsigned long *hart_mask,
-+			     unsigned long hbase, unsigned long start,
-+			     unsigned long size, unsigned long arg4,
-+			     unsigned long arg5)
-+{
-+	pr_warn("remote fence extension is not available in SBI v%lu.%lu\n",
-+		sbi_major_version(), sbi_minor_version());
-+	return 0;
-+}
-+
-+#ifdef CONFIG_RISCV_SBI_V01
- /**
-  * sbi_console_putchar() - Writes given character to the console device.
-  * @ch: The data to be written to the console.
-@@ -80,41 +114,106 @@ int sbi_console_getchar(void)
- EXPORT_SYMBOL(sbi_console_getchar);
- 
- /**
-- * sbi_set_timer() - Program the timer for next timer event.
-- * @stime_value: The value after which next timer event should fire.
-+ * sbi_shutdown() - Remove all the harts from executing supervisor code.
-  *
-  * Return: None
-  */
--void sbi_set_timer(uint64_t stime_value)
-+void sbi_shutdown(void)
- {
--#if __riscv_xlen == 32
--	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value,
--			  stime_value >> 32, 0, 0, 0, 0);
--#else
--	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value, 0, 0, 0, 0, 0);
--#endif
-+	sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0);
- }
- EXPORT_SYMBOL(sbi_set_timer);
- 
- /**
-- * sbi_shutdown() - Remove all the harts from executing supervisor code.
-+ * sbi_clear_ipi() - Clear any pending IPIs for the calling hart.
-  *
-  * Return: None
-  */
--void sbi_shutdown(void)
-+void sbi_clear_ipi(void)
- {
--	sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0);
-+	sbi_ecall(SBI_EXT_0_1_CLEAR_IPI, 0, 0, 0, 0, 0, 0, 0);
- }
- EXPORT_SYMBOL(sbi_shutdown);
- 
- /**
-- * sbi_clear_ipi() - Clear any pending IPIs for the calling hart.
-+ * sbi_set_timer_v01() - Program the timer for next timer event.
-+ * @stime_value: The value after which next timer event should fire.
-  *
-  * Return: None
-  */
--void sbi_clear_ipi(void)
-+static void __sbi_set_timer_v01(uint64_t stime_value)
- {
--	sbi_ecall(SBI_EXT_0_1_CLEAR_IPI, 0, 0, 0, 0, 0, 0, 0);
-+#if __riscv_xlen == 32
-+	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value,
-+		  stime_value >> 32, 0, 0, 0, 0);
-+#else
-+	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value, 0, 0, 0, 0, 0);
-+#endif
-+}
-+
-+static int __sbi_send_ipi_v01(const unsigned long *hart_mask)
-+{
-+	sbi_ecall(SBI_EXT_0_1_SEND_IPI, 0, (unsigned long)hart_mask,
-+		  0, 0, 0, 0, 0);
-+	return 0;
-+}
-+
-+static int __sbi_rfence_v01(unsigned long ext, unsigned long fid,
-+			     const unsigned long *hart_mask,
-+			     unsigned long hbase, unsigned long start,
-+			     unsigned long size, unsigned long arg4,
-+			     unsigned long arg5)
-+{
-+	switch (ext) {
-+	case SBI_EXT_0_1_REMOTE_FENCE_I:
-+		sbi_ecall(SBI_EXT_0_1_REMOTE_FENCE_I, 0,
-+			  (unsigned long)hart_mask, 0, 0, 0, 0, 0);
-+		break;
-+	case SBI_EXT_0_1_REMOTE_SFENCE_VMA:
-+		sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA, 0,
-+			  (unsigned long)hart_mask, start, size,
-+			  0, 0, 0);
-+		break;
-+	case SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID:
-+		sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, 0,
-+			  (unsigned long)hart_mask, start, size,
-+			  arg4, 0, 0);
-+		break;
-+	default:
-+		pr_err("extid [%lu]not supported in SBI v0.1\n", ext);
-+	}
-+
-+	return 0;
-+}
-+#else
-+static void __sbi_set_timer_v01(uint64_t stime_value)
-+{
-+	__sbi_set_timer_dummy_warn(0);
-+}
-+static int __sbi_send_ipi_v01(const unsigned long *hart_mask)
-+{
-+	return __sbi_send_ipi_dummy_warn(NULL);
-+}
-+static int __sbi_rfence_v01(unsigned long ext, unsigned long fid,
-+			     const unsigned long *hart_mask,
-+			     unsigned long hbase, unsigned long start,
-+			     unsigned long size, unsigned long arg4,
-+			     unsigned long arg5)
-+{
-+	return __sbi_rfence_dummy_warn(0, 0, 0, 0, 0, 0, 0, 0);
-+
-+}
-+#endif /* CONFIG_RISCV_SBI_V01 */
-+
-+/**
-+ * sbi_set_timer() - Program the timer for next timer event.
-+ * @stime_value: The value after which next timer event should fire.
-+ *
-+ * Return: None
-+ */
-+void sbi_set_timer(uint64_t stime_value)
-+{
-+	__sbi_set_timer(stime_value);
- }
- 
- /**
-@@ -125,11 +224,11 @@ void sbi_clear_ipi(void)
-  */
- void sbi_send_ipi(const unsigned long *hart_mask)
- {
--	sbi_ecall(SBI_EXT_0_1_SEND_IPI, 0, (unsigned long)hart_mask,
--			0, 0, 0, 0, 0);
-+	__sbi_send_ipi(hart_mask);
- }
- EXPORT_SYMBOL(sbi_send_ipi);
- 
-+
- /**
-  * sbi_remote_fence_i() - Execute FENCE.I instruction on given remote harts.
-  * @hart_mask: A cpu mask containing all the target harts.
-@@ -138,8 +237,8 @@ EXPORT_SYMBOL(sbi_send_ipi);
-  */
- void sbi_remote_fence_i(const unsigned long *hart_mask)
- {
--	sbi_ecall(SBI_EXT_0_1_REMOTE_FENCE_I, 0, (unsigned long)hart_mask,
--			0, 0, 0, 0, 0);
-+	__sbi_rfence(SBI_EXT_0_1_REMOTE_FENCE_I, 0,
-+		     hart_mask, 0, 0, 0, 0, 0);
- }
- EXPORT_SYMBOL(sbi_remote_fence_i);
- 
-@@ -156,8 +255,8 @@ void sbi_remote_sfence_vma(const unsigned long *hart_mask,
- 					 unsigned long start,
- 					 unsigned long size)
- {
--	sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA, 0,
--			(unsigned long)hart_mask, start, size, 0, 0, 0);
-+	__sbi_rfence(SBI_EXT_0_1_REMOTE_SFENCE_VMA, 0,
-+		     hart_mask, 0, start, size, 0, 0);
- }
- EXPORT_SYMBOL(sbi_remote_sfence_vma);
- 
-@@ -177,8 +276,8 @@ void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
- 					      unsigned long size,
- 					      unsigned long asid)
- {
--	sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, 0,
--			(unsigned long)hart_mask, start, size, asid, 0, 0);
-+	__sbi_rfence(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, 0,
-+		     hart_mask, 0, start, size, asid, 0);
- }
- EXPORT_SYMBOL(sbi_remote_sfence_vma_asid);
- 
-@@ -253,8 +352,15 @@ int __init sbi_init(void)
- 
- 	pr_info("SBI specification v%lu.%lu detected\n",
- 		sbi_major_version(), sbi_minor_version());
--	if (!sbi_spec_is_0_1())
-+
-+	if (!sbi_spec_is_0_1()) {
- 		pr_info("SBI implementation ID=0x%lx Version=0x%lx\n",
- 			sbi_get_firmware_id(), sbi_get_firmware_version());
-+	}
-+
-+	__sbi_set_timer = __sbi_set_timer_v01;
-+	__sbi_send_ipi	= __sbi_send_ipi_v01;
-+	__sbi_rfence	= __sbi_rfence_v01;
-+
- 	return 0;
- }
--- 
-2.23.0
+> I'd argue that it makes more sense to just include the
+> generated header, then: The point of the Python script is specifically
+> to extract the latest version of the helper definitions from the kernel
+> source tree. And if you're "freezing" a version into a tarball, doesn't
+> it make more sense to also freeze the list of BPF helpers?
 
+Your suggestion may well even be the only solution, as older systems
+don't have python3, and that script requires it :-\
+
+Some containers were showing this:
+
+/bin/sh: 1: /git/linux/scripts/bpf_helpers_doc.py: not found
+Makefile:184: recipe for target 'bpf_helper_defs.h' failed
+make[3]: *** [bpf_helper_defs.h] Error 127
+make[3]: *** Deleting file 'bpf_helper_defs.h'
+Makefile.perf:778: recipe for target '/tmp/build/perf/libbpf.a' failed
+
+That "not found" doesn't mean what it looks from staring at the above,
+its just that:
+
+nobody@1fb841e33ba3:/tmp/perf-5.4.0$ head -1 /tmp/perf-5.4.0/scripts/bpf_helpers_doc.py
+#!/usr/bin/python3
+nobody@1fb841e33ba3:/tmp/perf-5.4.0$ ls -la /usr/bin/python3
+ls: cannot access /usr/bin/python3: No such file or directory
+nobody@1fb841e33ba3:/tmp/perf-5.4.0$
+
+So, for now, I'll keep my fix and start modifying the containers where
+this fails and disable testing libbpf/perf integration with BPF on those
+containers :-\
+
+I.e. doing:
+
+nobody@1fb841e33ba3:/tmp/perf-5.4.0$ make NO_LIBBPF=1 -C /tmp/perf-5.4.0/tools/perf/ O=/tmp/build/perf
+
+which ends up with a functional perf, just one without libbpf linked in:
+
+nobody@1fb841e33ba3:/tmp/perf-5.4.0$ /tmp/build/perf/perf -vv
+perf version 5.4.gf69779ce8f86
+                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+    dwarf_getlocations: [ OFF ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+                  gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
+         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+               libnuma: [ OFF ]  # HAVE_LIBNUMA_SUPPORT
+numa_num_possible_cpus: [ OFF ]  # HAVE_LIBNUMA_SUPPORT
+               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                   bpf: [ OFF ]  # HAVE_LIBBPF_SUPPORT
+                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+                  zstd: [ OFF ]  # HAVE_ZSTD_SUPPORT
+nobody@1fb841e33ba3:/tmp/perf-5.4.0$
+
+The the build tests for libbpf and the bpf support in perf will
+continue, but for a reduced set of containers, those with python3.
+
+People wanting to build libbpf on such older systems will hopefully find
+this discussion in google, run the script, get the output and have it
+working.
+
+- Arnaldo
