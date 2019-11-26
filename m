@@ -2,227 +2,120 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9684C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CBEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE3A20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C920020637
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:50:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dAk2F7mz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbfKZKt0 (ORCPT
+        id S1727869AbfKZKuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 05:49:26 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44125 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727802AbfKZKtZ (ORCPT
+        Tue, 26 Nov 2019 05:50:35 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51264 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727682AbfKZKuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 05:49:25 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iZYPJ-0003Bd-CC; Tue, 26 Nov 2019 11:49:21 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iZYPI-0002gz-8k; Tue, 26 Nov 2019 11:49:20 +0100
-Date:   Tue, 26 Nov 2019 11:49:20 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20191126104920.rjlgfwetz2ov3u44@pengutronix.de>
-References: <20191122113230.16486-1-miquel.raynal@bootlin.com>
- <20191125203849.fxvg74xrzp6rxahy@pengutronix.de>
- <20191126095156.292c03af@xps13>
+        Tue, 26 Nov 2019 05:50:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574765433;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=R0suUB0h2cJm9IG+wl8vuFejSumo0ekP4tj9lnnUJew=;
+        b=dAk2F7mzkUTnJG/SqgL0F9APFnt/4jQfkopFB9tnAWvtzaxGJSf1x0VYkNeQIkvXtU21BI
+        8Syde8EqBmWehuZgotu8qaZFuocardokGapkhxgA8O80hDj9AMUpP0jXywnoUIpV87+mzt
+        h9wilDpglzGJPk1PZMl73leqRmWn7jo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-22-MZk8Y8-6OzOtxr-UYBa_3w-1; Tue, 26 Nov 2019 05:50:32 -0500
+Received: by mail-wm1-f69.google.com with SMTP id m68so1010855wme.7
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 02:50:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R0suUB0h2cJm9IG+wl8vuFejSumo0ekP4tj9lnnUJew=;
+        b=kwaOaPOC0GLpaTjszc0SOxsOnfUcFML4FMsM3m/IHXrPgrWD2mN200n+SouJXMlKbZ
+         Ih93LCEySbBClNoOxHftE8LKIM1pNtCUs1ZMm022xF3MBEz4uqacDeuOu37JOgNWG2cj
+         t5seqpgROo0bEIfY35aLhbR6ADTyUPJMp4elIVGQbFB4jEqwq5bTIHQEILD7Fb+PdW8s
+         vnNuPrqfv4ZB2YUBZcgHC+KbN9jQjRVyTylOTbo48BWA2JMn8OEIQgjSA8so3Mf6RGT/
+         og9QdrLMvepsHvRU41eL2Gknejd/pV+FoYdLt16/EuRUGK1Kj0pivaLe0GzDPQDXvF5G
+         sBqA==
+X-Gm-Message-State: APjAAAXK0YM40L13n46yeR1L7Yz4QHRW0ViVHLdUE0lqyilDCyq2VBP9
+        hTqZbTZtGdxX0dKCoFP7xAk1H8NxYoWjP8QY1IPHmu7KBowHJH4GM7cM7E6Fuj018MIaplF8Ve4
+        xkRjaXFkWSMRtup2kpsYBduEK
+X-Received: by 2002:adf:d091:: with SMTP id y17mr38095418wrh.182.1574765431443;
+        Tue, 26 Nov 2019 02:50:31 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxYWtiHjTbs2+gq5fix9nXS12FIn2I1K/paROsrcbJEox1XXKa4zTvdRRqUsp5+Wm4plu4R0A==
+X-Received: by 2002:adf:d091:: with SMTP id y17mr38095394wrh.182.1574765431153;
+        Tue, 26 Nov 2019 02:50:31 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:5454:a592:5a0a:75c? ([2001:b07:6468:f312:5454:a592:5a0a:75c])
+        by smtp.gmail.com with ESMTPSA id w11sm15560411wra.83.2019.11.26.02.50.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2019 02:50:30 -0800 (PST)
+Subject: Re: "statsfs" API design
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     KVM list <kvm@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Peter Feiner <pfeiner@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <5d6cdcb1-d8ad-7ae6-7351-3544e2fa366d@redhat.com>
+ <20191109154952.GA1365674@kroah.com>
+ <cb52053e-eac0-cbb9-1633-646c7f71b8b3@redhat.com>
+ <20191126100948.GB1416107@kroah.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <75dc4403-cc07-0f99-00ec-86f61092fff9@redhat.com>
+Date:   Tue, 26 Nov 2019 11:50:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191126095156.292c03af@xps13>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191126100948.GB1416107@kroah.com>
+Content-Language: en-US
+X-MC-Unique: MZk8Y8-6OzOtxr-UYBa_3w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hallo Miquel,
-
-On Tue, Nov 26, 2019 at 09:51:56AM +0100, Miquel Raynal wrote:
-> > Also when switching from 0% to 50% you could prevent a glitch by
-> > sticking to an unset blink phase 0 bit.
+On 26/11/19 11:09, Greg Kroah-Hartman wrote:
+> So I think there are two different things here:
+> 	- a simple data structure for in-kernel users of statistics
+> 	- a way to export statistics to userspace
 > 
-> You mean, when turning off the PWM, I should first change the intensity
-> to 50%, then blink the phase, then change the intensity to 100%?
-> (reversed logic when intensity > 0).
-
-No, that's not what I meant. Your hardware seems to have two different
-"modes". One where you can set the intensity between 0 and 15/16, and
-another where the intensity is between 1/16 and 16/16, right? Switching
-between these two results in a glitch and you use the first mode only
-for intensity 0 and the second for the rest. If now you have to go from
-0 to 8/16 your driver does a mode switch while this isn't necessary.
-
-I also wonder if a glitch can at least be made less likely, even when
-going from 0% to 100%. You claimed that changing intensity was glitch
-free (i.e. the currently running period is completed before the changed
-setting has an effect). Does this hold also for changing the blink
-phase?
-
-> > > +	/* Disable the internal oscillator if no channel is in use */
-> > > +	if (!pwm->count) {
-> > > +		mutex_lock(&chip->i2c_lock);
-> > > +		regmap_write_bits(chip->regmap, MAX7313_MASTER,
-> > > +				  PWM_INTENSITY_MASK << PWM_BITS_PER_REG, 0);
-> > > +		mutex_unlock(&chip->i2c_lock);
-> > > +	}  
-> > 
-> > What happens to the output pin when the oscillator gets disabled?
+> Now if they both can be solved with the same "solution", wonderful!  But
+> don't think that you have to do both of these at the same time.
 > 
-> If .free does not modify the output, then disabling the oscillator
-> will force a static state if that was not already the case. I suppose
-> that's not what you want. Why one would free a pin if it stills need to
-> blink?
+> Which one are you trying to solve here, I can't figure it out.  Is it
+> the second one?
 
-It's the consumer who is supposed to stop the PWM before freeing it.
-Then better do the oscillator stop when pwm_apply_state(pwm, {...
-.enabled = false }) is called (and the other PWMs are off, too).
+I already have the second in KVM using debugfs, but that's not good.  So
+I want to do:
 
-> If I am not allowed to disable the oscillator it means energy
-> consumption will stay high for no reason as long as one PWM has been
-> enabled, ever.
-> 
-> > 
-> > > +	mutex_unlock(&pwm->count_lock);
-> > > +
-> > > +	gpiochip_free_own_desc(data->desc);
-> > > +}
-> > > +
-> > > +static int max7313_pwm_apply(struct pwm_chip *pwm_chip,
-> > > +			     struct pwm_device *pwm_device,
-> > > +			     const struct pwm_state *state)
-> > > +{
-> > > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm_device);
-> > > +	struct max7313_pwm *pwm = to_max7313_pwm(pwm_chip);
-> > > +	struct pca953x_chip *chip = to_pca953x(pwm);
-> > > +	unsigned int duty_cycle;
-> > > +
-> > > +	if (state->period != PWM_PERIOD_NS ||
-> > > +	    state->polarity != PWM_POLARITY_NORMAL)
-> > > +		return -EINVAL;  
-> > 
-> > The check for period is too strong. Anything bigger than PWM_PERIOD_NS
-> > is acceptable, too. (The policy I'd like to see is: Provide the biggest
-> > period possible not bigger than the requested policy.)
-> 
-> I don't understand, what is this parameter supposed to mean? the period
-> cannot be changed, it is ruled by an internal oscillator. In this case
-> any period bigger than the actual period cannot be physically achieved.
-> If we derive ratios with a bigger period than possible, why not
-> allowing it for lower periods too?
+- a simple data structure for in-kernel *publishers* of statistics
 
-Yes, I understood that the period is fixed for your PWM. However
-consider a consumer who would prefer a different period. If you decline
-all requests unless state->period == PWM_PERIOD_NS the consumer has no
-guide to determine that unless all periods are tested. If however asking
-for period = 2s results in getting 31.25 ms this allows the consumer to
-assume that no period setting between 2s and 31.25 ms is possible. And
-so the usual policy to implement is as stated in my previous mail.
+- a sysfs-based interface to export it to userspace, which looks a lot
+like KVM's debugfs-based statistics.
 
-(Of course for we'd need something like pwm_round_state() to effectively
-find a good request without actually modifying the hardware state. That
-is on my todo list.)
+What we don't have to do at the same time, is a new interface to
+userspace, one that is more efficient while keeping the self-describing
+property that we agree is needed.  That is also planned, but would come
+later.
 
-> > > +	data->enabled = state->enabled;
-> > > +	data->duty_cycle = state->duty_cycle;  
-> > 
-> > Storing these is only to let .get_state yield the last set values,
-> > right?
-> 
-> I can't guess the duty_cycle/enabled state just by reading the
-> hardware. For instance, I cannot represent a "40% duty with PWM
-> disabled". Reading the hardware will not be able to know if the PWM
-> is enabled or not and the duty_cycle will be read as 0.
+Paolo
 
-I interpret that as a "yes". IMHO it's a misconcept that a PWM driver
-has to remember the duty cycle (and period) with enabled=false even
-though this has no influence on the actual output in that state. I'd
-like to get rid of .enabled in struct pwm_state completely, but Thierry
-doesn't agree.
-
-> > > +	if (!state->enabled || !state->duty_cycle)
-> > > +		duty_cycle = 0;
-> > > +	else
-> > > +		/* Convert the duty-cycle to be in the [1;16] range */
-> > > +		duty_cycle = DIV_ROUND_DOWN_ULL(state->duty_cycle,
-> > > +						PWM_OFFSET_NS);
-> > > +
-> > > +	/* The hardware is supposedly glitch-free */
-> > > +	return max7313_pwm_set_state(chip, pwm_device, duty_cycle);
-> > > +}
-> > > +
-> > > +static void max7313_pwm_get_state(struct pwm_chip *pwm_chip,
-> > > +				  struct pwm_device *pwm_device,
-> > > +				  struct pwm_state *state)
-> > > +{
-> > > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm_device);
-> > > +	struct max7313_pwm *pwm = to_max7313_pwm(pwm_chip);
-> > > +	struct pca953x_chip *chip = to_pca953x(pwm);
-> > > +	u8 duty_cycle;
-> > > +
-> > > +	state->period = PWM_PERIOD_NS;
-> > > +	state->polarity = PWM_POLARITY_NORMAL;
-> > > +
-> > > +	if (!data)
-> > > +		return;
-> > > +
-> > > +	state->enabled = data->enabled;  
-> > 
-> > data->enabled is not initialized from hardware in .probe, so currently
-> > .get doesn't provide anything useful for the initial call. :-|
-> 
-> 'enabled' only has a software meaning here, so it will return false at
-> the first call as the structure is initially zeroed. Then it will
-> provide the last state of the boolean. This IP has no "enable/disable"
-> feature so I don't know how to handle this in a better way.
-
-When we'd get rid of struct pwm_state::enabled this would be clearer,
-right? As this driver will be another instance that will hopefully help
-me convincing Thierry in the end, can you please add a comment somewhere
-at the top like this?:
-
-/*
- * Limitations:
- * - Period fixed to 31.25 ms
- * - Only supports normal polarity
- * - Doesn't support a disabled state
- * - Some glitches cannot be prevented
- */
-
-(The idea is that a command like
-
-	for f in drivers/pwm/pwm-*.c ; do echo $f; sed -rn '/^ \* Limitation/,/^ \*\/?$/p' $f ; done
-
-gives some nice overview about common limitations.)
-
-But also today you should check the hardware state and if duty_cycle is
-greater than 0 don't report the PWM as disabled.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
