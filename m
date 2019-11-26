@@ -2,276 +2,154 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06344C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66594C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBEC20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F7E2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbfKZLPT convert rfc822-to-8bit (ORCPT
+        id S1728068AbfKZLPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 06:15:19 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:50807 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfKZLPT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 06:15:19 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id CAE426002D;
-        Tue, 26 Nov 2019 11:15:15 +0000 (UTC)
-Date:   Tue, 26 Nov 2019 12:15:14 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20191126121514.394df10e@xps13>
-In-Reply-To: <20191126104920.rjlgfwetz2ov3u44@pengutronix.de>
-References: <20191122113230.16486-1-miquel.raynal@bootlin.com>
-        <20191125203849.fxvg74xrzp6rxahy@pengutronix.de>
-        <20191126095156.292c03af@xps13>
-        <20191126104920.rjlgfwetz2ov3u44@pengutronix.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 26 Nov 2019 06:15:43 -0500
+Received: from mga01.intel.com ([192.55.52.88]:2334 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728053AbfKZLPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 06:15:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 03:15:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,245,1571727600"; 
+   d="scan'208";a="409944662"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Nov 2019 03:15:42 -0800
+Received: from [10.125.252.207] (abudanko-mobl.ccr.corp.intel.com [10.125.252.207])
+        by linux.intel.com (Postfix) with ESMTP id B61055802E4;
+        Tue, 26 Nov 2019 03:15:39 -0800 (PST)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v3 0/3] perf record: adapt NUMA awareness to machines with
+ #CPUs > 1K
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Organization: Intel Corp.
+Message-ID: <6b2be869-28c1-ae9b-92e8-5ababf143308@linux.intel.com>
+Date:   Tue, 26 Nov 2019 14:15:38 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
 
-Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Tue, 26 Nov
-2019 11:49:20 +0100:
+Current implementation of cpu_set_t type by glibc has internal cpu
+mask size limitation of no more than 1024 CPUs. This limitation confines
+NUMA awareness of Perf tool in record mode, thru --affinity option,
+to the first 1024 CPUs on machines with larger amount of CPUs.
 
-> Hallo Miquel,
-> 
-> On Tue, Nov 26, 2019 at 09:51:56AM +0100, Miquel Raynal wrote:
-> > > Also when switching from 0% to 50% you could prevent a glitch by
-> > > sticking to an unset blink phase 0 bit.  
-> > 
-> > You mean, when turning off the PWM, I should first change the intensity
-> > to 50%, then blink the phase, then change the intensity to 100%?
-> > (reversed logic when intensity > 0).  
-> 
-> No, that's not what I meant. Your hardware seems to have two different
-> "modes". One where you can set the intensity between 0 and 15/16, and
-> another where the intensity is between 1/16 and 16/16, right? Switching
+This patch set enables Perf tool to overcome 1024 CPUs limitation by
+using a dedicated struct mmap_cpu_mask type and applying tool's bitmap
+API operations to manipulate affinity masks of the tool's thread and
+the mmaped data buffers.
 
-Right!
+tools bitmap API has been extended with bitmap_free() function and
+bitmap_equal() operation whose implementation is derived from the
+kernel one.
 
-> between these two results in a glitch and you use the first mode only
-> for intensity 0 and the second for the rest.
+---
+Alexey Budankov (3):
+  tools bitmap: implement bitmap_equal() operation at bitmap API
+  perf mmap: declare type for cpu mask of arbitrary length
+  perf record: adapt affinity to machines with #CPUs > 1K
 
-Indeed.
+ tools/include/linux/bitmap.h | 30 +++++++++++++++++++++++++++
+ tools/lib/bitmap.c           | 15 ++++++++++++++
+ tools/perf/builtin-record.c  | 27 ++++++++++++++++++------
+ tools/perf/util/mmap.c       | 40 ++++++++++++++++++++++++++++++------
+ tools/perf/util/mmap.h       | 13 +++++++++++-
+ 5 files changed, 112 insertions(+), 13 deletions(-)
 
-> If now you have to go from
-> 0 to 8/16 your driver does a mode switch while this isn't necessary.
+---
+Changes in v3:
+- implemented perf_mmap__print_cpu_mask() function
+- use perf_mmap__print_cpu_mask() to log thread and mmap cpus masks
+  when verbose level is equal to 2
+Changes in v2:
+- implemented bitmap_free() for symmetry with bitmap_alloc()
+- capitalized MMAP_CPU_MASK_BYTES() macro
+- returned -1 from perf_mmap__setup_affinity_mask()
+- implemented releasing of masks using bitmap_free()
+- moved debug printing under -vv option
 
-This is right but it complicates a bit the logic as intensity changes
-become stateful. If this is what you want, I can do it.
+---
+Testing:
 
-> 
-> I also wonder if a glitch can at least be made less likely, even when
-> going from 0% to 100%. You claimed that changing intensity was glitch
-> free (i.e. the currently running period is completed before the changed
-> setting has an effect). Does this hold also for changing the blink
-> phase?
+	tools/perf/perf record -vv --affinity=cpu -- ls
+	thread mask[8]: empty
+	...
+	------------------------------------------------------------
+	perf_event_attr:
+	...
+	mmap size 528384B
+	0x7fddecf760b8: mmap mask[8]: 0
+	0x7fddecf86180: mmap mask[8]: 1
+	0x7fddecf96248: mmap mask[8]: 2
+	0x7fddecfa6310: mmap mask[8]: 3
+	0x7fddecfb63d8: mmap mask[8]: 4
+	0x7fddecfc64a0: mmap mask[8]: 5
+	0x7fddecfd6568: mmap mask[8]: 6
+	0x7fddecfe6630: mmap mask[8]: 7
+	------------------------------------------------------------
+	perf_event_attr:
+	...
+	Synthesizing TSC conversion information
+	0x7fddecf760b8: thread mask[8]: 0
+	0x7fddecf86180: thread mask[8]: 1
+	0x7fddecf96248: thread mask[8]: 2
+	arch			      copy     Documentation  init     kernel	 MAINTAINERS	  modules.builtin.modinfo  perf.data	  scripts   System.map	vmlinux
+	block			      COPYING  drivers	      ipc      lbuild	 Makefile	  modules.order		   perf.data.old  security  tools	vmlinux.o
+	certs			      CREDITS  fs	      Kbuild   lib	 mm		  Module.symvers	   README	  sound     usr
+	config-5.2.7-100.fc29.x86_64  crypto   include	      Kconfig  LICENSES  modules.builtin  net			   samples	  stdio     virt
+	0x7fddecfa6310: thread mask[8]: 3
+	0x7fddecfb63d8: thread mask[8]: 4
+	0x7fddecfc64a0: thread mask[8]: 5
+	0x7fddecfd6568: thread mask[8]: 6
+	0x7fddecfe6630: thread mask[8]: 7
+	0x7fddecf760b8: thread mask[8]: 0
+	0x7fddecf86180: thread mask[8]: 1
+	0x7fddecf96248: thread mask[8]: 2
+	0x7fddecfa6310: thread mask[8]: 3
+	0x7fddecfb63d8: thread mask[8]: 4
+	0x7fddecfc64a0: thread mask[8]: 5
+	0x7fddecfd6568: thread mask[8]: 6
+	0x7fddecfe6630: thread mask[8]: 7
+	[ perf record: Woken up 0 times to write data ]
+	0x7fddecf760b8: thread mask[8]: 0
+	0x7fddecf86180: thread mask[8]: 1
+	0x7fddecf96248: thread mask[8]: 2
+	0x7fddecfa6310: thread mask[8]: 3
+	0x7fddecfb63d8: thread mask[8]: 4
+	0x7fddecfc64a0: thread mask[8]: 5
+	0x7fddecfd6568: thread mask[8]: 6
+	0x7fddecfe6630: thread mask[8]: 7
+	Looking at the vmlinux_path (8 entries long)
+	Using vmlinux for symbols
+	[ perf record: Captured and wrote 0.014 MB perf.data (8 samples) ]
 
-I honestly don't know, the datasheet does not tell anything about it.
-If I implement the above logic, glitches will be made less likely.
+-- 
+2.20.1
 
-I could also add more logic to switch the blink state at the 50%
-whenever crossing this value but with the above logic added I think it
-becomes unreadable and error prone, the risks are not balanced with the
-benefits. Of course anyone can enhance the driver in the future.
-
-> 
-> > > > +	/* Disable the internal oscillator if no channel is in use */
-> > > > +	if (!pwm->count) {
-> > > > +		mutex_lock(&chip->i2c_lock);
-> > > > +		regmap_write_bits(chip->regmap, MAX7313_MASTER,
-> > > > +				  PWM_INTENSITY_MASK << PWM_BITS_PER_REG, 0);
-> > > > +		mutex_unlock(&chip->i2c_lock);
-> > > > +	}    
-> > > 
-> > > What happens to the output pin when the oscillator gets disabled?  
-> > 
-> > If .free does not modify the output, then disabling the oscillator
-> > will force a static state if that was not already the case. I suppose
-> > that's not what you want. Why one would free a pin if it stills need to
-> > blink?  
-> 
-> It's the consumer who is supposed to stop the PWM before freeing it.
-> Then better do the oscillator stop when pwm_apply_state(pwm, {...
-> .enabled = false }) is called (and the other PWMs are off, too).
-
-Ok, I can disable the oscillator in pwm_apply_state() if all
-duty_cycles are at 0.
-
-> 
-> > If I am not allowed to disable the oscillator it means energy
-> > consumption will stay high for no reason as long as one PWM has been
-> > enabled, ever.
-> >   
-> > >   
-> > > > +	mutex_unlock(&pwm->count_lock);
-> > > > +
-> > > > +	gpiochip_free_own_desc(data->desc);
-> > > > +}
-> > > > +
-> > > > +static int max7313_pwm_apply(struct pwm_chip *pwm_chip,
-> > > > +			     struct pwm_device *pwm_device,
-> > > > +			     const struct pwm_state *state)
-> > > > +{
-> > > > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm_device);
-> > > > +	struct max7313_pwm *pwm = to_max7313_pwm(pwm_chip);
-> > > > +	struct pca953x_chip *chip = to_pca953x(pwm);
-> > > > +	unsigned int duty_cycle;
-> > > > +
-> > > > +	if (state->period != PWM_PERIOD_NS ||
-> > > > +	    state->polarity != PWM_POLARITY_NORMAL)
-> > > > +		return -EINVAL;    
-> > > 
-> > > The check for period is too strong. Anything bigger than PWM_PERIOD_NS
-> > > is acceptable, too. (The policy I'd like to see is: Provide the biggest
-> > > period possible not bigger than the requested policy.)  
-> > 
-> > I don't understand, what is this parameter supposed to mean? the period
-> > cannot be changed, it is ruled by an internal oscillator. In this case
-> > any period bigger than the actual period cannot be physically achieved.
-> > If we derive ratios with a bigger period than possible, why not
-> > allowing it for lower periods too?  
-> 
-> Yes, I understood that the period is fixed for your PWM. However
-> consider a consumer who would prefer a different period. If you decline
-> all requests unless state->period == PWM_PERIOD_NS the consumer has no
-> guide to determine that unless all periods are tested. If however asking
-> for period = 2s results in getting 31.25 ms this allows the consumer to
-> assume that no period setting between 2s and 31.25 ms is possible. And
-> so the usual policy to implement is as stated in my previous mail.
-
-I am not sure to follow you, here are two possible understandings:
-
-1/ state->period > PWM_PERIOD_NS should not be refused, but in the end
-get_state should always return PWM_PERIOD_NS.
-
-2/ I should always do the ratio between state->period and
-state->duty_cycle as long as state->period >= PWM_PERIOD_NS (In this
-case I still don't understand why I should refuse state->period <
-PWM_PERIOD_NS).
-
-> (Of course for we'd need something like pwm_round_state() to effectively
-> find a good request without actually modifying the hardware state. That
-> is on my todo list.)
-> 
-> > > > +	data->enabled = state->enabled;
-> > > > +	data->duty_cycle = state->duty_cycle;    
-> > > 
-> > > Storing these is only to let .get_state yield the last set values,
-> > > right?  
-> > 
-> > I can't guess the duty_cycle/enabled state just by reading the
-> > hardware. For instance, I cannot represent a "40% duty with PWM
-> > disabled". Reading the hardware will not be able to know if the PWM
-> > is enabled or not and the duty_cycle will be read as 0.  
-> 
-> I interpret that as a "yes". IMHO it's a misconcept that a PWM driver
-> has to remember the duty cycle (and period) with enabled=false even
-> though this has no influence on the actual output in that state. I'd
-> like to get rid of .enabled in struct pwm_state completely, but Thierry
-> doesn't agree.
-
-I have no choice. Actually I don't understand why the core do not
-provide the 'last' duty cycle when enabled == false. It provides 0. So
-if I don't use the above trick here is what happens:
-
-echo 1 > enabled
-echo 50 > duty_cycle
-echo 0 > enabled
-echo 1 > enabled
-* duty_cycle is 0 while I expect it to be 50 *
-
-> > > > +	if (!state->enabled || !state->duty_cycle)
-> > > > +		duty_cycle = 0;
-> > > > +	else
-> > > > +		/* Convert the duty-cycle to be in the [1;16] range */
-> > > > +		duty_cycle = DIV_ROUND_DOWN_ULL(state->duty_cycle,
-> > > > +						PWM_OFFSET_NS);
-> > > > +
-> > > > +	/* The hardware is supposedly glitch-free */
-> > > > +	return max7313_pwm_set_state(chip, pwm_device, duty_cycle);
-> > > > +}
-> > > > +
-> > > > +static void max7313_pwm_get_state(struct pwm_chip *pwm_chip,
-> > > > +				  struct pwm_device *pwm_device,
-> > > > +				  struct pwm_state *state)
-> > > > +{
-> > > > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm_device);
-> > > > +	struct max7313_pwm *pwm = to_max7313_pwm(pwm_chip);
-> > > > +	struct pca953x_chip *chip = to_pca953x(pwm);
-> > > > +	u8 duty_cycle;
-> > > > +
-> > > > +	state->period = PWM_PERIOD_NS;
-> > > > +	state->polarity = PWM_POLARITY_NORMAL;
-> > > > +
-> > > > +	if (!data)
-> > > > +		return;
-> > > > +
-> > > > +	state->enabled = data->enabled;    
-> > > 
-> > > data->enabled is not initialized from hardware in .probe, so currently
-> > > .get doesn't provide anything useful for the initial call. :-|  
-> > 
-> > 'enabled' only has a software meaning here, so it will return false at
-> > the first call as the structure is initially zeroed. Then it will
-> > provide the last state of the boolean. This IP has no "enable/disable"
-> > feature so I don't know how to handle this in a better way.  
-> 
-> When we'd get rid of struct pwm_state::enabled this would be clearer,
-> right? As this driver will be another instance that will hopefully help
-> me convincing Thierry in the end, can you please add a comment somewhere
-> at the top like this?:
-> 
-> /*
->  * Limitations:
->  * - Period fixed to 31.25 ms
->  * - Only supports normal polarity
->  * - Doesn't support a disabled state
->  * - Some glitches cannot be prevented
->  */
-> 
-> (The idea is that a command like
-> 
-> 	for f in drivers/pwm/pwm-*.c ; do echo $f; sed -rn '/^ \* Limitation/,/^ \*\/?$/p' $f ; done
-
-Sure!
-
-> 
-> gives some nice overview about common limitations.)
-> 
-> But also today you should check the hardware state and if duty_cycle is
-> greater than 0 don't report the PWM as disabled.
-
-Ok.
-
-> 
-> Best regards
-> Uwe
-> 
-
-Thanks,
-Miquèl
