@@ -2,224 +2,293 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C19C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEB7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582D820722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A919E2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:09:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="cjpkddwP"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="SNEgLGMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbfKZRJN (ORCPT
+        id S1728743AbfKZRJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:09:13 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.70]:37423 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727674AbfKZRJN (ORCPT
+        Tue, 26 Nov 2019 12:09:35 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25841 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727674AbfKZRJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:09:13 -0500
-Received: from [46.226.52.200] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-6.bemta.az-b.eu-west-1.aws.symcld.net id B7/96-19153-53C5DDD5; Tue, 26 Nov 2019 17:09:09 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIJsWRWlGSWpSXmKPExsWSoc9gpWsSczf
-  WoKXd0OLKxUNMFlMfPmGz2Hyuh9Xi25UOJovLu+awWXTu6me1uPvaz2LD97WMDhweGz43sXns
-  uLuE0WPnrLvsHptWdbJ57Hu7jM1j/ZarLB6fN8kFsEexZuYl5VcksGZcXZ1Q8FG8YuaT66wNj
-  B+Euxi5OBgFljJLPDx3kQnCOcYiMfHYVFYIZzOjxO/en2wgDovACaCy3x1gjpDAVCaJp6t3MU
-  M4Dxkllmw/C5Th5GATsJCYfOIBWJWIwEtGias7ZoANYxb4yChx5M45VpAqYQF3ieeXPgFVcQB
-  VeUhs3eIIEhYRMJJoe7SDHcRmEVCVuHXvEhOIzSuQKHF/xxqwViGBGomX31eDxTkFXCTeTX4J
-  tphRQFbiS+NqZhCbWUBc4taT+WA1EgICEkv2nGeGsEUlXj7+xwpRnypxsukGI0RcR+Ls9SdQt
-  pLEvLlHoGxZiUvzuxlBzpQQ8JVoveYEU97SuRdqpIXEku5WFogSFYl/hyohwgUSa868Z4Ow1S
-  QutxyCmigj8ergeXBYSwhcYJX4c2Ez4wRG/VlIroawdSQW7P7EBmFrSyxb+Jp5FjgkBCVOznz
-  CsoCRZRWjeVJRZnpGSW5iZo6uoYGBrqGhka6hpYWukYVeYpVukl5qqW55anGJrqFeYnmxXnFl
-  bnJOil5easkmRmBqSyk4JrODsePTW71DjJIcTEqivIHsd2OF+JLyUyozEosz4otKc1KLDzHKc
-  HAoSfCWRAPlBItS01Mr0jJzgGkWJi3BwaMkwrsPJM1bXJCYW5yZDpE6xajLMeHl3EXMQix5+X
-  mpUuK8ASBFAiBFGaV5cCNgKf8So6yUMC8jAwODEE9BalFuZgmq/CtGcQ5GJWHeBSBTeDLzSuA
-  2vQI6ggnoCKaZt0COKElESEk1MOmvUmTfp/swwpKTcQOX3ooCedX5bZncvFr2onfnv1w+WzF2
-  HttpC0P3OQqZevNmrbi0v1RZmpPbRPrRy+LQyI/hHn8UGRvnKn/I2DRl4ye7EAHFTQtWq8+0t
-  LmkLX4o0Mrm6/vwU47+058/9ulU9FT9t8fQiCdVSvHnzLf7ZLpcrxyQbH9gl7ZO3Or6TksR3y
-  dW/l8DC9x/hB55uo2jZDvXynygG3eKrfQ+oe/Y0bjIQULN/qmpopZrz6cXEaU9JnqVXya9nH6
-  hyiUhT/4AW0Ep2+wKteRZR9fPWrYxek1SgYFEq+n7NbUdh5ZyzT0+0Tn1dY6+qlaLRn+TZXOi
-  W+/iM0cvrJLyWfoy/ZYSS3FGoqEWc1FxIgAI1wMmdAQAAA==
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-15.tower-288.messagelabs.com!1574788148!384261!1
-X-Originating-IP: [104.47.0.58]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 26206 invoked from network); 26 Nov 2019 17:09:08 -0000
-Received: from mail-he1eur01lp2058.outbound.protection.outlook.com (HELO EUR01-HE1-obe.outbound.protection.outlook.com) (104.47.0.58)
-  by server-15.tower-288.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 26 Nov 2019 17:09:08 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=duMAW/D4/9ZSaXzuCxlJhDCRJCtZ9sje1o0VXi1QRbLIlvHDC5Z0zMvpgDp3Ee8ZgiEurZhNLWOOvjDLRL++0EtMKiA0OLadBy3imT3WiJXQCzbYuCU0e5GIalt232TPEJuINa/DFQCMRWA791onwEJvi1u9sa4VIVFTnbS+K+Cn4qfDQLVvqnN5PweVsIHZwSph5rLQP6CBhPwAMJwpu5C6Q3Yn5atcGnuIzKUMecYE5/9fpvhRLCR4sPLkovNZaUZdiohPCFd0An0GEfWrtkBRjGBqrvMDuPf+nBUcw5PtAeV8PniY4DFRQ5MQ3u76SySy7crzgI0W5eM8+Nmqaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ESL2msQHjUumA/FF7ssFRHnSPTztIwj34g78Rr8GH2A=;
- b=YWdGyykQbZ8gWljdPwDfe5FAIZSm/V3+7evvt7D6gjVTq5GhkgP5neT+PzqrX+Jl/a45PpB6XMrfkKu0Yaz7KmcO6J+pyNaddHm8E3l3WFdvrmxVWGfLY9XhXqhcxrGb7SPG2n9CUcsjed+jlfjT08ZZ4NnjmQzz/qYuabCpBSA4Tus3cThJfr4lc614cBPht0kBv1mJsljDULwCyFw5ZyGh1hTw/p5lZ9IXw/X0IaZvr58TDRygDAGf7fsV1dIBgoFKN7MdmF4kgOMtcHIl+PmIimmXPSRZSVqm2sHwl/QlERpntIimqEm5Y2GLpKyKVu42PrOKqC1xDHc8gQy0ag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ESL2msQHjUumA/FF7ssFRHnSPTztIwj34g78Rr8GH2A=;
- b=cjpkddwPwfDkGtZbmaFvatS+uLye7Xu8N2uAmDAUwwrK63V5vZT3oUsfHnUs9CTX5reijpmxNhGDBvBVxhJ9csuP0daChYUIBQM69+Uvf6/XfTYh7Ajz6AUyQlZ+9DBGzTGp1z0pRO/dXRpcibiPWIEp0jGo6+GeiJGeDNbDK7g=
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
- AM5PR1001MB1041.EURPRD10.PROD.OUTLOOK.COM (10.169.155.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17; Tue, 26 Nov 2019 17:09:06 +0000
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
- 17:09:06 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>
-Subject: RE: [PATCHv2 4/6] ASoC: da7213: Move set_sysclk to codec level
-Thread-Topic: [PATCHv2 4/6] ASoC: da7213: Move set_sysclk to codec level
-Thread-Index: AQHVn7aaBTnjqncJ80WQRHaMl2nGI6eduAyw
-Date:   Tue, 26 Nov 2019 17:09:06 +0000
-Message-ID: <AM5PR1001MB0994623216C6B8690E2112DE80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
- <20191120152406.2744-5-sebastian.reichel@collabora.com>
-In-Reply-To: <20191120152406.2744-5-sebastian.reichel@collabora.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 458004dc-854d-4f62-660b-08d7729358a8
-x-ms-traffictypediagnostic: AM5PR1001MB1041:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR1001MB10414651CDA1F26675C4031EA7450@AM5PR1001MB1041.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 0233768B38
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(376002)(396003)(346002)(199004)(189003)(256004)(6506007)(53546011)(110136005)(478600001)(229853002)(52536014)(66066001)(316002)(55236004)(2906002)(71190400001)(74316002)(71200400001)(446003)(6246003)(102836004)(6116002)(86362001)(25786009)(33656002)(305945005)(6436002)(7736002)(3846002)(11346002)(186003)(54906003)(26005)(5660300002)(99286004)(76176011)(8676002)(81156014)(81166006)(14454004)(55016002)(8936002)(7696005)(66946007)(66446008)(9686003)(64756008)(66556008)(66476007)(4326008)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1041;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5Q5x/9udccSnsZIjP1KsazVtKgXV8YsgHlmr89nu/RY1tZm80r3lcUHrcW8oba/r+Ezkc7ZUD2VQ76+14mrEk3Ossw1N9F4qKMQXKT7fzHn00fS52wz0lqYjsomCTjo1dxO18hnW0U9/BTq2cIwRf93bBj4CdkH/DJkUmaPMYNE1W8bh5/m4uS6om759JD47QZWoh6E5eEu7K3tMg9Luh0c2MdcEOlhHdyX+sHloNGbncEyAlppFMtGREPNxbms78d/FuJ3CE791V9dxT8zV4e3BDsIyNksK6cF/anYIGRylaOVkw7M7hJScNiYPMeXE8qRxezdH18Vkgmi8FG629DpjNHUPSbpebpFqReq/mNBrYJy/FPizEz66RZ/BoAM2mRLcP+Ll2BACx2lPHKKz438GXDmPEWbKddtemnehmbRaG5EW3ISe+gB03u/OBzOm
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 458004dc-854d-4f62-660b-08d7729358a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 17:09:06.8225
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: N4PtW7N6zGbt1u1VVlwtVPXQlZMlJO3IQtdYUnh4ldLQnjwXDkGZTbYpK1sVtiRIa6PzYOTgAT0fuNRrph7ZxG4uv8mgB56Djrnz3U9gk38=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1041
+        Tue, 26 Nov 2019 12:09:34 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574788048; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=XK1cCvVsgTFpmDSEw0LpHcrpx7QZvQpr1BriubwvqOTJQXqx3CjOi2HUtYVxOmMePHGuRBShOb/Ijpm8jhyLzahBV2LDYFR9mxRzUFne4xA8mTmEJeHZUqVGnZG1CsYqWcqaUk4VjN43BK40xGSYRCZLSORt0ys5qNn7lYZxY2s=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574788048; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
+        bh=O2mxMRqNG5nxoS3M1p8Fo5LSL5q81C+xbwYZf2HrKD4=; 
+        b=Ata+vVoZGhtj7DWWnOqpENWHV79llPvrW0gdvhPtoeTuqAevymrtseTWg8C4RFaVJHuvnKqcOgAV/pCux2ZawXAb04KJOpjtrbU3ugGbxId2f/KBPi6tlcNrOV3B3HPHpgd4xfYINPrLgh3Mt05iO2Vy0/wya/jO4nUitj06WDE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=pRFV02mFUmkJDG5J2EYSHSSu2J9md90O2lZjmhTtPJnXIhJBmyOh3PqvPBvAQA99U2W5Bnn0JQDo
+    77bv9EPgJx9DRcgcFRmVUVWN9CqECezPGAC47x6eWz/G001j24FK  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574788048;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=O2mxMRqNG5nxoS3M1p8Fo5LSL5q81C+xbwYZf2HrKD4=;
+        b=SNEgLGMI3a11tDnaTU1z/Fl+KxIx8LUlWmshJJtVkcnsgvvSzSt813n/mu1AULs1
+        XklyWBvGsVsqnwFKfE9I+ZfLHbH8uPlxBQx2+Jfwh0AgWvTgFXP2MAYmmMA4p7sXJ3c
+        seyShPpVjpH7rSxI+hCrkdTYaJnW8Zq4ufxUj/GM=
+Received: from zhouyanjie-virtual-machine.localdomain (171.221.112.214 [171.221.112.214]) by mx.zohomail.com
+        with SMTPS id 1574788046343318.03779533446266; Tue, 26 Nov 2019 09:07:26 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+Subject: [PATCH v4 4/6] MIPS: Ingenic: Initial YSH & ATIL CU Neo board support.
+Date:   Wed, 27 Nov 2019 01:06:12 +0800
+Message-Id: <1574787974-58040-5-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
+References: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20 November 2019 15:24, Sebastian Reichel wrote:
+Add a device tree for the Ingenic X1000 based YSH & ATIL CU Neo board.
+Note that this is unselectable via Kconfig until the X1000 SoC is made
+selectable in a later commit.
 
-> Move set_sysclk function to component level, so that it can be used at
-> both component and DAI level.
->=20
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+---
 
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Notes:
+    v1->v2:
+    Rebase on top of mips-next, use TCU for system timer and clocksource.
+    
+    v2->v3:
+    No change.
+    
+    v3->v4:
+    1.Adjust "model" in "cu1000.dts" to match the description in "devices.yaml".
+    2.Adjust "bool" in "Kconfig" to avoid duplicate names with subsequent boards.
 
-> ---
->  sound/soc/codecs/da7213.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->=20
-> diff --git a/sound/soc/codecs/da7213.c b/sound/soc/codecs/da7213.c
-> index 0359249118d0..9686948b16ea 100644
-> --- a/sound/soc/codecs/da7213.c
-> +++ b/sound/soc/codecs/da7213.c
-> @@ -1343,10 +1343,10 @@ static int da7213_mute(struct snd_soc_dai *dai, i=
-nt
-> mute)
->  #define DA7213_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |
-> SNDRV_PCM_FMTBIT_S20_3LE |\
->  			SNDRV_PCM_FMTBIT_S24_LE |
-> SNDRV_PCM_FMTBIT_S32_LE)
->=20
-> -static int da7213_set_dai_sysclk(struct snd_soc_dai *codec_dai,
-> -				 int clk_id, unsigned int freq, int dir)
-> +static int da7213_set_component_sysclk(struct snd_soc_component
-> *component,
-> +				       int clk_id, int source,
-> +				       unsigned int freq, int dir)
->  {
-> -	struct snd_soc_component *component =3D codec_dai->component;
->  	struct da7213_priv *da7213 =3D
-> snd_soc_component_get_drvdata(component);
->  	int ret =3D 0;
->=20
-> @@ -1354,7 +1354,7 @@ static int da7213_set_dai_sysclk(struct snd_soc_dai
-> *codec_dai,
->  		return 0;
->=20
->  	if (((freq < 5000000) && (freq !=3D 32768)) || (freq > 54000000)) {
-> -		dev_err(codec_dai->dev, "Unsupported MCLK value %d\n",
-> +		dev_err(component->dev, "Unsupported MCLK value %d\n",
->  			freq);
->  		return -EINVAL;
->  	}
-> @@ -1370,7 +1370,7 @@ static int da7213_set_dai_sysclk(struct snd_soc_dai
-> *codec_dai,
->  				    DA7213_PLL_MCLK_SQR_EN);
->  		break;
->  	default:
-> -		dev_err(codec_dai->dev, "Unknown clock source %d\n", clk_id);
-> +		dev_err(component->dev, "Unknown clock source %d\n",
-> clk_id);
->  		return -EINVAL;
->  	}
->=20
-> @@ -1380,7 +1380,7 @@ static int da7213_set_dai_sysclk(struct snd_soc_dai
-> *codec_dai,
->  		freq =3D clk_round_rate(da7213->mclk, freq);
->  		ret =3D clk_set_rate(da7213->mclk, freq);
->  		if (ret) {
-> -			dev_err(codec_dai->dev, "Failed to set clock rate %d\n",
-> +			dev_err(component->dev, "Failed to set clock rate
-> %d\n",
->  				freq);
->  			return ret;
->  		}
-> @@ -1507,7 +1507,6 @@ static int da7213_set_dai_pll(struct snd_soc_dai
-> *codec_dai, int pll_id,
->  static const struct snd_soc_dai_ops da7213_dai_ops =3D {
->  	.hw_params	=3D da7213_hw_params,
->  	.set_fmt	=3D da7213_set_dai_fmt,
-> -	.set_sysclk	=3D da7213_set_dai_sysclk,
->  	.set_pll	=3D da7213_set_dai_pll,
->  	.digital_mute	=3D da7213_mute,
->  };
-> @@ -1845,6 +1844,7 @@ static const struct snd_soc_component_driver
-> soc_component_dev_da7213 =3D {
->  	.num_dapm_widgets	=3D ARRAY_SIZE(da7213_dapm_widgets),
->  	.dapm_routes		=3D da7213_audio_map,
->  	.num_dapm_routes	=3D ARRAY_SIZE(da7213_audio_map),
-> +	.set_sysclk		=3D da7213_set_component_sysclk,
->  	.idle_bias_on		=3D 1,
->  	.use_pmdown_time	=3D 1,
->  	.endianness		=3D 1,
-> --
-> 2.24.0
+ arch/mips/boot/dts/ingenic/Makefile   |   1 +
+ arch/mips/boot/dts/ingenic/cu1000.dts |  52 ++++++++++++++++++
+ arch/mips/configs/cu1000_defconfig    | 100 ++++++++++++++++++++++++++++++++++
+ arch/mips/jz4740/Kconfig              |   4 ++
+ 4 files changed, 157 insertions(+)
+ create mode 100644 arch/mips/boot/dts/ingenic/cu1000.dts
+ create mode 100644 arch/mips/configs/cu1000_defconfig
+
+diff --git a/arch/mips/boot/dts/ingenic/Makefile b/arch/mips/boot/dts/ingenic/Makefile
+index 9cc4844..f6db7bb 100644
+--- a/arch/mips/boot/dts/ingenic/Makefile
++++ b/arch/mips/boot/dts/ingenic/Makefile
+@@ -2,5 +2,6 @@
+ dtb-$(CONFIG_JZ4740_QI_LB60)	+= qi_lb60.dtb
+ dtb-$(CONFIG_JZ4770_GCW0)	+= gcw0.dtb
+ dtb-$(CONFIG_JZ4780_CI20)	+= ci20.dtb
++dtb-$(CONFIG_X1000_CU1000)	+= cu1000.dtb
+ 
+ obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .o, $(dtb-y))
+diff --git a/arch/mips/boot/dts/ingenic/cu1000.dts b/arch/mips/boot/dts/ingenic/cu1000.dts
+new file mode 100644
+index 00000000..f92f6af
+--- /dev/null
++++ b/arch/mips/boot/dts/ingenic/cu1000.dts
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: GPL-2.0
++/dts-v1/;
++
++#include "x1000.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/clock/ingenic,tcu.h>
++
++/ {
++	compatible = "yna,cu1000", "ingenic,x1000";
++	model = "YSH & ATIL General Board CU Neo";
++
++	aliases {
++		serial2 = &uart2;
++	};
++
++	chosen {
++		stdout-path = &uart2;
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x04000000>;
++	};
++};
++
++&exclk {
++	clock-frequency = <24000000>;
++};
++
++&tcu {
++	/* 1500 kHz for the system timer and clocksource */
++	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
++	assigned-clock-rates = <1500000>, <1500000>;
++
++	/* Use channel #1 for the system timer channel #2 for the clocksource */
++	ingenic,pwm-channels-mask = <0xfa>;
++};
++
++&uart2 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pins_uart2>;
++};
++
++&pinctrl {
++	pins_uart2: uart2 {
++		function = "uart2";
++		groups = "uart2-data-d";
++		bias-disable;
++	};
++};
+diff --git a/arch/mips/configs/cu1000_defconfig b/arch/mips/configs/cu1000_defconfig
+new file mode 100644
+index 00000000..88729ee
+--- /dev/null
++++ b/arch/mips/configs/cu1000_defconfig
+@@ -0,0 +1,100 @@
++CONFIG_LOCALVERSION_AUTO=y
++CONFIG_KERNEL_GZIP=y
++CONFIG_SYSVIPC=y
++CONFIG_NO_HZ_IDLE=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_PREEMPT=y
++CONFIG_IKCONFIG=y
++CONFIG_IKCONFIG_PROC=y
++CONFIG_LOG_BUF_SHIFT=14
++CONFIG_CGROUPS=y
++CONFIG_MEMCG=y
++CONFIG_MEMCG_KMEM=y
++CONFIG_CGROUP_SCHED=y
++CONFIG_CGROUP_FREEZER=y
++CONFIG_CGROUP_DEVICE=y
++CONFIG_CGROUP_CPUACCT=y
++CONFIG_NAMESPACES=y
++CONFIG_USER_NS=y
++CONFIG_BLK_DEV_INITRD=y
++CONFIG_INITRAMFS_SOURCE="arch/mips/boot/ramdisk.cpio.gz"
++CONFIG_CC_OPTIMIZE_FOR_SIZE=y
++CONFIG_SYSCTL_SYSCALL=y
++CONFIG_KALLSYMS_ALL=y
++CONFIG_EMBEDDED=y
++# CONFIG_VM_EVENT_COUNTERS is not set
++# CONFIG_COMPAT_BRK is not set
++CONFIG_SLAB=y
++CONFIG_MACH_INGENIC=y
++CONFIG_X1000_CU1000=y
++CONFIG_HIGHMEM=y
++CONFIG_HZ_100=y
++CONFIG_HZ=100
++# CONFIG_SECCOMP is not set
++# CONFIG_SUSPEND is not set
++# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
++# CONFIG_COMPACTION is not set
++CONFIG_CMA=y
++CONFIG_CMA_AREAS=7
++CONFIG_UEVENT_HELPER=y
++CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
++CONFIG_DEVTMPFS=y
++# CONFIG_FW_LOADER is not set
++# CONFIG_ALLOW_DEV_COREDUMP is not set
++# CONFIG_INPUT_MOUSEDEV is not set
++# CONFIG_INPUT_KEYBOARD is not set
++# CONFIG_INPUT_MOUSE is not set
++# CONFIG_SERIO is not set
++CONFIG_VT_HW_CONSOLE_BINDING=y
++CONFIG_LEGACY_PTY_COUNT=2
++CONFIG_SERIAL_EARLYCON=y
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_NR_UARTS=3
++CONFIG_SERIAL_8250_RUNTIME_UARTS=3
++CONFIG_SERIAL_8250_INGENIC=y
++CONFIG_SERIAL_OF_PLATFORM=y
++# CONFIG_HW_RANDOM is not set
++CONFIG_GPIO_SYSFS=y
++# CONFIG_HWMON is not set
++# CONFIG_LCD_CLASS_DEVICE is not set
++# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
++# CONFIG_VGA_CONSOLE is not set
++# CONFIG_HID is not set
++# CONFIG_USB_SUPPORT is not set
++# CONFIG_IOMMU_SUPPORT is not set
++CONFIG_NVMEM=y
++CONFIG_NVMEM_SYSFS=y
++CONFIG_EXT4_FS=y
++# CONFIG_DNOTIFY is not set
++CONFIG_PROC_KCORE=y
++# CONFIG_PROC_PAGE_MONITOR is not set
++CONFIG_TMPFS=y
++CONFIG_CONFIGFS_FS=y
++CONFIG_NLS=y
++CONFIG_NLS_CODEPAGE_936=y
++CONFIG_NLS_CODEPAGE_950=y
++CONFIG_NLS_ASCII=y
++CONFIG_NLS_ISO8859_1=y
++CONFIG_NLS_UTF8=y
++CONFIG_CRYPTO_ECHAINIV=y
++CONFIG_CRYPTO_AES=y
++CONFIG_CRYPTO_DEFLATE=y
++CONFIG_CRYPTO_LZO=y
++CONFIG_PRINTK_TIME=y
++CONFIG_CONSOLE_LOGLEVEL_DEFAULT=15
++CONFIG_CONSOLE_LOGLEVEL_QUIET=15
++CONFIG_MESSAGE_LOGLEVEL_DEFAULT=7
++CONFIG_DEBUG_INFO=y
++CONFIG_STRIP_ASM_SYMS=y
++CONFIG_DEBUG_FS=y
++CONFIG_MAGIC_SYSRQ=y
++CONFIG_PANIC_ON_OOPS=y
++CONFIG_PANIC_TIMEOUT=10
++# CONFIG_SCHED_DEBUG is not set
++# CONFIG_DEBUG_PREEMPT is not set
++CONFIG_STACKTRACE=y
++# CONFIG_FTRACE is not set
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE="console=ttyS2,115200n8 mem=32M@0x0 earlycon clk_ignore_unused"
++CONFIG_CMDLINE_OVERRIDE=y
+diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+index 6b96844..ccaf507 100644
+--- a/arch/mips/jz4740/Kconfig
++++ b/arch/mips/jz4740/Kconfig
+@@ -16,6 +16,10 @@ config JZ4780_CI20
+ 	bool "MIPS Creator CI20"
+ 	select MACH_JZ4780
+ 
++config X1000_CU1000
++	bool "YSH & ATIL General Module CU1000"
++	select MACH_X1000
++
+ endchoice
+ 
+ config MACH_JZ4740
+-- 
+2.7.4
+
 
