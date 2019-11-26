@@ -6,57 +6,57 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12289C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A4FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC18420727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2DF20727
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jn3dXdAU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwa38Tt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfKZNyd (ORCPT
+        id S1728102AbfKZNyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:54:33 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43650 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727374AbfKZNyc (ORCPT
+        Tue, 26 Nov 2019 08:54:38 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:44035 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727374AbfKZNyg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:54:32 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b1so9030328pgq.10;
-        Tue, 26 Nov 2019 05:54:31 -0800 (PST)
+        Tue, 26 Nov 2019 08:54:36 -0500
+Received: by mail-pj1-f65.google.com with SMTP id w8so8322509pjh.11;
+        Tue, 26 Nov 2019 05:54:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VbURqT/hIwISYpnd7Ewfv41kiT2pdXc627ZF5Jq5I3E=;
-        b=jn3dXdAUXjCfoTNIr3OuAUBdVoonrWEKqBMAuY8e4g0tBuHvsaniCAg1vun5q/XJb6
-         m68Oi1JcNA3elKzuyziqT9UmhDJTzPJpqSWbwePveSiW79D06dNmHVP2kqiBG2nv5kpy
-         Te0vcwffP3luJ+ZHivGiNFFeEN9dc9huhdQUNFWmWy8nCLldOjp/AZCtf3eKe2+3YirG
-         ohOCO29qxyFBYmw27rU4q4LA7GKX2yKZl48dalyIhFvqJ5hQYmrgtML0ZH4jtlMrS99A
-         nP/LTkgHeEo3B17svNxg2O708y4rNEcRUEImbCV9bm/Q2ytpsQrRDZ2lqrUeb7y6xjAe
-         KJHg==
+        bh=7z4jzenWhd0UApMYWS0PPwEvZ4lV+LKdoL7sPLRETfg=;
+        b=rwa38Tt5sE2SwqbB2LxzonQx7Dr4BlBhg2zTHHQ9R2novDl3ns4Kr5O5ZiSxl7IHw+
+         JxW/1unXoSU0s+ecxGRYNBDAR7zo9FPsKFiu3iRoteOtKtpkm48TitALEbta97EvzHYX
+         rTLKBc/AmAk84u6/J+MswbfozOY01grnkbgJCXwnS54Qmk5JWcwOAyx6yg9RMJzh1n/N
+         vNOxGYmeCNbPY6C/D2VVGKbNH7syGSY5nGGRmkbhWV2pcLIgSg+dNN/fWcRXRKzPvqjY
+         HXPLtpJqkXZ0/n5AbhfYHxJaRmnFPOM/YnPkwpmEBKzatmmnmxmsWPigv5I74ApjMeD1
+         z6vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VbURqT/hIwISYpnd7Ewfv41kiT2pdXc627ZF5Jq5I3E=;
-        b=OTOKcgN1pnYOZmZwDdMVYi125QxBeG9CiRdQLTsIjkoFKbLB9nPuQakTDzAeIZTgCu
-         L6Kw7ezQYOXqYjrSrUq1/l2qpTR+RXbJTIhN3jej4TFUV15WpNe8LupKGFigACVO03Ro
-         Ihcl06XBYtfKsw89VF91Nl6NG3f41cy77q+UhKZX0ASrMD2LGMyUqoXy+fbPHFdTMuik
-         V50bSqQ5ylR3SWhhmgEva2x15oZTRY95moo16rv9J2MH+zZBDWw8BEK5/+otoYKBwBKy
-         7/4Qz11F7Wu90HIE9BmqlSxAUEMzZ8MXLe876zTQezh7VOd9+Cmacy5gxg5J+e85jpqR
-         ZhMA==
-X-Gm-Message-State: APjAAAVvsk8GyJCpo7RqQjv0Co0v1+g4QrX0t0uBolOQdxrGLzxKzzvt
-        4wUISZmoXfj/tQdBhrYapYwrA2vZvo0=
-X-Google-Smtp-Source: APXvYqwEndTpIDrFY2fzA2dGp2sWoeRfH5LLeu+qEp6aMt+qIb+DSwKvlV2AxLfZHhRF7NA6PnbkSA==
-X-Received: by 2002:a63:6b87:: with SMTP id g129mr30172249pgc.438.1574776471317;
-        Tue, 26 Nov 2019 05:54:31 -0800 (PST)
+        bh=7z4jzenWhd0UApMYWS0PPwEvZ4lV+LKdoL7sPLRETfg=;
+        b=uH+wre1Hj8QrH7O8HOvmgwNKpRUYYVzE5wbfg6KidsFf6Oex6pGoNayIcUKK6sUDXC
+         ZzoV4TFRi0sFiO1Xs3EuiJByRt+v5SzxIe1dCwwGNgkTGHJDTJV3q0A07VGVQplzOaqd
+         uBHQ+ua2l7JcOvsCAev0+H7J92N2ZfaPrJSA+dZ0usipyJo80CWCU0m1UlbXt+QrHQY8
+         YLAhuWvpAbFPMnv7FSaRG1qPX/kzvszqahcP6ejTJRpCID1dq3dZwtw8WKu9wppPJTRW
+         7kIz5KfULV9XgJqK08nm+xHnapi3YtTnUvU5C5Rxr2fjtCopebnfIiIOxC/oIIHg7f7C
+         fe4A==
+X-Gm-Message-State: APjAAAUtUC8t0PFUq3w2MK5trtyPvaV6uKCwWzrXb/pWNUeAQ2MuSfVW
+        J76MooNwgXUDkLgYUjVtP4E=
+X-Google-Smtp-Source: APXvYqz3dLRYqY9DA8JuhOo9VI1HldHEbKnZGcH7/gkoUYh514c7/QqpY2S0OSRx/zKKAUrHUSEcLg==
+X-Received: by 2002:a17:90a:a616:: with SMTP id c22mr7240491pjq.46.1574776474943;
+        Tue, 26 Nov 2019 05:54:34 -0800 (PST)
 Received: from debian.net.fpt ([2405:4800:58f7:2f79:ce3b:4b9:a68f:959f])
-        by smtp.gmail.com with ESMTPSA id v3sm13018499pfi.26.2019.11.26.05.54.27
+        by smtp.gmail.com with ESMTPSA id v3sm13018499pfi.26.2019.11.26.05.54.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 05:54:30 -0800 (PST)
+        Tue, 26 Nov 2019 05:54:34 -0800 (PST)
 From:   Phong Tran <tranmanphong@gmail.com>
 To:     davem@davemloft.net
 Cc:     alexios.zavras@intel.com, allison@lohutok.net, benquike@gmail.com,
@@ -64,9 +64,9 @@ Cc:     alexios.zavras@intel.com, allison@lohutok.net, benquike@gmail.com,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
         netdev@vger.kernel.org, oneukum@suse.com, tglx@linutronix.de,
         tranmanphong@gmail.com
-Subject: [Patch v2 1/2] net: hso: Fix -Wcast-function-type
-Date:   Tue, 26 Nov 2019 20:54:12 +0700
-Message-Id: <20191126135413.19929-2-tranmanphong@gmail.com>
+Subject: [Patch v2 2/2] net: usbnet: Fix -Wcast-function-type
+Date:   Tue, 26 Nov 2019 20:54:13 +0700
+Message-Id: <20191126135413.19929-3-tranmanphong@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191126135413.19929-1-tranmanphong@gmail.com>
 References: <20191125.110708.76766634808358006.davem@davemloft.net>
@@ -83,33 +83,36 @@ Report by https://github.com/KSPP/linux/issues/20
 
 Signed-off-by: Phong Tran <tranmanphong@gmail.com>
 ---
- drivers/net/usb/hso.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/usb/usbnet.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
-index 74849da031fa..ca827802f291 100644
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -1214,8 +1214,9 @@ static void hso_std_serial_read_bulk_callback(struct urb *urb)
-  * This needs to be a tasklet otherwise we will
-  * end up recursively calling this function.
-  */
--static void hso_unthrottle_tasklet(struct hso_serial *serial)
-+static void hso_unthrottle_tasklet(unsigned long data)
- {
-+	struct hso_serial *serial = (struct hso_serial *)data;
- 	unsigned long flags;
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index dde05e2fdc3e..30e511c2c8d0 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -1573,6 +1573,13 @@ static void usbnet_bh (struct timer_list *t)
+ 	}
+ }
  
- 	spin_lock_irqsave(&serial->serial_lock, flags);
-@@ -1265,7 +1266,7 @@ static int hso_serial_open(struct tty_struct *tty, struct file *filp)
- 		/* Force default termio settings */
- 		_hso_serial_set_termios(tty, NULL);
- 		tasklet_init(&serial->unthrottle_tasklet,
--			     (void (*)(unsigned long))hso_unthrottle_tasklet,
-+			     hso_unthrottle_tasklet,
- 			     (unsigned long)serial);
- 		result = hso_start_serial_device(serial->parent, GFP_KERNEL);
- 		if (result) {
++static void usbnet_bh_tasklet(unsigned long data)
++{
++	struct timer_list *t = (struct timer_list *)data;
++
++	usbnet_bh(t);
++}
++
+ 
+ /*-------------------------------------------------------------------------
+  *
+@@ -1700,7 +1707,7 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
+ 	skb_queue_head_init (&dev->txq);
+ 	skb_queue_head_init (&dev->done);
+ 	skb_queue_head_init(&dev->rxq_pause);
+-	dev->bh.func = (void (*)(unsigned long))usbnet_bh;
++	dev->bh.func = usbnet_bh_tasklet;
+ 	dev->bh.data = (unsigned long)&dev->delay;
+ 	INIT_WORK (&dev->kevent, usbnet_deferred_kevent);
+ 	init_usb_anchor(&dev->deferred);
 -- 
 2.20.1
 
