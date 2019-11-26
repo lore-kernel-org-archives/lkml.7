@@ -2,108 +2,160 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2355AC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 07:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E166C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 07:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E589E20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 07:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574753499;
-	bh=pZooaciT0y37+4+FI0SqHLZWxcx11LQh0Nrdh9BgFw8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ED+9Ne1i3igTWDOp+yNu4jB5lr5OXRpKfHyQxMlZ2yTJ8uuYreaT+YLGpJYUuo2iQ
-	 Qa6nH14d3Ob8iSDLFgNMWC9CVccaHwW9Bv5r8YAcaGP88Cp2+xyNQF0+wtt2Om9tGB
-	 AOnl5IcnC15BKkDqU18aGJ/7DYNb6miItjM5VsAM=
+	by mail.kernel.org (Postfix) with ESMTP id 335972068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 07:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfKZHbh (ORCPT
+        id S1727300AbfKZHcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 02:31:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49900 "EHLO mail.kernel.org"
+        Tue, 26 Nov 2019 02:32:17 -0500
+Received: from mga04.intel.com ([192.55.52.120]:47051 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbfKZHbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 02:31:37 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 565512068E;
-        Tue, 26 Nov 2019 07:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574753496;
-        bh=pZooaciT0y37+4+FI0SqHLZWxcx11LQh0Nrdh9BgFw8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tgbeNQIEFyY4uAeIgo1Qa7cEJNQJ8E5xq6qCJSyxMZDVJoGC/QLiJK4cNZ1XusAKB
-         rnCEaJkutjfVXn06isMyc5E3TJdl6cD0ULjfA/ip9vY4/ueIdjWuO5NdkkJqzaIGmT
-         bVj8ZNF8EWJXZuONu1DVsuu9hy2ch7MHiDQrOau0=
-Date:   Tue, 26 Nov 2019 16:31:32 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BUGFIX PATCH v3 1/4] selftests/ftrace: Fix to check the
- existence of set_ftrace_filter
-Message-Id: <20191126163132.59a0c9811acdcf62a7431222@kernel.org>
-In-Reply-To: <20191125205429.5c9ba8c4@gandalf.local.home>
-References: <157466501169.21973.31401747181477687.stgit@devnote2>
-        <157466502067.21973.8795718044691377192.stgit@devnote2>
-        <20191125094445.03d0c8df@gandalf.local.home>
-        <20191126091345.e2eb722e2939864eeb01bc7e@kernel.org>
-        <20191125205429.5c9ba8c4@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1725802AbfKZHcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 02:32:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 23:32:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,244,1571727600"; 
+   d="scan'208";a="198736753"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga007.jf.intel.com with ESMTP; 25 Nov 2019 23:32:15 -0800
+Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 25 Nov 2019 23:32:15 -0800
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ fmsmsx115.amr.corp.intel.com (10.18.116.19) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 25 Nov 2019 23:32:14 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.108]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.149]) with mapi id 14.03.0439.000;
+ Tue, 26 Nov 2019 15:32:12 +0800
+From:   "Zhao, Shirley" <shirley.zhao@intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: RE: One question about trusted key of keyring in Linux kernel.
+Thread-Topic: One question about trusted key of keyring in Linux kernel.
+Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMA=
+Date:   Tue, 26 Nov 2019 07:32:12 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+ <1573659978.17949.83.camel@linux.ibm.com>
+In-Reply-To: <1573659978.17949.83.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDllZDA5NzgtOWI5Yy00Zjk1LWE4ODAtOWMwYmU4ZGM3OWZmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiT3JOXC93Y0dwNXQwVW44WXp0b3plWnFRZldzdFFQZExvS2VyQmczRVUreFdESUpSYU1Hd3pzVFh6UGFjOCtvdUgifQ==
+x-ctpclassification: CTP_NT
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Nov 2019 20:54:29 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 26 Nov 2019 09:13:45 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > > > @@ -93,7 +96,6 @@ initialize_ftrace() { # Reset ftrace to initial-state
-> > > >      disable_events
-> > > >      [ -f set_event_pid ] && echo > set_event_pid
-> > > >      [ -f set_ftrace_pid ] && echo > set_ftrace_pid
-> > > > -    [ -f set_ftrace_filter ] && echo | tee set_ftrace_*  
-> > > 
-> > > The above should be changed to:
-> > > 
-> > > 	[ -f set_ftrace_notrace ] && echo > set_ftrace_notrace  
-> > 
-> > Ah, good point! I think that should be done by another patch, since
-> > it will improve ftracetest.
-> 
-> No, it belongs in this patch, because you are removing:
-> 
-> 	[ -f set_ftrace_filter ] && echo | tee set_ftrace_*
-> 
-> which is equivalent to:
-> 
-> 	[ -f set_ftrace_filter ] && echo > set_ftrace_filter
-> 	[ -f set_ftrace_filter ] && echo > set_ftrace_notrace
-> 
-> as the "tee set_ftrace_*" covers both.
-
-Ah, I see. 
-
-> 
-> Without this change, this patch removes the update to
-> set_ftrace_notrace.
-
-OK, I'll update it.
-
-Thank you!
-
-> 
-> -- Steve
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+VGhhbmtzIGZvciB5b3VyIGZlZWRiYWNrLCBNaW1pLiANCkJ1dCB0aGUgZG9jdW1lbnQgb2YgZHJh
+Y3V0IGNhbid0IHNvbHZlIG15IHByb2JsZW0uIA0KDQpJIGRpZCBtb3JlIHRlc3QgdGhlc2UgZGF5
+cyBhbmQgdHJ5IHRvIGRlc2NyaXB0IG15IHF1ZXN0aW9uIGluIG1vcmUgZGV0YWlsLiANCg0KSW4g
+bXkgc2NlbmFyaW8sIHRoZSB0cnVzdGVkIGtleSB3aWxsIGJlIHNlYWxlZCBpbnRvIFRQTSB3aXRo
+IFBDUiBwb2xpY3kuIA0KQW5kIHRoZXJlIGFyZSBzb21lIHJlbGF0ZWQgb3B0aW9ucyBpbiBtYW51
+YWwgbGlrZSANCiAgICAgICBoYXNoPSAgICAgICAgIGhhc2ggYWxnb3JpdGhtIG5hbWUgYXMgYSBz
+dHJpbmcuIEZvciBUUE0gMS54IHRoZSBvbmx5DQogICAgICAgICAgICAgICAgICAgICBhbGxvd2Vk
+IHZhbHVlIGlzIHNoYTEuIEZvciBUUE0gMi54IHRoZSBhbGxvd2VkIHZhbHVlcw0KICAgICAgICAg
+ICAgICAgICAgICAgYXJlIHNoYTEsIHNoYTI1Niwgc2hhMzg0LCBzaGE1MTIgYW5kIHNtMy0yNTYu
+DQogICAgICAgcG9saWN5ZGlnZXN0PSBkaWdlc3QgZm9yIHRoZSBhdXRob3JpemF0aW9uIHBvbGlj
+eS4gbXVzdCBiZSBjYWxjdWxhdGVkDQogICAgICAgICAgICAgICAgICAgICB3aXRoIHRoZSBzYW1l
+IGhhc2ggYWxnb3JpdGhtIGFzIHNwZWNpZmllZCBieSB0aGUgJ2hhc2g9Jw0KICAgICAgICAgICAg
+ICAgICAgICAgb3B0aW9uLg0KICAgICAgIHBvbGljeWhhbmRsZT0gaGFuZGxlIHRvIGFuIGF1dGhv
+cml6YXRpb24gcG9saWN5IHNlc3Npb24gdGhhdCBkZWZpbmVzIHRoZQ0KICAgICAgICAgICAgICAg
+ICAgICAgc2FtZSBwb2xpY3kgYW5kIHdpdGggdGhlIHNhbWUgaGFzaCBhbGdvcml0aG0gYXMgd2Fz
+IHVzZWQgdG8NCiAgICAgICAgICAgICAgICAgICAgIHNlYWwgdGhlIGtleS4gDQoNCkhlcmUgaXMg
+bXkgdGVzdCBzdGVwLiANCkZpcnN0bHksIHRoZSBwY3IgcG9saWN5IGlzIGdlbmVyYXRlZCBhcyBi
+ZWxvdzogDQokIHRwbTJfY3JlYXRlcG9saWN5IC0tcG9saWN5LXBjciAtLXBjci1saXN0IHNoYTI1
+Njo3IC0tcG9saWN5IHBjcjdfYmluLnBvbGljeSA+IHBjcjcucG9saWN5DQoNClBjcjcucG9saWN5
+IGlzIHRoZSBhc2NpaSBoZXggb2YgcG9saWN5Og0KJCBjYXQgcGNyNy5wb2xpY3kNCjMyMWZiZDI4
+YjYwZmNjMjMwMTdkNTAxYjEzM2JkNWRiZjI4ODk4MTQ1ODhlOGEyMzUxMGZlMTAxMDVjYjJjYzkN
+Cg0KVGhlbiBnZW5lcmF0ZSB0aGUgdHJ1c3RlZCBrZXkgYW5kIGNvbmZpZ3VyZSBwb2xpY3lkaWdl
+c3QgYW5kIGdldCB0aGUga2V5IElEOiANCiQga2V5Y3RsIGFkZCB0cnVzdGVkIGttayAibmV3IDMy
+IGtleWhhbmRsZT0weDgxMDAwMDAxIGhhc2g9c2hhMjU2IHBvbGljeWRpZ2VzdD1gY2F0IHBjcjcu
+cG9saWN5YCIgQHUNCjg3NDExNzA0NQ0KDQpTYXZlIHRoZSB0cnVzdGVkIGtleS4gDQokIGtleWN0
+bCBwaXBlIDg3NDExNzA0NSA+IGttay5ibG9iDQoNClJlYm9vdCBhbmQgbG9hZCB0aGUga2V5LiAN
+ClN0YXJ0IGEgYXV0aCBzZXNzaW9uIHRvIGdlbmVyYXRlIHRoZSBwb2xpY3k6DQokIHRwbTJfc3Rh
+cnRhdXRoc2Vzc2lvbiAtUyBzZXNzaW9uLmN0eA0Kc2Vzc2lvbi1oYW5kbGU6IDB4MzAwMDAwMA0K
+JCB0cG0yX3Bjcmxpc3QgLUwgc2hhMjU2OjcgLW8gcGNyNy5zaGEyNTYNCiQgdHBtMl9wb2xpY3lw
+Y3IgLVMgc2Vzc2lvbi5jdHggLUwgc2hhMjU2OjcgLUYgcGNyNy5zaGEyNTYgLWYgcGNyNy5wb2xp
+Y3kNCnBvbGljeS1kaWdlc3Q6IDB4MzIxRkJEMjhCNjBGQ0MyMzAxN0Q1MDFCMTMzQkQ1REJGMjg4
+OTgxNDU4OEU4QTIzNTEwRkUxMDEwNUNCMkNDOQ0KDQpJbnB1dCB0aGUgcG9saWN5IGhhbmRsZSB0
+byBsb2FkIHRydXN0ZWQga2V5Og0KJCBrZXljdGwgYWRkIHRydXN0ZWQga21rICJsb2FkIGBjYXQg
+a21rLmJsb2JgIGtleWhhbmRsZT0weDgxMDAwMDAxIHBvbGljeWhhbmRsZT0weDMwMDAwMDAiIEB1
+DQphZGRfa2V5OiBPcGVyYXRpb24gbm90IHBlcm1pdHRlZA0KDQpUaGUgZXJyb3Igc2hvdWxkIGJl
+IHBvbGljeSBjaGVjayBmYWlsZWQsIGJlY2F1c2UgSSB1c2UgVFBNIGNvbW1hbmQgdG8gdW5zZWFs
+IGRpcmVjdGx5IHdpdGggZXJyb3Igb2YgcG9saWN5IGNoZWNrIGZhaWxlZC4gDQokIHRwbTJfdW5z
+ZWFsIC1jIDB4ODEwMDAwMDEgLUwgc2hhMjU2OjcNCkVSUk9SIG9uIGxpbmU6ICI4MSIgaW4gZmls
+ZTogIi4vbGliL2xvZy5oIjogVHNzMl9TeXNfVW5zZWFsKDB4OTlEKSAtIHRwbTpzZXNzaW9uKDEp
+OmEgcG9saWN5IGNoZWNrIGZhaWxlZA0KRVJST1Igb24gbGluZTogIjIxMyIgaW4gZmlsZTogInRv
+b2xzL3RwbTJfdW5zZWFsLmMiOiBVbnNlYWwgZmFpbGVkIQ0KRVJST1Igb24gbGluZTogIjE2NiIg
+aW4gZmlsZTogInRvb2xzL3RwbTJfdG9vbC5jIjogVW5hYmxlIHRvIHJ1biB0cG0yX3Vuc2VhbA0K
+DQpTbyBteSBxdWVzdGlvbiBpczoNCjEuIEhvdyB0byB1c2UgdGhlIG9wdGlvbiwgcG9saWN5ZGln
+ZXN0LCBwb2xpY3loYW5kbGU/PyBJcyB0aGVyZSBhbnkgZXhhbXBsZT8gDQoyLiBXaGF0J3Mgd3Jv
+bmcgd2l0aCBteSB0ZXN0IHN0ZXA/IA0KDQpUaGFua3MuIA0KDQotIFNoaXJsZXkgDQoNCg0KDQot
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogTWltaSBab2hhciA8em9oYXJAbGludXgu
+aWJtLmNvbT4gDQpTZW50OiBXZWRuZXNkYXksIE5vdmVtYmVyIDEzLCAyMDE5IDExOjQ2IFBNDQpU
+bzogWmhhbywgU2hpcmxleSA8c2hpcmxleS56aGFvQGludGVsLmNvbT47IEphbWVzIEJvdHRvbWxl
+eSA8amVqYkBsaW51eC5pYm0uY29tPjsgSmFya2tvIFNha2tpbmVuIDxqYXJra28uc2Fra2luZW5A
+bGludXguaW50ZWwuY29tPjsgSm9uYXRoYW4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4NCkNjOiBs
+aW51eC1pbnRlZ3JpdHlAdmdlci5rZXJuZWwub3JnOyBrZXlyaW5nc0B2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
+ICdNYXVybyBDYXJ2YWxobyBDaGVoYWInIDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz4NClN1
+YmplY3Q6IFJlOiBPbmUgcXVlc3Rpb24gYWJvdXQgdHJ1c3RlZCBrZXkgb2Yga2V5cmluZyBpbiBM
+aW51eCBrZXJuZWwuDQoNCk9uIFdlZCwgMjAxOS0xMS0xMyBhdCAwMToyMiArMDAwMCwgWmhhbywg
+U2hpcmxleSB3cm90ZToNCj4gSGksIGFsbCwNCj4gDQo+IFRoaXMgaXMgU2hpcmxleSBmcm9tIElu
+dGVsLiBJIGhhdmUgb25lIHF1ZXN0aW9uIGFib3V0IHRydXN0ZWQga2V5IG9mIA0KPiBrZXlyaW5n
+IGluIGtlcm5lbC4gUGxlYXNlIGhlbHAuDQo+IA0KPiBBY2NvcmRpbmcgdGhlIHRvIGRlc2NyaXB0
+aW9uIGluIGh0dHBzOi8vZ2l0aHViLmNvbS90b3J2YWxkcy9saW51eC9ibA0KPiBvYi9tYXN0ZXIv
+RG9jdW1lbnRhdGlvbi9zZWN1cml0eS9rZXlzL3RydXN0ZWQtZW5jcnlwdGVkLnJzdC4NCj4gVHJ1
+c3RlZCBrZXkgd2lsbCBiZSBzYXZlZCBpbiBUUE0gd2l0aCBQQ1IgcG9saWN5IHByb3RlY3RlZC4N
+Cg0KIlRydXN0ZWQgS2V5cyB1c2UgYSBUUE0gYm90aCB0byBnZW5lcmF0ZSBhbmQgdG8gc2VhbCB0
+aGUga2V5cy4gS2V5cyBhcmUgc2VhbGVkIHVuZGVyIGEgMjA0OCBiaXQgUlNBIGtleSBpbiB0aGUg
+VFBNLCAuLi4iDQoNClRydXN0ZWQga2V5cyBhcmUgbm90IFRQTSBrZXlzLiDCoFRoZXkgYXJlIG5v
+dCBzdG9yZWQgaW4gdGhlIFRQTS4NCg0KPiANCj4gVGhlbiwgSSBydW5uaW5nIHRoZSBmb2xsb3dp
+bmcgY29tbWFuZCB0byBjcmVhdGUgYSB0cnVzdGVkIGtleS4NCj4ga2V5Y3RsIGFkZCB0cnVzdGVk
+IHRlc3RfdHJ1c3RlZCAibmV3IDMyIGtleWhhbmRsZT0weDgxMDAwMDAxIiBAdQ0KPiANCj4gSSBh
+bHNvIHRyaWVkIHRoZSBmb2xsb3dpbmcgY29tbWFuZCwgaXQgY2FuIGFkZCBvbmUgdHJ1c3RlZCBr
+ZXksIHRvby4NCj4ga2V5Y3RsIGFkZCB0cnVzdGVkIHRlc3RfdHJ1c3RlZCAibmV3IDMyIGtleWhh
+bmRsZT0weDgxMDAwMDAxIA0KPiBwY3JpbmZvPWBjYXQgcGNyNy5ibG9iYCIgQHUNCj4gDQo+IEJ1
+dCBhZnRlciByZWJvb3QsIHRoaXMga2V5IHdpbGwgYmUgcmVtb3ZlZC4NCj4gSSBuZWVkIHRvIHJl
+LWFkZGVkIGR1cmluZyBib290Lg0KDQpSaWdodCwgdGhleSBuZWVkIHRvIGJlIHJlLWxvYWRlZCBv
+biBib290LiDCoFJlZmVyIHRvIHRoZSBkcmFjdXQgbW9kdWxlIC9tb2R1bGVzLmQvOTdtYXN0ZXJr
+ZXkgZm9yIGxvYWRpbmcgYSB0cnVzdGVkIGtleSBkdXJpbmcgYm9vdC4NCg0KPiANCj4gVGhlbiB0
+aGUgcXVlc3Rpb24gaXMgc2luY2UgdGhpcyBrZXkgaXMgc2F2ZWQgaW4gVFBNLCBob3cgdG8gZ2V0
+IGl0IA0KPiBiYWNrIGZyb20gVFBNPw0KDQpUcnVzdGVkIGtleXMgYXJlIG5vdCBzdG9yZWQgaW4g
+dGhlIFRQTS4gwqBSZWZlciB0byB0aGUgaW1hLWV2bS11dGlscyBSRUFETUUgZm9yIGV4YW1wbGVz
+IG9mIGNyZWF0aW5nIGEgdHJ1c3RlZCBrZXkgKGttaykgYW5kIGFuIGVuY3J5cHRlZCBrZXkgKGV2
+bS1rZXkpLg0KDQo+IA0KPiBGcm9tIHRoZSBkb2N1bWVudCwgSSBuZWVkIHRvIHVzZSAia2V5Y3Rs
+IHBpcGUiIHRvIHNhdmUgdGhlIGtleSBpbnRvIGEgDQo+IGJsb2IsIHRoZW4gbG9hZCBpdC4NCj4g
+QnV0IHRoZSBibG9iIGNvbnRlbmQga2V5IHRleHQsIGFuZCB0aGlzIGlzIGEgZmlsZSBvbiBoYXJk
+IGRpc2ssIGl0IGlzIA0KPiBub3Qgc2FmZSB0byBwcm90ZWN0IHRoZSBrZXkuDQo+IA0KPiBTbyB3
+aGF0IGNhbiBUUE0gZG8gaGVyZT8NCg0KVGhlIGhleCBhc2NpaSBlbmNvZGVkIHRydXN0ZWQga2V5
+IGlzIHNlYWxlZCB1bmRlciB0aGUgVFBNIFNSSy4NCg0KTWltaQ0KDQo=
