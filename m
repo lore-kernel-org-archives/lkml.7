@@ -2,131 +2,104 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C28C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6527DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741392071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AADF204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:53:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EfGYhmMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbfKZNwK (ORCPT
+        id S1727969AbfKZNxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:52:10 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8806 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727374AbfKZNwK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:52:10 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQDn0h4049806;
-        Tue, 26 Nov 2019 08:51:58 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wh5608b33-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 Nov 2019 08:51:58 -0500
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xAQDn81p050645;
-        Tue, 26 Nov 2019 08:51:58 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wh5608b26-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 Nov 2019 08:51:57 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAQDj5hq025781;
-        Tue, 26 Nov 2019 13:51:57 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma02wdc.us.ibm.com with ESMTP id 2wevd6kfa5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 Nov 2019 13:51:57 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAQDpue332440640
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Nov 2019 13:51:56 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 905FE112063;
-        Tue, 26 Nov 2019 13:51:56 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B756112061;
-        Tue, 26 Nov 2019 13:51:56 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.102.3.141])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 26 Nov 2019 13:51:56 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 3F88C2E2F7D; Tue, 26 Nov 2019 19:21:53 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Shilpasri G Bhat <shilpa.bhat11@gmail.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH] powernv/opal-sensor-groups: Add documentation for the sysfs interfaces
-Date:   Tue, 26 Nov 2019 19:21:14 +0530
-Message-Id: <1574776274-22355-1-git-send-email-ego@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-26_03:2019-11-26,2019-11-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 lowpriorityscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911260124
+        Tue, 26 Nov 2019 08:53:44 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:39724 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727374AbfKZNxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 08:53:43 -0500
+Received: from zn.tnic (p200300EC2F0EC2004C218550ABF865B7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:c200:4c21:8550:abf8:65b7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 838561EC0CC9;
+        Tue, 26 Nov 2019 14:53:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574776422;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=yYVg4n91flpvNftEr6bER0DSitlLkMNVnW8X+eq28JQ=;
+        b=EfGYhmMKkzziEqxtddBTe2Cod4+mjp2qSbJiB1PQPuw+OLcqULqMAUxe7VwYqLkit5Ovea
+        JBctUxU0kulh0A/Gx7pjq9KSDTYC//uUd4Wo5eKmy10OVePGWw9Cpwnyhk6+HS/HXh8Nal
+        5VFrs1V8Pb0AkHD5m6NmXjfE6Tv8keE=
+Date:   Tue, 26 Nov 2019 14:53:30 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        hpa@zytor.com, mingo@redhat.com
+Subject: Re: [PATCH] cpu: microcode: replace 0 with NULL
+Message-ID: <20191126135330.GE31379@zn.tnic>
+References: <20191126002734.121905-1-jbi.octave@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191126002734.121905-1-jbi.octave@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+On Tue, Nov 26, 2019 at 12:27:34AM +0000, Jules Irenge wrote:
+> Replace 0 with NULL to fix sparse tool  warning
+>  warning: Using plain integer as NULL pointer
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  arch/x86/kernel/cpu/microcode/amd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+> index a0e52bd00ecc..4934aa7c94e7 100644
+> --- a/arch/x86/kernel/cpu/microcode/amd.c
+> +++ b/arch/x86/kernel/cpu/microcode/amd.c
+> @@ -418,7 +418,7 @@ static int __apply_microcode_amd(struct microcode_amd *mc)
+>  static bool
+>  apply_microcode_early_amd(u32 cpuid_1_eax, void *ucode, size_t size, bool save_patch)
+>  {
+> -	struct cont_desc desc = { 0 };
+> +	struct cont_desc desc = { NULL };
 
-Commit bf9571550f52 ("powerpc/powernv: Add support to clear sensor
-groups data") added a mechanism to clear sensor-group data via a sysfs
-interface. However, the ABI for that interface has not been
-documented.
+So my gcc guy says that 0 and NULL are equivalent as designated
+initializers in this case. And if you look at the resulting asm, it
+doesn't change:
 
-This patch documents the ABI for the sysfs interface for sensor-groups
-and clearing the sensor-groups.
+# arch/x86/kernel/cpu/microcode/amd.c:421: 	struct cont_desc desc = { 0 };
+	movq	$0, 8(%rsp)	#, desc
+	movq	$0, (%rsp)	#, desc
+	movq	$0, 16(%rsp)	#, desc
+	movq	$0, 24(%rsp)	#, desc
 
-This patch was originally sent by Shilpasri G Bhat on the mailing list:
-https://lkml.org/lkml/2018/8/1/85
+But what I'd prefer actually is, if you do them like this:
 
-Signed-off-by: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
- .../ABI/testing/sysfs-firmware-opal-sensor-groups   | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-firmware-opal-sensor-groups
+			... = { 0,  };
 
-diff --git a/Documentation/ABI/testing/sysfs-firmware-opal-sensor-groups b/Documentation/ABI/testing/sysfs-firmware-opal-sensor-groups
-new file mode 100644
-index 0000000..3a2dfe5
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-firmware-opal-sensor-groups
-@@ -0,0 +1,21 @@
-+What:		/sys/firmware/opal/sensor_groups
-+Date:		August 2017
-+Contact:	Linux for PowerPC mailing list <linuxppc-dev@ozlabs.org>
-+Description:	Sensor groups directory for POWER9 powernv servers
-+
-+		Each folder in this directory contains a sensor group
-+		which are classified based on type of the sensor
-+		like power, temperature, frequency, current, etc. They
-+		can also indicate the group of sensors belonging to
-+		different owners like CSM, Profiler, Job-Scheduler
-+
-+What:		/sys/firmware/opal/sensor_groups/<sensor_group_name>/clear
-+Date:		August 2017
-+Contact:	Linux for PowerPC mailing list <linuxppc-dev@ozlabs.org>
-+Description:	Sysfs file to clear the min-max of all the sensors
-+		belonging to the group.
-+
-+		Writing 1 to this file will clear the minimum and
-+		maximum values of all the sensors in the group.
-+		In POWER9, the min-max of a sensor is the historical minimum
-+		and maximum value of the sensor cached by OCC.
+because:
+
+1. It is clear that the memory for the struct is being cleared
+2. The following ones - the ones after "," are missing too, on purpose,
+   because they're being cleared too.
+
+Also pls add that explanation to the commit message.
+
+Thx.
+
 -- 
-1.9.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
