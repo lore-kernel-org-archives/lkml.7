@@ -2,176 +2,168 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA60C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B684DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFBC2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7C720722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:10:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hr+cdaiU"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="JWjARITx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbfKZPCb (ORCPT
+        id S1728223AbfKZPKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:02:31 -0500
-Received: from mail-eopbgr720063.outbound.protection.outlook.com ([40.107.72.63]:5709
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727615AbfKZPCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:02:31 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=imGfv7f/YVQS/7A2u4mDLcMhXYHkxg4K3XceZlUpp3ZraMhC7h6scPHJov9SeT6/40dInbLPSDjyFWtwOhBl9vaK3XMi/9ytRjRYEjJfBa++TYeQCi+LHhtSjp2Dl7pfTysmQP11Nx6jsr/H5hHw+pKlF3zhSt8udcNzhLnmRpVY9YWa3bt7qt+bY7fU/ocy4/xbSmpB/SrXQ1QHh2QQ5T2NahgqzjR3Yjvy8ng0nPE+0t85OmLWp3k0MczFG7XI/O02sFE1ZozXBZdcZ5z4FCmkzhRj2BeWPkECt7W0kFduHVshHvZStgISHtXI2aKHnE6lcBk3Ttt9WPd5BUBVAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ybb6ak0lL/TnI7k8HEVFxKgIOsXWvEhizwQp4rOuq68=;
- b=l/i1JCP6w1j7FeBps3m9aI0tervL9RqmS63t2itUNkOr79WoFLifYAiaV09TRKTtAsc7dwCV9BvCF+YRrwr946yelR0uB6dDbAcdr6e14UhhI4/57/fVG7JXCSn3JPh7xmjrXJxZ1CMzC4bE4xKulWEphFujs2D/ec5/Djs/GkH0JWtAHhz5y++Tzmjm08e4c+5nayc9d11tUVxm8QF9rWveH8irHeajvFOvbuiaRzoD7EBhuAUlgl+DR/hk5rXsiHGwbsmmB/MWdfCK2ReuIszkAcwlFi4BwkZ40dxgm5elQI+e29QmcIb2dZJBLh3JtOlLBq6LLlUngnXg+faSkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ybb6ak0lL/TnI7k8HEVFxKgIOsXWvEhizwQp4rOuq68=;
- b=hr+cdaiUtHayKeZXCHvaBQK4LPHFiP0rtUwYNryQaJdfdtCZRMheqcL2cQnc2OT/8/L7CGP20siuMkSxGc+jOrZPoecC8ZshhwVBwUh28tzx8L1A4aWCyf07ZDH/PtNmZC4cnNxn6Es48jbs5ngh6s0imAj3CSTl2kJ+ZPq+WtE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Sanju.Mehta@amd.com; 
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
- MN2PR12MB3119.namprd12.prod.outlook.com (20.178.242.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18; Tue, 26 Nov 2019 15:02:29 +0000
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::b927:9d83:f11:941b]) by MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::b927:9d83:f11:941b%6]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
- 15:02:28 +0000
-From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
-To:     Shyam-sundar.S-k@amd.com, linjiasen@hygon.cn, arindam.nath@amd.com,
-        jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com
-Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org,
-        Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH] NTB: Fix access to link status and control register
-Date:   Tue, 26 Nov 2019 09:01:16 -0600
-Message-Id: <1574780476-4423-1-git-send-email-Sanju.Mehta@amd.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR01CA0103.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:1::19) To MN2PR12MB3455.namprd12.prod.outlook.com
- (2603:10b6:208:d0::22)
+        Tue, 26 Nov 2019 10:10:38 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:38337 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727418AbfKZPKi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 10:10:38 -0500
+Received: from [IPv6:2001:420:44c1:2577:f03d:3627:b74f:a4d0]
+ ([IPv6:2001:420:44c1:2577:f03d:3627:b74f:a4d0])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id ZcU3iaZJEksqeZcU7iYfh5; Tue, 26 Nov 2019 16:10:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1574781035; bh=y76WVidUlXSx+713+kBnOamFxobos7oe0CF4cgTQRfA=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=JWjARITxSzrlT4oLVfCBlCwlMHkqI+8GTpLfUdncPI9+6RynoEaPsH8S4x/rq5BK/
+         Juz73MzLmg9+A5lIxJbdq0RKWIzA2otWqdaeyMe/n0VnUI8pa8e4UWVGHfUbrofYFz
+         Bw3ZDvihsSY9c+aN0yYNSfssLwHAh6x7/dOsgPAv4x76wM4Oo4SHwgJ9hG3RHoEZVj
+         iZS1y+ES/YE189QBXI3NtM8eKdaBjUh/KjP4y4MVPbmfG2+MFbRJom1pb/MOusALgH
+         u2pX9ou3Nf9sMkf+rtFlYCCmkyokGMlgL6VQgv7flcGflnbQJaa+nyaJLdj+GID0lt
+         7Ub4xoH3e8ygw==
+Subject: Re: [PATCH v4 5/8] media: v4l2-core: fix VIDIOC_DQEVENT for time64
+ ABI
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>
+References: <20191111203835.2260382-1-arnd@arndb.de>
+ <20191111203835.2260382-6-arnd@arndb.de>
+ <272c471b-a7a9-c830-e19b-d1f19ee47073@xs4all.nl>
+ <CAK8P3a3vHWBJU6EiUbRKJ01Zsv5E5Yfr+=h2Dg95atjvaHZ+Rg@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <15a1a26c-b3ad-7449-4508-1207527ab21f@xs4all.nl>
+Date:   Tue, 26 Nov 2019 16:10:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b7bcbdb1-6fca-47fc-68d5-08d77281a7c7
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3119:|MN2PR12MB3119:|MN2PR12MB3119:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3119E3C933D8979776347BAAE5450@MN2PR12MB3119.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0233768B38
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(199004)(189003)(186003)(5660300002)(66556008)(26005)(66476007)(48376002)(66946007)(50466002)(14454004)(386003)(6506007)(51416003)(52116002)(478600001)(6666004)(99286004)(305945005)(7736002)(16586007)(316002)(2616005)(81156014)(86362001)(66066001)(8936002)(50226002)(6512007)(47776003)(6116002)(4326008)(3846002)(6486002)(2906002)(36756003)(6436002)(25786009)(8676002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3119;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Fz8jzWTL8IlYLnTDQP51i0t+0LMkGpKAvY/ZbNHS8Gn3S311jDFjqSqTRqHLSVn6cVscsfSOdtnEUPtG4vF69gTIFlUcqbJgbtr4m4nPsDzi0up8+m0Ig8/VYE4YNjxmWKqgIzXSBSaNjYu7ZZxFWoiMlbD4WhTrceOTK/BVml0BvCh+V+21xH/HsD0AyWV9GLlBazBnCFHQvj0g6ICMPfmYlGBxpgiu8QIaWZcosu4SrCd02yeaoAaA1UbzXl40qhRHlZCQy0eiuSwhoBYRMtVEmP/eD+WQkmYaQjL1xaGerz6gYWW+NdfPCEjBagJroUGeQdhODPTrzJSO2NaQhK+mY6OLMUgHDlwd0hEiHOYhaIsxnaszCIfc7gzT26TsZfTr2icCdbT73ninbmgSuIp2QKixSf4EC15Is+zCFQFivsUWIFAIYIqffHvvXmIc
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7bcbdb1-6fca-47fc-68d5-08d77281a7c7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2019 15:02:28.9454
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3kBnLU213OxhIstOlDyV/nB0gjmnS9SYpOPgdLs1v0fmVnkzswXMfaejGXeWTd3SDnboE4fJmE43e+HYuWHeKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3119
+In-Reply-To: <CAK8P3a3vHWBJU6EiUbRKJ01Zsv5E5Yfr+=h2Dg95atjvaHZ+Rg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfHXt42Xzu9yCtqJYE8yF9vBBOgW++AEDzbz1qafByFrqdrJjYY+s40cEl6BhSegiY/e+BkoYZpFdFKmksrSqAwfu31sbBDUrVDotPgAHFTDMsOAhje8l
+ 8K36RqGQOrk/fpiqNFgTlgJbN6RjDFMgv+Hw8F9SeBge6c1mhJtlqTHZU8czBMdgmQHOdJGf1R1yDQWisUDxLglxV9DXwBMbP9DnecaN6mjAJSXdcxLfNta0
+ LPy04FeAgrYLzsT/49OeXL+co0z2auN/Znm+72wikI88jF5pZ4kqWyxUWxBDinYjrAiQqHzKlCwNNqZIz3hSvb9IVydkdb12pD6wb4zUKMQy1eBOFKd00kWV
+ iUs8Q2HjkFa4eN4x64mXK+Y0Rs+rb3Ton5HrsxrStl8eyL3NpWMONNpRfErU+P+i8ZpKGTL8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+On 11/26/19 3:43 PM, Arnd Bergmann wrote:
+> On Mon, Nov 25, 2019 at 3:40 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>> On 11/11/19 9:38 PM, Arnd Bergmann wrote:
+> 
+>>>       switch (cmd) {
+>>> +#ifdef CONFIG_COMPAT_32BIT_TIME
+>>> +     case VIDIOC_DQEVENT_TIME32: {
+>>> +             struct v4l2_event_time32 ev32;
+>>> +             struct v4l2_event *ev = parg;
+>>> +
+>>> +             memcpy(&ev32, ev, offsetof(struct v4l2_event, timestamp));
+>>> +             ev32.timestamp.tv_sec = ev->timestamp.tv_sec;
+>>> +             ev32.timestamp.tv_nsec = ev->timestamp.tv_nsec;
+>>> +             memcpy(&ev32.id, &ev->id, sizeof(*ev) - offsetof(struct v4l2_event, id));
+>>
+>> This looks dangerous: due to 64-bit alignment requirements the
+>> v4l2_event struct may end with a 4-byte hole at the end of the struct,
+>> which you do not want to copy to ev32.
+>>
+>> I think it is safer to just copy id and reserved separately:
+>>
+>>                 ev32.id = ev->id;
+>>                 memcpy(ev32.reserved, ev->reserved, sizeof(ev->reserved));
+> 
+> Actually I think it's that's also bad: The padding in *ev must already be
+> cleared here (otherwise there is a leak of stack data in the kernel
+> already), so  *not* copying the padding requires at least adding a memset
+> upfront.
+> 
+> I would do the per-member copy like I did for v4l2_buffer in my
+> other reply:
+> 
+>                 struct v4l2_event *ev = parg;
+>                 struct v4l2_event_time32 ev32 = {
+>                         .type           = ev->type,
+>                         .pending        = ev->pending,
+>                         .sequence       = ev->sequence,
+>                         .timestamp.tv_sec  = ev->timestamp.tv_sec,
+>                         .timestamp.tv_nsec = ev->timestamp.tv_nsec,
+>                         .id             = ev->id,
+>                 };
+> 
+>                 memcpy(ev32.u, ev->u, sizeof(ev->u));
+>                 memcpy(ev32.reserved, ev->reserved, sizeof(ev->reserved));
+> 
+>                 if (copy_to_user(arg, &ev32, sizeof(ev32)))
+>                         return -EFAULT;
+> 
+> Unfortunately this is a little uglier because it still requires the two
+> memcpy() for the arrays, but I think it's good enough.
 
-The design of AMD NTB implementation is such that
-the NTB secondary endpoint is behind a combination
-of Upstream Switch (SWUS) and a Downstream Switch
-(SWDS). The link training happens on the SWUS and
-not on the secondary endpoint. So to correctly
-return the link status on the NTB secondary, we
-need to read the link status of the SWUS.
+I agree.
 
-Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
-Signed-off-by: Arindam Nath <arindam.nath@amd.com>
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
----
- drivers/ntb/hw/amd/ntb_hw_amd.c | 45 +++++++++++++++++++++++++++++++++++++----
- 1 file changed, 41 insertions(+), 4 deletions(-)
+Hmm, can't you do .u = ev->u ? Or is that not allowed by this syntax?
 
-diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
-index ae91105..758f748 100644
---- a/drivers/ntb/hw/amd/ntb_hw_amd.c
-+++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
-@@ -842,6 +842,9 @@ static inline void ndev_init_struct(struct amd_ntb_dev *ndev,
- static int amd_poll_link(struct amd_ntb_dev *ndev)
- {
- 	void __iomem *mmio = ndev->peer_mmio;
-+	struct pci_dev *pdev = NULL;
-+	struct pci_dev *pci_swds = NULL;
-+	struct pci_dev *pci_swus = NULL;
- 	u32 reg, stat;
- 	int rc;
- 
-@@ -855,10 +858,44 @@ static int amd_poll_link(struct amd_ntb_dev *ndev)
- 
- 	ndev->cntl_sta = reg;
- 
--	rc = pcie_capability_read_dword(ndev->ntb.pdev,
--				   PCI_EXP_LNKCTL, &stat);
--	if (rc)
--		return 0;
-+	if (ndev->ntb.topo == NTB_TOPO_SEC) {
-+		/*
-+		 * Locate the pointer to Downstream Switch for
-+		 * this device
-+		 */
-+		pci_swds = pci_upstream_bridge(ndev->ntb.pdev);
-+		if (pci_swds) {
-+			/*
-+			 * Locate the pointer to Upstream Switch for
-+			 * this device
-+			 */
-+			pci_swus = pci_upstream_bridge(pci_swds);
-+			if (pci_swus) {
-+				/*
-+				 * Read the PCIe Link Control and
-+				 * Status register
-+				 */
-+				rc = pcie_capability_read_dword(pci_swus,
-+						PCI_EXP_LNKCTL, &stat);
-+				if (rc)
-+					return 0;
-+			} else {
-+				return 0;
-+			}
-+		} else {
-+			return 0;
-+		}
-+	} else if (ndev->ntb.topo == NTB_TOPO_PRI) {
-+		/*
-+		 * For NTB primary, we simply read the Link Status and control
-+		 * register of the NTB device itself.
-+		 */
-+		pdev = ndev->ntb.pdev;
-+		rc = pcie_capability_read_dword(pdev, PCI_EXP_LNKCTL, &stat);
-+		if (rc)
-+			return 0;
-+	}
-+
- 	ndev->lnk_sta = stat;
- 
- 	return 1;
--- 
-2.7.4
+> 
+> Any other ideas? Let me know if I should do a memset()
+> plus individual member copy instead.
 
+I think we have to, unless you have a better solution. This is leaking
+information from the holes in the struct.
+
+>>> +             if (!(sd->flags & V4L2_SUBDEV_FL_HAS_EVENTS))
+>>> +                     return -ENOIOCTLCMD;
+>>> +
+>>> +             rval = v4l2_event_dequeue(vfh, &ev, file->f_flags & O_NONBLOCK);
+>>> +
+>>> +             memcpy(ev32, &ev, offsetof(struct v4l2_event, timestamp));
+>>> +             ev32->timestamp.tv_sec = ev.timestamp.tv_sec;
+>>> +             ev32->timestamp.tv_nsec = ev.timestamp.tv_nsec;
+>>> +             memcpy(&ev32->id, &ev.id,
+>>> +                    sizeof(ev) - offsetof(struct v4l2_event, id));
+>>
+>> Ditto.
+> 
+> Using the corresponding code here as well.
+> 
+>>> +
+>>>  #define V4L2_EVENT_SUB_FL_SEND_INITIAL               (1 << 0)
+>>>  #define V4L2_EVENT_SUB_FL_ALLOW_FEEDBACK     (1 << 1)
+>>>
+>>> @@ -2486,6 +2515,7 @@ struct v4l2_create_buffers {
+>>>  #define      VIDIOC_S_DV_TIMINGS     _IOWR('V', 87, struct v4l2_dv_timings)
+>>>  #define      VIDIOC_G_DV_TIMINGS     _IOWR('V', 88, struct v4l2_dv_timings)
+>>>  #define      VIDIOC_DQEVENT           _IOR('V', 89, struct v4l2_event)
+>>> +#define      VIDIOC_DQEVENT_TIME32    _IOR('V', 89, struct v4l2_event_time32)
+>>
+>> Shouldn't this be under #ifdef __KERNEL__?
+>>
+>> And should this be in the public header at all? media/v4l2-ioctl.h might be a better
+>> place.
+> 
+> Done.
+> 
+>        Arnd
+> 
+
+Regards,
+
+	Hans
