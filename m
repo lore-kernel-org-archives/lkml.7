@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA94BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75167C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF9220835
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431092080F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfKZUOi (ORCPT
+        id S1727488AbfKZUOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:14:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47314 "EHLO mx1.suse.de"
+        Tue, 26 Nov 2019 15:14:46 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47226 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726593AbfKZUOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:14:32 -0500
+        id S1727386AbfKZUOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:14:34 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 62252AB92;
-        Tue, 26 Nov 2019 20:14:29 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 66FD2B350;
+        Tue, 26 Nov 2019 20:14:32 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 20/35] powerpc/64s/exception: only test KVM in SRR interrupts when PR KVM is supported
-Date:   Tue, 26 Nov 2019 21:13:34 +0100
-Message-Id: <f6e39de66993346635d422bf8090a3a0988dddb0.1574798487.git.msuchanek@suse.de>
+Subject: [PATCH v2 22/35] powerpc/64: system call remove non-volatile GPR save optimisation
+Date:   Tue, 26 Nov 2019 21:13:36 +0100
+Message-Id: <1c076f8cf487f9b4a62e927a43139db2ac865907.1574798487.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574798487.git.msuchanek@suse.de>
 References: <cover.1574798487.git.msuchanek@suse.de>
@@ -81,230 +81,217 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
-Apart from SRESET, MCE, and syscall (hcall variant), the SRR type
-interrupts are not escalated to hypervisor mode, so delivered to the OS.
+powerpc has an optimisation where interrupts avoid saving the
+non-volatile (or callee saved) registers to the interrupt stack frame if
+they are not required.
 
-When running PR KVM, the OS is the hypervisor, and the guest runs with
-MSR[PR]=1, so these interrupts must test if a guest was running when
-interrupted. These tests are required at the real-mode entry points
-because the PR KVM host runs with LPCR[AIL]=0.
+Two problems with this are that an interrupt does not always know
+whether it will need non-volatiles; and if it does need them, they can
+only be saved from the entry-scoped asm code (because we don't control
+what the C compiler does with these registers).
 
-In HV KVM and nested HV KVM, the guest always receives these interrupts,
-so there is no need for the host to make this test. So remove the tests
-if PR KVM is not configured.
+system calls are the most difficult: some system calls always require
+all registers (e.g., fork, to copy regs into the child).  Sometimes
+registers are only required under certain conditions (e.g., tracing,
+signal delivery). These cases require ugly logic in the call chains
+(e.g., ppc_fork), and require a lot of logic to be implemented in asm.
+
+So remove the optimisation for system calls, and always save NVGPRs on
+entry. Modern high performance CPUs are not so sensitive, because the
+stores are dense in cache and can be hidden by other expensive work in
+the syscall path -- the null syscall selftests benchmark on POWER9 is
+not slowed (124.40ns before and 123.64ns after, i.e., within the noise).
+
+Other interrupts retain the NVGPR optimisation for now.
 
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 65 ++++++++++++++++++++++++++--
- 1 file changed, 62 insertions(+), 3 deletions(-)
+ arch/powerpc/kernel/entry_64.S           | 72 +++++-------------------
+ arch/powerpc/kernel/syscalls/syscall.tbl | 22 +++++---
+ 2 files changed, 28 insertions(+), 66 deletions(-)
 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 2f50587392aa..38bc66b95516 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -214,9 +214,36 @@ do_define_int n
- #ifdef CONFIG_KVM_BOOK3S_64_HANDLER
- #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
- /*
-- * If hv is possible, interrupts come into to the hv version
-- * of the kvmppc_interrupt code, which then jumps to the PR handler,
-- * kvmppc_interrupt_pr, if the guest is a PR guest.
-+ * All interrupts which set HSRR registers, as well as SRESET and MCE and
-+ * syscall when invoked with "sc 1" switch to MSR[HV]=1 (HVMODE) to be taken,
-+ * so they all generally need to test whether they were taken in guest context.
-+ *
-+ * Note: SRESET and MCE may also be sent to the guest by the hypervisor, and be
-+ * taken with MSR[HV]=0.
-+ *
-+ * Interrupts which set SRR registers (with the above exceptions) do not
-+ * elevate to MSR[HV]=1 mode, though most can be taken when running with
-+ * MSR[HV]=1  (e.g., bare metal kernel and userspace). So these interrupts do
-+ * not need to test whether a guest is running because they get delivered to
-+ * the guest directly, including nested HV KVM guests.
-+ *
-+ * The exception is PR KVM, where the guest runs with MSR[PR]=1 and the host
-+ * runs with MSR[HV]=0, so the host takes all interrupts on behalf of the
-+ * guest. PR KVM runs with LPCR[AIL]=0 which causes interrupts to always be
-+ * delivered to the real-mode entry point, therefore such interrupts only test
-+ * KVM in their real mode handlers, and only when PR KVM is possible.
-+ *
-+ * Interrupts that are taken in MSR[HV]=0 and escalate to MSR[HV]=1 are always
-+ * delivered in real-mode when the MMU is in hash mode because the MMU
-+ * registers are not set appropriately to translate host addresses. In nested
-+ * radix mode these can be delivered in virt-mode as the host translations are
-+ * used implicitly (see: effective LPID, effective PID).
-+ */
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index 6467bdab8d40..5a3e0b5c9ad1 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -98,13 +98,14 @@ END_BTB_FLUSH_SECTION
+ 	std	r11,_XER(r1)
+ 	std	r11,_CTR(r1)
+ 	std	r9,GPR13(r1)
++	SAVE_NVGPRS(r1)
+ 	mflr	r10
+ 	/*
+ 	 * This clears CR0.SO (bit 28), which is the error indication on
+ 	 * return from this system call.
+ 	 */
+ 	rldimi	r2,r11,28,(63-28)
+-	li	r11,0xc01
++	li	r11,0xc00
+ 	std	r10,_LINK(r1)
+ 	std	r11,_TRAP(r1)
+ 	std	r3,ORIG_GPR3(r1)
+@@ -323,7 +324,6 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ 
+ /* Traced system call support */
+ .Lsyscall_dotrace:
+-	bl	save_nvgprs
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	do_syscall_trace_enter
+ 
+@@ -408,7 +408,6 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ 	mtmsrd	r10,1
+ #endif /* CONFIG_PPC_BOOK3E */
+ 
+-	bl	save_nvgprs
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	do_syscall_trace_leave
+ 	b	ret_from_except
+@@ -442,62 +441,6 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ _ASM_NOKPROBE_SYMBOL(system_call_common);
+ _ASM_NOKPROBE_SYMBOL(system_call_exit);
+ 
+-/* Save non-volatile GPRs, if not already saved. */
+-_GLOBAL(save_nvgprs)
+-	ld	r11,_TRAP(r1)
+-	andi.	r0,r11,1
+-	beqlr-
+-	SAVE_NVGPRS(r1)
+-	clrrdi	r0,r11,1
+-	std	r0,_TRAP(r1)
+-	blr
+-_ASM_NOKPROBE_SYMBOL(save_nvgprs);
+-
+-	
+-/*
+- * The sigsuspend and rt_sigsuspend system calls can call do_signal
+- * and thus put the process into the stopped state where we might
+- * want to examine its user state with ptrace.  Therefore we need
+- * to save all the nonvolatile registers (r14 - r31) before calling
+- * the C code.  Similarly, fork, vfork and clone need the full
+- * register state on the stack so that it can be copied to the child.
+- */
+-
+-_GLOBAL(ppc_fork)
+-	bl	save_nvgprs
+-	bl	sys_fork
+-	b	.Lsyscall_exit
+-
+-_GLOBAL(ppc_vfork)
+-	bl	save_nvgprs
+-	bl	sys_vfork
+-	b	.Lsyscall_exit
+-
+-_GLOBAL(ppc_clone)
+-	bl	save_nvgprs
+-	bl	sys_clone
+-	b	.Lsyscall_exit
+-
+-_GLOBAL(ppc_clone3)
+-       bl      save_nvgprs
+-       bl      sys_clone3
+-       b       .Lsyscall_exit
+-
+-_GLOBAL(ppc32_swapcontext)
+-	bl	save_nvgprs
+-	bl	compat_sys_swapcontext
+-	b	.Lsyscall_exit
+-
+-_GLOBAL(ppc64_swapcontext)
+-	bl	save_nvgprs
+-	bl	sys_swapcontext
+-	b	.Lsyscall_exit
+-
+-_GLOBAL(ppc_switch_endian)
+-	bl	save_nvgprs
+-	bl	sys_switch_endian
+-	b	.Lsyscall_exit
+-
+ _GLOBAL(ret_from_fork)
+ 	bl	schedule_tail
+ 	REST_NVGPRS(r1)
+@@ -516,6 +459,17 @@ _GLOBAL(ret_from_kernel_thread)
+ 	li	r3,0
+ 	b	.Lsyscall_exit
+ 
++/* Save non-volatile GPRs, if not already saved. */
++_GLOBAL(save_nvgprs)
++	ld	r11,_TRAP(r1)
++	andi.	r0,r11,1
++	beqlr-
++	SAVE_NVGPRS(r1)
++	clrrdi	r0,r11,1
++	std	r0,_TRAP(r1)
++	blr
++_ASM_NOKPROBE_SYMBOL(save_nvgprs);
 +
-+/*
-+ * If an interrupt is taken while a guest is running, it is immediately routed
-+ * to KVM to handle. If both HV and PR KVM arepossible, KVM interrupts go first
-+ * to kvmppc_interrupt_hv, which handles the PR guest case.
-  */
- #define kvmppc_interrupt kvmppc_interrupt_hv
- #else
-@@ -1258,8 +1285,10 @@ INT_DEFINE_BEGIN(data_access)
- 	IVEC=0x300
- 	IDAR=1
- 	IDSISR=1
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_SKIP=1
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(data_access)
+ #ifdef CONFIG_PPC_BOOK3S_64
  
- EXC_REAL_BEGIN(data_access, 0x300, 0x80)
-@@ -1306,8 +1335,10 @@ INT_DEFINE_BEGIN(data_access_slb)
- 	IAREA=PACA_EXSLB
- 	IRECONCILE=0
- 	IDAR=1
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_SKIP=1
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(data_access_slb)
- 
- EXC_REAL_BEGIN(data_access_slb, 0x380, 0x80)
-@@ -1357,7 +1388,9 @@ INT_DEFINE_BEGIN(instruction_access)
- 	IISIDE=1
- 	IDAR=1
- 	IDSISR=1
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(instruction_access)
- 
- EXC_REAL_BEGIN(instruction_access, 0x400, 0x80)
-@@ -1396,7 +1429,9 @@ INT_DEFINE_BEGIN(instruction_access_slb)
- 	IRECONCILE=0
- 	IISIDE=1
- 	IDAR=1
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(instruction_access_slb)
- 
- EXC_REAL_BEGIN(instruction_access_slb, 0x480, 0x80)
-@@ -1488,7 +1523,9 @@ INT_DEFINE_BEGIN(alignment)
- 	IVEC=0x600
- 	IDAR=1
- 	IDSISR=1
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(alignment)
- 
- EXC_REAL_BEGIN(alignment, 0x600, 0x100)
-@@ -1518,7 +1555,9 @@ EXC_COMMON_BEGIN(alignment_common)
-  */
- INT_DEFINE_BEGIN(program_check)
- 	IVEC=0x700
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(program_check)
- 
- EXC_REAL_BEGIN(program_check, 0x700, 0x100)
-@@ -1581,7 +1620,9 @@ EXC_COMMON_BEGIN(program_check_common)
- INT_DEFINE_BEGIN(fp_unavailable)
- 	IVEC=0x800
- 	IRECONCILE=0
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(fp_unavailable)
- 
- EXC_REAL_BEGIN(fp_unavailable, 0x800, 0x100)
-@@ -1643,7 +1684,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_TM)
- INT_DEFINE_BEGIN(decrementer)
- 	IVEC=0x900
- 	IMASK=IRQS_DISABLED
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(decrementer)
- 
- EXC_REAL_BEGIN(decrementer, 0x900, 0x80)
-@@ -1728,7 +1771,9 @@ EXC_COMMON_BEGIN(hdecrementer_common)
- INT_DEFINE_BEGIN(doorbell_super)
- 	IVEC=0xa00
- 	IMASK=IRQS_DISABLED
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(doorbell_super)
- 
- EXC_REAL_BEGIN(doorbell_super, 0xa00, 0x100)
-@@ -1919,7 +1964,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
-  */
- INT_DEFINE_BEGIN(single_step)
- 	IVEC=0xd00
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(single_step)
- 
- EXC_REAL_BEGIN(single_step, 0xd00, 0x100)
-@@ -2208,7 +2255,9 @@ EXC_VIRT_NONE(0x4ee0, 0x20)
- INT_DEFINE_BEGIN(performance_monitor)
- 	IVEC=0xf00
- 	IMASK=IRQS_PMI_DISABLED
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(performance_monitor)
- 
- EXC_REAL_BEGIN(performance_monitor, 0xf00, 0x20)
-@@ -2237,7 +2286,9 @@ EXC_COMMON_BEGIN(performance_monitor_common)
- INT_DEFINE_BEGIN(altivec_unavailable)
- 	IVEC=0xf20
- 	IRECONCILE=0
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(altivec_unavailable)
- 
- EXC_REAL_BEGIN(altivec_unavailable, 0xf20, 0x20)
-@@ -2291,7 +2342,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
- INT_DEFINE_BEGIN(vsx_unavailable)
- 	IVEC=0xf40
- 	IRECONCILE=0
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(vsx_unavailable)
- 
- EXC_REAL_BEGIN(vsx_unavailable, 0xf40, 0x20)
-@@ -2344,7 +2397,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX)
-  */
- INT_DEFINE_BEGIN(facility_unavailable)
- 	IVEC=0xf60
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(facility_unavailable)
- 
- EXC_REAL_BEGIN(facility_unavailable, 0xf60, 0x20)
-@@ -2434,8 +2489,10 @@ EXC_VIRT_NONE(0x5200, 0x100)
- 
- INT_DEFINE_BEGIN(instruction_breakpoint)
- 	IVEC=0x1300
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_SKIP=1
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(instruction_breakpoint)
- 
- EXC_REAL_BEGIN(instruction_breakpoint, 0x1300, 0x100)
-@@ -2606,7 +2663,9 @@ EXC_VIRT_NONE(0x5600, 0x100)
- 
- INT_DEFINE_BEGIN(altivec_assist)
- 	IVEC=0x1700
-+#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
- 	IKVM_REAL=1
-+#endif
- INT_DEFINE_END(altivec_assist)
- 
- EXC_REAL_BEGIN(altivec_assist, 0x1700, 0x100)
+ #define FLUSH_COUNT_CACHE	\
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index 43f736ed47f2..d899bcb5343e 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -9,7 +9,9 @@
+ #
+ 0	nospu	restart_syscall			sys_restart_syscall
+ 1	nospu	exit				sys_exit
+-2	nospu	fork				ppc_fork
++2	32	fork				ppc_fork			sys_fork
++2	64	fork				sys_fork
++2	spu	fork				sys_ni_syscall
+ 3	common	read				sys_read
+ 4	common	write				sys_write
+ 5	common	open				sys_open			compat_sys_open
+@@ -158,7 +160,9 @@
+ 119	32	sigreturn			sys_sigreturn			compat_sys_sigreturn
+ 119	64	sigreturn			sys_ni_syscall
+ 119	spu	sigreturn			sys_ni_syscall
+-120	nospu	clone				ppc_clone
++120	32	clone				ppc_clone			sys_clone
++120	64	clone				sys_clone
++120	spu	clone				sys_ni_syscall
+ 121	common	setdomainname			sys_setdomainname
+ 122	common	uname				sys_newuname
+ 123	common	modify_ldt			sys_ni_syscall
+@@ -240,7 +244,9 @@
+ 186	spu	sendfile			sys_sendfile64
+ 187	common	getpmsg				sys_ni_syscall
+ 188	common 	putpmsg				sys_ni_syscall
+-189	nospu	vfork				ppc_vfork
++189	32	vfork				ppc_vfork			sys_vfork
++189	64	vfork				sys_vfork
++189	spu	vfork				sys_ni_syscall
+ 190	common	ugetrlimit			sys_getrlimit			compat_sys_getrlimit
+ 191	common	readahead			sys_readahead			compat_sys_readahead
+ 192	32	mmap2				sys_mmap2			compat_sys_mmap2
+@@ -316,8 +322,8 @@
+ 248	32	clock_nanosleep			sys_clock_nanosleep_time32
+ 248	64	clock_nanosleep			sys_clock_nanosleep
+ 248	spu	clock_nanosleep			sys_clock_nanosleep
+-249	32	swapcontext			ppc_swapcontext			ppc32_swapcontext
+-249	64	swapcontext			ppc64_swapcontext
++249	32	swapcontext			ppc_swapcontext			compat_sys_swapcontext
++249	64	swapcontext			sys_swapcontext
+ 249	spu	swapcontext			sys_ni_syscall
+ 250	common	tgkill				sys_tgkill
+ 251	32	utimes				sys_utimes_time32
+@@ -456,7 +462,7 @@
+ 361	common	bpf				sys_bpf
+ 362	nospu	execveat			sys_execveat			compat_sys_execveat
+ 363	32	switch_endian			sys_ni_syscall
+-363	64	switch_endian			ppc_switch_endian
++363	64	switch_endian			sys_switch_endian
+ 363	spu	switch_endian			sys_ni_syscall
+ 364	common	userfaultfd			sys_userfaultfd
+ 365	common	membarrier			sys_membarrier
+@@ -516,4 +522,6 @@
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
+ 434	common	pidfd_open			sys_pidfd_open
+-435	nospu	clone3				ppc_clone3
++435	32	clone3				ppc_clone3			sys_clone3
++435	64	clone3				sys_clone3
++435	spu	clone3				sys_ni_syscall
 -- 
 2.23.0
 
