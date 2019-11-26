@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7144C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92718C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ABAE20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C1D20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfKZUOI (ORCPT
+        id S1727209AbfKZUOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:14:08 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45782 "EHLO mx1.suse.de"
+        Tue, 26 Nov 2019 15:14:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46102 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726033AbfKZUOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:14:06 -0500
+        id S1727138AbfKZUOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:14:11 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AB9A8AFFE;
-        Tue, 26 Nov 2019 20:14:03 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id DA842B147;
+        Tue, 26 Nov 2019 20:14:09 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/35] powerpc/64s/exception: Add GEN_KVM macro that uses INT_DEFINE parameters
-Date:   Tue, 26 Nov 2019 21:13:17 +0100
-Message-Id: <b9b8fd74a2f0e8339418d24535a99afe5b88d4c1.1574798487.git.msuchanek@suse.de>
+Subject: [PATCH v2 07/35] powerpc/64s/exception: Remove old INT_COMMON macro
+Date:   Tue, 26 Nov 2019 21:13:21 +0100
+Message-Id: <229a46517d86a0ba3cfdc11ac3d86d693939f396.1574798487.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574798487.git.msuchanek@suse.de>
 References: <cover.1574798487.git.msuchanek@suse.de>
@@ -81,64 +81,138 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
-No generated code change.
-
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/exceptions-64s.S | 51 +++++++++++++---------------
+ 1 file changed, 24 insertions(+), 27 deletions(-)
 
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 591ae2a73e18..0e39e98ef719 100644
+index ba2dcd91aaaf..f318869607db 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -204,6 +204,7 @@ END_FTR_SECTION_NESTED(ftr,ftr,943)
- #define ISET_RI		.L_ISET_RI_\name\()
- #define IEARLY		.L_IEARLY_\name\()
- #define IMASK		.L_IMASK_\name\()
-+#define IKVM_SKIP	.L_IKVM_SKIP_\name\()
- #define IKVM_REAL	.L_IKVM_REAL_\name\()
- #define IKVM_VIRT	.L_IKVM_VIRT_\name\()
- #define ISTACK		.L_ISTACK_\name\()
-@@ -243,6 +244,9 @@ do_define_int n
- 	.ifndef IMASK
- 		IMASK=0
+@@ -591,8 +591,8 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
+  * If stack=0, then the stack is already set in r1, and r1 is saved in r10.
+  * PPR save and CPU accounting is not done for the !stack case (XXX why not?)
+  */
+-.macro INT_COMMON vec, area, stack, kaup, reconcile, dar, dsisr
+-	.if \stack
++.macro GEN_COMMON name
++	.if ISTACK
+ 	andi.	r10,r12,MSR_PR		/* See if coming from user	*/
+ 	mr	r10,r1			/* Save r1			*/
+ 	subi	r1,r1,INT_FRAME_SIZE	/* alloc frame on kernel stack	*/
+@@ -609,54 +609,54 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
+ 	std	r0,GPR0(r1)		/* save r0 in stackframe	*/
+ 	std	r10,GPR1(r1)		/* save r1 in stackframe	*/
+ 
+-	.if \stack
+-	.if \kaup
++	.if ISTACK
++	.if IKUAP
+ 	kuap_save_amr_and_lock r9, r10, cr1, cr0
  	.endif
-+	.ifndef IKVM_SKIP
-+		IKVM_SKIP=0
-+	.endif
- 	.ifndef IKVM_REAL
- 		IKVM_REAL=0
+ 	beq	101f			/* if from kernel mode		*/
+ 	ACCOUNT_CPU_USER_ENTRY(r13, r9, r10)
+-	SAVE_PPR(\area, r9)
++	SAVE_PPR(IAREA, r9)
+ 101:
+ 	.else
+-	.if \kaup
++	.if IKUAP
+ 	kuap_save_amr_and_lock r9, r10, cr1
  	.endif
-@@ -265,6 +269,10 @@ do_define_int n
- 	KVM_HANDLER \vec, \hsrr, \area, \skip
+ 	.endif
+ 
+ 	/* Save original regs values from save area to stack frame. */
+-	ld	r9,\area+EX_R9(r13)	/* move r9, r10 to stackframe	*/
+-	ld	r10,\area+EX_R10(r13)
++	ld	r9,IAREA+EX_R9(r13)	/* move r9, r10 to stackframe	*/
++	ld	r10,IAREA+EX_R10(r13)
+ 	std	r9,GPR9(r1)
+ 	std	r10,GPR10(r1)
+-	ld	r9,\area+EX_R11(r13)	/* move r11 - r13 to stackframe	*/
+-	ld	r10,\area+EX_R12(r13)
+-	ld	r11,\area+EX_R13(r13)
++	ld	r9,IAREA+EX_R11(r13)	/* move r11 - r13 to stackframe	*/
++	ld	r10,IAREA+EX_R12(r13)
++	ld	r11,IAREA+EX_R13(r13)
+ 	std	r9,GPR11(r1)
+ 	std	r10,GPR12(r1)
+ 	std	r11,GPR13(r1)
+-	.if \dar
+-	.if \dar == 2
++	.if IDAR
++	.if IDAR == 2
+ 	ld	r10,_NIP(r1)
+ 	.else
+-	ld	r10,\area+EX_DAR(r13)
++	ld	r10,IAREA+EX_DAR(r13)
+ 	.endif
+ 	std	r10,_DAR(r1)
+ 	.endif
+-	.if \dsisr
+-	.if \dsisr == 2
++	.if IDSISR
++	.if IDSISR == 2
+ 	ld	r10,_MSR(r1)
+ 	lis	r11,DSISR_SRR1_MATCH_64S@h
+ 	and	r10,r10,r11
+ 	.else
+-	lwz	r10,\area+EX_DSISR(r13)
++	lwz	r10,IAREA+EX_DSISR(r13)
+ 	.endif
+ 	std	r10,_DSISR(r1)
+ 	.endif
+ BEGIN_FTR_SECTION_NESTED(66)
+-	ld	r10,\area+EX_CFAR(r13)
++	ld	r10,IAREA+EX_CFAR(r13)
+ 	std	r10,ORIG_GPR3(r1)
+ END_FTR_SECTION_NESTED(CPU_FTR_CFAR, CPU_FTR_CFAR, 66)
+-	GET_CTR(r10, \area)
++	GET_CTR(r10, IAREA)
+ 	std	r10,_CTR(r1)
+ 	std	r2,GPR2(r1)		/* save r2 in stackframe	*/
+ 	SAVE_4GPRS(3, r1)		/* save r3 - r6 in stackframe   */
+@@ -668,26 +668,22 @@ END_FTR_SECTION_NESTED(CPU_FTR_CFAR, CPU_FTR_CFAR, 66)
+ 	mfspr	r11,SPRN_XER		/* save XER in stackframe	*/
+ 	std	r10,SOFTE(r1)
+ 	std	r11,_XER(r1)
+-	li	r9,(\vec)+1
++	li	r9,(IVEC)+1
+ 	std	r9,_TRAP(r1)		/* set trap number		*/
+ 	li	r10,0
+ 	ld	r11,exception_marker@toc(r2)
+ 	std	r10,RESULT(r1)		/* clear regs->result		*/
+ 	std	r11,STACK_FRAME_OVERHEAD-16(r1) /* mark the frame	*/
+ 
+-	.if \stack
++	.if ISTACK
+ 	ACCOUNT_STOLEN_TIME
+ 	.endif
+ 
+-	.if \reconcile
++	.if IRECONCILE
+ 	RECONCILE_IRQ_STATE(r10, r11)
+ 	.endif
  .endm
  
-+.macro GEN_KVM name
-+	KVM_HANDLER IVEC, IHSRR, IAREA, IKVM_SKIP
-+.endm
-+
- #ifdef CONFIG_KVM_BOOK3S_64_HANDLER
- #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
+-.macro GEN_COMMON name
+-	INT_COMMON IVEC, IAREA, ISTACK, IKUAP, IRECONCILE, IDAR, IDSISR
+-.endm
+-
  /*
-@@ -1226,6 +1234,7 @@ INT_DEFINE_BEGIN(data_access)
- 	IVEC=0x300
- 	IDAR=1
- 	IDSISR=1
-+	IKVM_SKIP=1
- 	IKVM_REAL=1
- INT_DEFINE_END(data_access)
- 
-@@ -1235,7 +1244,8 @@ EXC_REAL_END(data_access, 0x300, 0x80)
- EXC_VIRT_BEGIN(data_access, 0x4300, 0x80)
- 	GEN_INT_ENTRY data_access, virt=1
- EXC_VIRT_END(data_access, 0x4300, 0x80)
--INT_KVM_HANDLER data_access, 0x300, EXC_STD, PACA_EXGEN, 1
-+TRAMP_KVM_BEGIN(data_access_kvm)
-+	GEN_KVM data_access
- EXC_COMMON_BEGIN(data_access_common)
- 	GEN_COMMON data_access
- 	ld	r4,_DAR(r1)
+  * Restore all registers including H/SRR0/1 saved in a stack frame of a
+  * standard exception.
+@@ -2400,7 +2396,8 @@ EXC_COMMON_BEGIN(soft_nmi_common)
+ 	mr	r10,r1
+ 	ld	r1,PACAEMERGSP(r13)
+ 	subi	r1,r1,INT_FRAME_SIZE
+-	INT_COMMON 0x900, PACA_EXGEN, 0, 1, 1, 0, 0
++	__ISTACK(decrementer)=0
++	GEN_COMMON decrementer
+ 	bl	save_nvgprs
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	soft_nmi_interrupt
 -- 
 2.23.0
 
