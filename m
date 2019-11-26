@@ -2,119 +2,260 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D722FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 03:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C596DC43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 03:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A08F320733
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 03:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966A320733
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 03:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SUFHjTwt"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GSKSZjzL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfKZDBA (ORCPT
+        id S1727326AbfKZDCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 22:01:00 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:37782 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725946AbfKZDBA (ORCPT
+        Mon, 25 Nov 2019 22:02:23 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:32809 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbfKZDCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 22:01:00 -0500
-X-UUID: a39f13485f844b13895c3be9b3b498dd-20191126
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=U4VK8y3TGwrQrTTLGoGY/Sz/+8bSigII6WIe7UI7Fsg=;
-        b=SUFHjTwtnhBzGLG9YOyIDp1I1RtMyUDYWZE/RbN2B03qM432PH1Xdb7GDVgvXDDXd7PviVe4A1oEA3P6E8CMnzjwZgwsE0I1itVnLLLMkyHQrdj0YfXJRvupQWWgVi28Rh0DWlZXlrdvOHG6FWMVJKkbrxkjHGS5B9uPbuiot90=;
-X-UUID: a39f13485f844b13895c3be9b3b498dd-20191126
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <yt.chang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 635451793; Tue, 26 Nov 2019 11:00:53 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 26 Nov 2019 11:00:43 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 26 Nov 2019 11:00:33 +0800
-Message-ID: <1574737251.12247.11.camel@mtksdccf07>
-Subject: Re: [PATCH 1/1] sched: cfs_rq h_load might not update due to irq
- disable
-From:   Kathleen Chang <yt.chang@mediatek.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        <wsd_upstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 26 Nov 2019 11:00:51 +0800
-In-Reply-To: <20191121123804.GR4097@hirez.programming.kicks-ass.net>
-References: <1574325009-10846-1-git-send-email-yt.chang@mediatek.com>
-         <20191121123804.GR4097@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 25 Nov 2019 22:02:23 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191126030218epoutp046b194a6b082369d2484ce8bb68bf4a92~al0QlxayA3155731557epoutp04s
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 03:02:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191126030218epoutp046b194a6b082369d2484ce8bb68bf4a92~al0QlxayA3155731557epoutp04s
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574737338;
+        bh=OMciozHpLzOj5UGxa+m6g2T+kC1AYWSBJic5bkxy8Zc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=GSKSZjzLTEUIeDV+JG2EIJdDcHBChw2xHxPI9EmT1C8YORuB4K5rXbXE5y1q2R/p2
+         0KotCfG+qn0pL7w8MxQHiAHXH18/2SMixpS+YnZcrRw6IaVxLoRkgkDPHGJMJJ/ulO
+         eiZPVfj7sWTNSSHf/3tK28mr2sm34jx8rsXrhJCI=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191126030218epcas1p28e00c9942427257eb9c3663dee8cadbe~al0QEORS72788927889epcas1p2I;
+        Tue, 26 Nov 2019 03:02:18 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 47MTGJ02c1zMqYkf; Tue, 26 Nov
+        2019 03:02:16 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        95.59.57028.4B59CDD5; Tue, 26 Nov 2019 12:02:12 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191126030212epcas1p457db612973b544c32b7aabb8e0f88c45~al0KqbNOQ1984919849epcas1p41;
+        Tue, 26 Nov 2019 03:02:12 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191126030212epsmtrp10cf62ccbb6aef0b403f4291f120d5a34~al0Kpp7vm1622616226epsmtrp10;
+        Tue, 26 Nov 2019 03:02:12 +0000 (GMT)
+X-AuditID: b6c32a35-50bff7000001dec4-14-5ddc95b49162
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CF.7D.10238.4B59CDD5; Tue, 26 Nov 2019 12:02:12 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191126030212epsmtip26164004f75da06e57e9a1f123fc46e9c~al0Kb7KYk2303723037epsmtip2K;
+        Tue, 26 Nov 2019 03:02:12 +0000 (GMT)
+Subject: Re: [PATCH v3] PM / devfreq: Add new name attribute for sysfs
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rafael.j.wysocki@intel.com, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, chanwoo@kernel.org,
+        stable@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <48cadf42-4675-ffe1-a3d4-a97a37538955@samsung.com>
+Date:   Tue, 26 Nov 2019 12:08:18 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191125085039.GA2301674@kroah.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHebd5dpRWb7P00Q+mpwtlbO5o02OkBdlY5QcrjAiWnvSk5m7t
+        bNLFILuaXVTMwmFlSWqrGJqU3dDMLlJmZoVY0U3KlRk0Cml02c4p8tuP5/k//+fyvqRU2UBE
+        kgVmO2czs0aKCJFdujVHpWqtfmHQNJxVMZUDT2TMrno3wfTsHJEz/VdrCcZ7qAsxz0uaCOZd
+        02c5U9f8Fi0i9fXXPRJ9i2s/oW8/fl6uP9zqQnpvS1RG0NrCBfkcm8vZojlzjiW3wJyXQi1f
+        lbU4S5uooVV0MpNERZtZE5dCpaVnqHQFRv8sVHQRa3T4Qxksz1NxqQtsFoedi8638PYUirPm
+        Gq3JVjXPmniHOU+dYzHNpzWaeK1fmF2Y3zPYi6xVczeXO19KdiAXVYaCScDzoK/jpKwMhZBK
+        3IbA23hRFkgo8VcED9yEyN8RfGpcVoZIoaBmZJMYvoHgty9E5C8I7ng2BDgU68B97a1gMwXP
+        Bs/tQcFfiq8h6B0+JQ8kCBwL7cMDgv8kHANPx96hACtwKvzeXS1oZHgmjJQclQT6TsVr4P43
+        VpRMhu6aIcE/GNPg9TQLNlIcDoNDJyUiT4PLn2ulgb6AfQRUvHojExdOg9qOE0jkUPh4t1Uu
+        ciR4yvf+5W1wtruLEItLEbS2PwoSEwnQfqZKGEiK54D7apwYjoErvuNIbDwRRr8dDBJvpYDS
+        vUpRMh36X7+UiBwB9fv2ExWIco5bxzluBee4FZz/m9UhmQuFcVbelMfxtJUe/9ItSPijsdo2
+        dORheifCJKImKMZ6nhuUQWwRv8XUiYCUUlMUup4Bg1KRy27ZytksWTaHkeM7kdZ/7Epp5NQc
+        i//Hm+1ZtDY+ISGBmUcnammaCleQY30GJc5j7Vwhx1k52786CRkcuQPdGopZl/asO7O7uHFG
+        mLFr1oXpFf2X6zeePtD8pCgz7kbmr9ThAzefqSXqDz/WuO49zc45lt47GjsQE3XiVNL60iVr
+        Vz+qC96o7agMu+DzPu5bWBKxdE+Tj5ypPhc++l7SsKR6xc/bXXrdxJWa8/eLddsTDRrHe/e9
+        F6+Hthsbk0Pjm+soGZ/P0rFSG8/+AaX81zi5AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsWy7bCSvO6WqXdiDeas4raYeOMKi0Xz4vVs
+        Fmeb3rBbXN41h83ic+8RRovbjSvYLB6veMtusWDjI0YHDo/Fe14yeWxa1cnmsX/uGnaPvi2r
+        GD0+b5ILYI3isklJzcksSy3St0vgyjh76zxjwWTtiv5Zd5kaGFcpdTFycEgImEjMfFPYxcjF
+        ISSwm1GiYe4yti5GTqC4pMS0i0eZIWqEJQ4fLoaoecsocenYUrAaYQE3ifW7H7GA2CICGhIv
+        j95iASliBhm0bPIuRpCEkMBWRok9l11BbDYBLYn9L26ANfMLKEpc/fEYrIZXwE7if8tUdhCb
+        RUBV4k3jNCYQW1QgQuL59htQNYISJ2c+AVvGKWAo8fnlRrA5zALqEn/mXWKGsMUlbj2ZzwRh
+        y0tsfzuHeQKj8Cwk7bOQtMxC0jILScsCRpZVjJKpBcW56bnFhgWGeanlesWJucWleel6yfm5
+        mxjBcaWluYPx8pL4Q4wCHIxKPLw/zt6OFWJNLCuuzD3EKMHBrCTC63b2RqwQb0piZVVqUX58
+        UWlOavEhRmkOFiVx3qd5xyKFBNITS1KzU1MLUotgskwcnFINjIXPZqosmCCpydSdteCVAGNp
+        4KS5P6Xv7757JPtzye+39hmu/7JW6z29I/FxfvtZuTmps3LK5uRHcT5K0rFePZWhfPbahMt/
+        /gsdXrA+2H7niatf2Rd71cq5/1hepdl20vGZ8Inlq74/8tlRWflUftU2k9RHl98y856KP8mc
+        tZhJXb37amnyQVklluKMREMt5qLiRABaC0xvpwIAAA==
+X-CMS-MailID: 20191126030212epcas1p457db612973b544c32b7aabb8e0f88c45
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191125005755epcas1p2404d0f095e6ce543d36e55e2427282f8
+References: <CGME20191125005755epcas1p2404d0f095e6ce543d36e55e2427282f8@epcas1p2.samsung.com>
+        <20191125010357.27153-1-cw00.choi@samsung.com>
+        <20191125085039.GA2301674@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTExLTIxIGF0IDEzOjM4ICswMTAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToN
-Cj4gT24gVGh1LCBOb3YgMjEsIDIwMTkgYXQgMDQ6MzA6MDlQTSArMDgwMCwgWVQgQ2hhbmcgd3Jv
-dGU6DQo+ID4gU3luZHJvbWU6DQo+ID4gDQo+ID4gVHdvIENQVXMgbWlnaHQgZG8gaWRsZSBiYWxh
-bmNlIGluIHRoZSBzYW1lIHRpbWUuDQo+ID4gT25lIENQVSBkb2VzIGlkbGUgYmFsYW5jZSBhbmQg
-cHVsbHMgc29tZSB0YXNrcy4NCj4gPiBIb3dldmVyIGJlZm9yZSBwaWNrIG5leHQgdGFzaywgQUxM
-IHRhc2sgYXJlIHB1bGxlZCBiYWNrIHRvIG90aGVyIENQVS4NCj4gPiBUaGF0IHJlc3VsdHMgaW4g
-aW5maW5pdGUgbG9vcCBpbiBib3RoIENQVXMuDQo+IA0KPiBDYW4geW91IGVhc2lseSByZXByb2R1
-Y2UgdGhpcz8NCg0KTm8sIEkgY2FuJ3QgZWFzaWx5IHJlcHJvZHVjZSB0aGlzLiANCj4gDQo+ID4g
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gPiBjb2RlIGZsb3c6
-DQo+ID4gDQo+ID4gaW4gcGlja19uZXh0X3Rhc2tfZmFpcigpDQo+ID4gDQo+ID4gYWdhaW46DQo+
-ID4gDQo+ID4gaWYgbnJfcnVubmluZyA9PSAwDQo+ID4gCWdvdG8gaWRsZQ0KPiA+IHBpY2sgbmV4
-dCB0YXNrDQo+ID4gCXJldHVybg0KPiA+IA0KPiA+IGlkbGU6DQo+ID4gCWlkbGVfYmFsYW5jZQ0K
-PiA+ICAgICAgICAvKiBwdWxsIHNvbWUgdGFza3MgZnJvbSBvdGhlciBDUFUsDQo+ID4gICAgICAg
-ICAqIEhvd2V2ZXIgb3RoZXIgQ1BVIGFyZSBhbHNvIGRvIGlkbGUgYmFsYW5jZSwNCj4gPiAJKiBh
-bmQgcHVsbCBiYWNrIHRoZXNlIHRhc2sgKi8NCj4gPiANCj4gPiAJZ28gdG8gYWdhaW4NCj4gPiAN
-Cj4gPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiA+IFRoZSBy
-ZXN1bHQgdG8gcHVsbCBBTEwgdGFza3MgYmFjayB3aGVuIHRoZSB0YXNrX2hfbG9hZA0KPiA+IGlz
-IGluY29ycmVjdCBhbmQgdG9vIGxvdy4NCj4gDQo+IENsZWFybHkgeW91J3JlIG5vdCBydW5uaW5n
-IGEgUFJFRU1QVCBrZXJuZWwsIG90aGVyd2lzZSB0aGUgYnJlYWsgaW4NCj4gZGV0YWNoX3Rhc2tz
-KCkgd291bGQndmUgc2F2ZWQgeW91LCByaWdodD8NCj4gDQo+ID4gc3RhdGljIHVuc2lnbmVkIGxv
-bmcgdGFza19oX2xvYWQoc3RydWN0IHRhc2tfc3RydWN0ICpwKQ0KPiA+IHsNCj4gPiAgICAgICAg
-IHN0cnVjdCBjZnNfcnEgKmNmc19ycSA9IHRhc2tfY2ZzX3JxKHApOw0KPiA+IA0KPiA+IAl1cGRh
-dGVfY2ZzX3JxX2hfbG9hZChjZnNfcnEpOw0KPiA+IAlyZXR1cm4gZGl2NjRfdWwocC0+c2UuYXZn
-LmxvYWRfYXZnX2NvbnRyaWIgKiBjZnNfcnEtPmhfbG9hZCwNCj4gPiAJCQljZnNfcnEtPnJ1bm5h
-YmxlX2xvYWRfYXZnICsgMSk7DQo+ID4gfQ0KPiA+IA0KPiA+IFRoZSBjZnNfcnEtPmhfbG9hZCBp
-cyBpbmNvcnJlY3QgYW5kIG1pZ2h0IHRvbyBzbWFsbC4NCj4gPiBUaGUgb3JpZ2luYWwgaWRlYSBv
-ZiBjZnNfcnE6Omxhc3RfaF9sb2FkX3VwZGF0ZSB3aWxsIG5vdA0KPiA+IHVwZGF0ZSBjZnNfcnE6
-OmhfbG9hZCBtb3JlIHRoYW4gb25jZSBhIGppZmZpZXMuDQo+ID4gV2hlbiB0aGUgVHdvIENQVXMg
-cHVsbCBlYWNoIG90aGVyIGluIHRoZSBwaWNrX25leHRfdGFza19mYWlyLA0KPiA+IHRoZSBpcnEg
-ZGlzYWJsZWQgYW5kIHJlc3VsdCBpbiBqaWZmaWUgbm90IHVwZGF0ZS4NCj4gPiAoT3RoZXIgQ1BV
-cyB3YWl0IGZvciBydW5xdWV1ZSBsb2NrIGxvY2tlZCBieSB0aGUgdHdvIENQVXMuDQo+ID4gU28s
-IEFMTCBDUFVzIGFyZSBpcnEgZGlzYWJsZWQuKQ0KPiANCj4gVGhpcyBjYW5ub3QgYmUgdHJ1ZTsg
-YmVjYXVzZSB0aGUgbG9vcCBkcm9wcyBycS0+bG9jaywgc28gb3RoZXIgQ1BVcw0KPiBzaG91bGQg
-aGF2ZSBhbiBvcHBvcnR1bml0eSB0byBhY3F1aXJlIHRoZSBsb2NrIGFuZCBtYWtlIHByb2dyZXNz
-Lg0KDQpJIHJlY2hlY2sgb3RoZXIgQ1BVcyBzaXR1YXRpb24uIA0KT3RoZXIgQ1BVcyBhcmUgaXJx
-IGRpc2FibGVkIGR1ZSB0byB3YWl0IGZvciBsb2NrIChOb3QgcnVucXVldWUgbG9jaykuDQoNClRo
-ZSByb290IGNhdXNlIHNob3VsZCBiZSB3aHkgb3RoZXIgQ1BVcyBhcmUgd2FpdGluZyBmb3IgdGhl
-IGxvY2sgDQpyYXRoZXIgdGhhbiByZXBsYWNpbmcgamlmZmllcyB3aXRoIHNjaGVkX2Nsb2NrKCku
-DQoNCj4gDQo+ID4gU29sdXRpb246DQo+ID4gY2ZzX3JxIGhfbG9hZCBtaWdodCBub3QgdXBkYXRl
-IGR1ZSB0byBpcnEgZGlzYWJsZQ0KPiA+IHVzZSBzY2hlZF9jbG9jayBpbnN0ZWFkIGppZmZpZXMN
-Cj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBZVCBDaGFuZyA8eXQuY2hhbmdAbWVkaWF0ZWsuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICBrZXJuZWwvc2NoZWQvZmFpci5jIHwgNCArKystDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZm
-IC0tZ2l0IGEva2VybmVsL3NjaGVkL2ZhaXIuYyBiL2tlcm5lbC9zY2hlZC9mYWlyLmMNCj4gPiBp
-bmRleCA4M2FiMzVlLi4yMzFjNTNmIDEwMDY0NA0KPiA+IC0tLSBhL2tlcm5lbC9zY2hlZC9mYWly
-LmMNCj4gPiArKysgYi9rZXJuZWwvc2NoZWQvZmFpci5jDQo+ID4gQEAgLTc1NzgsOSArNzU3OCwx
-MSBAQCBzdGF0aWMgdm9pZCB1cGRhdGVfY2ZzX3JxX2hfbG9hZChzdHJ1Y3QgY2ZzX3JxICpjZnNf
-cnEpDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBycSAqcnEgPSBycV9vZihjZnNfcnEpOw0KPiA+ICAJ
-c3RydWN0IHNjaGVkX2VudGl0eSAqc2UgPSBjZnNfcnEtPnRnLT5zZVtjcHVfb2YocnEpXTsNCj4g
-PiAtCXVuc2lnbmVkIGxvbmcgbm93ID0gamlmZmllczsNCj4gPiArCXU2NCBub3cgPSBzY2hlZF9j
-bG9ja19jcHUoY3B1X29mKHJxKSk7DQo+ID4gIAl1bnNpZ25lZCBsb25nIGxvYWQ7DQo+ID4gIA0K
-PiA+ICsJbm93ID0gbm93ICogSFogPj4gMzA7DQo+ID4gKw0KPiA+ICAJaWYgKGNmc19ycS0+bGFz
-dF9oX2xvYWRfdXBkYXRlID09IG5vdykNCj4gPiAgCQlyZXR1cm47DQo+ID4gIA0KPiANCj4gVGhp
-cyBpcyBkaXNndWlzdGluZyBhbmQgd3JvbmcuIFRoYXQgaXMgbm90IHRoZSBjb3JyZWN0IHJlbGF0
-aW9uIGJldHdlZW4NCj4gc2NoZWRfY2xvY2soKSBhbmQgamlmZmllcy4NCg0K
+Hi Greg,
 
+On 11/25/19 5:50 PM, Greg KH wrote:
+> On Mon, Nov 25, 2019 at 10:03:57AM +0900, Chanwoo Choi wrote:
+>> The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
+>> sysfs") changed the node name to devfreq(x). After this commit, it is not
+>> possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
+>>
+>> Add new name attribute in order to get device name.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  Changes from v2:
+>> - Change the order of name_show() according to the sequence in devfreq_attrs[]
+>>
+>> Changes from v1:
+>> - Update sysfs-class-devfreq documentation
+>> - Show device name directly from 'devfreq->dev.parent'
+>>
+> 
+> Shouldn't you just revert the original patch here?  Why did the sysfs
+> file change?
+
+The initial devfreq code used the parent device name for device name
+corresponding to devfreq object instead of 'devfreq%d' style.
+Before applied The commit 4585fbcb5331 ("PM / devfreq: Modify
+the device name as devfreq(X) for sysfs"), the devfreq sysfs
+showed the parent device name as following:
+
+For example on Odroid-XU3 board before applied the commit 4585fbcb5331,
+	/sys/class/devfreq/soc:bus_wcore
+	/sys/class/devfreq/soc:bus_noc
+	...(skip)
+
+
+But, I think that devfreq subsystem had to show the consistent
+sysfs entry name for devfreq device like input, thermal, hwmon subsystem.
+
+For example on Odroid-XU3 board,
+- The input subsystem show the 'input%d' style for input device.
+$root@localhost:/# ls /sys/class/input/                                         
+event0  event1  input0  input1  mice  mouse0
+
+- The thermal subsystem show the 'cooling_device%d' style for thermal cooling device.
+$ root@localhost:/# ls /sys/class/thermal/                                       
+cooling_device0  cooling_device2  thermal_zone1  thermal_zone3
+cooling_device1  thermal_zone0    thermal_zone2  thermal_zone4
+
+- The hwmon subsystem show the 'hwmon%d' style for h/w monitor device.
+$root@localhost:/# ls /sys/class/hwmon/                                         
+hwmon0
+
+
+So, I tried to make the consistent sysfs entry name for devfreq device
+by contributing commit 4585fbcb5331 ("PM / devfreq: Modify the device name as
+devfreq(X) for sysfs"). But, The commit 4585fbcb5331 have missed that sysfs
+interface had to provide the real device name. Some subsystem like thermal
+and hwmon provide the device type or device name through sysfs interface.
+It is possible to make the user to find their own specific device by iteration
+on user-space.
+
+root@localhost:/# cat /sys/class/thermal/cooling_device0/type 
+pwm-fan
+root@localhost:/# cat /sys/class/thermal/cooling_device1/type                  
+thermal-cpufreq-0
+root@localhost:/# cat /sys/class/thermal/cooling_device2/type                  
+thermal-cpufreq-1
+
+root@localhost:/# cat /sys/class/hwmon/hwmon0/name                             
+pwmfan
+
+
+So, I add the new 'name' attribute of sysfs for devfreq device.
+
+> 
+>> Documentation/ABI/testing/sysfs-class-devfreq | 7 +++++++
+>>  drivers/devfreq/devfreq.c                     | 9 +++++++++
+>>  2 files changed, 16 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
+>> index 01196e19afca..75897e2fde43 100644
+>> --- a/Documentation/ABI/testing/sysfs-class-devfreq
+>> +++ b/Documentation/ABI/testing/sysfs-class-devfreq
+>> @@ -7,6 +7,13 @@ Description:
+>>  		The name of devfreq object denoted as ... is same as the
+>>  		name of device using devfreq.
+>>  
+>> +What:		/sys/class/devfreq/.../name
+>> +Date:		November 2019
+>> +Contact:	Chanwoo Choi <cw00.choi@samsung.com>
+>> +Description:
+>> +		The /sys/class/devfreq/.../name shows the name of device
+>> +		of the corresponding devfreq object.
+>> +
+>>  What:		/sys/class/devfreq/.../governor
+>>  Date:		September 2011
+>>  Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index 65a4b6cf3fa5..6f4d93d2a651 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -1169,6 +1169,14 @@ int devfreq_remove_governor(struct devfreq_governor *governor)
+>>  }
+>>  EXPORT_SYMBOL(devfreq_remove_governor);
+>>  
+>> +static ssize_t name_show(struct device *dev,
+>> +			struct device_attribute *attr, char *buf)
+>> +{
+>> +	struct devfreq *devfreq = to_devfreq(dev);
+>> +	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
+> 
+> Why is the parent's name being set here, and not the device name?
+
+The device name style in struct devfreq is 'devfreq%d' instead of
+parent device name in order to keep the consistent naming style for devfreq device
+as I mentioned above. 'devfreq%d' name is consistent name style for devfreq device.
+But, it don't show the real h/w device name. So, show the parent device name
+which is specified on device-tree file.
+
+> 
+> The device name should be the name of the directory, and the parent's
+> name is the name of the parent directory, why is a sysfs attribute for a
+> name needed at all?
+
+I add my comment why 'name' attribute is needed with the example of
+other subsystem in the linux kernel. Instead of adding duplicate answer,
+you could check my comment above.
+
+> 
+> confused,
+> 
+> greg k-h
+> 
+> 
+
+Best Regards,
+Chanwoo Choi
