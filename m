@@ -2,176 +2,182 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A938DC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6052C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB8E2068E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CED2068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:31:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+ukCMQd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfKZMar (ORCPT
+        id S1728401AbfKZMbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 07:30:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45256 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727408AbfKZMar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 07:30:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A9FB6AC10;
-        Tue, 26 Nov 2019 12:30:45 +0000 (UTC)
-Date:   Tue, 26 Nov 2019 13:30:43 +0100
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH -tip, v2] x86/mm/32: Sync only to VMALLOC_END in
- vmalloc_sync_all()
-Message-ID: <20191126123043.GH21753@suse.de>
-References: <20191126100942.13059-1-joro@8bytes.org>
- <20191126111119.GA110513@gmail.com>
+        Tue, 26 Nov 2019 07:31:04 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38098 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727408AbfKZMbE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 07:31:04 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a14so16456266oid.5;
+        Tue, 26 Nov 2019 04:31:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4a9Z6JaXzAPTzYcSnTLehjmQZTmoKW8W48PP5NKG6HE=;
+        b=N+ukCMQdLPCfZ8KQ0napwH/kZ2eXxPJ89dC7sQPj76has+2dIuOXlfG7ohujzzj0gs
+         0XbkicX8aDaICwsUvOpaq1DKoK2HMMpdAP9B0kvdNxYMZyZBLfGq6NGbOSl+8QQuM5kd
+         W/KaNFW/ypTDsiFWb9+tJqg8wZsBD4N32ZrvxVqUoXDA2LHzOmSSO6TQBDB8fWlvqEgO
+         OHs9FQov14fJHJyfdX/I7APNuAff1B+Mi1AJ2vlrMX3y7BIgabtbHK7Y0qSj9cMijLX5
+         ZtVHZIBYS8Te5k3yFqZDbUaTAZytUyFfmN67jnuMcQltKqY233DjNgpU5CqtVt8JCNMp
+         Xcrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=4a9Z6JaXzAPTzYcSnTLehjmQZTmoKW8W48PP5NKG6HE=;
+        b=Zjtxt139nazeEiRvPpIIpCZl5XPrsN7unKQ0JnNZxNkEyLrf08kgmcLhxuZkHi63Vc
+         O617qqJ99skdf46oi9e7j9cuBPk8FAC8u8E8hNCdZxhAF0mn5I/V+apQHbXZ4Vn1GATn
+         LXn7764wLlItVz+0k3yXYQCYHPFur2XsZNplDEqERkMi6eETZJT7123hqtMuwD1Pq6o9
+         ujBqu67TrxPbVGyFD4F9VLCggnjfD/x+E2q1pg+bZx7ZtncvcH/3AXNOhoFOq+/HctSG
+         hW1Df9BD3ieQb54/Lm46u8rNbVsJzf6OxwXu89bbLxbfOjSlX1byPRKfsxChnji+5Ff7
+         2CqA==
+X-Gm-Message-State: APjAAAX0X76Zm979FE3cPJFv5kcOT4Ud/QwO0hCqtun7YWVxq0oMWOFc
+        zOFvNCFSUQPA/ZWkETBgcsFJSvo8
+X-Google-Smtp-Source: APXvYqzllppWSVGZtaT9lr/5UlwPmzabtyhU3ndAUKNNGiD4+WbJugCfxuAN8LEUmH6zyyHim4clog==
+X-Received: by 2002:aca:4f50:: with SMTP id d77mr543070oib.147.1574771463250;
+        Tue, 26 Nov 2019 04:31:03 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e193sm3636288oib.53.2019.11.26.04.31.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Nov 2019 04:31:02 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hwmon updates for v5.5
+Date:   Tue, 26 Nov 2019 04:31:01 -0800
+Message-Id: <20191126123101.7353-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126111119.GA110513@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ingo,
+Hi Linus,
 
-On Tue, Nov 26, 2019 at 12:11:19PM +0100, Ingo Molnar wrote:
-> The vmalloc_sync_all() also iterating over the LDT range is buggy, 
-> because for the LDT the mappings are *intentionally* and fundamentally 
-> different between processes, i.e. not synchronized.
+Please pull hwmon updates for Linux v5.5 from signed tag:
 
-Yes, you are right, your patch description is much better, thanks for
-making it more clear and correct.
+    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.5
 
-> Furthermore I'm not sure we need to iterate over the PKMAP range either: 
-> those are effectively permanent PMDs as well, and they are not part of 
-> the vmalloc.c lazy deallocation scheme in any case - they are handled 
-> entirely separately in mm/highmem.c et al.
+Thanks,
+Guenter
+------
 
-I looked a bit at that, and I didn't find an explict place where the
-PKMAP PMD gets established. It probably happens implicitly on the first
-kmap() call, so we are safe as long as the first call to kmap happens
-before the kernel starts the first userspace process.
+The following changes since commit a99d8080aaf358d5d23581244e5da23b35e340b9:
 
-But that is not an issue that should be handled by vmalloc_sync_all(),
-as the name already implies that it only cares about the vmalloc range.
-So your change to only iterate to VMALLOC_END makes sense and we should
-establish the PKMAP PMD at a defined place to make sure it exists when
-we start the first process.
+  Linux 5.4-rc6 (2019-11-03 14:07:26 -0800)
 
-> Note that this is *completely* untested - I might have wrecked PKMAP in 
-> my ignorance. Mind giving it a careful review and a test?
+are available in the Git repository at:
 
-My testing environment for 32 bit is quite limited these days, but I
-tested it in my PTI-x32 environment and the patch below works perfectly
-fine there and still fixes the ldt_gdt selftest.
+  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.5
 
+for you to fetch changes up to 4a1288f1c1cf5829f90c30f9d1af67f526ba4d85:
 
-Regards,
+  dell-smm-hwmon: Add documentation (2019-11-22 20:47:43 -0800)
 
-	Joerg
+----------------------------------------------------------------
+hwmon updates for v5.5
 
-> ===========================>
-> Subject: x86/mm/32: Sync only to VMALLOC_END in vmalloc_sync_all()
-> From:  Joerg Roedel <jroedel@suse.de>
-> Date: Tue, 26 Nov 2019 11:09:42 +0100
-> 
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> The job of vmalloc_sync_all() is to help the lazy freeing of vmalloc()
-> ranges: before such vmap ranges are reused we make sure that they are
-> unmapped from every task's page tables.
-> 
-> This is really easy on pagetable setups where the kernel page tables
-> are shared between all tasks - this is the case on 32-bit kernels
-> with SHARED_KERNEL_PMD = 1.
-> 
-> But on !SHARED_KERNEL_PMD 32-bit kernels this involves iterating
-> over the pgd_list and clearing all pmd entries in the pgds that
-> are cleared in the init_mm.pgd, which is the reference pagetable
-> that the vmalloc() code uses.
-> 
-> In that context the current practice of vmalloc_sync_all() iterating
-> until FIX_ADDR_TOP is buggy:
-> 
->         for (address = VMALLOC_START & PMD_MASK;
->              address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
->              address += PMD_SIZE) {
->                 struct page *page;
-> 
-> Because iterating up to FIXADDR_TOP will involve a lot of non-vmalloc
-> address ranges:
-> 
-> 	VMALLOC -> PKMAP -> LDT -> CPU_ENTRY_AREA -> FIX_ADDR
-> 
-> This is mostly harmless for the FIX_ADDR and CPU_ENTRY_AREA ranges
-> that don't clear their pmds, but it's lethal for the LDT range,
-> which relies on having different mappings in different processes,
-> and 'synchronizing' them in the vmalloc sense corrupts those
-> pagetable entries (clearing them).
-> 
-> This got particularly prominent with PTI, which turns SHARED_KERNEL_PMD
-> off and makes this the dominant mapping mode on 32-bit.
-> 
-> To make LDT working again vmalloc_sync_all() must only iterate over
-> the volatile parts of the kernel address range that are identical
-> between all processes.
-> 
-> So the correct check in vmalloc_sync_all() is "address < VMALLOC_END"
-> to make sure the VMALLOC areas are synchronized and the LDT
-> mapping is not falsely overwritten.
-> 
-> The CPU_ENTRY_AREA and the FIXMAP area are no longer synced either,
-> but this is not really a proplem since their PMDs get established
-> during bootup and never change.
-> 
-> This change fixes the ldt_gdt selftest in my setup.
-> 
-> Reported-by: Borislav Petkov <bp@suse.de>
-> Tested-by: Borislav Petkov <bp@suse.de>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> Cc: <stable@vger.kernel.org>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Brian Gerst <brgerst@gmail.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: H. Peter Anvin <hpa@zytor.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Fixes: 7757d607c6b3: ("x86/pti: Allow CONFIG_PAGE_TABLE_ISOLATION for x86_32")
-> Link: https://lkml.kernel.org/r/20191126100942.13059-1-joro@8bytes.org
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> ---
->  arch/x86/mm/fault.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Index: tip/arch/x86/mm/fault.c
-> ===================================================================
-> --- tip.orig/arch/x86/mm/fault.c
-> +++ tip/arch/x86/mm/fault.c
-> @@ -197,7 +197,7 @@ void vmalloc_sync_all(void)
->  		return;
->  
->  	for (address = VMALLOC_START & PMD_MASK;
-> -	     address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
-> +	     address >= TASK_SIZE_MAX && address < VMALLOC_END;
->  	     address += PMD_SIZE) {
->  		struct page *page;
->  
+- Added support for Texas Instruments TMP512/513
+- Added support for LTC2947
+- Added support for BEL PFE1100 and PFE3000
+- Various minor improvements and fixes
+
+----------------------------------------------------------------
+Colin Ian King (2):
+      hwmon: abituguru: make array probe_order static, makes object smaller
+      hwmon: (w83793d) remove redundant assignment to variable res
+
+Dmitry Torokhov (1):
+      hwmon: (applesmc) switch to using input device polling mode
+
+Eddie James (4):
+      hwmon: (pmbus/ibm-cffps) Switch LEDs to blocking brightness call
+      hwmon: (pmbus/ibm-cffps) Fix LED blink behavior
+      dt-bindings: hwmon: Document ibm,cffps compatible string
+      hwmon: (pmbus/ibm-cffps) Add version detection capability
+
+Eric Tremblay (2):
+      dt-bindings: hwmon: Add TMP512/513
+      hwmon: Add driver for Texas Instruments TMP512/513 sensor chips.
+
+Giovanni Mascellani (2):
+      hwmon: (dell-smm) Add support for disabling automatic BIOS fan control
+      dell-smm-hwmon: Add documentation
+
+Kyle Roeschley (1):
+      hwmon: (tmp421) Allow reading at 2Hz instead of 0.5Hz
+
+Markus Elfring (1):
+      hwmon: (aspeed-pwm-tacho) Use devm_platform_ioremap_resource() in aspeed_pwm_tacho_probe()
+
+Nicolin Chen (1):
+      hwmon: (ina3221) Add summation feature support
+
+Nuno Sá (2):
+      hwmon: Add support for ltc2947
+      dt-bindings: hwmon: Add ltc2947 documentation
+
+Tao Ren (2):
+      hwmon: (pmbus) add driver for BEL PFE1100 and PFE3000
+      docs: hwmon: Document bel-pfe pmbus driver
+
+ .../devicetree/bindings/hwmon/adi,ltc2947.yaml     |  104 ++
+ .../devicetree/bindings/hwmon/ibm,cffps1.txt       |    3 +
+ .../devicetree/bindings/hwmon/ti,tmp513.yaml       |   93 ++
+ Documentation/hwmon/bel-pfe.rst                    |  112 ++
+ Documentation/hwmon/dell-smm-hwmon.rst             |  164 +++
+ Documentation/hwmon/ina3221.rst                    |   12 +
+ Documentation/hwmon/index.rst                      |    4 +
+ Documentation/hwmon/ltc2947.rst                    |  100 ++
+ Documentation/hwmon/tmp513.rst                     |  103 ++
+ MAINTAINERS                                        |   18 +
+ drivers/hwmon/Kconfig                              |   38 +-
+ drivers/hwmon/Makefile                             |    4 +
+ drivers/hwmon/abituguru.c                          |    2 +-
+ drivers/hwmon/applesmc.c                           |   38 +-
+ drivers/hwmon/aspeed-pwm-tacho.c                   |    7 +-
+ drivers/hwmon/dell-smm-hwmon.c                     |  115 +-
+ drivers/hwmon/ina3221.c                            |  163 ++-
+ drivers/hwmon/ltc2947-core.c                       | 1183 ++++++++++++++++++++
+ drivers/hwmon/ltc2947-i2c.c                        |   49 +
+ drivers/hwmon/ltc2947-spi.c                        |   50 +
+ drivers/hwmon/ltc2947.h                            |   12 +
+ drivers/hwmon/pmbus/Kconfig                        |    9 +
+ drivers/hwmon/pmbus/Makefile                       |    1 +
+ drivers/hwmon/pmbus/bel-pfe.c                      |  131 +++
+ drivers/hwmon/pmbus/ibm-cffps.c                    |   74 +-
+ drivers/hwmon/tmp421.c                             |    3 +-
+ drivers/hwmon/tmp513.c                             |  772 +++++++++++++
+ drivers/hwmon/w83793.c                             |    2 +-
+ 28 files changed, 3288 insertions(+), 78 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/adi,ltc2947.yaml
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
+ create mode 100644 Documentation/hwmon/bel-pfe.rst
+ create mode 100644 Documentation/hwmon/dell-smm-hwmon.rst
+ create mode 100644 Documentation/hwmon/ltc2947.rst
+ create mode 100644 Documentation/hwmon/tmp513.rst
+ create mode 100644 drivers/hwmon/ltc2947-core.c
+ create mode 100644 drivers/hwmon/ltc2947-i2c.c
+ create mode 100644 drivers/hwmon/ltc2947-spi.c
+ create mode 100644 drivers/hwmon/ltc2947.h
+ create mode 100644 drivers/hwmon/pmbus/bel-pfe.c
+ create mode 100644 drivers/hwmon/tmp513.c
