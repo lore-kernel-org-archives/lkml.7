@@ -2,101 +2,115 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CABC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0722C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B06220748
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hBPtyFST"
+	by mail.kernel.org (Postfix) with ESMTP id 810E420748
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfKZK14 (ORCPT
+        id S1727865AbfKZKhK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 05:27:56 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43703 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727724AbfKZK14 (ORCPT
+        Tue, 26 Nov 2019 05:37:10 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42105 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727815AbfKZKhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 05:27:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574764074;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=tTo+z7GRdEpyDEyvmGX1mKfcZRDUg8TD8VPVW7nr34c=;
-        b=hBPtyFSTQCIlnUrfFM3BaKNlqWx543PzOaOlvmE4YPWdhzM5zOThUFNGlVWHN5SUEypZ0l
-        DR23qYGBJm+qvuzrdqC8pkyL94tzYCamdlBtBEoMBcI79COjAmCuDomupMR07PJAkZBn1Z
-        uFeXmlzDxh2NjuylrZ0fdtymgZHo13I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-324-Ns7fCixZMkCzNmMzbMTBrw-1; Tue, 26 Nov 2019 05:27:53 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 57F468017CC;
-        Tue, 26 Nov 2019 10:27:52 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E7165D6BE;
-        Tue, 26 Nov 2019 10:27:47 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
-        hch@lst.de, cai@lca.pw, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] iommu: fix KASAN use-after-free in iommu_insert_resv_region
-Date:   Tue, 26 Nov 2019 11:27:43 +0100
-Message-Id: <20191126102743.3269-1-eric.auger@redhat.com>
+        Tue, 26 Nov 2019 05:37:10 -0500
+Received: by mail-oi1-f195.google.com with SMTP id o12so16142341oic.9;
+        Tue, 26 Nov 2019 02:37:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=zopcK9DsIvrRMoKJaFBKq6wC/oxcFlyic0ael7BkN/8=;
+        b=ZwVGY8zZHU5ZLlSEHGkPOB3WBZlU+FiSvWqw44quKppgl1s6DVA0XOwR/NoRmZKAqp
+         G9F7+R3vQgynRQndg27qMClcfGPlquhPu1hT8D/dAQaWhaPBKgoTm34N4ntgWccIWQ66
+         avgX31kibPnRfWKhTm34CXTORtTEovoNsD1wiQCEmCsw3tTtMySmX8jYycJ6NTQuLfyg
+         XRfU14g70wJgEAV1xQg15my1zL8ZBMpNz8kzq8DNWUfc9JQ4K93SAMe+0OzcVLlbq1V8
+         R1FfmF1LJZGZstb861SXWChE3arTel8q8w2JMU6VsR2HzmZWWifSa4QD9OjM2DGRPSM2
+         bq9A==
+X-Gm-Message-State: APjAAAUV6hPUiPm7vpIBV5oeArCblh2/6Lieo2R4Ae/47reKO//92F8W
+        kIi13oOB9oe5X+t5lupMA7abLXK2qBez588NsHI=
+X-Google-Smtp-Source: APXvYqy4IeHlk78TvbZm1ZoZWnHSVBVTAMMciv5D+d1SOKzarsswVbnPuPy/zEICeY+bC7LzL429WWkDb12wjApJxSY=
+X-Received: by 2002:a05:6808:5d9:: with SMTP id d25mr3047363oij.54.1574764629163;
+ Tue, 26 Nov 2019 02:37:09 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: Ns7fCixZMkCzNmMzbMTBrw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+References: <20191108213853.16635-1-afaerber@suse.de> <20191108213853.16635-2-afaerber@suse.de>
+ <20191111183158.GT3001@twin.jikos.cz>
+In-Reply-To: <20191111183158.GT3001@twin.jikos.cz>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 26 Nov 2019 11:36:58 +0100
+Message-ID: <CAMuHMdVbcfB0FFS=gLDathXFM3x0WYXJEq99S_g7mjAPS94rAQ@mail.gmail.com>
+Subject: Re: [PATCH next 1/2] btrfs: tree-checker: Fix error format string
+To:     David Sterba <dsterba@suse.cz>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case the new region gets merged into another one, the nr
-list node is freed. Checking its type while completing the
-merge algorithm leads to a use-after-free. Use new->type
-instead.
+Hi David,
 
-Fixes: 4dbd258ff63e ("iommu: Revisit iommu_insert_resv_region()
-implementation")
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Cc: Stable <stable@vger.kernel.org> #v5.3+
+On Mon, Nov 11, 2019 at 7:32 PM David Sterba <dsterba@suse.cz> wrote:
+> On Fri, Nov 08, 2019 at 10:38:52PM +0100, Andreas Färber wrote:
+> > From: Andreas Färber <afaerber@suse.com>
+> >
+> > Argument BTRFS_FILE_EXTENT_INLINE_DATA_START is defined as offsetof(),
+> > which returns type size_t, so we need %zu instead of %lu.
+> >
+> > This fixes a build warning on 32-bit arm:
+> >
+> >   ../fs/btrfs/tree-checker.c: In function 'check_extent_data_item':
+> >   ../fs/btrfs/tree-checker.c:230:43: warning: format '%lu' expects argument of type 'long unsigned int', but argument 5 has type 'unsigned int' [-Wformat=]
+> >     230 |     "invalid item size, have %u expect [%lu, %u)",
+> >         |                                         ~~^
+> >         |                                           |
+> >         |                                           long unsigned int
+> >         |                                         %u
+>
+> Is there a gcc warning option that can catch that on 64bit too?
+> -Wformat=2 does not and I don't see any other of the option family to do
+> that. We've had fixups of the size_t printk formats and I'd like to
+> catch that when the patches are added to the devel branches. I can't run
+> 32bit build check each time but this seems to be the only way so far.
 
----
+Yep. On 64-bit, size_t _is_ unsigned long.
+So you have to compile for both 32-bit and 64-bit.
 
-v2 -> v3:
-- directly use new->type
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-v1 -> v2:
-- remove spurious new line
----
- drivers/iommu/iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > Fixes: a31ccb4b7ba2 ("btrfs: tree-checker: Check item size before reading file extent type")
+>
+> As the patch is still in the devel branch, the commit id is not stable
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index d658c7c6a2ab..285ad4a4c7f2 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -313,7 +313,7 @@ int iommu_insert_resv_region(struct iommu_resv_region *=
-new,
- =09=09phys_addr_t top_end, iter_end =3D iter->start + iter->length - 1;
-=20
- =09=09/* no merge needed on elements of different types than @nr */
--=09=09if (iter->type !=3D nr->type) {
-+=09=09if (iter->type !=3D new->type) {
- =09=09=09list_move_tail(&iter->list, &stack);
- =09=09=09continue;
- =09=09}
---=20
-2.20.1
+It indeed is not:
+Fixes: 153a6d299956983d ("btrfs: tree-checker: Check item size before
+reading file extent type")
 
+> and I'll fold the change to to the patch. Thanks.
+
+Apparently that was forgotten, and now the issue is part of Linus' tree.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
