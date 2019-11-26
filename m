@@ -2,166 +2,111 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC71C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491DAC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603B82071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E42207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UqzLIrwB";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="EQwm0w1y"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YBGK7122"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfKZKTR (ORCPT
+        id S1727813AbfKZKTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 05:19:17 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:47150
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727388AbfKZKTR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 05:19:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574763556;
-        h=From:To:Cc:Subject:Date:Message-Id;
-        bh=r2jfJ3xIyQaWw6GeuGN6e4VsK0IHe0LCmCTCkRi8THg=;
-        b=UqzLIrwBAkhE7kr3tCMJ12Xc694KCoGD9ZgnFXvK11csc4aRAVZwt70gx7PzjGn4
-        nkQhMYsTpiDRbxZYyaPwrcPKsf37AkUq73MneNe0WahiSqteCAAUfjXlfhHllEmkhNU
-        +YwaKbiP+4aVf/HwmxeCK9czsb/8VkDwHjlScY+0=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574763556;
-        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
-        bh=r2jfJ3xIyQaWw6GeuGN6e4VsK0IHe0LCmCTCkRi8THg=;
-        b=EQwm0w1yyp6dLtSgdr1+r393x61kzXR+F4YeOBlxrjJ1Da9qvg/FgUhW0dBpBVqQ
-        n0691WbgBnl4H3gmxKisWxTP6GahZ4BWG4xCLl/opFaM8bRx5VtnzdmgxNtHRNu7eal
-        cGsoHeH0H2o7zaEHDzYq6aJl696P1rjHC6XlxmQU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2813C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     ulf.hansson@linaro.org, adrian.hunter@intel.com
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH] mmc: sdhci-msm: Correct the offset and value for DDR_CONFIG register
-Date:   Tue, 26 Nov 2019 10:19:16 +0000
-Message-ID: <0101016ea738ec72-fa0f852d-20f8-474a-80b2-4b0ef63b132c-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 1.9.1
-X-SES-Outgoing: 2019.11.26-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Tue, 26 Nov 2019 05:19:31 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:33128 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727688AbfKZKTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 05:19:31 -0500
+Received: from zn.tnic (p200300EC2F0EC20064FC04F570E1B7F9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:c200:64fc:4f5:70e1:b7f9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 921071EC0CCE;
+        Tue, 26 Nov 2019 11:19:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574763569;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=haVL+dkqsD/o7fe1hvHolTBqze2NBMzLiLmc9pvNU5E=;
+        b=YBGK7122KKv+pHSfXF4Nwx5xHHfiSMzlTEfMJXb9+KAbDN/iFLTKEzGDxd4hIEtnXjNTfd
+        YcI29/8Y5/h1foaydwS0LSLaxSLVFYkHzAvCrp7ISDjqHTwU2BH0iKqX3OlffH6aLRMtRz
+        nQy3NNgjWWz9U0/xyEofvo1LCiiMeS0=
+Date:   Tue, 26 Nov 2019 11:19:22 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>, stable@vger.kernel.org
+Subject: Re: [PATCH -tip] x86/mm/32: Sync only to LDT_BASE_ADDR in
+ vmalloc_sync_all()
+Message-ID: <20191126101922.GB31379@zn.tnic>
+References: <20191126100942.13059-1-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191126100942.13059-1-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DDR_CONFIG register offset got updated after a specific
-minor version of sdcc V4. This offset change has not been properly
-taken care of while updating register changes for sdcc V5.
+On Tue, Nov 26, 2019 at 11:09:42AM +0100, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> When vmalloc_sync_all() iterates over the address space until
+> FIX_ADDR_TOP it will sync the whole kernel address space starting from
+> VMALLOC_START.
+> 
+> This is not a problem when the kernel address range is identical in
+> all page-tables, but this is no longer the case when PTI is enabled on
+> x86-32. In that case the per-process LDT is mapped in the kernel
+> address range and vmalloc_sync_all() clears the LDT mapping for all
+> processes.
+> 
+> To make LDT working again vmalloc_sync_all() must only iterate over
+> the volatile parts of the kernel address range that are identical
+> between all processes. This includes the VMALLOC and the PKMAP areas
+> on x86-32.
+> 
+> The order of the ranges in the address space is:
+> 
+> 	VMALLOC -> PKMAP -> LDT -> CPU_ENTRY_AREA -> FIX_ADDR
+> 
+> So the right check in vmalloc_sync_all() is "address < LDT_BASE_ADDR"
+> to make sure the VMALLOC and PKMAP areas are synchronized and the LDT
+> mapping is not falsely overwritten. the CPU_ENTRY_AREA and
+> the FIXMAP area are no longer synced as well, but these
+> ranges are synchronized on page-table creation time and do
+> not change during runtime.
+> 
+> This change fixes the ldt_gdt selftest in my setup.
+> 
+> Fixes: 7757d607c6b3 ("x86/pti: AllowCONFIG_PAGE_TABLE_ISOLATION for x86_32")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/mm/fault.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Correcting proper offset for this register.
-Also updating this register value to reflect the recommended RCLK
-delay.
+Reported-by: Borislav Petkov <bp@suse.de>
+Tested-by: Borislav Petkov <bp@suse.de>
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
----
- drivers/mmc/host/sdhci-msm.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+Thx Jörg!
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index b75c82d..3d0bb5e 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -99,7 +99,7 @@
- 
- #define CORE_PWRSAVE_DLL	BIT(3)
- 
--#define DDR_CONFIG_POR_VAL	0x80040853
-+#define DDR_CONFIG_POR_VAL	0x80040873
- 
- 
- #define INVALID_TUNING_PHASE	-1
-@@ -148,8 +148,9 @@ struct sdhci_msm_offset {
- 	u32 core_ddr_200_cfg;
- 	u32 core_vendor_spec3;
- 	u32 core_dll_config_2;
-+	u32 core_dll_config_3;
-+	u32 core_ddr_config_old; /* Applicable to sdcc minor ver < 0x49 */
- 	u32 core_ddr_config;
--	u32 core_ddr_config_2;
- };
- 
- static const struct sdhci_msm_offset sdhci_msm_v5_offset = {
-@@ -177,8 +178,8 @@ struct sdhci_msm_offset {
- 	.core_ddr_200_cfg = 0x224,
- 	.core_vendor_spec3 = 0x250,
- 	.core_dll_config_2 = 0x254,
--	.core_ddr_config = 0x258,
--	.core_ddr_config_2 = 0x25c,
-+	.core_dll_config_3 = 0x258,
-+	.core_ddr_config = 0x25c,
- };
- 
- static const struct sdhci_msm_offset sdhci_msm_mci_offset = {
-@@ -207,8 +208,8 @@ struct sdhci_msm_offset {
- 	.core_ddr_200_cfg = 0x184,
- 	.core_vendor_spec3 = 0x1b0,
- 	.core_dll_config_2 = 0x1b4,
--	.core_ddr_config = 0x1b8,
--	.core_ddr_config_2 = 0x1bc,
-+	.core_ddr_config_old = 0x1b8,
-+	.core_ddr_config = 0x1bc,
- };
- 
- struct sdhci_msm_variant_ops {
-@@ -253,6 +254,7 @@ struct sdhci_msm_host {
- 	const struct sdhci_msm_offset *offset;
- 	bool use_cdr;
- 	u32 transfer_mode;
-+	bool updated_ddr_cfg;
- };
- 
- static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
-@@ -924,8 +926,10 @@ static int sdhci_msm_cdclp533_calibration(struct sdhci_host *host)
- static int sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
- {
- 	struct mmc_host *mmc = host->mmc;
--	u32 dll_status, config;
-+	u32 dll_status, config, ddr_cfg_offset;
- 	int ret;
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
- 	const struct sdhci_msm_offset *msm_offset =
- 					sdhci_priv_msm_offset(host);
- 
-@@ -938,8 +942,11 @@ static int sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
- 	 * bootloaders. In the future, if this changes, then the desired
- 	 * values will need to be programmed appropriately.
- 	 */
--	writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr +
--			msm_offset->core_ddr_config);
-+	if (msm_host->updated_ddr_cfg)
-+		ddr_cfg_offset = msm_offset->core_ddr_config;
-+	else
-+		ddr_cfg_offset = msm_offset->core_ddr_config_old;
-+	writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr + ddr_cfg_offset);
- 
- 	if (mmc->ios.enhanced_strobe) {
- 		config = readl_relaxed(host->ioaddr +
-@@ -1899,6 +1906,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 				msm_offset->core_vendor_spec_capabilities0);
- 	}
- 
-+	if (core_major == 1 && core_minor >= 0x49)
-+		msm_host->updated_ddr_cfg = true;
-+
- 	/*
- 	 * Power on reset state may trigger power irq if previous status of
- 	 * PWRCTL was either BUS_ON or IO_HIGH_V. So before enabling pwr irq
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
