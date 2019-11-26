@@ -2,123 +2,76 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C77CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B0FC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C7F2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:18:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXH19YTY"
+	by mail.kernel.org (Postfix) with ESMTP id 90595207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574770745;
+	bh=OgsFd4sy4v6UpdihzAdNnw4tUbwpCdwMdmstE3vjEUI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ntX4nWLO5D41MraDczv5a00Ma3fMLdK9qw+/XUYB674KovPN74/kMxkal4xBAbKHb
+	 180MSdWzgTIru7lSwm9RpWeoIzbyLQ4L3SWm62iU+dB65kUYdR/ccVykLP4P2OWLks
+	 EZUMyXZQnNPaLO+Qcngux8q8YE87ryjLfj7iiYNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfKZMSq (ORCPT
+        id S1728301AbfKZMTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 07:18:46 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36489 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727615AbfKZMSp (ORCPT
+        Tue, 26 Nov 2019 07:19:04 -0500
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:52792 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727615AbfKZMTE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 07:18:45 -0500
-Received: by mail-ot1-f65.google.com with SMTP id f10so15700345oto.3;
-        Tue, 26 Nov 2019 04:18:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GPjIoPKAdBU2rhij0XkCzvo+ahx+quTsSMqV7wK7Go4=;
-        b=kXH19YTYWBb/zAuzTG2D+tFgg9MZ74NGM3I9FEiCDfBIv4BipMdk0YtT7FQh0nx5du
-         5PsAvauJPiHo77O5deZ5/3NbsAg0+Gdmezpq8R3AStdJGmuATFgOVZok7YMKr9sqs8bm
-         HXUzJ+zkd2cmITUiWpjDt4aoRMoDG4XqMfmhVeppEEFlKLejOy8ykHb+qo0LUaA7+U1s
-         M+CvJ/EWC9H+Teu1OtUwbORx5axg9qB3wN8xa2iq7JvgnMsGc/itO705yS1BuWj/YNDJ
-         OhokstKZZ0/DL6vn1/DLgvxJ0tVhmUCiFP8sb881PmusrfoU0XCHQQcFCCDncHkUSvLB
-         UDxg==
+        Tue, 26 Nov 2019 07:19:04 -0500
+Received: by mail-wm1-f46.google.com with SMTP id l1so2980775wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 04:19:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GPjIoPKAdBU2rhij0XkCzvo+ahx+quTsSMqV7wK7Go4=;
-        b=OuiOdAB3QuTdKju8C9ULQ6Piio2kcFmVMxD6n7Yvns2JJzt7in5FBI2Y8plKeYIIXZ
-         D0lZbe7JERm35e83Zga8YWm9bDLUyaKVt+Dd5ZYcfA8zIjdhLSnDSDhEWrq5ktxZLSFT
-         WjAP/akxXkeAW/rP8wLy5Askc4rAyynt9QCRH04hT1CNCg+MYlnU5e2x5kx46a5v5fqj
-         sYJ4qanj9Stt1lxG2y8bmZ5Ptb1wl34zlkSQOa8Ko5UeEd4yGp5SXanpyY8rniW5XaMy
-         sv0WDlh+Ph9qmPwf360ahrzFyDoZguRJ1RfvDw1tpOukZux3+dyNTAD5rYQkY5cHGLSP
-         Uo8w==
-X-Gm-Message-State: APjAAAWYGWGsaGqoUdZ1dkbbiCvgjitPsMCe/NGo2asnyhY9aFaPExID
-        PNSchz1T/WbkiwUk2GSa9sc=
-X-Google-Smtp-Source: APXvYqz/ELJmUcs3pP92+oVmdlJk7E+Dzm6ctuvIFTGCxQmgLgtcI9qH8dxQ7s2bJR6TaZ355x0psQ==
-X-Received: by 2002:a9d:470f:: with SMTP id a15mr24541053otf.290.1574770724780;
-        Tue, 26 Nov 2019 04:18:44 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j8sm3567921otj.42.2019.11.26.04.18.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Nov 2019 04:18:43 -0800 (PST)
-Subject: Re: [PATCH v1 2/4] watchdog: populate reboot mode node in toprgu node
- of MTK RGU (Reset Generation Unit)
-To:     freddy.hsin@mediatek.com, sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wim@linux-watchdog.org,
-        matthias.bgg@gmail.com, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc:     Chang-An.Chen@mediatek.com, wsd_upstream@mediatek.com
-References: <1574746490-625-1-git-send-email-freddy.hsin@mediatek.com>
- <1574746490-625-3-git-send-email-freddy.hsin@mediatek.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <ca66e52e-df80-388e-3018-7bf35aef5f43@roeck-us.net>
-Date:   Tue, 26 Nov 2019 04:18:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7FMoRj/ytJrUR66B8EfiOg4Y0/kxvjsVOapeN7HOSP0=;
+        b=p4To6L/uUB4Ynfx7xv9qYg7QuplT6BywCInGbTvO70p7KOEHOF7T4FECjv05a/l7EA
+         pCjPMiBaFxR4pe+3hRAvs3KwYMZhkhq/NhVPTd5Nr/BVauiSiKH2m++0/jH65PvXmWOT
+         ILSo5VBDmduw14z8IvMPXgw20oTeQV7NttmjsCsdylkKNSbrWersAkLvbVyRrQlsoDPB
+         IXq0EymWCaphhE/9nrJ7OiBFEtp/a29Oks1li4Q/T63kuH6rYsjR/6+PIa1MIemoDBSG
+         sLPUgG9OS2BNT+8di8HFdZALDyJathMBjtFV9ZKiHJtO9qiHdB4dDwi8JLFv0oeeFS1E
+         H9VA==
+X-Gm-Message-State: APjAAAUjDPPf+UVuByThSUzaIhharhuApPTBKF8NuxcCp3fHMoTYOlH6
+        ArSDvEYtN1C7LA2Hs8kTfkOsC3zO
+X-Google-Smtp-Source: APXvYqxrUOL9z2BdQOQxB0IBtlt/5B6vcbAXvaMuNfOtiZR8bhwJK4TpfNTavnKN5FLTbsYbr+2Wuw==
+X-Received: by 2002:a7b:c006:: with SMTP id c6mr4186483wmb.52.1574770742789;
+        Tue, 26 Nov 2019 04:19:02 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id k18sm14941263wrm.82.2019.11.26.04.19.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 04:19:02 -0800 (PST)
+Date:   Tue, 26 Nov 2019 13:19:01 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Cristopher Lameter <cl@linux.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Subject: SLUB: purpose of sysfs events on cache creation/removal
+Message-ID: <20191126121901.GE20912@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <1574746490-625-3-git-send-email-freddy.hsin@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/25/19 9:34 PM, freddy.hsin@mediatek.com wrote:
-> From: Freddy Hsin <freddy.hsin@mediatek.com>
-> 
-> of_platform_population should be added in the probe function of
-> toprgu driver, or the reboot mode driver will not be probed
-> 
-> Signed-off-by: Freddy Hsin <freddy.hsin@mediatek.com>
-> ---
->   drivers/watchdog/mtk_wdt.c |    3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
-> index 9c3d003..2fb2614 100644
-> --- a/drivers/watchdog/mtk_wdt.c
-> +++ b/drivers/watchdog/mtk_wdt.c
-> @@ -20,6 +20,7 @@
->   #include <linux/types.h>
->   #include <linux/watchdog.h>
->   #include <linux/delay.h>
-> +#include <linux/of_platform.h>
->   
->   #define WDT_MAX_TIMEOUT		31
->   #define WDT_MIN_TIMEOUT		1
-> @@ -167,6 +168,8 @@ static int mtk_wdt_probe(struct platform_device *pdev)
->   	if (IS_ERR(mtk_wdt->wdt_base))
->   		return PTR_ERR(mtk_wdt->wdt_base);
->   
-> +	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> +
+Hi,
+I have just learnt about KOBJ_{ADD,REMOVE} sysfs events triggered on
+kmem cache creation/removal when SLUB is configured. This functionality
+goes all the way down to initial SLUB merge. I do not see any references
+in the Documentation explaining what those events are used for and
+whether there are any real users.
 
-This seems just wrong. Such a driver should not be a child of the watchdog driver.
-
-Guenter
-
->   	mtk_wdt->wdt_dev.info = &mtk_wdt_info;
->   	mtk_wdt->wdt_dev.ops = &mtk_wdt_ops;
->   	mtk_wdt->wdt_dev.timeout = WDT_MAX_TIMEOUT;
-> 
-
+Could you shed some more light into this?
+-- 
+Michal Hocko
+SUSE Labs
