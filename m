@@ -2,235 +2,147 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA299C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67C0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2AB206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABADA206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:50:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="NcZl5aIt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfKZNua (ORCPT
+        id S1727895AbfKZNuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:50:30 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:58329 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfKZNua (ORCPT
+        Tue, 26 Nov 2019 08:50:55 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43167 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfKZNuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:50:30 -0500
-Received: from mail-qv1-f51.google.com ([209.85.219.51]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MlNYj-1i5iON0V4v-00lpy1; Tue, 26 Nov 2019 14:50:26 +0100
-Received: by mail-qv1-f51.google.com with SMTP id c2so105454qvp.12;
-        Tue, 26 Nov 2019 05:50:25 -0800 (PST)
-X-Gm-Message-State: APjAAAX3yZ7DUZaoCSoYXeIpqZq6KlrdE0LMcuZqnvIg4FXgv+cABkUQ
-        H52RMpORTM6lPck82I/8U9Ah8wihbpSiuXhwAFQ=
-X-Google-Smtp-Source: APXvYqx1kEUjMhBoyWfGDOcVEf9yxBeeeOF62PdlbrKEp0MnUNCK+3SzKhfm0UM+3l5go75Yd40xWBGDk2wdx7QuWXg=
-X-Received: by 2002:a05:6214:811:: with SMTP id df17mr15666880qvb.197.1574776224821;
- Tue, 26 Nov 2019 05:50:24 -0800 (PST)
+        Tue, 26 Nov 2019 08:50:55 -0500
+Received: by mail-ed1-f67.google.com with SMTP id dc19so1452910edb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 05:50:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=foSPG5b4GPTiNos5d2D1hghgoaS4XZmJhqxcKaf1/hY=;
+        b=NcZl5aItp0okvqh8ywht5GEbFHQZpvRbSaZteZaOWnTT/+3a+lqpOUwD+y6lvbHc1+
+         F2Z2YoeOlFbNXRkr+vLnML3XTByfa2aIyOkcK0G8uLGU4pVD+Hd34aEwxocvQEJ4pLxn
+         a2CPLiynWbHRi3CWvIdJxAZs6uVKA+lLqEFVW2uolPSWZMwTxIJKAkFcBR7kz3aNDVzl
+         KtHOYj9JRUMMIPasIqtmFYJLCsbKu59xf4XFl1EpCl8z3CSwNu9uZPH+ZC895N42pqwL
+         k60YdofUhXq5ooa12uqxPihOwOLMlpzTIeJfF7lkUUyEvsHJ4Th6MvG6MR+6jjmd6M/z
+         3JKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=foSPG5b4GPTiNos5d2D1hghgoaS4XZmJhqxcKaf1/hY=;
+        b=VEonNVMB1qEht4Is90/QBZBS4RTDG4LbvRv2MTr+s8kB6KgXk7sKInSunfLeshDN1u
+         3GUPJFOjVKN0SRdeoPzWTO4qe6xa/oS1j33mEDU8ZI7vYYBfwdQ4F6FPowQwZPnj0UM/
+         1Ed4yGV11RVzCj9jKtzfILmPJ5Mr6muo7gPFb7+x8IY8wCt3tjK8AtzBffesjsS4/fR6
+         lvJTsmX1kWNRNpulWlZgqv1i/gjLdUHpu/hw7EJxcG8JFnUXL/lf0ICfbzTMPSXZEmyw
+         EXPlGIFO9ZjaplpEp6dU7XFKZ9SybgKqzYgFIZo/MN+m4xVZ7I4QG5SvFsiUOeg5p6b5
+         wwyg==
+X-Gm-Message-State: APjAAAUFGFAoREXDqtlffYtUQm8prjC4cthiWnNRAfTxnY2UrWuByTXN
+        1VNay22ZGcGZRnqh63ZQBnG9971UVmUk5bHIdhXsKw==
+X-Google-Smtp-Source: APXvYqx/73kewLKTGG9V8bY7IVdZRVMPs089swKOBpgQRPlsJfFEGLkEpyKXCfAg+91rOQYdzSAPGhELagFggc29VvU=
+X-Received: by 2002:aa7:cc0f:: with SMTP id q15mr24919188edt.71.1574776253232;
+ Tue, 26 Nov 2019 05:50:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20191111203835.2260382-1-arnd@arndb.de> <20191111203835.2260382-7-arnd@arndb.de>
- <d54c82b5-21b7-2d5e-ad0b-206527ad2768@xs4all.nl>
-In-Reply-To: <d54c82b5-21b7-2d5e-ad0b-206527ad2768@xs4all.nl>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 26 Nov 2019 14:50:08 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0rom6x4X8eH0zknfZ5=6_rrXGKGR4H+RiY4SWKbXfp=g@mail.gmail.com>
-Message-ID: <CAK8P3a0rom6x4X8eH0zknfZ5=6_rrXGKGR4H+RiY4SWKbXfp=g@mail.gmail.com>
-Subject: Re: [PATCH v4 6/8] media: v4l2-core: fix v4l2_buffer handling for
- time64 ABI
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
+References: <20191122022406.590141-1-pasha.tatashin@soleen.com>
+In-Reply-To: <20191122022406.590141-1-pasha.tatashin@soleen.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Tue, 26 Nov 2019 08:50:42 -0500
+Message-ID: <CA+CK2bCBS2fKOTmTFm13iv3u5TBPwpoCsYeeP352DVE-gs9GJw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Use C inlines for uaccess
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, steve.capper@arm.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Stefan Agner <stefan@agner.ch>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        xen-devel@lists.xenproject.org,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:jnSSMN6vdSxwYv1na6uurqJRzOiUJ36xJ/yJRTCW45aYTgUoZqV
- pAzqr/S4arqUzgy0WqlS/r0TseIgQNGoavCJuWLp+fv+1c1F00sV1ke8mDEFPkLtHUoQWd5
- 6OrDfyeim4tDQMwDXSc9DJctEUcJuAFIEvJkcCefMh2bFIhHuPtyTmcxLLIVqmlTr7t+8jQ
- t0sG0qBkTMjGihMIbSZPQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vdKusKFyMok=:xbX6PN+6Oc9mRNbptd9iIe
- Ai6wE/DCIRMtnGQhneDTEMboZ0wQY2ssucY5kXrvUMpIcu5XXGx8HZSMlibin/tbI+RyDQC/u
- QjFZMS9pN3CdgojLTSs9Ryp6n8aXc1GvB+VmObWiGx131TjWykuyuU2TXvjrJy8HXWNa1LXKE
- OTTvJ9BFYlQHz/SnpVTIYtpVWpDBQ4ayBZWlK3+Bj/sl+d0sMBYAZbI+wnFfwv1Mm51wcHk/Q
- e9MThMNcB9jGI27I3m0YkYmeTVGM868pXzIkHhxv1kjvFkOdtJnhgLcC45y1YPOuEXHq8zEqn
- c/tN3OxJLAFmLuQd/neydeuCFpVLhPHnY7hYqZJp/nDfbwrwPDWj6Q9+SjCCwvkePFHh/ACli
- 8soUjCnojJMzw9GFJskRq7SR16pyDHjFQMMFCiwkIjiy3DgeRyftDO+qbI0aIuYeo6wBfbfiI
- KASe8jNsHSXXzVmaBJhQT/EsbdFxQAQcXKCkS3ix8pBlG6LGzg57DhRuy04GbY1TABKDgMUow
- T2hTS0gMtt055Ta5n7nv1/VVFkgk36kGuPWufF8kio1VyB1LY+Ize9Zgwxh+4uzCHLugViRTl
- YtUG+hmdqu0w/99MrGtSOhHF2kXpz24tCUUmNEFbOvgHnaX3Vy4jY/NXIOYu5mDoQWkixJ7le
- yBoV0dMtc7fvALlKB6dJw9EmyvGOpKqEe106ufX9ay5cfZoV+WlUCpnXiD6R234O2nRkRMhem
- r0jdsI5IN4n5rz32UyebszjUZFGcm5WUq6ZU2fmNLwHpJzi/o+Vt0wSv/OZzxvcKOMfA28KYo
- QMeYGaPr1ksv/XFGwVv0sk+ukTWQ7W5uoQlaThAAnpSQLFNQAYS5+4742ZS8UNhHrHB/aoDiD
- 3lf3C3f9y2tCWCLc5ZGg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 3:57 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> On 11/11/19 9:38 PM, Arnd Bergmann wrote:
+Kees Cook mentioned that it is a good idea to assert the PAN state
+during disable/enable. Since, with this change everything is moved to
+the same C place, if this hardening is something others also want to
+see, I could add it in the next revision of this series. Here are the
+options to choose from:
+1. Do something similar to what is done in preempt with
+CONFIG_PREEMPT_COUNT:  keep a boolean (could be optionally enabled by
+a config) that is checked when uaccess_enable()/uaccess_disable() are
+called. This way we will always check that state even on processors
+with hardware PAN and UAO, however, there is going to be this extra
+overhead of checking/storing the variable on userland enter/exits even
+on systems which have these marcos set to nothing otherwise.
+2. Check only in __uaccess_ttbr0_disable()/__uaccess_ttbr0_enable()
+that ttbr0_el1 is in the expected state, or add another boolean  for
+this purpose to thread_info.
+3. Keep as is, and do not add extra overhead for this hardening.
 
-> >       switch (cmd) {
-> > +#ifdef COMPAT_32BIT_TIME
-> > +     case VIDIOC_QUERYBUF_TIME32:
-> > +     case VIDIOC_QBUF_TIME32:
-> > +     case VIDIOC_DQBUF_TIME32:
-> > +     case VIDIOC_PREPARE_BUF_TIME32: {
-> > +             struct v4l2_buffer_time32 vb32;
-> > +             struct v4l2_buffer *vb = parg;
-> > +
-> > +             if (copy_from_user(&vb32, arg, sizeof(vb32)))
-> > +                     return -EFAULT;
-> > +
-> > +             memcpy(vb, &vb32, offsetof(struct v4l2_buffer, timestamp));
-> > +             vb->timestamp.tv_sec = vb32.timestamp.tv_sec;
-> > +             vb->timestamp.tv_usec = vb32.timestamp.tv_usec;
-> > +             memcpy(&vb->timecode, &vb32.timecode,
-> > +                    sizeof(*vb) - offsetof(struct v4l2_buffer, timecode));
+Thank you,
+Pasha
+
+On Thu, Nov 21, 2019 at 9:24 PM Pavel Tatashin
+<pasha.tatashin@soleen.com> wrote:
 >
-> I have similar concerns as with dqevent about whether this memcpy is the right approach.
-> Unless you can prove with a utility like pahole that this memcpy is safe.
-
-This is the video_get_user() function, so the input data comes from user
-space and gets copied into the kernel, which has to check each field for
-validity already, so I think this is safe regardless of the padding (which
-exists before the 64-bit timestamp on 32-bit architectures). The fields
-match because the definition of all members other than the timeval is
-the same.
-
-On the other hand, I agree it's not obvious from the code why this
-is correct. I've changed my copy to this version below now, do you like
-that better?
-
-                struct v4l2_buffer_time32 vb32;
-                struct v4l2_buffer *vb = parg;
-
-                if (copy_from_user(&vb32, arg, sizeof(vb32)))
-                        return -EFAULT;
-
-                *vb = (struct v4l2_buffer) {
-                        .index          = vb32.index,
-                        .type           = vb32.type,
-                        .bytesused      = vb32.bytesused,
-                        .flags          = vb32.flags,
-                        .field          = vb32.field,
-                        .timestamp.tv_sec       = vb32.timestamp.tv_sec,
-                        .timestamp.tv_usec      = vb32.timestamp.tv_usec,
-                        .timecode       = vb32.timecode,
-                        .memory         = vb32.memory,
-                        .m.userptr      = vb32.usercopy,
-                        .length         = vb32.length,
-                        .request_fd     = vb32.request_fd,
-                };
-
-                if (cmd == VIDIOC_QUERYBUF_TIME32)
-                        memset(&vb->length, 0, sizeof(*vb) -
-                               offsetof(struct v4l2_buffer, length));
-
-This way, all padding is zeroed out, and it's obvious to human
-readers that each field gets set in the correct location.
-
-> > +             memcpy(&vb32, vb, offsetof(struct v4l2_buffer, timestamp));
-> > +             vb32.timestamp.tv_sec = vb->timestamp.tv_sec;
-> > +             vb32.timestamp.tv_usec = vb->timestamp.tv_usec;
-> > +             memcpy(&vb32.timecode, &vb->timecode,
-> > +                    sizeof(*vb) - offsetof(struct v4l2_buffer, timecode));
+> Changelog
+> v2:
+>         - Addressed Russell King's concern by not adding
+>           uaccess_* to ARM.
+>         - Removed the accidental change to xtensa
 >
-> Ditto.
-
-This is my new version:
-
-                struct v4l2_buffer *vb = parg;
-                struct v4l2_buffer_time32 vb32 = {
-                        .index          = vb->index,
-                        .type           = vb->type,
-                        .bytesused      = vb->bytesused,
-                        .flags          = vb->flags,
-                        .field          = vb->field,
-                        .timestamp.tv_sec       = vb->timestamp.tv_sec,
-                        .timestamp.tv_usec      = vb->timestamp.tv_usec,
-                        .timecode       = vb->timecode,
-                        .memory         = vb->memory,
-                        .m.userptr      = vb->usercopy,
-                        .length         = vb->length,
-                        .request_fd     = vb->request_fd,
-                };
-
-                if (copy_to_user(arg, &vb32, sizeof(vb32)))
-                        return -EFAULT;
-
-> >       __u32                   field;
-> > +#ifdef __KERNEL__
-> > +     /* match glibc timeval64 format */
-> > +     struct {
-> > +             long long       tv_sec;
-> > +# if defined(__sparc__) && defined(__arch64__)
-> > +             int             tv_usec;
-> > +             int             __pad;
-> > +# else
-> > +             long long       tv_usec;
-> > +# endif
-> > +     } timestamp;
+> Convert the remaining uaccess_* calls from ASM macros to C inlines.
 >
-> Ewww!
+> These patches apply against linux-next. I boot tested ARM64, and
+> compile tested ARM changes.
 >
-> Are there more places where this is needed? If so, then I very much prefer
-> that a __kernel_timeval struct is defined somewhere, with appropriate
-> comments.
-
-I was trying hard to avoid adding a modern version of timeval, because
-all new code should be encouraged to use __kernel_timespec instead.
-
-There are not many users of timeval in the uapi, and this is the last one
-after the others all got invididual treatment.
-
-Usually what I would do is to have a kernel-internal type based
-on timespec or u64, and then define three uapi types:
-old native (based on __kernel_old_timeval), old compat (using
-old_timeval32) and the new type with 64-bit time_t.
-
-The problem with v4l2_buffer is that it includes another
-compat-incompatible field (m.userptr) and that it's passed
-between kernel functions, so then I'd probably need five variants
-of it in total, and it would slow down the common case (64-bit
-native) because it would require an extra copy.
-
-I can try a few more things here, but I don't expect to find anything
-much better than this.
-
-> > +#ifdef __KERNEL__
-> > +struct v4l2_buffer_time32 {
-> > +     __u32                   index;
-> > +     __u32                   type;
-> > +     __u32                   bytesused;
-> > +     __u32                   flags;
-> > +     __u32                   field;
-> > +     struct old_timeval32    timestamp;
-> >       struct v4l2_timecode    timecode;
-> >       __u32                   sequence;
-> >
-> > @@ -1009,6 +1049,7 @@ struct v4l2_buffer {
-> >               __u32           reserved;
-> >       };
-> >  };
-> > +#endif
+> Pavel Tatashin (3):
+>   arm/arm64/xen: use C inlines for privcmd_call
+>   arm64: remove uaccess_ttbr0 asm macros from cache functions
+>   arm64: remove the rest of asm-uaccess.h
 >
-> Can this be moved to v4l2-ioctls.h?
-
-done.
-
-> >  #ifndef __KERNEL__
-> >  /**
-> > @@ -2446,12 +2487,15 @@ struct v4l2_create_buffers {
-> >  #define VIDIOC_S_FMT         _IOWR('V',  5, struct v4l2_format)
-> >  #define VIDIOC_REQBUFS               _IOWR('V',  8, struct v4l2_requestbuffers)
-> >  #define VIDIOC_QUERYBUF              _IOWR('V',  9, struct v4l2_buffer)
-> > +#define VIDIOC_QUERYBUF_TIME32       _IOWR('V',  9, struct v4l2_buffer_time32)
+>  arch/arm/include/asm/assembler.h       |  2 +-
+>  arch/arm/include/asm/xen/hypercall.h   | 10 +++++
+>  arch/arm/xen/enlighten.c               |  2 +-
+>  arch/arm/xen/hypercall.S               |  4 +-
+>  arch/arm64/include/asm/asm-uaccess.h   | 60 --------------------------
+>  arch/arm64/include/asm/cacheflush.h    | 38 ++++++++++++++--
+>  arch/arm64/include/asm/xen/hypercall.h | 28 ++++++++++++
+>  arch/arm64/kernel/entry.S              |  6 +--
+>  arch/arm64/lib/clear_user.S            |  2 +-
+>  arch/arm64/lib/copy_from_user.S        |  2 +-
+>  arch/arm64/lib/copy_in_user.S          |  2 +-
+>  arch/arm64/lib/copy_to_user.S          |  2 +-
+>  arch/arm64/mm/cache.S                  | 31 +++++--------
+>  arch/arm64/mm/context.c                | 12 ++++++
+>  arch/arm64/mm/flush.c                  |  2 +-
+>  arch/arm64/xen/hypercall.S             | 19 +-------
+>  include/xen/arm/hypercall.h            | 12 +++---
+>  17 files changed, 115 insertions(+), 119 deletions(-)
+>  delete mode 100644 arch/arm64/include/asm/asm-uaccess.h
 >
-> And all these should be moved there as well.
-
-done.
-
-      Arnd
+> --
+> 2.24.0
+>
