@@ -2,92 +2,92 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC34C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6390DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABFA2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F232075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfKZT4A (ORCPT
+        id S1726593AbfKZT7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:56:00 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57126 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfKZT4A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:56:00 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id AA72C283CEA
-Subject: Re: clk/clk-next bisection: boot on tegra124-nyan-big
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <treding@nvidia.com>
-Cc:     tomeu.vizoso@collabora.com, mgalka@collabora.com,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        linux-tegra@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org
-References: <5dd4ce40.1c69fb81.548f8.e723@mx.google.com>
- <53eda2aa-35d0-8776-e2cb-b6c4e8c1ff7f@collabora.com>
- <20191122170141.4B9BF2068F@mail.kernel.org>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <2e734116-55da-c799-58b4-14e8c02deece@collabora.com>
-Date:   Tue, 26 Nov 2019 19:55:54 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 26 Nov 2019 14:59:13 -0500
+Received: from mga06.intel.com ([134.134.136.31]:54602 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbfKZT7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 14:59:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 11:59:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,246,1571727600"; 
+   d="scan'208";a="220735245"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga002.jf.intel.com with ESMTP; 26 Nov 2019 11:59:12 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/boot/realmode: Fix a comment's incorrect file reference
+Date:   Tue, 26 Nov 2019 11:59:11 -0800
+Message-Id: <20191126195911.3429-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191122170141.4B9BF2068F@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/11/2019 17:01, Stephen Boyd wrote:
-> Quoting Guillaume Tucker (2019-11-20 00:17:28)
->> On 20/11/2019 05:25, kernelci.org bot wrote:
->>> Author: Thierry Reding <treding@nvidia.com>
->>> Date:   Thu Jul 25 18:19:00 2019 +0200
->>>
->>>     clk: tegra: Reimplement SOR clock on Tegra124
->>>     
->>>     In order to allow the display driver to deal uniformly with all SOR
->>>     generations, implement the SOR clocks in a way that is compatible with
->>>     Tegra186 and later.
->>>     
->>>     Acked-by: Stephen Boyd <sboyd@kernel.org>
->>>     Signed-off-by: Thierry Reding <treding@nvidia.com>
->>
->> There was already a bisection last Thursday which found this
->> commit, and Thierry explained that it works in linux-next thanks
->> to other patches.  I guess those patches are not going to be
->> cherry-picked onto the clk-next branch, so this will keep failing
->> until it's rebased.  Is that right?
->>
->> If so, I can turn off bisections on clk-next for now.  We need to
->> have a way in KernelCI to tell that a commit has been fixed to
->> cope with this kind of situation in general.
->>
-> 
-> I guess so. It's disappointing that a bisection hole was introduced
-> though. I can possibly merge something onto clk-next from the Tegra tree
-> to make this go away but the bisection hole will always exist. Or we can
-> all wait a week and not care about this problem anymore.
+Fix the comment for 'struct real_mode_header' to reference the correct
+assembly file, realmode/rm/header.S.  The comment has always incorrectly
+referenced realmode.S, which doesn't exist, as defining the associated
+asm blob.
 
-Yes, let's just wait.  I'll check next week that the issue is
-gone in the test reports and re-enable bisection accordingly.
+Specify the file's path relative to arch/x86 to avoid confusion with
+boot/header.S.  Update the comment for 'struct trampoline_header' to
+also include the relative path to keep things consistent, and tweak the
+dual 64/32 reference so that it doesn't appear to be an extension of the
+relative path, i.e. avoid "realmode/rm/trampoline_32/64.S".
 
-Guillaume
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+
+The other obvious fix would be to simply delete the comment, but I found
+the comment to be quite helpful even though it referenced the incorrect
+file.  Without the comment, it's not immediately obvious that the struct
+is representative of an asm blob.
+
+ arch/x86/include/asm/realmode.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index 09ecc32f6524..b35030eeec36 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -14,7 +14,7 @@
+ #include <linux/types.h>
+ #include <asm/io.h>
+ 
+-/* This must match data at realmode.S */
++/* This must match data at realmode/rm/header.S */
+ struct real_mode_header {
+ 	u32	text_start;
+ 	u32	ro_end;
+@@ -36,7 +36,7 @@ struct real_mode_header {
+ #endif
+ };
+ 
+-/* This must match data at trampoline_32/64.S */
++/* This must match data at realmode/rm/trampoline_{32,64}.S */
+ struct trampoline_header {
+ #ifdef CONFIG_X86_32
+ 	u32 start;
+-- 
+2.24.0
 
