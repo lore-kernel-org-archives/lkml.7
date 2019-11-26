@@ -2,290 +2,123 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4395C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF0BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74B320727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B3E20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:46:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2TOTmIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbfKZOp7 (ORCPT
+        id S1728031AbfKZOqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 09:45:59 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6800 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726049AbfKZOp7 (ORCPT
+        Tue, 26 Nov 2019 09:46:46 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37551 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfKZOqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 09:45:59 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQEjuf9145030
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:45:58 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wfk5m2t6b-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:42:00 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zaslonko@linux.ibm.com>;
-        Tue, 26 Nov 2019 14:41:36 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Nov 2019 14:41:34 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAQEfWox47513790
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Nov 2019 14:41:32 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C32252051;
-        Tue, 26 Nov 2019 14:41:32 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id DD91552059;
-        Tue, 26 Nov 2019 14:41:31 +0000 (GMT)
-From:   Mikhail Zaslonko <zaslonko@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Richard Purdie <rpurdie@rpsys.net>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] s390/boot: Add dfltcc= kernel command line parameter
-Date:   Tue, 26 Nov 2019 15:41:29 +0100
+        Tue, 26 Nov 2019 09:46:46 -0500
+Received: by mail-wr1-f65.google.com with SMTP id g7so2086075wrw.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 06:46:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Z4d670MtFAZBRVHDDr7y0hwhh3jdjrRCwzJNRcQEIpE=;
+        b=b2TOTmIssjHAdfu33yethPu4DPKpr4YhsGK0jiWYpI4rByPGN6vKrELD6l/eWkO5Pj
+         JwsxE59R4krfQTwhLW/J2sVsJvp0r616lQcwOq/fprrfZMYtnFFUpWcLQdCEX/ehF8wO
+         VULG/somi6ZYO+lGfnZgzyHswOwE1dgdrO67woKr/PF/4CXPGntHp6PDq+Ao0yoeDW43
+         Q/UvWkHMNQ2A9sLohyiUJZTaFjfA7V1NyMYDRy0O209j42zNyjU9icdjwiD8ShXQJUZ+
+         ss9v9JtpHF6BP598vF/Oe/BxVVBihnbjK33XmDbS9QQp/F/ZgepjPbrv1MB2nCvpSVZy
+         UONg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Z4d670MtFAZBRVHDDr7y0hwhh3jdjrRCwzJNRcQEIpE=;
+        b=B4Bv9eLG81iyirk5zHV4/+WfmH7EPSB6oBZFTH5k+buErmkzZQtF6lAs2cwcFIR8Q6
+         TSPHJBJd94NYeGtkSIz55rXq2UjzcrfR8zgDSnNKyPhpXgvZRm6b9Yihl3hnnTPkFF0K
+         KM7HFSCJu2e7uK+wV3RHWkLRBNeCSm35e2uDmphVBw3yAVY3xbInZ3yXL0T2JyyxOJAI
+         9Qc0YHm2ZB5BjeZsGEmxdzT0WznsM8NyWEAxorWOLX3vfkRZNbcxSLiSYcSXr2bpe1cE
+         5GWdB3J/ZQom8FQC1bBcAwRkmtS56aQ6BG8c2rjnBrx9ZtFQLJl5pD4dy86OH/11MtN+
+         GqjQ==
+X-Gm-Message-State: APjAAAU27YEriN0yZFLQ3pkz7zy5uG4BLvg54Sc3iRIviWKqqGW5a0uX
+        CZdJfO8ThZKSCMndAxlWVlM8x3THDfk=
+X-Google-Smtp-Source: APXvYqz7zA8LG92MJSyDd2eRIISQ4Qcp/e84JCJxgZqxCKET9zDZXwoc5lrMqJeg6GKWYIPxTIWQKw==
+X-Received: by 2002:a05:6000:12:: with SMTP id h18mr14314290wrx.87.1574779604252;
+        Tue, 26 Nov 2019 06:46:44 -0800 (PST)
+Received: from localhost.localdomain ([2a02:a58:8166:7500:6c1e:69e9:a832:6384])
+        by smtp.gmail.com with ESMTPSA id s82sm3325380wms.28.2019.11.26.06.46.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 06:46:43 -0800 (PST)
+From:   Ilie Halip <ilie.halip@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>, Andy <luto@kernel.org>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH v3] x86/boot: discard .eh_frame sections
+Date:   Tue, 26 Nov 2019 16:45:44 +0200
+Message-Id: <20191126144545.19354-1-ilie.halip@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191126144130.75710-1-zaslonko@linux.ibm.com>
-References: <20191126144130.75710-1-zaslonko@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19112614-0008-0000-0000-000003388310
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112614-0009-0000-0000-00004A5787A3
-Message-Id: <20191126144130.75710-5-zaslonko@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-26_03:2019-11-26,2019-11-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0 priorityscore=1501
- suspectscore=0 clxscore=1015 impostorscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911260130
+In-Reply-To: <20191118175223.GM6363@zn.tnic>
+References: <20191118175223.GM6363@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the new kernel command line parameter 'dfltcc=' to configure
-s390 zlib hardware support.
-Format: { on | off | def_only | inf_only | always }
- on:       s390 zlib hardware support for compression on
-           level 1 and decompression (default)
- off:      No s390 zlib hardware support
- def_only: s390 zlib hardware support for deflate
-           only (compression on level 1)
- inf_only: s390 zlib hardware support for inflate
-           only (decompression)
- always:   Same as 'on' but ignores the selected compression
-           level always using hardware support (used for debugging)
+When using GCC as compiler and LLVM's lld as linker, linking
+setup.elf fails:
+      LD      arch/x86/boot/setup.elf
+    ld.lld: error: init sections too big!
 
-Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+This happens because GCC generates .eh_frame sections for most
+of the files in that directory, then ld.lld places the merged
+section before __end_init, triggering an assert in the linker
+script.
+
+Fix this by discarding the .eh_frame sections, as suggested by
+Boris. The kernel proper linker script discards them too.
+
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+Link: https://lore.kernel.org/lkml/20191118175223.GM6363@zn.tnic/
+Link: https://github.com/ClangBuiltLinux/linux/issues/760
+Suggested-by: Borislav Petkov <bp@alien8.de>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 12 ++++++++++++
- arch/s390/boot/ipl_parm.c                       | 14 ++++++++++++++
- arch/s390/include/asm/setup.h                   |  7 +++++++
- arch/s390/kernel/setup.c                        |  1 +
- lib/zlib_dfltcc/dfltcc.c                        |  5 ++++-
- lib/zlib_dfltcc/dfltcc.h                        |  1 +
- lib/zlib_dfltcc/dfltcc_deflate.c                |  6 ++++++
- lib/zlib_dfltcc/dfltcc_inflate.c                |  6 ++++++
- lib/zlib_dfltcc/dfltcc_util.h                   |  5 +++++
- 9 files changed, 56 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 8dee8f68fe15..953376347a3a 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -836,6 +836,18 @@
- 			dump out devices still on the deferred probe list after
- 			retrying.
+Changes in V3:
+ * discard .eh_frame instead of placing it after .rodata
+
+Changes in V2:
+ * removed wildcard for input sections (.eh_frame* -> .eh_frame)
+
+ arch/x86/boot/setup.ld | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
+index 0149e41d42c2..3da1c37c6dd5 100644
+--- a/arch/x86/boot/setup.ld
++++ b/arch/x86/boot/setup.ld
+@@ -51,7 +51,10 @@ SECTIONS
+ 	. = ALIGN(16);
+ 	_end = .;
  
-+	dfltcc=		[HW,S390]
-+			Format: { on | off | def_only | inf_only | always }
-+			on:       s390 zlib hardware support for compression on
-+			          level 1 and decompression (default)
-+			off:      No s390 zlib hardware support
-+			def_only: s390 zlib hardware support for deflate
-+			          only (compression on level 1)
-+			inf_only: s390 zlib hardware support for inflate
-+			          only (decompression)
-+			always:   Same as 'on' but ignores the selected compression
-+			          level always using hardware support (used for debugging)
-+
- 	dhash_entries=	[KNL]
- 			Set number of hash buckets for dentry cache.
+-	/DISCARD/ : { *(.note*) }
++	/DISCARD/	: {
++		*(.eh_frame)
++		*(.note*)
++	}
  
-diff --git a/arch/s390/boot/ipl_parm.c b/arch/s390/boot/ipl_parm.c
-index 24ef67eb1cef..357adad991d2 100644
---- a/arch/s390/boot/ipl_parm.c
-+++ b/arch/s390/boot/ipl_parm.c
-@@ -14,6 +14,7 @@
- char __bootdata(early_command_line)[COMMAND_LINE_SIZE];
- struct ipl_parameter_block __bootdata_preserved(ipl_block);
- int __bootdata_preserved(ipl_block_valid);
-+unsigned int __bootdata_preserved(zlib_dfltcc_support) = ZLIB_DFLTCC_FULL;
- 
- unsigned long __bootdata(vmalloc_size) = VMALLOC_DEFAULT_SIZE;
- unsigned long __bootdata(memory_end);
-@@ -229,6 +230,19 @@ void parse_boot_command_line(void)
- 		if (!strcmp(param, "vmalloc") && val)
- 			vmalloc_size = round_up(memparse(val, NULL), PAGE_SIZE);
- 
-+		if (!strcmp(param, "dfltcc")) {
-+			if (!strcmp(val, "off"))
-+				zlib_dfltcc_support = ZLIB_DFLTCC_DISABLED;
-+			else if (!strcmp(val, "on"))
-+				zlib_dfltcc_support = ZLIB_DFLTCC_FULL;
-+			else if (!strcmp(val, "def_only"))
-+				zlib_dfltcc_support = ZLIB_DFLTCC_DEFLATE_ONLY;
-+			else if (!strcmp(val, "inf_only"))
-+				zlib_dfltcc_support = ZLIB_DFLTCC_INFLATE_ONLY;
-+			else if (!strcmp(val, "always"))
-+				zlib_dfltcc_support = ZLIB_DFLTCC_FULL_DEBUG;
-+		}
-+
- 		if (!strcmp(param, "noexec")) {
- 			rc = kstrtobool(val, &enabled);
- 			if (!rc && !enabled)
-diff --git a/arch/s390/include/asm/setup.h b/arch/s390/include/asm/setup.h
-index 6dc6c4fbc8e2..bd2cca097421 100644
---- a/arch/s390/include/asm/setup.h
-+++ b/arch/s390/include/asm/setup.h
-@@ -80,6 +80,13 @@ struct parmarea {
- 	char command_line[ARCH_COMMAND_LINE_SIZE];	/* 0x10480 */
- };
- 
-+extern unsigned int zlib_dfltcc_support;
-+#define ZLIB_DFLTCC_DISABLED		0
-+#define ZLIB_DFLTCC_FULL		1
-+#define ZLIB_DFLTCC_DEFLATE_ONLY	2
-+#define ZLIB_DFLTCC_INFLATE_ONLY	3
-+#define ZLIB_DFLTCC_FULL_DEBUG		4
-+
- extern int noexec_disabled;
- extern int memory_end_set;
- extern unsigned long memory_end;
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 3ff291bc63b7..e1a0cf580f6f 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -111,6 +111,7 @@ unsigned long __bootdata_preserved(__etext_dma);
- unsigned long __bootdata_preserved(__sdma);
- unsigned long __bootdata_preserved(__edma);
- unsigned long __bootdata_preserved(__kaslr_offset);
-+unsigned int __bootdata_preserved(zlib_dfltcc_support);
- 
- unsigned long VMALLOC_START;
- EXPORT_SYMBOL(VMALLOC_START);
-diff --git a/lib/zlib_dfltcc/dfltcc.c b/lib/zlib_dfltcc/dfltcc.c
-index 7f77e5bb01c6..c30de430b30c 100644
---- a/lib/zlib_dfltcc/dfltcc.c
-+++ b/lib/zlib_dfltcc/dfltcc.c
-@@ -44,7 +44,10 @@ void dfltcc_reset(
-     dfltcc_state->param.nt = 1;
- 
-     /* Initialize tuning parameters */
--    dfltcc_state->level_mask = DFLTCC_LEVEL_MASK;
-+    if (zlib_dfltcc_support == ZLIB_DFLTCC_FULL_DEBUG)
-+        dfltcc_state->level_mask = DFLTCC_LEVEL_MASK_DEBUG;
-+    else
-+        dfltcc_state->level_mask = DFLTCC_LEVEL_MASK;
-     dfltcc_state->block_size = DFLTCC_BLOCK_SIZE;
-     dfltcc_state->block_threshold = DFLTCC_FIRST_FHT_BLOCK_SIZE;
-     dfltcc_state->dht_threshold = DFLTCC_DHT_MIN_SAMPLE_SIZE;
-diff --git a/lib/zlib_dfltcc/dfltcc.h b/lib/zlib_dfltcc/dfltcc.h
-index 4782c92bb2ff..be70c807b62f 100644
---- a/lib/zlib_dfltcc/dfltcc.h
-+++ b/lib/zlib_dfltcc/dfltcc.h
-@@ -8,6 +8,7 @@
-  * Tuning parameters.
-  */
- #define DFLTCC_LEVEL_MASK 0x2 /* DFLTCC compression for level 1 only */
-+#define DFLTCC_LEVEL_MASK_DEBUG 0x3fe /* DFLTCC compression for all levels */
- #define DFLTCC_BLOCK_SIZE 1048576
- #define DFLTCC_FIRST_FHT_BLOCK_SIZE 4096
- #define DFLTCC_DHT_MIN_SAMPLE_SIZE 4096
-diff --git a/lib/zlib_dfltcc/dfltcc_deflate.c b/lib/zlib_dfltcc/dfltcc_deflate.c
-index b9d16917c30a..aa4539f5c071 100644
---- a/lib/zlib_dfltcc/dfltcc_deflate.c
-+++ b/lib/zlib_dfltcc/dfltcc_deflate.c
-@@ -3,6 +3,7 @@
- #include "../zlib_deflate/defutil.h"
- #include "dfltcc_util.h"
- #include "dfltcc.h"
-+#include <asm/setup.h>
- #include <linux/zutil.h>
- 
- /*
-@@ -15,6 +16,11 @@ int dfltcc_can_deflate(
-     deflate_state *state = (deflate_state *)strm->state;
-     struct dfltcc_state *dfltcc_state = GET_DFLTCC_STATE(state);
- 
-+    /* Check for kernel dfltcc command line parameter */
-+    if (zlib_dfltcc_support == ZLIB_DFLTCC_DISABLED ||
-+            zlib_dfltcc_support == ZLIB_DFLTCC_INFLATE_ONLY)
-+        return 0;
-+
-     /* Unsupported compression settings */
-     if (!dfltcc_are_params_ok(state->level, state->w_bits, state->strategy,
-                               dfltcc_state->level_mask))
-diff --git a/lib/zlib_dfltcc/dfltcc_inflate.c b/lib/zlib_dfltcc/dfltcc_inflate.c
-index 12a93a06bd61..aa9ef23474df 100644
---- a/lib/zlib_dfltcc/dfltcc_inflate.c
-+++ b/lib/zlib_dfltcc/dfltcc_inflate.c
-@@ -3,6 +3,7 @@
- #include "../zlib_inflate/inflate.h"
- #include "dfltcc_util.h"
- #include "dfltcc.h"
-+#include <asm/setup.h>
- #include <linux/zutil.h>
- 
- /*
-@@ -15,6 +16,11 @@ int dfltcc_can_inflate(
-     struct inflate_state *state = (struct inflate_state *)strm->state;
-     struct dfltcc_state *dfltcc_state = GET_DFLTCC_STATE(state);
- 
-+    /* Check for kernel dfltcc command line parameter */
-+    if (zlib_dfltcc_support == ZLIB_DFLTCC_DISABLED ||
-+            zlib_dfltcc_support == ZLIB_DFLTCC_DEFLATE_ONLY)
-+        return 0;
-+
-     /* Unsupported compression settings */
-     if (state->wbits != HB_BITS)
-         return 0;
-diff --git a/lib/zlib_dfltcc/dfltcc_util.h b/lib/zlib_dfltcc/dfltcc_util.h
-index 1930b43c1915..43419d7d181b 100644
---- a/lib/zlib_dfltcc/dfltcc_util.h
-+++ b/lib/zlib_dfltcc/dfltcc_util.h
-@@ -3,6 +3,7 @@
- #define DFLTCC_UTIL_H
- 
- #include <linux/zutil.h>
-+#include <asm/setup.h>
- 
- /*
-  * C wrapper for the DEFLATE CONVERSION CALL instruction.
-@@ -104,6 +105,10 @@ static inline int is_dfltcc_enabled(void)
-     uint64_t facilities[(DFLTCC_FACILITY / 64) + 1];
-     register char r0 __asm__("r0");
- 
-+    /* Check for kernel dfltcc command line parameter */
-+    if (zlib_dfltcc_support == ZLIB_DFLTCC_DISABLED)
-+        return 0;
-+
-     memset(facilities, 0, sizeof(facilities));
-     r0 = sizeof(facilities) / sizeof(facilities[0]) - 1;
-     __asm__ volatile("stfle %[facilities]\n"
+ 	/*
+ 	 * The ASSERT() sink to . is intentional, for binutils 2.14 compatibility:
 -- 
 2.17.1
 
