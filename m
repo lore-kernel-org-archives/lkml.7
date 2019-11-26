@@ -2,108 +2,102 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F76C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DCBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6763820722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7531F2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JieTCFWq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oBQUwAxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbfKZQ2K (ORCPT
+        id S1727840AbfKZQ3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 11:28:10 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36407 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfKZQ2K (ORCPT
+        Tue, 26 Nov 2019 11:29:06 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39833 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfKZQ3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 11:28:10 -0500
-Received: by mail-wm1-f68.google.com with SMTP id n188so4075160wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 08:28:08 -0800 (PST)
+        Tue, 26 Nov 2019 11:29:06 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x28so9435881pfo.6
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 08:29:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lpf541/6ikEv3JJ2ul3APwZIfgPQ6unMan8v4La6FD4=;
-        b=JieTCFWq0nixSvgtCiL59CJeZu3LC4DI3ozvC6SCMq8yOfpTyvmgTzQNJB+0KAwH82
-         FZbWZ0MSaOx8Xwf/PcFSyviWSsAoeAD1S9lbb0qYtC+z0LsSqUobyrgpQBvsYKUKNeJH
-         54d3rcSJAhK5M6xcDfm2qQeTrxTEbQ6aZXBu/JVFc6plWpWQ9ActI88B5VDmDI88O2g8
-         vzq1ICpaahQOIJ9rTg0v9zl+daqycOPMvOjmbodK1inIBUcGVJyniMp0ftf5N9SVLPji
-         eGpys0U4dyYb/gOJCFwIecl920Kn7XlKRr9hhe0yIdtQG6FInOpysmI5/FNkDA31yEYG
-         h6+w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=cti69LXQYlxjH1hcVp0rOavAITI77gvcwbc4nx5LA1Q=;
+        b=oBQUwAxQNj1m1n2QbNKXS0feZVmXDWCPnEuFAtUehHXUYbDtJVwp075zNt+R3SebqZ
+         lzimW6Me4uZlwM/r/jwQP2m/PxMpGaZ746ddu5AHFJKOQVthy2ghNXShP519aK08Ekfx
+         lsXjDp08iLVNkMQ/yIxRbBKvuH9mhhFWueyGQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lpf541/6ikEv3JJ2ul3APwZIfgPQ6unMan8v4La6FD4=;
-        b=hRn4jZC4JEHz1bKWB8KXBsCuEBPiuQMHB56L1vmdZKp4C743IKk85oz0QqCfSSUraH
-         eDDC7uN8KrSFxdFCRLA3gQW5UmFJ14Pc1d38odseCfX8rJnPJ7uAA70YeXMx+Vu9OBz6
-         18JeKb+wiLcDuzWqFjYLZ9CudbqDf2ckHcpuYOO/NJSVGyiDXsWa8T3QaYUt7MM+30Yj
-         6a80J3fzr25oJ7yL5eqYjoPHh+aNsf8sen2RN8eBOSQktpS/t86NsPAmND2bLNPCb1Gv
-         tHjhLJ56yQOPtxWOPIOjlouLTWsBQlmA486KDsBphNAf/5D/4J57O6eDFV3apB/AdhYb
-         pjLw==
-X-Gm-Message-State: APjAAAXMkKC1AHLgCsOXurRlZGNoCS4AgHsxLmBWWrWnV2KIusDOdyH0
-        fPDvoWPtSjLMILfnTTLURILiSMD/cBlMBBPsQxQ=
-X-Google-Smtp-Source: APXvYqwgv1uiWhI8ounqnl7xziQvTMjaQD4iWYsok936xxtQ3YUO0jFuO7HLV9vH7BCmji9L/qv8lpPQJxxXiA+Z+H8=
-X-Received: by 2002:a7b:c1d3:: with SMTP id a19mr5326942wmj.127.1574785687879;
- Tue, 26 Nov 2019 08:28:07 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=cti69LXQYlxjH1hcVp0rOavAITI77gvcwbc4nx5LA1Q=;
+        b=Crf8M9RV/kkYBsmS9TSUB8YZhwSF1dZ5xtw59Esm1R1Xo3PxjXpJScL1mE/uoGuCCs
+         Ooqu6/oKJcT2M0BtgArw9BPRUfQDbrMdjWUnXk4ekdMNhkROSScHgyMlX5P2krwmmT3M
+         81WPHY1S95zVDz6fDCG/V/HFqsP2Dvx33bWQGPW8whB/+3CqKxqimwLZHZeW2NFS6GOf
+         Mv/7F5lUktMNjygycknKlJfUB0yaMD+6GVjRK5lv6x7/INoRthkeTm9HSj03U4/3ooOM
+         ZYGwwof2mO4QXUUNb2zaJpdpYvBDuljSb/432X5Blg//qFwtHAbHMDO0fzfBMx/s4vIH
+         jXHA==
+X-Gm-Message-State: APjAAAVs/WJOPaxbntvCkndqHRM9ELBz0+hxbN8S5+7W9q/V5oMcz26G
+        aaHLuxFXe/itTJFf85AJUQH9ql/bi5U=
+X-Google-Smtp-Source: APXvYqxf7Qp3ZlZE0AMl7r0nTr2LwFOoDLk8ldo1+vuLrh9BeK/YOG5+aMEPFaVd3UUWMQH5/0/lIQ==
+X-Received: by 2002:a62:ee0c:: with SMTP id e12mr43428174pfi.38.1574785744608;
+        Tue, 26 Nov 2019 08:29:04 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q3sm13190478pgl.15.2019.11.26.08.29.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 08:29:03 -0800 (PST)
+Date:   Tue, 26 Nov 2019 08:29:02 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [GIT PULL] pstore update for v5.5-rc1
+Message-ID: <201911260828.9090F0A258@keescook>
 MIME-Version: 1.0
-References: <20191126003514.133692-1-jbi.octave@gmail.com>
-In-Reply-To: <20191126003514.133692-1-jbi.octave@gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 26 Nov 2019 11:27:55 -0500
-Message-ID: <CADnq5_Mvx8yNG=PUYB6s+Dwqevbx4a0gC-K7iqmNtM-shrDOLw@mail.gmail.com>
-Subject: Re: [PATCH] drm: radeon: replace 0 with NULL
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Christian Koenig <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  thanks!
+Hi Linus,
 
-Alex
+Please pull this tiny pstore update for v5.5-rc1. It contains a single
+fix for a missing "static". :)
 
-On Tue, Nov 26, 2019 at 3:15 AM Jules Irenge <jbi.octave@gmail.com> wrote:
->
-> Replace 0 with NULL to fix sparse tool  warning
->  warning: Using plain integer as NULL pointer
->
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  drivers/gpu/drm/radeon/radeon_audio.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/radeon/radeon_audio.c b/drivers/gpu/drm/radeon/radeon_audio.c
-> index b9aea5776d3d..2269cfced788 100644
-> --- a/drivers/gpu/drm/radeon/radeon_audio.c
-> +++ b/drivers/gpu/drm/radeon/radeon_audio.c
-> @@ -288,7 +288,7 @@ static void radeon_audio_interface_init(struct radeon_device *rdev)
->         } else {
->                 rdev->audio.funcs = &r600_funcs;
->                 rdev->audio.hdmi_funcs = &r600_hdmi_funcs;
-> -               rdev->audio.dp_funcs = 0;
-> +               rdev->audio.dp_funcs = NULL;
->         }
->  }
->
-> --
-> 2.23.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Thanks!
+
+-Kees
+
+The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+
+  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v5.5-rc1
+
+for you to fetch changes up to 8d82cee2f8aa8b9bc806907ecd9e1494c6e8526b:
+
+  pstore: Make pstore_choose_compression() static (2019-10-29 09:43:03 -0700)
+
+----------------------------------------------------------------
+pstore bug fix
+
+- add missing "static" (Ben Dooks)
+
+----------------------------------------------------------------
+Ben Dooks (Codethink) (1):
+      pstore: Make pstore_choose_compression() static
+
+ fs/pstore/platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+-- 
+Kees Cook
