@@ -4,251 +4,215 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA43C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081C8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEE720684
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5FD220684
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:55:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfKZTzc (ORCPT
+        id S1727336AbfKZTzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:55:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40204 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726036AbfKZTyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:54:43 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id ADBAFAE34;
-        Tue, 26 Nov 2019 19:54:39 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Hou Tao <houtao1@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, Hannes Reinecke <hare@suse.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v4 rebase 02/10] cdrom: factor out common open_for_* code
-Date:   Tue, 26 Nov 2019 20:54:21 +0100
-Message-Id: <28ea5ed3fc07adba819bbcdb9fe9e969a727b203.1574797504.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1574797504.git.msuchanek@suse.de>
-References: <cover.1574797504.git.msuchanek@suse.de>
+        Tue, 26 Nov 2019 14:55:54 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:35157 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfKZTzx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 14:55:53 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M89P1-1iVa4X058F-005Hn9; Tue, 26 Nov 2019 20:55:46 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v5.1 4/8] media: v4l2-core: split out data copy from video_usercopy
+Date:   Tue, 26 Nov 2019 20:55:38 +0100
+Message-Id: <20191126195538.4160031-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191126161824.337724-1-arnd@arndb.de>
+References: <20191126161824.337724-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:XVWRP1o8QaB5DUD89+2m/pjduCozGfCbQfT6tZiPgI3KqyGt+fL
+ s6uOTS/r7c+o1AcAKLeFhEbDpDfyc16LPV/hN8lWjTd17iLJqRMjKCnH3TgGyVpx1LH+BGy
+ fik+tSBz+fI/Dviu4kfx97OsrjaQISdAIZJe5ipcVg8VdjHrahxGnoSJj9MWoByiMFw4fG9
+ /Ao/bS/cN3OXN/dg/IwMQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+qzM3W6W4dM=:sXFMvuHQqh9zObXzv2Rxi2
+ 7lmcdzO+dlBCFXbPo62ynWwr9V01HoASvWOkVp13cy2LCMqUBG7hbggDsGojG4xX0oyZnSM9R
+ FjnMGT48qHJB/4ryeGNPJGXdgU+N3ESqQQ9s9g9oeRV83pzoUN/KdhY4mDApjRZVjfsm6yPj6
+ qldYFosTnSW1E4+m6W228eX8yOJ6zqGl3afZxBGrumRfOzBTP8l+OdTeB87/A62On/h0DzFo+
+ hr9UddmMgCIz1XA0FeVOMHdXqP3IB9buqhxjypx2+kyINZhgcJhm+NfkrDAUqf6hVXaZz9nIb
+ MHluJsIISqWJUP8gW81eYzf7F9X5XwksVuD/lpLbFPYvMr5dhROAKVK7Eix/H2cWjwmPYPFUL
+ Lg4nk7YRBsabff+fW0YEtlMZ766Sqb9xI8HFVvkzVOUmaBUa+bsb1M2XSGV8nZEp46CMZJ9TO
+ lbnRUqlQ/7bkgu/pDLloKjSpWEMKdnU3UdnWfaBM/+ynhKswSERySeeS9DB/75FKJg/7DsQi+
+ ClUk4zXOApjZeIdirl6tPxvXTdGSqMBqZavtFJI8aVwP5Ay760JpT1i+tKS5tR786qKhl+ATj
+ u3VpoJdVfM37Y9RW6sM7sP8Pq+YWDBI21KYGeBe92+5AdwNqQvIhIcSsFlBhck831xqI+3j2o
+ YPxO5TbymC2+pfBiBaoHga38lfR6HhXsyveSdJJskyCOiQWB2ZmXHUuRXGZR18Ts/EtcY2VLa
+ IwdUN0fH3AEleNmSmaegNnpPRhaD4kAcmut4qdnvefm3Z08WzoRFyiFpeLrvx1SZLFkNt8S2b
+ izrHxf4WAyP4VxysoDXLpTxwlhoKEGgE34VshR5YL8Nwy3VWW48vDmM+99TMCLfyd1GtHoIgE
+ nyYpzH/lRas10U5F3Slg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The open_for_audio and open_for_data copies are bitrotten in different
-ways already and will need to update the autoclose logic in both.
+The copy-in/out portions of video_usercopy() are about to
+get more complex, so turn then into separate functions as
+a cleanup first.
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-v2: do not add unrelated whitespace changes
-v3: fix declaration style
-v4: fix the debug message logic around closing tray
----
- drivers/cdrom/cdrom.c | 118 ++++++++++++++----------------------------
- 1 file changed, 40 insertions(+), 78 deletions(-)
+v5.1: fix error handling for positive return code
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index 2ad6b73482fe..bb32decdadf1 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -1045,13 +1045,12 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
- 	       tracks->cdi, tracks->xa);
+ drivers/media/v4l2-core/v4l2-ioctl.c | 108 +++++++++++++++++----------
+ 1 file changed, 69 insertions(+), 39 deletions(-)
+
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 4e700583659b..fe4678965e1b 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -3023,8 +3023,69 @@ static int check_array_args(unsigned int cmd, void *parg, size_t *array_size,
+ 	return ret;
  }
  
--static
--int open_for_data(struct cdrom_device_info *cdi)
-+static int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
- {
- 	int ret;
- 	const struct cdrom_device_ops *cdo = cdi->ops;
--	tracktype tracks;
--	cd_dbg(CD_OPEN, "entering open_for_data\n");
++static unsigned int video_translate_cmd(unsigned int cmd)
++{
++	return cmd;
++}
 +
-+	cd_dbg(CD_OPEN, "entering open_for_common\n");
- 	/* Check if the driver can report drive status.  If it can, we
- 	   can do clever things.  If it can't, well, we at least tried! */
- 	if (cdo->drive_status != NULL) {
-@@ -1059,49 +1058,48 @@ int open_for_data(struct cdrom_device_info *cdi)
- 		cd_dbg(CD_OPEN, "drive_status=%d\n", ret);
- 		if (ret == CDS_TRAY_OPEN) {
- 			cd_dbg(CD_OPEN, "the tray is open...\n");
--			/* can/may i close it? */
--			if (CDROM_CAN(CDC_CLOSE_TRAY) &&
--			    cdi->options & CDO_AUTO_CLOSE) {
-+			if (CDROM_CAN(CDC_CLOSE_TRAY)) {
-+				if (!(cdi->options & CDO_AUTO_CLOSE))
-+					return -ENOMEDIUM;
- 				cd_dbg(CD_OPEN, "trying to close the tray\n");
- 				ret=cdo->tray_move(cdi,0);
- 				if (ret) {
- 					cd_dbg(CD_OPEN, "bummer. tried to close the tray but failed.\n");
--					/* Ignore the error from the low
--					level driver.  We don't care why it
--					couldn't close the tray.  We only care 
--					that there is no disc in the drive, 
--					since that is the _REAL_ problem here.*/
--					ret=-ENOMEDIUM;
--					goto clean_up_and_return;
-+					return -ENOMEDIUM;
- 				}
-+				ret = cdo->drive_status(cdi, CDSL_CURRENT);
-+				if (ret == CDS_TRAY_OPEN)
-+					cd_dbg(CD_OPEN, "bummer. the tray is still not closed.\n");
-+				if (ret == CDS_NO_DISC)
-+					cd_dbg(CD_OPEN, "tray might not contain a medium\n");
- 			} else {
- 				cd_dbg(CD_OPEN, "bummer. this drive can't close the tray.\n");
--				ret=-ENOMEDIUM;
--				goto clean_up_and_return;
--			}
--			/* Ok, the door should be closed now.. Check again */
--			ret = cdo->drive_status(cdi, CDSL_CURRENT);
--			if ((ret == CDS_NO_DISC) || (ret==CDS_TRAY_OPEN)) {
--				cd_dbg(CD_OPEN, "bummer. the tray is still not closed.\n");
--				cd_dbg(CD_OPEN, "tray might not contain a medium\n");
--				ret=-ENOMEDIUM;
--				goto clean_up_and_return;
-+				return -ENOMEDIUM;
- 			}
--			cd_dbg(CD_OPEN, "the tray is now closed\n");
--		}
--		/* the door should be closed now, check for the disc */
--		ret = cdo->drive_status(cdi, CDSL_CURRENT);
--		if (ret!=CDS_DISC_OK) {
--			ret = -ENOMEDIUM;
--			goto clean_up_and_return;
- 		}
-+		if (ret != CDS_DISC_OK)
-+			return -ENOMEDIUM;
- 	}
--	cdrom_count_tracks(cdi, &tracks);
--	if (tracks.error == CDS_NO_DISC) {
-+	cdrom_count_tracks(cdi, tracks);
-+	if (tracks->error == CDS_NO_DISC) {
- 		cd_dbg(CD_OPEN, "bummer. no disc.\n");
--		ret=-ENOMEDIUM;
--		goto clean_up_and_return;
-+		return -ENOMEDIUM;
- 	}
++static int video_get_user(void __user *arg, void *parg, unsigned int cmd,
++			  bool *always_copy)
++{
++	unsigned int n = _IOC_SIZE(cmd);
++
++	if (!(_IOC_DIR(cmd) & _IOC_WRITE)) {
++		/* read-only ioctl */
++		memset(parg, 0, n);
++		return 0;
++	}
++
++	switch (cmd) {
++	default:
++		/*
++		 * In some cases, only a few fields are used as input,
++		 * i.e. when the app sets "index" and then the driver
++		 * fills in the rest of the structure for the thing
++		 * with that index.  We only need to copy up the first
++		 * non-input field.
++		 */
++		if (v4l2_is_known_ioctl(cmd)) {
++			u32 flags = v4l2_ioctls[_IOC_NR(cmd)].flags;
++
++			if (flags & INFO_FL_CLEAR_MASK)
++				n = (flags & INFO_FL_CLEAR_MASK) >> 16;
++			*always_copy = flags & INFO_FL_ALWAYS_COPY;
++		}
++
++		if (copy_from_user(parg, (void __user *)arg, n))
++			return -EFAULT;
++
++		/* zero out anything we don't copy from userspace */
++		if (n < _IOC_SIZE(cmd))
++			memset((u8 *)parg + n, 0, _IOC_SIZE(cmd) - n);
++		break;
++	}
 +
 +	return 0;
 +}
 +
-+static int open_for_data(struct cdrom_device_info *cdi)
++static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
 +{
-+	int ret;
-+	const struct cdrom_device_ops *cdo = cdi->ops;
-+	tracktype tracks;
++	if (!(_IOC_DIR(cmd) & _IOC_READ))
++		return 0;
 +
-+	cd_dbg(CD_OPEN, "entering open_for_data\n");
-+	ret = open_for_common(cdi, &tracks);
-+	if (ret)
-+		goto clean_up_and_return;
++	switch (cmd) {
++	default:
++		/*  Copy results into user buffer  */
++		if (copy_to_user(arg, parg, _IOC_SIZE(cmd)))
++			return -EFAULT;
++		break;
++	}
 +
- 	/* CD-Players which don't use O_NONBLOCK, workman
- 	 * for example, need bit CDO_CHECK_TYPE cleared! */
- 	if (tracks.data==0) {
-@@ -1208,53 +1206,17 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
- /* This code is similar to that in open_for_data. The routine is called
-    whenever an audio play operation is requested.
- */
--static int check_for_audio_disc(struct cdrom_device_info *cdi,
--				const struct cdrom_device_ops *cdo)
-+static int check_for_audio_disc(struct cdrom_device_info *cdi)
++	return 0;
++}
++
+ long
+-video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
++video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
+ 	       v4l2_kioctl func)
  {
-         int ret;
- 	tracktype tracks;
- 	cd_dbg(CD_OPEN, "entering check_for_audio_disc\n");
- 	if (!(cdi->options & CDO_CHECK_TYPE))
- 		return 0;
--	if (cdo->drive_status != NULL) {
--		ret = cdo->drive_status(cdi, CDSL_CURRENT);
--		cd_dbg(CD_OPEN, "drive_status=%d\n", ret);
--		if (ret == CDS_TRAY_OPEN) {
--			cd_dbg(CD_OPEN, "the tray is open...\n");
--			/* can/may i close it? */
--			if (CDROM_CAN(CDC_CLOSE_TRAY) &&
--			    cdi->options & CDO_AUTO_CLOSE) {
--				cd_dbg(CD_OPEN, "trying to close the tray\n");
--				ret=cdo->tray_move(cdi,0);
--				if (ret) {
--					cd_dbg(CD_OPEN, "bummer. tried to close tray but failed.\n");
--					/* Ignore the error from the low
--					level driver.  We don't care why it
--					couldn't close the tray.  We only care 
--					that there is no disc in the drive, 
--					since that is the _REAL_ problem here.*/
--					return -ENOMEDIUM;
--				}
--			} else {
--				cd_dbg(CD_OPEN, "bummer. this driver can't close the tray.\n");
--				return -ENOMEDIUM;
+ 	char	sbuf[128];
+@@ -3036,6 +3097,7 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
+ 	size_t  array_size = 0;
+ 	void __user *user_ptr = NULL;
+ 	void	**kernel_ptr = NULL;
++	unsigned int cmd = video_translate_cmd(orig_cmd);
+ 	const size_t ioc_size = _IOC_SIZE(cmd);
+ 
+ 	/*  Copy arguments into temp kernel buffer  */
+@@ -3050,37 +3112,12 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
+ 			parg = mbuf;
+ 		}
+ 
+-		err = -EFAULT;
+-		if (_IOC_DIR(cmd) & _IOC_WRITE) {
+-			unsigned int n = ioc_size;
+-
+-			/*
+-			 * In some cases, only a few fields are used as input,
+-			 * i.e. when the app sets "index" and then the driver
+-			 * fills in the rest of the structure for the thing
+-			 * with that index.  We only need to copy up the first
+-			 * non-input field.
+-			 */
+-			if (v4l2_is_known_ioctl(cmd)) {
+-				u32 flags = v4l2_ioctls[_IOC_NR(cmd)].flags;
+-
+-				if (flags & INFO_FL_CLEAR_MASK)
+-					n = (flags & INFO_FL_CLEAR_MASK) >> 16;
+-				always_copy = flags & INFO_FL_ALWAYS_COPY;
 -			}
--			/* Ok, the door should be closed now.. Check again */
--			ret = cdo->drive_status(cdi, CDSL_CURRENT);
--			if ((ret == CDS_NO_DISC) || (ret==CDS_TRAY_OPEN)) {
--				cd_dbg(CD_OPEN, "bummer. the tray is still not closed.\n");
--				return -ENOMEDIUM;
--			}	
--			if (ret!=CDS_DISC_OK) {
--				cd_dbg(CD_OPEN, "bummer. disc isn't ready.\n");
--				return -EIO;
--			}	
--			cd_dbg(CD_OPEN, "the tray is now closed\n");
--		}	
--	}
--	cdrom_count_tracks(cdi, &tracks);
--	if (tracks.error) 
--		return(tracks.error);
+-
+-			if (copy_from_user(parg, (void __user *)arg, n))
+-				goto out;
+-
+-			/* zero out anything we don't copy from userspace */
+-			if (n < ioc_size)
+-				memset((u8 *)parg + n, 0, ioc_size - n);
+-		} else {
+-			/* read-only ioctl */
+-			memset(parg, 0, ioc_size);
+-		}
+ 	}
+ 
++	err = video_get_user((void __user *)arg, parg, orig_cmd, &always_copy);
++	if (err)
++		goto out;
 +
-+	ret = open_for_common(cdi, &tracks);
-+	if (ret)
-+		return ret;
+ 	err = check_array_args(cmd, parg, &array_size, &user_ptr, &kernel_ptr);
+ 	if (err < 0)
+ 		goto out;
+@@ -3131,15 +3168,8 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
+ 		goto out;
  
- 	if (tracks.audio==0)
- 		return -EMEDIUMTYPE;
-@@ -2725,7 +2687,7 @@ static int cdrom_ioctl_play_trkind(struct cdrom_device_info *cdi,
- 	if (copy_from_user(&ti, argp, sizeof(ti)))
- 		return -EFAULT;
- 
--	ret = check_for_audio_disc(cdi, cdi->ops);
-+	ret = check_for_audio_disc(cdi);
- 	if (ret)
- 		return ret;
- 	return cdi->ops->audio_ioctl(cdi, CDROMPLAYTRKIND, &ti);
-@@ -2773,7 +2735,7 @@ static int cdrom_ioctl_audioctl(struct cdrom_device_info *cdi,
- 
- 	if (!CDROM_CAN(CDC_PLAY_AUDIO))
- 		return -ENOSYS;
--	ret = check_for_audio_disc(cdi, cdi->ops);
-+	ret = check_for_audio_disc(cdi);
- 	if (ret)
- 		return ret;
- 	return cdi->ops->audio_ioctl(cdi, cmd, NULL);
+ out_array_args:
+-	/*  Copy results into user buffer  */
+-	switch (_IOC_DIR(cmd)) {
+-	case _IOC_READ:
+-	case (_IOC_WRITE | _IOC_READ):
+-		if (copy_to_user((void __user *)arg, parg, ioc_size))
+-			err = -EFAULT;
+-		break;
+-	}
+-
++	if (video_put_user((void __user *)arg, parg, orig_cmd))
++		err = -EFAULT;
+ out:
+ 	kvfree(mbuf);
+ 	return err;
 -- 
-2.23.0
+2.20.0
 
