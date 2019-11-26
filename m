@@ -2,94 +2,219 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04742C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDE8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4012064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08F52071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbfKZNSm (ORCPT
+        id S1727408AbfKZNdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:18:42 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53586 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727088AbfKZNSl (ORCPT
+        Tue, 26 Nov 2019 08:33:14 -0500
+Received: from smtprelay0142.hostedemail.com ([216.40.44.142]:59889 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725900AbfKZNdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:18:41 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQDHEX2006080;
-        Tue, 26 Nov 2019 08:18:36 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wfjq1ecfw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 Nov 2019 08:18:36 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAQDEpPx001335;
-        Tue, 26 Nov 2019 13:18:35 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma02dal.us.ibm.com with ESMTP id 2wevd6j0gm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 Nov 2019 13:18:35 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAQDIY2c43647374
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Nov 2019 13:18:34 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B424828059;
-        Tue, 26 Nov 2019 13:18:34 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C9BB28058;
-        Tue, 26 Nov 2019 13:18:34 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 26 Nov 2019 13:18:34 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     linux-integrity@vger.kernel.org, jarkko.sakkinen@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH 0/2] Revert patches fixing probing of interrupts
-Date:   Tue, 26 Nov 2019 08:17:51 -0500
-Message-Id: <20191126131753.3424363-1-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 26 Nov 2019 08:33:14 -0500
+X-Greylist: delayed 468 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 Nov 2019 08:33:13 EST
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave04.hostedemail.com (Postfix) with ESMTP id 94C3E1802623B;
+        Tue, 26 Nov 2019 13:25:25 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 5A9C41800BEAB;
+        Tue, 26 Nov 2019 13:25:24 +0000 (UTC)
+X-Session-Marker: 7368656140736865616C6576792E636F6D
+X-HE-Tag: actor99_69506a9204f19
+X-Filterd-Recvd-Size: 6817
+Received: from localhost (unknown [75.112.159.170])
+        (Authenticated sender: shea@shealevy.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 26 Nov 2019 13:25:23 +0000 (UTC)
+From:   Shea Levy <shea@shealevy.com>
+To:     =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Cc:     linux-riscv@lists.infradead.org, albert@sifive.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH] RISC-V: Load modules within relative jump range of the kernel text.
+In-Reply-To: <CAJ+HfNhoJnGon-L9OwSfrMbmUt1ZPBB_=A8ZFrg1CgEq3ua-Sg@mail.gmail.com>
+References: <mhng-0a2f9574-9b23-4f26-ae76-18ed7f2c8533@palmer-si-x1c4> <87d0yoizv9.fsf@xps13.shealevy.com> <87zi19gjof.fsf@xps13.shealevy.com> <CAJ+HfNhoJnGon-L9OwSfrMbmUt1ZPBB_=A8ZFrg1CgEq3ua-Sg@mail.gmail.com>
+Date:   Tue, 26 Nov 2019 08:25:21 -0500
+Message-ID: <87o8wyojlq.fsf@xps13.shealevy.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-26_03:2019-11-26,2019-11-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- lowpriorityscore=0 phishscore=0 adultscore=0 mlxscore=0 bulkscore=0
- impostorscore=0 mlxlogscore=677 malwarescore=0 suspectscore=0
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1911260119
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Revert the patches that were fixing the probing of interrupts due
-to reports of interrupt stroms on some systems
+Hi Bj=C3=B6rn,
 
-The following Linux kernel versions are affected:
+Unfortunately I'm not sure what more is needed to get this in, and I'm
+in the middle of a move and won't have easy access to my RISC-V setup
+for testing. I don't think you can count on me for this one.
 
-- 5.4
-- 5.3.4 and later
-- 5.2.19 and later
+Thanks,
+Shea
 
-Stefan Berger (2):
-  tpm: Revert "tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for
-    interrupts"
-  tpm: Revert "tpm_tis_core: Turn on the TPM before probing IRQ's"
+Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com> writes:
 
- drivers/char/tpm/tpm_tis_core.c | 3 ---
- 1 file changed, 3 deletions(-)
+> On Wed, 9 May 2018 at 13:22, Shea Levy <shea@shealevy.com> wrote:
+>>
+>> Hi Palmer,
+>>
+>> Shea Levy <shea@shealevy.com> writes:
+>>
+>> > Hi Palmer,
+>> >
+>> > Palmer Dabbelt <palmer@sifive.com> writes:
+>> >
+>> >> On Sun, 22 Apr 2018 05:53:56 PDT (-0700), shea@shealevy.com wrote:
+>> >>> Hi Palmer,
+>> >>>
+>> >>> Shea Levy <shea@shealevy.com> writes:
+>> >>>
+>> >>>> Signed-off-by: Shea Levy <shea@shealevy.com>
+>> >>>> ---
+>> >>>>
+>> >>>> Note that this patch worked in my old modules patchset and seems to=
+ be
+>> >>>> working now, but my kernel boot locks up on top of
+>> >>>> riscv-for-linus-4.17-mw0 and I don't know if it's due to this patch=
+ or
+>> >>>> something else that's changed in the mean time.
+>> >>>>
+>> >>>> ---
+>> >>>>  arch/riscv/include/asm/pgtable.h |  9 +++++++++
+>> >>>>  arch/riscv/kernel/module.c       | 11 +++++++++++
+>> >>>>  2 files changed, 20 insertions(+)
+>> >>>>
+>> >>>> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/=
+asm/pgtable.h
+>> >>>> index 16301966d65b..b08ded13364a 100644
+>> >>>> --- a/arch/riscv/include/asm/pgtable.h
+>> >>>> +++ b/arch/riscv/include/asm/pgtable.h
+>> >>>> @@ -25,6 +25,7 @@
+>> >>>>  #include <asm/page.h>
+>> >>>>  #include <asm/tlbflush.h>
+>> >>>>  #include <linux/mm_types.h>
+>> >>>> +#include <linux/sizes.h>
+>> >>>>
+>> >>>>  #ifdef CONFIG_64BIT
+>> >>>>  #include <asm/pgtable-64.h>
+>> >>>> @@ -425,6 +426,14 @@ static inline void pgtable_cache_init(void)
+>> >>>>  #define TASK_SIZE VMALLOC_START
+>> >>>>  #endif
+>> >>>>
+>> >>>> +/*
+>> >>>> + * The module space lives between the addresses given by TASK_SIZE
+>> >>>> + * and PAGE_OFFSET - it must be within 2G of the kernel text.
+>> >>>> + */
+>> >>>> +#define MODULES_SIZE              (SZ_128M)
+>> >>>> +#define MODULES_VADDR             (PAGE_OFFSET - MODULES_SIZE)
+>> >>>> +#define MODULES_END               (VMALLOC_END)
+>> >>>> +
+>> >>>>  #include <asm-generic/pgtable.h>
+>> >>>>
+>> >>>>  #endif /* !__ASSEMBLY__ */
+>> >>>> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
+>> >>>> index 5dddba301d0a..1b382c7de095 100644
+>> >>>> --- a/arch/riscv/kernel/module.c
+>> >>>> +++ b/arch/riscv/kernel/module.c
+>> >>>> @@ -16,6 +16,8 @@
+>> >>>>  #include <linux/err.h>
+>> >>>>  #include <linux/errno.h>
+>> >>>>  #include <linux/moduleloader.h>
+>> >>>> +#include <linux/vmalloc.h>
+>> >>>> +#include <asm/pgtable.h>
+>> >>>>
+>> >>>>  static int apply_r_riscv_64_rela(struct module *me, u32 *location,=
+ Elf_Addr v)
+>> >>>>  {
+>> >>>> @@ -382,3 +384,12 @@ int apply_relocate_add(Elf_Shdr *sechdrs, cons=
+t char *strtab,
+>> >>>>
+>> >>>>    return 0;
+>> >>>>  }
+>> >>>> +
+>> >>>> +void *module_alloc(unsigned long size)
+>> >>>> +{
+>> >>>> +  return __vmalloc_node_range(size, 1, MODULES_VADDR,
+>> >>>> +                              MODULES_END, GFP_KERNEL,
+>> >>>> +                              PAGE_KERNEL_EXEC, 0,
+>> >>>> +                              NUMA_NO_NODE,
+>> >>>> +                              __builtin_return_address(0));
+>> >>>> +}
+>> >>>> --
+>> >>>> 2.16.2
+>> >>>
+>> >>> Any thoughts on this?
+>> >>
+>> >> The concept looks good, but does this actually keep the modules withi=
+n 2GiB of
+>> >> the text if PAGE_OFFSET is large?
+>> >
+>> > It's been some time since I wrote this, but I thought PAGE_OFFSET was
+>> > where the kernel text *started*? So unless the text itself is bigger
+>> > than 2G - 128 M, in which case we're SOL anyway, it seems like this
+>> > should work. Is there something better we can do, without a large memo=
+ry
+>> > model?
+>> >
+>> > Thanks,
+>> > Shea
+>>
+>> Any further thoughts on this?
+>>
+>> Thanks,
+>> Shea
+>
+> Shea,
+>
+> Waking up the dead (threads)!
+>
+> I'm hacking on call improvements for the RISC-V BPF JIT.
+> module_alloc() is used under the hood of bpf_jit_binary_alloc(), which
+> in turn is used to allocate the JIT image. The current JIT
+> implementation has to to "load imm64 + jalr" to call kernel syms,
+> since the relative offset is >32b. With your patch, I can use regular
+> jal/auipc+jalr instead. IOW, it would be great if it could be merged.
+> ;-) I'd prefer not having the patch in my BPF JIT series, since that
+> will go through a different tree than Paul's RV one.
+>
+> Wdyt about brushing of the dust of the patch, and re-send it?
+>
+>
+> Thanks!
+> Bj=C3=B6rn
 
--- 
-2.14.5
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE6ESKvwKkwnxgMLnaXAvWlX2G/icFAl3dJ8EACgkQXAvWlX2G
+/iegUw//RFoBh407tMvoG6prgim8nj0qW2gGKFCKiCAaVK0h2XP/oQmMFT9LKQf+
+ZjzdWx6TStG29g+JPBnHPgdIaXHDmFB6DK4z4rZkBgufog1k6kkIBsWaEu6q7/lP
+cOX31sGO+r4yljFg2f5KLQV0qkyd1sFFDxNwLTjwBLPV3PsGw2fjfMxCiLYgPg9N
+G1mcp/7PscyZErrgaysfBUOZ2sYyhjM9xFh8BJxq3vIVXEqf94zMgHD63mgVC1x8
+gcv/3Fbe1pN/nXr7otX0XR16h04xIOojrnKnuZlDPqqppv4ywao4yci7SYQvM0lL
+xeuy7nTdu7CGNd+o8icrvQia8K5Hcbb5OqeESRKUg7z+TrftdK1r5Khny+fLIa1r
+QqK+at8W2t4JDkli+45IkL9KYPkPkdf1I/xEvksADLOjXFYKL1bwYAE7iyPdds37
+uvXqWGOdio4pOyq34UM95AdDjbG0CrO4aTeTQBSDGTcSwfEPoVpPrF5zIsqQtmHr
+VULez79njycJMJaIsIABp2gpkFM5GvY3iFPudqbtcHOs/z2vTO/zVE8MwTP/AhAV
+l8PZ2dsD4csFAk0IHLoqLw4LERAtA9sT0veDJEcU2ikOwHe5a+6Br3zU7hvjNkR9
+OOLJHeVePytK4GR3yJjDjZ1/B+9ihhOeKfqPefCLV3Dht7vmUAk=
+=thWq
+-----END PGP SIGNATURE-----
+--=-=-=--
