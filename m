@@ -2,127 +2,195 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82B2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E08DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB36A20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43FE2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyhC0a7W"
+	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="yj/42p8M";
+	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="UM3FQllS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfKZJm4 (ORCPT
+        id S1727653AbfKZJnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:42:56 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38220 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727275AbfKZJm4 (ORCPT
+        Tue, 26 Nov 2019 04:43:05 -0500
+Received: from mx07-00252a01.pphosted.com ([62.209.51.214]:34284 "EHLO
+        mx07-00252a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727275AbfKZJnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:42:56 -0500
-Received: by mail-ed1-f67.google.com with SMTP id s10so15705118edi.5;
-        Tue, 26 Nov 2019 01:42:54 -0800 (PST)
+        Tue, 26 Nov 2019 04:43:05 -0500
+X-Greylist: delayed 353 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 Nov 2019 04:43:03 EST
+Received: from pps.filterd (m0102628.ppops.net [127.0.0.1])
+        by mx07-00252a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQ9ZCK5012387
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:37:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=raspberrypi.org; h=subject : to :
+ cc : references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp;
+ bh=od7NtWv8A1ft46ESIAn5eCrlELpL9JojAJd+KINECi4=;
+ b=yj/42p8M5m7IE8Ht/7o0/YFharUMGlOYox7IFIQoFEp+X0CJKnG6o7cszwmadDYA+gBI
+ NaezpF3RrC+VBxFBOuhSX3zMBUm192U7kmMPxO8RKjuHAK2asOaOAVTJeSwGfbRXtSXc
+ NW9eZkhwWmF3e6914M2B745l0ybdIHZZNL+vWWVUD+D7geHfL7Ox3jKf+61xpSryRn+I
+ is7l8ZgXclE9+jxA4zJ1w3xi5DAfJYLucdrQj0y6Q+0ot8pcDJj1VLe73AfXUtsUweE+
+ lNv9yXNw3q2tXzXlix8BsUBbJwya9M8NOg03ODuXEHFQ86mdKaQaT4pNkKZw3YIAuHiR Jw== 
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        by mx07-00252a01.pphosted.com with ESMTP id 2weu29hee8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK)
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:37:09 +0000
+Received: by mail-wm1-f71.google.com with SMTP id z3so887070wmk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 01:37:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9bfdvk/BCYnBIN3lkt7QnRugpNhrBl4MqK4VJoegeaQ=;
-        b=JyhC0a7WITO/qRb5QCbT71KZ6Nm+N7oCBp7ZhwJpZGQkhllijWbZ6ViWR2QQQy9XwR
-         nP6bpB41eJiu4660U1Xgm+2ouCZH7fON7EMPTE2Rz/b13dyL4o3spO6XvGOAzFhGI/OS
-         36+wXRGSTwQwBZ5wrpNCXFT7xAYUiTdFauMuJA2Q83O9Tt1x/UB+vLysF9rUpHIu+LTb
-         W5alaHEXz6iWYRvIJdyMVK9Z3Ot9ulPOg4S1szYmRh2wOH37hDgnANDUtqug9I+M8b9E
-         cssCeOvVSTJYOcGVkKw5b/y7Gdm1MK8zn5xpw2k67Jkvh+Vj53cV7WGR8CX8kPRiZcSr
-         azpg==
+        d=raspberrypi.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=od7NtWv8A1ft46ESIAn5eCrlELpL9JojAJd+KINECi4=;
+        b=UM3FQllSTPplmabTC7jU+LvD7cb2Fa240ifZRDTJXFxChlEsJNHcaR/AfbBSmXRdnz
+         2eiiq9qJPnT7Bm3WqcNbdo8c4vDT5hRaMcQ8ASCvNqNXVLwg/s1NqhwXvB53f2NG9AmT
+         lVVGP/N/bHbHh3OgwN8MRxsK7oMBDUm+LtHpx8j3LDajq+Xk2K7AjT8aqk6HZn0WacaN
+         56T4do1RvngA5k9avohIS2oeWpX1pZvBfn7UJ00yurrTqZ7o88io8MPygmKqimVdQo0y
+         OtpPjyMbh16nPQzTN8uBuuXF+zqug9rEoU7H0q3piiYbiYM4EcyUjpEUGzCPnfstzE5E
+         0+BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9bfdvk/BCYnBIN3lkt7QnRugpNhrBl4MqK4VJoegeaQ=;
-        b=S0h2zo2PU+gxNZLZUdjl5MaTxZt6YKIt+2A3fPCfuRwITemSaBGA9ul+0fJWN1Wv+s
-         z02+rJKBGfYUXLjLcWQWN/og2eEZLGC0pLvNFnbDRAu1W4XajE/3DKwOhD+N3wPyS/5n
-         PqYnv32RsOsIT+7BvH4pvpA5z5jKeZrOloYGEkPOus3KZg4x/5Zf9uJSttWmpK0EOsvO
-         Kad+pBPEmPqO1ACRctEt2QJVqi+FiVKgPj6hyY2xIhZeZZJPfAHgTyTF3xyGuZrPaY1/
-         peK3XQ2nZIYCAo6SyMHcS8fp6gBkeMpVor/RI5gxkt8z5VVLgJmnoEpPZouuQuB/qlzR
-         fuSg==
-X-Gm-Message-State: APjAAAWQ5cW8TJubgYvmXEVcp+mDuzEiNt7Y8kE2/DmGhcil1j2nsTnK
-        GNCRH6Vc2qbY56Mud5O6YlrTni1WgOpw690gDHk=
-X-Google-Smtp-Source: APXvYqyks7TiuCgvDEvHQo/6h3yAGojsPacxZkIOZyOWkCRlk0kc3juTtgdDjeLpfULEVNal73vtemHWYNM5TPheU3U=
-X-Received: by 2002:a17:906:4910:: with SMTP id b16mr41915513ejq.133.1574761374033;
- Tue, 26 Nov 2019 01:42:54 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=od7NtWv8A1ft46ESIAn5eCrlELpL9JojAJd+KINECi4=;
+        b=GY7wY5Vmhi2gAmNjwD8KJGQmyAPJUh9R8JVNOlSiHaXurP06o29hA0KE+/ktANXJCF
+         uDKLDENe5OFGCqdC5gj8dKAb9LpmcqdqiVSDnKHow6qTLKgP3954UlyustyYLNlos9uf
+         M5j93/qSU6CrTDW/QoFGMSGWbhFO3HqXWL9cVgvzj5LjNrNg7k6mFwyED+BjfN5DtQJi
+         4z7IkdKaUZ7SJPKaDGzZyHgix7PRbALh8fpSxCPoibR2gpiv0HAjHi/IjMrzhDszya4B
+         tYNQ6wWpkD+NUMp662ZWtbjMH1ud3CzTTH3K6/tfxyiEyQJOM8lGYZgbaZrlibLOIIFw
+         DkDg==
+X-Gm-Message-State: APjAAAW+gtT4+ud5Kn3KAcmDV6ZRlZZA77RpMoxnRV7EUqdVQ49EDquc
+        h0B6e0WUcFh6zw8w4IsVIIjUV99hbmUYGFbDF2GYJTlZXUTs/g3BQdCuoaCtPJDzOG9yxMiDARJ
+        JZnhtcXPqkBedY2tFkdwFFTB8
+X-Received: by 2002:a5d:4946:: with SMTP id r6mr28487133wrs.155.1574761028347;
+        Tue, 26 Nov 2019 01:37:08 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwBt2FmyEREb7ZvdP/DpQYA/wjkntFQB86TPOEh4oNOeIIRXcU33m0OX9mwck9d8Gn6k8YdQg==
+X-Received: by 2002:a5d:4946:: with SMTP id r6mr28487093wrs.155.1574761027986;
+        Tue, 26 Nov 2019 01:37:07 -0800 (PST)
+Received: from ?IPv6:2a00:1098:3142:14:f57f:65b0:b998:e2ca? ([2a00:1098:3142:14:f57f:65b0:b998:e2ca])
+        by smtp.gmail.com with ESMTPSA id e16sm2372706wme.35.2019.11.26.01.37.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2019 01:37:07 -0800 (PST)
+Subject: Re: [PATCH v3 3/7] ARM: dts: bcm2711: Enable PCIe controller
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
+Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, jeremy.linton@arm.com,
+        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+ <20191126091946.7970-4-nsaenzjulienne@suse.de>
+From:   Phil Elwell <phil@raspberrypi.org>
+Message-ID: <ede90a60-8194-4035-01c2-2673f4a8cfe7@raspberrypi.org>
+Date:   Tue, 26 Nov 2019 09:37:08 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191126093008.19742-1-o.rempel@pengutronix.de>
-In-Reply-To: <20191126093008.19742-1-o.rempel@pengutronix.de>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 26 Nov 2019 11:42:42 +0200
-Message-ID: <CA+h21hrs0Fo3-xS4GNwyFhJmbk+_xeY+WxondH06GWbH5PJFYg@mail.gmail.com>
-Subject: Re: [PATCH v2] net: dsa: sja1105: print info about probed chip only
- after everything was done.
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     mkl@pengutronix.de, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, david@protonic.nl
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191126091946.7970-4-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-26_01:2019-11-26,2019-11-26 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleksij,
+Hi Nicolas,
 
-On Tue, 26 Nov 2019 at 11:30, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
->
-> Currently we will get "Probed switch chip" notification multiple times
-> if first probe failed by some reason. To avoid this confusing notifications move
-> dev_info to the end of probe.
->
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+On 26/11/2019 09:19, Nicolas Saenz Julienne wrote:
+> This enables bcm2711's PCIe bus, which is hardwired to a VIA
+> Technologies XHCI USB 3.0 controller.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> 
 > ---
-
-The merge window just opened yesterday:
-http://vger.kernel.org/~davem/net-next.html.
-Come back in 2 weeks with this patch for net-next.
-
->  drivers/net/dsa/sja1105/sja1105_main.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-> index aa140662c7c2..34544b1c30dc 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_main.c
-> +++ b/drivers/net/dsa/sja1105/sja1105_main.c
-> @@ -2191,8 +2191,6 @@ static int sja1105_probe(struct spi_device *spi)
->                 return rc;
->         }
->
-> -       dev_info(dev, "Probed switch chip: %s\n", priv->info->name);
-> -
->         ds = dsa_switch_alloc(dev, SJA1105_NUM_PORTS);
->         if (!ds)
->                 return -ENOMEM;
-> @@ -2218,7 +2216,13 @@ static int sja1105_probe(struct spi_device *spi)
->
->         sja1105_tas_setup(ds);
->
-> -       return dsa_register_switch(priv->ds);
-> +       rc = dsa_register_switch(priv->ds);
-> +       if (rc)
-> +               return rc;
+> 
+> This will likely need a rebase once the RPi GENET patches land.
+> 
+> Changes since v2:
+>    - Remove unused interrupt-map
+>    - correct dma-ranges to it's full size, non power of 2 bus DMA
+>      constraints now supported in linux-next[1]
+>    - add device_type
+>    - rename alias from pcie_0 to pcie0
+> 
+> Changes since v1:
+>    - remove linux,pci-domain
+> 
+> [1] https://lkml.org/lkml/2019/11/21/235
+> 
+>   arch/arm/boot/dts/bcm2711.dtsi | 41 ++++++++++++++++++++++++++++++++++
+>   1 file changed, 41 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+> index 667658497898..2e121fc8b3d0 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -288,6 +288,47 @@ IRQ_TYPE_LEVEL_LOW)>,
+>   		arm,cpu-registers-not-fw-configured;
+>   	};
+>   
+> +	scb {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
 > +
-> +       dev_info(dev, "Probed switch chip: %s\n", priv->info->name);
+> +		ranges = <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
+> +			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
 > +
-> +       return 0;
->  }
->
->  static int sja1105_remove(struct spi_device *spi)
-> --
-> 2.24.0
->
+> +		pcie0: pcie@7d500000 {
+> +			compatible = "brcm,bcm2711-pcie";
+> +			reg = <0x0 0x7d500000 0x9310>;
+> +			device_type = "pci";
+> +			#address-cells = <3>;
+> +			#interrupt-cells = <1>;
+> +			#size-cells = <2>;
+> +			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "pcie", "msi";
+> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +			interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143
+> +							IRQ_TYPE_LEVEL_HIGH>;
+> +			msi-controller;
+> +			msi-parent = <&pcie0>;
+> +
+> +			ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000
+> +				  0x0 0x04000000>;
+> +			/*
+> +			 * The wrapper around the PCIe block has a bug
+> +			 * preventing it from accessing beyond the first 3GB of
+> +			 * memory. As the bus DMA mask is rounded up to the
+> +			 * closest power of two of the dma-range size, we're
+> +			 * forced to set the limit at 2GB. This can be
+> +			 * harmlessly changed in the future once the DMA code
+> +			 * handles non power of two DMA limits.
+> +			 */
+> +			dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000
+> +				      0x0 0xc0000000>;
 
-Thanks,
--Vladimir
+The comment doesn't match the data here - I think for now the size field 
+needs to be reduced to 2GB to match the comment.
+
+Phil
+
+> +			brcm,enable-ssc;
+> +		};
+> +	};
+> +
+>   	cpus: cpus {
+>   		#address-cells = <1>;
+>   		#size-cells = <0>;
+> 
