@@ -2,155 +2,64 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97685C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ED8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7623820722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB1F20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:30:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rw+WNrhI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfKZO2U (ORCPT
+        id S1728096AbfKZOaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 09:28:20 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52068 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfKZO2U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 09:28:20 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: alyssa)
-        with ESMTPSA id CBA622639F4
-Date:   Tue, 26 Nov 2019 09:28:14 -0500
-From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/panfrost: devfreq: Round frequencies to OPPs
-Message-ID: <20191126142814.GA6151@kevin>
-References: <20191118173002.32015-1-steven.price@arm.com>
+        Tue, 26 Nov 2019 09:30:21 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:56604 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbfKZOaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 09:30:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=9LohR98h7eSnbtOjih5buv5szdpX2GUI8naC1HscHjw=; b=rw+WNrhIljSW4nQOJHevd6Xn92
+        AHiqQUiOji33SYte/aZOoBfrw0XK+xwXdtuTm9dEjQLL3tAzzEeNRNH3adS8x4/u/Qf/YhMgCfo8Z
+        T6Af7wJxGxwAyauS5SJ0T0SW+Fb9thcbSrNyYDPfIOMnCGjeJSboCJYhTfts5/WMp0kc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iZbqz-0003UL-Ak; Tue, 26 Nov 2019 15:30:09 +0100
+Date:   Tue, 26 Nov 2019 15:30:09 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Milind Parab <mparab@cadence.com>
+Cc:     antoine.tenart@bootlin.com, nicolas.ferre@microchip.com,
+        davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux-kernel@vger.kernel.org,
+        dkangude@cadence.com, pthombar@cadence.com
+Subject: Re: [PATCH 1/3] net: macb: fix for fixed-link mode
+Message-ID: <20191126143009.GO6602@lunn.ch>
+References: <1574759354-102696-1-git-send-email-mparab@cadence.com>
+ <1574759380-102986-1-git-send-email-mparab@cadence.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191118173002.32015-1-steven.price@arm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1574759380-102986-1-git-send-email-mparab@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 26, 2019 at 09:09:40AM +0000, Milind Parab wrote:
+> This patch fix the issue with fixed link mode in macb.
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Milind.
 
-Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+What issue is it fixing? Please give a good description here, so we
+can understand what/why the patch exists.
 
-On Mon, Nov 18, 2019 at 05:30:02PM +0000, Steven Price wrote:
-> Currently when setting a frequency in panfrost_devfreq_target the
-> returned frequency is the actual frequency that the clock driver reports
-> (the return of clk_get_rate()). However, where the provided OPPs don't
-> precisely match the frequencies that the clock actually achieves devfreq
-> will then complain (repeatedly):
->=20
->   devfreq devfreq0: Couldn't update frequency transition information.
->=20
-> To avoid this change panfrost_devfreq_target() to fetch the opp using
-> devfreq_recommened_opp() and not actually query the clock for the
-> frequency.
->=20
-> A similar problem exists with panfrost_devfreq_get_cur_freq(), but in
-> this case because the function is optional we can just remove it and
-> devfreq will fall back to using the previously set frequency.
->=20
-> Fixes: 221bc77914cb ("drm/panfrost: Use generic code for devfreq")
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  drivers/gpu/drm/panfrost/panfrost_devfreq.c | 19 ++++++-------------
->  1 file changed, 6 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/dr=
-m/panfrost/panfrost_devfreq.c
-> index 4c4e8a30a1ac..536ba93b0f46 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> @@ -18,15 +18,18 @@ static void panfrost_devfreq_update_utilization(struc=
-t panfrost_device *pfdev);
->  static int panfrost_devfreq_target(struct device *dev, unsigned long *fr=
-eq,
->  				   u32 flags)
->  {
-> -	struct panfrost_device *pfdev =3D dev_get_drvdata(dev);
-> +	struct dev_pm_opp *opp;
->  	int err;
-> =20
-> +	opp =3D devfreq_recommended_opp(dev, freq, flags);
-> +	if (IS_ERR(opp))
-> +		return PTR_ERR(opp);
-> +	dev_pm_opp_put(opp);
-> +
->  	err =3D dev_pm_opp_set_rate(dev, *freq);
->  	if (err)
->  		return err;
-> =20
-> -	*freq =3D clk_get_rate(pfdev->clock);
-> -
->  	return 0;
->  }
-> =20
-> @@ -60,20 +63,10 @@ static int panfrost_devfreq_get_dev_status(struct dev=
-ice *dev,
->  	return 0;
->  }
-> =20
-> -static int panfrost_devfreq_get_cur_freq(struct device *dev, unsigned lo=
-ng *freq)
-> -{
-> -	struct panfrost_device *pfdev =3D platform_get_drvdata(to_platform_devi=
-ce(dev));
-> -
-> -	*freq =3D clk_get_rate(pfdev->clock);
-> -
-> -	return 0;
-> -}
-> -
->  static struct devfreq_dev_profile panfrost_devfreq_profile =3D {
->  	.polling_ms =3D 50, /* ~3 frames */
->  	.target =3D panfrost_devfreq_target,
->  	.get_dev_status =3D panfrost_devfreq_get_dev_status,
-> -	.get_cur_freq =3D panfrost_devfreq_get_cur_freq,
->  };
-> =20
->  int panfrost_devfreq_init(struct panfrost_device *pfdev)
-> --=20
-> 2.20.1
->=20
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl3dNngACgkQ/v5QWgr1
-WA267g/+NDmG6aj6K2DK0lkeUq6M/3casflPkv+adupyR8L/SuhJ+U+76a3XhqVI
-xAn+eYwpqNHXeiSW3vTYWXVZ/nwsZ0SRbEZmdDKfuXmYiP1Wkt8HOxgEIPDgyI9r
-5baXr3yXckq/aUZ+vPA8U6vw/qHAWaycIHmcOg+mUMXYPuFHJH4o2kK/wZywJAZc
-/nt+XCuwhXS6Eur2kNHWo6SCYXZlAxCPEzRqpjupc1R3W0EnXJvNH1eX+2tF1W08
-vO093pttECSnibV7NQHIKLfREyoybBWBJamocRTBuFlpn0Va5r3Y8Dw+CX4xZ+js
-oZTRb/gLZ4WFCYoMLQUUwO+D+vqVu0BQDrxL03gMS2qGDAJ0gNQWVfJP7nwBpBzU
-N0s7gMIGYx4m9veC3B4CVb8szQrpkD3KoXLfZycm+EtZx2afqbvDrP7lXDfuE3ma
-Vw/7H2Dg/8kZKsEPCLIHszWlJuOsbHAFmf4hUlLp6tsFJRwb891S05fWKtqTa8UX
-qLsakAu4GlJu2OmVPo1kCHLJklZTVwWGETxXObpsELF/fA2Bq/E1Zeq3Veib3P0A
-RcR2AIt0QN80shPCfzWY0h2WZcQVrV+uRXuUusp5qOxA0WtdqAhPjlZ0fYOwZE/9
-UvEbUBWFcOa6qrVVa4IvvklKZ62DL4qCrV200mc3hE5c7Td8xhg=
-=liIu
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
+    Andrew
