@@ -2,92 +2,75 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DD4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4036E2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA0420748
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574762588;
+	bh=xGCbmWzbnll5u+eUEBhlLq9PaIZXUzSktU0Zep/ysCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U1AePf6Nc1+SYoIShG49wJKd34/EOM6dL5HTsUzoJ/z7giUQNEGfji2Z5PJXw5/B3
+	 eYdUzm02h1qbYOwm331V3krsj5auGGcNaCS4ME7n8lp4+GiX3nYEW6+gda5yiD16Fq
+	 IF2nUjBKb/7oCLrDbhrYhXqQRxved1SZd3rH4WYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfKZKCS (ORCPT
+        id S1727756AbfKZKDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 05:02:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51762 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727629AbfKZKCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 05:02:18 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5F9B7B38D;
-        Tue, 26 Nov 2019 10:02:16 +0000 (UTC)
-Subject: Re: [PATCH v2 2/4] xen-pcifront: Align address of flags to size of
- unsigned long
-To:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-References: <1574710984-208305-1-git-send-email-fenghua.yu@intel.com>
- <1574710984-208305-3-git-send-email-fenghua.yu@intel.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <e236e8fe-3a81-e17a-2286-228bfde9919a@suse.com>
-Date:   Tue, 26 Nov 2019 11:02:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 26 Nov 2019 05:03:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727624AbfKZKDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 05:03:07 -0500
+Received: from localhost (unknown [84.241.194.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36FB12075C;
+        Tue, 26 Nov 2019 10:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574762586;
+        bh=xGCbmWzbnll5u+eUEBhlLq9PaIZXUzSktU0Zep/ysCU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SXOP4i52ZwwOLyarWsp60kVhR7XlHhafZ0YPjr+mzOBtFKXxSDPCMtUPO+SulJrkd
+         COeHeDzuJwgYFLw3eOQoKyYKHU0owLjj2RmzqeedmFZMcy6aXNpUrBn4LH+Vyd/1h1
+         pQTXEpfSVzdjoNfZq5I+H6CFKkw6/YiDhqB9z79k=
+Date:   Tue, 26 Nov 2019 10:57:38 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     kc27041980@gmail.com
+Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] block/drbd/drbd_debugfs.c: Protect &connection->kref
+ with resource->req_lock
+Message-ID: <20191126095738.GA1415341@kroah.com>
+References: <1574742858-23131-1-git-send-email-KC17041980@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1574710984-208305-3-git-send-email-fenghua.yu@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574742858-23131-1-git-send-email-KC17041980@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.11.19 20:43, Fenghua Yu wrote:
-> The address of "flags" is passed to atomic bitops which require the
-> address is aligned to size of unsigned long.
+On Tue, Nov 26, 2019 at 10:04:18AM +0530, kc27041980@gmail.com wrote:
+> From: KC27041980 <kc27041980@gmail.com>
 > 
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> ---
->   include/xen/interface/io/pciif.h | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
+> Protect &connection->kref by moving it under resource->req_lock.
 > 
-> diff --git a/include/xen/interface/io/pciif.h b/include/xen/interface/io/pciif.h
-> index d9922ae36eb5..639d5fb484a3 100644
-> --- a/include/xen/interface/io/pciif.h
-> +++ b/include/xen/interface/io/pciif.h
-> @@ -103,8 +103,11 @@ struct xen_pcie_aer_op {
->   	uint32_t devfn;
->   };
->   struct xen_pci_sharedinfo {
-> -	/* flags - XEN_PCIF_* */
-> -	uint32_t flags;
-> +	/* flags - XEN_PCIF_*. Force alignment for atomic bit operations. */
-> +	union {
-> +		uint32_t	flags;
-> +		unsigned long	flags_alignment;
-> +	};
->   	struct xen_pci_op op;
->   	struct xen_pcie_aer_op aer_op;
->   };
-> 
+> Signed-off-by: KC27041980 <kc27041980@gmail.com>
 
-NAK.
+We need a real name here, something you sign legal documents with.
+Please see the in-kernel documentation about submitting patches for all
+of the details.
 
-This is an interface definition for communication between Xen dom0 and
-guests via shared memory. It can't be changed.
+thanks,
 
-BTW: you should Cc: the maintainers for the files you are modifying.
-
-
-Juergen
+gre gk-h
