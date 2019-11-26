@@ -2,161 +2,150 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA548C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED895C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D68207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8477207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:28:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijh+tzmr"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="FgztwZwN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfKZCRt (ORCPT
+        id S1727263AbfKZC2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 21:17:49 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:37611 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfKZCRt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 21:17:49 -0500
-Received: by mail-qk1-f193.google.com with SMTP id e187so14810072qkf.4;
-        Mon, 25 Nov 2019 18:17:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lum5yvTwyxlmtQGtde1ND4PsuRW3bzOGy1CfGppZ++Y=;
-        b=ijh+tzmrex64seYZum553uDwhyi58v45cTa6vQE8qsQubHFn3IhgU0Pa9JDSwwE2GK
-         dPZHLjo+37eyOaFKepsFjIhKy8pBNRSqqFOOrtyBnaSRbTIlNjqQThRoaGVJT3IS2YDK
-         InQO385PaBlMTynVqRcq28Uf/MC32cDyaU4z0AgEMEMBVK0FVo5T62HLIhU1Hjj04Yao
-         btPRjLJJCxd1FixCd903VqsGZj+NTvOQZmQNAB42obmLj0fLIpITlGq2fIen/6nnks4C
-         FOIpWzaMRixzaFeXYsYlxu7V/S7lqD2m2VVgxOwfxR/yKy+vDcygXOuQ40FNVDNx2084
-         IPCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lum5yvTwyxlmtQGtde1ND4PsuRW3bzOGy1CfGppZ++Y=;
-        b=hljxiIkQPBRXT6UwlDz9U0DZqvKuWgw195M+knwDykBTviT+raDyAwnmg02C3o1GMB
-         hit8CNpURHrUr4AUDf5rhsMIoeo84lqgQOEEu0mD9wO4s8KqSGjoe8CIpcMT8mn0AfKF
-         VvBkmNjRsYcjA12N1Lq0+twttKTx4XyNL3cwr5DnekqG2Yv7D/mlkyWCrI3thWMSuaxW
-         Ja/u3npP8pEfbHdOXBloxw4Pc+kFkRfBY/Tot6tODGyClesb/TnIm2O03UeP+I1DrDeF
-         rYG5esE/x1FUE7Au95OLa3+RTwdurSnHSHlTDhZx/gQkrVIYt0+Ll/TPTc8EhhgFaXic
-         126A==
-X-Gm-Message-State: APjAAAWdQBWUMHAaw9H9qrq8Ywj4PqjFVcZdClbXkaiRNGK2zrwi72+f
-        urcci0QjSXZtbwhd627DYWFUefPr
-X-Google-Smtp-Source: APXvYqyDmXCLYu7zkSEIYa48Hku6Ktklg4NWhTrGPK3SpkZ3qC8Ugb+b/bgmX5rZf/c/qzzeSL86zw==
-X-Received: by 2002:a37:4d89:: with SMTP id a131mr19040147qkb.241.1574734666699;
-        Mon, 25 Nov 2019 18:17:46 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id v65sm4406930qkh.7.2019.11.25.18.17.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Nov 2019 18:17:45 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 9AEF3226FC;
-        Mon, 25 Nov 2019 21:17:44 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 25 Nov 2019 21:17:44 -0500
-X-ME-Sender: <xms:SIvcXVjqX8ZqBlc9-SYhoB01Y2hlUYMPj08uw47KYUnzsp4_9q5lKg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeivddggeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfh
-    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecukfhppeehvddrud
-    ehhedrudduuddrjedunecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghs
-    mhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhe
-    dvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:SIvcXY_crJDuNoe1E7pXLISd1o7jcgfCLlgcUL_MxVsSxJL0W9v8jg>
-    <xmx:SIvcXRLWQHHU18cdPMdCo0GOEcK7c4NTaZFihj-dexW8R4FdAUy-lA>
-    <xmx:SIvcXdzBas5aRYEnaFVp3xfTxmykQ0cuFBik3srFGt3_FMbgTCytxg>
-    <xmx:SIvcXYQS3-BGxQxB4BqxZVHkS11RT7hnNK8_vDK9crm-Qxzfdfd17LW20QQ>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BEF61306005F;
-        Mon, 25 Nov 2019 21:17:43 -0500 (EST)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] clocksource: hyperv: Reserve PAGE_SIZE space for tsc page
-Date:   Tue, 26 Nov 2019 10:17:20 +0800
-Message-Id: <20191126021723.4710-1-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 25 Nov 2019 21:28:19 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54947 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbfKZC2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 21:28:19 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47MSW10MKdz9sPT;
+        Tue, 26 Nov 2019 13:28:13 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1574735296;
+        bh=bDpBpExv22RYZg9+7U2ew6DFKYXTfeM4Kl6AcYjAgzY=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=FgztwZwNJDiZ7EM+Yr9+ALlLY8vEMT2mnd8WXWdEpCdnNkQw4xADD7XKzgrAvyTT6
+         Cv8gvnycwfKKIrTHQap0Kk81nvKOZy4ya9O9B5p54sNMtFw6gB+KXD740JrhoRBVBb
+         6596F6YHpp7MSRpyBiawhr2fkyofqG43h728IvxqU1zbTSj1FMKsCNqxnKsOUNtlmQ
+         SnW8YYx/zorrarGVZl5iN4E3DNR8RtnqVkgL+HMW28EN0QoLZqjzZNbtfHCdxoh2d2
+         emHH3FOjfo12nuIt9IUJuHvMDOUxHV3MfmfnjhuDRR71JXglFzeMO+YefJWdIkS+rF
+         sfXYWJPnubq8Q==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Gustavo Walbon <gwalbon@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     benh@kernel.crashing.org, paulus@samba.org, diana.craciun@nxp.com,
+        gwalbon@linux.ibm.com, jkosina@suse.cz, jpoimboe@redhat.com,
+        geert+renesas@glider.be, cmr@informatik.wtf, yuehaibing@huawei.com,
+        linux-kernel@vger.kernel.org, maurosr@linux.ibm.com
+Subject: Re: [PATCH][v2] powerpc: Set right value of Speculation_Store_Bypass in /proc/<pid>/status
+In-Reply-To: <20191123230235.11888-1-gwalbon@linux.ibm.com>
+References: <20191123230235.11888-1-gwalbon@linux.ibm.com>
+Date:   Tue, 26 Nov 2019 13:28:10 +1100
+Message-ID: <87v9r79xs5.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the reserved size for a tsc page is 4K, which is enough for
-communicating with hypervisor. However, in the case where we want to
-export the tsc page to userspace (e.g. for vDSO to read the
-clocksource), the tsc page should be at least PAGE_SIZE, otherwise, when
-PAGE_SIZE is larger than 4K, extra kernel data will be mapped into
-userspace, which means leaking kernel information.
+Gustavo Walbon <gwalbon@linux.ibm.com> writes:
+> The issue has showed the value of status of Speculation_Store_Bypass in the
+> /proc/<pid>/status as `unknown` for PowerPC systems.
+>
+> The patch fix the checking of the mitigation status of Speculation, and
+> can be reported as "not vulnerable", "globally mitigated" or "vulnerable".
+>
+> Link: https://github.com/linuxppc/issues/issues/255
+>
+> Changelog:
+> Rebase on v5.4-rc8
+>
+> Signed-off-by: Gustavo Walbon <gwalbon@linux.ibm.com>
+> ---
+>  arch/powerpc/kernel/security.c | 25 ++++++++++++++++++++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
 
-Therefore reserve PAGE_SIZE space for tsc_pg as a preparation for the
-vDSO support of ARM64 in the future. Also, while at it, replace all
-reference to tsc_pg with hv_get_tsc_page() since it should be the only
-interface to access tsc page.
+On further thoughts I don't think this logic (which I suggested) is
+right >:(
 
-Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-Cc: linux-hyperv@vger.kernel.org
----
- drivers/clocksource/hyperv_timer.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+I commented on the issue:
 
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 2317d4e3daaf..bcac936fa62b 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -213,17 +213,20 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
- struct clocksource *hyperv_cs;
- EXPORT_SYMBOL_GPL(hyperv_cs);
- 
--static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
-+static union {
-+	struct ms_hyperv_tsc_page page;
-+	u8 reserved[PAGE_SIZE];
-+} tsc_pg __aligned(PAGE_SIZE);
- 
- struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
- {
--	return &tsc_pg;
-+	return &tsc_pg.page;
- }
- EXPORT_SYMBOL_GPL(hv_get_tsc_page);
- 
- static u64 notrace read_hv_clock_tsc(struct clocksource *arg)
- {
--	u64 current_tick = hv_read_tsc_page(&tsc_pg);
-+	u64 current_tick = hv_read_tsc_page(hv_get_tsc_page());
- 
- 	if (current_tick == U64_MAX)
- 		hv_get_time_ref_count(current_tick);
-@@ -278,7 +281,7 @@ static bool __init hv_init_tsc_clocksource(void)
- 		return false;
- 
- 	hyperv_cs = &hyperv_cs_tsc;
--	phys_addr = virt_to_phys(&tsc_pg);
-+	phys_addr = virt_to_phys(hv_get_tsc_page());
- 
- 	/*
- 	 * The Hyper-V TLFS specifies to preserve the value of reserved
--- 
-2.24.0
+  I think my original suggestion on this was wrong.
+  
+  Our mitigation is not global, ie. it's a barrier that must be used in
+  the right location. We have kernel code to insert the barrier on
+  kernel entry/exit, but that doesn't protect userspace against itself
+  (ie. sandboxes).
+  
+  There's no way to express that with the current values as far as I can
+  see.
+  
+  I think all we can do for now is:
+  
+  if stf_enabled_flush_types == STF_BARRIER_NONE:
+    return PR_SPEC_NOT_AFFECTED // "not vulnerable"
+  else
+    return PR_SPEC_ENABLE // "vulnerable"
+  
+  To express the situation properly we'd need another value, something
+  like PR_SPEC_MITIGATION_AVAILABLE (??) which says that there is a
+  mitigation available but it must be used. That still has the problem
+  that it doesn't tell userspace what the mitigation is, userspace would
+  have to know.
 
+cheers
+
+> diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+> index 7d4b2080a658..04e566026bbc 100644
+> --- a/arch/powerpc/kernel/security.c
+> +++ b/arch/powerpc/kernel/security.c
+> @@ -14,7 +14,7 @@
+>  #include <asm/debugfs.h>
+>  #include <asm/security_features.h>
+>  #include <asm/setup.h>
+> -
+> +#include <linux/prctl.h>
+>  
+>  u64 powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
+>  
+> @@ -344,6 +344,29 @@ ssize_t cpu_show_spec_store_bypass(struct device *dev, struct device_attribute *
+>  	return sprintf(buf, "Vulnerable\n");
+>  }
+>  
+> +static int ssb_prctl_get(struct task_struct *task)
+> +{
+> +	if (stf_barrier) {
+> +		if (stf_enabled_flush_types == STF_BARRIER_NONE)
+> +			return PR_SPEC_NOT_AFFECTED;
+> +		else
+> +			return PR_SPEC_DISABLE;
+> +	} else
+> +		return PR_SPEC_DISABLE_NOEXEC;
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +int arch_prctl_spec_ctrl_get(struct task_struct *task, unsigned long which)
+> +{
+> +	switch (which) {
+> +	case PR_SPEC_STORE_BYPASS:
+> +		return ssb_prctl_get(task);
+> +	default:
+> +		return -ENODEV;
+> +	}
+> +}
+> +
+>  #ifdef CONFIG_DEBUG_FS
+>  static int stf_barrier_set(void *data, u64 val)
+>  {
+> -- 
+> 2.19.1
