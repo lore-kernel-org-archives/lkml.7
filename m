@@ -4,28 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75167C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5CEC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431092080F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DC32084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfKZUOq (ORCPT
+        id S1727502AbfKZUOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:14:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47226 "EHLO mx1.suse.de"
+        Tue, 26 Nov 2019 15:14:47 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47802 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727386AbfKZUOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:14:34 -0500
+        id S1726593AbfKZUOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:14:40 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 66FD2B350;
-        Tue, 26 Nov 2019 20:14:32 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 8F21CB2B5;
+        Tue, 26 Nov 2019 20:14:38 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Oleg Nesterov <oleg@redhat.com>,
@@ -34,7 +35,6 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Nicholas Piggin <npiggin@gmail.com>,
         Allison Randal <allison@lohutok.net>,
         "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Breno Leitao <leitao@debian.org>,
         Christophe Leroy <christophe.leroy@c-s.fr>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 22/35] powerpc/64: system call remove non-volatile GPR save optimisation
-Date:   Tue, 26 Nov 2019 21:13:36 +0100
-Message-Id: <1c076f8cf487f9b4a62e927a43139db2ac865907.1574798487.git.msuchanek@suse.de>
+Subject: [PATCH v2 26/35] powerpc/64: system call: Fix sparse warning about missing declaration
+Date:   Tue, 26 Nov 2019 21:13:40 +0100
+Message-Id: <d0a6b5235c4e1544f4c253724a5b8f2106cc43bd.1574798487.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574798487.git.msuchanek@suse.de>
 References: <cover.1574798487.git.msuchanek@suse.de>
@@ -79,219 +79,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+Sparse warns about missing declarations for these functions:
 
-powerpc has an optimisation where interrupts avoid saving the
-non-volatile (or callee saved) registers to the interrupt stack frame if
-they are not required.
++arch/powerpc/kernel/syscall_64.c:108:23: warning: symbol 'syscall_exit_prepare' was not declared. Should it be static?
++arch/powerpc/kernel/syscall_64.c:18:6: warning: symbol 'system_call_exception' was not declared. Should it be static?
++arch/powerpc/kernel/syscall_64.c:200:23: warning: symbol 'interrupt_exit_user_prepare' was not declared. Should it be static?
++arch/powerpc/kernel/syscall_64.c:288:23: warning: symbol 'interrupt_exit_kernel_prepare' was not declared. Should it be static?
 
-Two problems with this are that an interrupt does not always know
-whether it will need non-volatiles; and if it does need them, they can
-only be saved from the entry-scoped asm code (because we don't control
-what the C compiler does with these registers).
+Add declaration for them.
 
-system calls are the most difficult: some system calls always require
-all registers (e.g., fork, to copy regs into the child).  Sometimes
-registers are only required under certain conditions (e.g., tracing,
-signal delivery). These cases require ugly logic in the call chains
-(e.g., ppc_fork), and require a lot of logic to be implemented in asm.
-
-So remove the optimisation for system calls, and always save NVGPRs on
-entry. Modern high performance CPUs are not so sensitive, because the
-stores are dense in cache and can be hidden by other expensive work in
-the syscall path -- the null syscall selftests benchmark on POWER9 is
-not slowed (124.40ns before and 123.64ns after, i.e., within the noise).
-
-Other interrupts retain the NVGPR optimisation for now.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- arch/powerpc/kernel/entry_64.S           | 72 +++++-------------------
- arch/powerpc/kernel/syscalls/syscall.tbl | 22 +++++---
- 2 files changed, 28 insertions(+), 66 deletions(-)
+ arch/powerpc/include/asm/asm-prototypes.h | 6 ++++++
+ arch/powerpc/kernel/syscall_64.c          | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-index 6467bdab8d40..5a3e0b5c9ad1 100644
---- a/arch/powerpc/kernel/entry_64.S
-+++ b/arch/powerpc/kernel/entry_64.S
-@@ -98,13 +98,14 @@ END_BTB_FLUSH_SECTION
- 	std	r11,_XER(r1)
- 	std	r11,_CTR(r1)
- 	std	r9,GPR13(r1)
-+	SAVE_NVGPRS(r1)
- 	mflr	r10
- 	/*
- 	 * This clears CR0.SO (bit 28), which is the error indication on
- 	 * return from this system call.
- 	 */
- 	rldimi	r2,r11,28,(63-28)
--	li	r11,0xc01
-+	li	r11,0xc00
- 	std	r10,_LINK(r1)
- 	std	r11,_TRAP(r1)
- 	std	r3,ORIG_GPR3(r1)
-@@ -323,7 +324,6 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+diff --git a/arch/powerpc/include/asm/asm-prototypes.h b/arch/powerpc/include/asm/asm-prototypes.h
+index 399ca63196e4..841746357833 100644
+--- a/arch/powerpc/include/asm/asm-prototypes.h
++++ b/arch/powerpc/include/asm/asm-prototypes.h
+@@ -96,6 +96,12 @@ ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp, s
+ unsigned long __init early_init(unsigned long dt_ptr);
+ void __init machine_init(u64 dt_ptr);
+ #endif
++#ifdef CONFIG_PPC64
++long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8, unsigned long r0, struct pt_regs *regs);
++notrace unsigned long syscall_exit_prepare(unsigned long r3, struct pt_regs *regs);
++notrace unsigned long interrupt_exit_user_prepare(struct pt_regs *regs, unsigned long msr);
++notrace unsigned long interrupt_exit_kernel_prepare(struct pt_regs *regs, unsigned long msr);
++#endif
  
- /* Traced system call support */
- .Lsyscall_dotrace:
--	bl	save_nvgprs
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	do_syscall_trace_enter
- 
-@@ -408,7 +408,6 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 	mtmsrd	r10,1
- #endif /* CONFIG_PPC_BOOK3E */
- 
--	bl	save_nvgprs
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	do_syscall_trace_leave
- 	b	ret_from_except
-@@ -442,62 +441,6 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- _ASM_NOKPROBE_SYMBOL(system_call_common);
- _ASM_NOKPROBE_SYMBOL(system_call_exit);
- 
--/* Save non-volatile GPRs, if not already saved. */
--_GLOBAL(save_nvgprs)
--	ld	r11,_TRAP(r1)
--	andi.	r0,r11,1
--	beqlr-
--	SAVE_NVGPRS(r1)
--	clrrdi	r0,r11,1
--	std	r0,_TRAP(r1)
--	blr
--_ASM_NOKPROBE_SYMBOL(save_nvgprs);
--
--	
--/*
-- * The sigsuspend and rt_sigsuspend system calls can call do_signal
-- * and thus put the process into the stopped state where we might
-- * want to examine its user state with ptrace.  Therefore we need
-- * to save all the nonvolatile registers (r14 - r31) before calling
-- * the C code.  Similarly, fork, vfork and clone need the full
-- * register state on the stack so that it can be copied to the child.
-- */
--
--_GLOBAL(ppc_fork)
--	bl	save_nvgprs
--	bl	sys_fork
--	b	.Lsyscall_exit
--
--_GLOBAL(ppc_vfork)
--	bl	save_nvgprs
--	bl	sys_vfork
--	b	.Lsyscall_exit
--
--_GLOBAL(ppc_clone)
--	bl	save_nvgprs
--	bl	sys_clone
--	b	.Lsyscall_exit
--
--_GLOBAL(ppc_clone3)
--       bl      save_nvgprs
--       bl      sys_clone3
--       b       .Lsyscall_exit
--
--_GLOBAL(ppc32_swapcontext)
--	bl	save_nvgprs
--	bl	compat_sys_swapcontext
--	b	.Lsyscall_exit
--
--_GLOBAL(ppc64_swapcontext)
--	bl	save_nvgprs
--	bl	sys_swapcontext
--	b	.Lsyscall_exit
--
--_GLOBAL(ppc_switch_endian)
--	bl	save_nvgprs
--	bl	sys_switch_endian
--	b	.Lsyscall_exit
--
- _GLOBAL(ret_from_fork)
- 	bl	schedule_tail
- 	REST_NVGPRS(r1)
-@@ -516,6 +459,17 @@ _GLOBAL(ret_from_kernel_thread)
- 	li	r3,0
- 	b	.Lsyscall_exit
- 
-+/* Save non-volatile GPRs, if not already saved. */
-+_GLOBAL(save_nvgprs)
-+	ld	r11,_TRAP(r1)
-+	andi.	r0,r11,1
-+	beqlr-
-+	SAVE_NVGPRS(r1)
-+	clrrdi	r0,r11,1
-+	std	r0,_TRAP(r1)
-+	blr
-+_ASM_NOKPROBE_SYMBOL(save_nvgprs);
-+
- #ifdef CONFIG_PPC_BOOK3S_64
- 
- #define FLUSH_COUNT_CACHE	\
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 43f736ed47f2..d899bcb5343e 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -9,7 +9,9 @@
- #
- 0	nospu	restart_syscall			sys_restart_syscall
- 1	nospu	exit				sys_exit
--2	nospu	fork				ppc_fork
-+2	32	fork				ppc_fork			sys_fork
-+2	64	fork				sys_fork
-+2	spu	fork				sys_ni_syscall
- 3	common	read				sys_read
- 4	common	write				sys_write
- 5	common	open				sys_open			compat_sys_open
-@@ -158,7 +160,9 @@
- 119	32	sigreturn			sys_sigreturn			compat_sys_sigreturn
- 119	64	sigreturn			sys_ni_syscall
- 119	spu	sigreturn			sys_ni_syscall
--120	nospu	clone				ppc_clone
-+120	32	clone				ppc_clone			sys_clone
-+120	64	clone				sys_clone
-+120	spu	clone				sys_ni_syscall
- 121	common	setdomainname			sys_setdomainname
- 122	common	uname				sys_newuname
- 123	common	modify_ldt			sys_ni_syscall
-@@ -240,7 +244,9 @@
- 186	spu	sendfile			sys_sendfile64
- 187	common	getpmsg				sys_ni_syscall
- 188	common 	putpmsg				sys_ni_syscall
--189	nospu	vfork				ppc_vfork
-+189	32	vfork				ppc_vfork			sys_vfork
-+189	64	vfork				sys_vfork
-+189	spu	vfork				sys_ni_syscall
- 190	common	ugetrlimit			sys_getrlimit			compat_sys_getrlimit
- 191	common	readahead			sys_readahead			compat_sys_readahead
- 192	32	mmap2				sys_mmap2			compat_sys_mmap2
-@@ -316,8 +322,8 @@
- 248	32	clock_nanosleep			sys_clock_nanosleep_time32
- 248	64	clock_nanosleep			sys_clock_nanosleep
- 248	spu	clock_nanosleep			sys_clock_nanosleep
--249	32	swapcontext			ppc_swapcontext			ppc32_swapcontext
--249	64	swapcontext			ppc64_swapcontext
-+249	32	swapcontext			ppc_swapcontext			compat_sys_swapcontext
-+249	64	swapcontext			sys_swapcontext
- 249	spu	swapcontext			sys_ni_syscall
- 250	common	tgkill				sys_tgkill
- 251	32	utimes				sys_utimes_time32
-@@ -456,7 +462,7 @@
- 361	common	bpf				sys_bpf
- 362	nospu	execveat			sys_execveat			compat_sys_execveat
- 363	32	switch_endian			sys_ni_syscall
--363	64	switch_endian			ppc_switch_endian
-+363	64	switch_endian			sys_switch_endian
- 363	spu	switch_endian			sys_ni_syscall
- 364	common	userfaultfd			sys_userfaultfd
- 365	common	membarrier			sys_membarrier
-@@ -516,4 +522,6 @@
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
--435	nospu	clone3				ppc_clone3
-+435	32	clone3				ppc_clone3			sys_clone3
-+435	64	clone3				sys_clone3
-+435	spu	clone3				sys_ni_syscall
+ long ppc_fadvise64_64(int fd, int advice, u32 offset_high, u32 offset_low,
+ 		      u32 len_high, u32 len_low);
+diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall_64.c
+index d00cfc4a39a9..62f44c3072f3 100644
+--- a/arch/powerpc/kernel/syscall_64.c
++++ b/arch/powerpc/kernel/syscall_64.c
+@@ -1,4 +1,5 @@
+ #include <linux/err.h>
++#include <asm/asm-prototypes.h>
+ #include <asm/book3s/64/kup-radix.h>
+ #include <asm/cputime.h>
+ #include <asm/hw_irq.h>
 -- 
 2.23.0
 
