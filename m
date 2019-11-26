@@ -3,215 +3,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC54C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED28FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855F62073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90922073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:05:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UpyrP3YA"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="EfY/OBOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbfKZREh (ORCPT
+        id S1728584AbfKZRFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:04:37 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36145 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfKZREh (ORCPT
+        Tue, 26 Nov 2019 12:05:39 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.6]:49682 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727309AbfKZRFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:04:37 -0500
-Received: by mail-ot1-f65.google.com with SMTP id p19so72362otc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:04:36 -0800 (PST)
+        Tue, 26 Nov 2019 12:05:39 -0500
+Received: from [46.226.52.108] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-6.bemta.az-a.eu-west-1.aws.symcld.net id 22/97-05312-06B5DDD5; Tue, 26 Nov 2019 17:05:36 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WSf0wbZRjHeXvX60GovpQiLw1srrI/hlyhuCy
+  H2XQKxv6hyBJJgFnxGCdtLEftHaw1iw5kZuV3onMM+dFNREWJDEYCTCV0iEDkhy1ER0YctGaD
+  jTjAjA0nsdeDqf99vs/3m+d53jcPiakWCQ3J2gXWxjEWLRGGm5JkNJV3dN6Y/NtaAj3zs1tGn
+  1nwE3TPZLWcvjtzWkZ7B5oI2jlQJ6fnb2XQXRud4DBp6FovJwx9823A0N84rzB0dzgJw/cr7Y
+  Thm0uzuGG9e1emIldu5vKL7W/ITXdnaWuVwj6+OCQ/Ce7JK0EYCeBnGLo4MiqTxAiOrngWtkU
+  PQH/V3CdEgcNRDLX1uzBRqODHMvRT9QNCEgsA1bV+oKgEoSQBafTh6PWgoYZLAM32NQTHYHAV
+  oOFrk3IxFQmfR52nvYEpZCCVhprGzWJZDVOQ98e/gcg43ItmT12WiayEDCr3DAZZBU+gyUutw
+  TahMB0NXfkumAcwDv1Z9hUmMgaj0Zy/NZhHEKK2b6cwiaPQkm9LLuVZNFb+K5DqiWjiF/82a1
+  FL8/A2xyFPa9U2v4ycNQ3YTt7lXcYlplFb1SlcfAqC8WjL7ZDKVtThrCak8l7kbaekcixaHpo
+  Kfi+CPjka8kzL60FS43+2ljgw4fIaIfGTqP38Lawx+BMRaOycH3cBvAPQ+TZzoUkoYswWSp+c
+  TOn1KZQ+dT+lP5CsY96hGB1bQh1neYHS65jjvI53FB2zFOg4VugGgXMrsLpdfeDM2orODWJIm
+  TZKeUQxb1Q9kl9c4DAxvCnPVmJheTeIJUktUk7nBLwIG1vI2t80WwJHu2MjMlyrVlblBmwlb2
+  WKeHOhZI0Diqxfar6AqXCumGM10UpMDEExZCrhHrbYOX0PiNNEKkFISIgq3MraiszC//1lEE0
+  CbaSSFruEmznh4aTlwBKywBKyc3PiEgLzr6U5KUu8MXgYDGZ9ERKbvf55c2/21xkvfDlz03/w
+  /vQf6ereyUOtOLbHcZto0oYfirDPnddmPRrDNXyC2Tdvbrzvc8XbE5wjH/mMTp7KqIMTm3PPh
+  g3U754q7U3EclKT7sw92N9ZRVn8KSExpbefi3si+93co3eWnupcWZnWVdjLNBvOrdW4t+vULT
+  fGCnsyyw7aGtaFq68YHjMnG7DVtPeihOa80Mrd+7oyIUNXCPzVs03N3b7pghfdxnupx1biF9P
+  IHId616sL10q9TNbjr3EvXTzgrT0bVWSsGKzL/vStiR+431s46wlX1vDi05vPIEVN7VS/0PH6
+  PsGxpza91qeMue7R4ryJ0SdgNp75B9sekfd1BAAA
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-3.tower-272.messagelabs.com!1574787935!781!1
+X-Originating-IP: [104.47.2.56]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 5515 invoked from network); 26 Nov 2019 17:05:35 -0000
+Received: from mail-db5eur01lp2056.outbound.protection.outlook.com (HELO EUR01-DB5-obe.outbound.protection.outlook.com) (104.47.2.56)
+  by server-3.tower-272.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 26 Nov 2019 17:05:35 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EMRETXGDE/mGT/B19QQI/N0zGkpqq1phioNk0e/wzE6lgpFgjqbpzCfQjT2+KlENreSqboFJtZzhxMaRoCZ+HbB3EjrcuwH6lrmeH/OYYKSOsewZ040AkIPP0jc11UrLq7zTsWf1n8OMkV1IZ37n1Bkd1pt/4bEdzbCT0nSHtEfMOl7YMW+6+QSBkGWhLTSx/UDDHqatNdf43udMb8KFRom2Qg3ScRyCIFmZlbKiI1isC1abcRww8A2+INm9lKzzV5R5fWH63Jg7EbfxPmyS0kCleHQ6lHgSt+AR/aJFoGFPtYRW8veYWAvnq8Wp/w1feSw66QEqDNb/Wwy+qL2cvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0ljmhcn1J2mLKTCkAMF5DWYK2knem6+UE0h80w6JgrU=;
+ b=QZ2TyrGRILmQhKFd+BG8B6mUXcxa2//+QhDTiBs9WsYe3KXNsRF4V7oXrLO5ihV4bQlbz9JnmG2OsyAvPCZBAd6QwsK2nVem+er6RqhDeKnzSTeUBjFVj6U+WbmtyawQ1vDNBILLxs6FcAWfQmMQetuclFeuIzlQRr6wR5MtPw+Ofeac1ufU6QgBTmDJQ/PtwCJJM6ufTq4FhdGeMCXWk5TDoQfiH/8fQGp4NGSTzZVa1996nBuvR9qWhvyEnFxuD0nNBxbjPembTR6VzlwL7fw7y216cX7lgxE08DQeHlFJ0nmAF07oCocBHwXwmA7SJqh9ztsgDyXHb4mM90h1rQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0aRqjubVebGkfF0Se7BSThAXYeQQXVaR/wxZsEbt0q8=;
-        b=UpyrP3YA6tguIzdLA7TVi9RB4XydlLBFFWdnNBuzbspnU1ZjNvXrgfsuXbY99Roizt
-         lg7ffuqfaTVeRlmXWIPImxwH59yWclys3ymaIZUo+TPLThcHHCPmmPsGRVonwKq+akkr
-         2QSNGsHYfVT0M3IT4B7mpvGAhowY2QbFgQye8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0aRqjubVebGkfF0Se7BSThAXYeQQXVaR/wxZsEbt0q8=;
-        b=hLuWFiOr4ovTyb22/RgJQ+A3Dfk5qt28Z4Ela3mjgV6Lbjh81hBEOE2VhRfSXNTfzI
-         dY2W+7oJ9fp5969omRWLEnRk0M7j83dn/mQ3oLjjj7aLhtvMAZ0uisAgKLqcLughlxdm
-         OpRBW8hQt4upnetGfB43VE+1nu630C4AEn8n9LTmLjpEGAbh1kGZ0wFRdACUCKPr4zUx
-         Tn+B/eosSu0vW7fIei51i9EjoyrbmLXOjpyMa7sZc2Y7rTcg00yJcKfwkHOV8HpfpGFo
-         VuBhZqy9+9v0uOsWAQ7DfYmNMcNyqyCRPxMsN3GoJiNhlhsoFEOq8WtYVXMWE4MnWw+W
-         dUWw==
-X-Gm-Message-State: APjAAAVUbQsLWmu6d0/sKRavFw3lIkB56bjDIpopZsLKQNOhp48lq30e
-        MKOISm13MQroH9j2/0mrg3NRTmh790UlV2sVd6OomDGn
-X-Google-Smtp-Source: APXvYqxtz3LsMLPp3CWwV+HNab1glWV5rUdJ9ZIXotQRmAG1CFu2i2k6ws4D3fy3+3bB4CkNSsTgBuipWG5XuBEIOj8=
-X-Received: by 2002:a9d:1b4b:: with SMTP id l69mr3042854otl.303.1574787875817;
- Tue, 26 Nov 2019 09:04:35 -0800 (PST)
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0ljmhcn1J2mLKTCkAMF5DWYK2knem6+UE0h80w6JgrU=;
+ b=EfY/OBOlNPYZMvMfWcA42oYCTMbty+Q5uoCAVfcY8s6qeRlX8lUhzngDlj6GD9rA3zgxNqmcZOKk0e0Tv1yTFrGrwLGwto3lrB1rF7l7T95RlOd1so4VklakOQSevoE44cQyE4oqQ1twJhb0wQoBmUmKSai0Oc/13G53zQLgwTQ=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1170.EURPRD10.PROD.OUTLOOK.COM (10.169.155.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.19; Tue, 26 Nov 2019 17:05:34 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
+ 17:05:34 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@collabora.com" <kernel@collabora.com>
+Subject: RE: [PATCHv2 3/6] ASoC: da7213: Provide selectable option
+Thread-Topic: [PATCHv2 3/6] ASoC: da7213: Provide selectable option
+Thread-Index: AQHVn7aW3HRPJHTGr0K/Z65q+crSuKedt65g
+Date:   Tue, 26 Nov 2019 17:05:34 +0000
+Message-ID: <AM5PR1001MB09942FC6CA1144DBC8C7BC2A80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
+ <20191120152406.2744-4-sebastian.reichel@collabora.com>
+In-Reply-To: <20191120152406.2744-4-sebastian.reichel@collabora.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 02fbdf9d-9b66-4787-481f-08d77292da1a
+x-ms-traffictypediagnostic: AM5PR1001MB1170:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR1001MB117096CC86F7756B4F49DDF1A7450@AM5PR1001MB1170.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:569;
+x-forefront-prvs: 0233768B38
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(396003)(39860400002)(136003)(199004)(189003)(86362001)(52536014)(6506007)(55236004)(71200400001)(53546011)(26005)(4744005)(76116006)(7696005)(71190400001)(6436002)(64756008)(66446008)(102836004)(9686003)(54906003)(25786009)(110136005)(55016002)(446003)(11346002)(8936002)(2906002)(186003)(6116002)(66476007)(99286004)(66946007)(3846002)(66556008)(5660300002)(66066001)(33656002)(6246003)(14444005)(256004)(74316002)(305945005)(7736002)(8676002)(81166006)(229853002)(81156014)(76176011)(316002)(478600001)(4326008)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1170;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: O5RcapkVKAKS7NqCRiR/4F7zHnSRppttCCOPmW//D5KQJgNBL+UNJFiqw3xjkKYGmnlbTjzAmwaKr/WFtgUfdMWrFOVAsYWz2cGz4fJ+9Dx8IBDxWOfiQqWjU+trBi58K7jzM85u7fShtxFWLL6KYYOhYQEpfeE12x35RQXbTIwLB/nWVf9DtWj7DK6IQ8xGZullPRFN3DT4AJHw7XlawNr7L0bkLuu6LzbsGFfbdwF/dHzUdPHhZiwXSnVIAv2iamLn86LNaM7I07z2eZLUtLbeZu31ylIAkRM1K8Qj9xsGe2+GQn4zZWXJN9pPC1d6IaGp4YLJw0G9+cFybM5XmKyf4OGgwCxFAGAXxLPAVFr0eSowV8rn7B1ru/1Vg2qi80T0VNWx7OJZVRDKVRstgeL2t3XF1WS4Liq3goJxwC9JdYI9wQ2LD3e74ezeV09j
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191126131541.47393-1-mihail.atanassov@arm.com>
- <20191126131541.47393-2-mihail.atanassov@arm.com> <20191126142610.GV29965@phenom.ffwll.local>
- <11447519.fzG14qnjOE@e123338-lin>
-In-Reply-To: <11447519.fzG14qnjOE@e123338-lin>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 26 Nov 2019 18:04:24 +0100
-Message-ID: <CAKMK7uG2T9hPCsQ6yLekGoz5qA2-ePa2_MmsmQRBH5je+7Kaow@mail.gmail.com>
-Subject: Re: [PATCH 01/30] drm: Introduce drm_bridge_init()
-To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02fbdf9d-9b66-4787-481f-08d77292da1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 17:05:34.4912
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ofwMV23JbsEbvcQIDdXH859b8GBpAoDp+IIVLkDWLwg97FwNDsCN7jIQLU71xY4j5d5KZdroFbQDqzBgBlZ0zomYIY8lEw3DmyJ8PGK5/1Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 4:55 PM Mihail Atanassov
-<Mihail.Atanassov@arm.com> wrote:
->
-> Hi Daniel,
->
-> Thanks for the quick review.
->
-> On Tuesday, 26 November 2019 14:26:10 GMT Daniel Vetter wrote:
-> > On Tue, Nov 26, 2019 at 01:15:59PM +0000, Mihail Atanassov wrote:
-> > > A simple convenience function to initialize the struct drm_bridge.
-> > >
-> > > Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
-> >
-> > The commit message here leaves figuring out why we need this to the
-> > reader. Reading ahead the reasons seems to be to roll out bridge->dev
-> > setting for everyone, so that we can set the device_link. Please explain
-> > that in the commit message so the patch is properly motivated.
->
-> Ack, but with one caveat: bridge->dev is the struct drm_device that is
-> the bridge client, we need to add a bridge->device (patch 29 in this
-> series) which is the struct device that will manage the bridge lifetime.
+On 20 November 2019 15:24, Sebastian Reichel wrote:
 
-Ah yes, ->dev is for drm_bridge_attach.
+> This commit adds the Dialog DA7213 audio codec as a selectable option
+> in the kernel config. Currently the driver can only be selected for
+> Intel Baytrail/Cherrytrail devices or if SND_SOC_ALL_CODECS is enabled.
+>=20
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-> >
-> > > ---
-> > >  drivers/gpu/drm/drm_bridge.c | 29 +++++++++++++++++++++++++++++
-> > >  include/drm/drm_bridge.h     |  4 ++++
-> > >  2 files changed, 33 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> > > index cba537c99e43..cbe680aa6eac 100644
-> > > --- a/drivers/gpu/drm/drm_bridge.c
-> > > +++ b/drivers/gpu/drm/drm_bridge.c
-> > > @@ -89,6 +89,35 @@ void drm_bridge_remove(struct drm_bridge *bridge)
-> > >  }
-> > >  EXPORT_SYMBOL(drm_bridge_remove);
-> > >
-> > > +/**
-> > > + * drm_bridge_init - initialise a drm_bridge structure
-> > > + *
-> > > + * @bridge: bridge control structure
-> > > + * @funcs: control functions
-> > > + * @dev: device
-> > > + * @timings: timing specification for the bridge; optional (may be NULL)
-> > > + * @driver_private: pointer to the bridge driver internal context (may be NULL)
-> >
-> > Please also sprinkle some links to this new function to relevant places,
-> > I'd add at least:
-> >
-> > "Drivers should call drm_bridge_init() first." to the kerneldoc for
-> > drm_bridge_add. drm_bridge_add should also mention drm_bridge_remove as
-> > the undo function.
-> >
-> > And perhaps a longer paragraph to &struct drm_bridge:
-> >
-> > "Bridge drivers should call drm_bridge_init() to initialized a bridge
-> > driver, and then register it with drm_bridge_add().
-> >
-> > "Users of bridges link a bridge driver into their overall display output
-> > pipeline by calling drm_bridge_attach()."
->
-> Will do.
->
-> >
-> > > + */
-> > > +void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
-> > > +                const struct drm_bridge_funcs *funcs,
-> > > +                const struct drm_bridge_timings *timings,
-> > > +                void *driver_private)
-> > > +{
-> > > +   WARN_ON(!funcs);
-> > > +
-> > > +   bridge->dev = NULL;
-> >
-> > Given that the goal here is to get bridge->dev set up, why not
-> >
-> >       WARN_ON(!dev);
-> >       bridge->dev = dev;
->
-> See above struct device vs struct drm_device. I add a
->
->         bridge->device = dev;
->
-> in patch 29, which takes care of that. I skipped the warn since
-> there's a dereference of dev, but I now realized it's behind CONFIG_OF,
-> so I'll add it in for v2.
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 
-Ok, sounds good. Having the WARN_ON in patch 1 should also help making
-sure all the conversion patches dtrt (and any future users).
--Daniel
-
-> Yes, 'device' isn't the best of names, but I took Russell's patch
-> almost as-is, I didn't have any better ideas for bikeshedding.
->
-> >
-> > That should help us to really move forward with all this.
-> > -Daniel
-> >
-> > > +   bridge->encoder = NULL;
-> > > +   bridge->next = NULL;
-> > > +
-> > > +#ifdef CONFIG_OF
-> > > +   bridge->of_node = dev->of_node;
-> > > +#endif
-> > > +   bridge->timings = timings;
-> > > +   bridge->funcs = funcs;
-> > > +   bridge->driver_private = driver_private;
-> > > +}
-> > > +EXPORT_SYMBOL(drm_bridge_init);
-> > > +
-> > >  /**
-> > >   * drm_bridge_attach - attach the bridge to an encoder's chain
-> > >   *
-> > > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> > > index c0a2286a81e9..d6d9d5301551 100644
-> > > --- a/include/drm/drm_bridge.h
-> > > +++ b/include/drm/drm_bridge.h
-> > > @@ -402,6 +402,10 @@ struct drm_bridge {
-> > >
-> > >  void drm_bridge_add(struct drm_bridge *bridge);
-> > >  void drm_bridge_remove(struct drm_bridge *bridge);
-> > > +void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
-> > > +                const struct drm_bridge_funcs *funcs,
-> > > +                const struct drm_bridge_timings *timings,
-> > > +                void *driver_private);
-> > >  struct drm_bridge *of_drm_find_bridge(struct device_node *np);
-> > >  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
-> > >                   struct drm_bridge *previous);
-> >
-> >
->
->
+> ---
+>  sound/soc/codecs/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+> index 229cc89f8c5a..1d44fbc3d407 100644
+> --- a/sound/soc/codecs/Kconfig
+> +++ b/sound/soc/codecs/Kconfig
+> @@ -646,7 +646,8 @@ config SND_SOC_DA7210
+>          tristate
+>=20
+>  config SND_SOC_DA7213
+> -        tristate
+> +	tristate "Dialog DA7213 CODEC"
+> +	depends on I2C
+>=20
+>  config SND_SOC_DA7218
+>  	tristate
 > --
-> Mihail
->
->
->
+> 2.24.0
 
-
---
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
