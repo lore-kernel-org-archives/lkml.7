@@ -2,166 +2,204 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF3EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849A7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F4A2080F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5181F2080F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:46:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="iopaX69/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c5Pahk6W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfKZLn5 (ORCPT
+        id S1728201AbfKZLqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 06:43:57 -0500
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:53155 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725884AbfKZLn4 (ORCPT
+        Tue, 26 Nov 2019 06:46:35 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36937 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfKZLqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 06:43:56 -0500
-Received: from [IPv6:2001:420:44c1:2577:f03d:3627:b74f:a4d0]
- ([IPv6:2001:420:44c1:2577:f03d:3627:b74f:a4d0])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id ZZG2iFikrjpCOZZG5i5L5F; Tue, 26 Nov 2019 12:43:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1574768634; bh=x+Jz7Gw9Z56QjWtxcvTqZ2nl9dKf/bTGLBWhIEL58tA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=iopaX69/0VPqEa4BZDcUQAxi7obAZeMk5JiECTBCmJ3q1vEPpW4pGOKTKm3poQVla
-         YVwgMV4OeZxU57Yfl3sRt0vVDFEHMHEn4x0RCItVstWSq2cu6r6i15O2H30Y0OJ4Wl
-         74u6vJiPQfaYvT5gxN9JrXF/E4lApzdLMQkOOWVN9TYEnRPa7y5ag/3PEp1hBUsCgQ
-         FO3JG16XIcvwCdcS+c2oj1he1/nvnJcW0siZquclY79e0MzLKAQ94Z2DPJPkGWN8no
-         2+wVrZpI84ybFm/FFzEB9/hYSSk7ciyUiFma7K3HK6Rezjlq4Ty6gYOmCNZlkJLzlf
-         0gW/ia30S38gQ==
-Subject: Re: [PATCH v4 2/8] media: v4l2: abstract timeval handling in
- v4l2_buffer
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
-References: <20191111203835.2260382-1-arnd@arndb.de>
- <20191111203835.2260382-3-arnd@arndb.de>
- <00fea162-508a-b6e1-84ba-1472a94f6945@xs4all.nl>
- <CAK8P3a3dhruU1k9XtVHZsfmTxt+jL5Pf8jhT77+vce5p=h9U8w@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <efdeef8a-5ce7-bbe5-8def-e4eec31f13ab@xs4all.nl>
-Date:   Tue, 26 Nov 2019 12:43:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 26 Nov 2019 06:46:35 -0500
+Received: by mail-ot1-f67.google.com with SMTP id d5so15628415otp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 03:46:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tjdzshLYgCCgwbhmOuSJ84yu2IodR1Sq0mvSDQia2nY=;
+        b=c5Pahk6W4sXmZRKozu33aIaYc7PpKpPGB0sKYIs77jLfYAD1+buqI5qh3mULM8Rkos
+         9hnhyuce3J9WPG/XQceQQK+Ux+eULGa32tmfyOk7FAQxZu8UGs/kumBfFSvrgqPfbIq/
+         w70Qk+QIVpIAvo9LlZ6EY4DRNUdStDc6R3BIhOlwpR8japU3THUUnQlDr/9ERf+6CYw/
+         1PYQJxnBkwVip0wDCW92NoYc9YDtmivr+Cj2+L/lHiDzYvaDeLyHbdwegTjUS9Fu+9CN
+         u/tjC2gpyhGvJpLdRhnLDRizy0Z7bKtuTveJxaxzfVwXPrOswEQuO5SUghNNsrsIhsri
+         Mi3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tjdzshLYgCCgwbhmOuSJ84yu2IodR1Sq0mvSDQia2nY=;
+        b=lrKgaa0+DIEfcr4CRiwvn5yhDeqHwzwebJzgfCZQQ7eicZV4Z79/59Y11Ou7O4uXEs
+         BOiGJGp+H2pIYfbapnsat8v1HeVjWqHWYq2NcOs4SjkttcdJO8YFrEavpW4/pebhuqws
+         B5R3Tu/C2ao9mXl46wU9HdwZZf0FZMGYJIymjJPZzTC+OxDGJQoQDr2XQmIRdJiX6x9Q
+         HLcL31RInuR3NnIGNUwxoBmgcKiIXlOYvYHOwfb6weNuMXjp9/NYk9+TVJNPfPgnHry3
+         62eGFfy0iQoQ4X46ItBS7fGSKfRysEzJ9JY7cQG3vtJvLxgJxd9wei6TiAQuSA8iYmPf
+         3O3g==
+X-Gm-Message-State: APjAAAU1sAit/lN+cCK2eFw1OeCdSwF3LTe5LUqcvMgjkV/Nc8aKzflG
+        7vaZAWH4R//dgX85ReFDJH8/3bWYkTVqLI18ke72BQ==
+X-Google-Smtp-Source: APXvYqzrjXF9x63tU7nIMUMgccRV5IqIYdZ9qQhDEb2MN8d8nab7Ed9tgrYrm6RH/peO7Z24CiyVFGoJVj9dgbSBv8o=
+X-Received: by 2002:a05:6830:2308:: with SMTP id u8mr23115197ote.2.1574768791781;
+ Tue, 26 Nov 2019 03:46:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3dhruU1k9XtVHZsfmTxt+jL5Pf8jhT77+vce5p=h9U8w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBOkbCwWInD2lFTX8p0nyKnZ+84lQbHuBNnKSS7ohtfK2pNi8snslujQh22RvKH/ZnI1cM+HH8j9SRwHmAUNQdEJCQRYyF3Eb8d5d0lLaiTyFrSIOxkm
- 2bUPlWaTXPuM/pSVctOsG//utMZnszVP61cjKjWyRA5+9Y818sTACZPP1X2J4HCakhlh0kvXzVvxLCsFy6Qqj92rG9vzT3OyQhrDTJGLtX2khu8Du8Arxb43
- wcIwM44ZNj5ZSmJ7ZYhJc0pHLxUiCCK6nM9epVRAyBTpmMa4vTs5tJ0pBzmHJWboMvJ7/5Fh5U1Gpbr3rFpBlEIOxpwtiPbV+8ldW30z2thkLp+Q+bsoGPVH
- DjmOlV/93i1+54lOC5o5vMnD1vTBo8DHGiXHGxVgxQAKQu1HepboJ2Ih+ZAxA7pP8H3uTTi5
+References: <20191122154221.247680-1-elver@google.com> <20191125173756.GF32635@lakrids.cambridge.arm.com>
+ <CANpmjNMLEYdW0kaLAiO9fQN1uC7bW6K08zZRG=GG7vq4fBn+WA@mail.gmail.com> <20191125183936.GG32635@lakrids.cambridge.arm.com>
+In-Reply-To: <20191125183936.GG32635@lakrids.cambridge.arm.com>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 26 Nov 2019 12:46:19 +0100
+Message-ID: <CANpmjNM5tgiyFOt4jW97Dg1ot1LmJC1rcrQX+Q74B28c=t7Kzw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] asm-generic/atomic: Prefer __always_inline for wrappers
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/26/19 12:34 PM, Arnd Bergmann wrote:
-> On Mon, Nov 25, 2019 at 4:52 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> On 11/11/19 9:38 PM, Arnd Bergmann wrote:
->>> As a preparation for adding 64-bit time_t support in the uapi,
->>> change the drivers to no longer care about the format of the
->>> timestamp field in struct v4l2_buffer.
->>>
->>> The v4l2_timeval_to_ns() function is no longer needed in the
->>> kernel after this, but there may be userspace code relying on
->>> it because it is part of the uapi header.
->>
->> There is indeed userspace code that relies on this.
-> 
-> Ok, good to know. I rephrased the changelog text as
-> 
-> The v4l2_timeval_to_ns() function is no longer needed in the
-> kernel after this, but there is userspace code relying on
-> it to be part of the uapi header.
-> 
->>>
->>> +static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
->>> +{
->>> +     return buf->timestamp.tv_sec * NSEC_PER_SEC +
->>> +            (u32)buf->timestamp.tv_usec * NSEC_PER_USEC;
->>
->> Why the (u32) cast?
-> 
-> Simple question, long answer:
-> 
-> on 32-bit architectures, the tv_usec member may be 32-bit wide plus
-> padding in user space when interpreted as a regular 'struct timeval',
-> but the kernel implementation now sees it as a 64-bit member,
-> with half of it being possibly uninitialized user space data.
-> 
-> The 32-bit cast avoids that uninitialized data and ensures user space
-> passing garbage in the upper half gets ignored, as it has to be on 32-bit
-> user space.
+On Mon, 25 Nov 2019 at 19:39, Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Mon, Nov 25, 2019 at 07:22:33PM +0100, Marco Elver wrote:
+> > On Mon, 25 Nov 2019 at 18:38, Mark Rutland <mark.rutland@arm.com> wrote:
+> > >
+> > > On Fri, Nov 22, 2019 at 04:42:20PM +0100, Marco Elver wrote:
+> > > > Prefer __always_inline for atomic wrappers. When building for size
+> > > > (CC_OPTIMIZE_FOR_SIZE), some compilers appear to be less inclined to
+> > > > inline even relatively small static inline functions that are assumed to
+> > > > be inlinable such as atomic ops. This can cause problems, for example in
+> > > > UACCESS regions.
+> > >
+> > > From looking at the link below, the problem is tat objtool isn't happy
+> > > about non-whiteliested calls within UACCESS regions.
+> > >
+> > > Is that a problem here? are the kasan/kcsan calls whitelisted?
+> >
+> > We whitelisted all the relevant functions.
+> >
+> > The problem it that small static inline functions private to the
+> > compilation unit do not get inlined when CC_OPTIMIZE_FOR_SIZE=y (they
+> > do get inlined when CC_OPTIMIZE_FOR_PERFORMANCE=y).
+> >
+> > For the runtime this is easy to fix, by just making these small
+> > functions __always_inline (also avoiding these function call overheads
+> > in the runtime when CC_OPTIMIZE_FOR_SIZE).
+> >
+> > I stumbled upon the issue for the atomic ops, because the runtime uses
+> > atomic_long_try_cmpxchg outside a user_access_save() region (and it
+> > should not be moved inside). Essentially I fixed up the runtime, but
+> > then objtool still complained about the access to
+> > atomic64_try_cmpxchg. Hence this patch.
+> >
+> > I believe it is the right thing to do, because the final inlining
+> > decision should *not* be made by wrappers. I would think this patch is
+> > the right thing to do irrespective of KCSAN or not.
+>
+> Given the wrappers are trivial, and for !KASAN && !KCSAN, this would
+> make them equivalent to the things they wrap, that sounds fine to me.
+>
+> > > > By using __always_inline, we let the real implementation and not the
+> > > > wrapper determine the final inlining preference.
+> > >
+> > > That sounds reasonable to me, assuming that doesn't end up significantly
+> > > bloating the kernel text. What impact does this have on code size?
+> >
+> > It actually seems to make it smaller.
+> >
+> > x86 tinyconfig:
+> > - vmlinux baseline: 1316204
+> > - vmlinux with patches: 1315988 (-216 bytes)
+>
+> Great! Fancy putting that in the commit message?
 
-But that's only valid for little endian 32 bit systems, right?
-Is this only an issue for x86 platforms?
+Done.
 
-> 
-> On 64-bit native user space, the tv_usec field is always 64 bit wide,
-> so this is a change in behavior for denormalized timeval data
-> with tv_usec > U32_MAX, but the current behavior does not appear
-> worth preserving either.
-> 
-> The correct way would probably be to return an error for
->  tv_usec >USEC_PER_SEC, but as the code never did that, this
-> would risk a regression for user space that relies on passing
-> invalid timestamps without getting an error.
+> > > > This came up when addressing UACCESS warnings with CC_OPTIMIZE_FOR_SIZE
+> > > > in the KCSAN runtime:
+> > > > http://lkml.kernel.org/r/58708908-84a0-0a81-a836-ad97e33dbb62@infradead.org
+> > > >
+> > > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > > > Signed-off-by: Marco Elver <elver@google.com>
+> > > > ---
+> > > >  include/asm-generic/atomic-instrumented.h | 334 +++++++++++-----------
+> > > >  include/asm-generic/atomic-long.h         | 330 ++++++++++-----------
+> > > >  scripts/atomic/gen-atomic-instrumented.sh |   6 +-
+> > > >  scripts/atomic/gen-atomic-long.sh         |   2 +-
+> > > >  4 files changed, 336 insertions(+), 336 deletions(-)
+> > >
+> > > Do we need to do similar for gen-atomic-fallback.sh and the fallbacks
+> > > defined in scripts/atomic/fallbacks/ ?
+> >
+> > I think they should be, but I think that's debatable. Some of them do
+> > a little more than just wrap things. If we want to make this
+> > __always_inline, I would do it in a separate patch independent from
+> > this series to not stall the fixes here.
+>
+> I would expect that they would suffer the same problem if used in a
+> UACCESS region, so if that's what we're trying to fix here, I think that
+> we need to do likewise there.
+>
+> The majority are trivial wrappers (shuffling arguments or adding trivial
+> barriers), so those seem fine. The rest call things that we're inlining
+> here.
+>
+> Would you be able to give that a go?
 
-This long answer needs to be added to a comment to that function.
-Because otherwise someone will come along later and remove that
-seemingly unnecessary cast.
+Done in v2.
 
-It's OK if it is a long comment, it's a non-trivial reason.
+> > > > diff --git a/scripts/atomic/gen-atomic-instrumented.sh b/scripts/atomic/gen-atomic-instrumented.sh
+> > > > index 8b8b2a6f8d68..68532d4f36ca 100755
+> > > > --- a/scripts/atomic/gen-atomic-instrumented.sh
+> > > > +++ b/scripts/atomic/gen-atomic-instrumented.sh
+> > > > @@ -84,7 +84,7 @@ gen_proto_order_variant()
+> > > >       [ ! -z "${guard}" ] && printf "#if ${guard}\n"
+> > > >
+> > > >  cat <<EOF
+> > > > -static inline ${ret}
+> > > > +static __always_inline ${ret}
+> > >
+> > > We should add an include of <linux/compiler.h> to the preamble if we're
+> > > explicitly using __always_inline.
+> >
+> > Will add in v2.
+> >
+> > > > diff --git a/scripts/atomic/gen-atomic-long.sh b/scripts/atomic/gen-atomic-long.sh
+> > > > index c240a7231b2e..4036d2dd22e9 100755
+> > > > --- a/scripts/atomic/gen-atomic-long.sh
+> > > > +++ b/scripts/atomic/gen-atomic-long.sh
+> > > > @@ -46,7 +46,7 @@ gen_proto_order_variant()
+> > > >       local retstmt="$(gen_ret_stmt "${meta}")"
+> > > >
+> > > >  cat <<EOF
+> > > > -static inline ${ret}
+> > > > +static __always_inline ${ret}
+> > >
+> > > Likewise here
+> >
+> > Will add in v2.
+>
+> Great; thanks!
 
-> 
->>> +static inline void v4l2_buffer_set_timestamp(struct v4l2_buffer *buf,
->>> +                                          u64 timestamp)
->>> +{
->>> +     struct timespec64 ts = ns_to_timespec64(timestamp);
->>> +
->>> +     buf->timestamp.tv_sec  = ts.tv_sec;
->>> +     buf->timestamp.tv_usec = ts.tv_nsec / NSEC_PER_USEC;
->>> +}
->>> +
->>
->> This does not belong in the public header. This is kernel specific,
-> 
-> Note: this is not the uapi header but the in-kernel one.
+Sent v2: http://lkml.kernel.org/r/20191126114121.85552-1-elver@google.com
 
-Ah, I missed that.
-
-> 
->> so media/v4l2-common.h would be a good place.
-> 
-> Ok, sounds good. I wasn't sure where to put it, and ended up
-> with include/linux/videodev2.h as the best replacement for
-> include/uapi/linux/videodev2.h, changed it to
-> include/media/v4l2-common.h now.
-
-Never use include/linux/videodev2.h. It's just a wrapper around
-the uapi header and should not contain any 'real' code.
-
-It's also why I missed that you modified that header since we never
-touch it.
-
-Regards,
-
-	Hans
-
-> 
->        Arnd
-> 
-
+Thanks,
+-- Marco
