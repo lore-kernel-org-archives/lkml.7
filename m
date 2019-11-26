@@ -2,113 +2,108 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BCCC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F76C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0109B20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:27:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574785646;
-	bh=lsycWwVLMBQX+2olUenNQAufGZbjMZxM0wg2GgODZi0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uz52MkzdaJrXKWGrAkfzKwivfZDBvbj5v87ndu3eG8VPSA88aQiu0gmLe7r/2DHaz
-	 shD9470XLzFlEdww41NPvZNmId4gnoxYXj49+BZMbJcW/8CMEhmowzVJDvq8GITuAb
-	 H71LXyxJqTSyRhfgkXlmlPiKW26SkFoAPeKlOmOc=
+	by mail.kernel.org (Postfix) with ESMTP id 6763820722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:28:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JieTCFWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfKZQ1Z (ORCPT
+        id S1727851AbfKZQ2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 11:27:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727333AbfKZQ1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 11:27:24 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FE5320862;
-        Tue, 26 Nov 2019 16:27:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574785644;
-        bh=lsycWwVLMBQX+2olUenNQAufGZbjMZxM0wg2GgODZi0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mVc129KGwONqZlfcjKgKn/s3RnfMsjMPnSnShfcFgr9/TQs3j4NVIwdjcb50L8EpJ
-         CHPxlI7uWH4PWJZBsQkbX07vLBctI6Kj2ZQuYlqxgfFCtwABRHpmaO5UKug6/t0lvj
-         amEY5DsmnldMfat9dqYEGAt8vcwNzw/9yKIk1ayk=
-Date:   Tue, 26 Nov 2019 17:27:21 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/1] arm64: dts: allwinner: a64: olinuxino: Add VCC-PG
- supply
-Message-ID: <20191126162721.qi7scp3vadxn7k2i@gilmour.lan>
-References: <20191126110508.15264-1-stefan@olimex.com>
+        Tue, 26 Nov 2019 11:28:10 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36407 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbfKZQ2K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 11:28:10 -0500
+Received: by mail-wm1-f68.google.com with SMTP id n188so4075160wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 08:28:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lpf541/6ikEv3JJ2ul3APwZIfgPQ6unMan8v4La6FD4=;
+        b=JieTCFWq0nixSvgtCiL59CJeZu3LC4DI3ozvC6SCMq8yOfpTyvmgTzQNJB+0KAwH82
+         FZbWZ0MSaOx8Xwf/PcFSyviWSsAoeAD1S9lbb0qYtC+z0LsSqUobyrgpQBvsYKUKNeJH
+         54d3rcSJAhK5M6xcDfm2qQeTrxTEbQ6aZXBu/JVFc6plWpWQ9ActI88B5VDmDI88O2g8
+         vzq1ICpaahQOIJ9rTg0v9zl+daqycOPMvOjmbodK1inIBUcGVJyniMp0ftf5N9SVLPji
+         eGpys0U4dyYb/gOJCFwIecl920Kn7XlKRr9hhe0yIdtQG6FInOpysmI5/FNkDA31yEYG
+         h6+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lpf541/6ikEv3JJ2ul3APwZIfgPQ6unMan8v4La6FD4=;
+        b=hRn4jZC4JEHz1bKWB8KXBsCuEBPiuQMHB56L1vmdZKp4C743IKk85oz0QqCfSSUraH
+         eDDC7uN8KrSFxdFCRLA3gQW5UmFJ14Pc1d38odseCfX8rJnPJ7uAA70YeXMx+Vu9OBz6
+         18JeKb+wiLcDuzWqFjYLZ9CudbqDf2ckHcpuYOO/NJSVGyiDXsWa8T3QaYUt7MM+30Yj
+         6a80J3fzr25oJ7yL5eqYjoPHh+aNsf8sen2RN8eBOSQktpS/t86NsPAmND2bLNPCb1Gv
+         tHjhLJ56yQOPtxWOPIOjlouLTWsBQlmA486KDsBphNAf/5D/4J57O6eDFV3apB/AdhYb
+         pjLw==
+X-Gm-Message-State: APjAAAXMkKC1AHLgCsOXurRlZGNoCS4AgHsxLmBWWrWnV2KIusDOdyH0
+        fPDvoWPtSjLMILfnTTLURILiSMD/cBlMBBPsQxQ=
+X-Google-Smtp-Source: APXvYqwgv1uiWhI8ounqnl7xziQvTMjaQD4iWYsok936xxtQ3YUO0jFuO7HLV9vH7BCmji9L/qv8lpPQJxxXiA+Z+H8=
+X-Received: by 2002:a7b:c1d3:: with SMTP id a19mr5326942wmj.127.1574785687879;
+ Tue, 26 Nov 2019 08:28:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="duhffbtvsspnw6ng"
-Content-Disposition: inline
-In-Reply-To: <20191126110508.15264-1-stefan@olimex.com>
+References: <20191126003514.133692-1-jbi.octave@gmail.com>
+In-Reply-To: <20191126003514.133692-1-jbi.octave@gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 26 Nov 2019 11:27:55 -0500
+Message-ID: <CADnq5_Mvx8yNG=PUYB6s+Dwqevbx4a0gC-K7iqmNtM-shrDOLw@mail.gmail.com>
+Subject: Re: [PATCH] drm: radeon: replace 0 with NULL
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Christian Koenig <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Applied.  thanks!
 
---duhffbtvsspnw6ng
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Alex
 
-Hi Stefan,
-
-On Tue, Nov 26, 2019 at 01:05:08PM +0200, Stefan Mavrodiev wrote:
-> On A64-OLinuXino boards, PG9 is used for USB1 enable/disable. The
-> port is supplied by DLDO4, which is disabled by default. The patch
-> adds the regulator as vcc-pg, which is later used by the pinctrl.
+On Tue, Nov 26, 2019 at 3:15 AM Jules Irenge <jbi.octave@gmail.com> wrote:
 >
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+> Replace 0 with NULL to fix sparse tool  warning
+>  warning: Using plain integer as NULL pointer
+>
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 > ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/gpu/drm/radeon/radeon_audio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> index 01a9a52edae4..c9d8c9c4ef20 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> @@ -163,6 +163,10 @@
->  	status = "okay";
->  };
+> diff --git a/drivers/gpu/drm/radeon/radeon_audio.c b/drivers/gpu/drm/radeon/radeon_audio.c
+> index b9aea5776d3d..2269cfced788 100644
+> --- a/drivers/gpu/drm/radeon/radeon_audio.c
+> +++ b/drivers/gpu/drm/radeon/radeon_audio.c
+> @@ -288,7 +288,7 @@ static void radeon_audio_interface_init(struct radeon_device *rdev)
+>         } else {
+>                 rdev->audio.funcs = &r600_funcs;
+>                 rdev->audio.hdmi_funcs = &r600_hdmi_funcs;
+> -               rdev->audio.dp_funcs = 0;
+> +               rdev->audio.dp_funcs = NULL;
+>         }
+>  }
 >
-> +&pio {
-> +	vcc-pg-supply=<&reg_dldo4>;
-
-The equal sign should have spaces around it.
-
-Also, can you please list all the bank supplies while you're at it?
-
-Thanks!
-Maxime
+> --
+> 2.23.0
 >
-
---duhffbtvsspnw6ng
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXd1SaAAKCRDj7w1vZxhR
-xXArAP9pNq5XxgsrXMmqOM0FNRQA+MWaUyrJ8bzIKdPtsY1+xwD8DA+PgzubuRzo
-DT9smxFVEkQUm5d3dPI79hLwkAlgfAM=
-=l4bs
------END PGP SIGNATURE-----
-
---duhffbtvsspnw6ng--
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
