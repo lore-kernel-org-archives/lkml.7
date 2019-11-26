@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7637C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFE2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABED62084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1762084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfKZUOT (ORCPT
+        id S1727300AbfKZUOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:14:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46162 "EHLO mx1.suse.de"
+        Tue, 26 Nov 2019 15:14:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46542 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727139AbfKZUON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:14:13 -0500
+        id S1727230AbfKZUOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:14:18 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 62EF1B14B;
-        Tue, 26 Nov 2019 20:14:11 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id CF82AB253;
+        Tue, 26 Nov 2019 20:14:15 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/35] powerpc/64s/exception: Remove old INT_KVM_HANDLER
-Date:   Tue, 26 Nov 2019 21:13:22 +0100
-Message-Id: <a6a7189a597da57877ce94d634fc73e0ae65e862.1574798487.git.msuchanek@suse.de>
+Subject: [PATCH v2 11/35] powerpc/64s/exception: move soft-mask test to common code
+Date:   Tue, 26 Nov 2019 21:13:25 +0100
+Message-Id: <9a7132fa0e385531ce4e732e1cf89d074fdc9b18.1574798487.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574798487.git.msuchanek@suse.de>
 References: <cover.1574798487.git.msuchanek@suse.de>
@@ -81,141 +81,201 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
+As well as moving code out of the unrelocated vectors, this allows the
+masked handlers to be moved to common code, and allows the soft_nmi
+handler to be generated more like a regular handler.
+
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 55 +++++++++++++---------------
- 1 file changed, 26 insertions(+), 29 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 106 +++++++++++++--------------
+ 1 file changed, 49 insertions(+), 57 deletions(-)
 
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index f318869607db..bef0c2eee7dc 100644
+index 5803ce3b9404..fbc3fbb293f7 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -266,15 +266,6 @@ do_define_int n
+@@ -411,36 +411,6 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
+ 	.if (!\virt && IKVM_REAL) || (\virt && IKVM_VIRT)
+ 		KVMTEST \name IHSRR IVEC
  	.endif
- .endm
- 
--.macro INT_KVM_HANDLER name, vec, hsrr, area, skip
--	TRAMP_KVM_BEGIN(\name\()_kvm)
--	KVM_HANDLER \vec, \hsrr, \area, \skip
--.endm
+-	.if IMASK
+-		lbz	r10,PACAIRQSOFTMASK(r13)
+-		andi.	r10,r10,IMASK
+-		/* Associate vector numbers with bits in paca->irq_happened */
+-		.if IVEC == 0x500 || IVEC == 0xea0
+-		li	r10,PACA_IRQ_EE
+-		.elseif IVEC == 0x900
+-		li	r10,PACA_IRQ_DEC
+-		.elseif IVEC == 0xa00 || IVEC == 0xe80
+-		li	r10,PACA_IRQ_DBELL
+-		.elseif IVEC == 0xe60
+-		li	r10,PACA_IRQ_HMI
+-		.elseif IVEC == 0xf00
+-		li	r10,PACA_IRQ_PMI
+-		.else
+-		.abort "Bad maskable vector"
+-		.endif
 -
--.macro GEN_KVM name
--	KVM_HANDLER IVEC, IHSRR, IAREA, IKVM_SKIP
--.endm
--
- #ifdef CONFIG_KVM_BOOK3S_64_HANDLER
- #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
- /*
-@@ -293,35 +284,35 @@ do_define_int n
- 	bne	\name\()_kvm
+-		.if IHSRR == EXC_HV_OR_STD
+-		BEGIN_FTR_SECTION
+-		bne	masked_Hinterrupt
+-		FTR_SECTION_ELSE
+-		bne	masked_interrupt
+-		ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
+-		.elseif IHSRR
+-		bne	masked_Hinterrupt
+-		.else
+-		bne	masked_interrupt
+-		.endif
+-	.endif
+ 
+ 	std	r11,IAREA+EX_R11(r13)
+ 	std	r12,IAREA+EX_R12(r13)
+@@ -524,6 +494,37 @@ DEFINE_FIXED_SYMBOL(\name\()_common_virt)
  .endm
  
--.macro KVM_HANDLER vec, hsrr, area, skip
--	.if \skip
-+.macro GEN_KVM name
-+	.if IKVM_SKIP
- 	cmpwi	r10,KVM_GUEST_MODE_SKIP
- 	beq	89f
- 	.else
- BEGIN_FTR_SECTION_NESTED(947)
--	ld	r10,\area+EX_CFAR(r13)
-+	ld	r10,IAREA+EX_CFAR(r13)
- 	std	r10,HSTATE_CFAR(r13)
- END_FTR_SECTION_NESTED(CPU_FTR_CFAR,CPU_FTR_CFAR,947)
- 	.endif
- 
- BEGIN_FTR_SECTION_NESTED(948)
--	ld	r10,\area+EX_PPR(r13)
-+	ld	r10,IAREA+EX_PPR(r13)
- 	std	r10,HSTATE_PPR(r13)
- END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
--	ld	r10,\area+EX_R10(r13)
-+	ld	r10,IAREA+EX_R10(r13)
- 	std	r12,HSTATE_SCRATCH0(r13)
- 	sldi	r12,r9,32
- 	/* HSRR variants have the 0x2 bit added to their trap number */
--	.if \hsrr == EXC_HV_OR_STD
-+	.if IHSRR == EXC_HV_OR_STD
- 	BEGIN_FTR_SECTION
--	ori	r12,r12,(\vec + 0x2)
-+	ori	r12,r12,(IVEC + 0x2)
- 	FTR_SECTION_ELSE
--	ori	r12,r12,(\vec)
-+	ori	r12,r12,(IVEC)
- 	ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
--	.elseif \hsrr
--	ori	r12,r12,(\vec + 0x2)
-+	.elseif IHSRR
-+	ori	r12,r12,(IVEC+ 0x2)
- 	.else
--	ori	r12,r12,(\vec)
-+	ori	r12,r12,(IVEC)
- 	.endif
- 
- #ifdef CONFIG_RELOCATABLE
-@@ -334,25 +325,25 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	std	r9,HSTATE_SCRATCH1(r13)
- 	__LOAD_FAR_HANDLER(r9, kvmppc_interrupt)
- 	mtctr	r9
--	ld	r9,\area+EX_R9(r13)
-+	ld	r9,IAREA+EX_R9(r13)
- 	bctr
- #else
--	ld	r9,\area+EX_R9(r13)
-+	ld	r9,IAREA+EX_R9(r13)
- 	b	kvmppc_interrupt
- #endif
- 
- 
--	.if \skip
-+	.if IKVM_SKIP
- 89:	mtocrf	0x80,r9
--	ld	r9,\area+EX_R9(r13)
--	ld	r10,\area+EX_R10(r13)
--	.if \hsrr == EXC_HV_OR_STD
-+	ld	r9,IAREA+EX_R9(r13)
-+	ld	r10,IAREA+EX_R10(r13)
-+	.if IHSRR == EXC_HV_OR_STD
- 	BEGIN_FTR_SECTION
- 	b	kvmppc_skip_Hinterrupt
- 	FTR_SECTION_ELSE
- 	b	kvmppc_skip_interrupt
- 	ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
--	.elseif \hsrr
-+	.elseif IHSRR
- 	b	kvmppc_skip_Hinterrupt
- 	.else
- 	b	kvmppc_skip_interrupt
-@@ -363,7 +354,7 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- #else
- .macro KVMTEST name, hsrr, n
- .endm
--.macro KVM_HANDLER name, vec, hsrr, area, skip
-+.macro GEN_KVM name
- .endm
- #endif
- 
-@@ -1640,6 +1631,12 @@ EXC_VIRT_NONE(0x4b00, 0x100)
-  * without saving, though xer is not a good idea to use, as hardware may
-  * interpret some bits so it may be costly to change them.
-  */
-+INT_DEFINE_BEGIN(system_call)
-+	IVEC=0xc00
-+	IKVM_REAL=1
-+	IKVM_VIRT=1
-+INT_DEFINE_END(system_call)
+ .macro __GEN_COMMON_BODY name
++	.if IMASK
++		lbz	r10,PACAIRQSOFTMASK(r13)
++		andi.	r10,r10,IMASK
++		/* Associate vector numbers with bits in paca->irq_happened */
++		.if IVEC == 0x500 || IVEC == 0xea0
++		li	r10,PACA_IRQ_EE
++		.elseif IVEC == 0x900
++		li	r10,PACA_IRQ_DEC
++		.elseif IVEC == 0xa00 || IVEC == 0xe80
++		li	r10,PACA_IRQ_DBELL
++		.elseif IVEC == 0xe60
++		li	r10,PACA_IRQ_HMI
++		.elseif IVEC == 0xf00
++		li	r10,PACA_IRQ_PMI
++		.else
++		.abort "Bad maskable vector"
++		.endif
 +
- .macro SYSTEM_CALL virt
- #ifdef CONFIG_KVM_BOOK3S_64_HANDLER
- 	/*
-@@ -1733,7 +1730,7 @@ TRAMP_KVM_BEGIN(system_call_kvm)
- 	SET_SCRATCH0(r10)
- 	std	r9,PACA_EXGEN+EX_R9(r13)
- 	mfcr	r9
--	KVM_HANDLER 0xc00, EXC_STD, PACA_EXGEN, 0
-+	GEN_KVM system_call
- #endif
++		.if IHSRR == EXC_HV_OR_STD
++		BEGIN_FTR_SECTION
++		bne	masked_Hinterrupt
++		FTR_SECTION_ELSE
++		bne	masked_interrupt
++		ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
++		.elseif IHSRR
++		bne	masked_Hinterrupt
++		.else
++		bne	masked_interrupt
++		.endif
++	.endif
++
+ 	.if ISTACK
+ 	andi.	r10,r12,MSR_PR		/* See if coming from user	*/
+ 	mr	r10,r1			/* Save r1			*/
+@@ -2343,18 +2344,10 @@ EXC_VIRT_NONE(0x5800, 0x100)
  
+ #ifdef CONFIG_PPC_WATCHDOG
+ 
+-#define MASKED_DEC_HANDLER_LABEL 3f
+-
+-#define MASKED_DEC_HANDLER(_H)				\
+-3: /* soft-nmi */					\
+-	std	r12,PACA_EXGEN+EX_R12(r13);		\
+-	GET_SCRATCH0(r10);				\
+-	std	r10,PACA_EXGEN+EX_R13(r13);		\
+-	mfspr	r11,SPRN_SRR0;		/* save SRR0 */	\
+-	mfspr	r12,SPRN_SRR1;		/* and SRR1 */	\
+-	LOAD_HANDLER(r10, soft_nmi_common);		\
+-	mtctr	r10;					\
+-	bctr
++INT_DEFINE_BEGIN(soft_nmi)
++	IVEC=0x900
++	ISTACK=0
++INT_DEFINE_END(soft_nmi)
+ 
+ /*
+  * Branch to soft_nmi_interrupt using the emergency stack. The emergency
+@@ -2366,19 +2359,16 @@ EXC_VIRT_NONE(0x5800, 0x100)
+  * and run it entirely with interrupts hard disabled.
+  */
+ EXC_COMMON_BEGIN(soft_nmi_common)
++	mfspr	r11,SPRN_SRR0
+ 	mr	r10,r1
+ 	ld	r1,PACAEMERGSP(r13)
+ 	subi	r1,r1,INT_FRAME_SIZE
+-	__ISTACK(decrementer)=0
+-	__GEN_COMMON_BODY decrementer
++	__GEN_COMMON_BODY soft_nmi
+ 	bl	save_nvgprs
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	soft_nmi_interrupt
+ 	b	ret_from_except
+ 
+-#else /* CONFIG_PPC_WATCHDOG */
+-#define MASKED_DEC_HANDLER_LABEL 2f /* normal return */
+-#define MASKED_DEC_HANDLER(_H)
+ #endif /* CONFIG_PPC_WATCHDOG */
+ 
+ /*
+@@ -2397,7 +2387,6 @@ masked_Hinterrupt:
+ 	.else
+ masked_interrupt:
+ 	.endif
+-	std	r11,PACA_EXGEN+EX_R11(r13)
+ 	lbz	r11,PACAIRQHAPPENED(r13)
+ 	or	r11,r11,r10
+ 	stb	r11,PACAIRQHAPPENED(r13)
+@@ -2406,26 +2395,30 @@ masked_interrupt:
+ 	lis	r10,0x7fff
+ 	ori	r10,r10,0xffff
+ 	mtspr	SPRN_DEC,r10
+-	b	MASKED_DEC_HANDLER_LABEL
++#ifdef CONFIG_PPC_WATCHDOG
++	b	soft_nmi_common
++#else
++	b	2f
++#endif
+ 1:	andi.	r10,r10,PACA_IRQ_MUST_HARD_MASK
+ 	beq	2f
++	xori	r12,r12,MSR_EE	/* clear MSR_EE */
+ 	.if \hsrr
+-	mfspr	r10,SPRN_HSRR1
+-	xori	r10,r10,MSR_EE	/* clear MSR_EE */
+-	mtspr	SPRN_HSRR1,r10
++	mtspr	SPRN_HSRR1,r12
+ 	.else
+-	mfspr	r10,SPRN_SRR1
+-	xori	r10,r10,MSR_EE	/* clear MSR_EE */
+-	mtspr	SPRN_SRR1,r10
++	mtspr	SPRN_SRR1,r12
+ 	.endif
+ 	ori	r11,r11,PACA_IRQ_HARD_DIS
+ 	stb	r11,PACAIRQHAPPENED(r13)
+ 2:	/* done */
++	ld	r10,PACA_EXGEN+EX_CTR(r13)
++	mtctr	r10
+ 	mtcrf	0x80,r9
+ 	std	r1,PACAR1(r13)
+ 	ld	r9,PACA_EXGEN+EX_R9(r13)
+ 	ld	r10,PACA_EXGEN+EX_R10(r13)
+ 	ld	r11,PACA_EXGEN+EX_R11(r13)
++	ld	r12,PACA_EXGEN+EX_R12(r13)
+ 	/* returns to kernel where r13 must be set up, so don't restore it */
+ 	.if \hsrr
+ 	HRFI_TO_KERNEL
+@@ -2433,7 +2426,6 @@ masked_interrupt:
+ 	RFI_TO_KERNEL
+ 	.endif
+ 	b	.
+-	MASKED_DEC_HANDLER(\hsrr\())
+ .endm
+ 
+ TRAMP_REAL_BEGIN(stf_barrier_fallback)
+@@ -2540,7 +2532,7 @@ TRAMP_REAL_BEGIN(hrfi_flush_fallback)
+  * instruction code patches (which end up in the common .text area)
+  * cannot reach these if they are put there.
+  */
+-USE_FIXED_SECTION(virt_trampolines)
++USE_TEXT_SECTION()
+ 	MASKED_INTERRUPT EXC_STD
+ 	MASKED_INTERRUPT EXC_HV
  
 -- 
 2.23.0
