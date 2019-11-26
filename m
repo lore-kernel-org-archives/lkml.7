@@ -2,175 +2,107 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C6CC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44116C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98CB20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153672073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfKZJno (ORCPT
+        id S1727680AbfKZJon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:43:44 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35112 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727400AbfKZJnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:43:43 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EBD8DBBFE;
-        Tue, 26 Nov 2019 09:43:40 +0000 (UTC)
-Message-ID: <26c9cb9434fe59b61884e0e43d116fbff6c8590a.camel@suse.de>
-Subject: Re: [PATCH v3 3/7] ARM: dts: bcm2711: Enable PCIe controller
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Phil Elwell <phil@raspberrypi.org>, andrew.murray@arm.com,
-        maz@kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org
-Date:   Tue, 26 Nov 2019 10:43:39 +0100
-In-Reply-To: <ede90a60-8194-4035-01c2-2673f4a8cfe7@raspberrypi.org>
-References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
-         <20191126091946.7970-4-nsaenzjulienne@suse.de>
-         <ede90a60-8194-4035-01c2-2673f4a8cfe7@raspberrypi.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-MjOyRhx4Yk8pEyDha5vk"
-User-Agent: Evolution 3.34.1 
+        Tue, 26 Nov 2019 04:44:43 -0500
+Received: from mga02.intel.com ([134.134.136.20]:61239 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727397AbfKZJom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:44:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 01:44:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,245,1571727600"; 
+   d="scan'208";a="220576352"
+Received: from twinkler-lnx.jer.intel.com ([10.12.91.155])
+  by orsmga002.jf.intel.com with ESMTP; 26 Nov 2019 01:44:40 -0800
+From:   Tomas Winkler <tomas.winkler@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [char-misc-next] mei: bus: use simple sprintf for sysfs
+Date:   Tue, 26 Nov 2019 14:30:02 +0200
+Message-Id: <20191126123002.4835-1-tomas.winkler@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Replace scnprintf with simple sprintf for sysfs files.
+it is implicitly known that the buffer is big enough
+for the variables to fit in.
 
---=-MjOyRhx4Yk8pEyDha5vk
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+---
+ drivers/misc/mei/bus.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-On Tue, 2019-11-26 at 09:37 +0000, Phil Elwell wrote:
-> Hi Nicolas,
->=20
-> On 26/11/2019 09:19, Nicolas Saenz Julienne wrote:
-> > This enables bcm2711's PCIe bus, which is hardwired to a VIA
-> > Technologies XHCI USB 3.0 controller.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> >=20
-> > ---
-> >=20
-> > This will likely need a rebase once the RPi GENET patches land.
-> >=20
-> > Changes since v2:
-> >    - Remove unused interrupt-map
-> >    - correct dma-ranges to it's full size, non power of 2 bus DMA
-> >      constraints now supported in linux-next[1]
-> >    - add device_type
-> >    - rename alias from pcie_0 to pcie0
-> >=20
-> > Changes since v1:
-> >    - remove linux,pci-domain
-> >=20
-> > [1] https://lkml.org/lkml/2019/11/21/235
-> >=20
-> >   arch/arm/boot/dts/bcm2711.dtsi | 41 +++++++++++++++++++++++++++++++++=
-+
-> >   1 file changed, 41 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711=
-.dtsi
-> > index 667658497898..2e121fc8b3d0 100644
-> > --- a/arch/arm/boot/dts/bcm2711.dtsi
-> > +++ b/arch/arm/boot/dts/bcm2711.dtsi
-> > @@ -288,6 +288,47 @@ IRQ_TYPE_LEVEL_LOW)>,
-> >   		arm,cpu-registers-not-fw-configured;
-> >   	};
-> >  =20
-> > +	scb {
-> > +		compatible =3D "simple-bus";
-> > +		#address-cells =3D <2>;
-> > +		#size-cells =3D <1>;
-> > +
-> > +		ranges =3D <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
-> > +			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
-> > +
-> > +		pcie0: pcie@7d500000 {
-> > +			compatible =3D "brcm,bcm2711-pcie";
-> > +			reg =3D <0x0 0x7d500000 0x9310>;
-> > +			device_type =3D "pci";
-> > +			#address-cells =3D <3>;
-> > +			#interrupt-cells =3D <1>;
-> > +			#size-cells =3D <2>;
-> > +			interrupts =3D <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> > +			interrupt-names =3D "pcie", "msi";
-> > +			interrupt-map-mask =3D <0x0 0x0 0x0 0x7>;
-> > +			interrupt-map =3D <0 0 0 1 &gicv2 GIC_SPI 143
-> > +							IRQ_TYPE_LEVEL_HIGH>;
-> > +			msi-controller;
-> > +			msi-parent =3D <&pcie0>;
-> > +
-> > +			ranges =3D <0x02000000 0x0 0xf8000000 0x6 0x00000000
-> > +				  0x0 0x04000000>;
-> > +			/*
-> > +			 * The wrapper around the PCIe block has a bug
-> > +			 * preventing it from accessing beyond the first 3GB of
-> > +			 * memory. As the bus DMA mask is rounded up to the
-> > +			 * closest power of two of the dma-range size, we're
-> > +			 * forced to set the limit at 2GB. This can be
-> > +			 * harmlessly changed in the future once the DMA code
-> > +			 * handles non power of two DMA limits.
-> > +			 */
-> > +			dma-ranges =3D <0x02000000 0x0 0x00000000 0x0 0x00000000
-> > +				      0x0 0xc0000000>;
->=20
-> The comment doesn't match the data here - I think for now the size field=
-=20
-> needs to be reduced to 2GB to match the comment.
-
-You're right, my bad, should've edited it out. The good part is that with t=
-his
-commit[1], which will soon be in Linus' tree, we don't need to fake dma-ran=
-ges
-size anymore.
-
-So for the record, the comment should state the following:
-
-	/*
-	 * The wrapper around the PCIe block has a bug
-	 * preventing it from accessing beyond the first 3GB of
-	 * memory.
-	 */
-
-Regards,
-Nicolas
-
-[1] https://lkml.org/lkml/2019/11/21/235
-
-
---=-MjOyRhx4Yk8pEyDha5vk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3c88sACgkQlfZmHno8
-x/7oswgAh8iyNGIM8/MJDFgcwiJ/KpGC9jc+vkjrrB7lLjA2i2L72hTIiHL4BbzE
-6sM5qVV7uml+1a9QwNLMsHkJQrK4VXdJohQEkPG+qqa1qWuYuQX9JIqA4CGowiMZ
-X/tWSCI5DJS3npMmiOCXlh7zZBaZx90iuJZXMqWRKHuEXlw5nN/rfkYiMyf4J0kD
-xquAH7gT/Tx5O20oh9cKjOoa745pbnX7At6qwIg7DTbU8mb2zLJWLhHA/GZmfkv3
-dmzw2btV71x+s3JVkfdzzA9g+Ttm+MUbu4GJzVqkshuEUU3BR6If7xBQTh7EH51C
-HFvZfdwyqnMSXjipC6RpifYEEX5tGQ==
-=sINh
------END PGP SIGNATURE-----
-
---=-MjOyRhx4Yk8pEyDha5vk--
+diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
+index a0a495c95e3c..8d468e0a950a 100644
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -765,7 +765,7 @@ static ssize_t uuid_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	const uuid_le *uuid = mei_me_cl_uuid(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%pUl", uuid);
++	return sprintf(buf, "%pUl", uuid);
+ }
+ static DEVICE_ATTR_RO(uuid);
+ 
+@@ -775,7 +775,7 @@ static ssize_t version_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u8 version = mei_me_cl_ver(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%02X", version);
++	return sprintf(buf, "%02X", version);
+ }
+ static DEVICE_ATTR_RO(version);
+ 
+@@ -797,7 +797,7 @@ static ssize_t max_conn_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u8 maxconn = mei_me_cl_max_conn(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%d", maxconn);
++	return sprintf(buf, "%d", maxconn);
+ }
+ static DEVICE_ATTR_RO(max_conn);
+ 
+@@ -807,7 +807,7 @@ static ssize_t fixed_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u8 fixed = mei_me_cl_fixed(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%d", fixed);
++	return sprintf(buf, "%d", fixed);
+ }
+ static DEVICE_ATTR_RO(fixed);
+ 
+@@ -817,7 +817,7 @@ static ssize_t max_len_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u32 maxlen = mei_me_cl_max_len(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%u", maxlen);
++	return sprintf(buf, "%u", maxlen);
+ }
+ static DEVICE_ATTR_RO(max_len);
+ 
+-- 
+2.21.0
 
