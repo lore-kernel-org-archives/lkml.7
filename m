@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F23C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD04C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5847920722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D0120722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfKZNNW (ORCPT
+        id S1727857AbfKZNNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:13:22 -0500
+        Tue, 26 Nov 2019 08:13:24 -0500
 Received: from esa3.microchip.iphmx.com ([68.232.153.233]:57033 "EHLO
         esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfKZNNW (ORCPT
+        with ESMTP id S1727304AbfKZNNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Nov 2019 08:13:22 -0500
 Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
@@ -39,22 +39,22 @@ Received-SPF: None (esa3.microchip.iphmx.com: no sender
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
 Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: qk+4DH05O+eW50SgCUZFpGq+L+fjSqaZvKz/Wn4NDsVcaryzJcbdd96w4kCJECjyErAOSoAK96
- k4RX5uVgb++yDloxLZc7+IqXeRwjGmLUNmczX7swRrPLdnWOa/INNHKTjERm17oGmTcXe5/v9H
- FFeRPP8yoXxcAsswCtreMNHIYUeNTJ7UVpByZFry/Wd0MQaogDP1H2d8BaKtHsmrV0hdObud26
- h1lqJCC3C5a8BHOxv9yFCz5iEzc+U8a2/t7HRj7OVQ+514CNdgjljgihR/tkuxcjclCV76kLR0
- Qlk=
+IronPort-SDR: +9qhK6o2MHIXlpRJ6Zamg9p5qByY1W4+Vw6uEnX2rh/lp3Zg5jTrKtAYl/lFKMt0/t4o2bT/dr
+ lRB8sLBCn4OTjsQTFBmdE6MPUZbW43yBNYRYXqpOh+9smCTiOXHlXo0u9denEvxH6FkVmcrb5s
+ 01c+vHyz8pw8mvCbDcWz6XFsAUckYaVFTuH872M8reHMNDyfZjCk84T6mBlcXp3dTxDL1umtOr
+ 562SpvFigWXOiSGk7VGCEi3i1wc3BSF+JZxGnykh7HsDPu5imYNSx25pAYnuBdAzXfpXBiwDW8
+ tFw=
 X-IronPort-AV: E=Sophos;i="5.69,245,1571727600"; 
-   d="scan'208";a="58391133"
+   d="scan'208";a="58391137"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
   by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Nov 2019 06:13:21 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 26 Nov 2019 06:13:16 -0700
+ 15.1.1713.5; Tue, 26 Nov 2019 06:13:19 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 26 Nov 2019 06:13:14 -0700
+ 15.1.1713.5 via Frontend Transport; Tue, 26 Nov 2019 06:13:16 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
         <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
@@ -62,9 +62,9 @@ To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 09/17] ARM: at91/defconfig: enable config flag for sam9x60 SoC
-Date:   Tue, 26 Nov 2019 15:12:13 +0200
-Message-ID: <1574773941-20649-10-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 10/17] ARM: at91/defconfig: enable config flag for atmel maxtouch
+Date:   Tue, 26 Nov 2019 15:12:14 +0200
+Message-ID: <1574773941-20649-11-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
@@ -75,33 +75,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable config flag for SAM9X60 SoC.
+Enable config flag for atmel maxtouch. This is needed for SAM9X60 SoC.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/configs/at91_dt_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/configs/at91_dt_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
-index 148f753de6c7..5afc39c241db 100644
+index 5afc39c241db..c3305e563742 100644
 --- a/arch/arm/configs/at91_dt_defconfig
 +++ b/arch/arm/configs/at91_dt_defconfig
-@@ -13,6 +13,7 @@ CONFIG_ARCH_MULTI_V5=y
- CONFIG_ARCH_AT91=y
- CONFIG_SOC_AT91RM9200=y
- CONFIG_SOC_AT91SAM9=y
-+CONFIG_SOC_SAM9X60=y
- # CONFIG_ATMEL_CLOCKSOURCE_PIT is not set
- CONFIG_AEABI=y
- CONFIG_UACCESS_WITH_MEMCPY=y
-@@ -109,6 +110,7 @@ CONFIG_I2C_GPIO=y
- CONFIG_SPI=y
- CONFIG_SPI_ATMEL=y
- CONFIG_POWER_RESET=y
-+# CONFIG_POWER_RESET_AT91_SAMA5D2_SHDWC is not set
- CONFIG_POWER_SUPPLY=y
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=y
+@@ -100,6 +100,7 @@ CONFIG_KEYBOARD_GPIO=y
+ # CONFIG_INPUT_MOUSE is not set
+ CONFIG_INPUT_TOUCHSCREEN=y
+ CONFIG_TOUCHSCREEN_ADS7846=y
++CONFIG_TOUCHSCREEN_ATMEL_MXT=y
+ # CONFIG_SERIO is not set
+ CONFIG_LEGACY_PTY_COUNT=4
+ CONFIG_SERIAL_ATMEL=y
 -- 
 2.7.4
 
