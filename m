@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BC9C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD54C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1E721556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EB1216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889275;
-	bh=tiZo7yfmOeXm6N5umuvy8LgJchgg6d+v0cQPRTP5Mw0=;
+	s=default; t=1574889278;
+	bh=k6AYE9IRxjT7DXWWP/QLm26U5fRTVcN27W+J5Ij7gIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KQpyN3xds1KJ851t5qHRq2EQxwTpgF9otmoIJW4y3HraKxb1ZCYM8s/uL9cmIcxT+
-	 AZeiVrzUe/LC4lpzgNfL/F1dLQQVlCwswASTeVT/hUkWzsXHPNnJ4fKKiUXelXJ/VB
-	 tF0XmHrxcO80bHUgVnFuOZT114eKzzzz8/ybkaPw=
+	b=dw4dkPf3FguaUrf6Jv73T5th1A2kmxSLKEzM8usRekeZLSI6V/VhrFgKijqeu9Pi4
+	 bhwL5YGq51tYhq07aI6tzh/cERpEcKMDJlRdZ4FnND7cLqXXWgXA+dUbveaDNyDPuy
+	 VNc1D/27URe4vlE9oFeHJ+bfwlZzVdq2X3ef3gLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732190AbfK0VOe (ORCPT
+        id S1733146AbfK0VOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:14:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48292 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:14:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387540AbfK0VO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:14:29 -0500
+        id S1732210AbfK0VOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:14:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42B6E2086A;
-        Wed, 27 Nov 2019 21:14:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19B542086A;
+        Wed, 27 Nov 2019 21:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889268;
-        bh=tiZo7yfmOeXm6N5umuvy8LgJchgg6d+v0cQPRTP5Mw0=;
+        s=default; t=1574889271;
+        bh=k6AYE9IRxjT7DXWWP/QLm26U5fRTVcN27W+J5Ij7gIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XsTIscrFnVErhEDgSYW2h9bGgIY8EeHBC661/YqF9LJj1RDuR6jDmfgd24kJwhsR3
-         hvb5fwboFUyjBflT6JG9ZHFGGDmUFM27nMtYgPhrGtODzYKtWOXkp4C6Rat0jHzeQz
-         evKZ5OQK/WVd9c06UgLaWZQOSckZG5zUuqfaqyjs=
+        b=Bl0XipLV7Su+WFqiB8UPCyPW2xP9n1TbUsYgRk150CwlKZU05dSG/c+kwpkCZb5kp
+         j888itAfkAOvWI3KueLtOncMKRziD7CzAUsKfgyBQiGe7o+knuQSjKrGVELBguooPC
+         bEfKUtVNfxK/zSZAT0itoDjUT+F2kFdJWHTpbY8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 12/66] nbd: prevent memory leak
-Date:   Wed, 27 Nov 2019 21:32:07 +0100
-Message-Id: <20191127202647.736404180@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.4 13/66] x86/stackframe/32: Repair 32-bit Xen PV
+Date:   Wed, 27 Nov 2019 21:32:08 +0100
+Message-Id: <20191127202649.327030931@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -60,42 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Jan Beulich <jbeulich@suse.com>
 
-commit 03bf73c315edca28f47451913177e14cd040a216 upstream.
+commit 81ff2c37f9e5d77593928df0536d86443195fd64 upstream.
 
-In nbd_add_socket when krealloc succeeds, if nsock's allocation fail the
-reallocted memory is leak. The correct behaviour should be assigning the
-reallocted memory to config->socks right after success.
+Once again RPL checks have been introduced which don't account for a 32-bit
+kernel living in ring 1 when running in a PV Xen domain. The case in
+FIXUP_FRAME has been preventing boot.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Adjust BUG_IF_WRONG_CR3 as well to guard against future uses of the macro
+on a code path reachable when running in PV mode under Xen; I have to admit
+that I stopped at a certain point trying to figure out whether there are
+present ones.
+
+Fixes: 3c88c692c287 ("x86/stackframe/32: Provide consistent pt_regs")
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Stable Team <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/0fad341f-b7f5-f859-d55d-f0084ee7087e@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/nbd.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/entry/entry_32.S      |    4 ++--
+ arch/x86/include/asm/segment.h |   12 ++++++++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1032,14 +1032,15 @@ static int nbd_add_socket(struct nbd_dev
- 		sockfd_put(sock);
- 		return -ENOMEM;
- 	}
-+
-+	config->socks = socks;
-+
- 	nsock = kzalloc(sizeof(struct nbd_sock), GFP_KERNEL);
- 	if (!nsock) {
- 		sockfd_put(sock);
- 		return -ENOMEM;
- 	}
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -172,7 +172,7 @@
+ 	ALTERNATIVE "jmp .Lend_\@", "", X86_FEATURE_PTI
+ 	.if \no_user_check == 0
+ 	/* coming from usermode? */
+-	testl	$SEGMENT_RPL_MASK, PT_CS(%esp)
++	testl	$USER_SEGMENT_RPL_MASK, PT_CS(%esp)
+ 	jz	.Lend_\@
+ 	.endif
+ 	/* On user-cr3? */
+@@ -217,7 +217,7 @@
+ 	testl	$X86_EFLAGS_VM, 4*4(%esp)
+ 	jnz	.Lfrom_usermode_no_fixup_\@
+ #endif
+-	testl	$SEGMENT_RPL_MASK, 3*4(%esp)
++	testl	$USER_SEGMENT_RPL_MASK, 3*4(%esp)
+ 	jnz	.Lfrom_usermode_no_fixup_\@
  
--	config->socks = socks;
--
- 	nsock->fallback_index = -1;
- 	nsock->dead = false;
- 	mutex_init(&nsock->tx_lock);
+ 	orl	$CS_FROM_KERNEL, 3*4(%esp)
+--- a/arch/x86/include/asm/segment.h
++++ b/arch/x86/include/asm/segment.h
+@@ -31,6 +31,18 @@
+  */
+ #define SEGMENT_RPL_MASK	0x3
+ 
++/*
++ * When running on Xen PV, the actual privilege level of the kernel is 1,
++ * not 0. Testing the Requested Privilege Level in a segment selector to
++ * determine whether the context is user mode or kernel mode with
++ * SEGMENT_RPL_MASK is wrong because the PV kernel's privilege level
++ * matches the 0x3 mask.
++ *
++ * Testing with USER_SEGMENT_RPL_MASK is valid for both native and Xen PV
++ * kernels because privilege level 2 is never used.
++ */
++#define USER_SEGMENT_RPL_MASK	0x2
++
+ /* User mode is privilege level 3: */
+ #define USER_RPL		0x3
+ 
 
 
