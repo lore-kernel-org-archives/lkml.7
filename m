@@ -2,132 +2,118 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C79FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2609EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543B82075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6291206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PzOTKkC7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JOd+v619"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfK0P4C (ORCPT
+        id S1727016AbfK0P7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:56:02 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:37252 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfK0P4C (ORCPT
+        Wed, 27 Nov 2019 10:59:19 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40986 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfK0P7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:56:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3iLIidMssZl9d6PrGezfyNaB0BMUcnGVIulOgI4kuAE=; b=PzOTKkC7unuoES0OGlMuf21uf
-        xroZeZ83LZ/s43XO2hmGm6VZOm3wxokxseSI+a/nkev26HRxbhxNCXqzuqzUrC2jgMAalU8W0brsQ
-        ZsryDSyHaq2yJ/Y4MsvRbQPGi6o45CAG89PTE257mW93scnxt2sKj8XxzhkT+uEl8nmub88ZFLZcG
-        Y3CrpvqOESne3xp1NItxbfhvzvtxXxcdggKZfUkda/ruNVvc/u2mPlRbzzEgaj+Rnex/OtuuENONY
-        UZDqdgOdx3Kc+OkWT2uz1/vbYU3ObLUnHcKMH9nNQQ9yAZyjh4EWgcZ8tRwb4KPCg9s9Wjcdx3jjH
-        L+dHlHPLA==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iZzfb-0000rZ-Tn; Wed, 27 Nov 2019 15:56:00 +0000
-Subject: Re: linux-next: Tree for Nov 27
- (drivers/pci/controller/dwc/pcie-designware-host.c)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-References: <20191127155717.400a60de@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <fc3586ef-a0a1-84b3-2e0e-b8ba5c41f229@infradead.org>
-Date:   Wed, 27 Nov 2019 07:55:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 27 Nov 2019 10:59:18 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xARFxEcr106737;
+        Wed, 27 Nov 2019 09:59:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574870354;
+        bh=YRWe/K0Aw3uLblw7Xsa+RJ5R4nqhOQRu3ZilF1Lpw18=;
+        h=From:To:CC:Subject:Date;
+        b=JOd+v619xGmfvIPkefpbpMGiLuJ/cs/4ASFQKEHvl4kGIeknMK8T8Qyc85QUgnyPI
+         9Pr79JneRvj+Vj1y7/Q1r1Hx8tZ9/3R/w7WTBdtxoB8vg5R+p6QnV9D8TcEGXTb0OO
+         1kxoJj7Ws5nuW4mdhXTA/X2N+NJFkoLyVEcSF1kM=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xARFxEqZ053544
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 Nov 2019 09:59:14 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
+ Nov 2019 09:59:14 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 27 Nov 2019 09:59:13 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xARFxCKS127610;
+        Wed, 27 Nov 2019 09:59:13 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     <netdev@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>
+CC:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, Sekhar Nori <nsekhar@ti.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] net: ethernet: ti: ale: ensure vlan/mdb deleted when no members
+Date:   Wed, 27 Nov 2019 17:59:05 +0200
+Message-ID: <20191127155905.22921-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191127155717.400a60de@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/26/19 8:57 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Please do not add any material for v5.6 to your linux-next included
-> trees until after v5.5-rc1 has been released.
-> 
-> Changes since 20191126:
-> 
+The recently updated ALE APIs cpsw_ale_del_mcast() and
+cpsw_ale_del_vlan_modify() have an issue and will not delete ALE entry even
+if VLAN/mcast group has no more members. Hence fix it here and delete ALE
+entry if !port_mask.
 
-on i386:
-# CONFIG_PCI_MSI is not set
+The issue affected only new cpsw switchdev driver.
 
+Fixes: e85c14370783 ("net: ethernet: ti: ale: modify vlan/mdb api for switchdev")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/cpsw_ale.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-WARNING: unmet direct dependencies detected for PCIE_DW_HOST
-  Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
-  Selected by [y]:
-  - PCIE_INTEL_GW [=y] && PCI [=y] && OF [=y] && (X86 [=y] || COMPILE_TEST [=n])
-
-and related build errors:
-
-../drivers/pci/controller/dwc/pcie-designware-host.c:72:15: error: variable ‘dw_pcie_msi_domain_info’ has initializer but incomplete type
- static struct msi_domain_info dw_pcie_msi_domain_info = {
-               ^~~~~~~~~~~~~~~
-../drivers/pci/controller/dwc/pcie-designware-host.c:73:3: error: ‘struct msi_domain_info’ has no member named ‘flags’
-  .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-   ^~~~~
-../drivers/pci/controller/dwc/pcie-designware-host.c:73:12: error: ‘MSI_FLAG_USE_DEF_DOM_OPS’ undeclared here (not in a function); did you mean ‘SIMPLE_DEV_PM_OPS’?
-  .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-            ^~~~~~~~~~~~~~~~~~~~~~~~
-            SIMPLE_DEV_PM_OPS
-../drivers/pci/controller/dwc/pcie-designware-host.c:73:39: error: ‘MSI_FLAG_USE_DEF_CHIP_OPS’ undeclared here (not in a function); did you mean ‘MSI_FLAG_USE_DEF_DOM_OPS’?
-  .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-                                       ^~~~~~~~~~~~~~~~~~~~~~~~~
-                                       MSI_FLAG_USE_DEF_DOM_OPS
-../drivers/pci/controller/dwc/pcie-designware-host.c:74:6: error: ‘MSI_FLAG_PCI_MSIX’ undeclared here (not in a function); did you mean ‘SS_FLAG_BITS’?
-      MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
-      ^~~~~~~~~~~~~~~~~
-      SS_FLAG_BITS
-../drivers/pci/controller/dwc/pcie-designware-host.c:74:26: error: ‘MSI_FLAG_MULTI_PCI_MSI’ undeclared here (not in a function); did you mean ‘MSI_FLAG_PCI_MSIX’?
-      MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
-                          ^~~~~~~~~~~~~~~~~~~~~~
-                          MSI_FLAG_PCI_MSIX
-../drivers/pci/controller/dwc/pcie-designware-host.c:73:11: warning: excess elements in struct initializer
-  .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-           ^
-../drivers/pci/controller/dwc/pcie-designware-host.c:73:11: note: (near initialization for ‘dw_pcie_msi_domain_info’)
-../drivers/pci/controller/dwc/pcie-designware-host.c:75:3: error: ‘struct msi_domain_info’ has no member named ‘chip’
-  .chip = &dw_pcie_msi_irq_chip,
-   ^~~~
-../drivers/pci/controller/dwc/pcie-designware-host.c:75:10: warning: excess elements in struct initializer
-  .chip = &dw_pcie_msi_irq_chip,
-          ^
-../drivers/pci/controller/dwc/pcie-designware-host.c:75:10: note: (near initialization for ‘dw_pcie_msi_domain_info’)
-../drivers/pci/controller/dwc/pcie-designware-host.c: In function ‘dw_pcie_allocate_domains’:
-../drivers/pci/controller/dwc/pcie-designware-host.c:267:19: error: implicit declaration of function ‘pci_msi_create_irq_domain’; did you mean ‘pci_msi_get_device_domain’? [-Werror=implicit-function-declaration]
-  pp->msi_domain = pci_msi_create_irq_domain(fwnode,
-                   ^~~~~~~~~~~~~~~~~~~~~~~~~
-                   pci_msi_get_device_domain
-../drivers/pci/controller/dwc/pcie-designware-host.c:267:17: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-  pp->msi_domain = pci_msi_create_irq_domain(fwnode,
-                 ^
-../drivers/pci/controller/dwc/pcie-designware-host.c: At top level:
-../drivers/pci/controller/dwc/pcie-designware-host.c:72:31: error: storage size of ‘dw_pcie_msi_domain_info’ isn’t known
- static struct msi_domain_info dw_pcie_msi_domain_info = {
-                               ^~~~~~~~~~~~~~~~~~~~~~~
-
-
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+index 929f3d3354e3..a5179ecfea05 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -396,12 +396,14 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
+ 	if (port_mask) {
+ 		mcast_members = cpsw_ale_get_port_mask(ale_entry,
+ 						       ale->port_mask_bits);
+-		mcast_members &= ~port_mask;
+-		cpsw_ale_set_port_mask(ale_entry, mcast_members,
++		port_mask = mcast_members & ~port_mask;
++	}
++
++	if (port_mask)
++		cpsw_ale_set_port_mask(ale_entry, port_mask,
+ 				       ale->port_mask_bits);
+-	} else {
++	else
+ 		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
+-	}
+ 
+ 	cpsw_ale_write(ale, idx, ale_entry);
+ 	return 0;
+@@ -478,6 +480,10 @@ static void cpsw_ale_del_vlan_modify(struct cpsw_ale *ale, u32 *ale_entry,
+ 	members = cpsw_ale_get_vlan_member_list(ale_entry,
+ 						ale->vlan_field_bits);
+ 	members &= ~port_mask;
++	if (!members) {
++		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
++		return;
++	}
+ 
+ 	untag = cpsw_ale_get_vlan_untag_force(ale_entry,
+ 					      ale->vlan_field_bits);
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.17.1
+
