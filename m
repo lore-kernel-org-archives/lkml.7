@@ -2,109 +2,123 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48ABC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478BEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5F1215F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA96215F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574889915;
+	bh=t6h2MdHKYMubMCHj2hQ1lpKMgX+mo2ybIpeMq9ud7/4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Pi6keherEXitUT4d+pIQfQj4kS36H+1N4WB6PnNunxWTAuHeHJVP2kbr4PaqKFDsE
+	 xdRvVOwtDyIs3Xzw4rGMjK08z+B9X6rXWZB21NFb9g83ghT8D7BbJTBBnHR1gX6qvg
+	 2/YbAb2RrpgLi7LT9q8E/LxwOgHOgEzo+TQK7nKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731854AbfK0VCP (ORCPT
+        id S1731828AbfK0VCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:02:15 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43338 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731840AbfK0VCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:02:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7B612AC1A;
-        Wed, 27 Nov 2019 21:02:09 +0000 (UTC)
-Subject: Re: [PATCH 1/5] pinctrl: actions: Use the correct style for SPDX
- License Identifier
-To:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-References: <cover.1574871463.git.nishadkamdar@gmail.com>
- <5b588fc885efca6efdc73869aa4b1eeeb3d6f6c5.1574871463.git.nishadkamdar@gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <c76290a7-b9bb-7f70-e750-04fe6fdbb7e1@suse.de>
-Date:   Wed, 27 Nov 2019 22:02:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 27 Nov 2019 16:02:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727303AbfK0VCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:02:04 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B512D20862;
+        Wed, 27 Nov 2019 21:02:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574888523;
+        bh=t6h2MdHKYMubMCHj2hQ1lpKMgX+mo2ybIpeMq9ud7/4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z69TRZIaM/U+SCYjEfsm0iUCzXgAOsUK+2gJPxzzPZeVA3Mts4VKqCBbApjbdD0CZ
+         e/sz+vRkogs6StMUyVpVsArA9zPtmlB932tAeWD7q3tekj2nDKHqdteiDreTO2Y0eI
+         /0rC0gNDToWAJFZZWWCAHoEw20modlDE5aKNSVAE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 167/306] linux/bitmap.h: handle constant zero-size bitmaps correctly
+Date:   Wed, 27 Nov 2019 21:30:17 +0100
+Message-Id: <20191127203127.614192983@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
+References: <20191127203114.766709977@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <5b588fc885efca6efdc73869aa4b1eeeb3d6f6c5.1574871463.git.nishadkamdar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 27.11.19 um 17:40 schrieb Nishad Kamdar:
-> This patch corrects the SPDX License Identifier style in
-> header file related Actions Semi OWL pinctrl driver.
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-Owl
+[ Upstream commit 7275b097851a5e2e0dd4da039c7e96b59ac5314e ]
 
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used).
-> 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> ---
->  drivers/pinctrl/actions/pinctrl-owl.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/actions/pinctrl-owl.h b/drivers/pinctrl/actions/pinctrl-owl.h
-> index dae2e8363fd5..feee7ad7e27e 100644
-> --- a/drivers/pinctrl/actions/pinctrl-owl.h
-> +++ b/drivers/pinctrl/actions/pinctrl-owl.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +/* SPDX-License-Identifier: GPL-2.0+ */
+The static inlines in bitmap.h do not handle a compile-time constant
+nbits==0 correctly (they dereference the passed src or dst pointers,
+despite only 0 words being valid to access).  I had the 0-day buildbot
+chew on a patch [1] that would cause build failures for such cases without
+complaining, suggesting that we don't have any such users currently, at
+least for the 70 .config/arch combinations that was built.  Should any
+turn up, make sure they use the out-of-line versions, which do handle
+nbits==0 correctly.
 
-This is not a uapi or asm header, which that /* */ rule was later added
-for, I thought?
+This is of course not the most efficient, but it's much less churn than
+teaching all the static inlines an "if (zero_const_nbits())", and since we
+don't have any current instances, this doesn't affect existing code at
+all.
 
->  /*
->   * OWL SoC's Pinctrl definitions
->   *
+[1] lkml.kernel.org/r/20180815085539.27485-1-linux@rasmusvillemoes.dk
 
-Not objecting, just making sure we're not blindly refactoring code.
+Link: http://lkml.kernel.org/r/20180818131623.8755-3-linux@rasmusvillemoes.dk
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Yury Norov <ynorov@caviumnetworks.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/bitmap.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-If doing this, I suggest updating to GPL-2.0-or-later.
-
-Regards,
-Andreas
-
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index acf5e8df3504f..a9805bacbd7ca 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -204,8 +204,13 @@ extern int bitmap_print_to_pagebuf(bool list, char *buf,
+ #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
+ #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
+ 
++/*
++ * The static inlines below do not handle constant nbits==0 correctly,
++ * so make such users (should any ever turn up) call the out-of-line
++ * versions.
++ */
+ #define small_const_nbits(nbits) \
+-	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG)
++	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG && (nbits) > 0)
+ 
+ static inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
+ {
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+2.20.1
+
+
+
