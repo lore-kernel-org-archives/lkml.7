@@ -2,104 +2,142 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 388A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A24C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 149632068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3E9206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfK0QDt (ORCPT
+        id S1727096AbfK0QEQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:03:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:49506 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfK0QDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:03:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1388630E;
-        Wed, 27 Nov 2019 08:03:48 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50F533F68E;
-        Wed, 27 Nov 2019 08:03:45 -0800 (PST)
-Date:   Wed, 27 Nov 2019 16:03:43 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, steve.capper@arm.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Stefan Agner <stefan@agner.ch>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        xen-devel@lists.xenproject.org,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2 3/3] arm64: remove the rest of asm-uaccess.h
-Message-ID: <20191127160342.GF51937@lakrids.cambridge.arm.com>
-References: <20191122022406.590141-1-pasha.tatashin@soleen.com>
- <20191122022406.590141-4-pasha.tatashin@soleen.com>
- <20191127151154.GC51937@lakrids.cambridge.arm.com>
- <CA+CK2bDDom_pwLC-ABwDw66ynyELH3f3NdjUEdhr1LYLkgWJvg@mail.gmail.com>
+        Wed, 27 Nov 2019 11:04:16 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:36368 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbfK0QEP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 11:04:15 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-18-Aa6kDxC7OPi54Qqo1k4BMw-1; Wed, 27 Nov 2019 16:04:12 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 27 Nov 2019 16:04:12 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 27 Nov 2019 16:04:12 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jesper Dangaard Brouer' <brouer@redhat.com>
+CC:     'Marek Majkowski' <marek@cloudflare.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Paolo Abeni <pabeni@redhat.com>
+Subject: RE: epoll_wait() performance
+Thread-Topic: epoll_wait() performance
+Thread-Index: AdWgk3jgEIFNwcnRS6+4A+/jFPxTuQEdLCCAAAAn2qAADFPagAAAV68A
+Date:   Wed, 27 Nov 2019 16:04:12 +0000
+Message-ID: <5eecf41c7e124d7dbc0ab363d94b7d13@AcuMS.aculab.com>
+References: <bc84e68c0980466096b0d2f6aec95747@AcuMS.aculab.com>
+        <CAJPywTJYDxGQtDWLferh8ObjGp3JsvOn1om1dCiTOtY6S3qyVg@mail.gmail.com>
+        <5f4028c48a1a4673bd3b38728e8ade07@AcuMS.aculab.com>
+ <20191127164821.1c41deff@carbon>
+In-Reply-To: <20191127164821.1c41deff@carbon>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+CK2bDDom_pwLC-ABwDw66ynyELH3f3NdjUEdhr1LYLkgWJvg@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+X-MC-Unique: Aa6kDxC7OPi54Qqo1k4BMw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 10:31:54AM -0500, Pavel Tatashin wrote:
-> On Wed, Nov 27, 2019 at 10:12 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Thu, Nov 21, 2019 at 09:24:06PM -0500, Pavel Tatashin wrote:
-> > > The __uaccess_ttbr0_disable and __uaccess_ttbr0_enable,
-> > > are the last two macros defined in asm-uaccess.h.
+From: Jesper Dangaard Brouer
+> Sent: 27 November 2019 15:48
+> On Wed, 27 Nov 2019 10:39:44 +0000 David Laight <David.Laight@ACULAB.COM> wrote:
+> 
+> > ...
+> > > > While using recvmmsg() to read multiple messages might seem a good idea, it is much
+> > > > slower than recv() when there is only one message (even recvmsg() is a lot slower).
+> > > > (I'm not sure why the code paths are so slow, I suspect it is all the copy_from_user()
+> > > > and faffing with the user iov[].)
+> > > >
+> > > > So using poll() we repoll the fd after calling recv() to find is there is a second message.
+> > > > However the second poll has a significant performance cost (but less than using recvmmsg()).
 > > >
-> > > Replace them with C wrappers and call C functions from
-> > > kernel_entry and kernel_exit.
+> > > That sounds wrong. Single recvmmsg(), even when receiving only a
+> > > single message, should be faster than two syscalls - recv() and
+> > > poll().
 > >
-> > For now, please leave those as-is.
+> > My suspicion is the extra two copy_from_user() needed for each recvmsg are a
+> > significant overhead, most likely due to the crappy code that tries to stop
+> > the kernel buffer being overrun.
 > >
-> > I don't think we want to have out-of-line C wrappers in the middle of
-> > the entry assembly where we don't have a complete kernel environment.
-> > The use in entry code can also assume non-preemptibility, while the C
-> > functions have to explcitily disable that.
+> > I need to run the tests on a system with a 'home built' kernel to see how much
+> > difference this make (by seeing how much slower duplicating the copy makes it).
+> >
+> > The system call cost of poll() gets factored over a reasonable number of sockets.
+> > So doing poll() on a socket with no data is a lot faster that the setup for recvmsg
+> > even allowing for looking up the fd.
+> >
+> > This could be fixed by an extra flag to recvmmsg() to indicate that you only really
+> > expect one message and to call the poll() function before each subsequent receive.
+> >
+> > There is also the 'reschedule' that Eric added to the loop in recvmmsg.
+> > I don't know how much that actually costs.
+> > In this case the process is likely to be running at a RT priority and pinned to a cpu.
+> > In some cases the cpu is also reserved (at boot time) so that 'random' other code can't use it.
+> >
+> > We really do want to receive all these UDP packets in a timely manner.
+> > Although very low latency isn't itself an issue.
+> > The data is telephony audio with (typically) one packet every 20ms.
+> > The code only looks for packets every 10ms - that helps no end since, in principle,
+> > only a single poll()/epoll_wait() call (on all the sockets) is needed every 10ms.
 > 
-> I do not understand, if C function is called form non-preemptible
-> context it stays non-preemptible. kernel_exit already may call C
-> functions around the time __uaccess_ttbr0_enable is called (it may
-> call post_ttbr_update_workaround), and that C functions does not do
-> explicit preempt disable:
-
-Sorry, I meant that IRQs are disabled here.
-
-The C wrapper calls __uaccess_ttbr0_enable(), which calls
-local_irq_save() and local_irq_restore(). Those are pointless in the
-bowels of the entry code, and potentially expensive if IRQ prio masking
-is in use.
-
-I'd rather not add more out-of-line C code calls here right now as I'd
-prefer to factor out the logic to C in a better way.
-
-> > We can certainly remove the includes of <asm/asm-uaccess.h> elsewhere,
-> > and maybe fold the macros into entry.S if it's not too crowded.
+> I have a simple udp_sink tool[1] that cycle through the different
+> receive socket system calls.  I gave it a quick spin on a F31 kernel
+> 5.3.12-300.fc31.x86_64 on a mlx5 100G interface, and I'm very surprised
+> to see a significant regression/slowdown for recvMmsg.
 > 
-> I can do this as a separate patch.
+> $ sudo ./udp_sink --port 9 --repeat 1 --count $((10**7))
+>           	run      count   	ns/pkt	pps		cycles	payload
+> recvMmsg/32  	run:  0	10000000	1461.41	684270.96	5261	18	 demux:1
+> recvmsg   	run:  0	10000000	889.82	1123824.84	3203	18	 demux:1
+> read      	run:  0	10000000	974.81	1025841.68	3509	18	 demux:1
+> recvfrom  	run:  0	10000000	1056.51	946513.44	3803	18	 demux:1
+> 
+> Normal recvmsg almost have double performance that recvmmsg.
+>  recvMmsg/32 = 684,270 pps
+>  recvmsg     = 1,123,824 pps
 
-That sounds fine to me,
+Can you test recv() as well?
+I think it might be faster than read().
 
-Thanks,
-Mark.
+...
+> Found some old results (approx v4.10-rc1):
+> 
+> [brouer@skylake src]$ sudo taskset -c 2 ./udp_sink --count $((10**7)) --port 9 --connect
+>  recvMmsg/32    run: 0 10000000 537.89  1859106.74      2155    21559353816
+>  recvmsg        run: 0 10000000 552.69  1809344.44      2215    22152468673
+>  read           run: 0 10000000 476.65  2097970.76      1910    19104864199
+>  recvfrom       run: 0 10000000 450.76  2218492.60      1806    18066972794
+
+That is probably nearer what I am seeing on a 4.15 Ubuntu 18.04 kernel.
+recvmmsg() and recvmsg() are similar - but both a lot slower then recv().
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
