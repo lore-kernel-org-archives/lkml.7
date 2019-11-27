@@ -5,51 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24836C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DD6C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7B721556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3040421556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889773;
-	bh=TSfcfKMerSp3xOiFklG5ABCAq1n+d8pMG/0OHuwn+yU=;
+	s=default; t=1574889779;
+	bh=9LCI/pUJ619qOl/wn7bYyo2lDa06P71DoVqYJwBe8X0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjQck48FZLiauuaqAd39Ob37ilI1BYPpMWzY7HLqCWqblA2VfJAWhakEdB2O5y0EI
-	 sX2zwLfosfEbXZvOUukDngizB2D/rF2r5UNgpBM7kfQuM8lj/xptEBPdSkWm6Z8ORC
-	 V9mj0veh/WWivJql5zI5QzghPzK++AehkC9Fipu0=
+	b=DnFINvZMsH82IuHxjOFso/9Hw3LG1Qqe7kMIKqvT2t/B5K6A2ftDbPas6mV3Fqh3y
+	 UbgjD/8nmcy/25Akpoq+olTYGgAhbqIHiSbf2zs/NfTN9FLBEAaTUnI7mrqsfZewsg
+	 RbWlFnYXjiIUpITR7viePhkZt6TKm37jHlrHSSuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732441AbfK0VWv (ORCPT
+        id S1732253AbfK0VFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:22:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:05:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732274AbfK0VFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:05:22 -0500
+        id S1732249AbfK0VFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:05:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5AFD2166E;
-        Wed, 27 Nov 2019 21:05:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3ACF2166E;
+        Wed, 27 Nov 2019 21:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888722;
-        bh=TSfcfKMerSp3xOiFklG5ABCAq1n+d8pMG/0OHuwn+yU=;
+        s=default; t=1574888709;
+        bh=9LCI/pUJ619qOl/wn7bYyo2lDa06P71DoVqYJwBe8X0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lDXfgidZJD8oIO/JnWTtZlaXRwYvWdHr9Ulvxz1e3yh/+Tg70GQsXwFL8z7M5SlTm
-         00gVqHUp9simhk8zuMq54M+I55PzVXAQXiMlDHFumU9h8+9xHdUerE7UMIRuvOmBbB
-         Aj4gBHor5nLkcYoup72j8xqyICzlfmdA7GOHeDhE=
+        b=jIxyiYL1MWVI8XG54nZJA01ZbelD6C+fLettgo2TmiSeMvA0GxHOm0O44asNbIGwb
+         nFBG+6lsIoS7kyCEJbOX8+Sx0IqnMSjrao7vdDMHCw7k1Cw/6i9Hlojw0H9BtNIIil
+         CpDrlQIN/Em4cJxDr2v5JHHpI50bF5Bm8XoidN1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, guozhonghua <guozhonghua@h3c.com>,
+        Jan Kara <jack@suse.cz>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 245/306] pinctrl: bcm2835: Use define directive for BCM2835_PINCONF_PARAM_PULL
-Date:   Wed, 27 Nov 2019 21:31:35 +0100
-Message-Id: <20191127203132.838482192@linuxfoundation.org>
+Subject: [PATCH 4.19 196/306] ocfs2: without quota support, avoid calling quota recovery
+Date:   Wed, 27 Nov 2019 21:30:46 +0100
+Message-Id: <20191127203129.508092540@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,50 +66,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Guozhonghua <guozhonghua@h3c.com>
 
-[ Upstream commit b40ac08ff886302a6aa457fd72e94a969f50e245 ]
+[ Upstream commit 21158ca85b73ddd0088076a5209cfd040513a8b5 ]
 
-Clang warns when one enumerated type is implicitly converted to another:
+During one dead node's recovery by other node, quota recovery work will
+be queued.  We should avoid calling quota when it is not supported, so
+check the quota flags.
 
-drivers/pinctrl/bcm/pinctrl-bcm2835.c:707:40: warning: implicit
-conversion from enumeration type 'enum bcm2835_pinconf_param' to
-different enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        configs[0] = pinconf_to_config_packed(BCM2835_PINCONF_PARAM_PULL, pull);
-                     ~~~~~~~~~~~~~~~~~~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~~~
-1 warning generated.
-
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: http://lkml.kernel.org/r/71604351584F6A4EBAE558C676F37CA401071AC9FB@H3CMLB12-EX.srv.huawei-3com.com
+Signed-off-by: guozhonghua <guozhonghua@h3c.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/ocfs2/journal.c | 51 ++++++++++++++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 08925d24180b0..1bd3c10ce1893 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -72,10 +72,8 @@
- #define GPIO_REG_OFFSET(p)	((p) / 32)
- #define GPIO_REG_SHIFT(p)	((p) % 32)
+diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+index c492cbb2410f6..babb0ec76d676 100644
+--- a/fs/ocfs2/journal.c
++++ b/fs/ocfs2/journal.c
+@@ -1379,15 +1379,23 @@ static int __ocfs2_recovery_thread(void *arg)
+ 	int rm_quota_used = 0, i;
+ 	struct ocfs2_quota_recovery *qrec;
  
--enum bcm2835_pinconf_param {
--	/* argument: bcm2835_pinconf_pull */
--	BCM2835_PINCONF_PARAM_PULL = (PIN_CONFIG_END + 1),
--};
-+/* argument: bcm2835_pinconf_pull */
-+#define BCM2835_PINCONF_PARAM_PULL	(PIN_CONFIG_END + 1)
++	/* Whether the quota supported. */
++	int quota_enabled = OCFS2_HAS_RO_COMPAT_FEATURE(osb->sb,
++			OCFS2_FEATURE_RO_COMPAT_USRQUOTA)
++		|| OCFS2_HAS_RO_COMPAT_FEATURE(osb->sb,
++			OCFS2_FEATURE_RO_COMPAT_GRPQUOTA);
++
+ 	status = ocfs2_wait_on_mount(osb);
+ 	if (status < 0) {
+ 		goto bail;
+ 	}
  
- struct bcm2835_pinctrl {
- 	struct device *dev;
+-	rm_quota = kcalloc(osb->max_slots, sizeof(int), GFP_NOFS);
+-	if (!rm_quota) {
+-		status = -ENOMEM;
+-		goto bail;
++	if (quota_enabled) {
++		rm_quota = kcalloc(osb->max_slots, sizeof(int), GFP_NOFS);
++		if (!rm_quota) {
++			status = -ENOMEM;
++			goto bail;
++		}
+ 	}
+ restart:
+ 	status = ocfs2_super_lock(osb, 1);
+@@ -1423,9 +1431,14 @@ static int __ocfs2_recovery_thread(void *arg)
+ 		 * then quota usage would be out of sync until some node takes
+ 		 * the slot. So we remember which nodes need quota recovery
+ 		 * and when everything else is done, we recover quotas. */
+-		for (i = 0; i < rm_quota_used && rm_quota[i] != slot_num; i++);
+-		if (i == rm_quota_used)
+-			rm_quota[rm_quota_used++] = slot_num;
++		if (quota_enabled) {
++			for (i = 0; i < rm_quota_used
++					&& rm_quota[i] != slot_num; i++)
++				;
++
++			if (i == rm_quota_used)
++				rm_quota[rm_quota_used++] = slot_num;
++		}
+ 
+ 		status = ocfs2_recover_node(osb, node_num, slot_num);
+ skip_recovery:
+@@ -1453,16 +1466,19 @@ static int __ocfs2_recovery_thread(void *arg)
+ 	/* Now it is right time to recover quotas... We have to do this under
+ 	 * superblock lock so that no one can start using the slot (and crash)
+ 	 * before we recover it */
+-	for (i = 0; i < rm_quota_used; i++) {
+-		qrec = ocfs2_begin_quota_recovery(osb, rm_quota[i]);
+-		if (IS_ERR(qrec)) {
+-			status = PTR_ERR(qrec);
+-			mlog_errno(status);
+-			continue;
++	if (quota_enabled) {
++		for (i = 0; i < rm_quota_used; i++) {
++			qrec = ocfs2_begin_quota_recovery(osb, rm_quota[i]);
++			if (IS_ERR(qrec)) {
++				status = PTR_ERR(qrec);
++				mlog_errno(status);
++				continue;
++			}
++			ocfs2_queue_recovery_completion(osb->journal,
++					rm_quota[i],
++					NULL, NULL, qrec,
++					ORPHAN_NEED_TRUNCATE);
+ 		}
+-		ocfs2_queue_recovery_completion(osb->journal, rm_quota[i],
+-						NULL, NULL, qrec,
+-						ORPHAN_NEED_TRUNCATE);
+ 	}
+ 
+ 	ocfs2_super_unlock(osb, 1);
+@@ -1484,7 +1500,8 @@ static int __ocfs2_recovery_thread(void *arg)
+ 
+ 	mutex_unlock(&osb->recovery_lock);
+ 
+-	kfree(rm_quota);
++	if (quota_enabled)
++		kfree(rm_quota);
+ 
+ 	/* no one is callint kthread_stop() for us so the kthread() api
+ 	 * requires that we call do_exit().  And it isn't exported, but
 -- 
 2.20.1
 
