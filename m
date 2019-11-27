@@ -2,147 +2,261 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8376C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77684C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4B92084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36077207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:24:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q8xCo+Zb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfK0UTS (ORCPT
+        id S1727192AbfK0UYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:19:18 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21562 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726716AbfK0UTS (ORCPT
+        Wed, 27 Nov 2019 15:24:21 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43695 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbfK0UYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:19:18 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARKETAQ050538;
-        Wed, 27 Nov 2019 15:19:02 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whhyg0s9t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 15:19:02 -0500
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xARKJ2I9060582;
-        Wed, 27 Nov 2019 15:19:02 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whhyg0s9e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 15:19:02 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xARKFHQ9025850;
-        Wed, 27 Nov 2019 20:19:05 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01wdc.us.ibm.com with ESMTP id 2wevd6ftqw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 20:19:05 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARKJ0aT39191020
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 20:19:00 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5BB4F112067;
-        Wed, 27 Nov 2019 20:19:00 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D0F34112063;
-        Wed, 27 Nov 2019 20:18:58 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.137])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Nov 2019 20:18:58 +0000 (GMT)
-Message-ID: <7dd89f27e886fc73e3de4d2a92e27f443978f318.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] powerpc/kvm/book3s: Fixes possible 'use after
- release' of kvm
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Date:   Wed, 27 Nov 2019 17:18:57 -0300
-In-Reply-To: <f3750cf8-88fc-cae7-1cfb-cb4b86b44704@redhat.com>
-References: <20191126175212.377171-1-leonardo@linux.ibm.com>
-         <f3750cf8-88fc-cae7-1cfb-cb4b86b44704@redhat.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-svLp0XGwOGKrM1lqBRkB"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Wed, 27 Nov 2019 15:24:20 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l14so20227061oti.10;
+        Wed, 27 Nov 2019 12:24:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MixxgPNvg3pUnry2JzNoXYx2kY3tKkdeMgXAkzkyNYs=;
+        b=Q8xCo+ZbqsfjOgoXWTnHWNvKIjvPEEcwP+yXEBzmj2ekJJlDCBa94VFtCAGp2f+bzq
+         elQN5VZ0Q6MrI3M85kFAM7EcRpIT6dOyhTlaodtLBSugf0KJru8davD/6imekZuJmkNx
+         PKcyk5pw+9Yw45suj7kCI5epoouGLLTi0kYP0fey25mulV3BNtcIR6WKxFwJiFpSvh39
+         r+fZZtaHTh8Vqg56FBTN6g91jdzGaHCpToEq7ANGcvTUaONmosJTjEnzZ0amMb7T/Dfh
+         2sMqDroQQ4rqoAnUrp4pRzTkVcUnPo3MZ6ZYkFQ/jv9nMvj+GO/NOi53qfubSe832egJ
+         s8hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MixxgPNvg3pUnry2JzNoXYx2kY3tKkdeMgXAkzkyNYs=;
+        b=a0VItJa3X0pfxxUXygSTuVIzLf+Jj1Ay9e7FNkFGehThv21Ac1QcAL0TgBFNrMKmav
+         76BK+Ug/xqscFobx0z5J4N8o0c1Qp64bMbAFjtfbCUBsbGSO47Nsg/f/xNGPRyxgpiVC
+         LdKTDGXfnB8+OiMsUtO2OQkSKNtSOOklxfWoE5MCVCH2v6Ju2EbZRTVqPWJHSo0qhhoV
+         9ibM5I5NzvPvQ8stHX2KVQ5S336wB5gi3kXR1dBQcXOOWKTluRLcTtA/uY8kA5b3cB3A
+         IUZChD2dcYWYyJxnxE9FFuJPQwYELakbrdDle8kTr5JQ1aMHMtYhrln5MdxemGLT8SJX
+         U25g==
+X-Gm-Message-State: APjAAAWFvwoHQdx1EOs+H00bN/xGUtlX3cTzNYxPbu3gyAI6BxPN4N/R
+        Cy9gWWNYkmuTbICHGNGpWpdzpMH8htGFV8DmPpw=
+X-Google-Smtp-Source: APXvYqzQ//Ez72MjlZ6tnpozQgzvE/hhO0Vn1XVq9GxyZPcPEL2qouYxRSGFV+mE8Gods9QDh7e/ODo46N4kJh7VLCE=
+X-Received: by 2002:a9d:6acf:: with SMTP id m15mr5155723otq.312.1574886258682;
+ Wed, 27 Nov 2019 12:24:18 -0800 (PST)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- phishscore=0 impostorscore=0 mlxlogscore=934 spamscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270162
+References: <20191127052935.1719897-1-anarsoul@gmail.com> <20191127052935.1719897-3-anarsoul@gmail.com>
+ <20191127174434.wousbqosmm5vxcsu@gilmour.lan>
+In-Reply-To: <20191127174434.wousbqosmm5vxcsu@gilmour.lan>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Wed, 27 Nov 2019 12:23:53 -0800
+Message-ID: <CA+E=qVe22T1uhUo6iq9a82Y9bC014CZSkAtSJJNX4qsn6dJL9w@mail.gmail.com>
+Subject: Re: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for
+ sun8i-thermal driver bindings
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 27, 2019 at 9:44 AM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> Hi,
+>
+> On Tue, Nov 26, 2019 at 09:29:30PM -0800, Vasily Khoruzhick wrote:
+> > From: Yangtao Li <tiny.windzz@gmail.com>
+> >
+> > sun8i-thermal driver supports thermal sensor in wide range of Allwinner
+> > SoCs. Add YAML schema for its bindings.
+> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > ---
+> >  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 103 ++++++++++++++++++
+> >  1 file changed, 103 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> > new file mode 100644
+> > index 000000000000..e622f0a4be90
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> > @@ -0,0 +1,103 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Yangtao Li <tiny.windzz@gmail.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - const: allwinner,sun8i-a83t-ths
+> > +      - const: allwinner,sun8i-h3-ths
+> > +      - const: allwinner,sun8i-r40-ths
+> > +      - const: allwinner,sun50i-a64-ths
+> > +      - const: allwinner,sun50i-h5-ths
+> > +      - const: allwinner,sun50i-h6-ths
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    anyOf:
+> > +      - items:
+> > +        - const: bus
+> > +        - const: mod
+> > +      - items:
+> > +        - const: bus
+>
+> This can be:
+>
+> clock-names:
+>   minItems: 1
+>   maxItems: 2
+>   items:
+>     - const: bus
+>     - const: mod
+>
+> And the length should be checked based on the compatible value, with
+> something like
+>
+> if:
+>   properties:
+>     compatible:
+>       contains:
+>         const: allwinner,sun50i-h6-ths
+>
+> then:
+>   properties:
+>     clocks:
+>       maxItems: 1
+>
+>     clock-names:
+>       maxItems: 1
+>
+> else:
+>   properties:
+>     clocks:
+>       maxItems: 2
+>
+>     clock-names:
+>       maxItems: 2
 
---=-svLp0XGwOGKrM1lqBRkB
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+OK, will do
 
-On Wed, 2019-11-27 at 17:40 +0100, Paolo Bonzini wrote:
-> >  =20
-> >        if (ret >=3D 0)
-> >                list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
-> > -     else
-> > -             kvm_put_kvm(kvm);
-> >  =20
-> >        mutex_unlock(&kvm->lock);
-> >  =20
-> >        if (ret >=3D 0)
-> >                return ret;
-> >  =20
-> > +     kvm_put_kvm(kvm);
-> >        kfree(stt);
-> >    fail_acct:
-> >        account_locked_vm(current->mm, kvmppc_stt_pages(npages), false);
->=20
-> This part is a good change, as it makes the code clearer.  The
-> virt/kvm/kvm_main.c bits, however, are not necessary as explained by Sean=
-.
->=20
+> > +
+> > +  '#thermal-sensor-cells':
+> > +    enum: [ 0, 1 ]
+> > +    description: |
+> > +      Definition depends on soc version:
+> > +
+> > +      For "allwinner,sun8i-h3-ths",
+> > +      value must be 0.
+> > +      For all other compatibles
+> > +      value must be 1.
+>
+> This should be checked using an if as well.
 
-Thanks!
-So, like this patch?
-https://lkml.org/lkml/2019/11/7/763
+Will do.
 
-Best regards,
+> > +
+> > +  nvmem-cells:
+> > +    maxItems: 1
+> > +    items:
+> > +      - description: Calibration data for thermal sensors
+>
+> You can drop the items and just move the description up one level,
+> under nvmem-cells
 
-Leonardo
+Will do.
 
---=-svLp0XGwOGKrM1lqBRkB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> > +
+> > +  nvmem-cell-names:
+> > +    items:
+> > +      - const: calibration
+>
+> Ditto for the const
 
------BEGIN PGP SIGNATURE-----
+Sorry, I don't quite get it. What exactly do you want me to do with
+this one? nvmem-cell-names must be "calibration"
 
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3e2jEACgkQlQYWtz9S
-ttTWzxAAy+Q8kuOW+58Zujf5Pl1VAPNeOj8APWTSfbtEtYh+qeriS0Fx+MlwfycO
-jKea8M8pTxuNFG88V9+rQM+qciE5UpqGYqTPkbhHEsrXYcBRPct/bS6/EmYc5wve
-MeTLOTW11fnZYR9WXghKpPhM2AOCvBYPMq3nnQUFqr0DLk7tkOB7OuHk9qASTVbH
-dZvU9rXIIMa5cxH4v0/qEZtzY+9/UStvDUM3cghd9p0DqDtGL396wIQwvRMfxT94
-KP925KeLoi1wqIAH7VUxgrP8/SkLPfgMwG1QuyIiWO2cqHE9MpozjDU9hOebXoyb
-UVJngHT/oRyG7plHLcZ6eedy75M6Z4lKv3oviezjEjIRr8pC7/xT2MZYiV3dox9c
-rd9KgDTLihHEBfKmKnocErwvEleu9Dr6vJ6zBU1bWOahROryvuPdZ00SbVGZIa0U
-MFyIinaBDLWwn6zhpGZVc1vUqy1lmJnS91116u+og30IgwXMYpb6sHFUWmr9B0Ai
-40tdEGnFKthSCeyskqBrLab4ykV49MLJxd9cK4kwnWou1M6Fl1kDY86h1P6afqEG
-RAbTtL4HCmOButVZjP5kzTnONkIZWLSmkibqSx4Gxl9Lw2u+jg523Ds9Ye2Pfqrd
-NARjPJb+1h6PU2IiDLmoC7r+axcI+Np+xacERZEOFo51lE0wI/c=
-=CM/a
------END PGP SIGNATURE-----
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - '#thermal-sensor-cells'
+>
+> Whether clocks, clock-names and resets are thereshould be check using
+> an if statement as well.
 
---=-svLp0XGwOGKrM1lqBRkB--
+Will do
 
+> > +
+> > +examples:
+> > +  - |
+> > +    ths_a83t: ths@1f04000 {
+>
+> You don't need the label at all, and the node name should be
+> temperature-sensor according to the DT spec, not ths. This applies to
+> all you examples.
+
+OK
+
+> > +         compatible = "allwinner,sun8i-a83t-ths";
+> > +         reg = <0x01f04000 0x100>;
+> > +         interrupts = <0 31 0>;
+> > +         nvmem-cells = <&ths_calibration>;
+> > +         nvmem-cell-names = "calibration";
+> > +         #thermal-sensor-cells = <1>;
+> > +    };
+>
+> New line.
+
+OK
+
+>
+> Thanks!
+> Maxime
