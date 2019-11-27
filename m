@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2D3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED100C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D262154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B892620869
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891144;
-	bh=H6bctPRfq8XqJuzYNECQWMiThWRjYOGOSX2ux+jZzI4=;
+	s=default; t=1574891147;
+	bh=5XTVctNyzk6Pgxq8rjqvXvZW0PO39MZ7Adbv+jjPc3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKMEF+6fUSaMmbt69EHsMHbEdLOxhUokVubnzxBQ3BdnhTqYmBy4DEqEyGEfcRhRC
-	 htioT/QD2uPoNzKM4RC0cp+3/ccUKvFEV4chLHFRYuN+qJNXRadRj7hWBnFxGP6AjK
-	 IGs4f+iE2u6DDAR6xTBzfOpq5G6eweZ2lFu43Tbs=
+	b=j3qJP5hSUzDQpGcxyNUG81yCFvvfhtcFZy+eEUNjpMXoWVZnWlnD9kiycneTEvQ6i
+	 wEvytESp/1XRWeVTgPkqTpzbifgAK3KH54uzy2d7jqXLjqM58US8XP/6g2F692xK8K
+	 4HDG1fKJZKK7HxXj50dC60t8IwpEW9BX1aw52Cn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbfK0Vpn (ORCPT
+        id S1729050AbfK0Vpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:45:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36302 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:45:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbfK0UfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:35:17 -0500
+        id S1727817AbfK0UfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:35:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A5E72154A;
-        Wed, 27 Nov 2019 20:35:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D387920866;
+        Wed, 27 Nov 2019 20:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886916;
-        bh=H6bctPRfq8XqJuzYNECQWMiThWRjYOGOSX2ux+jZzI4=;
+        s=default; t=1574886913;
+        bh=5XTVctNyzk6Pgxq8rjqvXvZW0PO39MZ7Adbv+jjPc3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OY2U8Rd0Plq9Pl8zWWOaiNR+tfjOcTvXsgsaXBh70VNiFnA4vPHTEW+ovEs5u87Id
-         WESrRGGhystIPcIQVu92FHzPI3QE5N1gORcXJo2icM3BpugPe8yZHtZ8L9OgES+2CW
-         HiJdCOEN+u03aSvITmGLWlKP5y0Z029Des/5tcNY=
+        b=LRSLpa7RFoK3MJg2JlmOVtEQi5TQp3WqykReIPICRRtltmfPz/uiXxbEfZL4SBgIH
+         yOZVDmfbpCYFjhIty2jbqCZeLPx+b8fZ5jqbB+0YD8Tfxz3JOtsRhFAF/3NLRh/lTk
+         20h2hXoJDD21FkiefyMW1PwKKP5sB1dodH7lPrrM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyeongdon Kim <kyeongdon.kim@lge.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 042/132] net: fix warning in af_unix
-Date:   Wed, 27 Nov 2019 21:30:33 +0100
-Message-Id: <20191127202937.623909833@linuxfoundation.org>
+Subject: [PATCH 4.4 024/132] synclink_gt(): fix compat_ioctl()
+Date:   Wed, 27 Nov 2019 21:30:15 +0100
+Message-Id: <20191127202920.953069607@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -60,35 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kyeongdon Kim <kyeongdon.kim@lge.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 33c4368ee2589c165aebd8d388cbd91e9adb9688 ]
+[ Upstream commit 27230e51349fde075598c1b59d15e1ff802f3f6e ]
 
-This fixes the "'hash' may be used uninitialized in this function"
+compat_ptr() for pointer-taking ones...
 
-net/unix/af_unix.c:1041:20: warning: 'hash' may be used uninitialized in this function [-Wmaybe-uninitialized]
-  addr->hash = hash ^ sk->sk_type;
-
-Signed-off-by: Kyeongdon Kim <kyeongdon.kim@lge.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/unix/af_unix.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tty/synclink_gt.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index b1a72615fdc30..b5e2ef242efe7 100644
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -224,6 +224,8 @@ static inline void unix_release_addr(struct unix_address *addr)
- 
- static int unix_mkname(struct sockaddr_un *sunaddr, int len, unsigned int *hashp)
+diff --git a/drivers/tty/synclink_gt.c b/drivers/tty/synclink_gt.c
+index 6fc39fbfc2755..b5145e8bdf0a2 100644
+--- a/drivers/tty/synclink_gt.c
++++ b/drivers/tty/synclink_gt.c
+@@ -1192,14 +1192,13 @@ static long slgt_compat_ioctl(struct tty_struct *tty,
+ 			 unsigned int cmd, unsigned long arg)
  {
-+	*hashp = 0;
-+
- 	if (len <= sizeof(short) || len > sizeof(*sunaddr))
- 		return -EINVAL;
- 	if (!sunaddr || sunaddr->sun_family != AF_UNIX)
+ 	struct slgt_info *info = tty->driver_data;
+-	int rc = -ENOIOCTLCMD;
++	int rc;
+ 
+ 	if (sanity_check(info, tty->name, "compat_ioctl"))
+ 		return -ENODEV;
+ 	DBGINFO(("%s compat_ioctl() cmd=%08X\n", info->device_name, cmd));
+ 
+ 	switch (cmd) {
+-
+ 	case MGSL_IOCSPARAMS32:
+ 		rc = set_params32(info, compat_ptr(arg));
+ 		break;
+@@ -1219,18 +1218,11 @@ static long slgt_compat_ioctl(struct tty_struct *tty,
+ 	case MGSL_IOCWAITGPIO:
+ 	case MGSL_IOCGXSYNC:
+ 	case MGSL_IOCGXCTRL:
+-	case MGSL_IOCSTXIDLE:
+-	case MGSL_IOCTXENABLE:
+-	case MGSL_IOCRXENABLE:
+-	case MGSL_IOCTXABORT:
+-	case TIOCMIWAIT:
+-	case MGSL_IOCSIF:
+-	case MGSL_IOCSXSYNC:
+-	case MGSL_IOCSXCTRL:
+-		rc = ioctl(tty, cmd, arg);
++		rc = ioctl(tty, cmd, (unsigned long)compat_ptr(arg));
+ 		break;
++	default:
++		rc = ioctl(tty, cmd, arg);
+ 	}
+-
+ 	DBGINFO(("%s compat_ioctl() cmd=%08X rc=%d\n", info->device_name, cmd, rc));
+ 	return rc;
+ }
 -- 
 2.20.1
 
