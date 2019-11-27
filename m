@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C29C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B3EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2935F21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8303B21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889752;
-	bh=cY1lYufDsOuH9eYiHBsjkA1HrylGeF39ZhwcLFZxWqg=;
+	s=default; t=1574889763;
+	bh=PV75VkIsQLSgJfMJKGoDxgGY1yV4axR33hw/nS5ls3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iKAnzlHewKSVWOWKI+rCMeZSK2uq+wt9FmfkqCflcBq3PxOCKYjGrCs63rKlwuuZ+
-	 YiZEl+FKlDL7nzqvZunEol2en0qmNa9EHctqbz16cp65u+yiyx7omiogWyGHc2KxQY
-	 zOnHNH1qtal8MZCbqp+A6CmknmEJClff1pB0s/BE=
+	b=Ts9ZPMq6JOwZbimvZ9X85eE8T8vsCPAeWHvsezqaTV3M+HtNb48FWnhdN71LBO+96
+	 ANcRYvs0iIKU8udUNwtfibe39ziIft9Gepn2z1OqpGAHYgjZTBjKIE4oo95BEG5dWW
+	 /LLRegbz3DrAz3wsfMcIfcNo9bRZtzUq7WwDmFeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732319AbfK0VFp (ORCPT
+        id S1732314AbfK0VWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:05:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59528 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:22:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727372AbfK0VFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:05:43 -0500
+        id S1727459AbfK0VFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:05:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B92F21741;
-        Wed, 27 Nov 2019 21:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E19B2080F;
+        Wed, 27 Nov 2019 21:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888742;
-        bh=cY1lYufDsOuH9eYiHBsjkA1HrylGeF39ZhwcLFZxWqg=;
+        s=default; t=1574888732;
+        bh=PV75VkIsQLSgJfMJKGoDxgGY1yV4axR33hw/nS5ls3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c8sW0VMiH2xnpLeOpGcZjQ2WpdnLR6lK91dlvkTZi8G4JX1XYcQAmP7x2IFpQXxSz
-         Zo2avjEj6swz3f0c2aL3NEbWZYFdEc5LKpaBPhP1c4CZ2rsE8Ru6+kWTbEl3hdtJ9P
-         HvOKjEC1BDwVHoLjHvrkjWjlM8fnBnwU1RUggz6o=
+        b=gi5RZJsAhPF4iz/AVgy3HeWZZRmedDCvY1UFGbZpRYu/l2oyDlDwc5qTOzgsgTpSQ
+         k0N9LgXmqoy7wXqjJCZXIi6QopEQ4VcwwjOASWmBCwZUpcH+cp7Odx6m6CNzz6SsWc
+         RUvlD2kcc5nsG4Gzu2Eq7kty2L34BkJwwNqVHcoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Manning <mmanning@vyatta.att-mail.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 235/306] vrf: mark skb for multicast or link-local as enslaved to VRF
-Date:   Wed, 27 Nov 2019 21:31:25 +0100
-Message-Id: <20191127203132.178090957@linuxfoundation.org>
+        stable@vger.kernel.org, Igor Konopko <igor.j.konopko@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 249/306] nvme-pci: fix surprise removal
+Date:   Wed, 27 Nov 2019 21:31:39 +0100
+Message-Id: <20191127203133.104515360@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,67 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Manning <mmanning@vyatta.att-mail.com>
+From: Igor Konopko <igor.j.konopko@intel.com>
 
-[ Upstream commit 6f12fa775530195a501fb090d092c637f32d0cc5 ]
+[ Upstream commit 751a0cc0cd3a0d51e6aaf6fd3b8bd31f4ecfaf3e ]
 
-The skb for packets that are multicast or to a link-local address are
-not marked as being enslaved to a VRF, if they are received on a socket
-bound to the VRF. This is needed for ND and it is preferable for the
-kernel not to have to deal with the additional use-cases if ll or mcast
-packets are handled as enslaved. However, this does not allow service
-instances listening on unbound and bound to VRF sockets to distinguish
-the VRF used, if packets are sent as multicast or to a link-local
-address. The fix is for the VRF driver to also mark these skb as being
-enslaved to the VRF.
+When a PCIe NVMe device is not present, nvme_dev_remove_admin() calls
+blk_cleanup_queue() on the admin queue, which frees the hctx for that
+queue.  Moments later, on the same path nvme_kill_queues() calls
+blk_mq_unquiesce_queue() on admin queue and tries to access hctx of it,
+which leads to following OOPS:
 
-Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Tested-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Oops: 0000 [#1] SMP PTI
+RIP: 0010:sbitmap_any_bit_set+0xb/0x40
+Call Trace:
+ blk_mq_run_hw_queue+0xd5/0x150
+ blk_mq_run_hw_queues+0x3a/0x50
+ nvme_kill_queues+0x26/0x50
+ nvme_remove_namespaces+0xb2/0xc0
+ nvme_remove+0x60/0x140
+ pci_device_remove+0x3b/0xb0
+
+Fixes: cb4bfda62afa2 ("nvme-pci: fix hot removal during error handling")
+Signed-off-by: Igor Konopko <igor.j.konopko@intel.com>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vrf.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-index 9f895083bc0aa..7f5ee6bb44300 100644
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -993,24 +993,23 @@ static struct sk_buff *vrf_ip6_rcv(struct net_device *vrf_dev,
- 				   struct sk_buff *skb)
- {
- 	int orig_iif = skb->skb_iif;
--	bool need_strict;
-+	bool need_strict = rt6_need_strict(&ipv6_hdr(skb)->daddr);
-+	bool is_ndisc = ipv6_ndisc_frame(skb);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 5d0f99bcc987f..44da9fe5b27b8 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3647,7 +3647,7 @@ void nvme_kill_queues(struct nvme_ctrl *ctrl)
+ 	down_read(&ctrl->namespaces_rwsem);
  
--	/* loopback traffic; do not push through packet taps again.
--	 * Reset pkt_type for upper layers to process skb
-+	/* loopback, multicast & non-ND link-local traffic; do not push through
-+	 * packet taps again. Reset pkt_type for upper layers to process skb
- 	 */
--	if (skb->pkt_type == PACKET_LOOPBACK) {
-+	if (skb->pkt_type == PACKET_LOOPBACK || (need_strict && !is_ndisc)) {
- 		skb->dev = vrf_dev;
- 		skb->skb_iif = vrf_dev->ifindex;
- 		IP6CB(skb)->flags |= IP6SKB_L3SLAVE;
--		skb->pkt_type = PACKET_HOST;
-+		if (skb->pkt_type == PACKET_LOOPBACK)
-+			skb->pkt_type = PACKET_HOST;
- 		goto out;
- 	}
+ 	/* Forcibly unquiesce queues to avoid blocking dispatch */
+-	if (ctrl->admin_q)
++	if (ctrl->admin_q && !blk_queue_dying(ctrl->admin_q))
+ 		blk_mq_unquiesce_queue(ctrl->admin_q);
  
--	/* if packet is NDISC or addressed to multicast or link-local
--	 * then keep the ingress interface
--	 */
--	need_strict = rt6_need_strict(&ipv6_hdr(skb)->daddr);
--	if (!ipv6_ndisc_frame(skb) && !need_strict) {
-+	/* if packet is NDISC then keep the ingress interface */
-+	if (!is_ndisc) {
- 		vrf_rx_stats(vrf_dev, skb->len);
- 		skb->dev = vrf_dev;
- 		skb->skb_iif = vrf_dev->ifindex;
+ 	list_for_each_entry(ns, &ctrl->namespaces, list)
 -- 
 2.20.1
 
