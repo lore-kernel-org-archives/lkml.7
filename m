@@ -2,113 +2,122 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40079C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AFFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73793206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA33A206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:15:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="nDHcEC8K"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="RElQVMX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfK0PPD (ORCPT
+        id S1727442AbfK0PPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:15:03 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:34527 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfK0PPC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:15:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574867700;
-        s=strato-dkim-0002; d=xenosoft.de;
-        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=rU6EJZnQMWHiAAMrDnvCSg5GJl/7kaL3qM/q2ihcwWc=;
-        b=nDHcEC8KNSx0uEmDXuznTw1hr4gLIQbctk3/ymPqjCzLAfUx+SZkmWNSZl/ZQEGPm/
-        XGY50eWL5q+2LtfJ8B9fRHhw4+aHH2etWCP4VKOTSoxI9pCcyUT10aWQimSKxFxpG5SU
-        EFDtFS2tTxbzWyW+0oIIZsCNBEDkFOLoBSgADKWYlz9yyep2KCJrOdq2q8nzW5cEAA21
-        4l02tfxdtNE87dPPHde1vuiYiQj454YDM/8QTqFubnUzIXJpqJATqnB64AbDWr5sEdbD
-        qQGXJqYTniJ7sd+YWIVeI6KPm+rlrfAlbZjuDTKZ4iPfhnQOziIkNNHoE2T9WuhsiJu3
-        H33Q==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPhUIxnPrrzntHiDgpTRUbNSOXek"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2a02:8109:89c0:ebfc:7591:d54e:863:4581]
-        by smtp.strato.de (RZmta 46.0.0 AUTH)
-        with ESMTPSA id n05ae1vARFEh10O
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 27 Nov 2019 16:14:43 +0100 (CET)
-Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board
- installed, unless RAM size limited to 3500M
-To:     Mike Rapoport <rppt@linux.ibm.com>, Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>, linux-arch@vger.kernel.org,
-        darren@stevens-zone.net, mad skateman <madskateman@gmail.com>,
+        Wed, 27 Nov 2019 10:15:19 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:3691 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726655AbfK0PPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 10:15:18 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47NPTZ5Z5sz9v0vn;
+        Wed, 27 Nov 2019 16:15:14 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=RElQVMX9; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id eEa3dEyy4enE; Wed, 27 Nov 2019 16:15:14 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47NPTZ4Wzmz9v0vj;
+        Wed, 27 Nov 2019 16:15:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1574867714; bh=xDzqAuKpsMI0fM1Nu2APkhHGF83sjAZj+b2lNk9mmCU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=RElQVMX9+cCEQ78l0/J1L3DVbJxFsc0NztZpgSERF3y/OySvGhO+jQzlTNdzWyb64
+         f+vTAMnbV/x1zA7L+63FgChsJ6lc31ydvuTMVMObuv0zcJFM8zhorlNmr3lRheuJgs
+         VEUpw+GHSuU0PQLV6/W/oj5hu5sjavTHhRdzLf0o=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 253978B868;
+        Wed, 27 Nov 2019 16:15:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id TiWizM8GxlXJ; Wed, 27 Nov 2019 16:15:16 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 806FA8B85A;
+        Wed, 27 Nov 2019 16:15:15 +0100 (CET)
+Subject: Re: [PATCH v4 2/2] powerpc/irq: inline call_do_irq() and
+ call_do_softirq()
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        paulus@samba.org, rtd2@xtra.co.nz,
-        "contact@a-eon.com" <contact@a-eon.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        nsaenzjulienne@suse.de
-References: <20191121072943.GA24024@lst.de>
- <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
- <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de>
- <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com>
- <b3217742-2c0b-8447-c9ac-608b93265363@xenosoft.de>
- <20191121180226.GA3852@lst.de>
- <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
- <20191125073923.GA30168@lst.de>
- <4681f5fe-c095-15f5-9221-4b55e940bafc@xenosoft.de>
- <20191126164026.GA8026@lst.de> <20191127065624.GB16913@linux.ibm.com>
-From:   Christian Zigotzky <chzigotzky@xenosoft.de>
-Message-ID: <6a4289cf-d2b5-2357-f1ad-eeab44ab3b1e@xenosoft.de>
-Date:   Wed, 27 Nov 2019 16:14:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Paul Mackerras <paulus@samba.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <f12fb9a6cc52d83ee9ddf15a36ee12ac77e6379f.1570684298.git.christophe.leroy@c-s.fr>
+ <5ca6639b7c1c21ee4b4138b7cfb31d6245c4195c.1570684298.git.christophe.leroy@c-s.fr>
+ <877e3tbvsa.fsf@mpe.ellerman.id.au>
+ <20191121101552.GR16031@gate.crashing.org>
+ <87y2w49rgo.fsf@mpe.ellerman.id.au> <20191125142556.GU9491@gate.crashing.org>
+ <5fdb1c92-8bf4-01ca-f81c-214870c33be3@c-s.fr>
+ <20191127145958.GG9491@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <2072e066-1ffb-867e-60ec-04a6bb9075c1@c-s.fr>
+Date:   Wed, 27 Nov 2019 16:15:15 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191127065624.GB16913@linux.ibm.com>
+In-Reply-To: <20191127145958.GG9491@gate.crashing.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: de-DE
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27 November 2019 at 07:56 am, Mike Rapoport wrote:
->
-> Maybe we'll simply force bottom up allocation before calling
-> swiotlb_init()? Anyway, it's the last memblock allocation.
->
->
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index 62f74b1b33bd..771e6cf7e2b9 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -286,14 +286,15 @@ void __init mem_init(void)
->   	/*
->   	 * book3s is limited to 16 page sizes due to encoding this in
->   	 * a 4-bit field for slices.
->   	 */
->   	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
->   
->   #ifdef CONFIG_SWIOTLB
-> +	memblock_set_bottom_up(true);
->   	swiotlb_init(0);
->   #endif
->   
->   	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
->   	set_max_mapnr(max_pfn);
->   	memblock_free_all();
->   
->   
-Hello Mike,
 
-I tested the latest Git kernel with your new patch today. My PCI TV card 
-works without any problems.
 
-Thanks,
-Christian
+Le 27/11/2019 à 15:59, Segher Boessenkool a écrit :
+> On Wed, Nov 27, 2019 at 02:50:30PM +0100, Christophe Leroy wrote:
+>> So what do we do ? We just drop the "r2" clobber ?
+> 
+> You have to make sure your asm code works for all ABIs.  This is quite
+> involved if you do a call to an external function.  The compiler does
+> *not* see this call, so you will have to make sure that all that the
+> compiler and linker do will work, or prevent some of those things (say,
+> inlining of the function containing the call).
+
+But the whole purpose of the patch is to inline the call to __do_irq() 
+in order to avoid the trampoline function.
+
+> 
+>> Otherwise, to be on the safe side we can just save r2 in a local var
+>> before the bl and restore it after. I guess it won't collapse CPU time
+>> on a performant PPC64.
+> 
+> That does not fix everything.  The called function requires a specific
+> value in r2 on entry.
+
+Euh ... but there is nothing like that when using existing 
+call_do_irq(). How does GCC know that call_do_irq() has same TOC as 
+__do_irq() ?
+
+> 
+> So all this needs verification.  Hopefully you can get away with just
+> not clobbering r2 (and not adding a nop after the bl), sure.  But this
+> needs to be checked.
+> 
+> Changing control flow inside inline assembler always is problematic.
+> Another problem in this case (on all ABIs) is that the compiler does
+> not see you call __do_irq.  Again, you can probably get away with that
+> too, but :-)
+
+Anyway it sees I reference it, as it is in input arguments. Isn't it 
+enough ?
+
+Christophe
