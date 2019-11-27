@@ -2,447 +2,343 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811E5C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B70C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 455AA20684
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655702070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LQG2Ojjg";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="PshHnikM"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="dNPT7Mk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfK0JBj (ORCPT
+        id S1726252AbfK0JM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 04:01:39 -0500
-Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:58548
-        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726112AbfK0JBi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 04:01:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574845296;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=W3L6nlmes8oXrfGyTRcQKAPftzxl1AiuiyJp8dmg4qg=;
-        b=LQG2OjjgFMOCHDWLBHvCmbMKHttjEMksDlR4S96SjPEyyV5pFvlSKq5yWrDu40aB
-        ZzASbkPRfUJSRra96rlqq6XKS0mY+zvnq6j4st/08Nlxxnlb2jlnHH22Iy5rVr62MIN
-        baya9Hl+8pojRgvEcwJkk8gpff5o6/Id4SN0Uu/k=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574845296;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=W3L6nlmes8oXrfGyTRcQKAPftzxl1AiuiyJp8dmg4qg=;
-        b=PshHnikMhvrHPlqgUvukSzpIAPjOmiHAHIL2mYDEbCBzbDICoJZ6bsV9/XU4+c0n
-        AxBylgkoqFTWVxlUMvEHGjE+XMgrVfTJ+pierx25rsVeJO+SNBJSM95BvO818tUch+h
-        7bZP+O+dXdBPE4s7uxDCClRezJQmKoTjEpuF5Kg4=
+        Wed, 27 Nov 2019 04:12:57 -0500
+Received: from mail-eopbgr770080.outbound.protection.outlook.com ([40.107.77.80]:10091
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726133AbfK0JM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 04:12:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O/AWIBC3J4qlYdVeWtRsDkouy+j+mfQtYAX+yPdIIxJyYLbYCEM8M0BXATq2A8cZAU5WHnr09eC73OPlNwdxZCKY+Z21mZfq9ZXPjc9e5tpkEld59cn6AH+4hbFNQPn+4KeebKV3AVTYQm1J+OcjKsxZ/hmwWmEQIeR5rrublBi1R3FVL4kidk801ksu85jBSoSWYQzixy+uLxEQPKcpiL4bMHZTHGQFkNVx3LbX+1AAAf97bK18U02G7zlh/gD/ztsM/2+2EQffhIKQiFIlbCyiXG1fpyinHoCY8tVFqthz8lifOKPyWxIw1Y/FrDLPqEnjcfeBLRdJp/zuNUroGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ExqbDUVbse+YiXhNTU5zOR7ICi9Xa/lfAU76LDB+TSE=;
+ b=oa976Au/b+qVMAyXs37MzFNcK8ZMuvN9zc0BtEvUZIKiF4yny2K/+r0MrHyDy4YvSQPOHM8235O5aPL6Cym8zwOm7R1Fd497PA3YV2el8ltDpLzz6jsu1nIajzxjp/YXtbHZY6+T9j7+3ZEONzVjndrOLVKgNalsrp/toZrxNxIS6wM80PCb7WAPB9btKNg0z40woLmc1QlrHbUsFXGJDtiOOIq7QnB/3tB3CIo+E0nVwgm+T2ixOV5l/jBpWf58M0QdbjwjCoZdDTj/4e9ElMyzafT/5J3JhjGTAbXsCrJ1MwYrJRKzjGl0VaNOJtpMdS0hZZEGgSJzKZt6miJkZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ExqbDUVbse+YiXhNTU5zOR7ICi9Xa/lfAU76LDB+TSE=;
+ b=dNPT7Mk9bvWvK2h3RnJ6b4+esoaI9N3FmMS/JCKElf3Hs5cNLBWTTapCoxlCG6kjwrIbf9BkQ+g5o3zG/Mc5HwNaLgjepJgYRH4acFWFRUdQIGsgcyxA3cwV6cJW5gOzGeKtmumIlT4OhL5poThh/WwUEPyDxs3pf2eCNva9VBM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
+ DM5PR12MB1692.namprd12.prod.outlook.com (10.172.34.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.19; Wed, 27 Nov 2019 09:12:48 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::e5e7:96f0:ad90:d933]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::e5e7:96f0:ad90:d933%7]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
+ 09:12:48 +0000
+Subject: Re: [RFC PATCH 4/7] drm/ttm: Support huge pagefaults
+To:     =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20191127083120.34611-1-thomas_os@shipmail.org>
+ <20191127083120.34611-5-thomas_os@shipmail.org>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <b7e21292-2967-b11c-a0b6-8b857c89f9df@amd.com>
+Date:   Wed, 27 Nov 2019 10:12:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <20191127083120.34611-5-thomas_os@shipmail.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR0102CA0016.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:14::29) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 27 Nov 2019 09:01:36 +0000
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Odelu Kukatla <okukatla@codeaurora.org>
-Cc:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@google.com, sboyd@kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V1 1/2] dt-bindings: interconnect: Add Qualcomm SC7180 DT
- bindings
-In-Reply-To: <0101016ea83b44e2-546fc9ff-6056-482b-a42d-231b9d908640-000000@us-west-2.amazonses.com>
-References: <1574780408-21282-1-git-send-email-okukatla@codeaurora.org>
- <0101016ea83b44e2-546fc9ff-6056-482b-a42d-231b9d908640-000000@us-west-2.amazonses.com>
-Message-ID: <0101016eac183058-afcce911-d283-4748-b3ff-8455e076a313-000000@us-west-2.amazonses.com>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.27-54.240.27.186
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b974a5dc-2634-45ae-8b5f-08d77319f8c0
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1692:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1692679F278E5CD0CF53E0D483440@DM5PR12MB1692.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-Forefront-PRVS: 023495660C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(39860400002)(136003)(396003)(376002)(189003)(199004)(2486003)(50466002)(186003)(6506007)(23676004)(86362001)(8936002)(386003)(7736002)(58126008)(6116002)(25786009)(46003)(305945005)(229853002)(36756003)(446003)(7416002)(99286004)(11346002)(316002)(76176011)(14444005)(31696002)(14454004)(81156014)(52116002)(54906003)(2616005)(8676002)(81166006)(31686004)(2906002)(6666004)(2870700001)(66946007)(66476007)(66556008)(65806001)(65956001)(47776003)(66574012)(5660300002)(6512007)(6246003)(6486002)(6436002)(478600001)(4326008)(14583001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1692;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nspHhdsGJA19ktooRfcSfyQKRvEx5q/nb4zH0ZrylIe1Ly/vpNPW6SineQTzOCYJoOrgayFMljXQCW6YnQb0j60OtsTv7Sn8qTdCNSAJevEycEPGP2lJOAtG4+GoezQavcFQJ0b9QxYjVZ39TJEVubV/sWbqgDq3D3+crhci0cFl360Fy+z/l5wv4yTUyEkttskNetNMeP/v8ya9QcHJX3Rlc02A6q8Cz1ap95khlmetUSni5xi3a5B7xpXgb2oTC2DsBOuaiNfG3iR2SDuUZd7lsGrNw2XsHKqHGmv19Y92Du2ujJKWYRtB88iskFc/MACRZfWP8Fh/oIzuTyFCXuc6ZSPNPGO4eh8mwATH2aScN+y40lAoKm9h3xVDc6KYleupWSVWHSQyyWdZz+aHrr4jTpJ2a00AEzKIFHKYfFdKqNSNB1RkALfZrfRlenuB
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b974a5dc-2634-45ae-8b5f-08d77319f8c0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2019 09:12:48.3628
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8P4uDoZfLLXzJ/zUMHQYxUVmtft3ujCLDToVjssZTn8wCDcJZw2NnUdHKgQOFeP0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1692
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Odelu,
-
-On 2019-11-26 20:31, Odelu Kukatla wrote:
-> The Qualcomm SC7180 platform has several bus fabrics that could be
-> controlled and tuned dynamically according to the bandwidth demand.
-> 
-> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+Am 27.11.19 um 09:31 schrieb Thomas Hellström (VMware):
+> From: Thomas Hellstrom <thellstrom@vmware.com>
+>
+> Support huge (PMD-size and PUD-size) page-table entries by providing a
+> huge_fault() callback.
+> We still support private mappings and write-notify by splitting the huge
+> page-table entries on write-access.
+>
+> Note that for huge page-faults to occur, either the kernel needs to be
+> compiled with trans-huge-pages always enabled, or the kernel needs to be
+> compiled with trans-huge-pages enabled using madvise, and the user-space
+> app needs to call madvise() to enable trans-huge pages on a per-mapping
+> basis.
+>
+> Furthermore huge page-faults will not occur unless buffer objects and
+> user-space addresses are aligned on huge page size boundaries.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 > ---
->  .../bindings/interconnect/qcom,bcm-voter.yaml      |   1 +
->  .../bindings/interconnect/qcom,sc7180.yaml         | 155 
-> +++++++++++++++++++++
->  include/dt-bindings/interconnect/qcom,sc7180.h     | 149 
-> ++++++++++++++++++++
->  3 files changed, 305 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
->  create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
-> b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
-> index 74f0715..55c9f34 100644
-> --- 
-> a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
-> +++ 
-> b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
-> @@ -19,6 +19,7 @@ description: |
->  properties:
->    compatible:
->      enum:
-> +      - qcom,sc7180-bcm-voter
->        - qcom,sdm845-bcm-voter
-> 
->  required:
-> diff --git
-> a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-> b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-> new file mode 100644
-> index 0000000..487da5e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-> @@ -0,0 +1,155 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title:  Qualcomm SC7180 Network-On-Chip Interconnect
-> +
-
-seems to be same as the SDM845
-icc description can't we just
-re-use/add it to that?
-
-> +maintainers:
-> +  - David Dai <daidavid1@codeaurora.org>
-> +
-> +description: |
-> +   SC7180 interconnect providers support system bandwidth requirements 
-> through
-> +   RPMh hardware accelerators known as Bus Clock Manager (BCM). The 
-> provider is
-> +   able to communicate with the BCM through the Resource State
-> Coordinator (RSC)
-> +   associated with each execution environment. Provider nodes must 
-> point to at
-> +   least one RPMh device child node pertaining to their RSC and each 
-> provider
-> +   can map to multiple RPMh resources.
-> +
-> +properties:
-> +  reg:
-> +    maxItems: 1
-> +
-> +  compatible:
-> +    enum:
-> +      - qcom,sc7180-aggre1-noc
-> +      - qcom,sc7180-aggre2-noc
-> +      - qcom,sc7180-camnoc-virt
-> +      - qcom,sc7180-compute-noc
-> +      - qcom,sc7180-config-noc
-> +      - qcom,sc7180-dc-noc
-> +      - qcom,sc7180-gem-noc
-> +      - qcom,sc7180-ipa-virt
-> +      - qcom,sc7180-mc-virt
-> +      - qcom,sc7180-mmss-noc
-> +      - qcom,sc7180-npu-noc
-> +      - qcom,sc7180-qup-virt
-> +      - qcom,sc7180-system-noc
-> +
-> +  '#interconnect-cells':
-> +    const: 1
-> +
-> +  qcom,bcm-voters:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: |
-> +      List of phandles to qcom,bcm-voter nodes that are required by
-> +      this interconnect to send RPMh commands.
-> +
-> +  qcom,bcm-voter-names:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    description: |
-> +      Names for each of the qcom,bcm-voters specified.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#interconnect-cells'
-> +  - qcom,bcm-voters
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +      #include <dt-bindings/interconnect/qcom,sc7180.h>
-> +
-> +      config_noc: interconnect@1500000 {
-> +            compatible = "qcom,sc7180-config-noc";
-> +            reg = <0 0x01500000 0 0x28000>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      system_noc: interconnect@1620000 {
-> +            compatible = "qcom,sc7180-system-noc";
-> +            reg = <0 0x01620000 0 0x17080>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      mc_virt: interconnect@1630000 {
-> +            compatible = "qcom,sc7180-mc-virt";
-> +            reg = <0 0x01630000 0 0x4000>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      qup_virt: interconnect@1650000 {
-> +            compatible = "qcom,sc7180-qup-virt";
-> +            reg = <0 0x01650000 0 0x4000>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      aggre1_noc: interconnect@16e0000 {
-> +            compatible = "qcom,sc7180-aggre1-noc";
-> +            reg = <0 0x016e0000 0 0x15080>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      aggre2_noc: interconnect@1700000 {
-> +            compatible = "qcom,sc7180-aggre2-noc";
-> +            reg = <0 0x01700000 0 0x1f880>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      compute_noc: interconnect@170e000 {
-> +            compatible = "qcom,sc7180-compute-noc";
-> +            reg = <0 0x0170e000 0 0x11880>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      mmss_noc: interconnect@1740000 {
-> +            compatible = "qcom,sc7180-mmss-noc";
-> +            reg = <0 0x01740000 0 0x1c100>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      ipa_virt: interconnect@1e00000 {
-> +            compatible = "qcom,sc7180-ipa-virt";
-> +            reg = <0 0x01e00000 0 0x4000>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      dc_noc: interconnect@9160000 {
-> +            compatible = "qcom,sc7180-dc-noc";
-> +            reg = <0 0x09160000 0 0x03200>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      gem_noc: interconnect@9680000 {
-> +            compatible = "qcom,sc7180-gem-noc";
-> +            reg = <0 0x09680000 0 0x3e200>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      npu_noc: interconnect@9990000 {
-> +            compatible = "qcom,sc7180-npu-noc";
-> +            reg = <0 0x09990000 0 0x1600>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      camnoc_virt: interconnect@ac00000 {
-> +            compatible = "qcom,sc7180-camnoc-virt";
-> +            reg = <0 0x0ac00000 0 0x4000>;
-> +            #interconnect-cells = <1>;
-> +            qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> diff --git a/include/dt-bindings/interconnect/qcom,sc7180.h
-> b/include/dt-bindings/interconnect/qcom,sc7180.h
-> new file mode 100644
-> index 0000000..b762bc3
-> --- /dev/null
-> +++ b/include/dt-bindings/interconnect/qcom,sc7180.h
-> @@ -0,0 +1,149 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Qualcomm SC7180 interconnect IDs
+>   drivers/gpu/drm/ttm/ttm_bo_vm.c | 139 +++++++++++++++++++++++++++++++-
+>   include/drm/ttm/ttm_bo_api.h    |   3 +-
+>   2 files changed, 138 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> index 2098f8d4dfc5..8d6089880e39 100644
+> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> @@ -150,6 +150,84 @@ vm_fault_t ttm_bo_vm_reserve(struct ttm_buffer_object *bo,
+>   }
+>   EXPORT_SYMBOL(ttm_bo_vm_reserve);
+>   
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +/**
+> + * ttm_bo_vm_insert_huge - Insert a pfn for PUD or PMD faults
+> + * @vmf: Fault data
+> + * @bo: The buffer object
+> + * @page_offset: Page offset from bo start
+> + * @fault_page_size: The size of the fault in pages.
+> + * @pgprot: The page protections.
+> + * Does additional checking whether it's possible to insert a PUD or PMD
+> + * pfn and performs the insertion.
 > + *
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + * Return: VM_FAULT_NOPAGE on successful insertion, VM_FAULT_FALLBACK if
+> + * a huge fault was not possible, and a VM_FAULT_ERROR code otherwise.
 > + */
+> +static vm_fault_t ttm_bo_vm_insert_huge(struct vm_fault *vmf,
+> +					struct ttm_buffer_object *bo,
+> +					pgoff_t page_offset,
+> +					pgoff_t fault_page_size,
+> +					pgprot_t pgprot)
+> +{
+> +	pgoff_t i;
+> +	vm_fault_t ret;
+> +	unsigned long pfn;
+> +	pfn_t pfnt;
+> +	struct ttm_tt *ttm = bo->ttm;
+> +	bool write = vmf->flags & FAULT_FLAG_WRITE;
 > +
-> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
-> +#define __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
-
-Please use local ids instead, the
-following way of defining nodes will
-lead to unnecessarily large array
-sizes.
-
 > +
-> +#define MASTER_APPSS_PROC			0
-> +#define MASTER_SYS_TCU				1
-> +#define MASTER_NPU_SYS				2
-> +#define MASTER_IPA_CORE				3
-> +#define MASTER_LLCC				4
-> +#define MASTER_A1NOC_CFG			5
-> +#define MASTER_A2NOC_CFG			6
-> +#define MASTER_CNOC_DC_NOC			7
-> +#define MASTER_GEM_NOC_CFG			8
-> +#define MASTER_CNOC_MNOC_CFG			9
-> +#define MASTER_NPU_NOC_CFG			10
-> +#define MASTER_QDSS_BAM				11
-> +#define MASTER_QSPI				12
-> +#define MASTER_QUP_0				13
-> +#define MASTER_QUP_1				14
-> +#define MASTER_SNOC_CFG				15
-> +#define MASTER_A1NOC_SNOC			16
-> +#define MASTER_A2NOC_SNOC			17
-> +#define MASTER_COMPUTE_NOC			18
-> +#define MASTER_GEM_NOC_SNOC			19
-> +#define MASTER_MNOC_HF_MEM_NOC			20
-> +#define MASTER_MNOC_SF_MEM_NOC			21
-> +#define MASTER_NPU				22
-> +#define MASTER_SNOC_CNOC			23
-> +#define MASTER_SNOC_GC_MEM_NOC			24
-> +#define MASTER_SNOC_SF_MEM_NOC			25
-> +#define MASTER_QUP_CORE_0			26
-> +#define MASTER_QUP_CORE_1			27
-> +#define MASTER_CAMNOC_HF0			28
-> +#define MASTER_CAMNOC_HF1			29
-> +#define MASTER_CAMNOC_HF0_UNCOMP		30
-> +#define MASTER_CAMNOC_HF1_UNCOMP		31
-> +#define MASTER_CAMNOC_SF			32
-> +#define MASTER_CAMNOC_SF_UNCOMP			33
-> +#define MASTER_CRYPTO				34
-> +#define MASTER_GFX3D				35
-> +#define MASTER_IPA				36
-> +#define MASTER_MDP0				37
-> +#define MASTER_NPU_PROC				38
-> +#define MASTER_PIMEM				39
-> +#define MASTER_ROTATOR				40
-> +#define MASTER_VIDEO_P0				41
-> +#define MASTER_VIDEO_PROC			42
-> +#define MASTER_QDSS_DAP				43
-> +#define MASTER_QDSS_ETR				44
-> +#define MASTER_SDCC_2				45
-> +#define MASTER_UFS_MEM				46
-> +#define MASTER_USB3				47
-> +#define MASTER_EMMC				48
-> +#define SLAVE_EBI1				512
-
-Shouldn't the node ids be just
-sequential?
-
-> +#define SLAVE_IPA_CORE				513
-> +#define SLAVE_A1NOC_CFG				514
-> +#define SLAVE_A2NOC_CFG				515
-> +#define SLAVE_AHB2PHY_SOUTH			516
-> +#define SLAVE_AHB2PHY_CENTER			517
-> +#define SLAVE_AOP				518
-> +#define SLAVE_AOSS				519
-> +#define SLAVE_APPSS				520
-> +#define SLAVE_BOOT_ROM				521
-> +#define SLAVE_NPU_CAL_DP0			522
-> +#define SLAVE_CAMERA_CFG			523
-> +#define SLAVE_CAMERA_NRT_THROTTLE_CFG		524
-> +#define SLAVE_CAMERA_RT_THROTTLE_CFG		525
-> +#define SLAVE_CLK_CTL				526
-> +#define SLAVE_NPU_CP				527
-> +#define SLAVE_RBCPR_CX_CFG			528
-> +#define SLAVE_RBCPR_MX_CFG			529
-> +#define SLAVE_CRYPTO_0_CFG			530
-> +#define SLAVE_DCC_CFG				531
-> +#define SLAVE_CNOC_DDRSS			532
-> +#define SLAVE_DISPLAY_CFG			533
-> +#define SLAVE_DISPLAY_RT_THROTTLE_CFG		534
-> +#define SLAVE_DISPLAY_THROTTLE_CFG		535
-> +#define SLAVE_NPU_INT_DMA_BWMON_CFG		536
-> +#define SLAVE_NPU_DPM				537
-> +#define SLAVE_EMMC_CFG				538
-> +#define SLAVE_GEM_NOC_CFG			539
-> +#define SLAVE_GLM				540
-> +#define SLAVE_GFX3D_CFG				541
-> +#define SLAVE_IMEM_CFG				542
-> +#define SLAVE_IPA_CFG				543
-> +#define SLAVE_ISENSE_CFG			544
-> +#define SLAVE_LLCC_CFG				545
-> +#define SLAVE_NPU_LLM_CFG			546
-> +#define SLAVE_MSS_PROC_MS_MPU_CFG		547
-> +#define SLAVE_CNOC_MNOC_CFG			548
-> +#define SLAVE_CNOC_MSS				549
-> +#define SLAVE_NPU_CFG				550
-> +#define SLAVE_NPU_DMA_BWMON_CFG			551
-> +#define SLAVE_NPU_PROC_BWMON_CFG		552
-> +#define SLAVE_PDM				553
-> +#define SLAVE_PIMEM_CFG				554
-> +#define SLAVE_PRNG				555
-> +#define SLAVE_QDSS_CFG				556
-> +#define SLAVE_QM_CFG				557
-> +#define SLAVE_QM_MPU_CFG			558
-> +#define SLAVE_QSPI_0				559
-> +#define SLAVE_QUP_0				560
-> +#define SLAVE_QUP_1				561
-> +#define SLAVE_SDCC_2				562
-> +#define SLAVE_SECURITY				563
-> +#define SLAVE_SNOC_CFG				564
-> +#define SLAVE_NPU_TCM				565
-> +#define SLAVE_TCSR				566
-> +#define SLAVE_TLMM_WEST				567
-> +#define SLAVE_TLMM_NORTH			568
-> +#define SLAVE_TLMM_SOUTH			569
-> +#define SLAVE_UFS_MEM_CFG			570
-> +#define SLAVE_USB3				571
-> +#define SLAVE_VENUS_CFG				572
-> +#define SLAVE_VENUS_THROTTLE_CFG		573
-> +#define SLAVE_VSENSE_CTRL_CFG			574
-> +#define SLAVE_A1NOC_SNOC			575
-> +#define SLAVE_A2NOC_SNOC			576
-> +#define SLAVE_CAMNOC_UNCOMP			577
-> +#define SLAVE_CDSP_GEM_NOC			578
-> +#define SLAVE_SNOC_CNOC				579
-> +#define SLAVE_GEM_NOC_SNOC			580
-> +#define SLAVE_SNOC_GEM_NOC_GC			581
-> +#define SLAVE_SNOC_GEM_NOC_SF			582
-> +#define SLAVE_LLCC				583
-> +#define SLAVE_MNOC_HF_MEM_NOC			584
-> +#define SLAVE_MNOC_SF_MEM_NOC			585
-> +#define SLAVE_NPU_COMPUTE_NOC			586
-> +#define SLAVE_QUP_CORE_0			587
-> +#define SLAVE_QUP_CORE_1			588
-> +#define SLAVE_IMEM				589
-> +#define SLAVE_PIMEM				590
-> +#define SLAVE_SERVICE_A1NOC			591
-> +#define SLAVE_SERVICE_A2NOC			592
-> +#define SLAVE_SERVICE_CNOC			593
-> +#define SLAVE_SERVICE_GEM_NOC			594
-> +#define SLAVE_SERVICE_MNOC			595
-> +#define SLAVE_SERVICE_NPU_NOC			596
-> +#define SLAVE_SERVICE_SNOC			597
-> +#define SLAVE_QDSS_STM				598
-> +#define SLAVE_TCU				599
+> +	/* Fault should not cross bo boundary */
+> +	page_offset &= ~(fault_page_size - 1);
+> +	if (page_offset + fault_page_size > bo->num_pages)
+> +		goto out_fallback;
 > +
+> +	if (bo->mem.bus.is_iomem)
+> +		pfn = ttm_bo_io_mem_pfn(bo, page_offset);
+> +	else
+> +		pfn = page_to_pfn(ttm->pages[page_offset]);
+> +
+> +	/* pfn must be fault_page_size aligned. */
+> +	if ((pfn & (fault_page_size - 1)) != 0)
+> +		goto out_fallback;
+> +
+> +	/* IO memory is OK now, TT memory must be contigous. */
+
+That won't work correctly, IO mem might not be contiguous either.
+
+We either need to call ttm_bo_io_mem_pfn() multiple times and check that 
+the addresses are linear or return the length additional to the pfn.
+
+Regards,
+Christian.
+
+> +	if (!bo->mem.bus.is_iomem)
+> +		for (i = 1; i < fault_page_size; ++i) {
+> +			if (page_to_pfn(ttm->pages[page_offset + i]) != pfn + i)
+> +				goto out_fallback;
+> +		}
+> +
+> +	pfnt = __pfn_to_pfn_t(pfn, PFN_DEV);
+> +	if (fault_page_size == (HPAGE_PMD_SIZE >> PAGE_SHIFT))
+> +		ret = vmf_insert_pfn_pmd_prot(vmf, pfnt, pgprot, write);
+> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+> +	else if (fault_page_size == (HPAGE_PUD_SIZE >> PAGE_SHIFT))
+> +		ret = vmf_insert_pfn_pud_prot(vmf, pfnt, pgprot, write);
 > +#endif
+> +	else
+> +		WARN_ON_ONCE(ret = VM_FAULT_FALLBACK);
+> +
+> +	if (ret != VM_FAULT_NOPAGE)
+> +		goto out_fallback;
+> +
+> +	return VM_FAULT_NOPAGE;
+> +out_fallback:
+> +	count_vm_event(THP_FAULT_FALLBACK);
+> +	return VM_FAULT_FALLBACK;
+> +}
+> +#else
+> +static vm_fault_t ttm_bo_vm_insert_huge(struct vm_fault *vmf,
+> +					struct ttm_buffer_object *bo,
+> +					pgoff_t page_offset,
+> +					pgoff_t fault_page_size,
+> +					pgprot_t pgprot)
+> +{
+> +	return VM_FAULT_NOPAGE;
+> +}
+> +#endif
+> +
+>   /**
+>    * ttm_bo_vm_fault_reserved - TTM fault helper
+>    * @vmf: The struct vm_fault given as argument to the fault callback
+> @@ -170,7 +248,8 @@ EXPORT_SYMBOL(ttm_bo_vm_reserve);
+>    */
+>   vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+>   				    pgprot_t prot,
+> -				    pgoff_t num_prefault)
+> +				    pgoff_t num_prefault,
+> +				    pgoff_t fault_page_size)
+>   {
+>   	struct vm_area_struct *vma = vmf->vma;
+>   	struct ttm_buffer_object *bo = vma->vm_private_data;
+> @@ -262,6 +341,13 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+>   		prot = pgprot_decrypted(prot);
+>   	}
+>   
+> +	/* We don't prefault on huge faults. Yet. */
+> +	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && fault_page_size != 1) {
+> +		ret = ttm_bo_vm_insert_huge(vmf, bo, page_offset,
+> +					    fault_page_size, prot);
+> +		goto out_io_unlock;
+> +	}
+> +
+>   	/*
+>   	 * Speculatively prefault a number of pages. Only error on
+>   	 * first page.
+> @@ -320,7 +406,7 @@ vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
+>   		return ret;
+>   
+>   	prot = vma->vm_page_prot;
+> -	ret = ttm_bo_vm_fault_reserved(vmf, prot, TTM_BO_VM_NUM_PREFAULT);
+> +	ret = ttm_bo_vm_fault_reserved(vmf, prot, TTM_BO_VM_NUM_PREFAULT, 1);
+>   	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
+>   		return ret;
+>   
+> @@ -330,6 +416,50 @@ vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
+>   }
+>   EXPORT_SYMBOL(ttm_bo_vm_fault);
+>   
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +static vm_fault_t ttm_bo_vm_huge_fault(struct vm_fault *vmf,
+> +				       enum page_entry_size pe_size)
+> +{
+> +	struct vm_area_struct *vma = vmf->vma;
+> +	pgprot_t prot;
+> +	struct ttm_buffer_object *bo = vma->vm_private_data;
+> +	vm_fault_t ret;
+> +	pgoff_t fault_page_size = 0;
+> +	bool write = vmf->flags & FAULT_FLAG_WRITE;
+> +
+> +	switch (pe_size) {
+> +	case PE_SIZE_PMD:
+> +		fault_page_size = HPAGE_PMD_SIZE >> PAGE_SHIFT;
+> +		break;
+> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+> +	case PE_SIZE_PUD:
+> +		fault_page_size = HPAGE_PUD_SIZE >> PAGE_SHIFT;
+> +		break;
+> +#endif
+> +	default:
+> +		WARN_ON_ONCE(1);
+> +		return VM_FAULT_FALLBACK;
+> +	}
+> +
+> +	/* Fallback on write dirty-tracking or COW */
+> +	if (write && !(pgprot_val(vmf->vma->vm_page_prot) & _PAGE_RW))
+> +		return VM_FAULT_FALLBACK;
+> +
+> +	ret = ttm_bo_vm_reserve(bo, vmf);
+> +	if (ret)
+> +		return ret;
+> +
+> +	prot = vm_get_page_prot(vma->vm_flags);
+> +	ret = ttm_bo_vm_fault_reserved(vmf, prot, 1, fault_page_size);
+> +	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
+> +		return ret;
+> +
+> +	dma_resv_unlock(bo->base.resv);
+> +
+> +	return ret;
+> +}
+> +#endif
+> +
+>   void ttm_bo_vm_open(struct vm_area_struct *vma)
+>   {
+>   	struct ttm_buffer_object *bo = vma->vm_private_data;
+> @@ -431,7 +561,10 @@ static const struct vm_operations_struct ttm_bo_vm_ops = {
+>   	.fault = ttm_bo_vm_fault,
+>   	.open = ttm_bo_vm_open,
+>   	.close = ttm_bo_vm_close,
+> -	.access = ttm_bo_vm_access
+> +	.access = ttm_bo_vm_access,
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +	.huge_fault = ttm_bo_vm_huge_fault,
+> +#endif
+>   };
+>   
+>   static struct ttm_buffer_object *ttm_bo_vm_lookup(struct ttm_bo_device *bdev,
+> diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
+> index 66ca49db9633..4fc90d53aa15 100644
+> --- a/include/drm/ttm/ttm_bo_api.h
+> +++ b/include/drm/ttm/ttm_bo_api.h
+> @@ -732,7 +732,8 @@ vm_fault_t ttm_bo_vm_reserve(struct ttm_buffer_object *bo,
+>   
+>   vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+>   				    pgprot_t prot,
+> -				    pgoff_t num_prefault);
+> +				    pgoff_t num_prefault,
+> +				    pgoff_t fault_page_size);
+>   
+>   vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf);
+>   
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
