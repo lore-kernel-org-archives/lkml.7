@@ -2,255 +2,116 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CD0C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA89DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A94C206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815D120678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:54:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="k/94Cqjb"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="UMUZ5uIB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfK0Nxa (ORCPT
+        id S1727028AbfK0NyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:53:30 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.20]:13223 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfK0Nx3 (ORCPT
+        Wed, 27 Nov 2019 08:54:10 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44484 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfK0NyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:53:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574862802;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=PPfP9mcJWSMHbHZqS0bO2czGghIr6I3dL5HsA0oLoIM=;
-        b=k/94Cqjbxx07BvkSczailp9egoLObssDj2r2bmrjjPCfw1x0YL7ay+Rx/Ylf8wS1oa
-        qa5elIZx45+g8uOfurXsGRKszzLaPInKdKXLCc8b8EcCvC+Zr1smpqXuWSHDKG+SUj4+
-        q3frNHcYVX0As3iJRe3ZppkN8DF5iyAjnDmt1Hgxm9w3WPjsNjoWqE+CfO6GMtcM2KSG
-        rr1jWdKcjiAOGhZEfT3ZDnQ7U0xzONsZcFZ+noL9yvM/zjbK6nCKusZZXnqABe5BpIPP
-        UF+KYtoECS4F/Vmy6PTdLMda9UQeSRnc4JIeRUhSJiEBMI6N5ajAomACmqGw+1+6IoHt
-        tBSQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMjw47pbCs="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id y07703vARDrKDnf
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 27 Nov 2019 14:53:20 +0100 (CET)
+        Wed, 27 Nov 2019 08:54:10 -0500
+Received: by mail-qt1-f193.google.com with SMTP id g24so18568635qtq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 05:54:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=B8AdbwkolH/zZhIni1bfNeVxIM4SCQqBBGLNihqtq4k=;
+        b=UMUZ5uIBB+/yf2ttfNNyKB03xeaf7fBour2E40Dlum/LB5P0LN0sdUowrAkAgtnnHO
+         f53AMRdmdyEHPqp85m5Xp26jIE5VlmZm/y+01nTlV4dBn+sz5K/risEIyuyRbypHhDtS
+         n+U8eNzA3W7b2JsN/wc1hMghtZLuLzC5MeiThjvJSm9DJWErzEUpL7nZWSJcdPpQvVqG
+         F074glBrsV6nUgAesgDNxkPQxJpVV6ugeS8qbo2cwSJAQJuYbLxtB1DCHpXRb+aKWWiz
+         Nt/CppCRI+PBuoB/JuzNfe1o7H5FpLaWG49+w49I0gqxCTbghpayGO7Oj1VyoSKeyv7C
+         HnoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B8AdbwkolH/zZhIni1bfNeVxIM4SCQqBBGLNihqtq4k=;
+        b=L8rrLwpYR4LRGUd8MyHZg50itg0Y4KmNrdgwKYqxesCjlrNkeLpscbRAF9rYk3HmRe
+         B20Ydu6IZnRgQ4lVQdPVMlO35Y0Pg3ANFbvR0zGz2aZ+KHmy1tQRKiTRs2cqfJaXa+Pa
+         WwEmGBXDeNlRinBb3wAiwFBpXdczDLRCNCgjvCat8viaLsYkTEkxvvKPMOnfVc5PSd7F
+         n0Myp9wbkpfS6r+SWylOYAhm4ld0eFRjs+vAvCylT6O7KlUxoKDclVmpcjIu2KfwaOYI
+         KFca2x/aURQQcsGfRbrsb9+iJEurzLGUcOW4TPYpcBZm8NBwwX9SukOtQ6rI97/PcguW
+         BTag==
+X-Gm-Message-State: APjAAAWgBlvQL0ZUOIQ2pyBta/0cm16PMtn3r3vYG1nwPazX5baK5m/q
+        hcp2CueqliRlIm8bBcLtjyhIvA==
+X-Google-Smtp-Source: APXvYqzg2k38DbhBUIujL+npAV2fIIwB83882umXaPJTgDAPgB94SSphEydA3B9cm1UhSvaQ+FEYzg==
+X-Received: by 2002:ac8:6644:: with SMTP id j4mr38249574qtp.213.1574862847474;
+        Wed, 27 Nov 2019 05:54:07 -0800 (PST)
+Received: from localhost ([2620:10d:c091:480::e4d7])
+        by smtp.gmail.com with ESMTPSA id x1sm6824750qke.125.2019.11.27.05.54.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Nov 2019 05:54:06 -0800 (PST)
+Date:   Wed, 27 Nov 2019 08:54:05 -0500
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     David Sterba <dsterba@suse.cz>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] btrfs: Increase buffer size for zlib functions
+Message-ID: <20191127135405.326hmnja2sv3k2kh@macbook-pro-91.dhcp.thefacebook.com>
+References: <20191126144130.75710-1-zaslonko@linux.ibm.com>
+ <20191126144130.75710-6-zaslonko@linux.ibm.com>
+ <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
+ <20191127121423.GQ2734@suse.cz>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <3190d1a4-96c4-1843-3ae1-bae3a97af9fb@arm.com>
-Date:   Wed, 27 Nov 2019 14:53:20 +0100
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MIPS Creator CI20 Development 
-        <mips-creator-ci20-dev@googlegroups.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8D151C34-41A1-4DFE-92D6-D1B27AEC8730@goldelico.com>
-References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com> <703DC004-96E8-463D-8870-3CC410FE1C5E@goldelico.com> <3190d1a4-96c4-1843-3ae1-bae3a97af9fb@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <20191127121423.GQ2734@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincenzo,
+On Wed, Nov 27, 2019 at 01:14:23PM +0100, David Sterba wrote:
+> On Tue, Nov 26, 2019 at 10:52:49AM -0500, Josef Bacik wrote:
+> > On Tue, Nov 26, 2019 at 03:41:30PM +0100, Mikhail Zaslonko wrote:
+> > > Due to the small size of zlib buffer (1 page) set in btrfs code, s390
+> > > hardware compression is rather limited in terms of performance. Increasing
+> > > the buffer size to 4 pages would bring significant benefit for s390
+> > > hardware compression (up to 60% better performance compared to the
+> > > PAGE_SIZE buffer) and should not bring much overhead in terms of memory
+> > > consumption due to order 2 allocations.
+> > > 
+> > > Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+> > 
+> > We may have to make these allocations under memory pressure in the IO context,
+> > order 2 allocations here is going to be not awesome.  If you really want it then
+> > you need to at least be able to fall back to single page if you fail to get the
+> > allocation.  Thanks,
+> 
+> The allocation is only for the workspace and it does not happen on the
+> IO path for each call. There's the pool and if
+> 
+> btrfs_get_workspace
+>   alloc_workspace
+> 
+> fails, then there's fallback path to wait for an existing workspace to
+> be free.
 
-> Am 26.11.2019 um 11:52 schrieb Vincenzo Frascino =
-<vincenzo.frascino@arm.com>:
->=20
-> Hi Nikolaus,
->=20
-> sorry for the delay in answering to your email but due to personal =
-reasons I had
-> to pull off the linux development for few weeks.
+Only if we are maxed out, otherwise it tries to allocate.  If it can happen it
+will happen, and I'll be the guy swearing in the middle of the night trying to
+deal with this making boxes fall over in production.  I'm ok if we pre-allocate
+them first and only do 1 page on-demand, but having it always this way will bite
+us in the ass in production.  Thanks,
 
-No problem.
-
->=20
-> On 17/11/2019 13:14, H. Nikolaus Schaller wrote:
->> Hi Vincenzo,
->>=20
->=20
-> [...]
->=20
->>=20
->> If I look at the definition of vdso_data it *is* significantly =
-differen
->> from mips_vdso_data.
->>=20
->> What I would assume is that the struct mips_vdso_data is embossed in =
-user
->> space code and therefore using vdso_data instead is breaking API.
->>=20
->=20
-> vdso_data and mips_vdso_data before are not part of the ABI hence they =
-are not
-> bind by a contract with the userspace.
->=20
-> This means that they can change at any point and if a userspace =
-software relies
-> on a specific layout of these data structures is doing something =
-wrong.
-
-Maybe the libs are clever enough to find that out dynamically but I have =
-no
-idea about how gettimeofday() and user-space VDSO is implemented to =
-handle such
-changes.
-
->=20
->> Please advise what I should try or check to narrow down further.
->>=20
->=20
-> I had a look at [1] line 200 and seems that the error you are seeing =
-is
-> generated by:
->  if (gettimeofday(&tv, NULL) =3D=3D -1) { ... }
-
-Yes.
-
-> I do not have a CI20 hence I can't do the test myself: could you =
-please write a
-> small application that invokes gettimeofday() as per above and report =
-the
-> behavior (I am even interested in the value returned). If we can =
-reproduce the
-> problem in a smaller environment it is easier to debug and get to the =
-solution.
->=20
-> [1] =
-http://users.isc.org/~each/doxygen/bind9/isc_2unix_2time_8c-source.html
->=20
->> BR and thanks,
->> Nikolaus Schaller
->>=20
->=20
-> Let me know.
-
-I have done this and it seems as if tv_usec reports something that is =
-beyond 1e6 us
-or remains unchanged by the syscall. tv_sec seems to be set correctly. =
-And,
-gettimeofday() reports -1.
-
-hwclock isn't set on 45.4 kernel because I have no ethernet connection =
-due to the bug.
-
-BR,
-Nikolaus
-
-
-Here is the log
-
-a) with 5.4 kernel
-
-root@letux:~# cat gettime.c=20
-#include <stdio.h>
-#include <time.h>
-#include <sys/time.h>
-
-int main(void)
-{
-struct timeval tv;
-int r =3D gettimeofday(&tv, NULL);
-time_t t;
-int rt =3D time(&t);
-
-printf("r =3D %d\n", r);
-printf("tv.sec =3D %ld\n", tv.tv_sec);
-printf("tv.usec =3D %d\n", tv.tv_usec);
-printf("rt =3D %d\n", rt);
-printf("t =3D %ld\n", t);
-}
-root@letux:~# make gettime
-cc     gettime.c   -o gettime
-root@letux:~# ./gettime=20
-r =3D -1
-tv.sec =3D 1431857456
-tv.usec =3D 2012065500
-rt =3D 1478206565
-t =3D 1478206565
-root@letux:~# ./gettime=20
-r =3D -1
-tv.sec =3D 1431873840
-tv.usec =3D 2012065500
-rt =3D 1478206573
-t =3D 1478206573
-root@letux:~# uname -a
-Linux letux 5.4.0-letux-l400+ #1485 PREEMPT Wed Nov 27 10:23:16 CET 2019 =
-mips GNU/Linux
-root@letux:~# cat /proc/cpuinfo=20
-system type             : JZ4780
-machine                 : img,ci20
-processor               : 0
-cpu model               : Ingenic JZRISC V4.15  FPU V0.0
-BogoMIPS                : 1196.85
-wait instruction        : yes
-microsecond timers      : no
-tlb_entries             : 32
-extra interrupt vector  : yes
-hardware watchpoint     : yes, count: 1, address/irw mask: [0x0fff]
-isa                     : mips1 mips2 mips32r1 mips32r2
-ASEs implemented        :
-shadow register sets    : 1
-kscratch registers      : 0
-package                 : 0
-core                    : 0
-VCED exceptions         : not available
-VCEI exceptions         : not available
-
-root@letux:~# dpkg -l | grep libc6
-ii  libc6:mipsel                   2.24-11+deb9u4                 mipsel =
-      GNU C Library: Shared libraries
-ii  libc6-dev:mipsel               2.24-11+deb9u4                 mipsel =
-      GNU C Library: Development Libraries and Header Files
-root@letux:~# cat /etc/debian_version=20
-9.11
-root@letux:~#=20
-
-b) same system booted with 4.19 kernel:
-
-root@letux:~# ./gettime=20
-r =3D 0
-tv.sec =3D 1574862135
-tv.usec =3D 27974
-rt =3D 1574862135
-t =3D 1574862135
-root@letux:~# uname -a
-Linux letux 4.19.86-letux-l400+ #1450 PREEMPT Sun Nov 24 17:17:19 CET =
-2019 mips GNU/Linux
-root@letux:~# cat /proc/cpuinfo=20
-system type             : JZ4780
-machine                 : img,ci20
-processor               : 0
-cpu model               : Ingenic JZRISC V4.15  FPU V0.0
-BogoMIPS                : 1196.85
-wait instruction        : yes
-microsecond timers      : no
-tlb_entries             : 32
-extra interrupt vector  : yes
-hardware watchpoint     : yes, count: 1, address/irw mask: [0x0fff]
-isa                     : mips1 mips2 mips32r1 mips32r2
-ASEs implemented        :
-shadow register sets    : 1
-kscratch registers      : 0
-package                 : 0
-core                    : 0
-VCED exceptions         : not available
-VCEI exceptions         : not available
-
-root@letux:~# cat /etc/debian_version=20
-9.11
-root@letux:~#=20
-
+Josef
