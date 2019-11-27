@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4917FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB873C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9BB21903
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E1021903
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887878;
-	bh=l6iiVA3E9iGMZdpQYcBruEKsw7d0YFm93jzD7sppr0Q=;
+	s=default; t=1574887881;
+	bh=IM1t6g1nMjKWhDLnyHsa0pI2DuK8mSYSBKumetio6Ws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=giI+JU91MH4XQhWoOJkSUPbPo3NN4RQRgsEBctlhVXG3xK0ydYEC5fNsc95bwy6nW
-	 HAXyEkiEXA9angSHR6/qVDrkMQrTmrII3P4WIRMPgtM3qgvXMsRwgMLy7RnrGbqxRc
-	 YQb69/h2Cv9q13/lvYoD4/oiupuuKBz1iFeUdcN8=
+	b=GBs8uWxn0STgp73Lz0MsJ0nriwOv94EO0D2j+qDzzM911OGS7BV95qFUnRMzCXqXX
+	 V2h0kOjZcG+TRpg+MdNXNMT4IcPDmfn1dCUTSApqros63nwzJMsakcfKms/0fdBTim
+	 o5HRyRY1UeM9Pm0vOFbHhlNgQg6edcM+p5cnHKOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730458AbfK0UvQ (ORCPT
+        id S1730464AbfK0UvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:51:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37770 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:51:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730443AbfK0UvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:51:13 -0500
+        id S1730454AbfK0UvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:51:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82C4D2192C;
-        Wed, 27 Nov 2019 20:51:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1A5721847;
+        Wed, 27 Nov 2019 20:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887872;
-        bh=l6iiVA3E9iGMZdpQYcBruEKsw7d0YFm93jzD7sppr0Q=;
+        s=default; t=1574887875;
+        bh=IM1t6g1nMjKWhDLnyHsa0pI2DuK8mSYSBKumetio6Ws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gIPiYkkxUlp7NtM6v5vYV2AQ0h2ldLaHbybZnV/otfbFEp9p2Mj4Jn++7fHHL6vTh
-         oSTD6h+LWxSLEbNKk2RPueIf51I3cyQefATW3StYGzhJO9bobA1UPJFIW79tZhTFs4
-         y9qG72/dxXBzlvNpjMlZRFtJYPp5j2ghNPx9aeps=
+        b=xysraq16mvTf55O7A9cdEOBNuRp7rSNUpIA3c4bqTpysgCtA8a/vzYqQ/LwCfQEeF
+         M4Aqw1m0AuVhCNV73TFBIryDQVgsKvyMkdqnou3TvckrP6KmbaBvR4jX7ZK+jfQ6F2
+         p4PGhQyuVUvQlVoQaRmM3YN6g4vGluulFDk6x2Jo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 126/211] net: do not abort bulk send on BQL status
-Date:   Wed, 27 Nov 2019 21:30:59 +0100
-Message-Id: <20191127203106.019810447@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 127/211] sched/topology: Fix off by one bug
+Date:   Wed, 27 Nov 2019 21:31:00 +0100
+Message-Id: <20191127203106.103789668@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,49 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit fe60faa5063822f2d555f4f326c7dd72a60929bf ]
+[ Upstream commit 993f0b0510dad98b4e6e39506834dab0d13fd539 ]
 
-Before calling dev_hard_start_xmit(), upper layers tried
-to cook optimal skb list based on BQL budget.
+With the addition of the NUMA identity level, we increased @level by
+one and will run off the end of the array in the distance sort loop.
 
-Problem is that GSO packets can end up comsuming more than
-the BQL budget.
-
-Breaking the loop is not useful, since requeued packets
-are ahead of any packets still in the qdisc.
-
-It is also more expensive, since next TX completion will
-push these packets later, while skbs are not in cpu caches.
-
-It is also a behavior difference with TSO packets, that can
-break the BQL limit by a large amount.
-
-Note that drivers should use __netdev_tx_sent_queue()
-in order to have optimal xmit_more support, and avoid
-useless atomic operations as shown in the following patch.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixed: 051f3ca02e46 ("sched/topology: Introduce NUMA identity node sched domain")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 2 +-
+ kernel/sched/topology.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 9d6beb9de924b..3ce68484ed5aa 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3029,7 +3029,7 @@ struct sk_buff *dev_hard_start_xmit(struct sk_buff *first, struct net_device *de
- 		}
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 9dcd80ed9d4c1..867d173dab482 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1347,7 +1347,7 @@ void sched_init_numa(void)
+ 	int level = 0;
+ 	int i, j, k;
  
- 		skb = next;
--		if (netif_xmit_stopped(txq) && skb) {
-+		if (netif_tx_queue_stopped(txq) && skb) {
- 			rc = NETDEV_TX_BUSY;
- 			break;
- 		}
+-	sched_domains_numa_distance = kzalloc(sizeof(int) * nr_node_ids, GFP_KERNEL);
++	sched_domains_numa_distance = kzalloc(sizeof(int) * (nr_node_ids + 1), GFP_KERNEL);
+ 	if (!sched_domains_numa_distance)
+ 		return;
+ 
 -- 
 2.20.1
 
