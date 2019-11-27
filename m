@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7420FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EAFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD5F21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F07C21741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889509;
-	bh=v3MWzvn0YJzItHPCQQwMkMqD7KQdqDf1JizHExGJBTM=;
+	s=default; t=1574889514;
+	bh=IZD60WKOoIIwQZ0XlG9VB+VgoMwu1UzQuNA7TjHizyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pMpM0tnfQuySmxBRXAMyTMCLQ52WE5d2X2ZCn32pSFaeJ4ab1JmMy4ZRdeHC59l+p
-	 godmYXhj39cPJp4da30Xl1TUFA8vmTIJQdwCoswRj473AV2GoJdgJUrKUY/aoJhP2T
-	 ZDkJIpP245WfFtkH+3RnuaYGvsREo6t3ZgjaTq5c=
+	b=f/iD0zbZ1UduvBe5c7lldCaVHPxaRAF/B6Zt6DP7368GHgx1XE0JVnHbcCMB16/Ry
+	 zjC0eT5sWUqeX2AKBdV4ggjLTqN0UF9ngkG873sSRGbp+U351wKzyrxiipACSHs8DX
+	 ixN1l1sqieTuTYOj3dAYCdVPsg5ggWVHR/bh89FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732490AbfK0VLa (ORCPT
+        id S1733181AbfK0VSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:11:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39982 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:18:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733179AbfK0VL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:11:27 -0500
+        id S1728335AbfK0VLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBAE8216F4;
-        Wed, 27 Nov 2019 21:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63D952086A;
+        Wed, 27 Nov 2019 21:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889086;
-        bh=v3MWzvn0YJzItHPCQQwMkMqD7KQdqDf1JizHExGJBTM=;
+        s=default; t=1574889083;
+        bh=IZD60WKOoIIwQZ0XlG9VB+VgoMwu1UzQuNA7TjHizyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XghcoleIVyy1Eb2cXg7kqQv+WHTkZISEj896c1D5fMADrBxb9CM15lkYIRy0hchrX
-         dCiuWvUkXoJeuEe76FlMWyP+m9IkgSDPnQq8ezjm2o5RK0onuPKyqyQrfyLMB+8LNi
-         okzZMqC/QQEGkmesfERyvOrsfyEis5wDcztO5k8w=
+        b=pvMIPncckvPJeTcBds/zi81bKDNKVqgWoFrdsDYN9T6bq0km4GgnPJTY7K1ItboaQ
+         xuriVPxZn3o4Vb77Pqo1uQ9ZF2z0T8LX7dotnj4zjvM0/P+YYFfo1Z3g1O5xQjExug
+         unLv46ZIYiDBFPO754/GVKy/icFLowhldzDVTUbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vito Caputo <vcaputo@pengaru.com>,
-        syzbot <syzkaller@googlegroups.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.3 77/95] media: cxusb: detect cxusb_ctrl_msg error in query
-Date:   Wed, 27 Nov 2019 21:32:34 +0100
-Message-Id: <20191127202945.633083568@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 5.3 76/95] media: b2c2-flexcop-usb: add sanity checking
+Date:   Wed, 27 Nov 2019 21:32:33 +0100
+Message-Id: <20191127202943.105318630@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,78 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vito Caputo <vcaputo@pengaru.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit ca8f245f284eeffa56f3b7a5eb6fc503159ee028 upstream.
+commit 1b976fc6d684e3282914cdbe7a8d68fdce19095c upstream.
 
-Don't use uninitialized ircode[] in cxusb_rc_query() when
-cxusb_ctrl_msg() fails to populate its contents.
+The driver needs an isochronous endpoint to be present. It will
+oops in its absence. Add checking for it.
 
-syzbot reported:
-
-dvb-usb: bulk message failed: -22 (1/-30591)
-=====================================================
-BUG: KMSAN: uninit-value in ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
-BUG: KMSAN: uninit-value in rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
-BUG: KMSAN: uninit-value in rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
-CPU: 1 PID: 11436 Comm: kworker/1:2 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events dvb_usb_read_remote_control
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x191/0x1f0 lib/dump_stack.c:113
- kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
- __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
- bsearch+0x1dd/0x250 lib/bsearch.c:41
- ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
- rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
- rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
- cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
- dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
- process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
- worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
- kthread+0x4b5/0x4f0 kernel/kthread.c:256
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
- kmsan_internal_chain_origin+0xd2/0x170 mm/kmsan/kmsan.c:314
- __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:184
- rc_g_keycode_from_table drivers/media/rc/rc-main.c:583 [inline]
- rc_keydown+0x2c4/0x6f0 drivers/media/rc/rc-main.c:816
- cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
- dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
- process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
- worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
- kthread+0x4b5/0x4f0 kernel/kthread.c:256
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Local variable description: ----ircode@cxusb_rc_query
-Variable was created at:
- cxusb_rc_query+0x4d/0x360 drivers/media/usb/dvb-usb/cxusb.c:543
- dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
-
-Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Reported-by: syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/dvb-usb/cxusb.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/usb/b2c2/flexcop-usb.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/media/usb/dvb-usb/cxusb.c
-+++ b/drivers/media/usb/dvb-usb/cxusb.c
-@@ -542,7 +542,8 @@ static int cxusb_rc_query(struct dvb_usb
- {
- 	u8 ircode[4];
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -538,6 +538,9 @@ static int flexcop_usb_probe(struct usb_
+ 	struct flexcop_device *fc = NULL;
+ 	int ret;
  
--	cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4);
-+	if (cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4) < 0)
-+		return 0;
- 
- 	if (ircode[2] || ircode[3])
- 		rc_keydown(d->rc_dev, RC_PROTO_NEC,
++	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
++		return -ENODEV;
++
+ 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
+ 		err("out of memory\n");
+ 		return -ENOMEM;
 
 
