@@ -2,99 +2,136 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF36AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15ECC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFCD20684
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:27:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="NcA3edqK";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="Hv26thj9"
+	by mail.kernel.org (Postfix) with ESMTP id AF8FE20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfK0I1g (ORCPT
+        id S1726546AbfK0I2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:27:36 -0500
-Received: from mail187-16.suw11.mandrillapp.com ([198.2.187.16]:18789 "EHLO
-        mail187-16.suw11.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726125AbfK0I1g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:27:36 -0500
-X-Greylist: delayed 900 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Nov 2019 03:27:35 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=FyS2d7WYMN0XOjwqfqtBJxC7BKxHzrTUpalh89S9EPA=;
- b=NcA3edqKKW328oETwaJrje3RWQsX3x+AuM+0PSExfg++KrUBadyB4hOU3GJyg50Lj3PI/1rjXbC/
-   DKUeH5RUjdIj7IuuomYjnQXx/ADcijd1qJvu+eJUej3uglxfXcHyAzOkWNLIlMdyDnBe4Axy7xjt
-   HJ9h2+kC8fMSX0Nz718=
-Received: from pmta01.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail187-16.suw11.mandrillapp.com id hropne174i46 for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 08:12:34 +0000 (envelope-from <bounce-md_31050260.5dde2ff2.v1-79c01fdeceb14bb68d395f4859771242@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1574842354; h=From : 
- Subject : To : Cc : Message-Id : In-Reply-To : Date : MIME-Version : 
- Content-Type : Content-Transfer-Encoding : From : Subject : Date : 
- X-Mandrill-User : List-Unsubscribe; 
- bh=FyS2d7WYMN0XOjwqfqtBJxC7BKxHzrTUpalh89S9EPA=; 
- b=Hv26thj983lyL85quVozUQ8Kq7K/sjb9TulHzXDwrZIa16sBWaK1Hf9XxmA01hXJh+zfdv
- +FS6/RY6I0yvfPcY/mzsx+mtybkYPpTXmXVS9Gr0HDW0+rtT63+v1HE/Qbpyqu85oVIe2E2T
- 8ilVkSHbLs8f1mqtbWWG6DqajUMNg=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: Commit 0be0ee71 ("fs: properly and reliably lock f_pos in fdget_pos()") breaking userspace
-Received: from [87.98.221.171] by mandrillapp.com id 79c01fdeceb14bb68d395f4859771242; Wed, 27 Nov 2019 08:12:34 +0000
-To:     "Kenneth R. Crudup" <kenny@panix.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <20191127081229.GA3506@deco.navytux.spb.ru>
-In-Reply-To: <CAHk-=wh6w6U5FgZZXq-Eo8+aH1Y6ffp+Nwr_6GzmuzjVuGXmNw@mail.gmail.com> <alpine.DEB.2.21.1911260445170.6292@hp-x360n>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.79c01fdeceb14bb68d395f4859771242
-X-Mandrill-User: md_31050260
-Date:   Wed, 27 Nov 2019 08:12:34 +0000
+        Wed, 27 Nov 2019 03:28:30 -0500
+Received: from mail.phunq.net ([66.183.183.73]:58710 "EHLO phunq.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbfK0I2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 03:28:30 -0500
+Received: from [172.16.1.14]
+        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+        (Exim 4.92.3)
+        (envelope-from <daniel@phunq.net>)
+        id 1iZsgU-0003Z4-HJ; Wed, 27 Nov 2019 00:28:26 -0800
+Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
+To:     Vyacheslav Dubeyko <slava@dubeyko.com>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        "Darrick J. Wong" <djwong@kernel.org>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+ <8ece0424ceeeffbc4df5d52bfa270a9522f81cda.camel@dubeyko.com>
+From:   Daniel Phillips <daniel@phunq.net>
+Message-ID: <5c9b5bd3-028a-5211-30a6-a5a8706b373e@phunq.net>
+Date:   Wed, 27 Nov 2019 00:28:26 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <8ece0424ceeeffbc4df5d52bfa270a9522f81cda.camel@dubeyko.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 12:03:36PM -0800, Linus Torvalds wrote:
-> On Mon, Nov 25, 2019 at 7:39 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > I think I'll have to revert that trial commit. I'll give it another
-> > day in case somebody has a better idea, but it looks like it's too
-> > early to do that nice cleanup as things are now.
-> 
-> I've reverted it for now,
-> 
-> I don't want this problem to cause people to report known bugs during
-> the merge window. The fact that I saw no issues obviously is just a
-> matter of my workloads being too simple.
+On 2019-11-26 11:40 p.m., Vyacheslav Dubeyko wrote:
+> As far as I know, usually, a folder contains dozens or hundreds
+> files/folders in average. There are many research works that had showed
+> this fact. Do you mean some special use-case when folder could contain
+> the billion files? Could you share some research work that describes
+> some practical use-case with billion files per folder?
 
-I see, ok; let's move on incrementally. What is the fate of small
-net/socket.c cleanup patch? Should I resend it to netdev or something?
+You are entirely correct that the vast majority of directories contain
+only a handful of files. That is my case (1). A few directories on a
+typical server can go into the tens of thousands of files. There was
+a time when we could not handle those efficiently, and now thanks to
+HTree we can. Some directories go into the millions, ask the Lustre
+people about that. If you could have a directory with a billion files
+then somebody will have a use for it. For example, you may be able to
+avoid a database for a particular application and just use the file
+system instead.
 
+Now, scaling to a billion files is just one of several things that
+Shardmap does better than HTree. More immediately, Shardmap implements
+readdir simply, accurately and efficiently, unlike HTree. See here for
+some discussion:
 
-On Tue, Nov 26, 2019 at 04:46:39AM -0800, Kenneth R. Crudup wrote:
+   https://lwn.net/Articles/544520/
+   "Widening ext4's readdir() cookie"
+
+See the recommendation that is sometimes offered to work around
+HTree's issues with processing files in hash order. Basically, read
+the entire directory into memory, sort by inode number, then process
+in that order. As an application writer do you really want to do this,
+or would you prefer that the filesystem just take care of for you so
+the normal, simple and readable code is also the most efficient code?
+
+> If you are talking about improving the performance then do you mean
+> some special open-source implementation?
+
+I mean the same kind of kernel filesystem implementation that HTree
+currently has. Open source of course, GPLv2 to be specific.
+
+>> For delete, Shardmap avoids write multiplication by appending tombstone
+>> entries to index shards, thereby addressing a well known HTree delete
+>> performance issue.
 > 
-> On Tue, 26 Nov 2019, Kirill Smelkov wrote:
-> 
-> > P.S. even though I was put into cc there, somehow I did not received any
-> > notification email for commits d8e464ecc17b (vfs: mark pipes and sockets as
-> > stream-like file descriptors) and 0be0ee71816b (vfs: properly and
-> > reliably lock f_pos in fdget_pos()).
-> 
-> That's my fault; the CC: list for those commits was pretty long and I was
-> worried about it appearing like SPAMming anyone who'd signed off on it, so
-> I'd punted and sent it to Linus and the LKML only.
+> Do you mean Copy-On-Write policy here or some special technique?
 
-I did not mean it was your fault. I was trying to say that there was no
-automatic notification just as those commits were pushed to master. And
-neither there is for 2be7d348fe92 (Revert "vfs: properly and reliably
-lock f_pos in fdget_pos()").
+The technique Shardmap uses to reduce write amplication under heavy
+load is somewhat similar to the technique used by Google's Bigtable to
+achieve a similar result for data files. (However, the resemblance to
+Bigtable ends there.)
 
-Kirill
+Each update to a Shardmap index is done twice: once in a highly
+optimized hash table shard in cache, then again by appending an
+entry to the tail of the shard's media "fifo". Media writes are
+therefore mostly linear. I say mostly, because if there is a large
+number of shards then a single commit may need to update the tail
+block of each one, which still adds up to vastly fewer blocks than
+the BTree case, where it is easy to construct cases where every
+index block must be updated on every commit, a nasty example of
+n**2 performance overhead.
+
+> How could be good Shardmap for the SSD use-case? Do you mean that we
+> could reduce write amplification issue for NAND flash case?
+
+Correct. Reducing write amplification is particularly important for
+flash based storage. It also has a noticeable beneficial effect on
+efficiency under many common and not so common loads.
+
+> Let's imagine that it needs to implement the Shardmap approach. Could
+> you estimate the implementation and stabilization time? How expensive
+> and long-term efforts could it be?
+
+Shardmap is already implemented and stable, though it does need wider
+usage and testing. Code is available here:
+
+   https://github.com/danielbot/Shardmap
+
+Shardmap needs to be ported to kernel, already planned and in progress
+for Tux3. Now I am proposing that the Ext4 team should consider porting
+Shardmap to Ext4, or at least enter into a serious discussion of the
+logistics.
+
+Added Darrick to cc, as he is already fairly familiar with this subject,
+once was an Ext4 developer, and perhaps still is should the need arise.
+By the way, is there a reason that Ted's MIT address bounced on my
+original post?
+
+Regards,
+
+Daniel
