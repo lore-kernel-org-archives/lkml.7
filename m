@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29AEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3339C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81F62154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDCA2154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889340;
-	bh=6V7r6TB9qW/1X5KnQjTT2gyh0o0FqU2iM3qP87EZEXI=;
+	s=default; t=1574889345;
+	bh=/cg2bAmI7uI2SxnxtxpG8PwGvgizfuvw/FEYoaE4u1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FUSANQwgBuC+2IBPYouH63nMoZFo5PW5tTbn8iLnChcBNePk73Mt8cqbT5cIEOJkC
-	 ezJlY/vtekUv89+E6vsRi2ElFOGSnNx2vJZjfQ6LbGqt8wFtrX1DNhtDVNQHNahMgR
-	 LwHMMKv5JnXu2uXjUlaPHBCPR5UFp5ri+sIvoPtc=
+	b=qAr8hbBWWJEOkRe2GjxBRzmJ8oWtBEOSdCZdNShAZoXvW7rnCzLRRaCwVU5s28dma
+	 A4TAcXU7v+Y7Pna8EGBMqPaO43fozWvzE/feijBybBgJZbDJZag/XnWPmTU3s7xJvi
+	 Fm0hu7uNIAGJPxKj2Y7fwixmxmFQpU5QiFz+X2Y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387712AbfK0VPj (ORCPT
+        id S2387659AbfK0VPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:15:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50596 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:15:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387670AbfK0VPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:15:18 -0500
+        id S2387642AbfK0VPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:15:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E425621789;
-        Wed, 27 Nov 2019 21:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C06B6216F4;
+        Wed, 27 Nov 2019 21:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889318;
-        bh=6V7r6TB9qW/1X5KnQjTT2gyh0o0FqU2iM3qP87EZEXI=;
+        s=default; t=1574889305;
+        bh=/cg2bAmI7uI2SxnxtxpG8PwGvgizfuvw/FEYoaE4u1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pyRMavpY/hgKzJv4KZrQghOQU0Da7auW6CULRCl1++YTokY1LiEtYj96krJzqyxMk
-         iu9XMgdXaPOdGpHZHcDUVYBAnjIej/RJzNFXtpfv3zF9rXc9khlkD/P79GpUT+NQMC
-         597rT200t0I5hL+XaZzkKMJ+gHUHBzIF9xs/knFI=
+        b=V8NeAhZ276TR2r3egQYMHEQjfy37ZJ0hgdQbNULJdZPP2y0rmEjla6t7GcYziETay
+         wSxrAhLVf14NySkW1xcnc0ZfcgYl+CSkI0yNpdq4ZN0ucSqWVk50/ZySnlMDDiZ5ss
+         ktS2ForzkLXeF9XAaXdYEr+KtyFVL2HfU/ARw4/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Subject: [PATCH 5.4 58/66] appledisplay: fix error handling in the scheduled work
-Date:   Wed, 27 Nov 2019 21:32:53 +0100
-Message-Id: <20191127202739.120131623@linuxfoundation.org>
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 5.4 53/66] USBIP: add config dependency for SGL_ALLOC
+Date:   Wed, 27 Nov 2019 21:32:48 +0100
+Message-Id: <20191127202733.747256473@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -61,49 +61,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit 91feb01596e5efc0cc922cc73f5583114dccf4d2 upstream.
+commit 1ec13abac58b6f24e32f0d3081ef4e7456e62ed8 upstream.
 
-The work item can operate on
+USBIP uses lib/scatterlist.h
+Hence it needs to set CONFIG_SGL_ALLOC
 
-1. stale memory left over from the last transfer
-the actual length of the data transfered needs to be checked
-2. memory already freed
-the error handling in appledisplay_probe() needs
-to cancel the work in that case
-
-Reported-and-tested-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
 Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191106124902.7765-1-oneukum@suse.com
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20191112154939.21217-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/appledisplay.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/usb/usbip/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/misc/appledisplay.c
-+++ b/drivers/usb/misc/appledisplay.c
-@@ -164,7 +164,12 @@ static int appledisplay_bl_get_brightnes
- 		0,
- 		pdata->msgdata, 2,
- 		ACD_USB_TIMEOUT);
--	brightness = pdata->msgdata[1];
-+	if (retval < 2) {
-+		if (retval >= 0)
-+			retval = -EMSGSIZE;
-+	} else {
-+		brightness = pdata->msgdata[1];
-+	}
- 	mutex_unlock(&pdata->sysfslock);
- 
- 	if (retval < 0)
-@@ -299,6 +304,7 @@ error:
- 	if (pdata) {
- 		if (pdata->urb) {
- 			usb_kill_urb(pdata->urb);
-+			cancel_delayed_work_sync(&pdata->work);
- 			if (pdata->urbdata)
- 				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
- 					pdata->urbdata, pdata->urb->transfer_dma);
+--- a/drivers/usb/usbip/Kconfig
++++ b/drivers/usb/usbip/Kconfig
+@@ -4,6 +4,7 @@ config USBIP_CORE
+ 	tristate "USB/IP support"
+ 	depends on NET
+ 	select USB_COMMON
++	select SGL_ALLOC
+ 	---help---
+ 	  This enables pushing USB packets over IP to allow remote
+ 	  machines direct access to USB devices. It provides the
 
 
