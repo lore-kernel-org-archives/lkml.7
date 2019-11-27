@@ -2,122 +2,130 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415CEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C147C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15ACF20870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891036;
-	bh=Ubzdtado8qpF9VSRmYdGAtTkvjECdbzj1U/T/2pUfco=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rnNqwI6hIr1PlnGmn8OVez6LZPFAWmJTthq1dLVhKe/Q9a8O1KkpZzttdBXF+r9Bt
-	 jbMMoYUqn5sV7UMtcuq7WehN7u9Jr3bSOC7pQ0lAuE6WyPPneo4uYQ+aeG7TZw2Ekd
-	 HKRu1BkPpSS47nQqNuGUsK6+GlJPD2nTn5wYZcRo=
+	by mail.kernel.org (Postfix) with ESMTP id E7DC420870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfK0Vny (ORCPT
+        id S1729215AbfK0VoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:43:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728685AbfK0UiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:38:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A82621771;
-        Wed, 27 Nov 2019 20:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887090;
-        bh=Ubzdtado8qpF9VSRmYdGAtTkvjECdbzj1U/T/2pUfco=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vu1aNK+hPQzt7GIBmcG9bz1MtdrddhDggj8nW2iTXgRyLpjslbPaxtyiNQwtPa+eh
-         f19TtN7Df34lUwynTEPaS4LYnpit/AxqGNdkXYWuhMJ40jZFib4tklR+SkcO8jUzsa
-         Ffl8AjsVl6y2n2BwCBAgnTnzoSX+zKiSpk7Z6r2k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "Ernesto A. Fernndez" <ernesto.mnd.fernandez@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Hin-Tak Leung <htl10@users.sourceforge.net>,
-        Vyacheslav Dubeyko <slava@dubeyko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 072/132] fs/hfs/extent.c: fix array out of bounds read of array extent
-Date:   Wed, 27 Nov 2019 21:31:03 +0100
-Message-Id: <20191127203007.572023848@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
-References: <20191127202857.270233486@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 27 Nov 2019 16:44:04 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35451 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728174AbfK0Uh7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:37:59 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 23so18544059otf.2;
+        Wed, 27 Nov 2019 12:37:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=14vyCpwlco5dNMekZ671HzsQ/qD/jZMl32Sz5ULoC/U=;
+        b=EXzhuoyV1OLRcuwocYrAZ7FKZEIUjtjNrYygi24X9SokyLEPz0XRMvGUmsXzJHPEsm
+         HEjGyocRwmBgOCv3NqKYx1IVM9tRQsIdHEPjm05IQVIfhAkknunCKokl0v8sHdzSl2cJ
+         qkQhhvTLVPe5s3bAlhaeh/sL21g84jTENGy/B4ISDhpZHxsnODQ2vMbdu3b8L0iseCsh
+         4zTwpXFXwAoUA+iEQHJJpAaCPZROsJuvBlOo65Nkn/9NhUoKvK7dmge+9j+OL+oL1vzI
+         Jn8v5fVJX7HNWSFy+XmU4Q07pNCriIeqUft32P+RN3GpoVmRCMLFFQI2InxLvvTiYFZl
+         DHTQ==
+X-Gm-Message-State: APjAAAUU9SGfpxDvmtC2lMC/+uldHntpWEgb3fvdJW3lrFGeUqHPEwW/
+        uP1to04+2EeUB1p0oLSN9rxkPgRIlohy+5nhEcU=
+X-Google-Smtp-Source: APXvYqyekyFnyyTzxDAaVF4lh76x3pVg0AJcETDtG/R5UDB8kyib7ugeAakdgVvr7ZJMAAkTJwIUv0P5kqimosEUmPw=
+X-Received: by 2002:a9d:2073:: with SMTP id n106mr5117337ota.145.1574887078997;
+ Wed, 27 Nov 2019 12:37:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1574871463.git.nishadkamdar@gmail.com> <5a7ed2e4b58ba7ff2f0638a2435a3a1e1c62c9f6.1574871463.git.nishadkamdar@gmail.com>
+In-Reply-To: <5a7ed2e4b58ba7ff2f0638a2435a3a1e1c62c9f6.1574871463.git.nishadkamdar@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 27 Nov 2019 21:37:47 +0100
+Message-ID: <CAMuHMdUqfRioTBV27AKx9zv9YuSqEod6x+A4aguf=h20TDXr6w@mail.gmail.com>
+Subject: Re: [PATCH 4/5] pinctrl: sh-pfc: Use the correct style for SPDX
+ License Identifier
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Nishad,
 
-[ Upstream commit 6c9a3f843a29d6894dfc40df338b91dbd78f0ae3 ]
+On Wed, Nov 27, 2019 at 5:46 PM Nishad Kamdar <nishadkamdar@gmail.com> wrote:
+> This patch corrects the SPDX License Identifier style in
+> header files related to Reneses Soc pinctrl driver.
+> It assigns explicit block comment for the SPDX License Identifier.
 
-Currently extent and index i are both being incremented causing an array
-out of bounds read on extent[i].  Fix this by removing the extraneous
-increment of extent.
+Is it incorrect to not have an explicit block comment?
+Other recommendations have been to integrate the SPDX comment line
+into an existing comment header, if it exists....
 
-Ernesto said:
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
+>
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> ---
+>  drivers/pinctrl/sh-pfc/core.h   | 4 ++--
+>  drivers/pinctrl/sh-pfc/sh_pfc.h | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pinctrl/sh-pfc/core.h b/drivers/pinctrl/sh-pfc/core.h
+> index b5b1d163e98a..5ad0ab8f9e14 100644
+> --- a/drivers/pinctrl/sh-pfc/core.h
+> +++ b/drivers/pinctrl/sh-pfc/core.h
+> @@ -1,5 +1,5 @@
+> -/* SPDX-License-Identifier: GPL-2.0
+> - *
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+>   * SuperH Pin Function Controller support.
+>   *
+>   * Copyright (C) 2012  Renesas Solutions Corp.
+> diff --git a/drivers/pinctrl/sh-pfc/sh_pfc.h b/drivers/pinctrl/sh-pfc/sh_pfc.h
+> index 640d2a4cb838..fff9cbb7a0f8 100644
+> --- a/drivers/pinctrl/sh-pfc/sh_pfc.h
+> +++ b/drivers/pinctrl/sh-pfc/sh_pfc.h
+> @@ -1,5 +1,5 @@
+> -/* SPDX-License-Identifier: GPL-2.0
+> - *
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+>   * SuperH Pin Function Controller Support
+>   *
+>   * Copyright (c) 2008 Magnus Damm
 
-: This is only triggered when deleting a file with a resource fork.  I
-: may be wrong because the documentation isn't clear, but I don't think
-: you can create those under linux.  So I guess nobody was testing them.
-:
-: > A disk space leak, perhaps?
-:
-: That's what it looks like in general.  hfs_free_extents() won't do
-: anything if the block count doesn't add up, and the error will be
-: ignored.  Now, if the block count randomly does add up, we could see
-: some corruption.
+Gr{oetje,eeting}s,
 
-Detected by CoverityScan, CID#711541 ("Out of bounds read")
+                        Geert
 
-Link: http://lkml.kernel.org/r/20180831140538.31566-1-colin.king@canonical.com
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Ernesto A. Fernndez <ernesto.mnd.fernandez@gmail.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Hin-Tak Leung <htl10@users.sourceforge.net>
-Cc: Vyacheslav Dubeyko <slava@dubeyko.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/hfs/extent.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
-index 16819d2a978b4..cbe4fca96378a 100644
---- a/fs/hfs/extent.c
-+++ b/fs/hfs/extent.c
-@@ -304,7 +304,7 @@ int hfs_free_fork(struct super_block *sb, struct hfs_cat_file *file, int type)
- 		return 0;
- 
- 	blocks = 0;
--	for (i = 0; i < 3; extent++, i++)
-+	for (i = 0; i < 3; i++)
- 		blocks += be16_to_cpu(extent[i].count);
- 
- 	res = hfs_free_extents(sb, extent, blocks, blocks);
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
