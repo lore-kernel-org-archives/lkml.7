@@ -2,53 +2,57 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8671C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DCEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7176821739
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B80D21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889740;
-	bh=fplUeAm3cYMRQPtLwx2S5Y4Mzzno+mFsrYPL27frXLs=;
+	s=default; t=1574889746;
+	bh=GsNJSubEqy9092/kPFVh7cTNvDDqTlvKsL8ToKkBp3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gXn+3+49Zizvot3VLjjMg9N/OLRHMGnFw5X9P10aigd9MMjRaTR6A8N3tWuc3YO8o
-	 ZZe2OEPjtjKr8c3r9kaL8NHTsLVjnwK8oxVdXmuLnNAHZcEbfgByz3MPVeq7almJX1
-	 6Otj1STPCoGuO2WPk0p6+cK4Hwlxw4LLGynwew+g=
+	b=f8qGnLese2T97eGXKiLyPYbSv80T4hAo/QLtuhsbCttoWiTg1v5UdbljU4ujPMnOT
+	 5Nu1k9f7EttIggee/trO3tkVouHvfpxuNhlC1+ACRjzSmEhOv1Cr27nJHDYf3gfV9q
+	 4nOKJ1qZnpKFKvKuNldlowpOxxWSqjNWQymhYi6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732380AbfK0VGL (ORCPT
+        id S1732354AbfK0VFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:06:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:05:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727440AbfK0VGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:06:04 -0500
+        id S1732065AbfK0VFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:05:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E0332086A;
-        Wed, 27 Nov 2019 21:06:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10C682176D;
+        Wed, 27 Nov 2019 21:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888763;
-        bh=fplUeAm3cYMRQPtLwx2S5Y4Mzzno+mFsrYPL27frXLs=;
+        s=default; t=1574888751;
+        bh=GsNJSubEqy9092/kPFVh7cTNvDDqTlvKsL8ToKkBp3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P16GRtQWt0NaKtxQaeHt0rZS82qu/6PF7oB80+NfwtjWAMwvGZMJtYUx7u+q4/gxH
-         XsIxnVRj0KGEEtu1k8ePUjpe+mssXaZHk85p+dahnFZxcixTkelVeKuaR0MWoBT56J
-         yKQc2iJhKs3N4PYAAAMzHwAR8TTc2yHL2US9BSTk=
+        b=C648szzbFwBduCYjhuJFYmrNeuFZpwe28LCe12sTTzvBWCxjYhxuTpuSMJ0ssghoY
+         Um9YzGy+k3wxl+Di755f7uREcgjiyqMrY0bw3/k0a811HZz5amvSPK/NKg5hFMcBo5
+         BNiREDSZa+4gwp2veMdSMVhP8ZAclRPavXgYIMwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Pittman <jpittman@redhat.com>,
-        David Jeffery <djeffery@redhat.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.19 260/306] md/raid10: prevent access of uninitialized resync_pages offset
-Date:   Wed, 27 Nov 2019 21:31:50 +0100
-Message-Id: <20191127203133.828677762@linuxfoundation.org>
+        stable@vger.kernel.org, Vinayak Menon <vinmenon@codeaurora.org>,
+        Minchan Kim <minchan@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 255/306] mm/page_io.c: do not free shared swap slots
+Date:   Wed, 27 Nov 2019 21:31:45 +0100
+Message-Id: <20191127203133.499090401@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,40 +65,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Pittman <jpittman@redhat.com>
+From: Vinayak Menon <vinmenon@codeaurora.org>
 
-commit 45422b704db392a6d79d07ee3e3670b11048bd53 upstream.
+[ Upstream commit 5df373e95689b9519b8557da7c5bd0db0856d776 ]
 
-Due to unneeded multiplication in the out_free_pages portion of
-r10buf_pool_alloc(), when using a 3-copy raid10 layout, it is
-possible to access a resync_pages offset that has not been
-initialized.  This access translates into a crash of the system
-within resync_free_pages() while passing a bad pointer to
-put_page().  Remove the multiplication, preventing access to the
-uninitialized area.
+The following race is observed due to which a processes faulting on a
+swap entry, finds the page neither in swapcache nor swap.  This causes
+zram to give a zero filled page that gets mapped to the process,
+resulting in a user space crash later.
 
-Fixes: f0250618361db ("md: raid10: don't use bio's vec table to manage resync pages")
-Cc: stable@vger.kernel.org # 4.12+
-Signed-off-by: John Pittman <jpittman@redhat.com>
-Suggested-by: David Jeffery <djeffery@redhat.com>
-Reviewed-by: Laurence Oberman <loberman@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Consider parent and child processes Pa and Pb sharing the same swap slot
+with swap_count 2.  Swap is on zram with SWP_SYNCHRONOUS_IO set.
+Virtual address 'VA' of Pa and Pb points to the shared swap entry.
 
+Pa                                       Pb
+
+fault on VA                              fault on VA
+do_swap_page                             do_swap_page
+lookup_swap_cache fails                  lookup_swap_cache fails
+                                         Pb scheduled out
+swapin_readahead (deletes zram entry)
+swap_free (makes swap_count 1)
+                                         Pb scheduled in
+                                         swap_readpage (swap_count == 1)
+                                         Takes SWP_SYNCHRONOUS_IO path
+                                         zram enrty absent
+                                         zram gives a zero filled page
+
+Fix this by making sure that swap slot is freed only when swap count
+drops down to one.
+
+Link: http://lkml.kernel.org/r/1571743294-14285-1-git-send-email-vinmenon@codeaurora.org
+Fixes: aa8d22a11da9 ("mm: swap: SWP_SYNCHRONOUS_IO: skip swapcache only if swapped page has no other reference")
+Signed-off-by: Vinayak Menon <vinmenon@codeaurora.org>
+Suggested-by: Minchan Kim <minchan@google.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid10.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/page_io.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -229,7 +229,7 @@ static void * r10buf_pool_alloc(gfp_t gf
+diff --git a/mm/page_io.c b/mm/page_io.c
+index aafd19ec1db46..08d2eae58fcee 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -76,6 +76,7 @@ static void swap_slot_free_notify(struct page *page)
+ {
+ 	struct swap_info_struct *sis;
+ 	struct gendisk *disk;
++	swp_entry_t entry;
  
- out_free_pages:
- 	while (--j >= 0)
--		resync_free_pages(&rps[j * 2]);
-+		resync_free_pages(&rps[j]);
+ 	/*
+ 	 * There is no guarantee that the page is in swap cache - the software
+@@ -107,11 +108,11 @@ static void swap_slot_free_notify(struct page *page)
+ 	 * we again wish to reclaim it.
+ 	 */
+ 	disk = sis->bdev->bd_disk;
+-	if (disk->fops->swap_slot_free_notify) {
+-		swp_entry_t entry;
++	entry.val = page_private(page);
++	if (disk->fops->swap_slot_free_notify &&
++			__swap_count(sis, entry) == 1) {
+ 		unsigned long offset;
  
- 	j = 0;
- out_free_bio:
+-		entry.val = page_private(page);
+ 		offset = swp_offset(entry);
+ 
+ 		SetPageDirty(page);
+-- 
+2.20.1
+
 
 
