@@ -2,133 +2,100 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32BFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020EEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9178A2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7302071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="YdGbiaMu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O5px3CgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfK0C32 (ORCPT
+        id S1726968AbfK0Cav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 21:29:28 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43740 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfK0C32 (ORCPT
+        Tue, 26 Nov 2019 21:30:51 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:48432 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfK0Cau (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 21:29:28 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 3so10168575pfb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 18:29:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NN2NK4AVnHEIbvB9lst01l+3zKuPHZoMQF6S334Sv9g=;
-        b=YdGbiaMu/yoWaKdN4xLKKLWNKdEv4Ec2V5T+CBLpDakJdirXjnihGmEMfcfVHpU03y
-         hbXNsp0s0xpC1m/qkIcZTQkwcSjocPq/hPYojNUH6Mc2LdAwueyJa25wJLmbLDyhQ7n3
-         TICUTAr5viybVXfMWtNdFutu6P0ZtFSnMmR1c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NN2NK4AVnHEIbvB9lst01l+3zKuPHZoMQF6S334Sv9g=;
-        b=bLD0mEYpodFgfFE5jb8VXqjUlGKgEU+q6l4Xvlb+VxzkLZqlEKU6Z7Ux+UThSUA2ty
-         O1L0BKeuZ1DgsNJeQc6mf9jIleVcKaxSIWDwX5d7vrjGKh/HIqTp4t+zSqMM+hYubPpA
-         dgwD6XOe2gRg9qdlMohQsvNNTxdwxx53gcJuMFiHrm4t57RdcWXiB6EAkj6TUaA8QP5Z
-         vgjYri28BqR/1fh0ejy9ykdQnMEpgtlaucqBnAhroPhYVo5ox9+ZzR7SdQ90P5XVwLKb
-         5j4ngziViDjam/2VCzbU+PBxaDSQqeEeJXWMsl2W1RA0P7A2DkY8jCA+DZXHf5jWli4c
-         XX0Q==
-X-Gm-Message-State: APjAAAWu2TLjVOtu8Fxzd1ohVjWB0GclogeDcRDb8btaTr92uS9UGl5B
-        wkOTmj9GsTQJRqtS8VPM8UXg7w==
-X-Google-Smtp-Source: APXvYqx+HX61yjud9fIbZqiRcxDpx9y0e6bR1uba8VJ+HnNyYomcwswg1BHVEDSvG74B2G9ilx7NIQ==
-X-Received: by 2002:a63:770c:: with SMTP id s12mr2129673pgc.25.1574821767441;
-        Tue, 26 Nov 2019 18:29:27 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id u7sm4370989pjx.19.2019.11.26.18.29.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 18:29:26 -0800 (PST)
-Date:   Tue, 26 Nov 2019 21:29:25 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel: audit.c: Add __rcu notation to RCU pointer
-Message-ID: <20191127022925.GB157739@google.com>
-References: <20191126172723.GA12759@workstation-kernel-dev>
+        Tue, 26 Nov 2019 21:30:50 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAR2TIVC024463;
+        Wed, 27 Nov 2019 02:30:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=JrGo/aJN1mHO7VqhwYPgcCJ1sYT7BsnzcntD5cWkBbM=;
+ b=O5px3CgARI4MisIKP4S7176PGnbI4gAJu45IxJfj8iU5Z2mQovu8FNcaAemuhcRHlouP
+ p5x+EKF6noEVQ1BU1UQ8TtUPa/Fij62/k+GpLETFZYumOCWXU5rnuOdxgHHRX23iQfna
+ 9OIGJpPOgsl6Santlw0uTvKPpnWu17F6TO6hyVq4KDC+cwAHN7iflL81Vyvr0mHgXw3q
+ ozqulC5L+5eAH00xijaMJprY/Wq77M5getG3oungIrU9yu4MHAr/JBBIyA4oQ7nUqMXm
+ 1Jxc5Xp5NBeUKp5UEoOfw6sL8DCMKyDolBBo9Cksnf796galju9b2MlTZwfiB+aA3tWS GA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2wevqqag1e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Nov 2019 02:30:43 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAR2TBGT151171;
+        Wed, 27 Nov 2019 02:30:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2wgvhb8da8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Nov 2019 02:30:42 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAR2UcuK026703;
+        Wed, 27 Nov 2019 02:30:38 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 26 Nov 2019 18:30:38 -0800
+To:     Colin King <colin.king@canonical.com>
+Cc:     Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Deepak Ukey <Deepak.Ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>, linux-scsi@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: pm80xx: fix logic to break out of loop when register value is 2 or 3
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191120135031.270708-1-colin.king@canonical.com>
+Date:   Tue, 26 Nov 2019 21:30:35 -0500
+In-Reply-To: <20191120135031.270708-1-colin.king@canonical.com> (Colin King's
+        message of "Wed, 20 Nov 2019 13:50:31 +0000")
+Message-ID: <yq136ea9hkk.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126172723.GA12759@workstation-kernel-dev>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9453 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=975
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911270018
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9453 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911270018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 10:57:23PM +0530, Amol Grover wrote:
-> add __rcu notation to RCU protected global pointer auditd_conn
-> 
-> Fixes multiple instances of sparse error:
-> error: incompatible types in comparison expression
-> (different address spaces)
-> 
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> ---
->  kernel/audit.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index da8dc0db5bd3..30e7fc9b8da2 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -102,12 +102,14 @@ struct audit_net {
->   * This struct is RCU protected; you must either hold the RCU lock for reading
->   * or the associated spinlock for writing.
->   */
-> -static struct auditd_connection {
-> +struct auditd_connection {
->  	struct pid *pid;
->  	u32 portid;
->  	struct net *net;
->  	struct rcu_head rcu;
-> -} *auditd_conn = NULL;
-> +};
-> +static struct auditd_connection __rcu *auditd_conn;
-> +RCU_INIT_POINTER(auditd_conn);
 
-Looks like this causes a build error. Always please build test your patches
-in the very least. And I also did not understand how RCU_INIT_POINTER can
-even be used outside of a function. In C, executable code cannot be outside
-functions.
+Colin,
 
-Is doing the following not sufficient to fix the sparse issue?
+> The condition (reg_val != 2) || (reg_val != 3) will always be true
+> because reg_val cannot be equal to two different values at the same
+> time. Fix this by replacing the || operator with && so that the loop
+> will loop if reg_val is not a 2 and not a 3 as was originally
+> intended.
 
-thanks,
+Applied to 5.5/scsi-queue, thanks!
 
- - Joel
-
----8<-----------------------
-
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 49b6049b26ac..c5d4b5a2dea1 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -108,8 +108,8 @@ struct auditd_connection {
- 	struct net *net;
- 	struct rcu_head rcu;
- };
--static struct auditd_connection __rcu *auditd_conn;
--RCU_INIT_POINTER(auditd_conn);
-+static struct auditd_connection __rcu *auditd_conn = NULL;
-+
- static DEFINE_SPINLOCK(auditd_conn_lock);
- 
- /* If audit_rate_limit is non-zero, limit the rate of sending audit records
+-- 
+Martin K. Petersen	Oracle Linux Engineering
