@@ -2,298 +2,86 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3DCC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421C4C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634962068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B05E2068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:54:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YRy3Zf6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfK0BwR (ORCPT
+        id S1726548AbfK0ByO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 20:52:17 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:53567 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725871AbfK0BwR (ORCPT
+        Tue, 26 Nov 2019 20:54:14 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47548 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfK0ByN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 20:52:17 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R321e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0TjBBq.j_1574819522;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TjBBq.j_1574819522)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 27 Nov 2019 09:52:05 +0800
-Subject: [PATCH v2 3/3] sched/numa: documentation for per-cgroup numa stat
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
-Message-ID: <cc35a710-c2ec-6c61-e30e-ee707798c5e9@linux.alibaba.com>
-Date:   Wed, 27 Nov 2019 09:50:35 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Tue, 26 Nov 2019 20:54:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2hokKrX4e87LQqiRatVJDMxEpK+XnJXNvRF/iW+S+Ao=; b=YRy3Zf6LPXccXIWi7tsy+qtuY
+        TI2FVU/o/f7al/uadzKhcTxR6GmGOxgMj1DLUqFieMVWf3KJ06P6qDwaW7JuxQkITH0Zh3DwbGz0E
+        AvaMnl9eWrAa0HZjHNRyJc07t06XyO7wmwsO5kGHVkz5BoFc1D6CQ5LmKoo8eEsXS4/duyrDbQpif
+        ogwyFytyZprOVlBVpz23bwiEbA3vI2jnB4QlSs4t04T52D31GoOulUEDs1mELt61sTnDGoq8o04wC
+        BqHBOZvXv33y8vpL+8wtvL8Z32GJAs8OPBZG+inmxgVtqsJpPopt9A8gZ+MPe0vHcnEnz54/lzt97
+        k7E6WfMlw==;
+Received: from [2603:3004:32:9a00::f45c]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iZmWw-0002I0-BT; Wed, 27 Nov 2019 01:54:10 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Cc:     Vineet Gupta <vgupta@synopsys.com>, Ofer Levi <oferle@mellanox.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] arc: eznps: fix allmodconfig kconfig warning
+Message-ID: <7f2e6690-f377-86e7-6f56-e85d8d4d22a0@infradead.org>
+Date:   Tue, 26 Nov 2019 17:54:09 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since v1:
-  * thanks to Iurii for the better sentence
-  * thanks to Jonathan for the better format
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Add the description for 'cg_numa_stat', also a new doc to explain
-the details on how to deal with the per-cgroup numa statistics.
+Fix kconfig warning for arch/arc/plat-eznps/Kconfig allmodconfig:
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Michal Koutný <mkoutny@suse.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Iurii Zaikin <yzaikin@google.com>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+WARNING: unmet direct dependencies detected for CLKSRC_NPS
+  Depends on [n]: GENERIC_CLOCKEVENTS [=y] && !PHYS_ADDR_T_64BIT [=y]
+  Selected by [y]:
+  - ARC_PLAT_EZNPS [=y]
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Ofer Levi <oferle@mellanox.com>
+Cc: linux-snps-arc@lists.infradead.org
 ---
- Documentation/admin-guide/cg-numa-stat.rst      | 163 ++++++++++++++++++++++++
- Documentation/admin-guide/index.rst             |   1 +
- Documentation/admin-guide/kernel-parameters.txt |   4 +
- Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
- 4 files changed, 177 insertions(+)
- create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+ arch/arc/plat-eznps/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/cg-numa-stat.rst b/Documentation/admin-guide/cg-numa-stat.rst
-new file mode 100644
-index 000000000000..6f505f46fe00
---- /dev/null
-+++ b/Documentation/admin-guide/cg-numa-stat.rst
-@@ -0,0 +1,163 @@
-+===============================
-+Per-cgroup NUMA statistics
-+===============================
-+
-+Background
-+----------
-+
-+On NUMA platforms, remote memory accessing always has a performance penalty,
-+although we have NUMA balancing working hard to maximize the access locality,
-+there are still situations it can't help.
-+
-+This could happen in modern production environment. When a large number of
-+cgroups are used to classify and control resources, this creates a complex
-+configuration for memory policy, CPUs and NUMA nodes. In such cases NUMA
-+balancing could end up with the wrong memory policy or exhausted local NUMA
-+node, which would lead to low percentage of local page accesses.
-+
-+We need to detect such cases, figure out which workloads from which cgroup
-+has introduced the issues, then we get chance to do adjustment to avoid
-+performance degradation.
-+
-+However, there are no hardware counters for per-task local/remote accessing
-+info, we don't know how many remote page accesses have occurred for a
-+particular task.
-+
-+Statistics
-+----------
-+
-+Fortunately, we have NUMA Balancing which scans task's mapping and triggers PF
-+periodically, gives us the opportunity to record per-task page accessing info.
-+
-+By "echo 1 > /proc/sys/kernel/cg_numa_stat" at runtime or adding boot parameter
-+'cg_numa_stat', we will enable the accounting of per-cgroup numa statistics,
-+the 'cpu.numa_stat' entry of CPU cgroup will show statistics::
-+
-+  locality -- execution time sectioned by task NUMA locality (in ms)
-+  exectime -- execution time sectioned by NUMA node (in ms)
-+
-+We define 'task NUMA locality' as::
-+
-+  nr_local_page_access * 100 / (nr_local_page_access + nr_remote_page_access)
-+
-+this per-task percentage value will be updated on the ticks for current task,
-+and the access counter will be updated on task's NUMA balancing PF, so only
-+the pages which NUMA Balancing paid attention to will be accounted.
-+
-+On each tick, we acquire the locality of current task on that CPU, accumulating
-+the ticks into the counter of corresponding locality region, tasks from the
-+same group sharing the counters, becoming the group locality.
-+
-+Similarly, we acquire the NUMA node of current CPU where the current task is
-+executing on, accumulating the ticks into the counter of corresponding node,
-+becoming the per-cgroup node execution time.
-+
-+Note that the accounting is hierarchical, which means the numa statistics for
-+a given group represents not only the workload of this group, but also the
-+workloads of all it's descendants.
-+
-+For example the 'cpu.numa_stat' show::
-+
-+  locality 39541 60962 36842 72519 118605 721778 946553
-+  exectime 1220127 1458684
-+
-+The locality is sectioned into 7 regions, approximately as::
-+
-+  0-13% 14-27% 28-42% 43-56% 57-71% 72-85% 86-100%
-+
-+And exectime is sectioned into 2 nodes, 0 and 1 in this case.
-+
-+Thus we know the workload of this group and it's descendants have totally
-+executed 1220127ms on node_0 and 1458684ms on node_1, tasks with locality
-+around 0~13% executed for 39541 ms, and tasks with locality around 87~100%
-+executed for 946553 ms, which imply most of the memory access are local.
-+
-+Monitoring
-+----------
-+
-+By monitoring the increments of these statistics, we can easily know whether
-+NUMA balancing is working well for a particular workload.
-+
-+For example we take a 5 secs sample period, and consider locality under 27%
-+is bad, then on each sampling we have::
-+
-+  region_bad = region_1 + region_2
-+  region_all = region_1 + region_2 + ... + region_7
-+
-+and we have the increments as::
-+
-+  region_bad_diff = region_bad - last_region_bad
-+  region_all_diff = region_all - last_region_all
-+
-+which finally become::
-+
-+  region_bad_percent = region_bad_diff * 100 / region_all_diff
-+
-+we can plot a line for region_bad_percent, when the line close to 0 things
-+are good, when getting close to 100% something is wrong, we can pick a proper
-+watermark to trigger warning message.
-+
-+You may want to drop the data if the region_all is too small, which implies
-+there are not many available pages for NUMA Balancing, ignoring would be fine
-+since most likely the workload is insensitive to NUMA.
-+
-+Monitoring root group helps you control the overall situation, while you may
-+also want to monitor all the leaf groups which contain the workloads, this
-+helps to catch the mouse.
-+
-+The exectime could be useful when NUMA Balancing is disabled, or when locality
-+becomes too small, for NUMA node X we have::
-+
-+  exectime_X_diff = exectime_X - last_exectime_X
-+  exectime_all_diff = exectime_all - last_exectime_all
-+
-+try to put your workload into a memory cgroup which providing per-node memory
-+consumption by 'memory.numa_stat' entry, then we could get::
-+
-+  memory_percent_X = memory_X * 100 / memory_all
-+  exectime_percent_X = exectime_X_diff * 100 / exectime_all_diff
-+
-+These two percentages are usually matched on each node, workload should execute
-+mostly on the node contain most of it's memory, but it's not guaranteed.
-+
-+The workload may only access a small part of it's memory, in such cases although
-+the majority of memory are remotely, locality could still be good.
-+
-+Thus to tell if things are fine or not depends on the understanding of system
-+resource deployment, however, if you find node X got 100% memory percent but 0%
-+exectime percent, definitely something is wrong.
-+
-+Troubleshooting
-+---------------
-+
-+After identifying which workload introduced the bad locality, check:
-+
-+1). Is the workload bound to a particular NUMA node?
-+2). Has any NUMA node run out of resources?
-+
-+There are several ways to bind task's memory with a NUMA node, the strict way
-+like the MPOL_BIND memory policy or 'cpuset.mems' will limiting the memory
-+node where to allocate pages, in this situation, admin should make sure the
-+task is allowed to run on the CPUs of that NUMA node, and make sure there are
-+available CPU resource there.
-+
-+There are also ways to bind task's CPU with a NUMA node, like 'cpuset.cpus' or
-+sched_setaffinity() syscall, in this situation, NUMA Balancing help to migrate
-+pages into that node, admin should make sure there are available memory there.
-+
-+Admin could try rebind or unbind the NUMA node to erase the damage, make a
-+change then observe the statistics see if things get better until the situation
-+is acceptable.
-+
-+Highlights
-+----------
-+
-+For some tasks, NUMA Balancing may found no necessary to scan pages, and
-+locality could always be 0 or small number, don't pay attention to them
-+since they most likely insensitive to NUMA.
-+
-+There are no accounting until the option turned on, so enable it in advance
-+if you want to have the whole history.
-+
-+We have per-task migfailed counter to tell how many page migration has been
-+failed for a particular task, you will find it in /proc/PID/sched entry.
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 4405b7485312..c75a3fdfcd94 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -112,6 +112,7 @@ configure specific aspects of kernel behavior to your liking.
-    video-output
-    wimax/index
-    xfs
-+   cg-numa-stat
-
- .. only::  subproject and html
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0945611b3877..674c1a4bae14 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3227,6 +3227,10 @@
- 	numa_balancing=	[KNL,X86] Enable or disable automatic NUMA balancing.
- 			Allowed values are enable and disable
-
-+	cg_numa_atat	[KNL] Enable advanced per-cgroup numa statistics.
-+			Useful to debug NUMA efficiency problems when there are
-+			lots of per-cgroup workloads.
-+
- 	numa_zonelist_order= [KNL, BOOT] Select zonelist order for NUMA.
- 			'node', 'default' can be specified
- 			This can be set from sysctl after boot.
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 7e203b3ed331..918a26d2bd77 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -572,6 +572,15 @@ rate for each task.
- numa_balancing_scan_size_mb is how many megabytes worth of pages are
- scanned for a given scan.
-
-+cg_numa_stat:
-+=============
-+
-+Enables/disables advanced per-cgroup NUMA statistic.
-+
-+0: disabled (default).
-+1: enabled.
-+
-+Check Documentation/admin-guide/cg-numa-stat.rst for details.
-
- osrelease, ostype & version:
- ============================
--- 
-2.14.4.44.g2045bb6
+--- lnx-54.orig/arch/arc/plat-eznps/Kconfig
++++ lnx-54/arch/arc/plat-eznps/Kconfig
+@@ -7,7 +7,7 @@
+ menuconfig ARC_PLAT_EZNPS
+ 	bool "\"EZchip\" ARC dev platform"
+ 	select CPU_BIG_ENDIAN
+-	select CLKSRC_NPS
++	select CLKSRC_NPS if !PHYS_ADDR_T_64BIT
+ 	select EZNPS_GIC
+ 	select EZCHIP_NPS_MANAGEMENT_ENET if ETHERNET
+ 	help
 
