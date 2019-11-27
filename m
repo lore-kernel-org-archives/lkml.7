@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7BDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40380C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A8221775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1C82178F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889061;
-	bh=u8OllIDv3yRMJ9j8X65aPhaHYNuwoOxjnb0WOQlmxDU=;
+	s=default; t=1574889066;
+	bh=pf8vHl++j1XR6IXLl1oZf1CJuHieiqhwzC6AzRFcam0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bBleLjbH8lyx4P40ZUrr1SCB4x61xf8SSi895OGWt3Q9BDdUpz/WhItNs/BDSFY2F
-	 vJBqJFRJnKeo2h37aM3M3vdXUI9GeZAvMhu8hSfRTRdmNlLswd02kVfFPhnMgdaMsV
-	 ui1iYbuKaCt03HUqKPKbxagG9xjOl/1Ckjc3safM=
+	b=OX8XxblJBG6uo0IzIl6A7dgjMQ7gCxLAMxSxeZvNCbEiAKdoJObYyc+8CvJNkNsre
+	 zb0JV/87prWRDOLi315e79sL3X/t2NxayLkYcG0yuZ49cngnZ+WTlLYSTBURVJsac1
+	 64i6LfhE+07sPMhpfs2nvRg2lYh0uZw4fe6YSWeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733106AbfK0VLA (ORCPT
+        id S1733119AbfK0VLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:11:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38616 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:11:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730786AbfK0VKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:10:53 -0500
+        id S1730786AbfK0VLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 967EC2178F;
-        Wed, 27 Nov 2019 21:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C33F21774;
+        Wed, 27 Nov 2019 21:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889053;
-        bh=u8OllIDv3yRMJ9j8X65aPhaHYNuwoOxjnb0WOQlmxDU=;
+        s=default; t=1574889061;
+        bh=pf8vHl++j1XR6IXLl1oZf1CJuHieiqhwzC6AzRFcam0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZgfVHRCYgbYi8YPmwnRt0Jkv+2Ds2XWrPAPpi9BoyaemY5A20s4LHt1cG7DxDkyx3
-         g6AwkCx8wLtEvzTw85onV64iVG4O1Etqotz8na7eMsf7nio4K6qoavGr4RaN0OVG8O
-         PEx6dRr8EaxCkbauvD1ysSCkrUtb14PTVCr8wVVU=
+        b=ymgCPq4+fseDewG6JTjUmAiWs+WNCfS49KuYmq4vfpmZJFMFnbbjbUCJzzPr/+OJe
+         LfrVM5f8G9ajPZ76xtT0xKxdVvinTpiySCOTi8fI8VYeMmychje5FUnKKTxnC9WQA8
+         5chvgRN8EX8ey3LGGhqIuQBkpMQQ257frdS3djw0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 5.3 65/95] x86/entry/32: Fix FIXUP_ESPFIX_STACK with user CR3
-Date:   Wed, 27 Nov 2019 21:32:22 +0100
-Message-Id: <20191127202930.003997819@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+711468aa5c3a1eabf863@syzkaller.appspotmail.com
+Subject: [PATCH 5.3 68/95] nfc: port100: handle command failure cleanly
+Date:   Wed, 27 Nov 2019 21:32:25 +0100
+Message-Id: <20191127202932.374553291@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -62,68 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 4a13b0e3e10996b9aa0b45a764ecfe49f6fcd360 upstream.
+commit 5f9f0b11f0816b35867f2cf71e54d95f53f03902 upstream.
 
-UNWIND_ESPFIX_STACK needs to read the GDT, and the GDT mapping that
-can be accessed via %fs is not mapped in the user pagetables.  Use
-SGDT to find the cpu_entry_area mapping and read the espfix offset
-from that instead.
+If starting the transfer of a command suceeds but the transfer for the reply
+fails, it is not enough to initiate killing the transfer for the
+command may still be running. You need to wait for the killing to finish
+before you can reuse URB and buffer.
 
-Reported-and-tested-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-and-tested-by: syzbot+711468aa5c3a1eabf863@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_32.S |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/nfc/port100.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -415,7 +415,8 @@
+--- a/drivers/nfc/port100.c
++++ b/drivers/nfc/port100.c
+@@ -783,7 +783,7 @@ static int port100_send_frame_async(stru
  
- .macro CHECK_AND_APPLY_ESPFIX
- #ifdef CONFIG_X86_ESPFIX32
--#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + (GDT_ENTRY_ESPFIX_SS * 8)
-+#define GDT_ESPFIX_OFFSET (GDT_ENTRY_ESPFIX_SS * 8)
-+#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + GDT_ESPFIX_OFFSET
+ 	rc = port100_submit_urb_for_ack(dev, GFP_KERNEL);
+ 	if (rc)
+-		usb_unlink_urb(dev->out_urb);
++		usb_kill_urb(dev->out_urb);
  
- 	ALTERNATIVE	"jmp .Lend_\@", "", X86_BUG_ESPFIX
- 
-@@ -1147,12 +1148,26 @@ ENDPROC(entry_INT80_32)
-  * We can't call C functions using the ESPFIX stack. This code reads
-  * the high word of the segment base from the GDT and swiches to the
-  * normal stack and adjusts ESP with the matching offset.
-+ *
-+ * We might be on user CR3 here, so percpu data is not mapped and we can't
-+ * access the GDT through the percpu segment.  Instead, use SGDT to find
-+ * the cpu_entry_area alias of the GDT.
-  */
- #ifdef CONFIG_X86_ESPFIX32
- 	/* fixup the stack */
--	mov	GDT_ESPFIX_SS + 4, %al /* bits 16..23 */
--	mov	GDT_ESPFIX_SS + 7, %ah /* bits 24..31 */
-+	pushl	%ecx
-+	subl	$2*4, %esp
-+	sgdt	(%esp)
-+	movl	2(%esp), %ecx				/* GDT address */
-+	/*
-+	 * Careful: ECX is a linear pointer, so we need to force base
-+	 * zero.  %cs is the only known-linear segment we have right now.
-+	 */
-+	mov	%cs:GDT_ESPFIX_OFFSET + 4(%ecx), %al	/* bits 16..23 */
-+	mov	%cs:GDT_ESPFIX_OFFSET + 7(%ecx), %ah	/* bits 24..31 */
- 	shl	$16, %eax
-+	addl	$2*4, %esp
-+	popl	%ecx
- 	addl	%esp, %eax			/* the adjusted stack pointer */
- 	pushl	$__KERNEL_DS
- 	pushl	%eax
+ exit:
+ 	mutex_unlock(&dev->out_urb_lock);
 
 
