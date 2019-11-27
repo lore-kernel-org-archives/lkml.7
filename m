@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D1EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D172DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A562080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8DA206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890413;
-	bh=GL2BxTNj0E0U6b50Cgt11UhBHTzZtJbYm0AmbFQSoMI=;
+	s=default; t=1574890415;
+	bh=XRbu216x41VlCbMrwQejgg8e7awRwMdwlAm6BBlFN/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rArKNYWScymtanF5SoEDjo5FkG3COuSIcRF70Qyz9N5lYXza0JJ0nNd5rokjAJDxT
-	 i/o8v5eqwZNeK/WzbJyvmJ2QrPXzinke+uSsn0jMzXJ+QCIZ2C1fr6Z0Vcj5YiHgaC
-	 iCNaGVl0a8Hcl/KGgGrs636OBStVCcfUuJXzTZeA=
+	b=O8SoymAxRL5AzJxMgUwI1sqSC7H8AkqNOpJEo3SH5tnQ+RlO86+t+qhzw9ffZv59b
+	 hbALzclAGIKUFYYKP3emvYCl5js1dJMIoSFXU7YpkYA9NO5+2sDV8sCbtlZiSiJobm
+	 2AzHqaN6mfrxBanhsInkFmo/rkuEfxicBheLvgt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731058AbfK0Vdb (ORCPT
+        id S1729372AbfK0UwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:33:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39462 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:52:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730190AbfK0UwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:52:09 -0500
+        id S1728360AbfK0UwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:52:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D721218AE;
-        Wed, 27 Nov 2019 20:52:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76B0F218AE;
+        Wed, 27 Nov 2019 20:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887929;
-        bh=GL2BxTNj0E0U6b50Cgt11UhBHTzZtJbYm0AmbFQSoMI=;
+        s=default; t=1574887923;
+        bh=XRbu216x41VlCbMrwQejgg8e7awRwMdwlAm6BBlFN/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wYgxGCFuOL22M8hVtJiimZ24PNYsKANkGDkZrt24uscaq8P2GCZf8DIkTvPj8nHp3
-         n8vPCXRgEMUo7LohanomYmI2HXvmCkmn77h/Yd83R/Rj0KDA15fgQEHUHhiQue+Sxl
-         uEUpgngfr7ErVl00hHChVbW0bwT1nj4Hwhar2LAI=
+        b=vdDcwJu/4pp2p9N4o1QK7rEvnWtcGuXEcOUZkbtoPOup4QR32GHxDN9u1fSIThp6v
+         Vl8DBQbzusB6Q2LmsRAyZ7HylI44fRkR7P2a7Lcx9eKY2nDqAeAMPHI5uoJwWdW/ml
+         fI8HYWcl96BTOJUGVOCICQtre8wqZeLeFWi2mcy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
+        David Teigland <teigland@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 150/211] ACPICA: Use %d for signed int print formatting instead of %u
-Date:   Wed, 27 Nov 2019 21:31:23 +0100
-Message-Id: <20191127203108.177654992@linuxfoundation.org>
+Subject: [PATCH 4.14 148/211] dlm: dont leak kernel pointer to userspace
+Date:   Wed, 27 Nov 2019 21:31:21 +0100
+Message-Id: <20191127203108.000787142@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,34 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Tycho Andersen <tycho@tycho.ws>
 
-[ Upstream commit f8ddf49b420112e28bdd23d7ad52d7991a0ccbe3 ]
+[ Upstream commit 9de30f3f7f4d31037cfbb7c787e1089c1944b3a7 ]
 
-Fix warnings found using static analysis with cppcheck, use %d printf
-format specifier for signed ints rather than %u
+In copy_result_to_user(), we first create a struct dlm_lock_result, which
+contains a struct dlm_lksb, the last member of which is a pointer to the
+lvb. Unfortunately, we copy the entire struct dlm_lksb to the result
+struct, which is then copied to userspace at the end of the function,
+leaking the contents of sb_lvbptr, which is a valid kernel pointer in some
+cases (indeed, later in the same function the data it points to is copied
+to userspace).
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+It is an error to leak kernel pointers to userspace, as it undermines KASLR
+protections (see e.g. 65eea8edc31 ("floppy: Do not copy a kernel pointer to
+user memory in FDGETPRM ioctl") for another example of this).
+
+Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/acpi/tools/acpidump/apmain.c | 2 +-
+ fs/dlm/user.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/power/acpi/tools/acpidump/apmain.c b/tools/power/acpi/tools/acpidump/apmain.c
-index 943b6b6146834..bed0794e3295f 100644
---- a/tools/power/acpi/tools/acpidump/apmain.c
-+++ b/tools/power/acpi/tools/acpidump/apmain.c
-@@ -139,7 +139,7 @@ static int ap_insert_action(char *argument, u32 to_be_done)
+diff --git a/fs/dlm/user.c b/fs/dlm/user.c
+index d18e7a539f116..1f0c071d4a861 100644
+--- a/fs/dlm/user.c
++++ b/fs/dlm/user.c
+@@ -702,7 +702,7 @@ static int copy_result_to_user(struct dlm_user_args *ua, int compat,
+ 	result.version[0] = DLM_DEVICE_VERSION_MAJOR;
+ 	result.version[1] = DLM_DEVICE_VERSION_MINOR;
+ 	result.version[2] = DLM_DEVICE_VERSION_PATCH;
+-	memcpy(&result.lksb, &ua->lksb, sizeof(struct dlm_lksb));
++	memcpy(&result.lksb, &ua->lksb, offsetof(struct dlm_lksb, sb_lvbptr));
+ 	result.user_lksb = ua->user_lksb;
  
- 	current_action++;
- 	if (current_action > AP_MAX_ACTIONS) {
--		fprintf(stderr, "Too many table options (max %u)\n",
-+		fprintf(stderr, "Too many table options (max %d)\n",
- 			AP_MAX_ACTIONS);
- 		return (-1);
- 	}
+ 	/* FIXME: dlm1 provides for the user's bastparam/addr to not be updated
 -- 
 2.20.1
 
