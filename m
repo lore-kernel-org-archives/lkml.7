@@ -2,53 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AAEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1846C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE9D215F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2C52158A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887431;
-	bh=FnI+fa6RYHCzzLqSE6NIcC3D6jU/xkVbeou+UhqK7sc=;
+	s=default; t=1574887433;
+	bh=pm4J433S+H+C6Sxgui/dBAeNPiQ5Rk3ZCpsfCJCntLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uadazshmp3T2lqsLXXLVEUO6g6qfF3eIF+PpxJUSByOXkk2TDx/u1wEeXLQs6xgZX
-	 diU7+Ic76AaMFdhmIDq2SUvXfu6vJT6aej59jwqStM+giXj8K8iPOdglWAl4K/1zzM
-	 gAk9KntR3DRSWNRwJSetT2DWGHdlVtRCoklLrndA=
+	b=F27NlDs/tSTRlEb78Zs3Zc4hikH6aZktOghP3siCPnkBqVAhMqO/28+AsxI2H8qT4
+	 BzMHX4JI+rDDy9Bph5cbkqo3wF5w8vjLat0ch8y+runk63MDTCouHGhB8K0TsEUy9n
+	 i5Q5x8mzHxY7K809w0Mr5mRj0ynTLQeKFpbCCbYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729510AbfK0Unu (ORCPT
+        id S1729503AbfK0Unt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:43:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52218 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:43:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729498AbfK0Uns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:43:48 -0500
+        id S1729475AbfK0Unl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:43:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3F052080F;
-        Wed, 27 Nov 2019 20:43:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DCEE217AB;
+        Wed, 27 Nov 2019 20:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887428;
-        bh=FnI+fa6RYHCzzLqSE6NIcC3D6jU/xkVbeou+UhqK7sc=;
+        s=default; t=1574887420;
+        bh=pm4J433S+H+C6Sxgui/dBAeNPiQ5Rk3ZCpsfCJCntLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HvaxB0JUOsuzaS8s5A6tYZbOUPLEN0LtXgaakmGP9w0KQwTsxKVSa5DMvL5Fen12r
-         p7xRBbgc6FaPsPR6kuteMg70dQi7/zswLjkq/WCmwDYQXQRkNC0cnE4OTYnG5YKLdH
-         mUUKXAhBSTJ8dPilHpMaIodeiPXhWhrAxng0TN04=
+        b=lGmnd4wfBjhVGIH/IE5KYWGEVJn4R7Jbj+Bb/dqUN1zXU0AI8TCtS9zJY3XWybmEw
+         to403cfgTVlFKmdJ1BoMn9mu+rOgu5rm5wtucwP89TJ4XFG4IxVh53cR1Wy5EDqh0G
+         HC7DjiG3OTeBtqcKmkzSywMd6tU+LFeGJbde/cWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Radu Rendec <radu.rendec@gmail.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 105/151] pinctrl: lpc18xx: Use define directive for PIN_CONFIG_GPIO_PIN_INT
-Date:   Wed, 27 Nov 2019 21:31:28 +0100
-Message-Id: <20191127203040.899342059@linuxfoundation.org>
+Subject: [PATCH 4.9 067/151] macsec: let the administrator set UP state even if lowerdev is down
+Date:   Wed, 27 Nov 2019 21:30:50 +0100
+Message-Id: <20191127203034.133854267@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -61,63 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit f24bfb39975c241374cadebbd037c17960cf1412 ]
+[ Upstream commit 07bddef9839378bd6f95b393cf24c420529b4ef1 ]
 
-Clang warns when one enumerated type is implicitly converted to another:
+Currently, the kernel doesn't let the administrator set a macsec device
+up unless its lower device is currently up. This is inconsistent, as a
+macsec device that is up won't automatically go down when its lower
+device goes down.
 
-drivers/pinctrl/pinctrl-lpc18xx.c:643:29: warning: implicit conversion
-from enumeration type 'enum lpc18xx_pin_config_param' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
-        ~                          ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/pinctrl-lpc18xx.c:648:12: warning: implicit conversion
-from enumeration type 'enum lpc18xx_pin_config_param' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        PCONFDUMP(PIN_CONFIG_GPIO_PIN_INT, "gpio pin int", NULL, true),
-        ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
-macro 'PCONFDUMP'
-        .param = a, .display = b, .format = c, .has_arg = d     \
-                 ^
-2 warnings generated.
+Now that linkstate propagation works, there's really no reason for this
+limitation, so let's remove it.
 
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/140
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Reported-by: Radu Rendec <radu.rendec@gmail.com>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-lpc18xx.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/net/macsec.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-lpc18xx.c b/drivers/pinctrl/pinctrl-lpc18xx.c
-index e053f1fa55120..ab2a451f31562 100644
---- a/drivers/pinctrl/pinctrl-lpc18xx.c
-+++ b/drivers/pinctrl/pinctrl-lpc18xx.c
-@@ -630,14 +630,8 @@ static const struct pinctrl_pin_desc lpc18xx_pins[] = {
- 	LPC18XX_PIN(i2c0_sda, PIN_I2C0_SDA),
- };
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index d2a3825376be5..a48ed0873cc72 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -2798,9 +2798,6 @@ static int macsec_dev_open(struct net_device *dev)
+ 	struct net_device *real_dev = macsec->real_dev;
+ 	int err;
  
--/**
-- * enum lpc18xx_pin_config_param - possible pin configuration parameters
-- * @PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt
-- * 	controller.
-- */
--enum lpc18xx_pin_config_param {
--	PIN_CONFIG_GPIO_PIN_INT = PIN_CONFIG_END + 1,
--};
-+/* PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt controller */
-+#define PIN_CONFIG_GPIO_PIN_INT		(PIN_CONFIG_END + 1)
- 
- static const struct pinconf_generic_params lpc18xx_params[] = {
- 	{"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
+-	if (!(real_dev->flags & IFF_UP))
+-		return -ENETDOWN;
+-
+ 	err = dev_uc_add(real_dev, dev->dev_addr);
+ 	if (err < 0)
+ 		return err;
 -- 
 2.20.1
 
