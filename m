@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBC8C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC04EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8815520665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD58820665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890326;
-	bh=kN3WIv/LyoTwwkl5EnavKlDXb+7KafpH6vrOsCLhcoY=;
+	s=default; t=1574890346;
+	bh=2Z0PeulUKiddpx7Y+aKFqPHyf9rEQImC8/nS7AD3Qp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BWYl+vr4NwL0IZGKm8OwLMcGVuJn7riJSnE+CoxlIa6EXPcq9xcO7XdrCaXQx5UOP
-	 bXDlmvOpJaqr1y14s4pa/zvgQNCJ8v9cQd4zYiMRY3rr9ZFTe6pOwARutG8GhCIpon
-	 f4bbYzoAQTYaoQUMJ3dD1/K5y0vj5UTiqzCS/FyY=
+	b=xx1+tlUNLt/ceFB1huonKYieKt7rbiR4ej2AZlGnRkyMLFaJKVLcAelfdw+9MMGkT
+	 a1jUU3XAu4LBbQUysZiKu4jjnaxa1R96v7Uy7Oa53XzazNDpNj5ReGPTxkOSpc6qUS
+	 68HTy+Y5bu1u7otF0vsM+pI/MWpgg2o0mB2mj5AM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730567AbfK0VcF (ORCPT
+        id S1729891AbfK0VcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:32:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43270 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:32:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727146AbfK0Uxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:55 -0500
+        id S1727277AbfK0Ux1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BA252070B;
-        Wed, 27 Nov 2019 20:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEA6521850;
+        Wed, 27 Nov 2019 20:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888034;
-        bh=kN3WIv/LyoTwwkl5EnavKlDXb+7KafpH6vrOsCLhcoY=;
+        s=default; t=1574888006;
+        bh=2Z0PeulUKiddpx7Y+aKFqPHyf9rEQImC8/nS7AD3Qp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JREx76pmw4sZOG07G1Vbp7wvSg1cTLmFZzPojkkEECMs1BDtRD7yQshzMXtFSyuc0
-         +iKCXYIt8YFkWE7l0ROExa44/6TDVGF5mUQv3Q0i+YfFh5/ZWgOO8LKijS5Z9IdVGF
-         zPdHJoAS8/FIOUayNV6el72FZbikSizPYDX9Pnxk=
+        b=J0ZnyXbu/dHFe0oDoc4zhoZxsqVNpyLPx2jGEfM6hsOrxt/YEBa/SyK0baUVQwcCR
+         sJoN+91St38zxooIo77zOfpSozRDOp6PfANdP8ETV7YRQCTjLJgt/4ZpCG4wHigkfd
+         2364tLfJpVUbjg5+xccNbFxV847tLerOOYr83yZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai Shen <shenkai8@huawei.com>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 191/211] cpufreq: Add NULL checks to show() and store() methods of cpufreq
-Date:   Wed, 27 Nov 2019 21:32:04 +0100
-Message-Id: <20191127203111.731778105@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.14 177/211] x86/insn: Fix awk regexp warnings
+Date:   Wed, 27 Nov 2019 21:31:50 +0100
+Message-Id: <20191127203110.552058097@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,56 +67,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Shen <shenkai8@huawei.com>
+From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
 
-commit e6e8df07268c1f75dd9215536e2ce4587b70f977 upstream.
+commit 700c1018b86d0d4b3f1f2d459708c0cdf42b521d upstream.
 
-Add NULL checks to show() and store() in cpufreq.c to avoid attempts
-to invoke a NULL callback.
+gawk 5.0.1 generates the following regexp warnings:
 
-Though some interfaces of cpufreq are set as read-only, users can
-still get write permission using chmod which can lead to a kernel
-crash, as follows:
+  GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
+  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
+  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is  not a known regexp operator
 
-chmod +w /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
-echo 1 >  /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+Ealier versions of gawk are not known to generate these warnings. The
+gawk manual referenced below does not list characters ':' and '&' as
+needing escaping, so 'unescape' them. See
 
-This bug was found in linux 4.19.
+  https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html
 
-Signed-off-by: Kai Shen <shenkai8@huawei.com>
-Reported-by: Feilong Lin <linfeilong@huawei.com>
-Reviewed-by: Feilong Lin <linfeilong@huawei.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-[ rjw: Subject & changelog ]
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+for more info.
+
+Running diff on the output generated by the script before and after
+applying the patch reported no differences.
+
+ [ bp: Massage commit message. ]
+
+[ Caught the respective tools header discrepancy. ]
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190924044659.3785-1-alexander.kapshuk@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/cpufreq.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/tools/gen-insn-attr-x86.awk               |    4 ++--
+ tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -911,6 +911,9 @@ static ssize_t show(struct kobject *kobj
- 	struct freq_attr *fattr = to_attr(attr);
- 	ssize_t ret;
+--- a/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -69,7 +69,7 @@ BEGIN {
  
-+	if (!fattr->show)
-+		return -EIO;
-+
- 	down_read(&policy->rwsem);
- 	ret = fattr->show(policy, buf);
- 	up_read(&policy->rwsem);
-@@ -925,6 +928,9 @@ static ssize_t store(struct kobject *kob
- 	struct freq_attr *fattr = to_attr(attr);
- 	ssize_t ret = -EINVAL;
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
+-	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
++	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+ 	lprefix_expr = "\\((66|F2|F3)\\)"
+ 	max_lprefix = 4
  
-+	if (!fattr->store)
-+		return -EIO;
-+
- 	cpus_read_lock();
+@@ -257,7 +257,7 @@ function convert_operands(count,opnd,
+ 	return add_flags(imm, mod)
+ }
  
- 	if (cpu_online(policy->cpu)) {
+-/^[0-9a-f]+\:/ {
++/^[0-9a-f]+:/ {
+ 	if (NR == 1)
+ 		next
+ 	# get index
+--- a/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -69,7 +69,7 @@ BEGIN {
+ 
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
+-	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
++	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+ 	lprefix_expr = "\\((66|F2|F3)\\)"
+ 	max_lprefix = 4
+ 
+@@ -257,7 +257,7 @@ function convert_operands(count,opnd,
+ 	return add_flags(imm, mod)
+ }
+ 
+-/^[0-9a-f]+\:/ {
++/^[0-9a-f]+:/ {
+ 	if (NR == 1)
+ 		next
+ 	# get index
 
 
