@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D363C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E065C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30B0215B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67073215E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574886903;
-	bh=HOcaq0eTt3sWpujI16INbD4a6Vw/LVwz3TEbLWtPfQk=;
+	s=default; t=1574886905;
+	bh=JadU7RXG0vhQpSjpd6IvdvyjnC7SaQAKpVyfBtCPbz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWDUEv4ffGQ8yG7MdNhvESDgmmhqOJaDkVl4ubmGAVVaN8kbv0SFLOZNyaYkoSNkI
-	 SxmlBLtPLFZw+sgi7EW1MyDXWqwjRY6CaAFhz53xob1c6NFa7FRx5M13eTnHz2zEYb
-	 zPG5VZQZnMBO8SXSEclzoInHe38Cb1IF0sHpYw/E=
+	b=tPzh4Bswq9kwtUONJOcVZRt3v2kwsJMYxxPUE8J2zDp5NdZlYLqFyMdFWf7FZFnZl
+	 CsQhloUTQAhUYepdz865cx626x5lLQERnqnXGa49tLdHts1Ywmy6vPArdU4FkQ8UhU
+	 xTpgRT2YTs3jx2xED5nPSEIHsKNatelx0AX1BU1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfK0UfB (ORCPT
+        id S1727788AbfK0UfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:35:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:35:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727738AbfK0Uex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:34:53 -0500
+        id S1727749AbfK0Uez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:34:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CC7420866;
-        Wed, 27 Nov 2019 20:34:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8A9C215E5;
+        Wed, 27 Nov 2019 20:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886892;
-        bh=HOcaq0eTt3sWpujI16INbD4a6Vw/LVwz3TEbLWtPfQk=;
+        s=default; t=1574886895;
+        bh=JadU7RXG0vhQpSjpd6IvdvyjnC7SaQAKpVyfBtCPbz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fpqp3ihttFVGSDXodGl8xiR8y3GvCo6prUNlJxu3OIYEYfYqcAO2UnvijLjE/1PHE
-         682NFHIB7WKjSbzin0THahxOj+Ao7eIqcKQiQlvS2L6LcqSZYc2ImDZGoImglLpUYv
-         TiZ7SiK6SKuU2PzI7Ua2VxFqblwLIy8Uh7I0IcCs=
+        b=SQnj8xp0D7GBgJhd2JY81Y9EhJJtgYa6HA8UBnLKSkRHT2DxGLGoETWKWkBYvhgCT
+         98KAoeVkVZ7R2qbGcZ2ul+ihb75iYFil3zvNeV//L11BAQSYzMuiCAedxE3eOcdXg/
+         N+lyaJ0IfdoJ8nLEKCKB0F/EeWqQgtcNycrqMWN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        stable@vger.kernel.org, Uros Bizjak <ubizjak@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 034/132] scsi: ips: fix missing break in switch
-Date:   Wed, 27 Nov 2019 21:30:25 +0100
-Message-Id: <20191127202929.463223722@linuxfoundation.org>
+Subject: [PATCH 4.4 035/132] KVM/x86: Fix invvpid and invept register operand size in 64-bit mode
+Date:   Wed, 27 Nov 2019 21:30:26 +0100
+Message-Id: <20191127202930.091213175@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,34 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Uros Bizjak <ubizjak@gmail.com>
 
-[ Upstream commit 5d25ff7a544889bc4b749fda31778d6a18dddbcb ]
+[ Upstream commit 5ebb272b2ea7e02911a03a893f8d922d49f9bb4a ]
 
-Add missing break statement in order to prevent the code from falling
-through to case TEST_UNIT_READY.
+Register operand size of invvpid and invept instruction in 64-bit mode
+has always 64 bits. Adjust inline function argument type to reflect
+correct size.
 
-Addresses-Coverity-ID: 1357338 ("Missing break in switch")
-Suggested-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ips.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/vmx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/ips.c b/drivers/scsi/ips.c
-index 02cb76fd44208..6bbf2945a3e00 100644
---- a/drivers/scsi/ips.c
-+++ b/drivers/scsi/ips.c
-@@ -3500,6 +3500,7 @@ ips_send_cmd(ips_ha_t * ha, ips_scb_t * scb)
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index 1b3a432f6fd53..9344ac6b4f99d 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -1298,7 +1298,7 @@ static int __find_msr_index(struct vcpu_vmx *vmx, u32 msr)
+ 	return -1;
+ }
  
- 		case START_STOP:
- 			scb->scsi_cmd->result = DID_OK << 16;
-+			break;
+-static inline void __invvpid(int ext, u16 vpid, gva_t gva)
++static inline void __invvpid(unsigned long ext, u16 vpid, gva_t gva)
+ {
+     struct {
+ 	u64 vpid : 16;
+@@ -1312,7 +1312,7 @@ static inline void __invvpid(int ext, u16 vpid, gva_t gva)
+ 		  : : "a"(&operand), "c"(ext) : "cc", "memory");
+ }
  
- 		case TEST_UNIT_READY:
- 		case INQUIRY:
+-static inline void __invept(int ext, u64 eptp, gpa_t gpa)
++static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
+ {
+ 	struct {
+ 		u64 eptp, gpa;
 -- 
 2.20.1
 
