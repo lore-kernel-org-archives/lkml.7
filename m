@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6694CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4983CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F9721736
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D58C21736
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889613;
-	bh=5yemM2jPWun0Szk6nsZE3AnqlsD35Qi3e+oCLqnavF0=;
+	s=default; t=1574889617;
+	bh=BOiowEuy+RlWqcjqjvrERK6atbQLQnXcNLNSpSWSa24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DqzwBcojTsbzY5JY75/g7Tlm02Gb2B557WIvC7j7p/p6qcAodYh8NnGHaHZ+8UuWh
-	 w6Sn/e0Qu+TSvHkmjY2NBi/H5f3BJ2eNRi+JdGnUyYXd9joBb02ywwGCc+TcPk4E6N
-	 Bodwp9xoWhh6re1ebzkJ49b9atIVQViI0y3KhEi0=
+	b=1QuqqdOzsVVGeCdZN7NlUBGG+C8DrqNQJMRVKMIreRt7si42469AhmAZspGdYNmn1
+	 54GNg+e7cl4SDvxBdcEj5HMLG8b81+erd1gsDNSigEH9QkJSVGCStPsnnYAfdtfw2T
+	 tx97HIIOXbt2KkN4zB/Y5nYaY04MH1kX3iaJ2+nM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733113AbfK0VUM (ORCPT
+        id S1732880AbfK0VJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:20:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36156 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:09:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728997AbfK0VJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:09:25 -0500
+        id S1732863AbfK0VJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:09:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE7CE21555;
-        Wed, 27 Nov 2019 21:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C09121556;
+        Wed, 27 Nov 2019 21:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888965;
-        bh=5yemM2jPWun0Szk6nsZE3AnqlsD35Qi3e+oCLqnavF0=;
+        s=default; t=1574888954;
+        bh=BOiowEuy+RlWqcjqjvrERK6atbQLQnXcNLNSpSWSa24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AdcbYrHF9BpZxeEjw3IGL65OsB67E89KM7vLnEG7eNcCxGMP6o1visEEOqSOYSOPy
-         0JBVLCDMkZmKwN39igWe/tBIxwP7kjz0Q3NZmV4JLlnxzixPuMaRp/dp7sbOZ0CFNJ
-         r2jO0UVS2uQGu6PuMEtibFNJzwPs6GZB6e80wiP8=
+        b=AlSjnA+pUMyOlCAZvh6cRzwdcXnWl0ByQz1kWM9aEjVcBTWwHF8gOzFTmqlZnnMg5
+         2/JchH64rLT5ac3oo/m7/jYIVKoTov+RMz7emhNY+oespa4ka+q0yzEdMzOlilKKYA
+         xkMddpfG7HbUlDEqpcTH24OlF2GNjs8BGZq4T5Bo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaojie Yuan <xiaojie.yuan@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.3 30/95] drm/amdgpu: disable gfxoff when using register read interface
-Date:   Wed, 27 Nov 2019 21:31:47 +0100
-Message-Id: <20191127202856.736039714@linuxfoundation.org>
+        stable@vger.kernel.org, Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Thomas Voegtle <tv@lio96.de>, Changwei Ge <gechangwei@live.cn>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 27/95] Revert "fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()"
+Date:   Wed, 27 Nov 2019 21:31:44 +0100
+Message-Id: <20191127202854.186425693@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,46 +66,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Joseph Qi <joseph.qi@linux.alibaba.com>
 
-commit c57040d333c6729ce99c2cb95061045ff84c89ea upstream.
+commit 94b07b6f9e2e996afff7395de6b35f34f4cb10bf upstream.
 
-When gfxoff is enabled, accessing gfx registers via MMIO
-can lead to a hang.
+This reverts commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d.
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=205497
-Acked-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Commit 56e94ea132bb ("fs: ocfs2: fix possible null-pointer dereferences
+in ocfs2_xa_prepare_entry()") introduces a regression that fail to
+create directory with mount option user_xattr and acl.  Actually the
+reported NULL pointer dereference case can be correctly handled by
+loc->xl_ops->xlo_add_entry(), so revert it.
+
+Link: http://lkml.kernel.org/r/1573624916-83825-1-git-send-email-joseph.qi@linux.alibaba.com
+Fixes: 56e94ea132bb ("fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()")
+Signed-off-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reported-by: Thomas Voegtle <tv@lio96.de>
+Acked-by: Changwei Ge <gechangwei@live.cn>
+Cc: Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/ocfs2/xattr.c |   56 ++++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 33 insertions(+), 23 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -635,15 +635,19 @@ static int amdgpu_info_ioctl(struct drm_
- 			return -ENOMEM;
- 		alloc_size = info->read_mmr_reg.count * sizeof(*regs);
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -1490,6 +1490,18 @@ static int ocfs2_xa_check_space(struct o
+ 	return loc->xl_ops->xlo_check_space(loc, xi);
+ }
  
--		for (i = 0; i < info->read_mmr_reg.count; i++)
-+		amdgpu_gfx_off_ctrl(adev, false);
-+		for (i = 0; i < info->read_mmr_reg.count; i++) {
- 			if (amdgpu_asic_read_register(adev, se_num, sh_num,
- 						      info->read_mmr_reg.dword_offset + i,
- 						      &regs[i])) {
- 				DRM_DEBUG_KMS("unallowed offset %#x\n",
- 					      info->read_mmr_reg.dword_offset + i);
- 				kfree(regs);
-+				amdgpu_gfx_off_ctrl(adev, true);
- 				return -EFAULT;
- 			}
++static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
++{
++	loc->xl_ops->xlo_add_entry(loc, name_hash);
++	loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
++	/*
++	 * We can't leave the new entry's xe_name_offset at zero or
++	 * add_namevalue() will go nuts.  We set it to the size of our
++	 * storage so that it can never be less than any other entry.
++	 */
++	loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
++}
++
+ static void ocfs2_xa_add_namevalue(struct ocfs2_xa_loc *loc,
+ 				   struct ocfs2_xattr_info *xi)
+ {
+@@ -2121,31 +2133,29 @@ static int ocfs2_xa_prepare_entry(struct
+ 	if (rc)
+ 		goto out;
+ 
+-	if (!loc->xl_entry) {
+-		rc = -EINVAL;
+-		goto out;
+-	}
+-
+-	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
+-		orig_value_size = loc->xl_entry->xe_value_size;
+-		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
+-		if (rc)
+-			goto out;
+-		goto alloc_value;
+-	}
++	if (loc->xl_entry) {
++		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
++			orig_value_size = loc->xl_entry->xe_value_size;
++			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
++			if (rc)
++				goto out;
++			goto alloc_value;
 +		}
-+		amdgpu_gfx_off_ctrl(adev, true);
- 		n = copy_to_user(out, regs, min(size, alloc_size));
- 		kfree(regs);
- 		return n ? -EFAULT : 0;
+ 
+-	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
+-		orig_clusters = ocfs2_xa_value_clusters(loc);
+-		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
+-		if (rc) {
+-			mlog_errno(rc);
+-			ocfs2_xa_cleanup_value_truncate(loc,
+-							"overwriting",
+-							orig_clusters);
+-			goto out;
++		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
++			orig_clusters = ocfs2_xa_value_clusters(loc);
++			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
++			if (rc) {
++				mlog_errno(rc);
++				ocfs2_xa_cleanup_value_truncate(loc,
++								"overwriting",
++								orig_clusters);
++				goto out;
++			}
+ 		}
+-	}
+-	ocfs2_xa_wipe_namevalue(loc);
++		ocfs2_xa_wipe_namevalue(loc);
++	} else
++		ocfs2_xa_add_entry(loc, name_hash);
+ 
+ 	/*
+ 	 * If we get here, we have a blank entry.  Fill it.  We grow our
 
 
