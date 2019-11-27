@@ -2,56 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8821FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3054CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610FF215B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06154216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887112;
-	bh=U/6tRCUAgN7vLtq1CMV91hKOfrocRssLaPKmD5mtqa4=;
+	s=default; t=1574887114;
+	bh=zYJRsokSNnbLuG9oKacMYr6iwcJAcDKTNZpXfdZ7Apc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxYmyFdtDA7kDGOyNdtSgeL8N7rh7As3s+JjIRZA8bZ/8S0d+AkQ2+brBm4aqryTA
-	 X3jkjybJi7yHnFvrIMTUyOSWBMIKeyrxiZDDcUQ4VQpBqzM7LQXEAJ+UybBkIE2xx+
-	 Iz7b06X+MeEOMo3kAIKpcyUxYUfuktdQhybdvpoo=
+	b=In1A5LZ3NLO8DLsz+soeAWZfSsn8O3+ya0ZYnIeKEnWPe9PgiFnO8HPn2g/GBPaKw
+	 yrwnd4+kNWj9VzsnQpdk+pFeCGXldzNWECXpGh3BSTy7z96+ebff2cVTBJlRuETUlN
+	 2V0EDEnHV/3O+5HCIahO0/FA2mbnRWRe5T6hHTR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbfK0Uib (ORCPT
+        id S1728760AbfK0Uic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:38:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42120 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:38:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfK0Ui2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:38:28 -0500
+        id S1727073AbfK0Ui0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:38:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0241215A5;
-        Wed, 27 Nov 2019 20:38:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B75B215A4;
+        Wed, 27 Nov 2019 20:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887108;
-        bh=U/6tRCUAgN7vLtq1CMV91hKOfrocRssLaPKmD5mtqa4=;
+        s=default; t=1574887105;
+        bh=zYJRsokSNnbLuG9oKacMYr6iwcJAcDKTNZpXfdZ7Apc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I7XLWrcwbiLnCNYzq4Sw8RtNsriDXh9oyTh8QGk3ki0VCKtYxN2LixR6tJtEjvV9k
-         6pmEmoe6ymfZA6XI6Ddpqyr9FWS2NCzmvarsNaR+ajK+0798UK6NES5DztkO8SM4AC
-         cJX3qccXN7YtKG062jnxFee9CvKRBI4PRLUeLQfw=
+        b=FiaatHy9l3Yp4UKoosw2IXhz5aF7YscQAtvLMqRpEpGZN2Pn4l/f/GvP21Fk7v4CY
+         Nqrs+g7T4VHjiiTLOkHFECNgBdFFldHcYoLyRjs0TwfaEs401qpO1ruCRBcr7EMPJN
+         iVOz34dvnkCkfw+bETo78aDMM+A5InegB8569VqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 073/132] igb: shorten maximum PHC timecounter update interval
-Date:   Wed, 27 Nov 2019 21:31:04 +0100
-Message-Id: <20191127203007.942579295@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.4 113/132] media: b2c2-flexcop-usb: add sanity checking
+Date:   Wed, 27 Nov 2019 21:31:44 +0100
+Message-Id: <20191127203030.791717735@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -64,56 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 094bf4d0e9657f6ea1ee3d7e07ce3970796949ce ]
+commit 1b976fc6d684e3282914cdbe7a8d68fdce19095c upstream.
 
-The timecounter needs to be updated at least once per ~550 seconds in
-order to avoid a 40-bit SYSTIM timestamp to be misinterpreted as an old
-timestamp.
+The driver needs an isochronous endpoint to be present. It will
+oops in its absence. Add checking for it.
 
-Since commit 500462a9d ("timers: Switch to a non-cascading wheel"),
-scheduling of delayed work seems to be less accurate and a requested
-delay of 540 seconds may actually be longer than 550 seconds. Shorten
-the delay to 480 seconds to be sure the timecounter is updated in time.
+Reported-by: syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This fixes an issue with HW timestamps on 82580/I350/I354 being off by
-~1100 seconds for few seconds every ~9 minutes.
-
-Cc: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_ptp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/media/usb/b2c2/flexcop-usb.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_ptp.c b/drivers/net/ethernet/intel/igb/igb_ptp.c
-index c44df87c38de2..5e65d8a78c3ed 100644
---- a/drivers/net/ethernet/intel/igb/igb_ptp.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ptp.c
-@@ -65,9 +65,15 @@
-  *
-  * The 40 bit 82580 SYSTIM overflows every
-  *   2^40 * 10^-9 /  60  = 18.3 minutes.
-+ *
-+ * SYSTIM is converted to real time using a timecounter. As
-+ * timecounter_cyc2time() allows old timestamps, the timecounter
-+ * needs to be updated at least once per half of the SYSTIM interval.
-+ * Scheduling of delayed work is not very accurate, so we aim for 8
-+ * minutes to be sure the actual interval is shorter than 9.16 minutes.
-  */
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -508,6 +508,9 @@ static int flexcop_usb_probe(struct usb_
+ 	struct flexcop_device *fc = NULL;
+ 	int ret;
  
--#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
-+#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 8)
- #define IGB_PTP_TX_TIMEOUT		(HZ * 15)
- #define INCPERIOD_82576			(1 << E1000_TIMINCA_16NS_SHIFT)
- #define INCVALUE_82576_MASK		((1 << E1000_TIMINCA_16NS_SHIFT) - 1)
--- 
-2.20.1
-
++	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
++		return -ENODEV;
++
+ 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
+ 		err("out of memory\n");
+ 		return -ENOMEM;
 
 
