@@ -2,203 +2,513 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5971C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6465CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE0E206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574869829;
-	bh=mRDKzpK2+G3TTsTrun2HIWQx27oJdGgVN2L4KWZ3RJ0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=UTtGlsfEqd9evohnAvaMh7T0R3UleTXL6x5ik4QjUPQA9nUlt+Y1cUf2tfT2tUn9t
-	 S6zGr1fuZTW2qIVDN9dwVuvXxzseJ0LanCbnIsdBBOF9a42DP28vtqwvWpJ5wY2LQo
-	 hV4AIAq8+ctXKXH9ZvIysek+tDN3Dl/cWFmaT6p4=
+	by mail.kernel.org (Postfix) with ESMTP id 24F3220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:50:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="OrlK64Cs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfK0Pu2 (ORCPT
+        id S1727120AbfK0Pu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:50:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfK0Pu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:50:28 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44D0220665;
-        Wed, 27 Nov 2019 15:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574869827;
-        bh=mRDKzpK2+G3TTsTrun2HIWQx27oJdGgVN2L4KWZ3RJ0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=D1Hu7Apgg08qPQs1JDz8++ey3J66+OSoRiXQCwWHCd0s1+7IDwB4wiklQzVUiBC50
-         s8Kg01OllWlGEyATj3w6NxyvIwC6+3WDEjWu+yGzZyfOSutjXyJqrPHC/OE+eWtFtE
-         TCQwC8e21ZfmPel4mQCEX4VBjQoAiILGamd8xnMg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 1528A352083A; Wed, 27 Nov 2019 07:50:27 -0800 (PST)
-Date:   Wed, 27 Nov 2019 07:50:27 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     jiangshanlai@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: Workqueues splat due to ending up on wrong CPU
-Message-ID: <20191127155027.GA15170@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191125230312.GP2889@paulmck-ThinkPad-P72>
- <20191126183334.GE2867037@devbig004.ftw2.facebook.com>
- <20191126220533.GU2889@paulmck-ThinkPad-P72>
+        Wed, 27 Nov 2019 10:50:56 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41036 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfK0Puz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 10:50:55 -0500
+Received: by mail-io1-f66.google.com with SMTP id z26so21856460iot.8
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 07:50:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h5gValmc4D2Or92V7Nq+oH7EcejFT62EqNujH8T+di8=;
+        b=OrlK64CsRuAQS/M7zlsB6j/WFCb2dRJjwrmGjjj7h5Zn+RAIgCP7GrqNVu8cxZu343
+         yrMGLh4ca/OHA+/KQ8BBmxAVcVn8j2Votm61br6BqdFZwuWkZnFEuG63/dRdE/JJJabv
+         0egLq2SdJgwOoSV07Uycws2rodbXQPNzYqCF+UeW9NqjvXzt7IZldWGEBbKtqqT34/98
+         w/1yotFfPl17TQkM7wgGMK7WVXtShAVKbqULjYyXfpFq11n/9QFMw3V+HAdBxaLsIXkh
+         AcPH61KxtYzwLU2nbXYcyGRQLK6isjH1tku1lwupRMLaEZSpQb5/HolWeJDAPwGyi0As
+         hyGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h5gValmc4D2Or92V7Nq+oH7EcejFT62EqNujH8T+di8=;
+        b=Ma8SvC3qmFFOntNmuswCajNIrZOzNDOWq8w0I7bv2BJK1fuy9KE0uKeNZ+Y4OtZOj4
+         w3+xdXkGYppAkqO1Dnypjq56xK7A/VIQgkdt5j/f1faeZjiKgZWZ6xHznUK5ggtdf59+
+         ZLxynFkrlPyUKH4SGLgfhriTfIIoTy8wN1rVZOIRAlHDbYqXv80s2a20TX5JLuW3MAda
+         1dhU6u90aMH0ZcCbRnW7w8IHIVUA8Hg64hXM1sb+20F9Ef1sHvqINqzwPCyOamPY4rJR
+         YGhAY1x5UFHRruM4LjTkeJOKbL1jyhBKyeK3cEjfcmCfUWIA29PU2xVVHfEYUpN03gcv
+         BJtQ==
+X-Gm-Message-State: APjAAAX2mj+b4PuNuroywOPmIvFDbFSj4MZlSvmYQ4v7pTu1XVL/g5Jx
+        toBWD3Ocs/+T48awIXt7m90XyWk5BJMtGQWSQnuoFQ==
+X-Google-Smtp-Source: APXvYqxlElh7NfR2zzjIZcgEL5sjIQhTz+KMIcAE83vSnXhWgYdi85b09jq3Y9e1c76qQZeJzUjieyIzGy+8wHIn3zg=
+X-Received: by 2002:a5d:8b83:: with SMTP id p3mr35571854iol.189.1574869854248;
+ Wed, 27 Nov 2019 07:50:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126220533.GU2889@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191127133510.10614-1-brgl@bgdev.pl> <20191127133510.10614-8-brgl@bgdev.pl>
+ <20191127152410.GA24936@sol>
+In-Reply-To: <20191127152410.GA24936@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 27 Nov 2019 16:50:43 +0100
+Message-ID: <CAMRc=MdLnZFJQ+qMJSiSQSh6pOnKpLeU79u9ymA7HaujgK0kcg@mail.gmail.com>
+Subject: Re: [PATCH 7/8] gpiolib: add new ioctl() for monitoring changes in
+ line info
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 02:05:33PM -0800, Paul E. McKenney wrote:
-> On Tue, Nov 26, 2019 at 10:33:34AM -0800, Tejun Heo wrote:
-> > Hello, Paul.
-> > 
-> > On Mon, Nov 25, 2019 at 03:03:12PM -0800, Paul E. McKenney wrote:
-> > > I am seeing this occasionally during rcutorture runs in the presence
-> > > of CPU hotplug.  This is on v5.4-rc1 in process_one_work() at the first
-> > > WARN_ON():
-> > > 
-> > > 	WARN_ON_ONCE(!(pool->flags & POOL_DISASSOCIATED) &&
-> > > 		     raw_smp_processor_id() != pool->cpu);
-> > 
-> > Hmm... so it's saying that this worker's pool is supposed to be bound
-> > to a cpu but it's currently running on the wrong cpu.
-> 
-> Probably because the bound-to CPU recently went offline.  And maybe
-> back online and back offline recently as well.
-> 
-> > > What should I do to help further debug this?
-> > 
-> > Do you always see rescuer_thread in the backtrace?  Can you please
-> > apply the following patch and reproduce the problem?
-> 
-> The short answer is "yes", they all have rescuer_thread() in the
-> backtrace.
-
-And 420 hours of test overnight failed to reproduce the problem.  I kicked
-off an additional 672 hours that should complete tomorrow (Thursday PST)
-morning.  If it is still -ENOREPRODUCE, I will be making some rcutorture
-changes to avoid unrelated false-positive rcutorture splats due to fun
-with hyperthreading on large systems and rerun.  Just in case timing due
-to hyperthreading is required to make this splat happen or some such...
-
-							Thanx, Paul
-
-> Here is the one from October:
-> 
-> ------------------------------------------------------------------------
-> 
-> [  951.674908] WARNING: CPU: 2 PID: 4 at kernel/workqueue.c:2185 process_one_work+0x48/0x3b0
-> [  951.676859] Modules linked in:
-> [  951.677284] CPU: 2 PID: 4 Comm: rcu_par_gp Not tainted 5.3.0-rc2+ #4
-> [  951.678144] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
-> [  951.679330] RIP: 0010:process_one_work+0x48/0x3b0
-> [  951.680010] Code: 00 00 00 00 4c 0f 44 e0 49 8b 44 24 08 44 8b a8 00 01 00 00 41 83 e5 20 f6 45 10 04 75 0e 65 8b 05 cd e0 98 5f 39 45 04 74 02 <0f> 0b 48 ba eb 83 b5 80 46 86 c8 61 48 0f af d6 48 c1 ea 3a 48 8b
-> [  951.682598] RSP: 0000:ffffa3624002fe80 EFLAGS: 00010093
-> [  951.683315] RAX: 0000000000000002 RBX: ffffa242dec107a8 RCX: ffffa242df228898
-> [  951.684307] RDX: ffffa242df228898 RSI: ffffffffa1a4e2b8 RDI: ffffa242dec10780
-> [  951.685356] RBP: ffffa242df228880 R08: 0000000000000000 R09: 0000000000000000
-> [  951.686394] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa242df22cf00
-> [  951.687422] R13: 0000000000000000 R14: ffffa242df2288a0 R15: ffffa242dec10780
-> [  951.688397] FS:  0000000000000000(0000) GS:ffffa242df280000(0000) knlGS:0000000000000000
-> [  951.689497] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  951.690284] CR2: 00000000000000b0 CR3: 000000001e20a000 CR4: 00000000000006e0
-> [  951.691248] Call Trace:
-> [  951.691602]  rescuer_thread+0x244/0x320
-> [  951.692130]  ? worker_thread+0x3c0/0x3c0
-> [  951.692676]  kthread+0x10d/0x130
-> [  951.693126]  ? kthread_create_on_node+0x60/0x60
-> [  951.693771]  ret_from_fork+0x35/0x40
-> [  951.694297] ---[ end trace e04817902e40095b ]---
-> 
-> ------------------------------------------------------------------------
-> 
-> And the other one from August:
-> 
-> ------------------------------------------------------------------------
-> 
-> [ 1668.624302] WARNING: CPU: 1 PID: 4 at kernel/workqueue.c:2185 process_one_work+0x84/0x5b0
-> [ 1668.625806] Modules linked in:
-> [ 1668.626133] CPU: 1 PID: 4 Comm: rcu_par_gp Not tainted 5.3.0-rc2+ #420
-> [ 1668.626806] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.10.2-1ubuntu1 04/01/2014
-> [ 1668.627673] RIP: 0010:process_one_work+0x84/0x5b0
-> [ 1668.628146] Code: 48 8b 46 20 41 83 e6 20 41 f6 44 24 44 04 48 89 45 b0 48 8b 46 38 48 89 45 c8 75 10 65 8b 05 13 80 58 54 41 39 44 24 38 74 02 <0f> 0b 48 ba eb 83 b5 80 46 86 c8 61 48 0f af d3 48 c1 ea 3a 49 8b
-> [ 1668.630099] RSP: 0000:ffffa2668002be50 EFLAGS: 00010006
-> [ 1668.630650] RAX: 0000000000000001 RBX: fffffffface678e8 RCX: 0000000000000000
-> [ 1668.631399] RDX: ffff8e00df329508 RSI: fffffffface678e8 RDI: ffff8e00dec94600
-> [ 1668.632149] RBP: ffffa2668002beb0 R08: 0000000000000000 R09: 0000000000000000
-> [ 1668.632902] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8e00df3294c0
-> [ 1668.633651] R13: ffff8e00df32de00 R14: 0000000000000000 R15: ffff8e00dec94600
-> [ 1668.634377] FS:  0000000000000000(0000) GS:ffff8e00df240000(0000) knlGS:0000000000000000
-> [ 1668.635226] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 1668.635814] CR2: 0000000000000148 CR3: 000000001581e000 CR4: 00000000000006e0
-> [ 1668.636536] Call Trace:
-> [ 1668.636803]  rescuer_thread+0x20b/0x340
-> [ 1668.637194]  ? worker_thread+0x3d0/0x3d0
-> [ 1668.637566]  kthread+0x10e/0x130
-> [ 1668.637886]  ? kthread_park+0xa0/0xa0
-> [ 1668.638278]  ret_from_fork+0x35/0x40
-> [ 1668.638657] ---[ end trace 6290de3b1c80098a ]---
-> 
-> ------------------------------------------------------------------------
-> 
-> I have started running your patch.  Not enough data to be statistically
-> significant, but it looks like rcutorture scenario TREE02 is the
-> best bet, so I will focus on that one.
-> 
-> 							Thanx, Paul
-> 
-> > Thanks.
-> > 
-> > diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> > index 914b845ad4ff..6f7f185cd146 100644
-> > --- a/kernel/workqueue.c
-> > +++ b/kernel/workqueue.c
-> > @@ -1842,13 +1842,18 @@ static struct worker *alloc_worker(int node)
-> >  static void worker_attach_to_pool(struct worker *worker,
-> >  				   struct worker_pool *pool)
-> >  {
-> > +	int ret;
+=C5=9Br., 27 lis 2019 o 16:24 Kent Gibson <warthog618@gmail.com> napisa=C5=
+=82(a):
+>
+> On Wed, Nov 27, 2019 at 02:35:09PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Currently there is no way for user-space to be informed about changes
+> > in status of GPIO lines e.g. when someone else requests the line or its
+> > config changes. We can only periodically re-read the line-info. This
+> > is fine for simple one-off user-space tools, but any daemon that provid=
+es
+> > a centralized access to GPIO chips would benefit hugely from an event
+> > driven line info synchronization.
+> >
+> > This patch adds a new ioctl() that allows user-space processes to retri=
+eve
+> > a file-descriptor for given GPIO lines which can be polled for line sta=
+tus
+> > change events.
+> >
+> > Currently the events are generated on three types of status changes: wh=
+en
+> > a line is requested, when it's released and when its config is changed.
+> > The first two are self-explanatory. For the third one: this will only
+> > happen when another user-space process calls the new SET_CONFIG ioctl()
+> > as any changes that can happen from within the kernel (i.e.
+> > set_transitory() or set_debounce()) are of no interest to user-space.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  drivers/gpio/gpiolib.c    | 218 ++++++++++++++++++++++++++++++++++++++
+> >  drivers/gpio/gpiolib.h    |   1 +
+> >  include/uapi/linux/gpio.h |  36 +++++++
+> >  3 files changed, 255 insertions(+)
+> >
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index d094b1be334d..be5df4bdf44b 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -547,6 +547,9 @@ static long linehandle_set_config(struct linehandle=
+_state *lh,
+> >                       if (ret)
+> >                               return ret;
+> >               }
 > > +
-> >  	mutex_lock(&wq_pool_attach_mutex);
-> >  
-> >  	/*
-> >  	 * set_cpus_allowed_ptr() will fail if the cpumask doesn't have any
-> >  	 * online CPUs.  It'll be re-applied when any of the CPUs come up.
-> >  	 */
-> > -	set_cpus_allowed_ptr(worker->task, pool->attrs->cpumask);
-> > +	ret = set_cpus_allowed_ptr(worker->task, pool->attrs->cpumask);
-> > +	if (ret && !(pool->flags & POOL_DISASSOCIATED))
-> > +		printk("XXX worker pid %d failed to attach to cpus of pool %d, ret=%d\n",
-> > +		       task_pid_nr(worker->task), pool->id, ret);
-> >  
-> >  	/*
-> >  	 * The wq_pool_attach_mutex ensures %POOL_DISASSOCIATED remains
-> > @@ -2183,8 +2188,10 @@ __acquires(&pool->lock)
-> >  	lockdep_copy_map(&lockdep_map, &work->lockdep_map);
+> > +             atomic_notifier_call_chain(&desc->gdev->notifier,
+> > +                                        GPIOLINE_CHANGED_CONFIG, desc)=
+;
+> >       }
+> >       return 0;
+> >  }
+> > @@ -1148,6 +1151,212 @@ static int lineevent_create(struct gpio_device =
+*gdev, void __user *ip)
+> >       return ret;
+> >  }
+> >
+> > +struct linechanged_fd_state {
+> > +     struct gpio_device *gdev;
+> > +     struct gpio_desc *descs[GPIOHANDLES_MAX];
+> > +     size_t numdescs;
+> > +     wait_queue_head_t waitqueue;
+> > +     DECLARE_KFIFO(events, struct gpioline_changed, 16);
+> > +     struct mutex lock;
+> > +     struct notifier_block changed_nb;
+> > +};
+> > +
+> > +static int linechanged_fd_release(struct inode *inode, struct file *fi=
+lep)
+> > +{
+> > +     struct linechanged_fd_state *lc_state =3D filep->private_data;
+> > +
+> > +     atomic_notifier_chain_unregister(&lc_state->gdev->notifier,
+> > +                                      &lc_state->changed_nb);
+> > +     put_device(&lc_state->gdev->dev);
+> > +     kfree(lc_state);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static __poll_t linechanged_fd_poll(struct file *filep,
+> > +                                 struct poll_table_struct *pollt)
+> > +{
+> > +     struct linechanged_fd_state *lc_state =3D filep->private_data;
+> > +     __poll_t events =3D 0;
+> > +
+> > +     poll_wait(filep, &lc_state->waitqueue, pollt);
+> > +
+> > +     mutex_lock(&lc_state->lock);
+> > +     if (!kfifo_is_empty(&lc_state->events))
+> > +             events =3D EPOLLIN | EPOLLRDNORM;
+> > +     mutex_unlock(&lc_state->lock);
+> > +
+> > +     return events;
+> > +}
+> > +
+> > +static ssize_t linechanged_fd_read(struct file *filep, char __user *bu=
+f,
+> > +                                size_t count, loff_t *off)
+> > +{
+> > +     struct linechanged_fd_state *lc_state =3D filep->private_data;
+> > +     unsigned int copied;
+> > +     int ret;
+> > +
+> > +     if (count < sizeof(struct gpioline_changed))
+> > +             return -EINVAL;
+> > +
+> > +     do {
+> > +             mutex_lock(&lc_state->lock);
+> > +             if (kfifo_is_empty(&lc_state->events)) {
+> > +                     mutex_unlock(&lc_state->lock);
+> > +                     if (filep->f_flags & O_NONBLOCK)
+> > +                             return -EAGAIN;
+> > +
+> > +                     ret =3D wait_event_interruptible(lc_state->waitqu=
+eue,
+> > +                                     !kfifo_is_empty(&lc_state->events=
+));
+> > +                     if (ret)
+> > +                             return ret;
+> > +             } else {
+> > +                     mutex_unlock(&lc_state->lock);
+> > +             }
+> > +
+> > +             if (mutex_lock_interruptible(&lc_state->lock))
+> > +                     return -ERESTARTSYS;
+> > +
+> > +             ret =3D kfifo_to_user(&lc_state->events, buf, count, &cop=
+ied);
+> > +             mutex_unlock(&lc_state->lock);
+> > +             if (ret)
+> > +                     return ret;
+> > +
+> > +             if (copied =3D=3D 0 && (filep->f_flags & O_NONBLOCK))
+> > +                     return -EAGAIN;
+> > +     } while (copied =3D=3D 0);
+> > +
+> > +     return copied;
+> > +}
+> > +
+> > +static const struct file_operations linechanged_fd_fileops =3D {
+> > +     .release =3D linechanged_fd_release,
+> > +     .owner =3D THIS_MODULE,
+> > +     .llseek =3D noop_llseek,
+> > +     .poll =3D linechanged_fd_poll,
+> > +     .read =3D linechanged_fd_read,
+> > +};
+> > +
+> > +static struct linechanged_fd_state *
+> > +to_linechanged_fd_state(struct notifier_block *nb)
+> > +{
+> > +     return container_of(nb, struct linechanged_fd_state, changed_nb);
+> > +}
+> > +
+> > +static int linechanged_fd_notify(struct notifier_block *nb,
+> > +                              unsigned long action, void *data)
+> > +{
+> > +     struct linechanged_fd_state *lc_state =3D to_linechanged_fd_state=
+(nb);
+> > +     struct gpio_desc *desc =3D data;
+> > +     struct gpioline_changed chg;
+> > +     int i, ret;
+> > +
+> > +     for (i =3D 0; i < lc_state->numdescs; i++) {
+> > +             /* Are we watching this desc? */
+> > +             if (desc =3D=3D lc_state->descs[i]) {
+> > +                     /* Yes - prepare the event. */
+> > +                     memset(&chg, 0, sizeof(chg));
+> > +                     chg.line_offset =3D gpio_chip_hwgpio(desc);
+> > +                     chg.event_type =3D action;
+> > +
+> > +                     mutex_lock(&lc_state->lock);
+> > +                     ret =3D kfifo_put(&lc_state->events, chg);
+> > +                     mutex_unlock(&lc_state->lock);
+> > +                     if (ret)
+> > +                             wake_up_poll(&lc_state->waitqueue, EPOLLI=
+N);
+> > +
+> > +                     return NOTIFY_OK;
+> > +             }
+> > +     }
+> > +
+> > +     return NOTIFY_DONE;
+> > +}
+> > +
+> > +static int linechanged_fd_create(struct gpio_device *gdev, void __user=
+ *ip)
+> > +{
+> > +     struct gpioline_changed_fd_request changed_req;
+> > +     struct linechanged_fd_state *lc_state;
+> > +     struct gpio_desc *desc;
+> > +     struct file *file;
+> > +     int ret, i, fd;
+> > +     u32 offset;
+> > +
+> > +     ret =3D copy_from_user(&changed_req, ip, sizeof(changed_req));
+> > +     if (ret)
+> > +             return -EFAULT;
+> > +
+> > +     if ((changed_req.num_lines =3D=3D 0) ||
+> > +         (changed_req.num_lines > GPIOHANDLES_MAX))
+> > +             return -EINVAL;
+> > +
+> > +     lc_state =3D kzalloc(sizeof(*lc_state), GFP_KERNEL);
+> > +     if (!lc_state)
+> > +             return -ENOMEM;
+> > +
+> > +     lc_state->gdev =3D gdev;
+> > +     get_device(&gdev->dev);
+> > +
+> > +     for (i =3D 0; i < changed_req.num_lines; i++) {
+> > +             offset =3D changed_req.lineoffsets[i];
+> > +             desc =3D gpiochip_get_desc(gdev->chip, offset);
+> > +             if (IS_ERR(desc)) {
+> > +                     ret =3D PTR_ERR(desc);
+> > +                     goto out_free_lc_state;
+> > +             }
+> > +
+> > +             lc_state->descs[i] =3D desc;
+> > +     }
+> > +
+> > +     lc_state->numdescs =3D changed_req.num_lines;
+> > +
+> > +     init_waitqueue_head(&lc_state->waitqueue);
+> > +     INIT_KFIFO(lc_state->events);
+> > +     mutex_init(&lc_state->lock);
+> > +
+> > +     lc_state->changed_nb.notifier_call =3D linechanged_fd_notify;
+> > +
+> > +     ret =3D atomic_notifier_chain_register(&gdev->notifier,
+> > +                                          &lc_state->changed_nb);
+> > +     if (ret)
+> > +             goto out_free_lc_state;
+> > +
+> > +     fd =3D get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
+> > +     if (fd < 0) {
+> > +             ret =3D fd;
+> > +             goto out_unregister_notifier;
+> > +     }
+> > +
+> > +     file =3D anon_inode_getfile("gpio-line-changed-fd",
+> > +                               &linechanged_fd_fileops,
+> > +                               lc_state, O_RDONLY | O_CLOEXEC);
+> > +     if (IS_ERR(file)) {
+> > +             ret =3D PTR_ERR(file);
+> > +             goto out_put_unused_fd;
+> > +     }
+> > +
+> > +     changed_req.fd =3D fd;
+> > +     ret =3D copy_to_user(ip, &changed_req, sizeof(changed_req));
+> > +     if (ret) {
+> > +             fput(file);
+> > +             put_unused_fd(fd);
+> > +             return -EFAULT;
+> > +     }
+> > +
+> > +     fd_install(fd, file);
+> > +
+> > +     return 0;
+> > +
+> > +out_put_unused_fd:
+> > +     put_unused_fd(fd);
+> > +out_unregister_notifier:
+> > +     atomic_notifier_chain_unregister(&gdev->notifier,
+> > +                                      &lc_state->changed_nb);
+> > +out_free_lc_state:
+> > +     kfree(lc_state);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> >  /*
+> >   * gpio_ioctl() - ioctl handler for the GPIO chardev
+> >   */
+> > @@ -1238,6 +1447,8 @@ static long gpio_ioctl(struct file *filp, unsigne=
+d int cmd, unsigned long arg)
+> >               return linehandle_create(gdev, ip);
+> >       } else if (cmd =3D=3D GPIO_GET_LINEEVENT_IOCTL) {
+> >               return lineevent_create(gdev, ip);
+> > +     } else if (cmd =3D=3D GPIO_GET_LINECHANGED_FD_IOCTL) {
+> > +             return linechanged_fd_create(gdev, ip);
+> >       }
+> >       return -EINVAL;
+> >  }
+> > @@ -1499,6 +1710,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *=
+chip, void *data,
+> >       for (i =3D 0; i < chip->ngpio; i++)
+> >               gdev->descs[i].gdev =3D gdev;
+> >
+> > +     ATOMIC_INIT_NOTIFIER_HEAD(&gdev->notifier);
+> > +
+> >  #ifdef CONFIG_PINCTRL
+> >       INIT_LIST_HEAD(&gdev->pin_ranges);
 > >  #endif
-> >  	/* ensure we're on the correct CPU */
-> > -	WARN_ON_ONCE(!(pool->flags & POOL_DISASSOCIATED) &&
-> > -		     raw_smp_processor_id() != pool->cpu);
-> > +	WARN_ONCE(!(pool->flags & POOL_DISASSOCIATED) &&
-> > +		  raw_smp_processor_id() != pool->cpu,
-> > +		  "expected on cpu %d but on cpu %d, pool %d, workfn=%pf\n",
-> > +		  pool->cpu, raw_smp_processor_id(), pool->id, work->func);
-> >  
-> >  	/*
-> >  	 * A single work shouldn't be executed concurrently by
-> > 
-> > -- 
-> > tejun
+> > @@ -2837,6 +3050,8 @@ static int gpiod_request_commit(struct gpio_desc =
+*desc, const char *label)
+> >               spin_lock_irqsave(&gpio_lock, flags);
+> >       }
+> >  done:
+> > +     atomic_notifier_call_chain(&desc->gdev->notifier,
+> > +                                GPIOLINE_CHANGED_REQUESTED, desc);
+> >       spin_unlock_irqrestore(&gpio_lock, flags);
+> >       return ret;
+> >  }
+> > @@ -2934,6 +3149,8 @@ static bool gpiod_free_commit(struct gpio_desc *d=
+esc)
+> >               ret =3D true;
+> >       }
+> >
+> > +     atomic_notifier_call_chain(&desc->gdev->notifier,
+> > +                                GPIOLINE_CHANGED_RELEASED, desc);
+> >       spin_unlock_irqrestore(&gpio_lock, flags);
+> >       return ret;
+> >  }
+> > @@ -3097,6 +3314,7 @@ static int gpio_set_bias(struct gpio_chip *chip, =
+struct gpio_desc *desc)
+> >               if (ret !=3D -ENOTSUPP)
+> >                       return ret;
+> >       }
+> > +
+> >       return 0;
+> >  }
+> >
+> > diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> > index a1cbeabadc69..8e3969616cfe 100644
+> > --- a/drivers/gpio/gpiolib.h
+> > +++ b/drivers/gpio/gpiolib.h
+> > @@ -54,6 +54,7 @@ struct gpio_device {
+> >       const char              *label;
+> >       void                    *data;
+> >       struct list_head        list;
+> > +     struct atomic_notifier_head notifier;
+> >
+> >  #ifdef CONFIG_PINCTRL
+> >       /*
+> > diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+> > index 799cf823d493..c61429467dd4 100644
+> > --- a/include/uapi/linux/gpio.h
+> > +++ b/include/uapi/linux/gpio.h
+> > @@ -59,6 +59,40 @@ struct gpioline_info {
+> >  /* Maximum number of requested handles */
+> >  #define GPIOHANDLES_MAX 64
+> >
+> > +/**
+> > + * struct gpioline_changed_fd_request - Information about a linechange=
+d fd
+> > + * request
+> > + * @lineoffsets: an array of desired lines, specified by offset index =
+for the
+> > + * associated GPIO device
+> > + * @num_lines: number of lines requested in this request, i.e. the num=
+ber of
+> > + * valid fields in the above arrays, set to 1 to request a single line
+> > + * @fd: if successful this field will contain a valid anonymous file h=
+andle
+> > + */
+> > +struct gpioline_changed_fd_request {
+> > +     __u32 lineoffsets[GPIOHANDLES_MAX];
+> > +     __u32 num_lines;
+> > +     int fd;
+> > +};
+> > +
+>
+> Wouldn't the most common case be to watch all the lines on a chip?
+> How about an easy way to do that, say num_lines=3D0?
+>
+
+IMO this is too implicit - it's literally a magic value. I'd prefer to
+keep it this way for the same reason I didn't want to have implicit
+BIAS settings. I prefer the kernel uAPI to be explicit and then we can
+wrap it in simple helpers in the library.
+
+> > +/* Possible line status change events */
+> > +enum {
+> > +     GPIOLINE_CHANGED_REQUESTED =3D 1,
+> > +     GPIOLINE_CHANGED_RELEASED,
+> > +     GPIOLINE_CHANGED_CONFIG,
+> > +};
+> > +
+> > +/**
+> > + * struct gpioline_changed - Information about a change in status
+> > + * of a GPIO line
+> > + * @line_offset: offset of the line that changed relative to the gpioc=
+hip
+> > + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RE=
+LEASED
+> > + * and GPIOLINE_CHANGED_CONFIG
+> > + */
+> > +struct gpioline_changed {
+> > +     __u32 line_offset;
+> > +     __u32 event_type;
+> > +};
+> > +
+>
+> Rather than sending an event type, and requiring userspace to poll
+> LINEINFO, which is racy, how about passing the updated info flags here?
+> A change in the state of the GPIOLINE_FLAG_KERNEL implies the
+> GPIOLINE_CHANGED_REQUESTED or GPIOLINE_CHANGED_RELEASED, so the
+> event_type is then redundant.
+> Userspace would then only have to poll LINEINFO if they were interested
+> in the consumer on GPIOLINE_CHANGED_REQUESTED.
+>
+> To sync kernel and userspace state the current state of each line
+> should be returned immediately via the fd as soon as the fd is created,
+> and then subsequently on any change.
+>
+
+I guess you're right. You even made me think we could go as far as to
+embed the whole gpioline_info structure in struct gpioline_changed.
+I'd still keep the event type though - otherwise we'd have to assume
+the user always calls LINEINFO_IOCTL before obtaining the LINECHANGED
+fd.
+
+> And a timestamp might be useful, as per gpioevent_data?
+
+Sure thing!
+
+Bart
+
+>
+> Kent.
+>
+> >  /* Linerequest flags */
+> >  #define GPIOHANDLE_REQUEST_INPUT     (1UL << 0)
+> >  #define GPIOHANDLE_REQUEST_OUTPUT    (1UL << 1)
+> > @@ -176,6 +210,8 @@ struct gpioevent_data {
+> >
+> >  #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
+> >  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info=
+)
+> > +#define GPIO_GET_LINECHANGED_FD_IOCTL \
+> > +             _IOWR(0xB4, 0x0b, struct gpioline_changed_fd_request)
+> >  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_=
+request)
+> >  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_re=
+quest)
+> >
+> > --
+> > 2.23.0
+> >
