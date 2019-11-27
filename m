@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D59AC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26F8C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69A52070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CEC20722
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="gBaQjqqE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="I1TSdGL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfK0Ic3 (ORCPT
+        id S1727105AbfK0Ice (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:32:29 -0500
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:39050 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfK0IcO (ORCPT
+        Wed, 27 Nov 2019 03:32:34 -0500
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:35792 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfK0IcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:32:14 -0500
+        Wed, 27 Nov 2019 03:32:12 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 3DA5C4883B;
-        Wed, 27 Nov 2019 09:32:12 +0100 (CET)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=gBaQjqqE;
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 572F03F5E0;
+        Wed, 27 Nov 2019 09:32:10 +0100 (CET)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=I1TSdGL3;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5H8rmA5EwagJ; Wed, 27 Nov 2019 09:32:05 +0100 (CET)
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bHNccKRAXQug; Wed, 27 Nov 2019 09:32:05 +0100 (CET)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 1A66B48839;
-        Wed, 27 Nov 2019 09:32:02 +0100 (CET)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 4340D3F5BF;
+        Wed, 27 Nov 2019 09:32:05 +0100 (CET)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id BB2F9360476;
-        Wed, 27 Nov 2019 09:32:02 +0100 (CET)
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 0C26436060F;
+        Wed, 27 Nov 2019 09:32:03 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1574843522; bh=+xgHCNrVgI6W/xl5HoP5w6ow7rdJ2HhRm71nzkY7qFk=;
+        t=1574843523; bh=yW4Kv+tDJBfAXwh/Zhx3QElV1XLWl/OFJo8EITEcphM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBaQjqqE1bRU7Q1tPmmxefaaHgtcJ7N1AnaH7ZrQkJxvicnCDS1FZHMNkMapOTRUL
-         SRy91pperNq9wo1HISErEmE6hnNTb47K6X8FcF3cJhWMEKrRpP9E5z4w0n/SmpGUB6
-         elhz5Rc0w73iWImaHaQS82Uy0oN16Sr54hX7J6UU=
+        b=I1TSdGL39WpjjsQ2vSeU9iiNq16d55INmsc+XWaIEanIkMa6S+WwcROTsKAJiRiVr
+         h7J04Wum3zSasmPtK2kGe8rGzik5iBffxWJWaoGfbvhuRIUzfweRmjRoKzd/FaaItI
+         FkY5sYwAlCsxxOaGRz1nLUbwSDOZe8fLn8494EKY=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
@@ -58,9 +58,9 @@ Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
         Ralph Campbell <rcampbell@nvidia.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: [RFC PATCH 4/7] drm/ttm: Support huge pagefaults
-Date:   Wed, 27 Nov 2019 09:31:17 +0100
-Message-Id: <20191127083120.34611-5-thomas_os@shipmail.org>
+Subject: [RFC PATCH 6/7] drm/ttm: Introduce a huge page aligning TTM range manager.
+Date:   Wed, 27 Nov 2019 09:31:19 +0100
+Message-Id: <20191127083120.34611-7-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191127083120.34611-1-thomas_os@shipmail.org>
 References: <20191127083120.34611-1-thomas_os@shipmail.org>
@@ -74,19 +74,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-Support huge (PMD-size and PUD-size) page-table entries by providing a
-huge_fault() callback.
-We still support private mappings and write-notify by splitting the huge
-page-table entries on write-access.
-
-Note that for huge page-faults to occur, either the kernel needs to be
-compiled with trans-huge-pages always enabled, or the kernel needs to be
-compiled with trans-huge-pages enabled using madvise, and the user-space
-app needs to call madvise() to enable trans-huge pages on a per-mapping
-basis.
-
-Furthermore huge page-faults will not occur unless buffer objects and
-user-space addresses are aligned on huge page size boundaries.
+Using huge page-table entries require that the start of a buffer object
+is huge page size aligned. So introduce a ttm_bo_man_get_node_huge()
+function that attempts to accomplish this for allocations that are larger
+than the huge page size, and provide a new range-manager instance that
+uses that function.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -97,209 +89,128 @@ Cc: "Jérôme Glisse" <jglisse@redhat.com>
 Cc: "Christian König" <christian.koenig@amd.com>
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 ---
- drivers/gpu/drm/ttm/ttm_bo_vm.c | 139 +++++++++++++++++++++++++++++++-
- include/drm/ttm/ttm_bo_api.h    |   3 +-
- 2 files changed, 138 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/ttm/ttm_bo_manager.c | 92 ++++++++++++++++++++++++++++
+ include/drm/ttm/ttm_bo_driver.h      |  1 +
+ 2 files changed, 93 insertions(+)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-index 2098f8d4dfc5..8d6089880e39 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -150,6 +150,84 @@ vm_fault_t ttm_bo_vm_reserve(struct ttm_buffer_object *bo,
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_manager.c b/drivers/gpu/drm/ttm/ttm_bo_manager.c
+index 18d3debcc949..26aa1a2ae7f1 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_manager.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_manager.c
+@@ -89,6 +89,89 @@ static int ttm_bo_man_get_node(struct ttm_mem_type_manager *man,
+ 	return 0;
  }
- EXPORT_SYMBOL(ttm_bo_vm_reserve);
  
 +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+/**
-+ * ttm_bo_vm_insert_huge - Insert a pfn for PUD or PMD faults
-+ * @vmf: Fault data
-+ * @bo: The buffer object
-+ * @page_offset: Page offset from bo start
-+ * @fault_page_size: The size of the fault in pages.
-+ * @pgprot: The page protections.
-+ * Does additional checking whether it's possible to insert a PUD or PMD
-+ * pfn and performs the insertion.
-+ *
-+ * Return: VM_FAULT_NOPAGE on successful insertion, VM_FAULT_FALLBACK if
-+ * a huge fault was not possible, and a VM_FAULT_ERROR code otherwise.
-+ */
-+static vm_fault_t ttm_bo_vm_insert_huge(struct vm_fault *vmf,
-+					struct ttm_buffer_object *bo,
-+					pgoff_t page_offset,
-+					pgoff_t fault_page_size,
-+					pgprot_t pgprot)
++static int ttm_bo_insert_aligned(struct drm_mm *mm, struct drm_mm_node *node,
++				 unsigned long align_pages,
++				 const struct ttm_place *place,
++				 struct ttm_mem_reg *mem,
++				 unsigned long lpfn,
++				 enum drm_mm_insert_mode mode)
 +{
-+	pgoff_t i;
-+	vm_fault_t ret;
-+	unsigned long pfn;
-+	pfn_t pfnt;
-+	struct ttm_tt *ttm = bo->ttm;
-+	bool write = vmf->flags & FAULT_FLAG_WRITE;
++	if (align_pages >= mem->page_alignment &&
++	    (!mem->page_alignment || align_pages % mem->page_alignment == 0)) {
++		return drm_mm_insert_node_in_range(mm, node,
++						   mem->num_pages,
++						   align_pages, 0,
++						   place->fpfn, lpfn, mode);
++	}
 +
++	return -ENOSPC;
++}
 +
-+	/* Fault should not cross bo boundary */
-+	page_offset &= ~(fault_page_size - 1);
-+	if (page_offset + fault_page_size > bo->num_pages)
-+		goto out_fallback;
++static int ttm_bo_man_get_node_huge(struct ttm_mem_type_manager *man,
++				    struct ttm_buffer_object *bo,
++				    const struct ttm_place *place,
++				    struct ttm_mem_reg *mem)
++{
++	struct ttm_range_manager *rman = (struct ttm_range_manager *) man->priv;
++	struct drm_mm *mm = &rman->mm;
++	struct drm_mm_node *node;
++	unsigned long align_pages;
++	unsigned long lpfn;
++	enum drm_mm_insert_mode mode = DRM_MM_INSERT_BEST;
++	int ret;
 +
-+	if (bo->mem.bus.is_iomem)
-+		pfn = ttm_bo_io_mem_pfn(bo, page_offset);
-+	else
-+		pfn = page_to_pfn(ttm->pages[page_offset]);
++	node = kzalloc(sizeof(*node), GFP_KERNEL);
++	if (!node)
++		return -ENOMEM;
 +
-+	/* pfn must be fault_page_size aligned. */
-+	if ((pfn & (fault_page_size - 1)) != 0)
-+		goto out_fallback;
++	lpfn = place->lpfn;
++	if (!lpfn)
++		lpfn = man->size;
 +
-+	/* IO memory is OK now, TT memory must be contigous. */
-+	if (!bo->mem.bus.is_iomem)
-+		for (i = 1; i < fault_page_size; ++i) {
-+			if (page_to_pfn(ttm->pages[page_offset + i]) != pfn + i)
-+				goto out_fallback;
++	mode = DRM_MM_INSERT_BEST;
++	if (place->flags & TTM_PL_FLAG_TOPDOWN)
++		mode = DRM_MM_INSERT_HIGH;
++
++	spin_lock(&rman->lock);
++	if (IS_ENABLED(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)) {
++		align_pages = (HPAGE_PUD_SIZE >> PAGE_SHIFT);
++		if (mem->num_pages >= align_pages) {
++			ret = ttm_bo_insert_aligned(mm, node, align_pages,
++						    place, mem, lpfn, mode);
++			if (!ret)
++				goto found_unlock;
 +		}
++	}
 +
-+	pfnt = __pfn_to_pfn_t(pfn, PFN_DEV);
-+	if (fault_page_size == (HPAGE_PMD_SIZE >> PAGE_SHIFT))
-+		ret = vmf_insert_pfn_pmd_prot(vmf, pfnt, pgprot, write);
-+#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-+	else if (fault_page_size == (HPAGE_PUD_SIZE >> PAGE_SHIFT))
-+		ret = vmf_insert_pfn_pud_prot(vmf, pfnt, pgprot, write);
-+#endif
-+	else
-+		WARN_ON_ONCE(ret = VM_FAULT_FALLBACK);
++	align_pages = (HPAGE_PMD_SIZE >> PAGE_SHIFT);
++	if (mem->num_pages >= align_pages) {
++		ret = ttm_bo_insert_aligned(mm, node, align_pages, place, mem,
++					    lpfn, mode);
++		if (!ret)
++			goto found_unlock;
++	}
 +
-+	if (ret != VM_FAULT_NOPAGE)
-+		goto out_fallback;
++	ret = drm_mm_insert_node_in_range(mm, node, mem->num_pages,
++					  mem->page_alignment, 0,
++					  place->fpfn, lpfn, mode);
++found_unlock:
++	spin_unlock(&rman->lock);
 +
-+	return VM_FAULT_NOPAGE;
-+out_fallback:
-+	count_vm_event(THP_FAULT_FALLBACK);
-+	return VM_FAULT_FALLBACK;
++	if (unlikely(ret)) {
++		kfree(node);
++	} else {
++		mem->mm_node = node;
++		mem->start = node->start;
++	}
++
++	return 0;
 +}
 +#else
-+static vm_fault_t ttm_bo_vm_insert_huge(struct vm_fault *vmf,
-+					struct ttm_buffer_object *bo,
-+					pgoff_t page_offset,
-+					pgoff_t fault_page_size,
-+					pgprot_t pgprot)
-+{
-+	return VM_FAULT_NOPAGE;
-+}
++#define ttm_bo_man_get_node_huge ttm_bo_man_get_node
 +#endif
 +
- /**
-  * ttm_bo_vm_fault_reserved - TTM fault helper
-  * @vmf: The struct vm_fault given as argument to the fault callback
-@@ -170,7 +248,8 @@ EXPORT_SYMBOL(ttm_bo_vm_reserve);
-  */
- vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
- 				    pgprot_t prot,
--				    pgoff_t num_prefault)
-+				    pgoff_t num_prefault,
-+				    pgoff_t fault_page_size)
++
+ static void ttm_bo_man_put_node(struct ttm_mem_type_manager *man,
+ 				struct ttm_mem_reg *mem)
  {
- 	struct vm_area_struct *vma = vmf->vma;
- 	struct ttm_buffer_object *bo = vma->vm_private_data;
-@@ -262,6 +341,13 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
- 		prot = pgprot_decrypted(prot);
- 	}
- 
-+	/* We don't prefault on huge faults. Yet. */
-+	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && fault_page_size != 1) {
-+		ret = ttm_bo_vm_insert_huge(vmf, bo, page_offset,
-+					    fault_page_size, prot);
-+		goto out_io_unlock;
-+	}
-+
- 	/*
- 	 * Speculatively prefault a number of pages. Only error on
- 	 * first page.
-@@ -320,7 +406,7 @@ vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- 		return ret;
- 
- 	prot = vma->vm_page_prot;
--	ret = ttm_bo_vm_fault_reserved(vmf, prot, TTM_BO_VM_NUM_PREFAULT);
-+	ret = ttm_bo_vm_fault_reserved(vmf, prot, TTM_BO_VM_NUM_PREFAULT, 1);
- 	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
- 		return ret;
- 
-@@ -330,6 +416,50 @@ vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- }
- EXPORT_SYMBOL(ttm_bo_vm_fault);
- 
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+static vm_fault_t ttm_bo_vm_huge_fault(struct vm_fault *vmf,
-+				       enum page_entry_size pe_size)
-+{
-+	struct vm_area_struct *vma = vmf->vma;
-+	pgprot_t prot;
-+	struct ttm_buffer_object *bo = vma->vm_private_data;
-+	vm_fault_t ret;
-+	pgoff_t fault_page_size = 0;
-+	bool write = vmf->flags & FAULT_FLAG_WRITE;
-+
-+	switch (pe_size) {
-+	case PE_SIZE_PMD:
-+		fault_page_size = HPAGE_PMD_SIZE >> PAGE_SHIFT;
-+		break;
-+#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-+	case PE_SIZE_PUD:
-+		fault_page_size = HPAGE_PUD_SIZE >> PAGE_SHIFT;
-+		break;
-+#endif
-+	default:
-+		WARN_ON_ONCE(1);
-+		return VM_FAULT_FALLBACK;
-+	}
-+
-+	/* Fallback on write dirty-tracking or COW */
-+	if (write && !(pgprot_val(vmf->vma->vm_page_prot) & _PAGE_RW))
-+		return VM_FAULT_FALLBACK;
-+
-+	ret = ttm_bo_vm_reserve(bo, vmf);
-+	if (ret)
-+		return ret;
-+
-+	prot = vm_get_page_prot(vma->vm_flags);
-+	ret = ttm_bo_vm_fault_reserved(vmf, prot, 1, fault_page_size);
-+	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
-+		return ret;
-+
-+	dma_resv_unlock(bo->base.resv);
-+
-+	return ret;
-+}
-+#endif
-+
- void ttm_bo_vm_open(struct vm_area_struct *vma)
- {
- 	struct ttm_buffer_object *bo = vma->vm_private_data;
-@@ -431,7 +561,10 @@ static const struct vm_operations_struct ttm_bo_vm_ops = {
- 	.fault = ttm_bo_vm_fault,
- 	.open = ttm_bo_vm_open,
- 	.close = ttm_bo_vm_close,
--	.access = ttm_bo_vm_access
-+	.access = ttm_bo_vm_access,
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	.huge_fault = ttm_bo_vm_huge_fault,
-+#endif
+@@ -154,3 +237,12 @@ const struct ttm_mem_type_manager_func ttm_bo_manager_func = {
+ 	.debug = ttm_bo_man_debug
  };
+ EXPORT_SYMBOL(ttm_bo_manager_func);
++
++const struct ttm_mem_type_manager_func ttm_bo_manager_huge_func = {
++	.init = ttm_bo_man_init,
++	.takedown = ttm_bo_man_takedown,
++	.get_node = ttm_bo_man_get_node_huge,
++	.put_node = ttm_bo_man_put_node,
++	.debug = ttm_bo_man_debug
++};
++EXPORT_SYMBOL(ttm_bo_manager_huge_func);
+diff --git a/include/drm/ttm/ttm_bo_driver.h b/include/drm/ttm/ttm_bo_driver.h
+index cac7a8a0825a..868bd0d4be6a 100644
+--- a/include/drm/ttm/ttm_bo_driver.h
++++ b/include/drm/ttm/ttm_bo_driver.h
+@@ -888,5 +888,6 @@ int ttm_bo_pipeline_gutting(struct ttm_buffer_object *bo);
+ pgprot_t ttm_io_prot(uint32_t caching_flags, pgprot_t tmp);
  
- static struct ttm_buffer_object *ttm_bo_vm_lookup(struct ttm_bo_device *bdev,
-diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
-index 66ca49db9633..4fc90d53aa15 100644
---- a/include/drm/ttm/ttm_bo_api.h
-+++ b/include/drm/ttm/ttm_bo_api.h
-@@ -732,7 +732,8 @@ vm_fault_t ttm_bo_vm_reserve(struct ttm_buffer_object *bo,
+ extern const struct ttm_mem_type_manager_func ttm_bo_manager_func;
++extern const struct ttm_mem_type_manager_func ttm_bo_manager_huge_func;
  
- vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
- 				    pgprot_t prot,
--				    pgoff_t num_prefault);
-+				    pgoff_t num_prefault,
-+				    pgoff_t fault_page_size);
- 
- vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf);
- 
+ #endif
 -- 
 2.21.0
 
