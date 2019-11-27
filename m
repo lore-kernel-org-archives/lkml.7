@@ -2,136 +2,130 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15ECC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A710CC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8FE20684
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859FE2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfK0I2a (ORCPT
+        id S1726558AbfK0I3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:28:30 -0500
-Received: from mail.phunq.net ([66.183.183.73]:58710 "EHLO phunq.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbfK0I2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:28:30 -0500
-Received: from [172.16.1.14]
-        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-        (Exim 4.92.3)
-        (envelope-from <daniel@phunq.net>)
-        id 1iZsgU-0003Z4-HJ; Wed, 27 Nov 2019 00:28:26 -0800
-Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
-To:     Vyacheslav Dubeyko <slava@dubeyko.com>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        "Darrick J. Wong" <djwong@kernel.org>
-References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
- <8ece0424ceeeffbc4df5d52bfa270a9522f81cda.camel@dubeyko.com>
-From:   Daniel Phillips <daniel@phunq.net>
-Message-ID: <5c9b5bd3-028a-5211-30a6-a5a8706b373e@phunq.net>
-Date:   Wed, 27 Nov 2019 00:28:26 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 03:29:39 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:39463 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfK0I3j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 03:29:39 -0500
+Received: from localhost (lfbn-1-1480-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 93296240007;
+        Wed, 27 Nov 2019 08:29:36 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] rtc: interface fix kerneldoc comments
+Date:   Wed, 27 Nov 2019 09:29:32 +0100
+Message-Id: <20191127082932.666869-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <8ece0424ceeeffbc4df5d52bfa270a9522f81cda.camel@dubeyko.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-26 11:40 p.m., Vyacheslav Dubeyko wrote:
-> As far as I know, usually, a folder contains dozens or hundreds
-> files/folders in average. There are many research works that had showed
-> this fact. Do you mean some special use-case when folder could contain
-> the billion files? Could you share some research work that describes
-> some practical use-case with billion files per folder?
+Fix kerneldoc warnings:
 
-You are entirely correct that the vast majority of directories contain
-only a handful of files. That is my case (1). A few directories on a
-typical server can go into the tens of thousands of files. There was
-a time when we could not handle those efficiently, and now thanks to
-HTree we can. Some directories go into the millions, ask the Lustre
-people about that. If you could have a directory with a billion files
-then somebody will have a use for it. For example, you may be able to
-avoid a database for a particular application and just use the file
-system instead.
+drivers/rtc/interface.c:619: warning: Function parameter or member 'num' not described in 'rtc_handle_legacy_irq'
+drivers/rtc/interface.c:619: warning: Function parameter or member 'mode' not described in 'rtc_handle_legacy_irq'
+drivers/rtc/interface.c:804: warning: Function parameter or member 'rtc' not described in 'rtc_timer_enqueue'
+drivers/rtc/interface.c:804: warning: Function parameter or member 'timer' not described in 'rtc_timer_enqueue'
+drivers/rtc/interface.c:864: warning: Function parameter or member 'rtc' not described in 'rtc_timer_remove'
+drivers/rtc/interface.c:864: warning: Function parameter or member 'timer' not described in 'rtc_timer_remove'
+drivers/rtc/interface.c:900: warning: Function parameter or member 'work' not described in 'rtc_timer_do_work'
+drivers/rtc/interface.c:1035: warning: Function parameter or member 'rtc' not described in 'rtc_read_offset'
+drivers/rtc/interface.c:1035: warning: Function parameter or member 'offset' not described in 'rtc_read_offset'
+drivers/rtc/interface.c:1070: warning: Function parameter or member 'rtc' not described in 'rtc_set_offset'
+drivers/rtc/interface.c:1070: warning: Function parameter or member 'offset' not described in 'rtc_set_offset'
 
-Now, scaling to a billion files is just one of several things that
-Shardmap does better than HTree. More immediately, Shardmap implements
-readdir simply, accurately and efficiently, unlike HTree. See here for
-some discussion:
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/interface.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-   https://lwn.net/Articles/544520/
-   "Widening ext4's readdir() cookie"
+diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+index bd8034b7bc93..794a4f036b99 100644
+--- a/drivers/rtc/interface.c
++++ b/drivers/rtc/interface.c
+@@ -610,6 +610,8 @@ EXPORT_SYMBOL_GPL(rtc_update_irq_enable);
+ /**
+  * rtc_handle_legacy_irq - AIE, UIE and PIE event hook
+  * @rtc: pointer to the rtc device
++ * @num: number of occurence of the event
++ * @mode: type of the event, RTC_AF, RTC_UF of RTC_PF
+  *
+  * This function is called when an AIE, UIE or PIE mode interrupt
+  * has occurred (or been emulated).
+@@ -790,8 +792,8 @@ int rtc_irq_set_freq(struct rtc_device *rtc, int freq)
+ 
+ /**
+  * rtc_timer_enqueue - Adds a rtc_timer to the rtc_device timerqueue
+- * @rtc rtc device
+- * @timer timer being added.
++ * @rtc: rtc device
++ * @timer: timer being added.
+  *
+  * Enqueues a timer onto the rtc devices timerqueue and sets
+  * the next alarm event appropriately.
+@@ -850,8 +852,8 @@ static void rtc_alarm_disable(struct rtc_device *rtc)
+ 
+ /**
+  * rtc_timer_remove - Removes a rtc_timer from the rtc_device timerqueue
+- * @rtc rtc device
+- * @timer timer being removed.
++ * @rtc: rtc device
++ * @timer: timer being removed.
+  *
+  * Removes a timer onto the rtc devices timerqueue and sets
+  * the next alarm event appropriately.
+@@ -888,8 +890,7 @@ static void rtc_timer_remove(struct rtc_device *rtc, struct rtc_timer *timer)
+ 
+ /**
+  * rtc_timer_do_work - Expires rtc timers
+- * @rtc rtc device
+- * @timer timer being removed.
++ * @work: work item
+  *
+  * Expires rtc timers. Reprograms next alarm event if needed.
+  * Called via worktask.
+@@ -1022,8 +1023,8 @@ void rtc_timer_cancel(struct rtc_device *rtc, struct rtc_timer *timer)
+ 
+ /**
+  * rtc_read_offset - Read the amount of rtc offset in parts per billion
+- * @ rtc: rtc device to be used
+- * @ offset: the offset in parts per billion
++ * @rtc: rtc device to be used
++ * @offset: the offset in parts per billion
+  *
+  * see below for details.
+  *
+@@ -1051,8 +1052,8 @@ int rtc_read_offset(struct rtc_device *rtc, long *offset)
+ 
+ /**
+  * rtc_set_offset - Adjusts the duration of the average second
+- * @ rtc: rtc device to be used
+- * @ offset: the offset in parts per billion
++ * @rtc: rtc device to be used
++ * @offset: the offset in parts per billion
+  *
+  * Some rtc's allow an adjustment to the average duration of a second
+  * to compensate for differences in the actual clock rate due to temperature,
+-- 
+2.23.0
 
-See the recommendation that is sometimes offered to work around
-HTree's issues with processing files in hash order. Basically, read
-the entire directory into memory, sort by inode number, then process
-in that order. As an application writer do you really want to do this,
-or would you prefer that the filesystem just take care of for you so
-the normal, simple and readable code is also the most efficient code?
-
-> If you are talking about improving the performance then do you mean
-> some special open-source implementation?
-
-I mean the same kind of kernel filesystem implementation that HTree
-currently has. Open source of course, GPLv2 to be specific.
-
->> For delete, Shardmap avoids write multiplication by appending tombstone
->> entries to index shards, thereby addressing a well known HTree delete
->> performance issue.
-> 
-> Do you mean Copy-On-Write policy here or some special technique?
-
-The technique Shardmap uses to reduce write amplication under heavy
-load is somewhat similar to the technique used by Google's Bigtable to
-achieve a similar result for data files. (However, the resemblance to
-Bigtable ends there.)
-
-Each update to a Shardmap index is done twice: once in a highly
-optimized hash table shard in cache, then again by appending an
-entry to the tail of the shard's media "fifo". Media writes are
-therefore mostly linear. I say mostly, because if there is a large
-number of shards then a single commit may need to update the tail
-block of each one, which still adds up to vastly fewer blocks than
-the BTree case, where it is easy to construct cases where every
-index block must be updated on every commit, a nasty example of
-n**2 performance overhead.
-
-> How could be good Shardmap for the SSD use-case? Do you mean that we
-> could reduce write amplification issue for NAND flash case?
-
-Correct. Reducing write amplification is particularly important for
-flash based storage. It also has a noticeable beneficial effect on
-efficiency under many common and not so common loads.
-
-> Let's imagine that it needs to implement the Shardmap approach. Could
-> you estimate the implementation and stabilization time? How expensive
-> and long-term efforts could it be?
-
-Shardmap is already implemented and stable, though it does need wider
-usage and testing. Code is available here:
-
-   https://github.com/danielbot/Shardmap
-
-Shardmap needs to be ported to kernel, already planned and in progress
-for Tux3. Now I am proposing that the Ext4 team should consider porting
-Shardmap to Ext4, or at least enter into a serious discussion of the
-logistics.
-
-Added Darrick to cc, as he is already fairly familiar with this subject,
-once was an Ext4 developer, and perhaps still is should the need arise.
-By the way, is there a reason that Ted's MIT address bounced on my
-original post?
-
-Regards,
-
-Daniel
