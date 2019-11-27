@@ -2,202 +2,157 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A64C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819F2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA0620862
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:51:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D/I1PI3/"
+	by mail.kernel.org (Postfix) with ESMTP id 61C182070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfK0Sv5 (ORCPT
+        id S1727457AbfK0Swb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:51:57 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35716 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbfK0Sv4 (ORCPT
+        Wed, 27 Nov 2019 13:52:31 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2680 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727026AbfK0Swb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:51:56 -0500
-Received: by mail-pl1-f196.google.com with SMTP id s10so10192050plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:51:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YimDLRO44EFdVpsrruJmPdiNyDfnYjYesEmjPbE4iug=;
-        b=D/I1PI3/xRstodfiyXqR1BgtCy/ajR8WN0uJqbYuGeWhpekpVi8hrssvJ6Uej9JgIC
-         OQiXNI3dbKwmTz8Opz4WZIL67/55kCioIxXRa5OrTNIM/kclnAYk1eDIm9peYJE5fqNn
-         LFNTa/mOB4TkrVqFH/GHRejPJk47fxpl9tYV8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YimDLRO44EFdVpsrruJmPdiNyDfnYjYesEmjPbE4iug=;
-        b=Ym2uIo3whKJ54A8OtxqhPK+6W+UaOt8jf8uDwgSS5JVDbwfwat2P3Cw+DjSNDKKxo/
-         mVqLNHdaBNC3tGf+onUK5eDloVEcvzvaKQQIwb35enI8PH2N35694fqK7OC8iNY50Xgq
-         K8lI8+y5QpuBTdYKWOgzjIz8VkYtvsjlBsBUDmcQ0cAX7SwHML2hIiOWG1pDH2/7B9qy
-         4cVy5FMMoXzmsMRUNWPZ7lITXu7XHTX1+X2w56uilqb//fozMpcswo3ITNCAdXwx8Z9n
-         jsnrluj/ON26rMyZnx6vzjSq7cPibZposXJ1LE+BVtEfY+aFxCDd5fA2DwJgdkRs5GLz
-         EWkQ==
-X-Gm-Message-State: APjAAAUprckqF7+tUaD3B2MwmTHeyOgvnSojZzmRU7fFHAcEFkIU4Qe2
-        buzYM+3VYPFIf98OvKMVdpcV5Q==
-X-Google-Smtp-Source: APXvYqwu01IvMOa1VFObRaM/KHPJkHSkKDJA8DuUDOHFFKgjF15kURy3Urf9LJqzyG7YUQ3N0tLSGQ==
-X-Received: by 2002:a17:90a:c68f:: with SMTP id n15mr7977113pjt.20.1574880715835;
-        Wed, 27 Nov 2019 10:51:55 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id x2sm17088680pgc.67.2019.11.27.10.51.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 10:51:55 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     linux-input@vger.kernel.org
-Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        linux-bluetooth@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
-Subject: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
-Date:   Wed, 27 Nov 2019 10:51:39 -0800
-Message-Id: <20191127185139.65048-1-abhishekpandit@chromium.org>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Wed, 27 Nov 2019 13:52:31 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARIoQdx062249
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 13:52:30 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxr590w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 13:52:29 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 27 Nov 2019 18:52:27 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 27 Nov 2019 18:52:23 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARIqNot58327128
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Nov 2019 18:52:23 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0216042049;
+        Wed, 27 Nov 2019 18:52:23 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EDA904203F;
+        Wed, 27 Nov 2019 18:52:21 +0000 (GMT)
+Received: from dhcp-9-31-103-87.watson.ibm.com (unknown [9.31.103.87])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Nov 2019 18:52:21 +0000 (GMT)
+Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Date:   Wed, 27 Nov 2019 13:52:21 -0500
+In-Reply-To: <20191127015654.3744-6-nramas@linux.microsoft.com>
+References: <20191127015654.3744-1-nramas@linux.microsoft.com>
+         <20191127015654.3744-6-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19112718-0016-0000-0000-000002CD15C5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112718-0017-0000-0000-0000332EF741
+Message-Id: <1574880741.4793.292.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 suspectscore=3 priorityscore=1501
+ spamscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911270152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support setting the uniq attribute of the input device. The uniq
-attribute is used as a unique identifier for the connected device.
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -79,6 +79,7 @@ struct ima_rule_entry {
+>  		int type;	/* audit type */
+>  	} lsm[MAX_LSM_RULES];
+>  	char *fsname;
+> +	char *keyrings; /* Measure keys added to these keyrings */
+>  	struct ima_template_desc *template;
+>  };
+>  
+> @@ -356,6 +357,55 @@ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
+>  	return NOTIFY_OK;
+>  }
+>  
+> +/**
+> + * ima_match_keyring - determine whether the keyring matches the measure rule
+> + * @rule: a pointer to a rule
+> + * @keyring: name of the keyring to match against the measure rule
+> + *
+> + * If the measure action for KEY_CHECK does not specify keyrings=
+> + * option then return true (Measure all keys).
+> + * Else, return true if the given keyring name is present in
+> + * the keyrings= option. False, otherwise.
 
-For example, uinput devices created by BlueZ will store the address of
-the connected device as the uniq property.
+This is suppose to be a comment, not code or pseudo code.  Please
+refer to the section "Comments" in Documentation/process/coding-
+style.rst.
+ 
+> + */
+> +static bool ima_match_keyring(struct ima_rule_entry *rule,
+> +			      const char *keyring)
+> +{
+> +	const char *p;
+> +
+> +	/* If "keyrings=" is not specified all keys are measured. */
+> +	if (!rule->keyrings)
+> +		return true;
+> +
+> +	if (!keyring)
+> +		return false;
+> +
+> +	/*
+> +	 * "keyrings=" is specified in the policy in the format below:
+> +	 *   keyrings=.builtin_trusted_keys|.ima|.evm
+> +	 *
+> +	 * Each keyring name in the option is separated by a '|' and
+> +	 * the last keyring name is null terminated.
+> +	 *
+> +	 * The given keyring is considered matched only if
+> +	 * the whole keyring name matched a keyring name specified
+> +	 * in the "keyrings=" option.
+> +	 */
+> +	p = strstr(rule->keyrings, keyring);
+> +	if (p) {
+> +		/*
+> +		 * Found a substring match. Check if the character
+> +		 * at the end of the keyring name is | (keyring name
+> +		 * separator) or is the terminating null character.
+> +		 * If yes, we have a whole string match.
+> +		 */
+> +		p += strlen(keyring);
+> +		if (*p == '|' || *p == '\0')
+> +			return true;
+> +	}
+> +
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
-Hi input maintainers,
+Using "while strsep()" would simplify this code, removing the need for
+such a long comment.
 
-I added this change to allow BlueZ to display the peer device address in
-udev. BlueZ has been setting ATTR{name} to the peer address since it
-isn't possible to set the uniq attribute currently.
+Mimi
 
-I've tested this on a Chromebook running kernel v4.19 with this patch.
-
-$ uname -r
-4.19.85
-
-$ dmesg | grep "input:" | tail -1
-[   69.604752] input: BeatsStudio Wireless as /devices/virtual/input/input17
-
-$ udevadm info -a -p /sys/devices/virtual/input/input17
-
-Udevadm info starts with the device specified by the devpath and then
-walks up the chain of parent devices. It prints for every device
-found, all possible attributes in the udev rules key format.
-A rule to match, can be composed by the attributes of the device
-and the attributes from one single parent device.
-
-  looking at device '/devices/virtual/input/input17':
-    KERNEL=="input17"
-    SUBSYSTEM=="input"
-    DRIVER==""
-    ATTR{inhibited}=="0"
-    ATTR{name}=="BeatsStudio Wireless"
-    ATTR{phys}=="00:00:00:6e:d0:74"
-    ATTR{properties}=="0"
-    ATTR{uniq}=="00:00:00:cc:1c:f3"
-
-(I zeroed out part of the addresses above. The phys attribute
-corresponds to the address of the Bluetooth controller on the Chromebook
-and the uniq is the address of the headphones)
-
-
- drivers/input/misc/uinput.c | 21 ++++++++++++++++++++-
- include/uapi/linux/uinput.h |  1 +
- 2 files changed, 21 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
-index 84051f20b18a..68319bda41b8 100644
---- a/drivers/input/misc/uinput.c
-+++ b/drivers/input/misc/uinput.c
-@@ -280,7 +280,7 @@ static int uinput_dev_flush(struct input_dev *dev, struct file *file)
- 
- static void uinput_destroy_device(struct uinput_device *udev)
- {
--	const char *name, *phys;
-+	const char *name, *phys, *uniq;
- 	struct input_dev *dev = udev->dev;
- 	enum uinput_state old_state = udev->state;
- 
-@@ -289,6 +289,7 @@ static void uinput_destroy_device(struct uinput_device *udev)
- 	if (dev) {
- 		name = dev->name;
- 		phys = dev->phys;
-+		uniq = dev->uniq;
- 		if (old_state == UIST_CREATED) {
- 			uinput_flush_requests(udev);
- 			input_unregister_device(dev);
-@@ -297,6 +298,7 @@ static void uinput_destroy_device(struct uinput_device *udev)
- 		}
- 		kfree(name);
- 		kfree(phys);
-+		kfree(uniq);
- 		udev->dev = NULL;
- 	}
- }
-@@ -840,6 +842,7 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
- 	struct uinput_ff_erase  ff_erase;
- 	struct uinput_request   *req;
- 	char			*phys;
-+	char			*uniq;
- 	const char		*name;
- 	unsigned int		size;
- 
-@@ -931,6 +934,22 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
- 		udev->dev->phys = phys;
- 		goto out;
- 
-+	case UI_SET_UNIQ:
-+		if (udev->state == UIST_CREATED) {
-+			retval = -EINVAL;
-+			goto out;
-+		}
-+
-+		uniq = strndup_user(p, 1024);
-+		if (IS_ERR(uniq)) {
-+			retval = PTR_ERR(uniq);
-+			goto out;
-+		}
-+
-+		kfree(udev->dev->uniq);
-+		udev->dev->uniq = uniq;
-+		goto out;
-+
- 	case UI_BEGIN_FF_UPLOAD:
- 		retval = uinput_ff_upload_from_user(p, &ff_up);
- 		if (retval)
-diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uinput.h
-index c9e677e3af1d..d5b7767c1b02 100644
---- a/include/uapi/linux/uinput.h
-+++ b/include/uapi/linux/uinput.h
-@@ -145,6 +145,7 @@ struct uinput_abs_setup {
- #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
- #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
- #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
-+#define UI_SET_UNIQ		_IOW(UINPUT_IOCTL_BASE, 111, char*)
- 
- #define UI_BEGIN_FF_UPLOAD	_IOWR(UINPUT_IOCTL_BASE, 200, struct uinput_ff_upload)
- #define UI_END_FF_UPLOAD	_IOW(UINPUT_IOCTL_BASE, 201, struct uinput_ff_upload)
--- 
-2.24.0.432.g9d3f5f5b63-goog
+> +	return false;
+> +}
+> +
 
