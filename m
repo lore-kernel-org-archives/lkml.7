@@ -2,91 +2,110 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6851DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55879C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464A520665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2943420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574890231;
+	bh=8bxpyTayDO1IguOcBDdmMf7HebvpmIjmrxBF6bdJCP0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=S/zrj14pF0SvLDpGYVUmPlOJLCEu6FtVb501I7AdffPzExH26OqWQBVk31ibwY7ut
+	 qRytFwLWzV2UG9BEAohv1IvrJZNEDJR+L1yxVpEtIYUzlKYYKLXzPEbj2X2BBL5WwD
+	 ND/+gITSzvgEyWp4W0c0H0wPpY8vAOQhH1ew6V+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbfK0Uzp (ORCPT
+        id S1731018AbfK0Va3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 27 Nov 2019 16:30:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730989AbfK0Uzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 15:55:45 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40618 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729696AbfK0Uzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:55:43 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8DE6AAC12;
-        Wed, 27 Nov 2019 20:55:40 +0000 (UTC)
-Subject: Re: [PATCH 4/5] pinctrl: sh-pfc: Use the correct style for SPDX
- License Identifier
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nishad Kamdar <nishadkamdar@gmail.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-amlogic <linux-amlogic@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <cover.1574871463.git.nishadkamdar@gmail.com>
- <5a7ed2e4b58ba7ff2f0638a2435a3a1e1c62c9f6.1574871463.git.nishadkamdar@gmail.com>
- <CAMuHMdUqfRioTBV27AKx9zv9YuSqEod6x+A4aguf=h20TDXr6w@mail.gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <9bacc7d9-6bd9-0b7c-18cd-d614796397dd@suse.de>
-Date:   Wed, 27 Nov 2019 21:55:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49AFE2068E;
+        Wed, 27 Nov 2019 20:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574888144;
+        bh=8bxpyTayDO1IguOcBDdmMf7HebvpmIjmrxBF6bdJCP0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cF4IhWUULlHgwpl5FBkkpoqRytMNs0IUu7K+LK994cJItm5nT0uAxTCh2IW0fa0Ul
+         CCDQ2BGMZL9PkwzDf3neapVD3QaeWI4Rc6uupf2TuTWjJRLbFf8Nsn8vzok/Ij4TqH
+         mJBqa+zcvw0Xb9GVesrGXLCBFQZxH3vjMURMfmqA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 022/306] ALSA: isight: fix leak of reference to firewire unit in error path of .probe callback
+Date:   Wed, 27 Nov 2019 21:27:52 +0100
+Message-Id: <20191127203116.313964901@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
+References: <20191127203114.766709977@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUqfRioTBV27AKx9zv9YuSqEod6x+A4aguf=h20TDXr6w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-Am 27.11.19 um 21:37 schrieb Geert Uytterhoeven:
-> On Wed, Nov 27, 2019 at 5:46 PM Nishad Kamdar <nishadkamdar@gmail.com> wrote:
->> This patch corrects the SPDX License Identifier style in
->> header files related to Reneses Soc pinctrl driver.
->> It assigns explicit block comment for the SPDX License Identifier.
-> 
-> Is it incorrect to not have an explicit block comment?
+[ Upstream commit 51e68fb0929c29e47e9074ca3e99ffd6021a1c5a ]
 
-Yes, Greg said so to me. He suggested I provide a patch against the
-documentation if the docs are not clear enough, but I didn't get around
-to it (and it's not my rule in the first place, so I'd appreciate the
-person making that rule to take care of documenting it).
+In some error paths, reference count of firewire unit is not decreased.
+This commit fixes the bug.
 
-However, if we're touching these lines anyway, shouldn't we be updating
-the SPDX Identifier to GPL-2.0-only while at it?
+Fixes: 5b14ec25a79b('ALSA: firewire: release reference count of firewire unit in .remove callback of bus driver')
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/firewire/isight.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Cheers,
-Andreas
-
+diff --git a/sound/firewire/isight.c b/sound/firewire/isight.c
+index 30957477e005e..0717ab9e48e3b 100644
+--- a/sound/firewire/isight.c
++++ b/sound/firewire/isight.c
+@@ -640,7 +640,7 @@ static int isight_probe(struct fw_unit *unit,
+ 	if (!isight->audio_base) {
+ 		dev_err(&unit->device, "audio unit base not found\n");
+ 		err = -ENXIO;
+-		goto err_unit;
++		goto error;
+ 	}
+ 	fw_iso_resources_init(&isight->resources, unit);
+ 
+@@ -669,12 +669,12 @@ static int isight_probe(struct fw_unit *unit,
+ 	dev_set_drvdata(&unit->device, isight);
+ 
+ 	return 0;
+-
+-err_unit:
+-	fw_unit_put(isight->unit);
+-	mutex_destroy(&isight->mutex);
+ error:
+ 	snd_card_free(card);
++
++	mutex_destroy(&isight->mutex);
++	fw_unit_put(isight->unit);
++
+ 	return err;
+ }
+ 
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+2.20.1
+
+
+
