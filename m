@@ -2,107 +2,238 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7800FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE74C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C922070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20C820678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pw69BFmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfK0IOu convert rfc822-to-8bit (ORCPT
+        id S1726540AbfK0IPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:14:50 -0500
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:25273 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfK0IOu (ORCPT
+        Wed, 27 Nov 2019 03:15:55 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50230 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfK0IPy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:14:50 -0500
-IronPort-SDR: vOSqOyXw8HC05bJhzZP6FTTg6h4fSPJPvO1Fb/JUKcrhi9bpGsvBbE7s5YDuAzFxMnG55KrSIv
- Tu/xSe4DvlTNXUfL0f6uhFUnDeLuglWw45XXDkeywb3YTT3sFNbWmuJSrLwmUXIKAPOHx2AsTN
- S6KhqrhjxV2PQhT2Wse1f4PYWwGKo6DcF9rGDN4e5p5o2TliBZF1IRbgDG5g3jZiYpP+vLSj8E
- OmOMOIY4KfGn3yUSpOUraeBNo1arbfG16oii1vzVh/2uwt1NLHhXPoziu73zCAWVI8vUZOBqbQ
- Iqo=
-X-IronPort-AV: E=Sophos;i="5.69,248,1571731200"; 
-   d="scan'208";a="43556738"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 27 Nov 2019 00:14:49 -0800
-IronPort-SDR: BX04e9T2j+gJ4hVUyHYeKaKEEuYFQjU4MfwcvPoT0NPPhyNItdfQayTeyclKm7vY8pxc+SuyYt
- LMTPOnfCybjTbuI2XZOVq6LYbF73aNyNUgGn2v6HUusqVk47dblNyej1Pgjy3X2Z/ZFaCt8n7j
- vb2fLrbqanyEuMzDN+xAHJ90QXdSZ3CM7W9TB9w/Jkx4CLCetFNQBqyghf2YJVIg/4Q/dhU4G4
- QmmQsYmDGnrMeg/ohsZjppVgcW+1+8Enh8sbw7MPQeqCQ3ao4zL278Da2oGzmm9qW2pdtxFahQ
- pIU=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        Andrea Vai <andrea.vai@unipv.it>
-CC:     Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: AW: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-Thread-Topic: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-Thread-Index: AQHVV3qcHF7jYFXqX02A+/ZaS0pzdqeAjBMAgANe+wCAFDitAIAAzHgAgACKv4CAAl41gIAAaSkAgAAFKQCAAEsvAIAABMGAgAA8WICAAIDlgIAAV4SAgAEWB4CAAIOAUA==
-Date:   Wed, 27 Nov 2019 08:14:43 +0000
-Message-ID: <cb6e84781c4542229a3f31572cef19ab@SVR-IES-MBX-03.mgc.mentorg.com>
-References: <20191109222828.GA30568@ming.t460p>
-         <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>
-         <20191123072726.GC25356@ming.t460p>
-         <a9ffcca93657cbbb56819fd883c474a702423b41.camel@unipv.it>
-         <20191125035437.GA3806@ming.t460p>
-         <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>
-         <20191125102928.GA20489@ming.t460p>
-         <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
-         <20191125151535.GA8044@ming.t460p>
-         <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>
-         <20191126023253.GA24501@ming.t460p>
- <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
- <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
-In-Reply-To: <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 27 Nov 2019 03:15:54 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR8FdDj096811;
+        Wed, 27 Nov 2019 02:15:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574842539;
+        bh=vfBtNY+xbAV9gXZchLR1PUM9PQyW2elU9lS1sC+Tpkk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Pw69BFmMBBomCTtfL6fhdHtChk6wVo3b2N3aNuorM/l3fox27k/6WrX1k/Tj4SPU6
+         ZdvqnU2s2OvDKsyUWCnsJN/47eR95AyCshdijewAfeuREb4YIB82Bdf19yuIMorRC+
+         1VVOIRyG3TsfTGu/8+J2sh5OBJdJhbJwYYZc0quU=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR8FdfW030244
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 Nov 2019 02:15:39 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
+ Nov 2019 02:15:39 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 27 Nov 2019 02:15:39 -0600
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR8FVqe112349;
+        Wed, 27 Nov 2019 02:15:33 -0600
+Subject: Re: [PATCH 1/4] PCI: dwc: Add new feature to skip core initialization
+To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <20191113090851.26345-2-vidyas@nvidia.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <973f239f-fdb8-b119-5ca1-b0a6307efe21@ti.com>
+Date:   Wed, 27 Nov 2019 13:44:49 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191113090851.26345-2-vidyas@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 
-> > Then I started another set of 100 trials and let them run tonight, and
-> > the first 10 trials were around 1000s, then gradually decreased to
-> > ~300s, and finally settled around 200s with some trials below 70-80s.
-> > This to say, times are extremely variable and for the first time I
-> > noticed a sort of "performance increase" with time.
-> >
-> 
-> The sheer volume of testing (probably some terabytes by now) would
-> exercise the wear leveling algorithm in the FTL.
-> 
-But with "old kernel" the copy operation still is "fast", as far as i understood.
-If FTL (e.g. wear leveling) would slow down, we would see that also in
-the old kernel, right?
+Hi,
 
-Andrea, can you confirm that the same device used with the old fast
-kernel is still fast today?
+On 13/11/19 2:38 PM, Vidya Sagar wrote:
+> Add a new feature 'skip_core_init' that can be set by platform drivers
+> of devices that do not have their core registers available until reference
+> clock from host is available (Ex:- Tegra194) to indicate DesignWare
+> endpoint mode sub-system to not perform core registers initialization.
+> Existing dw_pcie_ep_init() is refactored and all the code that touches
+> registers is extracted to form a new API dw_pcie_ep_init_complete() that
+> can be called later by platform drivers setting 'skip_core_init' to '1'.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 72 +++++++++++--------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  6 ++
+>  include/linux/pci-epc.h                       |  1 +
+>  3 files changed, 51 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 3dd2e2697294..06f4379be8a3 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -492,19 +492,53 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+>  	return 0;
+>  }
+>  
+> -int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>  {
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	unsigned int offset;
+> +	unsigned int nbars;
+> +	u8 hdr_type;
+> +	u32 reg;
+>  	int i;
+> +
+> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+> +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+> +		dev_err(pci->dev,
+> +			"PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+> +			hdr_type);
+> +		return -EIO;
+> +	}
+> +
+> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+> +
+> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+> +
+> +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+> +	if (offset) {
+> +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+> +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+> +			PCI_REBAR_CTRL_NBAR_SHIFT;
+> +
+> +		dw_pcie_dbi_ro_wr_en(pci);
+> +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+> +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> +		dw_pcie_dbi_ro_wr_dis(pci);
+> +	}
+> +
+> +	dw_pcie_setup(pci);
+> +
+> +	return 0;
+> +}
+> +
+> +int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+>  	int ret;
+> -	u32 reg;
+>  	void *addr;
+> -	u8 hdr_type;
+> -	unsigned int nbars;
+> -	unsigned int offset;
+>  	struct pci_epc *epc;
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	struct device *dev = pci->dev;
+>  	struct device_node *np = dev->of_node;
+> +	const struct pci_epc_features *epc_features;
+>  
+>  	if (!pci->dbi_base || !pci->dbi_base2) {
+>  		dev_err(dev, "dbi_base/dbi_base2 is not populated\n");
+> @@ -563,13 +597,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	if (ep->ops->ep_init)
+>  		ep->ops->ep_init(ep);
+>  
+> -	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+> -	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+> -		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+> -			hdr_type);
+> -		return -EIO;
+> -	}
+> -
+>  	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
+>  	if (ret < 0)
+>  		epc->max_functions = 1;
+> @@ -587,23 +614,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>  		return -ENOMEM;
+>  	}
+> -	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+>  
+> -	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+> -
+> -	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+> -	if (offset) {
+> -		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+> -		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+> -			PCI_REBAR_CTRL_NBAR_SHIFT;
+> -
+> -		dw_pcie_dbi_ro_wr_en(pci);
+> -		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+> -			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> -		dw_pcie_dbi_ro_wr_dis(pci);
+> +	if (ep->ops->get_features) {
+> +		epc_features = ep->ops->get_features(ep);
+> +		if (epc_features->skip_core_init)
+> +			return 0;
+>  	}
+>  
+> -	dw_pcie_setup(pci);
+> -
+> -	return 0;
+> +	return dw_pcie_ep_init_complete(ep);
+>  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 5accdd6bc388..340783e9032e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -399,6 +399,7 @@ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+>  #ifdef CONFIG_PCIE_DW_EP
+>  void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
+>  int dw_pcie_ep_init(struct dw_pcie_ep *ep);
+> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
+>  void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
+>  int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
+>  int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+> @@ -416,6 +417,11 @@ static inline int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	return 0;
+>  }
+>  
+> +static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>  {
+>  }
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index 36644ccd32ac..241e6a6f39fb 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -121,6 +121,7 @@ struct pci_epc_features {
+>  	u8	bar_fixed_64bit;
+>  	u64	bar_fixed_size[PCI_STD_NUM_BARS];
+>  	size_t	align;
+> +	bool	skip_core_init;
 
-BR
-Carsten
+This looks more like a designware specific change. Why is it added to the core
+pci_epc_features?
+
+Thanks
+Kishon
