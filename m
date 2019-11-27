@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E5BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66424C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279242084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 337ED2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888318;
-	bh=/ZJI/4gyijIuk0UAleXk9pAGE4qXIMVC+2rzUpbTqLg=;
+	s=default; t=1574888324;
+	bh=ZbZQWLNVEAwI0OA//as0xFt12U2YZ+kzigbVogJ9SX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=duFzpIdhXHhnVTDZs+GEItT8rM7dckWyK8vDjZ4nHwynwTZMiQPPDs1kLk+h0m0mc
-	 Uwge/6m0kST2lN8Y51atILzjkHVtSbpbbA9OsHjpxw3M14NeaSKE39ohIQ1QG50FFm
-	 eoR3fuHcOOKSmNA/wJCE6c9fawWiyM72Q6UaxIYk=
+	b=HPCSCoFCjm+xsAhhxXWRRgqLk98KyFRuCmBHbGPvOwhRz/O0oHY8wiNfDx0Ev1LYB
+	 dyJf9KQ6huXMxKhb2rsAyPXKGMXCxzvRKyoj5K+Fx8L3A33Z8UrAhfxpZVkYHivqEn
+	 SYwlvbqF1UVD1UGkL2VQZcIgg4zKCipqVgjPN5Z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731338AbfK0U6h (ORCPT
+        id S1727138AbfK0U6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:58:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49854 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:58:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731331AbfK0U6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:58:31 -0500
+        id S1731075AbfK0U6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:58:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24350215B2;
-        Wed, 27 Nov 2019 20:58:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0436215B2;
+        Wed, 27 Nov 2019 20:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888310;
-        bh=/ZJI/4gyijIuk0UAleXk9pAGE4qXIMVC+2rzUpbTqLg=;
+        s=default; t=1574888319;
+        bh=ZbZQWLNVEAwI0OA//as0xFt12U2YZ+kzigbVogJ9SX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VC/5Rz5/omUP6q3cCo1/DNvOU4Kopj+ONscvF1e8RTB2//PeXBbQECQlhRtJeJAS3
-         XgInYepBg6WPfbX5BbEabJzziRg9tMMe14aRkSO3AAZ7v6KWSGv1Qq8xE2gfu2te88
-         Nk8cO3Zl/CuN+bxqC3kdLxIaQi3ZAp9CJdEXpf2U=
+        b=AbRI4BxGVL4ZPwAI3TliR77H6mpwjI0KXPW0p3FfYRWIUza2H8YMml8cJDnVQwM0+
+         bW3VMCBU1C4MGE2Qy0DsBhDf7MoONdU8oQ5kXJepOK9pz3PMSqtycHT+Z49BC5fvjS
+         cagirQNFQfMpeDPJblvbzV1VFylsW69bvkCdMm1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Netanel Belgazal <netanel@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 084/306] scsi: zorro_esp: Limit DMA transfers to 65535 bytes
-Date:   Wed, 27 Nov 2019 21:28:54 +0100
-Message-Id: <20191127203121.071497032@linuxfoundation.org>
+Subject: [PATCH 4.19 087/306] net: ena: Fix Kconfig dependency on X86
+Date:   Wed, 27 Nov 2019 21:28:57 +0100
+Message-Id: <20191127203121.280336169@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,87 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Netanel Belgazal <netanel@amazon.com>
 
-[ Upstream commit b7ded0e8b0d11b6df1c4e5aa23a26e6629c21985 ]
+[ Upstream commit 8c590f9776386b8f697fd0b7ed6142ae6e3de79e ]
 
-The core driver, esp_scsi, does not use the ESP_CONFIG2_FENAB bit, so the
-chip's Transfer Counter register is only 16 bits wide (not 24).  A larger
-transfer cannot work and will theoretically result in a failed command
-and a "DMA length is zero" error.
+The Kconfig limitation of X86 is to too wide.
+The ENA driver only requires a little endian dependency.
 
-Fixes: 3109e5ae0311 ("scsi: zorro_esp: New driver for Amiga Zorro NCR53C9x boards")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Cc: Michael Schmitz <schmitzmic@gmail.com>
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Reviewed-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Change the dependency to be on little endian CPU.
+
+Signed-off-by: Netanel Belgazal <netanel@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/zorro_esp.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/net/ethernet/amazon/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/zorro_esp.c b/drivers/scsi/zorro_esp.c
-index bb70882e6b56e..be79127db5946 100644
---- a/drivers/scsi/zorro_esp.c
-+++ b/drivers/scsi/zorro_esp.c
-@@ -245,7 +245,7 @@ static int fastlane_esp_irq_pending(struct esp *esp)
- static u32 zorro_esp_dma_length_limit(struct esp *esp, u32 dma_addr,
- 					u32 dma_len)
- {
--	return dma_len > 0xFFFFFF ? 0xFFFFFF : dma_len;
-+	return dma_len > 0xFFFF ? 0xFFFF : dma_len;
- }
+diff --git a/drivers/net/ethernet/amazon/Kconfig b/drivers/net/ethernet/amazon/Kconfig
+index 99b30353541ab..9e87d7b8360f5 100644
+--- a/drivers/net/ethernet/amazon/Kconfig
++++ b/drivers/net/ethernet/amazon/Kconfig
+@@ -17,7 +17,7 @@ if NET_VENDOR_AMAZON
  
- static void zorro_esp_reset_dma(struct esp *esp)
-@@ -484,7 +484,6 @@ static void zorro_esp_send_blz1230_dma_cmd(struct esp *esp, u32 addr,
- 	scsi_esp_cmd(esp, ESP_CMD_DMA);
- 	zorro_esp_write8(esp, (esp_count >> 0) & 0xff, ESP_TCLOW);
- 	zorro_esp_write8(esp, (esp_count >> 8) & 0xff, ESP_TCMED);
--	zorro_esp_write8(esp, (esp_count >> 16) & 0xff, ESP_TCHI);
+ config ENA_ETHERNET
+ 	tristate "Elastic Network Adapter (ENA) support"
+-	depends on (PCI_MSI && X86)
++	depends on PCI_MSI && !CPU_BIG_ENDIAN
+ 	---help---
+ 	  This driver supports Elastic Network Adapter (ENA)"
  
- 	scsi_esp_cmd(esp, cmd);
- }
-@@ -529,7 +528,6 @@ static void zorro_esp_send_blz1230II_dma_cmd(struct esp *esp, u32 addr,
- 	scsi_esp_cmd(esp, ESP_CMD_DMA);
- 	zorro_esp_write8(esp, (esp_count >> 0) & 0xff, ESP_TCLOW);
- 	zorro_esp_write8(esp, (esp_count >> 8) & 0xff, ESP_TCMED);
--	zorro_esp_write8(esp, (esp_count >> 16) & 0xff, ESP_TCHI);
- 
- 	scsi_esp_cmd(esp, cmd);
- }
-@@ -574,7 +572,6 @@ static void zorro_esp_send_blz2060_dma_cmd(struct esp *esp, u32 addr,
- 	scsi_esp_cmd(esp, ESP_CMD_DMA);
- 	zorro_esp_write8(esp, (esp_count >> 0) & 0xff, ESP_TCLOW);
- 	zorro_esp_write8(esp, (esp_count >> 8) & 0xff, ESP_TCMED);
--	zorro_esp_write8(esp, (esp_count >> 16) & 0xff, ESP_TCHI);
- 
- 	scsi_esp_cmd(esp, cmd);
- }
-@@ -599,7 +596,6 @@ static void zorro_esp_send_cyber_dma_cmd(struct esp *esp, u32 addr,
- 
- 	zorro_esp_write8(esp, (esp_count >> 0) & 0xff, ESP_TCLOW);
- 	zorro_esp_write8(esp, (esp_count >> 8) & 0xff, ESP_TCMED);
--	zorro_esp_write8(esp, (esp_count >> 16) & 0xff, ESP_TCHI);
- 
- 	if (write) {
- 		/* DMA receive */
-@@ -649,7 +645,6 @@ static void zorro_esp_send_cyberII_dma_cmd(struct esp *esp, u32 addr,
- 
- 	zorro_esp_write8(esp, (esp_count >> 0) & 0xff, ESP_TCLOW);
- 	zorro_esp_write8(esp, (esp_count >> 8) & 0xff, ESP_TCMED);
--	zorro_esp_write8(esp, (esp_count >> 16) & 0xff, ESP_TCHI);
- 
- 	if (write) {
- 		/* DMA receive */
-@@ -691,7 +686,6 @@ static void zorro_esp_send_fastlane_dma_cmd(struct esp *esp, u32 addr,
- 
- 	zorro_esp_write8(esp, (esp_count >> 0) & 0xff, ESP_TCLOW);
- 	zorro_esp_write8(esp, (esp_count >> 8) & 0xff, ESP_TCMED);
--	zorro_esp_write8(esp, (esp_count >> 16) & 0xff, ESP_TCHI);
- 
- 	if (write) {
- 		/* DMA receive */
 -- 
 2.20.1
 
