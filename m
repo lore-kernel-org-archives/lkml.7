@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53973C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD70BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284E1216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A244521771
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889295;
-	bh=F2JsfBtc2GSihRVgSKDuj9dNn5knM3fBq6e/3aibmxo=;
+	s=default; t=1574889297;
+	bh=dUyKsA+l1Lk1Fs5j/YCVO3J9HOukfmlgbeZAaLG3wQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LAznXISV1jeX0Ozw964u9oZhlWw/yxqnG/zEydwWh8RcXe9Yy8yIcB633BOh3Sd6+
-	 d3YoR9PbYVSy9eK5sF43Jsh1R7VxaCfPY90wReC6v3TwLAU3MMEZg3uMjVTqaNH0/T
-	 5zSg9FSB4WDm2dxUMg6NHE24FO4o2TqFOPbkGvaI=
+	b=jFSHC5zcW/wFq7O8SJII5MWHRDThKpgzpQcR1OSmg/RbkI9+3sJNOfWvv9LfzA7/o
+	 tRioBhqy4laNkEqGP9PdX2KaFTBKEa9V4br506G0n5aSWeb7dnpy2ibax11AjiGFpj
+	 NVV+A5/RDT+ehN4Dm1vrqzkKsB8KO577qLZAqC00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387617AbfK0VOy (ORCPT
+        id S2387609AbfK0VOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:14:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387605AbfK0VOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 16:14:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732321AbfK0VOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:14:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 978AF215F1;
-        Wed, 27 Nov 2019 21:14:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 259E3216F4;
+        Wed, 27 Nov 2019 21:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889292;
-        bh=F2JsfBtc2GSihRVgSKDuj9dNn5knM3fBq6e/3aibmxo=;
+        s=default; t=1574889289;
+        bh=dUyKsA+l1Lk1Fs5j/YCVO3J9HOukfmlgbeZAaLG3wQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rK1QKp/0pefmnFMm3t0xLUIj8Ws/0wcclJB7fBegR/nqrkH5Z9Xi0rQy9+pP/AZNL
-         EQLZCdBYtwrQtF7jvagd4/aFAhxvGyKJiYHMNkm9LYSaFbfg0HYbGHR4Mw75/q9Pt/
-         usfdcBvRo3TvZDQv/C6MsiffM2rIxPuTMc+sfmmY=
+        b=wy3JsZDw/OPWJWq7trJWMWPfmKADsXMfhex8+wTwPtY9+a3SkAKGUDH4Z33aO6cjY
+         LoWyvZQLzkuhB5u0ZROQKzK6RlYRXSXJwaA0fOxSlqdeguh57vwMFVvVs721HURqtv
+         eFJ7cN6l9SyeyMuJz4ot+NCzpt4Y2xH2rWmZzDTI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Aleksander Morgado <aleksander@aleksander.es>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 63/66] USB: serial: option: add support for Foxconn T77W968 LTE modules
-Date:   Wed, 27 Nov 2019 21:32:58 +0100
-Message-Id: <20191127202744.720279079@linuxfoundation.org>
+Subject: [PATCH 5.4 62/66] USB: serial: option: add support for DW5821e with eSIM support
+Date:   Wed, 27 Nov 2019 21:32:57 +0100
+Message-Id: <20191127202743.716152053@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -62,15 +62,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Aleksander Morgado <aleksander@aleksander.es>
 
-commit f0797095423e6ea3b4be61134ee353c7f504d440 upstream.
+commit 957c31ea082e3fe5196f46d5b04018b10de47400 upstream.
 
-These are the Foxconn-branded variants of the Dell DW5821e modules,
-same USB layout as those. The device exposes AT, NMEA and DIAG ports
-in both USB configurations.
+The device exposes AT, NMEA and DIAG ports in both USB configurations.
+Exactly same layout as the default DW5821e module, just a different
+vid/pid.
 
-P:  Vendor=0489 ProdID=e0b4 Rev=03.18
-S:  Manufacturer=FII
-S:  Product=T77W968 LTE
+P:  Vendor=413c ProdID=81e0 Rev=03.18
+S:  Manufacturer=Dell Inc.
+S:  Product=DW5821e-eSIM Snapdragon X20 LTE
 S:  SerialNumber=0123456789ABCDEF
 C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
 I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
@@ -80,9 +80,9 @@ I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
 I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
 I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
 
-P:  Vendor=0489 ProdID=e0b4 Rev=03.18
-S:  Manufacturer=FII
-S:  Product=T77W968 LTE
+P:  Vendor=413c ProdID=81e0 Rev=03.18
+S:  Manufacturer=Dell Inc.
+S:  Product=DW5821e-eSIM Snapdragon X20 LTE
 S:  SerialNumber=0123456789ABCDEF
 C:  #Ifs= 7 Cfg#= 2 Atr=a0 MxPwr=500mA
 I:  If#=0x0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
@@ -94,27 +94,32 @@ I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
 I:  If#=0x6 Alt= 0 #EPs= 1 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
 
 Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
-[ johan: drop id defines ]
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/serial/option.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 --- a/drivers/usb/serial/option.c
 +++ b/drivers/usb/serial/option.c
-@@ -1993,6 +1993,10 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x13) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x14) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x1b) },
-+	{ USB_DEVICE(0x0489, 0xe0b4),						/* Foxconn T77W968 */
+@@ -197,6 +197,7 @@ static void option_instat_callback(struc
+ #define DELL_PRODUCT_5804_MINICARD_ATT		0x819b  /* Novatel E371 */
+ 
+ #define DELL_PRODUCT_5821E			0x81d7
++#define DELL_PRODUCT_5821E_ESIM			0x81e0
+ 
+ #define KYOCERA_VENDOR_ID			0x0c88
+ #define KYOCERA_PRODUCT_KPC650			0x17da
+@@ -1044,6 +1045,8 @@ static const struct usb_device_id option
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(DELL_VENDOR_ID, DELL_PRODUCT_5804_MINICARD_ATT, 0xff, 0xff, 0xff) },
+ 	{ USB_DEVICE(DELL_VENDOR_ID, DELL_PRODUCT_5821E),
+ 	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
++	{ USB_DEVICE(DELL_VENDOR_ID, DELL_PRODUCT_5821E_ESIM),
 +	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
-+	{ USB_DEVICE(0x0489, 0xe0b5),						/* Foxconn T77W968 ESIM */
-+	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
- 	{ USB_DEVICE(0x1508, 0x1001),						/* Fibocom NL668 */
- 	  .driver_info = RSVD(4) | RSVD(5) | RSVD(6) },
- 	{ USB_DEVICE(0x2cb7, 0x0104),						/* Fibocom NL678 series */
+ 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_E100A) },	/* ADU-E100, ADU-310 */
+ 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_500A) },
+ 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_620UW) },
 
 
