@@ -2,261 +2,132 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77684C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24590C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36077207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5201207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:24:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q8xCo+Zb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ry4rBZW5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfK0UYV (ORCPT
+        id S1727259AbfK0UYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:24:21 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43695 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbfK0UYU (ORCPT
+        Wed, 27 Nov 2019 15:24:32 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33253 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbfK0UYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:24:20 -0500
-Received: by mail-ot1-f67.google.com with SMTP id l14so20227061oti.10;
-        Wed, 27 Nov 2019 12:24:19 -0800 (PST)
+        Wed, 27 Nov 2019 15:24:31 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c124so16321692qkg.0;
+        Wed, 27 Nov 2019 12:24:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MixxgPNvg3pUnry2JzNoXYx2kY3tKkdeMgXAkzkyNYs=;
-        b=Q8xCo+ZbqsfjOgoXWTnHWNvKIjvPEEcwP+yXEBzmj2ekJJlDCBa94VFtCAGp2f+bzq
-         elQN5VZ0Q6MrI3M85kFAM7EcRpIT6dOyhTlaodtLBSugf0KJru8davD/6imekZuJmkNx
-         PKcyk5pw+9Yw45suj7kCI5epoouGLLTi0kYP0fey25mulV3BNtcIR6WKxFwJiFpSvh39
-         r+fZZtaHTh8Vqg56FBTN6g91jdzGaHCpToEq7ANGcvTUaONmosJTjEnzZ0amMb7T/Dfh
-         2sMqDroQQ4rqoAnUrp4pRzTkVcUnPo3MZ6ZYkFQ/jv9nMvj+GO/NOi53qfubSe832egJ
-         s8hw==
+        bh=SgUjfcTX/7GXiJyA43XWcDT1cnpp+UReYglDGXWdON0=;
+        b=ry4rBZW57I0rDcZPHlpUxh07oaqemIldRXSpEpydrz1a8HsqWcYY3RDBzAfxHIE0li
+         tcjDwokDv7Hkc+QS8z/+oFDxLi+xJOySIZCDAKNnvJUtwg4jO5TM7+Ryv02mpVtdcU9m
+         cI4h+TQ7kZrSClQ+sFeMZ4iLyPDnoddczRTeWVKHAUNOIirnVO65605Fc9g91jLqrdgZ
+         ewlII6VuCVDJbelP/tmPSC8Cn5L7Y/u+JiA6+9h1g9KYsZ8j1NoW2xxG9309BNMgVQjp
+         YK9wWhGms9yLP0FOEVVlkGikR2tzyf+u94ZQEYmx6W26aaPpZEWgYfvwFL8EzfC5k5JV
+         oV6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MixxgPNvg3pUnry2JzNoXYx2kY3tKkdeMgXAkzkyNYs=;
-        b=a0VItJa3X0pfxxUXygSTuVIzLf+Jj1Ay9e7FNkFGehThv21Ac1QcAL0TgBFNrMKmav
-         76BK+Ug/xqscFobx0z5J4N8o0c1Qp64bMbAFjtfbCUBsbGSO47Nsg/f/xNGPRyxgpiVC
-         LdKTDGXfnB8+OiMsUtO2OQkSKNtSOOklxfWoE5MCVCH2v6Ju2EbZRTVqPWJHSo0qhhoV
-         9ibM5I5NzvPvQ8stHX2KVQ5S336wB5gi3kXR1dBQcXOOWKTluRLcTtA/uY8kA5b3cB3A
-         IUZChD2dcYWYyJxnxE9FFuJPQwYELakbrdDle8kTr5JQ1aMHMtYhrln5MdxemGLT8SJX
-         U25g==
-X-Gm-Message-State: APjAAAWFvwoHQdx1EOs+H00bN/xGUtlX3cTzNYxPbu3gyAI6BxPN4N/R
-        Cy9gWWNYkmuTbICHGNGpWpdzpMH8htGFV8DmPpw=
-X-Google-Smtp-Source: APXvYqzQ//Ez72MjlZ6tnpozQgzvE/hhO0Vn1XVq9GxyZPcPEL2qouYxRSGFV+mE8Gods9QDh7e/ODo46N4kJh7VLCE=
-X-Received: by 2002:a9d:6acf:: with SMTP id m15mr5155723otq.312.1574886258682;
- Wed, 27 Nov 2019 12:24:18 -0800 (PST)
+        bh=SgUjfcTX/7GXiJyA43XWcDT1cnpp+UReYglDGXWdON0=;
+        b=ISna9d7ygYhX69i1+DK5WMRNV5h9iTYfIUjaeaVSnxF+/3woYnPpICenk4cFIv5TBS
+         1fq+Lb43W1WEQJ/p+W0l6S7syivtYNVoD1tekRaK47whP6wSG2eN7HtnCym7n/zj1Gh6
+         mFDqKfBUsDuZg4A4b1iW/fz/ThjiXvc+bvTd7hfOG3/bMxkk2Xh1XLrno+L3x1JzKSfL
+         HqjDGcwGZphJ7IXj3Et31QpBxgqXVQkGcXLii6Zx+NVItewLnbFoUF1Xo3rvjF5Yiipe
+         zp+h4cqFhdrC0b3aVoLIiNILvx5jgZ2N00VXVg6Y40mcTRfB0joeyQIfmHYrgJGMZ6N+
+         6k+g==
+X-Gm-Message-State: APjAAAURE0wcGeyDN7eG0oszG8ifuTZ0ehUzCRdsCDkqDiVcsqpNkHgA
+        Dxjw+G0oz4XudYQse4ZGNQ7E/foKtpqPUXEoGZA=
+X-Google-Smtp-Source: APXvYqzQ3j5bso0l8WXxfmVDikzFct/L8BmxkhKEItQRWdWLvVEkAIp77SzQbhi7jl/QGFbYaLlAkssUVwfkaIlONCc=
+X-Received: by 2002:a05:620a:12b2:: with SMTP id x18mr6519127qki.437.1574886270399;
+ Wed, 27 Nov 2019 12:24:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127052935.1719897-1-anarsoul@gmail.com> <20191127052935.1719897-3-anarsoul@gmail.com>
- <20191127174434.wousbqosmm5vxcsu@gilmour.lan>
-In-Reply-To: <20191127174434.wousbqosmm5vxcsu@gilmour.lan>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Wed, 27 Nov 2019 12:23:53 -0800
-Message-ID: <CA+E=qVe22T1uhUo6iq9a82Y9bC014CZSkAtSJJNX4qsn6dJL9w@mail.gmail.com>
-Subject: Re: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for
- sun8i-thermal driver bindings
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20191127094837.4045-1-jolsa@kernel.org> <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
+In-Reply-To: <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 27 Nov 2019 12:24:19 -0800
+Message-ID: <CAEf4BzaDxnF0Ppfo5r5ma3ht033bWjQ78oiBzB=F40_Np=AKhw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 9:44 AM Maxime Ripard <mripard@kernel.org> wrote:
+On Wed, Nov 27, 2019 at 8:38 AM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 >
-> Hi,
->
-> On Tue, Nov 26, 2019 at 09:29:30PM -0800, Vasily Khoruzhick wrote:
-> > From: Yangtao Li <tiny.windzz@gmail.com>
+> On Wed, Nov 27, 2019 at 1:48 AM Jiri Olsa <jolsa@kernel.org> wrote:
 > >
-> > sun8i-thermal driver supports thermal sensor in wide range of Allwinner
-> > SoCs. Add YAML schema for its bindings.
+> > hi,
+> > adding support to link bpftool with libbpf dynamically,
+> > and config change for perf.
 > >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> > ---
-> >  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 103 ++++++++++++++++++
-> >  1 file changed, 103 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> > It's now possible to use:
+> >   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1
 > >
-> > diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> > new file mode 100644
-> > index 000000000000..e622f0a4be90
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> > @@ -0,0 +1,103 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Yangtao Li <tiny.windzz@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - const: allwinner,sun8i-a83t-ths
-> > +      - const: allwinner,sun8i-h3-ths
-> > +      - const: allwinner,sun8i-r40-ths
-> > +      - const: allwinner,sun50i-a64-ths
-> > +      - const: allwinner,sun50i-h5-ths
-> > +      - const: allwinner,sun50i-h6-ths
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +
-> > +  clock-names:
-> > +    anyOf:
-> > +      - items:
-> > +        - const: bus
-> > +        - const: mod
-> > +      - items:
-> > +        - const: bus
+> > which will detect libbpf devel package with needed version,
+> > and if found, link it with bpftool.
+> >
+> > It's possible to use arbitrary installed libbpf:
+> >   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/libbpf/
+> >
+> > I based this change on top of Arnaldo's perf/core, because
+> > it contains libbpf feature detection code as dependency.
+> > It's now also synced with latest bpf-next, so Toke's change
+> > applies correctly.
 >
-> This can be:
->
-> clock-names:
->   minItems: 1
->   maxItems: 2
->   items:
->     - const: bus
->     - const: mod
->
-> And the length should be checked based on the compatible value, with
-> something like
->
-> if:
->   properties:
->     compatible:
->       contains:
->         const: allwinner,sun50i-h6-ths
->
-> then:
->   properties:
->     clocks:
->       maxItems: 1
->
->     clock-names:
->       maxItems: 1
->
-> else:
->   properties:
->     clocks:
->       maxItems: 2
->
->     clock-names:
->       maxItems: 2
+> I don't like it.
+> Especially Toke's patch to expose netlink as public and stable libbpf api.
+> bpftools needs to stay tightly coupled with libbpf (and statically
+> linked for that reason).
+> Otherwise libbpf will grow a ton of public api that would have to be stable
+> and will quickly become a burden.
 
-OK, will do
+I second that. I'm currently working on adding few more APIs that I'd
+like to keep unstable for a while, until we have enough real-world
+usage (and feedback) accumulated, before we stabilize them. With
+LIBBPF_API and a promise of stable API, we are going to over-stress
+and over-design APIs, potentially making them either too generic and
+bloated, or too limited (and thus become deprecated almost at
+inception time). I'd like to take that pressure off for a super-new
+and in flux APIs and not hamper the progress.
 
-> > +
-> > +  '#thermal-sensor-cells':
-> > +    enum: [ 0, 1 ]
-> > +    description: |
-> > +      Definition depends on soc version:
-> > +
-> > +      For "allwinner,sun8i-h3-ths",
-> > +      value must be 0.
-> > +      For all other compatibles
-> > +      value must be 1.
->
-> This should be checked using an if as well.
+I'm thinking of splitting off those non-stable, sort-of-internal APIs
+into separate libbpf-experimental.h (or whatever name makes sense),
+and let those be used only by tools like bpftool, which are only ever
+statically link against libbpf and are ok with occasional changes to
+those APIs (which we'll obviously fix in bpftool as well). Pahole
+seems like another candidate that fits this bill and we might expose
+some stuff early on to it, if it provides tangible benefits (e.g., BTF
+dedup speeds ups, etc).
 
-Will do.
-
-> > +
-> > +  nvmem-cells:
-> > +    maxItems: 1
-> > +    items:
-> > +      - description: Calibration data for thermal sensors
->
-> You can drop the items and just move the description up one level,
-> under nvmem-cells
-
-Will do.
-
-> > +
-> > +  nvmem-cell-names:
-> > +    items:
-> > +      - const: calibration
->
-> Ditto for the const
-
-Sorry, I don't quite get it. What exactly do you want me to do with
-this one? nvmem-cell-names must be "calibration"
-
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - '#thermal-sensor-cells'
->
-> Whether clocks, clock-names and resets are thereshould be check using
-> an if statement as well.
-
-Will do
-
-> > +
-> > +examples:
-> > +  - |
-> > +    ths_a83t: ths@1f04000 {
->
-> You don't need the label at all, and the node name should be
-> temperature-sensor according to the DT spec, not ths. This applies to
-> all you examples.
-
-OK
-
-> > +         compatible = "allwinner,sun8i-a83t-ths";
-> > +         reg = <0x01f04000 0x100>;
-> > +         interrupts = <0 31 0>;
-> > +         nvmem-cells = <&ths_calibration>;
-> > +         nvmem-cell-names = "calibration";
-> > +         #thermal-sensor-cells = <1>;
-> > +    };
->
-> New line.
-
-OK
-
->
-> Thanks!
-> Maxime
+Then as APIs mature, we might decide to move them into libbpf.h with
+LIBBPF_API slapped onto them. Any objections?
