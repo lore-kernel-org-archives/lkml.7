@@ -2,138 +2,143 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEFAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1E2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C487215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43DB215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574890065;
+	bh=Mjp9Ayi7gHDEl4RyIz4743czz+ZO/l4kYbTirM1WaXM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V3b30kxpQq6jKjcEHcOxaGR1H8s4LX6uz95URr1NDQNgD7ahHl9UpM9AgnBGsYBFg
+	 SXSQcqsaYyV4tzRzHRJlGGvsPOGV/iHu+hANumfwa2cQ2S5VmAMTc7kmWlFMekDBno
+	 sPdoUqMvPnY8vsgszalFhReWrz9rhKqYLoSSNdqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731516AbfK0V1j (ORCPT
+        id S1732029AbfK0V1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:27:39 -0500
-Received: from mga06.intel.com ([134.134.136.31]:23224 "EHLO mga06.intel.com"
+        Wed, 27 Nov 2019 16:27:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731392AbfK0U7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:59:19 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 12:59:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,250,1571727600"; 
-   d="scan'208";a="383616943"
-Received: from gtau-mobl.ger.corp.intel.com (HELO localhost) ([10.251.83.243])
-  by orsmga005.jf.intel.com with ESMTP; 27 Nov 2019 12:59:14 -0800
-Date:   Wed, 27 Nov 2019 22:59:12 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org, James Morris <jmorris@namei.org>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [GIT PULL] tpmdd updates for Linux v5.4
-Message-ID: <20191127205912.GB14290@linux.intel.com>
-References: <20190902143121.pjnykevzlajlcrh6@linux.intel.com>
- <CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com>
- <20191127205800.GA14290@linux.intel.com>
+        id S1731399AbfK0U7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:59:18 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D32C2084B;
+        Wed, 27 Nov 2019 20:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574888357;
+        bh=Mjp9Ayi7gHDEl4RyIz4743czz+ZO/l4kYbTirM1WaXM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=X3/pDK9Kpqx3wrx7+biu/ygFnUgoqSC9RDrD6J2CA16K/yyI1eBuXL8OgsvqyDL22
+         0R9cpb8L2ytrK8VhEV3dBOGjuinDqo41nzd8h8HLFICTSJMNwTUtfsC+EDpVXf4lku
+         uQc4t0GB7rXcrtlE1Htsh2x7lvC0x7U8MqhXoqpQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>,
+        Vadim Bendebury <vbendeb@chromium.org>,
+        Stefan Reinauer <reinauer@chromium.org>,
+        Furquan Shaikh <furquan@google.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Aaron Durbin <adurbin@chromium.org>,
+        Justin TerAvest <teravest@chromium.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 050/306] gsmi: Fix bug in append_to_eventlog sysfs handler
+Date:   Wed, 27 Nov 2019 21:28:20 +0100
+Message-Id: <20191127203118.448242319@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
+References: <20191127203114.766709977@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127205800.GA14290@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 10:58:00PM +0200, Jarkko Sakkinen wrote:
-> On Wed, Nov 20, 2019 at 08:48:25PM -0800, Dan Williams wrote:
-> > On Mon, Sep 2, 2019 at 7:34 AM Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com> wrote:
-> > >
-> > > Hi
-> > >
-> > > A new driver for fTPM living inside ARM TEE was added this round. In
-> > > addition to that, there is three bug fixes and one clean up.
-> > >
-> > > /Jarkko
-> > >
-> > > The following changes since commit 8fb8e9e46261e0117cb3cffb6dd8bb7e08f8649b:
-> > >
-> > >   Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2019-08-30 09:23:45 -0700)
-> > >
-> > > are available in the Git repository at:
-> > >
-> > >   git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20190902
-> > >
-> > > for you to fetch changes up to e8bd417aab0c72bfb54465596b16085702ba0405:
-> > >
-> > >   tpm/tpm_ftpm_tee: Document fTPM TEE driver (2019-09-02 17:08:35 +0300)
-> > >
-> > > ----------------------------------------------------------------
-> > > tpmdd updates for Linux v5.4
-> > >
-> > > ----------------------------------------------------------------
-> > > Jarkko Sakkinen (1):
-> > >       tpm: Remove a deprecated comments about implicit sysfs locking
-> > >
-> > > Lukas Bulwahn (1):
-> > >       MAINTAINERS: fix style in KEYS-TRUSTED entry
-> > >
-> > > Sasha Levin (2):
-> > >       tpm/tpm_ftpm_tee: A driver for firmware TPM running inside TEE
-> > >       tpm/tpm_ftpm_tee: Document fTPM TEE driver
-> > >
-> > > Stefan Berger (2):
-> > >       tpm_tis_core: Turn on the TPM before probing IRQ's
-> > >       tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
-> > 
-> > Hi Jarrko,
-> > 
-> > I'm replying here because I can't find the patches to reply to
-> > directly from LKML.
-> > 
-> > Commit 7f064c378e2c "tpm_tis_core: Turn on the TPM before probing
-> > IRQ's" in the v5.3-stable tree caused a regression on a pre-release
-> > platform with a TPM2 device. The interrupt starts screaming when the
-> > driver is loaded and does not stop until the device is force unbond
-> > from the driver by:
-> > 
-> >      echo IFX0740:00 > /sys/bus/platform/drivers/tpm_tis/unbind
-> > 
-> > I checked v5.4-rc8 and it has the same problem. I tried reverting:
-> > 
-> > 1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
-> > 5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
-> > 
-> > Which silenced the screaming interrupt problem, but now the TPM is reporting:
-> > 
-> > [    3.725131] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
-> > [    3.725358] tpm tpm0: tpm_try_transmit: send(): error -5
-> > [    3.725359] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
-> > polling instead
-> > 
-> > ...at load, where it was not reporting this previously. Can you take a look?
-> 
-> It is already in WiP:
-> 
-> https://patchwork.kernel.org/patch/11240111/
-> 
-> Stefan also sent patches that revert to changes that you described:
-> 
-> https://patchwork.kernel.org/cover/11262363/
-> 
-> Probably better first to fix the issue on top of master before deciding
-> actions.
+From: Duncan Laurie <dlaurie@chromium.org>
 
-... and apologies for late response.
+[ Upstream commit 655603de68469adaff16842ac17a5aec9c9ce89b ]
 
-/Jarkko
+The sysfs handler should return the number of bytes consumed, which in the
+case of a successful write is the entire buffer.  Also fix a bug where
+param.data_len was being set to (count - (2 * sizeof(u32))) instead of just
+(count - sizeof(u32)).  The latter is correct because we skip over the
+leading u32 which is our param.type, but we were also incorrectly
+subtracting sizeof(u32) on the line where we were actually setting
+param.data_len:
+
+	param.data_len = count - sizeof(u32);
+
+This meant that for our example event.kernel_software_watchdog with total
+length 10 bytes, param.data_len was just 2 prior to this change.
+
+To test, successfully append an event to the log with gsmi sysfs.
+This sample event is for a "Kernel Software Watchdog"
+
+> xxd -g 1 event.kernel_software_watchdog
+0000000: 01 00 00 00 ad de 06 00 00 00
+
+> cat event.kernel_software_watchdog > /sys/firmware/gsmi/append_to_eventlog
+
+> mosys eventlog list | tail -1
+14 | 2012-06-25 10:14:14 | Kernl Event | Software Watchdog
+
+Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
+Reviewed-by: Vadim Bendebury <vbendeb@chromium.org>
+Reviewed-by: Stefan Reinauer <reinauer@chromium.org>
+Signed-off-by: Furquan Shaikh <furquan@google.com>
+Tested-by: Furquan Shaikh <furquan@chromium.org>
+Reviewed-by: Aaron Durbin <adurbin@chromium.org>
+Reviewed-by: Justin TerAvest <teravest@chromium.org>
+[zwisler: updated changelog for 2nd bug fix and upstream]
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/firmware/google/gsmi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
+index c8f169bf2e27d..62337be07afcb 100644
+--- a/drivers/firmware/google/gsmi.c
++++ b/drivers/firmware/google/gsmi.c
+@@ -480,11 +480,10 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
+ 	if (count < sizeof(u32))
+ 		return -EINVAL;
+ 	param.type = *(u32 *)buf;
+-	count -= sizeof(u32);
+ 	buf += sizeof(u32);
+ 
+ 	/* The remaining buffer is the data payload */
+-	if (count > gsmi_dev.data_buf->length)
++	if ((count - sizeof(u32)) > gsmi_dev.data_buf->length)
+ 		return -EINVAL;
+ 	param.data_len = count - sizeof(u32);
+ 
+@@ -504,7 +503,7 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
+ 
+ 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
+ 
+-	return rc;
++	return (rc == 0) ? count : rc;
+ 
+ }
+ 
+-- 
+2.20.1
+
+
+
