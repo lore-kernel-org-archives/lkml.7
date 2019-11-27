@@ -2,57 +2,59 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2445AC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80713C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F292154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5825F207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574886831;
-	bh=sph2R7pishUgeqOmCYzrLpe0s/ZA4/j+OqsawcNw1Uw=;
+	s=default; t=1574886832;
+	bh=j1as0qKzRucB6IDbVLDVONrGQprDEqzsCUQOpr7AmWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eaqqu5ur7oqvDIjRftB7/vtrW1WjQ7d471RfIL9/XlOZ6jD53KYEVSlUdf4ZM8RkO
-	 whBz4ilgXZWvmWdNMgNv7Q5PwswvDJ2Kn4UESfMPTHXNasMJfXNAqYua8zrlAk97UM
-	 4QHkyoPYDw99yj3r8T1BJcwc2cTZnwzl+vsGCYQM=
+	b=nPJhBl9pxWDeh7QB6SrFur9dsjsNhvl3L0doB2ghQH9y1mSe9KpTMzR1FugNn6/W6
+	 aamdulCkIKzdA9v8/f0HwTd9kYYorqQZZnRVj63+H4Y59vjRulDQ8ndT6sJZXhl0aV
+	 Jr1KjpsNIv2EDq86hECSe0kIdDF7BnEpyt3i9s64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfK0Udu (ORCPT
+        id S1727239AbfK0Udv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:33:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33800 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:33:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbfK0Udu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:33:50 -0500
+        id S1727010AbfK0Udv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:33:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93BBF207DD;
-        Wed, 27 Nov 2019 20:33:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FADD20866;
+        Wed, 27 Nov 2019 20:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886828;
-        bh=sph2R7pishUgeqOmCYzrLpe0s/ZA4/j+OqsawcNw1Uw=;
+        s=default; t=1574886830;
+        bh=j1as0qKzRucB6IDbVLDVONrGQprDEqzsCUQOpr7AmWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yS5eNp9eTl6SH8mOXb7dSMlSwfPsl7Cps2If09fqcWOJer1M7HQfJLFdiZnEt2S4h
-         cyy5a8GupBu5Pp/EW6WPyz7NMdvSViM+LVDG1t6lmnJF3v717Sk0gnwJAZMeakMNZO
-         8jTVOau2IrdblK3sZB9+1toq56Lnkp2FTKTdjzB4=
+        b=U/GkxTJKR0FOmWA0bxwyCTLNqlPBT4SCycBf5GhS1ePyioGjT6T/ifw6d1k5AycO+
+         KozwkBseLjjvOJ5NSDxml/u+LGQ538sw5eGSbj2D0aZd13oiqAgxyPFc3VJFVsQ1mI
+         raE9D0NcuC6AZj0mnl1ijjIPVaBzHWAWsbwVTmX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luigi Rizzo <lrizzo@google.com>,
-        Tariq Toukan <tariqt@mellanox.com>
-Subject: [PATCH 4.4 001/132] net/mlx4_en: fix mlx4 ethtool -N insertion
-Date:   Wed, 27 Nov 2019 21:29:52 +0100
-Message-Id: <20191127202858.337504458@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
+        Mousou Yuu <guogaishiwo@gmail.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 010/132] asus-wmi: Add quirk_no_rfkill for the Asus U303LB
+Date:   Wed, 27 Nov 2019 21:30:01 +0100
+Message-Id: <20191127202908.342923892@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,35 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luigi Rizzo <lrizzo@google.com>
+From: João Paulo Rechi Vita <jprvita@gmail.com>
 
-[ Upstream commit 34e59836565e36fade1464e054a3551c1a0364be ]
+[ Upstream commit 02db9ff7af18f7ace60f430cbbaa1d846b350916 ]
 
-ethtool expects ETHTOOL_GRXCLSRLALL to set ethtool_rxnfc->data with the
-total number of entries in the rx classifier table.  Surprisingly, mlx4
-is missing this part (in principle ethtool could still move forward and
-try the insert).
+The Asus U303LB has an airplane-mode indicator LED and the WMI WLAN user
+bit set, so asus-wmi uses ASUS_WMI_DEVID_WLAN_LED (0x00010002) to store
+the wlan state, which has a side-effect of driving the airplane mode
+indicator LED in an inverted fashion. quirk_no_rfkill prevents asus-wmi
+from registering RFKill switches at all for this laptop and allows
+asus-wireless to drive the LED through the ASHS ACPI device.
 
-Tested: compiled and run command:
-	phh13:~# ethtool -N eth1 flow-type udp4  queue 4
-	Added rule with ID 255
-
-Signed-off-by: Luigi Rizzo <lrizzo@google.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
+Reported-by: Mousou Yuu <guogaishiwo@gmail.com>
+Reviewed-by: Corentin Chary <corentin.chary@gmail.com>
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/en_ethtool.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-@@ -1667,6 +1667,7 @@ static int mlx4_en_get_rxnfc(struct net_
- 		err = mlx4_en_get_flow(dev, cmd, cmd->fs.location);
- 		break;
- 	case ETHTOOL_GRXCLSRLALL:
-+		cmd->data = MAX_NUM_OF_FS_RULES;
- 		while ((!err || err == -ENOENT) && priority < cmd->rule_cnt) {
- 			err = mlx4_en_get_flow(dev, cmd, i);
- 			if (!err)
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 0322b1cde825d..69e33c2772c11 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -342,6 +342,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_no_rfkill,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. U303LB",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "U303LB"),
++		},
++		.driver_data = &quirk_no_rfkill,
++	},
+ 	{},
+ };
+ 
+-- 
+2.20.1
+
 
 
