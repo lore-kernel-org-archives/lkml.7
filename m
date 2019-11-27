@@ -2,54 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC12C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5741DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4399820869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F09720870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890575;
-	bh=M8yWhEhiTwNnh56fDzs9IjxrNHd3LnDK6hpxY8eNykY=;
+	s=default; t=1574890580;
+	bh=J1to47OMKRkj9YZVUv1UjENY/JLzYU8gnUrjNEuIuok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UpoufMaXMGtADVyo9TDgsKS388eiAOoxTDFj4jl66hP2V2a7vGGwL7gu1HCFYEDfR
-	 kt9wLRq9BiYzenfyjV9dfc8zvPt6aB4XK6yoALQEiJF5VpxZtSyB4O++5lwOqzhLoq
-	 Z26eE3vuvNSz4ZhM/+hwiMuR38N4nvM0NiMdxVbo=
+	b=GtOFn3mvl+WcFuoxws0pSlN5cTdPFeZAOxg5JFI+QIQpCzB2D+5Zeuv4Fkj7NT7y5
+	 s21AMmDb9ssZQNxa4mx7ACzFqfh7GxrDpMUeSx9w6WrZDoAu6bM04VUvdcSF0fWFwR
+	 ZEBCEp90DWxnyidxxLcH1Ao9S3juVfDMqjnkafA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730917AbfK0VgO (ORCPT
+        id S1730130AbfK0UsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:36:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33870 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:48:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730154AbfK0Usc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:48:32 -0500
+        id S1729023AbfK0UsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:48:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB56C21847;
-        Wed, 27 Nov 2019 20:48:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBC4921826;
+        Wed, 27 Nov 2019 20:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887712;
-        bh=M8yWhEhiTwNnh56fDzs9IjxrNHd3LnDK6hpxY8eNykY=;
+        s=default; t=1574887699;
+        bh=J1to47OMKRkj9YZVUv1UjENY/JLzYU8gnUrjNEuIuok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RNpf1DVEPGmSBgw33VNGbDKX8Cm/nqUJQb3BDprZY7dq2X0lXU1+kOvzN+2yoBIED
-         8QdiM1qN/hUdwJbbv7rTCW3ASGDFJ+RIzBdwTTYEMn7+w2k9bHHIVazPqGjKXqHSnV
-         xwI2L0U7NOrpXUXIIF2i2D4zpfEbWMb3RyESy0BM=
+        b=VDBMgyvIcnQsuHF+rQaVoOPEf+Nau0RdHYRg8P2I/x/28RL0fLuAUl4gzTSZSwJTr
+         huJlAKLU6UrvrCrb7t/oZvfxkMZp1lGqF9/P1KosRk68bSgVNScZ5apIAjSiGKHhtt
+         1mAbftU5yFee1J4NiFBMNKKUMVpSdalizAWDQDRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 048/211] scsi: iscsi_tcp: Explicitly cast param in iscsi_sw_tcp_host_get_param
-Date:   Wed, 27 Nov 2019 21:29:41 +0100
-Message-Id: <20191127203058.610057489@linuxfoundation.org>
+Subject: [PATCH 4.14 061/211] PM / Domains: Deal with multiple states but no governor in genpd
+Date:   Wed, 27 Nov 2019 21:29:54 +0100
+Message-Id: <20191127203059.762982903@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -62,46 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 20054597f169090109fc3f0dfa1a48583f4178a4 ]
+[ Upstream commit 2c9b7f8772033cc8bafbd4eefe2ca605bf3eb094 ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+A caller of pm_genpd_init() that provides some states for the genpd via the
+->states pointer in the struct generic_pm_domain, should also provide a
+governor. This because it's the job of the governor to pick a state that
+satisfies the constraints.
 
-drivers/scsi/iscsi_tcp.c:803:15: warning: implicit conversion from
-enumeration type 'enum iscsi_host_param' to different enumeration type
-'enum iscsi_param' [-Wenum-conversion]
-                                                 &addr, param, buf);
-                                                        ^~~~~
-1 warning generated.
+Therefore, let's print a warning to inform the user about such bogus
+configuration and avoid to bail out, by instead picking the shallowest
+state before genpd invokes the ->power_off() callback.
 
-iscsi_conn_get_addr_param handles ISCSI_HOST_PARAM_IPADDRESS just fine
-so add an explicit cast to iscsi_param to make it clear to Clang that
-this is expected behavior.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/153
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/iscsi_tcp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/base/power/domain.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
-index e11eff6b0e97d..045207b5560eb 100644
---- a/drivers/scsi/iscsi_tcp.c
-+++ b/drivers/scsi/iscsi_tcp.c
-@@ -798,7 +798,8 @@ static int iscsi_sw_tcp_host_get_param(struct Scsi_Host *shost,
- 			return rc;
- 
- 		return iscsi_conn_get_addr_param((struct sockaddr_storage *)
--						 &addr, param, buf);
-+						 &addr,
-+						 (enum iscsi_param)param, buf);
- 	default:
- 		return iscsi_host_get_param(shost, param, buf);
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index c276ba1c0a19e..e811f24148897 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -369,6 +369,10 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+ 			return -EAGAIN;
  	}
+ 
++	/* Default to shallowest state. */
++	if (!genpd->gov)
++		genpd->state_idx = 0;
++
+ 	if (genpd->power_off) {
+ 		int ret;
+ 
+@@ -1598,6 +1602,8 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+ 		ret = genpd_set_default_power_state(genpd);
+ 		if (ret)
+ 			return ret;
++	} else if (!gov) {
++		pr_warn("%s : no governor for states\n", genpd->name);
+ 	}
+ 
+ 	mutex_lock(&gpd_list_lock);
 -- 
 2.20.1
 
