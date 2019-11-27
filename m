@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDE4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60813C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176CE21845
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D35F21826
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887710;
-	bh=jTWzCOQwRiWhKbKWMLAjSFDku8KDuyLw1gEEl2r4qbs=;
+	s=default; t=1574887715;
+	bh=EAxCQth2ZKk/kGjhKRAbSAUj7vT5Dv3HrY5a2a8j1CI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i4dSht2whssHl5iBTVasOemmjblbkSL0+m8WBlOQ45UQPxs6lAxYhJwXzpd+bKUFk
-	 W6M2JOo7s7MiGAlTMceop7X4dGWihVYPug3gy7wO/XT4zZdg+6KX0uiv8OouyX8GK5
-	 JThDBFfrKfboJbivU36OLfMt7LbLKO4eEFKB6LY8=
+	b=MgXYPwptZTX7vHIp+TQtC5moLrjoWogP0PR1Xi7DfxeZ1qcUhPD+sEkXi1KoWyjCs
+	 ytQJ3QlDcRMwLYbjB4RTCUfsKrm0Q6gZcm9u6HV/0WKKrd6tznDrzsmM6XYwu3OhdV
+	 21RVov2fNLn919sAFMEOdm26aY3HT8sMTywxZxhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbfK0Us2 (ORCPT
+        id S1730161AbfK0Use (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:48:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:48:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729667AbfK0UsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:48:24 -0500
+        id S1727893AbfK0Usa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:48:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA8F921826;
-        Wed, 27 Nov 2019 20:48:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5614B21826;
+        Wed, 27 Nov 2019 20:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887704;
-        bh=jTWzCOQwRiWhKbKWMLAjSFDku8KDuyLw1gEEl2r4qbs=;
+        s=default; t=1574887709;
+        bh=EAxCQth2ZKk/kGjhKRAbSAUj7vT5Dv3HrY5a2a8j1CI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NKsr1jSFgB8z1elWj7zTC4y3Wq7ZH0mpCD6f9Ucr6y0bW08lD/fotMqnmBRt2cL9o
-         PeNa9yw+6AbEWxXSq0AuSD/51F1kHlEuNlGga1WC2peVL8PkIx+X03U4ePizBc+eaS
-         yC3gXgZPiAwW4OqbSxdaX5J5CcLS3nUKqxuYYXT4=
+        b=YhrkKk5M/OB2V0V4AdCFChxov8MA5d+pEudIG081EBgb2cDgdCzUv0JNiUzboYdGW
+         FOp+eoyIsHbo3iSoxHrIm7hq0XRp0t6rApG+SWum1gfi+ZTnBm1LS6RyzW9I7qjExn
+         Y3lEhAaMiYVqZ3AdQhFSE3b8Tepv6z0Xq3+2wHck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Mattias Jacobsson <2pi@mok.nu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 063/211] macintosh/windfarm_smu_sat: Fix debug output
-Date:   Wed, 27 Nov 2019 21:29:56 +0100
-Message-Id: <20191127203059.905535526@linuxfoundation.org>
+Subject: [PATCH 4.14 065/211] USB: misc: appledisplay: fix backlight update_status return code
+Date:   Wed, 27 Nov 2019 21:29:58 +0100
+Message-Id: <20191127203100.066967396@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,77 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Mattias Jacobsson <2pi@mok.nu>
 
-[ Upstream commit fc0c8b36d379a046525eacb9c3323ca635283757 ]
+[ Upstream commit 090158555ff8d194a98616034100b16697dd80d0 ]
 
-There's some antiquated debug output that's trying
-to do a hand-made hexdump and turning into horrible
-1-byte-per-line output these days.
+Upon success the update_status handler returns a positive number
+corresponding to the number of bytes transferred by usb_control_msg.
+However the return code of the update_status handler should indicate if
+an error occurred(negative) or how many bytes of the user's input to sysfs
+that was consumed. Return code zero indicates all bytes were consumed.
 
-Use print_hex_dump() instead
+The bug can for example result in the update_status handler being called
+twice, the second time with only the "unconsumed" part of the user's input
+to sysfs. Effectively setting an incorrect brightness.
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Change the update_status handler to return zero for all successful
+transactions and forward usb_control_msg's error code upon failure.
+
+Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/macintosh/windfarm_smu_sat.c | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
+ drivers/usb/misc/appledisplay.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/macintosh/windfarm_smu_sat.c b/drivers/macintosh/windfarm_smu_sat.c
-index da7f4fc1a51d1..a0f61eb853c55 100644
---- a/drivers/macintosh/windfarm_smu_sat.c
-+++ b/drivers/macintosh/windfarm_smu_sat.c
-@@ -22,14 +22,6 @@
- 
- #define VERSION "1.0"
- 
--#define DEBUG
--
--#ifdef DEBUG
--#define DBG(args...)	printk(args)
--#else
--#define DBG(args...)	do { } while(0)
--#endif
--
- /* If the cache is older than 800ms we'll refetch it */
- #define MAX_AGE		msecs_to_jiffies(800)
- 
-@@ -106,13 +98,10 @@ struct smu_sdbp_header *smu_sat_get_sdb_partition(unsigned int sat_id, int id,
- 		buf[i+2] = data[3];
- 		buf[i+3] = data[2];
- 	}
--#ifdef DEBUG
--	DBG(KERN_DEBUG "sat %d partition %x:", sat_id, id);
--	for (i = 0; i < len; ++i)
--		DBG(" %x", buf[i]);
--	DBG("\n");
--#endif
- 
-+	printk(KERN_DEBUG "sat %d partition %x:", sat_id, id);
-+	print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
-+		       16, 1, buf, len, false);
- 	if (size)
- 		*size = len;
- 	return (struct smu_sdbp_header *) buf;
-@@ -132,13 +121,13 @@ static int wf_sat_read_cache(struct wf_sat *sat)
- 	if (err < 0)
- 		return err;
- 	sat->last_read = jiffies;
+diff --git a/drivers/usb/misc/appledisplay.c b/drivers/usb/misc/appledisplay.c
+index 03be7c75c5be7..3b59eaf81eefc 100644
+--- a/drivers/usb/misc/appledisplay.c
++++ b/drivers/usb/misc/appledisplay.c
+@@ -160,8 +160,11 @@ static int appledisplay_bl_update_status(struct backlight_device *bd)
+ 		pdata->msgdata, 2,
+ 		ACD_USB_TIMEOUT);
+ 	mutex_unlock(&pdata->sysfslock);
+-	
+-	return retval;
 +
- #ifdef LOTSA_DEBUG
- 	{
- 		int i;
--		DBG(KERN_DEBUG "wf_sat_get: data is");
--		for (i = 0; i < 16; ++i)
--			DBG(" %.2x", sat->cache[i]);
--		DBG("\n");
-+		printk(KERN_DEBUG "wf_sat_get: data is");
-+		print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
-+			       16, 1, sat->cache, 16, false);
- 	}
- #endif
- 	return 0;
++	if (retval < 0)
++		return retval;
++	else
++		return 0;
+ }
+ 
+ static int appledisplay_bl_get_brightness(struct backlight_device *bd)
 -- 
 2.20.1
 
