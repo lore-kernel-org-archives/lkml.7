@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0730C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1F7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C26B21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009FB21852
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887846;
-	bh=VNgWXYD8e+4U8yiObGoH66hb1GrtXm1uHaPUEKGL4xg=;
+	s=default; t=1574887850;
+	bh=gBTeW+pCyoMom3SAv8uExhGU7eCyM3+qFj3QzheXUr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PHhll8pfbKCgIlPsQRdB7W1xY3MV18GCJ3Zh/EP8kyUzCjyW/OJ3Cf2cJDi/fQErA
-	 J7EGq6kFpLhBYC2ureJVI+WPYou6xdhuCL6nlH8IY/04VeatYF9EPgW543VJbYvOa0
-	 obiWOrcI5bmhVqDIIjIEQFBM8ypiLwkpNDlX7yZw=
+	b=wL+DF3oL4MYthtP2vY4bGnfXa8VZtZfOOBad82XpG4CILDSzwAIHH+svOi+t7WSqW
+	 uVX8DTInSu5+6qXUy5zEloKxrNrDja3RpN+DyfgPNoHl9WkRlGqRkPYAcYMvNhYW/i
+	 oQLLaxVXNQGdFzMckhfi/oOSpFGnUiDY2dZLya80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfK0Uup (ORCPT
+        id S1730394AbfK0Uus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:50:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36750 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:50:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730378AbfK0Uuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:50:39 -0500
+        id S1729399AbfK0Uum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:50:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B492184C;
-        Wed, 27 Nov 2019 20:50:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4124A2184C;
+        Wed, 27 Nov 2019 20:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887839;
-        bh=VNgWXYD8e+4U8yiObGoH66hb1GrtXm1uHaPUEKGL4xg=;
+        s=default; t=1574887841;
+        bh=gBTeW+pCyoMom3SAv8uExhGU7eCyM3+qFj3QzheXUr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KBzyh5BGayQxBvaxHkiJAwtXKp9/1DjyJlMHn/EvpCRxgLfzAbRnfCjlXWPK7m6dz
-         FZMElM7R751PnW4QQtxkdQzZ5pmWjOyh9l+IM0/s7oBzYEtym/QXuVLwC2jHEWOWHe
-         SrLzW2LvShWE8a9AHzlP6WWSeAP3n/1LCK6Scw74=
+        b=ymURGcCp20bsAPsIRewWtB5rXlkYlUhz/v4kNRUvoS5b6KVYOqlJQxZyvacZh78iN
+         DjBKhCg5lAfXMnI3mmBZdXx7Ss2XTv34yh1tGh/Oa6Lxd98W8RWCRft0/QXKIct+I9
+         Kl+6IhCZvbDTeck7942mwk3SKE0bz++AxNoKZves=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 114/211] hfs: fix return value of hfs_get_block()
-Date:   Wed, 27 Nov 2019 21:30:47 +0100
-Message-Id: <20191127203104.767292820@linuxfoundation.org>
+Subject: [PATCH 4.14 115/211] hfsplus: update timestamps on truncate()
+Date:   Wed, 27 Nov 2019 21:30:48 +0100
+Message-Id: <20191127203104.879621451@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -66,41 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
 
-[ Upstream commit 1267a07be5ebbff2d2739290f3d043ae137c15b4 ]
+[ Upstream commit dc8844aada735890a6de109bef327f5df36a982e ]
 
-Direct writes to empty inodes fail with EIO.  The generic direct-io code
-is in part to blame (a patch has been submitted as "direct-io: allow
-direct writes to empty inodes"), but hfs is worse affected than the other
-filesystems because the fallback to buffered I/O doesn't happen.
+The vfs takes care of updating ctime and mtime on ftruncate(), but on
+truncate() it must be done by the module.
 
-The problem is the return value of hfs_get_block() when called with
-!create.  Change it to be more consistent with the other modules.
+This patch can be tested with xfstests generic/313.
 
-Link: http://lkml.kernel.org/r/4538ab8c35ea37338490525f0f24cbc37227528c.1539195310.git.ernesto.mnd.fernandez@gmail.com
+Link: http://lkml.kernel.org/r/9beb0913eea37288599e8e1b7cec8768fb52d1b8.1539316825.git.ernesto.mnd.fernandez@gmail.com
 Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
 Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfs/extent.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/hfsplus/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
-index 0c638c6121526..5f1ff97a3b987 100644
---- a/fs/hfs/extent.c
-+++ b/fs/hfs/extent.c
-@@ -345,7 +345,9 @@ int hfs_get_block(struct inode *inode, sector_t block,
- 	ablock = (u32)block / HFS_SB(sb)->fs_div;
+diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
+index 190c60efbc998..5b31f4730ee9c 100644
+--- a/fs/hfsplus/inode.c
++++ b/fs/hfsplus/inode.c
+@@ -262,6 +262,7 @@ static int hfsplus_setattr(struct dentry *dentry, struct iattr *attr)
+ 		}
+ 		truncate_setsize(inode, attr->ia_size);
+ 		hfsplus_file_truncate(inode);
++		inode->i_mtime = inode->i_ctime = current_time(inode);
+ 	}
  
- 	if (block >= HFS_I(inode)->fs_blocks) {
--		if (block > HFS_I(inode)->fs_blocks || !create)
-+		if (!create)
-+			return 0;
-+		if (block > HFS_I(inode)->fs_blocks)
- 			return -EIO;
- 		if (ablock >= HFS_I(inode)->alloc_blocks) {
- 			res = hfs_extend_file(inode);
+ 	setattr_copy(inode, attr);
 -- 
 2.20.1
 
