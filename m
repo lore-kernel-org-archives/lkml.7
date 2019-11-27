@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280A7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B952C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C9221741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F7021741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888736;
-	bh=9OXAevLG4BgzRbZksXQkB08q/O8Khxr4GuRBGW5lZdM=;
+	s=default; t=1574888741;
+	bh=k+aeY3djTXrMWJV296qj1JOi9SAAWVq/Vc2rki06J+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ZMMqmVjnGr5FJXdbHpkhMHmTI1J4w/vsHkSL2n9uZb3CIIkIlrPR14sTVuvdAYdp
-	 rIab0FCPgWtSzEmLlNlyOwJPbtEki/dEsq0WznaI1gd2GTJTTgTvGOpJbeJkRyG21N
-	 WkyflBoye3XrstOMqMY7jAzaM/1PjGT8nzQ1SADw=
+	b=NC0rqfJvnJODx1J2c4KuKGkWylaFT8/K3s5oAUOGyLEgnndJ1BNG1a0Lym1rJGFh7
+	 5cxk6QtknDaFgxd9RDRqq5Wb6i+7qCyWJzVeC+fzaIFjB8KY5zoRJlMGHf4GUBBmsv
+	 r0A01ggGdzlFwtpehBW7I296LiL0NKh84/0DP8ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732305AbfK0VFe (ORCPT
+        id S1732312AbfK0VFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:05:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59258 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:05:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732295AbfK0VFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:05:30 -0500
+        id S1731393AbfK0VFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:05:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1EB521741;
-        Wed, 27 Nov 2019 21:05:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A34002080F;
+        Wed, 27 Nov 2019 21:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888730;
-        bh=9OXAevLG4BgzRbZksXQkB08q/O8Khxr4GuRBGW5lZdM=;
+        s=default; t=1574888735;
+        bh=k+aeY3djTXrMWJV296qj1JOi9SAAWVq/Vc2rki06J+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e1XgCzfasZOKGXBrSvi4Nubr1Wg3CfPSNT465GtSCC7y7I2DB53IjO5QOBlBWl3KB
-         6eHJ0jZf2LLW5cCWKfx3LZf5mUvNBOjbr7hhxGml8OWpHqqSrTuMYlRZhyNkwk+uuG
-         Nz8bOqtw/usHxMDx4/UyApi+bm28WRfIEE4asIo8=
+        b=OSI8G93ttj8iO4JvhIC03KiSx4mGx6eDWi1AI3OPIZCiTPuNonYoaHpvoOK8c0i4L
+         hIUNL66WQd9bv7NTRlb5oiMvaCLWd/uNsrctVLa2OsK6RmX44YrV6BaHebfKlwRNEJ
+         IcQvtksxngW/iMzAXAl3rwS+WxK2y/4VRuKUsYfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org, David Lechner <david@lechnology.com>,
+        Vignesh R <vigneshr@ti.com>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 248/306] PCI: keystone: Use quirk to limit MRRS for K2G
-Date:   Wed, 27 Nov 2019 21:31:38 +0100
-Message-Id: <20191127203133.038833312@linuxfoundation.org>
+Subject: [PATCH 4.19 250/306] spi: omap2-mcspi: Fix DMA and FIFO event trigger size mismatch
+Date:   Wed, 27 Nov 2019 21:31:40 +0100
+Message-Id: <20191127203133.170686283@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,42 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Vignesh R <vigneshr@ti.com>
 
-[ Upstream commit 148e340c0696369fadbbddc8f4bef801ed247d71 ]
+[ Upstream commit baf8b9f8d260c55a86405f70a384c29cda888476 ]
 
-PCI controller in K2G also has a limitation that memory read request
-size (MRRS) must not exceed 256 bytes. Use the quirk to limit MRRS
-(added for K2HK, K2L and K2E) for K2G as well.
+Commit b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
+broke SPI transfers where bits_per_word != 8. This is because of
+mimsatch between McSPI FIFO level event trigger size (SPI word length) and
+DMA request size(word length * maxburst). This leads to data
+corruption, lockup and errors like:
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+	spi1.0: EOW timed out
+
+Fix this by setting DMA maxburst size to 1 so that
+McSPI FIFO level event trigger size matches DMA request size.
+
+Fixes: b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
+Cc: stable@vger.kernel.org
+Reported-by: David Lechner <david@lechnology.com>
+Tested-by: David Lechner <david@lechnology.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/spi/spi-omap2-mcspi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 5e199e7d2d4fd..765357b87ff69 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -36,6 +36,7 @@
- #define PCIE_RC_K2HK		0xb008
- #define PCIE_RC_K2E		0xb009
- #define PCIE_RC_K2L		0xb00a
-+#define PCIE_RC_K2G		0xb00b
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index f50cb8a4b4138..eb2d2de172af3 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -607,8 +607,8 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
+ 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
+ 	cfg.src_addr_width = width;
+ 	cfg.dst_addr_width = width;
+-	cfg.src_maxburst = es;
+-	cfg.dst_maxburst = es;
++	cfg.src_maxburst = 1;
++	cfg.dst_maxburst = 1;
  
- #define to_keystone_pcie(x)	dev_get_drvdata((x)->dev)
- 
-@@ -50,6 +51,8 @@ static void quirk_limit_mrrs(struct pci_dev *dev)
- 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
- 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2L),
- 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
-+		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2G),
-+		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
- 		{ 0, },
- 	};
- 
+ 	rx = xfer->rx_buf;
+ 	tx = xfer->tx_buf;
 -- 
 2.20.1
 
