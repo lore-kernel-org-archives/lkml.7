@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E49C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93334C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4755215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6860A215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890045;
-	bh=ciD88Gv0rf2JVpx+kH4j4K39gE7puEYxFFujMASN6fI=;
+	s=default; t=1574890055;
+	bh=Mr7tKvRZ502cywgXVcx/jiSQvnfQj4wn5VzQkntfH5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N3nu+719TYlBhTPPMCv1jQQ2el/ieB2taQbZYHERMDt4pTUWOkIp0QnfpkLUcMWig
-	 VND33tA0CzCNxRlOE4dcYVXM+1vLN4s9/HlLNLQbwdULOotlWFRDyiujQz9Xf1YCBW
-	 fsGwp/+q63uCX4XbJ5Sr9a4u1wUAYQm0bDMI7mec=
+	b=T4pyzZrs1Ggbugrq6wjflXOD7Gwem6VANy0p5iHfMntM51J6SvWcUZcgh7xz1F892
+	 ETKxSWMsRDEY9wTUvgZmIGffqZbAkC2VKM3hhKblRZ/KlqDLAYwwQ4yxZF7Gp6vOVU
+	 +wlT4SBrM1cFGi5FvF8A9lo7G2xlliuCdkYeNQTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730927AbfK0U7c (ORCPT
+        id S1730937AbfK0V1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:59:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50948 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:27:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731419AbfK0U70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:59:26 -0500
+        id S1731411AbfK0U7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:59:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 413E82084B;
-        Wed, 27 Nov 2019 20:59:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7C6E20678;
+        Wed, 27 Nov 2019 20:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888365;
-        bh=ciD88Gv0rf2JVpx+kH4j4K39gE7puEYxFFujMASN6fI=;
+        s=default; t=1574888363;
+        bh=Mr7tKvRZ502cywgXVcx/jiSQvnfQj4wn5VzQkntfH5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZQVoSmBGoArJFKOcPH3qe+BlF6dhZwKlunW/5dYeYe7zL72Knk59/kw/BQdxXgKlh
-         c/Zv5bDzCyJLPBmdydgv9Zu+xGpqX+51FwNmJCyUwVLMDT11Ql6DFUdjZktKaWLA6r
-         WhL7KvpdoJgtcUUNAXp/K4GNf+aelHK7L2hV/gxg=
+        b=cxIHABpsMtR1pcMfIdpfH6BBC+cjFyZHP/aWndX3bL7xXlizUhIn3EToKD014EZy2
+         jM7Gf7ZlH0BmID07GnyNi97I2GvDC37UdIIwSPedNT4JEGKHcCOKwETvtdtry5hZER
+         I2jbabiDXGVh3LwdEEHwX/SloHms3I+s5cnhGR8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jithu Joseph <jithu.joseph@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, fenghua.yu@intel.com,
-        tony.luck@intel.com, gavin.hindman@intel.com, hpa@zytor.com,
+        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 107/306] x86/intel_rdt: Prevent pseudo-locking from using stale pointers
-Date:   Wed, 27 Nov 2019 21:29:17 +0100
-Message-Id: <20191127203123.117247777@linuxfoundation.org>
+Subject: [PATCH 4.19 106/306] spi: omap2-mcspi: Set FIFO DMA trigger level to word length
+Date:   Wed, 27 Nov 2019 21:29:16 +0100
+Message-Id: <20191127203123.065567740@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,186 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jithu Joseph <jithu.joseph@intel.com>
+From: Vignesh R <vigneshr@ti.com>
 
-[ Upstream commit b61b8bba18fe2b63d38fdaf9b83de25e2d787dfe ]
+[ Upstream commit b682cffa3ac6d9d9e16e9b413c45caee3b391fab ]
 
-When the last CPU in an rdt_domain goes offline, its rdt_domain struct gets
-freed. Current pseudo-locking code is unaware of this scenario and tries to
-dereference the freed structure in a few places.
+McSPI has 32 byte FIFO in Transmit-Receive mode. Current code tries to
+configuration FIFO watermark level for DMA trigger to be GCD of transfer
+length and max FIFO size which would mean trigger level may be set to 32
+for transmit-receive mode if length is aligned. This does not work in
+case of SPI slave mode where FIFO always needs to have data ready
+whenever master starts the clock. With DMA trigger size of 32 there will
+be a small window during slave TX where DMA is still putting data into
+FIFO but master would have started clock for next byte, resulting in
+shifting out of stale data. Similarly, on Slave RX side there may be RX
+FIFO overflow
+Fix this by setting FIFO watermark for DMA trigger to word
+length. This means DMA is triggered as soon as FIFO has space for word
+length bytes and DMA would make sure FIFO is almost always full
+therefore improving FIFO occupancy in both master and slave mode.
 
-Add checks to prevent pseudo-locking code from doing this.
-
-While further work is needed to seamlessly restore resource groups (not
-just pseudo-locking) to their configuration when the domain is brought back
-online, the immediate issue of invalid pointers is addressed here.
-
-Fixes: f4e80d67a5274 ("x86/intel_rdt: Resctrl files reflect pseudo-locked information")
-Fixes: 443810fe61605 ("x86/intel_rdt: Create debugfs files for pseudo-locking testing")
-Fixes: 746e08590b864 ("x86/intel_rdt: Create character device exposing pseudo-locked region")
-Fixes: 33dc3e410a0d9 ("x86/intel_rdt: Make CPU information accessible for pseudo-locked regions")
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: fenghua.yu@intel.com
-Cc: tony.luck@intel.com
-Cc: gavin.hindman@intel.com
-Cc: hpa@zytor.com
-Link: https://lkml.kernel.org/r/231f742dbb7b00a31cc104416860e27dba6b072d.1539384145.git.reinette.chatre@intel.com
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/intel_rdt.c             |  7 ++++
- arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c | 12 +++++--
- arch/x86/kernel/cpu/intel_rdt_pseudo_lock.c | 10 ++++++
- arch/x86/kernel/cpu/intel_rdt_rdtgroup.c    | 38 +++++++++++++++------
- 4 files changed, 55 insertions(+), 12 deletions(-)
+ drivers/spi/spi-omap2-mcspi.c | 26 +++++++-------------------
+ 1 file changed, 7 insertions(+), 19 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/intel_rdt.c b/arch/x86/kernel/cpu/intel_rdt.c
-index cc43c5abd187b..b99a04da70f61 100644
---- a/arch/x86/kernel/cpu/intel_rdt.c
-+++ b/arch/x86/kernel/cpu/intel_rdt.c
-@@ -610,6 +610,13 @@ static void domain_remove_cpu(int cpu, struct rdt_resource *r)
- 			cancel_delayed_work(&d->cqm_limbo);
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index e2be7da743438..f50cb8a4b4138 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -299,7 +299,7 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
+ 	struct omap2_mcspi_cs *cs = spi->controller_state;
+ 	struct omap2_mcspi *mcspi;
+ 	unsigned int wcnt;
+-	int max_fifo_depth, fifo_depth, bytes_per_word;
++	int max_fifo_depth, bytes_per_word;
+ 	u32 chconf, xferlevel;
+ 
+ 	mcspi = spi_master_get_devdata(master);
+@@ -315,10 +315,6 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
+ 		else
+ 			max_fifo_depth = OMAP2_MCSPI_MAX_FIFODEPTH;
+ 
+-		fifo_depth = gcd(t->len, max_fifo_depth);
+-		if (fifo_depth < 2 || fifo_depth % bytes_per_word != 0)
+-			goto disable_fifo;
+-
+ 		wcnt = t->len / bytes_per_word;
+ 		if (wcnt > OMAP2_MCSPI_MAX_FIFOWCNT)
+ 			goto disable_fifo;
+@@ -326,16 +322,17 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
+ 		xferlevel = wcnt << 16;
+ 		if (t->rx_buf != NULL) {
+ 			chconf |= OMAP2_MCSPI_CHCONF_FFER;
+-			xferlevel |= (fifo_depth - 1) << 8;
++			xferlevel |= (bytes_per_word - 1) << 8;
+ 		}
++
+ 		if (t->tx_buf != NULL) {
+ 			chconf |= OMAP2_MCSPI_CHCONF_FFET;
+-			xferlevel |= fifo_depth - 1;
++			xferlevel |= bytes_per_word - 1;
  		}
  
-+		/*
-+		 * rdt_domain "d" is going to be freed below, so clear
-+		 * its pointer from pseudo_lock_region struct.
-+		 */
-+		if (d->plr)
-+			d->plr->d = NULL;
-+
- 		kfree(d->ctrl_val);
- 		kfree(d->mbps_val);
- 		kfree(d->rmid_busy_llc);
-diff --git a/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c b/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c
-index 968ace3c6d730..c8b72aff55e00 100644
---- a/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c
-+++ b/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c
-@@ -408,8 +408,16 @@ int rdtgroup_schemata_show(struct kernfs_open_file *of,
- 			for_each_alloc_enabled_rdt_resource(r)
- 				seq_printf(s, "%s:uninitialized\n", r->name);
- 		} else if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED) {
--			seq_printf(s, "%s:%d=%x\n", rdtgrp->plr->r->name,
--				   rdtgrp->plr->d->id, rdtgrp->plr->cbm);
-+			if (!rdtgrp->plr->d) {
-+				rdt_last_cmd_clear();
-+				rdt_last_cmd_puts("Cache domain offline\n");
-+				ret = -ENODEV;
-+			} else {
-+				seq_printf(s, "%s:%d=%x\n",
-+					   rdtgrp->plr->r->name,
-+					   rdtgrp->plr->d->id,
-+					   rdtgrp->plr->cbm);
-+			}
- 		} else {
- 			closid = rdtgrp->closid;
- 			for_each_alloc_enabled_rdt_resource(r) {
-diff --git a/arch/x86/kernel/cpu/intel_rdt_pseudo_lock.c b/arch/x86/kernel/cpu/intel_rdt_pseudo_lock.c
-index 912d53939f4f4..a999a58ca3318 100644
---- a/arch/x86/kernel/cpu/intel_rdt_pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/intel_rdt_pseudo_lock.c
-@@ -1116,6 +1116,11 @@ static int pseudo_lock_measure_cycles(struct rdtgroup *rdtgrp, int sel)
- 		goto out;
+ 		mcspi_write_reg(master, OMAP2_MCSPI_XFERLEVEL, xferlevel);
+ 		mcspi_write_chconf0(spi, chconf);
+-		mcspi->fifo_depth = fifo_depth;
++		mcspi->fifo_depth = max_fifo_depth;
+ 
+ 		return;
+ 	}
+@@ -585,7 +582,6 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
+ 	struct dma_slave_config	cfg;
+ 	enum dma_slave_buswidth width;
+ 	unsigned es;
+-	u32			burst;
+ 	void __iomem		*chstat_reg;
+ 	void __iomem            *irqstat_reg;
+ 	int			wait_res;
+@@ -605,22 +601,14 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
  	}
  
-+	if (!plr->d) {
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
- 	plr->thread_done = 0;
- 	cpu = cpumask_first(&plr->d->cpu_mask);
- 	if (!cpu_online(cpu)) {
-@@ -1429,6 +1434,11 @@ static int pseudo_lock_dev_mmap(struct file *filp, struct vm_area_struct *vma)
- 
- 	plr = rdtgrp->plr;
- 
-+	if (!plr->d) {
-+		mutex_unlock(&rdtgroup_mutex);
-+		return -ENODEV;
-+	}
-+
- 	/*
- 	 * Task is required to run with affinity to the cpus associated
- 	 * with the pseudo-locked region. If this is not the case the task
-diff --git a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-index ad64031e82dcd..a2d7e6646cce8 100644
---- a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-+++ b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-@@ -268,17 +268,27 @@ static int rdtgroup_cpus_show(struct kernfs_open_file *of,
- 			      struct seq_file *s, void *v)
- {
- 	struct rdtgroup *rdtgrp;
-+	struct cpumask *mask;
- 	int ret = 0;
- 
- 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
- 
- 	if (rdtgrp) {
--		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED)
--			seq_printf(s, is_cpu_list(of) ? "%*pbl\n" : "%*pb\n",
--				   cpumask_pr_args(&rdtgrp->plr->d->cpu_mask));
+ 	count = xfer->len;
+-	burst = 1;
+-
+-	if (mcspi->fifo_depth > 0) {
+-		if (count > mcspi->fifo_depth)
+-			burst = mcspi->fifo_depth / es;
 -		else
-+		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED) {
-+			if (!rdtgrp->plr->d) {
-+				rdt_last_cmd_clear();
-+				rdt_last_cmd_puts("Cache domain offline\n");
-+				ret = -ENODEV;
-+			} else {
-+				mask = &rdtgrp->plr->d->cpu_mask;
-+				seq_printf(s, is_cpu_list(of) ?
-+					   "%*pbl\n" : "%*pb\n",
-+					   cpumask_pr_args(mask));
-+			}
-+		} else {
- 			seq_printf(s, is_cpu_list(of) ? "%*pbl\n" : "%*pb\n",
- 				   cpumask_pr_args(&rdtgrp->cpu_mask));
-+		}
- 	} else {
- 		ret = -ENOENT;
- 	}
-@@ -1286,6 +1296,7 @@ static int rdtgroup_size_show(struct kernfs_open_file *of,
- 	struct rdt_resource *r;
- 	struct rdt_domain *d;
- 	unsigned int size;
-+	int ret = 0;
- 	bool sep;
- 	u32 ctrl;
+-			burst = count / es;
+-	}
  
-@@ -1296,11 +1307,18 @@ static int rdtgroup_size_show(struct kernfs_open_file *of,
- 	}
+ 	memset(&cfg, 0, sizeof(cfg));
+ 	cfg.src_addr = cs->phys + OMAP2_MCSPI_RX0;
+ 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
+ 	cfg.src_addr_width = width;
+ 	cfg.dst_addr_width = width;
+-	cfg.src_maxburst = burst;
+-	cfg.dst_maxburst = burst;
++	cfg.src_maxburst = es;
++	cfg.dst_maxburst = es;
  
- 	if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED) {
--		seq_printf(s, "%*s:", max_name_width, rdtgrp->plr->r->name);
--		size = rdtgroup_cbm_to_size(rdtgrp->plr->r,
--					    rdtgrp->plr->d,
--					    rdtgrp->plr->cbm);
--		seq_printf(s, "%d=%u\n", rdtgrp->plr->d->id, size);
-+		if (!rdtgrp->plr->d) {
-+			rdt_last_cmd_clear();
-+			rdt_last_cmd_puts("Cache domain offline\n");
-+			ret = -ENODEV;
-+		} else {
-+			seq_printf(s, "%*s:", max_name_width,
-+				   rdtgrp->plr->r->name);
-+			size = rdtgroup_cbm_to_size(rdtgrp->plr->r,
-+						    rdtgrp->plr->d,
-+						    rdtgrp->plr->cbm);
-+			seq_printf(s, "%d=%u\n", rdtgrp->plr->d->id, size);
-+		}
- 		goto out;
- 	}
- 
-@@ -1330,7 +1348,7 @@ static int rdtgroup_size_show(struct kernfs_open_file *of,
- out:
- 	rdtgroup_kn_unlock(of->kn);
- 
--	return 0;
-+	return ret;
- }
- 
- /* rdtgroup information files for one cache resource. */
+ 	rx = xfer->rx_buf;
+ 	tx = xfer->tx_buf;
 -- 
 2.20.1
 
