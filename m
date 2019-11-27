@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36554C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CF5C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B20B21789
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81245217BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889050;
-	bh=w+m6KjUIoZY/8hFdgusd84msZw06EQ08t3XBUtOWqvI=;
+	s=default; t=1574889053;
+	bh=nZdoRaeE0FxWGCecbzOvB2AAJ+KHGsxC/QthJB7BhRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hrKCR8UvBtbd7SJq1jS/NEAJOJno98Cl7014HbaNTHaBNU+u3ZD3OVzNP9h/inHCn
-	 65ZGls4TjZ/GoowsolAijDrAMFP85xGGmzuFuKbK0nDqCIEOW8riSHhhmpFyeCQgU6
-	 e54d8tU85rQifpJcsYK9fTHNc3V/JHPJ9VuabObQ=
+	b=T8FR6pwLF0sJp+XlvX1zB3Fff2sxlEHN45tw1fUsQJ1Yt1K3frfR+1grZvfuMS0fN
+	 G3FYrV2woLBvW2AbBrqy6jAXLX7InJvl4YvoDLpwSHHr+t3QHEp+yDysxB8YFmFXQp
+	 LFf+HDjD/2t/c1jv4PVfx+BGnNJ6OkpSGJ88Aoy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733082AbfK0VKs (ORCPT
+        id S1733091AbfK0VKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:10:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:10:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732659AbfK0VKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:10:41 -0500
+        id S1733081AbfK0VKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:10:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF0822154A;
-        Wed, 27 Nov 2019 21:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2990B2176D;
+        Wed, 27 Nov 2019 21:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889040;
-        bh=w+m6KjUIoZY/8hFdgusd84msZw06EQ08t3XBUtOWqvI=;
+        s=default; t=1574889047;
+        bh=nZdoRaeE0FxWGCecbzOvB2AAJ+KHGsxC/QthJB7BhRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yIxgaU4MJ8qY1rbO+61gNURVEpwZwOowGhjLfwoHvYVCjg2jdRTKiNup62DolLaCD
-         Y3ctweMRNAJ3Fh+7cMamnllaRW5cTCSvo/ZcOTg/qZ5ZxmgXaTotNcsfI7qHRuz6vN
-         8TuU2/81N2k+nNrPXsIVflZq33/iAAtqI5hznTqc=
+        b=aJQfEhHJLOl18PWw60AYoWvh2Fk6JWlXYVYP1i8ZLBzQLTNM4RPrJiPEkXawNQYuk
+         q63LfPyHBVsa6DHj1nE5aoblx0sqZMCUHPXR6Qtgh3UvDPfSpRPU6pVk5v2MzZccTd
+         agL+tAgvL+F7CkyfBHqJf3bi3Bk0ESidph0kWq74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>, stable@kernel.org
-Subject: [PATCH 5.3 61/95] x86/entry/32: Fix NMI vs ESPFIX
-Date:   Wed, 27 Nov 2019 21:32:18 +0100
-Message-Id: <20191127202927.340839341@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org
+Subject: [PATCH 5.3 63/95] selftests/x86/sigreturn/32: Invalidate DS and ES when abusing the kernel
+Date:   Wed, 27 Nov 2019 21:32:20 +0100
+Message-Id: <20191127202928.486043857@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,126 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 895429076512e9d1cf5428181076299c90713159 upstream.
+commit 4d2fa82d98d2d296043a04eb517d7dbade5b13b8 upstream.
 
-When the NMI lands on an ESPFIX_SS, we are on the entry stack and must
-swizzle, otherwise we'll run do_nmi() on the entry stack, which is
-BAD.
+If the kernel accidentally uses DS or ES while the user values are
+loaded, it will work fine for sane userspace.  In the interest of
+simulating maximally insane userspace, make sigreturn_32 zero out DS
+and ES for the nasty parts so that inadvertent use of these segments
+will crash.
 
-Also, similar to the normal exception path, we need to correct the
-ESPFIX magic before leaving the entry stack, otherwise pt_regs will
-present a non-flat stack pointer.
-
-Tested by running sigreturn_32 concurrent with perf-record.
-
-Fixes: e5862d0515ad ("x86/entry/32: Leave the kernel via trampoline stack")
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Andy Lutomirski <luto@kernel.org>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_32.S |   53 +++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 41 insertions(+), 12 deletions(-)
+ tools/testing/selftests/x86/sigreturn.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -205,6 +205,7 @@
- #define CS_FROM_ENTRY_STACK	(1 << 31)
- #define CS_FROM_USER_CR3	(1 << 30)
- #define CS_FROM_KERNEL		(1 << 29)
-+#define CS_FROM_ESPFIX		(1 << 28)
+--- a/tools/testing/selftests/x86/sigreturn.c
++++ b/tools/testing/selftests/x86/sigreturn.c
+@@ -451,6 +451,19 @@ static void sigusr1(int sig, siginfo_t *
+ 	ctx->uc_mcontext.gregs[REG_SP] = (unsigned long)0x8badf00d5aadc0deULL;
+ 	ctx->uc_mcontext.gregs[REG_CX] = 0;
  
- .macro FIXUP_FRAME
- 	/*
-@@ -342,8 +343,8 @@
- .endif
- .endm
- 
--.macro SAVE_ALL_NMI cr3_reg:req
--	SAVE_ALL
-+.macro SAVE_ALL_NMI cr3_reg:req unwind_espfix=0
-+	SAVE_ALL unwind_espfix=\unwind_espfix
- 
- 	BUG_IF_WRONG_CR3
- 
-@@ -1526,6 +1527,10 @@ ENTRY(nmi)
- 	ASM_CLAC
- 
- #ifdef CONFIG_X86_ESPFIX32
++#ifdef __i386__
 +	/*
-+	 * ESPFIX_SS is only ever set on the return to user path
-+	 * after we've switched to the entry stack.
++	 * Make sure the kernel doesn't inadvertently use DS or ES-relative
++	 * accesses in a region where user DS or ES is loaded.
++	 *
++	 * Skip this for 64-bit builds because long mode doesn't care about
++	 * DS and ES and skipping it increases test coverage a little bit,
++	 * since 64-bit kernels can still run the 32-bit build.
 +	 */
- 	pushl	%eax
- 	movl	%ss, %eax
- 	cmpw	$__ESPFIX_SS, %ax
-@@ -1561,6 +1566,11 @@ ENTRY(nmi)
- 	movl	%ebx, %esp
- 
- .Lnmi_return:
-+#ifdef CONFIG_X86_ESPFIX32
-+	testl	$CS_FROM_ESPFIX, PT_CS(%esp)
-+	jnz	.Lnmi_from_espfix
++	ctx->uc_mcontext.gregs[REG_DS] = 0;
++	ctx->uc_mcontext.gregs[REG_ES] = 0;
 +#endif
 +
- 	CHECK_AND_APPLY_ESPFIX
- 	RESTORE_ALL_NMI cr3_reg=%edi pop=4
- 	jmp	.Lirq_return
-@@ -1568,23 +1578,42 @@ ENTRY(nmi)
- #ifdef CONFIG_X86_ESPFIX32
- .Lnmi_espfix_stack:
- 	/*
--	 * create the pointer to lss back
-+	 * Create the pointer to LSS back
- 	 */
- 	pushl	%ss
- 	pushl	%esp
- 	addl	$4, (%esp)
--	/* copy the iret frame of 12 bytes */
--	.rept 3
--	pushl	16(%esp)
--	.endr
--	pushl	%eax
--	SAVE_ALL_NMI cr3_reg=%edi
-+
-+	/* Copy the (short) IRET frame */
-+	pushl	4*4(%esp)	# flags
-+	pushl	4*4(%esp)	# cs
-+	pushl	4*4(%esp)	# ip
-+
-+	pushl	%eax		# orig_ax
-+
-+	SAVE_ALL_NMI cr3_reg=%edi unwind_espfix=1
- 	ENCODE_FRAME_POINTER
--	FIXUP_ESPFIX_STACK			# %eax == %esp
-+
-+	/* clear CS_FROM_KERNEL, set CS_FROM_ESPFIX */
-+	xorl	$(CS_FROM_ESPFIX | CS_FROM_KERNEL), PT_CS(%esp)
-+
- 	xorl	%edx, %edx			# zero error code
--	call	do_nmi
-+	movl	%esp, %eax			# pt_regs pointer
-+	jmp	.Lnmi_from_sysenter_stack
-+
-+.Lnmi_from_espfix:
- 	RESTORE_ALL_NMI cr3_reg=%edi
--	lss	12+4(%esp), %esp		# back to espfix stack
-+	/*
-+	 * Because we cleared CS_FROM_KERNEL, IRET_FRAME 'forgot' to
-+	 * fix up the gap and long frame:
-+	 *
-+	 *  3 - original frame	(exception)
-+	 *  2 - ESPFIX block	(above)
-+	 *  6 - gap		(FIXUP_FRAME)
-+	 *  5 - long frame	(FIXUP_FRAME)
-+	 *  1 - orig_ax
-+	 */
-+	lss	(1+5+6)*4(%esp), %esp			# back to espfix stack
- 	jmp	.Lirq_return
- #endif
- END(nmi)
+ 	memcpy(&requested_regs, &ctx->uc_mcontext.gregs, sizeof(gregset_t));
+ 	requested_regs[REG_CX] = *ssptr(ctx);	/* The asm code does this. */
+ 
 
 
