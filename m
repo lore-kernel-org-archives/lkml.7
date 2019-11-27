@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF4DC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A51BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C63020862
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ECF6215B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887045;
-	bh=3ezIcSOyWYw8I4efjEO+0CwCb+ZkrQdkz6h7FNO1ffM=;
+	s=default; t=1574887049;
+	bh=lZr7US6FaeThTI/d26sQnxKvcAV50nPIC10UNTCyzG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Twr1x1stKvKJfH0cXEikr/mpvy1JOZeXeLeSXCVnIrCAF+vbIReHIOGkgGal8qSst
-	 6jkL0q2aQ5V76vzUrPUd0bn/mLrJZoQunHtWB7w4pSkVGmM1/62hrSwbSn0gqIz5my
-	 gIYFa1b+/6JGJ2i/xSmtsfmrh0nleHohcZxcXRDc=
+	b=FsrvEOcNfFGNjashISYlzdkK1ZSAM9hW893VT4cVmH+NwiNXiWrC2iNKVFdV1AsHp
+	 UT2K7WAiwvxrK0HhzJVsbbzrBM3Gf6hVBeukm9Wfs/PsOQxdqVSCG29vrTLW7RVYKW
+	 OlnRW5uzn/Zp8lO9HBzO5k9JLUNnRUFHbR0hckKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfK0UhY (ORCPT
+        id S1727592AbfK0Uh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:37:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40302 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:37:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727617AbfK0UhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:37:21 -0500
+        id S1728569AbfK0UhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:37:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4E8E20862;
-        Wed, 27 Nov 2019 20:37:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B411215B2;
+        Wed, 27 Nov 2019 20:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887041;
-        bh=3ezIcSOyWYw8I4efjEO+0CwCb+ZkrQdkz6h7FNO1ffM=;
+        s=default; t=1574887043;
+        bh=lZr7US6FaeThTI/d26sQnxKvcAV50nPIC10UNTCyzG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bRQ2/Wld2f/P0Od+eBqsyWt19TNUtqpU5AHREeemBRXD1IAyuZ+ww6AXaFlpIXePS
-         YSBFnRg0eMat/GdRq6icm5Y05QqovgGRv/CQ/El41Em0Vcz3+yADpoxjEwACPeryV1
-         GPOXSXUzHunhHKbbuZtD6mnwKi5dMlTdvL5pEysE=
+        b=BKp0+2KG7tmauv3m1yAlW+4XrSJ4I7np6BUuQa6o50yuQFQ7ZOHdsIoXEkUulS7IN
+         OHs7mxIewWa0S45ZW4aoyPzlZyjlMmF/7NziDT5TVfAS3n1H+05Q1gtzvBPoQBMkAn
+         OacV9nxuFq1ewgNXJwutGEDsTfUqEyhwQYQ5Nl4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
         David Teigland <teigland@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 090/132] dlm: fix invalid free
-Date:   Wed, 27 Nov 2019 21:31:21 +0100
-Message-Id: <20191127203018.602173035@linuxfoundation.org>
+Subject: [PATCH 4.4 091/132] dlm: dont leak kernel pointer to userspace
+Date:   Wed, 27 Nov 2019 21:31:22 +0100
+Message-Id: <20191127203019.010365205@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -62,42 +62,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tycho Andersen <tycho@tycho.ws>
 
-[ Upstream commit d968b4e240cfe39d39d80483bac8bca8716fd93c ]
+[ Upstream commit 9de30f3f7f4d31037cfbb7c787e1089c1944b3a7 ]
 
-dlm_config_nodes() does not allocate nodes on failure, so we should not
-free() nodes when it fails.
+In copy_result_to_user(), we first create a struct dlm_lock_result, which
+contains a struct dlm_lksb, the last member of which is a pointer to the
+lvb. Unfortunately, we copy the entire struct dlm_lksb to the result
+struct, which is then copied to userspace at the end of the function,
+leaking the contents of sb_lvbptr, which is a valid kernel pointer in some
+cases (indeed, later in the same function the data it points to is copied
+to userspace).
+
+It is an error to leak kernel pointers to userspace, as it undermines KASLR
+protections (see e.g. 65eea8edc31 ("floppy: Do not copy a kernel pointer to
+user memory in FDGETPRM ioctl") for another example of this).
 
 Signed-off-by: Tycho Andersen <tycho@tycho.ws>
 Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/member.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/dlm/user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/dlm/member.c b/fs/dlm/member.c
-index 9c47f1c14a8ba..a47ae99f7bcbc 100644
---- a/fs/dlm/member.c
-+++ b/fs/dlm/member.c
-@@ -683,7 +683,7 @@ int dlm_ls_start(struct dlm_ls *ls)
+diff --git a/fs/dlm/user.c b/fs/dlm/user.c
+index e40c440a45552..dd2b7416e40ae 100644
+--- a/fs/dlm/user.c
++++ b/fs/dlm/user.c
+@@ -705,7 +705,7 @@ static int copy_result_to_user(struct dlm_user_args *ua, int compat,
+ 	result.version[0] = DLM_DEVICE_VERSION_MAJOR;
+ 	result.version[1] = DLM_DEVICE_VERSION_MINOR;
+ 	result.version[2] = DLM_DEVICE_VERSION_PATCH;
+-	memcpy(&result.lksb, &ua->lksb, sizeof(struct dlm_lksb));
++	memcpy(&result.lksb, &ua->lksb, offsetof(struct dlm_lksb, sb_lvbptr));
+ 	result.user_lksb = ua->user_lksb;
  
- 	error = dlm_config_nodes(ls->ls_name, &nodes, &count);
- 	if (error < 0)
--		goto fail;
-+		goto fail_rv;
- 
- 	spin_lock(&ls->ls_recover_lock);
- 
-@@ -715,8 +715,9 @@ int dlm_ls_start(struct dlm_ls *ls)
- 	return 0;
- 
-  fail:
--	kfree(rv);
- 	kfree(nodes);
-+ fail_rv:
-+	kfree(rv);
- 	return error;
- }
- 
+ 	/* FIXME: dlm1 provides for the user's bastparam/addr to not be updated
 -- 
 2.20.1
 
