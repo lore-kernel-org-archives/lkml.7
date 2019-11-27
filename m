@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2CAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51333C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0202D215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F4F2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890012;
-	bh=dP+PCoNwoOWfPuFe01TtS/TXqgxB3zZdYBB2ROF1FZs=;
+	s=default; t=1574890015;
+	bh=CUQm85ZwFc3ZiJ3wii7Anj20FIV1fgD/Xl2COzvfJSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aepSjnnyIpPpmEURTb4Y+ZR8USFXh21/T2NJQczemLAqYxpIDqck22x4s5HOF6zHH
-	 UKG0aGda9jmWcjciPD0VI25JCC4ppVg347i+Uy2FIYgfmht239SmMLtrHTxckujfGC
-	 vtvSFMZF6fCOeE2z9hREs5pemHDsj941sjbqE6I0=
+	b=u+tquK16aPHKv6tCaR4BNBuhY6tDcwAw9QkQuG0CUNQRYcRuLSmJn3RXF5txSl/QF
+	 1OrCrDyESuh9Cjtvj8Zx/n3NNVlUlwoc5JQ1Mr3FaQjg2tNl5zRpzS6a76FDxev3xA
+	 RN+b8qDSFn892jXYP2b5ZSoloBvIxWatIn0xn9gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbfK0V0u (ORCPT
+        id S1731509AbfK0VAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:26:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51988 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:00:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730957AbfK0VAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:00:13 -0500
+        id S1730993AbfK0U77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:59:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D88B52158C;
-        Wed, 27 Nov 2019 21:00:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC6662158A;
+        Wed, 27 Nov 2019 20:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888412;
-        bh=dP+PCoNwoOWfPuFe01TtS/TXqgxB3zZdYBB2ROF1FZs=;
+        s=default; t=1574888399;
+        bh=CUQm85ZwFc3ZiJ3wii7Anj20FIV1fgD/Xl2COzvfJSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xv1/ZT+rsKVgSTgFRprpWDUPL679QlGlo9ng274B5QEtezwXuIZEeJQMF0biXsE5/
-         4wNUam5jLTnLcKPamWTTFQJQI+z1U5cfyojblQ5xjRllYGGn01oI94sDv/GOO+cwqU
-         StklvvUoSp+xHqNXGeZgxLgpGe1hUjO0F1qnW3IE=
+        b=1k4kRuvjBgQO8XP9ZealarUrFEfnwLuopxVaI2Hu57PuutowQx0SlGobIuNTuk7VD
+         ZiiTv45MvH/KwMfbtQI2ZIX62NPjja8W2k7v6ru8Kd0O3n/EgSGEq3JQNdCMNuyEmE
+         ggCk8Os2KmOa394KlZYq4Z+EIzKjH6lyoBxHHo4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Nathan Chancellor <natechancellor@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 124/306] mISDN: Fix type of switch control variable in ctrl_teimanager
-Date:   Wed, 27 Nov 2019 21:29:34 +0100
-Message-Id: <20191127203124.183945021@linuxfoundation.org>
+Subject: [PATCH 4.19 119/306] rtc: s35390a: Change bufs type to u8 in s35390a_init
+Date:   Wed, 27 Nov 2019 21:29:29 +0100
+Message-Id: <20191127203123.846992325@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -63,66 +63,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit aeb5e02aca91522733eb1db595ac607d30c87767 ]
+[ Upstream commit ef0f02fd69a02b50e468a4ddbe33e3d81671e248 ]
 
-Clang warns (trimmed for brevity):
+Clang warns:
 
-drivers/isdn/mISDN/tei.c:1193:7: warning: overflow converting case value
-to switch condition type (2147764552 to 18446744071562348872) [-Wswitch]
-        case IMHOLD_L1:
-             ^
-drivers/isdn/mISDN/tei.c:1187:7: warning: overflow converting case value
-to switch condition type (2147764550 to 18446744071562348870) [-Wswitch]
-        case IMCLEAR_L2:
-             ^
-2 warnings generated.
+drivers/rtc/rtc-s35390a.c:124:27: warning: implicit conversion from
+'int' to 'char' changes value from 192 to -64 [-Wconstant-conversion]
+        buf = S35390A_FLAG_RESET | S35390A_FLAG_24H;
+            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+1 warning generated.
 
-The root cause is that the _IOC macro can generate really large numbers,
-which don't find into type int. My research into how GCC and Clang are
-handling this at a low level didn't prove fruitful and surveying the
-kernel tree shows that aside from here and a few places in the scsi
-subsystem, everything that uses _IOC is at least of type 'unsigned int'.
-Make that change here because as nothing in this function cares about
-the signedness of the variable and it removes ambiguity, which is never
-good when dealing with compilers.
+Update buf to be an unsigned 8-bit integer, which matches the buf member
+in struct i2c_msg.
 
-While we're here, remove the unnecessary local variable ret (just return
--EINVAL and 0 directly).
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/67
+https://github.com/ClangBuiltLinux/linux/issues/145
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/mISDN/tei.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/rtc/rtc-s35390a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/isdn/mISDN/tei.c b/drivers/isdn/mISDN/tei.c
-index 12d9e5f4beb1f..58635b5f296f0 100644
---- a/drivers/isdn/mISDN/tei.c
-+++ b/drivers/isdn/mISDN/tei.c
-@@ -1180,8 +1180,7 @@ static int
- ctrl_teimanager(struct manager *mgr, void *arg)
+diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
+index 77feb603cd4c0..3c64dbb08109a 100644
+--- a/drivers/rtc/rtc-s35390a.c
++++ b/drivers/rtc/rtc-s35390a.c
+@@ -108,7 +108,7 @@ static int s35390a_get_reg(struct s35390a *s35390a, int reg, char *buf, int len)
+ 
+ static int s35390a_init(struct s35390a *s35390a)
  {
- 	/* currently we only have one option */
--	int	*val = (int *)arg;
--	int	ret = 0;
-+	unsigned int *val = (unsigned int *)arg;
+-	char buf;
++	u8 buf;
+ 	int ret;
+ 	unsigned initcount = 0;
  
- 	switch (val[0]) {
- 	case IMCLEAR_L2:
-@@ -1197,9 +1196,9 @@ ctrl_teimanager(struct manager *mgr, void *arg)
- 			test_and_clear_bit(OPTION_L1_HOLD, &mgr->options);
- 		break;
- 	default:
--		ret = -EINVAL;
-+		return -EINVAL;
- 	}
--	return ret;
-+	return 0;
- }
- 
- /* This function does create a L2 for fixed TEI in NT Mode */
 -- 
 2.20.1
 
