@@ -2,582 +2,184 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA36C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A425C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E511206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78BB20722
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:42:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I1sroUoE";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="GCmtO/uU"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KXJJrPJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfK0ImX (ORCPT
+        id S1726546AbfK0Imz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:42:23 -0500
-Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:48312
-        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726130AbfK0ImX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:42:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574844141;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=7/MivRQHyfpcrvHSpuvFAQNtij6PJmOgyCg3Zt0kVH4=;
-        b=I1sroUoEM7IgYvUHatkIGEpv/nHFt5foOtCK1eY2TWxy05FYK5GKXeitYI3UMBw1
-        p6wgXgK6drl2tE1rcyrggySRzKg/pWWGkFcd231Ai95Dd8vnmCWGKMkgeil3XpJEI5l
-        h6WbgTKrcLWdyHWZMZ2ZX6jcu5XDfA7tmSFFMZiw=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574844141;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=7/MivRQHyfpcrvHSpuvFAQNtij6PJmOgyCg3Zt0kVH4=;
-        b=GCmtO/uUTxWjPFjwiXyTzhj0kxJFF9JLfVJyIw007ki7LBu/phyYPuRqy5VuxnSQ
-        Y3+qbF9ToowNQct3IKqTAFRvEGsK4bUMZ7CCK90Dxy+HbCUU4vA8VAtGXf2FkaxXN1e
-        +oekqFf9JTYrwK9oOrKqjcBgNWie/oi8Iyq/JkQg=
+        Wed, 27 Nov 2019 03:42:55 -0500
+Received: from mail-eopbgr790084.outbound.protection.outlook.com ([40.107.79.84]:58496
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726130AbfK0Imz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 03:42:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Koyge/fpbC+89b+bMu+HNcrQqweVPZrK9OQBrH+o9T6Rdu2+CB4jrTJJsiTmr6v9ad7mHgz/ztDGCL0klrzECPw88RFCJTtuQkMnn1A7ZL8w62c8IhZi+NqpnuFzZDJ1Lr9WC6IesKTSDUZdj76Mk1kn54ejr0zSreEOZvICrHAK34pVKjAAwfUBcwdUCtDxBcX5ZqKZ0lbZG008kI37kXz7vOa/7q+2v51SOtZhmXtyIodoPZbgJYwkcKMxWA9fD/pyNN+P4iBz3CR9nDbh5C+23zPpumIOITMAUBWqriazuyJsVlGJ1KST8TIw0X/jNAkfUde45FmVSpr9+tBW6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EjArgt8xEC3XRZ4TzMt//d5skXR3LOTrFiLTmqoRQms=;
+ b=iB6Hm9s1TR7fUY8KpH1WrE3QkACrVgCzci3vhgD/8o18MKebnD8Qr95ZX24OowDnYApTqTlnl+DcP4ekrKCosShaLjRfk8hQYx90w14mjCo7Bb2GFP8VQuqDKBUh5kOEk7SITUlxaHfkS3hHdhN1RqNmZxC/VzgC2SSSJtFuokXamIB/pR+yM+P6oqGuZb7y6HOSJ9nNOyjE1Ci1unYRLo5lgpiapxPwVi3ZybKsNbZUHMm+src666twMijDcZ/d7UaHk+vu3m+7g/KpTCctXvwjDupcTLbVaYQHv3vgBtHbe6GbUauV03S5H6uUYVS7EJNb+8/wy871nSGTi2I+oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EjArgt8xEC3XRZ4TzMt//d5skXR3LOTrFiLTmqoRQms=;
+ b=KXJJrPJbUqDoO65YYmCLEJtLAN5FjmMxH83AuuuYLFBrYuR6Gohw89Xfez+rruFd3mcvKTueC2uGFunPqblzxeJBPntWKS9+/DDmivVZEH5XMBbtfQ0j1ITn/Er/ribR1SHBsvX39jkAuN64/s/5SwvU8ASSoOon1ix9F3tdGIs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
+ DM5PR12MB1211.namprd12.prod.outlook.com (10.168.239.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.19; Wed, 27 Nov 2019 08:42:51 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::e5e7:96f0:ad90:d933]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::e5e7:96f0:ad90:d933%7]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
+ 08:42:51 +0000
+Subject: Re: [PATCH 1/2] mm: Add and export vmf_insert_mixed_prot()
+To:     =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20191126202717.30762-1-thomas_os@shipmail.org>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <e1a5ce03-1b8d-8118-de95-b53901e94b50@amd.com>
+Date:   Wed, 27 Nov 2019 09:42:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <20191126202717.30762-1-thomas_os@shipmail.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AM4PR07CA0013.eurprd07.prod.outlook.com
+ (2603:10a6:205:1::26) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 27 Nov 2019 08:42:20 +0000
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
- provider support
-In-Reply-To: <0101016e83897442-ecc4c00f-c0d1-4c2c-92ed-ce78e65c0935-000000@us-west-2.amazonses.com>
-References: <20191118154435.20357-1-sibis@codeaurora.org>
- <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
- <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
- <0101016e83897442-ecc4c00f-c0d1-4c2c-92ed-ce78e65c0935-000000@us-west-2.amazonses.com>
-Message-ID: <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.27-54.240.27.18
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 23aa8fc9-fb06-4a08-148d-08d77315c9b7
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1211:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1211B651519727476708FC9A83440@DM5PR12MB1211.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:390;
+X-Forefront-PRVS: 023495660C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(136003)(39860400002)(376002)(189003)(199004)(31686004)(446003)(11346002)(4326008)(50466002)(65806001)(47776003)(316002)(2616005)(186003)(46003)(2486003)(58126008)(229853002)(65956001)(6246003)(81166006)(81156014)(66556008)(386003)(66476007)(8676002)(6506007)(52116002)(7736002)(54906003)(76176011)(66946007)(23676004)(5660300002)(478600001)(6436002)(99286004)(6116002)(7416002)(8936002)(305945005)(6512007)(25786009)(6666004)(14454004)(86362001)(31696002)(2906002)(6486002)(36756003)(2870700001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1211;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TBwR4X1OeyHbwTFRpSndhJTtxNfxBFxCX+BLPN+6QiWJnW/zGWJAkg2LEMSgCYzxYdwogvLc4dtPU2DQAJ7IW7f7fxCWffx2EhQuq8TNXg2y0Dwn/2GwLp/pXO9rIKZbeFoPHNepGM9f4Td50fM/3wsukTuuD+1pUmsAljlSsSO/kxwYP/TG/sBY5sDK9n9oET3VTx1r95aPRfAmpXdRGzBVqEXHL91y5vywZ0a1XQ9aegkOJCjeC9Z6BTkz6f2Oe6UVs62mj4k5UElp9QK5zapfaPC9MIWuwzTofbK+aVnPtP5C9niyreoCRajOAZNzH67/mVSvUammoxBhuJ1q5Xg+t9ZFHfxdQ9SQk03QnKZ3Kfuort7QJ8YIPMppCQoclpKQ/oNjxws4B7IHdrnpcKLI77D8zhF3EdXqQG8l0TT8ovIIukIn0btupXbflTWV
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23aa8fc9-fb06-4a08-148d-08d77315c9b7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2019 08:42:51.4009
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mLwdRiy11Jamxybl+T00UeynIieq/+3Yghcu08UusxpMHXLqCHunzTVBvDUgcaI2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1211
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Evan/Georgi,
+Am 26.11.19 um 21:27 schrieb Thomas Hellström (VMware):
+> From: Thomas Hellstrom <thellstrom@vmware.com>
+>
+> The TTM module today uses a hack to be able to set a different page
+> protection than struct vm_area_struct::vm_page_prot. To be able to do
+> this properly, add and export vmf_insert_mixed_prot().
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 
-https://git.linaro.org/people/georgi.djakov/linux.git/commit/?h=icc-dev&id=9197da7d06e88666d1588e3c21a743e60381264d
+Acked-by: Christian König <christian.koenig@amd.com>
 
-With the "Redefine interconnect provider
-DT nodes for SDM845" series, wouldn't it
-make more sense to define the OSM_L3 icc
-nodes in the sdm845.c icc driver and have
-the common helpers in osm_l3 driver? Though
-we don't plan on linking the OSM L3 nodes
-to the other nodes on SDM845/SC7180, we
-might have GPU needing to be linked to the
-OSM L3 nodes on future SoCs. Let me know
-how you want this done.
+> ---
+>   include/linux/mm.h |  2 ++
+>   mm/memory.c        | 15 +++++++++++----
+>   2 files changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index cc292273e6ba..29575d3c1e47 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2548,6 +2548,8 @@ vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
+>   			unsigned long pfn, pgprot_t pgprot);
+>   vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
+>   			pfn_t pfn);
+> +vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
+> +			pfn_t pfn, pgprot_t pgprot);
+>   vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
+>   		unsigned long addr, pfn_t pfn);
+>   int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long len);
+> diff --git a/mm/memory.c b/mm/memory.c
+> index b1ca51a079f2..28f162e28144 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -1719,9 +1719,9 @@ static bool vm_mixed_ok(struct vm_area_struct *vma, pfn_t pfn)
+>   }
+>   
+>   static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
+> -		unsigned long addr, pfn_t pfn, bool mkwrite)
+> +		unsigned long addr, pfn_t pfn, pgprot_t pgprot,
+> +		bool mkwrite)
+>   {
+> -	pgprot_t pgprot = vma->vm_page_prot;
+>   	int err;
+>   
+>   	BUG_ON(!vm_mixed_ok(vma, pfn));
+> @@ -1764,10 +1764,17 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
+>   	return VM_FAULT_NOPAGE;
+>   }
+>   
+> +vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
+> +				 pfn_t pfn, pgprot_t pgprot)
+> +{
+> +	return __vm_insert_mixed(vma, addr, pfn, pgprot, false);
+> +}
+> +EXPORT_SYMBOL(vmf_insert_mixed_prot);
+> +
+>   vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
+>   		pfn_t pfn)
+>   {
+> -	return __vm_insert_mixed(vma, addr, pfn, false);
+> +	return __vm_insert_mixed(vma, addr, pfn, vma->vm_page_prot, false);
+>   }
+>   EXPORT_SYMBOL(vmf_insert_mixed);
+>   
+> @@ -1779,7 +1786,7 @@ EXPORT_SYMBOL(vmf_insert_mixed);
+>   vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
+>   		unsigned long addr, pfn_t pfn)
+>   {
+> -	return __vm_insert_mixed(vma, addr, pfn, true);
+> +	return __vm_insert_mixed(vma, addr, pfn, vma->vm_page_prot, true);
+>   }
+>   EXPORT_SYMBOL(vmf_insert_mixed_mkwrite);
+>   
 
-Anyway I'll re-spin the series once the
-SDM845 icc re-work gets re-posted.
-
-On 2019-11-19 17:30, sibis@codeaurora.org wrote:
-> Hey Evan,
-> Thanks for taking time to review
-> the series.
-> 
-> On 2019-11-19 04:12, Evan Green wrote:
->> Hi Sibi,
->> 
->> On Mon, Nov 18, 2019 at 7:45 AM Sibi Sankar <sibis@codeaurora.org> 
->> wrote:
->>> 
->>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
->>> resources of scaling L3 caches. Add a driver to handle bandwidth
->>> requests to OSM L3 from CPU/GPU.
->>> 
->>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->>> ---
->>>  drivers/interconnect/qcom/Kconfig  |   7 +
->>>  drivers/interconnect/qcom/Makefile |   2 +
->>>  drivers/interconnect/qcom/osm-l3.c | 284 
->>> +++++++++++++++++++++++++++++
->>>  3 files changed, 293 insertions(+)
->>>  create mode 100644 drivers/interconnect/qcom/osm-l3.c
->>> 
->>> diff --git a/drivers/interconnect/qcom/Kconfig 
->>> b/drivers/interconnect/qcom/Kconfig
->>> index ecf057d7e2409..17aee5b0f15b7 100644
->>> --- a/drivers/interconnect/qcom/Kconfig
->>> +++ b/drivers/interconnect/qcom/Kconfig
->>> @@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
->>>         help
->>>           Support for Qualcomm's Network-on-Chip interconnect 
->>> hardware.
->>> 
->>> +config INTERCONNECT_QCOM_OSM_L3
->>> +       tristate "Qualcomm OSM L3 interconnect driver"
->>> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
->> 
->> Should we depend on something sdm845 here?
-> 
-> not really...
-> 
-> maybe I can have 845 interconnect
-> selecting osm_l3? since sc7180 also
-> would be doing the same.
-> 
->> 
->>> +       help
->>> +         Say y here to support the Operating State Manager (OSM) 
->>> interconnect
->>> +         driver which controls the scaling of L3 caches on Qualcomm 
->>> SoCs.
->>> +
->>>  config INTERCONNECT_QCOM_QCS404
->>>         tristate "Qualcomm QCS404 interconnect driver"
->>>         depends on INTERCONNECT_QCOM
->>> diff --git a/drivers/interconnect/qcom/Makefile 
->>> b/drivers/interconnect/qcom/Makefile
->>> index 9adf9e380545e..8d86d6515ffc9 100644
->>> --- a/drivers/interconnect/qcom/Makefile
->>> +++ b/drivers/interconnect/qcom/Makefile
->>> @@ -1,10 +1,12 @@
->>>  # SPDX-License-Identifier: GPL-2.0
->>> 
->>> +icc-osm-l3-objs                                := osm-l3.o
->>>  qnoc-msm8974-objs                      := msm8974.o
->>>  qnoc-qcs404-objs                       := qcs404.o
->>>  qnoc-sdm845-objs                       := sdm845.o
->>>  icc-smd-rpm-objs                       := smd-rpm.o
->>> 
->>> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
->>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
->>>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
->>>  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
->>> diff --git a/drivers/interconnect/qcom/osm-l3.c 
->>> b/drivers/interconnect/qcom/osm-l3.c
->>> new file mode 100644
->>> index 0000000000000..5e9f9ce02863b
->>> --- /dev/null
->>> +++ b/drivers/interconnect/qcom/osm-l3.c
->>> @@ -0,0 +1,284 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->>> + *
->>> + */
->>> +
->>> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
->>> +#include <dt-bindings/interconnect/qcom,sdm845.h>
->>> +#include <linux/bitfield.h>
->>> +#include <linux/clk.h>
->>> +#include <linux/interconnect-provider.h>
->>> +#include <linux/io.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_device.h>
->>> +#include <linux/of_platform.h>
->>> +#include <linux/platform_device.h>
->>> +
->>> +#define LUT_MAX_ENTRIES                        40U
->>> +#define LUT_SRC                                GENMASK(31, 30)
->>> +#define LUT_L_VAL                      GENMASK(7, 0)
->>> +#define LUT_ROW_SIZE                   32
->>> +#define CLK_HW_DIV                     2
->>> +
->>> +/* Register offsets */
->>> +#define REG_ENABLE                     0x0
->>> +#define REG_FREQ_LUT                   0x110
->>> +#define REG_PERF_STATE                 0x920
->>> +
->>> +#define OSM_L3_MAX_LINKS               1
->>> +
->>> +#define to_qcom_provider(_provider) \
->>> +       container_of(_provider, struct qcom_osm_l3_icc_provider, 
->>> provider)
->>> +
->>> +enum {
->>> +       SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
->>> +       SDM845_SLAVE_OSM_L3,
->>> +};
->> 
->> Should these just go in qcom,sdm845.h? Seems nice to have them all in
->> one place, and then they can be accessed in the DT if needed.
-> 
-> yeah I can do that, by doing
-> this I can also get rid of the
-> SLAVE_TCU + 1 :)
-> 
->> 
->>> +
->>> +struct qcom_osm_l3_icc_provider {
->>> +       void __iomem *base;
->>> +       unsigned int max_state;
->>> +       unsigned long lut_tables[LUT_MAX_ENTRIES];
->>> +       struct icc_provider provider;
->>> +};
->>> +
->>> +/**
->>> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
->>> + * @name: the node name used in debugfs
->>> + * @links: an array of nodes where we can go next while traversing
->>> + * @id: a unique node identifier
->>> + * @num_links: the total number of @links
->>> + * @buswidth: width of the interconnect between a node and the bus
->>> + */
->>> +struct qcom_icc_node {
->>> +       const char *name;
->>> +       u16 links[OSM_L3_MAX_LINKS];
->>> +       u16 id;
->>> +       u16 num_links;
->>> +       u16 buswidth;
->>> +};
->>> +
->>> +struct qcom_icc_desc {
->>> +       struct qcom_icc_node **nodes;
->>> +       size_t num_nodes;
->>> +};
->>> +
->>> +#define DEFINE_QNODE(_name, _id, _buswidth, ...)                     
->>>   \
->>> +               static struct qcom_icc_node _name = {                 
->>>   \
->>> +               .name = #_name,                                       
->>>   \
->>> +               .id = _id,                                            
->>>   \
->>> +               .buswidth = _buswidth,                                
->>>   \
->>> +               .num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),    
->>>   \
->>> +               .links = { __VA_ARGS__ },                             
->>>   \
->>> +       }
->>> +
->>> +DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, 
->>> SDM845_SLAVE_OSM_L3);
->>> +DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
->>> +
->>> +static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
->> 
->> const?
-> 
-> unfortunately we can't ...
-> 
-> data->nodes[i] = node;
-> we setup links later ^^ with
-> the pointer.
-> 
->> 
->>> +       [MASTER_OSM_L3_APPS] = &osm_apps_l3,
->>> +       [SLAVE_OSM_L3] = &osm_l3,
->>> +};
->>> +
->>> +static struct qcom_icc_desc sdm845_osm_l3 = {
->>> +       .nodes = sdm845_osm_l3_nodes,
->>> +       .num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
->>> +};
->>> +
->>> +static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 
->>> avg_bw,
->>> +                             u32 peak_bw, u32 *agg_avg, u32 
->>> *agg_peak)
->>> +{
->>> +       *agg_avg += avg_bw;
->>> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
->>> +
->>> +       return 0;
->>> +}
->> 
->> Georgi, I wonder if it's a good idea to make a small collection of
->> "std" aggregate functions in the interconnect core that a driver can
->> just point to if it's doing something super standard like this (ie
->> driver->aggregate = icc_std_aggregate;). This is probably fine as-is
->> for now, but if we see a lot more copy/pastes of this function we
->> should think about it.
->> 
->>> +
->>> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
->>> +{
->>> +       struct qcom_osm_l3_icc_provider *qp;
->>> +       struct icc_provider *provider;
->>> +       struct qcom_icc_node *qn;
->>> +       struct icc_node *n;
->>> +       unsigned int index;
->>> +       u32 agg_peak = 0;
->>> +       u32 agg_avg = 0;
->>> +       u64 rate;
->>> +
->>> +       qn = src->data;
->>> +       provider = src->provider;
->>> +       qp = to_qcom_provider(provider);
->>> +
->>> +       list_for_each_entry(n, &provider->nodes, node_list)
->>> +               qcom_icc_aggregate(n, 0, n->avg_bw, n->peak_bw,
->>> +                                  &agg_avg, &agg_peak);
->>> +
->>> +       rate = max(agg_avg, agg_peak);
->>> +       rate = icc_units_to_bps(rate);
->>> +       do_div(rate, qn->buswidth);
->>> +
->>> +       for (index = 0; index < qp->max_state; index++) {
->> 
->> If the rate is too high, you'll end up setting max_state into the
->> register. That's probably bad, right? (Or maybe it's not because the
->> table ends with the same value twice, but it seems like relying on an
->> implementation detail). We could guard against that by only iterating
->> to index < qp->max_state - 1.
-> 
-> yes, using max_state - 1 makes sense
-> here. Will change this in the next
-> re-spin.
-> 
->> 
->>> +               if (qp->lut_tables[index] >= rate)
->>> +                       break;
->>> +       }
->>> +
->>> +       writel_relaxed(index, qp->base + REG_PERF_STATE);
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static int qcom_osm_l3_remove(struct platform_device *pdev)
->>> +{
->>> +       struct qcom_osm_l3_icc_provider *qp = 
->>> platform_get_drvdata(pdev);
->>> +       struct icc_provider *provider = &qp->provider;
->>> +       struct icc_node *n;
->>> +
->>> +       list_for_each_entry(n, &provider->nodes, node_list) {
->> 
->> There was a comment on one of the other threads that we've been
->> copy/pasting this snippet around and it's wrong because it doesn't use
->> the _safe variant of the macro. So we end up destroying the list we're
->> iterating over.
->> 
->> Georgi, did you have a plan to refactor this, or should we just change
->> this to be the _safe version?
->> 
->>> +               icc_node_del(n);
->>> +               icc_node_destroy(n->id);
->>> +       }
->>> +
->>> +       return icc_provider_del(provider);
->>> +}
->>> +
->>> +static int qcom_osm_l3_probe(struct platform_device *pdev)
->>> +{
->>> +       u32 info, src, lval, i, prev_freq = 0, freq;
->>> +       static unsigned long hw_rate, xo_rate;
->>> +       struct qcom_osm_l3_icc_provider *qp;
->>> +       const struct qcom_icc_desc *desc;
->>> +       struct icc_onecell_data *data;
->>> +       struct icc_provider *provider;
->>> +       struct qcom_icc_node **qnodes;
->>> +       struct icc_node *node;
->>> +       size_t num_nodes;
->>> +       struct clk *clk;
->>> +       int ret;
->>> +
->>> +       clk = clk_get(&pdev->dev, "xo");
->>> +       if (IS_ERR(clk))
->>> +               return PTR_ERR(clk);
->>> +
->>> +       xo_rate = clk_get_rate(clk);
->>> +       clk_put(clk);
->>> +
->>> +       clk = clk_get(&pdev->dev, "alternate");
->>> +       if (IS_ERR(clk))
->>> +               return PTR_ERR(clk);
->>> +
->>> +       hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
->> 
->> It's a little weird there's a constant divide in there, though I guess
->> it's in the cpufreq driver as well. I guess this is fine if it's
->> likely to stay there (and the same) when this driver is generalized
->> for other SoCs.
-> 
-> yeah I don't see this changing
-> on sc7180 so I'll leave this
-> as is.
-> 
->> 
->>> +       clk_put(clk);
->>> +
->>> +       qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
->>> +       if (!qp)
->>> +               return -ENOMEM;
->>> +
->>> +       qp->base = devm_platform_ioremap_resource(pdev, 0);
->>> +       if (IS_ERR(qp->base))
->>> +               return PTR_ERR(qp->base);
->>> +
->>> +       /* HW should be in enabled state to proceed */
->>> +       if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
->>> +               dev_err(&pdev->dev, "error hardware not enabled\n");
->>> +               return -ENODEV;
->>> +       }
->>> +
->>> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->>> +               info = readl_relaxed(qp->base + REG_FREQ_LUT +
->>> +                                    i * LUT_ROW_SIZE);
->>> +               src = FIELD_GET(LUT_SRC, info);
->>> +               lval = FIELD_GET(LUT_L_VAL, info);
->>> +               if (src)
->>> +                       freq = xo_rate * lval;
->>> +               else
->>> +                       freq = hw_rate;
->>> +
->>> +               /*
->>> +                * Two of the same frequencies with the same core 
->>> counts means
->> 
->> "core counts" seems like a copied comment that doesn't apply.
-> 
-> yes we don't use the core_cnt
-> field so will update the comment.
-> 
->> 
->> But you only look at freq and not core count, is that really
->> equivalent to the table's boundary condition? Or do you need to be
->> comparing info == info_prev?
-> 
-> no we can get by comparing
-> current freq with prev freq
-> on OSM L3.
-> 
->> 
->>> +                * end of table
->>> +                */
->>> +               if (i > 0 && prev_freq == freq)
->>> +                       break;
->>> +
->>> +               qp->lut_tables[i] = freq;
->>> +               prev_freq = freq;
->>> +       }
->>> +       qp->max_state = i;
->> 
->> Should we error out or complain if there are too few entries, or if
->> the table is not in increasing order?
-> 
-> OSM does make sure of the
-> increasing order and correct
-> number of freq entries if the
-> REG_ENABLE is set. However I
-> don't really mind adding the
-> increasing order check but we
-> can't really detect too few
-> entries since the number can
-> vary across SKUs.
-> 
->> 
->>> +
->>> +       desc = of_device_get_match_data(&pdev->dev);
->>> +       if (!desc)
->>> +               return -EINVAL;
->>> +
->>> +       qnodes = desc->nodes;
->>> +       num_nodes = desc->num_nodes;
->>> +
->>> +       data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), 
->>> GFP_KERNEL);
->>> +       if (!data)
->>> +               return -ENOMEM;
->>> +
->>> +       provider = &qp->provider;
->>> +       provider->dev = &pdev->dev;
->>> +       provider->set = qcom_icc_set;
->>> +       provider->aggregate = qcom_icc_aggregate;
->>> +       provider->xlate = of_icc_xlate_onecell;
->>> +       INIT_LIST_HEAD(&provider->nodes);
->>> +       provider->data = data;
->>> +
->>> +       ret = icc_provider_add(provider);
->>> +       if (ret) {
->>> +               dev_err(&pdev->dev, "error adding interconnect 
->>> provider\n");
->>> +               return ret;
->>> +       }
->>> +
->>> +       for (i = 0; i < num_nodes; i++) {
->>> +               size_t j;
->>> +
->>> +               node = icc_node_create(qnodes[i]->id);
->>> +               if (IS_ERR(node)) {
->>> +                       ret = PTR_ERR(node);
->>> +                       goto err;
->>> +               }
->>> +
->>> +               node->name = qnodes[i]->name;
->>> +               node->data = qnodes[i];
->>> +               icc_node_add(node, provider);
->>> +
->>> +               dev_dbg(&pdev->dev, "registered node %p %s %d\n", 
->>> node,
->>> +                       qnodes[i]->name, node->id);
->>> +
->>> +               /* populate links */
->> 
->> Not a super useful comment.
-> 
-> lol will remove it
-> 
->> 
->> 
->>> +               for (j = 0; j < qnodes[i]->num_links; j++)
->>> +                       icc_link_create(node, qnodes[i]->links[j]);
->>> +
->>> +               data->nodes[i] = node;
->>> +       }
->>> +       data->num_nodes = num_nodes;
->>> +
->>> +       platform_set_drvdata(pdev, qp);
->>> +
->>> +       return ret;
->>> +err:
->>> +       qcom_osm_l3_remove(pdev);
->>> +       return ret;
->>> +}
->>> +
->>> +static const struct of_device_id osm_l3_of_match[] = {
->>> +       { .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 
->>> },
->>> +       { },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, osm_l3_of_match);
->>> +
->>> +static struct platform_driver osm_l3_driver = {
->>> +       .probe = qcom_osm_l3_probe,
->>> +       .remove = qcom_osm_l3_remove,
->>> +       .driver = {
->>> +               .name = "osm-l3",
->>> +               .of_match_table = osm_l3_of_match,
->>> +       },
->>> +};
->>> +module_platform_driver(osm_l3_driver);
->>> +
->>> +MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
->>> +MODULE_LICENSE("GPL v2");
->>> --
->>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->>> Forum,
->>> a Linux Foundation Collaborative Project
->>> 
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
