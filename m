@@ -2,199 +2,206 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9C9C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E268C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A5520870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552DB20870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:28:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="li5wluUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfK0W1b (ORCPT
+        id S1727372AbfK0W2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 17:27:31 -0500
-Received: from mail.phunq.net ([66.183.183.73]:33890 "EHLO phunq.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbfK0W1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 17:27:30 -0500
-Received: from [172.16.1.14]
-        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-        (Exim 4.92.3)
-        (envelope-from <daniel@phunq.net>)
-        id 1ia5mS-00083g-5q; Wed, 27 Nov 2019 14:27:28 -0800
-Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
- <20191127142508.GB5143@mit.edu>
-From:   Daniel Phillips <daniel@phunq.net>
-Message-ID: <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
-Date:   Wed, 27 Nov 2019 14:27:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 17:28:51 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36262 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfK0W2v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 17:28:51 -0500
+Received: by mail-oi1-f196.google.com with SMTP id j7so21579421oib.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 14:28:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KeXZ4luqCFNOPNM7E+9i6XZwG6Bi3IeNYp/i0vjoN04=;
+        b=li5wluUZUo67xUOUjkpEHsTybwfeR0mZ8+iHAG7b0JlFSUrdCdOhEYUH3EeWmEwYov
+         UNZ+SoidmuEwIfkCvtnTAfktOKGxHJu6bNIjPsFHg/OPD5rymcqC+6iimYnawpLMI0EB
+         hKvZXNbaTgMRX4KyhMg0i02RWhjuX/GgAdFLuSB5a6RT3kXjImhXXWhdBWr9djo953Y4
+         tCwnAlGhSdbnbLdwZ7V0aG7XrShPVoFCtxqtndzOPMABP14hK4hbQkDziDtAhIrdPLcZ
+         +uLgx04uFM5YzR3c4C0wEhXhGXigfx+ruLxivWVq53+eHHMVgKUjSYZHE+BXGy6WtXR8
+         XROQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KeXZ4luqCFNOPNM7E+9i6XZwG6Bi3IeNYp/i0vjoN04=;
+        b=EV20GCLhiFd+lmWqu5lf3FLuh9S9eQkwn26806PFP61Cm4W+7AJbwZLSkEHWv4dc3U
+         8FhPAIadTpWRYHi8g+yS01YTf4hiGfVod4LtXB0YZZZfJiFirJ/v9R3y01R33kG6+wUz
+         3Yf+BhPAq8BBpvijGzvRbdPwB8cbVoDlVk56iMXdhV8Pe1A/nHZRRJPCYQJCyRVC0NNJ
+         C0Lm81O2SiCUw9hgS0K8XrbLqIS7/UPgocNhI34vEoTJi9O3DzS482cGWrGVdbtOSeyf
+         drzEAuhPw/JL4CEG8FcNYE7EeMw0felGJxHY1VcZ8trxjSoxECXkM9PbBkx5nrQhb4so
+         3ntg==
+X-Gm-Message-State: APjAAAWRXD93KcnsBV08kIiVmla4RPsJkZlnsbfRH+l+bKxcZ/QqMdy4
+        /OgBcJM3YzvZwP/jUWOT3dAQrvtzlfsHBw0QsBGbzQ==
+X-Google-Smtp-Source: APXvYqyQP4RAxV2mUJJ+XJJ2Rf9/9eFYVgtXHs6Npz3WK7Xm9giK0qIq0VGPNm4luJs0itKnN96rmtXRxQY5Kl0F6rs=
+X-Received: by 2002:aca:ccd1:: with SMTP id c200mr6180503oig.157.1574893728992;
+ Wed, 27 Nov 2019 14:28:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191127142508.GB5143@mit.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191120170208.211997-1-jannh@google.com> <20191120170208.211997-2-jannh@google.com>
+ <20191120202516.GD32572@linux.intel.com>
+In-Reply-To: <20191120202516.GD32572@linux.intel.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 27 Nov 2019 23:28:22 +0100
+Message-ID: <CAG48ez0D2Neddh5WTX-agdpS=Xyf3XWXFB=DebxxV9nAVY43Gg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] x86/traps: Print non-canonical address on #GP
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
+On Wed, Nov 20, 2019 at 9:25 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+> On Wed, Nov 20, 2019 at 06:02:06PM +0100, Jann Horn wrote:
+> > @@ -509,11 +511,50 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
+> >       do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, error_code, 0, NULL);
+> >  }
+> >
+> > +/*
+> > + * On 64-bit, if an uncaught #GP occurs while dereferencing a non-canonical
+> > + * address, return that address.
+>
+> Stale comment now that it's decoding canonical addresses too.
 
-I trust you will find your initial points satisfactorily addressed below.
+Right, reworded.
 
-On 2019-11-27 6:25 a.m., Theodore Y. Ts'o wrote:
-> A couple of quick observations about Shardmap.
-> 
-> (1) It's licensed[1] under the GPLv3, so it's not compatible with the
-> kernel license.  That doesn't matter much for ext4, because...
-> 
-> [1] https://github.com/danielbot/Shardmap/blob/master/LICENSE
+> > + */
+> > +static bool get_kernel_gp_address(struct pt_regs *regs, unsigned long *addr,
+> > +                                        bool *non_canonical)
+>
+> Alignment of non_canonical is funky.
 
-The kernel port of Shardmap will (necessarily) be licensed under GPLv2.
+Fixed the indentation.
 
-> (2) It's implemented as userspace code (e.g., it uses open(2),
-> mmap(2), et. al) and using C++, so it would need to be reimplemented
-> from scratch for use in the kernel.
+> > +{
+> > +#ifdef CONFIG_X86_64
+> > +     u8 insn_buf[MAX_INSN_SIZE];
+> > +     struct insn insn;
+> > +
+> > +     if (probe_kernel_read(insn_buf, (void *)regs->ip, MAX_INSN_SIZE))
+> > +             return false;
+> > +
+> > +     kernel_insn_init(&insn, insn_buf, MAX_INSN_SIZE);
+> > +     insn_get_modrm(&insn);
+> > +     insn_get_sib(&insn);
+> > +     *addr = (unsigned long)insn_get_addr_ref(&insn, regs);
+> > +
+> > +     if (*addr == (unsigned long)-1L)
+>
+> Nit, wouldn't -1UL avoid the need to cast?
 
-Right. Some of these details, like open, are obviously trivial, others
-less so. Reimplementing from scratch is an overstatement because the
-actual intrusions of user space code are just a small portion of the code
-and nearly all abstracted behind APIs that can be implemented as needed
-for userspace or kernel in out of line helpers, so that the main source
-is strictly unaware of the difference. That said, we can just fork off a
-kernel version and not worry about keeping compatiblity with user space
-if you wish, though putting in the extra effort to make it dual mode
-would probably be helpful for e2fsck.
+Ooh. I incorrectly assumed that a minus sign would be part of the
+number literal and wouldn't be allowed for unsigned types, and didn't
+realize that -1UL is just -(1UL)... thanks, will adjust.
 
-Also, most of this work is already being done for Tux3, so the only
-Ext4-specific work needing doing may well be the differences in atomic
-commit required to accommodate Ext4's ordered journaling, versus Tux3's
-(more precise) delta commit. To that end, we could discuss the atomic
-commit strategy that we use for the persistent memory implementation of
-Shardmap, which may turn out to be largely applicable to Ext4's journal
-transaction model.
+> > +             return false;
+> > +
+> > +     /*
+> > +      * Check that:
+> > +      *  - the address is not in the kernel half or -1 (which means the
+> > +      *    decoder failed to decode it)
+> > +      *  - the last byte of the address is not in the user canonical half
+> > +      */
+>
+> This -1 part of the comment should be moved above, or probably dropped
+> entirely.
 
-> (3) It's not particularly well documented, making the above more
-> challenging, but it appears to be a variation of an extensible hashing
-> scheme, which was used by dbx and Berkley DB.
+Yeah... I remember changing that as well as the comment above, I think
+I lost the overview and accidentally went back to an earlier version
+of the commit at some point... adjusted, thanks.
 
-Sorry about that. There is this post from a few years back:
+> > +     *non_canonical = *addr < ~__VIRTUAL_MASK &&
+> > +                      *addr + insn.opnd_bytes - 1 > __VIRTUAL_MASK;
+> > +
+[...]
+> > +             if (addr_resolved)
+> > +                     snprintf(desc, sizeof(desc),
+> > +                         GPFSTR " probably for %saddress 0x%lx",
+> > +                         non_canonical ? "non-canonical " : "", gp_addr);
+>
+> I still think not explicitly calling out the straddle case will be
+> confusing, e.g.
+>
+>   general protection fault probably for non-canonical address 0x7fffffffffff: 0000 [#1] SMP
+>
+> versus
+>
+>   general protection fault, non-canonical access 0x7fffffffffff - 0x800000000006: 0000 [#1] SMP
+>
+>
+> And for the canonical case, "probably for address" may not be all that
+> accurate, e.g. #GP(0) due to a instruction specific requirement is arguably
+> just as likely to apply to the instruction itself as it is to its memory
+> operand.
 
-   https://lkml.org/lkml/2013/6/18/869
+Okay, I'll bump up the level of hedging for canonical addresses to "maybe".
 
-And there is a paper in the works. I can also follow up here with a post
-on Shardmap internals, a number of which are interesting and unique.
+> Rather than pass around multiple booleans, what about adding an enum and
+> handling everything in (a renamed) get_kernel_gp_address?  This works
+> especially well if address decoding is done for 32-bit as well as 64-bit,
+> which is probably worth doing since we're printing the address in 64-bit
+> even if it's canonical.  The ifdeffery is really ugly if its 64-bit only...
 
-Shardmap (introduced above as an "an O(1) extensible hash table") is indeed
-an extensible hashing scheme. Fixed size hash tables are impractical for
-databases and file system directories because small data sets waste too
-much table space and large data sets have too many collisions. Therefore
-every such design must incorporate some form of extensibility. Shardmap's
-extension scheme is unique, and worthy of note in its own right as a
-contribution to hash table technology. We did benchmark against Berkeley
-DB and found Shardmap to be markedly faster. I will hunt around for those
-numbers.
+The part about 32-bit makes sense to me; I've limited the
+CONFIG_X86_64 ifdeffery to the computation of *non_canonical.
 
-Very briefly, the Shardmap index has two distinct forms, one optimized
-for media and the other for cache. These are bijective, each being
-constructable from the other. The media form (the backing store) only
-has a single purpose: to reconstruct the cache form on demand, one shard
-at a time.
+> enum kernel_gp_hint {
+>         GP_NO_HINT,
+>         GP_SEGMENT,
+>         GP_NON_CANONICAL,
+>         GP_STRADDLE_CANONICAL,
+>         GP_RESOLVED_ADDR,
+> };
 
-The cache form is the main source of Shardmap's efficiency. This is a
-two level hash table with each entry in the top level table being a
-pointer to a self contained hash table object. In contrast to other
-extensible hashing schemes, these cache shard are not themselves
-extensible. Rather, we simply rewrite entire shards into subshards
-as needed.
+I don't really like plumbing the error code down to the helper just so
+that it can return an enum value to us based on that; but I guess the
+rest of it does make the code a bit more pretty, will adjust.
 
-The top level hash table is where the extensibility happens. At some
-threshold, the top level table is expanded by duplicating the pointers
-to the hash objects so that multiple buckets may reference the same
-hash object. When any of those objects passes a threshold number of
-entries, it is split into multiple, smaller hash objects, each with a
-unique pointer from the top level table. Traversing this two level
-table for lookup or existence tests takes just a few nanoseconds.
+> I get that adding a print just for the straddle case is probably overkill,
+> but it seems silly to add all this and not make it as precise as possible.
+>
+>   general protection fault, non-canonical address 0xdead000000000000: 0000 [#1] SMP
+>   general protection fault, non-canonical access 0x7fffffffffff - 0x800000000006: 0000 [#1] SMP
+>   general protection fault, possibly for address 0xffffc9000021bd90: 0000 [#1] SMP
+>   general protection fault, possibly for address 0xebcbde5c: 0000 [#1] SMP  // 32-bit kernel
+>
+>
+> Side topic, opnd_bytes isn't correct for instructions with fixed 64-bit
+> operands (Mq notation in the opcode map), which is probably an argument
+> against the fancy straddle logic...
 
-Extending the hash in cache is mirrored by extending the media form,
-by serializing the cache shard into multiple linear regions on media.
-Now here is the key idea: even taking the cost of this media rewrite
-into account, insert performance remains O(1), just with a slightly
-higher constant factor. Shardmap exploits this subtle mathematical
-fact to get the best of both worlds: O(1) performance like a hash and
-extensibility like a BTree.
-
-In fact, if you wish to avoid that constant media rewrite factor
-entirely, Shardmap lets you do it, by allowing you to specify the
-number and size of shards at directory creation time. I have not
-benchmarked this, but it could improve average create performance by 20%
-or so. However, even with the "extra" media copy, Shardmap still has
-impressively high insert performance, in fact it is significantly
-faster than any of the high performance key value stores we have tried
-so far.
-
-> (4) Because of (2), we won't be able to do any actual benchmarks for a
-> while.
-
-(2) is not an issue, the copyright is entirely mine and the license can
-be retuned as convenient. Just indicate where the GPLv2 version should
-be posted and I will make it so. Perhaps a new Github repo, or Gitlab?
-
-> I just checked the latest version of Tux3[2], and it appears
-> to be be still using a linear search scheme for its directory ---
-> e.g., an O(n) lookup ala ext2.  So I'm guessing Shardmap may have been
-> *designed* for Tux3, but it has not yet been *implemented* for Tux3?
-> 
-> [2] https://github.com/OGAWAHirofumi/linux-tux3/blob/hirofumi/fs/tux3/dir.c#L283
-
-Correct, not yet ported to Tux3, however this work is in progress. There
-are some sticky little points to work out such as how to implement the
-largish cache shard objects without using virtual memory. The PAGEMAP
-compilation option in the current source breaks those objects up into
-pages, essentially doing virtual memory by hand, which will add some
-small amount of additional overhead to the kernel version versus the
-user space version, nothing to worry about. However it does make me wish
-that we had better kernel support for virtual memory.
-
-There are various other kernel porting details that are maybe a bit too
-fine grained for this post. Example: Shardmap is a memory mapped db but
-we don't have mmap in kernel, so must do this by hand also.
-
-> (5) The claim is made that readdir() accesses files sequentially; but
-> there is also mention in Shardmap of compressing shards (e.g.,
-> rewriting them) to squeeze out deleted and tombstone entries.  This
-> pretty much guarantees that it will not be possible to satisfy POSIX
-> requirements of telldir(2)/seekdir(3) (using a 32-bit or 64-bitt
-> cookie), NFS (which also requires use of a 32-bit or 64-bit cookie
-> while doing readdir scan), or readdir() semantics in the face of
-> directory entries getting inserted or removed from the directory.
-
-No problem, the data blocks are completely separate from the index so
-readdir just walks through them in linear order a la classic UFS/Ext2.
-What could possibly be simpler, faster or more POSIX compliant?
-
-> (To be specific, POSIX requires readdir returns each entry in a
-> directory once and only once, and in the case of a directory entry
-> which is removed or inserted, that directory entry must be returned
-> exactly zero or one times.  This is true even if telldir(2) ort
-> seekdir(2) is used to memoize a particular location in the directory,
-> which means you have a 32-bit or 64-bit cookie to define a particular
-> location in the readdir(2) stream.  If the file system wants to be
-> exportable via NFS, it must meet similar requirements ---- except the
-> 32-bit or 64-bit cookie MUST survive a reboot.)
-
-So we finally get to fix this nagging HTree defect after all these
-years. Thank you once again for that sweet hack, but with luck we
-will be able to obsolete it by this time next year.
-
-Regards,
-
-Daniel
+And there also is nothing in the instruction decoder that could ever
+set opnd_bytes to 1, AFAICS. So while I think that the inaccuracies
+there don't really matter for the coarse "is it noncanonical #GP?"
+distinction right now - especially considering that userland isn't
+allowed to allocate the last canonical virtual page on X86-64 -, it
+definitely isn't accurate enough to explicitly print the access size
+or end address.
