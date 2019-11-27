@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87224C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB8DC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB69215B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C19215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887051;
-	bh=MJkrTnZhYe4LTAXlDBRFqF4QGe98ekRj43Q6Mgu8rWY=;
+	s=default; t=1574887056;
+	bh=Ear3GYjHcm6aXs1U2mblM6eBMGjbS/W5opmAxtJII2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epqpWv9Q4V9JrMoveNtBWP2oM9sAbBZbr2u5o4eYwtVfBZSwMudW6hoXGpce94t/Y
-	 dwYuIyEXUsaH6gfo4JXE6eABFM1D3vz9b1Q2491tQ4cgqmg2R7Hv5l5wveyyJ14dvM
-	 Lxzlbefp6AAo/nFhrhSFYzi4KF9FhZ3DR0HWSXhQ=
+	b=B6oKpWajX4seLoB+DV6vyYV7Klpo7ZTCAV6bdjY7izu4ol3b5v8bhuZG8i1DZWLKi
+	 ki7Gvs0TdOIBPT8uhW33z1W49MgGC2MX4awPdDe9AMkoBuVJVlrHzzfndYlgI69onK
+	 vCUdiGqzS7i7kYslXvtfiSLsUlUZqmqerOs91o8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbfK0Uha (ORCPT
+        id S1728593AbfK0Uhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:37:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40456 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:37:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728575AbfK0Uh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:37:27 -0500
+        id S1728580AbfK0Uh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:37:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D848215A5;
-        Wed, 27 Nov 2019 20:37:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B971420862;
+        Wed, 27 Nov 2019 20:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887046;
-        bh=MJkrTnZhYe4LTAXlDBRFqF4QGe98ekRj43Q6Mgu8rWY=;
+        s=default; t=1574887049;
+        bh=Ear3GYjHcm6aXs1U2mblM6eBMGjbS/W5opmAxtJII2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BwcceBU9z2cmY/XlLE0qOmqNOyWN4IXsf4bkLhJf3W6cERzh7FleYW5xblUkdtfX8
-         OnQBJUeTlDs9DXbDeHuOBAYnnLAxXX5vZlK1s1x72Q8EDsRWC8ROjVSUnBxlaF5Wvn
-         xBXAtct682MevgEBULw18ikSayIfyZ798WP0znx0=
+        b=eRA3k4tzQ5dw43Gwgh3LxEP+pJZqOKFbxmGBvGERZliRMBNGvoJFSXgXT5/X0hqtQ
+         q2i8zqUnHPPPsIXI0roJoGmgpxbEblS2ce1h/0TNosW6M/cimhSqDqhnj9CehvrGQd
+         TqRxXbWZKXXy7B7d0Cj2hwAgzhpXKOjc+MOM66ZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org,
+        David Barmann <david.barmann@stackpath.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 092/132] net: bcmgenet: return correct value ret from bcmgenet_power_down
-Date:   Wed, 27 Nov 2019 21:31:23 +0100
-Message-Id: <20191127203019.531099139@linuxfoundation.org>
+Subject: [PATCH 4.4 093/132] sock: Reset dst when changing sk_mark via setsockopt
+Date:   Wed, 27 Nov 2019 21:31:24 +0100
+Message-Id: <20191127203020.182005605@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -60,39 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: David Barmann <david.barmann@stackpath.com>
 
-[ Upstream commit 0db55093b56618088b9a1d445eb6e43b311bea33 ]
+[ Upstream commit 50254256f382c56bde87d970f3d0d02fdb76ec70 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+When setting the SO_MARK socket option, if the mark changes, the dst
+needs to be reset so that a new route lookup is performed.
 
-drivers/net/ethernet/broadcom/genet/bcmgenet.c: In function 'bcmgenet_power_down':
-drivers/net/ethernet/broadcom/genet/bcmgenet.c:1136:6: warning:
- variable 'ret' set but not used [-Wunused-but-set-variable]
+This fixes the case where an application wants to change routing by
+setting a new sk_mark.  If this is done after some packets have already
+been sent, the dst is cached and has no effect.
 
-bcmgenet_power_down should return 'ret' instead of 0.
-
-Fixes: ca8cf341903f ("net: bcmgenet: propagate errors from bcmgenet_power_down")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David Barmann <david.barmann@stackpath.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/sock.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 04fe570275cd6..34fae5576b603 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1074,7 +1074,7 @@ static int bcmgenet_power_down(struct bcmgenet_priv *priv,
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 8aa4a5f895723..92d5f6232ec76 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -951,10 +951,12 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
+ 			clear_bit(SOCK_PASSSEC, &sock->flags);
  		break;
- 	}
+ 	case SO_MARK:
+-		if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
++		if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN)) {
+ 			ret = -EPERM;
+-		else
++		} else if (val != sk->sk_mark) {
+ 			sk->sk_mark = val;
++			sk_dst_reset(sk);
++		}
+ 		break;
  
--	return 0;
-+	return ret;
- }
- 
- static void bcmgenet_power_up(struct bcmgenet_priv *priv,
+ 	case SO_RXQ_OVFL:
 -- 
 2.20.1
 
