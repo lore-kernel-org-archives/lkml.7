@@ -2,76 +2,101 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4F2C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF68C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C197E20722
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:49:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="apEnIqch"
+	by mail.kernel.org (Postfix) with ESMTP id F11E82073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfK0Kte (ORCPT
+        id S1726559AbfK0Kz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:49:34 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:41637 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfK0Kte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:49:34 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id f4a941b4;
-        Wed, 27 Nov 2019 09:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=date:from:to
-        :cc:subject:message-id:references:mime-version:content-type
-        :in-reply-to; s=mail; bh=eRC4IefZaq2pDwmil7AkwYOB+x4=; b=apEnIqc
-        hNhcp7PJoYCnlztSmO7hU35bnQku8sxzwt1fW8+esarEmV01sBUE2BQEGhNWxXE8
-        I2q2j1gBzd0sjNNA9TGQddNz6gFlSozY/c4Gj3iymlk6n+wQuhsrqW8KN/ivJI5v
-        BNCCm+d4ePkfYGyaMxzmLeYm7/SK8RkTljIhUtAElmPpeaFoIB2n+3ughhPsQbq2
-        VDDxiHP+jZ0P77Fiym39B4h+Lh2SVAtU8ipMse5WxWj4lTB4vjO2STnTP3BUobxn
-        oIqk3/PV8ttdTa1XejhNrrmvfApxp3fSNEolkmv0UXwr2RhbvKShz43T9HyGelkf
-        vF0EwPKqVdHxSTA==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 96238084 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Wed, 27 Nov 2019 09:55:42 +0000 (UTC)
-Date:   Wed, 27 Nov 2019 11:49:30 +0100
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     David Miller <davem@davemloft.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH RFC net-next] net: WireGuard secure network tunnel
-Message-ID: <20191127104930.GA367657@zx2c4.com>
-References: <20191120203538.199367-1-Jason@zx2c4.com>
+        Wed, 27 Nov 2019 05:55:27 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:53869 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfK0Kz1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:55:27 -0500
+X-Originating-IP: 90.76.211.102
+Received: from localhost.localdomain (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 109B1FF803;
+        Wed, 27 Nov 2019 10:55:23 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Bernhard Frauendienst <kernel@nospam.obeliks.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v5 0/4] MTD concat
+Date:   Wed, 27 Nov 2019 11:55:18 +0100
+Message-Id: <20191127105522.31445-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191120203538.199367-1-Jason@zx2c4.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 09:35:38PM +0100, Jason A. Donenfeld wrote:
-> RFC Note:
->   This is a RFC for folks who want to play with this early, because
->   Herbert's cryptodev-2.6 tree hasn't yet made it into net-next. I'll
->   repost this as a v1 (possibly with feedback incorporated) once the
->   various trees are in the right place. This compiles on top of the
->   Frankenzinc patchset from Ard, though it hasn't yet received suitable
->   testing there for me to call it v1 just yet. Preliminary testing with
->   the usual netns.sh test suite on x86 indicates it's at least mostly
->   functional, but I'll be giving things further scrutiny in the days to
->   come.
-> 
-> WireGuard is a layer 3 secure networking tunnel made specifically for
-> [...]
+Hello,
 
-FYI, as the various merges happen between crypto-2.6.git and net*.git,
-I'll be keeping this tag up to date with the latest WireGuard patch:
+A year ago Bernhard Frauendienst started an effort to bring MTD
+devices concatenation generic [1]. Today I also need this
+concatenation to be possible in order to support configurations where
+two MTD devices are treated like one bigger in order to be able to
+define partitions across chip boundaries.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/zx2c4/linux.git/patch/?id=734bd9ed21b0b0057bd2a131c9129a50cd910f6c
-https://git.kernel.org/pub/scm/linux/kernel/git/zx2c4/linux.git/commit/?h=wireguard
+After having talked with Mark Brown, Boris Brezillon and Rob Herring,
+the only approach which seems acceptable is to add a property in the
+partitions nodes to describe which partitions should be concatenated
+in a virtual device.
+
+At first I changed a bit the code logic and style, keeping the logic
+from the original version. Since the last bindings change, I rewrote
+almost all the driver, so I took ownership on it, keeping Bernhard in
+a 'Suggested-by' tag.
+
+I would like to add another way to concatenate devices: with module
+parameters/arguments on the cmdline. This is easily doable in a second
+time.
+
+Thanks,
+Miquèl
+
+[1] https://lwn.net/ml/linux-kernel/20180907173515.19990-1-kernel@nospam.obeliks.de/
+
+
+Bernhard Frauendienst (1):
+  mtd: Add get_mtd_device_by_node() helper
+
+Miquel Raynal (3):
+  dt-bindings: mtd: Describe MTD partitions concatenation
+  mtd: concat: Fix a comment referring to an unknown symbol
+  mtd: Add driver for concatenating devices
+
+ .../devicetree/bindings/mtd/partition.txt     |   1 +
+ drivers/mtd/Kconfig                           |   8 +
+ drivers/mtd/Makefile                          |   1 +
+ drivers/mtd/mtd_virt_concat.c                 | 240 ++++++++++++++++++
+ drivers/mtd/mtdconcat.c                       |   5 +-
+ drivers/mtd/mtdcore.c                         |  38 +++
+ include/linux/mtd/mtd.h                       |   2 +
+ 7 files changed, 291 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/mtd/mtd_virt_concat.c
+
+-- 
+2.20.1
+
