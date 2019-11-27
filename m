@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E31C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615A3C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A6220715
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382D420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890564;
-	bh=aJgCLU5INSKa8i+HSX657zceEvO95pCi04icG6OYlDc=;
+	s=default; t=1574890572;
+	bh=m09NQk/hf9MktbOGeBLi3nTN2WP7IyVR6LenXFTYOpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YxT2+HKwClymJCiCd4lvm4yGzV6Nv229vRMZQ3dvQ6U3Pc7Bnm+byYy9ORglGFpWf
-	 CIcf6zoBj9FxADkpCt8FWufI52gewQrdj/KUf9rvu7Od6qQDtne8Gd8WJJhpFGvFI8
-	 Rz1go+wePmJrZ+47/NDpgMHdGxtWi7Knl/ApMu4A=
+	b=c0pPhKZ70QYlO3JHGwpesKSwGWwsvGAfda72KnrHQx1O6ZpAi5YxvmyesO9vu6IYY
+	 oRU4+Hu60pVx3CgNVvogx2Zg7PDKifubdiV70z2H4tFsEfAftAFWDjjd3EmFeQt7yj
+	 /VhJu9D722XlH+e0W7TsE7i7tsnaNPUOSzhzRsHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbfK0VgD (ORCPT
+        id S1730152AbfK0Usb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:36:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34062 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:48:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730163AbfK0Usn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:48:43 -0500
+        id S1730141AbfK0Us1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:48:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 471A2217C3;
-        Wed, 27 Nov 2019 20:48:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72B5621844;
+        Wed, 27 Nov 2019 20:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887722;
-        bh=aJgCLU5INSKa8i+HSX657zceEvO95pCi04icG6OYlDc=;
+        s=default; t=1574887706;
+        bh=m09NQk/hf9MktbOGeBLi3nTN2WP7IyVR6LenXFTYOpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qcb+b1me9mZSx/0sYIY1bwpxTovIQ4jiM1EFQN1+T3XW/Ps58CFtCLslOMn0XSrjP
-         R8Mq/h/6ifb9cAKGRkpiX75YemjkFmJRxtQTzyqiwAcxpGghn1dK6fKvBdEs30xkm3
-         rSCZy6Jz+cPsXwbdlPeFWuLMKuhiWhtVD7Aun/WU=
+        b=OH4PZ9IEra5PBMUyw5+Hi1BI9URwSkMGEc+/Krpn68AxP7HWuxbHqWLW9RC0E5Id+
+         ZVCtxAysWT5jssuluxPz0uBOWFd/vr/us23B+rwo3Y1yclVBEsjOTujZkDO5sPXEKD
+         hnIElpGOP6jFcZXHkh0ThU7+blqQGeLC5zSu4Ji0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 069/211] sunrpc: safely reallow resvport min/max inversion
-Date:   Wed, 27 Nov 2019 21:30:02 +0100
-Message-Id: <20191127203100.406589905@linuxfoundation.org>
+Subject: [PATCH 4.14 064/211] PCI: vmd: Detach resources after stopping root bus
+Date:   Wed, 27 Nov 2019 21:29:57 +0100
+Message-Id: <20191127203059.983587019@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,120 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: J. Bruce Fields <bfields@redhat.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-[ Upstream commit 826799e66e8683e5698e140bb9ef69afc8c0014e ]
+[ Upstream commit dc8af3a827df6d4bb925d3b81b7ec94a7cce9482 ]
 
-Commits ffb6ca33b04b and e08ea3a96fc7 prevent setting xprt_min_resvport
-greater than xprt_max_resvport, but may also break simple code that sets
-one parameter then the other, if the new range does not overlap the old.
+The VMD removal path calls pci_stop_root_busi(), which tears down the pcie
+tree, including detaching all of the attached drivers. During driver
+detachment, devices may use pci_release_region() to release resources.
+This path relies on the resource being accessible in resource tree.
 
-Also it looks racy to me, unless there's some serialization I'm not
-seeing.  Granted it would probably require malicious privileged processes
-(unless there's a chance these might eventually be settable in unprivileged
-containers), but still it seems better not to let userspace panic the
-kernel.
+By detaching the child domain from the parent resource domain prior to
+stopping the bus, we are preventing the list traversal from finding the
+resource to be freed. If we instead detach the resource after stopping
+the bus, we will have properly freed the resource and detaching is
+simply accounting at that point.
 
-Simpler seems to be to allow setting the parameters to whatever you want
-but interpret xprt_min_resvport > xprt_max_resvport as the empty range.
+Without this order, the resource is never freed and is orphaned on VMD
+removal, leading to a warning:
 
-Fixes: ffb6ca33b04b "sunrpc: Prevent resvport min/max inversion..."
-Fixes: e08ea3a96fc7 "sunrpc: Prevent rexvport min/max inversion..."
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+[  181.940162] Trying to free nonexistent resource <e5a10000-e5a13fff>
+
+Fixes: 2c2c5c5cd213 ("x86/PCI: VMD: Attach VMD resources to parent domain's resource tree")
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+[lorenzo.pieralisi@arm.com: updated commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtsock.c | 34 ++++++++++++++++++----------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
+ drivers/pci/host/vmd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index a42871a59f3b9..f75b5b7c1fc2a 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -127,7 +127,7 @@ static struct ctl_table xs_tunables_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= &xprt_min_resvport_limit,
--		.extra2		= &xprt_max_resvport
-+		.extra2		= &xprt_max_resvport_limit
- 	},
- 	{
- 		.procname	= "max_resvport",
-@@ -135,7 +135,7 @@ static struct ctl_table xs_tunables_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &xprt_min_resvport,
-+		.extra1		= &xprt_min_resvport_limit,
- 		.extra2		= &xprt_max_resvport_limit
- 	},
- 	{
-@@ -1754,11 +1754,17 @@ static void xs_udp_timer(struct rpc_xprt *xprt, struct rpc_task *task)
- 	spin_unlock_bh(&xprt->transport_lock);
- }
- 
--static unsigned short xs_get_random_port(void)
-+static int xs_get_random_port(void)
+diff --git a/drivers/pci/host/vmd.c b/drivers/pci/host/vmd.c
+index 2537b022f42d4..af6d5da10ea5f 100644
+--- a/drivers/pci/host/vmd.c
++++ b/drivers/pci/host/vmd.c
+@@ -753,12 +753,12 @@ static void vmd_remove(struct pci_dev *dev)
  {
--	unsigned short range = xprt_max_resvport - xprt_min_resvport + 1;
--	unsigned short rand = (unsigned short) prandom_u32() % range;
--	return rand + xprt_min_resvport;
-+	unsigned short min = xprt_min_resvport, max = xprt_max_resvport;
-+	unsigned short range;
-+	unsigned short rand;
-+
-+	if (max < min)
-+		return -EADDRINUSE;
-+	range = max - min + 1;
-+	rand = (unsigned short) prandom_u32() % range;
-+	return rand + min;
- }
+ 	struct vmd_dev *vmd = pci_get_drvdata(dev);
  
- /**
-@@ -1815,9 +1821,9 @@ static void xs_set_srcport(struct sock_xprt *transport, struct socket *sock)
- 		transport->srcport = xs_sock_getport(sock);
- }
- 
--static unsigned short xs_get_srcport(struct sock_xprt *transport)
-+static int xs_get_srcport(struct sock_xprt *transport)
- {
--	unsigned short port = transport->srcport;
-+	int port = transport->srcport;
- 
- 	if (port == 0 && transport->xprt.resvport)
- 		port = xs_get_random_port();
-@@ -1838,7 +1844,7 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
- {
- 	struct sockaddr_storage myaddr;
- 	int err, nloop = 0;
--	unsigned short port = xs_get_srcport(transport);
-+	int port = xs_get_srcport(transport);
- 	unsigned short last;
- 
- 	/*
-@@ -1856,8 +1862,8 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
- 	 * transport->xprt.resvport == 1) xs_get_srcport above will
- 	 * ensure that port is non-zero and we will bind as needed.
- 	 */
--	if (port == 0)
--		return 0;
-+	if (port <= 0)
-+		return port;
- 
- 	memcpy(&myaddr, &transport->srcaddr, transport->xprt.addrlen);
- 	do {
-@@ -3286,12 +3292,8 @@ static int param_set_uint_minmax(const char *val,
- 
- static int param_set_portnr(const char *val, const struct kernel_param *kp)
- {
--	if (kp->arg == &xprt_min_resvport)
--		return param_set_uint_minmax(val, kp,
--			RPC_MIN_RESVPORT,
--			xprt_max_resvport);
- 	return param_set_uint_minmax(val, kp,
--			xprt_min_resvport,
-+			RPC_MIN_RESVPORT,
- 			RPC_MAX_RESVPORT);
+-	vmd_detach_resources(vmd);
+ 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+ 	pci_stop_root_bus(vmd->bus);
+ 	pci_remove_root_bus(vmd->bus);
+ 	vmd_cleanup_srcu(vmd);
+ 	vmd_teardown_dma_ops(vmd);
++	vmd_detach_resources(vmd);
+ 	irq_domain_remove(vmd->irq_domain);
  }
  
 -- 
