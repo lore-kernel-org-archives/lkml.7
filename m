@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7551C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA41C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A44242075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D5D2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890651;
-	bh=LZp/NX6ULwok7KISCfKKkJI5x6JyKuh3DkWBM1uLWIw=;
+	s=default; t=1574890659;
+	bh=lj6K0mYTs3dnyoxMWa1tl5VThW2W61nKhT+eoMC9cTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tyknYKq5/Ab85j6yXfsxwLN/OjEedq/Q5bKVTVghfiijmqrILHAJ4havTeqMSG43F
-	 kwtR5p0IcLSn0IauXX8pKlwjABJHg3dUjJk4ql63gz+KeF++O1/Bbx1QLYWRPvfJ8P
-	 seCqbMYetlw7P8+W20cr33kRSDsG1G9hLTb/y6qw=
+	b=aQOcWNEm3OCQyEDtl1RuGFY7Rj6rLOHdY/sTDdAeWGEvzkbxU7LgYUmkBPPGppidK
+	 tJ30Fx7z6nOtuP+3OV8VBxeJzMsgpK5bvlj/IkK1XUhtI8w7bu5g8hGuZD3HwdsYJ/
+	 jmgB3Rqu5XNjSpB53PwKb69j6Qy6lwsapKHHvYzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbfK0Uqt (ORCPT
+        id S1728608AbfK0Uqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:46:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58896 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:46:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729916AbfK0Uqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:46:44 -0500
+        id S1729896AbfK0Uqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:46:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE0EB2166E;
-        Wed, 27 Nov 2019 20:46:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43FFE2166E;
+        Wed, 27 Nov 2019 20:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887604;
-        bh=LZp/NX6ULwok7KISCfKKkJI5x6JyKuh3DkWBM1uLWIw=;
+        s=default; t=1574887593;
+        bh=lj6K0mYTs3dnyoxMWa1tl5VThW2W61nKhT+eoMC9cTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13KyxP2Qu+uGlcYh+MCAlV1yuJCGE/Y5SkwzngtN627Sk6XyNC6e3iNSJxNZw8u5c
-         Xb6ee7RUo43T2YU7OIdJ87wYHtWDaXli0/JNjHMTmoMRA2+1EBc28kDNyh1lx/e2Vq
-         bhMEYpCixnvrdwbQfXg1HQ56ZK+dV/FuloqBU7w4=
+        b=BD/plhNHKzR7TMDx0wDvHFo2X8QY4Lru+2sPXitHFhalNFQyA+EbqdWWsoCwRYGUf
+         I1F89PSsma/ox2x4RDBF88zo3ZKO3eC6mhlmeuW9Et1LBWT8WrwAHKClZV1Vp6w4Rb
+         wId3p2PvPMROmO4a9NmnoO80ELMHS2wm9H81Xo/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 023/211] powerpc: Fix signedness bug in update_flash_db()
-Date:   Wed, 27 Nov 2019 21:29:16 +0100
-Message-Id: <20191127203053.294605731@linuxfoundation.org>
+Subject: [PATCH 4.14 020/211] gfs2: Fix marking bitmaps non-full
+Date:   Wed, 27 Nov 2019 21:29:13 +0100
+Message-Id: <20191127203052.913632014@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,38 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 014704e6f54189a203cc14c7c0bb411b940241bc ]
+[ Upstream commit ec23df2b0cf3e1620f5db77972b7fb735f267eff ]
 
-The "count < sizeof(struct os_area_db)" comparison is type promoted to
-size_t so negative values of "count" are treated as very high values
-and we accidentally return success instead of a negative error code.
+Reservations in gfs can span multiple gfs2_bitmaps (but they won't span
+multiple resource groups).  When removing a reservation, we want to
+clear the GBF_FULL flags of all involved gfs2_bitmaps, not just that of
+the first bitmap.
 
-This doesn't really change runtime much but it fixes a static checker
-warning.
-
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Steven Whitehouse <swhiteho@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/ps3/os-area.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/gfs2/rgrp.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/ps3/os-area.c b/arch/powerpc/platforms/ps3/os-area.c
-index 3db53e8aff927..9b2ef76578f06 100644
---- a/arch/powerpc/platforms/ps3/os-area.c
-+++ b/arch/powerpc/platforms/ps3/os-area.c
-@@ -664,7 +664,7 @@ static int update_flash_db(void)
- 	db_set_64(db, &os_area_db_id_rtc_diff, saved_params.rtc_diff);
+diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
+index 0d72baae51509..7cb0672294dfc 100644
+--- a/fs/gfs2/rgrp.c
++++ b/fs/gfs2/rgrp.c
+@@ -623,7 +623,10 @@ static void __rs_deltree(struct gfs2_blkreserv *rs)
+ 	RB_CLEAR_NODE(&rs->rs_node);
  
- 	count = os_area_flash_write(db, sizeof(struct os_area_db), pos);
--	if (count < sizeof(struct os_area_db)) {
-+	if (count < 0 || count < sizeof(struct os_area_db)) {
- 		pr_debug("%s: os_area_flash_write failed %zd\n", __func__,
- 			 count);
- 		error = count < 0 ? count : -EIO;
+ 	if (rs->rs_free) {
+-		struct gfs2_bitmap *bi = rbm_bi(&rs->rs_rbm);
++		u64 last_block = gfs2_rbm_to_block(&rs->rs_rbm) +
++				 rs->rs_free - 1;
++		struct gfs2_rbm last_rbm = { .rgd = rs->rs_rbm.rgd, };
++		struct gfs2_bitmap *start, *last;
+ 
+ 		/* return reserved blocks to the rgrp */
+ 		BUG_ON(rs->rs_rbm.rgd->rd_reserved < rs->rs_free);
+@@ -634,7 +637,13 @@ static void __rs_deltree(struct gfs2_blkreserv *rs)
+ 		   it will force the number to be recalculated later. */
+ 		rgd->rd_extfail_pt += rs->rs_free;
+ 		rs->rs_free = 0;
+-		clear_bit(GBF_FULL, &bi->bi_flags);
++		if (gfs2_rbm_from_block(&last_rbm, last_block))
++			return;
++		start = rbm_bi(&rs->rs_rbm);
++		last = rbm_bi(&last_rbm);
++		do
++			clear_bit(GBF_FULL, &start->bi_flags);
++		while (start++ != last);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
