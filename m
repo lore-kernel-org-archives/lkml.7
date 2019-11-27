@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0506C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C327BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B4920835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8E020835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUXYnPJG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AG41P4Ie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfK0Rup (ORCPT
+        id S1727217AbfK0Ruv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:50:45 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44390 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfK0Rup (ORCPT
+        Wed, 27 Nov 2019 12:50:51 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:32841 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfK0Ruv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:50:45 -0500
-Received: by mail-il1-f193.google.com with SMTP id z12so12334870iln.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 09:50:44 -0800 (PST)
+        Wed, 27 Nov 2019 12:50:51 -0500
+Received: by mail-il1-f195.google.com with SMTP id y16so14244194iln.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 09:50:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dPQmr4Gy2qdgWTqBpMzYGw3HanW+MuNpIpNa1l5uMF4=;
-        b=aUXYnPJGTfhmmdmRXkhRssANa3FP4VNSyxHaauee/olzYY1Eb2AKfpz/lHdzElh+Ke
-         ofXA9TwbPPG7QQC4kO7BuhFXW0r8K4h7ftZWd0FbszzawhTR+MYHu0gm4mqSo8eu3gej
-         fMie+82APTO9sT5M9XIp5tnqxwBz0+Rqxi36OK05FtVt+DEu1jO5rBdA54u2tW4UqxVg
-         mv/nSW74a0WVHZWiU/bmhMisInhtHmU9UP5QeyFnZFHtM30ZFA7hR2Gd3AzSt9mzcKu3
-         Att+n2HeT2IuTjX6saSu91Uzecmqz2nBmvaS5ifgq7xaNzWVany4px9ddc5eIOFJ+dU9
-         Tsig==
+        bh=E9sFvSVCjMbmru2cAfKAhYSNr5hnv5CQxVIAALqigoU=;
+        b=AG41P4IetILl2isGM0nVwEHyR47EGnaI+o4rXm2n9WHyg1Xk4u7GtAH/HqhbwtPrK9
+         V523BCo6BUTfjYxCE71NpUSksfMwomIbZHfAvs7pnEJDx4WRYUyn2G9YcJbGexIBHHS3
+         hjp6c53S3V0JiW+nUgNqUrWODi/eYGKyFvN0BEV/I7pG64ezVfN/YY1JjFofLjcKKUzM
+         lU8Nz3YNyj258vD3wCRpyE+iHUpWzV+AvmL7d177J8R0Qoj0IYs87dRSxbn0YZqOAYCi
+         QWuPQgp0h3386FlKLPc5+Fjz0SiiWi2rahEnVsuwO8ZvYIqLWYDFahKSLDSmLif/h/cm
+         8R2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dPQmr4Gy2qdgWTqBpMzYGw3HanW+MuNpIpNa1l5uMF4=;
-        b=Gw/1UHQIuuTUlW90XNf19LMHkXSmj4udMLI0Lj33Ct4RDljduuzCw4SIv5/zrM2quu
-         PTGfDeZKpLgHnfkxu8gPBkY4G2DVTylocWQBgid/hN4SV4lUtMe7zDPzLiii4TJH/o9N
-         3vHwpuK8tsM1HQ6QDpVm14S/JHeVzeI88wJkUpkq+13UIZum5bPLoLducVPtmfLmcG0D
-         ElsBDntT8gkFPJunDjlOODEZlQH/7HLH5tHSqIa88llM0KvcKz6ccStk+RqON+GndKcT
-         hWNHBPPIcpSJSN5iy2V/Sl4YyBwH3WmnZCtDm8O6hxEtFvkNsJOmXQoxvc87u1rML4/Q
-         +zww==
-X-Gm-Message-State: APjAAAVaeAEKUwg+oVGuiJGZkqQI+4ph3Z0bLuzJPI14XiUJZZH4R9IE
-        tDcjaZwKEvGNzTLbI5KVVoM=
-X-Google-Smtp-Source: APXvYqwNA+u2ncyGleHE6ttKjoY9mlO1t4Fh+Zsrqv8sgPsP7cZI2YYaHVmhlhXxEJuj1S3uIrdveQ==
-X-Received: by 2002:a92:3984:: with SMTP id h4mr2462992ilf.36.1574877044279;
-        Wed, 27 Nov 2019 09:50:44 -0800 (PST)
+        bh=E9sFvSVCjMbmru2cAfKAhYSNr5hnv5CQxVIAALqigoU=;
+        b=m/QKsx2TK9TxqSAAT/VWzChUpHwfY175b6IFOZD1VQ9xTaDKnWzirvB6faUz2zFs+2
+         vCt/GqgxRUJR+em2VqGpUo2NZldyebaac+bZwsSIEKv6KFprkQRT83KtcOu1iXjpVcYG
+         VjiD+JF5E+9BYy2r58+Ypw9WO3RguNiMTyfnIHV6ZjGzsgO7R88OwtKNePNXYjwS+8dw
+         8S1vZE3Z2JrwCq0fcFL5i0XFdHAyoPMUUoVQ5+/PtPyvNt5IYuVaUmunU3o6M1a+6kxs
+         UvX9aSUJYU4fczuFA1PUHD4L3sIKAgBd86uKCB0ntQB5J+YGPby+ty/cowqTmzGgY4Qb
+         qOMQ==
+X-Gm-Message-State: APjAAAUhvjtXJnCwP8Tx7syER/TfHbbIv6pfaUa86mZmFo7JyiysM0BR
+        WCRWX/gAWFle+vm9kDBrYOw=
+X-Google-Smtp-Source: APXvYqz89TUAUSTdgQYwZM9NgjEIAKC2JBRbyYg/JxZDbNsIMZP88Ijo0FmKR0Qg6WM2nnkYYH+euw==
+X-Received: by 2002:a05:6e02:d92:: with SMTP id i18mr44152161ilj.20.1574877050575;
+        Wed, 27 Nov 2019 09:50:50 -0800 (PST)
 Received: from localhost.localdomain (c-24-9-77-57.hsd1.co.comcast.net. [24.9.77.57])
-        by smtp.googlemail.com with ESMTPSA id d8sm3791783ioq.84.2019.11.27.09.50.42
+        by smtp.googlemail.com with ESMTPSA id s23sm4633162ild.48.2019.11.27.09.50.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 09:50:43 -0800 (PST)
+        Wed, 27 Nov 2019 09:50:49 -0800 (PST)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org
 Cc:     linux@rasmusvillemoes.dk, greg@kroah.com,
         Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH 02/16] dyndbg: drop obsolete comment on ddebug_proc_open
-Date:   Wed, 27 Nov 2019 10:50:36 -0700
-Message-Id: <20191127175036.1351226-1-jim.cromie@gmail.com>
+Subject: [PATCH 03/16] dyndbg: raise verbosity needed to enable ddebug_proc_* logging
+Date:   Wed, 27 Nov 2019 10:50:44 -0700
+Message-Id: <20191127175044.1351285-1-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,35 +72,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 4bad78c55002 ("lib/dynamic_debug.c: use seq_open_private() instead of seq_open()")'
+The verbose/debug logging done by `cat $DBGFS/dynamic_debug/control`
+is voluminous, and clutters logging done during parsing of queries,
+which is much more useful when manipulating/enabling callsites.
 
-The commit was one of a tree-wide set which replaced open-coded
-boilerplate with a single tail-call.  It therefore obsoleted the
-comment about that boilerplate, clean that up now.
+So increase the required verbosity to 8&9 for per-page and per-line
+logging; ie ddebug_proc_(start|stop) and ddebug_proc_(show|next)
+respectively.  This leaves 2-7 for any further logging tweaks to the
+query parsing process.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 7 -------
- 1 file changed, 7 deletions(-)
+ lib/dynamic_debug.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index c60409138e13..6cefceffadcb 100644
+index 6cefceffadcb..c86c97154657 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -853,13 +853,6 @@ static const struct seq_operations ddebug_proc_seqops = {
- 	.stop = ddebug_proc_stop
- };
+@@ -105,12 +105,16 @@ static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
+ 	return buf;
+ }
  
--/*
-- * File_ops->open method for <debugfs>/dynamic_debug/control.  Does
-- * the seq_file setup dance, and also creates an iterator to walk the
-- * _ddebugs.  Note that we create a seq_file always, even for O_WRONLY
-- * files where it's not needed, as doing so simplifies the ->release
-- * method.
-- */
- static int ddebug_proc_open(struct inode *inode, struct file *file)
+-#define vpr_info(fmt, ...)					\
++#define vnpr_info(lvl, fmt, ...)				\
+ do {								\
+-	if (verbose)						\
++	if (verbose >= lvl)					\
+ 		pr_info(fmt, ##__VA_ARGS__);			\
+ } while (0)
+ 
++#define vpr_info(fmt, ...)	vnpr_info(1, fmt, ##__VA_ARGS__)
++#define v8pr_info(fmt, ...)	vnpr_info(8, fmt, ##__VA_ARGS__)
++#define v9pr_info(fmt, ...)	vnpr_info(9, fmt, ##__VA_ARGS__)
++
+ static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
  {
- 	vpr_info("called\n");
+ 	/* trim any trailing newlines */
+@@ -771,7 +775,7 @@ static void *ddebug_proc_start(struct seq_file *m, loff_t *pos)
+ 	struct _ddebug *dp;
+ 	int n = *pos;
+ 
+-	vpr_info("called m=%p *pos=%lld\n", m, (unsigned long long)*pos);
++	v8pr_info("called m=%p *pos=%lld\n", m, (unsigned long long)*pos);
+ 
+ 	mutex_lock(&ddebug_lock);
+ 
+@@ -795,7 +799,7 @@ static void *ddebug_proc_next(struct seq_file *m, void *p, loff_t *pos)
+ 	struct ddebug_iter *iter = m->private;
+ 	struct _ddebug *dp;
+ 
+-	vpr_info("called m=%p p=%p *pos=%lld\n",
++	v9pr_info("called m=%p p=%p *pos=%lld\n",
+ 		 m, p, (unsigned long long)*pos);
+ 
+ 	if (p == SEQ_START_TOKEN)
+@@ -818,7 +822,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ 	struct _ddebug *dp = p;
+ 	char flagsbuf[10];
+ 
+-	vpr_info("called m=%p p=%p\n", m, p);
++	v9pr_info("called m=%p p=%p\n", m, p);
+ 
+ 	if (p == SEQ_START_TOKEN) {
+ 		seq_puts(m,
+@@ -842,7 +846,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+  */
+ static void ddebug_proc_stop(struct seq_file *m, void *p)
+ {
+-	vpr_info("called m=%p p=%p\n", m, p);
++	v8pr_info("called m=%p p=%p\n", m, p);
+ 	mutex_unlock(&ddebug_lock);
+ }
+ 
 -- 
 2.23.0
 
