@@ -2,53 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4AEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36FFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E2D20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DDEA206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890359;
-	bh=tbtk4ZJrPTtjXR+uDo9oZZx5WFHNPAYVSs9Zpfb6ccY=;
+	s=default; t=1574890363;
+	bh=bhdA9kNRhnLawkQQEg6MRHgImVL95/eiUfk8//boD7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h9C07p++50/yL1fRFHN+Ra+oWiBqcfEIWdVhbAxWRIsrSVm3oL8geN+GPqi/Z4LeJ
-	 J6a2vtgoikrwu6aZnP41Ij2PEd6/ud4/L9MFAmzgFntOjmau+AYBDjbW8dwc8jo85u
-	 Y05zp126iZzVprdyXE7CTzLEfopia3Cb4U+UEiwM=
+	b=QzdkELtVbcbz6KDX3tmgEJa3V88773svDZlzI65AuaCAkb9zRyGztrS8FdBFaPeBM
+	 mN/xQsk5/jekUZLeiq4lh4bclkocOCylEaM1qopK7kw8Ug4Dk6RLImB3nBSpGKBSWN
+	 s9jTEStb5UV84wh1YK6hjW0drP6LOgeJem3uFgIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730652AbfK0Vch (ORCPT
+        id S1726695AbfK0Uw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:32:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41552 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:52:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbfK0UxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:11 -0500
+        id S1728367AbfK0Uwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:52:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33CEB21774;
-        Wed, 27 Nov 2019 20:53:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36312218AF;
+        Wed, 27 Nov 2019 20:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887990;
-        bh=tbtk4ZJrPTtjXR+uDo9oZZx5WFHNPAYVSs9Zpfb6ccY=;
+        s=default; t=1574887972;
+        bh=bhdA9kNRhnLawkQQEg6MRHgImVL95/eiUfk8//boD7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TNDWqm5GXrrD8uxciaqmXcuTaM7uYzvG6WWDiWWPExgC8EnvOLLSHrwtuYQaBqkoi
-         OAmhuW919Uphjc5pAOfAawJYBrwx8Ywg/Nwhd2aHIBdVLufu3TeLDwWH0O1mk62Y98
-         lmuKhfcluobnjLiFcB0nlTKFUxjL+watGGnwXrgY=
+        b=YfCvRvSzo3jSq3/95kSIP9bqZ7ZDFZ6OtvIK+25cBVlkrf1VL547UudkZw7V+dvor
+         LSuYElIcrWRsM0rr14PDAeFOTu126Do3oFnmmwoPaT5H9so0gerwQ2Xi70tiHCmUFN
+         +CqfakojK/omIYyecIs8NqtlJ56ccLYns92Kvf0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hari Vyas <hari.vyas@broadcom.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 172/211] arm64: fix for bad_mode() handler to always result in panic
-Date:   Wed, 27 Nov 2019 21:31:45 +0100
-Message-Id: <20191127203110.120376346@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 139/211] net: dsa: bcm_sf2: Turn on PHY to allow successful registration
+Date:   Wed, 27 Nov 2019 21:31:12 +0100
+Message-Id: <20191127203107.145733435@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,37 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hari Vyas <hari.vyas@broadcom.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit e4ba15debcfd27f60d43da940a58108783bff2a6 upstream.
+[ Upstream commit c04a17d2a9ccf1eaba1c5a56f83e997540a70556 ]
 
-The bad_mode() handler is called if we encounter an uunknown exception,
-with the expectation that the subsequent call to panic() will halt the
-system. Unfortunately, if the exception calling bad_mode() is taken from
-EL0, then the call to die() can end up killing the current user task and
-calling schedule() instead of falling through to panic().
+We are binding to the PHY using the SF2 slave MDIO bus that we create,
+binding involves reading the PHY's MII_PHYSID1/2 which won't be possible
+if the PHY is turned off. Temporarily turn it on/off for the bus probing
+to succeeed. This fixes unbind/bind problems where the port connecting
+to that PHY would be in error since it could not connect to it.
 
-Remove the die() call altogether, since we really want to bring down the
-machine in this "impossible" case.
-
-Signed-off-by: Hari Vyas <hari.vyas@broadcom.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/traps.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/dsa/bcm_sf2.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -648,7 +648,6 @@ asmlinkage void bad_mode(struct pt_regs
- 		handler[reason], smp_processor_id(), esr,
- 		esr_get_class_string(esr));
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 604c5abc08eb8..af666951a9592 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1196,12 +1196,16 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
--	die("Oops - bad mode", regs, 0);
- 	local_irq_disable();
- 	panic("bad mode");
- }
++	bcm_sf2_gphy_enable_set(priv->dev->ds, true);
++
+ 	ret = bcm_sf2_mdio_register(ds);
+ 	if (ret) {
+ 		pr_err("failed to register MDIO bus\n");
+ 		return ret;
+ 	}
+ 
++	bcm_sf2_gphy_enable_set(priv->dev->ds, false);
++
+ 	ret = bcm_sf2_cfp_rst(priv);
+ 	if (ret) {
+ 		pr_err("failed to reset CFP\n");
+-- 
+2.20.1
+
 
 
