@@ -2,175 +2,91 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F476C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6851DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E2E20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890226;
-	bh=uUfspw6J0y7zVNWHaEL3Fg4hnP5/GkJoZOcnFFnl6tg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TS4fpqadIlqDrLRuxBq6yaAmB7EQeKxKM0IsLWpaYjFKAPKZ8tUURZTPRBWuzqw/Z
-	 XFApoXZ0GY39OzPiQKILO5zWedVUuy/y+EyYtTjnqtqv+dchzCnLT7UpPWcZxNU+V4
-	 YmhUuvtV/aCkwevGRosbVhhNp1sF5U+CA+8/CCnw=
+	by mail.kernel.org (Postfix) with ESMTP id 464A520665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730995AbfK0Uzr (ORCPT
+        id S1730268AbfK0Uzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:55:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730981AbfK0Uzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:55:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40618 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729696AbfK0Uzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 15:55:43 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D02882068E;
-        Wed, 27 Nov 2019 20:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888142;
-        bh=uUfspw6J0y7zVNWHaEL3Fg4hnP5/GkJoZOcnFFnl6tg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ns9V0C2vKtwMmA1dWZV4zIPRYHlHVu0Ud4549Cabl4UEitqP9Mx8u1KrLsaigMrL3
-         tMzy0lAoBZGrkJ8m6UMcBiP52o4x/iTNL5Pan90lzZd7EkTpNtM4azEf9yvbsuoLPY
-         cB6eTwMpzaF8b+kHUkX9Frb+S84nwJmQeN2jEOZ0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Bunk <bunk@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 021/306] mwifiex: Fix NL80211_TX_POWER_LIMITED
-Date:   Wed, 27 Nov 2019 21:27:51 +0100
-Message-Id: <20191127203116.245218438@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
-References: <20191127203114.766709977@linuxfoundation.org>
-User-Agent: quilt/0.66
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8DE6AAC12;
+        Wed, 27 Nov 2019 20:55:40 +0000 (UTC)
+Subject: Re: [PATCH 4/5] pinctrl: sh-pfc: Use the correct style for SPDX
+ License Identifier
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nishad Kamdar <nishadkamdar@gmail.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-amlogic <linux-amlogic@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <cover.1574871463.git.nishadkamdar@gmail.com>
+ <5a7ed2e4b58ba7ff2f0638a2435a3a1e1c62c9f6.1574871463.git.nishadkamdar@gmail.com>
+ <CAMuHMdUqfRioTBV27AKx9zv9YuSqEod6x+A4aguf=h20TDXr6w@mail.gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <9bacc7d9-6bd9-0b7c-18cd-d614796397dd@suse.de>
+Date:   Wed, 27 Nov 2019 21:55:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAMuHMdUqfRioTBV27AKx9zv9YuSqEod6x+A4aguf=h20TDXr6w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Bunk <bunk@kernel.org>
+Hi Geert,
 
-[ Upstream commit 65a576e27309120e0621f54d5c81eb9128bd56be ]
+Am 27.11.19 um 21:37 schrieb Geert Uytterhoeven:
+> On Wed, Nov 27, 2019 at 5:46 PM Nishad Kamdar <nishadkamdar@gmail.com> wrote:
+>> This patch corrects the SPDX License Identifier style in
+>> header files related to Reneses Soc pinctrl driver.
+>> It assigns explicit block comment for the SPDX License Identifier.
+> 
+> Is it incorrect to not have an explicit block comment?
 
-NL80211_TX_POWER_LIMITED was treated as NL80211_TX_POWER_AUTOMATIC,
-which is the opposite of what should happen and can cause nasty
-regulatory problems.
+Yes, Greg said so to me. He suggested I provide a patch against the
+documentation if the docs are not clear enough, but I didn't get around
+to it (and it's not my rule in the first place, so I'd appreciate the
+person making that rule to take care of documenting it).
 
-if/else converted to a switch without default to make gcc warn
-on unhandled enum values.
+However, if we're touching these lines anyway, shouldn't we be updating
+the SPDX Identifier to GPL-2.0-only while at it?
 
-Signed-off-by: Adrian Bunk <bunk@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/marvell/mwifiex/cfg80211.c  | 13 +++++++++++--
- drivers/net/wireless/marvell/mwifiex/ioctl.h     |  1 +
- drivers/net/wireless/marvell/mwifiex/sta_ioctl.c | 11 +++++++----
- 3 files changed, 19 insertions(+), 6 deletions(-)
+Cheers,
+Andreas
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index 47ec5293c045d..7b74ef71bef1d 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -376,11 +376,20 @@ mwifiex_cfg80211_set_tx_power(struct wiphy *wiphy,
- 	struct mwifiex_power_cfg power_cfg;
- 	int dbm = MBM_TO_DBM(mbm);
- 
--	if (type == NL80211_TX_POWER_FIXED) {
-+	switch (type) {
-+	case NL80211_TX_POWER_FIXED:
- 		power_cfg.is_power_auto = 0;
-+		power_cfg.is_power_fixed = 1;
- 		power_cfg.power_level = dbm;
--	} else {
-+		break;
-+	case NL80211_TX_POWER_LIMITED:
-+		power_cfg.is_power_auto = 0;
-+		power_cfg.is_power_fixed = 0;
-+		power_cfg.power_level = dbm;
-+		break;
-+	case NL80211_TX_POWER_AUTOMATIC:
- 		power_cfg.is_power_auto = 1;
-+		break;
- 	}
- 
- 	priv = mwifiex_get_priv(adapter, MWIFIEX_BSS_ROLE_ANY);
-diff --git a/drivers/net/wireless/marvell/mwifiex/ioctl.h b/drivers/net/wireless/marvell/mwifiex/ioctl.h
-index 48e154e1865df..0dd592ea6e833 100644
---- a/drivers/net/wireless/marvell/mwifiex/ioctl.h
-+++ b/drivers/net/wireless/marvell/mwifiex/ioctl.h
-@@ -267,6 +267,7 @@ struct mwifiex_ds_encrypt_key {
- 
- struct mwifiex_power_cfg {
- 	u32 is_power_auto;
-+	u32 is_power_fixed;
- 	u32 power_level;
- };
- 
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-index 843d65bba1811..74e50566db1f2 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-@@ -688,6 +688,9 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
- 	txp_cfg = (struct host_cmd_ds_txpwr_cfg *) buf;
- 	txp_cfg->action = cpu_to_le16(HostCmd_ACT_GEN_SET);
- 	if (!power_cfg->is_power_auto) {
-+		u16 dbm_min = power_cfg->is_power_fixed ?
-+			      dbm : priv->min_tx_power_level;
-+
- 		txp_cfg->mode = cpu_to_le32(1);
- 		pg_tlv = (struct mwifiex_types_power_group *)
- 			 (buf + sizeof(struct host_cmd_ds_txpwr_cfg));
-@@ -702,7 +705,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
- 		pg->last_rate_code = 0x03;
- 		pg->modulation_class = MOD_CLASS_HR_DSSS;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg++;
- 		/* Power group for modulation class OFDM */
-@@ -710,7 +713,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
- 		pg->last_rate_code = 0x07;
- 		pg->modulation_class = MOD_CLASS_OFDM;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg++;
- 		/* Power group for modulation class HTBW20 */
-@@ -718,7 +721,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
- 		pg->last_rate_code = 0x20;
- 		pg->modulation_class = MOD_CLASS_HT;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg->ht_bandwidth = HT_BW_20;
- 		pg++;
-@@ -727,7 +730,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
- 		pg->last_rate_code = 0x20;
- 		pg->modulation_class = MOD_CLASS_HT;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg->ht_bandwidth = HT_BW_40;
- 	}
 -- 
-2.20.1
-
-
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
