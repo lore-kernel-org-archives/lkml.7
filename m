@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF701C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566D7C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3F7215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2142B215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889997;
-	bh=WeEIEc584qKbnLnJJjfQHq4AJ1PlgR0ZnvgFb83cxXM=;
+	s=default; t=1574889999;
+	bh=IjvQhKnlcixplGYef5OlTSVczlEn23RmU4lkJjnJ5sw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M6Pu84fSbBtcaadK9hWlSO6wUwJZRhxrr2PnVn3Cl+WhXZLFhSGyXI0OK2d+DbsrR
-	 vMiQThneRuRv6I893zz+yOHe+QMmVd9z0hB14W8/TkDC3sRlUGYfeEhtqdQ3s0McQJ
-	 bU3w52CYEz5E+wkzPHWXtKST07AmoeE8YPq0Brb4=
+	b=MAhGSynJAMJwYXAVFEggdF9GTNm/Q84fYBB0WyTbKyBb+lJPN1buP1uTbD6gH+VsV
+	 gOWSIT/SAEu2OXzyDe5+n3UcVWMeHbThHetnYAmhidSaCibyFQqAKQuOmcN9MMD5Ka
+	 Fx/WAhs5+p8BAn2uFkJF6fHaovX2oR1wpY5RphO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbfK0VA1 (ORCPT
+        id S1731555AbfK0VA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:00:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52222 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:00:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731540AbfK0VAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:00:20 -0500
+        id S1731269AbfK0VAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:00:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE8242084B;
-        Wed, 27 Nov 2019 21:00:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6FD92154A;
+        Wed, 27 Nov 2019 21:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888420;
-        bh=WeEIEc584qKbnLnJJjfQHq4AJ1PlgR0ZnvgFb83cxXM=;
+        s=default; t=1574888417;
+        bh=IjvQhKnlcixplGYef5OlTSVczlEn23RmU4lkJjnJ5sw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yRn21wEuZjCKYOWHsS5eXreXHBCupVOKiq39HpHNtIRro+dfg7kqSJ9QLfNQ+5FU5
-         d3AFDJeXg+xxQ6IdO2TlmkT4lmEBdRhXFjhS1LbQu/z53yjH7pp2TwnIhkaDirhZ9A
-         zW5AnqBrlGegrkxEDkIJD9R9n/0/8Y9CUIgMQTmc=
+        b=dv/WpRHFnAhcuKpHJxWY9wo2axTx7BrC/k1lCrlshKMX6ZGqXi66e8INfgI5xgZRI
+         O2IetCYs5+1NQoZj60r0KqsWdb9tbSolczn8svkpSu/POcqLA0TmKG+KcYI9hztWEX
+         pYdkKf8rqUyp01VMErMcMjY7XoueisowiL6O3IE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Heinz Mauelshagen <heinzm@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 126/306] net: ethernet: ti: cpsw: unsync mcast entries while switch promisc mode
-Date:   Wed, 27 Nov 2019 21:29:36 +0100
-Message-Id: <20191127203124.320663717@linuxfoundation.org>
+Subject: [PATCH 4.19 099/306] dm raid: avoid bitmap with raid4/5/6 journal device
+Date:   Wed, 27 Nov 2019 21:29:09 +0100
+Message-Id: <20191127203122.125456304@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,40 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+From: Heinz Mauelshagen <heinzm@redhat.com>
 
-[ Upstream commit 9737cc99dd14b5b8b9d267618a6061feade8ea68 ]
+[ Upstream commit d857ad75edf3c0066fcd920746f9dc75382b3324 ]
 
-After flushing all mcast entries from the table, the ones contained in
-mc list of ndev are not restored when promisc mode is toggled off,
-because they are considered as synched with ALE, thus, in order to
-restore them after promisc mode - reset syncing info. This fix
-touches only switch mode devices, including single port boards
-like Beagle Bone.
+With raid4/5/6, journal device and write intent bitmap are mutually exclusive.
 
-Fixes: commit 5da1948969bc
-("net: ethernet: ti: cpsw: fix lost of mcast packets while rx_mode update")
-
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Heinz Mauelshagen <heinzm@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/dm-raid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 1afed85550c0a..8417d4c178447 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -642,6 +642,7 @@ static void cpsw_set_promiscious(struct net_device *ndev, bool enable)
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index b78a8a4d061ca..6c9b542882613 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -2475,7 +2475,7 @@ static int super_validate(struct raid_set *rs, struct md_rdev *rdev)
+ 	}
  
- 			/* Clear all mcast from ALE */
- 			cpsw_ale_flush_multicast(ale, ALE_ALL_PORTS, -1);
-+			__dev_mc_unsync(ndev, NULL);
+ 	/* Enable bitmap creation for RAID levels != 0 */
+-	mddev->bitmap_info.offset = rt_is_raid0(rs->raid_type) ? 0 : to_sector(4096);
++	mddev->bitmap_info.offset = (rt_is_raid0(rs->raid_type) || rs->journal_dev.dev) ? 0 : to_sector(4096);
+ 	mddev->bitmap_info.default_offset = mddev->bitmap_info.offset;
  
- 			/* Flood All Unicast Packets to Host port */
- 			cpsw_ale_control_set(ale, 0, ALE_P0_UNI_FLOOD, 1);
+ 	if (!test_and_clear_bit(FirstUse, &rdev->flags)) {
 -- 
 2.20.1
 
