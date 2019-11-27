@@ -2,108 +2,131 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B3EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533CBC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8303B21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889763;
-	bh=PV75VkIsQLSgJfMJKGoDxgGY1yV4axR33hw/nS5ls3w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ts9ZPMq6JOwZbimvZ9X85eE8T8vsCPAeWHvsezqaTV3M+HtNb48FWnhdN71LBO+96
-	 ANcRYvs0iIKU8udUNwtfibe39ziIft9Gepn2z1OqpGAHYgjZTBjKIE4oo95BEG5dWW
-	 /LLRegbz3DrAz3wsfMcIfcNo9bRZtzUq7WwDmFeI=
+	by mail.kernel.org (Postfix) with ESMTP id 3526021741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732314AbfK0VWm (ORCPT
+        id S1730867AbfK0VWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:22:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727459AbfK0VFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:05:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E19B2080F;
-        Wed, 27 Nov 2019 21:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888732;
-        bh=PV75VkIsQLSgJfMJKGoDxgGY1yV4axR33hw/nS5ls3w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gi5RZJsAhPF4iz/AVgy3HeWZZRmedDCvY1UFGbZpRYu/l2oyDlDwc5qTOzgsgTpSQ
-         k0N9LgXmqoy7wXqjJCZXIi6QopEQ4VcwwjOASWmBCwZUpcH+cp7Odx6m6CNzz6SsWc
-         RUvlD2kcc5nsG4Gzu2Eq7kty2L34BkJwwNqVHcoA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Konopko <igor.j.konopko@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 249/306] nvme-pci: fix surprise removal
-Date:   Wed, 27 Nov 2019 21:31:39 +0100
-Message-Id: <20191127203133.104515360@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
-References: <20191127203114.766709977@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 27 Nov 2019 16:22:40 -0500
+Received: from www62.your-server.de ([213.133.104.62]:59214 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727460AbfK0VWh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:22:37 -0500
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1ia4ld-00023l-3D; Wed, 27 Nov 2019 22:22:33 +0100
+Received: from [178.197.248.11] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1ia4lc-000N2Z-Gw; Wed, 27 Nov 2019 22:22:32 +0100
+Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+References: <20191127094837.4045-1-jolsa@kernel.org>
+ <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
+ <CAEf4BzaDxnF0Ppfo5r5ma3ht033bWjQ78oiBzB=F40_Np=AKhw@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <14accea8-a35f-5be3-607c-f5e1e7dff310@iogearbox.net>
+Date:   Wed, 27 Nov 2019 22:22:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzaDxnF0Ppfo5r5ma3ht033bWjQ78oiBzB=F40_Np=AKhw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25646/Wed Nov 27 11:06:44 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Konopko <igor.j.konopko@intel.com>
+On 11/27/19 9:24 PM, Andrii Nakryiko wrote:
+> On Wed, Nov 27, 2019 at 8:38 AM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+>> On Wed, Nov 27, 2019 at 1:48 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>>>
+>>> hi,
+>>> adding support to link bpftool with libbpf dynamically,
+>>> and config change for perf.
+>>>
+>>> It's now possible to use:
+>>>    $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1
+>>>
+>>> which will detect libbpf devel package with needed version,
+>>> and if found, link it with bpftool.
+>>>
+>>> It's possible to use arbitrary installed libbpf:
+>>>    $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/libbpf/
+>>>
+>>> I based this change on top of Arnaldo's perf/core, because
+>>> it contains libbpf feature detection code as dependency.
+>>> It's now also synced with latest bpf-next, so Toke's change
+>>> applies correctly.
+>>
+>> I don't like it.
+>> Especially Toke's patch to expose netlink as public and stable libbpf api.
+>> bpftools needs to stay tightly coupled with libbpf (and statically
+>> linked for that reason).
+>> Otherwise libbpf will grow a ton of public api that would have to be stable
+>> and will quickly become a burden.
 
-[ Upstream commit 751a0cc0cd3a0d51e6aaf6fd3b8bd31f4ecfaf3e ]
++1, and would also be out of scope from a BPF library point of view.
 
-When a PCIe NVMe device is not present, nvme_dev_remove_admin() calls
-blk_cleanup_queue() on the admin queue, which frees the hctx for that
-queue.  Moments later, on the same path nvme_kill_queues() calls
-blk_mq_unquiesce_queue() on admin queue and tries to access hctx of it,
-which leads to following OOPS:
+> I second that. I'm currently working on adding few more APIs that I'd
+> like to keep unstable for a while, until we have enough real-world
+> usage (and feedback) accumulated, before we stabilize them. With
+> LIBBPF_API and a promise of stable API, we are going to over-stress
+> and over-design APIs, potentially making them either too generic and
+> bloated, or too limited (and thus become deprecated almost at
+> inception time). I'd like to take that pressure off for a super-new
+> and in flux APIs and not hamper the progress.
+> 
+> I'm thinking of splitting off those non-stable, sort-of-internal APIs
+> into separate libbpf-experimental.h (or whatever name makes sense),
+> and let those be used only by tools like bpftool, which are only ever
+> statically link against libbpf and are ok with occasional changes to
+> those APIs (which we'll obviously fix in bpftool as well). Pahole
+> seems like another candidate that fits this bill and we might expose
+> some stuff early on to it, if it provides tangible benefits (e.g., BTF
+> dedup speeds ups, etc).
+> 
+> Then as APIs mature, we might decide to move them into libbpf.h with
+> LIBBPF_API slapped onto them. Any objections?
 
-Oops: 0000 [#1] SMP PTI
-RIP: 0010:sbitmap_any_bit_set+0xb/0x40
-Call Trace:
- blk_mq_run_hw_queue+0xd5/0x150
- blk_mq_run_hw_queues+0x3a/0x50
- nvme_kill_queues+0x26/0x50
- nvme_remove_namespaces+0xb2/0xc0
- nvme_remove+0x60/0x140
- pci_device_remove+0x3b/0xb0
+I don't think adding yet another libbpf_experimental.h makes sense, it feels
+too much of an invitation to add all sort of random stuff in there. We already
+do have libbpf.h and libbpf_internal.h, so everything that does not relate to
+the /stable and public/ API should be moved from libbpf.h into libbpf_internal.h
+such as the netlink helpers, as one example, and bpftool can use these since
+in-tree changes also cover the latter just fine. So overall, same page, just
+reuse/improve libbpf_internal.h instead of a new libbpf_experimental.h.
 
-Fixes: cb4bfda62afa2 ("nvme-pci: fix hot removal during error handling")
-Signed-off-by: Igor Konopko <igor.j.konopko@intel.com>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 5d0f99bcc987f..44da9fe5b27b8 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3647,7 +3647,7 @@ void nvme_kill_queues(struct nvme_ctrl *ctrl)
- 	down_read(&ctrl->namespaces_rwsem);
- 
- 	/* Forcibly unquiesce queues to avoid blocking dispatch */
--	if (ctrl->admin_q)
-+	if (ctrl->admin_q && !blk_queue_dying(ctrl->admin_q))
- 		blk_mq_unquiesce_queue(ctrl->admin_q);
- 
- 	list_for_each_entry(ns, &ctrl->namespaces, list)
--- 
-2.20.1
-
-
-
+Thanks,
+Daniel
