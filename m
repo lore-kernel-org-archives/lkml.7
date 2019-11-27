@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B18C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F1AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7CF2184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30ED52184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887813;
-	bh=QnaxnzstfPmSHF7Mv7k/QGomLz291pM/Xc9KcCmOD6Q=;
+	s=default; t=1574887817;
+	bh=+jRBefN1uwEbzARKvRxsl294CfyeOzMo4klRHllFCY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1sFvddf42N1N6eC6jy1hGk0LFKzTSW5mFJ9MJ72DTTqwI6lT2RiNbOpOZ8PSsoAf1
-	 eHABE3GN3C9sFNt9ajA0AJsVxCr6Anx9tgNKkFvklzMjZ0iSW5F1fNHaghZd6QpAz9
-	 v0bEQZY3d138DSkK+GQrAAIozrzOXuIZv6SLUtlc=
+	b=KhgwhQT9Jmjy+xDirfJK2KkeyqfE6oDv2VgLN67Ga/xK0hujprT9DedaXoo9Qih4n
+	 2GcpjnJ4loHW1jATdrbXaqaz70D/n0PnjxeuJVLPopaxLjyNrrhIAstGxmRbGGMiGo
+	 cy3HuMgA+yXa+fXxZyHgaaddRW4KJlq/T2xBLPqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbfK0UuM (ORCPT
+        id S1729850AbfK0UuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:50:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35848 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:50:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729592AbfK0UuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:50:05 -0500
+        id S1729907AbfK0UuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:50:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 651C021844;
-        Wed, 27 Nov 2019 20:50:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A265721843;
+        Wed, 27 Nov 2019 20:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887804;
-        bh=QnaxnzstfPmSHF7Mv7k/QGomLz291pM/Xc9KcCmOD6Q=;
+        s=default; t=1574887810;
+        bh=+jRBefN1uwEbzARKvRxsl294CfyeOzMo4klRHllFCY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UaKCYUwoyTpg2YjNSjy4FoS1fnOsJIs0SxOsAaJBYEtkCoi8HLej1rqlxZBUYRJxF
-         AQgRkH625jWpGsW9jz7AQRAg1WKCZf6DJTJFc+KdWhZm8OCJRtbeVq5PYla+OiQBdM
-         le7P/IOxcpEnY6bLrfYesTWeeCH8PKEy5ZiwAj/g=
+        b=SFH2UYN7fkXj1Jo8Zy0vWgFIRnF9knI1hMsY5raImIynlnC5Hg+IduICbHJLtb2LU
+         me9r3TdYrNo3F5z7rncunaqGIUAQ6YLXkoElJ/SYmuciJKzlytCYkBwMH6oBVDVhoT
+         zF9p7jlpBuRFunpU7cx5Yg1mZ0h7HLGl5Xkzji2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <david@fromorbit.com>,
+        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 102/211] vfs: avoid problematic remapping requests into partial EOF block
-Date:   Wed, 27 Nov 2019 21:30:35 +0100
-Message-Id: <20191127203103.352347432@linuxfoundation.org>
+Subject: [PATCH 4.14 104/211] selftests/powerpc/signal: Fix out-of-tree build
+Date:   Wed, 27 Nov 2019 21:30:37 +0100
+Message-Id: <20191127203103.526628802@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -62,95 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Joel Stanley <joel@jms.id.au>
 
-[ Upstream commit 07d19dc9fbe9128378b9e226abe886fd8fd473df ]
+[ Upstream commit 27825349d7b238533a47e3d98b8bb0efd886b752 ]
 
-A deduplication data corruption is exposed in XFS and btrfs. It is
-caused by extending the block match range to include the partial EOF
-block, but then allowing unknown data beyond EOF to be considered a
-"match" to data in the destination file because the comparison is only
-made to the end of the source file. This corrupts the destination file
-when the source extent is shared with it.
-
-The VFS remapping prep functions  only support whole block dedupe, but
-we still need to appear to support whole file dedupe correctly.  Hence
-if the dedupe request includes the last block of the souce file, don't
-include it in the actual dedupe operation. If the rest of the range
-dedupes successfully, then reject the entire request.  A subsequent
-patch will enable us to shorten dedupe requests correctly.
-
-When reflinking sub-file ranges, a data corruption can occur when the
-source file range includes a partial EOF block. This shares the unknown
-data beyond EOF into the second file at a position inside EOF, exposing
-stale data in the second file.
-
-If the reflink request includes the last block of the souce file, only
-proceed with the reflink operation if it lands at or past the
-destination file's current EOF. If it lands within the destination file
-EOF, reject the entire request with -EINVAL and make the caller go the
-hard way.  A subsequent patch will enable us to shorten reflink requests
+We should use TEST_GEN_PROGS, not TEST_PROGS. That tells the selftests
+makefile (lib.mk) that those tests are generated (built), and so it
+adds the $(OUTPUT) prefix for us, making the out-of-tree build work
 correctly.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Dave Chinner <david@fromorbit.com>
+It also means we don't need our own clean rule, lib.mk does it.
+
+We also have to update the signal_tm rule to use $(OUTPUT).
+
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/read_write.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ tools/testing/selftests/powerpc/signal/Makefile | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 38a8bcccf0dd0..e8136a72c13f3 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1709,6 +1709,34 @@ static int clone_verify_area(struct file *file, loff_t pos, u64 len, bool write)
+diff --git a/tools/testing/selftests/powerpc/signal/Makefile b/tools/testing/selftests/powerpc/signal/Makefile
+index a7cbd5082e271..4213978f3ee2c 100644
+--- a/tools/testing/selftests/powerpc/signal/Makefile
++++ b/tools/testing/selftests/powerpc/signal/Makefile
+@@ -1,14 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
+-TEST_PROGS := signal signal_tm
+-
+-all: $(TEST_PROGS)
+-
+-$(TEST_PROGS): ../harness.c ../utils.c signal.S
++TEST_GEN_PROGS := signal signal_tm
  
- 	return security_file_permission(file, write ? MAY_WRITE : MAY_READ);
- }
-+/*
-+ * Ensure that we don't remap a partial EOF block in the middle of something
-+ * else.  Assume that the offsets have already been checked for block
-+ * alignment.
-+ *
-+ * For deduplication we always scale down to the previous block because we
-+ * can't meaningfully compare post-EOF contents.
-+ *
-+ * For clone we only link a partial EOF block above the destination file's EOF.
-+ */
-+static int generic_remap_check_len(struct inode *inode_in,
-+				   struct inode *inode_out,
-+				   loff_t pos_out,
-+				   u64 *len,
-+				   bool is_dedupe)
-+{
-+	u64 blkmask = i_blocksize(inode_in) - 1;
-+
-+	if ((*len & blkmask) == 0)
-+		return 0;
-+
-+	if (is_dedupe)
-+		*len &= ~blkmask;
-+	else if (pos_out + *len < i_size_read(inode_out))
-+		return -EINVAL;
-+
-+	return 0;
-+}
+ CFLAGS += -maltivec
+-signal_tm: CFLAGS += -mhtm
++$(OUTPUT)/signal_tm: CFLAGS += -mhtm
  
- /*
-  * Check that the two inodes are eligible for cloning, the ranges make
-@@ -1815,6 +1843,11 @@ int vfs_clone_file_prep_inodes(struct inode *inode_in, loff_t pos_in,
- 			return -EBADE;
- 	}
+ include ../../lib.mk
  
-+	ret = generic_remap_check_len(inode_in, inode_out, pos_out, len,
-+			is_dedupe);
-+	if (ret)
-+		return ret;
-+
- 	return 1;
- }
- EXPORT_SYMBOL(vfs_clone_file_prep_inodes);
+-clean:
+-	rm -f $(TEST_PROGS) *.o
++$(TEST_GEN_PROGS): ../harness.c ../utils.c signal.S
 -- 
 2.20.1
 
