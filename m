@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C9AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC12C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D9621556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62B32158C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888086;
-	bh=gla/T9epZxieOxWiss8ElTZqXZOTcBewGKHUizRHzyk=;
+	s=default; t=1574888095;
+	bh=r7xPYCGuPsGo1R+yB7dlU0oOx4E2V9pZb45mLGsJmn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VmCIyESJm/ulgS54OPfO7gcKKEN2alWJH8iansilBH0pFgA7S6Tfvob3noUYRFNLe
-	 UsRyLocPkOTgIgmzbhLgpI0VOlvjRqojzwKofjTytVB5N/nft/HNGKN4aIaG4o8THM
-	 5CWeKZtZMY1RIGcRR0O0yivYmKLKOhZ2cWYz5Eq8=
+	b=D4Sier8ym8nk8iTCkPvMWES9YhrUmbrVnoDxifsRS9JqteG3E3PgSvaFLYRYek4DN
+	 bU8DtpmQVtfqVgMXPH6qq/2p42+YSfGIVNQjlrD62pVJ5uhBvy/2d5BRxTaXKJZCCn
+	 +hUqqbctm/6oHOK+2uDTyM2RFLqxRFWkKrY+lkOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbfK0Uyp (ORCPT
+        id S1727295AbfK0Uyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:54:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44734 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:54:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730847AbfK0Uyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:54:38 -0500
+        id S1727955AbfK0Uyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:54:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11B882068E;
-        Wed, 27 Nov 2019 20:54:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F8AC2086A;
+        Wed, 27 Nov 2019 20:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888077;
-        bh=gla/T9epZxieOxWiss8ElTZqXZOTcBewGKHUizRHzyk=;
+        s=default; t=1574888092;
+        bh=r7xPYCGuPsGo1R+yB7dlU0oOx4E2V9pZb45mLGsJmn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ovZki9SJ8+9gv14VYj+44wsZ3xAOemxCNWFfYNNqF1I6k6qiZFLA8+98NXtYQujz6
-         czjWGuxaaKyRJHdyfD9o0Wfg0L5vcyrFA8j6ajhqQ/VZ1QRzbVKUUP/IAZAOKSxJMO
-         5v89TP11ecbBaPxps5P3VJF0VQ+JsF/2u+OrXlMY=
+        b=wdK+qvsMY4Q5twrXrSFKCQw5VLnYsU8Aah6EZdzuaBrld8ikl3CNQciDjfmLxRMDt
+         jTgiC9brxV2v6/oeT22uMbe+/fL98p4bjK/hrV5KvYwYWucv/YbWdPGr2FWiDvVPkT
+         ZlsNy+fR8zbRPHHfMYu2DKM6Pp+IcYuaGxVvuNlw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bernd Porr <mail@berndporr.me.uk>,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.14 207/211] staging: comedi: usbduxfast: usbduxfast_ai_cmdtest rounding error
-Date:   Wed, 27 Nov 2019 21:32:20 +0100
-Message-Id: <20191127203113.085267201@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org
+Subject: [PATCH 4.14 184/211] selftests/x86/sigreturn/32: Invalidate DS and ES when abusing the kernel
+Date:   Wed, 27 Nov 2019 21:31:57 +0100
+Message-Id: <20191127203111.138917306@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -59,86 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernd Porr <mail@berndporr.me.uk>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 5618332e5b955b4bff06d0b88146b971c8dd7b32 upstream.
+commit 4d2fa82d98d2d296043a04eb517d7dbade5b13b8 upstream.
 
-The userspace comedilib function 'get_cmd_generic_timed' fills
-the cmd structure with an informed guess and then calls the
-function 'usbduxfast_ai_cmdtest' in this driver repeatedly while
-'usbduxfast_ai_cmdtest' is modifying the cmd struct until it
-no longer changes. However, because of rounding errors this never
-converged because 'steps = (cmd->convert_arg * 30) / 1000' and then
-back to 'cmd->convert_arg = (steps * 1000) / 30' won't be the same
-because of rounding errors. 'Steps' should only be converted back to
-the 'convert_arg' if 'steps' has actually been modified. In addition
-the case of steps being 0 wasn't checked which is also now done.
+If the kernel accidentally uses DS or ES while the user values are
+loaded, it will work fine for sane userspace.  In the interest of
+simulating maximally insane userspace, make sigreturn_32 zero out DS
+and ES for the nasty parts so that inadvertent use of these segments
+will crash.
 
-Signed-off-by: Bernd Porr <mail@berndporr.me.uk>
-Cc: <stable@vger.kernel.org> # 4.4+
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20191118230759.1727-1-mail@berndporr.me.uk
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/usbduxfast.c |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ tools/testing/selftests/x86/sigreturn.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/staging/comedi/drivers/usbduxfast.c
-+++ b/drivers/staging/comedi/drivers/usbduxfast.c
-@@ -1,5 +1,5 @@
- /*
-- *  Copyright (C) 2004-2014 Bernd Porr, mail@berndporr.me.uk
-+ *  Copyright (C) 2004-2019 Bernd Porr, mail@berndporr.me.uk
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-@@ -17,7 +17,7 @@
-  * Description: University of Stirling USB DAQ & INCITE Technology Limited
-  * Devices: [ITL] USB-DUX-FAST (usbduxfast)
-  * Author: Bernd Porr <mail@berndporr.me.uk>
-- * Updated: 10 Oct 2014
-+ * Updated: 16 Nov 2019
-  * Status: stable
-  */
+--- a/tools/testing/selftests/x86/sigreturn.c
++++ b/tools/testing/selftests/x86/sigreturn.c
+@@ -459,6 +459,19 @@ static void sigusr1(int sig, siginfo_t *
+ 	ctx->uc_mcontext.gregs[REG_SP] = (unsigned long)0x8badf00d5aadc0deULL;
+ 	ctx->uc_mcontext.gregs[REG_CX] = 0;
  
-@@ -31,6 +31,7 @@
-  *
-  *
-  * Revision history:
-+ * 1.0: Fixed a rounding error in usbduxfast_ai_cmdtest
-  * 0.9: Dropping the first data packet which seems to be from the last transfer.
-  *      Buffer overflows in the FX2 are handed over to comedi.
-  * 0.92: Dropping now 4 packets. The quad buffer has to be emptied.
-@@ -359,6 +360,7 @@ static int usbduxfast_ai_cmdtest(struct
- 				 struct comedi_cmd *cmd)
- {
- 	int err = 0;
-+	int err2 = 0;
- 	unsigned int steps;
- 	unsigned int arg;
++#ifdef __i386__
++	/*
++	 * Make sure the kernel doesn't inadvertently use DS or ES-relative
++	 * accesses in a region where user DS or ES is loaded.
++	 *
++	 * Skip this for 64-bit builds because long mode doesn't care about
++	 * DS and ES and skipping it increases test coverage a little bit,
++	 * since 64-bit kernels can still run the 32-bit build.
++	 */
++	ctx->uc_mcontext.gregs[REG_DS] = 0;
++	ctx->uc_mcontext.gregs[REG_ES] = 0;
++#endif
++
+ 	memcpy(&requested_regs, &ctx->uc_mcontext.gregs, sizeof(gregset_t));
+ 	requested_regs[REG_CX] = *ssptr(ctx);	/* The asm code does this. */
  
-@@ -408,11 +410,16 @@ static int usbduxfast_ai_cmdtest(struct
- 	 */
- 	steps = (cmd->convert_arg * 30) / 1000;
- 	if (cmd->chanlist_len !=  1)
--		err |= comedi_check_trigger_arg_min(&steps,
--						    MIN_SAMPLING_PERIOD);
--	err |= comedi_check_trigger_arg_max(&steps, MAX_SAMPLING_PERIOD);
--	arg = (steps * 1000) / 30;
--	err |= comedi_check_trigger_arg_is(&cmd->convert_arg, arg);
-+		err2 |= comedi_check_trigger_arg_min(&steps,
-+						     MIN_SAMPLING_PERIOD);
-+	else
-+		err2 |= comedi_check_trigger_arg_min(&steps, 1);
-+	err2 |= comedi_check_trigger_arg_max(&steps, MAX_SAMPLING_PERIOD);
-+	if (err2) {
-+		err |= err2;
-+		arg = (steps * 1000) / 30;
-+		err |= comedi_check_trigger_arg_is(&cmd->convert_arg, arg);
-+	}
- 
- 	if (cmd->stop_src == TRIG_COUNT)
- 		err |= comedi_check_trigger_arg_min(&cmd->stop_arg, 1);
 
 
