@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3834AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36061C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 079592080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE33217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888784;
-	bh=dZvexBe28LkdVb8dTGUN63UBYjHJZ+tVRGX71Tjw5LE=;
+	s=default; t=1574888788;
+	bh=W3hwjXMYKbNOB98aUJ5wPNlUM3SaFCCFZQLG1S7wBjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dDjIWzDOJRufiodZtCbOyTD8kM+yOwFWUmrwDytKceSPkYoDLk6FJwqal3FES7Yag
-	 2ukXwsHMqQ4Tf0Dt0PHrcn0nCG5FqvrT1u6Sal57mcvQwPk895JLDEGqX/oe2DOnIm
-	 XBhi9clvJQF6UOReRJrvy+1kBqdjNZeBBrtptl9A=
+	b=Dsi36rMUb/nycqWnskHttqL/ziHUpYjVBYUzn8/Zb4Q2EM+8KqmbzUGLRpFjaw/CR
+	 dv43tFr0lux1g1kizudqHg3OITPNsv4urnb6Wy3owvN/56WTY4u0zvUGPjseeOU3O9
+	 V7ZFgpYLTazuVi1MLgRHbiH+pb/NPg8fHmuAFlX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732412AbfK0VGX (ORCPT
+        id S1732428AbfK0VG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:06:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:06:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727351AbfK0VGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:06:18 -0500
+        id S1732410AbfK0VGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:06:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC93021770;
-        Wed, 27 Nov 2019 21:06:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 029882080F;
+        Wed, 27 Nov 2019 21:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888777;
-        bh=dZvexBe28LkdVb8dTGUN63UBYjHJZ+tVRGX71Tjw5LE=;
+        s=default; t=1574888782;
+        bh=W3hwjXMYKbNOB98aUJ5wPNlUM3SaFCCFZQLG1S7wBjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CzufqzpQ3UxIuvZAEgBB3OY0S+MytgJpsmFFoVfBx5f96FkZMU3LqB1L/ammYmHQx
-         kTyoGo982D+J+9qtzj/wqds1XUDH/w37ZknoycBljPWqlcAeMSgWyC5dlpyEMq3whK
-         xc4JcsDqWFvsJpV7z/lAu3Gw0lTUNANVmPNnJRpc=
+        b=Lme+Ct4YpZ5wxD5UGXj6bMi/+CrKXQCGbBJ0bzpqx5S1shL8VoIQFMMwYR15HjyQv
+         YPK5PwqWFWrYopAjgmbTH0aJHvhHWdZberNagsyTw+dJ01JicT8rpkjg5Cuf+xaqv+
+         CI+IHBk1uR0kZdzBSkNbf+cg9ilQJ9RF7M3dym84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gang He <ghe@suse.com>,
-        Joseph Qi <jiangqi903@gmail.com>, Eric Ren <zren@suse.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 264/306] ocfs2: remove ocfs2_is_o2cb_active()
-Date:   Wed, 27 Nov 2019 21:31:54 +0100
-Message-Id: <20191127203134.120845835@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.19 266/306] ARC: perf: Accommodate big-endian CPU
+Date:   Wed, 27 Nov 2019 21:31:56 +0100
+Message-Id: <20191127203134.266441817@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -66,74 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gang He <ghe@suse.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
 
-commit a634644751c46238df58bbfe992e30c1668388db upstream.
+commit 5effc09c4907901f0e71e68e5f2e14211d9a203f upstream.
 
-Remove ocfs2_is_o2cb_active().  We have similar functions to identify
-which cluster stack is being used via osb->osb_cluster_stack.
+8-letter strings representing ARC perf events are stores in two
+32-bit registers as ASCII characters like that: "IJMP", "IALL", "IJMPTAK" etc.
 
-Secondly, the current implementation of ocfs2_is_o2cb_active() is not
-totally safe.  Based on the design of stackglue, we need to get
-ocfs2_stack_lock before using ocfs2_stack related data structures, and
-that active_stack pointer can be NULL in the case of mount failure.
+And the same order of bytes in the word is used regardless CPU endianness.
 
-Link: http://lkml.kernel.org/r/1495441079-11708-1-git-send-email-ghe@suse.com
-Signed-off-by: Gang He <ghe@suse.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Reviewed-by: Eric Ren <zren@suse.com>
-Acked-by: Changwei Ge <ge.changwei@h3c.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Which means in case of big-endian CPU core we need to swap bytes to get
+the same order as if it was on little-endian CPU.
+
+Otherwise we're seeing the following error message on boot:
+------------------------->8----------------------
+ARC perf        : 8 counters (32 bits), 40 conditions, [overflow IRQ support]
+sysfs: cannot create duplicate filename '/devices/arc_pct/events/pmji'
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
+Stack Trace:
+  arc_unwind_core+0xd4/0xfc
+  dump_stack+0x64/0x80
+  sysfs_warn_dup+0x46/0x58
+  sysfs_add_file_mode_ns+0xb2/0x168
+  create_files+0x70/0x2a0
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at kernel/events/core.c:12144 perf_event_sysfs_init+0x70/0xa0
+Failed to register pmu: arc_pct, reason -17
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
+Stack Trace:
+  arc_unwind_core+0xd4/0xfc
+  dump_stack+0x64/0x80
+  __warn+0x9c/0xd4
+  warn_slowpath_fmt+0x22/0x2c
+  perf_event_sysfs_init+0x70/0xa0
+---[ end trace a75fb9a9837bd1ec ]---
+------------------------->8----------------------
+
+What happens here we're trying to register more than one raw perf event
+with the same name "PMJI". Why? Because ARC perf events are 4 to 8 letters
+and encoded into two 32-bit words. In this particular case we deal with 2
+events:
+ * "IJMP____" which counts all jump & branch instructions
+ * "IJMPC___" which counts only conditional jumps & branches
+
+Those strings are split in two 32-bit words this way "IJMP" + "____" &
+"IJMP" + "C___" correspondingly. Now if we read them swapped due to CPU core
+being big-endian then we read "PMJI" + "____" & "PMJI" + "___C".
+
+And since we interpret read array of ASCII letters as a null-terminated string
+on big-endian CPU we end up with 2 events of the same name "PMJI".
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- fs/ocfs2/dlmglue.c   |    2 +-
- fs/ocfs2/stackglue.c |    6 ------
- fs/ocfs2/stackglue.h |    3 ---
- 3 files changed, 1 insertion(+), 10 deletions(-)
 
---- a/fs/ocfs2/dlmglue.c
-+++ b/fs/ocfs2/dlmglue.c
-@@ -3603,7 +3603,7 @@ static int ocfs2_downconvert_lock(struct
- 	 * we can recover correctly from node failure. Otherwise, we may get
- 	 * invalid LVB in LKB, but without DLM_SBF_VALNOTVALID being set.
- 	 */
--	if (!ocfs2_is_o2cb_active() &&
-+	if (ocfs2_userspace_stack(osb) &&
- 	    lockres->l_ops->flags & LOCK_TYPE_USES_LVB)
- 		lvb = 1;
+
+---
+ arch/arc/kernel/perf_event.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/arch/arc/kernel/perf_event.c
++++ b/arch/arc/kernel/perf_event.c
+@@ -490,8 +490,8 @@ static int arc_pmu_device_probe(struct p
+ 	/* loop thru all available h/w condition indexes */
+ 	for (j = 0; j < cc_bcr.c; j++) {
+ 		write_aux_reg(ARC_REG_CC_INDEX, j);
+-		cc_name.indiv.word0 = read_aux_reg(ARC_REG_CC_NAME0);
+-		cc_name.indiv.word1 = read_aux_reg(ARC_REG_CC_NAME1);
++		cc_name.indiv.word0 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME0));
++		cc_name.indiv.word1 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME1));
  
---- a/fs/ocfs2/stackglue.c
-+++ b/fs/ocfs2/stackglue.c
-@@ -48,12 +48,6 @@ static char ocfs2_hb_ctl_path[OCFS2_MAX_
-  */
- static struct ocfs2_stack_plugin *active_stack;
- 
--inline int ocfs2_is_o2cb_active(void)
--{
--	return !strcmp(active_stack->sp_name, OCFS2_STACK_PLUGIN_O2CB);
--}
--EXPORT_SYMBOL_GPL(ocfs2_is_o2cb_active);
--
- static struct ocfs2_stack_plugin *ocfs2_stack_lookup(const char *name)
- {
- 	struct ocfs2_stack_plugin *p;
---- a/fs/ocfs2/stackglue.h
-+++ b/fs/ocfs2/stackglue.h
-@@ -298,9 +298,6 @@ void ocfs2_stack_glue_set_max_proto_vers
- int ocfs2_stack_glue_register(struct ocfs2_stack_plugin *plugin);
- void ocfs2_stack_glue_unregister(struct ocfs2_stack_plugin *plugin);
- 
--/* In ocfs2_downconvert_lock(), we need to know which stack we are using */
--int ocfs2_is_o2cb_active(void);
--
- extern struct kset *ocfs2_kset;
- 
- #endif  /* STACKGLUE_H */
+ 		/* See if it has been mapped to a perf event_id */
+ 		for (i = 0; i < ARRAY_SIZE(arc_pmu_ev_hw_map); i++) {
 
 
