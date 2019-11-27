@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300E9C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B3EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03FF72176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A151320637
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888859;
-	bh=TRb5HTTsZJoWoKSMnF7M7UQE1ZMd2U/s70WlhBbl5aw=;
+	s=default; t=1574888862;
+	bh=O4kljrPt375tBeZnHIE1KU1ZosopXyMxljzp2rRX/gg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FjneMOVa+xMWv63gssBmw0YQDo6KZUACM+/5oJ8lREmEVTMgeE2qle3g5tIJ+hYmg
-	 C9FHRC2iPy1NpbTKypTH1pdu6K6YSnae+lXiqjr0hfw8W8arhauitGe/j5UuorO/ZN
-	 jziFqmQdO1D8I2yJbfVyYLJbIEMApSngiuYapUt0=
+	b=yp7+L6lj5gBwQEfSLnyFj6erXBt4vKyCQcJ6xDZyrA7TGG1fxfmVqJqRSCRzgdqWp
+	 Aeak58cDFyd0ecFSd5IkIJO/JaNJQmqlipVsXinlA1QMWXfWhiyHmRyTkzmyQ2Kw7v
+	 RT3WzLIzhrwuwsPCS4Sund8fusQUIiwKNpTn2znE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732630AbfK0VHh (ORCPT
+        id S1731981AbfK0VHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:07:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33802 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:07:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732631AbfK0VHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:07:36 -0500
+        id S1732032AbfK0VHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:07:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1482A2086A;
-        Wed, 27 Nov 2019 21:07:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE07D20637;
+        Wed, 27 Nov 2019 21:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888855;
-        bh=TRb5HTTsZJoWoKSMnF7M7UQE1ZMd2U/s70WlhBbl5aw=;
+        s=default; t=1574888858;
+        bh=O4kljrPt375tBeZnHIE1KU1ZosopXyMxljzp2rRX/gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H8n4lVaplvtSm9DeooPZlDLgpw0Y2l+45s6SGO6zxrmz8NYBEmNKYpqVrzet4JCNL
-         19plrYTmjV3hyeeMJ8NIZ/YJSv/Y1MSFT5MmbdJ+N9GZqna2hzhTk36NFqBflh/uix
-         TvcY6Z355AVzayiy8k9a11K7uaokLOeOxMg/G/IM=
+        b=nL9T8hW+m9M1VGOqejePn1P9JMQROGN8uw73bSZm75r0disBYXIqtQzVSG9OUNQOl
+         9u9rtuZeoqmgOXN+ZFKw1y2tMZswIKcgRZlFtLm0MaLl6T3Vg61qiKlQ86RIc8K9/v
+         /vWu5ddj/6f3bkW7Ln1qTYXnKjQoEJ7pS/vtzs/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 297/306] appledisplay: fix error handling in the scheduled work
-Date:   Wed, 27 Nov 2019 21:32:27 +0100
-Message-Id: <20191127203136.435985288@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 280/306] ALSA: usb-audio: Fix NULL dereference at parsing BADD
+Date:   Wed, 27 Nov 2019 21:32:10 +0100
+Message-Id: <20191127203135.243292483@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -59,51 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 91feb01596e5efc0cc922cc73f5583114dccf4d2 upstream.
+commit 9435f2bb66874a0c4dd25e7c978957a7ca2c93b1 upstream.
 
-The work item can operate on
+snd_usb_mixer_controls_badd() that parses UAC3 BADD profiles misses a
+NULL check for the given interfaces.  When a malformed USB descriptor
+is passed, this may lead to an Oops, as spotted by syzkaller.
+Skip the iteration if the interface doesn't exist for avoiding the
+crash.
 
-1. stale memory left over from the last transfer
-the actual length of the data transfered needs to be checked
-2. memory already freed
-the error handling in appledisplay_probe() needs
-to cancel the work in that case
-
-Reported-and-tested-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191106124902.7765-1-oneukum@suse.com
+Fixes: 17156f23e93c ("ALSA: usb: add UAC3 BADD profiles support")
+Reported-by: syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191122112840.24797-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/appledisplay.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ sound/usb/mixer.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/misc/appledisplay.c
-+++ b/drivers/usb/misc/appledisplay.c
-@@ -170,7 +170,12 @@ static int appledisplay_bl_get_brightnes
- 		0,
- 		pdata->msgdata, 2,
- 		ACD_USB_TIMEOUT);
--	brightness = pdata->msgdata[1];
-+	if (retval < 2) {
-+		if (retval >= 0)
-+			retval = -EMSGSIZE;
-+	} else {
-+		brightness = pdata->msgdata[1];
-+	}
- 	mutex_unlock(&pdata->sysfslock);
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2949,6 +2949,9 @@ static int snd_usb_mixer_controls_badd(s
+ 			continue;
  
- 	if (retval < 0)
-@@ -305,6 +310,7 @@ error:
- 	if (pdata) {
- 		if (pdata->urb) {
- 			usb_kill_urb(pdata->urb);
-+			cancel_delayed_work_sync(&pdata->work);
- 			if (pdata->urbdata)
- 				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
- 					pdata->urbdata, pdata->urb->transfer_dma);
+ 		iface = usb_ifnum_to_if(dev, intf);
++		if (!iface)
++			continue;
++
+ 		num = iface->num_altsetting;
+ 
+ 		if (num < 2)
 
 
