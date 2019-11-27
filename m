@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FD9C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D56C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABA621850
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C20E21852
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887860;
-	bh=J0/R4Z5BY+02R0pbRuvu0OdHWnNZFRHfN+3UcXMO7bk=;
+	s=default; t=1574887866;
+	bh=cZPT0WojLQHBwL1aDDdvZwNQLqnruWSL0DxO3nlIPMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+vXv45aWkWdpQUkqU9Q3BYwoB+cSPqVKWvfCynl87Vh8FxHCt+xTvD1IuyFX1Lmq
-	 A/NspxCj8QCWNAi1hvk6Ftr9vPk97MF67g4bFa7etmg4/p/61C2e0HlI5H/jbmkmMz
-	 ILmoW9AWY/KAYvtT4Gy4V2jFV8Ae4JGXymu5NBsY=
+	b=R46OIKQ2jKkcNoQf3dsSTYfSupl6F4cqGk0khzglpxeRU68H0BX+iy0enDCgDLkTz
+	 Zt9xewCwmkR5qU/ZNBVrj3qqfe2grSOYGNh/zIRbwF2ogpigXC3TQilxWQkg/L03/6
+	 iXNWY2XPde0N3fNDg/TiUwSqt5jZu3gldU1rUTZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbfK0Uu7 (ORCPT
+        id S1730433AbfK0UvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:50:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37150 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:51:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730001AbfK0Uuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:50:52 -0500
+        id S1729890AbfK0UvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:51:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 174E421850;
-        Wed, 27 Nov 2019 20:50:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF95E21852;
+        Wed, 27 Nov 2019 20:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887851;
-        bh=J0/R4Z5BY+02R0pbRuvu0OdHWnNZFRHfN+3UcXMO7bk=;
+        s=default; t=1574887862;
+        bh=cZPT0WojLQHBwL1aDDdvZwNQLqnruWSL0DxO3nlIPMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jJMALwx4igSOpNGTH3SaY/BgRAW7LHRxx73JP+Ju+jO7oamDgCCSlSrIqkgJu2Met
-         5HXfUjnKD+8hdHjgEWfl3Ymdk6Im2GTO+lPk+8oScC3JMTeICxKEBUutSJM9bCRluj
-         omdFhC2euryX1AlFdggZaoH0mx1tVoyktFV/CJRM=
+        b=Oon7ThSzxWxyY0Ii+IXOnUQrfDvbepXmVFYK6Pj2PhCXmhD60SAFLb0LWJFd0k5S8
+         6kamdK6et2U0/SjBgO8l2tlzgCU5buWrnkBl76Pk+xL6Zw1rsbGSh8QwnC8GExFcK7
+         VggkaB7TIFA/KZMa7uzAtSQN4l8BUJCk0WkhqjP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        Lucas Van <lucas.van@intel.com>, Jon Mason <jdmason@kudzu.us>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 119/211] igb: shorten maximum PHC timecounter update interval
-Date:   Wed, 27 Nov 2019 21:30:52 +0100
-Message-Id: <20191127203105.303707787@linuxfoundation.org>
+Subject: [PATCH 4.14 122/211] ntb: intel: fix return value for ndev_vec_mask()
+Date:   Wed, 27 Nov 2019 21:30:55 +0100
+Message-Id: <20191127203105.690915268@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -64,54 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Dave Jiang <dave.jiang@intel.com>
 
-[ Upstream commit 094bf4d0e9657f6ea1ee3d7e07ce3970796949ce ]
+[ Upstream commit 7756e2b5d68c36e170a111dceea22f7365f83256 ]
 
-The timecounter needs to be updated at least once per ~550 seconds in
-order to avoid a 40-bit SYSTIM timestamp to be misinterpreted as an old
-timestamp.
+ndev_vec_mask() should be returning u64 mask value instead of int.
+Otherwise the mask value returned can be incorrect for larger
+vectors.
 
-Since commit 500462a9d ("timers: Switch to a non-cascading wheel"),
-scheduling of delayed work seems to be less accurate and a requested
-delay of 540 seconds may actually be longer than 550 seconds. Shorten
-the delay to 480 seconds to be sure the timecounter is updated in time.
+Fixes: e26a5843f7f5 ("NTB: Split ntb_hw_intel and ntb_transport drivers")
 
-This fixes an issue with HW timestamps on 82580/I350/I354 being off by
-~1100 seconds for few seconds every ~9 minutes.
-
-Cc: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Tested-by: Lucas Van <lucas.van@intel.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_ptp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/ntb/hw/intel/ntb_hw_intel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_ptp.c b/drivers/net/ethernet/intel/igb/igb_ptp.c
-index 0746b19ec6d37..295d27f331042 100644
---- a/drivers/net/ethernet/intel/igb/igb_ptp.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ptp.c
-@@ -65,9 +65,15 @@
-  *
-  * The 40 bit 82580 SYSTIM overflows every
-  *   2^40 * 10^-9 /  60  = 18.3 minutes.
-+ *
-+ * SYSTIM is converted to real time using a timecounter. As
-+ * timecounter_cyc2time() allows old timestamps, the timecounter
-+ * needs to be updated at least once per half of the SYSTIM interval.
-+ * Scheduling of delayed work is not very accurate, so we aim for 8
-+ * minutes to be sure the actual interval is shorter than 9.16 minutes.
-  */
+diff --git a/drivers/ntb/hw/intel/ntb_hw_intel.c b/drivers/ntb/hw/intel/ntb_hw_intel.c
+index 2557e2c05b90c..58068f1447bb2 100644
+--- a/drivers/ntb/hw/intel/ntb_hw_intel.c
++++ b/drivers/ntb/hw/intel/ntb_hw_intel.c
+@@ -348,7 +348,7 @@ static inline int ndev_db_clear_mask(struct intel_ntb_dev *ndev, u64 db_bits,
+ 	return 0;
+ }
  
--#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
-+#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 8)
- #define IGB_PTP_TX_TIMEOUT		(HZ * 15)
- #define INCPERIOD_82576			BIT(E1000_TIMINCA_16NS_SHIFT)
- #define INCVALUE_82576_MASK		GENMASK(E1000_TIMINCA_16NS_SHIFT - 1, 0)
+-static inline int ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
++static inline u64 ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
+ {
+ 	u64 shift, mask;
+ 
 -- 
 2.20.1
 
