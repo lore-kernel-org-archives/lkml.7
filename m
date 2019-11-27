@@ -2,112 +2,108 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D24C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0CFC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFED620678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66AA20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:02:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ngfgP/ZT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBFsxvai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfK0OC3 (ORCPT
+        id S1727073AbfK0OCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:02:29 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44857 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfK0OC3 (ORCPT
+        Wed, 27 Nov 2019 09:02:53 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35287 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbfK0OCx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:02:29 -0500
-Received: by mail-qk1-f195.google.com with SMTP id m16so19527597qki.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 06:02:27 -0800 (PST)
+        Wed, 27 Nov 2019 09:02:53 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s8so10011631pji.2;
+        Wed, 27 Nov 2019 06:02:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QiANxCdzbSnhcioCshDSncN9KNW/FPFbw4cOUMqmqeE=;
-        b=ngfgP/ZTpPWsNp46WapVEeO/23UKqhQpYPxJU8Dc7TSCBLiuziZEFLNieXiEgVi/pK
-         tGb3BLwoxViSQEurg9p1YJnhQF1sD9IHgHXkD4dFHyTfkGJsVJS4ua9HVSzdgPulEKos
-         siwebeHBuryUKtLcjHPtFLBLXdDdua9RcF4wFtEbsdjZz6EHjLqTFvYW+vxzXB5jN+Bt
-         ZlxupDjpq3KAjxtAiANabxP+G3KBnGAYg/VIaxmE3YgeSfvvmCL5Qj7pwJB7jsrY4fHt
-         2De1tir7UzrXzumms27m8DxKOWYQoDT6QGUNDnwtE8ZizqoH8WZlW6euNObqwUQuAcY8
-         Y8pw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Qqnu36JyHB0qpO7U4bBKm9m3czEGEUiM2+3oKiYtY2A=;
+        b=qBFsxvaiBkLt4/gjk0R+enVePgY/BnRtVuoKL2xLigzPBFFfEhTq/gDrz0Q961DJyM
+         IH2FQZF+NNM/F9y47VQyc6LaXREZ1fwNSSz/S5AfMhAnZomSoSMOW+UYdGxjiqUnYDek
+         bHKCsMdGFtYOJKAPEsyNbB5yRkPgIqaGzFNC/lJDfhQriZ0gD1WEZpT5uirKbWmUrloT
+         twp6jUIz5K1F7xGammpFK0vmoDTKJTPckYzrCK0GwHpgyE9sFff6Rv7YlP/9PO1Kw+ma
+         YZOfYrMHvEK6r5R9L4fHJjQiStTD1+MQk3Sz5WV57GOhVxnwKvGnOcBKSRs5dmRVh25r
+         Wxqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QiANxCdzbSnhcioCshDSncN9KNW/FPFbw4cOUMqmqeE=;
-        b=XFKWEcI2/NOE4ANkAn2sw+gulXIK1DzFcVD/XX8dYHd/bJKuSUM0dybnOXFSjfRiiI
-         Ibdqu850MX500XM6gxm2k2GbGyG6sdfNR14aC/OYTm9CLce/YXOT2Dt6dqa3s08DQHbz
-         W37BQ0dlKqO2JIu4+ZTbqRqCH6B5fLS96yXtWph0Esm7Q9EVmsPjY2uBM8feAOMfY1qq
-         P6VkFVuRTpcQceeRCmoozk2WiY9Ntqw+nJm6XhDHJ5xUd1NepGhMShKZBgvdjGqoWtdh
-         KknZg2XM6e2x6ZFjokKU95WkCB4m8hhIbrFSLSj7rKHFkU9byZR+ZKyOimYQo4QU1A3Z
-         YAig==
-X-Gm-Message-State: APjAAAXEW01r8pTpmh0/QdA3i/xThVH3Kz3qA7JjqZtbJdKdBiy4RX14
-        bE6euOf9C310dKIGq3WmPzFTTCzUqcriYurOmdGUZA==
-X-Google-Smtp-Source: APXvYqzS6mlz4BCAYHUVdzb46ZrHHqG8DBfbMgLijDEeGXHUH+izQyzaEY6Dq5osj9QJojOwj5cAr/rMnM/acdv6l04=
-X-Received: by 2002:a37:bdc3:: with SMTP id n186mr40399qkf.407.1574863346374;
- Wed, 27 Nov 2019 06:02:26 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Qqnu36JyHB0qpO7U4bBKm9m3czEGEUiM2+3oKiYtY2A=;
+        b=RLKJmpFDagb95bL6gPhaIsKsZbG2tDG59/zIGFxHZuO+IWdBEUZVdLXG9AXoqr7QS9
+         OnQAw/fKGq26xzWnx67rS+uK6quc1DqRLCkEmxPdrJPuDagckig5uVyxtc0h6Bjndn3I
+         kdoBzvPfgiDkUB1d0N99BbIajuxOJzueCClcwPuiFABdh3jdj2pabmSDuP1rcYd4/9ei
+         YAgyX0gZ5hPkuy4Y4MA4tFfIJyPYw9GOpRn7As3VIpRCZzqFngS5yiRLDa8acgwc8xSK
+         EHX05rLPVozHq/YP67aztYrDMc4TPRit8APGWvtXkxDckSQebKPXlHvw0obq/IYyUkAA
+         tErw==
+X-Gm-Message-State: APjAAAVFiIk1WIl7U6slV7didW9dW48lYIWECOKnhh+elgExMAv6P1BC
+        6LkgQZXQGniQlBPwH0+z6+0=
+X-Google-Smtp-Source: APXvYqzpzi/A3NjNPMw3sZI/pDOo5qFWUzB+SnDkURkl/8aVYZQdx4V9qGBLmswIBEeOCc9RLZDY+w==
+X-Received: by 2002:a17:90a:a4cb:: with SMTP id l11mr6206536pjw.47.1574863372749;
+        Wed, 27 Nov 2019 06:02:52 -0800 (PST)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id x9sm16800145pgt.66.2019.11.27.06.02.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Nov 2019 06:02:46 -0800 (PST)
+Date:   Wed, 27 Nov 2019 19:32:33 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] phy: qcom-qmp: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20191127140229.GA30510@nishad>
 MIME-Version: 1.0
-References: <001a11441b6c6cb96c0569120042@google.com> <00000000000093ca84059853da04@google.com>
-In-Reply-To: <00000000000093ca84059853da04@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 27 Nov 2019 15:02:15 +0100
-Message-ID: <CACT4Y+Y1=+uGRNUk5G-m4vF4AhRTWRAngLJLGGiFmN_Y72sGeQ@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in ntfs_read_locked_inode
-To:     syzbot <syzbot+19b469021157c136116a@syzkaller.appspotmail.com>
-Cc:     anton@tuxera.com, deller@gmx.de, jejb@parisc-linux.org,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-ntfs-dev@lists.sourceforge.net, linux-parisc@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Will Drewry <wad@chromium.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 2:20 PM syzbot
-<syzbot+19b469021157c136116a@syzkaller.appspotmail.com> wrote:
->
-> syzbot has bisected this bug to:
->
-> commit 910cd32e552ea09caa89cdbe328e468979b030dd
-> Author: Helge Deller <deller@gmx.de>
-> Date:   Wed Mar 30 12:14:31 2016 +0000
->
->      parisc: Fix and enable seccomp filter support
+This patch corrects the SPDX License Identifier style in
+header files related to PHY drivers for Qualcomm platforms.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-FWIW this commit somehow has an effect on x86 binary. I can reproduce
-it. I've collected what I know so far here:
-https://github.com/google/syzkaller/issues/1271#issuecomment-559093018
-Well, actually it does not look like effect of this commit but rather
-non-deterministic/hermetic kernel build.
-+Al for affected x86 build bullshit
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=143090dee00000
-> start commit:   3e968c9f Merge tag 'ext4_for_linus' of git://git.kernel.or..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=163090dee00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=123090dee00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7e8c053ac965e0dd
-> dashboard link: https://syzkaller.appspot.com/bug?extid=19b469021157c136116a
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142d219b800000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143029db800000
->
-> Reported-by: syzbot+19b469021157c136116a@syzkaller.appspotmail.com
-> Fixes: 910cd32e552e ("parisc: Fix and enable seccomp filter support")
->
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000093ca84059853da04%40google.com.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+index ab6ff9b45a32..90f793c2293d 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.h
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2017, The Linux Foundation. All rights reserved.
+  */
+-- 
+2.17.1
+
