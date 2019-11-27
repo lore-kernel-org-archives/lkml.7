@@ -2,107 +2,122 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14742C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8853CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCCDB20678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:24:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uME+JoZ+"
+	by mail.kernel.org (Postfix) with ESMTP id 6755720866
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:27:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfK0KYZ (ORCPT
+        id S1726540AbfK0K1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:24:25 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29768 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726934AbfK0KYZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:24:25 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARAMKPL028075;
-        Wed, 27 Nov 2019 11:24:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=NGFn1INSjiFml8tyG7QtE320FjzT4hxnP0D7Gm8LUjM=;
- b=uME+JoZ+//t/DS+f6MAZex+Z9TXISsVsn5lhbai1DelE4ii2Ew9vpIylgLi6hfjVKvI4
- ZmjyIfAzdSlG11yX8kQVXhk3bss4hHlWY8sdJmtkax+oBFMs138y3dU4XcN1dHBzahUS
- pJ6v6phHMhlHkBeZ/437466BYpEzIWWCriT1LzEFFunp/1tUsdbBW97PsWQjPyeWldOj
- OSuZfXTcZ5m/0rOBCq0QxhLaLPr7/hYJpawKA5Andlix/2ajYuSBGNRGZ9fPQ28U8U+0
- TeFyQpcwDWy2xXlakHz+JDNT0hBm/daX3tStKgkJRXWq9uIGiPNuU/CctC1V0xDlnWB5 iw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2whcxsb0sj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 11:24:17 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4E46010002A;
-        Wed, 27 Nov 2019 11:24:16 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A1EF82B1218;
-        Wed, 27 Nov 2019 11:24:16 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Nov 2019 11:24:15
- +0100
-From:   Yannick Fertre <yannick.fertre@st.com>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] Input: goodix - support gt9147 touchpanel
-Date:   Wed, 27 Nov 2019 11:24:14 +0100
-Message-ID: <1574850254-13381-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
+        Wed, 27 Nov 2019 05:27:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47792 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726204AbfK0K1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:27:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1B51FACE0;
+        Wed, 27 Nov 2019 10:27:47 +0000 (UTC)
+Message-ID: <1574850465.2485.10.camel@suse.com>
+Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, hverkuil@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Date:   Wed, 27 Nov 2019 11:27:45 +0100
+In-Reply-To: <000000000000f47f0b0595307ddc@google.com>
+References: <000000000000f47f0b0595307ddc@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_02:2019-11-27,2019-11-27 signatures=0
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yannick Fertré <yannick.fertre@st.com>
+Am Freitag, den 18.10.2019, 07:53 -0700 schrieb syzbot:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=102b65cf600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9ca7a12fd736d93e0232
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143b9060e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d3b94b600000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com
 
-Add support for it by adding compatible and supported chip data
-(default settings used).
-The chip data on GT9147 is similar to GT912, like
-- config data register has 0x8047 address
-- config data register max len is 240
-- config data checksum has 8-bit
+#syz test: https://github.com/google/kasan.git 22be26f7
 
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+From 497dce10b022c0cfbba450a47d634aa212ecafa1 Mon Sep 17 00:00:00 2001
+From: Oliver Neukum <oneukum@suse.com>
+Date: Mon, 18 Nov 2019 14:41:51 +0100
+Subject: [PATCH] si470x: prevent resubmission
+
+Starting IO to a device is not necessarily a NOP in every error
+case. So we need to terminate all IO in every case of probe
+failure and disconnect with absolute certainty.
+
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 ---
- drivers/input/touchscreen/goodix.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/radio/si470x/radio-si470x-usb.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index fb43aa7..b470773 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -1045,6 +1045,7 @@ static const struct of_device_id goodix_of_match[] = {
- 	{ .compatible = "goodix,gt9271" },
- 	{ .compatible = "goodix,gt928" },
- 	{ .compatible = "goodix,gt967" },
-+	{ .compatible = "goodix,gt9147",},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, goodix_of_match);
+diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
+index fedff68d8c49..8663828d93a5 100644
+--- a/drivers/media/radio/si470x/radio-si470x-usb.c
++++ b/drivers/media/radio/si470x/radio-si470x-usb.c
+@@ -542,6 +542,8 @@ static int si470x_start_usb(struct si470x_device *radio)
+ 		radio->int_in_running = 0;
+ 	}
+ 	radio->status_rssi_auto_update = radio->int_in_running;
++	if (retval < 0)
++		return retval;
+ 
+ 	/* start radio */
+ 	retval = si470x_start(radio);
+@@ -734,7 +736,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 	/* start radio */
+ 	retval = si470x_start_usb(radio);
+ 	if (retval < 0)
+-		goto err_buf;
++		/* the urb may be running even after an error */
++		goto err_all;
+ 
+ 	/* set initial frequency */
+ 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
+@@ -749,7 +752,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 
+ 	return 0;
+ err_all:
+-	usb_kill_urb(radio->int_in_urb);
++	usb_poison_urb(radio->int_in_urb);
+ err_buf:
+ 	kfree(radio->buffer);
+ err_ctrl:
+@@ -824,7 +827,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
+ 	mutex_lock(&radio->lock);
+ 	v4l2_device_disconnect(&radio->v4l2_dev);
+ 	video_unregister_device(&radio->videodev);
+-	usb_kill_urb(radio->int_in_urb);
++	usb_poison_urb(radio->int_in_urb);
+ 	usb_set_intfdata(intf, NULL);
+ 	mutex_unlock(&radio->lock);
+ 	v4l2_device_put(&radio->v4l2_dev);
 -- 
-2.7.4
+2.16.4
 
