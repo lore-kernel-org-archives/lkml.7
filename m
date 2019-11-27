@@ -2,136 +2,135 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7BFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46322204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D52D204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NkdOCTCD"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="q22+IpVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfK0Hat (ORCPT
+        id S1726426AbfK0Hcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 02:30:49 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:8466 "EHLO pegase1.c-s.fr"
+        Wed, 27 Nov 2019 02:32:42 -0500
+Received: from cmta20.telus.net ([209.171.16.93]:37329 "EHLO cmta20.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbfK0Hat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 02:30:49 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47NC9c3dGGz9tykX;
-        Wed, 27 Nov 2019 08:30:44 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=NkdOCTCD; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 0lG1PMTvBala; Wed, 27 Nov 2019 08:30:44 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47NC9c1bgrz9tykW;
-        Wed, 27 Nov 2019 08:30:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1574839844; bh=NJQssQkYeJeEjKGMaEMr+bjTGOX9h1XeXNPNHApes7k=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NkdOCTCDvC0Kndz+ltBeOQvVocuXPNtP0aJg9+YY+8GqDvUIdB91/nP31kmMHRcap
-         WFsCPGX0tZVfMzN09DlYpkejbUT9sXpvf1l1b9Ph1Ec4woz7r/DhkUfWLUnzu69vZb
-         Hwy/pEaiRyDrEYOMc3lH+ZhmYVlh8Y7gK+BzYF5o=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F33098B842;
-        Wed, 27 Nov 2019 08:30:44 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id OkqU2WrIISZx; Wed, 27 Nov 2019 08:30:44 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 339598B770;
-        Wed, 27 Nov 2019 08:30:43 +0100 (CET)
-Subject: Re: [PATCH v2 26/35] powerpc/64: system call: Fix sparse warning
- about missing declaration
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Michal Suchanek <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Breno Leitao <leitao@debian.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Diana Craciun <diana.craciun@nxp.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Neuling <mikey@neuling.org>,
-        Gustavo Romero <gromero@linux.ibm.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
-        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org
-References: <cover.1574798487.git.msuchanek@suse.de>
- <d0a6b5235c4e1544f4c253724a5b8f2106cc43bd.1574798487.git.msuchanek@suse.de>
- <20191126214441.4wziibsax2mvpl3p@ltop.local>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <35062751-0d90-ce2d-76ad-ea6566668d93@c-s.fr>
-Date:   Wed, 27 Nov 2019 08:30:42 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1726092AbfK0Hcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 02:32:42 -0500
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id ZroRi5vCYN5I9ZroSiik5X; Wed, 27 Nov 2019 00:32:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1574839960; bh=0ORBH/ZadSHCKZQiUWjIShwLMG7CSdG3H9xgVcazVJU=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=q22+IpVAASH+U2XC4w8g/WP4DylYoKoUrCa+ZrfCCIARaAiRcPxqRq5d7UtnIyMVO
+         Q9mBDyc4XKS3AadM6fJrbbtxzxXuUqDT3I9xJ11leHzRC6dVlmgcMZ3VT74LiR8vtm
+         ApAzKp1ldrxZZILhypUdEu+azketPmv7dvFwFrP0rl73zqnqya4SV96XoyP3Cpq8np
+         hSCjobndT7a8tluUQUip/CTOZXJoGTLlu+wbFGfhmTRAvK+Huvh77qJ+YMsBcUZx0V
+         pqvcrgGLjEcSSxg+efyHL4z1aQvmWB5L+ex2b6vX18++k+ReKYaCskAq/729E85RLh
+         hCBMaUTP1ooRg==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=dAj8EvzD0n44Yc48VYEA:9 a=QEXdDO2ut3YA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
+Cc:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "'Mel Gorman'" <mgorman@techsingularity.net>,
+        "'Matt Fleming'" <matt@codeblueprint.co.uk>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Juri Lelli'" <juri.lelli@redhat.com>,
+        "'Paul Turner'" <pjt@google.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
+        "'Quentin Perret'" <qperret@qperret.net>,
+        "'Dietmar Eggemann'" <dietmar.eggemann@arm.com>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Borislav Petkov'" <bp@suse.de>, "'Len Brown'" <lenb@kernel.org>,
+        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
+References: <20191113124654.18122-1-ggherdovich@suse.cz>                 <20191113124654.18122-2-ggherdovich@suse.cz>                 <000001d5a29b$c944fd70$5bcef850$@net> <1574697961.16378.5.camel@suse.cz>         <000801d5a41e$a7fce2c0$f7f6a840$@net> <1574781600.7677.2.camel@suse.cz>
+In-Reply-To: <1574781600.7677.2.camel@suse.cz>
+Subject: RE: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
+Date:   Tue, 26 Nov 2019 23:32:34 -0800
+Message-ID: <001d01d5a4f4$d96b21b0$8c416510$@net>
 MIME-Version: 1.0
-In-Reply-To: <20191126214441.4wziibsax2mvpl3p@ltop.local>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdWkbC8LB/SpP9sCRCWbwO3FO+l3UwAhVS2w
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfNRXJHBbT8vjMdPapanEaph3gv4V2+AANKO8BH+eYmR1Nso692Mw0NJl1Q6Yq/wGlZoYcEBt0dX5lbjPw89ZHFUy+HTJlBcHXQs65J2CzkiO2FtVCMHQ
+ 8qdbInoD2VETmXgk4ekKkZonQQKdAO46hQD9usndH/mEOiD0AH7jjUh7JqiqZuLO3penEF0LiInl2sPX95+rCsZbsCyzdzn4ZFcWkzaFrXbaRjPbyKGQAsTH
+ N19Ik0dOoYG4CV/PH65GATgDjKC5uHH5IQWK4QEZS1eBZ4JEhWTr8tW3DD5bs0UMaMespVt3UlZggS8pRgc7K90vD5i+J/LhbdfXk3ljr61n8mTSRRp0ZEqm
+ Tb6tV6H4qONGNCJI2OiLs9JxHdxwoUdSg5bZPYun40VAHGxe8P+AQ5GYJ0MKcbEcQ+ZFQ4gzn6br3dhbMmCiLn0AOPvsNqLcsi/uKtR+1IElAhRLS0GvuqXx
+ 5DMVk9rakujonmx9aSZmCtHPeJeZ+AuMYbLghbOhLS7RR5G8FeIdHz2NZVHuYDTji9jGvakZCto8DpelczMhJ2aPNeP20pnxSkA1NobSiaYApscVe3S8Gb+D
+ 9lsnwqa8827j5yNeFKxpC4sIG3mJiLLrsgwQdxFzw8BT8zZ/7s27U5h+o3+XZ0bgM9aTs29VlUbpE6QIUwJnlQvH16gf7jhe1pQWdhrfLrjvrqV/DMRk4zoq
+ htB7xbjfM51qlUWP9vtjH3lT75ZBEMM4XKUpJQUJAoQoPDSdu3fBag==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 26/11/2019 à 22:44, Luc Van Oostenryck a écrit :
-> On Tue, Nov 26, 2019 at 09:13:40PM +0100, Michal Suchanek wrote:
->> Sparse warns about missing declarations for these functions:
->>
->> +arch/powerpc/kernel/syscall_64.c:108:23: warning: symbol 'syscall_exit_prepare' was not declared. Should it be static?
->> +arch/powerpc/kernel/syscall_64.c:18:6: warning: symbol 'system_call_exception' was not declared. Should it be static?
->> +arch/powerpc/kernel/syscall_64.c:200:23: warning: symbol 'interrupt_exit_user_prepare' was not declared. Should it be static?
->> +arch/powerpc/kernel/syscall_64.c:288:23: warning: symbol 'interrupt_exit_kernel_prepare' was not declared. Should it be static?
->>
->> Add declaration for them.
+On 2019.11.26 07:20 Giovanni Gherdovich wrote:
+> On Mon, 2019-11-25 at 21:59 -0800, Doug Smythies wrote:
+>> [...]
+>> The issue with the schedutil governor not working properly in the 5.4 RC series
+>> appears to be hardware dependant.
+>> 
+>> My test computer is Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz., Sandy Bridge.
+>> On a temporary basis, I acquired a computer with an
+>> Intel(R) Core(TM) i5-4460 CPU @ 3.20GHz, Haswell,
+>> and schedutil governor behaviour with the exact same kernels is fine:
+>> 
+>> That "gitsource" test, "make test" 6 times, first run thrown out:
+>> 
+>> Kernel 5.4 intel_cpufreq/schedutil: 3411.8 seconds
+>> Kernel 5.4 + gg 6 intel_cpufreq/schedutil: 1696.7 seconds
+>> Ratio: 0.49
+>> Recall you got a ratio of 0.49 with 5th generation, Broadwell.
+>
+> It's good to hear that we're getting the same performance numbers for this
+> patchset on all hardware that is not a Sandy Bridge. Thanks for double
+> checking, independent verification is always valuable.
 > 
-> I'm fine with this patch but, just FYI, lately people seems to
-> prefer to add '__visible' to the function definition instead
-> of creating such header files.
+> Now, regarding the 5.4 regression for schedutil you see on Sandy Bridge: can
+> we move this to the kernel bugzilla? Would you care to open a bug there and CC
+> me to it?
 
-AFAIU, that's not exactly the purpose of '__visible', see 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9add850c2
+O.K., I'll need another day or two to isolate further, then I'll open a bug.
+I now understand considerably more, and why my bisection ended up
+at a strange spot.
 
-Christophe
+> If it's reproducible we should assess it and see what can be done.
+
+On my Sandy Bridge system if the kernel configuration contains:
+
+CONFIG_UCLAMP_TASK_GROUP=y
+
+Then the intel_cpufreq/schedutil will respond much like the performance
+governor.
+
+If the kernel configuration contains:
+
+# CONFIG_UCLAMP_TASK_GROUP is not set
+
+Then the intel_cpufreq/schedutil will respond much like it used to.
+
+On the Haswell computer, it doesn't seem to matter, and your tests
+seem to confirm this.
+
+Note: I steal my kernel configuration from the Ubuntu mainline builds,
+and they changed this parameter during the 5.4-rc series.
+
+... Doug
+
+
