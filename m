@@ -2,111 +2,128 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB924C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654D6C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB64A20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E0C206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574837682;
-	bh=rxs7qi8eKR+9ZrDZ28RvjAwZEH/m4ffIBqFeOsG9kbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ThIXshH5EV0rmw659vASQtwbDoyLtjDeCweEWUseLCVkUyF41MEpCzj76SYRkJqk+
-	 x2oVadd1C+PW8EscSaKqQDfabasY6ynNntSBPA3WbKT2+Bf5SMD5atk+tvAwFLTAKj
-	 1sU+oHxUElUWU7MS3DaOC/TuSDdEL1NEfRTgLZHs=
+	s=default; t=1574837794;
+	bh=kyXfm7AOEZ8Syg1jiA3cZuR2h8U5E3zuVBPHsT7+B1s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sox7Sm3J0BEW/OxtjpctXCgpI8txL9c548b3JVlf/ZcLHm3lJCtJf16w7aIJsEDZJ
+	 bHmRiTIgE3kxsM8AZEYuY+2/E30i+PQIfbLslhgupN2XpW6id1i/wUqLR7pTfXZOEK
+	 LQtMyW9Snv0KfogK6eGYOeEnx6Xy+AayjQVOb4Ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfK0Gyl (ORCPT
+        id S1726470AbfK0G4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 01:54:41 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43564 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfK0Gyl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 01:54:41 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n1so25313232wra.10
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 22:54:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KuQPrp2Sf7gN5I9EAr348T1yBTBQmJrpqeh1YXF7Lzs=;
-        b=WMOXL/ILHyTMMK62UlIIUCyH/MoU3hbrKHjGiJ/sgbLmF8XmA91lLhtmCa5Ztrd3g6
-         tNdDYpi5taMs0iX+3voaZrBBh19vE2wkV+mc0weNsnYvdJbu672uh6m8LRKlUqHGoCWz
-         v9ogaH1rzEAdR8vW2/bEmSfiNJKyEetkpVt/bvZ+qrCan9TMT2J8I7SpohSfhatJPiEp
-         +s8lTs3pULMQCxidqNPa5VniRtds2lDbR2ucfDDfd9XwVVL/EsrXHhXCjrVPGvOluJ6b
-         SLikrXMnNPR51Uvy6lfWXbg9wcOFADAPMj8IQfMOh7MPxmQJ1Xs7wHF3N7bQZHB+ostn
-         SwBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KuQPrp2Sf7gN5I9EAr348T1yBTBQmJrpqeh1YXF7Lzs=;
-        b=fsLqy75UA/Tx2+wV/oFBHlVq9rgFlmBkr6XR63kRPqTUyMr9+qIc6iCCUIqRTsqfSi
-         nFmyUeW8lszY39RrghS+jvPeU9HYvpDyugHwMJ+gEhXar0fJzZk/pZR4U7OgvzZV5zly
-         rXVf09GvaHe0V/AbFSiAkYjfmOILWfeNd9GteRMe3FrSVQlp3OyCYPljLg0iN56CiUCD
-         wUHKYbh3QU4AtlQU5FIOGbSBGjTiDsvgpFu6FYfRgEVQu9poQBt6PnQSearHV4RkeyKp
-         vJFiYte8OTZGd9gspmstCYtFcdHzPW2eLGECT5+zeuYA8HrXH7b0QyvjpLMtT8vvvKma
-         QXqA==
-X-Gm-Message-State: APjAAAXpIFROkbtT9b7WuvlKsEJcFUpVFKU2g5562A38HGvIrW1pyWeu
-        aEWJaQlo1BTr3zuM8wtPUw7CBMrd
-X-Google-Smtp-Source: APXvYqwE4fh4DybzzJTVdArcKOAdloAXiFEfExedjedmAj6f0bS3UToeENnW1eKVNkyO6Rvspl+tFQ==
-X-Received: by 2002:adf:e40e:: with SMTP id g14mr19328980wrm.264.1574837679093;
-        Tue, 26 Nov 2019 22:54:39 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id z9sm18102498wrv.35.2019.11.26.22.54.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 22:54:38 -0800 (PST)
-Date:   Wed, 27 Nov 2019 07:54:36 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     bp@alien8.de, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        x86@kernel.org, hpa@zytor.com, mingo@redhat.com
-Subject: Re: [PATCH] cpu: microcode: Add comma to 0
-Message-ID: <20191127065436.GC52731@gmail.com>
-References: <20191126221519.167145-1-jbi.octave@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126221519.167145-1-jbi.octave@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 27 Nov 2019 01:56:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbfK0G4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 01:56:32 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 109E120665;
+        Wed, 27 Nov 2019 06:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574837791;
+        bh=kyXfm7AOEZ8Syg1jiA3cZuR2h8U5E3zuVBPHsT7+B1s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Lfnfzy4NPW0+4d6PcBHZS+myWitxFIrLLcDf67hUfyCKxlOrRdxZR28q2AOk41INa
+         oObBqgvBH4swW6AijumXLgcGMCqdZ6lG1ubPEnglbXMNldJdFpiUjHRqlNKXNDapUe
+         66V3dPiL6PFbqbeJXOUpQNbAT8gfQp7zVOy6h8+U=
+Date:   Wed, 27 Nov 2019 15:56:26 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, namit@vmware.com, hpa@zytor.com,
+        luto@kernel.org, ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        jeyu@kernel.org
+Subject: Re: [PATCH -tip 2/2] kprobes: Set unoptimized flag after
+ unoptimizing code
+Message-Id: <20191127155626.5386bc3a25195cfd0fa82a08@kernel.org>
+In-Reply-To: <20191127061910.nbfmzds4k5wxorwz@ast-mbp.dhcp.thefacebook.com>
+References: <157483420094.25881.9190014521050510942.stgit@devnote2>
+        <157483422375.25881.13508326028469515760.stgit@devnote2>
+        <20191127061910.nbfmzds4k5wxorwz@ast-mbp.dhcp.thefacebook.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 26 Nov 2019 22:19:11 -0800
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-* Jules Irenge <jbi.octave@gmail.com> wrote:
-
-> Add ","  after 0
-> Because memory for the struct is being cleared
-> and elements after "," are missing on purpose
->  as they are being cleared to
+> On Wed, Nov 27, 2019 at 02:57:04PM +0900, Masami Hiramatsu wrote:
+> > Fix to set unoptimized flag after confirming the code is completely
+> > unoptimized. Without this fix, when a kprobe hits the intermediate
+> > modified instruction (the first byte is replaced by int3, but
+> > latter bytes still be a jump address operand) while unoptimizing,
+> > it can return to the middle byte of the modified code. And it causes
+> > an invalid instruction exception in the kernel.
+> > 
+> > Usually, this is a rare case, but if we put a probe on the function
+> > called while text patching, it always causes a kernel panic as below.
+> > (text_poke() is used for patching the code in optprobe)
+> > 
+> >  # echo p text_poke+5 > kprobe_events
+> >  # echo 1 > events/kprobes/enable
+> >  # echo 0 > events/kprobes/enable
+> >  invalid opcode: 0000 [#1] PREEMPT SMP PTI
+> >  CPU: 7 PID: 137 Comm: kworker/7:1 Not tainted 5.4.0-rc8+ #29
+> >  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+> >  Workqueue: events kprobe_optimizer
+> >  RIP: 0010:text_poke+0x9/0x50
+> >  Code: 01 00 00 5b 5d 41 5c 41 5d c3 89 c0 0f b7 4c 02 fe 66 89 4c 05 fe e9 31 ff ff ff e8 71 ac 03 00 90 55 48 89 f5 53 cc 30 cb fd <1e> ec 08 8b 05 72 98 31 01 85 c0 75 11 48 83 c4 08 48 89 ee 48 89
+> >  RSP: 0018:ffffc90000343df0 EFLAGS: 00010686
+> >  RAX: 0000000000000000 RBX: ffffffff81025796 RCX: 0000000000000000
+> >  RDX: 0000000000000004 RSI: ffff88807c983148 RDI: ffffffff81025796
+> >  RBP: ffff88807c983148 R08: 0000000000000001 R09: 0000000000000000
+> >  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82284fe0
+> >  R13: ffff88807c983138 R14: ffffffff82284ff0 R15: 0ffff88807d9eee0
+> >  FS:  0000000000000000(0000) GS:ffff88807d9c0000(0000) knlGS:0000000000000000
+> >  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >  CR2: 000000000058158b CR3: 000000007b372000 CR4: 00000000000006a0
+> >  Call Trace:
+> >   arch_unoptimize_kprobe+0x22/0x28
+> >   arch_unoptimize_kprobes+0x39/0x87
+> >   kprobe_optimizer+0x6e/0x290
+> >   process_one_work+0x2a0/0x610
+> >   worker_thread+0x28/0x3d0
+> >   ? process_one_work+0x610/0x610
+> >   kthread+0x10d/0x130
+> >   ? kthread_park+0x80/0x80
+> >   ret_from_fork+0x3a/0x50
+> >  Modules linked in:
+> >  ---[ end trace 83b34b22a228711b ]---
+> > 
+> > This can happen even if we blacklist text_poke() and other functions,
+> > because there is a small time window which showing the intermediate
+> > code to other CPUs.
+> > 
+> > Fixes: 6274de4984a6 ("kprobes: Support delayed unoptimizing")
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 > 
-> Recommended by Boris Petkov
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  arch/x86/kernel/cpu/microcode/amd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-> index a0e52bd00ecc..04ee649f4acb 100644
-> --- a/arch/x86/kernel/cpu/microcode/amd.c
-> +++ b/arch/x86/kernel/cpu/microcode/amd.c
-> @@ -418,7 +418,7 @@ static int __apply_microcode_amd(struct microcode_amd *mc)
->  static bool
->  apply_microcode_early_amd(u32 cpuid_1_eax, void *ucode, size_t size, bool save_patch)
->  {
-> -	struct cont_desc desc = { 0 };
-> +	struct cont_desc desc = { 0, };
+> Awesome. It fixes the crash for me.
+> Tested-by: Alexei Starovoitov <ast@kernel.org>
 
-This is 100% unnecessary - " = { }" is enough of a structure initializer.
+That's a good news :)
 
-Thanks,
+Thank you for testing!
 
-	Ingo
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
