@@ -2,107 +2,306 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60813C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C106EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D35F21826
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887715;
-	bh=EAxCQth2ZKk/kGjhKRAbSAUj7vT5Dv3HrY5a2a8j1CI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MgXYPwptZTX7vHIp+TQtC5moLrjoWogP0PR1Xi7DfxeZ1qcUhPD+sEkXi1KoWyjCs
-	 ytQJ3QlDcRMwLYbjB4RTCUfsKrm0Q6gZcm9u6HV/0WKKrd6tznDrzsmM6XYwu3OhdV
-	 21RVov2fNLn919sAFMEOdm26aY3HT8sMTywxZxhA=
+	by mail.kernel.org (Postfix) with ESMTP id 811D621844
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FdkcHHVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730161AbfK0Use (ORCPT
+        id S1729639AbfK0Ush (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:48:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727893AbfK0Usa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:48:30 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5614B21826;
-        Wed, 27 Nov 2019 20:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887709;
-        bh=EAxCQth2ZKk/kGjhKRAbSAUj7vT5Dv3HrY5a2a8j1CI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YhrkKk5M/OB2V0V4AdCFChxov8MA5d+pEudIG081EBgb2cDgdCzUv0JNiUzboYdGW
-         FOp+eoyIsHbo3iSoxHrIm7hq0XRp0t6rApG+SWum1gfi+ZTnBm1LS6RyzW9I7qjExn
-         Y3lEhAaMiYVqZ3AdQhFSE3b8Tepv6z0Xq3+2wHck=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mattias Jacobsson <2pi@mok.nu>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 065/211] USB: misc: appledisplay: fix backlight update_status return code
-Date:   Wed, 27 Nov 2019 21:29:58 +0100
-Message-Id: <20191127203100.066967396@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
-References: <20191127203049.431810767@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 27 Nov 2019 15:48:37 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46505 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730141AbfK0Usd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:48:33 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 193so11712451pfc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 12:48:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Y6LYqA1009w6/0ukN0Ib/bql9rL9dUoPmyEoPz0e4AE=;
+        b=FdkcHHVvIY3IEFp0+wECGStXgSWXF4l63Es+grBYcdduCC7OlLsRIWiHcAceeoSO0c
+         KE0p4VBA6wuzuhj5W0xVaHoLemUCW42tcOtTP+cZ+h2pgIpk+E/D3wCOKVQUIM+vbQeD
+         r227ZE4R8e355lnIjtEEyv7foBGflEwCdB+rrMnT3BGtEawzPn0rS2mjsjtJQxaES0ma
+         eJ/eamuR4soalOyEHTTDv8WPVrjK73knNLLbRQvV61uDf2IZW9VCQ8huhMtc5lyBy5Vv
+         6I9el17XC6e3uHm27KZt//D+ZWGQ5xffzzug2d10YB5s8pc6U+zTQfApYxQWmT3KvFdF
+         Cteg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y6LYqA1009w6/0ukN0Ib/bql9rL9dUoPmyEoPz0e4AE=;
+        b=HF6b/l186t2K6ij31p3xt7wcMzgiUSBz+cguPhDzlUntqiy3vWhD21o5HJ14QwRE4L
+         4glpD8LCFtewSFd9/sMXMUlmUxPpr0rCMrJgM+T7MZM9ienk8BvfydHRpI7+6fOPCp2t
+         BQEbu8wQ42slQQaswANKOnOWDtdfPb/xFOR32BDNx0bvAU84V05C/PezQVqD/q2pkkn/
+         pI4EsU445gLP5ldAi0d4bRkBDPFEE12sRs3PQy9WFVWcMNHrZA4ervqoiBr4TsfkDzyL
+         D8m0Oe1WwdTJj7WNjeQ4LvSPGHsHLfg5qUYH+jlj/UMSfJXvdBEzacwHWOn/n/Jo38G1
+         m+Ew==
+X-Gm-Message-State: APjAAAUkqXHqjVcGKJ9/Rftg8rCXeyV/JDDTzImLuhHl3OjJpL2bkFoN
+        Jn3PnIPZ914pnldhJyt0YQ3THw==
+X-Google-Smtp-Source: APXvYqxQ65bEvXdycLMXbBtX1P9RFv4BXVKPMqYZ/aYjR1KmPzyt6bVrEPZZCdlnLzb3SEwPi+GajQ==
+X-Received: by 2002:a63:4b52:: with SMTP id k18mr7079804pgl.394.1574887712054;
+        Wed, 27 Nov 2019 12:48:32 -0800 (PST)
+Received: from ?IPv6:2605:e000:100e:8c61:814b:c5b0:7860:90ce? ([2605:e000:100e:8c61:814b:c5b0:7860:90ce])
+        by smtp.gmail.com with ESMTPSA id l7sm3479413pfl.11.2019.11.27.12.48.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Nov 2019 12:48:31 -0800 (PST)
+Subject: Re: [PATCH RFC] signalfd: add support for SFD_TASK
+To:     Jann Horn <jannh@google.com>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
+ <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <1d3a458a-fa79-5e33-b5ce-b473122f6d1a@kernel.dk>
+Date:   Wed, 27 Nov 2019 12:48:29 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mattias Jacobsson <2pi@mok.nu>
+On 11/27/19 12:23 PM, Jann Horn wrote:
+> On Wed, Nov 27, 2019 at 6:11 AM Jens Axboe <axboe@kernel.dk> wrote:
+>> I posted this a few weeks back, took another look at it and refined it a
+>> bit. I'd like some input on the viability of this approach.
+>>
+>> A new signalfd setup flag is added, SFD_TASK. This is only valid if used
+>> with SFD_CLOEXEC. If set, the task setting up the signalfd descriptor is
+>> remembered in the signalfd context, and will be the one we use for
+>> checking signals in the poll/read handlers in signalfd.
+>>
+>> This is needed to make signalfd useful with io_uring and aio, of which
+>> the former in particular has my interest.
+>>
+>> I _think_ this is sane. To prevent the case of a task clearing O_CLOEXEC
+>> on the signalfd descriptor, forking, and then exiting, we grab a
+>> reference to the task when we assign it. If that original task exits, we
+>> catch it in signalfd_flush() and ensure waiters are woken up.
+> 
+> Mh... that's not really reliable, because you only get ->flush() from
+> the last exiting thread (or more precisely, the last exiting task that
+> shares the files_struct).
+> 
+> What is your goal here? To have a reference to a task without keeping
+> the entire task_struct around in memory if someone leaks the signalfd
+> to another process - basically like a weak pointer? If so, you could
+> store a refcounted reference to "struct pid" instead of a refcounted
+> reference to the task_struct, and then do the lookup of the
+> task_struct on ->poll and ->read (similar to what procfs does).
 
-[ Upstream commit 090158555ff8d194a98616034100b16697dd80d0 ]
+Yeah, I think that works out much better (and cleaner). How about this,
+then? Follows your advice and turns it into a struct pid instead. I
+don't particularly like the -ESRCH in dequeue and setup, what do you
+think? For poll, POLLERR seems like a prudent choice.
 
-Upon success the update_status handler returns a positive number
-corresponding to the number of bytes transferred by usb_control_msg.
-However the return code of the update_status handler should indicate if
-an error occurred(negative) or how many bytes of the user's input to sysfs
-that was consumed. Return code zero indicates all bytes were consumed.
+Tested with the test cases I sent out yesterday, works for me.
 
-The bug can for example result in the update_status handler being called
-twice, the second time with only the "unconsumed" part of the user's input
-to sysfs. Effectively setting an incorrect brightness.
-
-Change the update_status handler to return zero for all successful
-transactions and forward usb_control_msg's error code upon failure.
-
-Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/misc/appledisplay.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/misc/appledisplay.c b/drivers/usb/misc/appledisplay.c
-index 03be7c75c5be7..3b59eaf81eefc 100644
---- a/drivers/usb/misc/appledisplay.c
-+++ b/drivers/usb/misc/appledisplay.c
-@@ -160,8 +160,11 @@ static int appledisplay_bl_update_status(struct backlight_device *bd)
- 		pdata->msgdata, 2,
- 		ACD_USB_TIMEOUT);
- 	mutex_unlock(&pdata->sysfslock);
--	
--	return retval;
+diff --git a/fs/signalfd.c b/fs/signalfd.c
+index 44b6845b071c..ccb1173b20aa 100644
+--- a/fs/signalfd.c
++++ b/fs/signalfd.c
+@@ -50,6 +50,7 @@ void signalfd_cleanup(struct sighand_struct *sighand)
+  
+  struct signalfd_ctx {
+  	sigset_t sigmask;
++	struct pid *task_pid;
+  };
+  
+  static int signalfd_release(struct inode *inode, struct file *file)
+@@ -58,20 +59,41 @@ static int signalfd_release(struct inode *inode, struct file *file)
+  	return 0;
+  }
+  
++static void signalfd_put_task(struct signalfd_ctx *ctx, struct task_struct *tsk)
++{
++	if (ctx->task_pid)
++		put_task_struct(tsk);
++}
 +
-+	if (retval < 0)
-+		return retval;
-+	else
-+		return 0;
- }
- 
- static int appledisplay_bl_get_brightness(struct backlight_device *bd)
++static struct task_struct *signalfd_get_task(struct signalfd_ctx *ctx)
++{
++	if (ctx->task_pid)
++		return get_pid_task(ctx->task_pid, PIDTYPE_PID);
++
++	return current;
++}
++
+  static __poll_t signalfd_poll(struct file *file, poll_table *wait)
+  {
+  	struct signalfd_ctx *ctx = file->private_data;
++	struct task_struct *tsk;
+  	__poll_t events = 0;
+  
+-	poll_wait(file, &current->sighand->signalfd_wqh, wait);
++	tsk = signalfd_get_task(ctx);
++	if (tsk) {
++		poll_wait(file, &tsk->sighand->signalfd_wqh, wait);
+  
+-	spin_lock_irq(&current->sighand->siglock);
+-	if (next_signal(&current->pending, &ctx->sigmask) ||
+-	    next_signal(&current->signal->shared_pending,
+-			&ctx->sigmask))
+-		events |= EPOLLIN;
+-	spin_unlock_irq(&current->sighand->siglock);
++		spin_lock_irq(&tsk->sighand->siglock);
++		if (next_signal(&tsk->pending, &ctx->sigmask) ||
++		    next_signal(&tsk->signal->shared_pending,
++				&ctx->sigmask))
++			events |= EPOLLIN;
++		spin_unlock_irq(&tsk->sighand->siglock);
+  
++		signalfd_put_task(ctx, tsk);
++	} else {
++		events |= EPOLLERR;
++	}
+  	return events;
+  }
+  
+@@ -167,10 +189,15 @@ static ssize_t signalfd_dequeue(struct signalfd_ctx *ctx, kernel_siginfo_t *info
+  				int nonblock)
+  {
+  	ssize_t ret;
++	struct task_struct *tsk;
+  	DECLARE_WAITQUEUE(wait, current);
+  
+-	spin_lock_irq(&current->sighand->siglock);
+-	ret = dequeue_signal(current, &ctx->sigmask, info);
++	tsk = signalfd_get_task(ctx);
++	if (!tsk)
++		return -ESRCH;
++
++	spin_lock_irq(&tsk->sighand->siglock);
++	ret = dequeue_signal(tsk, &ctx->sigmask, info);
+  	switch (ret) {
+  	case 0:
+  		if (!nonblock)
+@@ -178,29 +205,31 @@ static ssize_t signalfd_dequeue(struct signalfd_ctx *ctx, kernel_siginfo_t *info
+  		ret = -EAGAIN;
+  		/* fall through */
+  	default:
+-		spin_unlock_irq(&current->sighand->siglock);
++		spin_unlock_irq(&tsk->sighand->siglock);
++		signalfd_put_task(ctx, tsk);
+  		return ret;
+  	}
+  
+-	add_wait_queue(&current->sighand->signalfd_wqh, &wait);
++	add_wait_queue(&tsk->sighand->signalfd_wqh, &wait);
+  	for (;;) {
+  		set_current_state(TASK_INTERRUPTIBLE);
+-		ret = dequeue_signal(current, &ctx->sigmask, info);
++		ret = dequeue_signal(tsk, &ctx->sigmask, info);
+  		if (ret != 0)
+  			break;
+  		if (signal_pending(current)) {
+  			ret = -ERESTARTSYS;
+  			break;
+  		}
+-		spin_unlock_irq(&current->sighand->siglock);
++		spin_unlock_irq(&tsk->sighand->siglock);
+  		schedule();
+-		spin_lock_irq(&current->sighand->siglock);
++		spin_lock_irq(&tsk->sighand->siglock);
+  	}
+-	spin_unlock_irq(&current->sighand->siglock);
++	spin_unlock_irq(&tsk->sighand->siglock);
+  
+-	remove_wait_queue(&current->sighand->signalfd_wqh, &wait);
++	remove_wait_queue(&tsk->sighand->signalfd_wqh, &wait);
+  	__set_current_state(TASK_RUNNING);
+  
++	signalfd_put_task(ctx, tsk);
+  	return ret;
+  }
+  
+@@ -267,19 +296,24 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
+  	/* Check the SFD_* constants for consistency.  */
+  	BUILD_BUG_ON(SFD_CLOEXEC != O_CLOEXEC);
+  	BUILD_BUG_ON(SFD_NONBLOCK != O_NONBLOCK);
++	BUILD_BUG_ON(SFD_TASK & (SFD_CLOEXEC | SFD_NONBLOCK));
+  
+-	if (flags & ~(SFD_CLOEXEC | SFD_NONBLOCK))
++	if (flags & ~(SFD_CLOEXEC | SFD_NONBLOCK | SFD_TASK))
++		return -EINVAL;
++	if ((flags & (SFD_CLOEXEC | SFD_TASK)) == SFD_TASK)
+  		return -EINVAL;
+  
+  	sigdelsetmask(mask, sigmask(SIGKILL) | sigmask(SIGSTOP));
+  	signotset(mask);
+  
+  	if (ufd == -1) {
+-		ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
++		ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+  		if (!ctx)
+  			return -ENOMEM;
+  
+  		ctx->sigmask = *mask;
++		if (flags & SFD_TASK)
++			ctx->task_pid = get_task_pid(current, PIDTYPE_PID);
+  
+  		/*
+  		 * When we call this, the initialization must be complete, since
+@@ -290,6 +324,7 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
+  		if (ufd < 0)
+  			kfree(ctx);
+  	} else {
++		struct task_struct *tsk;
+  		struct fd f = fdget(ufd);
+  		if (!f.file)
+  			return -EBADF;
+@@ -298,11 +333,17 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
+  			fdput(f);
+  			return -EINVAL;
+  		}
+-		spin_lock_irq(&current->sighand->siglock);
++		tsk = signalfd_get_task(ctx);
++		if (!tsk) {
++			fdput(f);
++			return -ESRCH;
++		}
++		spin_lock_irq(&tsk->sighand->siglock);
+  		ctx->sigmask = *mask;
+-		spin_unlock_irq(&current->sighand->siglock);
++		spin_unlock_irq(&tsk->sighand->siglock);
+  
+-		wake_up(&current->sighand->signalfd_wqh);
++		wake_up(&tsk->sighand->signalfd_wqh);
++		signalfd_put_task(ctx, tsk);
+  		fdput(f);
+  	}
+  
+diff --git a/include/uapi/linux/signalfd.h b/include/uapi/linux/signalfd.h
+index 83429a05b698..064c5dc3eb99 100644
+--- a/include/uapi/linux/signalfd.h
++++ b/include/uapi/linux/signalfd.h
+@@ -16,6 +16,7 @@
+  /* Flags for signalfd4.  */
+  #define SFD_CLOEXEC O_CLOEXEC
+  #define SFD_NONBLOCK O_NONBLOCK
++#define SFD_TASK 00000001
+  
+  struct signalfd_siginfo {
+  	__u32 ssi_signo;
+
 -- 
-2.20.1
-
-
+Jens Axboe
 
