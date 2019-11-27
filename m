@@ -2,138 +2,109 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7CAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFEDC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D79520678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62B52084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:19:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ac4MIf2x"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YIqEU0TV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfK0ISy (ORCPT
+        id S1726526AbfK0IT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:18:54 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59693 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726125AbfK0ISx (ORCPT
+        Wed, 27 Nov 2019 03:19:27 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41450 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfK0IT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:18:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574842732;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ljhewKbxHJezSx+rS3E3FDX8oxHHWYHSlYwJHWJi7eA=;
-        b=Ac4MIf2xJASTiC0/XBL7c9nGCnseBqe/3tyDdfdMIzyu92pvS8Md0xjKjqaO7kCjGPZJLG
-        ad208g5CcmwLAeIRrHfbxt8hQ21OO7PXOaIPnjE0KdtFigyXklPZViGVbAuNHh9nPq1HDx
-        fpufYo1n9PF7oKnVmhr+LVJUWlx+SSs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-1jFMoWh8MuW10INoaOHqMA-1; Wed, 27 Nov 2019 03:18:49 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADAC0100A14C;
-        Wed, 27 Nov 2019 08:18:47 +0000 (UTC)
-Received: from krava (ovpn-204-226.brq.redhat.com [10.40.204.226])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4E1E5600C8;
-        Wed, 27 Nov 2019 08:18:45 +0000 (UTC)
-Date:   Wed, 27 Nov 2019 09:18:44 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf c2c: fix '-e list'
-Message-ID: <20191127081844.GH32367@krava>
-References: <20191127073442.174202-1-irogers@google.com>
+        Wed, 27 Nov 2019 03:19:27 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR8JJ3J067346;
+        Wed, 27 Nov 2019 02:19:19 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574842759;
+        bh=JD1B6cKRhzsHcZyvChJ7/JL9GOsyPba3BplB3CG9oLA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YIqEU0TVVkXMEdqSAl0bZWoxdsk3K4t9NF7bEAhUO2Zss7uBVsVqHCaa10tLvQEBw
+         ay1/9r6e/T9qNToilCbYmV0VSPBizKMHGHxA3uTmnngM0XfgfNer5W2gMeVGTHm54X
+         UB8kJg5JoHqa19Ds2e7uv1yKEweGoseLfHvIqifg=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR8JJNZ035536
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 Nov 2019 02:19:19 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
+ Nov 2019 02:19:19 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 27 Nov 2019 02:19:19 -0600
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR8JEMM117536;
+        Wed, 27 Nov 2019 02:19:15 -0600
+Subject: Re: [PATCH 2/4] PCI: endpoint: Add notification for core init
+ completion
+To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <20191113090851.26345-3-vidyas@nvidia.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <122c1625-2075-d34a-80da-8b73a03096d3@ti.com>
+Date:   Wed, 27 Nov 2019 13:48:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191127073442.174202-1-irogers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: 1jFMoWh8MuW10INoaOHqMA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191113090851.26345-3-vidyas@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 11:34:42PM -0800, Ian Rogers wrote:
-> When the event is passed as list, the default events should be listed as
-> per 'perf mem record -e list'. Previous behavior is:
->=20
-> $ perf c2c record -e list
-> failed: event 'list' not found, use '-e list' to get list of available ev=
-ents
->=20
->  Usage: perf c2c record [<options>] [<command>]
->     or: perf c2c record [<options>] -- <command> [<options>]
->=20
->     -e, --event <event>   event selector. Use 'perf mem record -e list' t=
-o list available events
+Hi,
 
-man c2c page do say you should use 'perf mem' not 'perf c2c'
-could you please change the man page as well?
-
->=20
-> New behavior:
->=20
-> $ perf c2c record -e list
-> ldlat-loads  : available
-> ldlat-stores : available
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On 13/11/19 2:38 PM, Vidya Sagar wrote:
+> Add support to send notifications to EPF from EPC once the core
+> registers initialization is complete.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  tools/perf/builtin-c2c.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
->=20
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index e69f44941aad..dd69cd218e4c 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -2872,10 +2872,26 @@ static int perf_c2c__report(int argc, const char =
-**argv)
->  static int parse_record_events(const struct option *opt,
->  =09=09=09       const char *str, int unset __maybe_unused)
->  {
-> +=09int j;
->  =09bool *event_set =3D (bool *) opt->value;
-> =20
-> -=09*event_set =3D true;
-> -=09return perf_mem_events__parse(str);
-> +=09if (strcmp(str, "list")) {
-> +=09=09*event_set =3D true;
-> +=09=09if (!perf_mem_events__parse(str))
-> +=09=09=09return 0;
-> +
-> +=09=09exit(-1);
-> +=09}
-> +=09for (j =3D 0; j < PERF_MEM_EVENTS__MAX; j++) {
-> +=09=09struct perf_mem_event *e =3D &perf_mem_events[j];
-> +
-> +=09=09fprintf(stderr, "%-13s%-*s%s\n",
-> +=09=09=09e->tag,
-> +=09=09=09verbose > 0 ? 25 : 0,
-> +=09=09=09verbose > 0 ? perf_mem_events__name(j) : "",
-> +=09=09=09e->supported ? ": available" : "");
-> +=09}
+>  drivers/pci/endpoint/pci-epc-core.c | 19 ++++++++++++++++++-
+>  include/linux/pci-epc.h             |  1 +
+>  include/linux/pci-epf.h             |  5 +++++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index 2f6436599fcb..fcc3f7fb19c0 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -542,10 +542,27 @@ void pci_epc_linkup(struct pci_epc *epc)
+>  	if (!epc || IS_ERR(epc))
+>  		return;
+>  
+> -	atomic_notifier_call_chain(&epc->notifier, 0, NULL);
+> +	atomic_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_linkup);
 
-there's same loop in builtin-mem.c, could you please put it
-to function in mem-events.c?
+Is this based on upstream kernel? or did you create this after applying [1]?
 
-thanks,
-jirka
 
+[1] -> https://lkml.org/lkml/2019/6/4/633
+
+Thanks
+Kishon
