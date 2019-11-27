@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E64C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F476C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0148E20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E2E20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890218;
-	bh=mdj7XPfQr7aTT3QJ1EjZS6B280N60fbSQCKhLUyoZvw=;
+	s=default; t=1574890226;
+	bh=uUfspw6J0y7zVNWHaEL3Fg4hnP5/GkJoZOcnFFnl6tg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xynR+F+OPs3qRGuaVz7Eqcin551bX/q/PZUKxNvfn94ekY6CO7xHiFNJV8EMi/Suc
-	 6ii8xGE/Np4kgrhEurHQGTj8+KkuPtBRFa4KipYH7mKOwlkAb/AThxcz5n24X9zyww
-	 zuoCQ+zpr7Jv/Y3dpDqJgq8PqQNSmttwpu8psadg=
+	b=TS4fpqadIlqDrLRuxBq6yaAmB7EQeKxKM0IsLWpaYjFKAPKZ8tUURZTPRBWuzqw/Z
+	 XFApoXZ0GY39OzPiQKILO5zWedVUuy/y+EyYtTjnqtqv+dchzCnLT7UpPWcZxNU+V4
+	 YmhUuvtV/aCkwevGRosbVhhNp1sF5U+CA+8/CCnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731391AbfK0VaQ (ORCPT
+        id S1730995AbfK0Uzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:30:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:55:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731017AbfK0U4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:56:00 -0500
+        id S1730981AbfK0Uzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:55:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AA082084D;
-        Wed, 27 Nov 2019 20:55:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D02882068E;
+        Wed, 27 Nov 2019 20:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888160;
-        bh=mdj7XPfQr7aTT3QJ1EjZS6B280N60fbSQCKhLUyoZvw=;
+        s=default; t=1574888142;
+        bh=uUfspw6J0y7zVNWHaEL3Fg4hnP5/GkJoZOcnFFnl6tg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YmTwYmY14XQ97vVEy1LPhK/fjSK9o69Le4yFmU2v8WEZnAHed15feS1z8VxYUUw6a
-         lBwDKLoeDzsrKeH+ysU4KvVP4XFvc7+b/IG3/f9z19O3lHO59vdYmaA+EZiPVifp+D
-         bJFj2bmD/ITshCaJKfQvd/5QYp+P7ZvXY131mrAQ=
+        b=Ns9V0C2vKtwMmA1dWZV4zIPRYHlHVu0Ud4549Cabl4UEitqP9Mx8u1KrLsaigMrL3
+         tMzy0lAoBZGrkJ8m6UMcBiP52o4x/iTNL5Pan90lzZd7EkTpNtM4azEf9yvbsuoLPY
+         cB6eTwMpzaF8b+kHUkX9Frb+S84nwJmQeN2jEOZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Douglas <adouglas@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org, Adrian Bunk <bunk@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/306] PCI: cadence: Write MSI data with 32bits
-Date:   Wed, 27 Nov 2019 21:27:57 +0100
-Message-Id: <20191127203116.673854739@linuxfoundation.org>
+Subject: [PATCH 4.19 021/306] mwifiex: Fix NL80211_TX_POWER_LIMITED
+Date:   Wed, 27 Nov 2019 21:27:51 +0100
+Message-Id: <20191127203116.245218438@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,35 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Douglas <adouglas@cadence.com>
+From: Adrian Bunk <bunk@kernel.org>
 
-[ Upstream commit e81e36a96bb56f243b5ac1d114c37c086761595b ]
+[ Upstream commit 65a576e27309120e0621f54d5c81eb9128bd56be ]
 
-According to the PCIe specification, although the MSI data is only
-16bits, the upper 16bits should be written as 0. Use writel
-instead of writew when writing the MSI data to the host.
+NL80211_TX_POWER_LIMITED was treated as NL80211_TX_POWER_AUTOMATIC,
+which is the opposite of what should happen and can cause nasty
+regulatory problems.
 
-Fixes: 37dddf14f1ae ("PCI: cadence: Add EndPoint Controller driver for Cadence PCIe controller")
-Signed-off-by: Alan Douglas <adouglas@cadence.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+if/else converted to a switch without default to make gcc warn
+on unhandled enum values.
+
+Signed-off-by: Adrian Bunk <bunk@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-cadence-ep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c  | 13 +++++++++++--
+ drivers/net/wireless/marvell/mwifiex/ioctl.h     |  1 +
+ drivers/net/wireless/marvell/mwifiex/sta_ioctl.c | 11 +++++++----
+ 3 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
-index 6692654798d44..c3a088910f48d 100644
---- a/drivers/pci/controller/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/pcie-cadence-ep.c
-@@ -355,7 +355,7 @@ static int cdns_pcie_ep_send_msi_irq(struct cdns_pcie_ep *ep, u8 fn,
- 		ep->irq_pci_addr = (pci_addr & ~pci_addr_mask);
- 		ep->irq_pci_fn = fn;
- 	}
--	writew(data, ep->irq_cpu_addr + (pci_addr & pci_addr_mask));
-+	writel(data, ep->irq_cpu_addr + (pci_addr & pci_addr_mask));
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 47ec5293c045d..7b74ef71bef1d 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -376,11 +376,20 @@ mwifiex_cfg80211_set_tx_power(struct wiphy *wiphy,
+ 	struct mwifiex_power_cfg power_cfg;
+ 	int dbm = MBM_TO_DBM(mbm);
  
- 	return 0;
- }
+-	if (type == NL80211_TX_POWER_FIXED) {
++	switch (type) {
++	case NL80211_TX_POWER_FIXED:
+ 		power_cfg.is_power_auto = 0;
++		power_cfg.is_power_fixed = 1;
+ 		power_cfg.power_level = dbm;
+-	} else {
++		break;
++	case NL80211_TX_POWER_LIMITED:
++		power_cfg.is_power_auto = 0;
++		power_cfg.is_power_fixed = 0;
++		power_cfg.power_level = dbm;
++		break;
++	case NL80211_TX_POWER_AUTOMATIC:
+ 		power_cfg.is_power_auto = 1;
++		break;
+ 	}
+ 
+ 	priv = mwifiex_get_priv(adapter, MWIFIEX_BSS_ROLE_ANY);
+diff --git a/drivers/net/wireless/marvell/mwifiex/ioctl.h b/drivers/net/wireless/marvell/mwifiex/ioctl.h
+index 48e154e1865df..0dd592ea6e833 100644
+--- a/drivers/net/wireless/marvell/mwifiex/ioctl.h
++++ b/drivers/net/wireless/marvell/mwifiex/ioctl.h
+@@ -267,6 +267,7 @@ struct mwifiex_ds_encrypt_key {
+ 
+ struct mwifiex_power_cfg {
+ 	u32 is_power_auto;
++	u32 is_power_fixed;
+ 	u32 power_level;
+ };
+ 
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+index 843d65bba1811..74e50566db1f2 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+@@ -688,6 +688,9 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
+ 	txp_cfg = (struct host_cmd_ds_txpwr_cfg *) buf;
+ 	txp_cfg->action = cpu_to_le16(HostCmd_ACT_GEN_SET);
+ 	if (!power_cfg->is_power_auto) {
++		u16 dbm_min = power_cfg->is_power_fixed ?
++			      dbm : priv->min_tx_power_level;
++
+ 		txp_cfg->mode = cpu_to_le32(1);
+ 		pg_tlv = (struct mwifiex_types_power_group *)
+ 			 (buf + sizeof(struct host_cmd_ds_txpwr_cfg));
+@@ -702,7 +705,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
+ 		pg->last_rate_code = 0x03;
+ 		pg->modulation_class = MOD_CLASS_HR_DSSS;
+ 		pg->power_step = 0;
+-		pg->power_min = (s8) dbm;
++		pg->power_min = (s8) dbm_min;
+ 		pg->power_max = (s8) dbm;
+ 		pg++;
+ 		/* Power group for modulation class OFDM */
+@@ -710,7 +713,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
+ 		pg->last_rate_code = 0x07;
+ 		pg->modulation_class = MOD_CLASS_OFDM;
+ 		pg->power_step = 0;
+-		pg->power_min = (s8) dbm;
++		pg->power_min = (s8) dbm_min;
+ 		pg->power_max = (s8) dbm;
+ 		pg++;
+ 		/* Power group for modulation class HTBW20 */
+@@ -718,7 +721,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
+ 		pg->last_rate_code = 0x20;
+ 		pg->modulation_class = MOD_CLASS_HT;
+ 		pg->power_step = 0;
+-		pg->power_min = (s8) dbm;
++		pg->power_min = (s8) dbm_min;
+ 		pg->power_max = (s8) dbm;
+ 		pg->ht_bandwidth = HT_BW_20;
+ 		pg++;
+@@ -727,7 +730,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
+ 		pg->last_rate_code = 0x20;
+ 		pg->modulation_class = MOD_CLASS_HT;
+ 		pg->power_step = 0;
+-		pg->power_min = (s8) dbm;
++		pg->power_min = (s8) dbm_min;
+ 		pg->power_max = (s8) dbm;
+ 		pg->ht_bandwidth = HT_BW_40;
+ 	}
 -- 
 2.20.1
 
