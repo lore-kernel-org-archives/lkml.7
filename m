@@ -7,77 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBC7C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5971C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8982217BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F212217AB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888566;
-	bh=ogrjsBVNJ8JMmbQWh6mnwRs1djxIQYaYeCb4jx1Tyu4=;
+	s=default; t=1574888568;
+	bh=p9rxlh9iXXQvXzQWkVDUbPxKMIiAfjzCTTSipkRAAMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W2pND/tTbt0YpFiYjoDdDM8730DvuoyFbFzrVDJqj8lL0m+pnLYlfFytGcuby9vBm
-	 z0XBZbTIg0E0xX1vJ3hn/rR6kWJ5di04ad3xsx2Usrulv/0m6swTeBuuj9edpbZ+5q
-	 eeP9CY0/UhVo84HLq/e1yHbS1hiokY7uXC8DWROc=
+	b=FZhowNzm7KrgwYsfuSy4Qlo2iCRM1grwG0j9zJpDkd1bAmcb1apvE6P4KZ3KbpHq8
+	 K5iQtVwuPolXHIldru6clse1vP1dJm2JJa8wTa43D5UVpMmHXx9dPSllajSPfUts4u
+	 fIErdMvWYXkgkZlHmloLi4ySJCfKIx0odycBihfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731938AbfK0VCp (ORCPT
+        id S1731592AbfK0VCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:02:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55518 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:02:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727337AbfK0VCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:02:42 -0500
+        id S1731934AbfK0VCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:02:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4742215A5;
-        Wed, 27 Nov 2019 21:02:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22825217AB;
+        Wed, 27 Nov 2019 21:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888562;
-        bh=ogrjsBVNJ8JMmbQWh6mnwRs1djxIQYaYeCb4jx1Tyu4=;
+        s=default; t=1574888564;
+        bh=p9rxlh9iXXQvXzQWkVDUbPxKMIiAfjzCTTSipkRAAMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WV848oDFexYCgj9R9CBFEN96l6zHXTG1Zsiow1WSQR0C1PmRuHpQwFcB0INpqMzx9
-         BVBZCf48TaakuQgPK6n+myEZzCsEthzogrcsmCU828gruvjWCEwPxQuRSz0DdEZiW2
-         zRnJg/WFXXvzb73IskbWWZqBT4cHRX2qO8v3kVzY=
+        b=Qio23onCOZCv8GnbU3hvZe1dyXkRT8ZNALWNPvGZL6CrbYwssgS4Ibyo5QZ6iEdBP
+         6L9KlMf1d7hul6y76RJZ3IMA+d1KrOGmLqEu90UN9QDzynry116xjjyw69NfGQ9uTV
+         BQ1TsRmFm6FKB5TFI9TJHJUTl9n2JKvm+YOmlRFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Rashmica Gupta <rashmica.g@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        John Allen <jallen@linux.vnet.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Kyeongdon Kim <kyeongdon.kim@lge.com>,
+        Alexander Potapenko <glider@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 181/306] mm/memory_hotplug: fix online/offline_pages called w.o. mem_hotplug_lock
-Date:   Wed, 27 Nov 2019 21:30:31 +0100
-Message-Id: <20191127203128.538002154@linuxfoundation.org>
+Subject: [PATCH 4.19 146/306] arm64: lib: use C string functions with KASAN enabled
+Date:   Wed, 27 Nov 2019 21:29:56 +0100
+Message-Id: <20191127203126.028496158@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -90,263 +66,221 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Andrey Ryabinin <aryabinin@virtuozzo.com>
 
-[ Upstream commit 381eab4a6ee81266f8dddc62e57376c7e584e5b8 ]
+[ Upstream commit 19a2ca0fb560fd7be7b5293c6b652c6d6078dcde ]
 
-There seem to be some problems as result of 30467e0b3be ("mm, hotplug:
-fix concurrent memory hot-add deadlock"), which tried to fix a possible
-lock inversion reported and discussed in [1] due to the two locks
-	a) device_lock()
-	b) mem_hotplug_lock
+ARM64 has asm implementation of memchr(), memcmp(), str[r]chr(),
+str[n]cmp(), str[n]len().  KASAN don't see memory accesses in asm code,
+thus it can potentially miss many bugs.
 
-While add_memory() first takes b), followed by a) during
-bus_probe_device(), onlining of memory from user space first took a),
-followed by b), exposing a possible deadlock.
+Ifdef out __HAVE_ARCH_* defines of these functions when KASAN is enabled,
+so the generic implementations from lib/string.c will be used.
 
-In [1], and it was decided to not make use of device_hotplug_lock, but
-rather to enforce a locking order.
+We can't just remove the asm functions because efistub uses them.  And we
+can't have two non-weak functions either, so declare the asm functions as
+weak.
 
-The problems I spotted related to this:
-
-1. Memory block device attributes: While .state first calls
-   mem_hotplug_begin() and the calls device_online() - which takes
-   device_lock() - .online does no longer call mem_hotplug_begin(), so
-   effectively calls online_pages() without mem_hotplug_lock.
-
-2. device_online() should be called under device_hotplug_lock, however
-   onlining memory during add_memory() does not take care of that.
-
-In addition, I think there is also something wrong about the locking in
-
-3. arch/powerpc/platforms/powernv/memtrace.c calls offline_pages()
-   without locks. This was introduced after 30467e0b3be. And skimming over
-   the code, I assume it could need some more care in regards to locking
-   (e.g. device_online() called without device_hotplug_lock. This will
-   be addressed in the following patches.
-
-Now that we hold the device_hotplug_lock when
-- adding memory (e.g. via add_memory()/add_memory_resource())
-- removing memory (e.g. via remove_memory())
-- device_online()/device_offline()
-
-We can move mem_hotplug_lock usage back into
-online_pages()/offline_pages().
-
-Why is mem_hotplug_lock still needed? Essentially to make
-get_online_mems()/put_online_mems() be very fast (relying on
-device_hotplug_lock would be very slow), and to serialize against
-addition of memory that does not create memory block devices (hmm).
-
-[1] http://driverdev.linuxdriverproject.org/pipermail/ driverdev-devel/
-    2015-February/065324.html
-
-This patch is partly based on a patch by Vitaly Kuznetsov.
-
-Link: http://lkml.kernel.org/r/20180925091457.28651-4-david@redhat.com
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Reviewed-by: Rashmica Gupta <rashmica.g@gmail.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Rashmica Gupta <rashmica.g@gmail.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Balbir Singh <bsingharora@gmail.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: John Allen <jallen@linux.vnet.ibm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: http://lkml.kernel.org/r/20180920135631.23833-2-aryabinin@virtuozzo.com
+Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Reported-by: Kyeongdon Kim <kyeongdon.kim@lge.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/memory.c | 13 +------------
- mm/memory_hotplug.c   | 28 ++++++++++++++++++++--------
- 2 files changed, 21 insertions(+), 20 deletions(-)
+ arch/arm64/include/asm/string.h | 14 ++++++++------
+ arch/arm64/kernel/arm64ksyms.c  |  7 +++++--
+ arch/arm64/lib/memchr.S         |  2 +-
+ arch/arm64/lib/memcmp.S         |  2 +-
+ arch/arm64/lib/strchr.S         |  2 +-
+ arch/arm64/lib/strcmp.S         |  2 +-
+ arch/arm64/lib/strlen.S         |  2 +-
+ arch/arm64/lib/strncmp.S        |  2 +-
+ arch/arm64/lib/strnlen.S        |  2 +-
+ arch/arm64/lib/strrchr.S        |  2 +-
+ 10 files changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 07901cacfec63..0f8e77f78cc80 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -228,7 +228,6 @@ static bool pages_correctly_probed(unsigned long start_pfn)
- /*
-  * MEMORY_HOTPLUG depends on SPARSEMEM in mm/Kconfig, so it is
-  * OK to have direct references to sparsemem variables in here.
-- * Must already be protected by mem_hotplug_begin().
+diff --git a/arch/arm64/include/asm/string.h b/arch/arm64/include/asm/string.h
+index dd95d33a5bd5d..03a6c256b7ec4 100644
+--- a/arch/arm64/include/asm/string.h
++++ b/arch/arm64/include/asm/string.h
+@@ -16,6 +16,7 @@
+ #ifndef __ASM_STRING_H
+ #define __ASM_STRING_H
+ 
++#ifndef CONFIG_KASAN
+ #define __HAVE_ARCH_STRRCHR
+ extern char *strrchr(const char *, int c);
+ 
+@@ -34,6 +35,13 @@ extern __kernel_size_t strlen(const char *);
+ #define __HAVE_ARCH_STRNLEN
+ extern __kernel_size_t strnlen(const char *, __kernel_size_t);
+ 
++#define __HAVE_ARCH_MEMCMP
++extern int memcmp(const void *, const void *, size_t);
++
++#define __HAVE_ARCH_MEMCHR
++extern void *memchr(const void *, int, __kernel_size_t);
++#endif
++
+ #define __HAVE_ARCH_MEMCPY
+ extern void *memcpy(void *, const void *, __kernel_size_t);
+ extern void *__memcpy(void *, const void *, __kernel_size_t);
+@@ -42,16 +50,10 @@ extern void *__memcpy(void *, const void *, __kernel_size_t);
+ extern void *memmove(void *, const void *, __kernel_size_t);
+ extern void *__memmove(void *, const void *, __kernel_size_t);
+ 
+-#define __HAVE_ARCH_MEMCHR
+-extern void *memchr(const void *, int, __kernel_size_t);
+-
+ #define __HAVE_ARCH_MEMSET
+ extern void *memset(void *, int, __kernel_size_t);
+ extern void *__memset(void *, int, __kernel_size_t);
+ 
+-#define __HAVE_ARCH_MEMCMP
+-extern int memcmp(const void *, const void *, size_t);
+-
+ #ifdef CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE
+ #define __HAVE_ARCH_MEMCPY_FLUSHCACHE
+ void memcpy_flushcache(void *dst, const void *src, size_t cnt);
+diff --git a/arch/arm64/kernel/arm64ksyms.c b/arch/arm64/kernel/arm64ksyms.c
+index d894a20b70b28..72f63a59b0088 100644
+--- a/arch/arm64/kernel/arm64ksyms.c
++++ b/arch/arm64/kernel/arm64ksyms.c
+@@ -44,20 +44,23 @@ EXPORT_SYMBOL(__arch_copy_in_user);
+ EXPORT_SYMBOL(memstart_addr);
+ 
+ 	/* string / mem functions */
++#ifndef CONFIG_KASAN
+ EXPORT_SYMBOL(strchr);
+ EXPORT_SYMBOL(strrchr);
+ EXPORT_SYMBOL(strcmp);
+ EXPORT_SYMBOL(strncmp);
+ EXPORT_SYMBOL(strlen);
+ EXPORT_SYMBOL(strnlen);
++EXPORT_SYMBOL(memcmp);
++EXPORT_SYMBOL(memchr);
++#endif
++
+ EXPORT_SYMBOL(memset);
+ EXPORT_SYMBOL(memcpy);
+ EXPORT_SYMBOL(memmove);
+ EXPORT_SYMBOL(__memset);
+ EXPORT_SYMBOL(__memcpy);
+ EXPORT_SYMBOL(__memmove);
+-EXPORT_SYMBOL(memchr);
+-EXPORT_SYMBOL(memcmp);
+ 
+ 	/* atomic bitops */
+ EXPORT_SYMBOL(set_bit);
+diff --git a/arch/arm64/lib/memchr.S b/arch/arm64/lib/memchr.S
+index 4444c1d25f4bb..0f164a4baf52a 100644
+--- a/arch/arm64/lib/memchr.S
++++ b/arch/arm64/lib/memchr.S
+@@ -30,7 +30,7 @@
+  * Returns:
+  *	x0 - address of first occurrence of 'c' or 0
   */
- static int
- memory_block_action(unsigned long phys_index, unsigned long action, int online_type)
-@@ -294,7 +293,6 @@ static int memory_subsys_online(struct device *dev)
- 	if (mem->online_type < 0)
- 		mem->online_type = MMOP_ONLINE_KEEP;
+-ENTRY(memchr)
++WEAK(memchr)
+ 	and	w1, w1, #0xff
+ 1:	subs	x2, x2, #1
+ 	b.mi	2f
+diff --git a/arch/arm64/lib/memcmp.S b/arch/arm64/lib/memcmp.S
+index 2a4e239bd17a0..fb295f52e9f87 100644
+--- a/arch/arm64/lib/memcmp.S
++++ b/arch/arm64/lib/memcmp.S
+@@ -58,7 +58,7 @@ pos		.req	x11
+ limit_wd	.req	x12
+ mask		.req	x13
  
--	/* Already under protection of mem_hotplug_begin() */
- 	ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+-ENTRY(memcmp)
++WEAK(memcmp)
+ 	cbz	limit, .Lret0
+ 	eor	tmp1, src1, src2
+ 	tst	tmp1, #7
+diff --git a/arch/arm64/lib/strchr.S b/arch/arm64/lib/strchr.S
+index dae0cf5591f99..7c83091d1bcdd 100644
+--- a/arch/arm64/lib/strchr.S
++++ b/arch/arm64/lib/strchr.S
+@@ -29,7 +29,7 @@
+  * Returns:
+  *	x0 - address of first occurrence of 'c' or 0
+  */
+-ENTRY(strchr)
++WEAK(strchr)
+ 	and	w1, w1, #0xff
+ 1:	ldrb	w2, [x0], #1
+ 	cmp	w2, w1
+diff --git a/arch/arm64/lib/strcmp.S b/arch/arm64/lib/strcmp.S
+index 471fe61760ef6..7d5d15398bfbc 100644
+--- a/arch/arm64/lib/strcmp.S
++++ b/arch/arm64/lib/strcmp.S
+@@ -60,7 +60,7 @@ tmp3		.req	x9
+ zeroones	.req	x10
+ pos		.req	x11
  
- 	/* clear online_type */
-@@ -341,19 +339,11 @@ store_mem_state(struct device *dev,
- 		goto err;
- 	}
+-ENTRY(strcmp)
++WEAK(strcmp)
+ 	eor	tmp1, src1, src2
+ 	mov	zeroones, #REP8_01
+ 	tst	tmp1, #7
+diff --git a/arch/arm64/lib/strlen.S b/arch/arm64/lib/strlen.S
+index 55ccc8e24c084..8e0b14205dcb4 100644
+--- a/arch/arm64/lib/strlen.S
++++ b/arch/arm64/lib/strlen.S
+@@ -56,7 +56,7 @@ pos		.req	x12
+ #define REP8_7f 0x7f7f7f7f7f7f7f7f
+ #define REP8_80 0x8080808080808080
  
--	/*
--	 * Memory hotplug needs to hold mem_hotplug_begin() for probe to find
--	 * the correct memory block to online before doing device_online(dev),
--	 * which will take dev->mutex.  Take the lock early to prevent an
--	 * inversion, memory_subsys_online() callbacks will be implemented by
--	 * assuming it's already protected.
--	 */
--	mem_hotplug_begin();
--
- 	switch (online_type) {
- 	case MMOP_ONLINE_KERNEL:
- 	case MMOP_ONLINE_MOVABLE:
- 	case MMOP_ONLINE_KEEP:
-+		/* mem->online_type is protected by device_hotplug_lock */
- 		mem->online_type = online_type;
- 		ret = device_online(&mem->dev);
- 		break;
-@@ -364,7 +354,6 @@ store_mem_state(struct device *dev,
- 		ret = -EINVAL; /* should never happen */
- 	}
+-ENTRY(strlen)
++WEAK(strlen)
+ 	mov	zeroones, #REP8_01
+ 	bic	src, srcin, #15
+ 	ands	tmp1, srcin, #15
+diff --git a/arch/arm64/lib/strncmp.S b/arch/arm64/lib/strncmp.S
+index e267044761c6f..66bd145935d9e 100644
+--- a/arch/arm64/lib/strncmp.S
++++ b/arch/arm64/lib/strncmp.S
+@@ -64,7 +64,7 @@ limit_wd	.req	x13
+ mask		.req	x14
+ endloop		.req	x15
  
--	mem_hotplug_done();
- err:
- 	unlock_device_hotplug();
+-ENTRY(strncmp)
++WEAK(strncmp)
+ 	cbz	limit, .Lret0
+ 	eor	tmp1, src1, src2
+ 	mov	zeroones, #REP8_01
+diff --git a/arch/arm64/lib/strnlen.S b/arch/arm64/lib/strnlen.S
+index eae38da6e0bb3..355be04441fe6 100644
+--- a/arch/arm64/lib/strnlen.S
++++ b/arch/arm64/lib/strnlen.S
+@@ -59,7 +59,7 @@ limit_wd	.req	x14
+ #define REP8_7f 0x7f7f7f7f7f7f7f7f
+ #define REP8_80 0x8080808080808080
  
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 0db85bffa3892..3a0a87e7c40ad 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -846,7 +846,6 @@ static struct zone * __meminit move_pfn_range(int online_type, int nid,
- 	return zone;
- }
- 
--/* Must be protected by mem_hotplug_begin() or a device_lock */
- int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int online_type)
- {
- 	unsigned long flags;
-@@ -858,6 +857,8 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int online_typ
- 	struct memory_notify arg;
- 	struct memory_block *mem;
- 
-+	mem_hotplug_begin();
-+
- 	/*
- 	 * We can't use pfn_to_nid() because nid might be stored in struct page
- 	 * which is not yet initialized. Instead, we find nid from memory block.
-@@ -923,6 +924,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int online_typ
- 
- 	if (onlined_pages)
- 		memory_notify(MEM_ONLINE, &arg);
-+	mem_hotplug_done();
- 	return 0;
- 
- failed_addition:
-@@ -930,6 +932,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int online_typ
- 		 (unsigned long long) pfn << PAGE_SHIFT,
- 		 (((unsigned long long) pfn + nr_pages) << PAGE_SHIFT) - 1);
- 	memory_notify(MEM_CANCEL_ONLINE, &arg);
-+	mem_hotplug_done();
- 	return ret;
- }
- #endif /* CONFIG_MEMORY_HOTPLUG_SPARSE */
-@@ -1134,20 +1137,20 @@ int __ref add_memory_resource(int nid, struct resource *res, bool online)
- 	/* create new memmap entry */
- 	firmware_map_add_hotplug(start, start + size, "System RAM");
- 
-+	/* device_online() will take the lock when calling online_pages() */
-+	mem_hotplug_done();
-+
- 	/* online pages if requested */
- 	if (online)
- 		walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1),
- 				  NULL, online_memory_block);
- 
--	goto out;
--
-+	return ret;
- error:
- 	/* rollback pgdat allocation and others */
- 	if (new_node)
- 		rollback_node_hotadd(nid);
- 	memblock_remove(start, size);
--
--out:
- 	mem_hotplug_done();
- 	return ret;
- }
-@@ -1614,10 +1617,16 @@ static int __ref __offline_pages(unsigned long start_pfn,
- 		return -EINVAL;
- 	if (!IS_ALIGNED(end_pfn, pageblock_nr_pages))
- 		return -EINVAL;
-+
-+	mem_hotplug_begin();
-+
- 	/* This makes hotplug much easier...and readable.
- 	   we assume this for now. .*/
--	if (!test_pages_in_a_zone(start_pfn, end_pfn, &valid_start, &valid_end))
-+	if (!test_pages_in_a_zone(start_pfn, end_pfn, &valid_start,
-+				  &valid_end)) {
-+		mem_hotplug_done();
- 		return -EINVAL;
-+	}
- 
- 	zone = page_zone(pfn_to_page(valid_start));
- 	node = zone_to_nid(zone);
-@@ -1626,8 +1635,10 @@ static int __ref __offline_pages(unsigned long start_pfn,
- 	/* set above range as isolated */
- 	ret = start_isolate_page_range(start_pfn, end_pfn,
- 				       MIGRATE_MOVABLE, true);
--	if (ret)
-+	if (ret) {
-+		mem_hotplug_done();
- 		return ret;
-+	}
- 
- 	arg.start_pfn = start_pfn;
- 	arg.nr_pages = nr_pages;
-@@ -1698,6 +1709,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
- 	writeback_set_ratelimit();
- 
- 	memory_notify(MEM_OFFLINE, &arg);
-+	mem_hotplug_done();
- 	return 0;
- 
- failed_removal:
-@@ -1707,10 +1719,10 @@ static int __ref __offline_pages(unsigned long start_pfn,
- 	memory_notify(MEM_CANCEL_OFFLINE, &arg);
- 	/* pushback to free area */
- 	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
-+	mem_hotplug_done();
- 	return ret;
- }
- 
--/* Must be protected by mem_hotplug_begin() or a device_lock */
- int offline_pages(unsigned long start_pfn, unsigned long nr_pages)
- {
- 	return __offline_pages(start_pfn, start_pfn + nr_pages);
+-ENTRY(strnlen)
++WEAK(strnlen)
+ 	cbz	limit, .Lhit_limit
+ 	mov	zeroones, #REP8_01
+ 	bic	src, srcin, #15
+diff --git a/arch/arm64/lib/strrchr.S b/arch/arm64/lib/strrchr.S
+index f8e2784d57521..ea84924d59901 100644
+--- a/arch/arm64/lib/strrchr.S
++++ b/arch/arm64/lib/strrchr.S
+@@ -29,7 +29,7 @@
+  * Returns:
+  *	x0 - address of last occurrence of 'c' or 0
+  */
+-ENTRY(strrchr)
++WEAK(strrchr)
+ 	mov	x3, #0
+ 	and	w1, w1, #0xff
+ 1:	ldrb	w2, [x0], #1
 -- 
 2.20.1
 
