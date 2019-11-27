@@ -2,157 +2,273 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819F2C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC95C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C182070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5392070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:53:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8vdY+vl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfK0Swb (ORCPT
+        id S1727464AbfK0SxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:52:31 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2680 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727026AbfK0Swb (ORCPT
+        Wed, 27 Nov 2019 13:53:22 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37069 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbfK0SxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:52:31 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARIoQdx062249
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 13:52:30 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxr590w-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 13:52:29 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 27 Nov 2019 18:52:27 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 27 Nov 2019 18:52:23 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARIqNot58327128
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 18:52:23 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0216042049;
-        Wed, 27 Nov 2019 18:52:23 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EDA904203F;
-        Wed, 27 Nov 2019 18:52:21 +0000 (GMT)
-Received: from dhcp-9-31-103-87.watson.ibm.com (unknown [9.31.103.87])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Nov 2019 18:52:21 +0000 (GMT)
-Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Wed, 27 Nov 2019 13:52:21 -0500
-In-Reply-To: <20191127015654.3744-6-nramas@linux.microsoft.com>
-References: <20191127015654.3744-1-nramas@linux.microsoft.com>
-         <20191127015654.3744-6-nramas@linux.microsoft.com>
+        Wed, 27 Nov 2019 13:53:22 -0500
+Received: by mail-oi1-f193.google.com with SMTP id 128so12983171oih.4;
+        Wed, 27 Nov 2019 10:53:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=B7OdfyOfsvItvmaN0rYdNSg9G6SH0O4NS8qdePNGNsM=;
+        b=N8vdY+vlJAQhjge4fCNhfz2W4+03pESQoSCgv88q2OlHXMyNb5KgDwo52mHKSK/4D5
+         6+Ro8/dh5tdnzYBZTchIotY9Bliv0l+waCLXOhRzpqsPOwOfJlqMq6KAiDGTIHWIdxy4
+         eNFZ4R6HMfsm//Y86ousrjQwK6cIajqJTjbWJSLMEreAY3VyYzy+6EX76/JpzO0N9mUa
+         Ab3bg3doy/GnWBRHtoUin/0E0lzjBm/Q4jbyMuBVqasrsTA2zfyJm4+70JjmIu/m5PYe
+         wBg3FPSV5rUVFe08TNISjx6zOXlxDNo6VChINu5JHQVzCx+Dskm3IBMiG0DbNWuTJM1S
+         jTCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=B7OdfyOfsvItvmaN0rYdNSg9G6SH0O4NS8qdePNGNsM=;
+        b=mahTAn0wv+Ww4fhMVm2TOavbv/42UXdAIEdwXyRjiVdOpIVxVtYdwquBgG0g5uVfr1
+         sRh7fne7CgzlmFgrfh2ANVhvbnYIz/5tQzKr7XVPtngGrnjC08x48Ct0Ok0x6Cny0sMw
+         pJWTVY6W5nVR0DlBQE1MgIQ0DZc2VsyXVLDGTNzDj7YlawQ44XYHWljmoOnPElWFaBZc
+         6GrxPQX/z7xeLa4CYuDs343q+lMu4oiUKrR1TLXWau2r8AgJ4S0nZONWPbgRXIfZy8c5
+         Jn8CnOnN2QKF2GgvZlApKlJoXW84aLaHmF8wSBk1qgO9ScPnS4EgDT/egkYnOoetZuih
+         6MtA==
+X-Gm-Message-State: APjAAAUOZ8jeOKNrzMb9iaAY+CpAHdMqzCdRQwoDQG7U9fdPuuadmH3q
+        tUdN3ohUI2sYDftb1E5nMZ1u7pziri7iNsk1/P89ZIJB
+X-Google-Smtp-Source: APXvYqx+wTrJMMEAadlR2TvpMsiJs6MouGSI7S70yGV387JqMw+U7ZdD2Kjv46qQTOWW6lu42qDvJ/n1yjP4CpNThoM=
+X-Received: by 2002:aca:5883:: with SMTP id m125mr5055567oib.145.1574880800897;
+ Wed, 27 Nov 2019 10:53:20 -0800 (PST)
+MIME-Version: 1.0
+References: <20191127052935.1719897-1-anarsoul@gmail.com> <20191127052935.1719897-3-anarsoul@gmail.com>
+ <20191127174434.wousbqosmm5vxcsu@gilmour.lan> <20191127180743.ww5npenlg2urxtjn@core.my.home>
+In-Reply-To: <20191127180743.ww5npenlg2urxtjn@core.my.home>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Wed, 27 Nov 2019 10:52:55 -0800
+Message-ID: <CA+E=qVeXhutfeJ6m8fuokzy8aRmNqWWyRGn0Lbtv_9hNCXzSeg@mail.gmail.com>
+Subject: Re: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for
+ sun8i-thermal driver bindings
+To:     Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19112718-0016-0000-0000-000002CD15C5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112718-0017-0000-0000-0000332EF741
-Message-Id: <1574880741.4793.292.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 suspectscore=3 priorityscore=1501
- spamscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270152
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -79,6 +79,7 @@ struct ima_rule_entry {
->  		int type;	/* audit type */
->  	} lsm[MAX_LSM_RULES];
->  	char *fsname;
-> +	char *keyrings; /* Measure keys added to these keyrings */
->  	struct ima_template_desc *template;
->  };
->  
-> @@ -356,6 +357,55 @@ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
->  	return NOTIFY_OK;
->  }
->  
-> +/**
-> + * ima_match_keyring - determine whether the keyring matches the measure rule
-> + * @rule: a pointer to a rule
-> + * @keyring: name of the keyring to match against the measure rule
-> + *
-> + * If the measure action for KEY_CHECK does not specify keyrings=
-> + * option then return true (Measure all keys).
-> + * Else, return true if the given keyring name is present in
-> + * the keyrings= option. False, otherwise.
+On Wed, Nov 27, 2019 at 10:07 AM Ond=C5=99ej Jirman <megous@megous.com> wro=
+te:
+>
+> Hi,
+>
+> On Wed, Nov 27, 2019 at 06:44:34PM +0100, Maxime Ripard wrote:
+> > Hi,
+> >
+> > On Tue, Nov 26, 2019 at 09:29:30PM -0800, Vasily Khoruzhick wrote:
+> > > From: Yangtao Li <tiny.windzz@gmail.com>
+> > >
+> > > sun8i-thermal driver supports thermal sensor in wide range of Allwinn=
+er
+> > > SoCs. Add YAML schema for its bindings.
+> > >
+> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > > ---
+> > >  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 103 ++++++++++++++++=
+++
+> > >  1 file changed, 103 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/thermal/allwinn=
+er,sun8i-a83t-ths.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8=
+i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i=
+-a83t-ths.yaml
+> > > new file mode 100644
+> > > index 000000000000..e622f0a4be90
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-=
+ths.yaml
+> > > @@ -0,0 +1,103 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.=
+yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Yangtao Li <tiny.windzz@gmail.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - const: allwinner,sun8i-a83t-ths
+> > > +      - const: allwinner,sun8i-h3-ths
+> > > +      - const: allwinner,sun8i-r40-ths
+> > > +      - const: allwinner,sun50i-a64-ths
+> > > +      - const: allwinner,sun50i-h5-ths
+> > > +      - const: allwinner,sun50i-h6-ths
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  resets:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    minItems: 1
+> > > +    maxItems: 2
+> > > +
+> > > +  clock-names:
+> > > +    anyOf:
+> > > +      - items:
+> > > +        - const: bus
+> > > +        - const: mod
+> > > +      - items:
+> > > +        - const: bus
+> >
+> > This can be:
+> >
+> > clock-names:
+> >   minItems: 1
+>
+> Additionally, minItems should be 0, since A83T doesn't have bus clock/res=
+et. And
+> then there should be a special case for A83T too with min/maxItems =3D 0 =
+for both
+> resets and clocks.
 
-This is suppose to be a comment, not code or pseudo code.  Please
-refer to the section "Comments" in Documentation/process/coding-
-style.rst.
- 
-> + */
-> +static bool ima_match_keyring(struct ima_rule_entry *rule,
-> +			      const char *keyring)
-> +{
-> +	const char *p;
-> +
-> +	/* If "keyrings=" is not specified all keys are measured. */
-> +	if (!rule->keyrings)
-> +		return true;
-> +
-> +	if (!keyring)
-> +		return false;
-> +
-> +	/*
-> +	 * "keyrings=" is specified in the policy in the format below:
-> +	 *   keyrings=.builtin_trusted_keys|.ima|.evm
-> +	 *
-> +	 * Each keyring name in the option is separated by a '|' and
-> +	 * the last keyring name is null terminated.
-> +	 *
-> +	 * The given keyring is considered matched only if
-> +	 * the whole keyring name matched a keyring name specified
-> +	 * in the "keyrings=" option.
-> +	 */
-> +	p = strstr(rule->keyrings, keyring);
-> +	if (p) {
-> +		/*
-> +		 * Found a substring match. Check if the character
-> +		 * at the end of the keyring name is | (keyring name
-> +		 * separator) or is the terminating null character.
-> +		 * If yes, we have a whole string match.
-> +		 */
-> +		p += strlen(keyring);
-> +		if (*p == '|' || *p == '\0')
-> +			return true;
-> +	}
-> +
+That's why I removed clocks, clock-names and resets from required
+properties. If they're present min/maxItems should be 1 and 2
+accordingly.
 
-Using "while strsep()" would simplify this code, removing the need for
-such a long comment.
-
-Mimi
-
-> +	return false;
-> +}
-> +
-
+> regards,
+>         o.
+>
+> >   maxItems: 2
+> >   items:
+> >     - const: bus
+> >     - const: mod
+> >
+> > And the length should be checked based on the compatible value, with
+> > something like
+> >
+> > if:
+> >   properties:
+> >     compatible:
+> >       contains:
+> >         const: allwinner,sun50i-h6-ths
+> >
+> > then:
+> >   properties:
+> >     clocks:
+> >       maxItems: 1
+> >
+> >     clock-names:
+> >       maxItems: 1
+> >
+> > else:
+> >   properties:
+> >     clocks:
+> >       maxItems: 2
+> >
+> >     clock-names:
+> >       maxItems: 2
+> >
+> > > +
+> > > +  '#thermal-sensor-cells':
+> > > +    enum: [ 0, 1 ]
+> > > +    description: |
+> > > +      Definition depends on soc version:
+> > > +
+> > > +      For "allwinner,sun8i-h3-ths",
+> > > +      value must be 0.
+> > > +      For all other compatibles
+> > > +      value must be 1.
+> >
+> > This should be checked using an if as well.
+> >
+> > > +
+> > > +  nvmem-cells:
+> > > +    maxItems: 1
+> > > +    items:
+> > > +      - description: Calibration data for thermal sensors
+> >
+> > You can drop the items and just move the description up one level,
+> > under nvmem-cells
+> >
+> > > +
+> > > +  nvmem-cell-names:
+> > > +    items:
+> > > +      - const: calibration
+> >
+> > Ditto for the const
+> >
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - interrupts
+> > > +  - '#thermal-sensor-cells'
+> >
+> > Whether clocks, clock-names and resets are thereshould be check using
+> > an if statement as well.
+> >
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    ths_a83t: ths@1f04000 {
+> >
+> > You don't need the label at all, and the node name should be
+> > temperature-sensor according to the DT spec, not ths. This applies to
+> > all you examples.
+> >
+> > > +         compatible =3D "allwinner,sun8i-a83t-ths";
+> > > +         reg =3D <0x01f04000 0x100>;
+> > > +         interrupts =3D <0 31 0>;
+> > > +         nvmem-cells =3D <&ths_calibration>;
+> > > +         nvmem-cell-names =3D "calibration";
+> > > +         #thermal-sensor-cells =3D <1>;
+> > > +    };
+> >
+> > New line.
+> >
+> > Thanks!
+> > Maxime
+>
+>
