@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A30C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2FFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA0E21775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8D621775
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889117;
-	bh=6V7r6TB9qW/1X5KnQjTT2gyh0o0FqU2iM3qP87EZEXI=;
+	s=default; t=1574889119;
+	bh=+jjDHJxZIeqTOnINzZNlGxXqKuwC1sqvGEFai89MMkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hABOG5c6FGKXmWbHW5pd8vpFkLEbtYwlSsDawo2U0gE9fCwGMzspV+6snkUBEAEGz
-	 2VhWQ7VjnWkS3nKWIGEvW29/PkVBWYSGiqe2KgZaIG92jpGg8x5af2hylgKtbigXY2
-	 MD8NVtWqrVfIEH+Ggz/BcwaCMZLCzfL3YkQ2ootI=
+	b=0Iwmpofpl8RHv8HgyyGxTS++qWXtTF/ZghZr8JrG6ZpEpXi3kvQhfm2bPmW8JJ5Fe
+	 wPXqlPWIgsajdWcr+t1J3WQ8rZFQFIRnr0dCbTna40tQfsah61lW5QS9HT1X+slyMo
+	 /ROK6dyusXTQiuZOH0eCGyPomOqvkT2B9pSLiLHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733240AbfK0VLz (ORCPT
+        id S1733243AbfK0VL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:11:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41234 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:11:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732782AbfK0VLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:11:52 -0500
+        id S1733237AbfK0VLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B15EE21555;
-        Wed, 27 Nov 2019 21:11:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F4C0215F1;
+        Wed, 27 Nov 2019 21:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889112;
-        bh=6V7r6TB9qW/1X5KnQjTT2gyh0o0FqU2iM3qP87EZEXI=;
+        s=default; t=1574889114;
+        bh=+jjDHJxZIeqTOnINzZNlGxXqKuwC1sqvGEFai89MMkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SCzapFZJp0rPqJHzKM93O1+CL8FVDdSKlS+20jr0ooIEkr4FnbP3TGdLIMlqdjyMd
-         84a1XRV9wYXQYPWj0Gxrm3zZrf+p7pS95v5oNFrOJb+7kuAU7cByQHLbor+AfMmEOp
-         EOC+D+2SHUtEEKrH3sVZrX52TyP8anNZB62W3fe4=
+        b=w8MguYgLe4O7T3QYaCGhWaphdIs12bcNIu/SbCjY2Tgzw8FR5E+np9PShFj2o5sZT
+         jGaEfyGlst12yF/T7J6iPNqxDXjEyfPodLiF3l8FnObNfYtsLTxnZLUPCdYO+REzDB
+         ZzNGYfIrLb2pOLxhR0S5VDQnC8aGVqvKIk5HV1Gk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Subject: [PATCH 5.3 86/95] appledisplay: fix error handling in the scheduled work
-Date:   Wed, 27 Nov 2019 21:32:43 +0100
-Message-Id: <20191127202955.638390156@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Pavel=20L=C3=B6bl?= <pavel@loebl.cz>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 87/95] USB: serial: mos7840: add USB ID to support Moxa UPort 2210
+Date:   Wed, 27 Nov 2019 21:32:44 +0100
+Message-Id: <20191127202955.993827613@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -59,51 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Pavel Löbl <pavel@loebl.cz>
 
-commit 91feb01596e5efc0cc922cc73f5583114dccf4d2 upstream.
+commit e696d00e65e81d46e911f24b12e441037bf11b38 upstream.
 
-The work item can operate on
+Add USB ID for MOXA UPort 2210. This device contains mos7820 but
+it passes GPIO0 check implemented by driver and it's detected as
+mos7840. Hence product id check is added to force mos7820 mode.
 
-1. stale memory left over from the last transfer
-the actual length of the data transfered needs to be checked
-2. memory already freed
-the error handling in appledisplay_probe() needs
-to cancel the work in that case
-
-Reported-and-tested-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Pavel Löbl <pavel@loebl.cz>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191106124902.7765-1-oneukum@suse.com
+[ johan: rename id defines and add vendor-id check ]
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/appledisplay.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/usb/serial/mos7840.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/usb/misc/appledisplay.c
-+++ b/drivers/usb/misc/appledisplay.c
-@@ -164,7 +164,12 @@ static int appledisplay_bl_get_brightnes
- 		0,
- 		pdata->msgdata, 2,
- 		ACD_USB_TIMEOUT);
--	brightness = pdata->msgdata[1];
-+	if (retval < 2) {
-+		if (retval >= 0)
-+			retval = -EMSGSIZE;
-+	} else {
-+		brightness = pdata->msgdata[1];
-+	}
- 	mutex_unlock(&pdata->sysfslock);
+--- a/drivers/usb/serial/mos7840.c
++++ b/drivers/usb/serial/mos7840.c
+@@ -119,11 +119,15 @@
+ /* This driver also supports
+  * ATEN UC2324 device using Moschip MCS7840
+  * ATEN UC2322 device using Moschip MCS7820
++ * MOXA UPort 2210 device using Moschip MCS7820
+  */
+ #define USB_VENDOR_ID_ATENINTL		0x0557
+ #define ATENINTL_DEVICE_ID_UC2324	0x2011
+ #define ATENINTL_DEVICE_ID_UC2322	0x7820
  
- 	if (retval < 0)
-@@ -299,6 +304,7 @@ error:
- 	if (pdata) {
- 		if (pdata->urb) {
- 			usb_kill_urb(pdata->urb);
-+			cancel_delayed_work_sync(&pdata->work);
- 			if (pdata->urbdata)
- 				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
- 					pdata->urbdata, pdata->urb->transfer_dma);
++#define USB_VENDOR_ID_MOXA		0x110a
++#define MOXA_DEVICE_ID_2210		0x2210
++
+ /* Interrupt Routine Defines    */
+ 
+ #define SERIAL_IIR_RLS      0x06
+@@ -195,6 +199,7 @@ static const struct usb_device_id id_tab
+ 	{USB_DEVICE(USB_VENDOR_ID_BANDB, BANDB_DEVICE_ID_USOPTL2_4)},
+ 	{USB_DEVICE(USB_VENDOR_ID_ATENINTL, ATENINTL_DEVICE_ID_UC2324)},
+ 	{USB_DEVICE(USB_VENDOR_ID_ATENINTL, ATENINTL_DEVICE_ID_UC2322)},
++	{USB_DEVICE(USB_VENDOR_ID_MOXA, MOXA_DEVICE_ID_2210)},
+ 	{}			/* terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, id_table);
+@@ -2020,6 +2025,7 @@ static int mos7840_probe(struct usb_seri
+ 				const struct usb_device_id *id)
+ {
+ 	u16 product = le16_to_cpu(serial->dev->descriptor.idProduct);
++	u16 vid = le16_to_cpu(serial->dev->descriptor.idVendor);
+ 	u8 *buf;
+ 	int device_type;
+ 
+@@ -2030,6 +2036,11 @@ static int mos7840_probe(struct usb_seri
+ 		goto out;
+ 	}
+ 
++	if (vid == USB_VENDOR_ID_MOXA && product == MOXA_DEVICE_ID_2210) {
++		device_type = MOSCHIP_DEVICE_ID_7820;
++		goto out;
++	}
++
+ 	buf = kzalloc(VENDOR_READ_LENGTH, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
 
 
