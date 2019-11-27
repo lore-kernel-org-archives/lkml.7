@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC04EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4AEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD58820665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E2D20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890346;
-	bh=2Z0PeulUKiddpx7Y+aKFqPHyf9rEQImC8/nS7AD3Qp8=;
+	s=default; t=1574890359;
+	bh=tbtk4ZJrPTtjXR+uDo9oZZx5WFHNPAYVSs9Zpfb6ccY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xx1+tlUNLt/ceFB1huonKYieKt7rbiR4ej2AZlGnRkyMLFaJKVLcAelfdw+9MMGkT
-	 a1jUU3XAu4LBbQUysZiKu4jjnaxa1R96v7Uy7Oa53XzazNDpNj5ReGPTxkOSpc6qUS
-	 68HTy+Y5bu1u7otF0vsM+pI/MWpgg2o0mB2mj5AM=
+	b=h9C07p++50/yL1fRFHN+Ra+oWiBqcfEIWdVhbAxWRIsrSVm3oL8geN+GPqi/Z4LeJ
+	 J6a2vtgoikrwu6aZnP41Ij2PEd6/ud4/L9MFAmzgFntOjmau+AYBDjbW8dwc8jo85u
+	 Y05zp126iZzVprdyXE7CTzLEfopia3Cb4U+UEiwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbfK0VcZ (ORCPT
+        id S1730652AbfK0Vch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:32:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42146 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:32:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727277AbfK0Ux1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:27 -0500
+        id S1728366AbfK0UxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEA6521850;
-        Wed, 27 Nov 2019 20:53:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33CEB21774;
+        Wed, 27 Nov 2019 20:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888006;
-        bh=2Z0PeulUKiddpx7Y+aKFqPHyf9rEQImC8/nS7AD3Qp8=;
+        s=default; t=1574887990;
+        bh=tbtk4ZJrPTtjXR+uDo9oZZx5WFHNPAYVSs9Zpfb6ccY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0ZnyXbu/dHFe0oDoc4zhoZxsqVNpyLPx2jGEfM6hsOrxt/YEBa/SyK0baUVQwcCR
-         sJoN+91St38zxooIo77zOfpSozRDOp6PfANdP8ETV7YRQCTjLJgt/4ZpCG4wHigkfd
-         2364tLfJpVUbjg5+xccNbFxV847tLerOOYr83yZw=
+        b=TNDWqm5GXrrD8uxciaqmXcuTaM7uYzvG6WWDiWWPExgC8EnvOLLSHrwtuYQaBqkoi
+         OAmhuW919Uphjc5pAOfAawJYBrwx8Ywg/Nwhd2aHIBdVLufu3TeLDwWH0O1mk62Y98
+         lmuKhfcluobnjLiFcB0nlTKFUxjL+watGGnwXrgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.14 177/211] x86/insn: Fix awk regexp warnings
-Date:   Wed, 27 Nov 2019 21:31:50 +0100
-Message-Id: <20191127203110.552058097@linuxfoundation.org>
+        stable@vger.kernel.org, Hari Vyas <hari.vyas@broadcom.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.14 172/211] arm64: fix for bad_mode() handler to always result in panic
+Date:   Wed, 27 Nov 2019 21:31:45 +0100
+Message-Id: <20191127203110.120376346@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -67,88 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+From: Hari Vyas <hari.vyas@broadcom.com>
 
-commit 700c1018b86d0d4b3f1f2d459708c0cdf42b521d upstream.
+commit e4ba15debcfd27f60d43da940a58108783bff2a6 upstream.
 
-gawk 5.0.1 generates the following regexp warnings:
+The bad_mode() handler is called if we encounter an uunknown exception,
+with the expectation that the subsequent call to panic() will halt the
+system. Unfortunately, if the exception calling bad_mode() is taken from
+EL0, then the call to die() can end up killing the current user task and
+calling schedule() instead of falling through to panic().
 
-  GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
-  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
-  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is  not a known regexp operator
+Remove the die() call altogether, since we really want to bring down the
+machine in this "impossible" case.
 
-Ealier versions of gawk are not known to generate these warnings. The
-gawk manual referenced below does not list characters ':' and '&' as
-needing escaping, so 'unescape' them. See
-
-  https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html
-
-for more info.
-
-Running diff on the output generated by the script before and after
-applying the patch reported no differences.
-
- [ bp: Massage commit message. ]
-
-[ Caught the respective tools header discrepancy. ]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190924044659.3785-1-alexander.kapshuk@gmail.com
+Signed-off-by: Hari Vyas <hari.vyas@broadcom.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/tools/gen-insn-attr-x86.awk               |    4 ++--
- tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/traps.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -648,7 +648,6 @@ asmlinkage void bad_mode(struct pt_regs
+ 		handler[reason], smp_processor_id(), esr,
+ 		esr_get_class_string(esr));
  
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
- 
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,
- 	return add_flags(imm, mod)
+-	die("Oops - bad mode", regs, 0);
+ 	local_irq_disable();
+ 	panic("bad mode");
  }
- 
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
---- a/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
- 
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
- 
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,
- 	return add_flags(imm, mod)
- }
- 
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
 
 
