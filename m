@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48114C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DBAC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB08217BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E60F217BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889316;
-	bh=WYLjzLJr4LJQ1JTM+hMm/fYTi2rQD3RG0X8a8GmwJMI=;
+	s=default; t=1574889319;
+	bh=keyMyZOrwHJ8/Mma4YkJTZvdUatq7dXMHRjU0gDH6+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o/cNhS4wVDMj0jdnTQ/yUSrMRm/U187GgycNPqe3fo107+YT0ez6R/UCNoKr4s6ZF
-	 AK9an2/XnzUe30k/H6e86KMt0BMSIgoF/b3F71AWzk//ITqO3DG/X3aAGkgOn8/uMv
-	 B0S1etHBgz1wKK0OuJZP8uMlNS3SloqT+4LkSZIs=
+	b=AlPZe7pH/9iQM3GUVrnOS5LE7Ic64eWjOtY7pkV63tpBZxsUjBIpUTDnwMyM9qOna
+	 V3hHTK5vQPUNQmXrf1Yd7I9A8PQZXdgagwSKKqRjKX3abu1rk6P+Qra4wNvLb3taIM
+	 dCury2XzQS9iFpr95DXJYs25GhNaM+LpIteWp8VM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733064AbfK0VPO (ORCPT
+        id S2387681AbfK0VPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:15:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50286 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:15:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731324AbfK0VPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:15:11 -0500
+        id S2387670AbfK0VPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:15:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5B2421736;
-        Wed, 27 Nov 2019 21:15:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F8BF21771;
+        Wed, 27 Nov 2019 21:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889310;
-        bh=WYLjzLJr4LJQ1JTM+hMm/fYTi2rQD3RG0X8a8GmwJMI=;
+        s=default; t=1574889312;
+        bh=keyMyZOrwHJ8/Mma4YkJTZvdUatq7dXMHRjU0gDH6+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UKZvxuULrhrtaWNtHR3tFW85RmrStr4H4q+TkyH+eqtjyUfakyhoHM3PPPf2RiUTl
-         co1b1+S6gUfRxOaSgRndTNQP87DYZbdmos0FIYXdjV6Ymq7lXr4FTTceTsWyDWLHYe
-         zkmyxzChLuAiMSQ2Zv/d+vGsNGlQrsnBgYpdbfcI=
+        b=sT20lPOyuG8EZEd3ujvoqS1cnxGnTLjWBikA6RqGAcpGziTWV6QxhqNsgR62yxHwa
+         E2PyLRkxxzZ8GPhW5wWnQcAgFCWGef4bDaXHZUIWJJS9gfZEimvxv64dbe5eK/emoI
+         hpSPbfssKUQSY32HFKD2+SZVnJiprAuLFnff39es=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Suwan Kim <suwan.kim027@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 5.4 55/66] usbip: Fix uninitialized symbol nents in stub_recv_cmd_submit()
-Date:   Wed, 27 Nov 2019 21:32:50 +0100
-Message-Id: <20191127202735.718373687@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Joel Jennings <joel.jennings@makeitlabs.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 56/66] usb-serial: cp201x: support Mark-10 digital force gauge
+Date:   Wed, 27 Nov 2019 21:32:51 +0100
+Message-Id: <20191127202736.157804366@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -61,115 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suwan Kim <suwan.kim027@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 2a9125317b247f2cf35c196f968906dcf062ae2d upstream.
+commit 347bc8cb26388791c5881a3775cb14a3f765a674 upstream.
 
-Smatch reported that nents is not initialized and used in
-stub_recv_cmd_submit(). nents is currently initialized by sgl_alloc()
-and used to allocate multiple URBs when host controller doesn't
-support scatter-gather DMA. The use of uninitialized nents means that
-buf_len is zero and use_sg is true. But buffer length should not be
-zero when an URB uses scatter-gather DMA.
+Add support for the Mark-10 digital force gauge device to the cp201x
+driver.
 
-To prevent this situation, add the conditional that checks buf_len
-and use_sg. And move the use of nents right after the sgl_alloc() to
-avoid the use of uninitialized nents.
+Based on a report and a larger patch from Joel Jennings
 
-If the error occurs, it adds SDEV_EVENT_ERROR_MALLOC and stub_priv
-will be released by stub event handler and connection will be shut
-down.
-
-Fixes: ea44d190764b ("usbip: Implement SG support to vhci-hcd and stub driver")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Reported-by: Joel Jennings <joel.jennings@makeitlabs.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191111141035.27788-1-suwan.kim027@gmail.com
+Acked-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191118092119.GA153852@kroah.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/usbip/stub_rx.c |   50 ++++++++++++++++++++++++++++----------------
- 1 file changed, 32 insertions(+), 18 deletions(-)
+ drivers/usb/serial/cp210x.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/usbip/stub_rx.c
-+++ b/drivers/usb/usbip/stub_rx.c
-@@ -470,18 +470,50 @@ static void stub_recv_cmd_submit(struct
- 	if (pipe == -1)
- 		return;
- 
-+	/*
-+	 * Smatch reported the error case where use_sg is true and buf_len is 0.
-+	 * In this case, It adds SDEV_EVENT_ERROR_MALLOC and stub_priv will be
-+	 * released by stub event handler and connection will be shut down.
-+	 */
- 	priv = stub_priv_alloc(sdev, pdu);
- 	if (!priv)
- 		return;
- 
- 	buf_len = (unsigned long long)pdu->u.cmd_submit.transfer_buffer_length;
- 
-+	if (use_sg && !buf_len) {
-+		dev_err(&udev->dev, "sg buffer with zero length\n");
-+		goto err_malloc;
-+	}
-+
- 	/* allocate urb transfer buffer, if needed */
- 	if (buf_len) {
- 		if (use_sg) {
- 			sgl = sgl_alloc(buf_len, GFP_KERNEL, &nents);
- 			if (!sgl)
- 				goto err_malloc;
-+
-+			/* Check if the server's HCD supports SG */
-+			if (!udev->bus->sg_tablesize) {
-+				/*
-+				 * If the server's HCD doesn't support SG, break
-+				 * a single SG request into several URBs and map
-+				 * each SG list entry to corresponding URB
-+				 * buffer. The previously allocated SG list is
-+				 * stored in priv->sgl (If the server's HCD
-+				 * support SG, SG list is stored only in
-+				 * urb->sg) and it is used as an indicator that
-+				 * the server split single SG request into
-+				 * several URBs. Later, priv->sgl is used by
-+				 * stub_complete() and stub_send_ret_submit() to
-+				 * reassemble the divied URBs.
-+				 */
-+				support_sg = 0;
-+				num_urbs = nents;
-+				priv->completed_urbs = 0;
-+				pdu->u.cmd_submit.transfer_flags &=
-+								~URB_DMA_MAP_SG;
-+			}
- 		} else {
- 			buffer = kzalloc(buf_len, GFP_KERNEL);
- 			if (!buffer)
-@@ -489,24 +521,6 @@ static void stub_recv_cmd_submit(struct
- 		}
- 	}
- 
--	/* Check if the server's HCD supports SG */
--	if (use_sg && !udev->bus->sg_tablesize) {
--		/*
--		 * If the server's HCD doesn't support SG, break a single SG
--		 * request into several URBs and map each SG list entry to
--		 * corresponding URB buffer. The previously allocated SG
--		 * list is stored in priv->sgl (If the server's HCD support SG,
--		 * SG list is stored only in urb->sg) and it is used as an
--		 * indicator that the server split single SG request into
--		 * several URBs. Later, priv->sgl is used by stub_complete() and
--		 * stub_send_ret_submit() to reassemble the divied URBs.
--		 */
--		support_sg = 0;
--		num_urbs = nents;
--		priv->completed_urbs = 0;
--		pdu->u.cmd_submit.transfer_flags &= ~URB_DMA_MAP_SG;
--	}
--
- 	/* allocate urb array */
- 	priv->num_urbs = num_urbs;
- 	priv->urbs = kmalloc_array(num_urbs, sizeof(*priv->urbs), GFP_KERNEL);
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -125,6 +125,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(0x10C4, 0x8341) }, /* Siemens MC35PU GPRS Modem */
+ 	{ USB_DEVICE(0x10C4, 0x8382) }, /* Cygnal Integrated Products, Inc. */
+ 	{ USB_DEVICE(0x10C4, 0x83A8) }, /* Amber Wireless AMB2560 */
++	{ USB_DEVICE(0x10C4, 0x83AA) }, /* Mark-10 Digital Force Gauge */
+ 	{ USB_DEVICE(0x10C4, 0x83D8) }, /* DekTec DTA Plus VHF/UHF Booster/Attenuator */
+ 	{ USB_DEVICE(0x10C4, 0x8411) }, /* Kyocera GPS Module */
+ 	{ USB_DEVICE(0x10C4, 0x8418) }, /* IRZ Automation Teleport SG-10 GSM/GPRS Modem */
 
 
