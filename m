@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D7AC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5443FC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED672086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D4D21775
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888659;
-	bh=wX4O2JHToNm4AF5thow3+D7uWZoA5jbNZGRyT/NCEgo=;
+	s=default; t=1574888662;
+	bh=YRIoyCqFbllyk9Rbao0HAflYjxyFvS7VSLfoVAW4XKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MnDvcIv6voLTqUxk26JAA2gLMgLcq5esAgdEAcw4JZjztTpYi8oTzE4gFPmGxiw1R
-	 gb3KV8C2QaDuk7u0YEZ+40y2kkGJHNO7kIm8UHmSdxKdShLEEtgYgDsyaIy1QIdsDX
-	 dkS17P5A4FtdcFZONECgxt8f3eiuKid4oVyXMfJM=
+	b=YTTJPioNgGuMkxu3+hMIshX9TXR639P/H9kADcTHvG3GVIEm0tlYrKxSwV1wvF158
+	 W363ovtsLdA5/V2TvYPvl8+LlbgmJUcP8Yxd4+8NnlZIZP2NuGooMLb6wc7yg/0m9f
+	 2OH8GtzIm5bvLr6mIeK55MKYb7+XmjfS40DQFdZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732127AbfK0VES (ORCPT
+        id S1732137AbfK0VEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:04:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57632 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:04:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731830AbfK0VEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:04:12 -0500
+        id S1731521AbfK0VEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:04:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3FF62086A;
-        Wed, 27 Nov 2019 21:04:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D432086A;
+        Wed, 27 Nov 2019 21:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888652;
-        bh=wX4O2JHToNm4AF5thow3+D7uWZoA5jbNZGRyT/NCEgo=;
+        s=default; t=1574888654;
+        bh=YRIoyCqFbllyk9Rbao0HAflYjxyFvS7VSLfoVAW4XKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ewHwGGK44y8Gs9z+JSlMCepYEPHKEtR9TP7Ap1/D6kgvJt39lzpC53mqEgoUpRrvO
-         LGbYbnpjSn3ktmlFBLcRFqjoZrwhb+d7aW46OZfOC5QufriBbsrg2HiAsF1HyajeIj
-         iCMrvzq8s9+oM6YsF3XrQ8VhtlRGf6z8PLQqpJn8=
+        b=in82cZC+c+V6j4Nql8YgnMPj6PLNN3YN7khKUc2nL9QyAbZyKzuaThpSKfQA9PhEk
+         ansdj/t3xCE9wiGDsECfUT+5IgbagamE06w/avgwomZN52HDmcrlOEw/nTeTKCdZnz
+         KQA1nLTs8VZrW6d6RdpSqpPkg650Yc/B9SMdqBJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
-        Lucas Van <lucas.van@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 190/306] ntb: intel: fix return value for ndev_vec_mask()
-Date:   Wed, 27 Nov 2019 21:30:40 +0100
-Message-Id: <20191127203129.122203699@linuxfoundation.org>
+Subject: [PATCH 4.19 217/306] ath10k: snoc: fix unbalanced clock error handling
+Date:   Wed, 27 Nov 2019 21:31:07 +0100
+Message-Id: <20191127203130.930122869@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,37 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 7756e2b5d68c36e170a111dceea22f7365f83256 ]
+[ Upstream commit 82e60d920e8ad70cd9a280ab156566755f1fe4aa ]
 
-ndev_vec_mask() should be returning u64 mask value instead of int.
-Otherwise the mask value returned can be incorrect for larger
-vectors.
+Similar to regulator error handling, we should only start tearing down
+the 'i - 1' clock when clock 'i' fails to enable. Otherwise, we might
+end up with an unbalanced clock, where we never successfully enabled the
+clock, but we try to disable it anyway.
 
-Fixes: e26a5843f7f5 ("NTB: Split ntb_hw_intel and ntb_transport drivers")
-
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Tested-by: Lucas Van <lucas.van@intel.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: a6a793f98786 ("ath10k: vote for hardware resources for WCN3990")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/hw/intel/ntb_hw_gen1.c | 2 +-
+ drivers/net/wireless/ath/ath10k/snoc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ntb/hw/intel/ntb_hw_gen1.c b/drivers/ntb/hw/intel/ntb_hw_gen1.c
-index 6aa5732272791..2ad263f708da7 100644
---- a/drivers/ntb/hw/intel/ntb_hw_gen1.c
-+++ b/drivers/ntb/hw/intel/ntb_hw_gen1.c
-@@ -265,7 +265,7 @@ static inline int ndev_db_clear_mask(struct intel_ntb_dev *ndev, u64 db_bits,
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index fa1843a7e0fda..e2d78f77edb70 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -1190,7 +1190,7 @@ static int ath10k_wcn3990_clk_init(struct ath10k *ar)
  	return 0;
- }
  
--static inline int ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
-+static inline u64 ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
- {
- 	u64 shift, mask;
+ err_clock_config:
+-	for (; i >= 0; i--) {
++	for (i = i - 1; i >= 0; i--) {
+ 		clk_info = &ar_snoc->clk[i];
  
+ 		if (!clk_info->handle)
 -- 
 2.20.1
 
