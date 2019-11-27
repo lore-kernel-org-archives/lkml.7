@@ -5,43 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F4AC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0D1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D787820678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D7B20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfK0ITv (ORCPT
+        id S1727116AbfK0ITw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:19:51 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43985 "EHLO
+        Wed, 27 Nov 2019 03:19:52 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43993 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfK0ITo (ORCPT
+        with ESMTP id S1726987AbfK0ITo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 03:19:44 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iZsXu-0002Rj-1S; Wed, 27 Nov 2019 09:19:34 +0100
+        id 1iZsXu-0002SA-7K; Wed, 27 Nov 2019 09:19:34 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 502A81C1E72;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 770061C1E6E;
         Wed, 27 Nov 2019 09:19:30 +0100 (CET)
 Date:   Wed, 27 Nov 2019 08:19:30 -0000
-From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] selftests/x86/single_step_syscall: Check SYSENTER directly
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Subject: [tip: x86/urgent] x86/mm/32: Sync only to VMALLOC_END in vmalloc_sync_all()
+Cc:     Borislav Petkov <bp@suse.de>, Joerg Roedel <jroedel@suse.de>,
+        <stable@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, hpa@zytor.com,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191126111119.GA110513@gmail.com>
+References: <20191126111119.GA110513@gmail.com>
 MIME-Version: 1.0
-Message-ID: <157484277024.21853.2643521750694270592.tip-bot2@tip-bot2>
+Message-ID: <157484277038.21853.10016482959595799515.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,154 +63,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     3300c4f3afbb59a1f4bfdbe0f0b6c91e241541b1
-Gitweb:        https://git.kernel.org/tip/3300c4f3afbb59a1f4bfdbe0f0b6c91e241541b1
-Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Wed, 20 Nov 2019 12:22:46 -08:00
+Commit-ID:     9a62d20027da3164a22244d9f022c0c987261687
+Gitweb:        https://git.kernel.org/tip/9a62d20027da3164a22244d9f022c0c987261687
+Author:        Joerg Roedel <jroedel@suse.de>
+AuthorDate:    Tue, 26 Nov 2019 11:09:42 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Tue, 26 Nov 2019 21:53:34 +01:00
 
-selftests/x86/single_step_syscall: Check SYSENTER directly
+x86/mm/32: Sync only to VMALLOC_END in vmalloc_sync_all()
 
-We used to test SYSENTER only through the vDSO.  Test it directly
-too, just in case.
+The job of vmalloc_sync_all() is to help the lazy freeing of vmalloc()
+ranges: before such vmap ranges are reused we make sure that they are
+unmapped from every task's page tables.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+This is really easy on pagetable setups where the kernel page tables
+are shared between all tasks - this is the case on 32-bit kernels
+with SHARED_KERNEL_PMD = 1.
+
+But on !SHARED_KERNEL_PMD 32-bit kernels this involves iterating
+over the pgd_list and clearing all pmd entries in the pgds that
+are cleared in the init_mm.pgd, which is the reference pagetable
+that the vmalloc() code uses.
+
+In that context the current practice of vmalloc_sync_all() iterating
+until FIX_ADDR_TOP is buggy:
+
+        for (address = VMALLOC_START & PMD_MASK;
+             address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
+             address += PMD_SIZE) {
+                struct page *page;
+
+Because iterating up to FIXADDR_TOP will involve a lot of non-vmalloc
+address ranges:
+
+	VMALLOC -> PKMAP -> LDT -> CPU_ENTRY_AREA -> FIX_ADDR
+
+This is mostly harmless for the FIX_ADDR and CPU_ENTRY_AREA ranges
+that don't clear their pmds, but it's lethal for the LDT range,
+which relies on having different mappings in different processes,
+and 'synchronizing' them in the vmalloc sense corrupts those
+pagetable entries (clearing them).
+
+This got particularly prominent with PTI, which turns SHARED_KERNEL_PMD
+off and makes this the dominant mapping mode on 32-bit.
+
+To make LDT working again vmalloc_sync_all() must only iterate over
+the volatile parts of the kernel address range that are identical
+between all processes.
+
+So the correct check in vmalloc_sync_all() is "address < VMALLOC_END"
+to make sure the VMALLOC areas are synchronized and the LDT
+mapping is not falsely overwritten.
+
+The CPU_ENTRY_AREA and the FIXMAP area are no longer synced either,
+but this is not really a proplem since their PMDs get established
+during bootup and never change.
+
+This change fixes the ldt_gdt selftest in my setup.
+
+[ mingo: Fixed up the changelog to explain the logic and modified the
+         copying to only happen up until VMALLOC_END. ]
+
+Reported-by: Borislav Petkov <bp@suse.de>
+Tested-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: <stable@vger.kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: hpa@zytor.com
+Fixes: 7757d607c6b3: ("x86/pti: Allow CONFIG_PAGE_TABLE_ISOLATION for x86_32")
+Link: https://lkml.kernel.org/r/20191126111119.GA110513@gmail.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/testing/selftests/x86/single_step_syscall.c | 94 ++++++++++++--
- 1 file changed, 85 insertions(+), 9 deletions(-)
+ arch/x86/mm/fault.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/x86/single_step_syscall.c b/tools/testing/selftests/x86/single_step_syscall.c
-index 50ce6c3..1063328 100644
---- a/tools/testing/selftests/x86/single_step_syscall.c
-+++ b/tools/testing/selftests/x86/single_step_syscall.c
-@@ -43,7 +43,19 @@ static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
- 		err(1, "sigaction");
- }
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 9ceacd1..304d31d 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -197,7 +197,7 @@ void vmalloc_sync_all(void)
+ 		return;
  
--static volatile sig_atomic_t sig_traps;
-+static void clearhandler(int sig)
-+{
-+	struct sigaction sa;
-+	memset(&sa, 0, sizeof(sa));
-+	sa.sa_handler = SIG_DFL;
-+	sigemptyset(&sa.sa_mask);
-+	if (sigaction(sig, &sa, 0))
-+		err(1, "sigaction");
-+}
-+
-+static volatile sig_atomic_t sig_traps, sig_eflags;
-+sigjmp_buf jmpbuf;
-+static unsigned char altstack_data[SIGSTKSZ];
+ 	for (address = VMALLOC_START & PMD_MASK;
+-	     address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
++	     address >= TASK_SIZE_MAX && address < VMALLOC_END;
+ 	     address += PMD_SIZE) {
+ 		struct page *page;
  
- #ifdef __x86_64__
- # define REG_IP REG_RIP
-@@ -90,6 +102,25 @@ static void sigtrap(int sig, siginfo_t *info, void *ctx_void)
- 	}
- }
- 
-+static char const * const signames[] = {
-+	[SIGSEGV] = "SIGSEGV",
-+	[SIGBUS] = "SIBGUS",
-+	[SIGTRAP] = "SIGTRAP",
-+	[SIGILL] = "SIGILL",
-+};
-+
-+static void print_and_longjmp(int sig, siginfo_t *si, void *ctx_void)
-+{
-+	ucontext_t *ctx = ctx_void;
-+
-+	printf("\tGot %s with RIP=%lx, TF=%ld\n", signames[sig],
-+	       (unsigned long)ctx->uc_mcontext.gregs[REG_IP],
-+	       (unsigned long)ctx->uc_mcontext.gregs[REG_EFL] & X86_EFLAGS_TF);
-+
-+	sig_eflags = (unsigned long)ctx->uc_mcontext.gregs[REG_EFL];
-+	siglongjmp(jmpbuf, 1);
-+}
-+
- static void check_result(void)
- {
- 	unsigned long new_eflags = get_eflags();
-@@ -109,6 +140,22 @@ static void check_result(void)
- 	sig_traps = 0;
- }
- 
-+static void fast_syscall_no_tf(void)
-+{
-+	sig_traps = 0;
-+	printf("[RUN]\tFast syscall with TF cleared\n");
-+	fflush(stdout);  /* Force a syscall */
-+	if (get_eflags() & X86_EFLAGS_TF) {
-+		printf("[FAIL]\tTF is now set\n");
-+		exit(1);
-+	}
-+	if (sig_traps) {
-+		printf("[FAIL]\tGot SIGTRAP\n");
-+		exit(1);
-+	}
-+	printf("[OK]\tNothing unexpected happened\n");
-+}
-+
- int main()
- {
- #ifdef CAN_BUILD_32
-@@ -163,17 +210,46 @@ int main()
- 	check_result();
- 
- 	/* Now make sure that another fast syscall doesn't set TF again. */
--	printf("[RUN]\tFast syscall with TF cleared\n");
--	fflush(stdout);  /* Force a syscall */
--	if (get_eflags() & X86_EFLAGS_TF) {
--		printf("[FAIL]\tTF is now set\n");
--		exit(1);
-+	fast_syscall_no_tf();
-+
-+	/*
-+	 * And do a forced SYSENTER to make sure that this works even if
-+	 * fast syscalls don't use SYSENTER.
-+	 *
-+	 * Invoking SYSENTER directly breaks all the rules.  Just handle
-+	 * the SIGSEGV.
-+	 */
-+	if (sigsetjmp(jmpbuf, 1) == 0) {
-+		unsigned long nr = SYS_getpid;
-+		printf("[RUN]\tSet TF and check SYSENTER\n");
-+		stack_t stack = {
-+			.ss_sp = altstack_data,
-+			.ss_size = SIGSTKSZ,
-+		};
-+		if (sigaltstack(&stack, NULL) != 0)
-+			err(1, "sigaltstack");
-+		sethandler(SIGSEGV, print_and_longjmp,
-+			   SA_RESETHAND | SA_ONSTACK);
-+		sethandler(SIGILL, print_and_longjmp, SA_RESETHAND);
-+		set_eflags(get_eflags() | X86_EFLAGS_TF);
-+		/* Clear EBP first to make sure we segfault cleanly. */
-+		asm volatile ("xorl %%ebp, %%ebp; SYSENTER" : "+a" (nr) :: "flags", "rcx"
-+#ifdef __x86_64__
-+				, "r11"
-+#endif
-+			);
-+
-+		/* We're unreachable here.  SYSENTER forgets RIP. */
- 	}
--	if (sig_traps) {
--		printf("[FAIL]\tGot SIGTRAP\n");
-+	clearhandler(SIGSEGV);
-+	clearhandler(SIGILL);
-+	if (!(sig_eflags & X86_EFLAGS_TF)) {
-+		printf("[FAIL]\tTF was cleared\n");
- 		exit(1);
- 	}
--	printf("[OK]\tNothing unexpected happened\n");
-+
-+	/* Now make sure that another fast syscall doesn't set TF again. */
-+	fast_syscall_no_tf();
- 
- 	return 0;
- }
