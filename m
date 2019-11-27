@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1062DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C363AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D5521736
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B6BC21736
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889226;
-	bh=XlAJfjFYmMEYcBNDrUXkP9rhkEu3DX4g5RnRmGamycI=;
+	s=default; t=1574889230;
+	bh=JIsUz9vlmfY/6ZXR6VzpR0e6jx9ksj38fQGrlFkR4eQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fXwLw0feIBliVRuo8LMefK1rzusGbk4jgfjThQ2APwirBxVskiDKyWlXBmpxMAK3M
-	 sWilkcT28wdTSeT8P3nTBcpnePyMW12du41NBfa2nCL71c0/xu7R2XJXzrL27XCznK
-	 2KN7VCw07hm9dDbdTHJPnWFvx60aJyygxgUeXP9g=
+	b=q2CZpOg6SOMu0TfZNlv2+xOkLTvytsf5TGwrlIlEQXPaoQWdcySm2ys1OM37/i2M6
+	 FfTn97JWwwCjS9g1FBMaLH9QgV7TRO35MoRUQ25uGecBUzZV1yqO3h7+jtymTCsCqJ
+	 SmockZvurZmmGW+Qr1MV9uaLXG97EnPkSpjjPOKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733013AbfK0VNq (ORCPT
+        id S1731460AbfK0VNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:13:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46036 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:13:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732608AbfK0VNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:13:38 -0500
+        id S1733005AbfK0VNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:13:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D81EA215F1;
-        Wed, 27 Nov 2019 21:13:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 357C5216F4;
+        Wed, 27 Nov 2019 21:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889218;
-        bh=XlAJfjFYmMEYcBNDrUXkP9rhkEu3DX4g5RnRmGamycI=;
+        s=default; t=1574889225;
+        bh=JIsUz9vlmfY/6ZXR6VzpR0e6jx9ksj38fQGrlFkR4eQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PGR3HL3uiB3m3ImNGJp7Y4GpkMlMAsRm44Aa3NfpS5Y0vpifHWPuB8QBs7Hcwtvmo
-         3dWDC9b+0gF7MeWr9RWm+3kq0jVBbadfEq32IL86d3d24HyHnfHt3MhvIAvhfNSBjW
-         0OARy9hECo+RuV9rE6F9kozaBbnSZJlERDonG4cA=
+        b=jUbWY83pPUMWfk/U2u0dusEMNmoC41qygPUudvVI9/HiCeC8kdije/6BaW191cCai
+         knkSjsopwZR2PfzzJqSQVHS4H2/9M6UjQm/VGKeVOB6As3q5HLkjkE2dQ+pnQFENOP
+         1oxGGuB6cEqwBexwqSRWmFx3Py5of73u32Sgg/ME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com
-Subject: [PATCH 5.4 33/66] media: usbvision: Fix invalid accesses after device disconnect
-Date:   Wed, 27 Nov 2019 21:32:28 +0100
-Message-Id: <20191127202710.996633518@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 5.4 09/66] x86/insn: Fix awk regexp warnings
+Date:   Wed, 27 Nov 2019 21:32:04 +0100
+Message-Id: <20191127202645.904126805@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -61,62 +67,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
 
-commit c7a191464078262bf799136317c95824e26a222b upstream.
+commit 700c1018b86d0d4b3f1f2d459708c0cdf42b521d upstream.
 
-The syzbot fuzzer found two invalid-access bugs in the usbvision
-driver.  These bugs occur when userspace keeps the device file open
-after the device has been disconnected and usbvision_disconnect() has
-set usbvision->dev to NULL:
+gawk 5.0.1 generates the following regexp warnings:
 
-	When the device file is closed, usbvision_radio_close() tries
-	to issue a usb_set_interface() call, passing the NULL pointer
-	as its first argument.
+  GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
+  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
+  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is  not a known regexp operator
 
-	If userspace performs a querycap ioctl call, vidioc_querycap()
-	calls usb_make_path() with the same NULL pointer.
+Ealier versions of gawk are not known to generate these warnings. The
+gawk manual referenced below does not list characters ':' and '&' as
+needing escaping, so 'unescape' them. See
 
-This patch fixes the problems by making the appropriate tests
-beforehand.  Note that vidioc_querycap() is protected by
-usbvision->v4l2_lock, acquired in a higher layer of the V4L2
-subsystem.
+  https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html
 
-Reported-and-tested-by: syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com
+for more info.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Running diff on the output generated by the script before and after
+applying the patch reported no differences.
+
+ [ bp: Massage commit message. ]
+
+[ Caught the respective tools header discrepancy. ]
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190924044659.3785-1-alexander.kapshuk@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/usbvision/usbvision-video.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/tools/gen-insn-attr-x86.awk       |    4 ++--
+ tools/arch/x86/tools/gen-insn-attr-x86.awk |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/media/usb/usbvision/usbvision-video.c
-+++ b/drivers/media/usb/usbvision/usbvision-video.c
-@@ -453,6 +453,9 @@ static int vidioc_querycap(struct file *
- {
- 	struct usb_usbvision *usbvision = video_drvdata(file);
+--- a/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -69,7 +69,7 @@ BEGIN {
  
-+	if (!usbvision->dev)
-+		return -ENODEV;
-+
- 	strscpy(vc->driver, "USBVision", sizeof(vc->driver));
- 	strscpy(vc->card,
- 		usbvision_device_data[usbvision->dev_model].model_string,
-@@ -1099,8 +1102,9 @@ static int usbvision_radio_close(struct
- 	mutex_lock(&usbvision->v4l2_lock);
- 	/* Set packet size to 0 */
- 	usbvision->iface_alt = 0;
--	usb_set_interface(usbvision->dev, usbvision->iface,
--				    usbvision->iface_alt);
-+	if (usbvision->dev)
-+		usb_set_interface(usbvision->dev, usbvision->iface,
-+				  usbvision->iface_alt);
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
+-	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
++	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+ 	lprefix_expr = "\\((66|F2|F3)\\)"
+ 	max_lprefix = 4
  
- 	usbvision_audio_off(usbvision);
- 	usbvision->radio = 0;
+@@ -257,7 +257,7 @@ function convert_operands(count,opnd,
+ 	return add_flags(imm, mod)
+ }
+ 
+-/^[0-9a-f]+\:/ {
++/^[0-9a-f]+:/ {
+ 	if (NR == 1)
+ 		next
+ 	# get index
+--- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -69,7 +69,7 @@ BEGIN {
+ 
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
+-	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
++	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+ 	lprefix_expr = "\\((66|F2|F3)\\)"
+ 	max_lprefix = 4
+ 
+@@ -257,7 +257,7 @@ function convert_operands(count,opnd,
+ 	return add_flags(imm, mod)
+ }
+ 
+-/^[0-9a-f]+\:/ {
++/^[0-9a-f]+:/ {
+ 	if (NR == 1)
+ 		next
+ 	# get index
 
 
