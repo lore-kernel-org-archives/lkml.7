@@ -1,60 +1,121 @@
 Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D35AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E64C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16FB82068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D232071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfK0NaT (ORCPT
+        id S1726937AbfK0NcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:30:19 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2094 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726558AbfK0NaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:30:19 -0500
-Received: from DGGEML402-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 064B51B3F8C02A728C45;
-        Wed, 27 Nov 2019 21:30:17 +0800 (CST)
-Received: from DGGEML526-MBX.china.huawei.com ([169.254.2.33]) by
- DGGEML402-HUB.china.huawei.com ([fe80::fca6:7568:4ee3:c776%31]) with mapi id
- 14.03.0439.000; Wed, 27 Nov 2019 21:30:07 +0800
-From:   "Shiyunming (Seth, RTOS)" <shiyunming@huawei.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "keescook@chromium.org" <keescook@chromium.org>,
-        "lizi (D)" <lizi4@huawei.com>, "Sunke (SK)" <sunke09@huawei.com>,
-        Jiangyangyang <jiangyangyang@huawei.com>,
-        Linzichang <linzichang@huawei.com>
-Subject: =?gb2312?B?s7e72DogUXVlc3Rpb25zIGFib3V0ICJzZWN1cml0eSBmdW5jdGlvbnMiIGFu?=
- =?gb2312?Q?d_"suppression_of_compilation_alarms".?=
-Thread-Topic: Questions about "security functions" and "suppression of
- compilation alarms".
-Thread-Index: AdWlJsj2lIXS9YugSc6SFQ1XqAqhlw==
-X-CallingTelephoneNumber: IPM.Note
-X-VoiceMessageDuration: 1
-X-FaxNumberOfPages: 0
-Date:   Wed, 27 Nov 2019 13:30:07 +0000
-Message-ID: <18FA40DC4B7A9742B8E58FC4CDA67429AFC83CDD@dggeml526-mbx.china.huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.202.150]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 27 Nov 2019 08:32:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:47582 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbfK0NcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 08:32:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C58D31B;
+        Wed, 27 Nov 2019 05:32:04 -0800 (PST)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D9A83F52E;
+        Wed, 27 Nov 2019 05:32:03 -0800 (PST)
+Date:   Wed, 27 Nov 2019 13:32:01 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: vexpress-spc: Fix wrong alternation of
+ policy->related_cpus during CPU hp
+Message-ID: <20191127133200.GE29301@bogus>
+References: <20191127114801.23837-1-dietmar.eggemann@arm.com>
+ <20191127120816.GC29301@bogus>
+ <20191127121402.vd3tul4gmqm6qtyb@vireshk-i7>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127121402.vd3tul4gmqm6qtyb@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U2hpeXVubWluZyAoU2V0aCwgUlRPUykgvauzt7vY08q8/qGwUXVlc3Rpb25zIGFib3V0ICJzZWN1
-cml0eSBmdW5jdGlvbnMiIGFuZCAic3VwcHJlc3Npb24gb2YgY29tcGlsYXRpb24gYWxhcm1zIi6h
-saGj
+On Wed, Nov 27, 2019 at 05:44:02PM +0530, Viresh Kumar wrote:
+> On 27-11-19, 12:08, Sudeep Holla wrote:
+> > On Wed, Nov 27, 2019 at 12:48:01PM +0100, Dietmar Eggemann wrote:
+> > > Since commit ca74b316df96 ("arm: Use common cpu_topology structure and
+> > > functions.") the core cpumask has to be modified during cpu hotplug
+> > > operations.
+> > >
+> > > ("arm: Fix topology setup in case of CPU hotplug for CONFIG_SCHED_MC")
+> > > [1] fixed that but revealed another issue on TC2, i.e in its cpufreq
+> > > driver.
+> > >
+> > > During CPU hp stress operations on multiple CPUs, policy->related_cpus
+> > > can be altered. This is wrong since this cpumask should contain the
+> > > online and offline CPUs.
+> > >
+> > > The WARN_ON(!cpumask_test_cpu(cpu, policy->related_cpus)) in
+> > > cpufreq_online() triggers in this case.
+> > >
+> > > The core cpumask can't be used to set the policy->cpus in
+> > > ve_spc_cpufreq_init() anymore in case it is called via
+> > > cpuhp_cpufreq_online()->cpufreq_online()->cpufreq_driver->init().
+> > >
+> > > An empty online() callback can be used to avoid that the init()
+> > > driver function is called during CPU hotplug in so that
+> > > policy->related_cpus will not be changed.
+> > >
+> >
+> > Unlike DT based drivers, it not easy to get the fixed cpumask unless we
+> > add some mechanism to extract it based on clks/OPP added. I prefer
+> > this simple solution instead.
+>
+> I will call this a work-around for the problem and not really the
+> solution, though I won't necessarily oppose it. There are cases which
+> will break even with this solution.
+>
+
+I agree and that's the reason I spoke out my thought aloud here :)
+
+> - Boot board with cpufreq driver as module.
+> - Offline all CPUs except CPU0.
+> - insert cpufreq driver.
+> - online all CPUs.
+>
+
+Indeed, not just boot anytime since it's a module :)
+
+> Now there is no guarantee that the last online will get the mask
+> properly, if I have understood the problem well :)
+>
+
+Yes
+
+> But yeah, who does this kind of messy work anyway :)
+>
+
+I won't bet on that ;)
+
+> FWIW, we need a proper way (may be from architecture code) to find
+> list of all CPUs that share clock line.
+>
+
+Yes but there's no architectural way. I need to revise and see tc2_pm.c
+to check if we can do any magic there.
+
+--
+Regards,
+Sudeep
