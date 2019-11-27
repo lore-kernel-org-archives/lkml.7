@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16579C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E210C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E283921775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058E721775
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887535;
-	bh=mG7tyWKBsFvSSI8JljWLG7ERevr6fOTFUrMhQgCm37o=;
+	s=default; t=1574887537;
+	bh=hy5EQTqdIO32KN9Xs+iYv16VQJmB7JjIp8RDms98nas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C3aOqj8cw4MV66qSPhzmC9pGHFQ1iagHGMkUKoS9MYkYr+UHJjF9zEY98WHKZBlOz
-	 v6PP4odGx49+1IA6jDpBbV0Ur7f5EUtIJOWojluMoLyfX9/BFVLUu7jm9u/5BwwMGJ
-	 mPEYWkoe2S6Jup4zi5ubhnpM15IJGFTrioR7CPEc=
+	b=WbX3gcIY+wTeKMbcfrkRsfOvHeyfrWIHmTiZe4FfrrOC6HB/TNGik7zo8BPgLV/Q/
+	 CpW+q/sFvb0mUoeZXex4qZju2fBktfpEUoBm/MR6I+5xkFz925BZlShV2PYH+53sLx
+	 uNPTee9PMoRuCRYRZtwrqEpl7XlwpmwIYBm7V0Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbfK0Upd (ORCPT
+        id S1729759AbfK0Upf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:45:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56326 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:45:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729258AbfK0Up2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:45:28 -0500
+        id S1729744AbfK0Upb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:45:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1FB321741;
-        Wed, 27 Nov 2019 20:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 731C721741;
+        Wed, 27 Nov 2019 20:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887528;
-        bh=mG7tyWKBsFvSSI8JljWLG7ERevr6fOTFUrMhQgCm37o=;
+        s=default; t=1574887530;
+        bh=hy5EQTqdIO32KN9Xs+iYv16VQJmB7JjIp8RDms98nas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GbSziumenpDxhLR+CukuEFKzPXvi/Q2qYT+KJKiDPmVQY45JL6MpEtdEr6iiSVRLW
-         KSJ+1oAAZcgOYD9dtnotkf23B7V/aTa8TIlDuIuuJMEPkpigAkEopbXA13kzmQ5g/Y
-         EU2JDTV3lVhWjVAAvDu8N2L1HmdmtpAAf3RfUr6Y=
+        b=mh4/Vg+9/2Nh+UPyQiVGHYJFGuPUDP0GpWoW8og98xzMFGMBwvHy6BKG9a1P+/Zdk
+         5WL+JlHfMgVDaYpR4iwpEouFYmTkaNgu3GBQKskaY7cMrdY94BW2xWBrFPHbSIPHu2
+         V1pXgFvrEeMu61t+hB7dZOfdR3HlwQkrDx1IOjXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 145/151] USB: serial: mos7840: fix remote wakeup
-Date:   Wed, 27 Nov 2019 21:32:08 +0100
-Message-Id: <20191127203047.366932195@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Aleksander Morgado <aleksander@aleksander.es>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 146/151] USB: serial: option: add support for DW5821e with eSIM support
+Date:   Wed, 27 Nov 2019 21:32:09 +0100
+Message-Id: <20191127203047.443093890@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -58,41 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Aleksander Morgado <aleksander@aleksander.es>
 
-commit 92fe35fb9c70a00d8fbbf5bd6172c921dd9c7815 upstream.
+commit 957c31ea082e3fe5196f46d5b04018b10de47400 upstream.
 
-The driver was setting the device remote-wakeup feature during probe in
-violation of the USB specification (which says it should only be set
-just prior to suspending the device). This could potentially waste
-power during suspend as well as lead to spurious wakeups.
+The device exposes AT, NMEA and DIAG ports in both USB configurations.
+Exactly same layout as the default DW5821e module, just a different
+vid/pid.
 
-Note that USB core would clear the remote-wakeup feature at first
-resume.
+P:  Vendor=413c ProdID=81e0 Rev=03.18
+S:  Manufacturer=Dell Inc.
+S:  Product=DW5821e-eSIM Snapdragon X20 LTE
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
 
-Fixes: 3f5429746d91 ("USB: Moschip 7840 USB-Serial Driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.19
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+P:  Vendor=413c ProdID=81e0 Rev=03.18
+S:  Manufacturer=Dell Inc.
+S:  Product=DW5821e-eSIM Snapdragon X20 LTE
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 7 Cfg#= 2 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
+I:  If#=0x1 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x6 Alt= 0 #EPs= 1 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+
+Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/mos7840.c |    5 -----
- 1 file changed, 5 deletions(-)
+ drivers/usb/serial/option.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/serial/mos7840.c
-+++ b/drivers/usb/serial/mos7840.c
-@@ -2361,11 +2361,6 @@ out:
- 			goto error;
- 		} else
- 			dev_dbg(&port->dev, "ZLP_REG5 Writing success status%d\n", status);
--
--		/* setting configuration feature to one */
--		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
--				0x03, 0x00, 0x01, 0x00, NULL, 0x00,
--				MOS_WDR_TIMEOUT);
- 	}
- 	return 0;
- error:
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -200,6 +200,7 @@ static void option_instat_callback(struc
+ #define DELL_PRODUCT_5804_MINICARD_ATT		0x819b  /* Novatel E371 */
+ 
+ #define DELL_PRODUCT_5821E			0x81d7
++#define DELL_PRODUCT_5821E_ESIM			0x81e0
+ 
+ #define KYOCERA_VENDOR_ID			0x0c88
+ #define KYOCERA_PRODUCT_KPC650			0x17da
+@@ -1043,6 +1044,8 @@ static const struct usb_device_id option
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(DELL_VENDOR_ID, DELL_PRODUCT_5804_MINICARD_ATT, 0xff, 0xff, 0xff) },
+ 	{ USB_DEVICE(DELL_VENDOR_ID, DELL_PRODUCT_5821E),
+ 	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
++	{ USB_DEVICE(DELL_VENDOR_ID, DELL_PRODUCT_5821E_ESIM),
++	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
+ 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_E100A) },	/* ADU-E100, ADU-310 */
+ 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_500A) },
+ 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_620UW) },
 
 
