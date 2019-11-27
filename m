@@ -2,108 +2,151 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A473C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1B0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471BE2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049BC20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:45:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loxi/+dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfK0Nnl (ORCPT
+        id S1727028AbfK0Np6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:43:41 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55990 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbfK0Nnk (ORCPT
+        Wed, 27 Nov 2019 08:45:58 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45315 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfK0Np5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:43:40 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARDfY77093032;
-        Wed, 27 Nov 2019 08:42:25 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2whh323tb7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 08:42:25 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xARDaaeM005774;
-        Wed, 27 Nov 2019 13:42:24 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma05wdc.us.ibm.com with ESMTP id 2wevd75033-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 13:42:24 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARDgMud50856388
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 13:42:23 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D69FD124055;
-        Wed, 27 Nov 2019 13:42:22 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BCE99124054;
-        Wed, 27 Nov 2019 13:42:21 +0000 (GMT)
-Received: from [9.152.98.31] (unknown [9.152.98.31])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Wed, 27 Nov 2019 13:42:21 +0000 (GMT)
-Subject: Re: [PATCH 5/5] btrfs: Increase buffer size for zlib functions
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191126144130.75710-1-zaslonko@linux.ibm.com>
- <20191126144130.75710-6-zaslonko@linux.ibm.com>
- <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
-From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Message-ID: <11377b99-b66c-fdc3-5c8f-0bae34c92c03@linux.ibm.com>
-Date:   Wed, 27 Nov 2019 14:42:20 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 27 Nov 2019 08:45:57 -0500
+Received: by mail-qt1-f195.google.com with SMTP id 30so25342660qtz.12;
+        Wed, 27 Nov 2019 05:45:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tim0z48P/Ho4XX4rxvSqCrBEA1TS21VHvg9AxGU9cUo=;
+        b=loxi/+dyFPwW34NQEBvyXRBAXz7R51jVt1JzJNfdmksHqZYiuGv678bpygS7AyTcyG
+         px+L3G+F1bImhNWDkGnnts4PZBFKzn29ElHqENqeJv1jppPnXdKDAmjzBQQ6sVRfg1xr
+         6Xfzx7m2O343J2pCvuzBOP4K5kf/9uPJ/oE+wqljaY9Ng7Bu1p1RFWJoM6v+MbwS9sYM
+         pDH3hHrynI7szJWf2fIkuEKXn/ODjn9YzmNKfc21I/3WWe20Xm003fsEk4AA3xVIUytY
+         NlVAaF6dWfgsLRkRWEenDkwjZ5yvHsIBi1f1CHuL9tm84B/RkoY0FpUXgT3EMDwHhcNy
+         FCag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tim0z48P/Ho4XX4rxvSqCrBEA1TS21VHvg9AxGU9cUo=;
+        b=MSZpqcY3Tp2Tve+W7eLd4vYi7zS/9UeHKMr194FkFg5cJZOhQ9DNNYOaNpbvXHIIbG
+         QTS7WE2BDsLECgGoqIyMeGJlP05pqy3q5B+VluCnvwllTqnkYYWzIkresS6/UU8Veaum
+         8NOq5lBpadNh6x+lMtM+pWhD/IMU6ddOid9Jop3kat0LCEURxRRS7MtkEDy/t7eIgPuR
+         63Hejp/i4SQQZX0hYIUa0s0idsaH8zzdwvIUzX3P2dDcb4OEh/uDdgOHfRp5/WuvoUtZ
+         SfiyzboguzWwBb0b+f7kwzykeSIWLebw+ls/HMC06uOt9Cjd5E7QCOtO3nzC/CsWXPkq
+         aBrQ==
+X-Gm-Message-State: APjAAAVbXRP5XZU+JuB/wnRTdLOQVD+Uj9ck95HF08lI4XpuHJ9dbpSq
+        w6NbjTAc+tXU9GsyHuiMBASoiHZjIE4=
+X-Google-Smtp-Source: APXvYqwAPqmAF3/Vr+h2lq/WTBPNZOERbfyeIOC6lgge2oHvISvxGhaZJm/IbCgWQsceKUt1cm3bEA==
+X-Received: by 2002:ac8:198b:: with SMTP id u11mr26214987qtj.133.1574862356632;
+        Wed, 27 Nov 2019 05:45:56 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id y200sm6435632qkb.1.2019.11.27.05.45.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 05:45:56 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A79E740D3E; Wed, 27 Nov 2019 10:45:53 -0300 (-03)
+Date:   Wed, 27 Nov 2019 10:45:53 -0300
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on 32-bit
+ arches
+Message-ID: <20191127134553.GC22719@kernel.org>
+References: <20191126183451.GC29071@kernel.org>
+ <87d0dexyij.fsf@toke.dk>
+ <20191126190450.GD29071@kernel.org>
+ <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
+ <20191126221018.GA22719@kernel.org>
+ <20191126221733.GB22719@kernel.org>
+ <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+ <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net>
+ <20191126155228.0e6ed54c@cakuba.netronome.com>
+ <20191127013901.GE29071@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_03:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- adultscore=0 mlxlogscore=773 malwarescore=0 mlxscore=0 priorityscore=1501
- phishscore=0 impostorscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127013901.GE29071@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Another fix I'm carrying in my perf/core branch,
 
-On 26.11.2019 16:52, Josef Bacik wrote:
-> On Tue, Nov 26, 2019 at 03:41:30PM +0100, Mikhail Zaslonko wrote:
->> Due to the small size of zlib buffer (1 page) set in btrfs code, s390
->> hardware compression is rather limited in terms of performance. Increasing
->> the buffer size to 4 pages would bring significant benefit for s390
->> hardware compression (up to 60% better performance compared to the
->> PAGE_SIZE buffer) and should not bring much overhead in terms of memory
->> consumption due to order 2 allocations.
->>
->> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-> 
-> We may have to make these allocations under memory pressure in the IO context,
-> order 2 allocations here is going to be not awesome.  If you really want it then
-> you need to at least be able to fall back to single page if you fail to get the
-> allocation.  Thanks,
-> 
+Regards,
 
-As far as I understand GFP_KERNEL allocations would never fail for the order <= 
-PAGE_ALLOC_COSTLY_ORDER. How else can the memory pressure condition be identified
-here?
+- Arnaldo
 
-> josef
-> 
+commit 98bb09f90a0ae33125fabc8f41529345382f1498
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Wed Nov 27 09:26:54 2019 -0300
+
+    libbpf: Use PRIu64 for sym->st_value to fix build on 32-bit arches
+    
+    The st_value field is a 64-bit value, so use PRIu64 to fix this error on
+    32-bit arches:
+    
+      In file included from libbpf.c:52:
+      libbpf.c: In function 'bpf_program__record_reloc':
+      libbpf_internal.h:59:22: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'Elf64_Addr' {aka 'const long long unsigned int'} [-Werror=format=]
+        libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+                            ^~~~~~~~~~
+      libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+       #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+                                 ^~~~
+      libbpf.c:1822:4: note: in expansion of macro 'pr_warn'
+          pr_warn("bad call relo offset: %lu\n", sym->st_value);
+          ^~~~~~~
+      libbpf.c:1822:37: note: format string is defined here
+          pr_warn("bad call relo offset: %lu\n", sym->st_value);
+                                         ~~^
+                                         %llu
+    
+    Fixes: 1f8e2bcb2cd5 ("libbpf: Refactor relocation handling")
+    Cc: Alexei Starovoitov <ast@kernel.org>
+    Cc: Andrii Nakryiko <andriin@fb.com>
+    Link: https://lkml.kernel.org/n/tip-iabs1wq19c357bkk84p7blif@git.kernel.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index b20f82e58989..6b0eae5c8a94 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -1819,7 +1819,7 @@ static int bpf_program__record_reloc(struct bpf_program *prog,
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 		if (sym->st_value % 8) {
+-			pr_warn("bad call relo offset: %lu\n", sym->st_value);
++			pr_warn("bad call relo offset: %" PRIu64 "\n", sym->st_value);
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 		reloc_desc->type = RELO_CALL;
