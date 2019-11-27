@@ -2,53 +2,54 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22D9C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FBCC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5AC520869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECDC920870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891158;
-	bh=MmcJ9yyJiqzSZ3u8XL93f5OPWh7yjOKwUHGqn3LdkBA=;
+	s=default; t=1574891167;
+	bh=+jTHa6RfLG3FB+eqyQHja/Mz7Yn6YwCwk6IA2kcztlI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M4/iozOpDkfzcBylBNSzxM6US8QjB+CLpCajW6HBvtL309uU2scJs2jRuYl7CUVWL
-	 eHsZqYNyn/cD4oz61323tyFFvsoNNs8TaaBjVZlV3XDhcbEVa6DuGj4RTgcSjpHjbY
-	 /vX2IOSoJhojUZuY7NFb828eQEbf0a1wX+oVWL9A=
+	b=PMI2SEdL51lRF5fmgGo3j2qzFJJsv1GIi6pQRfIujzhRlL24GZL8TvKPR6wj59cwr
+	 l/k0+WpBsNpYjGs9hkRqocQ8ZKa6dAbLNC/LISw6EQ90J8IuDFdr+qnGiK4x8kYr66
+	 2p+e5D7JYErvTOdqqavrfGnQ1h+EX61UNXiV3F3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbfK0Vp5 (ORCPT
+        id S1727669AbfK0Uej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:45:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35660 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:34:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727762AbfK0Ue6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:34:58 -0500
+        id S1727645AbfK0Ueg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:34:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72857215F1;
-        Wed, 27 Nov 2019 20:34:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7336E20866;
+        Wed, 27 Nov 2019 20:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886897;
-        bh=MmcJ9yyJiqzSZ3u8XL93f5OPWh7yjOKwUHGqn3LdkBA=;
+        s=default; t=1574886875;
+        bh=+jTHa6RfLG3FB+eqyQHja/Mz7Yn6YwCwk6IA2kcztlI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oy/8NSn5zj5gvKg0k5Q0MOI+9iq3kCqmURkJ4yQcfsKhU0+1wLdoN8yIRRGnWC4UR
-         HG6S/q5LrvU/ascTEM5qLfYorpVJp717r6T58CeeJsJ9iYE+awBUa6xlAQYh5vyjxI
-         7r/KwImRJp+XxBKt0BAqYQqxlSzQtPMybnnLZVzM=
+        b=HJK/27QSC2JmwcI6iUA2Ea9dCOi4AkXj2Bf30r/NFb2czrkdILmjlOvHkIhdrtNcs
+         DlZpBGDJMsXeNrrHpSDg5jzZQo3q+e4Be7c5o6ZGoHm4x+VkWtyh0vWbafjgR9Uh9+
+         DR/K4uUgOCpRaAt64BLAxKfds0fJGFaRf8EJcCOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 036/132] scsi: isci: Use proper enumerated type in atapi_d2h_reg_frame_handler
-Date:   Wed, 27 Nov 2019 21:30:27 +0100
-Message-Id: <20191127202930.898119175@linuxfoundation.org>
+Subject: [PATCH 4.4 007/132] asus-wmi: Create quirk for airplane_mode LED
+Date:   Wed, 27 Nov 2019 21:29:58 +0100
+Message-Id: <20191127202904.567920052@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,53 +62,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: João Paulo Rechi Vita <jprvita@gmail.com>
 
-[ Upstream commit e9e9a103528c7e199ead6e5374c9c52cf16b5802 ]
+[ Upstream commit a977e59c0c67c9d492bb16677ce66d67cae0ebd8 ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+Some Asus laptops that have an airplane-mode indicator LED, also have
+the WMI WLAN user bit set, and the following bits in their DSDT:
 
-drivers/scsi/isci/request.c:1629:13: warning: implicit conversion from
-enumeration type 'enum sci_io_status' to different enumeration type
-'enum sci_status' [-Wenum-conversion]
-                        status = SCI_IO_FAILURE_RESPONSE_VALID;
-                               ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/isci/request.c:1631:12: warning: implicit conversion from
-enumeration type 'enum sci_io_status' to different enumeration type
-'enum sci_status' [-Wenum-conversion]
-                status = SCI_IO_FAILURE_RESPONSE_VALID;
-                       ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Scope (_SB)
+{
+  (...)
+  Device (ATKD)
+  {
+    (...)
+    Method (WMNB, 3, Serialized)
+    {
+      (...)
+      If (LEqual (IIA0, 0x00010002))
+      {
+        OWGD (IIA1)
+        Return (One)
+      }
+    }
+  }
+}
 
-status is of type sci_status but SCI_IO_FAILURE_RESPONSE_VALID is of
-type sci_io_status. Use SCI_FAILURE_IO_RESPONSE_VALID, which is from
-sci_status and has SCI_IO_FAILURE_RESPONSE_VALID's exact value since
-that is what SCI_IO_FAILURE_RESPONSE_VALID is mapped to in the isci.h
-file.
+So when asus-wmi uses ASUS_WMI_DEVID_WLAN_LED (0x00010002) to store the
+wlan state, it drives the airplane-mode indicator LED (through the call
+to OWGD) in an inverted fashion: the LED is ON when airplane mode is OFF
+(since wlan is ON), and vice-versa.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/153
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This commit creates a quirk to not register a RFKill switch at all for
+these laptops, to allow the asus-wireless driver to drive the airplane
+mode LED correctly through the ASHS ACPI device. It also adds a match to
+that quirk for the Asus X555UB, which is affected by this problem.
+
+Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
+Reviewed-by: Corentin Chary <corentin.chary@gmail.com>
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/isci/request.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+ drivers/platform/x86/asus-wmi.c    |  8 +++++---
+ drivers/platform/x86/asus-wmi.h    |  1 +
+ 3 files changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/isci/request.c b/drivers/scsi/isci/request.c
-index cfd0084f1cd2b..224c9c60834cd 100644
---- a/drivers/scsi/isci/request.c
-+++ b/drivers/scsi/isci/request.c
-@@ -1626,9 +1626,9 @@ static enum sci_status atapi_d2h_reg_frame_handler(struct isci_request *ireq,
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index a284a2b42bcd5..5390846fa1e64 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -78,6 +78,10 @@ static struct quirk_entry quirk_asus_x200ca = {
+ 	.wapf = 2,
+ };
  
- 	if (status == SCI_SUCCESS) {
- 		if (ireq->stp.rsp.status & ATA_ERR)
--			status = SCI_IO_FAILURE_RESPONSE_VALID;
-+			status = SCI_FAILURE_IO_RESPONSE_VALID;
- 	} else {
--		status = SCI_IO_FAILURE_RESPONSE_VALID;
-+		status = SCI_FAILURE_IO_RESPONSE_VALID;
- 	}
++static struct quirk_entry quirk_no_rfkill = {
++	.no_rfkill = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	quirks = dmi->driver_data;
+@@ -315,6 +319,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_x200ca,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X555UB",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X555UB"),
++		},
++		.driver_data = &quirk_no_rfkill,
++	},
+ 	{},
+ };
  
- 	if (status != SCI_SUCCESS) {
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 7c1defaef3f58..823f85b1b4dc6 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2067,9 +2067,11 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail_leds;
+ 
+-	err = asus_wmi_rfkill_init(asus);
+-	if (err)
+-		goto fail_rfkill;
++	if (!asus->driver->quirks->no_rfkill) {
++		err = asus_wmi_rfkill_init(asus);
++		if (err)
++			goto fail_rfkill;
++	}
+ 
+ 	/* Some Asus desktop boards export an acpi-video backlight interface,
+ 	   stop this from showing up */
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 4da4c8bafe70e..5de1df510ebd8 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -38,6 +38,7 @@ struct key_entry;
+ struct asus_wmi;
+ 
+ struct quirk_entry {
++	bool no_rfkill;
+ 	bool hotplug_wireless;
+ 	bool scalar_panel_brightness;
+ 	bool store_backlight_power;
 -- 
 2.20.1
 
