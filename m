@@ -2,52 +2,57 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF5EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192BFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613B620869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB39520869
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890763;
-	bh=4lw864Ct5JLJps2WHuqaE8tkLWAdm3FEF5yk1oCmcRY=;
+	s=default; t=1574890772;
+	bh=RO3NcGmMVyAPo8SoPW9CsQgCU3aD96mHNIyXuVrwtxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=alNqg+jqGCR7av2y7VJOn7Alu6sZehqkdMB11aY6t8ZuhfuXV10bqKCDYHAo6Jv+T
-	 2aXspkoSJ29jQ7LtPsnhW1J2JuIj+LlW3/+InlJxhvavz33MEnWto7IJteJV4U1N6J
-	 u48pxqRMVqCmNQ2bD+HAH8F+xOghhc3IlcwXagGw=
+	b=a6sToGJ1du1O3dXmnxwCEI1xjrx2EVq9qxyvUbiBzAI26agNq5qLz5VB7dtXEAw7o
+	 lcsiNY7pct+TS6CdW4Q3YXIQyn2GCn1UJDYObx/yxn7E8mZUIAmkeP5d7vLdz0L15X
+	 xdXcn8UGRp3k9xjG7M8WhJs2+urxKS+eZGVdQwao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbfK0VjV (ORCPT
+        id S1729534AbfK0UoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:39:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53704 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:44:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729580AbfK0UoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:44:24 -0500
+        id S1728253AbfK0UoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:44:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18C1B217F9;
-        Wed, 27 Nov 2019 20:44:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4C2B21783;
+        Wed, 27 Nov 2019 20:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887463;
-        bh=4lw864Ct5JLJps2WHuqaE8tkLWAdm3FEF5yk1oCmcRY=;
+        s=default; t=1574887441;
+        bh=RO3NcGmMVyAPo8SoPW9CsQgCU3aD96mHNIyXuVrwtxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k7H71LlkOjnRwqhMbmBNvib/oGUbiol6YfkkvZtXqKq/cIGLGvshlLiTt/wcLGlMv
-         a5ADEXRdsvrZDygj7IyxqhY11CXMMRzCxLgUwNxpqG5PoKoNcHY9A5Ao+9XHjnLT1l
-         0Ck2yZf4L8jMAST3pnBnSqEPC/XAKU/7cytlHyu8=
+        b=am2yr1ZbppQiQ3pg7GexT5OPA86pa5IFbYkIrGs5xGXMZ0Wh917X04loM8B+6Rqxk
+         SdfwzchKSObJMYmMlTGbiO05hUtm0vk8p8MIIT9ydBrr/HU1aUc+wZ/6+PkXJpJ/ou
+         4b1lxktpmed0oLhKXTKf3bYUyXUcVBwG7HgzZ0Ko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+711468aa5c3a1eabf863@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 122/151] nfc: port100: handle command failure cleanly
-Date:   Wed, 27 Nov 2019 21:31:45 +0100
-Message-Id: <20191127203045.103624570@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 070/151] linux/bitmap.h: fix type of nbits in bitmap_shift_right()
+Date:   Wed, 27 Nov 2019 21:30:53 +0100
+Message-Id: <20191127203034.426095508@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -60,34 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-commit 5f9f0b11f0816b35867f2cf71e54d95f53f03902 upstream.
+[ Upstream commit d9873969fa8725dc6a5a21ab788c057fd8719751 ]
 
-If starting the transfer of a command suceeds but the transfer for the reply
-fails, it is not enough to initiate killing the transfer for the
-command may still be running. You need to wait for the killing to finish
-before you can reuse URB and buffer.
+Most other bitmap API, including the OOL version __bitmap_shift_right,
+take unsigned nbits.  This was accidentally left out from 2fbad29917c98.
 
-Reported-and-tested-by: syzbot+711468aa5c3a1eabf863@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/20180818131623.8755-5-linux@rasmusvillemoes.dk
+Fixes: 2fbad29917c98 ("lib: bitmap: change bitmap_shift_right to take unsigned parameters")
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reported-by: Yury Norov <ynorov@caviumnetworks.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/port100.c |    2 +-
+ include/linux/bitmap.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nfc/port100.c
-+++ b/drivers/nfc/port100.c
-@@ -791,7 +791,7 @@ static int port100_send_frame_async(stru
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index dc56304ac829f..dec03c0dbc214 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -321,7 +321,7 @@ static __always_inline int bitmap_weight(const unsigned long *src, unsigned int
+ }
  
- 	rc = port100_submit_urb_for_ack(dev, GFP_KERNEL);
- 	if (rc)
--		usb_unlink_urb(dev->out_urb);
-+		usb_kill_urb(dev->out_urb);
- 
- exit:
- 	mutex_unlock(&dev->out_urb_lock);
+ static inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+-				unsigned int shift, int nbits)
++				unsigned int shift, unsigned int nbits)
+ {
+ 	if (small_const_nbits(nbits))
+ 		*dst = (*src & BITMAP_LAST_WORD_MASK(nbits)) >> shift;
+-- 
+2.20.1
+
 
 
