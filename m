@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7B5C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C79C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9729720862
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013C82154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888029;
-	bh=EHA+Fe7eIbG8tt1ANtpom1GPKu0YwoUmtCxEmscV9QU=;
+	s=default; t=1574888032;
+	bh=zeMmqN91T1U6t+tXj7rn0j1WvBUUfrtvQg+SMNngmbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YJbFCtbsMEmLeSoFkzeyIPnnoKoZnmIbpzsp+FGHxrqG4NNZCyx4TEAx3CZrOf3GH
-	 SLHOBRPAEf3JXB2OpfQWlQxROlshiJ4Bd0f7oerG30gAbtafBkMvA3yKM9s0rV53kl
-	 I7VzLWDc8jFRRLR0P5DvxMGjWVRu8NUF1wn8V6qI=
+	b=Xp11NuhA9Ga4PKjidP1EOgI4CvBkBeDQrvPFGv/eF5IUP+5c8mPCgADYN3GBrbY9W
+	 KRryrad2TyXBpk4MQNhDunN+N7o8GO1B/Zzkv0krJ1xtSZMsh0X588M8EzcLpHaYxZ
+	 6YiSE4BsUbI7Mz14A4rA8WsRjlxJ44RJmxiJJji8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730767AbfK0Uxr (ORCPT
+        id S1730775AbfK0Uxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:53:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42876 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:53:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730140AbfK0Uxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:44 -0500
+        id S1728353AbfK0Uxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0068521850;
-        Wed, 27 Nov 2019 20:53:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 844CA21882;
+        Wed, 27 Nov 2019 20:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888023;
-        bh=EHA+Fe7eIbG8tt1ANtpom1GPKu0YwoUmtCxEmscV9QU=;
+        s=default; t=1574888021;
+        bh=zeMmqN91T1U6t+tXj7rn0j1WvBUUfrtvQg+SMNngmbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pqnpVG3qpZ1VRziVJcsxfg4K71NWgvYYrMn7PKF4Fia50JQ4mQJ8Kl8mEthi7XIdb
-         E2ndpnxm2oAGfEodECBU3xbaW3LL190DbUi2lONsP6fTolSPb1NzKjCGVC1d4cAzWJ
-         bqnomKSPYfmjQbQuXLT9TMTzQQH5uJI4TokgEaKM=
+        b=d2tvASS1X+R1N+U67BLkWrhOaGns410dV78HKDfOL4Gd9i3M01Bx41KFxzDSVACFM
+         JqOaRWgAKhKRUPyNj5WDRDDTGGsi+mpdN+p4tggUlZZXMCMOuYlX/Wt3xdRWjVlxh/
+         mr6h5fE1Utu08ftOGUeaQKztJe57jD0UY17/IfoQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        Hannes Reinecke <hare@suse.com>,
+        stable@vger.kernel.org,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 145/211] scsi: lpfc: fcoe: Fix link down issue after 1000+ link bounces
-Date:   Wed, 27 Nov 2019 21:31:18 +0100
-Message-Id: <20191127203107.713087907@linuxfoundation.org>
+Subject: [PATCH 4.14 144/211] scsi: megaraid_sas: Fix goto labels in error handling
+Date:   Wed, 27 Nov 2019 21:31:17 +0100
+Message-Id: <20191127203107.612529069@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -62,130 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 
-[ Upstream commit 036cad1f1ac9ce03e2db94b8460f98eaf1e1ee4c ]
+[ Upstream commit 8a25fa17b6ed6e6c8101e9c68a10ae68a9025f2c ]
 
-On FCoE adapters, when running link bounce test in a loop, initiator
-failed to login with switch switch and required driver reload to
-recover. Switch reached a point where all subsequent FLOGIs would be
-LS_RJT'd. Further testing showed the condition to be related to not
-performing FCF discovery between FLOGI's.
+During init, if pci_alloc_irq_vectors() fails, the driver has not yet setup
+the IRQs. Fix the goto labels and error handling for this case.
 
-Fix by monitoring FLOGI failures and once a repeated error is seen
-repeat FCF discovery.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c     |  2 ++
- drivers/scsi/lpfc/lpfc_hbadisc.c | 20 ++++++++++++++++++++
- drivers/scsi/lpfc/lpfc_init.c    |  2 +-
- drivers/scsi/lpfc/lpfc_sli.c     | 11 ++---------
- drivers/scsi/lpfc/lpfc_sli4.h    |  1 +
- 5 files changed, 26 insertions(+), 10 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index ddd29752d96dc..95449f97101d3 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -1152,6 +1152,7 @@ lpfc_cmpl_els_flogi(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 			phba->fcf.fcf_flag &= ~FCF_DISCOVERY;
- 			phba->hba_flag &= ~(FCF_RR_INPROG | HBA_DEVLOSS_TMO);
- 			spin_unlock_irq(&phba->hbalock);
-+			phba->fcf.fcf_redisc_attempted = 0; /* reset */
- 			goto out;
- 		}
- 		if (!rc) {
-@@ -1166,6 +1167,7 @@ lpfc_cmpl_els_flogi(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 			phba->fcf.fcf_flag &= ~FCF_DISCOVERY;
- 			phba->hba_flag &= ~(FCF_RR_INPROG | HBA_DEVLOSS_TMO);
- 			spin_unlock_irq(&phba->hbalock);
-+			phba->fcf.fcf_redisc_attempted = 0; /* reset */
- 			goto out;
- 		}
- 	}
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index b970933a218d5..d850077c5e226 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -1999,6 +1999,26 @@ int lpfc_sli4_fcf_rr_next_proc(struct lpfc_vport *vport, uint16_t fcf_index)
- 				"failover and change port state:x%x/x%x\n",
- 				phba->pport->port_state, LPFC_VPORT_UNKNOWN);
- 		phba->pport->port_state = LPFC_VPORT_UNKNOWN;
-+
-+		if (!phba->fcf.fcf_redisc_attempted) {
-+			lpfc_unregister_fcf(phba);
-+
-+			rc = lpfc_sli4_redisc_fcf_table(phba);
-+			if (!rc) {
-+				lpfc_printf_log(phba, KERN_INFO, LOG_FIP,
-+						"3195 Rediscover FCF table\n");
-+				phba->fcf.fcf_redisc_attempted = 1;
-+				lpfc_sli4_clear_fcf_rr_bmask(phba);
-+			} else {
-+				lpfc_printf_log(phba, KERN_WARNING, LOG_FIP,
-+						"3196 Rediscover FCF table "
-+						"failed. Status:x%x\n", rc);
-+			}
-+		} else {
-+			lpfc_printf_log(phba, KERN_WARNING, LOG_FIP,
-+					"3197 Already rediscover FCF table "
-+					"attempted. No more retry\n");
-+		}
- 		goto stop_flogi_current_fcf;
- 	} else {
- 		lpfc_printf_log(phba, KERN_INFO, LOG_FIP | LOG_ELS,
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 25612ccf6ff28..15bcd00dd7a23 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -4997,7 +4997,7 @@ lpfc_sli4_async_fip_evt(struct lpfc_hba *phba,
- 			break;
- 		}
- 		/* If fast FCF failover rescan event is pending, do nothing */
--		if (phba->fcf.fcf_flag & FCF_REDISC_EVT) {
-+		if (phba->fcf.fcf_flag & (FCF_REDISC_EVT | FCF_REDISC_PEND)) {
- 			spin_unlock_irq(&phba->hbalock);
- 			break;
- 		}
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 6c2b098b76095..ebf7d3cda3677 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -18056,15 +18056,8 @@ lpfc_sli4_fcf_rr_next_index_get(struct lpfc_hba *phba)
- 			goto initial_priority;
- 		lpfc_printf_log(phba, KERN_WARNING, LOG_FIP,
- 				"2844 No roundrobin failover FCF available\n");
--		if (next_fcf_index >= LPFC_SLI4_FCF_TBL_INDX_MAX)
--			return LPFC_FCOE_FCF_NEXT_NONE;
--		else {
--			lpfc_printf_log(phba, KERN_WARNING, LOG_FIP,
--				"3063 Only FCF available idx %d, flag %x\n",
--				next_fcf_index,
--			phba->fcf.fcf_pri[next_fcf_index].fcf_rec.flag);
--			return next_fcf_index;
--		}
-+
-+		return LPFC_FCOE_FCF_NEXT_NONE;
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 23a9f0777fa62..577513649afbe 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -5324,7 +5324,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
+ 	if (!instance->msix_vectors) {
+ 		i = pci_alloc_irq_vectors(instance->pdev, 1, 1, PCI_IRQ_LEGACY);
+ 		if (i < 0)
+-			goto fail_setup_irqs;
++			goto fail_init_adapter;
  	}
  
- 	if (next_fcf_index < LPFC_SLI4_FCF_TBL_INDX_MAX &&
-diff --git a/drivers/scsi/lpfc/lpfc_sli4.h b/drivers/scsi/lpfc/lpfc_sli4.h
-index 60200385fe009..a132a83ef233c 100644
---- a/drivers/scsi/lpfc/lpfc_sli4.h
-+++ b/drivers/scsi/lpfc/lpfc_sli4.h
-@@ -265,6 +265,7 @@ struct lpfc_fcf {
- #define FCF_REDISC_EVT	0x100 /* FCF rediscovery event to worker thread */
- #define FCF_REDISC_FOV	0x200 /* Post FCF rediscovery fast failover */
- #define FCF_REDISC_PROG (FCF_REDISC_PEND | FCF_REDISC_EVT)
-+	uint16_t fcf_redisc_attempted;
- 	uint32_t addr_mode;
- 	uint32_t eligible_fcf_cnt;
- 	struct lpfc_fcf_rec current_rec;
+ 	megasas_setup_reply_map(instance);
+@@ -5541,9 +5541,8 @@ static int megasas_init_fw(struct megasas_instance *instance)
+ 
+ fail_get_ld_pd_list:
+ 	instance->instancet->disable_intr(instance);
+-fail_init_adapter:
+ 	megasas_destroy_irqs(instance);
+-fail_setup_irqs:
++fail_init_adapter:
+ 	if (instance->msix_vectors)
+ 		pci_free_irq_vectors(instance->pdev);
+ 	instance->msix_vectors = 0;
 -- 
 2.20.1
 
