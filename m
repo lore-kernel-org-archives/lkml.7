@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B7FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC84C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC931215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEF621787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887252;
-	bh=pIrHMhpaaasDi/axB0LADqktz+OiSBs0YHoiRDHDFOM=;
+	s=default; t=1574887259;
+	bh=8v2/Cs1QTRw3u87ZKECXxUqI3I0na7RDg/PfoarGI0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ex4p2oUcaxdKZ3aQlbkAA3EpV3wsM/6iDgJ2isUXAEZsPm3Y+46HReGSJToytCG+y
-	 SUnRzXufFBfAlQCqN9fQancbLNFy068GN+XDu0lLWrLwvmaMmC74TjEJpx1Sgmwmt9
-	 hm86mcKA/JTr8xIlW4eYd4IsPUf8LZOr6T0se31I=
+	b=sqHYlAMSstx55HiLo2q8dIheMEVI+6kDYIUoHy2iOqaaV1FtmdV0y2CXKzINpX2/X
+	 lVSa3OX3lF4V+u4t+VpPhBwFFR0IguYIhGfiJ0e1jvbbyJTYkDe47WGxqymHCttfkh
+	 DtrxDdbp6YPJEtfydoGgARUglsJNX1UsHJkMdjHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbfK0Ukv (ORCPT
+        id S1729112AbfK0Uk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:40:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45588 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:40:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729090AbfK0Ukt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:40:49 -0500
+        id S1728591AbfK0Uky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:40:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E321821772;
-        Wed, 27 Nov 2019 20:40:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83FB521774;
+        Wed, 27 Nov 2019 20:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887248;
-        bh=pIrHMhpaaasDi/axB0LADqktz+OiSBs0YHoiRDHDFOM=;
+        s=default; t=1574887254;
+        bh=8v2/Cs1QTRw3u87ZKECXxUqI3I0na7RDg/PfoarGI0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pzLE+WW/Uz65/fe9xeBwacsVgP6pmw6QoKwhAjGuJnpFCjVHzMVUIdiv2KVF4knEl
-         AmbFuFXxT95UeQ9hWCzvXGCNkyxD+NeJrEJqPhb4Atrh5p2KiqGkqyF0HJUMZa9Rae
-         3CE8X1EPYi8LqyfGBToCslIXlzhL03KMpoO3mRoA=
+        b=Vc3Z8PIBbi/1gOfNXOsDaH8klZw391ucDXiwlUjEFReoxACwGNUjTcUY6xu2nVmTm
+         mLErLyMg+qJAtl/DM+1LdmpmDMI1EzCVWWI9srDcCR0KrjnwdEfXEYzZnoemXelYcC
+         K5kdAK7yD3+q9y4AZ9DhR0mHXk7p4Oh3mx0i8U1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Carl Huang <cjhuang@codeaurora.org>,
-        Brian Norris <briannorris@chomium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 020/151] ath10k: allocate small size dma memory in ath10k_pci_diag_write_mem
-Date:   Wed, 27 Nov 2019 21:30:03 +0100
-Message-Id: <20191127203012.724097908@linuxfoundation.org>
+Subject: [PATCH 4.9 039/151] xfs: fix use-after-free race in xfs_buf_rele
+Date:   Wed, 27 Nov 2019 21:30:22 +0100
+Message-Id: <20191127203024.197432490@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -61,112 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Carl Huang <cjhuang@codeaurora.org>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit 0738b4998c6d1caf9ca2447b946709a7278c70f1 ]
+[ Upstream commit 37fd1678245f7a5898c1b05128bc481fb403c290 ]
 
-ath10k_pci_diag_write_mem may allocate big size of the dma memory
-based on the parameter nbytes. Take firmware diag download as
-example, the biggest size is about 500K. In some systems, the
-allocation is likely to fail because it can't acquire such a large
-contiguous dma memory.
+When looking at a 4.18 based KASAN use after free report, I noticed
+that racing xfs_buf_rele() may race on dropping the last reference
+to the buffer and taking the buffer lock. This was the symptom
+displayed by the KASAN report, but the actual issue that was
+reported had already been fixed in 4.19-rc1 by commit e339dd8d8b04
+("xfs: use sync buffer I/O for sync delwri queue submission").
 
-The fix is to allocate a small size dma memory. In the loop,
-driver copies the data to the allocated dma memory and writes to
-the destination until all the data is written.
+Despite this, I think there is still an issue with xfs_buf_rele()
+in this code:
 
-Tested with QCA6174 PCI with
-firmware-6.bin_WLAN.RM.4.4.1-00119-QCARMSWP-1, this also affects
-QCA9377 PCI.
+        release = atomic_dec_and_lock(&bp->b_hold, &pag->pag_buf_lock);
+        spin_lock(&bp->b_lock);
+        if (!release) {
+.....
 
-Signed-off-by: Carl Huang <cjhuang@codeaurora.org>
-Reviewed-by: Brian Norris <briannorris@chomium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+If two threads race on the b_lock after both dropping a reference
+and one getting dropping the last reference so release = true, we
+end up with:
+
+CPU 0				CPU 1
+atomic_dec_and_lock()
+				atomic_dec_and_lock()
+				spin_lock(&bp->b_lock)
+spin_lock(&bp->b_lock)
+<spins>
+				<release = true bp->b_lru_ref = 0>
+				<remove from lists>
+				freebuf = true
+				spin_unlock(&bp->b_lock)
+				xfs_buf_free(bp)
+<gets lock, reading and writing freed memory>
+<accesses freed memory>
+spin_unlock(&bp->b_lock) <reads/writes freed memory>
+
+IOWs, we can't safely take bp->b_lock after dropping the hold
+reference because the buffer may go away at any time after we
+drop that reference. However, this can be fixed simply by taking the
+bp->b_lock before we drop the reference.
+
+It is safe to nest the pag_buf_lock inside bp->b_lock as the
+pag_buf_lock is only used to serialise against lookup in
+xfs_buf_find() and no other locks are held over or under the
+pag_buf_lock there. Make this clear by documenting the buffer lock
+orders at the top of the file.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com
+Signed-off-by: Dave Chinner <david@fromorbit.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/pci.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ fs/xfs/xfs_buf.c | 38 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index b7bac14d1487b..d84a362a084ac 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -1039,10 +1039,9 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 	struct ath10k_pci *ar_pci = ath10k_pci_priv(ar);
- 	int ret = 0;
- 	u32 *buf;
--	unsigned int completed_nbytes, orig_nbytes, remaining_bytes;
-+	unsigned int completed_nbytes, alloc_nbytes, remaining_bytes;
- 	struct ath10k_ce_pipe *ce_diag;
- 	void *data_buf = NULL;
--	u32 ce_data;	/* Host buffer address in CE space */
- 	dma_addr_t ce_data_base = 0;
- 	int i;
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index 651755353374d..0b58b9d419e84 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -57,6 +57,32 @@ static kmem_zone_t *xfs_buf_zone;
+ #define xb_to_gfp(flags) \
+ 	((((flags) & XBF_READ_AHEAD) ? __GFP_NORETRY : GFP_NOFS) | __GFP_NOWARN)
  
-@@ -1056,9 +1055,10 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 	 *   1) 4-byte alignment
- 	 *   2) Buffer in DMA-able space
- 	 */
--	orig_nbytes = nbytes;
-+	alloc_nbytes = min_t(unsigned int, nbytes, DIAG_TRANSFER_LIMIT);
-+
- 	data_buf = (unsigned char *)dma_alloc_coherent(ar->dev,
--						       orig_nbytes,
-+						       alloc_nbytes,
- 						       &ce_data_base,
- 						       GFP_ATOMIC);
- 	if (!data_buf) {
-@@ -1066,9 +1066,6 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 		goto done;
- 	}
++/*
++ * Locking orders
++ *
++ * xfs_buf_ioacct_inc:
++ * xfs_buf_ioacct_dec:
++ *	b_sema (caller holds)
++ *	  b_lock
++ *
++ * xfs_buf_stale:
++ *	b_sema (caller holds)
++ *	  b_lock
++ *	    lru_lock
++ *
++ * xfs_buf_rele:
++ *	b_lock
++ *	  pag_buf_lock
++ *	    lru_lock
++ *
++ * xfs_buftarg_wait_rele
++ *	lru_lock
++ *	  b_lock (trylock due to inversion)
++ *
++ * xfs_buftarg_isolate
++ *	lru_lock
++ *	  b_lock (trylock due to inversion)
++ */
  
--	/* Copy caller's data to allocated DMA buf */
--	memcpy(data_buf, data, orig_nbytes);
--
- 	/*
- 	 * The address supplied by the caller is in the
- 	 * Target CPU virtual address space.
-@@ -1081,12 +1078,14 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 	 */
- 	address = ath10k_pci_targ_cpu_to_ce_addr(ar, address);
+ static inline int
+ xfs_buf_is_vmapped(
+@@ -957,8 +983,18 @@ xfs_buf_rele(
  
--	remaining_bytes = orig_nbytes;
--	ce_data = ce_data_base;
-+	remaining_bytes = nbytes;
- 	while (remaining_bytes) {
- 		/* FIXME: check cast */
- 		nbytes = min_t(int, remaining_bytes, DIAG_TRANSFER_LIMIT);
+ 	ASSERT(atomic_read(&bp->b_hold) > 0);
  
-+		/* Copy caller's data to allocated DMA buf */
-+		memcpy(data_buf, data, nbytes);
-+
- 		/* Set up to receive directly into Target(!) address */
- 		ret = __ath10k_ce_rx_post_buf(ce_diag, &address, address);
- 		if (ret != 0)
-@@ -1096,7 +1095,7 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 		 * Request CE to send caller-supplied data that
- 		 * was copied to bounce buffer to Target(!) address.
- 		 */
--		ret = ath10k_ce_send_nolock(ce_diag, NULL, (u32)ce_data,
-+		ret = ath10k_ce_send_nolock(ce_diag, NULL, ce_data_base,
- 					    nbytes, 0, 0);
- 		if (ret != 0)
- 			goto done;
-@@ -1137,12 +1136,12 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 
- 		remaining_bytes -= nbytes;
- 		address += nbytes;
--		ce_data += nbytes;
-+		data += nbytes;
- 	}
- 
- done:
- 	if (data_buf) {
--		dma_free_coherent(ar->dev, orig_nbytes, data_buf,
-+		dma_free_coherent(ar->dev, alloc_nbytes, data_buf,
- 				  ce_data_base);
- 	}
- 
+-	release = atomic_dec_and_lock(&bp->b_hold, &pag->pag_buf_lock);
++	/*
++	 * We grab the b_lock here first to serialise racing xfs_buf_rele()
++	 * calls. The pag_buf_lock being taken on the last reference only
++	 * serialises against racing lookups in xfs_buf_find(). IOWs, the second
++	 * to last reference we drop here is not serialised against the last
++	 * reference until we take bp->b_lock. Hence if we don't grab b_lock
++	 * first, the last "release" reference can win the race to the lock and
++	 * free the buffer before the second-to-last reference is processed,
++	 * leading to a use-after-free scenario.
++	 */
+ 	spin_lock(&bp->b_lock);
++	release = atomic_dec_and_lock(&bp->b_hold, &pag->pag_buf_lock);
+ 	if (!release) {
+ 		/*
+ 		 * Drop the in-flight state if the buffer is already on the LRU
 -- 
 2.20.1
 
