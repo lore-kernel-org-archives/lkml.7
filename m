@@ -2,108 +2,108 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF641C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E182C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD5D20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A6C206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574871846;
+	bh=VlHFPAgt/0WbocE6gcofEs0ZlUbvLUxBAz1rxxQ5jN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KPMHcdrogLYcQVnhZluyxLrH5PiSLxfbaIDv0GQgM7OdSuz45lefA4t7Vwx4/ZRdA
+	 tRCouNX/+fIgCukk29oX80HJJZCU/jtMZd9PDpj+G5NxHGbxd6yTjMYefil5iXkxGE
+	 Je+1613kL1qAQvPr5xKVdsPPGRYWth5OaDAtV0zA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfK0QU6 (ORCPT
+        id S1727017AbfK0QYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:20:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9470 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726514AbfK0QU6 (ORCPT
+        Wed, 27 Nov 2019 11:24:05 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54196 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfK0QYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:20:58 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARGEEC6069557;
-        Wed, 27 Nov 2019 11:20:43 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxqga9c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 11:20:42 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xARGG1Ve002859;
-        Wed, 27 Nov 2019 16:20:42 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma02dal.us.ibm.com with ESMTP id 2wevd6yn7n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 16:20:42 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARGKf5S40829398
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 16:20:41 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50202AC075;
-        Wed, 27 Nov 2019 16:20:41 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F5F8AC06A;
-        Wed, 27 Nov 2019 16:20:40 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.137])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Nov 2019 16:20:40 +0000 (GMT)
-Message-ID: <411c748246960afffca0eb286ec938559a196852.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 0/2] Replace current->mm by kvm->mm on powerpc/kvm
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 27 Nov 2019 13:20:36 -0300
-In-Reply-To: <20191126223631.389779-1-leonardo@linux.ibm.com>
-References: <20191126223631.389779-1-leonardo@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-3OQMnFYPQ7WcaTZttaSk"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Wed, 27 Nov 2019 11:24:05 -0500
+Received: by mail-wm1-f65.google.com with SMTP id u18so7730971wmc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 08:24:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vnpQ1IWgNHmtlkWcvo5sOfYKcJiRkrf1DJyC0wdyg/A=;
+        b=RcwyNTIgz9nBqmxExLTkMLYyM15f8K5uTuf90wuXjcN5Pg+znUTGf3viUxLA2bTHG+
+         87XHZ0HLBY8ghRog+j+4MUhs9ivmuU/4aBJl3TNp7v862gIMhkJ8H3pD2fpSKIZ34jUb
+         cCUtX8tX9RhZPUgLOcLSXdBnmJ2lbe3Yd2Qtej7L8ZEBIKwD5zhBEfc1oDXuCc8xaM25
+         COKQ6NN8JurLAv0YahAxI5C5mSkfZJOU/wwPHbT6zXUenoQayTj0e3h5GKwnwOnRn3mR
+         k51nPTSWvEHP8CtEpcUD5kQkG9JbZ1gYMEWv6gGadCUHrABMbwVH3RniD7GMe443aTRH
+         68sg==
+X-Gm-Message-State: APjAAAWKV9KIrOJR/r/n1Hd6toyYMcaGD6sIqyaFdcSuhbZA1rB6rx2+
+        H4DXLF525F1P5ALVehmgsc5vlmL0
+X-Google-Smtp-Source: APXvYqw6koBVsu5yFcWL1pdK7n5WvXeFkttdBC8iFePiyXMzO4FE1ke8OMzRk3dC4MmzI/7Nbxm8HA==
+X-Received: by 2002:a7b:c44c:: with SMTP id l12mr4938300wmi.71.1574871842910;
+        Wed, 27 Nov 2019 08:24:02 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id a24sm5209426wmb.29.2019.11.27.08.24.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 08:24:01 -0800 (PST)
+Date:   Wed, 27 Nov 2019 17:24:00 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
+Message-ID: <20191127162400.GT20912@dhcp22.suse.cz>
+References: <20191126121901.GE20912@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1911261632030.9857@www.lameter.com>
+ <20191126165420.GL20912@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1911271535560.16935@www.lameter.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=821
- malwarescore=0 impostorscore=0 clxscore=1015 adultscore=0 suspectscore=0
- phishscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270138
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1911271535560.16935@www.lameter.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 27-11-19 15:40:19, Cristopher Lameter wrote:
+> On Tue, 26 Nov 2019, Michal Hocko wrote:
+> 
+> > > I have no idea about what this is.
+> >
+> > It seems to be there since the initial merge. I suspect this is just
+> > following a generic sysfs rule that each file has to provide those
+> > events?
+> 
+> I have never heard of anyone using this.
+> 
+> > > There have been many people who
+> > > reworked the sysfs support and this has been the cause for a lot of
+> > > breakage over the years.
+> >
+> > Remember any specifics?
+> 
+> The sequencing of setup / teardown of sysfs entries has frequently been
+> a problem and that caused numerous issues with slab initialization as well
+> as kmem cache creation. Initially kmalloc DMA caches were created on
+> demand which caused some issues. Then there was the back and forth with
+> cache aliasing during kmem_cache_create() that caused another set of
+> instabilities.
+> 
+> > I am mostly interested in potential users. In other words I am thinking
+> > to suppress those events. There is already ke knob to control existence
+> > of memcg caches but I do not see anything like this for root caches.
+> >
+> 
+> I am not aware of any users but the deployments of Linux are so diverse
+> these days that I am not sure that there are no users.
 
---=-3OQMnFYPQ7WcaTZttaSk
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Result of Travis-CI testing the change:
-https://travis-ci.org/LeoBras/linux-ppc/builds/617712012
-
---=-3OQMnFYPQ7WcaTZttaSk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3eolQACgkQlQYWtz9S
-ttQ7VQ/+PYOk1QHYIqz2IyCZceHcgPOmksF23eax+OWuyrGmQZ/zr+Cm81pBxuGw
-QYdqIddtUZw9caS0mLayvf8luPFa5r4+4FLXCn+pHFLQG6GXKLYSXFNEujBaL+0o
-bZQ+N1wMnvZSlIX2AlIE/kMsPOLhWRMzod+DlYmDZsV8cJn1xBYa8P5C/VSXIdL8
-EmVQOrraDle33dNBxop28sf09sFdnNBUYMWP/rllJ6evVWrmATRjMbkco2HZpj6O
-36CYbnI1CV5ETpjXxWQKLOy0WBPg021LJdedlqci3uRdwqxyFDyfwdaO9PNgDdNq
-uypw+FLG7kAzcF4ePrCMUVknUmpTbiby8vw19gj2ekOskfNp6n5RRML7U4WIcFWE
-3WzNnYks13zrvxr8ucLsoHUGqPOwJ1XIwbPo9PjN8ic9DAmQ/lWkW8SSzS2+BMWq
-ekj1FEMA4Kn/35bh4m7lbKJkpamKVqMmeWCXb2Pe4DKwjyY1UCImnlQBQEO654qO
-ompS7yuCUAhZ387iFxZ+GAyHBeg6XOg1sE2nEjPnYuVFXVMnkVHatsekNxyQQdgk
-o1BlxhlBntj6LQBJ3lV5xSHRaVf4lDCe3p3AB7DJkXyHTpbXYnCPNOXNkCxWcqpj
-vjbP95uPFEnqDI0nKIyfdEGQ/+E2HXuH80ugOQe/cXa2C3jYdGM=
-=SLY2
------END PGP SIGNATURE-----
-
---=-3OQMnFYPQ7WcaTZttaSk--
-
+Would you mind a patch that would add a kernel command line parameter
+that would work like memcg_sysfs_enabled? The default for the config
+would be on. Or it would be preferrable to simply drop only events?
+-- 
+Michal Hocko
+SUSE Labs
