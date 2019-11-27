@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBD8C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAB0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14ED521741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF992158A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574886994;
-	bh=+BzdJ6LDlqS6iccz6NVyrV0+MjE0C9nKxm+/FH2c3oA=;
+	s=default; t=1574886997;
+	bh=cPliugyUoPKqEYajZaa+5EhjP4iV/yZw1O40DFpuI2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7FSG4ouDkRqWSSvAdDZp+5ClM8i+0H/v5klIim8/CDiWLIoOmJfqbihwDoPLskDa
-	 kHWgRFOws7IdKQwGMW6zjkrY0uZfqaKsiRNZhZZVru+UuHyiMdHBIyenuxtCBYf/Yi
-	 ciNcgHbZaXG9Lp5eqHJMXvaHJnU9Rwp8jlsz5cGk=
+	b=2uFwFj0UYiFqwdETIEiIPUYQImE+7tRjmKaishv2htR3k0aMrNhSbwl8GnsbY/Nsy
+	 5IDBNLqmJ6dAZi30/0hU8TMVadonHqLXob+o2UfhfHxlR2rOBxZnqr/eTn6FMHO0XX
+	 BPjwseRMKt/TpWQ0tjKWtbv9dcFS6HZO5wRZsnSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfK0Ugd (ORCPT
+        id S1728293AbfK0Ugg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:36:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38730 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:36:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbfK0Ug3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:36:29 -0500
+        id S1728151AbfK0Uge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:36:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DC2721770;
-        Wed, 27 Nov 2019 20:36:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 747F52158A;
+        Wed, 27 Nov 2019 20:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886989;
-        bh=+BzdJ6LDlqS6iccz6NVyrV0+MjE0C9nKxm+/FH2c3oA=;
+        s=default; t=1574886993;
+        bh=cPliugyUoPKqEYajZaa+5EhjP4iV/yZw1O40DFpuI2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p9koiqlQweOJDdHP8KsMsfYnqbQaONmNMTxXwOG+KArNxQzF4Q4yOEvEbN7NdNbYU
-         ch3tTod87VlI9h5AZT0xjTBE3Cq1XDqLcmZvF/pAQyNWcshKDV7F6ow+Jnk6Xn4q8H
-         YM1irkoy59AF8EMI5956avvJHAO5qC2Z/uZP76vA=
+        b=xe5aLNYYNo+7YBgWO3S0Q2Nd/Q687N3EIGqZOkFm+uvfrKcOMCBGMjnm5yML5K1vf
+         XkW+TF/Ahi5QZdhsLBjLVo9SIwsMHqByS+f9oj+Lr/re3kxx0ddtTzAovKOTynapLp
+         YtIpsLQZ9RC2HTQdJbHhChh6/xJjfidFWxo2glxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 027/132] brcmsmac: AP mode: update beacon when TIM changes
-Date:   Wed, 27 Nov 2019 21:30:18 +0100
-Message-Id: <20191127202924.379661969@linuxfoundation.org>
+Subject: [PATCH 4.4 029/132] mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready fail
+Date:   Wed, 27 Nov 2019 21:30:20 +0100
+Message-Id: <20191127202927.244155202@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,97 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
 
-[ Upstream commit 2258ee58baa554609a3cc3996276e4276f537b6d ]
+[ Upstream commit f38a9774ddde9d79b3487dd888edd8b8623552af ]
 
-Beacons are not updated to reflect TIM changes. This is not compliant with
-power-saving client stations as the beacons do not have valid TIM and can
-cause the network to stall at random occasions and to have highly variable
-latencies.
-Fix it by updating beacon templates on mac80211 set_tim callback.
+when msdc_cmd_is_ready return fail, the req_timeout work has not been
+inited and cancel_delayed_work() will return false, then, the request
+return directly and never call mmc_request_done().
 
-Addresses an issue described in:
-https://marc.info/?i=20180911163534.21312d08%20()%20manjaro
+so need call mod_delayed_work() before msdc_cmd_is_ready()
 
-Signed-off-by: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/brcm80211/brcmsmac/mac80211_if.c | 26 +++++++++++++++++++
- .../net/wireless/brcm80211/brcmsmac/main.h    |  1 +
- 2 files changed, 27 insertions(+)
+ drivers/mmc/host/mtk-sd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/brcm80211/brcmsmac/mac80211_if.c
-index 61ae2768132a0..e3b01d804cf24 100644
---- a/drivers/net/wireless/brcm80211/brcmsmac/mac80211_if.c
-+++ b/drivers/net/wireless/brcm80211/brcmsmac/mac80211_if.c
-@@ -502,6 +502,7 @@ brcms_ops_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
- 	}
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 0bf0d0e9dbdba..5ef25463494f4 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -846,6 +846,7 @@ static void msdc_start_command(struct msdc_host *host,
+ 	WARN_ON(host->cmd);
+ 	host->cmd = cmd;
  
- 	spin_lock_bh(&wl->lock);
-+	wl->wlc->vif = vif;
- 	wl->mute_tx = false;
- 	brcms_c_mute(wl->wlc, false);
- 	if (vif->type == NL80211_IFTYPE_STATION)
-@@ -519,6 +520,11 @@ brcms_ops_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
- static void
- brcms_ops_remove_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
- {
-+	struct brcms_info *wl = hw->priv;
-+
-+	spin_lock_bh(&wl->lock);
-+	wl->wlc->vif = NULL;
-+	spin_unlock_bh(&wl->lock);
- }
++	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+ 	if (!msdc_cmd_is_ready(host, mrq, cmd))
+ 		return;
  
- static int brcms_ops_config(struct ieee80211_hw *hw, u32 changed)
-@@ -937,6 +943,25 @@ static void brcms_ops_set_tsf(struct ieee80211_hw *hw,
- 	spin_unlock_bh(&wl->lock);
- }
+@@ -857,7 +858,6 @@ static void msdc_start_command(struct msdc_host *host,
  
-+static int brcms_ops_beacon_set_tim(struct ieee80211_hw *hw,
-+				 struct ieee80211_sta *sta, bool set)
-+{
-+	struct brcms_info *wl = hw->priv;
-+	struct sk_buff *beacon = NULL;
-+	u16 tim_offset = 0;
-+
-+	spin_lock_bh(&wl->lock);
-+	if (wl->wlc->vif)
-+		beacon = ieee80211_beacon_get_tim(hw, wl->wlc->vif,
-+						  &tim_offset, NULL);
-+	if (beacon)
-+		brcms_c_set_new_beacon(wl->wlc, beacon, tim_offset,
-+				       wl->wlc->vif->bss_conf.dtim_period);
-+	spin_unlock_bh(&wl->lock);
-+
-+	return 0;
-+}
-+
- static const struct ieee80211_ops brcms_ops = {
- 	.tx = brcms_ops_tx,
- 	.start = brcms_ops_start,
-@@ -955,6 +980,7 @@ static const struct ieee80211_ops brcms_ops = {
- 	.flush = brcms_ops_flush,
- 	.get_tsf = brcms_ops_get_tsf,
- 	.set_tsf = brcms_ops_set_tsf,
-+	.set_tim = brcms_ops_beacon_set_tim,
- };
+ 	cmd->error = 0;
+ 	rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
+-	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
  
- void brcms_dpc(unsigned long data)
-diff --git a/drivers/net/wireless/brcm80211/brcmsmac/main.h b/drivers/net/wireless/brcm80211/brcmsmac/main.h
-index c4d135cff04ad..9f76b880814e8 100644
---- a/drivers/net/wireless/brcm80211/brcmsmac/main.h
-+++ b/drivers/net/wireless/brcm80211/brcmsmac/main.h
-@@ -563,6 +563,7 @@ struct brcms_c_info {
- 
- 	struct wiphy *wiphy;
- 	struct scb pri_scb;
-+	struct ieee80211_vif *vif;
- 
- 	struct sk_buff *beacon;
- 	u16 beacon_tim_offset;
+ 	sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
+ 	writel(cmd->arg, host->base + SDC_ARG);
 -- 
 2.20.1
 
