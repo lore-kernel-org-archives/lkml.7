@@ -7,78 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9D7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F030FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F2920715
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DB020715
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890481;
-	bh=txqLRh9YtVG4aAsQFX1EyXzQrPEXQwPsXOP8EiQUeOQ=;
+	s=default; t=1574890490;
+	bh=aW5Ar4ANm3BKPcJUCMq5Yl//RA9dUjj3BwoLt6fqEDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SaD1s7YVNvDNjNScbFqdNeqIJmhZkKih7c+nX9kgmicECGw4VCwUxNfSg2mY1Hsmy
-	 d0zZLx8kwzJ8JjCbY8z60iu0r5n+wPkzFmfPOj1S0V5kDpc9ni1TRHydKepgGpL6ri
-	 z5dDYeV4hLuEqHtemtDXeFf00FiT2N8bd4MSOuNM=
+	b=mUEAipaGTgjmgfDGGHEHtrWQufAa60GgcFTsOTRiaUHjXxNfX6p+HWoc8h76DPLvc
+	 XhUs89DH4Kt6Fzgk4NgEmL9oHfQKnJdeB24rvzNTle10QGeakdDjQX5vc3XxeiTMXS
+	 Pkn7JepTRnlD0QbUYwBFd5ANFD6Vz24D0Le/UpNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbfK0Vek (ORCPT
+        id S1730907AbfK0Vet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:34:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:34:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729399AbfK0Uut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:50:49 -0500
+        id S1730366AbfK0Uub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:50:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 640A521844;
-        Wed, 27 Nov 2019 20:50:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE452158A;
+        Wed, 27 Nov 2019 20:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887849;
-        bh=txqLRh9YtVG4aAsQFX1EyXzQrPEXQwPsXOP8EiQUeOQ=;
+        s=default; t=1574887830;
+        bh=aW5Ar4ANm3BKPcJUCMq5Yl//RA9dUjj3BwoLt6fqEDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LQAUiw8pdHvRzbaDxcwtaSwZWHGZ1v4NWASFuKtb7DCoQqOzAtKRXc+V6SZHATKbl
-         LE4AVn+2fynbm387BAsv9hGJt/8bFRWNTnKo/vWIUMY6xPhWbeSbo9mozha/9tcUpU
-         k+Zg3htnj5nxtHWWxluxJ9rcHYNfBwPxA2gpZdEk=
+        b=U4T9yn+uYrGEcpM/BqOaEQ3hqiZXuM/vDp0a4E07iC6bVvAxOSEiL7m6ZfAJuqypS
+         TpibiIkEbooibre0GVV+Xzc+fnxjNKIC1x9ygNP4duzP/qVOS8RWMnLEl3BTNE/wlg
+         Ztj+3NqjSNDoqbjAnPfYH2XCvnISv2r7IfpZCyUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rashmica Gupta <rashmica.g@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        John Allen <jallen@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mathieu Malaterre <malat@debian.org>,
-        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        Jan Kara <jack@suse.de>, Nicholas Piggin <npiggin@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 118/211] mm/memory_hotplug: make add_memory() take the device_hotplug_lock
-Date:   Wed, 27 Nov 2019 21:30:51 +0100
-Message-Id: <20191127203105.183245523@linuxfoundation.org>
+Subject: [PATCH 4.14 094/211] mm/page-writeback.c: fix range_cyclic writeback vs writepages deadlock
+Date:   Wed, 27 Nov 2019 21:30:27 +0100
+Message-Id: <20191127203102.600580491@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -91,213 +62,245 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit 8df1d0e4a265f25dc1e7e7624ccdbcb4a6630c89 ]
+[ Upstream commit 64081362e8ff4587b4554087f3cfc73d3e0a4cd7 ]
 
-add_memory() currently does not take the device_hotplug_lock, however
-is aleady called under the lock from
-	arch/powerpc/platforms/pseries/hotplug-memory.c
-	drivers/acpi/acpi_memhotplug.c
-to synchronize against CPU hot-remove and similar.
+We've recently seen a workload on XFS filesystems with a repeatable
+deadlock between background writeback and a multi-process application
+doing concurrent writes and fsyncs to a small range of a file.
 
-In general, we should hold the device_hotplug_lock when adding memory to
-synchronize against online/offline request (e.g.  from user space) - which
-already resulted in lock inversions due to device_lock() and
-mem_hotplug_lock - see 30467e0b3be ("mm, hotplug: fix concurrent memory
-hot-add deadlock").  add_memory()/add_memory_resource() will create memory
-block devices, so this really feels like the right thing to do.
+range_cyclic
+writeback		Process 1		Process 2
 
-Holding the device_hotplug_lock makes sure that a memory block device
-can really only be accessed (e.g. via .online/.state) from user space,
-once the memory has been fully added to the system.
+xfs_vm_writepages
+  write_cache_pages
+    writeback_index = 2
+    cycled = 0
+    ....
+    find page 2 dirty
+    lock Page 2
+    ->writepage
+      page 2 writeback
+      page 2 clean
+      page 2 added to bio
+    no more pages
+			write()
+			locks page 1
+			dirties page 1
+			locks page 2
+			dirties page 1
+			fsync()
+			....
+			xfs_vm_writepages
+			write_cache_pages
+			  start index 0
+			  find page 1 towrite
+			  lock Page 1
+			  ->writepage
+			    page 1 writeback
+			    page 1 clean
+			    page 1 added to bio
+			  find page 2 towrite
+			  lock Page 2
+			  page 2 is writeback
+			  <blocks>
+						write()
+						locks page 1
+						dirties page 1
+						fsync()
+						....
+						xfs_vm_writepages
+						write_cache_pages
+						  start index 0
 
-The lock is not held yet in
-	drivers/xen/balloon.c
-	arch/powerpc/platforms/powernv/memtrace.c
-	drivers/s390/char/sclp_cmd.c
-	drivers/hv/hv_balloon.c
-So, let's either use the locked variants or take the lock.
+    !done && !cycled
+      sets index to 0, restarts lookup
+    find page 1 dirty
+						  find page 1 towrite
+						  lock Page 1
+						  page 1 is writeback
+						  <blocks>
 
-Don't export add_memory_resource(), as it once was exported to be used by
-XEN, which is never built as a module.  If somebody requires it, we also
-have to export a locked variant (as device_hotplug_lock is never
-exported).
+    lock Page 1
+    <blocks>
 
-Link: http://lkml.kernel.org/r/20180925091457.28651-3-david@redhat.com
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Rashmica Gupta <rashmica.g@gmail.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Cc: John Allen <jallen@linux.vnet.ibm.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Cc: YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>
-Cc: Balbir Singh <bsingharora@gmail.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+DEADLOCK because:
+
+	- process 1 needs page 2 writeback to complete to make
+	  enough progress to issue IO pending for page 1
+	- writeback needs page 1 writeback to complete so process 2
+	  can progress and unlock the page it is blocked on, then it
+	  can issue the IO pending for page 2
+	- process 2 can't make progress until process 1 issues IO
+	  for page 1
+
+The underlying cause of the problem here is that range_cyclic writeback is
+processing pages in descending index order as we hold higher index pages
+in a structure controlled from above write_cache_pages().  The
+write_cache_pages() caller needs to be able to submit these pages for IO
+before write_cache_pages restarts writeback at mapping index 0 to avoid
+wcp inverting the page lock/writeback wait order.
+
+generic_writepages() is not susceptible to this bug as it has no private
+context held across write_cache_pages() - filesystems using this
+infrastructure always submit pages in ->writepage immediately and so there
+is no problem with range_cyclic going back to mapping index 0.
+
+However:
+	mpage_writepages() has a private bio context,
+	exofs_writepages() has page_collect
+	fuse_writepages() has fuse_fill_wb_data
+	nfs_writepages() has nfs_pageio_descriptor
+	xfs_vm_writepages() has xfs_writepage_ctx
+
+All of these ->writepages implementations can hold pages under writeback
+in their private structures until write_cache_pages() returns, and hence
+they are all susceptible to this deadlock.
+
+Also worth noting is that ext4 has it's own bastardised version of
+write_cache_pages() and so it /may/ have an equivalent deadlock.  I looked
+at the code long enough to understand that it has a similar retry loop for
+range_cyclic writeback reaching the end of the file and then promptly ran
+away before my eyes bled too much.  I'll leave it for the ext4 developers
+to determine if their code is actually has this deadlock and how to fix it
+if it has.
+
+There's a few ways I can see avoid this deadlock.  There's probably more,
+but these are the first I've though of:
+
+1. get rid of range_cyclic altogether
+
+2. range_cyclic always stops at EOF, and we start again from
+writeback index 0 on the next call into write_cache_pages()
+
+2a. wcp also returns EAGAIN to ->writepages implementations to
+indicate range cyclic has hit EOF. writepages implementations can
+then flush the current context and call wpc again to continue. i.e.
+lift the retry into the ->writepages implementation
+
+3. range_cyclic uses trylock_page() rather than lock_page(), and it
+skips pages it can't lock without blocking. It will already do this
+for pages under writeback, so this seems like a no-brainer
+
+3a. all non-WB_SYNC_ALL writeback uses trylock_page() to avoid
+blocking as per pages under writeback.
+
+I don't think #1 is an option - range_cyclic prevents frequently
+dirtied lower file offset from starving background writeback of
+rarely touched higher file offsets.
+
+#2 is simple, and I don't think it will have any impact on
+performance as going back to the start of the file implies an
+immediate seek. We'll have exactly the same number of seeks if we
+switch writeback to another inode, and then come back to this one
+later and restart from index 0.
+
+#2a is pretty much "status quo without the deadlock". Moving the
+retry loop up into the wcp caller means we can issue IO on the
+pending pages before calling wcp again, and so avoid locking or
+waiting on pages in the wrong order. I'm not convinced we need to do
+this given that we get the same thing from #2 on the next writeback
+call from the writeback infrastructure.
+
+#3 is really just a band-aid - it doesn't fix the access/wait
+inversion problem, just prevents it from becoming a deadlock
+situation. I'd prefer we fix the inversion, not sweep it under the
+carpet like this.
+
+#3a is really an optimisation that just so happens to include the
+band-aid fix of #3.
+
+So it seems that the simplest way to fix this issue is to implement
+solution #2
+
+Link: http://lkml.kernel.org/r/20181005054526.21507-1-david@fromorbit.com
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.de>
+Cc: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../platforms/pseries/hotplug-memory.c        |  2 +-
- drivers/acpi/acpi_memhotplug.c                |  2 +-
- drivers/base/memory.c                         |  9 ++++++--
- drivers/xen/balloon.c                         |  3 +++
- include/linux/memory_hotplug.h                |  1 +
- mm/memory_hotplug.c                           | 22 ++++++++++++++++---
- 6 files changed, 32 insertions(+), 7 deletions(-)
+ mm/page-writeback.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-index 93e09f108ca17..99a3cf51c5ba4 100644
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -787,7 +787,7 @@ static int dlpar_add_lmb(struct of_drconf_cell *lmb)
- 	nid = memory_add_physaddr_to_nid(lmb->base_addr);
- 
- 	/* Add the memory */
--	rc = add_memory(nid, lmb->base_addr, block_sz);
-+	rc = __add_memory(nid, lmb->base_addr, block_sz);
- 	if (rc) {
- 		dlpar_remove_device_tree_lmb(lmb);
- 		return rc;
-diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
-index 6b0d3ef7309cb..2ccfbb61ca899 100644
---- a/drivers/acpi/acpi_memhotplug.c
-+++ b/drivers/acpi/acpi_memhotplug.c
-@@ -228,7 +228,7 @@ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
- 		if (node < 0)
- 			node = memory_add_physaddr_to_nid(info->start_addr);
- 
--		result = add_memory(node, info->start_addr, info->length);
-+		result = __add_memory(node, info->start_addr, info->length);
- 
- 		/*
- 		 * If the memory block has been used by the kernel, add_memory()
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index c617e00f4361d..8e5818e735e2f 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -517,15 +517,20 @@ memory_probe_store(struct device *dev, struct device_attribute *attr,
- 	if (phys_addr & ((pages_per_block << PAGE_SHIFT) - 1))
- 		return -EINVAL;
- 
-+	ret = lock_device_hotplug_sysfs();
-+	if (ret)
-+		goto out;
-+
- 	nid = memory_add_physaddr_to_nid(phys_addr);
--	ret = add_memory(nid, phys_addr,
--			 MIN_MEMORY_BLOCK_SIZE * sections_per_block);
-+	ret = __add_memory(nid, phys_addr,
-+			   MIN_MEMORY_BLOCK_SIZE * sections_per_block);
- 
- 	if (ret)
- 		goto out;
- 
- 	ret = count;
- out:
-+	unlock_device_hotplug();
- 	return ret;
- }
- 
-diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-index 7d521babc020b..71a6deeb4e714 100644
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -356,7 +356,10 @@ static enum bp_state reserve_additional_memory(void)
- 	 * callers drop the mutex before trying again.
- 	 */
- 	mutex_unlock(&balloon_mutex);
-+	/* add_memory_resource() requires the device_hotplug lock */
-+	lock_device_hotplug();
- 	rc = add_memory_resource(nid, resource, memhp_auto_online);
-+	unlock_device_hotplug();
- 	mutex_lock(&balloon_mutex);
- 
- 	if (rc) {
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index 58e110aee7ab4..d36a029353915 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -316,6 +316,7 @@ static inline void remove_memory(int nid, u64 start, u64 size) {}
- 
- extern int walk_memory_range(unsigned long start_pfn, unsigned long end_pfn,
- 		void *arg, int (*func)(struct memory_block *, void *));
-+extern int __add_memory(int nid, u64 start, u64 size);
- extern int add_memory(int nid, u64 start, u64 size);
- extern int add_memory_resource(int nid, struct resource *resource, bool online);
- extern int arch_add_memory(int nid, u64 start, u64 size, bool want_memblock);
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index d4affa9982cac..e368a4e0c7cbc 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1073,7 +1073,12 @@ static int online_memory_block(struct memory_block *mem, void *arg)
- 	return device_online(&mem->dev);
- }
- 
--/* we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG */
-+/*
-+ * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
-+ * and online/offline operations (triggered e.g. by sysfs).
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index e001de5ac50cb..a40c075fd8f1e 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -2150,6 +2150,13 @@ EXPORT_SYMBOL(tag_pages_for_writeback);
+  * not miss some pages (e.g., because some other process has cleared TOWRITE
+  * tag we set). The rule we follow is that TOWRITE tag can be cleared only
+  * by the process clearing the DIRTY tag (and submitting the page for IO).
 + *
-+ * we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG
-+ */
- int __ref add_memory_resource(int nid, struct resource *res, bool online)
- {
- 	u64 start, size;
-@@ -1166,9 +1171,9 @@ int __ref add_memory_resource(int nid, struct resource *res, bool online)
- 	mem_hotplug_done();
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(add_memory_resource);
++ * To avoid deadlocks between range_cyclic writeback and callers that hold
++ * pages in PageWriteback to aggregate IO until write_cache_pages() returns,
++ * we do not loop back to the start of the file. Doing so causes a page
++ * lock/page writeback access order inversion - we should only ever lock
++ * multiple pages in ascending page->index order, and looping back to the start
++ * of the file violates that rule and causes deadlocks.
+  */
+ int write_cache_pages(struct address_space *mapping,
+ 		      struct writeback_control *wbc, writepage_t writepage,
+@@ -2164,7 +2171,6 @@ int write_cache_pages(struct address_space *mapping,
+ 	pgoff_t index;
+ 	pgoff_t end;		/* Inclusive */
+ 	pgoff_t done_index;
+-	int cycled;
+ 	int range_whole = 0;
+ 	int tag;
  
--int __ref add_memory(int nid, u64 start, u64 size)
-+/* requires device_hotplug_lock, see add_memory_resource() */
-+int __ref __add_memory(int nid, u64 start, u64 size)
- {
- 	struct resource *res;
- 	int ret;
-@@ -1182,6 +1187,17 @@ int __ref add_memory(int nid, u64 start, u64 size)
- 		release_memory_resource(res);
- 	return ret;
- }
+@@ -2172,23 +2178,17 @@ int write_cache_pages(struct address_space *mapping,
+ 	if (wbc->range_cyclic) {
+ 		writeback_index = mapping->writeback_index; /* prev offset */
+ 		index = writeback_index;
+-		if (index == 0)
+-			cycled = 1;
+-		else
+-			cycled = 0;
+ 		end = -1;
+ 	} else {
+ 		index = wbc->range_start >> PAGE_SHIFT;
+ 		end = wbc->range_end >> PAGE_SHIFT;
+ 		if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
+ 			range_whole = 1;
+-		cycled = 1; /* ignore range_cyclic tests */
+ 	}
+ 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+ 		tag = PAGECACHE_TAG_TOWRITE;
+ 	else
+ 		tag = PAGECACHE_TAG_DIRTY;
+-retry:
+ 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+ 		tag_pages_for_writeback(mapping, index, end);
+ 	done_index = index;
+@@ -2296,17 +2296,14 @@ int write_cache_pages(struct address_space *mapping,
+ 		pagevec_release(&pvec);
+ 		cond_resched();
+ 	}
+-	if (!cycled && !done) {
+-		/*
+-		 * range_cyclic:
+-		 * We hit the last page and there is more work to be done: wrap
+-		 * back to the start of the file
+-		 */
+-		cycled = 1;
+-		index = 0;
+-		end = writeback_index - 1;
+-		goto retry;
+-	}
 +
-+int add_memory(int nid, u64 start, u64 size)
-+{
-+	int rc;
-+
-+	lock_device_hotplug();
-+	rc = __add_memory(nid, start, size);
-+	unlock_device_hotplug();
-+
-+	return rc;
-+}
- EXPORT_SYMBOL_GPL(add_memory);
++	/*
++	 * If we hit the last page and there is more work to be done: wrap
++	 * back the index back to the start of the file for the next
++	 * time we are called.
++	 */
++	if (wbc->range_cyclic && !done)
++		done_index = 0;
+ 	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
+ 		mapping->writeback_index = done_index;
  
- #ifdef CONFIG_MEMORY_HOTREMOVE
 -- 
 2.20.1
 
