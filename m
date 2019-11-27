@@ -2,133 +2,161 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD71C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F96C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7ADE2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1402070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:12:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="EUqC/uYy"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="wt8W7Idf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfK0SKi (ORCPT
+        id S1727133AbfK0SMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:10:38 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33092 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfK0SKi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:10:38 -0500
-Received: by mail-wm1-f66.google.com with SMTP id y23so935074wma.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:10:36 -0800 (PST)
+        Wed, 27 Nov 2019 13:12:00 -0500
+Received: from mail-eopbgr800077.outbound.protection.outlook.com ([40.107.80.77]:10633
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726576AbfK0SMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 13:12:00 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QVA03c1CQ8Pg9QsCofsePiNcrTkkb2wjWIVGz7HQraLsfg4J6ifiFs3GASejVvp7fTuKY3B9HEft4k9cXGFqUYXEpbnO7Kk9S+rkHpvafqm/A9Y6BC0LtgBKywaBblhbPB5pnf2Umoa1YbMAkL+7bAjAnmml8wvH7JoqD+Pqi0Q6YEDNpGk3WBaogPns3C2DH/Ftm4jOQXVQCi59Ev3NKBR99SMODA5/fGdcOAcS8cPzcRYVCRDI77c6e0mWMX1T4Wpinj6JQhaqxMvZS6+pMzC0WX/tSOrippBPDfcO86qoVlZXzwzQ1a0IYd9PldFaIqJC04yhnsSa/DpNr/Ll7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JvFbPB7U32hKj02gTPM8D9eeOuLK2sRIs5lkF/5PlDE=;
+ b=PlYZE0sHlrAn9I5AEtcVzRgRhVAjB0zSV3ZfOk8ZdH3x27Dfr0udKVuFSLELU/IMK7a6bGPo0tkVADQBAtsaIBAUmpl2wPyd+zBkaKMqNT37+lgKqtYugSwuzfhJ1NAWlNzr/oTfuupT46Q7Ah70cCtm+n9uxRYAH4ByGg+HjqzeVV6qtc4pxhdn1Xeg/ryTKS+CRANZfeQ0eDUr1rJjFmwy9h6ELXkyr4TUh0BRMP5SndNvzxpjiucTCzJUpRn45UBWmD6wnXrEJii+X3qQw9VDzcyDff7aKo+WdGqSJ6KpqAuu1DT9it/R6pZWN2ro3GN4wYd/VuCaAZ/c+8GQAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cbv/8/r3sfhd+NMk4eKHS1W+CsksoJnBQ/vFeBDEews=;
-        b=EUqC/uYyOQLRXEtsbXGbq5CLVRefhyQ+qJRAcGcsLyvHr6z7hJsxzKw6xqplaCJ7oW
-         2vGwh6hRhxvmaeycEjkOAoLO6jgGGXS1+FEW2lE1eHsWd3mxTu694LM41fWeoIpBH7Vg
-         YhUg+vlDlYJk9n5tYVNZtLLEKm/64IfgV4D5I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=cbv/8/r3sfhd+NMk4eKHS1W+CsksoJnBQ/vFeBDEews=;
-        b=FCn9e6o3xAMAW17dKrokMrAu/0F+BXX0TFH0H0ioCx7z3tDO6f2W7lAyMmL2MjNJtE
-         MY4benp5ZK2e/iQ1i5WYlOvZws6nrSpdamBpaQq/bEh2R1ydlZQYhsuZ9H3i8bsdxr1/
-         lwZMR+lokpJ3ejzT1F+c+ZzBsb3ea4v0QvIwlPkhiRmSSNqi72Ye59qQisSJwu2sVP7c
-         RdWEjNh5lL+OTgXpq+jXHszOLjqT3Bo/3iEDwD+C9PgleshtGUvtooEpd8zxVuRaB9I0
-         5TkcaimYOuLP8KtLdqgxRigRnXqwxgOClVS1+ywbYqB6ZxfdqLmPeQNlSq9eDCMMBShc
-         LJ/g==
-X-Gm-Message-State: APjAAAVrJKHKmIqCaYc73GoIediUPNyj2uUe+CVe2+krTvGrzCNLOOTW
-        6TMR+Acgmcgki41ZfS/mnRjrag==
-X-Google-Smtp-Source: APXvYqzT8jaNqsYVNrsvu4LEeci1CDFvdEtIFSjKTmi0obdbFp5KUyHs9EfQvXEQTmYckN8AwBDGHw==
-X-Received: by 2002:a05:600c:2257:: with SMTP id a23mr5940479wmm.143.1574878236283;
-        Wed, 27 Nov 2019 10:10:36 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id g11sm7742001wmh.27.2019.11.27.10.10.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 10:10:35 -0800 (PST)
-Date:   Wed, 27 Nov 2019 19:10:33 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/mediatek: Fix build break
-Message-ID: <20191127181033.GF406127@phenom.ffwll.local>
-Mail-Followup-To: Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>, CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191127170513.42251-1-mihail.atanassov@arm.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JvFbPB7U32hKj02gTPM8D9eeOuLK2sRIs5lkF/5PlDE=;
+ b=wt8W7IdfcP0y3mICS5gzLiem0heYarz4chqSm0llGP3EGoH4UFWclX6d6Mhm5TjmkS6FT8kJmYKdYtNo5oJ2Bvl8+IL+m9ctWN7C/LafIYIMQAkfbXEwCNYz0X7/pcKJHvvgiCkixVjmpN8XwqQUfyyPSRTu/09ke+y52iydhWM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
+ DM6PR12MB4042.namprd12.prod.outlook.com (10.141.185.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.21; Wed, 27 Nov 2019 18:11:57 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::dd0c:8e53:4913:8ef4]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::dd0c:8e53:4913:8ef4%5]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
+ 18:11:56 +0000
+Subject: Re: [PATCH v2] KVM: SVM: Fix "error" isn't initialized
+To:     Haiwei Li <lihaiwei.kernel@gmail.com>,
+        "x86@kernel.org" <x86@kernel.org>, kvm@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-crypto@vger.kernel.org
+Cc:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        gary.hook@amd.com, herbert@gondor.apana.org.au, davem@davemloft.net
+References: <2967bd12-21bf-3223-e90b-96b4eaa8c4c2@gmail.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <1b0b053a-66cd-c712-4bba-732084075e97@amd.com>
+Date:   Wed, 27 Nov 2019 12:11:54 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+In-Reply-To: <2967bd12-21bf-3223-e90b-96b4eaa8c4c2@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN4PR0501CA0083.namprd05.prod.outlook.com
+ (2603:10b6:803:22::21) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127170513.42251-1-mihail.atanassov@arm.com>
-X-Operating-System: Linux phenom 5.3.0-2-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 60459dc9-1cd4-48d9-22dd-08d7736549dc
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4042:|DM6PR12MB4042:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4042EB4C91B0557D3D47A631EC440@DM6PR12MB4042.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:79;
+X-Forefront-PRVS: 023495660C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(39860400002)(346002)(136003)(199004)(189003)(5660300002)(52116002)(6486002)(8676002)(3846002)(2486003)(14454004)(31696002)(47776003)(36756003)(2501003)(81166006)(66066001)(229853002)(86362001)(66556008)(6116002)(23676004)(14444005)(66946007)(66476007)(76176011)(50466002)(316002)(446003)(81156014)(99286004)(478600001)(53546011)(305945005)(6506007)(26005)(7736002)(4326008)(58126008)(110136005)(6512007)(54906003)(186003)(7416002)(65956001)(65806001)(6436002)(25786009)(11346002)(31686004)(386003)(2616005)(2870700001)(2906002)(8936002)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4042;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: h0GD3HYz9wKvvaFWqEBWTW/tlGOnab5l1tCUke4AgrvuZ/Gq4K7JQtp2vlHUkiM3R53IAaOJoqMgQ20nrxCAlfIQ/MFQtoCcjzDRfiIEFZqUYY+9ohqU4aJ6VKv8ZUWIo7TQwP0JuCRdk/qU86ZNSrJR64tM03EUl4SqJHgZlt7tRlm4G2VHQh778Q147oJtuJoElGcEURKCSmGwjIMPKUCdxOLiTYajuPoPC2O2VFwo7a9/JSZavX+md6Myv8q/BkvDwFUOaB8tq0lj5U3+QKao9Vi7EL/udRA+jTMZJn8sSRe5peHsgRPqCeWc4tJdu/1tKc4chrtRFV/Ww1jI0/Mrad6T6miZeDGLr77oOgYh4NsN+jRVKDgvoAJCXhGS5GvCmJAT0YVtCjfPm1bF2RyC6mPF0pjB81PXFpkx51j9H8JlnKeUf+P1o7VF8YJh
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60459dc9-1cd4-48d9-22dd-08d7736549dc
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2019 18:11:56.8396
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zMR62l+GPt85zJTvXi052M49C6uvwX3VTOHNtMIV8phQ05CLngu61LsAV6HVVxOGu6eWeihMR5+AVjsUOqi6ow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 05:05:32PM +0000, Mihail Atanassov wrote:
-> Caused by file removal without adjusting the Makefile.
+On 11/27/19 1:23 AM, Haiwei Li wrote:
+>  From e7f9c786e43ef4f890b8a01f15f8f00786f4b14a Mon Sep 17 00:00:00 2001
+> From: Haiwei Li <lihaiwei@tencent.com>
+> Date: Wed, 27 Nov 2019 15:00:49 +0800
+> Subject: [PATCH v2] fix: 'error' is not initialized
 > 
-> Fixes: d268f42e6856 ("drm/mediatek: don't open-code drm_gem_fb_create")
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: CK Hu <ck.hu@mediatek.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-mediatek@lists.infradead.org
-> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+> There are a bunch of error paths were "error" isn't initialized.
 
-Drat, kbuild still sucks if you dont do a clean rebuild :-/
+Please provide a better patch commit message and just fix the actual
+problem, which is error is uninitialized in sev_flush_asids(). Please
+just initialize error to zero.
 
-Thanks for the patch, I pushed it.
--Daniel
+Thanks,
+Tom
+
+> 
+> Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 > ---
->  drivers/gpu/drm/mediatek/Makefile | 1 -
->  1 file changed, 1 deletion(-)
+>   arch/x86/kvm/svm.c           | 3 ++-
+>   drivers/crypto/ccp/psp-dev.c | 2 ++
+>   2 files changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
-> index 8067a4be8311..5044dfb8e3d6 100644
-> --- a/drivers/gpu/drm/mediatek/Makefile
-> +++ b/drivers/gpu/drm/mediatek/Makefile
-> @@ -7,7 +7,6 @@ mediatek-drm-y := mtk_disp_color.o \
->  		  mtk_drm_ddp.o \
->  		  mtk_drm_ddp_comp.o \
->  		  mtk_drm_drv.o \
-> -		  mtk_drm_fb.o \
->  		  mtk_drm_gem.o \
->  		  mtk_drm_plane.o \
->  		  mtk_dsi.o \
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 362e874..9eef6fc 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -6308,7 +6308,8 @@ static int sev_flush_asids(void)
+>       up_write(&sev_deactivate_lock);
+> 
+>       if (ret)
+> -        pr_err("SEV: DF_FLUSH failed, ret=%d, error=%#x\n", ret, error);
+> +        pr_err("SEV: DF_FLUSH failed, ret=%d. PSP returned error=%#x\n",
+> +               ret, error);
+> 
+>       return ret;
+>   }
+> diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
+> index 39fdd06..c486c24 100644
+> --- a/drivers/crypto/ccp/psp-dev.c
+> +++ b/drivers/crypto/ccp/psp-dev.c
+> @@ -155,6 +155,8 @@ static int __sev_do_cmd_locked(int cmd, void *data, 
+> int *psp_ret)
+>       unsigned int phys_lsb, phys_msb;
+>       unsigned int reg, ret = 0;
+> 
+> +    *psp_ret = -1;
+> +
+>       if (!psp)
+>           return -ENODEV;
+> 
 > -- 
-> 2.23.0
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> 1.8.3.1
