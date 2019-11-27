@@ -2,51 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41282C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9BAC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1290520870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFFFB20870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890987;
-	bh=KiNTpBqQjZufNQVSxZpZkenyg2xSVpIVaX9A/Vr/FdM=;
+	s=default; t=1574890993;
+	bh=7THZt9ZkgK+9f/AJ+1jxMmWKlvyOwQTfGltNfMG3Ofo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZF0A28/+lVHOCUGuykuG8I0pcr5qyRvB7woD2fMqBC/kZLIgSlRP/CKjE4K74j3AF
-	 mU+fE5tOZVBQgIvP7l/LGYZOnqwySh7jRMNYPjskTFTGWl2F3Cnz3IRGkTVj3kFCTm
-	 HjORnKDe0hGa+y73WfTwzz+fJI3SctbyY9xeKDZA=
+	b=VyleyESFj7wYJKCJBAHQPWtGmMldg7fA4PF/4Jp7fkjiZtFfW+4u15+UxUyRbDwVW
+	 Gmy7yqRV7bC12P1NFaD9Ha29cDDLP1GlCl5GtuoDmxMvyYqr7cyrbDw2uchD+hysxn
+	 1HBdnbn/mc/wrLQl0KiykfH09oC6LPvIe/gMZ618=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfK0UjS (ORCPT
+        id S1729482AbfK0VnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:39:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43120 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:43:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728043AbfK0UjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:39:08 -0500
+        id S1728028AbfK0UjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:39:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B215321781;
-        Wed, 27 Nov 2019 20:39:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29E4921771;
+        Wed, 27 Nov 2019 20:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887147;
-        bh=KiNTpBqQjZufNQVSxZpZkenyg2xSVpIVaX9A/Vr/FdM=;
+        s=default; t=1574887154;
+        bh=7THZt9ZkgK+9f/AJ+1jxMmWKlvyOwQTfGltNfMG3Ofo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NmPtAM1dC89GLpxHDJCTC7GwVpLVDnv9fe/1kbVNy5o1dC69x8rh+HCaCI17+22zR
-         bJC0GIRx6spQuhwBB0fLjEA0t9FzIeSVabK9tQb0/e8sj9fDHJ7/eTWRE+sQ54P4+S
-         m/gXsq6FTfFXwzmogWOoBtIgE0YOsEQAKw4OTfR8=
+        b=LP1se55hQ803BB9Tp3i4kLe4ltlxcy961vM6oXy5Nc+IX93eeEkDeXsrQ0yCNoIe7
+         uRkC/25XpMd+AH9x0tmJnkSmRIsNHki26el9VzxKL0luCmMqwYqfFafdkVRBIHJw4f
+         QEFAk7LVFJjRABb95WTVchtEhl0jq374RPDCstMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Axtens <dja@axtens.net>
-Subject: [PATCH 4.4 132/132] KVM: PPC: Book3S HV: Flush link stack on guest exit to host kernel
-Date:   Wed, 27 Nov 2019 21:32:03 +0100
-Message-Id: <20191127203034.541297082@linuxfoundation.org>
+        stable@vger.kernel.org, mst@redhat.com,
+        Laurent Vivier <lvivier@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 118/132] virtio_console: allocate inbufs in add_port() only if it is needed
+Date:   Wed, 27 Nov 2019 21:31:49 +0100
+Message-Id: <20191127203032.308948451@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -59,112 +60,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Laurent Vivier <lvivier@redhat.com>
 
-commit af2e8c68b9c5403f77096969c516f742f5bb29e0 upstream.
+[ Upstream commit d791cfcbf98191122af70b053a21075cb450d119 ]
 
-On some systems that are vulnerable to Spectre v2, it is up to
-software to flush the link stack (return address stack), in order to
-protect against Spectre-RSB.
+When we hot unplug a virtserialport and then try to hot plug again,
+it fails:
 
-When exiting from a guest we do some house keeping and then
-potentially exit to C code which is several stack frames deep in the
-host kernel. We will then execute a series of returns without
-preceeding calls, opening up the possiblity that the guest could have
-poisoned the link stack, and direct speculative execution of the host
-to a gadget of some sort.
+(qemu) chardev-add socket,id=serial0,path=/tmp/serial0,server,nowait
+(qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
+                  chardev=serial0,id=serial0,name=serial0
+(qemu) device_del serial0
+(qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
+                  chardev=serial0,id=serial0,name=serial0
+kernel error:
+  virtio-ports vport2p2: Error allocating inbufs
+qemu error:
+  virtio-serial-bus: Guest failure in adding port 2 for device \
+                     virtio-serial0.0
 
-To prevent this we add a flush of the link stack on exit from a guest.
+This happens because buffers for the in_vq are allocated when the port is
+added but are not released when the port is unplugged.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[dja: backport to v4.4, drop P9 support]
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+They are only released when virtconsole is removed (see a7a69ec0d8e4)
+
+To avoid the problem and to be symmetric, we could allocate all the buffers
+in init_vqs() as they are released in remove_vqs(), but it sounds like
+a waste of memory.
+
+Rather than that, this patch changes add_port() logic to ignore ENOSPC
+error in fill_queue(), which means queue has already been filled.
+
+Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+Cc: mst@redhat.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/asm-prototypes.h |    2 ++
- arch/powerpc/kernel/security.c            |    9 +++++++++
- arch/powerpc/kvm/book3s_hv_rmhandlers.S   |   20 ++++++++++++++++++++
- 3 files changed, 31 insertions(+)
+ drivers/char/virtio_console.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
---- a/arch/powerpc/include/asm/asm-prototypes.h
-+++ b/arch/powerpc/include/asm/asm-prototypes.h
-@@ -16,7 +16,9 @@
- extern s32 patch__call_flush_count_cache;
- extern s32 patch__flush_count_cache_return;
- extern s32 patch__flush_link_stack_return;
-+extern s32 patch__call_kvm_flush_link_stack;
+diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+index 1a566e3b16e07..c5b89f6b0145e 100644
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -1363,24 +1363,24 @@ static void set_console_size(struct port *port, u16 rows, u16 cols)
+ 	port->cons.ws.ws_col = cols;
+ }
  
- extern long flush_count_cache;
-+extern long kvm_flush_link_stack;
+-static unsigned int fill_queue(struct virtqueue *vq, spinlock_t *lock)
++static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
+ {
+ 	struct port_buffer *buf;
+-	unsigned int nr_added_bufs;
++	int nr_added_bufs;
+ 	int ret;
  
- #endif /* _ASM_POWERPC_ASM_PROTOTYPES_H */
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -391,6 +391,9 @@ static void toggle_count_cache_flush(boo
+ 	nr_added_bufs = 0;
+ 	do {
+ 		buf = alloc_buf(vq->vdev, PAGE_SIZE, 0);
+ 		if (!buf)
+-			break;
++			return -ENOMEM;
  
- 	if (!enable) {
- 		patch_instruction_site(&patch__call_flush_count_cache, PPC_INST_NOP);
-+#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
-+		patch_instruction_site(&patch__call_kvm_flush_link_stack, PPC_INST_NOP);
-+#endif
- 		pr_info("link-stack-flush: software flush disabled.\n");
- 		link_stack_flush_enabled = false;
- 		no_count_cache_flush();
-@@ -401,6 +404,12 @@ static void toggle_count_cache_flush(boo
- 	patch_branch_site(&patch__call_flush_count_cache,
- 			  (u64)&flush_count_cache, BRANCH_SET_LINK);
+ 		spin_lock_irq(lock);
+ 		ret = add_inbuf(vq, buf);
+ 		if (ret < 0) {
+ 			spin_unlock_irq(lock);
+ 			free_buf(buf, true);
+-			break;
++			return ret;
+ 		}
+ 		nr_added_bufs++;
+ 		spin_unlock_irq(lock);
+@@ -1400,7 +1400,6 @@ static int add_port(struct ports_device *portdev, u32 id)
+ 	char debugfs_name[16];
+ 	struct port *port;
+ 	dev_t devt;
+-	unsigned int nr_added_bufs;
+ 	int err;
  
-+#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
-+	// This enables the branch from guest_exit_cont to kvm_flush_link_stack
-+	patch_branch_site(&patch__call_kvm_flush_link_stack,
-+			  (u64)&kvm_flush_link_stack, BRANCH_SET_LINK);
-+#endif
-+
- 	pr_info("link-stack-flush: software flush enabled.\n");
- 	link_stack_flush_enabled = true;
+ 	port = kmalloc(sizeof(*port), GFP_KERNEL);
+@@ -1459,11 +1458,13 @@ static int add_port(struct ports_device *portdev, u32 id)
+ 	spin_lock_init(&port->outvq_lock);
+ 	init_waitqueue_head(&port->waitqueue);
  
---- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-+++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-@@ -18,6 +18,7 @@
-  */
+-	/* Fill the in_vq with buffers so the host can send us data. */
+-	nr_added_bufs = fill_queue(port->in_vq, &port->inbuf_lock);
+-	if (!nr_added_bufs) {
++	/* We can safely ignore ENOSPC because it means
++	 * the queue already has buffers. Buffers are removed
++	 * only by virtcons_remove(), not by unplug_port()
++	 */
++	err = fill_queue(port->in_vq, &port->inbuf_lock);
++	if (err < 0 && err != -ENOSPC) {
+ 		dev_err(port->dev, "Error allocating inbufs\n");
+-		err = -ENOMEM;
+ 		goto free_device;
+ 	}
  
- #include <asm/ppc_asm.h>
-+#include <asm/code-patching-asm.h>
- #include <asm/kvm_asm.h>
- #include <asm/reg.h>
- #include <asm/mmu.h>
-@@ -1169,6 +1170,10 @@ mc_cont:
- 	bl	kvmhv_accumulate_time
- #endif
+@@ -2075,14 +2076,11 @@ static int virtcons_probe(struct virtio_device *vdev)
+ 	INIT_WORK(&portdev->control_work, &control_work_handler);
  
-+	/* Possibly flush the link stack here. */
-+1:	nop
-+	patch_site 1b patch__call_kvm_flush_link_stack
-+
- 	mr 	r3, r12
- 	/* Increment exit count, poke other threads to exit */
- 	bl	kvmhv_commence_exit
-@@ -1564,6 +1569,21 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
- 	mtlr	r0
- 	blr
+ 	if (multiport) {
+-		unsigned int nr_added_bufs;
+-
+ 		spin_lock_init(&portdev->c_ivq_lock);
+ 		spin_lock_init(&portdev->c_ovq_lock);
  
-+.balign 32
-+.global kvm_flush_link_stack
-+kvm_flush_link_stack:
-+	/* Save LR into r0 */
-+	mflr	r0
-+
-+	/* Flush the link stack. On Power8 it's up to 32 entries in size. */
-+	.rept 32
-+	bl	.+4
-+	.endr
-+
-+	/* Restore LR */
-+	mtlr	r0
-+	blr
-+
- /*
-  * Check whether an HDSI is an HPTE not found fault or something else.
-  * If it is an HPTE not found fault that is due to the guest accessing
+-		nr_added_bufs = fill_queue(portdev->c_ivq,
+-					   &portdev->c_ivq_lock);
+-		if (!nr_added_bufs) {
++		err = fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
++		if (err < 0) {
+ 			dev_err(&vdev->dev,
+ 				"Error allocating buffers for control queue\n");
+ 			/*
+@@ -2093,7 +2091,7 @@ static int virtcons_probe(struct virtio_device *vdev)
+ 					   VIRTIO_CONSOLE_DEVICE_READY, 0);
+ 			/* Device was functional: we need full cleanup. */
+ 			virtcons_remove(vdev);
+-			return -ENOMEM;
++			return err;
+ 		}
+ 	} else {
+ 		/*
+-- 
+2.20.1
+
 
 
