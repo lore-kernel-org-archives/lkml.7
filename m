@@ -2,109 +2,126 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D0BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32523C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451F42154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889477;
-	bh=iKMlagfNcq3TPOMQAulL64ysv1hwp8Mdv1gDrrm9eTg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eN5HrKlbRkn7/SWwlLltt7WaThXxI61Bf23vgh6j8xcsb5Qu7BjV6vsf5mdzC/q8J
-	 KNAKOZyFr5Pxqv8sECj+/oGV8Y0uDr0ZZ4lP/EuU9dL2tAuZyWY6b3WU7NWprEgjIS
-	 p5896Ql4T+9DJxship7cl3SEHmFOXN4B7gvd/+5A=
+	by mail.kernel.org (Postfix) with ESMTP id 09A452154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="C2mnrUf7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732938AbfK0VR4 (ORCPT
+        id S1730950AbfK0VMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:17:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728397AbfK0VMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:12:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A821121775;
-        Wed, 27 Nov 2019 21:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889130;
-        bh=iKMlagfNcq3TPOMQAulL64ysv1hwp8Mdv1gDrrm9eTg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bYIgAYTTfeRKppWBzBSoNVKQ1M8NE3XRLN2Sq2O+sa0C04i0vvEb78cQWmNWa9EOW
-         zQIxAT7mShbFK0c/STqaXYMn0emT697OQp+srpOv/4GX1R08HjSSI7PyV8ZCRAfxXV
-         t3mGnk9TQQw/Upji/JweZxT0zsodWhd1pcsKWdQI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vito Caputo <vcaputo@pengaru.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.3 42/95] Revert "dm crypt: use WQ_HIGHPRI for the IO and crypt workqueues"
-Date:   Wed, 27 Nov 2019 21:31:59 +0100
-Message-Id: <20191127202908.311593368@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
-References: <20191127202845.651587549@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 27 Nov 2019 16:12:09 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:40538 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733256AbfK0VMF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:12:05 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B36C120B7185;
+        Wed, 27 Nov 2019 13:12:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B36C120B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1574889124;
+        bh=BjH41wc2s7M+i6lyEXWUb1jJqyOffx38FZ7r2CreKBw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=C2mnrUf75pU4jHQAMpcwi46dM3w7EZN3ld8GFzsICwqToZRFK07dIXgGA9jdsec85
+         cZ+lloUsdrTGs5LnPjNcdidd4r6Af0xuAjlfK3pul1n1M8I/3vc4uHHsE3jqxuLy1b
+         Ni+O0M/RgFCc1ts87IAj59+tfrp0YzA2nb6KUPAg=
+Subject: Re: [PATCH v0 1/2] IMA: Defined queue functions
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org, Janne Karhunen <janne.karhunen@gmail.com>
+References: <20191127025212.3077-1-nramas@linux.microsoft.com>
+ <20191127025212.3077-2-nramas@linux.microsoft.com>
+ <1574887137.4793.346.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <ea2fafb8-a97f-5365-debd-d90143e549bf@linux.microsoft.com>
+Date:   Wed, 27 Nov 2019 13:11:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <1574887137.4793.346.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+On 11/27/19 12:38 PM, Mimi Zohar wrote:
 
-commit f612b2132db529feac4f965f28a1b9258ea7c22b upstream.
+> Hi Lakshmi,
+> 
+> Janne Karhunen is defining an IMA workqueue in order to more
+> frequently update the on disk security xattrs.  
 
-This reverts commit a1b89132dc4f61071bdeaab92ea958e0953380a1.
+Has the above patch set been posted for review? I'll take a look and see 
+if that one can be used for queuing keys.
 
-Revert required hand-patching due to subsequent changes that were
-applied since commit a1b89132dc4f61071bdeaab92ea958e0953380a1.
+The Subject line on
+> this patch needs to be more explicit (eg. define workqueue for early
+> boot "key" measurements).
 
-Requires: ed0302e83098d ("dm crypt: make workqueue names device-specific")
-Cc: stable@vger.kernel.org
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=199857
-Reported-by: Vito Caputo <vcaputo@pengaru.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Will update the subject line.
+I was trying to keep the subject line short and have more details in the 
+patch description.
 
----
- drivers/md/dm-crypt.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+> I'm not sure why you want to differentiate between IMA being
+> initialized vs. an empty policy.  I would think you would want to know
+> when a custom policy has been loaded.
 
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -2911,21 +2911,18 @@ static int crypt_ctr(struct dm_target *t
- 	}
- 
- 	ret = -ENOMEM;
--	cc->io_queue = alloc_workqueue("kcryptd_io/%s",
--				       WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
--				       1, devname);
-+	cc->io_queue = alloc_workqueue("kcryptd_io/%s", WQ_MEM_RECLAIM, 1, devname);
- 	if (!cc->io_queue) {
- 		ti->error = "Couldn't create kcryptd io queue";
- 		goto bad;
- 	}
- 
- 	if (test_bit(DM_CRYPT_SAME_CPU, &cc->flags))
--		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
--						  WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
-+		cc->crypt_queue = alloc_workqueue("kcryptd/%s", WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
- 						  1, devname);
- 	else
- 		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
--						  WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
-+						  WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
- 						  num_online_cpus(), devname);
- 	if (!cc->crypt_queue) {
- 		ti->error = "Couldn't create kcryptd queue";
+You are right - When custom ima policy rules are loaded (in 
+ima_update_policy() function), ima_process_queued_keys_for_measurement() 
+function is called to process queued keys.
 
+The flag ima_process_keys_for_measurement is set to true in 
+ima_process_queued_keys_for_measurement(). And, subsequent keys are 
+processed immediately.
 
+Please take a look at ima_process_queued_keys_for_measurement() in this 
+patch (v0 1/2) and the ima_update_policy() change in "PATCH v0 2/2".
+
+> 
+> I would define a function that determines whether or not a custom
+> policy has been loaded.
+
+The queued keys need to be processed once when the custom policy is 
+loaded. Subsequently, keys are processed immediately (not queued).
+
+Do you still think there is a need to have a function to determine if 
+custom policy has been loaded? Wouldn't the flag 
+ima_process_keys_for_measurement be sufficient?
+
+Please take a look at "PATCH v0 2/2" and let me know if you disagree.
+
+> (I still need to review adding/removing from the queue.)
+> 
+>>
+>> @@ -27,14 +154,14 @@
+>>    * The payload data used to instantiate or update the key is measured.
+>>    */
+>>   void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+>> -				   const void *payload, size_t plen,
+>> +				   const void *payload, size_t payload_len,
+>>   				   unsigned long flags, bool create)
+> 
+> This "hunk" and subsequent one seem to be just a variable name change.
+>   It has nothing to do with queueing "key" measurements and shouldn't
+> be included in this patch.
+> 
+> Mimi
+
+I'll remove this change.
+
+thanks,
+  -lakshmi
