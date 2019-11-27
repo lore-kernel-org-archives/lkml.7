@@ -2,53 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A63C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFCEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEEA1215B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9516C21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888046;
-	bh=aJqLwpf/G8NqfB0sL2MWBrc35kuUJFRONfEAYaqxE9U=;
+	s=default; t=1574888053;
+	bh=9g0VDAiO7v6skVpYkFvuxrUHXJfpcXe6xW0ulDnGKY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ow89aaPP+aqxhjihrz/RxCTJCUf7zXt+mKSy35D+pB9mbyVC8oYWbm5Q1FTMuU8RS
-	 peAtsU+mvnwpabrst5H7dPn1oR1L0TBPavrYwI+jkCmgHbh0u+FrbQqN7zc2SE5WSL
-	 WdNM9pl4CdC7JinTqJCe7iTNkqiSRgT7Q8Mw7Xus=
+	b=RHtv5CNUrVFtdsLWnTIYosVMFNuvFK4zapDyhRAfPkCCTT8mbh+or29qsMyr9dFJd
+	 q+9tjuf9NetMOx0kL3toj7okjWLmxNTvsQ87Bnceh54Q/GO7cKjJeKx+gYqKBWG0JI
+	 AmFy7rdQ6mjYIMsv2qoeCyootoWfkRRiNvS2fx+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730792AbfK0UyF (ORCPT
+        id S1730804AbfK0UyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:54:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43468 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:54:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730291AbfK0Ux7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:59 -0500
+        id S1730441AbfK0UyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:54:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B8CE2070B;
-        Wed, 27 Nov 2019 20:53:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 498AA2086A;
+        Wed, 27 Nov 2019 20:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888039;
-        bh=aJqLwpf/G8NqfB0sL2MWBrc35kuUJFRONfEAYaqxE9U=;
+        s=default; t=1574888046;
+        bh=9g0VDAiO7v6skVpYkFvuxrUHXJfpcXe6xW0ulDnGKY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JEwWWEY/8zPpmFu59aSL0+dDsnxXepeukj0ytUQhX/YPaJtNotadn2U0EdJg8h249
-         eAEn7etlaEnpRLu2jvgANmK40PDh3jJ3d3kdtSgWm3yCfDYxKohJnLftNToXZe8kmF
-         ztsX4tllPJ5ytdaAEWO+SGlGAdmVlfiIkAAgGo+8=
+        b=U1UTsK+ZyMfdM9jzPpgivlTF0+vbPf8AIVv4kuZ0FI3uHyC0fnmLG/p8tXHo4nMd6
+         q/9RGUak+ARrYAoZPpuKSbXfU1dt2vU49CYJO+ZSZETpVQGfB8xXUrHEj3l64uOc63
+         b/RgAydSj0cz4Ep/80HcXCsSI1S0S25fRA7vhke4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 4.14 193/211] media: b2c2-flexcop-usb: add sanity checking
-Date:   Wed, 27 Nov 2019 21:32:06 +0100
-Message-Id: <20191127203111.901416984@linuxfoundation.org>
+        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 196/211] virtio_ring: fix return code on DMA mapping fails
+Date:   Wed, 27 Nov 2019 21:32:09 +0100
+Message-Id: <20191127203112.156790907@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,34 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-commit 1b976fc6d684e3282914cdbe7a8d68fdce19095c upstream.
+[ Upstream commit f7728002c1c7bfa787b276a31c3ef458739b8e7c ]
 
-The driver needs an isochronous endpoint to be present. It will
-oops in its absence. Add checking for it.
+Commit 780bc7903a32 ("virtio_ring: Support DMA APIs")  makes
+virtqueue_add() return -EIO when we fail to map our I/O buffers. This is
+a very realistic scenario for guests with encrypted memory, as swiotlb
+may run out of space, depending on it's size and the I/O load.
 
-Reported-by: syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The virtio-blk driver interprets -EIO form virtqueue_add() as an IO
+error, despite the fact that swiotlb full is in absence of bugs a
+recoverable condition.
 
+Let us change the return code to -ENOMEM, and make the block layer
+recover form these failures when virtio-blk encounters the condition
+described above.
+
+Cc: stable@vger.kernel.org
+Fixes: 780bc7903a32 ("virtio_ring: Support DMA APIs")
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Tested-by: Michael Mueller <mimu@linux.ibm.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/b2c2/flexcop-usb.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/virtio/virtio_ring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -537,6 +537,9 @@ static int flexcop_usb_probe(struct usb_
- 	struct flexcop_device *fc = NULL;
- 	int ret;
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index cc9d421c0929b..b82bb0b081615 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -432,7 +432,7 @@ unmap_release:
+ 		kfree(desc);
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
- 		err("out of memory\n");
- 		return -ENOMEM;
+ 	END_USE(vq);
+-	return -EIO;
++	return -ENOMEM;
+ }
+ 
+ /**
+-- 
+2.20.1
+
 
 
