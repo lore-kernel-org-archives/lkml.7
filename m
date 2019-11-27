@@ -2,53 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3054CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F3FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06154216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D84215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887114;
-	bh=zYJRsokSNnbLuG9oKacMYr6iwcJAcDKTNZpXfdZ7Apc=;
+	s=default; t=1574887116;
+	bh=38cFfSRhgYWumSAWefucCnUybSTkCpovcGLVhPczBAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=In1A5LZ3NLO8DLsz+soeAWZfSsn8O3+ya0ZYnIeKEnWPe9PgiFnO8HPn2g/GBPaKw
-	 yrwnd4+kNWj9VzsnQpdk+pFeCGXldzNWECXpGh3BSTy7z96+ebff2cVTBJlRuETUlN
-	 2V0EDEnHV/3O+5HCIahO0/FA2mbnRWRe5T6hHTR4=
+	b=R7GniV/4oLZgxwpy6hLcswgpsDd9fKapW/ML04UpvmZMCYOtNLkGbbfLX6NdWxsiQ
+	 ShuWt1TR+SqYunRvhwjGAfgQlB1PiqQtneoC7iSMr8CjVtT8gHb+RB7Difry6qHxDd
+	 YuvAN4rvr0R1WK2g4RKG8N+nPH86Z2c2YD/2jzgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbfK0Uic (ORCPT
+        id S1727909AbfK0Uif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:38:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:38:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727073AbfK0Ui0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:38:26 -0500
+        id S1727073AbfK0Uid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:38:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B75B215A4;
-        Wed, 27 Nov 2019 20:38:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD82D216F4;
+        Wed, 27 Nov 2019 20:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887105;
-        bh=zYJRsokSNnbLuG9oKacMYr6iwcJAcDKTNZpXfdZ7Apc=;
+        s=default; t=1574887113;
+        bh=38cFfSRhgYWumSAWefucCnUybSTkCpovcGLVhPczBAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FiaatHy9l3Yp4UKoosw2IXhz5aF7YscQAtvLMqRpEpGZN2Pn4l/f/GvP21Fk7v4CY
-         Nqrs+g7T4VHjiiTLOkHFECNgBdFFldHcYoLyRjs0TwfaEs401qpO1ruCRBcr7EMPJN
-         iVOz34dvnkCkfw+bETo78aDMM+A5InegB8569VqI=
+        b=S8wLL4DxlqHHWtqElMActsRoSd4bGSOQ0zGkA3kBLDkHRHkJ5FQmhjX3Wq01blflt
+         edsYk234tZzOoSx9VzJb7MJHrZPHfDS6aXdw8VsRREPFPQiciAo5VdLiXJeO3IVMPL
+         IA021qCDjeYoecxhhU62ue+EQJ/qOpElOcQtzxs8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 4.4 113/132] media: b2c2-flexcop-usb: add sanity checking
-Date:   Wed, 27 Nov 2019 21:31:44 +0100
-Message-Id: <20191127203030.791717735@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        Lucas Van <lucas.van@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 075/132] ntb: intel: fix return value for ndev_vec_mask()
+Date:   Wed, 27 Nov 2019 21:31:06 +0100
+Message-Id: <20191127203008.989261544@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,34 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Dave Jiang <dave.jiang@intel.com>
 
-commit 1b976fc6d684e3282914cdbe7a8d68fdce19095c upstream.
+[ Upstream commit 7756e2b5d68c36e170a111dceea22f7365f83256 ]
 
-The driver needs an isochronous endpoint to be present. It will
-oops in its absence. Add checking for it.
+ndev_vec_mask() should be returning u64 mask value instead of int.
+Otherwise the mask value returned can be incorrect for larger
+vectors.
 
-Reported-by: syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e26a5843f7f5 ("NTB: Split ntb_hw_intel and ntb_transport drivers")
 
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Tested-by: Lucas Van <lucas.van@intel.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/b2c2/flexcop-usb.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/ntb/hw/intel/ntb_hw_intel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -508,6 +508,9 @@ static int flexcop_usb_probe(struct usb_
- 	struct flexcop_device *fc = NULL;
- 	int ret;
+diff --git a/drivers/ntb/hw/intel/ntb_hw_intel.c b/drivers/ntb/hw/intel/ntb_hw_intel.c
+index a198f82982582..2898b39c065e3 100644
+--- a/drivers/ntb/hw/intel/ntb_hw_intel.c
++++ b/drivers/ntb/hw/intel/ntb_hw_intel.c
+@@ -330,7 +330,7 @@ static inline int ndev_db_clear_mask(struct intel_ntb_dev *ndev, u64 db_bits,
+ 	return 0;
+ }
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
- 		err("out of memory\n");
- 		return -ENOMEM;
+-static inline int ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
++static inline u64 ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
+ {
+ 	u64 shift, mask;
+ 
+-- 
+2.20.1
+
 
 
