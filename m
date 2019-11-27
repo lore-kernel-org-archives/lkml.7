@@ -2,53 +2,56 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3521C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8821FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9065216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610FF215B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887108;
-	bh=OyBQ+ISoZ+8SjXKCn5QTowWkqTtFsajvubXfBdi/IyI=;
+	s=default; t=1574887112;
+	bh=U/6tRCUAgN7vLtq1CMV91hKOfrocRssLaPKmD5mtqa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E2eiE9fK0/XePXXfnq5AmHbJoZZq0+cOXNq0rwKwGls3VDoEJU8xVB9Bf4ofuzBt0
-	 8dWptrCmOVFrkAU1usGbDp0TZcHBBJvpQ3ZSlqv8BMx81rD+dyB0wT+3y7ayVQ2/1X
-	 YyQevlf9I4yIG3eYmQdZ5M9bwGSurl8LXzYmf2yU=
+	b=uxYmyFdtDA7kDGOyNdtSgeL8N7rh7As3s+JjIRZA8bZ/8S0d+AkQ2+brBm4aqryTA
+	 X3jkjybJi7yHnFvrIMTUyOSWBMIKeyrxiZDDcUQ4VQpBqzM7LQXEAJ+UybBkIE2xx+
+	 Iz7b06X+MeEOMo3kAIKpcyUxYUfuktdQhybdvpoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfK0Ui1 (ORCPT
+        id S1728749AbfK0Uib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:38:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42000 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:38:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728707AbfK0UiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:38:23 -0500
+        id S1726716AbfK0Ui2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:38:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CDD121569;
-        Wed, 27 Nov 2019 20:38:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0241215A5;
+        Wed, 27 Nov 2019 20:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887102;
-        bh=OyBQ+ISoZ+8SjXKCn5QTowWkqTtFsajvubXfBdi/IyI=;
+        s=default; t=1574887108;
+        bh=U/6tRCUAgN7vLtq1CMV91hKOfrocRssLaPKmD5mtqa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k/+K3kmCBIKNt5EEIv97Ci2JCTrJkqfyxamXl6bi4oLn4Z2N51JLxwTnZQlkWUUKc
-         M2lgQLI2ekNw/9mf2Ozg6R0U1NsnAkfDvoKAzCahiCHrQ0Xny404KxAz+jbY3VzqHy
-         lQCM/PbmR9zcHVc6O153auyecQle954r4VGc/Rw0=
+        b=I7XLWrcwbiLnCNYzq4Sw8RtNsriDXh9oyTh8QGk3ki0VCKtYxN2LixR6tJtEjvV9k
+         6pmEmoe6ymfZA6XI6Ddpqyr9FWS2NCzmvarsNaR+ajK+0798UK6NES5DztkO8SM4AC
+         cJX3qccXN7YtKG062jnxFee9CvKRBI4PRLUeLQfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai Shen <shenkai8@huawei.com>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.4 112/132] cpufreq: Add NULL checks to show() and store() methods of cpufreq
-Date:   Wed, 27 Nov 2019 21:31:43 +0100
-Message-Id: <20191127203030.193845897@linuxfoundation.org>
+        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 073/132] igb: shorten maximum PHC timecounter update interval
+Date:   Wed, 27 Nov 2019 21:31:04 +0100
+Message-Id: <20191127203007.942579295@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,56 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Shen <shenkai8@huawei.com>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-commit e6e8df07268c1f75dd9215536e2ce4587b70f977 upstream.
+[ Upstream commit 094bf4d0e9657f6ea1ee3d7e07ce3970796949ce ]
 
-Add NULL checks to show() and store() in cpufreq.c to avoid attempts
-to invoke a NULL callback.
+The timecounter needs to be updated at least once per ~550 seconds in
+order to avoid a 40-bit SYSTIM timestamp to be misinterpreted as an old
+timestamp.
 
-Though some interfaces of cpufreq are set as read-only, users can
-still get write permission using chmod which can lead to a kernel
-crash, as follows:
+Since commit 500462a9d ("timers: Switch to a non-cascading wheel"),
+scheduling of delayed work seems to be less accurate and a requested
+delay of 540 seconds may actually be longer than 550 seconds. Shorten
+the delay to 480 seconds to be sure the timecounter is updated in time.
 
-chmod +w /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
-echo 1 >  /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+This fixes an issue with HW timestamps on 82580/I350/I354 being off by
+~1100 seconds for few seconds every ~9 minutes.
 
-This bug was found in linux 4.19.
-
-Signed-off-by: Kai Shen <shenkai8@huawei.com>
-Reported-by: Feilong Lin <linfeilong@huawei.com>
-Reviewed-by: Feilong Lin <linfeilong@huawei.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-[ rjw: Subject & changelog ]
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Jacob Keller <jacob.e.keller@intel.com>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/intel/igb/igb_ptp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -821,6 +821,9 @@ static ssize_t show(struct kobject *kobj
- 	struct freq_attr *fattr = to_attr(attr);
- 	ssize_t ret;
+diff --git a/drivers/net/ethernet/intel/igb/igb_ptp.c b/drivers/net/ethernet/intel/igb/igb_ptp.c
+index c44df87c38de2..5e65d8a78c3ed 100644
+--- a/drivers/net/ethernet/intel/igb/igb_ptp.c
++++ b/drivers/net/ethernet/intel/igb/igb_ptp.c
+@@ -65,9 +65,15 @@
+  *
+  * The 40 bit 82580 SYSTIM overflows every
+  *   2^40 * 10^-9 /  60  = 18.3 minutes.
++ *
++ * SYSTIM is converted to real time using a timecounter. As
++ * timecounter_cyc2time() allows old timestamps, the timecounter
++ * needs to be updated at least once per half of the SYSTIM interval.
++ * Scheduling of delayed work is not very accurate, so we aim for 8
++ * minutes to be sure the actual interval is shorter than 9.16 minutes.
+  */
  
-+	if (!fattr->show)
-+		return -EIO;
-+
- 	down_read(&policy->rwsem);
- 
- 	if (fattr->show)
-@@ -840,6 +843,9 @@ static ssize_t store(struct kobject *kob
- 	struct freq_attr *fattr = to_attr(attr);
- 	ssize_t ret = -EINVAL;
- 
-+	if (!fattr->store)
-+		return -EIO;
-+
- 	get_online_cpus();
- 
- 	if (!cpu_online(policy->cpu))
+-#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
++#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 8)
+ #define IGB_PTP_TX_TIMEOUT		(HZ * 15)
+ #define INCPERIOD_82576			(1 << E1000_TIMINCA_16NS_SHIFT)
+ #define INCVALUE_82576_MASK		((1 << E1000_TIMINCA_16NS_SHIFT) - 1)
+-- 
+2.20.1
+
 
 
