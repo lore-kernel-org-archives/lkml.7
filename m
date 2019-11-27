@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F24C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B497EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C28215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81AB5215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890000;
-	bh=QGsz8Ks1Tojt059lcycjgRGYNsiZ059yMmZcprWBtGc=;
+	s=default; t=1574890003;
+	bh=9Y+FllgtX9H8rgB0biRlPzQSiJRaRqpAoGAVl3BQjbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M48uH5wJO4u1qc6fpPS2dNpmRARwt82mjKWDTeNM76mkgXglr62IiWc5Jcyznbcop
-	 cnHmSbaA5JIVNqtcChzb8Jn2j+KFlIRvNxNYHN1WQjQkDp5BS8TdmUPpyd2FvZSv3+
-	 xh6IT8F1R029w5/BcgemcZtP2byykvR1+wLDG474=
+	b=KcXd7iKqO468CRi8b5tLb90ZRBCUZwSIQJxuYLWCy/jql91VvqUPVcU7kKvwYBNpa
+	 lOCeFhdxbymQMSLfqM8nEo2f64McW+y4KJDW9A+eop27W5gfRRogFMT9IpJoRBMTZ5
+	 LgZelkxVnRJyukFLDiabnRIJc07DVH36zCKVycas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731550AbfK0VAY (ORCPT
+        id S1731780AbfK0V0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:00:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52060 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:26:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731288AbfK0VAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:00:15 -0500
+        id S1730126AbfK0VAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:00:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5305320678;
-        Wed, 27 Nov 2019 21:00:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BF892084B;
+        Wed, 27 Nov 2019 21:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888414;
-        bh=QGsz8Ks1Tojt059lcycjgRGYNsiZ059yMmZcprWBtGc=;
+        s=default; t=1574888422;
+        bh=9Y+FllgtX9H8rgB0biRlPzQSiJRaRqpAoGAVl3BQjbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M7/rRr4z1ZJthcF2mMamp9Lxa46M4Ti81ABtbb2SePix1tS7Sg4OuxmQ9qgtXHPb6
-         DDCfj8l9yyHPD4OrnOH9vK7U8AU/9FXEhobryRu//MIMtuAb5+L64bTEWzEl6Y+kLX
-         iw5nj5+qypZuM8ADpjaDyPoRvPBp1s8Nx51TuoWA=
+        b=AZGPWino5CxE7IKPEWZ1mtPpX4vWO6tWcnxeZhAgwNLhk2KfO6NZTFWwjG5vakFgA
+         qLQ9f1CHU+DaGN5tcu03TLFaTc4UT1q+mQF1iuewFFhE1aorHrmigMowh9eFXTkcw1
+         gaJRfelIkpEh473vd8X6AhSXWWzFKKKLxgwuOkJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 125/306] qlcnic: fix a return in qlcnic_dcb_get_capability()
-Date:   Wed, 27 Nov 2019 21:29:35 +0100
-Message-Id: <20191127203124.252076176@linuxfoundation.org>
+Subject: [PATCH 4.19 127/306] mfd: arizona: Correct calling of runtime_put_sync
+Date:   Wed, 27 Nov 2019 21:29:37 +0100
+Message-Id: <20191127203124.387371381@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,38 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
 
-[ Upstream commit c94f026fb742b2d3199422751dbc4f6fc0e753d8 ]
+[ Upstream commit 6b269a41a4520f7eb639e61a45ebbb9c9267d5e0 ]
 
-These functions are supposed to return one on failure and zero on
-success.  Returning a zero here could cause uninitialized variable
-bugs in several of the callers.  For example:
+Don't call runtime_put_sync when clk32k_ref is ARIZONA_32KZ_MCLK2
+as there is no corresponding runtime_get_sync call.
 
-    drivers/scsi/cxgbi/cxgb4i/cxgb4i.c:1660 get_iscsi_dcb_priority()
-    error: uninitialized symbol 'caps'.
+MCLK1 is not in the AoD power domain so if it is used as 32kHz clock
+source we need to hold a runtime PM reference to keep the device from
+going into low power mode.
 
-Fixes: 48365e485275 ("qlcnic: dcb: Add support for CEE Netlink interface.")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: cdd8da8cc66b ("mfd: arizona: Add gating of external MCLKn clocks")
+Signed-off-by: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/arizona-core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
-index 4b76c69fe86d2..834208e55f7b8 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
-@@ -883,7 +883,7 @@ static u8 qlcnic_dcb_get_capability(struct net_device *netdev, int capid,
- 	struct qlcnic_adapter *adapter = netdev_priv(netdev);
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 47d6d40f41cd5..a4403a57ddc89 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -52,8 +52,10 @@ int arizona_clk32k_enable(struct arizona *arizona)
+ 			if (ret != 0)
+ 				goto err_ref;
+ 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK1]);
+-			if (ret != 0)
+-				goto err_pm;
++			if (ret != 0) {
++				pm_runtime_put_sync(arizona->dev);
++				goto err_ref;
++			}
+ 			break;
+ 		case ARIZONA_32KZ_MCLK2:
+ 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK2]);
+@@ -67,8 +69,6 @@ int arizona_clk32k_enable(struct arizona *arizona)
+ 					 ARIZONA_CLK_32K_ENA);
+ 	}
  
- 	if (!test_bit(QLCNIC_DCB_STATE, &adapter->dcb->state))
--		return 0;
-+		return 1;
- 
- 	switch (capid) {
- 	case DCB_CAP_ATTR_PG:
+-err_pm:
+-	pm_runtime_put_sync(arizona->dev);
+ err_ref:
+ 	if (ret != 0)
+ 		arizona->clk32k_ref--;
 -- 
 2.20.1
 
