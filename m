@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5E7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F43EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77224215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBD6215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887160;
-	bh=j6CA8H90Oqea5Y+5FqbiK5sFUNSLb0xxZbJYSv/r/3g=;
+	s=default; t=1574887164;
+	bh=8lr5WI3hKp8J6pf8q7kwThSAqJKzrjvFPMvna7Gwtuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sq+VXU7t6vYQ9dl/MRKt4ykuDW3mEOjBbVTju9et/TnovemVUoyaKtlAtNeD45qZi
-	 8YorEhwS9+FSWZTIZ38iQW2FzE2+5mW8vlETFZK5mfEjFUa3GxPQX4u0EhSUrfOkHn
-	 InN8E6TeEQJolPqdxgx9WELZonEPGmflNp3vCado=
+	b=YgWyxN5pL8UH15HVbPyk4jqpor5rMzDp+tcdy2S3EfpZA0yIyWyaSMbcz3KviGXA5
+	 km3NQv76Ao10HhS4KRpplD4rcDhAs0VgGithD3Ni/wJN9I/MNlSY3cl4FlU1Bq0cwZ
+	 ukoRieWMXL9+bTGAgLoVvsP9pS3ZEa4e+c9AGojY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbfK0UjT (ORCPT
+        id S1728917AbfK0UjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:39:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43378 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:39:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728897AbfK0UjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:39:17 -0500
+        id S1728897AbfK0UjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:39:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F2D9215A5;
-        Wed, 27 Nov 2019 20:39:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2465121569;
+        Wed, 27 Nov 2019 20:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887157;
-        bh=j6CA8H90Oqea5Y+5FqbiK5sFUNSLb0xxZbJYSv/r/3g=;
+        s=default; t=1574887159;
+        bh=8lr5WI3hKp8J6pf8q7kwThSAqJKzrjvFPMvna7Gwtuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f5mKVn4gktZzvlkrrpKz9C7GMYOWgxorI9g+ZcMrhVTYyERCFiPPBtzyH2CG35B0t
-         +pKaKDmQ49YnDfwlhs1R8WmAIf2gFocTMaUvkM6PGmlzv/+q1KP5ELvyHMgmN6F5T3
-         5X7KRYgTkn7lafT9rx8qLKDsye/o33LJ4cyVamis=
+        b=X1AO7A2ukK77RQFiUdhAWgIrY2Uxx7rbIDVWfUHPSVHzIq3TgrC+aBFHD/9ofw6HO
+         EAibsQuIsr/t42IdCAgmtdAbZDXWEeSj+v6JeYgVP9bflr+UB6vnZh1QGoGMFuzs5w
+         LuBsW0+w5JFx33oR6R7yF9STOiED1vR9HxW+P2ZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Galbraith <efault@gmx.de>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 119/132] virtio_console: fix uninitialized variable use
-Date:   Wed, 27 Nov 2019 21:31:50 +0100
-Message-Id: <20191127203032.434658701@linuxfoundation.org>
+Subject: [PATCH 4.4 120/132] virtio_console: drop custom control queue cleanup
+Date:   Wed, 27 Nov 2019 21:31:51 +0100
+Message-Id: <20191127203032.645412707@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -62,42 +61,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael S. Tsirkin <mst@redhat.com>
 
-[ Upstream commit 2055997f983c6db7b5c3940ce5f8f822657d5bc3 ]
+[ Upstream commit 61a8950c5c5708cf2068b29ffde94e454e528208 ]
 
-We try to disable callbacks on c_ivq even without multiport
-even though that vq is not initialized in this configuration.
+We now cleanup all VQs on device removal - no need
+to handle the control VQ specially.
 
-Fixes: c743d09dbd01 ("virtio: console: Disable callbacks for virtqueues at start of S4 freeze")
-Suggested-by: Mike Galbraith <efault@gmx.de>
+Cc: stable@vger.kernel.org
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/virtio_console.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/char/virtio_console.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
 diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-index c5b89f6b0145e..1b002e1391f0a 100644
+index 1b002e1391f0a..bc4a804048205 100644
 --- a/drivers/char/virtio_console.c
 +++ b/drivers/char/virtio_console.c
-@@ -2197,14 +2197,16 @@ static int virtcons_freeze(struct virtio_device *vdev)
+@@ -1987,21 +1987,6 @@ static void remove_vqs(struct ports_device *portdev)
+ 	kfree(portdev->out_vqs);
+ }
  
- 	vdev->config->reset(vdev);
- 
--	virtqueue_disable_cb(portdev->c_ivq);
-+	if (use_multiport(portdev))
-+		virtqueue_disable_cb(portdev->c_ivq);
- 	cancel_work_sync(&portdev->control_work);
- 	cancel_work_sync(&portdev->config_work);
- 	/*
- 	 * Once more: if control_work_handler() was running, it would
- 	 * enable the cb as the last step.
+-static void remove_controlq_data(struct ports_device *portdev)
+-{
+-	struct port_buffer *buf;
+-	unsigned int len;
+-
+-	if (!use_multiport(portdev))
+-		return;
+-
+-	while ((buf = virtqueue_get_buf(portdev->c_ivq, &len)))
+-		free_buf(buf, true);
+-
+-	while ((buf = virtqueue_detach_unused_buf(portdev->c_ivq)))
+-		free_buf(buf, true);
+-}
+-
+ /*
+  * Once we're further in boot, we get probed like any other virtio
+  * device.
+@@ -2162,7 +2147,6 @@ static void virtcons_remove(struct virtio_device *vdev)
+ 	 * have to just stop using the port, as the vqs are going
+ 	 * away.
  	 */
--	virtqueue_disable_cb(portdev->c_ivq);
-+	if (use_multiport(portdev))
-+		virtqueue_disable_cb(portdev->c_ivq);
- 	remove_controlq_data(portdev);
+-	remove_controlq_data(portdev);
+ 	remove_vqs(portdev);
+ 	kfree(portdev);
+ }
+@@ -2207,7 +2191,6 @@ static int virtcons_freeze(struct virtio_device *vdev)
+ 	 */
+ 	if (use_multiport(portdev))
+ 		virtqueue_disable_cb(portdev->c_ivq);
+-	remove_controlq_data(portdev);
  
  	list_for_each_entry(port, &portdev->ports, list) {
+ 		virtqueue_disable_cb(port->in_vq);
 -- 
 2.20.1
 
