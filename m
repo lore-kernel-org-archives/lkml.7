@@ -2,147 +2,147 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97150C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA29CC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BFC020863
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D02520862
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:33:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYHJze5y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K+ZK+0Hr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfK0Scj (ORCPT
+        id S1727117AbfK0Sdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:32:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54884 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726514AbfK0Scj (ORCPT
+        Wed, 27 Nov 2019 13:33:43 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:36662 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfK0Sdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:32:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574879557;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=29WF8SRJu7k6XWM0r8jhKtWhn/ROnuR/yAPRr+2SCjM=;
-        b=FYHJze5yacMgtus3V0trqsn33pfDEQM2AZkq4NstFxoZWMsptVhLzkxff8Y7E/sHW4Srzw
-        bRpy5yBbzN+ogAETn3Feysg1V2wIjff6q9hlWeLQkHAmb2DIc1aG6YCBfQbUyzn6hYjUcW
-        kyAVLJcRm3uro+T43xTUS09AOkae2MM=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-lqGYbTyoMVauNlUik-RkFw-1; Wed, 27 Nov 2019 13:32:36 -0500
-X-MC-Unique: lqGYbTyoMVauNlUik-RkFw-1
-Received: by mail-wr1-f70.google.com with SMTP id 92so12587345wro.14
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:32:35 -0800 (PST)
+        Wed, 27 Nov 2019 13:33:43 -0500
+Received: by mail-yw1-f66.google.com with SMTP id y64so8740628ywe.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:33:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5OjRi9UMypWzzX9/4nFcvQwOg0nYRy1dHKkHuUJ53+8=;
+        b=K+ZK+0HravEAzoAlA2idzRZjAVNh2ZfjaaRKVFFueLUIi9QXZ3PLV+wkoSCWaPvsPe
+         3I57x17cuFqVttoaY9dOb2kLJmecjpFEfxSf84fCMQGsw1IZ2vO2/8E040ICTSodPtyD
+         +LnTtigkbMklWlFkgXTW7bUUHRhbxvTvr7HTCYG/+p6wXBbnNRXGHi1M+4Av5i6/D9Ay
+         mWtb0py+8Ny9Iq6qsuoIItf0kJmcp7QgLPm3i31svTz0KzydaBXxD/KKO4i2ZWXy9MuP
+         nvFYtALl0dM0bnIEzsR3uh3j6Kw0Z+k24Z4Ubfu+TSmzVKoU7RSOBtoTr5JRgBptbUyW
+         obZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=YxaL1ZT1aGySKkKsMe8gcQSf/mlZomA5ztZxEiMxVxw=;
-        b=F99XwGt3a5CTmRiS8v1BR/Vk8v2vHhMzfefwWrgEDO0gnj4Mn2c2lMLtjtB/BcZ4Ca
-         tkU/1/USxX03EX9hNMW0vuxTrDDD4vf+IgZCuAZGO8lpzrrdI+iLLLUsKBXCxZXOFi6i
-         o0jfRmkX0qqwrDBhA0IliDVwop2ey+4+QbXLq86D7RrbmanCuUA2abo6ED8jyG6AtgAx
-         m4yjdTalLWm6MKhYD53TnoZDFfkZXPh3j8zY7CkKYDtrQvo1KjE11OHfGkjsoTbAqS5E
-         j6an8kPZ4Z0n+YJ+pjIne9oG6vMS51R7solYdbX+nXkop23ZhK61P6YRyh/tJG30H/YQ
-         EEyw==
-X-Gm-Message-State: APjAAAUQUrTjEOP7pIQ5nKz/pq7sjU0gs5tl52OIYE8a/37Drmg2DYXL
-        PaaR4AReAl8KE72Y4gvSZ9Co0uPTBAKxsG8wo/MxolDad0VCbqHwK2uV7IPUuA/zHh/kNlkqMrY
-        2JSZ1wHMiFo6chx9zSrHWpzcI
-X-Received: by 2002:adf:ffc5:: with SMTP id x5mr3907198wrs.92.1574879554650;
-        Wed, 27 Nov 2019 10:32:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx8ika2gcHJ74dgNr0WfljAWH/C85tD9jVcLcwqgkOP5zVcGmWunqYNXZFhQ43XFqfbSu8vdA==
-X-Received: by 2002:adf:ffc5:: with SMTP id x5mr3907176wrs.92.1574879554355;
-        Wed, 27 Nov 2019 10:32:34 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:459f:99a9:39f1:65ba? ([2001:b07:6468:f312:459f:99a9:39f1:65ba])
-        by smtp.gmail.com with ESMTPSA id o133sm8067506wmb.4.2019.11.27.10.32.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2019 10:32:33 -0800 (PST)
-Subject: Re: [PATCH] KVM: Add separate helper for putting borrowed reference
- to kvm
-To:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191021225842.23941-1-sean.j.christopherson@intel.com>
- <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
- <20191126171416.GA22233@linux.intel.com>
- <0009c6c1bb635098fa68cb6db6414634555039fe.camel@linux.ibm.com>
- <e1a4218f-2a70-3de3-1403-dbebf8a8abdf@redhat.com>
- <bfa563e6a584bd85d3abe953ca088281dc0e167b.camel@linux.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6beeff56-7676-5dfd-a578-1732730f8963@redhat.com>
-Date:   Wed, 27 Nov 2019 19:32:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5OjRi9UMypWzzX9/4nFcvQwOg0nYRy1dHKkHuUJ53+8=;
+        b=rsu5ORXBLL4MI27/3kwV+Z4Az7IwX2KoNxAhxnUCih67bztW4+iBY1WJmpVCJhNAu+
+         CG/pHH4mUiwuJNdK362zMNpAJ31s2Gkhf+mO5COL+BG7Cy350vjsZH8Nhl1kf24Csdvr
+         eqsgXcT920akrsEaiCSRclIWyji8X0kl3NUaq7Gk7hRTH8RgpwO9vQJW9WpTjKGPbuXe
+         PKbt2mW91XtbUhCZURR2sYDenlm9rbtHWkM9TXfOiqR2GEzAo39d60piOO3jNd7sa2Lx
+         gb5eV+k1qvEplXCAiqwhu2UC0bYaw9hXVeioLM3vNwdGIi9DlcGfBq+zjBgCbSJVBRrJ
+         pZ0g==
+X-Gm-Message-State: APjAAAXQqJJ2nxBBloOUxgbpa1mVSOsL9FXZW3yZ/pD7A+y8HTLOu28y
+        8zZCDtCpgTQW3/FXpt/vBapsiaUy3KqPJDivfcYbyg==
+X-Google-Smtp-Source: APXvYqxZCZzobDLUfgfVI9CO0nFruf34M+w51JC3QCWjxOTiA2cFEKYZ6we2BkJTkb7z+aEcsSHfV58hXuWK60i/DRk=
+X-Received: by 2002:a81:7053:: with SMTP id l80mr3532099ywc.377.1574879621810;
+ Wed, 27 Nov 2019 10:33:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <bfa563e6a584bd85d3abe953ca088281dc0e167b.camel@linux.ibm.com>
-X-Mimecast-Spam-Score: 0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="ffsTa9Xe2Ee0ZdRuXdoWLUmRFeQM2p1Zu"
+References: <20191127073442.174202-1-irogers@google.com> <20191127081844.GH32367@krava>
+In-Reply-To: <20191127081844.GH32367@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 27 Nov 2019 10:33:30 -0800
+Message-ID: <CAP-5=fUpn0fecOyXH14Wjo7SCqV5wnkMcZwDvB8wJ5z5Jc2FHw@mail.gmail.com>
+Subject: Re: [PATCH] perf c2c: fix '-e list'
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ffsTa9Xe2Ee0ZdRuXdoWLUmRFeQM2p1Zu
-Content-Type: multipart/mixed; boundary="aqZUHOq3nlK4WoWx9AL9jxCe3XQdlu06R"
+On Wed, Nov 27, 2019 at 12:18 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Tue, Nov 26, 2019 at 11:34:42PM -0800, Ian Rogers wrote:
+> > When the event is passed as list, the default events should be listed as
+> > per 'perf mem record -e list'. Previous behavior is:
+> >
+> > $ perf c2c record -e list
+> > failed: event 'list' not found, use '-e list' to get list of available events
+> >
+> >  Usage: perf c2c record [<options>] [<command>]
+> >     or: perf c2c record [<options>] -- <command> [<options>]
+> >
+> >     -e, --event <event>   event selector. Use 'perf mem record -e list' to list available events
+>
+> man c2c page do say you should use 'perf mem' not 'perf c2c'
+> could you please change the man page as well?
 
---aqZUHOq3nlK4WoWx9AL9jxCe3XQdlu06R
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Done.
 
-On 27/11/19 19:24, Leonardo Bras wrote:
-> By what I could undestand up to now, these functions that use borrowed
-> references can only be called while the reference (file descriptor)
-> exists.=20
-> So, suppose these threads, where:
-> - T1 uses a borrowed reference, and=20
-> - T2 is releasing the reference (close, release):
+> >
+> > New behavior:
+> >
+> > $ perf c2c record -e list
+> > ldlat-loads  : available
+> > ldlat-stores : available
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/builtin-c2c.c | 20 ++++++++++++++++++--
+> >  1 file changed, 18 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> > index e69f44941aad..dd69cd218e4c 100644
+> > --- a/tools/perf/builtin-c2c.c
+> > +++ b/tools/perf/builtin-c2c.c
+> > @@ -2872,10 +2872,26 @@ static int perf_c2c__report(int argc, const char **argv)
+> >  static int parse_record_events(const struct option *opt,
+> >                              const char *str, int unset __maybe_unused)
+> >  {
+> > +     int j;
+> >       bool *event_set = (bool *) opt->value;
+> >
+> > -     *event_set = true;
+> > -     return perf_mem_events__parse(str);
+> > +     if (strcmp(str, "list")) {
+> > +             *event_set = true;
+> > +             if (!perf_mem_events__parse(str))
+> > +                     return 0;
+> > +
+> > +             exit(-1);
+> > +     }
+> > +     for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+> > +             struct perf_mem_event *e = &perf_mem_events[j];
+> > +
+> > +             fprintf(stderr, "%-13s%-*s%s\n",
+> > +                     e->tag,
+> > +                     verbose > 0 ? 25 : 0,
+> > +                     verbose > 0 ? perf_mem_events__name(j) : "",
+> > +                     e->supported ? ": available" : "");
+> > +     }
+>
+> there's same loop in builtin-mem.c, could you please put it
+> to function in mem-events.c?
 
-Nit: T2 is releasing the *last* reference (as implied by your reference
-to close/release).
+Done.
 
->=20
-> T1=09=09=09=09| T2
-> kvm_get_kvm()=09=09=09|
-> ...=09=09=09=09| kvm_put_kvm()
-> kvm_put_kvm_no_destroy()=09|
->=20
-> The above would not trigger a use-after-free bug, but will cause a
-> memory leak. Is my above understanding right?
+Thanks for the review!
+Ian
 
-Yes, this is correct.
-
-Paolo
-
-
---aqZUHOq3nlK4WoWx9AL9jxCe3XQdlu06R--
-
---ffsTa9Xe2Ee0ZdRuXdoWLUmRFeQM2p1Zu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEE8TM4V0tmI4mGbHaCv/vSX3jHroMFAl3ewUAACgkQv/vSX3jH
-roNHAwf/V5jw3UuEAUr+qwFRt1WbZT7kDY6RcpqwfR7drS3cV9JoPkLaa/vuvUnj
-TvZG7Q2ZVR0m2JALj914WOuC5pmAYy8HVawrFbooQ4T5mtc2akQzVD0eshLankPo
-RZjfY2ijPzfY+tajHzQJ09U9Rzc33YvOZGmao/zV8/QXtFQokF1549ZJQyZPTVM0
-cgiRO5mVfl0/IbchPvczCrgXIT0P4Ca9w+BN7xn1+HFGO8rvUtwaG5ZxVhUfk58B
-LArJb8NkIGNDdoh3DF27nHNXak0C95hD1ENiPKVK6RrEkr/wJc6ffOS8eAdUu5yl
-WmgTspYVIA7RjqLbTwLXHOQwKrvG7A==
-=Shjy
------END PGP SIGNATURE-----
-
---ffsTa9Xe2Ee0ZdRuXdoWLUmRFeQM2p1Zu--
-
+> thanks,
+> jirka
+>
