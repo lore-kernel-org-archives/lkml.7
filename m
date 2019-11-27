@@ -2,58 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E13C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE49DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8733A21845
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8628021845
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887561;
-	bh=xcuo46ZBvX1YCpcetNRUT5rVfIvBZCdTb3ynfGInL1w=;
+	s=default; t=1574887565;
+	bh=1obXavLzHsCeZUAaQ/cIka7JXtrr6Qjcv2jjQ2VJJkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KWoYnzpCtfOpoJUgrNQz3/W4IcYCtOvI0Ljc9d0u6/vD4VsIGWoV56YQF+wsaGZFh
-	 YYTlDKWy1kcoUq7jEXDzWEdr3sAwhFTTs4ZKUHF/yplIZ7qp1gROnOZFso6GZBkaOA
-	 M9Kxc4Vg2P9e0a6Qfo1aTt/e81HFx5yQQqcuZqI0=
+	b=Zax/hP+gRzdfK+WCSGG+NK3STMSDPtkMk6Riy5TgQf6bkeOaTi3J5cJpoP33QS29M
+	 sD5FgvX8bj4bmx2pUMSRrEStdIU1vosf3rUjTBcEPquLeD6Yncx7SMy21cZ9rBkpUX
+	 0ZSoMM7RTT9Q4T1YqQJ5FxJi1cMmkUP4yfcEtsiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbfK0UqA (ORCPT
+        id S1729834AbfK0UqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:46:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57326 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:46:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728500AbfK0Up5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:45:57 -0500
+        id S1729820AbfK0UqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:46:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5BB12178F;
-        Wed, 27 Nov 2019 20:45:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F3A3217C3;
+        Wed, 27 Nov 2019 20:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887556;
-        bh=xcuo46ZBvX1YCpcetNRUT5rVfIvBZCdTb3ynfGInL1w=;
+        s=default; t=1574887561;
+        bh=1obXavLzHsCeZUAaQ/cIka7JXtrr6Qjcv2jjQ2VJJkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k0a4IkcCDcW8Vqo7dQv9TT3tqal2s/IyqKMQqUvJ3K89fP0M+WXkzDhBJdfi0MtX8
-         P/ohpMc9JfGFOW0LYuC9SOyw+5w3lTl1LGW2SSNWuNvxFfxiDNmpTRPjB6KSc8vjlG
-         n7QjlebDdQDawFYK0v3bSK6NIPIBM3QaCHOrw/hg=
+        b=oxcY/FItAbnWNOnOvV3+a8p820pfLxlBqE12lOC2s49klhOZ0fg3xX88+uvaCn7Hw
+         ChNOuBgQgBMQQP7k9Q3RhbtHQKEvDo1cAUHt7+mPg8oYJI77wDqJ39Qm/HoDw8/Xy4
+         KOkTCadZYTqyMp7mDn1RqRTvSOKC7VTiJA+9PfrQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gang He <ghe@suse.com>,
-        Joseph Qi <jiangqi903@gmail.com>, Eric Ren <zren@suse.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 116/151] ocfs2: remove ocfs2_is_o2cb_active()
-Date:   Wed, 27 Nov 2019 21:31:39 +0100
-Message-Id: <20191127203044.137496591@linuxfoundation.org>
+        stable@vger.kernel.org, David Lechner <david@lechnology.com>,
+        Vignesh R <vigneshr@ti.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 108/151] spi: omap2-mcspi: Fix DMA and FIFO event trigger size mismatch
+Date:   Wed, 27 Nov 2019 21:31:31 +0100
+Message-Id: <20191127203042.253609157@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -66,74 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gang He <ghe@suse.com>
+From: Vignesh R <vigneshr@ti.com>
 
-commit a634644751c46238df58bbfe992e30c1668388db upstream.
+[ Upstream commit baf8b9f8d260c55a86405f70a384c29cda888476 ]
 
-Remove ocfs2_is_o2cb_active().  We have similar functions to identify
-which cluster stack is being used via osb->osb_cluster_stack.
+Commit b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
+broke SPI transfers where bits_per_word != 8. This is because of
+mimsatch between McSPI FIFO level event trigger size (SPI word length) and
+DMA request size(word length * maxburst). This leads to data
+corruption, lockup and errors like:
 
-Secondly, the current implementation of ocfs2_is_o2cb_active() is not
-totally safe.  Based on the design of stackglue, we need to get
-ocfs2_stack_lock before using ocfs2_stack related data structures, and
-that active_stack pointer can be NULL in the case of mount failure.
+	spi1.0: EOW timed out
 
-Link: http://lkml.kernel.org/r/1495441079-11708-1-git-send-email-ghe@suse.com
-Signed-off-by: Gang He <ghe@suse.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Reviewed-by: Eric Ren <zren@suse.com>
-Acked-by: Changwei Ge <ge.changwei@h3c.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by setting DMA maxburst size to 1 so that
+McSPI FIFO level event trigger size matches DMA request size.
 
+Fixes: b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
+Cc: stable@vger.kernel.org
+Reported-by: David Lechner <david@lechnology.com>
+Tested-by: David Lechner <david@lechnology.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/dlmglue.c   |    2 +-
- fs/ocfs2/stackglue.c |    6 ------
- fs/ocfs2/stackglue.h |    3 ---
- 3 files changed, 1 insertion(+), 10 deletions(-)
+ drivers/spi/spi-omap2-mcspi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ocfs2/dlmglue.c
-+++ b/fs/ocfs2/dlmglue.c
-@@ -3421,7 +3421,7 @@ static int ocfs2_downconvert_lock(struct
- 	 * we can recover correctly from node failure. Otherwise, we may get
- 	 * invalid LVB in LKB, but without DLM_SBF_VALNOTVALID being set.
- 	 */
--	if (!ocfs2_is_o2cb_active() &&
-+	if (ocfs2_userspace_stack(osb) &&
- 	    lockres->l_ops->flags & LOCK_TYPE_USES_LVB)
- 		lvb = 1;
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index bc136fe3a2829..ccb6f98550da4 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -625,8 +625,8 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
+ 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
+ 	cfg.src_addr_width = width;
+ 	cfg.dst_addr_width = width;
+-	cfg.src_maxburst = es;
+-	cfg.dst_maxburst = es;
++	cfg.src_maxburst = 1;
++	cfg.dst_maxburst = 1;
  
---- a/fs/ocfs2/stackglue.c
-+++ b/fs/ocfs2/stackglue.c
-@@ -48,12 +48,6 @@ static char ocfs2_hb_ctl_path[OCFS2_MAX_
-  */
- static struct ocfs2_stack_plugin *active_stack;
- 
--inline int ocfs2_is_o2cb_active(void)
--{
--	return !strcmp(active_stack->sp_name, OCFS2_STACK_PLUGIN_O2CB);
--}
--EXPORT_SYMBOL_GPL(ocfs2_is_o2cb_active);
--
- static struct ocfs2_stack_plugin *ocfs2_stack_lookup(const char *name)
- {
- 	struct ocfs2_stack_plugin *p;
---- a/fs/ocfs2/stackglue.h
-+++ b/fs/ocfs2/stackglue.h
-@@ -298,9 +298,6 @@ void ocfs2_stack_glue_set_max_proto_vers
- int ocfs2_stack_glue_register(struct ocfs2_stack_plugin *plugin);
- void ocfs2_stack_glue_unregister(struct ocfs2_stack_plugin *plugin);
- 
--/* In ocfs2_downconvert_lock(), we need to know which stack we are using */
--int ocfs2_is_o2cb_active(void);
--
- extern struct kset *ocfs2_kset;
- 
- #endif  /* STACKGLUE_H */
+ 	rx = xfer->rx_buf;
+ 	tx = xfer->tx_buf;
+-- 
+2.20.1
+
 
 
