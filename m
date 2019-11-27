@@ -2,118 +2,109 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617E8C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F7EC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EB320637
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6C120674
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:24:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVsRjIUc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B143iIgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfK0OXu (ORCPT
+        id S1727092AbfK0OYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:23:50 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37221 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbfK0OXu (ORCPT
+        Wed, 27 Nov 2019 09:24:55 -0500
+Received: from mail-qt1-f182.google.com ([209.85.160.182]:44393 "EHLO
+        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfK0OYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:23:50 -0500
-Received: by mail-lf1-f66.google.com with SMTP id b20so17323539lfp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 06:23:47 -0800 (PST)
+        Wed, 27 Nov 2019 09:24:54 -0500
+Received: by mail-qt1-f182.google.com with SMTP id g24so18673722qtq.11;
+        Wed, 27 Nov 2019 06:24:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NQAc09iOSs+OUg5bzPj2H1rBE2GvXaGtHzNxY2vVFm8=;
-        b=NVsRjIUcwILPd1tnDv3S17qPH2Rc8pdEr06OlwognC5L1wYvuuWE2VmFAVum6Qb1sC
-         lmVgIpOLWlVMCndd202EatqCqX9bWwKuQpuknmnYAvNBZuRM0nfXZWN+zzgPxEDxXtNP
-         jo3HcmJ7bYOf3vgkcdZcmnDKCfYRUit71JHPUh0YjkuskgVPvkpJtC7gGesDIl5k/ASd
-         TnVlq3uYhRek3JP6dVNkz96AweylBNW4uXW04xnsmUiSETC69B8fHHkaoIdGKO35hm8Y
-         2kalCjn+HqYa1IEXmMSEhDzdLjntmK6J3oLzeaoyaS1e+VSazkpj5LuLvCDr9RKRbaqp
-         qWhA==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/ZjRuCdf64agVgNamIpbcb5ZOt2c6JCXvZXZubn5ERY=;
+        b=B143iIgvlm1JsDexn4GCrp+qQaEsO5o/w7aq3nbuhAmsHjaG6+KxppfC/aTUpThg3M
+         nw2FJjBdoBJ+Qgxp4jLI49dlUsxKE6rIM6LxoIm/S11yoGdNjQOYCI7BfO8LixeCR+DK
+         RgmqQIQ2iwKtSH6c3OLh4Ri50zsueNjEH76p82tUcAqYAfx4ZuG83j59yDS7mN7ekdAr
+         rw5niVr8wL0lHNgqJHTQRcx7luADmimJpYZJA/UXduL2lPMCzkoESXk61EBEse6WYy+C
+         ZN4H5jEgIslRb9CLqmdDv6nfmZl0sWQRttiEzDlbI8JV+ewLipOdU/38LHh51WO4pWjS
+         dkDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NQAc09iOSs+OUg5bzPj2H1rBE2GvXaGtHzNxY2vVFm8=;
-        b=qXh6BhVT/tKtT3ru67dV7ezgW+b2aOyZD5A1WjRb22WnXIl9hSEZ+64FEJb4EMYe0p
-         4fZG1vxya98L1bntcoRcFoEyZ13NRBWYo3yITVpCUWgaJo6NIvLk5GDa9Kmix64eLuPa
-         uXXWxZn8ooZ9QeENodt4bYX1PxK9qBobgN6vz0oGNKhQgdTZIzF5dE+sADewmzCA7eLi
-         CJm8JfuIbVmJ6BZ0aiAgDAsYNmH1swi9cEk12Z+7RCdVLF8RKmY8kM8NNw1tyVvDXNzc
-         A2RvMyWvjqtsm3861U84ZPqISdouKx2YDGvN3t4I3//K/HkCjwLRLxM5HGuu0r2/f+p+
-         7iSw==
-X-Gm-Message-State: APjAAAWmn6tkyQTEnBoBTrvBSYy3loSVQdQOL8Y84/J8+trgWjDr92O7
-        EyIkaGerOjHvO7llRxvh/6VH2vtk
-X-Google-Smtp-Source: APXvYqzhLx4HT6/iHXYY/lRbgzvswtQ8BpAwyny4yrxeVKhWIvSHhwsbr3b6fJNLMHfbnSj4C4QlJQ==
-X-Received: by 2002:ac2:4c82:: with SMTP id d2mr15617326lfl.62.1574864626598;
-        Wed, 27 Nov 2019 06:23:46 -0800 (PST)
-Received: from seldlx21914.corpusers.net ([37.139.156.40])
-        by smtp.gmail.com with ESMTPSA id t8sm6975946lfl.51.2019.11.27.06.23.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Nov 2019 06:23:46 -0800 (PST)
-Date:   Wed, 27 Nov 2019 15:23:45 +0100
-From:   Vitaly Wool <vitalywool@gmail.com>
-To:     <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 3/3] z3fold: protect handle reads
-Message-Id: <20191127152345.8059852f60947686674d726d@gmail.com>
-In-Reply-To: <20191127152012.17a4b35f9e7f6e50f9aaca9c@gmail.com>
-References: <20191127152012.17a4b35f9e7f6e50f9aaca9c@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; x86_64-unknown-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/ZjRuCdf64agVgNamIpbcb5ZOt2c6JCXvZXZubn5ERY=;
+        b=AXaiCX8DURd36euyJJD62gcVPdp2FzFaM9Gx8EiWJ2iFpK6xu1VTP4MJfD/qj0QUv5
+         /o4FjqDHNhPM/jWwrWNn1lcoMqQiadAuUg+/FbG6hVXIV+7W1U09khE6Hy9iUrLp1gTh
+         5ppQh5AgKrzhvAGH8N075lJcLqwdVre10E1FZEJ1oLZCrgJXopBSYrk15JBjQMeGQ73n
+         hHdp29oEMCx8vzqdMX8/aTOyIDf+nLK711mH+23YyB5BuOllQEYVBg3WIFXssKEAMH0g
+         3yoiBhmEx65zVbUu+G7Bl4bIyuD2kai/r82rUFWTOSQTkJ3RA66zVzVHvIqWo2wBSyVJ
+         ZH2w==
+X-Gm-Message-State: APjAAAVPhezPgImYAj65h6PZLYvA+VmY2KdH+FNzbxHAL/O+wyyrqTj3
+        /i0uuFMxVdCJV1IAS6erBsA=
+X-Google-Smtp-Source: APXvYqxP+QOUP8hC+F9dIRxzhI6FukncbB5ALX6XcXCEOEdJlxtvCsiBmnKgICFiTpIOr8nfe4tFYg==
+X-Received: by 2002:ac8:544e:: with SMTP id d14mr7570367qtq.321.1574864693016;
+        Wed, 27 Nov 2019 06:24:53 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id f21sm6752243qkl.34.2019.11.27.06.24.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 06:24:52 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B433F40D3E; Wed, 27 Nov 2019 11:24:49 -0300 (-03)
+Date:   Wed, 27 Nov 2019 11:24:49 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Quentin Monnet <quentin.monnet@netronome.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH 3/3] bpftool: Allow to link libbpf dynamically
+Message-ID: <20191127142449.GD22719@kernel.org>
+References: <20191127094837.4045-1-jolsa@kernel.org>
+ <20191127094837.4045-4-jolsa@kernel.org>
+ <fd22660f-2f70-4ffa-b45f-bb417d006d0a@netronome.com>
+ <20191127141520.GJ32367@krava>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127141520.GJ32367@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to make sure slots are protected on reading a handle. Since
-handles are modified by free_handle() which only takes slot rwlock,
-that lock should be used when handles are read.
+Em Wed, Nov 27, 2019 at 03:15:20PM +0100, Jiri Olsa escreveu:
+> On Wed, Nov 27, 2019 at 01:38:55PM +0000, Quentin Monnet wrote:
+> > 2019-11-27 10:48 UTC+0100 ~ Jiri Olsa <jolsa@kernel.org>
+> > On the plus side, all build attempts from
+> > tools/testing/selftests/bpf/test_bpftool_build.sh pass successfully on
+> > my setup with dynamic linking from your branch.
+> 
+> cool, had no idea there was such test ;-)
 
-Signed-off-by: Vitaly Wool <vitaly.vul@sony.com>
----
- mm/z3fold.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Should be the the equivalent to 'make -C tools/perf build-test' :-)
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index f2a75418e248..43754d8ebce8 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -486,8 +486,12 @@ static unsigned long encode_handle(struct z3fold_header *zhdr, enum buddy bud)
- /* only for LAST bud, returns zero otherwise */
- static unsigned short handle_to_chunks(unsigned long handle)
- {
--	unsigned long addr = *(unsigned long *)handle;
-+	struct z3fold_buddy_slots *slots = handle_to_slots(handle);
-+	unsigned long addr;
- 
-+	read_lock(&slots->lock);
-+	addr = *(unsigned long *)handle;
-+	read_unlock(&slots->lock);
- 	return (addr & ~PAGE_MASK) >> BUDDY_SHIFT;
- }
- 
-@@ -499,10 +503,13 @@ static unsigned short handle_to_chunks(unsigned long handle)
- static enum buddy handle_to_buddy(unsigned long handle)
- {
- 	struct z3fold_header *zhdr;
-+	struct z3fold_buddy_slots *slots = handle_to_slots(handle);
- 	unsigned long addr;
- 
-+	read_lock(&slots->lock);
- 	WARN_ON(handle & (1 << PAGE_HEADLESS));
- 	addr = *(unsigned long *)handle;
-+	read_unlock(&slots->lock);
- 	zhdr = (struct z3fold_header *)(addr & PAGE_MASK);
- 	return (addr - zhdr->first_num) & BUDDY_MASK;
- }
--- 
-2.17.1
+Perhaps we should make tools/testing/selftests/perf/ link to that?
+
+- Arnaldo
