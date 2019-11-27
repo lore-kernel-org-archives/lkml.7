@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C79C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2693DC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013C82154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94CF2154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888032;
-	bh=zeMmqN91T1U6t+tXj7rn0j1WvBUUfrtvQg+SMNngmbI=;
+	s=default; t=1574888035;
+	bh=JFkH838InWF4Uk6kpUipLTfcZq+Or1Xb9dh4tiaBm7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xp11NuhA9Ga4PKjidP1EOgI4CvBkBeDQrvPFGv/eF5IUP+5c8mPCgADYN3GBrbY9W
-	 KRryrad2TyXBpk4MQNhDunN+N7o8GO1B/Zzkv0krJ1xtSZMsh0X588M8EzcLpHaYxZ
-	 6YiSE4BsUbI7Mz14A4rA8WsRjlxJ44RJmxiJJji8=
+	b=Qlz9AgraPT2foRcnQ+AZilMbE4/gf+KY37EF4Gi9ImpQwMmSfmb5NXsqzlOXclFxV
+	 i7/6ekkXRzlU+mi9jzCDuzxtt+vFpbfyjpNhBOeNPyyWg1/eZyHo2Zanq3qew4f8+z
+	 9n7CAqMEQrTHhc+VBE2RDx+T1eCEtlz081HUD+Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbfK0Uxu (ORCPT
+        id S1727739AbfK0Uxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:53:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:53:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728353AbfK0Uxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:41 -0500
+        id S1730764AbfK0Uxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 844CA21882;
-        Wed, 27 Nov 2019 20:53:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FDCA2068E;
+        Wed, 27 Nov 2019 20:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888021;
-        bh=zeMmqN91T1U6t+tXj7rn0j1WvBUUfrtvQg+SMNngmbI=;
+        s=default; t=1574888025;
+        bh=JFkH838InWF4Uk6kpUipLTfcZq+Or1Xb9dh4tiaBm7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d2tvASS1X+R1N+U67BLkWrhOaGns410dV78HKDfOL4Gd9i3M01Bx41KFxzDSVACFM
-         JqOaRWgAKhKRUPyNj5WDRDDTGGsi+mpdN+p4tggUlZZXMCMOuYlX/Wt3xdRWjVlxh/
-         mr6h5fE1Utu08ftOGUeaQKztJe57jD0UY17/IfoQ=
+        b=PJxwfoZVEtfSlpiNtnDEGMclCcUQFngrG80ARLcS+q+kbOGXdYwTso1i+7md9BN1L
+         e4Eawpqo7VybLDEyTk1XZOveeU2ysleB85xSBCv5NAdeSFgs4Q0pC33GfRpxgilCGM
+         2EvfflUUMXcxT/8W+7mYAQM5kxY8rdYhfC+3p+vM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 144/211] scsi: megaraid_sas: Fix goto labels in error handling
-Date:   Wed, 27 Nov 2019 21:31:17 +0100
-Message-Id: <20191127203107.612529069@linuxfoundation.org>
+Subject: [PATCH 4.14 136/211] brcmsmac: never log "tid x is not aggable" by default
+Date:   Wed, 27 Nov 2019 21:31:09 +0100
+Message-Id: <20191127203106.881430566@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,44 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+From: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
 
-[ Upstream commit 8a25fa17b6ed6e6c8101e9c68a10ae68a9025f2c ]
+[ Upstream commit 96fca788e5788b7ea3b0050eb35a343637e0a465 ]
 
-During init, if pci_alloc_irq_vectors() fails, the driver has not yet setup
-the IRQs. Fix the goto labels and error handling for this case.
+This message greatly spams the log under heavy Tx of frames with BK access
+class which is especially true when operating as AP. It is also not informative
+as the "agg'ablity" of TIDs are set once and never change.
+Fix this by logging only in debug mode.
 
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ .../net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c    | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 23a9f0777fa62..577513649afbe 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -5324,7 +5324,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
- 	if (!instance->msix_vectors) {
- 		i = pci_alloc_irq_vectors(instance->pdev, 1, 1, PCI_IRQ_LEGACY);
- 		if (i < 0)
--			goto fail_setup_irqs;
-+			goto fail_init_adapter;
- 	}
- 
- 	megasas_setup_reply_map(instance);
-@@ -5541,9 +5541,8 @@ static int megasas_init_fw(struct megasas_instance *instance)
- 
- fail_get_ld_pd_list:
- 	instance->instancet->disable_intr(instance);
--fail_init_adapter:
- 	megasas_destroy_irqs(instance);
--fail_setup_irqs:
-+fail_init_adapter:
- 	if (instance->msix_vectors)
- 		pci_free_irq_vectors(instance->pdev);
- 	instance->msix_vectors = 0;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+index 257968fb3111f..66f1f41b13803 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+@@ -846,8 +846,8 @@ brcms_ops_ampdu_action(struct ieee80211_hw *hw,
+ 		status = brcms_c_aggregatable(wl->wlc, tid);
+ 		spin_unlock_bh(&wl->lock);
+ 		if (!status) {
+-			brcms_err(wl->wlc->hw->d11core,
+-				  "START: tid %d is not agg\'able\n", tid);
++			brcms_dbg_ht(wl->wlc->hw->d11core,
++				     "START: tid %d is not agg\'able\n", tid);
+ 			return -EINVAL;
+ 		}
+ 		ieee80211_start_tx_ba_cb_irqsafe(vif, sta->addr, tid);
 -- 
 2.20.1
 
