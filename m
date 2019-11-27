@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3D9C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ED6C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBAF215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A5320863
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887306;
-	bh=20y6msOi7lmlQ6mQ3DWuL9/PRbBq+fbqGSZPVLo2ebQ=;
+	s=default; t=1574887309;
+	bh=6MsO48qqDlueLw2rlZAnHoxYP3IEV8AjklsM9jZxRY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l8B6THmDqoQf0MeeQgPJDdh3KSBRPctUHOMbIlvEinsD5Byonbdm46yeY7bGHcMn+
-	 MPbeOXNkimiwJLHWIZ1dzW0faCLhhvwyFVGDxFRZvALuIA8ntZAtc4JYLKuYA+T3xj
-	 KPTDlwr7zGkU9/K6u6hBR35w4smD+8ZcEllL8iJI=
+	b=KgQm4CoJSDJ0XaJFqnpdM9jHpka1hKGVP726KnJwpTb95WHv2KxTQ/XVjPFYGvg+K
+	 RdKnz1XUDQmmDyhXKNL//c9Cf68VHS73ubo1aRlto6d/VlWP3AW9pztigafhHiDsGv
+	 HYW5wm2ezPjKyoaGrihxG2UPWC3ThVoifIbSYUqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbfK0Ulp (ORCPT
+        id S1728346AbfK0Ulr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:41:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47106 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:41:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729228AbfK0Ull (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:41:41 -0500
+        id S1727696AbfK0Uln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:41:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E184320863;
-        Wed, 27 Nov 2019 20:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EB5720863;
+        Wed, 27 Nov 2019 20:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887300;
-        bh=20y6msOi7lmlQ6mQ3DWuL9/PRbBq+fbqGSZPVLo2ebQ=;
+        s=default; t=1574887302;
+        bh=6MsO48qqDlueLw2rlZAnHoxYP3IEV8AjklsM9jZxRY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GTWTM47ok0STCqMTejmw68W8cQ1in7xYPjPN7rZF980FN60RuGdipptVRXM0AJArn
-         9AmZKNRtsC7jF+XFe8ycPIKhGMyutyKSpnoDK6sW9/DqEsRkRqCx1guxvRvV1JyHmM
-         qrHVKCt6QxQJT3tZqQReQoQXaiu/VZL+hiYoUfio=
+        b=S4OJSEwvYfB/LDp83CxaMykFQC8QeCvNzXfAhvQrfpZiAF393AYPRlvC43Kpog0R7
+         dFZdIu29oBn+BiU62wCTCFfQAMVAIc7utd5mAIz8y7jOovgHaDLGN3H9idBsmtArh6
+         fwz+z/hoHmQhXo0OdYXH+r+ewpMwvUPK2sr5K8EA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 056/151] net: ethernet: ti: cpsw: unsync mcast entries while switch promisc mode
-Date:   Wed, 27 Nov 2019 21:30:39 +0100
-Message-Id: <20191127203032.340864685@linuxfoundation.org>
+Subject: [PATCH 4.9 057/151] mfd: arizona: Correct calling of runtime_put_sync
+Date:   Wed, 27 Nov 2019 21:30:40 +0100
+Message-Id: <20191127203032.480021499@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -62,40 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+From: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
 
-[ Upstream commit 9737cc99dd14b5b8b9d267618a6061feade8ea68 ]
+[ Upstream commit 6b269a41a4520f7eb639e61a45ebbb9c9267d5e0 ]
 
-After flushing all mcast entries from the table, the ones contained in
-mc list of ndev are not restored when promisc mode is toggled off,
-because they are considered as synched with ALE, thus, in order to
-restore them after promisc mode - reset syncing info. This fix
-touches only switch mode devices, including single port boards
-like Beagle Bone.
+Don't call runtime_put_sync when clk32k_ref is ARIZONA_32KZ_MCLK2
+as there is no corresponding runtime_get_sync call.
 
-Fixes: commit 5da1948969bc
-("net: ethernet: ti: cpsw: fix lost of mcast packets while rx_mode update")
+MCLK1 is not in the AoD power domain so if it is used as 32kHz clock
+source we need to hold a runtime PM reference to keep the device from
+going into low power mode.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: cdd8da8cc66b ("mfd: arizona: Add gating of external MCLKn clocks")
+Signed-off-by: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/arizona-core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index d7cb205fe7e26..892b06852e150 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -590,6 +590,7 @@ static void cpsw_set_promiscious(struct net_device *ndev, bool enable)
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 0556a9749dbe0..1f0c2b594654e 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -52,8 +52,10 @@ int arizona_clk32k_enable(struct arizona *arizona)
+ 			if (ret != 0)
+ 				goto err_ref;
+ 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK1]);
+-			if (ret != 0)
+-				goto err_pm;
++			if (ret != 0) {
++				pm_runtime_put_sync(arizona->dev);
++				goto err_ref;
++			}
+ 			break;
+ 		case ARIZONA_32KZ_MCLK2:
+ 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK2]);
+@@ -67,8 +69,6 @@ int arizona_clk32k_enable(struct arizona *arizona)
+ 					 ARIZONA_CLK_32K_ENA);
+ 	}
  
- 			/* Clear all mcast from ALE */
- 			cpsw_ale_flush_multicast(ale, ALE_ALL_PORTS, -1);
-+			__dev_mc_unsync(ndev, NULL);
- 
- 			/* Flood All Unicast Packets to Host port */
- 			cpsw_ale_control_set(ale, 0, ALE_P0_UNI_FLOOD, 1);
+-err_pm:
+-	pm_runtime_put_sync(arizona->dev);
+ err_ref:
+ 	if (ret != 0)
+ 		arizona->clk32k_ref--;
 -- 
 2.20.1
 
