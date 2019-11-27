@@ -2,51 +2,58 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1095C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415CEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72FF20870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15ACF20870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891031;
-	bh=nQbGLp7kUFBI5MTtVDyufswpa9SdBhEAvYm8NlWKD2A=;
+	s=default; t=1574891036;
+	bh=Ubzdtado8qpF9VSRmYdGAtTkvjECdbzj1U/T/2pUfco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nk1PfE5yV2A273GxOAyeSoese89ufY0K7Ng4Os32GEV0O2ytsiiMXxu7xQ93i2pkL
-	 hiFGLcOyIGoIJ/KmgmaBdwQ+wtzkCY+M/KYt70Etzy3VmNjPX743uiBmaY7Wd0RHDj
-	 hbQVXukqaJmCR6m6O8E6UhwfA1U2laRDTtjeKBqM=
+	b=rnNqwI6hIr1PlnGmn8OVez6LZPFAWmJTthq1dLVhKe/Q9a8O1KkpZzttdBXF+r9Bt
+	 jbMMoYUqn5sV7UMtcuq7WehN7u9Jr3bSOC7pQ0lAuE6WyPPneo4uYQ+aeG7TZw2Ekd
+	 HKRu1BkPpSS47nQqNuGUsK6+GlJPD2nTn5wYZcRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfK0UiO (ORCPT
+        id S1728939AbfK0Vny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:38:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41404 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:43:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727784AbfK0UiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:38:06 -0500
+        id S1728685AbfK0UiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:38:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B24F6216F4;
-        Wed, 27 Nov 2019 20:38:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A82621771;
+        Wed, 27 Nov 2019 20:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887085;
-        bh=nQbGLp7kUFBI5MTtVDyufswpa9SdBhEAvYm8NlWKD2A=;
+        s=default; t=1574887090;
+        bh=Ubzdtado8qpF9VSRmYdGAtTkvjECdbzj1U/T/2pUfco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v7tQFzwNfoIcSg6g0GuM9Ws2QGdztat7+6qU5J5WQz7RZ3JPHX0eQixfbU6Mh7ocD
-         JeV1njKB/Y8gDSxVcB34M92e1c9XZP85SVT1cA0sn0r/C+pW3E5eRAI1krm62lSxa1
-         LmbcSKjK14sXCrBNAIiQorCdNNcKi4z4Re4bmF/k=
+        b=vu1aNK+hPQzt7GIBmcG9bz1MtdrddhDggj8nW2iTXgRyLpjslbPaxtyiNQwtPa+eh
+         f19TtN7Df34lUwynTEPaS4LYnpit/AxqGNdkXYWuhMJ40jZFib4tklR+SkcO8jUzsa
+         Ffl8AjsVl6y2n2BwCBAgnTnzoSX+zKiSpk7Z6r2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 4.4 106/132] ARC: perf: Accommodate big-endian CPU
-Date:   Wed, 27 Nov 2019 21:31:37 +0100
-Message-Id: <20191127203026.308055463@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "Ernesto A. Fernndez" <ernesto.mnd.fernandez@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Hin-Tak Leung <htl10@users.sourceforge.net>,
+        Vyacheslav Dubeyko <slava@dubeyko.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 072/132] fs/hfs/extent.c: fix array out of bounds read of array extent
+Date:   Wed, 27 Nov 2019 21:31:03 +0100
+Message-Id: <20191127203007.572023848@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -59,80 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 5effc09c4907901f0e71e68e5f2e14211d9a203f upstream.
+[ Upstream commit 6c9a3f843a29d6894dfc40df338b91dbd78f0ae3 ]
 
-8-letter strings representing ARC perf events are stores in two
-32-bit registers as ASCII characters like that: "IJMP", "IALL", "IJMPTAK" etc.
+Currently extent and index i are both being incremented causing an array
+out of bounds read on extent[i].  Fix this by removing the extraneous
+increment of extent.
 
-And the same order of bytes in the word is used regardless CPU endianness.
+Ernesto said:
 
-Which means in case of big-endian CPU core we need to swap bytes to get
-the same order as if it was on little-endian CPU.
+: This is only triggered when deleting a file with a resource fork.  I
+: may be wrong because the documentation isn't clear, but I don't think
+: you can create those under linux.  So I guess nobody was testing them.
+:
+: > A disk space leak, perhaps?
+:
+: That's what it looks like in general.  hfs_free_extents() won't do
+: anything if the block count doesn't add up, and the error will be
+: ignored.  Now, if the block count randomly does add up, we could see
+: some corruption.
 
-Otherwise we're seeing the following error message on boot:
-------------------------->8----------------------
-ARC perf        : 8 counters (32 bits), 40 conditions, [overflow IRQ support]
-sysfs: cannot create duplicate filename '/devices/arc_pct/events/pmji'
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
-Stack Trace:
-  arc_unwind_core+0xd4/0xfc
-  dump_stack+0x64/0x80
-  sysfs_warn_dup+0x46/0x58
-  sysfs_add_file_mode_ns+0xb2/0x168
-  create_files+0x70/0x2a0
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at kernel/events/core.c:12144 perf_event_sysfs_init+0x70/0xa0
-Failed to register pmu: arc_pct, reason -17
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
-Stack Trace:
-  arc_unwind_core+0xd4/0xfc
-  dump_stack+0x64/0x80
-  __warn+0x9c/0xd4
-  warn_slowpath_fmt+0x22/0x2c
-  perf_event_sysfs_init+0x70/0xa0
----[ end trace a75fb9a9837bd1ec ]---
-------------------------->8----------------------
+Detected by CoverityScan, CID#711541 ("Out of bounds read")
 
-What happens here we're trying to register more than one raw perf event
-with the same name "PMJI". Why? Because ARC perf events are 4 to 8 letters
-and encoded into two 32-bit words. In this particular case we deal with 2
-events:
- * "IJMP____" which counts all jump & branch instructions
- * "IJMPC___" which counts only conditional jumps & branches
-
-Those strings are split in two 32-bit words this way "IJMP" + "____" &
-"IJMP" + "C___" correspondingly. Now if we read them swapped due to CPU core
-being big-endian then we read "PMJI" + "____" & "PMJI" + "___C".
-
-And since we interpret read array of ASCII letters as a null-terminated string
-on big-endian CPU we end up with 2 events of the same name "PMJI".
-
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
-
+Link: http://lkml.kernel.org/r/20180831140538.31566-1-colin.king@canonical.com
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Ernesto A. Fernndez <ernesto.mnd.fernandez@gmail.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Hin-Tak Leung <htl10@users.sourceforge.net>
+Cc: Vyacheslav Dubeyko <slava@dubeyko.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/kernel/perf_event.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/hfs/extent.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arc/kernel/perf_event.c
-+++ b/arch/arc/kernel/perf_event.c
-@@ -486,8 +486,8 @@ static int arc_pmu_device_probe(struct p
- 	/* loop thru all available h/w condition indexes */
- 	for (j = 0; j < cc_bcr.c; j++) {
- 		write_aux_reg(ARC_REG_CC_INDEX, j);
--		cc_name.indiv.word0 = read_aux_reg(ARC_REG_CC_NAME0);
--		cc_name.indiv.word1 = read_aux_reg(ARC_REG_CC_NAME1);
-+		cc_name.indiv.word0 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME0));
-+		cc_name.indiv.word1 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME1));
+diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
+index 16819d2a978b4..cbe4fca96378a 100644
+--- a/fs/hfs/extent.c
++++ b/fs/hfs/extent.c
+@@ -304,7 +304,7 @@ int hfs_free_fork(struct super_block *sb, struct hfs_cat_file *file, int type)
+ 		return 0;
  
- 		/* See if it has been mapped to a perf event_id */
- 		for (i = 0; i < ARRAY_SIZE(arc_pmu_ev_hw_map); i++) {
+ 	blocks = 0;
+-	for (i = 0; i < 3; extent++, i++)
++	for (i = 0; i < 3; i++)
+ 		blocks += be16_to_cpu(extent[i].count);
+ 
+ 	res = hfs_free_extents(sb, extent, blocks, blocks);
+-- 
+2.20.1
+
 
 
