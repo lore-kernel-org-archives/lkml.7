@@ -2,127 +2,138 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6255EC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A46C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392F22154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889331;
-	bh=+jjDHJxZIeqTOnINzZNlGxXqKuwC1sqvGEFai89MMkY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+5b2eNqNHofCQ6+ChqdE/jzKqzIzPWGKgKyAi/EGD0dzmA49JmDPjO4syIAW+kPE
-	 iiZeZ3P0mTpMEzCbnUHMXNt/wqs9gt5n3A+b1dV9T2/jAgG4Bm8B48NdgyaZIqDWsK
-	 VmZItTvMhj+jDzxorbyadPTctE2xudfsIjdIQiGY=
+	by mail.kernel.org (Postfix) with ESMTP id 86D232154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Rh/Py5iA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387700AbfK0VPY (ORCPT
+        id S1733260AbfK0VPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:15:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387690AbfK0VPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:15:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D26D2154A;
-        Wed, 27 Nov 2019 21:15:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889320;
-        bh=+jjDHJxZIeqTOnINzZNlGxXqKuwC1sqvGEFai89MMkY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s7NX2J/9qIFPtIHrBq5i+gWMeyC9Ge1kokwPN9OCXHaxKim0yRWTK3QElM41SaDrx
-         WFmo5vzaT6G5HcQhbvEJtbdFteVml09cUioW64MRPxgzU4hvyhxjZ6cfncjocrTUWA
-         +aL+yZbWPSrX2pHGK6j4+Bu87r/gavwWz93qn0KM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pavel=20L=C3=B6bl?= <pavel@loebl.cz>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 59/66] USB: serial: mos7840: add USB ID to support Moxa UPort 2210
-Date:   Wed, 27 Nov 2019 21:32:54 +0100
-Message-Id: <20191127202739.902656298@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
-References: <20191127202632.536277063@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 27 Nov 2019 16:15:36 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:44071 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732826AbfK0VPc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:15:32 -0500
+Received: by mail-qv1-f66.google.com with SMTP id t11so713254qvz.11
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 13:15:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F99XMPQ3TAH+uV2c/3H52TWBXa+PYGt7dcNa6t/ODb8=;
+        b=Rh/Py5iAqTgPLbvtB+41QKoCIj+6ktjR+xDaZrX02/6GEvukEwIP3xD4GWKrP3JKDk
+         PPwCUuGOLvKom9XlvMl2aRlAxZcPJh+uOz2LC+iatHYW3hZTCLsLHsPog/4yI/DL6xmR
+         /Pi1xqBkEw2DqHAqh30+MSTyc6kwugXvPSlJs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F99XMPQ3TAH+uV2c/3H52TWBXa+PYGt7dcNa6t/ODb8=;
+        b=s9CXiEIalOa/7mNwzaoEoGMK+iClXhy6fLjWqiuVAOLOdnRPjRJHHMhCOaqVu4a2mO
+         NnwcXpcahqRqDoAIVC7fNssAUr+gjYu06K2Z/J2ppH6O9ROud1REzg0Svhf68CjxvYrU
+         ZyGGILA4hDY9MURCq4ygrfWFw71cYmMNgo0/hyDffLNF3Hk0H8J+CyyX/WI2Ktu0vvp6
+         zPXYlMNIy7vXKx0EVN884I37en6BlaO8HN0C7MQjdumYi6meb7k9twKEVBUJvQdiB9ac
+         uwclP1s5NrzTJlqVkSVCN4dwRmyKFuprBL2hCBwFopOZGY74GmhFtT5RqNOEQbEOoYxD
+         PWrA==
+X-Gm-Message-State: APjAAAWTQNdWZWTpKeXvoHq1ciZquCBLug1rnZw4HZFV86AW3ROLMh6N
+        Y8hCZJRsTegzoqhydCO8Qz4aD42khF/NKN7+cmVg7DTUK2k=
+X-Google-Smtp-Source: APXvYqx3fiQd2+CRzMpG4FjGt93LDYfrqxQEJovdF6Qh0gxMa602SiiBAJcRm/wKBl5Igo79dHDU0/X2S/hqockFg2o=
+X-Received: by 2002:a0c:e408:: with SMTP id o8mr7391529qvl.236.1574889331134;
+ Wed, 27 Nov 2019 13:15:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CABWYdi2jvPUq128XDv_VbY=vFknFyJHbUR=0_K9WuA0mFTkPvg@mail.gmail.com>
+In-Reply-To: <CABWYdi2jvPUq128XDv_VbY=vFknFyJHbUR=0_K9WuA0mFTkPvg@mail.gmail.com>
+From:   Ivan Babrou <ivan@cloudflare.com>
+Date:   Wed, 27 Nov 2019 13:15:20 -0800
+Message-ID: <CABWYdi3k9QvFOEd_hFG16LVE=BiokO4hWp50nZcxYwbWfxeE3g@mail.gmail.com>
+Subject: Re: perf is unable to read dward from go programs
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Löbl <pavel@loebl.cz>
+There were no response in linux-perf-users@, so I think it's fair to
+ask maintainers.
 
-commit e696d00e65e81d46e911f24b12e441037bf11b38 upstream.
-
-Add USB ID for MOXA UPort 2210. This device contains mos7820 but
-it passes GPIO0 check implemented by driver and it's detected as
-mos7840. Hence product id check is added to force mos7820 mode.
-
-Signed-off-by: Pavel Löbl <pavel@loebl.cz>
-Cc: stable <stable@vger.kernel.org>
-[ johan: rename id defines and add vendor-id check ]
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/usb/serial/mos7840.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
-
---- a/drivers/usb/serial/mos7840.c
-+++ b/drivers/usb/serial/mos7840.c
-@@ -119,11 +119,15 @@
- /* This driver also supports
-  * ATEN UC2324 device using Moschip MCS7840
-  * ATEN UC2322 device using Moschip MCS7820
-+ * MOXA UPort 2210 device using Moschip MCS7820
-  */
- #define USB_VENDOR_ID_ATENINTL		0x0557
- #define ATENINTL_DEVICE_ID_UC2324	0x2011
- #define ATENINTL_DEVICE_ID_UC2322	0x7820
- 
-+#define USB_VENDOR_ID_MOXA		0x110a
-+#define MOXA_DEVICE_ID_2210		0x2210
-+
- /* Interrupt Routine Defines    */
- 
- #define SERIAL_IIR_RLS      0x06
-@@ -195,6 +199,7 @@ static const struct usb_device_id id_tab
- 	{USB_DEVICE(USB_VENDOR_ID_BANDB, BANDB_DEVICE_ID_USOPTL2_4)},
- 	{USB_DEVICE(USB_VENDOR_ID_ATENINTL, ATENINTL_DEVICE_ID_UC2324)},
- 	{USB_DEVICE(USB_VENDOR_ID_ATENINTL, ATENINTL_DEVICE_ID_UC2322)},
-+	{USB_DEVICE(USB_VENDOR_ID_MOXA, MOXA_DEVICE_ID_2210)},
- 	{}			/* terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, id_table);
-@@ -2020,6 +2025,7 @@ static int mos7840_probe(struct usb_seri
- 				const struct usb_device_id *id)
- {
- 	u16 product = le16_to_cpu(serial->dev->descriptor.idProduct);
-+	u16 vid = le16_to_cpu(serial->dev->descriptor.idVendor);
- 	u8 *buf;
- 	int device_type;
- 
-@@ -2030,6 +2036,11 @@ static int mos7840_probe(struct usb_seri
- 		goto out;
- 	}
- 
-+	if (vid == USB_VENDOR_ID_MOXA && product == MOXA_DEVICE_ID_2210) {
-+		device_type = MOSCHIP_DEVICE_ID_7820;
-+		goto out;
-+	}
-+
- 	buf = kzalloc(VENDOR_READ_LENGTH, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
-
-
+On Fri, Nov 8, 2019 at 3:53 PM Ivan Babrou <ivan@cloudflare.com> wrote:
+>
+> I have a simple piece of code that burns CPU for 1s:
+>
+> * https://gist.github.com/bobrik/cf022ff6950d09032fa13a984e2272ed
+>
+> I can build it just fine: go build -o /tmp/burn burn.go
+>
+> And I can see correct stacks if I record with fp:
+>
+> perf record -e cpu-clock -g -F 99 /tmp/burn
+>
+> But if I record with gwarf:
+>
+> perf record -e cpu-clock -g -F 99 --call-graph dwarf /tmp/burn
+>
+> Then stacks are lost with the following complaints during "perf script":
+>
+> BFD: Dwarf Error: found dwarf version '376', this reader only handles
+> version 2, 3 and 4 information.
+> BFD: Dwarf Error: found dwarf version '31863', this reader only
+> handles version 2, 3 and 4 information.
+> BFD: Dwarf Error: found dwarf version '65271', this reader only
+> handles version 2, 3 and 4 information.
+> BFD: Dwarf Error: found dwarf version '289', this reader only handles
+> version 2, 3 and 4 information.
+> ...
+>
+> That's on Linux 5.4-rc5 with binutils 2.28. On Linux 4.19.80 with
+> binutils 2.31.1 I don't see the error, but the stacks are not any
+> better:
+>
+> burn   788  3994.230871:   10101010 cpu-clock:
+>           479955 crypto/sha512.blockAVX2+0x965 (/tmp/burn)
+>
+> burn   786  3994.241393:   10101010 cpu-clock:
+>           40b2a7 runtime.mallocgc+0x697 (/tmp/burn)
+>
+> burn   782  3994.248061:   10101010 cpu-clock:
+>           4746f1 crypto/sha512.(*digest).Write+0x21 (/tmp/burn)
+>
+> Compare to an fp version:
+>
+> burn   762  3892.587246:   10101010 cpu-clock:
+>           479b19 crypto/sha512.blockAVX2+0xb29 (/tmp/burn)
+> d186b8c721c0c207 [unknown] ([unknown])
+>
+> burn   760  3892.597158:   10101010 cpu-clock:
+>           474783 crypto/sha512.(*digest).Write+0xb3 (/tmp/burn)
+>           474e52 crypto/sha512.(*digest).checkSum+0xd2 (/tmp/burn)
+>           4749e3 crypto/sha512.(*digest).Sum+0xa3 (/tmp/burn)
+>           4840d3 main.burn+0xe3 (/tmp/burn)
+>           483fda main.main+0x2a (/tmp/burn)
+>           4298ee runtime.main+0x21e (/tmp/burn)
+>       c000016060 [unknown] ([unknown])
+> 89481eebc0313474 [unknown] ([unknown])
+>
+> I can understand AVX being off, but other stacks should be in order.
+>
+> Interestingly, in production I can see that some binaries are not
+> affected by this issue.
+>
+> Is this an expected outcome?
