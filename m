@@ -2,211 +2,108 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B875C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5406CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696E92071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:45:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qndVf33Y"
+	by mail.kernel.org (Postfix) with ESMTP id 267872071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574833589;
+	bh=oQiJiVUECmkuTnAwoFBoV84O+kVtT61Ej5+OnFy1dCE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rICHe6BfOPqMDRZSIUvXIP1yeaiQkrUWgXT4BP0TX2gms3tz0zLgQyZK5wVc9ORIl
+	 /YcaVswGOG3OAbB7XZhs/DreksjSErod3Yg9qPoV+Y8Bx1GqY50p7WVCMEJHauwdlR
+	 OmIKXdqyPBQ/5FAOSB02RW9oSL92LSnzqwaegy0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfK0FpY (ORCPT
+        id S1726722AbfK0Fq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 00:45:24 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48138 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfK0FpY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 00:45:24 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR5iw31020018;
-        Tue, 26 Nov 2019 23:44:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574833498;
-        bh=ghIhQuJ9aHS97LO4zAtdQCLPCJDJTY7NbKzwS6TyyAw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qndVf33YNLkQZU0nWotc7RdalzlFQ+JstoxF8ycG9eZBnDYfY/9carjo8SclfjI4X
-         j7o7vWluLgW7LnpKzrtc4uwH7N7pAKZHZl8RyJCZFurCkosFACCMWgNW7VwRkjky9H
-         7zU+CnLxcJxErGfyfY9QjF2lQdJhb6HJnbDh4Nis=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR5iwf4108619
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 Nov 2019 23:44:58 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 26
- Nov 2019 23:44:58 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 26 Nov 2019 23:44:58 -0600
-Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR5iocX018864;
-        Tue, 26 Nov 2019 23:44:51 -0600
-Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree
- bindings
-To:     Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
- <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
- <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
- <20191113040802.GA8269@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <3b218f7f-78a8-c158-80ac-67a3b9f5970c@ti.com>
-Date:   Wed, 27 Nov 2019 11:14:08 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 00:46:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726061AbfK0Fq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 00:46:28 -0500
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C5A42084B
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 05:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574833587;
+        bh=oQiJiVUECmkuTnAwoFBoV84O+kVtT61Ej5+OnFy1dCE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AdSr0gQG7P2SKzLEN+rfnH5OX5yxQl7ZNqSPcZS0qv8blSgjhoGKGytjWliG9hG0I
+         BKYSfGjRJswjxMs4hf/tLG52dDMGYwUHYBgZmow+Gboo5alx+gBtvDl0e0e8xVsA2x
+         4yEC3W2XJmRYDRgpPYN9NpIoG3KwZfE9TrVMY+1E=
+Received: by mail-wm1-f47.google.com with SMTP id g206so5681873wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 21:46:27 -0800 (PST)
+X-Gm-Message-State: APjAAAV4KLN/f5LyNe5R+hSNjtFsaQaGBL5pPCivLQ51ywRz4fntqZK6
+        CzdUr2U3v/5XK3+9OMcDBtD6upOaPXMzfPARDCQe4w==
+X-Google-Smtp-Source: APXvYqyM9npE6Emj9WttvPSjgS/uP+e5K5P03ZPlpmJO5JKOu26gYD0LNTCqKbWK4OL/jluqTLBCW1Dql5ojcnXhcvU=
+X-Received: by 2002:a1c:1f8d:: with SMTP id f135mr2394132wmf.79.1574833585808;
+ Tue, 26 Nov 2019 21:46:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191113040802.GA8269@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191126110659.GA14042@redhat.com> <20191126110758.GA14051@redhat.com>
+ <CAHk-=whrhuNg_53wc3pBVToH-AUwKDbC5P_cb7=8bYfn=BYCJA@mail.gmail.com>
+In-Reply-To: <CAHk-=whrhuNg_53wc3pBVToH-AUwKDbC5P_cb7=8bYfn=BYCJA@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 26 Nov 2019 21:46:14 -0800
+X-Gmail-Original-Message-ID: <CALCETrWTjUJQVXmbhnAfpg=J1kV8XZnWrjR7Yt+a1Dd2GSTr5A@mail.gmail.com>
+Message-ID: <CALCETrWTjUJQVXmbhnAfpg=J1kV8XZnWrjR7Yt+a1Dd2GSTr5A@mail.gmail.com>
+Subject: Re: [PATCH] ptrace/x86: introduce TS_COMPAT_RESTART to fix get_nr_restart_syscall()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Jan Kratochvil <jan.kratochvil@redhat.com>,
+        Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Nov 26, 2019 at 8:04 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, Nov 26, 2019 at 3:08 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > Alternatively we could add ->compat_restart into struct restart_block,
+> > logically this is the same thing.
+>
+> That sounds like the better model to me. That's what the restart_block
+> is about: it's supposed to contain the restart information.
+>
+> I'd much rather see the system call number added into the restart
+> block (or just the "compat bit" - but we have that X32 case too, so
+> why not put it all there). And then the get_nr_restart_syscall() hack
+> goes away and is just "set state from the restart block".
+>
+> How painful would that be? I guess right now we always just set all
+> the restart_block info manually in all the restart cases, and that
+> could make it a bit painful to add this kind of architecture-specific
+> flag, but it _sounds_ conceptually like the right thing to do.
 
-On 13/11/19 9:38 AM, Rob Herring wrote:
-> On Thu, Nov 07, 2019 at 09:08:35PM +0100, Geert Uytterhoeven wrote:
->> Hi Prabhakar,
->>
->> On Thu, Nov 7, 2019 at 10:26 AM Lad, Prabhakar
->> <prabhakar.csengg@gmail.com> wrote:
->>> On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>>> On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->>>>> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
->>>>>
->>>>> This patch adds the bindings for the R-Car PCIe endpoint driver.
->>>>>
->>>>> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->>>>
->>>> Thanks for your patch!
->>>>
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
->>>>> @@ -0,0 +1,43 @@
->>>>> +* Renesas R-Car PCIe Endpoint Controller DT description
->>>>> +
->>>>> +Required properties:
->>>>> +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
->>>>> +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
->>>>> +                                    RZ/G2 compatible device.
->>>>
->>>> Unless I'm missing something, this is for the exact same hardware block as
->>>> Documentation/devicetree/bindings/pci/rcar-pci.txt?
->>>> So shouldn't you amend those bindings, instead of adding new compatible
->>>> values?
->>>> Please remember that DT describes hardware, not software policy.
->>>> So IMHO choosing between host and endpoint is purely a configuration
->>>> issue, and could be indicated by the presence or lack of some DT properties.
->>>> E.g. host mode requires both "bus-range" and "device_type" properties,
->>>> so their absence could indicate endpoint mode.
->>>>
->>> yes its the same hardware block as described in the rcar-pci.txt, I
->>> did think about amending it
->>> but  it might turn out to be bit messy,
->>>
->>> required properties host ======required properties Endpoint
->>> ====================||==================
->>> 1: reg                                || reg
->>> 2:bus-range                      || reg names
->>> 3: device_type                  || resets
->>> 4: ranges                          || clocks
->>> 5: dma-ranges                  || clock-names
->>> 6: interrupts                      ||
->>> 7: interrupt-cells               ||
->>> 8: interrupt-map-mask     ||
->>> 9: clocks                          ||
->>> 10: clock-names             ||
->>
->> We have a similar situation with SPI, where a controller can operate in
->> master or slave mode, based on the absence or presence of the
->> "spi-slave" DT property.
->>
->>> and if I go ahead with the same compatible string that would mean to
->>> add support for endpoint
->>> mode in the host driver itself. I did follow the examples of
->>
->> You can still have two separate drivers, binding against the same
->> compatible value.  Just let the .probe() function return -ENODEV if it
->> discovers (by looking at DT properties) if the node is configured for
->> the other mode.
->> Which brings us to my next questions: is there any code that could be
->> shared between the drivers for the two modes?
->>
->>> rockchip/cadence/designware where
->>> its the same hardware block but has two different binding files one
->>> for host mode and other for
->>> endpoint mode.
->>
->> Having two separate DT binding documents sounds fine to me, if unifying
->> them makes things too complex.
->> However, I think they should use the same compatible value, because the
->> hardware block is the same, but just used in a different mode.
->>
->> Rob/Mark: Any input from the DT maintainers?
-> 
-> Separate files makes sense because different modes will want to 
-> include different common schemas. We've generally been doing different 
-> compatibles too which makes validating the node has the right set of 
-> properties easier.
->  
->>>>> +- reg: Five register ranges as listed in the reg-names property
->>>>> +- reg-names: Must include the following names
->>>>> +       - "apb-base"
->>>>> +       - "memory0"
->>>>> +       - "memory1"
->>>>> +       - "memory2"
->>>>> +       - "memory3"
->>>>
->>>> What is the purpose of the last 4 regions?
->>>> Can they be chosen by the driver, at runtime?
->>>>
->>> no the driver cannot choose them at runtime, as these are the only
->>> PCIE memory(0/1/2/3) ranges
->>> in the AXI address space where host memory can be mapped.
->>
->> Are they fixed by the PCIe hardware, i.e. could they be looked up by the
->> driver based on the compatible value?
-> 
-> That would be strange for a memory range.
-> 
-> Sounds like like 'ranges' though I'm not sure if 'ranges' for an EP 
-> makes sense or what that should look like.
+How about we rename restart_block::fn to __fn, add fields
+restart_syscall_nr and restart_syscall_arch, and do:
 
-These are similar to "memory node" with multiple address, size pairs. I'm
-thinking if these should be added as a subnode within PCIe EP controller device
-tree node?
+long restart_block_activate(long (*fn)(struct restart_block *))
+{
+  current->restart_block.__fn = fn;
+  arch_restart_block_activate();
+  return -ERESTART_RESTARTBLOCK;
+  current->restart_block.syscall_nr
+}
 
-Thanks
-Kishon
+IMO the ideal solution would be to add a new syscall nr to restart a
+syscall and make it the same on all architectures.  This has
+unfortunate interactions with seccomp, though.
+
+--Andy
