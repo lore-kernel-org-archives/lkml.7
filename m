@@ -5,80 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70DCC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B878C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF3921780
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466F621787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887363;
-	bh=dADKauMlBZ661YOJwCdfNFdHZ9ulvxzDNEeEW6+hekU=;
+	s=default; t=1574887367;
+	bh=QI1gw+r06sE5VELa9ZX/A+y3EYDXLyXaTUSzj6BhIYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o4Yr4F6Yic7sKHVaviljShRhE7suVQHpEBUcB/zuABzT0HXKAB/RxLdekH41xL4Pi
-	 v7jvVyCzsucDFEf77OG4XmUiVjtrriGyLqC7LHrjGgXjc0ui4Fa/71yARfeQOzIebS
-	 JgA9N5IY5b5RnfreqP4zSxNPm7yv3shndPvLeJn8=
+	b=D0cCQOd2HWttPUY5A1Em/ctveKiJe5up2w6uDemRG+TMQj3Gd2IviB4wYh8O8dFHy
+	 vwdZ8J+LFcj7IS6QnrAz91OSBxH4ygkY9zvWrGrMNuAiiiofV15FwZyUmlT1dNmifT
+	 vlnk2z6uEjbjgaaSmwNnY03n/OmOm8Qg/oRJgUlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfK0Umm (ORCPT
+        id S1728915AbfK0Ump (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:42:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49112 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:42:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbfK0Umh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:42:37 -0500
+        id S1728909AbfK0Umm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:42:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56B7921775;
-        Wed, 27 Nov 2019 20:42:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4895921781;
+        Wed, 27 Nov 2019 20:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887356;
-        bh=dADKauMlBZ661YOJwCdfNFdHZ9ulvxzDNEeEW6+hekU=;
+        s=default; t=1574887361;
+        bh=QI1gw+r06sE5VELa9ZX/A+y3EYDXLyXaTUSzj6BhIYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fa3f7CAbVAOaa5i7lS20mt7IGa92aoMzBqV8Wn+DMBfCPh76LaQytw0JmYF4jxmmM
-         Bvu4FKPYvtUCDlIf6wYCTK0S0Kq8GTqjv/S0ixV04aorMQgh9KEHm80nCt/q7ocv5X
-         YbbHzDCkkzJiDwHuKm5CI98e4FwSWKa7Nrbxio1E=
+        b=twf156mL1cZR8pKqWED/xPRhuuw/mIR23DO6xr4OD4vtKPyrXJufzgdKXTOSsbLsE
+         z7yTmYa1LWL8rMtNLn9PbYcZAAlv5QoFhO2jhiHjvR/fOprXx/o+OPGNarinjXQn8/
+         7KVij7Qz5hgjl5Zi/7vjTzlqbH4Zu70T03hIzUVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rashmica Gupta <rashmica.g@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        John Allen <jallen@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mathieu Malaterre <malat@debian.org>,
-        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        "Gerd W. Haeussler" <gerd.haeussler@cesys-it.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 080/151] mm/memory_hotplug: make add_memory() take the device_hotplug_lock
-Date:   Wed, 27 Nov 2019 21:31:03 +0100
-Message-Id: <20191127203035.780218292@linuxfoundation.org>
+Subject: [PATCH 4.9 082/151] ntb_netdev: fix sleep time mismatch
+Date:   Wed, 27 Nov 2019 21:31:05 +0100
+Message-Id: <20191127203036.065261269@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -91,213 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Jon Mason <jdmason@kudzu.us>
 
-[ Upstream commit 8df1d0e4a265f25dc1e7e7624ccdbcb4a6630c89 ]
+[ Upstream commit a861594b1b7ffd630f335b351c4e9f938feadb8e ]
 
-add_memory() currently does not take the device_hotplug_lock, however
-is aleady called under the lock from
-	arch/powerpc/platforms/pseries/hotplug-memory.c
-	drivers/acpi/acpi_memhotplug.c
-to synchronize against CPU hot-remove and similar.
+The tx_time should be in usecs (according to the comment above the
+variable), but the setting of the timer during the rearming is done in
+msecs.  Change it to match the expected units.
 
-In general, we should hold the device_hotplug_lock when adding memory to
-synchronize against online/offline request (e.g.  from user space) - which
-already resulted in lock inversions due to device_lock() and
-mem_hotplug_lock - see 30467e0b3be ("mm, hotplug: fix concurrent memory
-hot-add deadlock").  add_memory()/add_memory_resource() will create memory
-block devices, so this really feels like the right thing to do.
-
-Holding the device_hotplug_lock makes sure that a memory block device
-can really only be accessed (e.g. via .online/.state) from user space,
-once the memory has been fully added to the system.
-
-The lock is not held yet in
-	drivers/xen/balloon.c
-	arch/powerpc/platforms/powernv/memtrace.c
-	drivers/s390/char/sclp_cmd.c
-	drivers/hv/hv_balloon.c
-So, let's either use the locked variants or take the lock.
-
-Don't export add_memory_resource(), as it once was exported to be used by
-XEN, which is never built as a module.  If somebody requires it, we also
-have to export a locked variant (as device_hotplug_lock is never
-exported).
-
-Link: http://lkml.kernel.org/r/20180925091457.28651-3-david@redhat.com
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Rashmica Gupta <rashmica.g@gmail.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Cc: John Allen <jallen@linux.vnet.ibm.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Cc: YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>
-Cc: Balbir Singh <bsingharora@gmail.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: e74bfeedad08 ("NTB: Add flow control to the ntb_netdev")
+Suggested-by: Gerd W. Haeussler <gerd.haeussler@cesys-it.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Acked-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../platforms/pseries/hotplug-memory.c        |  2 +-
- drivers/acpi/acpi_memhotplug.c                |  2 +-
- drivers/base/memory.c                         |  9 ++++++--
- drivers/xen/balloon.c                         |  3 +++
- include/linux/memory_hotplug.h                |  1 +
- mm/memory_hotplug.c                           | 22 ++++++++++++++++---
- 6 files changed, 32 insertions(+), 7 deletions(-)
+ drivers/net/ntb_netdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-index c0a0947f43bbb..656bbbd731d03 100644
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -616,7 +616,7 @@ static int dlpar_add_lmb(struct of_drconf_cell *lmb)
- 	nid = memory_add_physaddr_to_nid(lmb->base_addr);
+diff --git a/drivers/net/ntb_netdev.c b/drivers/net/ntb_netdev.c
+index a9acf71568555..03009f1becddc 100644
+--- a/drivers/net/ntb_netdev.c
++++ b/drivers/net/ntb_netdev.c
+@@ -236,7 +236,7 @@ static void ntb_netdev_tx_timer(unsigned long data)
+ 	struct ntb_netdev *dev = netdev_priv(ndev);
  
- 	/* Add the memory */
--	rc = add_memory(nid, lmb->base_addr, block_sz);
-+	rc = __add_memory(nid, lmb->base_addr, block_sz);
- 	if (rc) {
- 		dlpar_remove_device_tree_lmb(lmb);
- 		dlpar_release_drc(lmb->drc_index);
-diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
-index 6b0d3ef7309cb..2ccfbb61ca899 100644
---- a/drivers/acpi/acpi_memhotplug.c
-+++ b/drivers/acpi/acpi_memhotplug.c
-@@ -228,7 +228,7 @@ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
- 		if (node < 0)
- 			node = memory_add_physaddr_to_nid(info->start_addr);
- 
--		result = add_memory(node, info->start_addr, info->length);
-+		result = __add_memory(node, info->start_addr, info->length);
- 
- 		/*
- 		 * If the memory block has been used by the kernel, add_memory()
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index c5cdd190b7816..9f96f1b43c15f 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -500,15 +500,20 @@ memory_probe_store(struct device *dev, struct device_attribute *attr,
- 	if (phys_addr & ((pages_per_block << PAGE_SHIFT) - 1))
- 		return -EINVAL;
- 
-+	ret = lock_device_hotplug_sysfs();
-+	if (ret)
-+		goto out;
-+
- 	nid = memory_add_physaddr_to_nid(phys_addr);
--	ret = add_memory(nid, phys_addr,
--			 MIN_MEMORY_BLOCK_SIZE * sections_per_block);
-+	ret = __add_memory(nid, phys_addr,
-+			   MIN_MEMORY_BLOCK_SIZE * sections_per_block);
- 
- 	if (ret)
- 		goto out;
- 
- 	ret = count;
- out:
-+	unlock_device_hotplug();
- 	return ret;
- }
- 
-diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-index 6af117af97804..731cf54f75c65 100644
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -358,7 +358,10 @@ static enum bp_state reserve_additional_memory(void)
- 	 * callers drop the mutex before trying again.
- 	 */
- 	mutex_unlock(&balloon_mutex);
-+	/* add_memory_resource() requires the device_hotplug lock */
-+	lock_device_hotplug();
- 	rc = add_memory_resource(nid, resource, memhp_auto_online);
-+	unlock_device_hotplug();
- 	mutex_lock(&balloon_mutex);
- 
- 	if (rc) {
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index 134a2f69c21ab..9469eef300952 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -272,6 +272,7 @@ static inline void remove_memory(int nid, u64 start, u64 size) {}
- 
- extern int walk_memory_range(unsigned long start_pfn, unsigned long end_pfn,
- 		void *arg, int (*func)(struct memory_block *, void *));
-+extern int __add_memory(int nid, u64 start, u64 size);
- extern int add_memory(int nid, u64 start, u64 size);
- extern int add_memory_resource(int nid, struct resource *resource, bool online);
- extern int zone_for_memory(int nid, u64 start, u64 size, int zone_default,
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index b4c8d7b9ab820..449999657c0bb 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1340,7 +1340,12 @@ static int online_memory_block(struct memory_block *mem, void *arg)
- 	return memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
- }
- 
--/* we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG */
-+/*
-+ * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
-+ * and online/offline operations (triggered e.g. by sysfs).
-+ *
-+ * we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG
-+ */
- int __ref add_memory_resource(int nid, struct resource *res, bool online)
- {
- 	u64 start, size;
-@@ -1418,9 +1423,9 @@ int __ref add_memory_resource(int nid, struct resource *res, bool online)
- 	mem_hotplug_done();
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(add_memory_resource);
- 
--int __ref add_memory(int nid, u64 start, u64 size)
-+/* requires device_hotplug_lock, see add_memory_resource() */
-+int __ref __add_memory(int nid, u64 start, u64 size)
- {
- 	struct resource *res;
- 	int ret;
-@@ -1434,6 +1439,17 @@ int __ref add_memory(int nid, u64 start, u64 size)
- 		release_memory_resource(res);
- 	return ret;
- }
-+
-+int add_memory(int nid, u64 start, u64 size)
-+{
-+	int rc;
-+
-+	lock_device_hotplug();
-+	rc = __add_memory(nid, start, size);
-+	unlock_device_hotplug();
-+
-+	return rc;
-+}
- EXPORT_SYMBOL_GPL(add_memory);
- 
- #ifdef CONFIG_MEMORY_HOTREMOVE
+ 	if (ntb_transport_tx_free_entry(dev->qp) < tx_stop) {
+-		mod_timer(&dev->tx_timer, jiffies + msecs_to_jiffies(tx_time));
++		mod_timer(&dev->tx_timer, jiffies + usecs_to_jiffies(tx_time));
+ 	} else {
+ 		/* Make sure anybody stopping the queue after this sees the new
+ 		 * value of ntb_transport_tx_free_entry()
 -- 
 2.20.1
 
