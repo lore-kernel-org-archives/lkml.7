@@ -2,150 +2,252 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDBBC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42D7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBC2206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:10:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="mTekDiyG"
+	by mail.kernel.org (Postfix) with ESMTP id 993C320674
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfK0PKV (ORCPT
+        id S1727095AbfK0PMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:10:21 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41028 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfK0PKV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:10:21 -0500
-Received: by mail-ed1-f66.google.com with SMTP id a21so19911595edj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 07:10:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=edWCWNJl31yQrbW0RZTxPYG82aTNE1yVNktB5ng+jf4=;
-        b=mTekDiyG/xSD58MUN5RTKNnzPqxt+1ORlhcDVQSCtgZD7sNjGt7a7DEpyDJLCHSio+
-         3duP0FXDUc/mOAzY3EV2Wa2JzDM2Z6fS8MEMH3ayihsodOPFsYkMEIBd7LfOfZB6anIx
-         lM37RhXs12XiLUpTvHp3EPdsIp/U+F7GUFDci+3U9wwSRjHah2bgF25bCd+pqiRnIpVx
-         SSVZOZFYRGW9qiOgMuEt9xfCdXkVY79xtc1sUWMxJbK2jnkeRKtKhnSTEbh8wAreQAAq
-         LSHHTXHfzKolX04pR5vPDEdVs+lUuicziBwzYA/5s3QiUQiy3q1ddUB9m+130YMPSr77
-         GYQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=edWCWNJl31yQrbW0RZTxPYG82aTNE1yVNktB5ng+jf4=;
-        b=lRtcDuNtDOdFJ07hr/Gi9k6nl1fhJ2nSZ/r3abIoUgJ4dpw0WKMZ0F5+bnFyVnq3wj
-         Pg382fdnMFlztyfDDt4081zQKoMH3OXAVeVfgrZxBHKcg6FtDutvnSzTG6xRK7vki1SC
-         U1xFsunCaOQqAiNkf2xNnzZ3mHqWudVtTnyDu8F9NUz6C0UDOZ6XzzKAVs8/ekOUdE6t
-         D2J5UzK1ysrPzap6Ns5l6YKDjKJjLhddrqdhHvBQBz5rFc0FJof2sQurwLTvWnG3FRD5
-         enPyes/KBiTE0IrJlI4r/PtJm00DaOanyBecrEX3l9p7xUNyL4MXAbKnx3OSPSwm9ArO
-         ZTMQ==
-X-Gm-Message-State: APjAAAVOAUgnDBn3Kll8GZ2JNOHJAbxHokD9HxMrK1eCFmbHzTnv3oXm
-        mOIdDV3S/AksnaxOU8Vt5Ed3ZBTcDXABRlF9fw+oUw==
-X-Google-Smtp-Source: APXvYqyPH1e9Ql392wF4i1O7GHWfwg6/A8SLFBgaaht+RqQI1k7Yx/GSlGoDs4aBwXnGTvjkilYo3d8M41CYZdYnigY=
-X-Received: by 2002:a05:6402:324:: with SMTP id q4mr32625784edw.108.1574867419153;
- Wed, 27 Nov 2019 07:10:19 -0800 (PST)
-MIME-Version: 1.0
+        Wed, 27 Nov 2019 10:12:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:48830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfK0PMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 10:12:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0118030E;
+        Wed, 27 Nov 2019 07:12:00 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C01E3F68E;
+        Wed, 27 Nov 2019 07:11:57 -0800 (PST)
+Date:   Wed, 27 Nov 2019 15:11:55 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, steve.capper@arm.com,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, allison@lohutok.net, info@metux.net,
+        alexios.zavras@intel.com, sstabellini@kernel.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com, stefan@agner.ch,
+        yamada.masahiro@socionext.com, xen-devel@lists.xenproject.org,
+        linux@armlinux.org.uk
+Subject: Re: [PATCH v2 3/3] arm64: remove the rest of asm-uaccess.h
+Message-ID: <20191127151154.GC51937@lakrids.cambridge.arm.com>
 References: <20191122022406.590141-1-pasha.tatashin@soleen.com>
- <20191122022406.590141-3-pasha.tatashin@soleen.com> <20191127150137.GB51937@lakrids.cambridge.arm.com>
-In-Reply-To: <20191127150137.GB51937@lakrids.cambridge.arm.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 27 Nov 2019 10:10:07 -0500
-Message-ID: <CA+CK2bBvgDe5zVur7EYJgYhoZesuQkZVeyRxPCBSySqsR=-YPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: remove uaccess_ttbr0 asm macros from cache functions
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, steve.capper@arm.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Stefan Agner <stefan@agner.ch>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        xen-devel@lists.xenproject.org,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+ <20191122022406.590141-4-pasha.tatashin@soleen.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122022406.590141-4-pasha.tatashin@soleen.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Thu, Nov 21, 2019 at 09:24:06PM -0500, Pavel Tatashin wrote:
+> The __uaccess_ttbr0_disable and __uaccess_ttbr0_enable,
+> are the last two macros defined in asm-uaccess.h.
+> 
+> Replace them with C wrappers and call C functions from
+> kernel_entry and kernel_exit.
 
-Thank you for reviewing this work.
+For now, please leave those as-is.
 
-> A commit message should provide rationale, rather than just a
-> description of the patch. Something like:
->
-> | We currently duplicate the logic to enable/disable uaccess via TTBR0,
-> | with C functions and assembly macros. This is a maintenenace burden
-> | and is liable to lead to subtle bugs, so let's get rid of the assembly
-> | macros, and always use the C functions. This requires refactoring
-> | some assembly functions to have a C wrapper.
+I don't think we want to have out-of-line C wrappers in the middle of
+the entry assembly where we don't have a complete kernel environment.
+The use in entry code can also assume non-preemptibility, while the C
+functions have to explcitily disable that.
 
-Thank you for suggestion, I will fix my commit log.
->
-> [...]
->
-> > +static inline int invalidate_icache_range(unsigned long start,
-> > +                                       unsigned long end)
-> > +{
-> > +     int rv;
-> > +#if ARM64_HAS_CACHE_DIC
-> > +     rv = arch_invalidate_icache_range(start, end);
-> > +#else
-> > +     uaccess_ttbr0_enable();
-> > +     rv = arch_invalidate_icache_range(start, end);
-> > +     uaccess_ttbr0_disable();
-> > +#endif
-> > +     return rv;
-> > +}
->
-> This ifdeffery is not the same as an alternative_if, and even if it were
-> the ARM64_HAS_CACHE_DIC behaviour is not the same as the existing
-> assembly.
->
-> This should be:
->
-> static inline int invalidate_icache_range(unsigned long start,
->                                           unsigned long end)
-> {
->         int ret;
->
->         if (cpus_have_const_cap(ARM64_HAS_CACHE_DIC)) {
->                 isb();
->                 return 0;
->         }
->
->         uaccess_ttbr0_enable();
->         ret = arch_invalidate_icache_range(start, end);
->         uaccess_ttbr0_disable();
->
->         return ret;
-> }
+We can certainly remove the includes of <asm/asm-uaccess.h> elsewhere,
+and maybe fold the macros into entry.S if it's not too crowded.
 
-I will fix it, thanks.
+Thanks,
+Mark.
 
->
-> The 'arch_' prefix should probably be 'asm_' (or have an '_asm' suffix),
-> since this is entirely local to the arch code, and even then should only
-> be called from the C wrappers.
-
-Sure, I can change it to asm_*, I was using arch_* to be consistent
-with __arch_copy_from_user() and friends.
-
-Thank you,
-Pasha
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  arch/arm64/include/asm/asm-uaccess.h | 38 ----------------------------
+>  arch/arm64/kernel/entry.S            |  6 ++---
+>  arch/arm64/lib/clear_user.S          |  2 +-
+>  arch/arm64/lib/copy_from_user.S      |  2 +-
+>  arch/arm64/lib/copy_in_user.S        |  2 +-
+>  arch/arm64/lib/copy_to_user.S        |  2 +-
+>  arch/arm64/mm/cache.S                |  1 -
+>  arch/arm64/mm/context.c              | 12 +++++++++
+>  8 files changed, 19 insertions(+), 46 deletions(-)
+>  delete mode 100644 arch/arm64/include/asm/asm-uaccess.h
+> 
+> diff --git a/arch/arm64/include/asm/asm-uaccess.h b/arch/arm64/include/asm/asm-uaccess.h
+> deleted file mode 100644
+> index 8f763e5b41b1..000000000000
+> --- a/arch/arm64/include/asm/asm-uaccess.h
+> +++ /dev/null
+> @@ -1,38 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef __ASM_ASM_UACCESS_H
+> -#define __ASM_ASM_UACCESS_H
+> -
+> -#include <asm/alternative.h>
+> -#include <asm/kernel-pgtable.h>
+> -#include <asm/mmu.h>
+> -#include <asm/sysreg.h>
+> -#include <asm/assembler.h>
+> -
+> -/*
+> - * User access enabling/disabling macros.
+> - */
+> -#ifdef CONFIG_ARM64_SW_TTBR0_PAN
+> -	.macro	__uaccess_ttbr0_disable, tmp1
+> -	mrs	\tmp1, ttbr1_el1			// swapper_pg_dir
+> -	bic	\tmp1, \tmp1, #TTBR_ASID_MASK
+> -	sub	\tmp1, \tmp1, #RESERVED_TTBR0_SIZE	// reserved_ttbr0 just before swapper_pg_dir
+> -	msr	ttbr0_el1, \tmp1			// set reserved TTBR0_EL1
+> -	isb
+> -	add	\tmp1, \tmp1, #RESERVED_TTBR0_SIZE
+> -	msr	ttbr1_el1, \tmp1		// set reserved ASID
+> -	isb
+> -	.endm
+> -
+> -	.macro	__uaccess_ttbr0_enable, tmp1, tmp2
+> -	get_current_task \tmp1
+> -	ldr	\tmp1, [\tmp1, #TSK_TI_TTBR0]	// load saved TTBR0_EL1
+> -	mrs	\tmp2, ttbr1_el1
+> -	extr    \tmp2, \tmp2, \tmp1, #48
+> -	ror     \tmp2, \tmp2, #16
+> -	msr	ttbr1_el1, \tmp2		// set the active ASID
+> -	isb
+> -	msr	ttbr0_el1, \tmp1		// set the non-PAN TTBR0_EL1
+> -	isb
+> -	.endm
+> -#endif
+> -#endif
+> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+> index 583f71abbe98..c7b571e6d0f2 100644
+> --- a/arch/arm64/kernel/entry.S
+> +++ b/arch/arm64/kernel/entry.S
+> @@ -22,8 +22,8 @@
+>  #include <asm/mmu.h>
+>  #include <asm/processor.h>
+>  #include <asm/ptrace.h>
+> +#include <asm/kernel-pgtable.h>
+>  #include <asm/thread_info.h>
+> -#include <asm/asm-uaccess.h>
+>  #include <asm/unistd.h>
+>  
+>  /*
+> @@ -219,7 +219,7 @@ alternative_else_nop_endif
+>  	and	x23, x23, #~PSR_PAN_BIT		// Clear the emulated PAN in the saved SPSR
+>  	.endif
+>  
+> -	__uaccess_ttbr0_disable x21
+> +	bl __uaccess_ttbr0_disable_c
+>  1:
+>  #endif
+>  
+> @@ -293,7 +293,7 @@ alternative_else_nop_endif
+>  	tbnz	x22, #22, 1f			// Skip re-enabling TTBR0 access if the PSR_PAN_BIT is set
+>  	.endif
+>  
+> -	__uaccess_ttbr0_enable x0, x1
+> +	bl	__uaccess_ttbr0_enable_c
+>  
+>  	.if	\el == 0
+>  	/*
+> diff --git a/arch/arm64/lib/clear_user.S b/arch/arm64/lib/clear_user.S
+> index aeafc03e961a..b0b4a86a09e2 100644
+> --- a/arch/arm64/lib/clear_user.S
+> +++ b/arch/arm64/lib/clear_user.S
+> @@ -6,7 +6,7 @@
+>   */
+>  #include <linux/linkage.h>
+>  
+> -#include <asm/asm-uaccess.h>
+> +#include <asm/alternative.h>
+>  #include <asm/assembler.h>
+>  
+>  	.text
+> diff --git a/arch/arm64/lib/copy_from_user.S b/arch/arm64/lib/copy_from_user.S
+> index ebb3c06cbb5d..142bc7505518 100644
+> --- a/arch/arm64/lib/copy_from_user.S
+> +++ b/arch/arm64/lib/copy_from_user.S
+> @@ -5,7 +5,7 @@
+>  
+>  #include <linux/linkage.h>
+>  
+> -#include <asm/asm-uaccess.h>
+> +#include <asm/alternative.h>
+>  #include <asm/assembler.h>
+>  #include <asm/cache.h>
+>  
+> diff --git a/arch/arm64/lib/copy_in_user.S b/arch/arm64/lib/copy_in_user.S
+> index 3d8153a1ebce..04dc48ca26f7 100644
+> --- a/arch/arm64/lib/copy_in_user.S
+> +++ b/arch/arm64/lib/copy_in_user.S
+> @@ -7,7 +7,7 @@
+>  
+>  #include <linux/linkage.h>
+>  
+> -#include <asm/asm-uaccess.h>
+> +#include <asm/alternative.h>
+>  #include <asm/assembler.h>
+>  #include <asm/cache.h>
+>  
+> diff --git a/arch/arm64/lib/copy_to_user.S b/arch/arm64/lib/copy_to_user.S
+> index 357eae2c18eb..8f3218ae88ab 100644
+> --- a/arch/arm64/lib/copy_to_user.S
+> +++ b/arch/arm64/lib/copy_to_user.S
+> @@ -5,7 +5,7 @@
+>  
+>  #include <linux/linkage.h>
+>  
+> -#include <asm/asm-uaccess.h>
+> +#include <asm/alternative.h>
+>  #include <asm/assembler.h>
+>  #include <asm/cache.h>
+>  
+> diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
+> index 408d317a47d2..7940d6ef5da5 100644
+> --- a/arch/arm64/mm/cache.S
+> +++ b/arch/arm64/mm/cache.S
+> @@ -12,7 +12,6 @@
+>  #include <asm/assembler.h>
+>  #include <asm/cpufeature.h>
+>  #include <asm/alternative.h>
+> -#include <asm/asm-uaccess.h>
+>  
+>  /*
+>   *	__arch_flush_icache_range(start,end)
+> diff --git a/arch/arm64/mm/context.c b/arch/arm64/mm/context.c
+> index b5e329fde2dd..4fc32c504dea 100644
+> --- a/arch/arm64/mm/context.c
+> +++ b/arch/arm64/mm/context.c
+> @@ -237,6 +237,18 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
+>  		cpu_switch_mm(mm->pgd, mm);
+>  }
+>  
+> +#ifdef CONFIG_ARM64_SW_TTBR0_PAN
+> +asmlinkage void __uaccess_ttbr0_enable_c(void)
+> +{
+> +	__uaccess_ttbr0_enable();
+> +}
+> +
+> +asmlinkage void __uaccess_ttbr0_disable_c(void)
+> +{
+> +	__uaccess_ttbr0_disable();
+> +}
+> +#endif
+> +
+>  /* Errata workaround post TTBRx_EL1 update. */
+>  asmlinkage void post_ttbr_update_workaround(void)
+>  {
+> -- 
+> 2.24.0
+> 
