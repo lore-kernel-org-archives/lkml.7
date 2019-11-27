@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBDDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0FBC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D4D20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCD62154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888167;
-	bh=QgY6q5BSECYRgekI5Gx4Ri6rdxW2UDYyP+iFriLg1X8=;
+	s=default; t=1574888170;
+	bh=3rZd8WAF0bdHLPMC9H3Bv1cYv1WRtPTVMC3DphGZp8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ItQCFehhCeoAtAjm2rc+l8NKxkKEG9GE/f4PWCTL/q1O5TiytPlv/08CmCi35rl2O
-	 /XwI2k8sovG367SAMk/voh/PBSQj+7xb9JJbRT6+IrXlKHSMUq+yVRFev26evnL1OE
-	 Pqemu+KMFuY5g/C08gOq0XE4huJvuYEQ81AasCsE=
+	b=KZHbasyVwx6cI8+91CrCJhAEEekxt3xHy+oYTYweAMd+FIf08Jt9MRQJ2PsckJUmb
+	 ZodzoWNxmmUt88/pYWCVIo3EmNwzAUXEKbZYTNhuc3h9LCbr7OuAy862xF1jMfQk8D
+	 rMUJl8vT5K0Jaway8X5AJoIIaYS411k6I/WW7hz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfK0U4G (ORCPT
+        id S1730717AbfK0U4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:56:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46758 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:56:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731019AbfK0U4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:56:03 -0500
+        id S1728364AbfK0U4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:56:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A13C2154A;
-        Wed, 27 Nov 2019 20:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AC7C2158C;
+        Wed, 27 Nov 2019 20:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888162;
-        bh=QgY6q5BSECYRgekI5Gx4Ri6rdxW2UDYyP+iFriLg1X8=;
+        s=default; t=1574888165;
+        bh=3rZd8WAF0bdHLPMC9H3Bv1cYv1WRtPTVMC3DphGZp8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxazaUhPpsLOeOdsetl1IXOcnl5g9umyWF5tdsdpHW/iNFiMKlrgzUJCGzsyqqV4p
-         XnsD76PgnIaxf3qO5aeA8z8L3CdS2VPP2zpo+0MCuCZBLOxlbQb3hHJy/Ok6PoTZoC
-         g0kpRlEsIpZjrwQlZfaBkFsr8CjPC/zTGGnYux2c=
+        b=JN/0mKNiU3LXglYxzppjHsYAVZI/6SGngoD+012QBcFO3CcpvLwckVGM+nhQX/O7n
+         7XbpeBP44IpTKpv881ReIYV+rkyevuv51zHnQkQjNFgfFvLXwJLD+woXkV8JcYf9P3
+         c1ygzbblntxYTRJmO4mNCIRoOVIL8eqYgSoVXWLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/306] gfs2: Fix marking bitmaps non-full
-Date:   Wed, 27 Nov 2019 21:27:58 +0100
-Message-Id: <20191127203116.758196167@linuxfoundation.org>
+Subject: [PATCH 4.19 029/306] pty: fix compat ioctls
+Date:   Wed, 27 Nov 2019 21:27:59 +0100
+Message-Id: <20191127203116.849803786@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,54 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit ec23df2b0cf3e1620f5db77972b7fb735f267eff ]
+[ Upstream commit 50f45326afab723df529eca54095e2feac24da2d ]
 
-Reservations in gfs can span multiple gfs2_bitmaps (but they won't span
-multiple resource groups).  When removing a reservation, we want to
-clear the GBF_FULL flags of all involved gfs2_bitmaps, not just that of
-the first bitmap.
+pointer-taking ones need compat_ptr(); int-taking one doesn't.
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Steven Whitehouse <swhiteho@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/rgrp.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/tty/pty.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
-index 63e5387c84d26..c94c4ac1ae78b 100644
---- a/fs/gfs2/rgrp.c
-+++ b/fs/gfs2/rgrp.c
-@@ -642,7 +642,10 @@ static void __rs_deltree(struct gfs2_blkreserv *rs)
- 	RB_CLEAR_NODE(&rs->rs_node);
+diff --git a/drivers/tty/pty.c b/drivers/tty/pty.c
+index 678406e0948b2..00099a8439d21 100644
+--- a/drivers/tty/pty.c
++++ b/drivers/tty/pty.c
+@@ -28,6 +28,7 @@
+ #include <linux/mount.h>
+ #include <linux/file.h>
+ #include <linux/ioctl.h>
++#include <linux/compat.h>
  
- 	if (rs->rs_free) {
--		struct gfs2_bitmap *bi = rbm_bi(&rs->rs_rbm);
-+		u64 last_block = gfs2_rbm_to_block(&rs->rs_rbm) +
-+				 rs->rs_free - 1;
-+		struct gfs2_rbm last_rbm = { .rgd = rs->rs_rbm.rgd, };
-+		struct gfs2_bitmap *start, *last;
- 
- 		/* return reserved blocks to the rgrp */
- 		BUG_ON(rs->rs_rbm.rgd->rd_reserved < rs->rs_free);
-@@ -653,7 +656,13 @@ static void __rs_deltree(struct gfs2_blkreserv *rs)
- 		   it will force the number to be recalculated later. */
- 		rgd->rd_extfail_pt += rs->rs_free;
- 		rs->rs_free = 0;
--		clear_bit(GBF_FULL, &bi->bi_flags);
-+		if (gfs2_rbm_from_block(&last_rbm, last_block))
-+			return;
-+		start = rbm_bi(&rs->rs_rbm);
-+		last = rbm_bi(&last_rbm);
-+		do
-+			clear_bit(GBF_FULL, &start->bi_flags);
-+		while (start++ != last);
- 	}
+ #undef TTY_DEBUG_HANGUP
+ #ifdef TTY_DEBUG_HANGUP
+@@ -488,6 +489,7 @@ static int pty_bsd_ioctl(struct tty_struct *tty,
+ 	return -ENOIOCTLCMD;
  }
  
++#ifdef CONFIG_COMPAT
+ static long pty_bsd_compat_ioctl(struct tty_struct *tty,
+ 				 unsigned int cmd, unsigned long arg)
+ {
+@@ -495,8 +497,11 @@ static long pty_bsd_compat_ioctl(struct tty_struct *tty,
+ 	 * PTY ioctls don't require any special translation between 32-bit and
+ 	 * 64-bit userspace, they are already compatible.
+ 	 */
+-	return pty_bsd_ioctl(tty, cmd, arg);
++	return pty_bsd_ioctl(tty, cmd, (unsigned long)compat_ptr(arg));
+ }
++#else
++#define pty_bsd_compat_ioctl NULL
++#endif
+ 
+ static int legacy_count = CONFIG_LEGACY_PTY_COUNT;
+ /*
+@@ -676,6 +681,7 @@ static int pty_unix98_ioctl(struct tty_struct *tty,
+ 	return -ENOIOCTLCMD;
+ }
+ 
++#ifdef CONFIG_COMPAT
+ static long pty_unix98_compat_ioctl(struct tty_struct *tty,
+ 				 unsigned int cmd, unsigned long arg)
+ {
+@@ -683,8 +689,12 @@ static long pty_unix98_compat_ioctl(struct tty_struct *tty,
+ 	 * PTY ioctls don't require any special translation between 32-bit and
+ 	 * 64-bit userspace, they are already compatible.
+ 	 */
+-	return pty_unix98_ioctl(tty, cmd, arg);
++	return pty_unix98_ioctl(tty, cmd,
++		cmd == TIOCSIG ? arg : (unsigned long)compat_ptr(arg));
+ }
++#else
++#define pty_unix98_compat_ioctl NULL
++#endif
+ 
+ /**
+  *	ptm_unix98_lookup	-	find a pty master
 -- 
 2.20.1
 
