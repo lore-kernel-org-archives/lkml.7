@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D714C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B26C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C80217BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325A621582
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888264;
-	bh=j6BAQHCSeUvTzCnq7OjgDnls3hqn4lnWjWlJ6zYEes8=;
+	s=default; t=1574888270;
+	bh=3SEdrihkurXXWwhveA9C1m9/FJwxrnHVGWM1zca4RWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N1rz1/+pvy61o+r53TDJMN6BPegBEk4rSryByalJVPV9WXkLtBJBfeLJR/OQyK3/u
-	 KIExImajJiEc1Ci/i+RStki8b+VSCHSZjAfXzNWCMcSy98mVmtMlewyXnL7zxvbGJI
-	 JCqlODUwPPjPQtuHOJfSULhhmYY/gpe7nNx95Duw=
+	b=bkQzUnIcLkgAI/rl33Le//RLM7JfU6nK62Q204NubjhoscUJhr7V8wWY6bpYE/3Wa
+	 YACIq5z8Rbelp3GCUsAADLb9nSGQcuY66L+IS9VAyo0Y2WDR+OgAVh9CvkuVM5beAc
+	 ZI28/YNAnaSgmYZR8Cgp1OSHFbxNZAlKDsc7wALo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfK0U5n (ORCPT
+        id S1731237AbfK0U5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:57:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48774 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:57:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730942AbfK0U5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:57:39 -0500
+        id S1730862AbfK0U5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:57:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5DB4217AB;
-        Wed, 27 Nov 2019 20:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D70AA217BA;
+        Wed, 27 Nov 2019 20:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888259;
-        bh=j6BAQHCSeUvTzCnq7OjgDnls3hqn4lnWjWlJ6zYEes8=;
+        s=default; t=1574888264;
+        bh=3SEdrihkurXXWwhveA9C1m9/FJwxrnHVGWM1zca4RWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQxjkJ/gSze9rUKfH0oLnMQ8+Dk213WcKC13e1pchcczI1LsRAoxEIsBXlLhCHqhf
-         zBLzjr5iOFIhJfYy13/oiYh/yVgnoaZE/OhGqTlq0D6V7g0Vud9veKZ2u4pJRxdOYM
-         IVMfbkM98W7CNITAy+NBKjnsnx9PWkXnqW45JQiw=
+        b=zuQNE8RrL8+sdSa4VXvEKfCrlnJSj53DiV9qP0neBeZjZjEMj+B5cN+MNsV9nAI6f
+         3QLg+3NdIIltn4q8Tz71YYqLf5w0c7t/jzz9rxgY53LpID3jqugH+uxBkTnMOrngQ4
+         v+JxqDj1szm9xKnbW/wB1x+QNol55HnO4CxjiZQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org, Uros Bizjak <ubizjak@gmail.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 066/306] KVM: nVMX: reset cache/shadows when switching loaded VMCS
-Date:   Wed, 27 Nov 2019 21:28:36 +0100
-Message-Id: <20191127203119.599052282@linuxfoundation.org>
+Subject: [PATCH 4.19 068/306] KVM/x86: Fix invvpid and invept register operand size in 64-bit mode
+Date:   Wed, 27 Nov 2019 21:28:38 +0100
+Message-Id: <20191127203119.753706595@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,60 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Uros Bizjak <ubizjak@gmail.com>
 
-[ Upstream commit b7031fd40fcc741b0f9b0c04c8d844e445858b84 ]
+[ Upstream commit 5ebb272b2ea7e02911a03a893f8d922d49f9bb4a ]
 
-Reset the vm_{entry,exit}_controls_shadow variables as well as the
-segment cache after loading a new VMCS in vmx_switch_vmcs().  The
-shadows/cache track VMCS data, i.e. they're stale every time we
-switch to a new VMCS regardless of reason.
+Register operand size of invvpid and invept instruction in 64-bit mode
+has always 64 bits. Adjust inline function argument type to reflect
+correct size.
 
-This fixes a bug where stale control shadows would be consumed after
-a nested VMExit due to a failed consistency check.
-
-Suggested-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kvm/vmx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 1ab4bb3d6a040..fe7fdd666f091 100644
+index bdf019f322117..0b7559bf15ea7 100644
 --- a/arch/x86/kvm/vmx.c
 +++ b/arch/x86/kvm/vmx.c
-@@ -11013,6 +11013,10 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
- 	vmx->loaded_vmcs = vmcs;
- 	vmx_vcpu_load(vcpu, cpu);
- 	put_cpu();
-+
-+	vm_entry_controls_reset_shadow(vmx);
-+	vm_exit_controls_reset_shadow(vmx);
-+	vmx_segment_cache_clear(vmx);
+@@ -2079,7 +2079,7 @@ static int __find_msr_index(struct vcpu_vmx *vmx, u32 msr)
+ 	return -1;
  }
  
- /*
-@@ -12699,7 +12703,6 @@ static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
- 		vmx->nested.vmcs01_guest_bndcfgs = vmcs_read64(GUEST_BNDCFGS);
+-static inline void __invvpid(int ext, u16 vpid, gva_t gva)
++static inline void __invvpid(unsigned long ext, u16 vpid, gva_t gva)
+ {
+     struct {
+ 	u64 vpid : 16;
+@@ -2094,7 +2094,7 @@ static inline void __invvpid(int ext, u16 vpid, gva_t gva)
+     BUG_ON(error);
+ }
  
- 	vmx_switch_vmcs(vcpu, &vmx->nested.vmcs02);
--	vmx_segment_cache_clear(vmx);
- 
- 	if (vmcs12->cpu_based_vm_exec_control & CPU_BASED_USE_TSC_OFFSETING)
- 		vcpu->arch.tsc_offset += vmcs12->tsc_offset;
-@@ -13530,9 +13533,6 @@ static void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
- 	}
- 
- 	vmx_switch_vmcs(vcpu, &vmx->vmcs01);
--	vm_entry_controls_reset_shadow(vmx);
--	vm_exit_controls_reset_shadow(vmx);
--	vmx_segment_cache_clear(vmx);
- 
- 	/* Update any VMCS fields that might have changed while L2 ran */
- 	vmcs_write32(VM_EXIT_MSR_LOAD_COUNT, vmx->msr_autoload.host.nr);
+-static inline void __invept(int ext, u64 eptp, gpa_t gpa)
++static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
+ {
+ 	struct {
+ 		u64 eptp, gpa;
 -- 
 2.20.1
 
