@@ -2,54 +2,58 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E851C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3834AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7358E2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079592080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888779;
-	bh=uCtfQYjOEF+Ola4zzI7wHRjLy+CCdvWIVjXr1R9YjH8=;
+	s=default; t=1574888784;
+	bh=dZvexBe28LkdVb8dTGUN63UBYjHJZ+tVRGX71Tjw5LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D0IFetgd7wPuGQGfWlyhLRbr3HIXizo6pa5+55ZW8BLW9IgFhG6NuNfKjuULuiwv0
-	 zw0FgTm1Rx614nWm8epQmWxi+L63Cl9EwBl15/S+AfAqF58mijVr+gL3ZlQJSpXHaj
-	 Q9gfwZ5zU9FHKSF1NJegcxiMMDpE6lGCn/+QxEEI=
+	b=dDjIWzDOJRufiodZtCbOyTD8kM+yOwFWUmrwDytKceSPkYoDLk6FJwqal3FES7Yag
+	 2ukXwsHMqQ4Tf0Dt0PHrcn0nCG5FqvrT1u6Sal57mcvQwPk895JLDEGqX/oe2DOnIm
+	 XBhi9clvJQF6UOReRJrvy+1kBqdjNZeBBrtptl9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732393AbfK0VGS (ORCPT
+        id S1732412AbfK0VGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:06:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60190 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:06:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731815AbfK0VGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:06:12 -0500
+        id S1727351AbfK0VGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:06:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A4B821770;
-        Wed, 27 Nov 2019 21:06:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC93021770;
+        Wed, 27 Nov 2019 21:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888772;
-        bh=uCtfQYjOEF+Ola4zzI7wHRjLy+CCdvWIVjXr1R9YjH8=;
+        s=default; t=1574888777;
+        bh=dZvexBe28LkdVb8dTGUN63UBYjHJZ+tVRGX71Tjw5LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AICqFzXOr2AowKUYBliO+Mg8TMBBv/p+xIkZx36JZUJ35ZdPLr4hi97ah0b80IxN5
-         B7L4wv5PIuDvZCQeSsSfxAV8BPKcIrascDXRASC+ryBHrQUjPJJSBhv/eHwcfWy0W2
-         Rhzl/Yn64BOttejghyKNexFrejkXilZkFK/T+ifY=
+        b=CzufqzpQ3UxIuvZAEgBB3OY0S+MytgJpsmFFoVfBx5f96FkZMU3LqB1L/ammYmHQx
+         kTyoGo982D+J+9qtzj/wqds1XUDH/w37ZknoycBljPWqlcAeMSgWyC5dlpyEMq3whK
+         xc4JcsDqWFvsJpV7z/lAu3Gw0lTUNANVmPNnJRpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 236/306] clk: tegra20: Turn EMC clock gate into divider
-Date:   Wed, 27 Nov 2019 21:31:26 +0100
-Message-Id: <20191127203132.244773773@linuxfoundation.org>
+        stable@vger.kernel.org, Gang He <ghe@suse.com>,
+        Joseph Qi <jiangqi903@gmail.com>, Eric Ren <zren@suse.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.19 264/306] ocfs2: remove ocfs2_is_o2cb_active()
+Date:   Wed, 27 Nov 2019 21:31:54 +0100
+Message-Id: <20191127203134.120845835@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,87 +66,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Gang He <ghe@suse.com>
 
-[ Upstream commit 514fddba845ed3a1b17e01e99cb3a2a52256a88a ]
+commit a634644751c46238df58bbfe992e30c1668388db upstream.
 
-Kernel should never gate the EMC clock as it causes immediate lockup, so
-removing clk-gate functionality doesn't affect anything. Turning EMC clk
-gate into divider allows to implement glitch-less EMC scaling, avoiding
-reparenting to a backup clock.
+Remove ocfs2_is_o2cb_active().  We have similar functions to identify
+which cluster stack is being used via osb->osb_cluster_stack.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Secondly, the current implementation of ocfs2_is_o2cb_active() is not
+totally safe.  Based on the design of stackglue, we need to get
+ocfs2_stack_lock before using ocfs2_stack related data structures, and
+that active_stack pointer can be NULL in the case of mount failure.
+
+Link: http://lkml.kernel.org/r/1495441079-11708-1-git-send-email-ghe@suse.com
+Signed-off-by: Gang He <ghe@suse.com>
+Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
+Reviewed-by: Eric Ren <zren@suse.com>
+Acked-by: Changwei Ge <ge.changwei@h3c.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/clk/tegra/clk-tegra20.c | 36 ++++++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 10 deletions(-)
+ fs/ocfs2/dlmglue.c   |    2 +-
+ fs/ocfs2/stackglue.c |    6 ------
+ fs/ocfs2/stackglue.h |    3 ---
+ 3 files changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
-index cc857d4d4a86e..68551effb5ca2 100644
---- a/drivers/clk/tegra/clk-tegra20.c
-+++ b/drivers/clk/tegra/clk-tegra20.c
-@@ -578,7 +578,6 @@ static struct tegra_clk tegra20_clks[tegra_clk_max] __initdata = {
- 	[tegra_clk_afi] = { .dt_id = TEGRA20_CLK_AFI, .present = true },
- 	[tegra_clk_fuse] = { .dt_id = TEGRA20_CLK_FUSE, .present = true },
- 	[tegra_clk_kfuse] = { .dt_id = TEGRA20_CLK_KFUSE, .present = true },
--	[tegra_clk_emc] = { .dt_id = TEGRA20_CLK_EMC, .present = true },
- };
+--- a/fs/ocfs2/dlmglue.c
++++ b/fs/ocfs2/dlmglue.c
+@@ -3603,7 +3603,7 @@ static int ocfs2_downconvert_lock(struct
+ 	 * we can recover correctly from node failure. Otherwise, we may get
+ 	 * invalid LVB in LKB, but without DLM_SBF_VALNOTVALID being set.
+ 	 */
+-	if (!ocfs2_is_o2cb_active() &&
++	if (ocfs2_userspace_stack(osb) &&
+ 	    lockres->l_ops->flags & LOCK_TYPE_USES_LVB)
+ 		lvb = 1;
  
- static unsigned long tegra20_clk_measure_input_freq(void)
-@@ -799,6 +798,31 @@ static struct tegra_periph_init_data tegra_periph_nodiv_clk_list[] = {
- 	TEGRA_INIT_DATA_NODIV("disp2",	mux_pllpdc_clkm, CLK_SOURCE_DISP2, 30, 2, 26,  0, TEGRA20_CLK_DISP2),
- };
+--- a/fs/ocfs2/stackglue.c
++++ b/fs/ocfs2/stackglue.c
+@@ -48,12 +48,6 @@ static char ocfs2_hb_ctl_path[OCFS2_MAX_
+  */
+ static struct ocfs2_stack_plugin *active_stack;
  
-+static void __init tegra20_emc_clk_init(void)
-+{
-+	struct clk *clk;
-+
-+	clk = clk_register_mux(NULL, "emc_mux", mux_pllmcp_clkm,
-+			       ARRAY_SIZE(mux_pllmcp_clkm),
-+			       CLK_SET_RATE_NO_REPARENT,
-+			       clk_base + CLK_SOURCE_EMC,
-+			       30, 2, 0, &emc_lock);
-+
-+	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
-+				    &emc_lock);
-+	clks[TEGRA20_CLK_MC] = clk;
-+
-+	/*
-+	 * Note that 'emc_mux' source and 'emc' rate shouldn't be changed at
-+	 * the same time due to a HW bug, this won't happen because we're
-+	 * defining 'emc_mux' and 'emc' as distinct clocks.
-+	 */
-+	clk = tegra_clk_register_divider("emc", "emc_mux",
-+				clk_base + CLK_SOURCE_EMC, CLK_IS_CRITICAL,
-+				TEGRA_DIVIDER_INT, 0, 8, 1, &emc_lock);
-+	clks[TEGRA20_CLK_EMC] = clk;
-+}
-+
- static void __init tegra20_periph_clk_init(void)
- {
- 	struct tegra_periph_init_data *data;
-@@ -812,15 +836,7 @@ static void __init tegra20_periph_clk_init(void)
- 	clks[TEGRA20_CLK_AC97] = clk;
- 
- 	/* emc */
--	clk = clk_register_mux(NULL, "emc_mux", mux_pllmcp_clkm,
--			       ARRAY_SIZE(mux_pllmcp_clkm),
--			       CLK_SET_RATE_NO_REPARENT,
--			       clk_base + CLK_SOURCE_EMC,
--			       30, 2, 0, &emc_lock);
+-inline int ocfs2_is_o2cb_active(void)
+-{
+-	return !strcmp(active_stack->sp_name, OCFS2_STACK_PLUGIN_O2CB);
+-}
+-EXPORT_SYMBOL_GPL(ocfs2_is_o2cb_active);
 -
--	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
--				    &emc_lock);
--	clks[TEGRA20_CLK_MC] = clk;
-+	tegra20_emc_clk_init();
+ static struct ocfs2_stack_plugin *ocfs2_stack_lookup(const char *name)
+ {
+ 	struct ocfs2_stack_plugin *p;
+--- a/fs/ocfs2/stackglue.h
++++ b/fs/ocfs2/stackglue.h
+@@ -298,9 +298,6 @@ void ocfs2_stack_glue_set_max_proto_vers
+ int ocfs2_stack_glue_register(struct ocfs2_stack_plugin *plugin);
+ void ocfs2_stack_glue_unregister(struct ocfs2_stack_plugin *plugin);
  
- 	/* dsi */
- 	clk = tegra_clk_register_periph_gate("dsi", "pll_d", 0, clk_base, 0,
--- 
-2.20.1
-
+-/* In ocfs2_downconvert_lock(), we need to know which stack we are using */
+-int ocfs2_is_o2cb_active(void);
+-
+ extern struct kset *ocfs2_kset;
+ 
+ #endif  /* STACKGLUE_H */
 
 
