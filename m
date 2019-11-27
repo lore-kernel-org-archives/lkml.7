@@ -2,257 +2,98 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88D8C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1CDC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C052071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:21:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n/FdqzdF"
+	by mail.kernel.org (Postfix) with ESMTP id 4C4A820872
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfK0JVU (ORCPT
+        id S1726281AbfK0JZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 04:21:20 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58624 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfK0JVU (ORCPT
+        Wed, 27 Nov 2019 04:25:12 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:47349 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfK0JZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 04:21:20 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR9LB9Q114688;
-        Wed, 27 Nov 2019 03:21:11 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574846471;
-        bh=kwY+h74SP4fvfaUg3sDvoCaQkY6vLWbOHhk5F3RbxDU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=n/FdqzdFWUIwIYLohrMC0k0cZblz/xpQyFObpVdLoAqsyQ+QJwFfiB+vzVfrWNH6O
-         KXzrGQmb3gMhKxxjcDqy0TYGERUSTi645ilbxINyiPJLZ9dLK3m+doGUw1HcJr58Ql
-         q3Qb46sa52ybEY6GN1H59tb5pSr7kWw5dLd826c4=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR9LB22051314
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 Nov 2019 03:21:11 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
- Nov 2019 03:21:11 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 27 Nov 2019 03:21:11 -0600
-Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR9L41M126034;
-        Wed, 27 Nov 2019 03:21:06 -0600
-Subject: Re: [PATCH 4/4] PCI: pci-epf-test: Add support to defer core
- initialization
-To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>
-CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-5-vidyas@nvidia.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
-Date:   Wed, 27 Nov 2019 14:50:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 04:25:12 -0500
+Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MWixU-1iKUGs1WKe-00X25Y; Wed, 27 Nov 2019 10:25:10 +0100
+Received: by mail-qv1-f54.google.com with SMTP id d3so8562842qvs.11;
+        Wed, 27 Nov 2019 01:25:10 -0800 (PST)
+X-Gm-Message-State: APjAAAUgKq5FWCyA1C8yF9uuJ5z96wysgkeUuL5e/SoqGdJIG1VoW/uk
+        wC6Bg0ikmSLhLaLiEmvTJ+yjFpIS3gVwu7iK3f0=
+X-Google-Smtp-Source: APXvYqzs6+rOckuHAd+3aopwg1GeGgfWV2X9q12ELte4WZT5ZoownfduEHy1+6glfj3Mcw2cHjRqHovN97pt0V2+7oA=
+X-Received: by 2002:a05:6214:811:: with SMTP id df17mr3679940qvb.197.1574846709178;
+ Wed, 27 Nov 2019 01:25:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191113090851.26345-5-vidyas@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191127130139.0b16375c@canb.auug.org.au>
+In-Reply-To: <20191127130139.0b16375c@canb.auug.org.au>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 27 Nov 2019 10:24:52 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3ZitDAXj+4UWYQM+Vv6FvO+q7DAx6ZhBZU58NPH6MvaQ@mail.gmail.com>
+Message-ID: <CAK8P3a3ZitDAXj+4UWYQM+Vv6FvO+q7DAx6ZhBZU58NPH6MvaQ@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the y2038 tree with the tip tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <dima@arista.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:WHbR4DI8Um5jgl17Wn1YLm4Xp7rPPGrftMB/Qo7sC3AY9rIg88c
+ PouKIY4wxsYNbQob33G45NAq070NkFzRyORQr9+LvGp7NXaQdkbXFqU+XuoHwn6hcqwRMrA
+ FWXauicOZXAi1ZosoKfqvVORqkrRSDZTySh2StywUiODm9aJHTwwPN3W8TaFrT7Bs+4jpnP
+ aos9ZF54cqm92EtBaGb7w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:haWH2gPHdQo=:roMz8QXqa5QqO6KZJVJ5Ia
+ rz6wl1YcISIxI+PO0h4hzMarTi3s78ZJMhzsdwX9T55y/i8pqEgkvddFg1n5cBDQI56f4c61c
+ TJOozFElDrgVQEm6M2Ci9aykzqM1VvyEmYK080vxjMWPN3Xqs5KVACbcerav5SSO/rksFZM8L
+ IpKnThyz1S3c3kD+6YKuJOioF297idVRumL1wezVmCiOgYRPc8fRg/u7/6ob6PyO4obGrBc/c
+ Bov/eqbesHqkAzNnQ1IJqv147GL7OFzAPUsz8fnbKUql965qiqWdRjlIwFjP7TPLk2SNqbUij
+ ywOgUx5GeR6kvp+/FqealLVhKQ64wu5fa4eaqccH08ge5VUG9zhIWoNOTAu8HUwCi5sHwLSoC
+ 7yAYU43iB8ni4GoR2T1ouoXuvARs4ve9eupIaSU70HwfalEKDFH6HpCDzxnI9ysC+1OsGaSeP
+ Q2xJtlIPpY1OPijcwVIx/I21V5+XQoH57o6UE3uF42yozf6yf6hKqo+C7rjn0v//PlFmJlqNz
+ jLYlc7N4N9HbKebDvdfIT8Eb+eiAAKlrJ25GxiH/499HBoyD6o0i7tEH/ikR5YUuJMseiW7H1
+ eupRUnm3/DHiRFcF+YKs2MpB+SEu4NMb95EU+kWXJF72dXAkURSWANbRlgiQsYVraTS1FivPW
+ NG41ohbpuUSW4mLwc0HXsuIkmUWOqR0gTyCwgItUk7krVgEl0wFf5bk5IHXuYgv/fEYjA4uaw
+ vynTJS7a2CUgv7/Mr0XhN6iWOxWzkXHtDhOq6+XGrDMbAbqldvxp4EvF1yo/ocJld9i9zHe8C
+ Dx08ArsGjRzvDYqsP6BKhSFNvr5kcpwi7vZsH6jGufl4aG0Vx7LsFT5o1v/+1HpYnxZ4SN9XA
+ 61bB2w1NIt2lTrF6MRtQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Nov 27, 2019 at 3:01 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the y2038 tree got a conflict in:
+>
+>   kernel/time/time.c
+>
+> between commit:
+>
+>   7b8474466ed9 ("time: Zero the upper 32-bits in __kernel_timespec on 32-bit")
+>
+> from the tip tree and commit:
+>
+>   3ca47e958a64 ("y2038: remove CONFIG_64BIT_TIME")
+>
+> from the y2038 tree.
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-On 13/11/19 2:38 PM, Vidya Sagar wrote:
-> Add support to defer core initialization and to receive a notifier
-> when core is ready to accommodate platforms where core is not for
-> initialization untile reference clock from host is available.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
->  1 file changed, 77 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index bddff15052cc..068024fab544 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->  			   msecs_to_jiffies(1));
->  }
->  
-> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
-> -				 void *data)
-> -{
-> -	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
-> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> -
-> -	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
-> -			   msecs_to_jiffies(1));
-> -
-> -	return NOTIFY_OK;
-> -}
-> -
->  static void pci_epf_test_unbind(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->  	return 0;
->  }
->  
-> +static int pci_epf_test_core_init(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_header *header = epf->header;
-> +	const struct pci_epc_features *epc_features;
-> +	struct pci_epc *epc = epf->epc;
-> +	struct device *dev = &epf->dev;
-> +	bool msix_capable = false;
-> +	bool msi_capable = true;
-> +	int ret;
-> +
-> +	epc_features = pci_epc_get_features(epc, epf->func_no);
-> +	if (epc_features) {
-> +		msix_capable = epc_features->msix_capable;
-> +		msi_capable = epc_features->msi_capable;
-> +	}
-> +
-> +	ret = pci_epc_write_header(epc, epf->func_no, header);
-> +	if (ret) {
-> +		dev_err(dev, "Configuration header write failed\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = pci_epf_test_set_bar(epf);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (msi_capable) {
-> +		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
-> +		if (ret) {
-> +			dev_err(dev, "MSI configuration failed\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (msix_capable) {
-> +		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
-> +		if (ret) {
-> +			dev_err(dev, "MSI-X configuration failed\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
-> +				 void *data)
-> +{
-> +	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
-> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> +	int ret;
-> +
-> +	switch (val) {
-> +	case CORE_INIT:
-> +		ret = pci_epf_test_core_init(epf);
-> +		if (ret)
-> +			return NOTIFY_BAD;
-> +		break;
-> +
-> +	case LINK_UP:
-> +		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
-> +				   msecs_to_jiffies(1));
-> +		break;
-> +
-> +	default:
-> +		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
-> +		return NOTIFY_BAD;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
->  static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> @@ -496,12 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  {
->  	int ret;
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> -	struct pci_epf_header *header = epf->header;
->  	const struct pci_epc_features *epc_features;
->  	enum pci_barno test_reg_bar = BAR_0;
->  	struct pci_epc *epc = epf->epc;
-> -	struct device *dev = &epf->dev;
->  	bool linkup_notifier = false;
-> +	bool skip_core_init = false;
->  	bool msix_capable = false;
->  	bool msi_capable = true;
->  
-> @@ -511,6 +570,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	epc_features = pci_epc_get_features(epc, epf->func_no);
->  	if (epc_features) {
->  		linkup_notifier = epc_features->linkup_notifier;
-> +		skip_core_init = epc_features->skip_core_init;
->  		msix_capable = epc_features->msix_capable;
->  		msi_capable = epc_features->msi_capable;
+Looks good, thanks!
 
-Are these used anywhere in this function?
->  		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
-> @@ -520,34 +580,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	epf_test->test_reg_bar = test_reg_bar;
->  	epf_test->epc_features = epc_features;
->  
-> -	ret = pci_epc_write_header(epc, epf->func_no, header);
-> -	if (ret) {
-> -		dev_err(dev, "Configuration header write failed\n");
-> -		return ret;
-> -	}
-> -
->  	ret = pci_epf_test_alloc_space(epf);
->  	if (ret)
->  		return ret;
->  
-> -	ret = pci_epf_test_set_bar(epf);
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (msi_capable) {
-> -		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
-> -		if (ret) {
-> -			dev_err(dev, "MSI configuration failed\n");
-> -			return ret;
-> -		}
-> -	}
-> -
-> -	if (msix_capable) {
-> -		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
-> -		if (ret) {
-> -			dev_err(dev, "MSI-X configuration failed\n");
-> +	if (!skip_core_init) {
-> +		ret = pci_epf_test_core_init(epf);
-> +		if (ret)
->  			return ret;
-> -		}
->  	}
->  
->  	if (linkup_notifier) {
-
-This could as well be moved to pci_epf_test_core_init().
-
-Thanks
-Kishon
+       Arnd
