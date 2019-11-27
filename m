@@ -2,167 +2,165 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BA4C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D78C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90192215F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B12F206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:48:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VyoIRAvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfK0WqS (ORCPT
+        id S1727519AbfK0WsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 17:46:18 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:44684 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfK0WqS (ORCPT
+        Wed, 27 Nov 2019 17:48:12 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44222 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727127AbfK0WsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 17:46:18 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 1232D1C229A; Wed, 27 Nov 2019 23:46:15 +0100 (CET)
-Date:   Wed, 27 Nov 2019 23:46:14 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org
-Subject: [GIT PULL] LEDs changes for v5.5-rc1
-Message-ID: <20191127224614.GA24850@amd>
+        Wed, 27 Nov 2019 17:48:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574894888;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=toeJ9GPoxlKgpugAoVw1OE/YjcHKR6enYDrV2N8KHUA=;
+        b=VyoIRAvtMScFJ+saCfBkgGyEbt5bEDWkoPa7d1ekbNoYbvUq3QTwh6M1lzhnAF1NXp7THQ
+        0oRGlLvFYrAJeNrYPlYAeqFkwlZ7iTvtcJ0Ls4LW+eaNrf1ddQvLzyG43zqpYma2JnP2jd
+        Kb3cGGgLdrlrVaHFgKarybjv2gcN/gc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-wC0uPfiPPn2r5VVSlOmDTw-1; Wed, 27 Nov 2019 17:48:06 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B9762F2A;
+        Wed, 27 Nov 2019 22:48:03 +0000 (UTC)
+Received: from krava (ovpn-204-45.brq.redhat.com [10.40.204.45])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8A0A1608B9;
+        Wed, 27 Nov 2019 22:47:54 +0000 (UTC)
+Date:   Wed, 27 Nov 2019 23:47:53 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191127224753.GA1209@krava>
+References: <20191127094837.4045-1-jolsa@kernel.org>
+ <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
+ <CAEf4BzaDxnF0Ppfo5r5ma3ht033bWjQ78oiBzB=F40_Np=AKhw@mail.gmail.com>
+ <14accea8-a35f-5be3-607c-f5e1e7dff310@iogearbox.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+In-Reply-To: <14accea8-a35f-5be3-607c-f5e1e7dff310@iogearbox.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: wC0uPfiPPn2r5VVSlOmDTw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 27, 2019 at 10:22:31PM +0100, Daniel Borkmann wrote:
+> On 11/27/19 9:24 PM, Andrii Nakryiko wrote:
+> > On Wed, Nov 27, 2019 at 8:38 AM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > > On Wed, Nov 27, 2019 at 1:48 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> > > >=20
+> > > > hi,
+> > > > adding support to link bpftool with libbpf dynamically,
+> > > > and config change for perf.
+> > > >=20
+> > > > It's now possible to use:
+> > > >    $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1
+> > > >=20
+> > > > which will detect libbpf devel package with needed version,
+> > > > and if found, link it with bpftool.
+> > > >=20
+> > > > It's possible to use arbitrary installed libbpf:
+> > > >    $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/tm=
+p/libbpf/
+> > > >=20
+> > > > I based this change on top of Arnaldo's perf/core, because
+> > > > it contains libbpf feature detection code as dependency.
+> > > > It's now also synced with latest bpf-next, so Toke's change
+> > > > applies correctly.
+> > >=20
+> > > I don't like it.
+> > > Especially Toke's patch to expose netlink as public and stable libbpf=
+ api.
+> > > bpftools needs to stay tightly coupled with libbpf (and statically
+> > > linked for that reason).
+> > > Otherwise libbpf will grow a ton of public api that would have to be =
+stable
+> > > and will quickly become a burden.
+>=20
+> +1, and would also be out of scope from a BPF library point of view.
 
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ok, static it is.. ;-) thanks for the feedback,
 
-LED updates for 5.5-rc1
+jirka
 
-This contains usual small updates to drivers, and removal of PAGE_SIZE
-limits on /sys/class/leds/<led>/trigger.
 
-We should not be really having that many triggers; but with cpu
-activity triggers we do, and we'll eventually need to fix it,
-but... remove the limit for now.
+>=20
+> > I second that. I'm currently working on adding few more APIs that I'd
+> > like to keep unstable for a while, until we have enough real-world
+> > usage (and feedback) accumulated, before we stabilize them. With
+> > LIBBPF_API and a promise of stable API, we are going to over-stress
+> > and over-design APIs, potentially making them either too generic and
+> > bloated, or too limited (and thus become deprecated almost at
+> > inception time). I'd like to take that pressure off for a super-new
+> > and in flux APIs and not hamper the progress.
+> >=20
+> > I'm thinking of splitting off those non-stable, sort-of-internal APIs
+> > into separate libbpf-experimental.h (or whatever name makes sense),
+> > and let those be used only by tools like bpftool, which are only ever
+> > statically link against libbpf and are ok with occasional changes to
+> > those APIs (which we'll obviously fix in bpftool as well). Pahole
+> > seems like another candidate that fits this bill and we might expose
+> > some stuff early on to it, if it provides tangible benefits (e.g., BTF
+> > dedup speeds ups, etc).
+> >=20
+> > Then as APIs mature, we might decide to move them into libbpf.h with
+> > LIBBPF_API slapped onto them. Any objections?
+>=20
+> I don't think adding yet another libbpf_experimental.h makes sense, it fe=
+els
+> too much of an invitation to add all sort of random stuff in there. We al=
+ready
+> do have libbpf.h and libbpf_internal.h, so everything that does not relat=
+e to
+> the /stable and public/ API should be moved from libbpf.h into libbpf_int=
+ernal.h
+> such as the netlink helpers, as one example, and bpftool can use these si=
+nce
+> in-tree changes also cover the latter just fine. So overall, same page, j=
+ust
+> reuse/improve libbpf_internal.h instead of a new libbpf_experimental.h.
+>=20
+> Thanks,
+> Daniel
+>=20
 
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
-
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/ tags/=
-leds-5.5-rc1
-
-for you to fetch changes up to 5f820ed52371b4f5d8c43c93f03408d0dbc01e5b:
-
-  leds: trigger: netdev: fix handling on interface rename (2019-11-03 18:10=
-:12 +0100)
-
-----------------------------------------------------------------
-Akinobu Mita (1):
-      leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
-
-Chuhong Yuan (1):
-      leds: an30259a: add a check for devm_regmap_init_i2c
-
-Dan Murphy (8):
-      leds: Kconfig: Be consistent with the usage of "LED"
-      leds: flash: Convert non extended registration to inline
-      leds: flash: Remove extern from the header file
-      leds: flash: Add devm_* functions to the flash class
-      leds: lm3601x: Convert class registration to device managed
-      leds: core: Remove extern from header
-      leds: core: Fix devm_classdev_match to reference correct structure
-      leds: core: Fix leds.h structure documentation
-
-Daniel Mack (1):
-      drivers: leds: tlc591xx: check error during device init
-
-Guido G=FCnther (5):
-      leds: lm3692x: Print error value on dev_err
-      leds: lm3692x: Don't overwrite return value in error path
-      leds: lm3692x: Handle failure to probe the regulator
-      leds: lm3692x: Use flags from LM3692X_BOOST_CTRL
-      leds: lm3692x: Use flags from LM3692X_BRT_CTRL
-
-Jean-Jacques Hiblot (3):
-      leds: tlc591xx: simplify driver by using the managed led API
-      leds: tlc591xx: use devm_led_classdev_register_ext()
-      leds: tlc591xx: update the maximum brightness
-
-Markus Elfring (2):
-      leds: bcm6328: Use devm_platform_ioremap_resource() in bcm6328_leds_p=
-robe()
-      leds: bcm6358: Use devm_platform_ioremap_resource() in bcm6358_leds_p=
-robe()
-
-Martin Schiller (1):
-      leds: trigger: netdev: fix handling on interface rename
-
-Oleh Kravchenko (3):
-      dt-bindings: Add docs for EL15203000
-      leds: add LED driver for EL15203000 board
-      leds: mlxreg: Fix possible buffer overflow
-
-Stephen Boyd (1):
-      leds: pca953x: Use of_device_get_match_data()
-
- .../ABI/testing/sysfs-class-led-driver-el15203000  | 139 ++++++++
- .../devicetree/bindings/leds/leds-el15203000.txt   |  69 ++++
- drivers/leds/Kconfig                               |  17 +-
- drivers/leds/Makefile                              |   1 +
- drivers/leds/led-class-flash.c                     |  50 +++
- drivers/leds/led-class.c                           |  10 +-
- drivers/leds/led-triggers.c                        |  90 ++++--
- drivers/leds/leds-an30259a.c                       |   7 +
- drivers/leds/leds-bcm6328.c                        |   7 +-
- drivers/leds/leds-bcm6358.c                        |   7 +-
- drivers/leds/leds-el15203000.c                     | 357 +++++++++++++++++=
-++++
- drivers/leds/leds-lm3601x.c                        |   4 +-
- drivers/leds/leds-lm3692x.c                        |  47 ++-
- drivers/leds/leds-mlxreg.c                         |   4 +-
- drivers/leds/leds-pca9532.c                        |  14 +-
- drivers/leds/leds-tlc591xx.c                       |  90 ++----
- drivers/leds/leds.h                                |   6 +
- drivers/leds/trigger/ledtrig-netdev.c              |   5 +-
- include/linux/led-class-flash.h                    |  41 ++-
- include/linux/leds.h                               | 105 +++---
- 20 files changed, 860 insertions(+), 210 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-el1520=
-3000
- create mode 100644 Documentation/devicetree/bindings/leds/leds-el15203000.=
-txt
- create mode 100644 drivers/leds/leds-el15203000.c
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3e/LYACgkQMOfwapXb+vKivACfQJFuvzDQ0u2gfnENhghhVLJx
-fCsAoKAD6mEiT7fsNlKqMfC/UeJa2NJM
-=vYvs
------END PGP SIGNATURE-----
-
---k1lZvvs/B4yU6o8G--
