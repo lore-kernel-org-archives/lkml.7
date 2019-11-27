@@ -2,139 +2,257 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A234AC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88D8C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A03F2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C052071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:21:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="EPFRTqu7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n/FdqzdF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfK0JU1 (ORCPT
+        id S1726545AbfK0JVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 04:20:27 -0500
-Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:57339 "EHLO
-        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfK0JU1 (ORCPT
+        Wed, 27 Nov 2019 04:21:20 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58624 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfK0JVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 04:20:27 -0500
-X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Nov 2019 04:20:26 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1574846426;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=9uuURIb8lrZNL/OMu7igvzdkxlazHa9ULxcdZfdQEJk=;
-  b=EPFRTqu7qGE0PnTMBM61BMPiR89NpZMOBWQJBOI3Uk05xGnj7AVYD/oo
-   kayMYYzU2Z7psgmhd5VaFrE+TxWSn5leyp9LMO3uWvHReSGlpFG9bhK5S
-   hai5aVgeD3A1fwi0zz7DQbOUeJqyR2f5+Qvi9OSeSdBKjttJmXop4TOKO
-   A=;
-Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: 3w5d59L52Mn1fIy3qlLg2l1iAGFHhwnFM+YxEHAiihny2aU1k/iXW9X2fzLiyzswN46YEeyy82
- MLt3NJLzRsx9IenYw0lON3SkfoO7Rl4dtAjrcoReZBPDbYWosP5elBiuth7JAsxXx7N1hOogoa
- jpZQ/nVMnSfxXiMEF9T2J1hEjRrA6zjwKijqesLels9WAo+D9IGxa6G5jMou7W8ZJ2Tmm9cv6h
- zHQFdo2MGJoFlqg0Mts+7CAI6B4pOEvFe6V8OzDi2yz9tcCcDnh9TGgZadpIwwi6p2q1fap1vA
- d8o=
-X-SBRS: 2.7
-X-MesageID: 9306850
-X-Ironport-Server: esa6.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,248,1571716800"; 
-   d="scan'208";a="9306850"
-Date:   Wed, 27 Nov 2019 10:13:14 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <konrad.wilk@oracle.com>, <axboe@kernel.dk>,
-        <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH] xen/blkback: Avoid unmapping unmapped grant pages
-Message-ID: <20191127091314.GK980@Air-de-Roger>
-References: <20191126153605.27564-1-sjpark@amazon.com>
+        Wed, 27 Nov 2019 04:21:20 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR9LB9Q114688;
+        Wed, 27 Nov 2019 03:21:11 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574846471;
+        bh=kwY+h74SP4fvfaUg3sDvoCaQkY6vLWbOHhk5F3RbxDU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=n/FdqzdFWUIwIYLohrMC0k0cZblz/xpQyFObpVdLoAqsyQ+QJwFfiB+vzVfrWNH6O
+         KXzrGQmb3gMhKxxjcDqy0TYGERUSTi645ilbxINyiPJLZ9dLK3m+doGUw1HcJr58Ql
+         q3Qb46sa52ybEY6GN1H59tb5pSr7kWw5dLd826c4=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR9LB22051314
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 Nov 2019 03:21:11 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
+ Nov 2019 03:21:11 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 27 Nov 2019 03:21:11 -0600
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR9L41M126034;
+        Wed, 27 Nov 2019 03:21:06 -0600
+Subject: Re: [PATCH 4/4] PCI: pci-epf-test: Add support to defer core
+ initialization
+To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <20191113090851.26345-5-vidyas@nvidia.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
+Date:   Wed, 27 Nov 2019 14:50:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191126153605.27564-1-sjpark@amazon.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+In-Reply-To: <20191113090851.26345-5-vidyas@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 04:36:05PM +0100, SeongJae Park wrote:
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> For each I/O request, blkback first maps the foreign pages for the
-> request to its local pages.  If an allocation of a local page for the
-> mapping fails, it should unmap every mapping already made for the
-> request.
-> 
-> However, blkback's handling mechanism for the allocation failure does
-> not mark the remaining foreign pages as unmapped.  Therefore, the unmap
-> function merely tries to unmap every valid grant page for the request,
-> including the pages not mapped due to the allocation failure.  On a
-> system that fails the allocation frequently, this problem leads to
-> following kernel crash.
-> 
->   [  372.012538] BUG: unable to handle kernel NULL pointer dereference at 0000000000000001
->   [  372.012546] IP: [<ffffffff814071ac>] gnttab_unmap_refs.part.7+0x1c/0x40
->   [  372.012557] PGD 16f3e9067 PUD 16426e067 PMD 0
->   [  372.012562] Oops: 0002 [#1] SMP
->   [  372.012566] Modules linked in: act_police sch_ingress cls_u32
->   ...
->   [  372.012746] Call Trace:
->   [  372.012752]  [<ffffffff81407204>] gnttab_unmap_refs+0x34/0x40
->   [  372.012759]  [<ffffffffa0335ae3>] xen_blkbk_unmap+0x83/0x150 [xen_blkback]
->   ...
->   [  372.012802]  [<ffffffffa0336c50>] dispatch_rw_block_io+0x970/0x980 [xen_blkback]
->   ...
->   Decompressing Linux... Parsing ELF... done.
->   Booting the kernel.
->   [    0.000000] Initializing cgroup subsys cpuset
-> 
-> This commit fixes this problem by marking the grant pages of the given
-> request that didn't mapped due to the allocation failure as invalid.
-> 
-> Fixes: c6cc142dac52 ("xen-blkback: use balloon pages for all mappings")
-> 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> Reviewed-by: David Woodhouse <dwmw@amazon.de>
-> Reviewed-by: Maximilian Heyne <mheyne@amazon.de>
-> Reviewed-by: Paul Durrant <pdurrant@amazon.co.uk>
+Hi,
 
-Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+On 13/11/19 2:38 PM, Vidya Sagar wrote:
+> Add support to defer core initialization and to receive a notifier
+> when core is ready to accommodate platforms where core is not for
+> initialization untile reference clock from host is available.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
+>  1 file changed, 77 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index bddff15052cc..068024fab544 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+>  			   msecs_to_jiffies(1));
+>  }
+>  
+> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+> -				 void *data)
+> -{
+> -	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> -
+> -	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+> -			   msecs_to_jiffies(1));
+> -
+> -	return NOTIFY_OK;
+> -}
+> -
+>  static void pci_epf_test_unbind(struct pci_epf *epf)
+>  {
+>  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>  	return 0;
+>  }
+>  
+> +static int pci_epf_test_core_init(struct pci_epf *epf)
+> +{
+> +	struct pci_epf_header *header = epf->header;
+> +	const struct pci_epc_features *epc_features;
+> +	struct pci_epc *epc = epf->epc;
+> +	struct device *dev = &epf->dev;
+> +	bool msix_capable = false;
+> +	bool msi_capable = true;
+> +	int ret;
+> +
+> +	epc_features = pci_epc_get_features(epc, epf->func_no);
+> +	if (epc_features) {
+> +		msix_capable = epc_features->msix_capable;
+> +		msi_capable = epc_features->msi_capable;
+> +	}
+> +
+> +	ret = pci_epc_write_header(epc, epf->func_no, header);
+> +	if (ret) {
+> +		dev_err(dev, "Configuration header write failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = pci_epf_test_set_bar(epf);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (msi_capable) {
+> +		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+> +		if (ret) {
+> +			dev_err(dev, "MSI configuration failed\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (msix_capable) {
+> +		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+> +		if (ret) {
+> +			dev_err(dev, "MSI-X configuration failed\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+> +				 void *data)
+> +{
+> +	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> +	int ret;
+> +
+> +	switch (val) {
+> +	case CORE_INIT:
+> +		ret = pci_epf_test_core_init(epf);
+> +		if (ret)
+> +			return NOTIFY_BAD;
+> +		break;
+> +
+> +	case LINK_UP:
+> +		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+> +				   msecs_to_jiffies(1));
+> +		break;
+> +
+> +	default:
+> +		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
+> +		return NOTIFY_BAD;
+> +	}
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+>  static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>  {
+>  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> @@ -496,12 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  {
+>  	int ret;
+>  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> -	struct pci_epf_header *header = epf->header;
+>  	const struct pci_epc_features *epc_features;
+>  	enum pci_barno test_reg_bar = BAR_0;
+>  	struct pci_epc *epc = epf->epc;
+> -	struct device *dev = &epf->dev;
+>  	bool linkup_notifier = false;
+> +	bool skip_core_init = false;
+>  	bool msix_capable = false;
+>  	bool msi_capable = true;
+>  
+> @@ -511,6 +570,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	epc_features = pci_epc_get_features(epc, epf->func_no);
+>  	if (epc_features) {
+>  		linkup_notifier = epc_features->linkup_notifier;
+> +		skip_core_init = epc_features->skip_core_init;
+>  		msix_capable = epc_features->msix_capable;
+>  		msi_capable = epc_features->msi_capable;
 
-Thanks, Roger.
+Are these used anywhere in this function?
+>  		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+> @@ -520,34 +580,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	epf_test->test_reg_bar = test_reg_bar;
+>  	epf_test->epc_features = epc_features;
+>  
+> -	ret = pci_epc_write_header(epc, epf->func_no, header);
+> -	if (ret) {
+> -		dev_err(dev, "Configuration header write failed\n");
+> -		return ret;
+> -	}
+> -
+>  	ret = pci_epf_test_alloc_space(epf);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = pci_epf_test_set_bar(epf);
+> -	if (ret)
+> -		return ret;
+> -
+> -	if (msi_capable) {
+> -		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+> -		if (ret) {
+> -			dev_err(dev, "MSI configuration failed\n");
+> -			return ret;
+> -		}
+> -	}
+> -
+> -	if (msix_capable) {
+> -		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+> -		if (ret) {
+> -			dev_err(dev, "MSI-X configuration failed\n");
+> +	if (!skip_core_init) {
+> +		ret = pci_epf_test_core_init(epf);
+> +		if (ret)
+>  			return ret;
+> -		}
+>  	}
+>  
+>  	if (linkup_notifier) {
+
+This could as well be moved to pci_epf_test_core_init().
+
+Thanks
+Kishon
