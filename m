@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40380C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9CCC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1C82178F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54EEC215F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889066;
-	bh=pf8vHl++j1XR6IXLl1oZf1CJuHieiqhwzC6AzRFcam0=;
+	s=default; t=1574889070;
+	bh=sDzY29B+fqQFh7q2y2OrABZsUQVM1JjkS1wKHq8bNn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OX8XxblJBG6uo0IzIl6A7dgjMQ7gCxLAMxSxeZvNCbEiAKdoJObYyc+8CvJNkNsre
-	 zb0JV/87prWRDOLi315e79sL3X/t2NxayLkYcG0yuZ49cngnZ+WTlLYSTBURVJsac1
-	 64i6LfhE+07sPMhpfs2nvRg2lYh0uZw4fe6YSWeE=
+	b=EcDL7fe2a9ZfyuBZBe0PNOs3GN/kFqs9rnADLLTmeuSJsoNU1YEM1Vt2NLj4bD6Ig
+	 nWuHmc4SyYoNWueD9iGCCy7Jh+WOKpcbzv256ppMmTNZHFbYdRTm8wGpqQy8R9Ygac
+	 yRgQ60OhWyt8vEReeWEGuxk0eviDaV/83JsHgVww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733119AbfK0VLE (ORCPT
+        id S1733125AbfK0VLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:11:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38978 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:11:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730786AbfK0VLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:11:01 -0500
+        id S1733097AbfK0VK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:10:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C33F21774;
-        Wed, 27 Nov 2019 21:11:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F79D21775;
+        Wed, 27 Nov 2019 21:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889061;
-        bh=pf8vHl++j1XR6IXLl1oZf1CJuHieiqhwzC6AzRFcam0=;
+        s=default; t=1574889058;
+        bh=sDzY29B+fqQFh7q2y2OrABZsUQVM1JjkS1wKHq8bNn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ymgCPq4+fseDewG6JTjUmAiWs+WNCfS49KuYmq4vfpmZJFMFnbbjbUCJzzPr/+OJe
-         LfrVM5f8G9ajPZ76xtT0xKxdVvinTpiySCOTi8fI8VYeMmychje5FUnKKTxnC9WQA8
-         5chvgRN8EX8ey3LGGhqIuQBkpMQQ257frdS3djw0=
+        b=xYxnYDWjnBfWFWdyHmz2s0AysIonH5CKJ/fOazP9b/qHocvdfnBhhtyo70BqV5H2y
+         orusAH0NeKjmGEPT5rU7IJP7jj2SWeLkoUjgQZysUHWcc96Slz5Du9fFDhlYC7fhZ7
+         1xr6qKA/iUURddKTxasGPWcG4YX4EX6LloYtuFpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+711468aa5c3a1eabf863@syzkaller.appspotmail.com
-Subject: [PATCH 5.3 68/95] nfc: port100: handle command failure cleanly
-Date:   Wed, 27 Nov 2019 21:32:25 +0100
-Message-Id: <20191127202932.374553291@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 67/95] ALSA: usb-audio: Fix NULL dereference at parsing BADD
+Date:   Wed, 27 Nov 2019 21:32:24 +0100
+Message-Id: <20191127202932.253077014@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,34 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 5f9f0b11f0816b35867f2cf71e54d95f53f03902 upstream.
+commit 9435f2bb66874a0c4dd25e7c978957a7ca2c93b1 upstream.
 
-If starting the transfer of a command suceeds but the transfer for the reply
-fails, it is not enough to initiate killing the transfer for the
-command may still be running. You need to wait for the killing to finish
-before you can reuse URB and buffer.
+snd_usb_mixer_controls_badd() that parses UAC3 BADD profiles misses a
+NULL check for the given interfaces.  When a malformed USB descriptor
+is passed, this may lead to an Oops, as spotted by syzkaller.
+Skip the iteration if the interface doesn't exist for avoiding the
+crash.
 
-Reported-and-tested-by: syzbot+711468aa5c3a1eabf863@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 17156f23e93c ("ALSA: usb: add UAC3 BADD profiles support")
+Reported-by: syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191122112840.24797-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nfc/port100.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/mixer.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/nfc/port100.c
-+++ b/drivers/nfc/port100.c
-@@ -783,7 +783,7 @@ static int port100_send_frame_async(stru
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2930,6 +2930,9 @@ static int snd_usb_mixer_controls_badd(s
+ 			continue;
  
- 	rc = port100_submit_urb_for_ack(dev, GFP_KERNEL);
- 	if (rc)
--		usb_unlink_urb(dev->out_urb);
-+		usb_kill_urb(dev->out_urb);
+ 		iface = usb_ifnum_to_if(dev, intf);
++		if (!iface)
++			continue;
++
+ 		num = iface->num_altsetting;
  
- exit:
- 	mutex_unlock(&dev->out_urb_lock);
+ 		if (num < 2)
 
 
