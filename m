@@ -2,181 +2,127 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382CFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D118C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0352A20715
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286E42080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y/58F3q4"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pzHN7zvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfK0TBT (ORCPT
+        id S1727124AbfK0TD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 14:01:19 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36652 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfK0TBT (ORCPT
+        Wed, 27 Nov 2019 14:03:27 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35065 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfK0TD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 14:01:19 -0500
-Received: by mail-pl1-f196.google.com with SMTP id d7so10202335pls.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 11:01:17 -0800 (PST)
+        Wed, 27 Nov 2019 14:03:27 -0500
+Received: by mail-qk1-f193.google.com with SMTP id v23so12691004qkg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 11:03:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eAnHFgyJiPx1fiIRfzMvTGcNXS0KAsf3uk+CKAYZmOQ=;
-        b=Y/58F3q4kFg6bgZ+GKBOeyRth14K4XJaXSaX7j0JV73eKg0WGAUKypXjTwmXkCuJGb
-         r79Yfdh5ucPuwARv+OZi99p7jqBkeE4mULwsXqr0scuuJje9msDNz+2ZP6/WXYgDLZ7N
-         8cilwxePecUuN3ps77W903OmEQJG6xCFo5zKc=
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=Ns8iu9D49xQ4IeMW2/4gv78eKGaXwmWoNevNMNlTk40=;
+        b=pzHN7zvkbUTkQa4WJmX1slaYlJ5eM0y/srER0U9JFmrrKZgkfCntUm58vjFRciwZ4T
+         6TCcWfaYF+zDxmNgHb8sVScjj4QM3XFf831namegspvyfhL2x7SODdxhkKSRzYJajzAc
+         OUI7IX79X6Lfqhz7c9BG3xQ/MPOaupuXfxPwC1usEyEx05/fPQeSyCoAUkqZfkbpJv1U
+         Y7AqriiCVPd/q62rw2jDOJg+dc6mV3lSzNzDqa2NtGc78ByHVNxVoouEMCXnIoGDl7oQ
+         Wde7lkJYpzJm2t4D6yoCNMVWMh8KxiPaMwW8kTrkUWAgU5m8x4B9YKfjGjAZJtjAN1A4
+         MWmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eAnHFgyJiPx1fiIRfzMvTGcNXS0KAsf3uk+CKAYZmOQ=;
-        b=D0jmIVh0IweRkqX1PKnbNOsekBAHwmiiPz5LfdBhTjRBWYAlOWxuslHJ4aGT300+Kn
-         DsnqKccoXjBhNCtVnPJKEI55xmLNIe822bq02v6E20JjU4uBxtxkHGMgd2jgPsprLYjy
-         MI9FOiftNNckWCBPjC2mOmVx3sz+nXGHwOMnSs1/CJpEvUwNZ8AiIMGz2AXRoOU0KWJT
-         ue9AMZvV2hVyJ8tZfg1/i+USWbW+kR5cf+GvCtTHxjFNatzuxg3ZizWxFWHscCKSg6P+
-         lZLTIvZEfupxTKjhVdScomm2Qln7Pad1VmCubJRNxulFegamRJzOs8z1saRRfhDgvTRy
-         XU3g==
-X-Gm-Message-State: APjAAAXb8Fe4nUxFojyXNR7j4riafYPB/W2WXWKBfr0sqxDR5SxUg9MM
-        3wH/4A8KzFVEeU7qqOICvX2A4CDvWzI=
-X-Google-Smtp-Source: APXvYqy79iv7PnhQlqmrqNVJxtIPIP4rBMv3lsjmDCXDY39LKJHn0NP4iNUzzX1iuf6k+2TtPWhpuQ==
-X-Received: by 2002:a17:902:6b45:: with SMTP id g5mr375764plt.159.1574881277136;
-        Wed, 27 Nov 2019 11:01:17 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l11sm3185823pff.120.2019.11.27.11.01.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 11:01:16 -0800 (PST)
-Date:   Wed, 27 Nov 2019 11:01:15 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "Shiyunming (Seth, RTOS)" <shiyunming@huawei.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lizi (D)" <lizi4@huawei.com>, "Sunke (SK)" <sunke09@huawei.com>,
-        Jiangyangyang <jiangyangyang@huawei.com>,
-        Linzichang <linzichang@huawei.com>,
-        kernel-hardening@lists.openwall.com, Arnd Bergmann <arnd@arndb.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: Questions about "security functions" and "suppression of
- compilation alarms".
-Message-ID: <201911271013.38BA7015C6@keescook>
-References: <18FA40DC4B7A9742B8E58FC4CDA67429AFC83C55@dggeml526-mbx.china.huawei.com>
-MIME-Version: 1.0
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=Ns8iu9D49xQ4IeMW2/4gv78eKGaXwmWoNevNMNlTk40=;
+        b=BHCbq/MGfitXCObON9IbCnTQbfP25iyIwq622clZBUt0bbXT+hhoKh84INyK7qs1Wd
+         q/zz0kjBlSBqjgKKJWHAmT7OFmVU5ThyqHPIebJYZ0t8N7ag4+NSQG/WcPp4s+p8pYI+
+         BaznB5k1kFcfAmUBc55oETR0r7Zkib/UHvCLwgr6t/6FLw6bjTXgrUTkRsq/aDbVnbR4
+         238zvholEqSGD+7oYtlC2dvoJPzeTwapAp99fJ+Nzm8veUr3uRODnf2uUke+McMLVx/e
+         nh+e7DeWfCncG7GaxxZ0RhPbfPo5P3/dy7pIJsgjzYQKmA9nB0KgOeC/ZTunspVZSATf
+         3h4A==
+X-Gm-Message-State: APjAAAV4jPIfzKv/y4r2qQv7tHuvWEAkYYs4wKQQp2bvSWunuZmPQQ6n
+        LY+w+aVI/mol6G8umMcvu4DOgmQ9Qtmc/g==
+X-Google-Smtp-Source: APXvYqxiQmN/hmDQO7QTsbci5YUMHjW00APmZIZjqmyjyZBbOtcihhNld5EdGDbvmdS/4Sf6ulVOqg==
+X-Received: by 2002:a37:bc81:: with SMTP id m123mr6216808qkf.358.1574881404551;
+        Wed, 27 Nov 2019 11:03:24 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id k196sm7242887qke.97.2019.11.27.11.03.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Nov 2019 11:03:23 -0800 (PST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18FA40DC4B7A9742B8E58FC4CDA67429AFC83C55@dggeml526-mbx.china.huawei.com>
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v1] mm/memory_hotplug: don't check the nid in find_(smallest|biggest)_section_pfn
+Date:   Wed, 27 Nov 2019 14:03:22 -0500
+Message-Id: <74CE315E-319F-4D2D-8276-7F89293286CF@lca.pw>
+References: <20191127174158.28226-1-david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>
+In-Reply-To: <20191127174158.28226-1-david@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 01:11:50PM +0000, Shiyunming (Seth, RTOS) wrote:
-> During the use of Linux, I found lots of C standard functions such
-> as memcpy and strcpy etc. These functions did not check the size of
-> the target buffer and easily introduced the security vulnerability of
-> buffer overflow.
 
-See CONFIG_FORTIFY_SOURCE (which enables such bounds checking):
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/string.h#n262
-and the plans for improvement: https://github.com/KSPP/linux/issues/6
 
-> And some compilation options are enabled to suppress compilation alarms,
-> for example (Wno-format-security Wno-pointer-sign Wno-frame-address
-> Wno-maybe-uninitialized Wno-format-overflow Wno-int-in-bool-context),
-> which may bring potential security problems.
+> On Nov 27, 2019, at 12:42 PM, David Hildenbrand <david@redhat.com> wrote:
+>=20
+> Now that we always check against a zone, we can stop checking against
+> the nid, it is implicitly covered by the zone.
+>=20
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+> mm/memory_hotplug.c | 23 ++++++++---------------
+> 1 file changed, 8 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 46b2e056a43f..602f753c662c 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -344,17 +344,14 @@ int __ref __add_pages(int nid, unsigned long pfn, un=
+signed long nr_pages,
+> }
+>=20
+> /* find the smallest valid pfn in the range [start_pfn, end_pfn) */
+> -static unsigned long find_smallest_section_pfn(int nid, struct zone *zone=
+,
+> -                     unsigned long start_pfn,
+> -                     unsigned long end_pfn)
+> +static unsigned long find_smallest_section_pfn(struct zone *zone,
+> +                           unsigned long start_pfn,
+> +                           unsigned long end_pfn)
+> {
+>    for (; start_pfn < end_pfn; start_pfn +=3D PAGES_PER_SUBSECTION) {
+>        if (unlikely(!pfn_to_online_page(start_pfn)))
+>            continue;
+>=20
+> -        if (unlikely(pfn_to_nid(start_pfn) !=3D nid))
+> -            continue;
 
-Each of these needs to be handled on a case-by-case basis. Kernel builds
-are expected to build without warnings, so before a new compiler flag
-can be added to the global build, all the instances need to be
-addressed. (Flags are regularly turned off because they are enabled by
-default in newer compiler versions but this causes too many warnings.)
-See the "W=1", "W=2", etc build options for enabling these:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/Makefile.extrawarn
+Are you sure? I thought this is to check against machines with odd layouts, n=
+o?=20
 
-Once all instances of a warning are eliminated, these warnings can be
-moved to the top-level Makefile. Arnd Bergmann does a lot of this work
-and might be able to speak more coherently about this. :) For example,
-here is enabling of -Wmaybe-uninitialized back in the v4.10 kernel:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4324cb23f4569edcf76e637cdb3c1dfe8e8a85e4
+			/*
+			 * Nodes's pfns can be overlapping.
+			 * We know some arch can have a nodes layout such a=
+s
+			 * -------------pfn-------------->
+			 * N0 | N1 | N2 | N0 | N1 | N2|....
+			 */
 
-Speaking specifically to your list:
-
--Wformat-security
-  This has tons of false positives, and likely requires fixing the
-  compiler.
-
--Wpointer-sign
-  Lots of things in the kernel pass pointers around in weird ways. This
-  is disabled to allow normal operation (which, combined with
-  -fwrapv-pointer and -fwrapv via -fno-strict-overflow) means signed
-  things and pointers behave without "undefined behavior". A lot of work
-  would be needed all over the kernel to enable this warning (and part
-  of that would be incrementally removing unexpected overflows of both
-  unsigned and signed arithmetic).
-
--Wframe-address
-  __builtin_frame_address() gets used in "safe" places on the
-  architectures where the limitations are understood, so adding this
-  warning doesn't gain anything because it's already rare and gets
-  some scrutiny.
-
--Wmaybe-uninitialized
-  And linked above, this is enabled by default since v4.10.
-
--Wformat-overflow
-  See https://git.kernel.org/linus/bd664f6b3e376a8ef4990f87d08271cc2d01ba9a
-  for details. Eliminating these warnings (there were 1500) needs to
-  happen before they can be turned back on. Any help here is very
-  welcome!
-
--Wint-in-bool-context
-  See https://git.kernel.org/linus/a3bc88645e9293f5aaac9c05a185d9f1c0594c6c
-  where it was enabled again in v5.2 after Arnd cleaned up the associated
-  warnings.
-
-> In response to these circumstances, my question is:
-> (1) Does the kernel community think that using these functions and
-> compiling alarm suppression have security problems?
-
-Generally speaking, yes, of course, if we have tools that provide the
-code base with better security (or more specifically, a reduction in all
-bugs, not just those that may have security implications), we want to
-use them. However, such things need to have a false positive rate that is
-close to zero. If it has a high false positive rate, then there needs to
-be a strong indication that the true positives are very serious problems
-and some mechanism can be implemented to silence the false positives.
-
->     If it is considered as a problem, will the developer be promoted
-> to fix it?
-
-Warnings seen from newly introduced code get fixed very quickly, yes.
-Problems that were already existing and are surfaced by new warnings
-tend to get less direct attention by maintainers since it creates a
-large amount of work where it is hard to measure the benefit. However,
-people contributing changes in these areas tend to be very well received.
-For example, Gustavo A. R. Silva did a huge amount of work to enable
--Wimplicit-fallthrough: https://lwn.net/Articles/794944/
-
->     If it is not considered as a problem, what is the reason?
-
-Hopefully I've explained the nuances in this email. :)
-
-> (2) The C11 specification contains security enhancement functions. What
-> is the policy of the community about them? Is there any plan to use
-> these functions?
-
-Which do you mean specifically? Generally speaking, the community is
-open to anything that can be reasonably maintained. :)
-
-Are there any features you've tried to enable and you'd be interested in
-submitting patches to fix?
-
-Thanks for the questions!
-
--- 
-Kees Cook
