@@ -2,117 +2,124 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AF1C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF13BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925292053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24252080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:54:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Iaujsh5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfK0Lw0 (ORCPT
+        id S1726673AbfK0Ly3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 06:52:26 -0500
-Received: from skedge04.snt-world.com ([91.208.41.69]:57258 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfK0Lw0 (ORCPT
+        Wed, 27 Nov 2019 06:54:29 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:55788 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726496AbfK0Ly3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 06:52:26 -0500
-Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 6CF6F67A903;
-        Wed, 27 Nov 2019 12:52:18 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
- (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 27 Nov
- 2019 12:52:17 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Wed, 27 Nov 2019 12:52:17 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     "Togorean, Bogdan" <Bogdan.Togorean@analog.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "sam@ravnborg.org" <sam@ravnborg.org>
-CC:     "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "matt.redfearn@thinci.com" <matt.redfearn@thinci.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: Re: [PATCH v2 2/2] drm: bridge: adv7511: Add support for ADV7535
-Thread-Topic: Re: [PATCH v2 2/2] drm: bridge: adv7511: Add support for ADV7535
-Thread-Index: AQHVpRke93eDKSsyK0u0m5zFvr+lWQ==
-Date:   Wed, 27 Nov 2019 11:52:17 +0000
-Message-ID: <4c60f287-eb6b-d5b3-8d40-89172755887d@kontron.de>
-References: <20190809141611.9927-1-bogdan.togorean@analog.com>
- <20190809141611.9927-3-bogdan.togorean@analog.com>
- <20190809152510.GA23265@ravnborg.org>
- <c99cfbd3dc45bb02618e7653c33022f3553e1cce.camel@analog.com>
- <20190819104616.GA15890@ravnborg.org>
- <20190820085329.GC11147@phenom.ffwll.local>
- <ccba9a66c6d5db8a295353b16084c6a1199f31dc.camel@analog.com>
-In-Reply-To: <ccba9a66c6d5db8a295353b16084c6a1199f31dc.camel@analog.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <65B7112A5BC3804EA5F6AAD9C877BF3B@snt-world.com>
-Content-Transfer-Encoding: base64
+        Wed, 27 Nov 2019 06:54:29 -0500
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARBpfxB003370;
+        Wed, 27 Nov 2019 05:54:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=dhIaUkoS+DrpcsuYOVcEaDmzt68tdOk/Gzkri67wU0c=;
+ b=Iaujsh5WQ5JVpEqCkMByHIkWEKZGQgAC1aqF2s9bGiN+g7erZPIRNT6sg2dl6EXpM8co
+ a/Bh9c4YCBHiTYvfVkekAfKE7N2uRMS0jO9tLJGKb3ag7I6I7tbfR49+TgxNQEw+WqAq
+ cbulQxOPSWnjPyiWOf+tuyRgDlCLbwMmGbr7AH+DoD0Iy7W0+UZM+i+k5ls0WRHYoNYm
+ Tf+kWrsYazc+OTLv0ZYWCT3pt5ROw+DMsj52TPqJqKnyx514uqB6JYzxwXbHc24sT+Nc
+ ExHk7K6YnfB1dD+QWtOKqK7bvCTub5ormETI7yOe67OgKT1XwCoizKAesD/6LJuKq+bY Zg== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([5.172.152.52])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2whda3rw5j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 27 Nov 2019 05:54:24 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 27 Nov
+ 2019 11:55:13 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Wed, 27 Nov 2019 11:55:13 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id D14612C8;
+        Wed, 27 Nov 2019 11:54:19 +0000 (UTC)
+Date:   Wed, 27 Nov 2019 11:54:19 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Gregory Clement <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] spi: cadence: Correct handling of native chipselect
+Message-ID: <20191127115419.GA10451@ediswmail.ad.cirrus.com>
+References: <20191126164140.6240-1-ckeepax@opensource.cirrus.com>
+ <CACRpkdYc=2vWte+gFp0m6RvWSu=+qT=WWUzag0N1FUBmbSCOOw@mail.gmail.com>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 6CF6F67A903.A1496
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: a.hajda@samsung.com, airlied@linux.ie,
-        allison@lohutok.net, bogdan.togorean@analog.com, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, gregkh@linuxfoundation.org,
-        laurent.pinchart@ideasonboard.com, linux-kernel@vger.kernel.org,
-        matt.redfearn@thinci.com, robh+dt@kernel.org, sam@ravnborg.org,
-        tglx@linutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYc=2vWte+gFp0m6RvWSu=+qT=WWUzag0N1FUBmbSCOOw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
+ impostorscore=0 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911270103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQm9nZGFuLA0KDQpPbiAyMS4wOC4xOSAwNzozNCwgVG9nb3JlYW4sIEJvZ2RhbiB3cm90ZToN
-Cj4gT24gVHVlLCAyMDE5LTA4LTIwIGF0IDEwOjUzICswMjAwLCBEYW5pZWwgVmV0dGVyIHdyb3Rl
-Og0KPj4gW0V4dGVybmFsXQ0KPj4NCj4+IE9uIE1vbiwgQXVnIDE5LCAyMDE5IGF0IDEyOjQ2OjE2
-UE0gKzAyMDAsIFNhbSBSYXZuYm9yZyB3cm90ZToNCj4+PiBIaSBCb2dkYW4uDQo+Pj4NCj4+Pj4+
-PiAgIAkJYWR2NzUzM19kZXRhY2hfZHNpKGFkdjc1MTEpOw0KPj4+Pj4+ICAgCWkyY191bnJlZ2lz
-dGVyX2RldmljZShhZHY3NTExLT5pMmNfY2VjKTsNCj4+Pj4+PiAgIAlpZiAoYWR2NzUxMS0+Y2Vj
-X2NsaykNCj4+Pj4+PiBAQCAtMTI2Niw4ICsxMjc4LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBp
-MmNfZGV2aWNlX2lkDQo+Pj4+Pj4gYWR2NzUxMV9pMmNfaWRzW10gPSB7DQo+Pj4+Pj4gICAJeyAi
-YWR2NzUxMSIsIEFEVjc1MTEgfSwNCj4+Pj4+PiAgIAl7ICJhZHY3NTExdyIsIEFEVjc1MTEgfSwN
-Cj4+Pj4+PiAgIAl7ICJhZHY3NTEzIiwgQURWNzUxMSB9LA0KPj4+Pj4+IC0jaWZkZWYgQ09ORklH
-X0RSTV9JMkNfQURWNzUzMw0KPj4+Pj4+ICsjaWZkZWYgQ09ORklHX0RSTV9JMkNfQURWNzUzeA0K
-Pj4+Pj4+ICAgCXsgImFkdjc1MzMiLCBBRFY3NTMzIH0sDQo+Pj4+Pj4gKwl7ICJhZHY3NTM1Iiwg
-QURWNzUzNSB9LA0KPj4+Pj4+ICAgI2VuZGlmDQo+Pj4+Pg0KPj4+Pj4gVGhpcyBpZmRlZiBtYXkg
-bm90IGJlIG5lZWRlZD8/DQo+Pj4+PiBJZiB3ZSBkaWQgbm90IGdldCB0aGlzIHR5cGUgd2Ugd2ls
-bCBub3QgbG9vayBpdCB1cC4NCj4+Pj4gQnV0IGlmIHdlIGhhdmUgZGVmaW5lZCBpbiBEVCBhZHY3
-NTMzLzUgZGV2aWNlIGJ1dA0KPj4+PiBDT05GSUdfRFJNX0kyQ19BRFY3NTN4IG5vdCBzZWxlY3Rl
-ZCBwcm9iZSB3aWxsIGZhaWwgd2l0aCBFTk9ERVYuDQo+Pj4+IFRoYXQNCj4+Pj4gd291bGQgYmUg
-b2s/DQo+Pj4NCj4+PiBXaGF0IGRvIHdlIGdhaW4gZnJvbSB0aGlzIGNvbXBsZXhpdHkgaW4gdGhl
-IGVuZC4NCj4+PiBXaHkgbm90IGxldCB0aGUgZHJpdmVyIGFsd2F5cyBzdXBwb3J0IGFsbCB2YXJp
-YW50cy4NCj4+Pg0KPj4+IElmIHRoaXMgcmVzdWx0IGluIGEgc2ltcGxlciBkcml2ZXIsIGFuZCBs
-ZXNzIGNob2ljZXMgaW4gS2NvbmZpZw0KPj4+IHRoZW4gaXQgaXMgYSB3aW4td2luLg0KPj4NCj4+
-IFllYWggaW4gZ2VuZXJhbCB3ZSBkb24ndCBLY29uZmlnIHdpdGhpbiBkcml2ZXJzIGluIGRybSB0
-byBkaXNhYmxlDQo+PiBzcGVjaWZpYw0KPj4gY29kZS1wYXRocy4gSXQncyBub3Qgd29ydGggdGhl
-IHBhaW4uDQogPg0KPiBBY2ssDQo+IFRoYW5rIHlvdSBmb3IgY2xhcmlmaWNhdGlvbi4gV2lsbCBy
-ZW1vdmUgaW4gVjMuDQoNCkFyZSB5b3Ugc3RpbGwgd29ya2luZyBvbiB0aGlzPyBEbyB5b3UgcGxh
-biB0byBzZW5kIGEgdjM/DQpJIHdpbGwgc29vbiBsYXkgbXkgaGFuZHMgb24gYSBib2FyZCB3aXRo
-IHRoZSBBRFY3NTM1IGFuZCB3b3VsZCBsaWtlIHRvIA0Kc2VlIHRoaXMgbWVyZ2VkLg0KQWxzbyBm
-b3IgcGF0Y2ggMS8yLCBpdCBzZWVtcyB5b3UgYWxyZWFkeSBoYXZlIGEgUi1iIGZvciB2MSBmcm9t
-IExhdXJlbnQsIA0KYnV0IHlvdSBkaWRuJ3QgY2FycnkgdGhlIHRhZyB0byB2Mi4NCg0KVGhhbmtz
-LA0KRnJpZWRlcg==
+On Wed, Nov 27, 2019 at 11:42:47AM +0100, Linus Walleij wrote:
+> On Tue, Nov 26, 2019 at 5:41 PM Charles Keepax
+> <ckeepax@opensource.cirrus.com> wrote:
+> The original patch
+> f3186dd87669 ("spi: Optionally use GPIO descriptors for CS GPIOs")
+> came with the assumption that native chip select handler needed
+> was to be converted to always expect a true (1) value to their
+> ->set_cs() callbacks for asserting chip select, and this was one of
+> the drivers augmented to expect that.
+> 
+
+Which is fine, I am not greatly invested in either symantics
+of the set_cs callback although if we were changing that we
+should have probably updated the kerneldoc comments for it.
+
+Although I do have a question if that is that case what is the
+expected way to handle the polarity of the chip select? Because
+it seems to me you would end up with each driver checking the
+SPI_CS_HIGH flag in set_cs and doing the invert locally, whereas
+with the pass the logic level system the core can centralise that
+inversion.
+
+> As
+> 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH setting when using native and GPIO CS")
+> essentially undo that semantic change and switches back to
+> the old semantic, all the drivers that were converted to expect
+> a high input to their ->set_cs() callbacks for asserting CS need
+> to be reverted back as well, but that didn't happen.
+> 
+> So we need to fix not just cadence but also any other driver setting
+> ->use_gpio_descriptors() and also supplying their own
+> ->set_cs() callback and expecting this behaviour, or the fix
+> will have fixed broken a bunch of drivers.
+> 
+> But we are lucky: there aren't many of them.
+> In addition to spi-cadence.c this seems to affect only spi-dw.c
+> and I suppose that is what Gregory was using? Or
+> something else?
+> 
+
+I will go do some digging and see what I can find.
+
+Thanks,
+Charles
