@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12635C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF45C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0F521770
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA9120715
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890298;
-	bh=7xQS1hoyAVX65UesJZ3oHwBIp4zUXaCx0n/ntoXsj+M=;
+	s=default; t=1574890300;
+	bh=FzCglVxcSpKyCaxsRhGAWDD0lVXiYxk8tTZGIPr44Ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WmXg7izaf/dhDqmPLMmnFw5d4hMOXRsZIYreuezER+T/dcyJuFIByJkkSuG+1TWJZ
-	 xvlcejXo5l0afoNtCEr5l96oAckv2x+AaU6ClX2ExqRq4yey4OPY5WGLGz8HIjf7mY
-	 bXmRvJlc7PEzrdShEnICnyFLT0W2kBXkzfruO65Q=
+	b=VCyMLKWq68qJhiLqM/oGxBeVSJzXTtx8M++cprgf5zH7zKiZSvZgD/ig3yto7oEgZ
+	 432/ubeyeY2H7amFtOkSxxT33EViVjMtEyR8sR0Eeb1Tkln+Dt6ijYPdZvjM2OB/ot
+	 /PpEQjqelGE75uv6WB/uq98umrQpmktohl38nCrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730825AbfK0Uy2 (ORCPT
+        id S1730819AbfK0UyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:54:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44284 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:54:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730815AbfK0UyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:54:22 -0500
+        id S1729004AbfK0UyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:54:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D73532154A;
-        Wed, 27 Nov 2019 20:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BC1A2154A;
+        Wed, 27 Nov 2019 20:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888062;
-        bh=7xQS1hoyAVX65UesJZ3oHwBIp4zUXaCx0n/ntoXsj+M=;
+        s=default; t=1574888059;
+        bh=FzCglVxcSpKyCaxsRhGAWDD0lVXiYxk8tTZGIPr44Ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JzUm5eQaIcaX2QNYvWMid+siw3nENdy/30Gnqwospas+qTlqtIFKlmRSanfVrD19z
-         Ko2Opq79+5VeOWkZRqp/ri19DDX778YkkJSIVTNtL//YcdHsnWTXjQj7om5WB5JE4Q
-         XmPSoXcIr535e0sRZ4zJrQWy8hocPyRNtCo7b2H8=
+        b=mAcefy4u9WatpyUXp7Xh8umeHUSD6+irkp5NRIRBANjqCz3p4n2PNg2Sj+Xj0lE0Q
+         C8OKY9zcY1nUG6vwWNCEHisSx+6wczgM2M4VFTqNsYVmzMBujcord5NtvTxVz0rSuU
+         ccsuvKFcLChJbw5Q54Iit48MVR8ka1wXZSEyQmJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 201/211] appledisplay: fix error handling in the scheduled work
-Date:   Wed, 27 Nov 2019 21:32:14 +0100
-Message-Id: <20191127203112.575337093@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.de>
+Subject: [PATCH 4.14 200/211] USB: chaoskey: fix error case of a timeout
+Date:   Wed, 27 Nov 2019 21:32:13 +0100
+Message-Id: <20191127203112.492188901@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,49 +60,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit 91feb01596e5efc0cc922cc73f5583114dccf4d2 upstream.
+commit 92aa5986f4f7b5a8bf282ca0f50967f4326559f5 upstream.
 
-The work item can operate on
+In case of a timeout or if a signal aborts a read
+communication with the device needs to be ended
+lest we overwrite an active URB the next time we
+do IO to the device, as the URB may still be active.
 
-1. stale memory left over from the last transfer
-the actual length of the data transfered needs to be checked
-2. memory already freed
-the error handling in appledisplay_probe() needs
-to cancel the work in that case
-
-Reported-and-tested-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.de>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191106124902.7765-1-oneukum@suse.com
+Link: https://lore.kernel.org/r/20191107142856.16774-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/appledisplay.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/usb/misc/chaoskey.c |   24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/misc/appledisplay.c
-+++ b/drivers/usb/misc/appledisplay.c
-@@ -182,7 +182,12 @@ static int appledisplay_bl_get_brightnes
- 		0,
- 		pdata->msgdata, 2,
- 		ACD_USB_TIMEOUT);
--	brightness = pdata->msgdata[1];
-+	if (retval < 2) {
-+		if (retval >= 0)
-+			retval = -EMSGSIZE;
-+	} else {
-+		brightness = pdata->msgdata[1];
-+	}
- 	mutex_unlock(&pdata->sysfslock);
+--- a/drivers/usb/misc/chaoskey.c
++++ b/drivers/usb/misc/chaoskey.c
+@@ -396,13 +396,17 @@ static int _chaoskey_fill(struct chaoske
+ 		!dev->reading,
+ 		(started ? NAK_TIMEOUT : ALEA_FIRST_TIMEOUT) );
  
- 	if (retval < 0)
-@@ -317,6 +322,7 @@ error:
- 	if (pdata) {
- 		if (pdata->urb) {
- 			usb_kill_urb(pdata->urb);
-+			cancel_delayed_work_sync(&pdata->work);
- 			if (pdata->urbdata)
- 				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
- 					pdata->urbdata, pdata->urb->transfer_dma);
+-	if (result < 0)
++	if (result < 0) {
++		usb_kill_urb(dev->urb);
+ 		goto out;
++	}
+ 
+-	if (result == 0)
++	if (result == 0) {
+ 		result = -ETIMEDOUT;
+-	else
++		usb_kill_urb(dev->urb);
++	} else {
+ 		result = dev->valid;
++	}
+ out:
+ 	/* Let the device go back to sleep eventually */
+ 	usb_autopm_put_interface(dev->interface);
+@@ -538,7 +542,21 @@ static int chaoskey_suspend(struct usb_i
+ 
+ static int chaoskey_resume(struct usb_interface *interface)
+ {
++	struct chaoskey *dev;
++	struct usb_device *udev = interface_to_usbdev(interface);
++
+ 	usb_dbg(interface, "resume");
++	dev = usb_get_intfdata(interface);
++
++	/*
++	 * We may have lost power.
++	 * In that case the device that needs a long time
++	 * for the first requests needs an extended timeout
++	 * again
++	 */
++	if (le16_to_cpu(udev->descriptor.idVendor) == ALEA_VENDOR_ID)
++		dev->reads_started = false;
++
+ 	return 0;
+ }
+ #else
 
 
