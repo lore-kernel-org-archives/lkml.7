@@ -5,54 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25FDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BD2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9859217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D8421775
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888605;
-	bh=mKp2s/blIgMGrwn5l+GuCYtectkjp5AVSv8RFFXlJYI=;
+	s=default; t=1574888612;
+	bh=Z5a/og1bx1sz2Y6k8bJubC1q/duzlsbMbgSblkYn4a0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u2brdnXjM1Mt4x1qbSlJ8LbqmcJNh5b6xupHfNvSAl58seFGGlDp/n31hlJO0Uh4m
-	 QKiR+CbmJR/Excc1fU/c+mU2hLeBQ6BT4wwOZQYgK5Hs+zoAOvUXBK0zZ8Md9tfPnF
-	 FqWO1bSU4ozsd99khbMJ2HnN3pomEQVDM3OW7/PM=
+	b=xsl4uEeZungQrnKWzNEWhlXrqXVmwsUz7yb4Dw35dvaaEJqn/mv6MWmy7VhorlfW6
+	 lOzSsfkg5vQmHfiEavTCOg/MPe+4rvAZ5/c3dx3LxAMRNwyETtnX0Qe5D3kGBPo33F
+	 5P5dp9OE3mu1K4Yp/b9IAx7wp0SAj7OXwQWtnUlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732014AbfK0VDY (ORCPT
+        id S1731405AbfK0VDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:03:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56508 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:03:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732004AbfK0VDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:03:18 -0500
+        id S1731679AbfK0VDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:03:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC8B02086A;
-        Wed, 27 Nov 2019 21:03:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EDAC217AB;
+        Wed, 27 Nov 2019 21:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888598;
-        bh=mKp2s/blIgMGrwn5l+GuCYtectkjp5AVSv8RFFXlJYI=;
+        s=default; t=1574888603;
+        bh=Z5a/og1bx1sz2Y6k8bJubC1q/duzlsbMbgSblkYn4a0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WreGH7UllX2H0fPMs9WPzY5DDYT7cxnVguo91OljobDH3QP06iNJk8xs++tj2apzH
-         2aZ/0THM68L6ifFi+ZXNOc8d86X5hxV3ZbWuHz/R4ueKsDigud3gA0xTgF5wT5RURT
-         W9JmDx4PziQ3MeTrm3LizRIh6jntgD5KlwYTyHTg=
+        b=S1jmk9zr7qi52XPLDLBVSbGLDSfwdcdP7ms2+i8x2EW5RAQ3uRQnzT3GdX8XIeZVI
+         flpgF/XOVxSYrWLBAbrKtAowMzU0kFAC7P+HvGrod6gruXecZ1BfZsl4xIpUpIaLO3
+         vosVox/2AtnYvRldS0qeWV1CDSKYoUMhvQ9hzBl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changwei Ge <ge.changwei@h3c.com>,
+        stable@vger.kernel.org, Larry Chen <lchen@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Mark Fasheh <mark@fasheh.com>,
         Joel Becker <jlbec@evilplan.org>,
         Junxiao Bi <junxiao.bi@oracle.com>,
         Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 197/306] ocfs2: dont use iocb when EIOCBQUEUED returns
-Date:   Wed, 27 Nov 2019 21:30:47 +0100
-Message-Id: <20191127203129.589297656@linuxfoundation.org>
+Subject: [PATCH 4.19 199/306] ocfs2: fix clusters leak in ocfs2_defrag_extent()
+Date:   Wed, 27 Nov 2019 21:30:49 +0100
+Message-Id: <20191127203129.722775199@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -65,70 +66,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changwei Ge <ge.changwei@h3c.com>
+From: Larry Chen <lchen@suse.com>
 
-[ Upstream commit 9e985787750db8aae87f02b67e908f28ac4d6b83 ]
+[ Upstream commit 6194ae4242dec0c9d604bc05df83aa9260a899e4 ]
 
-When -EIOCBQUEUED returns, it means that aio_complete() will be called
-from dio_complete(), which is an asynchronous progress against
-write_iter.  Generally, IO is a very slow progress than executing
-instruction, but we still can't take the risk to access a freed iocb.
+ocfs2_defrag_extent() might leak allocated clusters.  When the file
+system has insufficient space, the number of claimed clusters might be
+less than the caller wants.  If that happens, the original code might
+directly commit the transaction without returning clusters.
 
-And we do face a BUG crash issue.  Using the crash tool, iocb is
-obviously freed already.
+This patch is based on code in ocfs2_add_clusters_in_btree().
 
-  crash> struct -x kiocb ffff881a350f5900
-  struct kiocb {
-    ki_filp = 0xffff881a350f5a80,
-    ki_pos = 0x0,
-    ki_complete = 0x0,
-    private = 0x0,
-    ki_flags = 0x0
-  }
-
-And the backtrace shows:
-  ocfs2_file_write_iter+0xcaa/0xd00 [ocfs2]
-  aio_run_iocb+0x229/0x2f0
-  do_io_submit+0x291/0x540
-  SyS_io_submit+0x10/0x20
-  system_call_fastpath+0x16/0x75
-
-Link: http://lkml.kernel.org/r/1523361653-14439-1-git-send-email-ge.changwei@h3c.com
-Signed-off-by: Changwei Ge <ge.changwei@h3c.com>
+[akpm@linux-foundation.org: include localalloc.h, reduce scope of data_ac]
+Link: http://lkml.kernel.org/r/20180904041621.16874-3-lchen@suse.com
+Signed-off-by: Larry Chen <lchen@suse.com>
 Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
 Cc: Mark Fasheh <mark@fasheh.com>
 Cc: Joel Becker <jlbec@evilplan.org>
 Cc: Junxiao Bi <junxiao.bi@oracle.com>
 Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/file.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ocfs2/move_extents.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/fs/ocfs2/file.c b/fs/ocfs2/file.c
-index a847fe52c56ee..a3e077fcfeb9b 100644
---- a/fs/ocfs2/file.c
-+++ b/fs/ocfs2/file.c
-@@ -2389,7 +2389,7 @@ static ssize_t ocfs2_file_write_iter(struct kiocb *iocb,
+diff --git a/fs/ocfs2/move_extents.c b/fs/ocfs2/move_extents.c
+index f55f82ca34250..1565dd8e8856e 100644
+--- a/fs/ocfs2/move_extents.c
++++ b/fs/ocfs2/move_extents.c
+@@ -25,6 +25,7 @@
+ #include "ocfs2_ioctl.h"
  
- 	written = __generic_file_write_iter(iocb, from);
- 	/* buffered aio wouldn't have proper lock coverage today */
--	BUG_ON(written == -EIOCBQUEUED && !(iocb->ki_flags & IOCB_DIRECT));
-+	BUG_ON(written == -EIOCBQUEUED && !direct_io);
+ #include "alloc.h"
++#include "localalloc.h"
+ #include "aops.h"
+ #include "dlmglue.h"
+ #include "extent_map.h"
+@@ -222,6 +223,7 @@ static int ocfs2_defrag_extent(struct ocfs2_move_extents_context *context,
+ 	struct ocfs2_refcount_tree *ref_tree = NULL;
+ 	u32 new_phys_cpos, new_len;
+ 	u64 phys_blkno = ocfs2_clusters_to_blocks(inode->i_sb, phys_cpos);
++	int need_free = 0;
  
- 	/*
- 	 * deep in g_f_a_w_n()->ocfs2_direct_IO we pass in a ocfs2_dio_end_io
-@@ -2509,7 +2509,7 @@ static ssize_t ocfs2_file_read_iter(struct kiocb *iocb,
- 	trace_generic_file_read_iter_ret(ret);
+ 	if ((ext_flags & OCFS2_EXT_REFCOUNTED) && *len) {
+ 		BUG_ON(!ocfs2_is_refcount_inode(inode));
+@@ -312,6 +314,7 @@ static int ocfs2_defrag_extent(struct ocfs2_move_extents_context *context,
+ 		if (!partial) {
+ 			context->range->me_flags &= ~OCFS2_MOVE_EXT_FL_COMPLETE;
+ 			ret = -ENOSPC;
++			need_free = 1;
+ 			goto out_commit;
+ 		}
+ 	}
+@@ -336,6 +339,20 @@ static int ocfs2_defrag_extent(struct ocfs2_move_extents_context *context,
+ 		mlog_errno(ret);
  
- 	/* buffered aio wouldn't have proper lock coverage today */
--	BUG_ON(ret == -EIOCBQUEUED && !(iocb->ki_flags & IOCB_DIRECT));
-+	BUG_ON(ret == -EIOCBQUEUED && !direct_io);
+ out_commit:
++	if (need_free && context->data_ac) {
++		struct ocfs2_alloc_context *data_ac = context->data_ac;
++
++		if (context->data_ac->ac_which == OCFS2_AC_USE_LOCAL)
++			ocfs2_free_local_alloc_bits(osb, handle, data_ac,
++					new_phys_cpos, new_len);
++		else
++			ocfs2_free_clusters(handle,
++					data_ac->ac_inode,
++					data_ac->ac_bh,
++					ocfs2_clusters_to_blocks(osb->sb, new_phys_cpos),
++					new_len);
++	}
++
+ 	ocfs2_commit_trans(osb, handle);
  
- 	/* see ocfs2_file_write_iter */
- 	if (ret == -EIOCBQUEUED || !ocfs2_iocb_is_rw_locked(iocb)) {
+ out_unlock_mutex:
 -- 
 2.20.1
 
