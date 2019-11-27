@@ -2,247 +2,171 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD246C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D493C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A677D2068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="De9TnT8O"
+	by mail.kernel.org (Postfix) with ESMTP id 20CF12071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfK0NXt (ORCPT
+        id S1726881AbfK0N13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:23:49 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37676 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfK0NXt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:23:49 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p24so10995500pfn.4;
-        Wed, 27 Nov 2019 05:23:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=FYckdcYvzj5yK1e7XpJFaQ7ZpFtgpcz0P/S/HZ3xvbc=;
-        b=De9TnT8OPZ/OkNDYBgNjAksDWHzISRs/xzkfj1C3qsBCEHTgm0vG8VyIX/LYjDRKyj
-         MareuXWH38yaNVa5oZwxdlaVm8kALUSNOGcMGGnWm7onxh38Ms6rpfdE2HkGNI+3ucC8
-         fGTPcJ+PB1AS0O5lKIxWOs9DOu/OuhotKXujGQBuPn3D4nrZzJs9+A1VwxPlw1At3elQ
-         umy5EdOZ7iSrNlhnjTUfFaHOgGsDQuqcEQuLXfnmxdnbQoQzLY/85v5I3/cH0rXQQ89n
-         EgeIHjhNyZEtKnRLhJG12OQU8gaq9k3ruFP2MH6UryZ9agKdHLdufsDaGA5deLVB9VQ+
-         LD1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=FYckdcYvzj5yK1e7XpJFaQ7ZpFtgpcz0P/S/HZ3xvbc=;
-        b=O9F/L3KM2lLK3jucVglcPS3nzvNW33Uj7yrVEm3XbrJKEnTNBTPpA48FO4v1MdBPNl
-         AXMgIVq4/H6m1+xb/EzUnEA2AN3UL0vettmDHwt2kRwYc1xd+xd/kLtRRJXjQqRAwrDN
-         Em7xr+ol10plxiE+tSPDK1CXel88I3QcUvQX+zxPUNS027+kJXx1/mGD+3u1Tbze6aH+
-         b/PsBy/xccVileRgDQwjiWWdJtfedAegg0Ulv2Uiu97320GaidvPAcbmD/YPYdKv9FYp
-         DaakAQYEWt/6AiVrHpN+PaeCSt0ruKB9HA7bJqRI99vWDOIS/rK/csNJN8OVL91jYm19
-         bMHg==
-X-Gm-Message-State: APjAAAW+Nq9akkZeoiqi4TkgWHKu/klvKj9e9EPl7u7ag1pvZ1aSvnYL
-        zwRRvHA0PGlHmaYbTtjC0SA=
-X-Google-Smtp-Source: APXvYqz6/QPQIN/FIXGNBlmS5L9H3I4cIFW3BAhi8JvFvqwUYbWSeI4p/LK/W89Dganyyc04jkwrGA==
-X-Received: by 2002:a63:597:: with SMTP id 145mr2050606pgf.384.1574861028745;
-        Wed, 27 Nov 2019 05:23:48 -0800 (PST)
-Received: from cnn ([2402:3a80:46e:a1cb:a194:63c9:69fb:ee71])
-        by smtp.gmail.com with ESMTPSA id 16sm16855165pfc.21.2019.11.27.05.23.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Nov 2019 05:23:48 -0800 (PST)
-Date:   Wed, 27 Nov 2019 18:53:40 +0530
-From:   manikandan-e <manikandan.hcl.ers.epl@gmail.com>
-To:     andrew@aj.id.au
-Cc:     joel@jms.id.au, sdasari@fb.com, vijaykhemka@fb.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, manikandan.e@hcl.com
-Subject: [PATCH v4] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20191127132340.GA22672@cnn>
+        Wed, 27 Nov 2019 08:27:29 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56354 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726530AbfK0N12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 08:27:28 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7F7B6D52F418488E1238;
+        Wed, 27 Nov 2019 21:27:26 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 27 Nov 2019
+ 21:27:19 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <saeedm@mellanox.com>, <leon@kernel.org>, <davem@davemloft.net>,
+        <eli@mellanox.com>, <roid@mellanox.com>, <elibr@mellanox.com>,
+        <kliteyn@mellanox.com>, <ozsh@mellanox.com>, <pablo@netfilter.org>,
+        <yuehaibing@huawei.com>
+CC:     <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] net/mlx5e: Fix build error without IPV6
+Date:   Wed, 27 Nov 2019 21:27:00 +0800
+Message-ID: <20191127132700.25872-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Yosemite V2 is a facebook multi-node server
-platform that host four OCP server. The BMC
-in the Yosemite V2 platorm based on AST2500 SoC.
+If IPV6 is not set and CONFIG_MLX5_ESWITCH is y,
+building fails:
 
-This patch adds linux device tree entry related to
-Yosemite V2 specific devices connected to BMC SoC.
+drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c:322:5: error: redefinition of mlx5e_tc_tun_create_header_ipv6
+ int mlx5e_tc_tun_create_header_ipv6(struct mlx5e_priv *priv,
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c:7:0:
+drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.h:67:1: note: previous definition of mlx5e_tc_tun_create_header_ipv6 was here
+ mlx5e_tc_tun_create_header_ipv6(struct mlx5e_priv *priv,
+ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+Use #ifdef to guard this, also move mlx5e_route_lookup_ipv6
+to cleanup unused warning.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e689e998e102 ("net/mlx5e: TC, Stub out ipv6 tun create header function")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 150 +++++++++++++++++++++
- 1 file changed, 150 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+ .../net/ethernet/mellanox/mlx5/core/en/tc_tun.c    | 74 +++++++++++-----------
+ 1 file changed, 38 insertions(+), 36 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-new file mode 100644
-index 0000000..44e2b17
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2018 Facebook Inc.
-+/dts-v1/;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c
+index 784b1e2..6ed8753 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c
+@@ -130,42 +130,6 @@ static const char *mlx5e_netdev_kind(struct net_device *dev)
+ 		return "unknown";
+ }
+ 
+-static int mlx5e_route_lookup_ipv6(struct mlx5e_priv *priv,
+-				   struct net_device *mirred_dev,
+-				   struct net_device **out_dev,
+-				   struct net_device **route_dev,
+-				   struct flowi6 *fl6,
+-				   struct neighbour **out_n,
+-				   u8 *out_ttl)
+-{
+-	struct dst_entry *dst;
+-	struct neighbour *n;
+-
+-	int ret;
+-
+-	ret = ipv6_stub->ipv6_dst_lookup(dev_net(mirred_dev), NULL, &dst,
+-					 fl6);
+-	if (ret < 0)
+-		return ret;
+-
+-	if (!(*out_ttl))
+-		*out_ttl = ip6_dst_hoplimit(dst);
+-
+-	ret = get_route_and_out_devs(priv, dst->dev, route_dev, out_dev);
+-	if (ret < 0) {
+-		dst_release(dst);
+-		return ret;
+-	}
+-
+-	n = dst_neigh_lookup(dst, &fl6->daddr);
+-	dst_release(dst);
+-	if (!n)
+-		return -ENOMEM;
+-
+-	*out_n = n;
+-	return 0;
+-}
+-
+ static int mlx5e_gen_ip_tunnel_header(char buf[], __u8 *ip_proto,
+ 				      struct mlx5e_encap_entry *e)
+ {
+@@ -319,6 +283,43 @@ int mlx5e_tc_tun_create_header_ipv4(struct mlx5e_priv *priv,
+ 	return err;
+ }
+ 
++#if IS_ENABLED(CONFIG_INET) && IS_ENABLED(CONFIG_IPV6)
++static int mlx5e_route_lookup_ipv6(struct mlx5e_priv *priv,
++				   struct net_device *mirred_dev,
++				   struct net_device **out_dev,
++				   struct net_device **route_dev,
++				   struct flowi6 *fl6,
++				   struct neighbour **out_n,
++				   u8 *out_ttl)
++{
++	struct dst_entry *dst;
++	struct neighbour *n;
 +
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
++	int ret;
 +
-+/ {
-+	model = "Facebook Yosemitev2 BMC";
-+	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-+	aliases {
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+	};
++	ret = ipv6_stub->ipv6_dst_lookup(dev_net(mirred_dev), NULL, &dst,
++					 fl6);
++	if (ret < 0)
++		return ret;
 +
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
++	if (!(*out_ttl))
++		*out_ttl = ip6_dst_hoplimit(dst);
 +
-+	iio-hwmon {
-+		// VOLATAGE SENSOR
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-+		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-+		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-+		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-+	};
-+};
++	ret = get_route_and_out_devs(priv, dst->dev, route_dev, out_dev);
++	if (ret < 0) {
++		dst_release(dst);
++		return ret;
++	}
 +
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
++	n = dst_neigh_lookup(dst, &fl6->daddr);
++	dst_release(dst);
++	if (!n)
++		return -ENOMEM;
 +
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+	};
-+};
++	*out_n = n;
++	return 0;
++}
 +
-+&uart5 {
-+	// BMC Console
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	use-ncsi;
-+};
-+
-+&adc {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default
-+			&pinctrl_adc1_default
-+			&pinctrl_adc2_default
-+			&pinctrl_adc3_default
-+			&pinctrl_adc4_default
-+			&pinctrl_adc5_default
-+			&pinctrl_adc6_default
-+			&pinctrl_adc7_default
-+			&pinctrl_adc8_default
-+			&pinctrl_adc9_default
-+			&pinctrl_adc10_default
-+			&pinctrl_adc11_default
-+			&pinctrl_adc12_default
-+			&pinctrl_adc13_default
-+			&pinctrl_adc14_default
-+			&pinctrl_adc15_default>;
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+	//FRU EEPROM
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+	tmp421@4e {
-+	//INLET TEMP
-+		compatible = "ti,tmp421";
-+		reg = <0x4e>;
-+	};
-+	//OUTLET TEMP
-+	tmp421@4f {
-+		compatible = "ti,tmp421";
-+		reg = <0x4f>;
-+	};
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+	//HSC
-+	adm1278@40 {
-+		compatible = "adi,adm1278";
-+		reg = <0x40>;
-+	};
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+	//MEZZ_TEMP_SENSOR
-+	tmp421@1f {
-+		compatible = "ti,tmp421";
-+		reg = <0x1f>;
-+	};
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+	//MEZZ_FRU
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	//FSC
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-+	};
-+};
+ int mlx5e_tc_tun_create_header_ipv6(struct mlx5e_priv *priv,
+ 				    struct net_device *mirred_dev,
+ 				    struct mlx5e_encap_entry *e)
+@@ -436,6 +437,7 @@ int mlx5e_tc_tun_create_header_ipv6(struct mlx5e_priv *priv,
+ 	neigh_release(n);
+ 	return err;
+ }
++#endif
+ 
+ bool mlx5e_tc_tun_device_to_offload(struct mlx5e_priv *priv,
+ 				    struct net_device *netdev)
 -- 
 2.7.4
+
 
