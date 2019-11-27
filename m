@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAE0C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A6CC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7470121775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FE72184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887440;
-	bh=ANpEzvaNrgTeJe+unM5bxWbDq76vUfMBryJX1h5/v5w=;
+	s=default; t=1574887442;
+	bh=Yvtuzvt96j/m3vUDcrPWoNYcOPxSaH8nSvE4tz47aU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KR+P7st/IOhO15IfHm1ikUL/se75BlxY/uMo5+pTybKIXaVxNRoengnfuLf/oiT2b
-	 9aVaIOv1dhVuk/vtjCbTPtVS0BX3O6QecSKC4+Yu8/ppTJpPU9EoaILfMZlLBSnPkM
-	 hxvnMLzpCxqGGSglgkGVGeoVG6WwtlExdyRsXi6w=
+	b=OlK3wAWCXiSiJdQMw06tjBqy2sgpwPvOME1cf2tl1KTBd993WWVPS+7Om72DCwLVf
+	 +1chqKre95QwjJQJXHM1Qtstc7ZQbsDS7Jlu/NIEK1qxpnEuNf19XvWtKdjTkpF2pK
+	 ac/cK6kHnbPtJm74spxmxdlB+NhEC9lAPXOodGWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729515AbfK0Un6 (ORCPT
+        id S1729527AbfK0UoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:43:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52416 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:44:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728980AbfK0Uny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:43:54 -0500
+        id S1729035AbfK0Un7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:43:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6759720862;
-        Wed, 27 Nov 2019 20:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D6A5216C8;
+        Wed, 27 Nov 2019 20:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887433;
-        bh=ANpEzvaNrgTeJe+unM5bxWbDq76vUfMBryJX1h5/v5w=;
+        s=default; t=1574887438;
+        bh=Yvtuzvt96j/m3vUDcrPWoNYcOPxSaH8nSvE4tz47aU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f8/S6nalJ8vDCUIjWnGnSfgQFKcF1SyIBxNy5gKG8gfhWSaluzpKpi4aQT4sgYD1Z
-         Bd8KJ/bgDmQZ58vaW3xVKMXyU628GUwZqvbiAQcCqIcuuYoml3DoDtmrSGQOTtBr3B
-         J9PLE9Ad4s7iApQBUaVRWGODkPtzUjjShAOi9fww=
+        b=Pp5gzDoVThY+SnXywd7Won498UY0HeIzzGhaYFbdoIWCJUmgfT9Ip9Fahd964PQ7M
+         EOZmXr3JuwjU+1yRdxXlLeuvzWxaryBkbZbl5qdvYfiAChyWHOyvLx6XJux55cyzsd
+         XobVFMdl2Wdt3x+qFBjRWQ39gTIx/QG+VH3JRoQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 107/151] PCI: keystone: Use quirk to limit MRRS for K2G
-Date:   Wed, 27 Nov 2019 21:31:30 +0100
-Message-Id: <20191127203042.087223129@linuxfoundation.org>
+Subject: [PATCH 4.9 069/151] linux/bitmap.h: handle constant zero-size bitmaps correctly
+Date:   Wed, 27 Nov 2019 21:30:52 +0100
+Message-Id: <20191127203034.333073586@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -60,42 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 148e340c0696369fadbbddc8f4bef801ed247d71 ]
+[ Upstream commit 7275b097851a5e2e0dd4da039c7e96b59ac5314e ]
 
-PCI controller in K2G also has a limitation that memory read request
-size (MRRS) must not exceed 256 bytes. Use the quirk to limit MRRS
-(added for K2HK, K2L and K2E) for K2G as well.
+The static inlines in bitmap.h do not handle a compile-time constant
+nbits==0 correctly (they dereference the passed src or dst pointers,
+despite only 0 words being valid to access).  I had the 0-day buildbot
+chew on a patch [1] that would cause build failures for such cases without
+complaining, suggesting that we don't have any such users currently, at
+least for the 70 .config/arch combinations that was built.  Should any
+turn up, make sure they use the out-of-line versions, which do handle
+nbits==0 correctly.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+This is of course not the most efficient, but it's much less churn than
+teaching all the static inlines an "if (zero_const_nbits())", and since we
+don't have any current instances, this doesn't affect existing code at
+all.
+
+[1] lkml.kernel.org/r/20180815085539.27485-1-linux@rasmusvillemoes.dk
+
+Link: http://lkml.kernel.org/r/20180818131623.8755-3-linux@rasmusvillemoes.dk
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Yury Norov <ynorov@caviumnetworks.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pci-keystone.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/bitmap.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
-index eac0a1238e9d0..c690299d5c4a8 100644
---- a/drivers/pci/host/pci-keystone.c
-+++ b/drivers/pci/host/pci-keystone.c
-@@ -43,6 +43,7 @@
- #define PCIE_RC_K2HK		0xb008
- #define PCIE_RC_K2E		0xb009
- #define PCIE_RC_K2L		0xb00a
-+#define PCIE_RC_K2G		0xb00b
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index 3b77588a93602..dc56304ac829f 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -185,8 +185,13 @@ extern int bitmap_print_to_pagebuf(bool list, char *buf,
+ #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
+ #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
  
- #define to_keystone_pcie(x)	container_of(x, struct keystone_pcie, pp)
++/*
++ * The static inlines below do not handle constant nbits==0 correctly,
++ * so make such users (should any ever turn up) call the out-of-line
++ * versions.
++ */
+ #define small_const_nbits(nbits) \
+-	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG)
++	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG && (nbits) > 0)
  
-@@ -57,6 +58,8 @@ static void quirk_limit_mrrs(struct pci_dev *dev)
- 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
- 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2L),
- 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
-+		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2G),
-+		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
- 		{ 0, },
- 	};
- 
+ static inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
+ {
 -- 
 2.20.1
 
