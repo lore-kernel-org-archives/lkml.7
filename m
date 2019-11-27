@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F800C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE8EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DABDA21780
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572EF217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887452;
-	bh=GnvoePJDb/EgHDx1xW5xhESP3HsVbSoTADQMojtsNyw=;
+	s=default; t=1574887455;
+	bh=SD1+ZK9OmCUCUovyv9SYJ8BesDSNpcNeA9aYJoHtpTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1a9jM/KPzvbJdjLbeAFf+6LmYrQYDSwHsoHTHh/mRdOWiDEkGtoJQrJgPgiD/Kd6I
-	 QGsk8sYE0TXqsYjKWvspXEEURF2Ls1cWGi/iASggSeTelby7jg06GAKRDutMgPMP9q
-	 3QErwuT22QdeGMQpbDDg1U3ENtGuQse3nddnxnH0=
+	b=lLELq43ngVjf3aHyOsTf0UMuIsILwJEaaRjYhvBCjM/YOl+CU98AyhxiE2dqFiUUh
+	 UzbmxYBy7xW1dsStgtwWuhe1JLQ6Wwf9ibDYSZPlZ820AMTpo483UUjS8gNWu8+dJo
+	 96YWnb8b+FYb/S+XnLYNVZOMh+ZSrPiOrgjwDzUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbfK0UoL (ORCPT
+        id S1729564AbfK0UoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:44:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53006 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:44:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729552AbfK0UoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:44:09 -0500
+        id S1727937AbfK0UoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:44:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92FDB21775;
-        Wed, 27 Nov 2019 20:44:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 102F921775;
+        Wed, 27 Nov 2019 20:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887449;
-        bh=GnvoePJDb/EgHDx1xW5xhESP3HsVbSoTADQMojtsNyw=;
+        s=default; t=1574887451;
+        bh=SD1+ZK9OmCUCUovyv9SYJ8BesDSNpcNeA9aYJoHtpTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EkUP2h8Np6suni7gZhM4qvsyiuZTQSytbcU9Limcy9WtOPj5HuCRwgqG5Jdid+O30
-         yLSdqR9xU4trl1zuXTDtTxT7vk5LhPFrhdku5NoAnBAZ1936prEgBY4lvsB7Jtmsbe
-         e6sXcArV8+meZOsA1qJYDBIKJIh0HbRRDuvuTaXc=
+        b=OttUWmrgPuRCmOc+Q+2sETYTif261wc8v6yMhsK9gwpZ/4kO3nwKYo7PocnbZqQ29
+         nfcnmqC/Hg6g5sNzs53OuiZ5xWbneWq+FkB2amT2LA63tpX7UX+1Pv+LsVhOWsAqkM
+         dfAggYw/kt/Sx0ObuyGDAQJ5Psw0WrjzBdTkfjDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 063/151] sparc64: Rework xchg() definition to avoid warnings.
-Date:   Wed, 27 Nov 2019 21:30:46 +0100
-Message-Id: <20191127203033.434768326@linuxfoundation.org>
+        stable@vger.kernel.org, Yang yingliang <yangyingliang@huawei.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 109/151] mm/memory_hotplug: Do not unlock when fails to take the device_hotplug_lock
+Date:   Wed, 27 Nov 2019 21:31:32 +0100
+Message-Id: <20191127203042.581166556@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -59,46 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David S. Miller <davem@davemloft.net>
+From: zhong jiang <zhongjiang@huawei.com>
 
-[ Upstream commit 6c2fc9cddc1ffdef8ada1dc8404e5affae849953 ]
+[ Upstream commit d2ab99403ee00d8014e651728a4702ea1ae5e52c ]
 
-Such as:
+When adding the memory by probing memory block in sysfs interface, there is an
+obvious issue that we will unlock the device_hotplug_lock when fails to takes it.
 
-fs/ocfs2/file.c: In function ‘ocfs2_file_write_iter’:
-./arch/sparc/include/asm/cmpxchg_64.h:55:22: warning: value computed is not used [-Wunused-value]
- #define xchg(ptr,x) ((__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
+That issue was introduced in Commit 8df1d0e4a265
+("mm/memory_hotplug: make add_memory() take the device_hotplug_lock")
 
-and
+We should drop out in time when fails to take the device_hotplug_lock.
 
-drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c: In function ‘ixgbevf_xdp_setup’:
-./arch/sparc/include/asm/cmpxchg_64.h:55:22: warning: value computed is not used [-Wunused-value]
- #define xchg(ptr,x) ((__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
-
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 8df1d0e4a265 ("mm/memory_hotplug: make add_memory() take the device_hotplug_lock")
+Reported-by: Yang yingliang <yangyingliang@huawei.com>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/include/asm/cmpxchg_64.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/base/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sparc/include/asm/cmpxchg_64.h b/arch/sparc/include/asm/cmpxchg_64.h
-index faa2f61058c27..92f0a46ace78e 100644
---- a/arch/sparc/include/asm/cmpxchg_64.h
-+++ b/arch/sparc/include/asm/cmpxchg_64.h
-@@ -40,7 +40,12 @@ static inline unsigned long xchg64(__volatile__ unsigned long *m, unsigned long
- 	return val;
- }
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 9f96f1b43c15f..6a3694a4843f8 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -502,7 +502,7 @@ memory_probe_store(struct device *dev, struct device_attribute *attr,
  
--#define xchg(ptr,x) ((__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
-+#define xchg(ptr,x)							\
-+({	__typeof__(*(ptr)) __ret;					\
-+	__ret = (__typeof__(*(ptr)))					\
-+		__xchg((unsigned long)(x), (ptr), sizeof(*(ptr)));	\
-+	__ret;								\
-+})
+ 	ret = lock_device_hotplug_sysfs();
+ 	if (ret)
+-		goto out;
++		return ret;
  
- void __xchg_called_with_bad_pointer(void);
- 
+ 	nid = memory_add_physaddr_to_nid(phys_addr);
+ 	ret = __add_memory(nid, phys_addr,
 -- 
 2.20.1
 
