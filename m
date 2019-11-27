@@ -2,161 +2,137 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E8CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDF3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B014220835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:44:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enZ5Rj6U"
+	by mail.kernel.org (Postfix) with ESMTP id 2D51220835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfK0Tov (ORCPT
+        id S1727124AbfK0Tr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 14:44:51 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38886 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfK0Tou (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 14:44:50 -0500
-Received: by mail-io1-f65.google.com with SMTP id u24so24478919iob.5;
-        Wed, 27 Nov 2019 11:44:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JkBh9nZ4d1Mjj7D298qnbqHDDohOhtH9Rt6HWk+4d2k=;
-        b=enZ5Rj6U22Yrwy6nCsHHAVUtmWP2EhQStJL8ungoozR2CsEPcLMiwvAkfoBNbg//M0
-         mbG/S0zeNVmsWfQBJLz99X5LvVLrkY+ao4Klf/Y3mQn5Ik/Aj/IFoyXAamSxYR+FIKe/
-         0Zl9VCDuoRSEqdGTV9A67DgYR7ltQ9rRPkQ11lg0+UDodVuRi8vH4NxNxnpTxIN0fm2B
-         sok/dkOsRHBtamcEf9oYXqeTvz227dkonyTexdOGBjulPKjp0uq1kGcwukcUa0mgtxTZ
-         GrOLRiKb39w0dqjUdO/0jPcwSYn1Gy0XAYdKgjVNl/zeVaVhvwBIk6llsOC9pVpw9SiD
-         77qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JkBh9nZ4d1Mjj7D298qnbqHDDohOhtH9Rt6HWk+4d2k=;
-        b=L1qubfGCNXFv7SDTtREXCskzENip/ZUu0M7NHeZIJxsJwF8cCYhKXFLjVaWpTfUdSW
-         y6N1U5nINZVyxQc619yIqCgu2ARqZQ2molIIYFb//6yDJGcEG7bZUlKXopdGyV4SiFeP
-         OGptoLOY2gXYFxiks6prbDg6vaOx294oEfn70OmQbMd/rPa+YoFlHCtZg8Ljz9FaM8V2
-         QP9g433ER1cFG+dFkahK1OU6+raa5vLwYutIF5JZn6Cmu3KdAdazLJ7c/69XpVNM2Wvq
-         y9WTTL40GH3FfCdaawDI1NNbbxn2ZjceVUpjgCG1BVitBdUXpb0P13bus9DDuhuH+LX2
-         QRfQ==
-X-Gm-Message-State: APjAAAX67gXcc9kDp3MqIcCOH9tn87BTKXhYF8ATEdqelgDy5kHr1YaL
-        OOuPjFywHgubLG2fr9rv3h8wnT2Fj91Y12JoqlY=
-X-Google-Smtp-Source: APXvYqyyxziPAelILyTg664cHIWmPn+fz/UNPf2PsuJoQe1urUaJkiSTDxDeRsNDpEcQnqWvRh0cBA4L6uJWoDd2Ywo=
-X-Received: by 2002:a02:3f60:: with SMTP id c32mr6155122jaf.30.1574883889954;
- Wed, 27 Nov 2019 11:44:49 -0800 (PST)
+        Wed, 27 Nov 2019 14:47:59 -0500
+Received: from mga02.intel.com ([134.134.136.20]:54359 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbfK0Tr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 14:47:58 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 11:47:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,250,1571727600"; 
+   d="scan'208";a="206984788"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga007.fm.intel.com with ESMTP; 27 Nov 2019 11:47:57 -0800
+Date:   Wed, 27 Nov 2019 11:47:57 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Leonardo Bras <leonardo@linux.ibm.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: Add separate helper for putting borrowed reference
+ to kvm
+Message-ID: <20191127194757.GI22227@linux.intel.com>
+References: <20191021225842.23941-1-sean.j.christopherson@intel.com>
+ <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
+ <20191126171416.GA22233@linux.intel.com>
+ <0009c6c1bb635098fa68cb6db6414634555039fe.camel@linux.ibm.com>
+ <e1a4218f-2a70-3de3-1403-dbebf8a8abdf@redhat.com>
+ <bfa563e6a584bd85d3abe953ca088281dc0e167b.camel@linux.ibm.com>
+ <6beeff56-7676-5dfd-a578-1732730f8963@redhat.com>
+ <adcfe1b4c5b36b3c398a5d456da9543e0390cba3.camel@linux.ibm.com>
 MIME-Version: 1.0
-References: <20191127052935.1719897-1-anarsoul@gmail.com> <20191127052935.1719897-2-anarsoul@gmail.com>
- <20191127111419.z5hfu5soxceiivg6@core.my.home> <20191127173547.ch3pcv3lxgdcrfnu@gilmour.lan>
-In-Reply-To: <20191127173547.ch3pcv3lxgdcrfnu@gilmour.lan>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Thu, 28 Nov 2019 03:44:38 +0800
-Message-ID: <CAEExFWvG-Af4qtUrxQV4ssNQCVQAmpXfxB+92wX+6ZxUNfX-Jw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/7] thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <adcfe1b4c5b36b3c398a5d456da9543e0390cba3.camel@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Vasily,
+On Wed, Nov 27, 2019 at 04:25:55PM -0300, Leonardo Bras wrote:
+> On Wed, 2019-11-27 at 19:32 +0100, Paolo Bonzini wrote:
+> > On 27/11/19 19:24, Leonardo Bras wrote:
+> > > By what I could undestand up to now, these functions that use borrowed
+> > > references can only be called while the reference (file descriptor)
+> > > exists. 
+> > > So, suppose these threads, where:
+> > > - T1 uses a borrowed reference, and 
+> > > - T2 is releasing the reference (close, release):
+> > 
+> > Nit: T2 is releasing the *last* reference (as implied by your reference
+> > to close/release).
+> 
+> Correct.
+> 
+> > 
+> > > T1				| T2
+> > > kvm_get_kvm()			|
+> > > ...				| kvm_put_kvm()
+> > > kvm_put_kvm_no_destroy()	|
+> > > 
+> > > The above would not trigger a use-after-free bug, but will cause a
+> > > memory leak. Is my above understanding right?
+> > 
+> > Yes, this is correct.
+> > 
+> 
+> Then, what would not be a bug before (using kvm_put_kvm()) now is a
+> memory leak (using kvm_put_kvm_no_destroy()).
 
-Thank you very much for your work on this.
-This looks good to me.
+No, using kvm_put_kvm_no_destroy() changes how a bug would manifest, as
+you note below.  Replacing kvm_put_kvm() with kvm_put_kvm_no_destroy()
+when the refcount is _guaranteed_ to be >1 has no impact on correctness.
 
-By the way, I would like to ask comments about adding the following code.
+> And it's the price to avoid use-after-free on other cases, which is a
+> worse bug. Ok, I get it. 
+> 
+> > Paolo
+> 
+> On Tue, 2019-11-26 at 10:14 -0800, Sean Christopherson wrote:
+> > If one these kvm_put_kvm() calls did unexpectedly free @kvm (due to 
+> > a bug somewhere else), KVM would still hit a use-after-free scenario 
+> > as the caller still thinks @kvm is valid.  Currently, this would 
+> > only happen on a subsequent ioctl() on the caller's file descriptor
+> > (which holds a pointer to @kvm), as the callers of these functions
+> > don't directly dereference @kvm after the functions return.  But, 
+> > not deferencing @kvm isn't deliberate or functionally required, it's
+> > just how the code happens to be written.
+> 
+> So, testing if the kvm reference is valid before running ioctl would be
+> enough to avoid these bugs?
 
+No, the only way to avoid use-after-free bugs of this nature is to not
+screw up the refcounting :-)  This funky "borrowed reference" pattern is
+not very common.  It's necessary here because KVM needs to take an extra
+reference to itself on behalf of the child device before installing the
+child's file descriptor, because once the fd is installed it can be
+closed by userspace and free the child's reference.  The error path,
+which uses kvm_put_kvm_no_destroy(), is used if and only if installing
+the fd fails, in which case the extra reference is deliberately thrown
+away.
 
-diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index c0ed60782b11..579dde5e0701 100644
---- a/drivers/thermal/sun8i_thermal.c
-+++ b/drivers/thermal/sun8i_thermal.c
-@@ -629,11 +629,63 @@ static const struct of_device_id of_ths_match[] = {
- };
- MODULE_DEVICE_TABLE(of, of_ths_match);
+kvm_put_kvm_no_destroy() is asserting "N > 0" as a way to detect a
+refcounting bug that wouldn't be detected (until later) by the normal
+refcounting behavior, which asserts "N >= 0".
 
-+static int __maybe_unused sun8i_thermal_suspend(struct device *dev)
-+{
-+ struct ths_device *tmdev; = dev_get_drvdata(dev);
-+
-+ clk_disable(tmdev->mod_clk);
-+ clk_disable(tmdev->bus_clk);
-+
-+ reset_control_assert(tmdev->reset);
-+
-+ return 0;
-+}
-+
-+static int __maybe_unused sun8i_thermal_resume(struct device *dev)
-+{
-+ struct ths_device *tmdev; = dev_get_drvdata(dev);
-+ int error;
-+
-+ error = reset_control_deassert(tmdev->reset);
-+ if (error)
-+ return error;
-+
-+ error = clk_enable(tmdev->bus_clk);
-+ if (error)
-+ goto assert_reset;
-+
-+ clk_set_rate(tmdev->mod_clk, 24000000);
-+ error = clk_enable(tmdev->mod_clk);
-+ if (error)
-+ goto bus_disable;
-+
-+ sun8i_ths_calibrate(tmdev);
-+
-+ ret = tmdev->chip->init(tmdev);
-+ if (ret)
-+ goto mod_disable;
-+
-+ return 0;
-+
-+mod_disable:
-+ clk_disable(tmdev->mod_clk);
-+bus_disable:
-+ clk_disable(tmdev->bus_clk);
-+assert_reset:
-+ reset_control_assert(tmdev->reset);
-+
-+ return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(sun8i_thermal_pm_ops,
-+ sun8i_thermal_suspend, sun8i_thermal_resume);
-+
- static struct platform_driver ths_driver = {
-  .probe = sun8i_ths_probe,
-  .remove = sun8i_ths_remove,
-  .driver = {
-  .name = "sun8i-thermal",
-+ .pm = &sun8i_thermal_pm_ops,
-  .of_match_table = of_ths_match,
-  },
- };
+> Is it possible? 
 
-Yangtao
+No.  Similar to above, userspace gets a fd by doing open("/dev/kvm"), and
+the semantics of KVM are such that each fd is a reference to KVM. From
+userspace's perspective, having a valid fd *is* how it knows that it has
+a valid KVM reference.
+
+> Humm, but if it frees kvm before running ->release(), would it mean the
+> VM is destroyed incorrectly, and will probably crash?
+
+More than likely the host will crash due to corrupting memory.  The guest
+will crash too, but that's a secondary concern.
