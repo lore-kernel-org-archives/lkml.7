@@ -5,55 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B33BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC06C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D290020665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64C020665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:05:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lnaRLqub"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FcHGXfZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfK0FFr (ORCPT
+        id S1726587AbfK0FFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 00:05:47 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:33636 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfK0FFq (ORCPT
+        Wed, 27 Nov 2019 00:05:51 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44071 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfK0FFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 00:05:46 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r67so1598035pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 21:05:46 -0800 (PST)
+        Wed, 27 Nov 2019 00:05:50 -0500
+Received: by mail-pl1-f193.google.com with SMTP id az9so9188945plb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 21:05:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=sViBFOECCP081rRjgLL4aJh++GhBtQgv0rGQRJMbdcw=;
-        b=lnaRLqub2Df5JW9fegAH26ADKSj7HeTbWONK60QrSf4TDkTeWBYJPC+P/x1/RbZvvU
-         c7OXfRHFMueRi/sxSrgt0RpAnFzCUE7GQcexcL5FlzC+V8OPvG7uH1Exom4rppTWPBO5
-         b8SLhmznynqvjWx13NXQEqWm4mGMv5QYhFR2g=
+        bh=13/NKjR0qdfO/pQgZRQFa4jmq4Pfl5v/EazWoqNxEPA=;
+        b=FcHGXfZhwh5Muccpn8O+GeakJh++aAf3w1540pjXJP8iO/snlCJMq10wSKFeDeleVm
+         eftiC6f9zkvkDQzyUAE89w3NzdmT6h462IJN0Va6n1ZbsGddk+j2XCMd4rbAiCA4S2Yp
+         a/lR1uAWvdpOaWkt0rr6Q+zf3Acvi+XyaOnhQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=sViBFOECCP081rRjgLL4aJh++GhBtQgv0rGQRJMbdcw=;
-        b=ryTI86o5UUeFF8jXKIlFlCA8rFu+QxXqPFhe0Ci1dFUJhVrXHbsJTKEJPvWcPNApvh
-         W4V3glWQT02AmLAGFIxNuyR6M3OzaNy3wTHL5Yt5fKp3VMAilVoulfbzayfHxs3cVDpa
-         PQzWwl4/A3C0DavqvrlgXa2pq0QU6dFndMHNr703ZMwEOlu0hw5AVI7Nzct2DVh9OBH6
-         v1xiZDzk97LtrDO4QEZwERd6ddG6M65IMAmYy11HYBZr7f/rrbJgp07G6MvHxBxUfoiL
-         tHdtBT2gggFkOJrlhpIpADcwgOwkCSeZlDsd6XXh0i1jOAEW2rDeOTQ/UyMx+GGpSTNt
-         xOVg==
-X-Gm-Message-State: APjAAAXIIuJbJ9hFqXEC4/H8OXFn3Jr/GexOJTsE+4jlqHVnS4rcuwll
-        ItN9TQZcCwOHO5mM7ec0JWjSpw==
-X-Google-Smtp-Source: APXvYqyFEZIZWE+794O50kaWD9xTgidGuvtgEmJvV1slR+EM6BsMWlqZ8q4XMptXCPRG7GRYUFl7Tg==
-X-Received: by 2002:a17:902:ab98:: with SMTP id f24mr2144598plr.257.1574831145792;
-        Tue, 26 Nov 2019 21:05:45 -0800 (PST)
+        bh=13/NKjR0qdfO/pQgZRQFa4jmq4Pfl5v/EazWoqNxEPA=;
+        b=jspfN9biIrdIrlGLmJ88G63zw469fkpyECHLPNy7apgeGbN2BJCWJ92gcmna94Rphh
+         nNV2gno3sBzs3mraPyxM7I1I7EamLGgju/+wEKJ36aQdp49v5ztMlqBD1401LZ3fbLrU
+         sa/+jY16t2S1tFJMn4J+HcZbD3hGIKqQYJcyNG79FU9l5F9YN0iisSH1iSDjkZScv4xV
+         E3LlJUofEosEa233AtCupSPTq5RHNFrdLuxONitf0g7Q+bJETd0JXEnHG9e8KUanQG6m
+         8eXy4j9ozw4/PB54Wd/9pt+BTTP4F1MeUiXysjDHJDnzCudv2kLuRxzsMyQAB6Vx2Vpv
+         f6jQ==
+X-Gm-Message-State: APjAAAVtpAgbqTdz2WyxqgJ4ST00uq8hNxp7vfLK3b4a9LeA5OJ1m9o3
+        E+/DZIH8tN8CbZrvNA2kyEKyQw==
+X-Google-Smtp-Source: APXvYqwU8f5T80QIyp/yNb/Rj5j0aziV3JLwnG6PelN0cmfmQPJtZskDuK2cXjIFgy6Y6G//SNT5pg==
+X-Received: by 2002:a17:902:a581:: with SMTP id az1mr2125365plb.23.1574831149823;
+        Tue, 26 Nov 2019 21:05:49 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y14sm14877156pff.69.2019.11.26.21.05.44
+        by smtp.gmail.com with ESMTPSA id s130sm4351138pgc.82.2019.11.26.21.05.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 21:05:44 -0800 (PST)
-Date:   Tue, 26 Nov 2019 21:05:44 -0800
+        Tue, 26 Nov 2019 21:05:48 -0800 (PST)
+Date:   Tue, 26 Nov 2019 21:05:48 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     Phong Tran <tranmanphong@gmail.com>
 Cc:     Larry.Finger@lwfinger.net, jakub.kicinski@netronome.com,
@@ -67,21 +67,21 @@ Cc:     Larry.Finger@lwfinger.net, jakub.kicinski@netronome.com,
         rafal@milecki.pl, sara.sharon@intel.com,
         shahar.s.matityahu@intel.com, yhchuang@realtek.com,
         yuehaibing@huawei.com
-Subject: Re: [Patch v2 2/4] ipw2x00: Fix -Wcast-function-type
-Message-ID: <201911262105.5AE5669F9E@keescook>
+Subject: Re: [Patch v2 3/4] iwlegacy: Fix -Wcast-function-type
+Message-ID: <201911262105.E50C54F@keescook>
 References: <20191125150215.29263-1-tranmanphong@gmail.com>
  <20191126175529.10909-1-tranmanphong@gmail.com>
- <20191126175529.10909-3-tranmanphong@gmail.com>
+ <20191126175529.10909-4-tranmanphong@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191126175529.10909-3-tranmanphong@gmail.com>
+In-Reply-To: <20191126175529.10909-4-tranmanphong@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 12:55:27AM +0700, Phong Tran wrote:
+On Wed, Nov 27, 2019 at 12:55:28AM +0700, Phong Tran wrote:
 > correct usage prototype of callback in tasklet_init().
 > Report by https://github.com/KSPP/linux/issues/20
 > 
@@ -92,67 +92,58 @@ Reviewed-by: Kees Cook <keescook@chromium.org>
 -Kees
 
 > ---
->  drivers/net/wireless/intel/ipw2x00/ipw2100.c | 7 ++++---
->  drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 +++--
->  2 files changed, 7 insertions(+), 5 deletions(-)
+>  drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
+>  drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
+>  2 files changed, 6 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2100.c b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
-> index 8dfbaff2d1fe..a162146a43a7 100644
-> --- a/drivers/net/wireless/intel/ipw2x00/ipw2100.c
-> +++ b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
-> @@ -3206,8 +3206,9 @@ static void ipw2100_tx_send_data(struct ipw2100_priv *priv)
->  	}
+> diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+> index 4fbcc7fba3cc..e2e9c3e8fff5 100644
+> --- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+> +++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+> @@ -1376,8 +1376,9 @@ il3945_dump_nic_error_log(struct il_priv *il)
 >  }
 >  
-> -static void ipw2100_irq_tasklet(struct ipw2100_priv *priv)
-> +static void ipw2100_irq_tasklet(unsigned long data)
+>  static void
+> -il3945_irq_tasklet(struct il_priv *il)
+> +il3945_irq_tasklet(unsigned long data)
 >  {
-> +	struct ipw2100_priv *priv = (struct ipw2100_priv *)data;
->  	struct net_device *dev = priv->net_dev;
+> +	struct il_priv *il = (struct il_priv *)data;
+>  	u32 inta, handled = 0;
+>  	u32 inta_fh;
 >  	unsigned long flags;
->  	u32 inta, tmp;
-> @@ -6007,7 +6008,7 @@ static void ipw2100_rf_kill(struct work_struct *work)
->  	spin_unlock_irqrestore(&priv->low_lock, flags);
+> @@ -3403,7 +3404,7 @@ il3945_setup_deferred_work(struct il_priv *il)
+>  	timer_setup(&il->watchdog, il_bg_watchdog, 0);
+>  
+>  	tasklet_init(&il->irq_tasklet,
+> -		     (void (*)(unsigned long))il3945_irq_tasklet,
+> +		     il3945_irq_tasklet,
+>  		     (unsigned long)il);
 >  }
 >  
-> -static void ipw2100_irq_tasklet(struct ipw2100_priv *priv);
-> +static void ipw2100_irq_tasklet(unsigned long data);
->  
->  static const struct net_device_ops ipw2100_netdev_ops = {
->  	.ndo_open		= ipw2100_open,
-> @@ -6137,7 +6138,7 @@ static struct net_device *ipw2100_alloc_device(struct pci_dev *pci_dev,
->  	INIT_DELAYED_WORK(&priv->rf_kill, ipw2100_rf_kill);
->  	INIT_DELAYED_WORK(&priv->scan_event, ipw2100_scan_event);
->  
-> -	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
-> +	tasklet_init(&priv->irq_tasklet,
->  		     ipw2100_irq_tasklet, (unsigned long)priv);
->  
->  	/* NOTE:  We do not start the deferred work for status checks yet */
-> diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-> index ed0f06532d5e..ac5f797fb1ad 100644
-> --- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-> +++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-> @@ -1945,8 +1945,9 @@ static void notify_wx_assoc_event(struct ipw_priv *priv)
->  	wireless_send_event(priv->net_dev, SIOCGIWAP, &wrqu, NULL);
+> diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> index ffb705b18fb1..5fe17039a337 100644
+> --- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> +++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> @@ -4344,8 +4344,9 @@ il4965_synchronize_irq(struct il_priv *il)
 >  }
 >  
-> -static void ipw_irq_tasklet(struct ipw_priv *priv)
-> +static void ipw_irq_tasklet(unsigned long data)
+>  static void
+> -il4965_irq_tasklet(struct il_priv *il)
+> +il4965_irq_tasklet(unsigned long data)
 >  {
-> +	struct ipw_priv *priv = (struct ipw_priv *)data;
->  	u32 inta, inta_mask, handled = 0;
+> +	struct il_priv *il = (struct il_priv *)data;
+>  	u32 inta, handled = 0;
+>  	u32 inta_fh;
 >  	unsigned long flags;
->  	int rc = 0;
-> @@ -10680,7 +10681,7 @@ static int ipw_setup_deferred_work(struct ipw_priv *priv)
->  	INIT_WORK(&priv->qos_activate, ipw_bg_qos_activate);
->  #endif				/* CONFIG_IPW2200_QOS */
+> @@ -6238,7 +6239,7 @@ il4965_setup_deferred_work(struct il_priv *il)
+>  	timer_setup(&il->watchdog, il_bg_watchdog, 0);
 >  
-> -	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
-> +	tasklet_init(&priv->irq_tasklet,
->  		     ipw_irq_tasklet, (unsigned long)priv);
+>  	tasklet_init(&il->irq_tasklet,
+> -		     (void (*)(unsigned long))il4965_irq_tasklet,
+> +		     il4965_irq_tasklet,
+>  		     (unsigned long)il);
+>  }
 >  
->  	return ret;
 > -- 
 > 2.20.1
 > 
