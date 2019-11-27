@@ -2,109 +2,93 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFEDC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA163C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C62B52084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:19:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YIqEU0TV"
+	by mail.kernel.org (Postfix) with ESMTP id 9211320871
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:19:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfK0IT1 (ORCPT
+        id S1726618AbfK0ITg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:19:27 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41450 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfK0IT1 (ORCPT
+        Wed, 27 Nov 2019 03:19:36 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43952 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfK0ITg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:19:27 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR8JJ3J067346;
-        Wed, 27 Nov 2019 02:19:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574842759;
-        bh=JD1B6cKRhzsHcZyvChJ7/JL9GOsyPba3BplB3CG9oLA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YIqEU0TVVkXMEdqSAl0bZWoxdsk3K4t9NF7bEAhUO2Zss7uBVsVqHCaa10tLvQEBw
-         ay1/9r6e/T9qNToilCbYmV0VSPBizKMHGHxA3uTmnngM0XfgfNer5W2gMeVGTHm54X
-         UB8kJg5JoHqa19Ds2e7uv1yKEweGoseLfHvIqifg=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR8JJNZ035536
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 Nov 2019 02:19:19 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
- Nov 2019 02:19:19 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 27 Nov 2019 02:19:19 -0600
-Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR8JEMM117536;
-        Wed, 27 Nov 2019 02:19:15 -0600
-Subject: Re: [PATCH 2/4] PCI: endpoint: Add notification for core init
- completion
-To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>
-CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-3-vidyas@nvidia.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <122c1625-2075-d34a-80da-8b73a03096d3@ti.com>
-Date:   Wed, 27 Nov 2019 13:48:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 03:19:36 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iZsXp-0002Pd-Q7; Wed, 27 Nov 2019 09:19:30 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 72B3C1C1E6E;
+        Wed, 27 Nov 2019 09:19:29 +0100 (CET)
+Date:   Wed, 27 Nov 2019 08:19:29 -0000
+From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/traps: die() instead of panicking on a double fault
+Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191113090851.26345-3-vidyas@nvidia.com>
+Message-ID: <157484276938.21853.12231268079409007506.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The following commit has been merged into the x86/urgent branch of tip:
 
-On 13/11/19 2:38 PM, Vidya Sagar wrote:
-> Add support to send notifications to EPF from EPC once the core
-> registers initialization is complete.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/endpoint/pci-epc-core.c | 19 ++++++++++++++++++-
->  include/linux/pci-epc.h             |  1 +
->  include/linux/pci-epf.h             |  5 +++++
->  3 files changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index 2f6436599fcb..fcc3f7fb19c0 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -542,10 +542,27 @@ void pci_epc_linkup(struct pci_epc *epc)
->  	if (!epc || IS_ERR(epc))
->  		return;
->  
-> -	atomic_notifier_call_chain(&epc->notifier, 0, NULL);
-> +	atomic_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_linkup);
+Commit-ID:     0337b7ebfcb8efb4ea0a9f2b2f284217a1c0e62d
+Gitweb:        https://git.kernel.org/tip/0337b7ebfcb8efb4ea0a9f2b2f284217a1c0e62d
+Author:        Andy Lutomirski <luto@kernel.org>
+AuthorDate:    Mon, 25 Nov 2019 22:37:44 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 26 Nov 2019 22:00:12 +01:00
 
-Is this based on upstream kernel? or did you create this after applying [1]?
+x86/traps: die() instead of panicking on a double fault
 
+A double fault has a decent chance of being recoverable by killing
+the offending thread.  Use die() so that we at least try to recover.
 
-[1] -> https://lkml.org/lkml/2019/6/4/633
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/traps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
-Kishon
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index a9b16c3..05da6b5 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -427,7 +427,7 @@ dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsign
+ #endif
+ 
+ 	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
+-	show_regs(regs);
++	die("double fault", regs, error_code);
+ 	panic("Machine halted.");
+ }
+ #endif
