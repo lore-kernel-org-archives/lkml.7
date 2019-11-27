@@ -2,215 +2,136 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F129C33C9C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F88C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F42207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE293206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rDqjV4QM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="taZFHodo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfK0GIa (ORCPT
+        id S1726146AbfK0GTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 01:08:30 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43110 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfK0GIa (ORCPT
+        Wed, 27 Nov 2019 01:19:17 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42998 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfK0GTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 01:08:30 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR68ATE043987;
-        Wed, 27 Nov 2019 00:08:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574834890;
-        bh=JZc1B8RG/YeMTo2s/ibzN/Eaqy05JPcFJLaIF51oXpc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rDqjV4QMMrb55FIJgfbdwesvYoqebW+NdP/vKFSp3Ds9OTNe0YCZbTIdfECAp1V5E
-         nuEWG+4NvH4aknsDljjRrRl841LOspwEFH3uwU1syK3xtGVtuP2Br0L+m7w5HHz0D0
-         VpTBKfKLSlHYLykmJGDbf6fOpODYdg0keEQQAmzk=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR68Adw029429
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 Nov 2019 00:08:10 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
- Nov 2019 00:08:10 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 27 Nov 2019 00:08:10 -0600
-Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR680Wc026149;
-        Wed, 27 Nov 2019 00:08:01 -0600
-Subject: Re: [PATCH 0/5] Add support for PCIe controller to work in endpoint
- mode on R-Car SoCs.
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8tVK7oUYggTb5Vi3agMp4CH8gtiKDHet09DzE5-LAfiew@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <a0d5b159-001a-a013-ba1d-a0eeb3c89ffa@ti.com>
-Date:   Wed, 27 Nov 2019 11:37:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 01:19:17 -0500
+Received: by mail-pg1-f194.google.com with SMTP id i5so1985843pgj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 22:19:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kVnLwY80c2ExsF07S2kiO5ycjnu/P5W6DtRoLT7Qr9c=;
+        b=taZFHodoei/4QRNDF3ktNd11fzuPqd6pUM7Ic10pi/ICRoJEZ5A0/7wajri+2oRANu
+         N0X0BFyoD4yV2cfPG39Bjt/I67fo7Jy2P1ymWZt5laD8mPQDg1r0Es56Iz78zfveTsGD
+         tS3k3Nsu88XYnowcXIcCItKSsmP6gjonALC1G0KQG1UlschMT9x6ohV9/I9GpO6Bwsfn
+         xEf5cfVTu75dWcuTAyGVqNw+w5gMjyySiO8bga6msiras3jdp06BUnyPdE7iIEJsAUxJ
+         FHk4KBUrLSQItRbeRT7K4erFfUIJ7gL4+3e946liwKQfkHmchMTGmlFCzWPcJGzLeM21
+         9L5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kVnLwY80c2ExsF07S2kiO5ycjnu/P5W6DtRoLT7Qr9c=;
+        b=qtqfcsMnhJ9j/qkwJ/FXliomZZAstgXkve1lA9HIDLX7y+3AMN5lx1F2ELywAB3Qyw
+         qZ8/rcvnYmvNgxO5afPWvhtEkyiOG062fraELTHmDxcE7x7ddqXw7+PVx4Lw647Dgll4
+         8X9acpu7jJKxjXohpfY1W0RXd0P9Ay9OF8rx8FRR/qsBM0qCwNyI7vyt6USUgqwsO0xv
+         7r+Q4Z6bWT9U3Ihw+zkns0ThhTlq1WpVOxheqf4+tFa1WoMf4MnSXpA85cpRa+u+XquJ
+         LgDOO7qi7IDHkJZ3sB3cNJM/Viv1D6729X4MPziJQVwPE03ZGuTM/NeGuHsIEYHEvOyP
+         gQGg==
+X-Gm-Message-State: APjAAAXbFtWoBv/4RsXhkl0dBy39O3ic8bmdDmZ5+O4bPwcq8X9glA6D
+        xJf9g01fYsBKdWQ5KcgDy966/V8l
+X-Google-Smtp-Source: APXvYqw8793UoVWgmGF5RsKgjnpL5t9A7XhSeWveRxra7Ffj+oNU1vc46ZbQelFtTnfAH0WfiKoauQ==
+X-Received: by 2002:a63:6fca:: with SMTP id k193mr2941225pgc.363.1574835554671;
+        Tue, 26 Nov 2019 22:19:14 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::d351])
+        by smtp.gmail.com with ESMTPSA id w26sm15264713pfj.123.2019.11.26.22.19.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Nov 2019 22:19:13 -0800 (PST)
+Date:   Tue, 26 Nov 2019 22:19:11 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, namit@vmware.com, hpa@zytor.com,
+        luto@kernel.org, ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        jeyu@kernel.org
+Subject: Re: [PATCH -tip 2/2] kprobes: Set unoptimized flag after
+ unoptimizing code
+Message-ID: <20191127061910.nbfmzds4k5wxorwz@ast-mbp.dhcp.thefacebook.com>
+References: <157483420094.25881.9190014521050510942.stgit@devnote2>
+ <157483422375.25881.13508326028469515760.stgit@devnote2>
 MIME-Version: 1.0
-In-Reply-To: <CA+V-a8tVK7oUYggTb5Vi3agMp4CH8gtiKDHet09DzE5-LAfiew@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157483422375.25881.13508326028469515760.stgit@devnote2>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prabhakar,
-
-On 26/11/19 8:03 PM, Lad, Prabhakar wrote:
-> Hi Bjorn/Kishon,
+On Wed, Nov 27, 2019 at 02:57:04PM +0900, Masami Hiramatsu wrote:
+> Fix to set unoptimized flag after confirming the code is completely
+> unoptimized. Without this fix, when a kprobe hits the intermediate
+> modified instruction (the first byte is replaced by int3, but
+> latter bytes still be a jump address operand) while unoptimizing,
+> it can return to the middle byte of the modified code. And it causes
+> an invalid instruction exception in the kernel.
 > 
-> Gentle ping for this patch set.
-
-Reviewed them now. Sorry for the delay.
-
-Thanks
-Kishon
-
+> Usually, this is a rare case, but if we put a probe on the function
+> called while text patching, it always causes a kernel panic as below.
+> (text_poke() is used for patching the code in optprobe)
 > 
-> On Wed, Nov 6, 2019 at 7:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->>
->> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
->>
->> This patch series adds support for PCIe controller on rcar to work in endpoint mode,
->> this also extends the epf framework to handle multiple outbound regions.
->>
-> Cheers,
-> --Prabhakar Lad
+>  # echo p text_poke+5 > kprobe_events
+>  # echo 1 > events/kprobes/enable
+>  # echo 0 > events/kprobes/enable
+>  invalid opcode: 0000 [#1] PREEMPT SMP PTI
+>  CPU: 7 PID: 137 Comm: kworker/7:1 Not tainted 5.4.0-rc8+ #29
+>  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+>  Workqueue: events kprobe_optimizer
+>  RIP: 0010:text_poke+0x9/0x50
+>  Code: 01 00 00 5b 5d 41 5c 41 5d c3 89 c0 0f b7 4c 02 fe 66 89 4c 05 fe e9 31 ff ff ff e8 71 ac 03 00 90 55 48 89 f5 53 cc 30 cb fd <1e> ec 08 8b 05 72 98 31 01 85 c0 75 11 48 83 c4 08 48 89 ee 48 89
+>  RSP: 0018:ffffc90000343df0 EFLAGS: 00010686
+>  RAX: 0000000000000000 RBX: ffffffff81025796 RCX: 0000000000000000
+>  RDX: 0000000000000004 RSI: ffff88807c983148 RDI: ffffffff81025796
+>  RBP: ffff88807c983148 R08: 0000000000000001 R09: 0000000000000000
+>  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82284fe0
+>  R13: ffff88807c983138 R14: ffffffff82284ff0 R15: 0ffff88807d9eee0
+>  FS:  0000000000000000(0000) GS:ffff88807d9c0000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 000000000058158b CR3: 000000007b372000 CR4: 00000000000006a0
+>  Call Trace:
+>   arch_unoptimize_kprobe+0x22/0x28
+>   arch_unoptimize_kprobes+0x39/0x87
+>   kprobe_optimizer+0x6e/0x290
+>   process_one_work+0x2a0/0x610
+>   worker_thread+0x28/0x3d0
+>   ? process_one_work+0x610/0x610
+>   kthread+0x10d/0x130
+>   ? kthread_park+0x80/0x80
+>   ret_from_fork+0x3a/0x50
+>  Modules linked in:
+>  ---[ end trace 83b34b22a228711b ]---
 > 
+> This can happen even if we blacklist text_poke() and other functions,
+> because there is a small time window which showing the intermediate
+> code to other CPUs.
 > 
->> Note:
->> The cadence/rockchip/designware endpoint drivers are build tested only.
->>
->> Endpoint configuration:
->> $ cd /sys/kernel/config/pci_ep
->> $ mkdir functions/pci_epf_test/func1
->> $ echo 0x1912 > functions/pci_epf_test/func1/vendorid
->> $ echo 0x002d > functions/pci_epf_test/func1/deviceid
->> $ echo 32 > functions/pci_epf_test/func1/msi_interrupts
->> $ ln -s functions/pci_epf_test/func1/ controllers/fe000000.pcie_ep/
->> $ echo 1 > controllers/fe000000.pcie_ep/start
->>
->> Host side results:
->> lspci output:
->> 01:00.0 Unassigned class [ff00]: Renesas Technology Corp. Device 002d
->>         Flags: bus master, fast devsel, latency 0, IRQ 103
->>         Memory at fe200200 (64-bit, non-prefetchable) [size=128]
->>         Memory at fe200000 (64-bit, non-prefetchable) [size=256]
->>         Memory at fe200100 (64-bit, non-prefetchable) [size=256]
->>         Capabilities: [40] Power Management version 3
->>         Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
->>         Capabilities: [70] Express Endpoint, MSI 00
->>         Capabilities: [100] Virtual Channel
->>         Kernel driver in use: pci-endpoint-test
->>
->> pcitest results:
->>
->> BAR tests
->>
->> BAR0:           OKAY
->> BAR1:           NOT OKAY
->> BAR2:           OKAY
->> BAR3:           NOT OKAY
->> BAR4:           OKAY
->> BAR5:           NOT OKAY
->>
->> Interrupt tests
->>
->> SET IRQ TYPE TO LEGACY:         OKAY
->> LEGACY IRQ:     OKAY
->> Read Tests
->>
->> SET IRQ TYPE TO LEGACY:         OKAY
->> READ (      1 bytes):           OKAY
->> READ (   1024 bytes):           OKAY
->> READ (   1025 bytes):           OKAY
->> READ (1024000 bytes):           OKAY
->> READ (1024001 bytes):           OKAY
->>
->> Write Tests
->>
->> WRITE (      1 bytes):          OKAY
->> WRITE (   1024 bytes):          OKAY
->> WRITE (   1025 bytes):          OKAY
->> WRITE (1024000 bytes):          OKAY
->> WRITE (1024001 bytes):          OKAY
->>
->> Copy Tests
->>
->> COPY (      1 bytes):           OKAY
->> COPY (   1024 bytes):           OKAY
->> COPY (   1025 bytes):           OKAY
->> COPY (1024000 bytes):           OKAY
->> COPY (1024001 bytes):           OKAY
->>
->> BAR tests for 1/3/5 fail because its configured to use 64bit bars
->>
->> Lad, Prabhakar (5):
->>   pci: pcie-rcar: preparation for adding endpoint support
->>   pci: endpoint: add support to handle multiple base for mapping
->>     outbound memory
->>   PCI: rcar: Add R-Car PCIe endpoint device tree bindings
->>   pci: rcar: add support for rcar pcie controller in endpoint mode
->>   misc: pci_endpoint_test: add device-id for RZ/G2 pcie controller
->>
->>  .../devicetree/bindings/pci/rcar-pci-ep.txt   |   43 +
->>  arch/arm64/configs/defconfig                  |    2 +-
->>  arch/arm64/configs/renesas_defconfig          |    2 +-
->>  drivers/misc/pci_endpoint_test.c              |    3 +
->>  drivers/pci/controller/Kconfig                |   11 +-
->>  drivers/pci/controller/Makefile               |    3 +-
->>  .../pci/controller/dwc/pcie-designware-ep.c   |   30 +-
->>  drivers/pci/controller/pcie-cadence-ep.c      |   11 +-
->>  drivers/pci/controller/pcie-rcar-ep.c         |  483 +++++++
->>  drivers/pci/controller/pcie-rcar-host.c       | 1058 ++++++++++++++
->>  drivers/pci/controller/pcie-rcar.c            | 1231 +----------------
->>  drivers/pci/controller/pcie-rcar.h            |  129 ++
->>  drivers/pci/controller/pcie-rockchip-ep.c     |   13 +-
->>  drivers/pci/endpoint/functions/pci-epf-test.c |   29 +-
->>  drivers/pci/endpoint/pci-epc-core.c           |    7 +-
->>  drivers/pci/endpoint/pci-epc-mem.c            |  189 ++-
->>  include/linux/pci-epc.h                       |   43 +-
->>  17 files changed, 2016 insertions(+), 1271 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
->>  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
->>  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
->>  create mode 100644 drivers/pci/controller/pcie-rcar.h
->>
->> --
->> 2.20.1
->>
+> Fixes: 6274de4984a6 ("kprobes: Support delayed unoptimizing")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Awesome. It fixes the crash for me.
+Tested-by: Alexei Starovoitov <ast@kernel.org>
+
