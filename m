@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECB2C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3673C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7314520678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8513D20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888332;
-	bh=xgT6/wLTWKXsDD6APvpdQh4mC3zZ6KWe9rFCgZs52iM=;
+	s=default; t=1574888335;
+	bh=6eykspN3cd2v1dC2FZs8AixH9I5Z7C5N1now7YBSKs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z9r2/qev/q+Zr434QRG07LShmFxKpqOuNSZ1JuB4ty+3kwgyQ4LtxToGqMdmRPAiR
-	 OY8qPJ2kPp2+FxbY0V2H88UkOjLNNeGaLXikblFctpG/WGk6GYIqfAfmS5J1l/H7qZ
-	 +uqt6yg5qEe9PID7nSJipt6gRStAyPQSd/6Hi0rA=
+	b=1UBis7ZGO+h0V+17bm2pJUAzgssc3wNjAf+dIH6aD/53ODQpNTW0sg678W6rZmviE
+	 WCuOSnq1ISncNIJLZwPCNWNmClAL4esgqv8eGudCbIEIPPSwLDJvlmz0JAFnyCAcfV
+	 cIUqsoZCCQWg1tnJjI5SJBL1K5BxIf4Cg2afLA78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731353AbfK0U6u (ORCPT
+        id S1727088AbfK0U6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:58:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50080 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:58:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731075AbfK0U6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:58:45 -0500
+        id S1731345AbfK0U6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:58:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A41BC2158C;
-        Wed, 27 Nov 2019 20:58:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3221C2084B;
+        Wed, 27 Nov 2019 20:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888324;
-        bh=xgT6/wLTWKXsDD6APvpdQh4mC3zZ6KWe9rFCgZs52iM=;
+        s=default; t=1574888326;
+        bh=6eykspN3cd2v1dC2FZs8AixH9I5Z7C5N1now7YBSKs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2coAOA4fYzjVuWFYlX2MvmYyQ0rxNz8uF+Fvdv+9wCFDPAIvC1hML22h/7thyPrHs
-         DvYKeCMGuckOyGrv10JaJ9p8Qtue0msb5xhP8fPpCNKcWe/LdfffvvNqxSC/yCYyYa
-         vGCzgSD/6u3oycSaLk5VmOUCZH9+L2KhLbf0Ipd4=
+        b=ysvrSqtFHcfsvk9xX0lA+/bPkpwu5ZbpCEz/xNfqZzD9Y/Dg+2gx4TLtgk0785wxB
+         gsAtRL7nEsGsKER3IWF/W3RQLvQvTSSRVQghPj7TyKE+TgkMn65acDkkX5vcaBc3Xn
+         4njkECRTLew7Ryj2LUOIgDXG/KFG3mtXwKWmo9MI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
+        stable@vger.kernel.org, Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/306] xfs: clear ail delwri queued bufs on unmount of shutdown fs
-Date:   Wed, 27 Nov 2019 21:28:59 +0100
-Message-Id: <20191127203121.421898916@linuxfoundation.org>
+Subject: [PATCH 4.19 054/306] scsi: hisi_sas: Feed back linkrate(max/min) when re-attached
+Date:   Wed, 27 Nov 2019 21:28:24 +0100
+Message-Id: <20191127203118.734981846@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,116 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-[ Upstream commit efc3289cf8d39c34502a7cc9695ca2fa125aad0c ]
+[ Upstream commit 5a54691f874ab29ec82f08bc6936866a3ccdaa91 ]
 
-In the typical unmount case, the AIL is forced out by the unmount
-sequence before the xfsaild task is stopped. Since AIL items are
-removed on writeback completion, this means that the AIL
-->ail_buf_list delwri queue has been drained. This is not always
-true in the shutdown case, however.
+At directly attached situation, if the user modifies the sysfs interface
+of maximum_linkrate and minimum_linkrate to renegotiate the linkrate
+between SAS controller and target, the value of both files mentioned
+above should have change to user setting after renegotiate is over, but
+it remains unchanged.
 
-It's possible for buffers to sit on a delwri queue for a period of
-time across submission attempts if said items are locked or have
-been relogged and pinned since first added to the queue. If the
-attempt to log such an item results in a log I/O error, the error
-processing can shutdown the fs, remove the item from the AIL, stale
-the buffer (dropping the LRU reference) and clear its delwri queue
-state. The latter bit means the buffer will be released from a
-delwri queue on the next submission attempt, but this might never
-occur if the filesystem has shutdown and the AIL is empty.
+To fix this bug, maximum_linkrate and minimum_linkrate will be directly
+fed back to relevant sas_phy structure.
 
-This means that such buffers are held indefinitely by the AIL delwri
-queue across destruction of the AIL. Aside from being a memory leak,
-these buffers can also hold references to in-core perag structures.
-The latter problem manifests as a generic/475 failure, reproducing
-the following asserts at unmount time:
-
-  XFS: Assertion failed: atomic_read(&pag->pag_ref) == 0,
-	file: fs/xfs/xfs_mount.c, line: 151
-  XFS: Assertion failed: atomic_read(&pag->pag_ref) == 0,
-	file: fs/xfs/xfs_mount.c, line: 132
-
-To prevent this problem, clear the AIL delwri queue as a final step
-before xfsaild() exit. The !empty state should never occur in the
-normal case, so add an assert to catch unexpected problems going
-forward.
-
-[dgc: add comment explaining need for xfs_buf_delwri_cancel() after
- calling xfs_buf_delwri_submit_nowait().]
-
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Dave Chinner <david@fromorbit.com>
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_buf.c       |  7 +++++++
- fs/xfs/xfs_trans_ail.c | 28 ++++++++++++++++++++++------
- 2 files changed, 29 insertions(+), 6 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index f4a89c94c931b..e36124546d0db 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -2025,6 +2025,13 @@ xfs_buf_delwri_submit_buffers(
-  * is only safely useable for callers that can track I/O completion by higher
-  * level means, e.g. AIL pushing as the @buffer_list is consumed in this
-  * function.
-+ *
-+ * Note: this function will skip buffers it would block on, and in doing so
-+ * leaves them on @buffer_list so they can be retried on a later pass. As such,
-+ * it is up to the caller to ensure that the buffer list is fully submitted or
-+ * cancelled appropriately when they are finished with the list. Failure to
-+ * cancel or resubmit the list until it is empty will result in leaked buffers
-+ * at unmount time.
-  */
- int
- xfs_buf_delwri_submit_nowait(
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index 55326f971cb36..d3a4e89bf4a0d 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -531,17 +531,33 @@ xfsaild(
- 			set_current_state(TASK_INTERRUPTIBLE);
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index fd9d82c9033de..e9747379384b2 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -906,6 +906,9 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
+ 	_r.maximum_linkrate = max;
+ 	_r.minimum_linkrate = min;
  
- 		/*
--		 * Check kthread_should_stop() after we set the task state
--		 * to guarantee that we either see the stop bit and exit or
--		 * the task state is reset to runnable such that it's not
--		 * scheduled out indefinitely and detects the stop bit at
--		 * next iteration.
--		 *
-+		 * Check kthread_should_stop() after we set the task state to
-+		 * guarantee that we either see the stop bit and exit or the
-+		 * task state is reset to runnable such that it's not scheduled
-+		 * out indefinitely and detects the stop bit at next iteration.
- 		 * A memory barrier is included in above task state set to
- 		 * serialize again kthread_stop().
- 		 */
- 		if (kthread_should_stop()) {
- 			__set_current_state(TASK_RUNNING);
++	sas_phy->phy->maximum_linkrate = max;
++	sas_phy->phy->minimum_linkrate = min;
 +
-+			/*
-+			 * The caller forces out the AIL before stopping the
-+			 * thread in the common case, which means the delwri
-+			 * queue is drained. In the shutdown case, the queue may
-+			 * still hold relogged buffers that haven't been
-+			 * submitted because they were pinned since added to the
-+			 * queue.
-+			 *
-+			 * Log I/O error processing stales the underlying buffer
-+			 * and clears the delwri state, expecting the buf to be
-+			 * removed on the next submission attempt. That won't
-+			 * happen if we're shutting down, so this is the last
-+			 * opportunity to release such buffers from the queue.
-+			 */
-+			ASSERT(list_empty(&ailp->ail_buf_list) ||
-+			       XFS_FORCED_SHUTDOWN(ailp->ail_mount));
-+			xfs_buf_delwri_cancel(&ailp->ail_buf_list);
- 			break;
- 		}
- 
+ 	hisi_hba->hw->phy_disable(hisi_hba, phy_no);
+ 	msleep(100);
+ 	hisi_hba->hw->phy_set_linkrate(hisi_hba, phy_no, &_r);
 -- 
 2.20.1
 
