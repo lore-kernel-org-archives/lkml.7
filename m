@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BADC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BBEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE922178F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684B92166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887496;
-	bh=2B1TO9U0JJWHutMSGqxzc5uvWPcGaGlSdTFQaLGEKu8=;
+	s=default; t=1574887501;
+	bh=1vNBDlIZgpV/AcG6p9zZo5ELyIjDay1EuilGCvtmWp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p7YpjzKZcJlG9++0E8Fq+zd7Oi5QNp0mUw4A79DMFHww7mZqYa7dEsb1/9bW94kMX
-	 hD56Qe80EeXUhYJkoQ6/qNQCQNLK4u+gkG/TQFW5lT4hqHHaFQNYD7sFszGpPH6+qK
-	 zCQjbTfnN1LO4+BAC+0bC3VYEFYB1CJUG2xOqpF0=
+	b=W/nmmVcsWMp8IxWWDscOc4W4EccBlPvW/fGl3QK+oXwafuHY5qLRj2tPt+Id5DPJP
+	 iZoP3njN53299inY5XCSkRuv4tSI/ABptmwDuN3xecfVUMXeK5QpqeA7PibmKEi0tz
+	 a0lTKeHuozaNXKLmoikzsZXlnS7mEGWrVuSvTDkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729670AbfK0Uoz (ORCPT
+        id S1729679AbfK0UpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:44:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54836 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:45:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729662AbfK0Uow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:44:52 -0500
+        id S1728218AbfK0Uo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:44:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B0FD2166E;
-        Wed, 27 Nov 2019 20:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59EFB2166E;
+        Wed, 27 Nov 2019 20:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887492;
-        bh=2B1TO9U0JJWHutMSGqxzc5uvWPcGaGlSdTFQaLGEKu8=;
+        s=default; t=1574887496;
+        bh=1vNBDlIZgpV/AcG6p9zZo5ELyIjDay1EuilGCvtmWp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZwzMusWoFka51C2ROcepNNhiF98Gre1MZ3DciL1GeAJXJ0GKJEYjJuA1zH1ZybHk5
-         pfjhVdbFLUdMZOgczN3Re5gMAKR/cHT9IEJMmwGkux39WdIFAYE0ZK98/tVzbPobVc
-         a2Q+SdAQe10JfnO22f3HQBZ+PHSbhfzoiD2DPt08=
+        b=IdOwMIXwUo4IYXLdLjnLfjX8RXPoAdRyBXkxtDwpFGUqLLjpkZpCnMf0oTyvQtlWW
+         yvTlMY18XD9OM7W7ULdz8Qmxkba7uX85elT3F//qjpUifxvlapDf1gjDeXCrdAP66Y
+         L6dOg4mb+eX0Q9r91PXVU6oXmweaVqt13xy+R6SU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        stable@vger.kernel.org, mst@redhat.com,
+        Laurent Vivier <lvivier@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 132/151] virtio_console: reset on out of memory
-Date:   Wed, 27 Nov 2019 21:31:55 +0100
-Message-Id: <20191127203046.392102374@linuxfoundation.org>
+Subject: [PATCH 4.9 134/151] virtio_console: allocate inbufs in add_port() only if it is needed
+Date:   Wed, 27 Nov 2019 21:31:57 +0100
+Message-Id: <20191127203046.663614848@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -59,66 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+From: Laurent Vivier <lvivier@redhat.com>
 
-[ Upstream commit 5c60300d68da32ca77f7f978039dc72bfc78b06b ]
+[ Upstream commit d791cfcbf98191122af70b053a21075cb450d119 ]
 
-When out of memory and we can't add ctrl vq buffers,
-probe fails. Unfortunately the error handling is
-out of spec: it calls del_vqs without bothering
-to reset the device first.
+When we hot unplug a virtserialport and then try to hot plug again,
+it fails:
 
-To fix, call the full cleanup function in this case.
+(qemu) chardev-add socket,id=serial0,path=/tmp/serial0,server,nowait
+(qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
+                  chardev=serial0,id=serial0,name=serial0
+(qemu) device_del serial0
+(qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
+                  chardev=serial0,id=serial0,name=serial0
+kernel error:
+  virtio-ports vport2p2: Error allocating inbufs
+qemu error:
+  virtio-serial-bus: Guest failure in adding port 2 for device \
+                     virtio-serial0.0
 
+This happens because buffers for the in_vq are allocated when the port is
+added but are not released when the port is unplugged.
+
+They are only released when virtconsole is removed (see a7a69ec0d8e4)
+
+To avoid the problem and to be symmetric, we could allocate all the buffers
+in init_vqs() as they are released in remove_vqs(), but it sounds like
+a waste of memory.
+
+Rather than that, this patch changes add_port() logic to ignore ENOSPC
+error in fill_queue(), which means queue has already been filled.
+
+Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+Cc: mst@redhat.com
 Cc: stable@vger.kernel.org
+Signed-off-by: Laurent Vivier <lvivier@redhat.com>
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/virtio_console.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/char/virtio_console.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-index 800ced0a5a247..43724bd8a0c0a 100644
+index b09fc4553dc81..d7ee031d776d8 100644
 --- a/drivers/char/virtio_console.c
 +++ b/drivers/char/virtio_console.c
-@@ -2073,6 +2073,7 @@ static int virtcons_probe(struct virtio_device *vdev)
+@@ -1369,24 +1369,24 @@ static void set_console_size(struct port *port, u16 rows, u16 cols)
+ 	port->cons.ws.ws_col = cols;
+ }
  
- 	spin_lock_init(&portdev->ports_lock);
- 	INIT_LIST_HEAD(&portdev->ports);
-+	INIT_LIST_HEAD(&portdev->list);
+-static unsigned int fill_queue(struct virtqueue *vq, spinlock_t *lock)
++static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
+ {
+ 	struct port_buffer *buf;
+-	unsigned int nr_added_bufs;
++	int nr_added_bufs;
+ 	int ret;
  
- 	virtio_device_ready(portdev->vdev);
+ 	nr_added_bufs = 0;
+ 	do {
+ 		buf = alloc_buf(vq->vdev, PAGE_SIZE, 0);
+ 		if (!buf)
+-			break;
++			return -ENOMEM;
  
-@@ -2090,8 +2091,15 @@ static int virtcons_probe(struct virtio_device *vdev)
- 		if (!nr_added_bufs) {
+ 		spin_lock_irq(lock);
+ 		ret = add_inbuf(vq, buf);
+ 		if (ret < 0) {
+ 			spin_unlock_irq(lock);
+ 			free_buf(buf, true);
+-			break;
++			return ret;
+ 		}
+ 		nr_added_bufs++;
+ 		spin_unlock_irq(lock);
+@@ -1406,7 +1406,6 @@ static int add_port(struct ports_device *portdev, u32 id)
+ 	char debugfs_name[16];
+ 	struct port *port;
+ 	dev_t devt;
+-	unsigned int nr_added_bufs;
+ 	int err;
+ 
+ 	port = kmalloc(sizeof(*port), GFP_KERNEL);
+@@ -1465,11 +1464,13 @@ static int add_port(struct ports_device *portdev, u32 id)
+ 	spin_lock_init(&port->outvq_lock);
+ 	init_waitqueue_head(&port->waitqueue);
+ 
+-	/* Fill the in_vq with buffers so the host can send us data. */
+-	nr_added_bufs = fill_queue(port->in_vq, &port->inbuf_lock);
+-	if (!nr_added_bufs) {
++	/* We can safely ignore ENOSPC because it means
++	 * the queue already has buffers. Buffers are removed
++	 * only by virtcons_remove(), not by unplug_port()
++	 */
++	err = fill_queue(port->in_vq, &port->inbuf_lock);
++	if (err < 0 && err != -ENOSPC) {
+ 		dev_err(port->dev, "Error allocating inbufs\n");
+-		err = -ENOMEM;
+ 		goto free_device;
+ 	}
+ 
+@@ -2081,14 +2082,11 @@ static int virtcons_probe(struct virtio_device *vdev)
+ 	INIT_WORK(&portdev->control_work, &control_work_handler);
+ 
+ 	if (multiport) {
+-		unsigned int nr_added_bufs;
+-
+ 		spin_lock_init(&portdev->c_ivq_lock);
+ 		spin_lock_init(&portdev->c_ovq_lock);
+ 
+-		nr_added_bufs = fill_queue(portdev->c_ivq,
+-					   &portdev->c_ivq_lock);
+-		if (!nr_added_bufs) {
++		err = fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
++		if (err < 0) {
  			dev_err(&vdev->dev,
  				"Error allocating buffers for control queue\n");
--			err = -ENOMEM;
--			goto free_vqs;
-+			/*
-+			 * The host might want to notify mgmt sw about device
-+			 * add failure.
-+			 */
-+			__send_control_msg(portdev, VIRTIO_CONSOLE_BAD_ID,
-+					   VIRTIO_CONSOLE_DEVICE_READY, 0);
-+			/* Device was functional: we need full cleanup. */
-+			virtcons_remove(vdev);
-+			return -ENOMEM;
+ 			/*
+@@ -2099,7 +2097,7 @@ static int virtcons_probe(struct virtio_device *vdev)
+ 					   VIRTIO_CONSOLE_DEVICE_READY, 0);
+ 			/* Device was functional: we need full cleanup. */
+ 			virtcons_remove(vdev);
+-			return -ENOMEM;
++			return err;
  		}
  	} else {
  		/*
-@@ -2122,11 +2130,6 @@ static int virtcons_probe(struct virtio_device *vdev)
- 
- 	return 0;
- 
--free_vqs:
--	/* The host might want to notify mgmt sw about device add failure */
--	__send_control_msg(portdev, VIRTIO_CONSOLE_BAD_ID,
--			   VIRTIO_CONSOLE_DEVICE_READY, 0);
--	remove_vqs(portdev);
- free_chrdev:
- 	unregister_chrdev(portdev->chr_major, "virtio-portsdev");
- free:
 -- 
 2.20.1
 
