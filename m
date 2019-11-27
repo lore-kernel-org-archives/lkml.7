@@ -2,94 +2,84 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3611C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7EDC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FA82070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2802070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ve+nGtR1";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="AJfly1Eb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfK0LtB (ORCPT
+        id S1726920AbfK0LuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 06:49:01 -0500
-Received: from mga04.intel.com ([192.55.52.120]:37255 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfK0LtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 06:49:01 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 03:49:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,249,1571727600"; 
-   d="scan'208";a="217370597"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 27 Nov 2019 03:48:57 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 27 Nov 2019 13:48:56 +0200
-Date:   Wed, 27 Nov 2019 13:48:56 +0200
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191127114856.GZ11621@lahna.fi.intel.com>
-References: <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com>
- <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com>
- <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
- <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
- <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
- <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
- <e0eeddf4214f54dfac08e428dfb30cbd39f20680.camel@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0eeddf4214f54dfac08e428dfb30cbd39f20680.camel@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 27 Nov 2019 06:50:00 -0500
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:39426
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726320AbfK0LuA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 06:50:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574855399;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=BnWwMJfUSqCLiU7rXf0pst3qGFvqPL0IaIQDsuZ/v+g=;
+        b=Ve+nGtR1r6bHYZ3enPWZrD262SYqjTbEc+KczufEOIkOBlplKSYN4AaCgaHxrz0q
+        RQgQUKkDK/cjRGPKDar3SuHQdqNooRC9isF57H2+XT+EGDOPd4dG3rVsYeVH0/t2b/9
+        cp/+wh9SRMZUeM81kEPYFUQTrQ2vqcCxhyO0bqiQ=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574855399;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=BnWwMJfUSqCLiU7rXf0pst3qGFvqPL0IaIQDsuZ/v+g=;
+        b=AJfly1Ebv3IxkntSIqnAn8ylUcNRC5abgwm4de5RBIDfHOYPcpLucsaGxv5hDWPK
+        hYeMahPrKUvvYOgw7ky/yJEQwJuPgYVHMuFhEoeSs/p7xk/9BSfvZkfcfv7Pr3HMQ5H
+        hOqfKWud5IOPrNyeGCfEfpEwRl5EOrQF+39x417M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4415BC447AA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH V1 1/2] dt-bindings: mmc: sdhci-msm: Add compatible string for sc7180
+Date:   Wed, 27 Nov 2019 11:49:59 +0000
+Message-ID: <0101016eacb255af-3985262d-9b7e-4813-88c2-61838406e12c-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+X-SES-Outgoing: 2019.11.27-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 06:10:36PM -0500, Lyude Paul wrote:
-> Hey-this is almost certainly not the right place in this thread to respond,
-> but this thread has gotten so deep evolution can't push the subject further to
-> the right, heh. So I'll just respond here.
+Add sc7180 SoC specific compatible strings for qcom-sdhci controller.
 
-:)
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> I've been following this and helping out Karol with testing here and there.
-> They had me test Bjorn's PCI branch on the X1 Extreme 2nd generation, which
-> has a turing GPU and 8086:1901 PCI bridge.
-> 
-> I was about to say "the patch fixed things, hooray!" but it seems that after
-> trying runtime suspend/resume a couple times things fall apart again:
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index da4edb1..7ee639b 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -19,6 +19,7 @@ Required properties:
+ 		"qcom,msm8996-sdhci", "qcom,sdhci-msm-v4"
+ 		"qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
+ 		"qcom,qcs404-sdhci", "qcom,sdhci-msm-v5"
++		"qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+ 	NOTE that some old device tree files may be floating around that only
+ 	have the string "qcom,sdhci-msm-v4" without the SoC compatible string
+ 	but doing that should be considered a deprecated practice.
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
 
-You mean $subject patch, no?
-
-> [  686.883247] nouveau 0000:01:00.0: DRM: suspending object tree...
-> [  752.866484] ACPI Error: Aborting method \_SB.PCI0.PEG0.PEGP.NVPO due to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
-> [  752.866508] ACPI Error: Aborting method \_SB.PCI0.PGON due to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
-> [  752.866521] ACPI Error: Aborting method \_SB.PCI0.PEG0.PG00._ON due to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
-
-This is probably the culprit. The same AML code fails to properly turn
-on the device.
-
-Is acpidump from this system available somewhere?
