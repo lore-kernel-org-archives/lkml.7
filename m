@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05268C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EF3C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08AD2178F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C356921741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889802;
-	bh=cfIdG14Q63GQOlkA/hZ9JJgBBsfr+CPkNd3cO7cwUs0=;
+	s=default; t=1574889807;
+	bh=9uyfzauE58ZzV9qho2Uq/YQRYCXqOI53XmSwiLS9fDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NuBH84GwuZqQZfvCXMHZeA6x7aTR4awzPqu644mYLoFHzjaELishitOtx+Bd7wsi/
-	 0uvCYd7EP+oeLRbWUd2xzQ3OhSOJBzL5kfbzUwQgJjSit6oz3vLY2JfKXmIH0Zpq7w
-	 GKl49deOHcSYtmE4O4hRM6EYtkQuHebr0U8puutQ=
+	b=QiDbAJ9st6AU6CVwIgYhFmj8q5ZkKkhpebC90HYPcQm4b2eytSWpKCfxsXpB+5YZh
+	 0lbprCNO7MGVV4vu5EuzosR04HLst++QLxXz4blC5H1QnbHGd5gNQMEdkZEKq+gG4o
+	 Z5T65utRePLtOMf6DuOpiGHPnGHpxZ6Qd0N4xxiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732186AbfK0VEo (ORCPT
+        id S1732166AbfK0VEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:04:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58144 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:04:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732161AbfK0VEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:04:35 -0500
+        id S1731865AbfK0VEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:04:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D32FA2086A;
-        Wed, 27 Nov 2019 21:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC4AB21770;
+        Wed, 27 Nov 2019 21:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888675;
-        bh=cfIdG14Q63GQOlkA/hZ9JJgBBsfr+CPkNd3cO7cwUs0=;
+        s=default; t=1574888670;
+        bh=9uyfzauE58ZzV9qho2Uq/YQRYCXqOI53XmSwiLS9fDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BU73gKnt0lq14Tq11yr7+Dr6Njsr6dlrY9MwR2F+q/p14QexyehyAUL0qZx1gch+t
-         31JjMhokKDa/0w02w+Af04VTpN4NazRuPZ03rDQG9eF3+tMV6J/BiIC/2h3E/My0ls
-         XrSviNHmwOt6m3LPM4/8LOK1QErLnPSYsrkQJQ0Q=
+        b=GHAO70fIoz3Wk/pTX/tip4H6nMnjS2jYflqgNeqMkdqHJbec0G6lXgJNfbHh5KOgY
+         3+oSV/7JHFLKvC4UfR2GhOUQgSh43DOK9xyiag5nrbdeVtgH00bbDH66cRBwAzt1PU
+         5w92dnTCe9hpg5Y6VvPfNus1ZYwHmzRm3YvdeQ+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 225/306] scsi: mpt3sas: Dont modify EEDPTagMode field setting on SAS3.5 HBA devices
-Date:   Wed, 27 Nov 2019 21:31:15 +0100
-Message-Id: <20191127203131.484067241@linuxfoundation.org>
+Subject: [PATCH 4.19 223/306] net: dsa: bcm_sf2: Turn on PHY to allow successful registration
+Date:   Wed, 27 Nov 2019 21:31:13 +0100
+Message-Id: <20191127203131.347612884@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -63,36 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 6cd1bc7b9b5075d395ba0120923903873fc7ea0e ]
+[ Upstream commit c04a17d2a9ccf1eaba1c5a56f83e997540a70556 ]
 
-If EEDPTagMode field in manufacturing page11 is set then unset it. This is
-needed to fix a hardware bug only in SAS3/SAS2 cards. So, skipping
-EEDPTagMode changes in Manufacturing page11 for SAS 3.5 controllers.
+We are binding to the PHY using the SF2 slave MDIO bus that we create,
+binding involves reading the PHY's MII_PHYSID1/2 which won't be possible
+if the PHY is turned off. Temporarily turn it on/off for the bus probing
+to succeeed. This fixes unbind/bind problems where the port connecting
+to that PHY would be in error since it could not connect to it.
 
-Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/bcm_sf2.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-index d2ab52026014f..2c556c7fcf0dc 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -4117,7 +4117,7 @@ _base_static_config_pages(struct MPT3SAS_ADAPTER *ioc)
- 	 * flag unset in NVDATA.
- 	 */
- 	mpt3sas_config_get_manufacturing_pg11(ioc, &mpi_reply, &ioc->manu_pg11);
--	if (ioc->manu_pg11.EEDPTagMode == 0) {
-+	if (!ioc->is_gen35_ioc && ioc->manu_pg11.EEDPTagMode == 0) {
- 		pr_err("%s: overriding NVDATA EEDPTagMode setting\n",
- 		    ioc->name);
- 		ioc->manu_pg11.EEDPTagMode &= ~0x3;
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index ca3655d28e00f..17cec68e56b4f 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1099,12 +1099,16 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	bcm_sf2_gphy_enable_set(priv->dev->ds, true);
++
+ 	ret = bcm_sf2_mdio_register(ds);
+ 	if (ret) {
+ 		pr_err("failed to register MDIO bus\n");
+ 		return ret;
+ 	}
+ 
++	bcm_sf2_gphy_enable_set(priv->dev->ds, false);
++
+ 	ret = bcm_sf2_cfp_rst(priv);
+ 	if (ret) {
+ 		pr_err("failed to reset CFP\n");
 -- 
 2.20.1
 
