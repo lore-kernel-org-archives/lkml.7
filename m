@@ -2,104 +2,127 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AD1C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5021DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1799021555
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215BC2154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0yR8S6w"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UkHiWpu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfK0UY6 (ORCPT
+        id S1727133AbfK0U1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:24:58 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34225 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbfK0UY5 (ORCPT
+        Wed, 27 Nov 2019 15:27:49 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35632 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfK0U1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:24:57 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l136so5669305oig.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 12:24:57 -0800 (PST)
+        Wed, 27 Nov 2019 15:27:48 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 23so18521492otf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 12:27:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=6aJoWQihiHVsCp0vDw6arfz/X9qrDB9cPyNOPVpy++g=;
-        b=e0yR8S6wppcdxtKykSwBVUpDqtuNjzu7PRfhIfPhMbyD4L8PMyH9PzOxXzL6HEi3zQ
-         cr5WkfGizyNFT0iRh+zjrt8TQtpCmomtqwx5yTnpJ5ys8kA8YL7h/DI8Gx3sg7Kmtap4
-         Sro1P5teiZTOB1t3LGqQ/pA57YhNA8D7esmVKFdtLUMhNkZMoqwIDCdwuDj9bD5OL/e6
-         A1eamTPJvD9aV/xFbUfPh7M71zeNntOR5w2WVJ6PDh4D5dFWJOjNeDlED5zXxfCrgHB9
-         w8Pe6Y8DkJwZOvO3U12hhkWd6kKWUOrlo+j+wHMkx0Mi+UrsJZKqIS1Hx0MQooAun6Yd
-         UcFA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/9xP2Kq0ECGwvZPzuAJ5O0ZAlQ2V/eOMBzNaTBOLe2M=;
+        b=UkHiWpu57TLHrT7zfLK9ezWHC4Atn2Q8c+v34Ii47MuHGk4xEH0bL903ZN1ZLdrugB
+         AKjwJ9K+gmwYeZj+p6Dlk5j6OHz/BE6McmcKAQEMXb9sutTq4yTSHK4ZQ+8MuHrjEQU6
+         bHWRcRh9bwA8AOgnDnLa0EgMvktCFZZIb2RGJJjQbDC2e1w3AQGbrQsHtNlheS1Mempm
+         sd+wTJU1aQ+nVtnbBuBDXD4uyBC/eVHDWSpHvewA+GZSMNx5cZ3h3zLPUkKqulfmGAX1
+         ko8X707JwVmRR+DIsLA+vpqhD//BaQ4aHRQvZ9eM+CA2UP2FDMcUC7E59S4TMJ4Cir2G
+         5mNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=6aJoWQihiHVsCp0vDw6arfz/X9qrDB9cPyNOPVpy++g=;
-        b=GrozpnfdLsr64HVM8SU2aePb+5oxbUKhRdW7kEwZIoczs2afgI149FBPQzMp+Lv5ch
-         OSrpPspcyqzXuBy8SOThzbJgAP3NLpsxT56TcsvLdyaAC+5wf5md2xFcbp9wLulyKuLA
-         b5mvKKof3E7QSRSzJlApCMWKM5Qoj1cpVRLNSUSmkbzMEKa8wwdtPzCglNADHxrql3yr
-         n0IU0s1n+Rxz+WPMqxRbtDGX59+IX1E+pZqS+jD0tiVIoFerBN2EtlnYVqqiCyYmqkHw
-         aBhhy3GKVZBRDm6eU3X7eEMMWqwyHAFBHB+5sCuCvVxQWM75BhVapsXpCD3kJGAj0kcS
-         LHhw==
-X-Gm-Message-State: APjAAAV2GbWYwprHUQJAoqVveYELN2HYck6W1AVu4Y1YdoZma8lGBY7n
-        lf4fs4fWI6xZRU0ASvgkd1Q=
-X-Google-Smtp-Source: APXvYqwFNbupMxWxjjf4cdBJnjHXvS549YcDHbT9ozNaK9vtjMjLLeU9kCQkEfQKhVnd4vfgBYVmWQ==
-X-Received: by 2002:aca:4e91:: with SMTP id c139mr5885205oib.142.1574886296910;
-        Wed, 27 Nov 2019 12:24:56 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d2sm5186709oth.48.2019.11.27.12.24.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Nov 2019 12:24:56 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: [PATCH] driver core: Fix test_async_driver_probe if NUMA is disabled
-Date:   Wed, 27 Nov 2019 12:24:53 -0800
-Message-Id: <20191127202453.28087-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/9xP2Kq0ECGwvZPzuAJ5O0ZAlQ2V/eOMBzNaTBOLe2M=;
+        b=P3Sg98R6SqTYi1/kIRljdE8PPehlERuS7plJWYwHlpgAfmotRHL9EUyagAuJcGwvHw
+         Y4lSF03780h4HnoA4uiCrPxkKpospD6FE0ggLOwW6+0owPk+V+q3H1z09Pa4CDtJoVlX
+         sJ7HRML6BKB17hZj2339jkTls+B9JTLGe/bqKa5QAOnf3IJlyFdkCH0EO61a82ni7mzo
+         XXDDr9ONhkNpXvgo1tejDdfmX6g1PvYXjqEcsSjNRAXWc2JcxGSGomRVg5FTjcqfQDoX
+         ik1RhnS3myGi8JvjoLMqagwdiY9D0M07sGmvPcxfYsMUq8f5f4fQsKVkfvXhQZC9NEto
+         sOTA==
+X-Gm-Message-State: APjAAAV9bqlJ+HSm3n5K44yb53rZ+3Nzqu0c9fdfolllPL1XcRyOdPsA
+        62Uggi+mOZIfY05VwX6suE8kXlXcBmsyP9TsIQrJGA==
+X-Google-Smtp-Source: APXvYqxyBQIW4FqJ+D1jqs4aIN1hIsrJjqe9mFFq16KOxi6M6yT7nIbsjwNSwCv3eYpB5N1h0Tosh6ej/HzfEhBG/jo=
+X-Received: by 2002:a9d:328:: with SMTP id 37mr4826013otv.228.1574886467145;
+ Wed, 27 Nov 2019 12:27:47 -0800 (PST)
+MIME-Version: 1.0
+References: <20191115191728.87338-1-jannh@google.com> <20191115191728.87338-2-jannh@google.com>
+ <CALCETrVQ2NqPnED_E6Y6EsCOEJJcz8GkQhgcKHk7JVAyykq06A@mail.gmail.com>
+In-Reply-To: <CALCETrVQ2NqPnED_E6Y6EsCOEJJcz8GkQhgcKHk7JVAyykq06A@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 27 Nov 2019 21:27:20 +0100
+Message-ID: <CAG48ez2z8i1nosA1nGrVdXx1cXXwHBqe7CC5kMB2W=uxbsvkjg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 57ea974fb871 ("driver core: Rewrite test_async_driver_probe
-to cover serialization and NUMA affinity"), running the test with NUMA
-disabled results in warning messages similar to the following.
+On Sun, Nov 24, 2019 at 12:08 AM Andy Lutomirski <luto@kernel.org> wrote:
+> On Fri, Nov 15, 2019 at 11:17 AM Jann Horn <jannh@google.com> wrote:
+> > A frequent cause of #GP exceptions are memory accesses to non-canonical
+> > addresses. Unlike #PF, #GP doesn't come with a fault address in CR2, so
+> > the kernel doesn't currently print the fault address for #GP.
+> > Luckily, we already have the necessary infrastructure for decoding X86
+> > instructions and computing the memory address that is being accessed;
+> > hook it up to the #GP handler so that we can figure out whether the #GP
+> > looks like it was caused by a non-canonical address, and if so, print
+> > that address.
+[...]
+> > +static void print_kernel_gp_address(struct pt_regs *regs)
+> > +{
+> > +#ifdef CONFIG_X86_64
+> > +       u8 insn_bytes[MAX_INSN_SIZE];
+> > +       struct insn insn;
+> > +       unsigned long addr_ref;
+> > +
+> > +       if (probe_kernel_read(insn_bytes, (void *)regs->ip, MAX_INSN_SIZE))
+> > +               return;
+> > +
+> > +       kernel_insn_init(&insn, insn_bytes, MAX_INSN_SIZE);
+> > +       insn_get_modrm(&insn);
+> > +       insn_get_sib(&insn);
+> > +       addr_ref = (unsigned long)insn_get_addr_ref(&insn, regs);
+[...]
+> > +}
+>
+> Could you refactor this a little bit so that we end up with a helper
+> that does the computation?  Something like:
+>
+> int probe_insn_get_memory_ref(void **addr, size_t *len, void *insn_addr);
+>
+> returns 1 if there was a memory operand and fills in addr and len,
+> returns 0 if there was no memory operand, and returns a negative error
+> on error.
+>
+> I think we're going to want this for #AC handling, too :)
 
-test_async_driver test_async_driver.12: NUMA node mismatch -1 != 0
-
-If CONFIG_NUMA=n, dev_to_node(dev) returns -1, and numa_node_id()
-returns 0. Both are widely used, so it appears risky to change return
-values. Augment the check with IS_ENABLED(CONFIG_NUMA) instead
-to fix the problem.
-
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Fixes: 57ea974fb871 ("driver core: Rewrite test_async_driver_probe to cover serialization and NUMA affinity")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/base/test/test_async_driver_probe.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/test/test_async_driver_probe.c b/drivers/base/test/test_async_driver_probe.c
-index f4b1d8e54daf..3bb7beb127a9 100644
---- a/drivers/base/test/test_async_driver_probe.c
-+++ b/drivers/base/test/test_async_driver_probe.c
-@@ -44,7 +44,8 @@ static int test_probe(struct platform_device *pdev)
- 	 * performing an async init on that node.
- 	 */
- 	if (dev->driver->probe_type == PROBE_PREFER_ASYNCHRONOUS) {
--		if (dev_to_node(dev) != numa_node_id()) {
-+		if (IS_ENABLED(CONFIG_NUMA) &&
-+		    dev_to_node(dev) != numa_node_id()) {
- 			dev_warn(dev, "NUMA node mismatch %d != %d\n",
- 				 dev_to_node(dev), numa_node_id());
- 			atomic_inc(&warnings);
--- 
-2.17.1
-
+Mmmh... the instruction decoder doesn't currently give us a reliable
+access size though. (I know, I'm using it here regardless, but it
+doesn't really matter here if the decoded size is too big from time to
+time... whereas I imagine that that'd matter quite a bit for #AC
+handling.) IIRC e.g. a MOVZX that loads 1 byte into a 4-byte register
+is decoded as having .opnd_bytes==4; and if you look through
+arch/x86/lib/insn.c, there isn't even anything that would ever set
+->opnd_bytes to 1. You'd have to add some plumbing to get reliable
+access sizes. I don't want to add a helper for this before the
+underlying infrastructure actually works properly.
