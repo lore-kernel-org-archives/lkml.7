@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CC3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597B9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C54C20678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23ED920678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888367;
-	bh=exWk14fngb1BXqFLHVNg9jbsZqzBTXvvlD/nSx7Ny2Q=;
+	s=default; t=1574888370;
+	bh=xOiN5LjMgBp//ENnSVzIBfa6sOV/4n1mY+so8re9zjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MxcDvGRixmIAn+l8IH5Wf0syvkWcrT8S07yHvBcMRkaXNJMniWhbo1Ez2Bt0vxWKS
-	 sFY7BaQ30Cj7IkIFQ7lt7mvoRqaNuRR4BvlDst6bAFxM+TbI1CXi8zop6j3jQyqkSq
-	 MAbmrjxaPfBPXOldyKxhvolG+o3fPuhdVsctHcY4=
+	b=KS9IZB7t8jE67vcUG2jN8I6oeqCjahX7Ru35nc/JFbpspIuQSzbfaqzc3QLR+nxKo
+	 osxXiv8WF3CvYZsaI8id8MrnIRDPFNhnsWt7IFL2Va3XXKKQshb/oaQEET7u2s885T
+	 mYq7jXhvBnh3SYygl8owEXQiBrIoluvmILXh5CtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731418AbfK0U7Z (ORCPT
+        id S1730629AbfK0U73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:59:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50730 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:59:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731149AbfK0U7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:59:16 -0500
+        id S1731404AbfK0U7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:59:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC70F20678;
-        Wed, 27 Nov 2019 20:59:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6494620678;
+        Wed, 27 Nov 2019 20:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888355;
-        bh=exWk14fngb1BXqFLHVNg9jbsZqzBTXvvlD/nSx7Ny2Q=;
+        s=default; t=1574888360;
+        bh=xOiN5LjMgBp//ENnSVzIBfa6sOV/4n1mY+so8re9zjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SvrVFxema0NHBoZMbEfwfX+IJQutjP7nRuIfUeI57KpCZgCXcxjZcKXc+OpUtq+tx
-         3I6h0e3ORVrAUAs6+dGPxAiKroQJaXsKggY4GKjGUjxDWmIlLoevFNVICvhDu37edH
-         uc4ag1pC6j1qQDxQwyWCYYxcrnjpKa/a+AacvKc4=
+        b=1ac2CNvSkbgTgYPiTX/AFuW6p8UYkwfnpWO8cIWntcBgIlclg/YPGBev0RnWrmOoZ
+         1fpiOxAJGo/JSz7h1CU4hwGRndl1wwlA8SGzBOIiW7PIePpBnJ6JjrUUdEu+kansgg
+         dILlfGKvRnrQVSVwVVTKAOUoj9HGP6PW0HZCcG0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 059/306] RDMA/bnxt_re: Avoid resource leak in case the NQ registration fails
-Date:   Wed, 27 Nov 2019 21:28:29 +0100
-Message-Id: <20191127203119.077108112@linuxfoundation.org>
+Subject: [PATCH 4.19 097/306] usbip: tools: fix atoi() on non-null terminated string
+Date:   Wed, 27 Nov 2019 21:29:07 +0100
+Message-Id: <20191127203121.975683825@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,141 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Selvin Xavier <selvin.xavier@broadcom.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 5df950994934814a8b91f0cf9f653842d2ba082d ]
+[ Upstream commit e325808c0051b16729ffd472ff887c6cae5c6317 ]
 
-In case the NQ alloc/enable fails, free up the already allocated/enabled
-NQ before reporting failure. Also, track the alloc/enable using proper
-state checking.
+Currently the call to atoi is being passed a single char string
+that is not null terminated, so there is a potential read overrun
+along the stack when parsing for an integer value.  Fix this by
+instead using a 2 char string that is initialized to all zeros
+to ensure that a 1 char read into the string is always terminated
+with a \0.
 
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Detected by cppcheck:
+"Invalid atoi() argument nr 1. A nul-terminated string is required."
+
+Fixes: 3391ba0e2792 ("usbip: tools: Extract generic code to be shared with vudc backend")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/bnxt_re.h |  2 ++
- drivers/infiniband/hw/bnxt_re/main.c    | 31 ++++++++++++++++++-------
- 2 files changed, 24 insertions(+), 9 deletions(-)
+ tools/usb/usbip/libsrc/usbip_host_common.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/bnxt_re.h b/drivers/infiniband/hw/bnxt_re/bnxt_re.h
-index 96f76896488da..802942adea8e8 100644
---- a/drivers/infiniband/hw/bnxt_re/bnxt_re.h
-+++ b/drivers/infiniband/hw/bnxt_re/bnxt_re.h
-@@ -120,6 +120,8 @@ struct bnxt_re_dev {
- #define BNXT_RE_FLAG_HAVE_L2_REF		3
- #define BNXT_RE_FLAG_RCFW_CHANNEL_EN		4
- #define BNXT_RE_FLAG_QOS_WORK_REG		5
-+#define BNXT_RE_FLAG_RESOURCES_ALLOCATED	7
-+#define BNXT_RE_FLAG_RESOURCES_INITIALIZED	8
- #define BNXT_RE_FLAG_ISSUE_ROCE_STATS          29
- 	struct net_device		*netdev;
- 	unsigned int			version, major, minor;
-diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
-index 7ffad368c5fa1..589b0d4677d52 100644
---- a/drivers/infiniband/hw/bnxt_re/main.c
-+++ b/drivers/infiniband/hw/bnxt_re/main.c
-@@ -864,10 +864,8 @@ static void bnxt_re_cleanup_res(struct bnxt_re_dev *rdev)
- {
- 	int i;
+diff --git a/tools/usb/usbip/libsrc/usbip_host_common.c b/tools/usb/usbip/libsrc/usbip_host_common.c
+index dc93fadbee963..d79c7581b175f 100644
+--- a/tools/usb/usbip/libsrc/usbip_host_common.c
++++ b/tools/usb/usbip/libsrc/usbip_host_common.c
+@@ -43,7 +43,7 @@ static int32_t read_attr_usbip_status(struct usbip_usb_device *udev)
+ 	int size;
+ 	int fd;
+ 	int length;
+-	char status;
++	char status[2] = { 0 };
+ 	int value = 0;
  
--	if (rdev->nq[0].hwq.max_elements) {
--		for (i = 1; i < rdev->num_msix; i++)
--			bnxt_qplib_disable_nq(&rdev->nq[i - 1]);
--	}
-+	for (i = 1; i < rdev->num_msix; i++)
-+		bnxt_qplib_disable_nq(&rdev->nq[i - 1]);
- 
- 	if (rdev->qplib_res.rcfw)
- 		bnxt_qplib_cleanup_res(&rdev->qplib_res);
-@@ -876,6 +874,7 @@ static void bnxt_re_cleanup_res(struct bnxt_re_dev *rdev)
- static int bnxt_re_init_res(struct bnxt_re_dev *rdev)
- {
- 	int rc = 0, i;
-+	int num_vec_enabled = 0;
- 
- 	bnxt_qplib_init_res(&rdev->qplib_res);
- 
-@@ -891,9 +890,13 @@ static int bnxt_re_init_res(struct bnxt_re_dev *rdev)
- 				"Failed to enable NQ with rc = 0x%x", rc);
- 			goto fail;
- 		}
-+		num_vec_enabled++;
+ 	size = snprintf(status_attr_path, sizeof(status_attr_path),
+@@ -61,14 +61,14 @@ static int32_t read_attr_usbip_status(struct usbip_usb_device *udev)
+ 		return -1;
  	}
- 	return 0;
- fail:
-+	for (i = num_vec_enabled; i >= 0; i--)
-+		bnxt_qplib_disable_nq(&rdev->nq[i]);
-+
- 	return rc;
+ 
+-	length = read(fd, &status, 1);
++	length = read(fd, status, 1);
+ 	if (length < 0) {
+ 		err("error reading attribute %s", status_attr_path);
+ 		close(fd);
+ 		return -1;
+ 	}
+ 
+-	value = atoi(&status);
++	value = atoi(status);
+ 
+ 	return value;
  }
- 
-@@ -925,6 +928,7 @@ static void bnxt_re_free_res(struct bnxt_re_dev *rdev)
- static int bnxt_re_alloc_res(struct bnxt_re_dev *rdev)
- {
- 	int rc = 0, i;
-+	int num_vec_created = 0;
- 
- 	/* Configure and allocate resources for qplib */
- 	rdev->qplib_res.rcfw = &rdev->rcfw;
-@@ -951,7 +955,7 @@ static int bnxt_re_alloc_res(struct bnxt_re_dev *rdev)
- 		if (rc) {
- 			dev_err(rdev_to_dev(rdev), "Alloc Failed NQ%d rc:%#x",
- 				i, rc);
--			goto dealloc_dpi;
-+			goto free_nq;
- 		}
- 		rc = bnxt_re_net_ring_alloc
- 			(rdev, rdev->nq[i].hwq.pbl[PBL_LVL_0].pg_map_arr,
-@@ -964,14 +968,17 @@ static int bnxt_re_alloc_res(struct bnxt_re_dev *rdev)
- 			dev_err(rdev_to_dev(rdev),
- 				"Failed to allocate NQ fw id with rc = 0x%x",
- 				rc);
-+			bnxt_qplib_free_nq(&rdev->nq[i]);
- 			goto free_nq;
- 		}
-+		num_vec_created++;
- 	}
- 	return 0;
- free_nq:
--	for (i = 0; i < rdev->num_msix - 1; i++)
-+	for (i = num_vec_created; i >= 0; i--) {
-+		bnxt_re_net_ring_free(rdev, rdev->nq[i].ring_id);
- 		bnxt_qplib_free_nq(&rdev->nq[i]);
--dealloc_dpi:
-+	}
- 	bnxt_qplib_dealloc_dpi(&rdev->qplib_res,
- 			       &rdev->qplib_res.dpi_tbl,
- 			       &rdev->dpi_privileged);
-@@ -1206,8 +1213,11 @@ static void bnxt_re_ib_unreg(struct bnxt_re_dev *rdev)
- 	if (test_and_clear_bit(BNXT_RE_FLAG_QOS_WORK_REG, &rdev->flags))
- 		cancel_delayed_work(&rdev->worker);
- 
--	bnxt_re_cleanup_res(rdev);
--	bnxt_re_free_res(rdev);
-+	if (test_and_clear_bit(BNXT_RE_FLAG_RESOURCES_INITIALIZED,
-+			       &rdev->flags))
-+		bnxt_re_cleanup_res(rdev);
-+	if (test_and_clear_bit(BNXT_RE_FLAG_RESOURCES_ALLOCATED, &rdev->flags))
-+		bnxt_re_free_res(rdev);
- 
- 	if (test_and_clear_bit(BNXT_RE_FLAG_RCFW_CHANNEL_EN, &rdev->flags)) {
- 		rc = bnxt_qplib_deinit_rcfw(&rdev->rcfw);
-@@ -1337,12 +1347,15 @@ static int bnxt_re_ib_reg(struct bnxt_re_dev *rdev)
- 		pr_err("Failed to allocate resources: %#x\n", rc);
- 		goto fail;
- 	}
-+	set_bit(BNXT_RE_FLAG_RESOURCES_ALLOCATED, &rdev->flags);
- 	rc = bnxt_re_init_res(rdev);
- 	if (rc) {
- 		pr_err("Failed to initialize resources: %#x\n", rc);
- 		goto fail;
- 	}
- 
-+	set_bit(BNXT_RE_FLAG_RESOURCES_INITIALIZED, &rdev->flags);
-+
- 	if (!rdev->is_virtfn) {
- 		rc = bnxt_re_setup_qos(rdev);
- 		if (rc)
 -- 
 2.20.1
 
