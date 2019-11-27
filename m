@@ -7,165 +7,147 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CB6C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBB0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA6520665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C168E206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:02:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Mv7mfSz2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXf/BFVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfK0RCh (ORCPT
+        id S1727186AbfK0RCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:02:37 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:18543 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfK0RCg (ORCPT
+        Wed, 27 Nov 2019 12:02:47 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27659 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726984AbfK0RCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:02:36 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddeac2e0000>; Wed, 27 Nov 2019 09:02:38 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 27 Nov 2019 09:02:34 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 27 Nov 2019 09:02:34 -0800
-Received: from [10.2.169.149] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Nov
- 2019 17:02:33 +0000
-Subject: Re: [PATCH v2 00/11] Move PMC clocks into Tegra PMC driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>, <sboyd@kernel.org>
-CC:     <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
-        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
-        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
-        <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1574830773-14892-1-git-send-email-skomatineni@nvidia.com>
- <79e7bd6a-f138-1e7d-6e0b-435adde3b3e5@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <04b093fe-5eff-1ad2-9a8a-7674dcb2318a@nvidia.com>
-Date:   Wed, 27 Nov 2019 09:02:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 27 Nov 2019 12:02:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574874166;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PFznFDlZHRH6jRkPfupU/SWMKG2b5n/tHVJYWZ7aun8=;
+        b=iXf/BFVW6/MXIIqck8MXGoL690M3sZdGrwHiAhkZleptYQEAkajSZioUZgKIDUiQ8BpWqB
+        RmFN5cjgwaEt0jK6DUrCoxBrl/ClWonOeg3Tjrq+3ptrx4qh4SOyArHH91nWnOCm82P5H3
+        qoStCUDt0Y6d38OKV1oJXDlaTf5MM48=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-400-so-q2ANANmuDtfaY4tta0Q-1; Wed, 27 Nov 2019 12:02:43 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38EBA8017D9;
+        Wed, 27 Nov 2019 17:02:41 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 841AB5C219;
+        Wed, 27 Nov 2019 17:02:36 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 27 Nov 2019 18:02:40 +0100 (CET)
+Date:   Wed, 27 Nov 2019 18:02:35 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Jan Kratochvil <jan.kratochvil@redhat.com>,
+        Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH] ptrace/x86: introduce TS_COMPAT_RESTART to fix
+ get_nr_restart_syscall()
+Message-ID: <20191127170234.GA26180@redhat.com>
+References: <20191126110659.GA14042@redhat.com>
+ <20191126110758.GA14051@redhat.com>
+ <CAHk-=whrhuNg_53wc3pBVToH-AUwKDbC5P_cb7=8bYfn=BYCJA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <79e7bd6a-f138-1e7d-6e0b-435adde3b3e5@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAHk-=whrhuNg_53wc3pBVToH-AUwKDbC5P_cb7=8bYfn=BYCJA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: so-q2ANANmuDtfaY4tta0Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574874158; bh=hRogtYe7lxm985uZdtrOKd4Ba78X/poMSMnw8XT0lYo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Mv7mfSz2xQieZ3opcYzwRFO3jWlireqF4uc5LFCKfMjx3yb8tu/4OBv37Y2YW6ZnD
-         +MGLDVWxf9a0CgA5/F5+uhBGjncGUHpEaOHqK3d8sIsYP6+vf4irCkqE/rc3u16gTR
-         UcKlhNldaixt2TXlw446aPAC491S4+BAbGKdhm4mIkIUDEhkSWgItdM6h+FsemGVhK
-         oKsEivi7N/HB561PQmnX+e7SZjPZnClj94HGkWLuy8jZk4yZp7w/14e0Lr0DdhZMvv
-         pFACfUUNTCxyNTw/Aq2SbSgvKPqjsXeIP5+B+m5UZRqY5znsk83dFMORBGBkjZenXF
-         RmXnCdF1VNqjA==
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 11/27/19 6:31 AM, Dmitry Osipenko wrote:
-> 27.11.2019 07:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
->> are currently registered by Tegra clock driver using clk_regiser_mux and
->> clk_register_gate which performs direct Tegra PMC register access.
->>
->> When Tegra PMC is in secure mode, any access from non-secure world will
->> not go through.
->>
->> This patch series adds these Tegra PMC clocks and blink controls to Tegr=
-a
->> PMC driver with PMC as clock provider and removed them from Tegra clock
->> driver. This also adds PMC specific clock id's to use in device tree and
->> removed clock ids of PMC clock from Tegra clock driver.
->>
->> This series also includes patch to update clock provider from tegra_car
->> to pmc in the device tree tegra210-smaug.dts that uses clk_out_2 from PM=
-C.
->>
->> [v2]:	Changes between v1 and v2 are
->> 	- v2 includes patches for adding clk_out_1, clk_out_2, clk_out_3,
->> 	  blink controls to Tegra PMC driver and removing clk-tegra-pmc.
->> 	- feedback related to pmc clocks in Tegra PMC driver from v1
->> 	- Removed patches for WB0 PLLM overrides and PLLE IDDQ PMC programming
->> 	  by the clock driver using helper functions from Tegra PMC.
->>
->>   	  Note:
->> 	  To use helper functions from PMC driver, PMC early init need to
->> 	  happen prior to using helper functions and these helper functions are
->> 	  for PLLM Override and PLLE IDDQ programming in PMC during PLLM/PLLE
->> 	  clock registration which happen in clock_init prior to Tegra PMC
->> 	  probe.
->> 	  Moving PLLM/PLLE clocks registration to happen after Tegra PMC
->> 	  impacts other clocks EMC, MC and corresponding tegra_emc_init and
->> 	  tegra_mc_init.
->> 	  This implementation of configuring PMC registers thru helper
->> 	  functions in clock driver needs proper changes across PMC, Clock,
->> 	  EMC and MC inits to have it work across all Tegra platforms.
->>
->> 	  Currently PLLM Override is not enabled in the bootloader so proper
->> 	  patches for this fix will be taken care separately.
-> Hello Sowjanya,
+On 11/26, Linus Torvalds wrote:
 >
-> Could you please clarify what do you mean by "PLLM Override not enabled
-> in bootloader"?
+> On Tue, Nov 26, 2019 at 3:08 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > Alternatively we could add ->compat_restart into struct restart_block,
+> > logically this is the same thing.
 >
-> There is T124 Nyan Big Chromebook which is supported in upstream kernel,
-> it has PLLM Override set by bootloader. I also have T30 Nexus 7 tablet
-> which has the PLLM Override set by bootloader as well. It's not clear to
-> me whether this patch series is supposed to break these devices. If the
-> breakage is the case here, then I'm afraid you can't postpone supporting
-> the PLLM Override and a full-featured implementation is needed.
+> That sounds like the better model to me. That's what the restart_block
+> is about: it's supposed to contain the restart information.
 
-Hi Dmitry,
+I knew ;) OK, I won't argue, I'll send V2.
 
-Secure boot currently is enabled only on Tegra210 and Tegra210=20
-bootloader doesn't enable PLLM override.
+> I'd much rather see the system call number added into the restart
+> block (or just the "compat bit" - but we have that X32 case too, so
+> why not put it all there).
 
-So PLLM override/PLLE IDDQ being in clock driver currently will not=20
-break on any of existing Tegra platforms.
+apart from x86, who else can use it? after the quick grep I think nobody,
+even arm64 and mips which have compat nr_restart's do not need it.
 
->
-> I briefly tried to test this series on T30 and this time it doesn't hang
-> on boot, but somehow WiFi MMC card detection is broken. AFAIK, the WiFi
-> chip uses the Blink clock source and the clock should be enabled by the
-> MMC core because this is how DT part looks like:
->
-> brcm_wifi_pwrseq: wifi-pwrseq {
-> 	compatible =3D "mmc-pwrseq-simple";
-> 	clocks =3D <&pmc TEGRA_PMC_CLK_BLINK>;
-> 	clock-names =3D "ext_clock";
-> 	reset-gpios =3D  <&gpio TEGRA_GPIO(D, 3) GPIO_ACTIVE_LOW>;
-> 	post-power-on-delay-ms =3D <300>;
-> 	power-off-delay-us =3D <300>;
-> };
->
-> BTW, I  tried this series on a T20 device which also uses the Blink
-> clock for WiFi card and it works. So looks like this patchset has some
-> problem in regards to the T30 PMC clocks implementation.
->
-> [snip]
+restart_block.arch_restart_block_infp makes more sense, but that would be
+even more painful, I do not want to add asm/restart_block.h or
+HAVE_ARCH_RESTART_INFO, or use CONFIG_IA32_EMULATION.
 
-Blink init state is set to true for both Tegra20 and Tegra30 and all go=20
-through the same blink programming sequence.
+OK, lets add the new restart_block.nr_restart_syscall field, then we need
 
-Will try to add more debug messages to dump registers and will test=20
-blink through device tree on T30 and will get back...
+=09void set_restart_block_fn(restart, fn)
+=09{
+=09=09restart->nr_restart_syscall =3D arch_get_nr_restart_syscall()
+=09=09restart->fn =3D fn;
+=09}
 
+but somehow I do not see a good place for
+
+=09#ifndef arch_get_nr_restart_syscall()
+=09#define arch_get_nr_restart_syscall()=090
+=09#endif
+
+Can you suggest a simple solution?
+
+Hmm. Or may be HAVE_ARCH_RESTART is better after all? Say, just
+
+=09--- a/include/linux/restart_block.h
+=09+++ b/include/linux/restart_block.h
+=09@@ -24,6 +24,9 @@ enum timespec_type {
+=09  */
+=09 struct restart_block {
+=09=09long (*fn)(struct restart_block *);
+=09+#ifdef=09CONFIG_HAVE_ARCH_RESTART_XXX
+=09+=09int=09nr_restart_syscall;
+=09+#endif
+=09=09union {
+=09=09=09/* For futex_wait and futex_wait_requeue_pi */
+=09=09=09struct {
+=09@@ -55,6 +58,15 @@ struct restart_block {
+=09=09};
+=09 };
+=09=20
+=09+static inline void set_restart_block_fn(restart, fn)
+=09+{
+=09+#ifdef=09CONFIG_HAVE_ARCH_RESTART_XXX
+=09+=09extern int arch_get_nr_restart_syscall();
+=09+=09restart->nr_restart_syscall =3D arch_get_nr_restart_syscall();
+=09+#endif
+=09+=09restart->fn =3D fn;
+=09+}
+=09+
+=09 extern long do_no_restart_syscall(struct restart_block *parm);
+=09=20
+=09 #endif /* __LINUX_RESTART_BLOCK_H */
+
+?
+
+Oleg.
 
