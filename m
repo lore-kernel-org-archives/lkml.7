@@ -3,108 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B58C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0A7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989C320656
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB41C20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:00:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfK0O6z (ORCPT
+        id S1727004AbfK0PAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:58:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:48630 "EHLO foss.arm.com"
+        Wed, 27 Nov 2019 10:00:24 -0500
+Received: from gate.crashing.org ([63.228.1.57]:47841 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726537AbfK0O6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:58:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A22E430E;
-        Wed, 27 Nov 2019 06:58:52 -0800 (PST)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 268D63F68E;
-        Wed, 27 Nov 2019 06:58:51 -0800 (PST)
-Subject: Re: [PATCH] cpufreq: vexpress-spc: Fix wrong alternation of
- policy->related_cpus during CPU hp
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191127114801.23837-1-dietmar.eggemann@arm.com>
- <20191127120816.GC29301@bogus> <20191127121402.vd3tul4gmqm6qtyb@vireshk-i7>
- <20191127133200.GE29301@bogus>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <a60cab69-4d47-d418-94bd-74630bf9e846@arm.com>
-Date:   Wed, 27 Nov 2019 15:58:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191127133200.GE29301@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726514AbfK0PAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 10:00:24 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id xARF00sE025427;
+        Wed, 27 Nov 2019 09:00:00 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id xARExxVi025420;
+        Wed, 27 Nov 2019 08:59:59 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Wed, 27 Nov 2019 08:59:58 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 2/2] powerpc/irq: inline call_do_irq() and call_do_softirq()
+Message-ID: <20191127145958.GG9491@gate.crashing.org>
+References: <f12fb9a6cc52d83ee9ddf15a36ee12ac77e6379f.1570684298.git.christophe.leroy@c-s.fr> <5ca6639b7c1c21ee4b4138b7cfb31d6245c4195c.1570684298.git.christophe.leroy@c-s.fr> <877e3tbvsa.fsf@mpe.ellerman.id.au> <20191121101552.GR16031@gate.crashing.org> <87y2w49rgo.fsf@mpe.ellerman.id.au> <20191125142556.GU9491@gate.crashing.org> <5fdb1c92-8bf4-01ca-f81c-214870c33be3@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5fdb1c92-8bf4-01ca-f81c-214870c33be3@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/11/2019 14:32, Sudeep Holla wrote:
-> On Wed, Nov 27, 2019 at 05:44:02PM +0530, Viresh Kumar wrote:
->> On 27-11-19, 12:08, Sudeep Holla wrote:
->>> On Wed, Nov 27, 2019 at 12:48:01PM +0100, Dietmar Eggemann wrote:
+On Wed, Nov 27, 2019 at 02:50:30PM +0100, Christophe Leroy wrote:
+> So what do we do ? We just drop the "r2" clobber ?
 
-[...]
+You have to make sure your asm code works for all ABIs.  This is quite
+involved if you do a call to an external function.  The compiler does
+*not* see this call, so you will have to make sure that all that the
+compiler and linker do will work, or prevent some of those things (say,
+inlining of the function containing the call).
 
->>> Unlike DT based drivers, it not easy to get the fixed cpumask unless we
->>> add some mechanism to extract it based on clks/OPP added. I prefer
->>> this simple solution instead.
->>
->> I will call this a work-around for the problem and not really the
->> solution, though I won't necessarily oppose it. There are cases which
->> will break even with this solution.
->>
-> 
-> I agree and that's the reason I spoke out my thought aloud here :)
-> 
->> - Boot board with cpufreq driver as module.
->> - Offline all CPUs except CPU0.
->> - insert cpufreq driver.
->> - online all CPUs.
->>
-> 
-> Indeed, not just boot anytime since it's a module :)
-> 
->> Now there is no guarantee that the last online will get the mask
->> properly, if I have understood the problem well :)
->>
-> 
-> Yes
-> 
->> But yeah, who does this kind of messy work anyway :)
->>
-> 
-> I won't bet on that ;)
-> 
->> FWIW, we need a proper way (may be from architecture code) to find
->> list of all CPUs that share clock line.
->>
-> 
-> Yes but there's no architectural way. I need to revise and see tc2_pm.c
-> to check if we can do any magic there.
+> Otherwise, to be on the safe side we can just save r2 in a local var 
+> before the bl and restore it after. I guess it won't collapse CPU time 
+> on a performant PPC64.
 
-I'm fine with finding a better solution to return a fixed topology core
-cpumask or calling this patch a workaround. AFAICS, only TC2 is affected.
+That does not fix everything.  The called function requires a specific
+value in r2 on entry.
 
-("arm: Fix topology setup in case of CPU hotplug for CONFIG_SCHED_MC")
-is needed for other systems as well in case we have commit ca74b316df96
-("arm: Use common cpu_topology structure and functions."). We probably
-don't want to revert commit ca74b316df96?
+So all this needs verification.  Hopefully you can get away with just
+not clobbering r2 (and not adding a nop after the bl), sure.  But this
+needs to be checked.
 
-We do CPU hp stress tests in our EAS mainline integration test suite
-https://developer.arm.com/tools-and-software/open-source-software/linux-kernel/energy-aware-scheduling/eas-mainline-development
-and there is where we initially encountered this issue on TC2.
+Changing control flow inside inline assembler always is problematic.
+Another problem in this case (on all ABIs) is that the compiler does
+not see you call __do_irq.  Again, you can probably get away with that
+too, but :-)
+
+
+Segher
