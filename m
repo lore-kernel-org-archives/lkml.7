@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4C0C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374F7C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1346217C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0520521843
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887735;
-	bh=Adeqws/vbvbbgwO/qw2tFv0F8t6Gf2n3CMXRD7k9Ijg=;
+	s=default; t=1574887738;
+	bh=2KBB84b10gJqMmfdG4V8Z+ln6G26XwMY73MG7KwkykA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d0v2t88xPHgk99l/Wqj6NcOwC9H7ahFHGNSU2DRN1zIGzdmlJubVoodKK9xsLjlN4
-	 o56s1M4wptHomF9wC19CfyHKvlTJQxAdcmSsnyoObQ9VjKswgrAjqWXEVRelC7VYyJ
-	 8EY1lAu75bdgnLEFVVNLmp+AKnZAnSz50AoOyZB8=
+	b=s7UrcjDxK8KQn6vroAPmvWvOvmsx5fh9duOn0d1MQYSJY1J8X79m4Nks7PwMkGaPE
+	 sEnMMozP2gCw7+7kTuIy4+Kh1lwTH8Hv49UWUv5gOkh7epwUrTf9X/CoXU+MqmzawV
+	 bt0zk5yoolkxoiM+TjDJzrppHXsx0nvWM3IfKyg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfK0Usx (ORCPT
+        id S1730202AbfK0Us4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:48:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34216 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:48:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730189AbfK0Usv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:48:51 -0500
+        id S1728003AbfK0Usx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:48:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2A1821774;
-        Wed, 27 Nov 2019 20:48:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C60F121787;
+        Wed, 27 Nov 2019 20:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887730;
-        bh=Adeqws/vbvbbgwO/qw2tFv0F8t6Gf2n3CMXRD7k9Ijg=;
+        s=default; t=1574887733;
+        bh=2KBB84b10gJqMmfdG4V8Z+ln6G26XwMY73MG7KwkykA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P8bWyN0pERf5Fm4enKydq1W6Fr715ZyNqYKuEqlAUOHT23cBivep8fLzzwzr0UR2Z
-         6qptHqLZ8s3fnUXtQLVbcz5CZNMls0APrkJpBOKm6ayiCdkuJ4ggaMmClbpcEMfGSm
-         hVo2lSYnYrhBBldlaWiTjIrbb2/N4zj/lRnqmu1g=
+        b=t9tRArzcC6Tac0UX2EbUOAbO9xcCbvHerv5X+6DuKSU2icrYmgNGOEsjqS0Enqx+V
+         n5/TVJdh9+7pMaJu+TU5DTa4Q3+aqxC+ahh6um2+cooz020+7YvqgbAKH0aoQd0IQX
+         eCTQcvMqoQ7BS/viz4ikpJk51jiRx9WEGFjOaEH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 072/211] spi: omap2-mcspi: Set FIFO DMA trigger level to word length
-Date:   Wed, 27 Nov 2019 21:30:05 +0100
-Message-Id: <20191127203100.663190518@linuxfoundation.org>
+Subject: [PATCH 4.14 073/211] sparc: Fix parport build warnings.
+Date:   Wed, 27 Nov 2019 21:30:06 +0100
+Message-Id: <20191127203100.742434887@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,110 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh R <vigneshr@ti.com>
+From: David S. Miller <davem@davemloft.net>
 
-[ Upstream commit b682cffa3ac6d9d9e16e9b413c45caee3b391fab ]
+[ Upstream commit 46b8306480fb424abd525acc1763da1c63a27d8a ]
 
-McSPI has 32 byte FIFO in Transmit-Receive mode. Current code tries to
-configuration FIFO watermark level for DMA trigger to be GCD of transfer
-length and max FIFO size which would mean trigger level may be set to 32
-for transmit-receive mode if length is aligned. This does not work in
-case of SPI slave mode where FIFO always needs to have data ready
-whenever master starts the clock. With DMA trigger size of 32 there will
-be a small window during slave TX where DMA is still putting data into
-FIFO but master would have started clock for next byte, resulting in
-shifting out of stale data. Similarly, on Slave RX side there may be RX
-FIFO overflow
-Fix this by setting FIFO watermark for DMA trigger to word
-length. This means DMA is triggered as soon as FIFO has space for word
-length bytes and DMA would make sure FIFO is almost always full
-therefore improving FIFO occupancy in both master and slave mode.
+If PARPORT_PC_FIFO is not enabled, do not provide the dma lock
+macros and lock definition.  Otherwise:
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+./arch/sparc/include/asm/parport.h:24:24: warning: ‘dma_spin_lock’ defined but not used [-Wunused-variable]
+ static DEFINE_SPINLOCK(dma_spin_lock);
+                        ^~~~~~~~~~~~~
+./include/linux/spinlock_types.h:81:39: note: in definition of macro ‘DEFINE_SPINLOCK’
+ #define DEFINE_SPINLOCK(x) spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
+
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-omap2-mcspi.c | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
+ arch/sparc/include/asm/parport.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 9bf64e6eca9ba..517d0ade586bd 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -298,7 +298,7 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
- 	struct omap2_mcspi_cs *cs = spi->controller_state;
- 	struct omap2_mcspi *mcspi;
- 	unsigned int wcnt;
--	int max_fifo_depth, fifo_depth, bytes_per_word;
-+	int max_fifo_depth, bytes_per_word;
- 	u32 chconf, xferlevel;
+diff --git a/arch/sparc/include/asm/parport.h b/arch/sparc/include/asm/parport.h
+index 05df5f0430535..3c5a1c620f0f7 100644
+--- a/arch/sparc/include/asm/parport.h
++++ b/arch/sparc/include/asm/parport.h
+@@ -21,6 +21,7 @@
+  */
+ #define HAS_DMA
  
- 	mcspi = spi_master_get_devdata(master);
-@@ -314,10 +314,6 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
- 		else
- 			max_fifo_depth = OMAP2_MCSPI_MAX_FIFODEPTH;
++#ifdef CONFIG_PARPORT_PC_FIFO
+ static DEFINE_SPINLOCK(dma_spin_lock);
  
--		fifo_depth = gcd(t->len, max_fifo_depth);
--		if (fifo_depth < 2 || fifo_depth % bytes_per_word != 0)
--			goto disable_fifo;
--
- 		wcnt = t->len / bytes_per_word;
- 		if (wcnt > OMAP2_MCSPI_MAX_FIFOWCNT)
- 			goto disable_fifo;
-@@ -325,16 +321,17 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
- 		xferlevel = wcnt << 16;
- 		if (t->rx_buf != NULL) {
- 			chconf |= OMAP2_MCSPI_CHCONF_FFER;
--			xferlevel |= (fifo_depth - 1) << 8;
-+			xferlevel |= (bytes_per_word - 1) << 8;
- 		}
-+
- 		if (t->tx_buf != NULL) {
- 			chconf |= OMAP2_MCSPI_CHCONF_FFET;
--			xferlevel |= fifo_depth - 1;
-+			xferlevel |= bytes_per_word - 1;
- 		}
+ #define claim_dma_lock() \
+@@ -31,6 +32,7 @@ static DEFINE_SPINLOCK(dma_spin_lock);
  
- 		mcspi_write_reg(master, OMAP2_MCSPI_XFERLEVEL, xferlevel);
- 		mcspi_write_chconf0(spi, chconf);
--		mcspi->fifo_depth = fifo_depth;
-+		mcspi->fifo_depth = max_fifo_depth;
+ #define release_dma_lock(__flags) \
+ 	spin_unlock_irqrestore(&dma_spin_lock, __flags);
++#endif
  
- 		return;
- 	}
-@@ -601,7 +598,6 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
- 	struct dma_slave_config	cfg;
- 	enum dma_slave_buswidth width;
- 	unsigned es;
--	u32			burst;
- 	void __iomem		*chstat_reg;
- 	void __iomem            *irqstat_reg;
- 	int			wait_res;
-@@ -623,22 +619,14 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
- 	}
- 
- 	count = xfer->len;
--	burst = 1;
--
--	if (mcspi->fifo_depth > 0) {
--		if (count > mcspi->fifo_depth)
--			burst = mcspi->fifo_depth / es;
--		else
--			burst = count / es;
--	}
- 
- 	memset(&cfg, 0, sizeof(cfg));
- 	cfg.src_addr = cs->phys + OMAP2_MCSPI_RX0;
- 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
- 	cfg.src_addr_width = width;
- 	cfg.dst_addr_width = width;
--	cfg.src_maxburst = burst;
--	cfg.dst_maxburst = burst;
-+	cfg.src_maxburst = es;
-+	cfg.dst_maxburst = es;
- 
- 	rx = xfer->rx_buf;
- 	tx = xfer->tx_buf;
+ static struct sparc_ebus_info {
+ 	struct ebus_dma_info info;
 -- 
 2.20.1
 
