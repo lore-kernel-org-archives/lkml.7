@@ -2,51 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BAEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570F3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C714C21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAB82084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888230;
-	bh=ymKgi5qHOMzmBfl3cxb8n0AXalZfJo1V7k2iQENLuMs=;
+	s=default; t=1574888233;
+	bh=rsnNf15HrUbaGOrIbi6wyozb9yMbdByNuffKHCgCcss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2fVHCzNF4ZTcgyvlf8/+jFUzA6If6ZJSPnGjgisEeD21MNUXWLRoLI6KOxJzvrXWn
-	 33JezAJm0biWVINZSkWeRtJVrPYzXi0xf7uZ2LbV5lumOZMxYw/l6oB2LX1bEYfXzH
-	 XYwSSN/sUkXJrPzyxuDD9cP7Fo6FjOoH16KAlDd8=
+	b=kDrjY3wyTTRYrwmrFtqBUUbOl5c0cmuwcSOxICyfSnYKqlQ/PWmVgFjR1ik2DkkIv
+	 rGTTNsBeGyXr1sVNmb5rrolrAeFx7Bpgd2hpMJUFn0iqsQMfbG+8PRQdP0N4eg5/Iy
+	 xIJTePeEweun0xIolPpyltrz18DxgCrVnhdkPN9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731152AbfK0U5J (ORCPT
+        id S1731145AbfK0U5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:57:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48028 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:57:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728691AbfK0U5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:57:05 -0500
+        id S1730754AbfK0U5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:57:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2FCB21741;
-        Wed, 27 Nov 2019 20:57:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 632A821556;
+        Wed, 27 Nov 2019 20:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888225;
-        bh=ymKgi5qHOMzmBfl3cxb8n0AXalZfJo1V7k2iQENLuMs=;
+        s=default; t=1574888221;
+        bh=rsnNf15HrUbaGOrIbi6wyozb9yMbdByNuffKHCgCcss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bgDwBr1m6jLxUNWYF2W5rA4s2W1PBz3GZ12o7ROw4OFU/ntdYScNvjECaCsyRiTVK
-         WRT9Qen0Jb9kvrS/QMTUGI0Y2POVYv+NAGw+vFI+OHHK/5pO1dtC167mELVDx+SwuP
-         pW2s54DK79WdkEWqs4WFPDvrPRxBjvIpULOimGkU=
+        b=IZD49FNIyTb9tcjGVAeOV21b2IyeqxlKS+Qxhg0IrVDPuUOK7yAsGo/56tnaGIb3Q
+         WOnNU2bw4heg2OJnkgEJcDH161jjfDY4GaK7aJrXUR9RKcWfE6XcbWU6opd7p1dbRA
+         m94fZZoEUZ9knkCDFYvsA1fZjsgrMBG5eQPVwGPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 010/306] net/mlx5: Fix auto group size calculation
-Date:   Wed, 27 Nov 2019 21:27:40 +0100
-Message-Id: <20191127203115.482321963@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Lu Fengqi <lufq.fnst@cn.fujitsu.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 049/306] btrfs: handle error of get_old_root
+Date:   Wed, 27 Nov 2019 21:28:19 +0100
+Message-Id: <20191127203118.381291584@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -59,74 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maor Gottlieb <maorg@mellanox.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit 97fd8da281f80e7e69e0114bc906575734d4dfaf ]
+[ Upstream commit 315bed43fea532650933e7bba316a7601d439edf ]
 
-Once all the large flow groups (defined by the user when the flow table
-is created - max_num_groups) were created, then all the following new
-flow groups will have only one flow table entry, even though the flow table
-has place to larger groups.
-Fix the condition to prefer large flow group.
+In btrfs_search_old_slot get_old_root is always used with the assumption
+it cannot fail. However, this is not true in rare circumstance it can
+fail and return null. This will lead to null point dereference when the
+header is read. Fix this by checking the return value and properly
+handling NULL by setting ret to -EIO and returning gracefully.
 
-Fixes: f0d22d187473 ("net/mlx5_core: Introduce flow steering autogrouped flow table")
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Coverity-id: 1087503
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |   10 ++++++----
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.h |    1 +
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ fs/btrfs/ctree.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -520,7 +520,7 @@ static void del_sw_flow_group(struct fs_
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index 9fd383285f0ea..fc764f350f05a 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -3031,6 +3031,10 @@ int btrfs_search_old_slot(struct btrfs_root *root, const struct btrfs_key *key,
  
- 	rhashtable_destroy(&fg->ftes_hash);
- 	ida_destroy(&fg->fte_allocator);
--	if (ft->autogroup.active)
-+	if (ft->autogroup.active && fg->max_ftes == ft->autogroup.group_size)
- 		ft->autogroup.num_groups--;
- 	err = rhltable_remove(&ft->fgs_hash,
- 			      &fg->hash,
-@@ -1065,6 +1065,8 @@ mlx5_create_auto_grouped_flow_table(stru
+ again:
+ 	b = get_old_root(root, time_seq);
++	if (!b) {
++		ret = -EIO;
++		goto done;
++	}
+ 	level = btrfs_header_level(b);
+ 	p->locks[level] = BTRFS_READ_LOCK;
  
- 	ft->autogroup.active = true;
- 	ft->autogroup.required_groups = max_num_groups;
-+	/* We save place for flow groups in addition to max types */
-+	ft->autogroup.group_size = ft->max_fte / (max_num_groups + 1);
- 
- 	return ft;
- }
-@@ -1270,8 +1272,7 @@ static struct mlx5_flow_group *alloc_aut
- 		return ERR_PTR(-ENOENT);
- 
- 	if (ft->autogroup.num_groups < ft->autogroup.required_groups)
--		/* We save place for flow groups in addition to max types */
--		group_size = ft->max_fte / (ft->autogroup.required_groups + 1);
-+		group_size = ft->autogroup.group_size;
- 
- 	/*  ft->max_fte == ft->autogroup.max_types */
- 	if (group_size == 0)
-@@ -1298,7 +1299,8 @@ static struct mlx5_flow_group *alloc_aut
- 	if (IS_ERR(fg))
- 		goto out;
- 
--	ft->autogroup.num_groups++;
-+	if (group_size == ft->autogroup.group_size)
-+		ft->autogroup.num_groups++;
- 
- out:
- 	return fg;
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.h
-@@ -121,6 +121,7 @@ struct mlx5_flow_table {
- 	struct {
- 		bool			active;
- 		unsigned int		required_groups;
-+		unsigned int		group_size;
- 		unsigned int		num_groups;
- 	} autogroup;
- 	/* Protect fwd_rules */
+-- 
+2.20.1
+
 
 
