@@ -2,468 +2,845 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA5EC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22D6C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E59C2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:24:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VeGfDUkT"
+	by mail.kernel.org (Postfix) with ESMTP id 765C3204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfK0PYS (ORCPT
+        id S1727104AbfK0PYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:24:18 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34187 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfK0PYS (ORCPT
+        Wed, 27 Nov 2019 10:24:33 -0500
+Received: from outbound-smtp18.blacknight.com ([46.22.139.245]:53739 "EHLO
+        outbound-smtp18.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727060AbfK0PYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:24:18 -0500
-Received: by mail-pj1-f65.google.com with SMTP id bo14so10153826pjb.1;
-        Wed, 27 Nov 2019 07:24:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Y06sDd7nBt7g+f5VdCmd7T/y1VGrjxlKuQQXHHujB2c=;
-        b=VeGfDUkTAHEYaBRkhkFEyFi/2LhrfInpM7E6KQ4VEdRAP1FYfk2YndYch3UWZLIzck
-         VKAFpNqLXlNeLXVT0yF78KWpbUxdrePb07EyG5Rs+lc/J3gRDgi4Oi0kakkVNwfA/CwA
-         V7MC6DpaffnY4eKPQ5ZLud8n11hmWR+iSvKAlrQLVPuofblKpCB4P0VohHLcTZnkko9S
-         GaqIgaZSAP2NUukid6g9xEzhphssJjwltYM11G2C7F12cE1HM5Ap3bJ0m+PtTDYJjTy6
-         5VAnDOQlhpHEjcpyuexzWFiYad0c3zBHsGVWVOvGZ1mIkxfDDZhoQn4ck0kB9ghCD2Cr
-         pqpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y06sDd7nBt7g+f5VdCmd7T/y1VGrjxlKuQQXHHujB2c=;
-        b=Oc8IusHTPYy6NfnUmG6gD2gChJcuum0eI/TuSJWIk8vEpCJcYTWT/C86lFTJ9F0fhl
-         AcrXpcNiFVYM36lSJyQM/JHpsYJZ+GhSg4xKvS75PKxpZgVU5DzZGNHi6Zm1Kt9cJNFr
-         rbjlEkEBbmk2uG25iILJNSO67S/q7OPeuh24GHio6fj5S+etmYBy9QftYVou44mN1KY5
-         ADukN0tV5Z7YsWcv1kOakK1AggENDZ+n7Zl8B1HPdBfZ8CzFJxceGx97UqQHfaTA3TTu
-         laVXozjZ5VuEX+kyj/oplbhiigzsVJFLEjmfpzJB37fdGDxsWVg6v9FenfyWbB9l42BU
-         neiw==
-X-Gm-Message-State: APjAAAWXddhy8g84KXjMOw3yejNuTZrktwFgDm30jWU6ALTyOiWMVXm8
-        w/XekvH6ysz7POrsIPUMKO8=
-X-Google-Smtp-Source: APXvYqxDtBFdYtvo680ydWvFs485NzVKtDNed0pS6zL6ZuCCWHx1LgnqSukDE7OA57B2yvSwgaFZnw==
-X-Received: by 2002:a17:902:900b:: with SMTP id a11mr4553187plp.116.1574868256669;
-        Wed, 27 Nov 2019 07:24:16 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id v26sm17203797pfm.126.2019.11.27.07.24.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Nov 2019 07:24:15 -0800 (PST)
-Date:   Wed, 27 Nov 2019 23:24:10 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 7/8] gpiolib: add new ioctl() for monitoring changes in
- line info
-Message-ID: <20191127152410.GA24936@sol>
-References: <20191127133510.10614-1-brgl@bgdev.pl>
- <20191127133510.10614-8-brgl@bgdev.pl>
+        Wed, 27 Nov 2019 10:24:33 -0500
+Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
+        by outbound-smtp18.blacknight.com (Postfix) with ESMTPS id 3D3EA1C314D
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 15:24:25 +0000 (GMT)
+Received: (qmail 32469 invoked from network); 27 Nov 2019 15:24:25 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 27 Nov 2019 15:24:24 -0000
+Date:   Wed, 27 Nov 2019 15:24:22 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, vbabka@suse.cz, yang.zhang.wz@gmail.com,
+        nitesh@redhat.com, konrad.wilk@oracle.com, david@redhat.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com, osalvador@suse.de
+Subject: Re: [PATCH v14 3/6] mm: Introduce Reported pages
+Message-ID: <20191127152422.GE3016@techsingularity.net>
+References: <20191119214454.24996.66289.stgit@localhost.localdomain>
+ <20191119214633.24996.46821.stgit@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20191127133510.10614-8-brgl@bgdev.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191119214633.24996.46821.stgit@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 02:35:09PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Nov 19, 2019 at 01:46:33PM -0800, Alexander Duyck wrote:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > 
-> Currently there is no way for user-space to be informed about changes
-> in status of GPIO lines e.g. when someone else requests the line or its
-> config changes. We can only periodically re-read the line-info. This
-> is fine for simple one-off user-space tools, but any daemon that provides
-> a centralized access to GPIO chips would benefit hugely from an event
-> driven line info synchronization.
+> In order to pave the way for free page reporting in virtualized
+> environments we will need a way to get pages out of the free lists and
+> identify those pages after they have been returned. To accomplish this,
+> this patch adds the concept of a Reported Buddy, which is essentially
+> meant to just be the Uptodate flag used in conjunction with the Buddy
+> page type.
 > 
-> This patch adds a new ioctl() that allows user-space processes to retrieve
-> a file-descriptor for given GPIO lines which can be polled for line status
-> change events.
+> To prevent the reported pages from leaking outside of the buddy lists I
+> have added a call to clear_reported_page to the del_page_from_free_list
+> function. As a result any reported page that is split, merged, or
+> allocated will have the flag cleared prior to the PageBuddy value being
+> cleared.
 > 
-> Currently the events are generated on three types of status changes: when
-> a line is requested, when it's released and when its config is changed.
-> The first two are self-explanatory. For the third one: this will only
-> happen when another user-space process calls the new SET_CONFIG ioctl()
-> as any changes that can happen from within the kernel (i.e.
-> set_transitory() or set_debounce()) are of no interest to user-space.
+> The process for reporting pages is fairly simple. Once the nr_free for
+> a given free area has exceeded the number of pages reported for that area
+> plus a certain high watermark value we will flag the zone as needing
+> reporting and schedule the worker thread to start reporting. That worker
+> thread will begin working from the lowest supported page reporting order
+> up to MAX_ORDER - 1 pulling unreported pages from the free list and
+> storing them in the scatterlist.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> When processing each individual free list it is necessary for the worker
+> thread to release the zone lock when it needs to stop and report the full
+> scatterlist of pages. To reduce the work of the next iteration the worker
+> thread will rotate the free list so that the first unreported page in the
+> free list becomes the first entry in the list. Doing this we should only
+> have to walk an entire free list no more than twice assuming large
+> numbers of pages are not being added to the tail of the list.
+> 
+> It will then call a reporting function providing information on how many
+> entries are in the scatterlist. Once the function completes it will return
+> the pages to the tail of the free area from which they were allocated and
+> start over pulling more pages from the free areas until there are no
+> longer enough pages to report on to keep the worker busy.
+> 
+> The worker thread will work in a round-robin fashion making its way
+> though each zone requesting reporting, and through each reportable free
+> list within that zone. Once all free areas within the zone is below the
+> high watermark level for free pages to report the flag indicating that the
+> zone has requested reporting will be cleared, and if no zones are
+> requesting reporting the worker thread will exit.
+> 
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+
+Ok, I'm ok with how this hooks into the allocator as the overhead is
+minimal. However, the patch itself still includes a number of
+optimisations instead of being a bare-boned implementation of the
+feature with optimisations layered on top. I think some of the
+optimisations are also broken but it's harder to be sure because both
+the feature and the optimisations are lumped together.
+
 > ---
->  drivers/gpio/gpiolib.c    | 218 ++++++++++++++++++++++++++++++++++++++
->  drivers/gpio/gpiolib.h    |   1 +
->  include/uapi/linux/gpio.h |  36 +++++++
->  3 files changed, 255 insertions(+)
+>  include/linux/mmzone.h         |   12 +
+>  include/linux/page-flags.h     |   11 +
+>  include/linux/page_reporting.h |   31 ++++
+>  mm/Kconfig                     |   11 +
+>  mm/Makefile                    |    1 
+>  mm/memory_hotplug.c            |    2 
+>  mm/page_alloc.c                |   53 ++++++
+>  mm/page_reporting.c            |  337 ++++++++++++++++++++++++++++++++++++++++
+>  mm/page_reporting.h            |  125 +++++++++++++++
+>  9 files changed, 579 insertions(+), 4 deletions(-)
+>  create mode 100644 include/linux/page_reporting.h
+>  create mode 100644 mm/page_reporting.c
+>  create mode 100644 mm/page_reporting.h
 > 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index d094b1be334d..be5df4bdf44b 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -547,6 +547,9 @@ static long linehandle_set_config(struct linehandle_state *lh,
->  			if (ret)
->  				return ret;
->  		}
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 8d93106490f3..9647499983b1 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -478,6 +478,14 @@ struct zone {
+>  	seqlock_t		span_seqlock;
+>  #endif
+>  
+> +#ifdef CONFIG_PAGE_REPORTING
+> +	/*
+> +	 * Pointer to reported page tracking statistics array. The size of
+> +	 * the array is MAX_ORDER - PAGE_REPORTING_MIN_ORDER. NULL when
+> +	 * unused page reporting is not present.
+> +	 */
+> +	unsigned long		*reported_pages;
+> +#endif
+>  	int initialized;
+>  
+>  	/* Write-intensive fields used from the page allocator */
+
+Comment could be better. We know it's a pointer.
+
+/*
+ * When a device is registered to track free pages, this array tracks
+ * the number of pages already reported at each order from
+ * PAGE_REPORTING_MIN_ORDER up to MAX_ORDER.
+ */
+
+> @@ -550,6 +558,10 @@ enum zone_flags {
+>  	ZONE_BOOSTED_WATERMARK,		/* zone recently boosted watermarks.
+>  					 * Cleared when kswapd is woken.
+>  					 */
+> +	ZONE_PAGE_REPORTING_REQUESTED,	/* zone enabled page reporting and has
+> +					 * requested flushing the data out of
+> +					 * higher order pages.
+> +					 */
+>  };
+
+Set if a *driver* enabled page reporting and has requested that unused
+pages are reported?
+
+"flushing the data" would normally indicate that it's something to do
+with writeback.
+
+>  
+>  static inline unsigned long zone_managed_pages(struct zone *zone)
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 1bf83c8fcaa7..a3a3b15b56a8 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -163,6 +163,9 @@ enum pageflags {
+>  
+>  	/* non-lru isolated movable page */
+>  	PG_isolated = PG_reclaim,
 > +
-> +		atomic_notifier_call_chain(&desc->gdev->notifier,
-> +					   GPIOLINE_CHANGED_CONFIG, desc);
->  	}
->  	return 0;
->  }
-> @@ -1148,6 +1151,212 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->  	return ret;
+> +	/* Buddy pages. Used to track which pages have been reported */
+> +	PG_reported = PG_uptodate,
+>  };
+>  
+>  #ifndef __GENERATING_BOUNDS_H
+
+Only valid for buddy pages.....
+
+> diff --git a/include/linux/page_reporting.h b/include/linux/page_reporting.h
+> new file mode 100644
+> index 000000000000..925a16b1d14b
+> --- /dev/null
+> +++ b/include/linux/page_reporting.h
+> @@ -0,0 +1,31 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_PAGE_REPORTING_H
+> +#define _LINUX_PAGE_REPORTING_H
+> +
+> +#include <linux/mmzone.h>
+> +
+> +struct page_reporting_dev_info {
+> +	/* function that alters pages to make them "reported" */
+> +	void (*report)(struct page_reporting_dev_info *prdev,
+> +		       unsigned int nents);
+> +
+> +	/* pointer to scatterlist containing pages to be processed */
+> +	struct scatterlist *sg;
+> +
+
+The choice of scatterlist is curious because it adds unnecessary complexity
+without needing the benefits scatterlist and sg_table provides. All you
+really need is an array of pages that is NULL terminated because you can
+get the order of the struct page when it's a buddy page.
+
+> +	/*
+> +	 * Upper limit on the number of pages that the report function
+> +	 * expects to be placed into the scatterlist to be processed.
+> +	 */
+> +	unsigned int capacity;
+> +
+
+Instead of requiring the driver to specify capacity, why did you not
+simply make it PAGE_REPORTING_HWM and statically declare the array?
+
+> +	/* The number of zones requesting reporting */
+> +	atomic_t refcnt;
+> +
+
+The refcnt is overkill. Simply loop over all zones until there is a
+clear pass. Despite being atomic, it actually requires the zone lock to
+avoid races in places like this
+
+		if (test_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags))
+			refcnt = page_reporting_process_zone(prdev, zone);
+
+The optimisation is small and it's relatively subtle.
+
+>  static inline void __free_one_page(struct page *page,
+>  		unsigned long pfn,
+>  		struct zone *zone, unsigned int order,
+> -		int migratetype)
+> +		int migratetype, bool reported)
+>  {
+>  	struct capture_control *capc = task_capc(zone);
+>  	unsigned long uninitialized_var(buddy_pfn);
+> @@ -1048,7 +1053,9 @@ static inline void __free_one_page(struct page *page,
+>  done_merging:
+>  	set_page_order(page, order);
+>  
+> -	if (is_shuffle_order(order))
+> +	if (reported)
+> +		to_tail = true;
+> +	else if (is_shuffle_order(order))
+>  		to_tail = shuffle_pick_tail();
+>  	else
+>  		to_tail = buddy_merge_likely(pfn, buddy_pfn, page, order);
+> @@ -1057,6 +1064,14 @@ static inline void __free_one_page(struct page *page,
+>  		add_to_free_list_tail(page, zone, order, migratetype);
+>  	else
+>  		add_to_free_list(page, zone, order, migratetype);
+> +
+> +	/*
+> +	 * No need to notify on a reported page as the total count of
+> +	 * unreported pages will not have increased since we have essentially
+> +	 * merged the reported page with one or more unreported pages.
+> +	 */
+> +	if (!reported)
+> +		page_reporting_notify_free(zone, order);
 >  }
 >  
-> +struct linechanged_fd_state {
-> +	struct gpio_device *gdev;
-> +	struct gpio_desc *descs[GPIOHANDLES_MAX];
-> +	size_t numdescs;
-> +	wait_queue_head_t waitqueue;
-> +	DECLARE_KFIFO(events, struct gpioline_changed, 16);
-> +	struct mutex lock;
-> +	struct notifier_block changed_nb;
-> +};
-> +
-> +static int linechanged_fd_release(struct inode *inode, struct file *filep)
+>  /*
+
+If a reported page is merged with a larger buddy then the counts for the
+lower order needs to be updated or the counter gets out of sync. Then the
+reported status of the page needs to be cleared as the larger block may
+only be partially reported and the count is wrong. I know why you want
+the reported pages but it really should be in its own patch. This patch
+really should be just the bare essentials to support reporting of free
+pages even if it's sub-optimal. I know you also use reported_pages as
+part of a stop condition but a basic stop condition is simply to do a
+single pass.
+
+> @@ -3228,6 +3243,36 @@ int __isolate_free_page(struct page *page, unsigned int order)
+>  	return 1UL << order;
+>  }
+>  
+> +#ifdef CONFIG_PAGE_REPORTING
+> +/**
+> + * __free_isolated_page - Return a now-isolated page back where we got it
+> + * @page: Page that was isolated
+> + * @order: Order of the isolated page
+> + *
+> + * This function is meant to return a page pulled from the free lists via
+> + * __isolate_free_page back to the free lists they were pulled from.
+> + */
+
+Isolated within mm has special meaning already. __putback_reported_page?
+
+> +void __free_isolated_page(struct page *page, unsigned int order)
 > +{
-> +	struct linechanged_fd_state *lc_state = filep->private_data;
+> +	struct zone *zone = page_zone(page);
+> +	unsigned long pfn;
+> +	unsigned int mt;
 > +
-> +	atomic_notifier_chain_unregister(&lc_state->gdev->notifier,
-> +					 &lc_state->changed_nb);
-> +	put_device(&lc_state->gdev->dev);
-> +	kfree(lc_state);
+> +	/* zone lock should be held when this function is called */
+> +	lockdep_assert_held(&zone->lock);
 > +
-> +	return 0;
+> +	pfn = page_to_pfn(page);
+> +	mt = get_pfnblock_migratetype(page, pfn);
+> +
+> +	/*
+> +	 * Return isolated page to tail of freelist and don't bother with
+> +	 * triggering the page reporting notifiers since this page was
+> +	 * previously on the freelist and has likely already been reported.
+> +	 */
+> +	__free_one_page(page, pfn, zone, order, mt, true);
 > +}
-> +
-> +static __poll_t linechanged_fd_poll(struct file *filep,
-> +				    struct poll_table_struct *pollt)
-> +{
-> +	struct linechanged_fd_state *lc_state = filep->private_data;
-> +	__poll_t events = 0;
-> +
-> +	poll_wait(filep, &lc_state->waitqueue, pollt);
-> +
-> +	mutex_lock(&lc_state->lock);
-> +	if (!kfifo_is_empty(&lc_state->events))
-> +		events = EPOLLIN | EPOLLRDNORM;
-> +	mutex_unlock(&lc_state->lock);
-> +
-> +	return events;
-> +}
-> +
-> +static ssize_t linechanged_fd_read(struct file *filep, char __user *buf,
-> +				   size_t count, loff_t *off)
-> +{
-> +	struct linechanged_fd_state *lc_state = filep->private_data;
-> +	unsigned int copied;
-> +	int ret;
-> +
-> +	if (count < sizeof(struct gpioline_changed))
-> +		return -EINVAL;
-> +
-> +	do {
-> +		mutex_lock(&lc_state->lock);
-> +		if (kfifo_is_empty(&lc_state->events)) {
-> +			mutex_unlock(&lc_state->lock);
-> +			if (filep->f_flags & O_NONBLOCK)
-> +				return -EAGAIN;
-> +
-> +			ret = wait_event_interruptible(lc_state->waitqueue,
-> +					!kfifo_is_empty(&lc_state->events));
-> +			if (ret)
-> +				return ret;
-> +		} else {
-> +			mutex_unlock(&lc_state->lock);
-> +		}
-> +
-> +		if (mutex_lock_interruptible(&lc_state->lock))
-> +			return -ERESTARTSYS;
-> +
-> +		ret = kfifo_to_user(&lc_state->events, buf, count, &copied);
-> +		mutex_unlock(&lc_state->lock);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (copied == 0 && (filep->f_flags & O_NONBLOCK))
-> +			return -EAGAIN;
-> +	} while (copied == 0);
-> +
-> +	return copied;
-> +}
-> +
-> +static const struct file_operations linechanged_fd_fileops = {
-> +	.release = linechanged_fd_release,
-> +	.owner = THIS_MODULE,
-> +	.llseek = noop_llseek,
-> +	.poll = linechanged_fd_poll,
-> +	.read = linechanged_fd_read,
-> +};
-> +
-> +static struct linechanged_fd_state *
-> +to_linechanged_fd_state(struct notifier_block *nb)
-> +{
-> +	return container_of(nb, struct linechanged_fd_state, changed_nb);
-> +}
-> +
-> +static int linechanged_fd_notify(struct notifier_block *nb,
-> +				 unsigned long action, void *data)
-> +{
-> +	struct linechanged_fd_state *lc_state = to_linechanged_fd_state(nb);
-> +	struct gpio_desc *desc = data;
-> +	struct gpioline_changed chg;
-> +	int i, ret;
-> +
-> +	for (i = 0; i < lc_state->numdescs; i++) {
-> +		/* Are we watching this desc? */
-> +		if (desc == lc_state->descs[i]) {
-> +			/* Yes - prepare the event. */
-> +			memset(&chg, 0, sizeof(chg));
-> +			chg.line_offset = gpio_chip_hwgpio(desc);
-> +			chg.event_type = action;
-> +
-> +			mutex_lock(&lc_state->lock);
-> +			ret = kfifo_put(&lc_state->events, chg);
-> +			mutex_unlock(&lc_state->lock);
-> +			if (ret)
-> +				wake_up_poll(&lc_state->waitqueue, EPOLLIN);
-> +
-> +			return NOTIFY_OK;
-> +		}
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int linechanged_fd_create(struct gpio_device *gdev, void __user *ip)
-> +{
-> +	struct gpioline_changed_fd_request changed_req;
-> +	struct linechanged_fd_state *lc_state;
-> +	struct gpio_desc *desc;
-> +	struct file *file;
-> +	int ret, i, fd;
-> +	u32 offset;
-> +
-> +	ret = copy_from_user(&changed_req, ip, sizeof(changed_req));
-> +	if (ret)
-> +		return -EFAULT;
-> +
-> +	if ((changed_req.num_lines == 0) ||
-> +	    (changed_req.num_lines > GPIOHANDLES_MAX))
-> +		return -EINVAL;
-> +
-> +	lc_state = kzalloc(sizeof(*lc_state), GFP_KERNEL);
-> +	if (!lc_state)
-> +		return -ENOMEM;
-> +
-> +	lc_state->gdev = gdev;
-> +	get_device(&gdev->dev);
-> +
-> +	for (i = 0; i < changed_req.num_lines; i++) {
-> +		offset = changed_req.lineoffsets[i];
-> +		desc = gpiochip_get_desc(gdev->chip, offset);
-> +		if (IS_ERR(desc)) {
-> +			ret = PTR_ERR(desc);
-> +			goto out_free_lc_state;
-> +		}
-> +
-> +		lc_state->descs[i] = desc;
-> +	}
-> +
-> +	lc_state->numdescs = changed_req.num_lines;
-> +
-> +	init_waitqueue_head(&lc_state->waitqueue);
-> +	INIT_KFIFO(lc_state->events);
-> +	mutex_init(&lc_state->lock);
-> +
-> +	lc_state->changed_nb.notifier_call = linechanged_fd_notify;
-> +
-> +	ret = atomic_notifier_chain_register(&gdev->notifier,
-> +					     &lc_state->changed_nb);
-> +	if (ret)
-> +		goto out_free_lc_state;
-> +
-> +	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
-> +	if (fd < 0) {
-> +		ret = fd;
-> +		goto out_unregister_notifier;
-> +	}
-> +
-> +	file = anon_inode_getfile("gpio-line-changed-fd",
-> +				  &linechanged_fd_fileops,
-> +				  lc_state, O_RDONLY | O_CLOEXEC);
-> +	if (IS_ERR(file)) {
-> +		ret = PTR_ERR(file);
-> +		goto out_put_unused_fd;
-> +	}
-> +
-> +	changed_req.fd = fd;
-> +	ret = copy_to_user(ip, &changed_req, sizeof(changed_req));
-> +	if (ret) {
-> +		fput(file);
-> +		put_unused_fd(fd);
-> +		return -EFAULT;
-> +	}
-> +
-> +	fd_install(fd, file);
-> +
-> +	return 0;
-> +
-> +out_put_unused_fd:
-> +	put_unused_fd(fd);
-> +out_unregister_notifier:
-> +	atomic_notifier_chain_unregister(&gdev->notifier,
-> +					 &lc_state->changed_nb);
-> +out_free_lc_state:
-> +	kfree(lc_state);
-> +
-> +	return ret;
-> +}
+> +#endif /* CONFIG_PAGE_REPORTING */
 > +
 >  /*
->   * gpio_ioctl() - ioctl handler for the GPIO chardev
->   */
-> @@ -1238,6 +1447,8 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  		return linehandle_create(gdev, ip);
->  	} else if (cmd == GPIO_GET_LINEEVENT_IOCTL) {
->  		return lineevent_create(gdev, ip);
-> +	} else if (cmd == GPIO_GET_LINECHANGED_FD_IOCTL) {
-> +		return linechanged_fd_create(gdev, ip);
->  	}
->  	return -EINVAL;
->  }
-> @@ -1499,6 +1710,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
->  	for (i = 0; i < chip->ngpio; i++)
->  		gdev->descs[i].gdev = gdev;
->  
-> +	ATOMIC_INIT_NOTIFIER_HEAD(&gdev->notifier);
+>   * Update NUMA hit/miss statistics
+>   *
+> diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+> new file mode 100644
+> index 000000000000..4844f0aa2904
+> --- /dev/null
+> +++ b/mm/page_reporting.c
+> @@ -0,0 +1,337 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/mm.h>
+> +#include <linux/mmzone.h>
+> +#include <linux/page_reporting.h>
+> +#include <linux/gfp.h>
+> +#include <linux/export.h>
+> +#include <linux/delay.h>
+> +#include <linux/scatterlist.h>
 > +
->  #ifdef CONFIG_PINCTRL
->  	INIT_LIST_HEAD(&gdev->pin_ranges);
->  #endif
-> @@ -2837,6 +3050,8 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
->  		spin_lock_irqsave(&gpio_lock, flags);
->  	}
->  done:
-> +	atomic_notifier_call_chain(&desc->gdev->notifier,
-> +				   GPIOLINE_CHANGED_REQUESTED, desc);
->  	spin_unlock_irqrestore(&gpio_lock, flags);
->  	return ret;
->  }
-> @@ -2934,6 +3149,8 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
->  		ret = true;
->  	}
->  
-> +	atomic_notifier_call_chain(&desc->gdev->notifier,
-> +				   GPIOLINE_CHANGED_RELEASED, desc);
->  	spin_unlock_irqrestore(&gpio_lock, flags);
->  	return ret;
->  }
-> @@ -3097,6 +3314,7 @@ static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
->  		if (ret != -ENOTSUPP)
->  			return ret;
->  	}
+> +#include "page_reporting.h"
+> +#include "internal.h"
 > +
->  	return 0;
->  }
->  
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index a1cbeabadc69..8e3969616cfe 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -54,6 +54,7 @@ struct gpio_device {
->  	const char		*label;
->  	void			*data;
->  	struct list_head        list;
-> +	struct atomic_notifier_head notifier;
->  
->  #ifdef CONFIG_PINCTRL
->  	/*
-> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-> index 799cf823d493..c61429467dd4 100644
-> --- a/include/uapi/linux/gpio.h
-> +++ b/include/uapi/linux/gpio.h
-> @@ -59,6 +59,40 @@ struct gpioline_info {
->  /* Maximum number of requested handles */
->  #define GPIOHANDLES_MAX 64
->  
-> +/**
-> + * struct gpioline_changed_fd_request - Information about a linechanged fd
-> + * request
-> + * @lineoffsets: an array of desired lines, specified by offset index for the
-> + * associated GPIO device
-> + * @num_lines: number of lines requested in this request, i.e. the number of
-> + * valid fields in the above arrays, set to 1 to request a single line
-> + * @fd: if successful this field will contain a valid anonymous file handle
+> +static struct page_reporting_dev_info __rcu *pr_dev_info __read_mostly;
+> +
+> +#define for_each_reporting_migratetype_order(_order, _type) \
+> +	for (_order = PAGE_REPORTING_MIN_ORDER; _order < MAX_ORDER; _order++) \
+> +		for (_type = 0; _type < MIGRATE_TYPES; _type++) \
+> +			if (!is_migrate_isolate(_type))
+> +
+
+This only has one user so simply put it in place. As this stands, _order
+and _type can be evaluated multiple times which potentially leads to
+chaos
+
+> +static void page_reporting_populate_metadata(struct zone *zone)
+> +{
+> +	size_t size;
+> +	int node;
+> +
+> +	/*
+> +	 * We need to make sure we have somewhere to store the tracking
+> +	 * data for how many reported pages are in the zone. To do that
+> +	 * we need to make certain zone->reported_pages is populated.
+> +	 */
+> +	if (zone->reported_pages)
+> +		return;
+> +
+> +	node = zone_to_nid(zone);
+> +	size = (MAX_ORDER - PAGE_REPORTING_MIN_ORDER) * sizeof(unsigned long);
+> +	zone->reported_pages = kzalloc_node(size, GFP_KERNEL, node);
+> +}
+> +
+
+reported_pages is not necessarily updated by a CPU local to the zone.
+There is not much point worrying about its locality.
+
+> +static void
+> +page_reporting_drain(struct page_reporting_dev_info *prdev, struct zone *zone)
+> +{
+> +	struct scatterlist *sg = prdev->sg;
+> +
+> +	/*
+> +	 * Drain the now reported pages back into their respective
+> +	 * free lists/areas. We assume at least one page is populated.
+> +	 */
+> +	do {
+> +		unsigned int order = get_order(sg->length);
+> +		struct page *page = sg_page(sg);
+> +
+> +		__free_isolated_page(page, order);
+> +
+> +		/*
+> +		 * If page was not comingled with another page we can
+> +		 * consider the result to be "reported" since the page
+> +		 * hasn't been modified, otherwise we will need to
+> +		 * report on the new larger page when we make our way
+> +		 * up to that higher order.
+> +		 */
+> +		if (PageBuddy(page) && page_order(page) == order)
+> +			mark_page_reported(page, zone, order);
+> +	} while (!sg_is_last(sg++));
+> +}
+> +
+> +/*
+> + * The page reporting cycle consists of 4 stages, fill, report, drain, and
+> + * idle. We will cycle through the first 3 stages until we cannot obtain a
+> + * full scatterlist of pages, in that case we will switch to idle.
 > + */
-> +struct gpioline_changed_fd_request {
-> +	__u32 lineoffsets[GPIOHANDLES_MAX];
-> +	__u32 num_lines;
-> +	int fd;
-> +};
+
+Document the return value because it's unclear why the number of populated
+elements in sg is not tracked in page_reporting_dev_info. It seems
+unnecessarily fragile.
+
+> +static unsigned int
+> +page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
+> +		     unsigned int order, unsigned int mt, unsigned int nents)
+> +{
+> +	struct list_head *list = &zone->free_area[order].free_list[mt];
+> +	unsigned int page_len = PAGE_SIZE << order;
+> +	struct scatterlist *sg = prdev->sg;
+> +	struct page *page, *next;
+> +
+> +	/*
+> +	 * Perform early check, if free area is empty there is
+> +	 * nothing to process so we can skip this free_list.
+> +	 */
+> +	if (list_empty(list))
+> +		return nents;
+> +
+> +	spin_lock_irq(&zone->lock);
+> +
+> +	/* loop through free list adding unreported pages to sg list */
+> +	list_for_each_entry_safe(page, next, list, lru) {
+> +		/* We are going to skip over the reported pages. */
+> +		if (PageReported(page))
+> +			continue;
+> +
+> +		/* Attempt to add page to sg list */
+> +		if (nents < prdev->capacity) {
+> +			if (!__isolate_free_page(page, order))
+> +				break;
+> +
+> +			sg_set_page(&sg[nents++], page, page_len, 0);
+> +			continue;
+> +		}
+> +
+> +		/*
+> +		 * Make the first non-reported entry in the free list
+> +		 * the new head of the free list before we exit.
+> +		 */
+> +		if (!list_is_first(&page->lru, list))
+> +			list_rotate_to_front(&page->lru, list);
+> +
+> +		/* release lock before waiting on report processing*/
+> +		spin_unlock_irq(&zone->lock);
+> +
+> +		/* begin processing pages in local list */
+> +		prdev->report(prdev, nents);
+> +
+> +		/* reset number of entries */
+> +		nents = 0;
+> +
+> +		/* reacquire zone lock and resume processing free lists */
+> +		spin_lock_irq(&zone->lock);
+> +
+> +		/* flush reported pages from the sg list */
+> +		page_reporting_drain(prdev, zone);
+> +
+> +		/*
+> +		 * Reset next to first entry, the old next isn't valid
+> +		 * since we dropped the lock to report the pages
+> +		 */
+> +		next = list_first_entry(list, struct page, lru);
+> +	}
+> +
+> +	spin_unlock_irq(&zone->lock);
+> +
+> +	return nents;
+> +}
+> +
+> +static int
+> +page_reporting_process_zone(struct page_reporting_dev_info *prdev,
+> +			    struct zone *zone)
+> +{
+> +	unsigned int order, mt, nents = 0;
+> +	unsigned long watermark;
+> +	int refcnt = -1;
+> +
+> +	page_reporting_populate_metadata(zone);
+> +
+> +	/* Generate minimum watermark to be able to guarantee progress */
+> +	watermark = low_wmark_pages(zone) +
+> +		    (prdev->capacity << PAGE_REPORTING_MIN_ORDER);
+> +
+> +	/*
+> +	 * Cancel request if insufficient free memory or if we failed
+> +	 * to allocate page reporting statistics for the zone.
+> +	 */
+> +	if (!zone_watermark_ok(zone, 0, watermark, 0, ALLOC_CMA) ||
+> +	    !zone->reported_pages) {
+> +		spin_lock_irq(&zone->lock);
+> +		goto zone_not_ready;
+> +	}
+
+The zone lock is acquired just for the zone bit and the refcnt? That
+seems drastic overkill because the bit handling is already racy and the
+refcnt is overkill.
+
+> +
+> +	sg_init_table(prdev->sg, prdev->capacity);
+> +
+> +	/* Process each free list starting from lowest order/mt */
+> +	for_each_reporting_migratetype_order(order, mt)
+> +		nents = page_reporting_cycle(prdev, zone, order, mt, nents);
 > +
 
-Wouldn't the most common case be to watch all the lines on a chip?
-How about an easy way to do that, say num_lines=0?
 
-> +/* Possible line status change events */
-> +enum {
-> +	GPIOLINE_CHANGED_REQUESTED = 1,
-> +	GPIOLINE_CHANGED_RELEASED,
-> +	GPIOLINE_CHANGED_CONFIG,
-> +};
+> +	/* mark end of sg list and report the remainder */
+> +	if (nents) {
+> +		sg_mark_end(&prdev->sg[nents - 1]);
+> +		prdev->report(prdev, nents);
+> +	}
+> +
+> +	spin_lock_irq(&zone->lock);
+> +
+> +	/* flush any remaining pages out from the last report */
+> +	if (nents)
+> +		page_reporting_drain(prdev, zone);
+> +
+> +	/* check to see if values are low enough for us to stop for now */
+> +	for (order = PAGE_REPORTING_MIN_ORDER; order < MAX_ORDER; order++) {
+> +		if (pages_unreported(zone, order) < PAGE_REPORTING_HWM)
+> +			continue;
+> +#ifdef CONFIG_MEMORY_ISOLATION
+> +		/*
+> +		 * Do not allow a free_area with isolated pages to request
+> +		 * that we continue with page reporting. Keep the reporting
+> +		 * light until the isolated pages have been cleared.
+> +		 */
+> +		if (!free_area_empty(&zone->free_area[order], MIGRATE_ISOLATE))
+> +			continue;
+> +#endif
+> +		goto zone_not_complete;
+> +	}
+> +
+> +zone_not_ready:
+> +	/*
+> +	 * If there are no longer enough free pages to fully populate
+> +	 * the scatterlist, then we can just shut it down for this zone.
+> +	 */
+> +	__clear_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags);
+> +	refcnt = atomic_dec_return(&prdev->refcnt);
+
+If a request comes in while processing is already happening then the
+subsequent request is lost.
+
+> +zone_not_complete:
+> +	spin_unlock_irq(&zone->lock);
+> +
+> +	return refcnt;
+> +}
+> +
+> +static void page_reporting_process(struct work_struct *work)
+> +{
+> +	struct delayed_work *d_work = to_delayed_work(work);
+> +	struct page_reporting_dev_info *prdev =
+> +		container_of(d_work, struct page_reporting_dev_info, work);
+> +	struct zone *zone = first_online_pgdat()->node_zones;
+> +	int refcnt = -1;
+> +
+> +	do {
+> +		if (test_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags))
+> +			refcnt = page_reporting_process_zone(prdev, zone);
+> +
+> +		/* Move to next zone, if at end of list start over */
+> +		zone = next_zone(zone) ? : first_online_pgdat()->node_zones;
+> +
+> +		/*
+> +		 * As long as refcnt has not reached zero there are still
+> +		 * zones to be processed.
+> +		 */
+> +	} while (refcnt);
+> +}
+> +
+
+This is being done from a workqueue context and potentially this runs
+forever if the refcnt remains elevated. It's dangerous and should be in
+it's own patch. In the basic implementation, just do a single pass of
+all zones.
+
+> +/* request page reporting on this zone */
+> +void __page_reporting_request(struct zone *zone)
+> +{
+> +	struct page_reporting_dev_info *prdev;
+> +
+> +	rcu_read_lock();
+> +
+> +	/*
+> +	 * We use RCU to protect the pr_dev_info pointer. In almost all
+> +	 * cases this should be present, however in the unlikely case of
+> +	 * a shutdown this will be NULL and we should exit.
+> +	 */
+> +	prdev = rcu_dereference(pr_dev_info);
+> +	if (unlikely(!prdev))
+> +		goto out;
+> +
+> +	/*
+> +	 * We can use separate test and set operations here as there
+> +	 * is nothing else that can set or clear this bit while we are
+> +	 * holding the zone lock. The advantage to doing it this way is
+> +	 * that we don't have to dirty the cacheline unless we are
+> +	 * changing the value.
+> +	 */
+> +	__set_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags);
+> +
+
+The comment implies that the bit should have been tested first.
+
+> +	/*
+> +	 * Delay the start of work to allow a sizable queue to
+> +	 * build. For now we are limiting this to running no more
+> +	 * than 5 times per second.
+> +	 */
+> +	if (!atomic_fetch_inc(&prdev->refcnt))
+> +		schedule_delayed_work(&prdev->work, HZ / 5);
+
+The refcnt is incremented whether this zone has already been requested or
+not but only decremented when the bit is cleared so the refcnt potentially
+remains elevated forever.
+
+> +out:
+> +	rcu_read_unlock();
+> +}
+> +
+> +static DEFINE_MUTEX(page_reporting_mutex);
+> +DEFINE_STATIC_KEY_FALSE(page_reporting_enabled);
+> +
+> +void page_reporting_unregister(struct page_reporting_dev_info *prdev)
+> +{
+> +	mutex_lock(&page_reporting_mutex);
+> +
+> +	if (rcu_access_pointer(pr_dev_info) == prdev) {
+> +		/* Disable page reporting notification */
+> +		RCU_INIT_POINTER(pr_dev_info, NULL);
+> +		synchronize_rcu();
+> +
+> +		/* Flush any existing work, and lock it out */
+> +		cancel_delayed_work_sync(&prdev->work);
+> +
+> +		/* Free scatterlist */
+> +		kfree(prdev->sg);
+> +		prdev->sg = NULL;
+> +	}
+> +
+> +	mutex_unlock(&page_reporting_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(page_reporting_unregister);
+> +
+> +int page_reporting_register(struct page_reporting_dev_info *prdev)
+> +{
+> +	struct zone *zone;
+> +	int err = 0;
+> +
+> +	/* No point in enabling this if it cannot handle any pages */
+> +	if (WARN_ON(!prdev->capacity || prdev->capacity > PAGE_REPORTING_HWM))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&page_reporting_mutex);
+> +
+> +	/* nothing to do if already in use */
+> +	if (rcu_access_pointer(pr_dev_info)) {
+> +		err = -EBUSY;
+> +		goto err_out;
+> +	}
+> +
+> +	/* allocate scatterlist to store pages being reported on */
+> +	prdev->sg = kcalloc(prdev->capacity, sizeof(*prdev->sg), GFP_KERNEL);
+> +	if (!prdev->sg) {
+> +		err = -ENOMEM;
+> +		goto err_out;
+> +	}
+> +
+> +
+> +	/* initialize refcnt and work structures */
+> +	atomic_set(&prdev->refcnt, 0);
+> +	INIT_DELAYED_WORK(&prdev->work, &page_reporting_process);
+> +
+> +	/* assign device, and begin initial flush of populated zones */
+> +	rcu_assign_pointer(pr_dev_info, prdev);
+> +	for_each_populated_zone(zone) {
+> +		spin_lock_irq(&zone->lock);
+> +		__page_reporting_request(zone);
+> +		spin_unlock_irq(&zone->lock);
+> +	}
+> +
+> +	/* enable page reporting notification */
+> +	if (!static_key_enabled(&page_reporting_enabled)) {
+> +		static_branch_enable(&page_reporting_enabled);
+> +		pr_info("Unused page reporting enabled\n");
+> +	}
+> +err_out:
+> +	mutex_unlock(&page_reporting_mutex);
+> +
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(page_reporting_register);
+> diff --git a/mm/page_reporting.h b/mm/page_reporting.h
+> new file mode 100644
+> index 000000000000..2ad31bbb0036
+> --- /dev/null
+> +++ b/mm/page_reporting.h
+> @@ -0,0 +1,125 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _MM_PAGE_REPORTING_H
+> +#define _MM_PAGE_REPORTING_H
+> +
+> +#include <linux/mmzone.h>
+> +#include <linux/pageblock-flags.h>
+> +#include <linux/page-isolation.h>
+> +#include <linux/jump_label.h>
+> +#include <linux/slab.h>
+> +#include <asm/pgtable.h>
+> +
+> +#define PAGE_REPORTING_MIN_ORDER	pageblock_order
+
+This is potentially the same as MAX_ORDER-1. Not sure if it matters or
+not.
+
+> +#define PAGE_REPORTING_HWM		32
+> +
+> +#ifdef CONFIG_PAGE_REPORTING
+> +/* Reported page accessors, defined in page_alloc.c */
+> +void __free_isolated_page(struct page *page, unsigned int order);
+> +
+> +/* Free reported_pages and reset reported page tracking count to 0 */
+> +static inline void page_reporting_reset_zone(struct zone *zone)
+> +{
+> +	kfree(zone->reported_pages);
+> +	zone->reported_pages = NULL;
+> +}
+> +
+> +DECLARE_STATIC_KEY_FALSE(page_reporting_enabled);
+> +void __page_reporting_request(struct zone *zone);
+> +
+> +static inline bool page_reported(struct page *page)
+> +{
+> +	return static_branch_unlikely(&page_reporting_enabled) &&
+> +	       PageReported(page);
+> +}
+> +
+> +static inline unsigned long
+> +pages_unreported(struct zone *zone, int order)
+> +{
+> +	unsigned long nr_free;
+> +	int report_order;
+> +
+> +	/* Limit notifications only to higher order pages */
+> +	report_order = order - PAGE_REPORTING_MIN_ORDER;
+> +	if (report_order < 0)
+> +		return 0;
+> +
+> +	nr_free = zone->free_area[order].nr_free;
+> +
+> +	/* Only subtract reported_pages count if it is present */
+> +	if (!zone->reported_pages)
+> +		return nr_free;
+> +
+> +	return nr_free - zone->reported_pages[report_order];
+> +}
+
+Initially, this should be a full list traversal because I'm not
+convinced the reported_pages count is kept perfectly in sync. The
+optimisation confuses the review of the basic feature itself.
+
 > +
 > +/**
-> + * struct gpioline_changed - Information about a change in status
-> + * of a GPIO line
-> + * @line_offset: offset of the line that changed relative to the gpiochip
-> + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELEASED
-> + * and GPIOLINE_CHANGED_CONFIG
+> + * page_reporting_notify_free - Free page notification to start page processing
+> + * @zone: Pointer to current zone of last page processed
+> + * @order: Order of last page added to zone
+> + *
+> + * This function is meant to act as a screener for __page_reporting_request
+> + * which will determine if a give zone has crossed over the high-water mark
+> + * that will justify us beginning page treatment. If we have crossed that
+> + * threshold then it will start the process of pulling some pages and
+> + * placing them in the batch list for treatment.
 > + */
-> +struct gpioline_changed {
-> +	__u32 line_offset;
-> +	__u32 event_type;
-> +};
+> +static inline void page_reporting_notify_free(struct zone *zone, int order)
+> +{
+> +	/* Called from hot path in __free_one_page() */
+> +	if (!static_branch_unlikely(&page_reporting_enabled))
+> +		return;
 > +
-
-Rather than sending an event type, and requiring userspace to poll
-LINEINFO, which is racy, how about passing the updated info flags here?
-A change in the state of the GPIOLINE_FLAG_KERNEL implies the
-GPIOLINE_CHANGED_REQUESTED or GPIOLINE_CHANGED_RELEASED, so the
-event_type is then redundant.
-Userspace would then only have to poll LINEINFO if they were interested
-in the consumer on GPIOLINE_CHANGED_REQUESTED.
-
-To sync kernel and userspace state the current state of each line 
-should be returned immediately via the fd as soon as the fd is created,
-and then subsequently on any change.
-
-And a timestamp might be useful, as per gpioevent_data?
-
-Kent.
-
->  /* Linerequest flags */
->  #define GPIOHANDLE_REQUEST_INPUT	(1UL << 0)
->  #define GPIOHANDLE_REQUEST_OUTPUT	(1UL << 1)
-> @@ -176,6 +210,8 @@ struct gpioevent_data {
->  
->  #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
->  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
-> +#define GPIO_GET_LINECHANGED_FD_IOCTL \
-> +		_IOWR(0xB4, 0x0b, struct gpioline_changed_fd_request)
->  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
->  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
->  
-> -- 
-> 2.23.0
+> +	/* Do not bother with tests if we have already requested reporting */
+> +	if (test_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags))
+> +		return;
+> +
+> +	/* Determine if we have crossed reporting threshold */
+> +	if (pages_unreported(zone, order) < PAGE_REPORTING_HWM)
+> +		return;
+> +
+> +	/* This is slow, but should be called very rarely */
+> +	__page_reporting_request(zone);
+> +}
+> +
+> +/*
+> + * Functions for marking/clearing reported pages from the freelist.
+> + * All of them expect the zone lock to be held to maintain
+> + * consistency of the reported_pages count versus nr_free.
+> + */
+> +static inline void
+> +mark_page_reported(struct page *page, struct zone *zone, unsigned int order)
+> +{
+> +	/* flag page as reported */
+> +	__SetPageReported(page);
+> +
+> +	/* update areated page accounting */
+> +	zone->reported_pages[order - PAGE_REPORTING_MIN_ORDER]++;
+> +}
+> +
+> +static inline void
+> +clear_page_reported(struct page *page, struct zone *zone, unsigned int order)
+> +{
+> +	/* page_private will contain the page order, so just use it directly */
+> +	zone->reported_pages[order - PAGE_REPORTING_MIN_ORDER]--;
+> +
+> +	/* clear the flag so we can report on it when it returns */
+> +	__ClearPageReported(page);
+> +}
+> +
+> +#else /* CONFIG_PAGE_REPORTING */
+> +#define page_reported(_page)	false
+> +
+> +static inline void page_reporting_reset_zone(struct zone *zone)
+> +{
+> +}
+> +
+> +static inline void page_reporting_notify_free(struct zone *zone, int order)
+> +{
+> +}
+> +
+> +static inline void
+> +clear_page_reported(struct page *page, struct zone *zone, unsigned int order)
+> +{
+> +}
+> +#endif /* CONFIG_PAGE_REPORTING */
+> +#endif /*_MM_PAGE_REPORTING_H */
 > 
+
+-- 
+Mel Gorman
+SUSE Labs
