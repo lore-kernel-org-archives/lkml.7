@@ -2,51 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDF0C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E342AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F84D21844
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC06321823
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887634;
-	bh=A6r981WiwlLsuLjXzBrf8L+e7ByY9YU5xFewKaitogw=;
+	s=default; t=1574887636;
+	bh=cI00S5SAfJJxJwKC2KRPKowU5ynXC6YjOEbMSMAB+Yw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uOvLD9wr0QjXSIzsD4G9/Dt0WOrAQuB9j0U51KIvV5++p03YA0HfdlRJrPIeA84qV
-	 DGHWT+yzFMnVpCA+zmrwNFh+P31otR/x2HfsNQ0FzxWHQcpCPj29n9QqJR33cDI0hT
-	 UBQYjpXaEk+dEbZW2nHTu5ZokohGr2uc9AFE+D40=
+	b=DrBCyViRsTFYKDKSEQ3SLssPo6NFSxvUe38675RSOXgJR3WaokLRWFLcEm/9PMqqz
+	 F2Eap71Yp3taIzu8ahCDUK9vtOTDDlopaXAnQaCheQNdTFZrX6xkGZ7N3igUjVwcoy
+	 lzh62zgQ+XngueAR/VV0SH4+SPcVaWgTJogZy+6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbfK0UrN (ORCPT
+        id S1729979AbfK0UrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:47:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59564 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:47:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729950AbfK0UrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:47:03 -0500
+        id S1729955AbfK0UrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:47:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF0D72166E;
-        Wed, 27 Nov 2019 20:47:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C13BC21826;
+        Wed, 27 Nov 2019 20:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887622;
-        bh=A6r981WiwlLsuLjXzBrf8L+e7ByY9YU5xFewKaitogw=;
+        s=default; t=1574887627;
+        bh=cI00S5SAfJJxJwKC2KRPKowU5ynXC6YjOEbMSMAB+Yw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ee0w3e6LMjFYDlt27IbYOUxmjUj4S7iYJwiYNZ5OFupV0JJFkVkfbHX1Oe0kJ2PWk
-         L4iNsJ9gU//KTcJnWltuW91N/NCBGRLlk2PhcHNuGhlov0i5r/aH9YC1EnfEM/GTJd
-         uTFJkUvFEJr4PbEMewx90w+uTqgyJj5CUSx1xDgY=
+        b=xQ4li9Yw32Z4KyCXdAvM/pXOOMXicyBsluR5n+am5nP60nRb56/+Em0wOZdmjSckE
+         qlGrygfl86GkBwNgBzhwzuvtQpnzPITOVutltMVCRLpQKY/znW4lA9Geo5G3TaWY8n
+         pBdkNjNqaV39R8Zg6iYIBEXVkQRkpQvVKE0MFMFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Zary <linux@rainbow-software.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 030/211] cdrom: dont attempt to fiddle with cdo->capability
-Date:   Wed, 27 Nov 2019 21:29:23 +0100
-Message-Id: <20191127203054.355605248@linuxfoundation.org>
+        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.14 005/211] net/mlxfw: Verify FSM error code translation doesnt exceed array size
+Date:   Wed, 27 Nov 2019 21:28:58 +0100
+Message-Id: <20191127203049.969320055@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -59,80 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Eran Ben Elisha <eranbe@mellanox.com>
 
-[ Upstream commit 8f94004e2a51a3ea195cf3447eb5d5906f36d8b3 ]
+[ Upstream commit 30e9e0550bf693c94bc15827781fe42dd60be634 ]
 
-We can't modify cdo->capability as it is defined as a const.
-Change the modification hack to just WARN_ON_ONCE() if we hit
-any of the invalid combinations.
+Array mlxfw_fsm_state_err_str contains value to string translation, when
+values are provided by mlxfw_dev. If value is larger than
+MLXFW_FSM_STATE_ERR_MAX, return "unknown error" as expected instead of
+reading an address than exceed array size.
 
-This fixes a regression for pcd, which doesn't work after the
-constify patch.
-
-Fixes: 853fe1bf7554 ("cdrom: Make device operations read-only")
-Tested-by: Ondrej Zary <linux@rainbow-software.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 410ed13cae39 ("Add the mlxfw module for Mellanox firmware flash process")
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/cdrom/cdrom.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/mellanox/mlxfw/mlxfw_fsm.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index ea6558d4864c0..90dd8e7291dab 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -410,10 +410,10 @@ static int cdrom_get_disc_info(struct cdrom_device_info *cdi,
-  * hack to have the capability flags defined const, while we can still
-  * change it here without gcc complaining at every line.
-  */
--#define ENSURE(call, bits)			\
--do {						\
--	if (cdo->call == NULL)			\
--		*change_capability &= ~(bits);	\
-+#define ENSURE(cdo, call, bits)					\
-+do {								\
-+	if (cdo->call == NULL)					\
-+		WARN_ON_ONCE((cdo)->capability & (bits));	\
- } while (0)
+--- a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_fsm.c
++++ b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_fsm.c
+@@ -86,6 +86,8 @@ retry:
+ 		return err;
  
- /*
-@@ -589,7 +589,6 @@ int register_cdrom(struct cdrom_device_info *cdi)
- {
- 	static char banner_printed;
- 	const struct cdrom_device_ops *cdo = cdi->ops;
--	int *change_capability = (int *)&cdo->capability; /* hack */
- 
- 	cd_dbg(CD_OPEN, "entering register_cdrom\n");
- 
-@@ -601,16 +600,16 @@ int register_cdrom(struct cdrom_device_info *cdi)
- 		cdrom_sysctl_register();
- 	}
- 
--	ENSURE(drive_status, CDC_DRIVE_STATUS);
-+	ENSURE(cdo, drive_status, CDC_DRIVE_STATUS);
- 	if (cdo->check_events == NULL && cdo->media_changed == NULL)
--		*change_capability = ~(CDC_MEDIA_CHANGED | CDC_SELECT_DISC);
--	ENSURE(tray_move, CDC_CLOSE_TRAY | CDC_OPEN_TRAY);
--	ENSURE(lock_door, CDC_LOCK);
--	ENSURE(select_speed, CDC_SELECT_SPEED);
--	ENSURE(get_last_session, CDC_MULTI_SESSION);
--	ENSURE(get_mcn, CDC_MCN);
--	ENSURE(reset, CDC_RESET);
--	ENSURE(generic_packet, CDC_GENERIC_PACKET);
-+		WARN_ON_ONCE(cdo->capability & (CDC_MEDIA_CHANGED | CDC_SELECT_DISC));
-+	ENSURE(cdo, tray_move, CDC_CLOSE_TRAY | CDC_OPEN_TRAY);
-+	ENSURE(cdo, lock_door, CDC_LOCK);
-+	ENSURE(cdo, select_speed, CDC_SELECT_SPEED);
-+	ENSURE(cdo, get_last_session, CDC_MULTI_SESSION);
-+	ENSURE(cdo, get_mcn, CDC_MCN);
-+	ENSURE(cdo, reset, CDC_RESET);
-+	ENSURE(cdo, generic_packet, CDC_GENERIC_PACKET);
- 	cdi->mc_flags = 0;
- 	cdi->options = CDO_USE_FFLAGS;
- 
--- 
-2.20.1
-
+ 	if (fsm_state_err != MLXFW_FSM_STATE_ERR_OK) {
++		fsm_state_err = min_t(enum mlxfw_fsm_state_err,
++				      fsm_state_err, MLXFW_FSM_STATE_ERR_MAX);
+ 		pr_err("Firmware flash failed: %s\n",
+ 		       mlxfw_fsm_state_err_str[fsm_state_err]);
+ 		return -EINVAL;
 
 
