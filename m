@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BC6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AC5C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183F221774
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A54E21770
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887205;
-	bh=lugFMPJ1DzJF5JJ73kFrDkZQ7895HclbYHXx7hxytII=;
+	s=default; t=1574887209;
+	bh=yPx2913qVwkmD7oL4wr/bAxoDFmm9Hu+w7hZgg+7aTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1iYnbn6CR1d/QR5zHXRSNTJYECtEgQNPhLpaKveZJSv7gBlyHu4DAyLApXq1bFeDa
-	 V2yOxeyRn1ZgX4pCvlH0VdyD+ANoSUC9HHzM+IiH7vV2YHLul0dxOswF6V1xLNxDVv
-	 bh1BmZpQdrCmwYim0K9GWE41PIMBlB2TDIqzPgsI=
+	b=K6aUpfp+Of+lwhjQxsdtse6iAy6gcHONEAD/X0xjBn9G1c5i8vF4l4P4FTjzwki2A
+	 AX4louL2gxn+OEyQyLydVPX75Wxt1z8XrYI7ZuzWlTCESiV6fU9z0+Mv3xKsjn2Rb8
+	 h+fUStOLE6rPODke8MScKDcf47C4hFKQNKoKISxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfK0UkD (ORCPT
+        id S1727810AbfK0UkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:40:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44376 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:40:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728980AbfK0Uj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:39:59 -0500
+        id S1728988AbfK0UkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:40:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00AF621774;
-        Wed, 27 Nov 2019 20:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A52A21770;
+        Wed, 27 Nov 2019 20:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887198;
-        bh=lugFMPJ1DzJF5JJ73kFrDkZQ7895HclbYHXx7hxytII=;
+        s=default; t=1574887201;
+        bh=yPx2913qVwkmD7oL4wr/bAxoDFmm9Hu+w7hZgg+7aTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c1vQc3dPLvQ2nF2ktzJKRyP+dbFndzkELvoute2TzwpyZOfcdgyrhA0jHS5Mj6v0C
-         /sYjzanfevo+BL1QUZ59L2ZcSJtgEGWpg9G7++9ZKattGJ2ndYh+wFAeSVWttfJycv
-         l3CRUuXIeVoHIo2tFT9YXXUWWWVJ7PVtK4dCknnc=
+        b=vhEh1aRGLNSkjogCDpbA5eOfHiOtmGc+wB4Z+JfDR1tVHlm2o947CsRPDLxfPKF2u
+         xjaqSZPZDZbfczjfVrpGuVhZ8z9nro70al9FEa5so4FhtEeHgxBYUqm5uTDLgqKGDq
+         kerzqR03Q93NPw5gVeDyXO1LYKHxEKyCx4xqKt+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Habets <mhabets@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 003/151] sfc: Only cancel the PPS workqueue if it exists
-Date:   Wed, 27 Nov 2019 21:29:46 +0100
-Message-Id: <20191127203002.675141354@linuxfoundation.org>
+        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.9 004/151] net/mlx5e: Fix set vf link state error flow
+Date:   Wed, 27 Nov 2019 21:29:47 +0100
+Message-Id: <20191127203003.459425922@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -59,32 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Habets <mhabets@solarflare.com>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit 723eb53690041740a13ac78efeaf6804f5d684c9 ]
+[ Upstream commit 751021218f7e66ee9bbaa2be23056e447cd75ec4 ]
 
-The workqueue only exists for the primary PF. For other functions
-we hit a WARN_ON in kernel/workqueue.c.
+Before this commit the ndo always returned success.
+Fix that.
 
-Fixes: 7c236c43b838 ("sfc: Add support for IEEE-1588 PTP")
-Signed-off-by: Martin Habets <mhabets@solarflare.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1ab2068a4c66 ("net/mlx5: Implement vports admin state backup/restore")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/sfc/ptp.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/sfc/ptp.c
-+++ b/drivers/net/ethernet/sfc/ptp.c
-@@ -1320,7 +1320,8 @@ void efx_ptp_remove(struct efx_nic *efx)
- 	(void)efx_ptp_disable(efx);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -1757,7 +1757,7 @@ int mlx5_eswitch_set_vport_state(struct
  
- 	cancel_work_sync(&efx->ptp_data->work);
--	cancel_work_sync(&efx->ptp_data->pps_work);
-+	if (efx->ptp_data->pps_workwq)
-+		cancel_work_sync(&efx->ptp_data->pps_work);
+ unlock:
+ 	mutex_unlock(&esw->state_lock);
+-	return 0;
++	return err;
+ }
  
- 	skb_queue_purge(&efx->ptp_data->rxq);
- 	skb_queue_purge(&efx->ptp_data->txq);
+ int mlx5_eswitch_get_vport_config(struct mlx5_eswitch *esw,
 
 
