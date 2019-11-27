@@ -2,54 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6006EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808EAC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361EE215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547052084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888503;
-	bh=qt+8C+wStI+Ia8A369Sl1rBnYmbCBlYZqnKS7bIgTbg=;
+	s=default; t=1574888507;
+	bh=mjEAf4IZiaoy69szyp+z+zduvvrVkJ634Pi2kNlx0nY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ejCFTG7IUzsQbRjjUEXIENd3zO9xVWGVj6hy/lOk3GLyAbMj3Co1kOdqcLfvlzULV
-	 dDCnojyRpPdrgO8BzXm1xQwVTcG9JbZxVbybqyVN5Kvq+d585oO4r9eZ0U88L25fpc
-	 +4yUMiuYDohqYw1/8DbNvLc16AvARMgu9m8OYMwA=
+	b=eOLAFdoqFR/RpP4DxYN7URL7LeML+vsXmftCjHMTT6GDfaUj6LUcCAVk/sQzp+VaO
+	 WOjdWIMNPs92LfiSl6FiwnG20ACUr8AImmiLjO2n3dmd0XfrOxmZDayzSk30n/Hcrf
+	 4lQPmxKwURnCyuCFpAd5dTvkphpI2Jz0w/+lp5D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731770AbfK0VBm (ORCPT
+        id S1731783AbfK0VBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:01:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53988 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:01:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731741AbfK0VBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:01:37 -0500
+        id S1731741AbfK0VBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:01:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A26592086A;
-        Wed, 27 Nov 2019 21:01:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA08A2158C;
+        Wed, 27 Nov 2019 21:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888497;
-        bh=qt+8C+wStI+Ia8A369Sl1rBnYmbCBlYZqnKS7bIgTbg=;
+        s=default; t=1574888502;
+        bh=mjEAf4IZiaoy69szyp+z+zduvvrVkJ634Pi2kNlx0nY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UmUelrDqBi4wwFtZ8qO4+84PM0C+C9GP7TeRcenlDchzuKwQZ6CuX4SLr5cHEDnMW
-         BANDLT4pUljc3a8XyfPZ91kXINZOldsMSSE5Z3CDX0rp/ycfWd15UE6CKzio4HrPTY
-         CmT28nV1gH97tqxLjfRmaztIoCAR6Cj3ldUTgCrg=
+        b=xZz7WJVXDS2bU0v7Sv8a0XSH7ngT2HGYxaZtko+VPeoQfbPoZKRwj3p+3gAbd5B9g
+         q1WxZXKpXfjgUGCjkjj7ltjZHiWEa90PM6Mm/0wzAVFpo7o5YsZj47m72RXEnA3fV5
+         EmfkMtl6tNIsF8pgtW5hBS3hgDrWllD9q4l+e6HI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <david@fromorbit.com>,
+        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 158/306] vfs: avoid problematic remapping requests into partial EOF block
-Date:   Wed, 27 Nov 2019 21:30:08 +0100
-Message-Id: <20191127203127.101821881@linuxfoundation.org>
+Subject: [PATCH 4.19 160/306] powerpc/xmon: Relax frame size for clang
+Date:   Wed, 27 Nov 2019 21:30:10 +0100
+Message-Id: <20191127203127.204172470@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,95 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Joel Stanley <joel@jms.id.au>
 
-[ Upstream commit 07d19dc9fbe9128378b9e226abe886fd8fd473df ]
+[ Upstream commit 9c87156cce5a63735d1218f0096a65c50a7a32aa ]
 
-A deduplication data corruption is exposed in XFS and btrfs. It is
-caused by extending the block match range to include the partial EOF
-block, but then allowing unknown data beyond EOF to be considered a
-"match" to data in the destination file because the comparison is only
-made to the end of the source file. This corrupts the destination file
-when the source extent is shared with it.
+When building with clang (8 trunk, 7.0 release) the frame size limit is
+hit:
 
-The VFS remapping prep functions  only support whole block dedupe, but
-we still need to appear to support whole file dedupe correctly.  Hence
-if the dedupe request includes the last block of the souce file, don't
-include it in the actual dedupe operation. If the rest of the range
-dedupes successfully, then reject the entire request.  A subsequent
-patch will enable us to shorten dedupe requests correctly.
+ arch/powerpc/xmon/xmon.c:452:12: warning: stack frame size of 2576
+ bytes in function 'xmon_core' [-Wframe-larger-than=]
 
-When reflinking sub-file ranges, a data corruption can occur when the
-source file range includes a partial EOF block. This shares the unknown
-data beyond EOF into the second file at a position inside EOF, exposing
-stale data in the second file.
+Some investigation by Naveen indicates this is due to clang saving the
+addresses to printf format strings on the stack.
 
-If the reflink request includes the last block of the souce file, only
-proceed with the reflink operation if it lands at or past the
-destination file's current EOF. If it lands within the destination file
-EOF, reject the entire request with -EINVAL and make the caller go the
-hard way.  A subsequent patch will enable us to shorten reflink requests
-correctly.
+While this issue is investigated, bump up the frame size limit for xmon
+when building with clang.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Dave Chinner <david@fromorbit.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/252
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/read_write.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/powerpc/xmon/Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 5fb5ee5b8cd70..2195380620d02 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1715,6 +1715,34 @@ static int clone_verify_area(struct file *file, loff_t pos, u64 len, bool write)
+diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
+index 9d7d8e6d705c4..9ba44e190e5e4 100644
+--- a/arch/powerpc/xmon/Makefile
++++ b/arch/powerpc/xmon/Makefile
+@@ -13,6 +13,12 @@ UBSAN_SANITIZE := n
+ ORIG_CFLAGS := $(KBUILD_CFLAGS)
+ KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
  
- 	return security_file_permission(file, write ? MAY_WRITE : MAY_READ);
- }
-+/*
-+ * Ensure that we don't remap a partial EOF block in the middle of something
-+ * else.  Assume that the offsets have already been checked for block
-+ * alignment.
-+ *
-+ * For deduplication we always scale down to the previous block because we
-+ * can't meaningfully compare post-EOF contents.
-+ *
-+ * For clone we only link a partial EOF block above the destination file's EOF.
-+ */
-+static int generic_remap_check_len(struct inode *inode_in,
-+				   struct inode *inode_out,
-+				   loff_t pos_out,
-+				   u64 *len,
-+				   bool is_dedupe)
-+{
-+	u64 blkmask = i_blocksize(inode_in) - 1;
++ifdef CONFIG_CC_IS_CLANG
++# clang stores addresses on the stack causing the frame size to blow
++# out. See https://github.com/ClangBuiltLinux/linux/issues/252
++KBUILD_CFLAGS += -Wframe-larger-than=4096
++endif
 +
-+	if ((*len & blkmask) == 0)
-+		return 0;
-+
-+	if (is_dedupe)
-+		*len &= ~blkmask;
-+	else if (pos_out + *len < i_size_read(inode_out))
-+		return -EINVAL;
-+
-+	return 0;
-+}
+ ccflags-$(CONFIG_PPC64) := $(NO_MINIMAL_TOC)
  
- /*
-  * Check that the two inodes are eligible for cloning, the ranges make
-@@ -1821,6 +1849,11 @@ int vfs_clone_file_prep_inodes(struct inode *inode_in, loff_t pos_in,
- 			return -EBADE;
- 	}
- 
-+	ret = generic_remap_check_len(inode_in, inode_out, pos_out, len,
-+			is_dedupe);
-+	if (ret)
-+		return ret;
-+
- 	return 1;
- }
- EXPORT_SYMBOL(vfs_clone_file_prep_inodes);
+ obj-y			+= xmon.o nonstdio.o spr_access.o
 -- 
 2.20.1
 
