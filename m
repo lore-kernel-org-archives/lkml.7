@@ -2,187 +2,114 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C6DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00547C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C03A20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890247;
-	bh=7B3lhqLFlPVFKC1uvf1QDN3dBhA4isXKHtqt43nj7FE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r89uRa1p13ORTZV5ltrYhKRYHy6PrwiiiB9Ip+FkdCdDOAs988M4ZzD58KroFLUEs
-	 i4VpiOfg/CLcPO84TrxoDXXXnpoLQV/N7/Rt9cW3WwKvHUSrGOXY41G6aI6fNPr2cm
-	 BczTm+BjQqAHCi6a6GTwtuozxuhSKy+CVe/7j1Tg=
+	by mail.kernel.org (Postfix) with ESMTP id D4DA220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731558AbfK0Vaq (ORCPT
+        id S1731478AbfK0Vap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:30:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730956AbfK0Uz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:55:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D31D20862;
-        Wed, 27 Nov 2019 20:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888127;
-        bh=7B3lhqLFlPVFKC1uvf1QDN3dBhA4isXKHtqt43nj7FE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0gYG2omwc2+Yu6/YgBHyxpXN7vRYe8S/SG6HqIrq5zFD/NJkcmxyuVC8qM9PGevui
-         cXbLwSdQCN0hjpbxecgLk+IQ64ZW2nrhMGYT2lFpSrHfTpqACLHca/sCMvv3J933g+
-         4lL2jSnN7M1/uTH8HQKZ51gmbuZ4y+baxsX1JkXc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, mst@redhat.com,
-        Laurent Vivier <lvivier@redhat.com>
-Subject: [PATCH 4.19 015/306] virtio_console: allocate inbufs in add_port() only if it is needed
-Date:   Wed, 27 Nov 2019 21:27:45 +0100
-Message-Id: <20191127203115.820868466@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
-References: <20191127203114.766709977@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 27 Nov 2019 16:30:45 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:36718 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730315AbfK0Vam (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:30:42 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 6ECFA1C228B; Wed, 27 Nov 2019 22:30:38 +0100 (CET)
+Date:   Wed, 27 Nov 2019 22:30:37 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v2 11/12] ACPI/sleep: Convert acpi_wakeup_address into a
+ function
+Message-ID: <20191127213037.GB20612@amd>
+References: <20191126165417.22423-1-sean.j.christopherson@intel.com>
+ <20191126165417.22423-12-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
+Content-Disposition: inline
+In-Reply-To: <20191126165417.22423-12-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Vivier <lvivier@redhat.com>
 
-commit d791cfcbf98191122af70b053a21075cb450d119 upstream.
+--ZfOjI3PrQbgiZnxM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When we hot unplug a virtserialport and then try to hot plug again,
-it fails:
+On Tue 2019-11-26 08:54:16, Sean Christopherson wrote:
+> Convert acpi_wakeup_address from a raw variable into a function so that
+> x86 can wrap its dereference of the real mode boot header in a function
+> instead of broadcasting it to the world via a #define.  This sets the
+> stage for a future patch to move x86's definition of the new function,
+> acpi_get_wakeup_address(), out of asm/acpi.h and thus break acpi.h's
+> dependency on asm/realmode.h.
+>=20
+> No functional change intended.
+>=20
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-(qemu) chardev-add socket,id=serial0,path=/tmp/serial0,server,nowait
-(qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
-                  chardev=serial0,id=serial0,name=serial0
-(qemu) device_del serial0
-(qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
-                  chardev=serial0,id=serial0,name=serial0
-kernel error:
-  virtio-ports vport2p2: Error allocating inbufs
-qemu error:
-  virtio-serial-bus: Guest failure in adding port 2 for device \
-                     virtio-serial0.0
+Thanks!
 
-This happens because buffers for the in_vq are allocated when the port is
-added but are not released when the port is unplugged.
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-They are only released when virtconsole is removed (see a7a69ec0d8e4)
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-To avoid the problem and to be symmetric, we could allocate all the buffers
-in init_vqs() as they are released in remove_vqs(), but it sounds like
-a waste of memory.
+--ZfOjI3PrQbgiZnxM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Rather than that, this patch changes add_port() logic to ignore ENOSPC
-error in fill_queue(), which means queue has already been filled.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-Cc: mst@redhat.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Laurent Vivier <lvivier@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+iEYEARECAAYFAl3e6v0ACgkQMOfwapXb+vIvKgCgj+csmgRVJU3LjSgRtQ9xs4OL
+1n8An0cFCD4JerAugYVERVISU8Tw+N8s
+=cvdZ
+-----END PGP SIGNATURE-----
 
----
- drivers/char/virtio_console.c |   28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
-
---- a/drivers/char/virtio_console.c
-+++ b/drivers/char/virtio_console.c
-@@ -1349,24 +1349,24 @@ static void set_console_size(struct port
- 	port->cons.ws.ws_col = cols;
- }
- 
--static unsigned int fill_queue(struct virtqueue *vq, spinlock_t *lock)
-+static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
- {
- 	struct port_buffer *buf;
--	unsigned int nr_added_bufs;
-+	int nr_added_bufs;
- 	int ret;
- 
- 	nr_added_bufs = 0;
- 	do {
- 		buf = alloc_buf(vq->vdev, PAGE_SIZE, 0);
- 		if (!buf)
--			break;
-+			return -ENOMEM;
- 
- 		spin_lock_irq(lock);
- 		ret = add_inbuf(vq, buf);
- 		if (ret < 0) {
- 			spin_unlock_irq(lock);
- 			free_buf(buf, true);
--			break;
-+			return ret;
- 		}
- 		nr_added_bufs++;
- 		spin_unlock_irq(lock);
-@@ -1386,7 +1386,6 @@ static int add_port(struct ports_device
- 	char debugfs_name[16];
- 	struct port *port;
- 	dev_t devt;
--	unsigned int nr_added_bufs;
- 	int err;
- 
- 	port = kmalloc(sizeof(*port), GFP_KERNEL);
-@@ -1445,11 +1444,13 @@ static int add_port(struct ports_device
- 	spin_lock_init(&port->outvq_lock);
- 	init_waitqueue_head(&port->waitqueue);
- 
--	/* Fill the in_vq with buffers so the host can send us data. */
--	nr_added_bufs = fill_queue(port->in_vq, &port->inbuf_lock);
--	if (!nr_added_bufs) {
-+	/* We can safely ignore ENOSPC because it means
-+	 * the queue already has buffers. Buffers are removed
-+	 * only by virtcons_remove(), not by unplug_port()
-+	 */
-+	err = fill_queue(port->in_vq, &port->inbuf_lock);
-+	if (err < 0 && err != -ENOSPC) {
- 		dev_err(port->dev, "Error allocating inbufs\n");
--		err = -ENOMEM;
- 		goto free_device;
- 	}
- 
-@@ -2083,14 +2084,11 @@ static int virtcons_probe(struct virtio_
- 	INIT_WORK(&portdev->control_work, &control_work_handler);
- 
- 	if (multiport) {
--		unsigned int nr_added_bufs;
--
- 		spin_lock_init(&portdev->c_ivq_lock);
- 		spin_lock_init(&portdev->c_ovq_lock);
- 
--		nr_added_bufs = fill_queue(portdev->c_ivq,
--					   &portdev->c_ivq_lock);
--		if (!nr_added_bufs) {
-+		err = fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
-+		if (err < 0) {
- 			dev_err(&vdev->dev,
- 				"Error allocating buffers for control queue\n");
- 			/*
-@@ -2101,7 +2099,7 @@ static int virtcons_probe(struct virtio_
- 					   VIRTIO_CONSOLE_DEVICE_READY, 0);
- 			/* Device was functional: we need full cleanup. */
- 			virtcons_remove(vdev);
--			return -ENOMEM;
-+			return err;
- 		}
- 	} else {
- 		/*
-
-
+--ZfOjI3PrQbgiZnxM--
