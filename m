@@ -2,82 +2,69 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF45C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10778C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D849206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B769A206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:13:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FrHgGXXU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfK0RJr (ORCPT
+        id S1726947AbfK0RN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:09:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:50416 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbfK0RJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:09:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12FDB30E;
-        Wed, 27 Nov 2019 09:09:46 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 019323F6C4;
-        Wed, 27 Nov 2019 09:09:44 -0800 (PST)
-Subject: Re: [PATCH 2/2] iommu: dma: Use of_iommu_get_resv_regions()
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        Wed, 27 Nov 2019 12:13:26 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:38828 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfK0RN0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 12:13:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pEDHHVwu6bn2JJ/YM1Ka+McvYISRwpXtn4e69OMZoRY=; b=FrHgGXXUzlnTbKjWArLd6PYTb
+        ptGd/xSCW7mCL42n2ht9QnfSu5p+yMMhQbgamAE+g1fmA/BoB1cD9lWaBQkgtH0Bqtf6GRjG6Gl39
+        UiuiXwouB1kkvbpo/tLm8ckMVYF2LkPIREf8Qu2ztxwlQiaGPF29U4Ed7+z/vn7ELN4Pgeh9j6Roh
+        Uy3kJNDkasfGlq8LeWEYwZyanCh7RLCk/96vXOjaq4SqbEqJrPIndLN/f9lUZxtioe2OAv7dt8AWk
+        25Az9q76OwMcN53IYSJEPANTwqzKuwqjDvRjJ7zlviJAH3BjqFvE2CG+iNKLdH3iGEoNOKTZFfxlr
+        yopbuTodg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ia0sU-0005M9-Ce; Wed, 27 Nov 2019 17:13:22 +0000
+Date:   Wed, 27 Nov 2019 09:13:22 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-References: <20190829111407.17191-1-thierry.reding@gmail.com>
- <20190829111407.17191-3-thierry.reding@gmail.com>
- <1caeaaa0-c5aa-b630-6d42-055b26764f40@arm.com> <20190902145245.GC1445@ulmo>
- <20190917175950.wrwiqnh5bp62uy3c@willie-the-truck>
- <20191126172910.GA2669319@ulmo> <20191127141631.GA280099@ulmo>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <864d5afb-72b4-a3ef-9c93-3a8ad4864c56@arm.com>
-Date:   Wed, 27 Nov 2019 17:09:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Subject: Re: [PATCH 1/2] dma-mapping: move dma_addressing_limited out of line
+Message-ID: <20191127171322.GE20752@bombadil.infradead.org>
+References: <20191127144006.25998-1-hch@lst.de>
+ <20191127144006.25998-2-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20191127141631.GA280099@ulmo>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127144006.25998-2-hch@lst.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/11/2019 2:16 pm, Thierry Reding wrote:
-[...]
-> Nevermind that, I figured out that I was missingthe initialization of
-> some of the S2CR variables. I've got something that I think is working
-> now, though I don't know yet how to go about cleaning up the initial
-> mapping and "recycling" it.
-> 
-> I'll clean things up a bit, run some more tests and post a new patch
-> that can serve as a basis for discussion.
+On Wed, Nov 27, 2019 at 03:40:05PM +0100, Christoph Hellwig wrote:
+> +/**
+> + * dma_addressing_limited - return if the device is addressing limited
+> + * @dev:	device to check
+> + *
+> + * Return %true if the devices DMA mask is too small to address all memory in
 
-I'm a little puzzled by the smmu->identity domain - disregarding the 
-fact that it's not actually used by the given diff ;) - if isolation is 
-the reason for not simply using a bypass S2CR for the window between 
-reset and the relevant .add_device call where the default domain proper 
-comes in[1], then surely exposing the union of memory regions to the 
-union of all associated devices isn't all that desirable either.
+Could I trouble you to use a : after Return?  That turns it into its
+own section rather than making it part of the generic description.
 
-Either way, I'll give you the pre-emptive warning that this is the SMMU 
-in the way of my EFI framebuffer ;)
-
-...
-arm-smmu 7fb20000.iommu: 	1 context banks (1 stage-2 only)
-...
-
-Robin.
-
-[1] the fact that it currently depends on probe order whether getting 
-that .add_device call requires a driver probing for the device is an 
-error as discussed elsewhere, and will get fixed separately, I promise.
