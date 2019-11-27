@@ -4,50 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2FFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320BFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8D621775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0DCA21843
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889119;
-	bh=+jjDHJxZIeqTOnINzZNlGxXqKuwC1sqvGEFai89MMkY=;
+	s=default; t=1574889124;
+	bh=5qMPp90pyJ9iHGpcpTcjtPuzSnCHUz2f55lGYcnWxHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Iwmpofpl8RHv8HgyyGxTS++qWXtTF/ZghZr8JrG6ZpEpXi3kvQhfm2bPmW8JJ5Fe
-	 wPXqlPWIgsajdWcr+t1J3WQ8rZFQFIRnr0dCbTna40tQfsah61lW5QS9HT1X+slyMo
-	 /ROK6dyusXTQiuZOH0eCGyPomOqvkT2B9pSLiLHA=
+	b=u/Jomh65WLcyGpmOSKzfCAMNSJJsg2hr1Eq5523WJXz4bNphbqIjF4vP7iCQt9SkS
+	 rmPvz2b/7HAJ3J6ZlRYelgIlfjXoQ2ZyW4k7HWmb4iyqyMviZ9dJGBQ04KmGXTTCV9
+	 qoemM5b+otHcc797KHERvut0Jy4BN3fNHAjfqFOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733243AbfK0VL5 (ORCPT
+        id S1731759AbfK0VMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:11:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41372 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:12:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733237AbfK0VLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:11:55 -0500
+        id S1732807AbfK0VL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F4C0215F1;
-        Wed, 27 Nov 2019 21:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 566F82176D;
+        Wed, 27 Nov 2019 21:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889114;
-        bh=+jjDHJxZIeqTOnINzZNlGxXqKuwC1sqvGEFai89MMkY=;
+        s=default; t=1574889117;
+        bh=5qMPp90pyJ9iHGpcpTcjtPuzSnCHUz2f55lGYcnWxHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w8MguYgLe4O7T3QYaCGhWaphdIs12bcNIu/SbCjY2Tgzw8FR5E+np9PShFj2o5sZT
-         jGaEfyGlst12yF/T7J6iPNqxDXjEyfPodLiF3l8FnObNfYtsLTxnZLUPCdYO+REzDB
-         ZzNGYfIrLb2pOLxhR0S5VDQnC8aGVqvKIk5HV1Gk=
+        b=ZyYZWY91IWTYtGzF857oVIK9ngpmsyhx+yjD18fsFieJpUgzVjjn7JgnjJdQc1xl3
+         69Fr10iV6JmlGSrmI0bjNs9mBkoEoa0whderVFAwS433F/U8Y7SM0pjU1GqLuZxbaV
+         H6f9wvu2etu/dNYFMoeUU0ihJcujQ/sTbfieEW/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pavel=20L=C3=B6bl?= <pavel@loebl.cz>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 87/95] USB: serial: mos7840: add USB ID to support Moxa UPort 2210
-Date:   Wed, 27 Nov 2019 21:32:44 +0100
-Message-Id: <20191127202955.993827613@linuxfoundation.org>
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-doc@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Tyler Hicks <tyhicks@canonical.com>, x86-ml <x86@kernel.org>
+Subject: [PATCH 5.3 47/95] x86/speculation: Fix incorrect MDS/TAA mitigation status
+Date:   Wed, 27 Nov 2019 21:32:04 +0100
+Message-Id: <20191127202912.948534486@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,69 +69,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Löbl <pavel@loebl.cz>
+From: Waiman Long <longman@redhat.com>
 
-commit e696d00e65e81d46e911f24b12e441037bf11b38 upstream.
+commit 64870ed1b12e235cfca3f6c6da75b542c973ff78 upstream.
 
-Add USB ID for MOXA UPort 2210. This device contains mos7820 but
-it passes GPIO0 check implemented by driver and it's detected as
-mos7840. Hence product id check is added to force mos7820 mode.
+For MDS vulnerable processors with TSX support, enabling either MDS or
+TAA mitigations will enable the use of VERW to flush internal processor
+buffers at the right code path. IOW, they are either both mitigated
+or both not. However, if the command line options are inconsistent,
+the vulnerabilites sysfs files may not report the mitigation status
+correctly.
 
-Signed-off-by: Pavel Löbl <pavel@loebl.cz>
-Cc: stable <stable@vger.kernel.org>
-[ johan: rename id defines and add vendor-id check ]
-Signed-off-by: Johan Hovold <johan@kernel.org>
+For example, with only the "mds=off" option:
+
+  vulnerabilities/mds:Vulnerable; SMT vulnerable
+  vulnerabilities/tsx_async_abort:Mitigation: Clear CPU buffers; SMT vulnerable
+
+The mds vulnerabilities file has wrong status in this case. Similarly,
+the taa vulnerability file will be wrong with mds mitigation on, but
+taa off.
+
+Change taa_select_mitigation() to sync up the two mitigation status
+and have them turned off if both "mds=off" and "tsx_async_abort=off"
+are present.
+
+Update documentation to emphasize the fact that both "mds=off" and
+"tsx_async_abort=off" have to be specified together for processors that
+are affected by both TAA and MDS to be effective.
+
+ [ bp: Massage and add kernel-parameters.txt change too. ]
+
+Fixes: 1b42f017415b ("x86/speculation/taa: Add mitigation for TSX Async Abort")
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: linux-doc@vger.kernel.org
+Cc: Mark Gross <mgross@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Tyler Hicks <tyhicks@canonical.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191115161445.30809-2-longman@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/mos7840.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ Documentation/admin-guide/hw-vuln/mds.rst             |    7 +++++--
+ Documentation/admin-guide/hw-vuln/tsx_async_abort.rst |    5 ++++-
+ Documentation/admin-guide/kernel-parameters.txt       |   11 +++++++++++
+ arch/x86/kernel/cpu/bugs.c                            |   17 +++++++++++++++--
+ 4 files changed, 35 insertions(+), 5 deletions(-)
 
---- a/drivers/usb/serial/mos7840.c
-+++ b/drivers/usb/serial/mos7840.c
-@@ -119,11 +119,15 @@
- /* This driver also supports
-  * ATEN UC2324 device using Moschip MCS7840
-  * ATEN UC2322 device using Moschip MCS7820
-+ * MOXA UPort 2210 device using Moschip MCS7820
-  */
- #define USB_VENDOR_ID_ATENINTL		0x0557
- #define ATENINTL_DEVICE_ID_UC2324	0x2011
- #define ATENINTL_DEVICE_ID_UC2322	0x7820
+--- a/Documentation/admin-guide/hw-vuln/mds.rst
++++ b/Documentation/admin-guide/hw-vuln/mds.rst
+@@ -265,8 +265,11 @@ time with the option "mds=". The valid a
  
-+#define USB_VENDOR_ID_MOXA		0x110a
-+#define MOXA_DEVICE_ID_2210		0x2210
+   ============  =============================================================
+ 
+-Not specifying this option is equivalent to "mds=full".
+-
++Not specifying this option is equivalent to "mds=full". For processors
++that are affected by both TAA (TSX Asynchronous Abort) and MDS,
++specifying just "mds=off" without an accompanying "tsx_async_abort=off"
++will have no effect as the same mitigation is used for both
++vulnerabilities.
+ 
+ Mitigation selection guide
+ --------------------------
+--- a/Documentation/admin-guide/hw-vuln/tsx_async_abort.rst
++++ b/Documentation/admin-guide/hw-vuln/tsx_async_abort.rst
+@@ -174,7 +174,10 @@ the option "tsx_async_abort=". The valid
+                 CPU is not vulnerable to cross-thread TAA attacks.
+   ============  =============================================================
+ 
+-Not specifying this option is equivalent to "tsx_async_abort=full".
++Not specifying this option is equivalent to "tsx_async_abort=full". For
++processors that are affected by both TAA and MDS, specifying just
++"tsx_async_abort=off" without an accompanying "mds=off" will have no
++effect as the same mitigation is used for both vulnerabilities.
+ 
+ The kernel command line also allows to control the TSX feature using the
+ parameter "tsx=" on CPUs which support TSX control. MSR_IA32_TSX_CTRL is used
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2449,6 +2449,12 @@
+ 				     SMT on vulnerable CPUs
+ 			off        - Unconditionally disable MDS mitigation
+ 
++			On TAA-affected machines, mds=off can be prevented by
++			an active TAA mitigation as both vulnerabilities are
++			mitigated with the same mechanism so in order to disable
++			this mitigation, you need to specify tsx_async_abort=off
++			too.
 +
- /* Interrupt Routine Defines    */
+ 			Not specifying this option is equivalent to
+ 			mds=full.
  
- #define SERIAL_IIR_RLS      0x06
-@@ -195,6 +199,7 @@ static const struct usb_device_id id_tab
- 	{USB_DEVICE(USB_VENDOR_ID_BANDB, BANDB_DEVICE_ID_USOPTL2_4)},
- 	{USB_DEVICE(USB_VENDOR_ID_ATENINTL, ATENINTL_DEVICE_ID_UC2324)},
- 	{USB_DEVICE(USB_VENDOR_ID_ATENINTL, ATENINTL_DEVICE_ID_UC2322)},
-+	{USB_DEVICE(USB_VENDOR_ID_MOXA, MOXA_DEVICE_ID_2210)},
- 	{}			/* terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, id_table);
-@@ -2020,6 +2025,7 @@ static int mos7840_probe(struct usb_seri
- 				const struct usb_device_id *id)
- {
- 	u16 product = le16_to_cpu(serial->dev->descriptor.idProduct);
-+	u16 vid = le16_to_cpu(serial->dev->descriptor.idVendor);
- 	u8 *buf;
- 	int device_type;
+@@ -4896,6 +4902,11 @@
+ 				     vulnerable to cross-thread TAA attacks.
+ 			off        - Unconditionally disable TAA mitigation
  
-@@ -2030,6 +2036,11 @@ static int mos7840_probe(struct usb_seri
- 		goto out;
++			On MDS-affected machines, tsx_async_abort=off can be
++			prevented by an active MDS mitigation as both vulnerabilities
++			are mitigated with the same mechanism so in order to disable
++			this mitigation, you need to specify mds=off too.
++
+ 			Not specifying this option is equivalent to
+ 			tsx_async_abort=full.  On CPUs which are MDS affected
+ 			and deploy MDS mitigation, TAA mitigation is not
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -304,8 +304,12 @@ static void __init taa_select_mitigation
+ 		return;
  	}
  
-+	if (vid == USB_VENDOR_ID_MOXA && product == MOXA_DEVICE_ID_2210) {
-+		device_type = MOSCHIP_DEVICE_ID_7820;
-+		goto out;
+-	/* TAA mitigation is turned off on the cmdline (tsx_async_abort=off) */
+-	if (taa_mitigation == TAA_MITIGATION_OFF)
++	/*
++	 * TAA mitigation via VERW is turned off if both
++	 * tsx_async_abort=off and mds=off are specified.
++	 */
++	if (taa_mitigation == TAA_MITIGATION_OFF &&
++	    mds_mitigation == MDS_MITIGATION_OFF)
+ 		goto out;
+ 
+ 	if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
+@@ -339,6 +343,15 @@ static void __init taa_select_mitigation
+ 	if (taa_nosmt || cpu_mitigations_auto_nosmt())
+ 		cpu_smt_disable(false);
+ 
++	/*
++	 * Update MDS mitigation, if necessary, as the mds_user_clear is
++	 * now enabled for TAA mitigation.
++	 */
++	if (mds_mitigation == MDS_MITIGATION_OFF &&
++	    boot_cpu_has_bug(X86_BUG_MDS)) {
++		mds_mitigation = MDS_MITIGATION_FULL;
++		mds_select_mitigation();
 +	}
-+
- 	buf = kzalloc(VENDOR_READ_LENGTH, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
+ out:
+ 	pr_info("%s\n", taa_strings[taa_mitigation]);
+ }
 
 
