@@ -2,58 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FCDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F443C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E605820870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0974A2154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891171;
-	bh=tFlNYrOC3KCwkdNeWPxNBnmiaoq8RUFA4FkuPLjYP9U=;
+	s=default; t=1574891181;
+	bh=7ELU8Vu6+GPSxNfHPinOpipkeIGoboas9zgz5lzP99o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wLWYCuzA1bRqsMRAJJIKcP4Lx26sPCJ9PuF8OnFaAHEGv0FmSk9R9CVA2rosNvPwF
-	 C4xr7j4mScoFXgOYJmsNXSZMpCbmPgRUlgY9tLMbr9SAOYlgRuc9hF3qKZcfj7w7v8
-	 gERCX7QQ8ufsMVu3CIZ9vFqPtxukKMyTSmK3ARq0=
+	b=JkhPqV/MyhtPcSSJvgTMk3qT8RIJ/WaoogvBKH/lti9MOlgerHk/7IATq9Ebl2XD/
+	 zFsGDWsVO/jg7ie6/7IVI4Ejx9GoAONa5w0wQbTQr+AI3ZQ959+07yDLLIRua1eqyi
+	 TY5ZLARI47T43U5mMFQggAPS2EHYiqcsvdOr4jEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfK0Uee (ORCPT
+        id S1728764AbfK0VqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:34:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34956 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:46:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727615AbfK0Uea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:34:30 -0500
+        id S1727538AbfK0UeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:34:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E714521556;
-        Wed, 27 Nov 2019 20:34:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73D7D207DD;
+        Wed, 27 Nov 2019 20:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886869;
-        bh=tFlNYrOC3KCwkdNeWPxNBnmiaoq8RUFA4FkuPLjYP9U=;
+        s=default; t=1574886853;
+        bh=7ELU8Vu6+GPSxNfHPinOpipkeIGoboas9zgz5lzP99o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sEs+GtmcJsMREQgCWbq4O6saPMHIAIjXotEHe2QLAarfORqH3ww9xjAqQZ2ZzP8DB
-         n1MUEyaI4hoKnA2Xsj6NwRuilDbaCTyH/dB2ZzTxsCdqxvVCaU4C7tyJXN2JDB4KCp
-         KpHU+Ozti1SzjZdFeDgvbkVcDyRXx+e24Bu3WX68=
+        b=ge5uplF8zj8dD4hO+K+xABl7+6vdj5DPF1WFPWEdHNISm1CzE3EEgPYvz+mhjWgPF
+         EP7YxnNieHAenISYM3rqVWXhOEj1p65tagYz8JRoKjHcnJrCbW47jY0dsxcfPN3eZX
+         3KMqNvtEtikx9COz/1bhgMg7KhUvD695HwC6YwpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Thomas Voegtle <tv@lio96.de>, Changwei Ge <gechangwei@live.cn>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 005/132] Revert "fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()"
-Date:   Wed, 27 Nov 2019 21:29:56 +0100
-Message-Id: <20191127202902.263557775@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Darren Hart <dvhart@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 019/132] platform/x86: asus-wmi: add SERIO_I8042 dependency
+Date:   Wed, 27 Nov 2019 21:30:10 +0100
+Message-Id: <20191127202916.307387184@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -66,111 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joseph Qi <joseph.qi@linux.alibaba.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 94b07b6f9e2e996afff7395de6b35f34f4cb10bf upstream.
+[ Upstream commit ea893695ec1131a5fed0523ff8094bc6e8723bbe ]
 
-This reverts commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d.
+A recent bugfix added a call to i8042_install_filter but did
+not add the dependency, leading to possible link errors:
 
-Commit 56e94ea132bb ("fs: ocfs2: fix possible null-pointer dereferences
-in ocfs2_xa_prepare_entry()") introduces a regression that fail to
-create directory with mount option user_xattr and acl.  Actually the
-reported NULL pointer dereference case can be correctly handled by
-loc->xl_ops->xlo_add_entry(), so revert it.
+drivers/platform/built-in.o: In function `asus_nb_wmi_quirks':
+asus-nb-wmi.c:(.text+0x23af): undefined reference to `i8042_install_filter'
 
-Link: http://lkml.kernel.org/r/1573624916-83825-1-git-send-email-joseph.qi@linux.alibaba.com
-Fixes: 56e94ea132bb ("fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()")
-Signed-off-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Reported-by: Thomas Voegtle <tv@lio96.de>
-Acked-by: Changwei Ge <gechangwei@live.cn>
-Cc: Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This adds a dependency on SERIO_I8042||SERIO_I8042=n to indicate
+that we can build the driver when the i8042 driver is disabled,
+but it cannot be built-in when that is a loadable module.
 
+Fixes: b5643539b825 ("platform/x86: asus-wmi: Filter buggy scan codes on ASUS Q500A")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/xattr.c |   56 ++++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 33 insertions(+), 23 deletions(-)
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ocfs2/xattr.c
-+++ b/fs/ocfs2/xattr.c
-@@ -1475,6 +1475,18 @@ static int ocfs2_xa_check_space(struct o
- 	return loc->xl_ops->xlo_check_space(loc, xi);
- }
- 
-+static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
-+{
-+	loc->xl_ops->xlo_add_entry(loc, name_hash);
-+	loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
-+	/*
-+	 * We can't leave the new entry's xe_name_offset at zero or
-+	 * add_namevalue() will go nuts.  We set it to the size of our
-+	 * storage so that it can never be less than any other entry.
-+	 */
-+	loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
-+}
-+
- static void ocfs2_xa_add_namevalue(struct ocfs2_xa_loc *loc,
- 				   struct ocfs2_xattr_info *xi)
- {
-@@ -2106,31 +2118,29 @@ static int ocfs2_xa_prepare_entry(struct
- 	if (rc)
- 		goto out;
- 
--	if (!loc->xl_entry) {
--		rc = -EINVAL;
--		goto out;
--	}
--
--	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
--		orig_value_size = loc->xl_entry->xe_value_size;
--		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
--		if (rc)
--			goto out;
--		goto alloc_value;
--	}
-+	if (loc->xl_entry) {
-+		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
-+			orig_value_size = loc->xl_entry->xe_value_size;
-+			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
-+			if (rc)
-+				goto out;
-+			goto alloc_value;
-+		}
- 
--	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
--		orig_clusters = ocfs2_xa_value_clusters(loc);
--		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
--		if (rc) {
--			mlog_errno(rc);
--			ocfs2_xa_cleanup_value_truncate(loc,
--							"overwriting",
--							orig_clusters);
--			goto out;
-+		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
-+			orig_clusters = ocfs2_xa_value_clusters(loc);
-+			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
-+			if (rc) {
-+				mlog_errno(rc);
-+				ocfs2_xa_cleanup_value_truncate(loc,
-+								"overwriting",
-+								orig_clusters);
-+				goto out;
-+			}
- 		}
--	}
--	ocfs2_xa_wipe_namevalue(loc);
-+		ocfs2_xa_wipe_namevalue(loc);
-+	} else
-+		ocfs2_xa_add_entry(loc, name_hash);
- 
- 	/*
- 	 * If we get here, we have a blank entry.  Fill it.  We grow our
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 953974b5a9a95..6487453c68b59 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -566,6 +566,7 @@ config ASUS_WMI
+ config ASUS_NB_WMI
+ 	tristate "Asus Notebook WMI Driver"
+ 	depends on ASUS_WMI
++	depends on SERIO_I8042 || SERIO_I8042 = n
+ 	---help---
+ 	  This is a driver for newer Asus notebooks. It adds extra features
+ 	  like wireless radio and bluetooth control, leds, hotkeys, backlight...
+-- 
+2.20.1
+
 
 
