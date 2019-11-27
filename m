@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92353C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B4BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C842158C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342CD21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888514;
-	bh=nJ49gYhEL/vKBChnulon0sgeTedMmKmQ57sKJFu4eRw=;
+	s=default; t=1574888521;
+	bh=w0/xY84kePr1FeSz8bEq9jbc2HkpuXp4oF3+DxCx8oU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D8iZIT+RTR/Xxc1ZOxhSUaAohAkszqMnISRS/brZkH5l8qwj7ihgGr1Fl5s6aqJNo
-	 i8RMOZ84ahhIoq6XxzamnTg/owoaMpNL+hulX2KKQb8dnw+l+SpUdt5jtylGM9f2Mv
-	 98xe8b9WbBcQe0oedsaRuHXznTAeDh1ugQQFK9x8=
+	b=uXOkRC+ajNNrKmBm1bKIkq23gMCpb4Pwa6RG10SlyFHHaZ8NBqnUfbt1xnLUBSgg2
+	 kzZWGu96P81X/wOBpjRBq4ZLhcbxqDc4QKkYSk/xlzzPDbDZcD60+Hosvn3TZqP+vD
+	 IbCRRR7rKOZcuIQbk6m6ykLYsQOtKNWzKcacgPBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfK0VBx (ORCPT
+        id S1731817AbfK0VCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:01:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54292 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:02:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731787AbfK0VBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:01:50 -0500
+        id S1731806AbfK0VB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:01:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65A402084B;
-        Wed, 27 Nov 2019 21:01:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01F7F2084B;
+        Wed, 27 Nov 2019 21:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888509;
-        bh=nJ49gYhEL/vKBChnulon0sgeTedMmKmQ57sKJFu4eRw=;
+        s=default; t=1574888517;
+        bh=w0/xY84kePr1FeSz8bEq9jbc2HkpuXp4oF3+DxCx8oU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UvCQkH5SvXH19lUU65qs1+te24qMEQlKqcfLmtGVXt/XT+5USDWIjkiAWClSCZi4C
-         1pfC/8olllZOR9kWumy9QWbCAYmFUFhTlZT8j1ipinEFrTQRGyT0+kPHCP/5bN8+dH
-         kZz8jwpDEqhMGroOV7uTohB1fk6ZC4TwAR6u+kTk=
+        b=o868asB1Kc7rkBDXn3Uj+c6JmAb4EcXN3BRRA4f1LPBHSX91cXSqjdziq7RE9rR8h
+         +IeQEJYA7jRGZBNxfurTltMHbSTAme61ukaRTzrPowQrsdnCP1Z6SoeSj98FCWLC0m
+         USWihsUHdHlSQE90h98PgJmU75mKCPr/sVJs3gUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 162/306] selftests/powerpc/signal: Fix out-of-tree build
-Date:   Wed, 27 Nov 2019 21:30:12 +0100
-Message-Id: <20191127203127.315873242@linuxfoundation.org>
+Subject: [PATCH 4.19 165/306] block: call rq_qos_exit() after queue is frozen
+Date:   Wed, 27 Nov 2019 21:30:15 +0100
+Message-Id: <20191127203127.492254648@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,49 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 27825349d7b238533a47e3d98b8bb0efd886b752 ]
+[ Upstream commit c57cdf7a9e51d97a43e29b8f4a04157875104000 ]
 
-We should use TEST_GEN_PROGS, not TEST_PROGS. That tells the selftests
-makefile (lib.mk) that those tests are generated (built), and so it
-adds the $(OUTPUT) prefix for us, making the out-of-tree build work
-correctly.
+rq_qos_exit() removes the current q->rq_qos, this action has to be
+done after queue is frozen, otherwise the IO queue path may never
+be waken up, then IO hang is caused.
 
-It also means we don't need our own clean rule, lib.mk does it.
+So fixes this issue by moving rq_qos_exit() after queue is frozen.
 
-We also have to update the signal_tm rule to use $(OUTPUT).
-
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/signal/Makefile | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ block/blk-core.c  | 3 +++
+ block/blk-sysfs.c | 2 --
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/signal/Makefile b/tools/testing/selftests/powerpc/signal/Makefile
-index 1fca25c6ace06..209a958dca127 100644
---- a/tools/testing/selftests/powerpc/signal/Makefile
-+++ b/tools/testing/selftests/powerpc/signal/Makefile
-@@ -1,15 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0
--TEST_PROGS := signal signal_tm
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 074ae9376189b..ea33d6abdcfc9 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -784,6 +784,9 @@ void blk_cleanup_queue(struct request_queue *q)
+ 	 * prevent that q->request_fn() gets invoked after draining finished.
+ 	 */
+ 	blk_freeze_queue(q);
++
++	rq_qos_exit(q);
++
+ 	spin_lock_irq(lock);
+ 	queue_flag_set(QUEUE_FLAG_DEAD, q);
+ 	spin_unlock_irq(lock);
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index bab47a17b96f4..8286640d4d663 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -997,8 +997,6 @@ void blk_unregister_queue(struct gendisk *disk)
+ 	kobject_del(&q->kobj);
+ 	blk_trace_remove_sysfs(disk_to_dev(disk));
+ 
+-	rq_qos_exit(q);
 -
--all: $(TEST_PROGS)
--
--$(TEST_PROGS): ../harness.c ../utils.c signal.S
-+TEST_GEN_PROGS := signal signal_tm
- 
- CFLAGS += -maltivec
--signal_tm: CFLAGS += -mhtm
-+$(OUTPUT)/signal_tm: CFLAGS += -mhtm
- 
- top_srcdir = ../../../../..
- include ../../lib.mk
- 
--clean:
--	rm -f $(TEST_PROGS) *.o
-+$(TEST_GEN_PROGS): ../harness.c ../utils.c signal.S
+ 	mutex_lock(&q->sysfs_lock);
+ 	if (q->request_fn || (q->mq_ops && q->elevator))
+ 		elv_unregister_queue(q);
 -- 
 2.20.1
 
