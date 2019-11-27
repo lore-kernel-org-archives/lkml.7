@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67920C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36554C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392B321775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B20B21789
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889045;
-	bh=JdTkV7/44ucTxykzjuJkfEkDyJYwgFjz7gDeCoZMK9Q=;
+	s=default; t=1574889050;
+	bh=w+m6KjUIoZY/8hFdgusd84msZw06EQ08t3XBUtOWqvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kSSHBYtZ+7aJXxDXiZnznSXRbXTNF/KsmIYoQCHATUISFyyHr9HysPpVToe6/Y9m5
-	 K+kjJggWvgZ8nItZqti17wRLPI2EFpFZgp3kbc57/Kbu1NF6j0zv+HECZbv3jOuQrp
-	 2mQzUxVO+VHBiuPg2zo1X2C+8sfkFead3TBmxxVI=
+	b=hrKCR8UvBtbd7SJq1jS/NEAJOJno98Cl7014HbaNTHaBNU+u3ZD3OVzNP9h/inHCn
+	 65ZGls4TjZ/GoowsolAijDrAMFP85xGGmzuFuKbK0nDqCIEOW8riSHhhmpFyeCQgU6
+	 e54d8tU85rQifpJcsYK9fTHNc3V/JHPJ9VuabObQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732528AbfK0VKn (ORCPT
+        id S1733082AbfK0VKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:10:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37996 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:10:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733064AbfK0VKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:10:39 -0500
+        id S1732659AbfK0VKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:10:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 444CF2176D;
-        Wed, 27 Nov 2019 21:10:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF0822154A;
+        Wed, 27 Nov 2019 21:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889037;
-        bh=JdTkV7/44ucTxykzjuJkfEkDyJYwgFjz7gDeCoZMK9Q=;
+        s=default; t=1574889040;
+        bh=w+m6KjUIoZY/8hFdgusd84msZw06EQ08t3XBUtOWqvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EvkzFqjexPN92jZ7MngfKEblvs/1PBEjzwlPzIquk+kqae1YlN3PstZSuHXBdwkXa
-         Ic806my3gdIor/HXZMHK+nKMgTi7X26Ervz47JlSEGluZUZ+h9Kv/VBqwrU1btsb4J
-         xZYsLWeXMjr5Y7c5EUqRDYs+utSxYoUhelZ+q1QU=
+        b=yIxgaU4MJ8qY1rbO+61gNURVEpwZwOowGhjLfwoHvYVCjg2jdRTKiNup62DolLaCD
+         Y3ctweMRNAJ3Fh+7cMamnllaRW5cTCSvo/ZcOTg/qZ5ZxmgXaTotNcsfI7qHRuz6vN
+         8TuU2/81N2k+nNrPXsIVflZq33/iAAtqI5hznTqc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org
-Subject: [PATCH 5.3 60/95] x86/entry/32: Unwind the ESPFIX stack earlier on exception entry
-Date:   Wed, 27 Nov 2019 21:32:17 +0100
-Message-Id: <20191127202927.235334004@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>, stable@kernel.org
+Subject: [PATCH 5.3 61/95] x86/entry/32: Fix NMI vs ESPFIX
+Date:   Wed, 27 Nov 2019 21:32:18 +0100
+Message-Id: <20191127202927.340839341@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -59,117 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit a1a338e5b6fe9e0a39c57c232dc96c198bb53e47 upstream.
+commit 895429076512e9d1cf5428181076299c90713159 upstream.
 
-Right now, we do some fancy parts of the exception entry path while SS
-might have a nonzero base: we fill in regs->ss and regs->sp, and we
-consider switching to the kernel stack. This results in regs->ss and
-regs->sp referring to a non-flat stack and it may result in
-overflowing the entry stack. The former issue means that we can try to
-call iret_exc on a non-flat stack, which doesn't work.
+When the NMI lands on an ESPFIX_SS, we are on the entry stack and must
+swizzle, otherwise we'll run do_nmi() on the entry stack, which is
+BAD.
 
-Tested with selftests/x86/sigreturn_32.
+Also, similar to the normal exception path, we need to correct the
+ESPFIX magic before leaving the entry stack, otherwise pt_regs will
+present a non-flat stack pointer.
 
-Fixes: 45d7b255747c ("x86/entry/32: Enter the kernel via trampoline stack")
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Tested by running sigreturn_32 concurrent with perf-record.
+
+Fixes: e5862d0515ad ("x86/entry/32: Leave the kernel via trampoline stack")
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Andy Lutomirski <luto@kernel.org>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_32.S |   30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ arch/x86/entry/entry_32.S |   53 +++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 41 insertions(+), 12 deletions(-)
 
 --- a/arch/x86/entry/entry_32.S
 +++ b/arch/x86/entry/entry_32.S
-@@ -210,8 +210,6 @@
+@@ -205,6 +205,7 @@
+ #define CS_FROM_ENTRY_STACK	(1 << 31)
+ #define CS_FROM_USER_CR3	(1 << 30)
+ #define CS_FROM_KERNEL		(1 << 29)
++#define CS_FROM_ESPFIX		(1 << 28)
+ 
+ .macro FIXUP_FRAME
  	/*
- 	 * The high bits of the CS dword (__csh) are used for CS_FROM_*.
- 	 * Clear them in case hardware didn't do this for us.
--	 *
--	 * Be careful: we may have nonzero SS base due to ESPFIX.
- 	 */
- 	andl	$0x0000ffff, 4*4(%esp)
- 
-@@ -307,12 +305,21 @@
- .Lfinished_frame_\@:
+@@ -342,8 +343,8 @@
+ .endif
  .endm
  
--.macro SAVE_ALL pt_regs_ax=%eax switch_stacks=0 skip_gs=0
-+.macro SAVE_ALL pt_regs_ax=%eax switch_stacks=0 skip_gs=0 unwind_espfix=0
- 	cld
- .if \skip_gs == 0
- 	PUSH_GS
- .endif
- 	pushl	%fs
-+
-+	pushl	%eax
-+	movl	$(__KERNEL_PERCPU), %eax
-+	movl	%eax, %fs
-+.if \unwind_espfix > 0
-+	UNWIND_ESPFIX_STACK
-+.endif
-+	popl	%eax
-+
- 	FIXUP_FRAME
- 	pushl	%es
- 	pushl	%ds
-@@ -326,8 +333,6 @@
- 	movl	$(__USER_DS), %edx
- 	movl	%edx, %ds
- 	movl	%edx, %es
--	movl	$(__KERNEL_PERCPU), %edx
--	movl	%edx, %fs
- .if \skip_gs == 0
- 	SET_KERNEL_GS %edx
- .endif
-@@ -1153,18 +1158,17 @@ ENDPROC(entry_INT80_32)
- 	lss	(%esp), %esp			/* switch to the normal stack segment */
- #endif
- .endm
-+
- .macro UNWIND_ESPFIX_STACK
-+	/* It's safe to clobber %eax, all other regs need to be preserved */
+-.macro SAVE_ALL_NMI cr3_reg:req
+-	SAVE_ALL
++.macro SAVE_ALL_NMI cr3_reg:req unwind_espfix=0
++	SAVE_ALL unwind_espfix=\unwind_espfix
+ 
+ 	BUG_IF_WRONG_CR3
+ 
+@@ -1526,6 +1527,10 @@ ENTRY(nmi)
+ 	ASM_CLAC
+ 
  #ifdef CONFIG_X86_ESPFIX32
++	/*
++	 * ESPFIX_SS is only ever set on the return to user path
++	 * after we've switched to the entry stack.
++	 */
+ 	pushl	%eax
  	movl	%ss, %eax
- 	/* see if on espfix stack */
  	cmpw	$__ESPFIX_SS, %ax
--	jne	27f
--	movl	$__KERNEL_DS, %eax
--	movl	%eax, %ds
--	movl	%eax, %es
-+	jne	.Lno_fixup_\@
- 	/* switch to normal stack */
- 	FIXUP_ESPFIX_STACK
--27:
-+.Lno_fixup_\@:
+@@ -1561,6 +1566,11 @@ ENTRY(nmi)
+ 	movl	%ebx, %esp
+ 
+ .Lnmi_return:
++#ifdef CONFIG_X86_ESPFIX32
++	testl	$CS_FROM_ESPFIX, PT_CS(%esp)
++	jnz	.Lnmi_from_espfix
++#endif
++
+ 	CHECK_AND_APPLY_ESPFIX
+ 	RESTORE_ALL_NMI cr3_reg=%edi pop=4
+ 	jmp	.Lirq_return
+@@ -1568,23 +1578,42 @@ ENTRY(nmi)
+ #ifdef CONFIG_X86_ESPFIX32
+ .Lnmi_espfix_stack:
+ 	/*
+-	 * create the pointer to lss back
++	 * Create the pointer to LSS back
+ 	 */
+ 	pushl	%ss
+ 	pushl	%esp
+ 	addl	$4, (%esp)
+-	/* copy the iret frame of 12 bytes */
+-	.rept 3
+-	pushl	16(%esp)
+-	.endr
+-	pushl	%eax
+-	SAVE_ALL_NMI cr3_reg=%edi
++
++	/* Copy the (short) IRET frame */
++	pushl	4*4(%esp)	# flags
++	pushl	4*4(%esp)	# cs
++	pushl	4*4(%esp)	# ip
++
++	pushl	%eax		# orig_ax
++
++	SAVE_ALL_NMI cr3_reg=%edi unwind_espfix=1
+ 	ENCODE_FRAME_POINTER
+-	FIXUP_ESPFIX_STACK			# %eax == %esp
++
++	/* clear CS_FROM_KERNEL, set CS_FROM_ESPFIX */
++	xorl	$(CS_FROM_ESPFIX | CS_FROM_KERNEL), PT_CS(%esp)
++
+ 	xorl	%edx, %edx			# zero error code
+-	call	do_nmi
++	movl	%esp, %eax			# pt_regs pointer
++	jmp	.Lnmi_from_sysenter_stack
++
++.Lnmi_from_espfix:
+ 	RESTORE_ALL_NMI cr3_reg=%edi
+-	lss	12+4(%esp), %esp		# back to espfix stack
++	/*
++	 * Because we cleared CS_FROM_KERNEL, IRET_FRAME 'forgot' to
++	 * fix up the gap and long frame:
++	 *
++	 *  3 - original frame	(exception)
++	 *  2 - ESPFIX block	(above)
++	 *  6 - gap		(FIXUP_FRAME)
++	 *  5 - long frame	(FIXUP_FRAME)
++	 *  1 - orig_ax
++	 */
++	lss	(1+5+6)*4(%esp), %esp			# back to espfix stack
+ 	jmp	.Lirq_return
  #endif
- .endm
- 
-@@ -1458,10 +1462,9 @@ END(page_fault)
- 
- common_exception_read_cr2:
- 	/* the function address is in %gs's slot on the stack */
--	SAVE_ALL switch_stacks=1 skip_gs=1
-+	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
- 
- 	ENCODE_FRAME_POINTER
--	UNWIND_ESPFIX_STACK
- 
- 	/* fixup %gs */
- 	GS_TO_REG %ecx
-@@ -1483,9 +1486,8 @@ END(common_exception_read_cr2)
- 
- common_exception:
- 	/* the function address is in %gs's slot on the stack */
--	SAVE_ALL switch_stacks=1 skip_gs=1
-+	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
- 	ENCODE_FRAME_POINTER
--	UNWIND_ESPFIX_STACK
- 
- 	/* fixup %gs */
- 	GS_TO_REG %ecx
+ END(nmi)
 
 
