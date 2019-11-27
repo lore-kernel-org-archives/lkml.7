@@ -2,251 +2,139 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DDEC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A234AC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99C72070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A03F2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lmPtANha"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="EPFRTqu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbfK0JS4 (ORCPT
+        id S1726515AbfK0JU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 04:18:56 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48912 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfK0JS4 (ORCPT
+        Wed, 27 Nov 2019 04:20:27 -0500
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:57339 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfK0JU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 04:18:56 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR9Iktm083317;
-        Wed, 27 Nov 2019 03:18:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574846326;
-        bh=XFhek+qvbAe7MjOMmQtP2HopBs5gFCWKOjXGk8ta+YI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lmPtANhajOVhFeLhrQAwneV2E0RKomRRmeP/Y6r2yQHLdFOhfWRewKVa0yFlfqUt3
-         ELLnx4GgsDkWn90jLPpq3+b8mkr/we6oSfGd3FDChVv+SS3ShfdkLtJ+JljuvhsfMC
-         QIxbDcwdkTiEsE1v+risLVMjtlY3f0BMwxfjk6cg=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR9IkPR124247
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 Nov 2019 03:18:46 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
- Nov 2019 03:18:46 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 27 Nov 2019 03:18:46 -0600
-Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR9IfC3075387;
-        Wed, 27 Nov 2019 03:18:42 -0600
-Subject: Re: [PATCH 1/4] PCI: dwc: Add new feature to skip core initialization
-To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>
-CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-2-vidyas@nvidia.com>
- <973f239f-fdb8-b119-5ca1-b0a6307efe21@ti.com>
- <9151ba97-f27e-3ff4-1e4c-f0d29bab47e5@nvidia.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <373562ee-324c-66bc-5e8c-1dccb497886e@ti.com>
-Date:   Wed, 27 Nov 2019 14:48:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 04:20:27 -0500
+X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Nov 2019 04:20:26 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1574846426;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=9uuURIb8lrZNL/OMu7igvzdkxlazHa9ULxcdZfdQEJk=;
+  b=EPFRTqu7qGE0PnTMBM61BMPiR89NpZMOBWQJBOI3Uk05xGnj7AVYD/oo
+   kayMYYzU2Z7psgmhd5VaFrE+TxWSn5leyp9LMO3uWvHReSGlpFG9bhK5S
+   hai5aVgeD3A1fwi0zz7DQbOUeJqyR2f5+Qvi9OSeSdBKjttJmXop4TOKO
+   A=;
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: 3w5d59L52Mn1fIy3qlLg2l1iAGFHhwnFM+YxEHAiihny2aU1k/iXW9X2fzLiyzswN46YEeyy82
+ MLt3NJLzRsx9IenYw0lON3SkfoO7Rl4dtAjrcoReZBPDbYWosP5elBiuth7JAsxXx7N1hOogoa
+ jpZQ/nVMnSfxXiMEF9T2J1hEjRrA6zjwKijqesLels9WAo+D9IGxa6G5jMou7W8ZJ2Tmm9cv6h
+ zHQFdo2MGJoFlqg0Mts+7CAI6B4pOEvFe6V8OzDi2yz9tcCcDnh9TGgZadpIwwi6p2q1fap1vA
+ d8o=
+X-SBRS: 2.7
+X-MesageID: 9306850
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.69,248,1571716800"; 
+   d="scan'208";a="9306850"
+Date:   Wed, 27 Nov 2019 10:13:14 +0100
+From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <konrad.wilk@oracle.com>, <axboe@kernel.dk>,
+        <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
+Subject: Re: [PATCH] xen/blkback: Avoid unmapping unmapped grant pages
+Message-ID: <20191127091314.GK980@Air-de-Roger>
+References: <20191126153605.27564-1-sjpark@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <9151ba97-f27e-3ff4-1e4c-f0d29bab47e5@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191126153605.27564-1-sjpark@amazon.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Nov 26, 2019 at 04:36:05PM +0100, SeongJae Park wrote:
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> For each I/O request, blkback first maps the foreign pages for the
+> request to its local pages.  If an allocation of a local page for the
+> mapping fails, it should unmap every mapping already made for the
+> request.
+> 
+> However, blkback's handling mechanism for the allocation failure does
+> not mark the remaining foreign pages as unmapped.  Therefore, the unmap
+> function merely tries to unmap every valid grant page for the request,
+> including the pages not mapped due to the allocation failure.  On a
+> system that fails the allocation frequently, this problem leads to
+> following kernel crash.
+> 
+>   [  372.012538] BUG: unable to handle kernel NULL pointer dereference at 0000000000000001
+>   [  372.012546] IP: [<ffffffff814071ac>] gnttab_unmap_refs.part.7+0x1c/0x40
+>   [  372.012557] PGD 16f3e9067 PUD 16426e067 PMD 0
+>   [  372.012562] Oops: 0002 [#1] SMP
+>   [  372.012566] Modules linked in: act_police sch_ingress cls_u32
+>   ...
+>   [  372.012746] Call Trace:
+>   [  372.012752]  [<ffffffff81407204>] gnttab_unmap_refs+0x34/0x40
+>   [  372.012759]  [<ffffffffa0335ae3>] xen_blkbk_unmap+0x83/0x150 [xen_blkback]
+>   ...
+>   [  372.012802]  [<ffffffffa0336c50>] dispatch_rw_block_io+0x970/0x980 [xen_blkback]
+>   ...
+>   Decompressing Linux... Parsing ELF... done.
+>   Booting the kernel.
+>   [    0.000000] Initializing cgroup subsys cpuset
+> 
+> This commit fixes this problem by marking the grant pages of the given
+> request that didn't mapped due to the allocation failure as invalid.
+> 
+> Fixes: c6cc142dac52 ("xen-blkback: use balloon pages for all mappings")
+> 
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> Reviewed-by: David Woodhouse <dwmw@amazon.de>
+> Reviewed-by: Maximilian Heyne <mheyne@amazon.de>
+> Reviewed-by: Paul Durrant <pdurrant@amazon.co.uk>
 
-On 27/11/19 2:10 PM, Vidya Sagar wrote:
-> On 11/27/2019 1:44 PM, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On 13/11/19 2:38 PM, Vidya Sagar wrote:
->>> Add a new feature 'skip_core_init' that can be set by platform drivers
->>> of devices that do not have their core registers available until reference
->>> clock from host is available (Ex:- Tegra194) to indicate DesignWare
->>> endpoint mode sub-system to not perform core registers initialization.
->>> Existing dw_pcie_ep_init() is refactored and all the code that touches
->>> registers is extracted to form a new API dw_pcie_ep_init_complete() that
->>> can be called later by platform drivers setting 'skip_core_init' to '1'.
->>>
->>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>> ---
->>>   .../pci/controller/dwc/pcie-designware-ep.c   | 72 +++++++++++--------
->>>   drivers/pci/controller/dwc/pcie-designware.h  |  6 ++
->>>   include/linux/pci-epc.h                       |  1 +
->>>   3 files changed, 51 insertions(+), 28 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> b/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> index 3dd2e2697294..06f4379be8a3 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> @@ -492,19 +492,53 @@ static unsigned int
->>> dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
->>>       return 0;
->>>   }
->>>   -int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->>>   {
->>> +    struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->>> +    unsigned int offset;
->>> +    unsigned int nbars;
->>> +    u8 hdr_type;
->>> +    u32 reg;
->>>       int i;
->>> +
->>> +    hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
->>> +    if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
->>> +        dev_err(pci->dev,
->>> +            "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
->>> +            hdr_type);
->>> +        return -EIO;
->>> +    }
->>> +
->>> +    ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
->>> +
->>> +    ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
->>> +
->>> +    offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
->>> +    if (offset) {
->>> +        reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
->>> +        nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
->>> +            PCI_REBAR_CTRL_NBAR_SHIFT;
->>> +
->>> +        dw_pcie_dbi_ro_wr_en(pci);
->>> +        for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
->>> +            dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
->>> +        dw_pcie_dbi_ro_wr_dis(pci);
->>> +    }
->>> +
->>> +    dw_pcie_setup(pci);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>> +{
->>>       int ret;
->>> -    u32 reg;
->>>       void *addr;
->>> -    u8 hdr_type;
->>> -    unsigned int nbars;
->>> -    unsigned int offset;
->>>       struct pci_epc *epc;
->>>       struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->>>       struct device *dev = pci->dev;
->>>       struct device_node *np = dev->of_node;
->>> +    const struct pci_epc_features *epc_features;
->>>         if (!pci->dbi_base || !pci->dbi_base2) {
->>>           dev_err(dev, "dbi_base/dbi_base2 is not populated\n");
->>> @@ -563,13 +597,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>>       if (ep->ops->ep_init)
->>>           ep->ops->ep_init(ep);
->>>   -    hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
->>> -    if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
->>> -        dev_err(pci->dev, "PCIe controller is not set to EP mode
->>> (hdr_type:0x%x)!\n",
->>> -            hdr_type);
->>> -        return -EIO;
->>> -    }
->>> -
->>>       ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
->>>       if (ret < 0)
->>>           epc->max_functions = 1;
->>> @@ -587,23 +614,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>>           dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
->>>           return -ENOMEM;
->>>       }
->>> -    ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
->>>   -    ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
->>> -
->>> -    offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
->>> -    if (offset) {
->>> -        reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
->>> -        nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
->>> -            PCI_REBAR_CTRL_NBAR_SHIFT;
->>> -
->>> -        dw_pcie_dbi_ro_wr_en(pci);
->>> -        for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
->>> -            dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
->>> -        dw_pcie_dbi_ro_wr_dis(pci);
->>> +    if (ep->ops->get_features) {
->>> +        epc_features = ep->ops->get_features(ep);
->>> +        if (epc_features->skip_core_init)
->>> +            return 0;
->>>       }
->>>   -    dw_pcie_setup(pci);
->>> -
->>> -    return 0;
->>> +    return dw_pcie_ep_init_complete(ep);
->>>   }
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h
->>> b/drivers/pci/controller/dwc/pcie-designware.h
->>> index 5accdd6bc388..340783e9032e 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>> @@ -399,6 +399,7 @@ static inline int dw_pcie_allocate_domains(struct
->>> pcie_port *pp)
->>>   #ifdef CONFIG_PCIE_DW_EP
->>>   void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
->>>   int dw_pcie_ep_init(struct dw_pcie_ep *ep);
->>> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
->>>   void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
->>>   int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
->>>   int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->>> @@ -416,6 +417,11 @@ static inline int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>>       return 0;
->>>   }
->>>   +static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->>> +{
->>> +    return 0;
->>> +}
->>> +
->>>   static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->>>   {
->>>   }
->>> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
->>> index 36644ccd32ac..241e6a6f39fb 100644
->>> --- a/include/linux/pci-epc.h
->>> +++ b/include/linux/pci-epc.h
->>> @@ -121,6 +121,7 @@ struct pci_epc_features {
->>>       u8    bar_fixed_64bit;
->>>       u64    bar_fixed_size[PCI_STD_NUM_BARS];
->>>       size_t    align;
->>> +    bool    skip_core_init;
->>
->> This looks more like a designware specific change. Why is it added to the core
->> pci_epc_features?
-> Although the changes are done in DesignWare core (as Tegra194 uses DesignWare IP),
-> core not being available for programming before REFCLK from host is available,
-> seemed
-> like a very generic case to me, so I added this as part of core features it self.
+Reviewed-by: Roger Pau Monn� <roger.pau@citrix.com>
 
-right, I think you can name the epc_feature as core_init_notifier instead of
-skip_core_init (similar to linkup_notifier?) and add that as a first patch.
-Then you can use the epc_features in epf_test and designware in subsequent patches.
-
-Thanks
-Kishon
+Thanks, Roger.
