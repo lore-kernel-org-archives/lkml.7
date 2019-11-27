@@ -2,87 +2,95 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC34DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485A0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D7221556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 133DE21741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574889852;
+	bh=QiUo4hDo6X9EO6O8FE6TbEIZnyPD3uwyPo97cTDFrBg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nPQ8OSChem0nvcYuH84Wf1GJGM+6O3GnNAjU0XSTkbrFGFTjGbzcevnQSBbgsxaZr
+	 BHGfcTx7NBZLVKVnKo3r3xyB+PZlhU/4+1UFCZ3Dy32p8+wDwUGLspWUlshDEbmRj1
+	 Rt30Q8WC90odn4/lj0VW+rJ+v4CzP1A3QceLY3GY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732846AbfK0VYF (ORCPT
+        id S1732814AbfK0VYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:24:05 -0500
-Received: from mga18.intel.com ([134.134.136.126]:25959 "EHLO mga18.intel.com"
+        Wed, 27 Nov 2019 16:24:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727361AbfK0VYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:24:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 13:24:03 -0800
-X-IronPort-AV: E=Sophos;i="5.69,251,1571727600"; 
-   d="scan'208";a="203209747"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 13:24:03 -0800
-Message-ID: <4a2aa8554933c2d004761d5f3e8132018be5ea27.camel@linux.intel.com>
-Subject: Re: [PATCH] driver core: Fix test_async_driver_probe if NUMA is
- disabled
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 27 Nov 2019 13:24:02 -0800
-In-Reply-To: <20191127202453.28087-1-linux@roeck-us.net>
-References: <20191127202453.28087-1-linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        id S1732066AbfK0VDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:03:42 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B12A21771;
+        Wed, 27 Nov 2019 21:03:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574888621;
+        bh=QiUo4hDo6X9EO6O8FE6TbEIZnyPD3uwyPo97cTDFrBg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=k0J5jtBVVd8EMz4EvcZMxYuL83WaNn1iScTXloH3q+yt1nOeDNogBQxlXOtHcgAIy
+         +7gl83itFHBwNmk332PePYiAgCnJldgdLXHIvyteN8LpNrEpZiRi/0X0pAKKEQiyG0
+         1za9Me2iisDXT2Z7NrWjBKla6I9kz0Xu1oWXiFVU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 206/306] soc: bcm: brcmstb: Fix re-entry point with a THUMB2_KERNEL
+Date:   Wed, 27 Nov 2019 21:30:56 +0100
+Message-Id: <20191127203130.187488359@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
+References: <20191127203114.766709977@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-27 at 12:24 -0800, Guenter Roeck wrote:
-> Since commit 57ea974fb871 ("driver core: Rewrite test_async_driver_probe
-> to cover serialization and NUMA affinity"), running the test with NUMA
-> disabled results in warning messages similar to the following.
-> 
-> test_async_driver test_async_driver.12: NUMA node mismatch -1 != 0
-> 
-> If CONFIG_NUMA=n, dev_to_node(dev) returns -1, and numa_node_id()
-> returns 0. Both are widely used, so it appears risky to change return
-> values. Augment the check with IS_ENABLED(CONFIG_NUMA) instead
-> to fix the problem.
-> 
-> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Fixes: 57ea974fb871 ("driver core: Rewrite test_async_driver_probe to cover serialization and NUMA affinity")
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  drivers/base/test/test_async_driver_probe.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/test/test_async_driver_probe.c b/drivers/base/test/test_async_driver_probe.c
-> index f4b1d8e54daf..3bb7beb127a9 100644
-> --- a/drivers/base/test/test_async_driver_probe.c
-> +++ b/drivers/base/test/test_async_driver_probe.c
-> @@ -44,7 +44,8 @@ static int test_probe(struct platform_device *pdev)
->  	 * performing an async init on that node.
->  	 */
->  	if (dev->driver->probe_type == PROBE_PREFER_ASYNCHRONOUS) {
-> -		if (dev_to_node(dev) != numa_node_id()) {
-> +		if (IS_ENABLED(CONFIG_NUMA) &&
-> +		    dev_to_node(dev) != numa_node_id()) {
->  			dev_warn(dev, "NUMA node mismatch %d != %d\n",
->  				 dev_to_node(dev), numa_node_id());
->  			atomic_inc(&warnings);
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-I'm not sure that is really the correct fix. It might be better to test it
-against NUMA_NO_NODE and then if it is not that make sure that it matches
-the node ID. Adding the check against NUMA_NO_NODE would resolve the issue
-for cases where the device might be assigned to multiple NUMA nodes.
+[ Upstream commit fb14ada11d62fb849fc357a25ef8016ba438ba10 ]
+
+When the kernel is built with CONFIG_THUMB2_KERNEL we would set the
+kernel's resume entry point to be a function that is already built as
+Thumb-2 code while the boot agent doing the resume is in ARM mode, so
+this does not work. There is a header label defined: cpu_resume_arm
+which we can use to do the switching for us.
+
+Fixes: 0b741b8234c8 ("soc: bcm: brcmstb: Add support for S2/S3/S5 suspend states (ARM)")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/soc/bcm/brcmstb/pm/pm-arm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/soc/bcm/brcmstb/pm/pm-arm.c b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
+index a5577dd5eb087..8ee06347447c0 100644
+--- a/drivers/soc/bcm/brcmstb/pm/pm-arm.c
++++ b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
+@@ -404,7 +404,7 @@ noinline int brcmstb_pm_s3_finish(void)
+ {
+ 	struct brcmstb_s3_params *params = ctrl.s3_params;
+ 	dma_addr_t params_pa = ctrl.s3_params_pa;
+-	phys_addr_t reentry = virt_to_phys(&cpu_resume);
++	phys_addr_t reentry = virt_to_phys(&cpu_resume_arm);
+ 	enum bsp_initiate_command cmd;
+ 	u32 flags;
+ 
+-- 
+2.20.1
+
+
 
