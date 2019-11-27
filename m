@@ -2,52 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808EAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA58CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547052084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09C92158C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888507;
-	bh=mjEAf4IZiaoy69szyp+z+zduvvrVkJ634Pi2kNlx0nY=;
+	s=default; t=1574888511;
+	bh=zWF5U4xg7nt3/h5P3T6bRnH5eZb0im/xahs52GP8njM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOLAFdoqFR/RpP4DxYN7URL7LeML+vsXmftCjHMTT6GDfaUj6LUcCAVk/sQzp+VaO
-	 WOjdWIMNPs92LfiSl6FiwnG20ACUr8AImmiLjO2n3dmd0XfrOxmZDayzSk30n/Hcrf
-	 4lQPmxKwURnCyuCFpAd5dTvkphpI2Jz0w/+lp5D8=
+	b=Sq8AW87eLN9flobIOo5C+mEWtghmSmeOq47zIhffj7HzMoy8ddDpuB2EB9Jz6ennW
+	 htJNRvbWV3rt5zZkij110pxwiely2fBtWrsc1QASozN0+FnVx9aZYgYcr23XGsyBXX
+	 Dy8qQeHwtS3g2aB5ZLKUi2KvXvlwHN720ji4lO28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731783AbfK0VBq (ORCPT
+        id S1727339AbfK0VBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:01:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54092 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:01:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731741AbfK0VBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:01:42 -0500
+        id S1731206AbfK0VBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:01:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA08A2158C;
-        Wed, 27 Nov 2019 21:01:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1649217AB;
+        Wed, 27 Nov 2019 21:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888502;
-        bh=mjEAf4IZiaoy69szyp+z+zduvvrVkJ634Pi2kNlx0nY=;
+        s=default; t=1574888507;
+        bh=zWF5U4xg7nt3/h5P3T6bRnH5eZb0im/xahs52GP8njM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xZz7WJVXDS2bU0v7Sv8a0XSH7ngT2HGYxaZtko+VPeoQfbPoZKRwj3p+3gAbd5B9g
-         q1WxZXKpXfjgUGCjkjj7ltjZHiWEa90PM6Mm/0wzAVFpo7o5YsZj47m72RXEnA3fV5
-         EmfkMtl6tNIsF8pgtW5hBS3hgDrWllD9q4l+e6HI=
+        b=aTBrLGKxRP+20BisoB0ufDZsCugsq8/rUYK3d4EoRfADyYMm/Gco2mTWssx47vAL9
+         kcX1L+byUDVUDwEs40x0oN7B1S7JALmIwMuOcLthInWBBEdeWM4nEs1ML3L5NjDPMd
+         axexLQjjUNl/IIOxeKYPfGNRht43K80y8XIm5cVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
+        stable@vger.kernel.org,
+        Felipe Rechia <felipe.rechia@datacom.com.br>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 160/306] powerpc/xmon: Relax frame size for clang
-Date:   Wed, 27 Nov 2019 21:30:10 +0100
-Message-Id: <20191127203127.204172470@linuxfoundation.org>
+Subject: [PATCH 4.19 144/306] powerpc/process: Fix flush_all_to_thread for SPE
+Date:   Wed, 27 Nov 2019 21:29:54 +0100
+Message-Id: <20191127203125.902612534@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,47 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Felipe Rechia <felipe.rechia@datacom.com.br>
 
-[ Upstream commit 9c87156cce5a63735d1218f0096a65c50a7a32aa ]
+[ Upstream commit e901378578c62202594cba0f6c076f3df365ec91 ]
 
-When building with clang (8 trunk, 7.0 release) the frame size limit is
-hit:
+Fix a bug introduced by the creation of flush_all_to_thread() for
+processors that have SPE (Signal Processing Engine) and use it to
+compute floating-point operations.
 
- arch/powerpc/xmon/xmon.c:452:12: warning: stack frame size of 2576
- bytes in function 'xmon_core' [-Wframe-larger-than=]
+>From userspace perspective, the problem was seen in attempts of
+computing floating-point operations which should generate exceptions.
+For example:
 
-Some investigation by Naveen indicates this is due to clang saving the
-addresses to printf format strings on the stack.
+  fork();
+  float x = 0.0 / 0.0;
+  isnan(x);           // forked process returns False (should be True)
 
-While this issue is investigated, bump up the frame size limit for xmon
-when building with clang.
+The operation above also should always cause the SPEFSCR FINV bit to
+be set. However, the SPE floating-point exceptions were turned off
+after a fork().
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/252
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Kernel versions prior to the bug used flush_spe_to_thread(), which
+first saves SPEFSCR register values in tsk->thread and then calls
+giveup_spe(tsk).
+
+After commit 579e633e764e, the save_all() function was called first
+to giveup_spe(), and then the SPEFSCR register values were saved in
+tsk->thread. This would save the SPEFSCR register values after
+disabling SPE for that thread, causing the bug described above.
+
+Fixes 579e633e764e ("powerpc: create flush_all_to_thread()")
+Signed-off-by: Felipe Rechia <felipe.rechia@datacom.com.br>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/xmon/Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/powerpc/kernel/process.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
-index 9d7d8e6d705c4..9ba44e190e5e4 100644
---- a/arch/powerpc/xmon/Makefile
-+++ b/arch/powerpc/xmon/Makefile
-@@ -13,6 +13,12 @@ UBSAN_SANITIZE := n
- ORIG_CFLAGS := $(KBUILD_CFLAGS)
- KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 909c9407e392a..02b69a68139cc 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -575,12 +575,11 @@ void flush_all_to_thread(struct task_struct *tsk)
+ 	if (tsk->thread.regs) {
+ 		preempt_disable();
+ 		BUG_ON(tsk != current);
+-		save_all(tsk);
+-
+ #ifdef CONFIG_SPE
+ 		if (tsk->thread.regs->msr & MSR_SPE)
+ 			tsk->thread.spefscr = mfspr(SPRN_SPEFSCR);
+ #endif
++		save_all(tsk);
  
-+ifdef CONFIG_CC_IS_CLANG
-+# clang stores addresses on the stack causing the frame size to blow
-+# out. See https://github.com/ClangBuiltLinux/linux/issues/252
-+KBUILD_CFLAGS += -Wframe-larger-than=4096
-+endif
-+
- ccflags-$(CONFIG_PPC64) := $(NO_MINIMAL_TOC)
- 
- obj-y			+= xmon.o nonstdio.o spr_access.o
+ 		preempt_enable();
+ 	}
 -- 
 2.20.1
 
