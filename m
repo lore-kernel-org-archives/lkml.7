@@ -2,242 +2,133 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E5DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32BFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D132071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9178A2071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:29:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTlCJq9k"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="YdGbiaMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfK0CZC (ORCPT
+        id S1726655AbfK0C32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 21:25:02 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35208 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfK0CZC (ORCPT
+        Tue, 26 Nov 2019 21:29:28 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43740 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfK0C32 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 21:25:02 -0500
-Received: by mail-oi1-f195.google.com with SMTP id k196so2308428oib.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 18:25:01 -0800 (PST)
+        Tue, 26 Nov 2019 21:29:28 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 3so10168575pfb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 18:29:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xC9RVEUN60MRiDoiCowOLH+Vqpm85ZffCJiku49WmOU=;
-        b=aTlCJq9kHNPfUA7x56iC66yzyHWWV01ste/kdv/OU2wt7kxCa03HxNWVB7oANK+hTY
-         t7vx2q+uAWO5GJan2gg4AWeDnW9t+P8g2GQKcF1C8Oh3KOuqdUk1WXSZhirPEqIVdbps
-         kODPMv0tSl6uM81EmJ2k2nwyzt0GfAVkjYARBaBdde9X1f0sp0jovhLMiDY2Afk4MRaY
-         2kiGtrlWAk5ZHmTJqqBQnSXsRwHQgDUCVBKRfy/MhtsSA6qA44gLINLvuGNwniwJklHc
-         gypbhCS7uSZU4p4z2W6mcX4pM/NUlaHgVNNBqhcHILj3XLsKB9nE7peWPCBnphPHS4s/
-         63Ng==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NN2NK4AVnHEIbvB9lst01l+3zKuPHZoMQF6S334Sv9g=;
+        b=YdGbiaMu/yoWaKdN4xLKKLWNKdEv4Ec2V5T+CBLpDakJdirXjnihGmEMfcfVHpU03y
+         hbXNsp0s0xpC1m/qkIcZTQkwcSjocPq/hPYojNUH6Mc2LdAwueyJa25wJLmbLDyhQ7n3
+         TICUTAr5viybVXfMWtNdFutu6P0ZtFSnMmR1c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xC9RVEUN60MRiDoiCowOLH+Vqpm85ZffCJiku49WmOU=;
-        b=ii9vYoGr9C5OajXp0i+K0EZ7pereMSN7qNMq7e6v/QwLBNKqfDCcsgTZG/f6eE+DHM
-         ezl+bq8OHAY+KWaQLkARGulcvbQjW2W6QaUDfUum2OltsEXG5AGcJZWUhm1tLsDIANgs
-         Fa/7JVj07mUgB4JoLZW6Z+WDOO7qiCOAzfvTkQyfUQvf8NpRJsI4s3RwOcN0Afc1gNRU
-         v7rAAzlx0mll6pPE/vapAe5kxG8ACX19ZYZXZh+OQY7P4LB8+MaZmpNRTnGT4k+jW1e2
-         luf8qBsA6N6MiQ+q488pENK8dwOehMulC3UMNnKNNjsLXSa3A784Fzv6D//js6XiJQFc
-         WRxQ==
-X-Gm-Message-State: APjAAAVWfq1BVaJyT9Ko3V8YeHHh32Xr58aKDKFsf2fq0jSeYK+bKxDS
-        YajEmfwv/dZS/xkX1MgnjHtyk2s6F5ikOW3UKps=
-X-Google-Smtp-Source: APXvYqyQ+qoWokmJpwljroZqf+blVEyS0Tls/wjXa9zQycM+neHHQ0Zehnyeq+CXDZzKQyCm/g4iTieXckglPDt3ux4=
-X-Received: by 2002:aca:330a:: with SMTP id z10mr1993629oiz.98.1574821501100;
- Tue, 26 Nov 2019 18:25:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NN2NK4AVnHEIbvB9lst01l+3zKuPHZoMQF6S334Sv9g=;
+        b=bLD0mEYpodFgfFE5jb8VXqjUlGKgEU+q6l4Xvlb+VxzkLZqlEKU6Z7Ux+UThSUA2ty
+         O1L0BKeuZ1DgsNJeQc6mf9jIleVcKaxSIWDwX5d7vrjGKh/HIqTp4t+zSqMM+hYubPpA
+         dgwD6XOe2gRg9qdlMohQsvNNTxdwxx53gcJuMFiHrm4t57RdcWXiB6EAkj6TUaA8QP5Z
+         vgjYri28BqR/1fh0ejy9ykdQnMEpgtlaucqBnAhroPhYVo5ox9+ZzR7SdQ90P5XVwLKb
+         5j4ngziViDjam/2VCzbU+PBxaDSQqeEeJXWMsl2W1RA0P7A2DkY8jCA+DZXHf5jWli4c
+         XX0Q==
+X-Gm-Message-State: APjAAAWu2TLjVOtu8Fxzd1ohVjWB0GclogeDcRDb8btaTr92uS9UGl5B
+        wkOTmj9GsTQJRqtS8VPM8UXg7w==
+X-Google-Smtp-Source: APXvYqx+HX61yjud9fIbZqiRcxDpx9y0e6bR1uba8VJ+HnNyYomcwswg1BHVEDSvG74B2G9ilx7NIQ==
+X-Received: by 2002:a63:770c:: with SMTP id s12mr2129673pgc.25.1574821767441;
+        Tue, 26 Nov 2019 18:29:27 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id u7sm4370989pjx.19.2019.11.26.18.29.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 18:29:26 -0800 (PST)
+Date:   Tue, 26 Nov 2019 21:29:25 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: audit.c: Add __rcu notation to RCU pointer
+Message-ID: <20191127022925.GB157739@google.com>
+References: <20191126172723.GA12759@workstation-kernel-dev>
 MIME-Version: 1.0
-References: <20191126165529.30703-1-katsuhiro@katsuster.net>
-In-Reply-To: <20191126165529.30703-1-katsuhiro@katsuster.net>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Tue, 26 Nov 2019 18:24:35 -0800
-Message-ID: <CA+E=qVcqu7OJayOdrEXRaWYW1JBhJKk7dPDTEJtCD-hDAKohxg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: split rk3399-rockpro64 for v2 and
- v2.1 boards
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Hugh Cole-Baker <sigmaris@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126172723.GA12759@workstation-kernel-dev>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 8:55 AM Katsuhiro Suzuki
-<katsuhiro@katsuster.net> wrote:
-
-Hi Katsuhiro,
-
-> This patch splits rk3399-rockpro64 dts file to 2 files for v2 and
-> v2.1 boards.
-
-Thanks for the patch!
-
-> Both v2 and v2.1 boards can use almost same settings but we find a
-> difference in I2C address of audio CODEC ES8136.
-
-I'd prefer to avoid moving and renaming dts files since it can cause a
-mess if you don't upgrade your bootloader.
-
-Can we use existing rk3399-rockpro64.dts for v2.1 (and change model
-name accordingly) and introduce new dts for v2.0?
-
-Regards,
-Vasily
-
-
-> Reported-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+On Tue, Nov 26, 2019 at 10:57:23PM +0530, Amol Grover wrote:
+> add __rcu notation to RCU protected global pointer auditd_conn
+> 
+> Fixes multiple instances of sparse error:
+> error: incompatible types in comparison expression
+> (different address spaces)
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
 > ---
->  arch/arm64/boot/dts/rockchip/Makefile         |  3 +-
->  .../dts/rockchip/rk3399-rockpro64-v2.1.dts    | 30 +++++++++++++++++++
->  .../boot/dts/rockchip/rk3399-rockpro64-v2.dts | 30 +++++++++++++++++++
->  ...99-rockpro64.dts => rk3399-rockpro64.dtsi} | 18 -----------
->  4 files changed, 62 insertions(+), 19 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.1.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.dts
->  rename arch/arm64/boot/dts/rockchip/{rk3399-rockpro64.dts => rk3399-rockpro64.dtsi} (97%)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index 48fb631d5451..3debaeb517fd 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -33,6 +33,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezzanine.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
-> -dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64-v2.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64-v2.1.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.1.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.1.dts
-> new file mode 100644
-> index 000000000000..9450207bedad
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.1.dts
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
-> + * Copyright (c) 2018 Akash Gajjar <Akash_Gajjar@mentor.com>
-> + * Copyright (c) 2019 Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3399-rockpro64.dtsi"
-> +
-> +/ {
-> +       model = "Pine64 RockPro64 v2.1";
-> +       compatible = "pine64,rockpro64", "rockchip,rk3399";
-> +};
-> +
-> +&i2c1 {
-> +       es8316: codec@11 {
-> +               compatible = "everest,es8316";
-> +               reg = <0x11>;
-> +               clocks = <&cru SCLK_I2S_8CH_OUT>;
-> +               clock-names = "mclk";
-> +               #sound-dai-cells = <0>;
-> +
-> +               port {
-> +                       es8316_p0_0: endpoint {
-> +                               remote-endpoint = <&i2s1_p0_0>;
-> +                       };
-> +               };
-> +       };
-> +};
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.dts
-> new file mode 100644
-> index 000000000000..7bd37eaa1d57
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.dts
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
-> + * Copyright (c) 2018 Akash Gajjar <Akash_Gajjar@mentor.com>
-> + * Copyright (c) 2019 Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3399-rockpro64.dtsi"
-> +
-> +/ {
-> +       model = "Pine64 RockPro64 v2";
-> +       compatible = "pine64,rockpro64", "rockchip,rk3399";
-> +};
-> +
-> +&i2c1 {
-> +       es8316: codec@10 {
-> +               compatible = "everest,es8316";
-> +               reg = <0x10>;
-> +               clocks = <&cru SCLK_I2S_8CH_OUT>;
-> +               clock-names = "mclk";
-> +               #sound-dai-cells = <0>;
-> +
-> +               port {
-> +                       es8316_p0_0: endpoint {
-> +                               remote-endpoint = <&i2s1_p0_0>;
-> +                       };
-> +               };
-> +       };
-> +};
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-> similarity index 97%
-> rename from arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> rename to arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-> index 7f4b2eba31d4..183eda4ffb9c 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-> @@ -4,16 +4,12 @@
->   * Copyright (c) 2018 Akash Gajjar <Akash_Gajjar@mentor.com>
+>  kernel/audit.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index da8dc0db5bd3..30e7fc9b8da2 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -102,12 +102,14 @@ struct audit_net {
+>   * This struct is RCU protected; you must either hold the RCU lock for reading
+>   * or the associated spinlock for writing.
 >   */
->
-> -/dts-v1/;
->  #include <dt-bindings/input/linux-event-codes.h>
->  #include <dt-bindings/pwm/pwm.h>
->  #include "rk3399.dtsi"
->  #include "rk3399-opp.dtsi"
->
->  / {
-> -       model = "Pine64 RockPro64";
-> -       compatible = "pine64,rockpro64", "rockchip,rk3399";
-> -
->         chosen {
->                 stdout-path = "serial2:1500000n8";
->         };
-> @@ -476,20 +472,6 @@ &i2c1 {
->         i2c-scl-rising-time-ns = <300>;
->         i2c-scl-falling-time-ns = <15>;
->         status = "okay";
-> -
-> -       es8316: codec@11 {
-> -               compatible = "everest,es8316";
-> -               reg = <0x11>;
-> -               clocks = <&cru SCLK_I2S_8CH_OUT>;
-> -               clock-names = "mclk";
-> -               #sound-dai-cells = <0>;
-> -
-> -               port {
-> -                       es8316_p0_0: endpoint {
-> -                               remote-endpoint = <&i2s1_p0_0>;
-> -                       };
-> -               };
-> -       };
->  };
->
->  &i2c3 {
-> --
-> 2.24.0
->
+> -static struct auditd_connection {
+> +struct auditd_connection {
+>  	struct pid *pid;
+>  	u32 portid;
+>  	struct net *net;
+>  	struct rcu_head rcu;
+> -} *auditd_conn = NULL;
+> +};
+> +static struct auditd_connection __rcu *auditd_conn;
+> +RCU_INIT_POINTER(auditd_conn);
+
+Looks like this causes a build error. Always please build test your patches
+in the very least. And I also did not understand how RCU_INIT_POINTER can
+even be used outside of a function. In C, executable code cannot be outside
+functions.
+
+Is doing the following not sufficient to fix the sparse issue?
+
+thanks,
+
+ - Joel
+
+---8<-----------------------
+
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 49b6049b26ac..c5d4b5a2dea1 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -108,8 +108,8 @@ struct auditd_connection {
+ 	struct net *net;
+ 	struct rcu_head rcu;
+ };
+-static struct auditd_connection __rcu *auditd_conn;
+-RCU_INIT_POINTER(auditd_conn);
++static struct auditd_connection __rcu *auditd_conn = NULL;
++
+ static DEFINE_SPINLOCK(auditd_conn_lock);
+ 
+ /* If audit_rate_limit is non-zero, limit the rate of sending audit records
