@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 301E0C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0ED4C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE400215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF63215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887247;
-	bh=zVi3l48Dj1pEq/lXVT7CWip3HEIXhUTRhaX6jVURMJE=;
+	s=default; t=1574887249;
+	bh=+MSac9lGQ3g4tukeHIJJKFOOP18cM1X5Kz249xwJKOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/3ttqCJIK61H/u/tM5DbpFHZKOIxY54jh2kvmU0SHtBtJGKMgtyySQWVKrskNTLy
-	 t0JSF/2rMl7pznCYAVJ35Tv+SwUcHXUJJdpKbIE8VfQA/DCvzC90YR/X/DxcYjuCCm
-	 H4lR4g3XdEmwmorrxgCkgkNun8A3XFLuKJChlwjg=
+	b=S123wRiy4fpEU6apcBl8DqE2lmDbVbwuGSgufiqMA1YDX1sRIIjiRQngFcLns9vKc
+	 gXpck/ua768QLzwE9j8JvGx1wQHULJj3yK0zwislsaRU8gg54jxRbR3jFRsiRXSt3t
+	 hLbdnvI2SxziKk3uloY/I5vkkmbqEiF7IczHEJS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbfK0Ukp (ORCPT
+        id S1729086AbfK0Uks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:40:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:40:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727418AbfK0Ukl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:40:41 -0500
+        id S1729065AbfK0Ukn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:40:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7462C21772;
-        Wed, 27 Nov 2019 20:40:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E48CA21780;
+        Wed, 27 Nov 2019 20:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887240;
-        bh=zVi3l48Dj1pEq/lXVT7CWip3HEIXhUTRhaX6jVURMJE=;
+        s=default; t=1574887243;
+        bh=+MSac9lGQ3g4tukeHIJJKFOOP18cM1X5Kz249xwJKOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cqdVzfG9eGzlQoHGTG48kshgDGuLwezzXWBZaauzNseCJPa1ixUOZCN7Vil6h9mVC
-         udb/VHP30i3FtJkOitucPBOQhNpil/kxnay2i8sIAAPLO3n47J3VMN6qAhwf+VZPI5
-         t1nrPqiHV37A3gTvPOqHMROEaxmvXNDIE4bi3v28=
+        b=BB3m/LUKuaUITuPsklJ5fz8K1GpN3vjeXjq31R8ueRi4IWD3hoELXhgZdtsDsqsas
+         Eang9WKT3t2zzt99mj3KDJNl+DL82/u1DrHT+IwRVR392vkguIk3QqBdQ0+cQ9iBfR
+         4eCeDJAu9vFUkNrMbyD7zfdNNeMFWjemSvpS++iM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 035/151] scsi: dc395x: fix dma API usage in srb_done
-Date:   Wed, 27 Nov 2019 21:30:18 +0100
-Message-Id: <20191127203022.003091759@linuxfoundation.org>
+Subject: [PATCH 4.9 036/151] scsi: dc395x: fix DMA API usage in sg_update_list
+Date:   Wed, 27 Nov 2019 21:30:19 +0100
+Message-Id: <20191127203022.471385962@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -62,51 +62,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 3a5bd7021184dec2946f2a4d7a8943f8a5713e52 ]
+[ Upstream commit 6c404a68bf83b4135a8a9aa1c388ebdf98e8ba7f ]
 
-We can't just transfer ownership to the CPU and then unmap, as this will
-break with swiotlb.
-
-Instead unmap the command and sense buffer a little earlier in the I/O
-completion handler and get rid of the pci_dma_sync_sg_for_cpu call
-entirely.
+We need to transfer device ownership to the CPU before we can manipulate
+the mapped data.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/dc395x.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/scsi/dc395x.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/scsi/dc395x.c b/drivers/scsi/dc395x.c
-index 5ee7f44cf869b..9da0ac360848f 100644
+index 9da0ac360848f..830b2d2dcf206 100644
 --- a/drivers/scsi/dc395x.c
 +++ b/drivers/scsi/dc395x.c
-@@ -3450,14 +3450,12 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
- 		}
- 	}
- 
--	if (dir != PCI_DMA_NONE && scsi_sg_count(cmd))
--		pci_dma_sync_sg_for_cpu(acb->dev, scsi_sglist(cmd),
--					scsi_sg_count(cmd), dir);
--
- 	ckc_only = 0;
- /* Check Error Conditions */
-       ckc_e:
- 
-+	pci_unmap_srb(acb, srb);
-+
- 	if (cmd->cmnd[0] == INQUIRY) {
- 		unsigned char *base = NULL;
- 		struct ScsiInqData *ptr;
-@@ -3511,7 +3509,6 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
- 			cmd, cmd->result);
- 		srb_free_insert(acb, srb);
- 	}
--	pci_unmap_srb(acb, srb);
- 
- 	cmd->scsi_done(cmd);
- 	waiting_process_next(acb);
+@@ -1972,6 +1972,11 @@ static void sg_update_list(struct ScsiReqBlk *srb, u32 left)
+ 			xferred -= psge->length;
+ 		} else {
+ 			/* Partial SG entry done */
++			pci_dma_sync_single_for_cpu(srb->dcb->
++					    acb->dev,
++					    srb->sg_bus_addr,
++					    SEGMENTX_LEN,
++					    PCI_DMA_TODEVICE);
+ 			psge->length -= xferred;
+ 			psge->address += xferred;
+ 			srb->sg_index = idx;
 -- 
 2.20.1
 
