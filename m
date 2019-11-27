@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B7CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80B2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B544521741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF84B21789
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889242;
-	bh=MgOEtWYhOE6SVZmkuHBHGrnENDDruSYWQVQkdx+NfM4=;
+	s=default; t=1574889248;
+	bh=QuiF6W6wOHRgLYGxVxM5nbxXNsOuNOmkzfuXM8y9EVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VcyAOFlfNZTOkQ3j0mASeiCPTJhWoQumw8yutF+3sKzOqKH4G9IBsyiGiewny6/fT
-	 DYzxprufRDLt/q/15Vj0W2UJfYnq/0Sy0ow5wM1OI/EnC0ninpu8/ZUQF8FEoDyb6X
-	 pygOuY6v+vZu5rbbcOsV3FrFQVwobbej3Zf4l5yI=
+	b=eHg+ckdnsC0qM9F+SheNpXYTQXSFPS6j7qjjzsb0HJTYbDbNNN46yuAwZUiqEBBtP
+	 3DlvC6UlfhXOQDSWbsaJinF+LjHXt/zW5I/yQI6BHI9lSi6tmF80CXdl+HnAaVyG4Y
+	 F7VixPFlEaBWfCX4dw6URmAGnvZ36aiHa4JJyDtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387510AbfK0VOB (ORCPT
+        id S2387518AbfK0VOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:14:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46944 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:14:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387501AbfK0VN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:13:59 -0500
+        id S2387509AbfK0VOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:14:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BC54215F1;
-        Wed, 27 Nov 2019 21:13:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1577C216F4;
+        Wed, 27 Nov 2019 21:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889238;
-        bh=MgOEtWYhOE6SVZmkuHBHGrnENDDruSYWQVQkdx+NfM4=;
+        s=default; t=1574889241;
+        bh=QuiF6W6wOHRgLYGxVxM5nbxXNsOuNOmkzfuXM8y9EVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VgyRpmXayClq6y5TD8skfu6UN0tpU7iEYKZAbSQAnCevvEEP+il5iWh7yiYDYOzyB
-         fJyaOy4Cqyk3CUVGimrruF81QZqCXq1IHiy4YCw7xXasi6Ka5qltriCUgWkE4j0gXw
-         ZzbxV9Di073CgHsYwInfZ8Z4L1FobYk744p+QKc0=
+        b=fpQ4aN+vSYCfPoyrvwbLYJKLHVO8bEOqzp3BKzFyOiiLXTI954puivucCwLyPxjHd
+         H9Z+SUrO8anAtDP3JxhbkboY7vuG+NU4mJWXbF5b3Hfh3S2uyIHE4xjeEH8x9tfAnh
+         66I+UOPEc8aZ/iFzIZxw28//Kt5kdEYKCfvcN01o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.4 40/66] futex: Set task::futex_state to DEAD right after handling futex exit
-Date:   Wed, 27 Nov 2019 21:32:35 +0100
-Message-Id: <20191127202721.242075821@linuxfoundation.org>
+Subject: [PATCH 5.4 41/66] futex: Mark the begin of futex exit explicitly
+Date:   Wed, 27 Nov 2019 21:32:36 +0100
+Message-Id: <20191127202722.752355038@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -62,43 +62,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit f24f22435dcc11389acc87e5586239c1819d217c upstream.
+commit 18f694385c4fd77a09851fd301236746ca83f3cb upstream.
 
-Setting task::futex_state in do_exit() is rather arbitrarily placed for no
-reason. Move it into the futex code.
+Instead of relying on PF_EXITING use an explicit state for the futex exit
+and set it in the futex exit function. This moves the smp barrier and the
+lock/unlock serialization into the futex code.
 
-Note, this is only done for the exit cleanup as the exec cleanup cannot set
-the state to FUTEX_STATE_DEAD because the task struct is still in active
-use.
+As with the DEAD state this is restricted to the exit path as exec
+continues to use the same task struct.
+
+This allows to simplify that logic in a next step.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191106224556.439511191@linutronix.de
+Link: https://lkml.kernel.org/r/20191106224556.539409004@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/exit.c  |    1 -
- kernel/futex.c |    1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ include/linux/futex.h |   31 +++----------------------------
+ kernel/exit.c         |   13 +------------
+ kernel/futex.c        |   37 ++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 40 insertions(+), 41 deletions(-)
 
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -52,6 +52,7 @@ union futex_key {
+ #ifdef CONFIG_FUTEX
+ enum {
+ 	FUTEX_STATE_OK,
++	FUTEX_STATE_EXITING,
+ 	FUTEX_STATE_DEAD,
+ };
+ 
+@@ -66,33 +67,7 @@ static inline void futex_init_task(struc
+ 	tsk->futex_state = FUTEX_STATE_OK;
+ }
+ 
+-/**
+- * futex_exit_done - Sets the tasks futex state to FUTEX_STATE_DEAD
+- * @tsk:	task to set the state on
+- *
+- * Set the futex exit state of the task lockless. The futex waiter code
+- * observes that state when a task is exiting and loops until the task has
+- * actually finished the futex cleanup. The worst case for this is that the
+- * waiter runs through the wait loop until the state becomes visible.
+- *
+- * This has two callers:
+- *
+- * - futex_mm_release() after the futex exit cleanup has been done
+- *
+- * - do_exit() from the recursive fault handling path.
+- *
+- * In case of a recursive fault this is best effort. Either the futex exit
+- * code has run already or not. If the OWNER_DIED bit has been set on the
+- * futex then the waiter can take it over. If not, the problem is pushed
+- * back to user space. If the futex exit code did not run yet, then an
+- * already queued waiter might block forever, but there is nothing which
+- * can be done about that.
+- */
+-static inline void futex_exit_done(struct task_struct *tsk)
+-{
+-	tsk->futex_state = FUTEX_STATE_DEAD;
+-}
+-
++void futex_exit_recursive(struct task_struct *tsk);
+ void futex_exit_release(struct task_struct *tsk);
+ void futex_exec_release(struct task_struct *tsk);
+ 
+@@ -100,7 +75,7 @@ long do_futex(u32 __user *uaddr, int op,
+ 	      u32 __user *uaddr2, u32 val2, u32 val3);
+ #else
+ static inline void futex_init_task(struct task_struct *tsk) { }
+-static inline void futex_exit_done(struct task_struct *tsk) { }
++static inline void futex_exit_recursive(struct task_struct *tsk) { }
+ static inline void futex_exit_release(struct task_struct *tsk) { }
+ static inline void futex_exec_release(struct task_struct *tsk) { }
+ static inline long do_futex(u32 __user *uaddr, int op, u32 val,
 --- a/kernel/exit.c
 +++ b/kernel/exit.c
-@@ -837,7 +837,6 @@ void __noreturn do_exit(long code)
- 	 * Make sure we are holding no locks:
+@@ -746,23 +746,12 @@ void __noreturn do_exit(long code)
  	 */
- 	debug_check_no_locks_held();
--	futex_exit_done(tsk);
+ 	if (unlikely(tsk->flags & PF_EXITING)) {
+ 		pr_alert("Fixing recursive fault but reboot is needed!\n");
+-		futex_exit_done(tsk);
++		futex_exit_recursive(tsk);
+ 		set_current_state(TASK_UNINTERRUPTIBLE);
+ 		schedule();
+ 	}
  
- 	if (tsk->io_context)
- 		exit_io_context(tsk);
+ 	exit_signals(tsk);  /* sets PF_EXITING */
+-	/*
+-	 * Ensure that all new tsk->pi_lock acquisitions must observe
+-	 * PF_EXITING. Serializes against futex.c:attach_to_pi_owner().
+-	 */
+-	smp_mb();
+-	/*
+-	 * Ensure that we must observe the pi_state in exit_mm() ->
+-	 * mm_release() -> exit_pi_state_list().
+-	 */
+-	raw_spin_lock_irq(&tsk->pi_lock);
+-	raw_spin_unlock_irq(&tsk->pi_lock);
+ 
+ 	if (unlikely(in_atomic())) {
+ 		pr_info("note: %s[%d] exited with preempt_count %d\n",
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
-@@ -3682,6 +3682,7 @@ void futex_exec_release(struct task_stru
+@@ -3679,10 +3679,45 @@ void futex_exec_release(struct task_stru
+ 		exit_pi_state_list(tsk);
+ }
+ 
++/**
++ * futex_exit_recursive - Set the tasks futex state to FUTEX_STATE_DEAD
++ * @tsk:	task to set the state on
++ *
++ * Set the futex exit state of the task lockless. The futex waiter code
++ * observes that state when a task is exiting and loops until the task has
++ * actually finished the futex cleanup. The worst case for this is that the
++ * waiter runs through the wait loop until the state becomes visible.
++ *
++ * This is called from the recursive fault handling path in do_exit().
++ *
++ * This is best effort. Either the futex exit code has run already or
++ * not. If the OWNER_DIED bit has been set on the futex then the waiter can
++ * take it over. If not, the problem is pushed back to user space. If the
++ * futex exit code did not run yet, then an already queued waiter might
++ * block forever, but there is nothing which can be done about that.
++ */
++void futex_exit_recursive(struct task_struct *tsk)
++{
++	tsk->futex_state = FUTEX_STATE_DEAD;
++}
++
  void futex_exit_release(struct task_struct *tsk)
  {
++	tsk->futex_state = FUTEX_STATE_EXITING;
++	/*
++	 * Ensure that all new tsk->pi_lock acquisitions must observe
++	 * FUTEX_STATE_EXITING. Serializes against attach_to_pi_owner().
++	 */
++	smp_mb();
++	/*
++	 * Ensure that we must observe the pi_state in exit_pi_state_list().
++	 */
++	raw_spin_lock_irq(&tsk->pi_lock);
++	raw_spin_unlock_irq(&tsk->pi_lock);
++
  	futex_exec_release(tsk);
-+	futex_exit_done(tsk);
+-	futex_exit_done(tsk);
++
++	tsk->futex_state = FUTEX_STATE_DEAD;
  }
  
  long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
