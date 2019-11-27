@@ -2,122 +2,83 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8853CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD91C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6755720866
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E424F207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfK0K1t (ORCPT
+        id S1726673AbfK0K2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:27:49 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47792 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726204AbfK0K1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:27:49 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1B51FACE0;
-        Wed, 27 Nov 2019 10:27:47 +0000 (UTC)
-Message-ID: <1574850465.2485.10.camel@suse.com>
-Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
-From:   Oliver Neukum <oneukum@suse.com>
-To:     syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, hverkuil@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org,
-        syzkaller-bugs@googlegroups.com
-Date:   Wed, 27 Nov 2019 11:27:45 +0100
-In-Reply-To: <000000000000f47f0b0595307ddc@google.com>
-References: <000000000000f47f0b0595307ddc@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Wed, 27 Nov 2019 05:28:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44266 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfK0K2O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:28:14 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iZuYM-0004KS-Tg; Wed, 27 Nov 2019 11:28:10 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7B6481C1E75;
+        Wed, 27 Nov 2019 11:28:10 +0100 (CET)
+Date:   Wed, 27 Nov 2019 10:28:10 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/entry/32: Remove unused 'restore_all_notrace'
+ local label
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
+MIME-Version: 1.0
+Message-ID: <157485049034.21853.7019749519013705012.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, den 18.10.2019, 07:53 -0700 schrieb syzbot:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=102b65cf600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9ca7a12fd736d93e0232
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143b9060e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d3b94b600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com
+The following commit has been merged into the x86/urgent branch of tip:
 
-#syz test: https://github.com/google/kasan.git 22be26f7
+Commit-ID:     3e1b43586eae232157ca70e905cece0297f17bfd
+Gitweb:        https://git.kernel.org/tip/3e1b43586eae232157ca70e905cece0297f17bfd
+Author:        Borislav Petkov <bp@alien8.de>
+AuthorDate:    Sun, 24 Nov 2019 17:12:25 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 27 Nov 2019 10:38:16 +01:00
 
-From 497dce10b022c0cfbba450a47d634aa212ecafa1 Mon Sep 17 00:00:00 2001
-From: Oliver Neukum <oneukum@suse.com>
-Date: Mon, 18 Nov 2019 14:41:51 +0100
-Subject: [PATCH] si470x: prevent resubmission
+x86/entry/32: Remove unused 'restore_all_notrace' local label
 
-Starting IO to a device is not necessarily a NOP in every error
-case. So we need to terminate all IO in every case of probe
-failure and disconnect with absolute certainty.
-
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/media/radio/si470x/radio-si470x-usb.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/entry/entry_32.S | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
-index fedff68d8c49..8663828d93a5 100644
---- a/drivers/media/radio/si470x/radio-si470x-usb.c
-+++ b/drivers/media/radio/si470x/radio-si470x-usb.c
-@@ -542,6 +542,8 @@ static int si470x_start_usb(struct si470x_device *radio)
- 		radio->int_in_running = 0;
- 	}
- 	radio->status_rssi_auto_update = radio->int_in_running;
-+	if (retval < 0)
-+		return retval;
- 
- 	/* start radio */
- 	retval = si470x_start(radio);
-@@ -734,7 +736,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
- 	/* start radio */
- 	retval = si470x_start_usb(radio);
- 	if (retval < 0)
--		goto err_buf;
-+		/* the urb may be running even after an error */
-+		goto err_all;
- 
- 	/* set initial frequency */
- 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
-@@ -749,7 +752,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
- 
- 	return 0;
- err_all:
--	usb_kill_urb(radio->int_in_urb);
-+	usb_poison_urb(radio->int_in_urb);
- err_buf:
- 	kfree(radio->buffer);
- err_ctrl:
-@@ -824,7 +827,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
- 	mutex_lock(&radio->lock);
- 	v4l2_device_disconnect(&radio->v4l2_dev);
- 	video_unregister_device(&radio->videodev);
--	usb_kill_urb(radio->int_in_urb);
-+	usb_poison_urb(radio->int_in_urb);
- 	usb_set_intfdata(intf, NULL);
- 	mutex_unlock(&radio->lock);
- 	v4l2_device_put(&radio->v4l2_dev);
--- 
-2.16.4
-
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 632432b..7e05604 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1090,7 +1090,6 @@ SYM_FUNC_START(entry_INT80_32)
+ restore_all:
+ 	TRACE_IRQS_IRET
+ 	SWITCH_TO_ENTRY_STACK
+-.Lrestore_all_notrace:
+ 	CHECK_AND_APPLY_ESPFIX
+ .Lrestore_nocheck:
+ 	/* Switch back to user CR3 */
