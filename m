@@ -2,156 +2,83 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D640C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC8DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 387BF20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69302070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:45:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qsj7fvhI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfK0Xnx convert rfc822-to-8bit (ORCPT
+        id S1727542AbfK0Xpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 18:43:53 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:37750 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbfK0Xnw (ORCPT
+        Wed, 27 Nov 2019 18:45:31 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49910 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbfK0Xpb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 18:43:52 -0500
-Received: from localhost (c-73-35-209-67.hsd1.wa.comcast.net [73.35.209.67])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 21B2914B8FE24;
-        Wed, 27 Nov 2019 15:43:52 -0800 (PST)
-Date:   Wed, 27 Nov 2019 15:43:49 -0800 (PST)
-Message-Id: <20191127.154349.1004587494590963649.davem@davemloft.net>
-To:     torvalds@linux-foundation.org
-CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT] Networking
-From:   David Miller <davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-2
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 27 Nov 2019 15:43:52 -0800 (PST)
+        Wed, 27 Nov 2019 18:45:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6Ae0SH75w1m9aU+nYBuK6tJIXgbYW1zryuD5lKGbbEg=; b=Qsj7fvhIVgbdW2la4fC0lhgvY
+        Wo/EmrP1yYHewA72zmi/WVzozZvWb8lBeLvyml2xaT9VBDnOxnAGHjtQOGxdzIlOC5qV2ZrqnS+NM
+        XAUoLDYXcXJgriGImAKwHgBDiYZzXyac48+ufX83dxkhAlzZxijJteCqXkLhGN32LNCOsKAnFutZW
+        J6JDmuuZKrNUvGvKITm+V6dJTbkooW0ztS1A42D/+26BEzcL9QXK0lYrleCHS+aLYRzwi2BIt8XEN
+        TWKWq16+LWH7khXTfkKIY5EjuREmJ6NUW9bRgnSySIuUNyUiP4inGBQf9tYZGqKGbxGKhq0jltmVN
+        kr5sgfsBQ==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ia6zy-0003tM-SR; Wed, 27 Nov 2019 23:45:30 +0000
+Subject: Re: linux-next: Tree for Nov 19 (bpf/btf)
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20191119194658.39af50d0@canb.auug.org.au>
+ <ac0b86e4-611b-81d1-ba09-e819218efe3f@infradead.org>
+Message-ID: <8fa2ace8-c3a5-7d7d-b867-9f1c70981541@infradead.org>
+Date:   Wed, 27 Nov 2019 15:45:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <ac0b86e4-611b-81d1-ba09-e819218efe3f@infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/19/19 7:13 AM, Randy Dunlap wrote:
+> On 11/19/19 12:46 AM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20191118:
+>>
+> 
+> on i386 or x86_64:
+> 
+> ../kernel/bpf/btf.c:3466:1: error: empty enum is invalid
+>  };
+>  ^
+> 
+> when CONFIG_NET is not set/enabled.
+> 
+> 
 
-This is mostly to fix the iwlwifi regression:
+Still seeing this on linux-next of 20191127.
 
-1) Flush GRO state properly in iwlwifi driver, from Alexander Lobakin.
-
-2) Validate TIPC link name with properly length macro, from John
-   Rutherford.
-
-3) Fix completion init and device query timeouts in ibmvnic, from
-   Thomas Falcon.
-
-4) Fix SKB size calculation for netlink messages in psample, from
-   Nikolay Aleksandrov.
-
-5) Similar kind of fix for OVS flow dumps, from Paolo Abeni.
-
-6) Handle queue allocation failure unwind properly in gve driver, we
-   could try to release pages we didn't allocate.  From Jeroen de
-   Borst.
-
-7) Serialize TX queue SKB list accesses properly in mscc ocelot
-   driver.  From Yangbo Lu.
-
-Please pull, thanks a lot!
-
-The following changes since commit be2eca94d144e3ffed565c483a58ecc76a869c98:
-
-  Merge tag 'for-linus-5.5-1' of git://github.com/cminyard/linux-ipmi (2019-11-25 21:41:48 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net 
-
-for you to fetch changes up to bac139a846697b290c74fefd6af54a9e192de315:
-
-  net: usb: aqc111: Use the correct style for SPDX License Identifier (2019-11-27 11:27:01 -0800)
-
-----------------------------------------------------------------
-Alexander Lobakin (1):
-      net: wireless: intel: iwlwifi: fix GRO_NORMAL packet stalling
-
-Dan Murphy (1):
-      net: phy: dp83869: Fix return paths to return proper values
-
-David S. Miller (3):
-      Merge branch 'ibmvnic-Harden-device-commands-and-queries'
-      Merge branch 'net-func-cast'
-      Merge branch 'mscc-skb-lists'
-
-Jeroen de Borst (1):
-      gve: Fix the queue page list allocated pages count
-
-John Rutherford (1):
-      tipc: fix link name length check
-
-Maciej ¯enczykowski (4):
-      net: Fix a documentation bug wrt. ip_unprivileged_port_start
-      net-sctp: replace some sock_net(sk) with just 'net'
-      net: port < inet_prot_sock(net) --> inet_port_requires_bind_service(net, port)
-      net: inet_is_local_reserved_port() port arg should be unsigned short
-
-Nikolay Aleksandrov (1):
-      net: psample: fix skb_over_panic
-
-Nishad Kamdar (2):
-      net: phy: Use the correct style for SPDX License Identifier
-      net: usb: aqc111: Use the correct style for SPDX License Identifier
-
-Paolo Abeni (1):
-      openvswitch: fix flow command message size
-
-Phong Tran (2):
-      net: hso: Fix -Wcast-function-type
-      net: usbnet: Fix -Wcast-function-type
-
-Thomas Falcon (4):
-      ibmvnic: Fix completion structure initialization
-      ibmvnic: Terminate waiting device threads after loss of service
-      ibmvnic: Bound waits for device queries
-      ibmvnic: Serialize device queries
-
-Yangbo Lu (2):
-      net: mscc: ocelot: avoid incorrect consuming in skbs list
-      net: mscc: ocelot: use skb queue instead of skbs list
-
- Documentation/networking/ip-sysctl.txt       |   9 ++---
- drivers/net/ethernet/google/gve/gve_main.c   |   3 +-
- drivers/net/ethernet/ibm/ibmvnic.c           | 192 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------------
- drivers/net/ethernet/ibm/ibmvnic.h           |   2 ++
- drivers/net/ethernet/mscc/ocelot.c           |  55 ++++++++++-------------------
- drivers/net/phy/aquantia.h                   |   4 +--
- drivers/net/phy/bcm-phy-lib.h                |   2 +-
- drivers/net/phy/dp83869.c                    |  49 +++++++++++++-------------
- drivers/net/phy/mdio-cavium.h                |   2 +-
- drivers/net/phy/mdio-i2c.h                   |   2 +-
- drivers/net/phy/mdio-xgene.h                 |   2 +-
- drivers/net/usb/aqc111.h                     |   4 +--
- drivers/net/usb/hso.c                        |   5 +--
- drivers/net/usb/usbnet.c                     |   9 ++++-
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c |  13 +++++--
- include/net/ip.h                             |  12 +++----
- include/soc/mscc/ocelot.h                    |   9 +----
- net/ipv4/af_inet.c                           |   2 +-
- net/ipv6/af_inet6.c                          |   2 +-
- net/netfilter/ipvs/ip_vs_ctl.c               |   2 +-
- net/openvswitch/datapath.c                   |   6 +++-
- net/psample/psample.c                        |   2 +-
- net/sctp/socket.c                            |  16 ++++-----
- net/tipc/netlink_compat.c                    |   4 +--
- security/selinux/hooks.c                     |   4 +--
- 25 files changed, 277 insertions(+), 135 deletions(-)
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
