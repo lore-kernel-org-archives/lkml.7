@@ -2,112 +2,93 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B5FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68903C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DACEB20678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3714020678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SMS3LbaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfK0N7x (ORCPT
+        id S1727158AbfK0OAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:59:53 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39739 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfK0N7k (ORCPT
+        Wed, 27 Nov 2019 09:00:18 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:42052 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfK0OAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:59:40 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iZxqv-0005PC-Jd; Wed, 27 Nov 2019 14:59:33 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iZxqv-0008EN-3R; Wed, 27 Nov 2019 14:59:33 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        support.opensource@diasemi.com, lee.jones@linaro.org,
-        robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        stwiss.opensource@diasemi.com, Adam.Thomson.Opensource@diasemi.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH v2 1/5] gpio: add support to get local gpio number
-Date:   Wed, 27 Nov 2019 14:59:28 +0100
-Message-Id: <20191127135932.7223-2-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191127135932.7223-1-m.felsch@pengutronix.de>
-References: <20191127135932.7223-1-m.felsch@pengutronix.de>
+        Wed, 27 Nov 2019 09:00:18 -0500
+Received: by mail-vk1-f194.google.com with SMTP id r4so5459363vkf.9
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 06:00:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xv0agzTrWmCHWWQdEdnjrauxL6G7A6I1j0PhE1Au3GA=;
+        b=SMS3LbaEfWEtk84MXTU1uY5sFT4i44DeL2NZO367/zZdh7MGxJwvobTxGQZIvkXmjt
+         HKCivkes+H/swMNZxbygP2FDC6U+xHFyiW05trlZU1cniHBIu60/1Ik96HlX/dL/RH27
+         Le3sp14Ldq4KMTRYJNQKVZZLhHUiDylCzNRBnESSO4lHsd3c3knyPh7TClIcSdxRGZX1
+         N9HCa83BV9qLZHtXkGgqq469wsJeY0mdHM1TCf7UcvPhCkxgZCa2pK1yweCcAZjj4KNw
+         +qE41yWCXXY+Ue6T0MSwV/Eb6ZcRLspo3Jlp4dxp5mBSEWDYthXsphbE+mMoG36oY64I
+         RW8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xv0agzTrWmCHWWQdEdnjrauxL6G7A6I1j0PhE1Au3GA=;
+        b=qcNiOuTDO98702OYEadJNX9Ox9eNdza7C5riazGNiRc/zH7wTov0k1CEqNKPlat5vw
+         k5im0tsYYFq7cLqF0bkCQyhaQ1m2U4YH/vyWW5AVtZZQ89qbcKNGdelayAVnhIEwBFwj
+         SWGng8Jp4C40HTKxwpW/TIJ7lYrKI13lwK9JUdCCzgrKjU7uvfarjCdkkYeg8Uc7vio7
+         fIJwYtQU5tUQuPspk3atOFLQPWhoaKnTu6ANI4eIGZjHC40Kc9bvPgENo3R36sFjRZh5
+         XzV+PMa5T5NhiAqnMWh2TYhM92ECrQ0aObFSD8G2P+fmqMKJaueFqoTSV6bmIeoLIHyz
+         Q03g==
+X-Gm-Message-State: APjAAAWBalcWL9WLaHZDwn+pn3udiFiQHkJ182Ho7aFK+iMYa9QOIjjL
+        GLt/vPpedduRvvr8TrYjybWXyohhDrv6LXa7nT4uyw==
+X-Google-Smtp-Source: APXvYqy2z1ESn19JzZsxw2MQg1P7KKVZTecOuQKJc1YhRGnEfvelj4LBPw5SELJgHKFj9GZ2pB9Vdn4PruN7+IvV/3w=
+X-Received: by 2002:a1f:cf43:: with SMTP id f64mr2942105vkg.18.1574863217253;
+ Wed, 27 Nov 2019 06:00:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20191124205110.48031-1-stephan@gerhold.net>
+In-Reply-To: <20191124205110.48031-1-stephan@gerhold.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 27 Nov 2019 15:00:06 +0100
+Message-ID: <CACRpkdYnR3jYtrEWyKf=fi2c1Mvype9FeiKKmoLjK+1R73iVBQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: ux500: Use "arm,pl031" compatible for PL031
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes consumers needs to know the gpio-chip local gpio number of a
-'struct gpio_desc' for further configuration. This is often the case for
-mfd devices.
+On Sun, Nov 24, 2019 at 9:52 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/gpio/gpiolib.c        |  6 ++++++
- include/linux/gpio/consumer.h | 10 ++++++++++
- 2 files changed, 16 insertions(+)
+> The Ux500 device tree uses "arm,rtc-pl031" as compatible for PL031.
+> All other boards in Linux describe it using "arm,pl031" instead.
+> This works because the compatible is not actually used in Linux:
+> AMBA devices get probed based on "arm,primecell" and their peripheral ID.
+>
+> Nevertheless, some other projects (e.g. U-Boot) rely on the compatible
+> to probe the device with the correct driver. Those will look for
+> "arm,pl031" instead of "arm,rtc-pl031", preventing the RTC from being
+> probed.
+>
+> Change it to "arm,pl031" to match all other boards.
+>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 104ed299d5ea..7709648313fc 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4377,6 +4377,12 @@ int gpiod_count(struct device *dev, const char *con_id)
- }
- EXPORT_SYMBOL_GPL(gpiod_count);
- 
-+int gpiod_to_offset(struct gpio_desc *desc)
-+{
-+	return gpio_chip_hwgpio(desc);
-+}
-+EXPORT_SYMBOL_GPL(gpiod_to_offset);
-+
- /**
-  * gpiod_get - obtain a GPIO for a given GPIO function
-  * @dev:	GPIO consumer, can be NULL for system-global GPIOs
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index b70af921c614..e2178c3bf7fd 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -60,6 +60,9 @@ enum gpiod_flags {
- /* Return the number of GPIOs associated with a device / function */
- int gpiod_count(struct device *dev, const char *con_id);
- 
-+/* Get the local chip offset from a global desc */
-+int gpiod_to_offset(struct gpio_desc *desc);
-+
- /* Acquire and dispose GPIOs */
- struct gpio_desc *__must_check gpiod_get(struct device *dev,
- 					 const char *con_id,
-@@ -189,6 +192,13 @@ static inline int gpiod_count(struct device *dev, const char *con_id)
- 	return 0;
- }
- 
-+static inline int gpiod_to_offset(struct gpio_desc *desc)
-+{
-+	/* GPIO can never have been requested */
-+	WARN_ON(desc);
-+	return 0;
-+}
-+
- static inline struct gpio_desc *__must_check gpiod_get(struct device *dev,
- 						       const char *con_id,
- 						       enum gpiod_flags flags)
--- 
-2.20.1
+Patch applied.
 
+Yours,
+Linus Walleij
