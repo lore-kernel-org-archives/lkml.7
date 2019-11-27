@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6F7C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE87DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F42420665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DB52080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890451;
-	bh=EbbfNz2ZlOjuyLlZQPVnXYerkBR9NFHbNmfKODEnyRs=;
+	s=default; t=1574890462;
+	bh=iEFg2OgAmaWRd0RDYXvJ8JsJ2QGa+NeD4y94Xt9Om80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X8wwAl9qvG/C8B4SU1WL5DMBf1gnkS01GgRrQs5mKALF2+UVKbg09FePMYfVVph58
-	 ljqRyI6kJxgLG0mz7X7I55SZPDfvJbbUxOhJbSvFityTqcoc90JSxqLuKAp52fj8j7
-	 MOCq1i/9xjD/BMXHM7LmH35X16hHIW6j4fxnodpk=
+	b=GjTXxjhHOJ1sUj70zcf7bNXEaaD3+mXFxZXMSZ7AoIdFlyyKNjwxHQPnZb6H9dNVI
+	 TYfD+DSO2eMIDk29kg6bfK/yjzkksArf3SJmaOps4yg6YnOHN9sfMHYo9TT7aEMDpj
+	 xpMYg0lK3VV1d1f7rzDTIWdD/vHxZ3WHTiSqwPXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbfK0VeK (ORCPT
+        id S1730425AbfK0UvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:34:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37892 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:51:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfK0UvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:51:18 -0500
+        id S1729388AbfK0UvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:51:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1A93218A3;
-        Wed, 27 Nov 2019 20:51:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DF3D2195D;
+        Wed, 27 Nov 2019 20:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887877;
-        bh=EbbfNz2ZlOjuyLlZQPVnXYerkBR9NFHbNmfKODEnyRs=;
+        s=default; t=1574887859;
+        bh=iEFg2OgAmaWRd0RDYXvJ8JsJ2QGa+NeD4y94Xt9Om80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gsMP067vnv8Cfuw9XZgiWNwPoCWvBDlTgDQ2c/dIPcIPirB65QH6XfVtKZREx3b5m
-         VnFHzfv9YHX0T+2jHiil8/5q0FuCULbIq/Yl69FEnxOGJbc1qcvdOkUjyMACu8R67q
-         rJ2K80BbKsTWF/cRu2vRHqsERCLWNbyAFORaMT5Q=
+        b=UlwNsnbiR9OHT2LnR6jsOP/jUHPLE7JSADo67vbJT7L1WUxCPDNAuSeKKc7lbXgV7
+         bHIatz9H4UJOTTp4lUBk4j8jSEGw+SSTM5/DKXV2L8gWupUwF8e+NQQ0I68vSf46sh
+         42F6V1tDP5Pm7Pn0Hu43x1PuLmT1mYPKeraWJfL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Dietmar.Eggemann@arm.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, patrick.bellasi@arm.com,
-        vincent.guittot@linaro.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Radu Rendec <radu.rendec@gmail.com>,
+        Patrick Talbert <ptalbert@redhat.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 128/211] sched/fair: Dont increase sd->balance_interval on newidle balance
-Date:   Wed, 27 Nov 2019 21:31:01 +0100
-Message-Id: <20191127203106.189140425@linuxfoundation.org>
+Subject: [PATCH 4.14 095/211] macsec: update operstate when lower device changes
+Date:   Wed, 27 Nov 2019 21:30:28 +0100
+Message-Id: <20191127203102.680589559@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -65,75 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 3f130a37c442d5c4d66531b240ebe9abfef426b5 ]
+[ Upstream commit e6ac075882b2afcdf2d5ab328ce4ab42a1eb9593 ]
 
-When load_balance() fails to move some load because of task affinity,
-we end up increasing sd->balance_interval to delay the next periodic
-balance in the hopes that next time we look, that annoying pinned
-task(s) will be gone.
+Like all other virtual devices (macvlan, vlan), the operstate of a
+macsec device should match the state of its lower device. This is done
+by calling netif_stacked_transfer_operstate from its netdevice notifier.
 
-However, idle_balance() pays no attention to sd->balance_interval, yet
-it will still lead to an increase in balance_interval in case of
-pinned tasks.
+We also need to call netif_stacked_transfer_operstate when a new macsec
+device is created, so that its operstate is set properly. This is only
+relevant when we try to bring the device up directly when we create it.
 
-If we're going through several newidle balances (e.g. we have a
-periodic task), this can lead to a huge increase of the
-balance_interval in a very small amount of time.
+Radu Rendec proposed a similar patch, inspired from the 802.1q driver,
+that included changing the administrative state of the macsec device,
+instead of just the operstate. This version is similar to what the
+macvlan driver does, and updates only the operstate.
 
-To prevent that, don't increase the balance interval when going
-through a newidle balance.
-
-This is a similar approach to what is done in commit 58b26c4c0257
-("sched: Increment cache_nice_tries only on periodic lb"), where we
-disregard newidle balance and rely on periodic balance for more stable
-results.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Dietmar.Eggemann@arm.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: patrick.bellasi@arm.com
-Cc: vincent.guittot@linaro.org
-Link: http://lkml.kernel.org/r/1537974727-30788-2-git-send-email-valentin.schneider@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Reported-by: Radu Rendec <radu.rendec@gmail.com>
+Reported-by: Patrick Talbert <ptalbert@redhat.com>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/net/macsec.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index feeb52880d353..67433fbdcb5a4 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8319,13 +8319,22 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 	sd->nr_balance_failed = 0;
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 9bcb7c3e879f3..40e8f11f20cbf 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -3273,6 +3273,9 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
+ 	if (err < 0)
+ 		goto del_dev;
  
- out_one_pinned:
-+	ld_moved = 0;
++	netif_stacked_transfer_operstate(real_dev, dev);
++	linkwatch_fire_event(dev);
 +
-+	/*
-+	 * idle_balance() disregards balance intervals, so we could repeatedly
-+	 * reach this code, which would lead to balance_interval skyrocketting
-+	 * in a short amount of time. Skip the balance_interval increase logic
-+	 * to avoid that.
-+	 */
-+	if (env.idle == CPU_NEWLY_IDLE)
-+		goto out;
+ 	macsec_generation++;
+ 
+ 	return 0;
+@@ -3444,6 +3447,20 @@ static int macsec_notify(struct notifier_block *this, unsigned long event,
+ 		return NOTIFY_DONE;
+ 
+ 	switch (event) {
++	case NETDEV_DOWN:
++	case NETDEV_UP:
++	case NETDEV_CHANGE: {
++		struct macsec_dev *m, *n;
++		struct macsec_rxh_data *rxd;
 +
- 	/* tune up the balancing interval */
- 	if (((env.flags & LBF_ALL_PINNED) &&
- 			sd->balance_interval < MAX_PINNED_INTERVAL) ||
- 			(sd->balance_interval < sd->max_interval))
- 		sd->balance_interval *= 2;
--
--	ld_moved = 0;
- out:
- 	return ld_moved;
- }
++		rxd = macsec_data_rtnl(real_dev);
++		list_for_each_entry_safe(m, n, &rxd->secys, secys) {
++			struct net_device *dev = m->secy.netdev;
++
++			netif_stacked_transfer_operstate(real_dev, dev);
++		}
++		break;
++	}
+ 	case NETDEV_UNREGISTER: {
+ 		struct macsec_dev *m, *n;
+ 		struct macsec_rxh_data *rxd;
 -- 
 2.20.1
 
