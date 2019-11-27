@@ -2,161 +2,246 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8776C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4329CC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3672070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169AF20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="EhbwSR5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfK0SH3 (ORCPT
+        id S1727191AbfK0SHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:07:29 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36914 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726655AbfK0SH2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:07:28 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARI4woc038018;
-        Wed, 27 Nov 2019 13:06:23 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxr3xhh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 13:06:23 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xARI50D0028595;
-        Wed, 27 Nov 2019 18:06:22 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma01dal.us.ibm.com with ESMTP id 2wevd70s2c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 18:06:21 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARI6K8628442992
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 18:06:20 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 758F6136055;
-        Wed, 27 Nov 2019 18:06:20 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5EC3813604F;
-        Wed, 27 Nov 2019 18:06:18 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.134.245])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Nov 2019 18:06:18 +0000 (GMT)
-Message-ID: <1574877977.3551.5.camel@linux.ibm.com>
-Subject: Re: One question about trusted key of keyring in Linux kernel.
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Date:   Wed, 27 Nov 2019 10:06:17 -0800
-In-Reply-To: <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1011
- impostorscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
- spamscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270147
+        Wed, 27 Nov 2019 13:07:47 -0500
+Received: from vps.xff.cz ([195.181.215.36]:57420 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726576AbfK0SHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 13:07:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1574878064; bh=4VzrydAkThomO1NgCSzfkzhhez9X+ie12XCY93OYl4Y=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=EhbwSR5v8v8tPutBJipalzt60OO/s3cONAVvDxDWU8qLetxCn9MUhXeR6DPphGW66
+         1y1UxCnqcfb68suXdYaoqRW9qrZC4/BzcBjFxECihzsadeFcyqjySAtvJJlBnCP5Zb
+         YIB99+uHHsPQMy+P/A19mNaJ5ky6dNVfJFd5VwD4=
+Date:   Wed, 27 Nov 2019 19:07:43 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for
+ sun8i-thermal driver bindings
+Message-ID: <20191127180743.ww5npenlg2urxtjn@core.my.home>
+Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191127052935.1719897-1-anarsoul@gmail.com>
+ <20191127052935.1719897-3-anarsoul@gmail.com>
+ <20191127174434.wousbqosmm5vxcsu@gilmour.lan>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127174434.wousbqosmm5vxcsu@gilmour.lan>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-26 at 07:32 +0000, Zhao, Shirley wrote:
-> Thanks for your feedback, Mimi. 
-> But the document of dracut can't solve my problem. 
-> 
-> I did more test these days and try to descript my question in more
-> detail. 
-> 
-> In my scenario, the trusted key will be sealed into TPM with PCR
-> policy. 
-> And there are some related options in manual like 
->        hash=         hash algorithm name as a string. For TPM 1.x the
-> only
->                      allowed value is sha1. For TPM 2.x the allowed
-> values
->                      are sha1, sha256, sha384, sha512 and sm3-256.
->        policydigest= digest for the authorization policy. must be
-> calculated
->                      with the same hash algorithm as specified by the
-> 'hash='
->                      option.
->        policyhandle= handle to an authorization policy session that
-> defines the
->                      same policy and with the same hash algorithm as
-> was used to
->                      seal the key. 
-> 
-> Here is my test step. 
-> Firstly, the pcr policy is generated as below: 
-> $ tpm2_createpolicy --policy-pcr --pcr-list sha256:7 --policy
-> pcr7_bin.policy > pcr7.policy
-> 
-> Pcr7.policy is the ascii hex of policy:
-> $ cat pcr7.policy
-> 321fbd28b60fcc23017d501b133bd5dbf2889814588e8a23510fe10105cb2cc9
-> 
-> Then generate the trusted key and configure policydigest and get the
-> key ID: 
-> $ keyctl add trusted kmk "new 32 keyhandle=0x81000001 hash=sha256
-> policydigest=`cat pcr7.policy`" @u
-> 874117045
-> 
-> Save the trusted key. 
-> $ keyctl pipe 874117045 > kmk.blob
-> 
-> Reboot and load the key. 
-> Start a auth session to generate the policy:
-> $ tpm2_startauthsession -S session.ctx
-> session-handle: 0x3000000
-> $ tpm2_pcrlist -L sha256:7 -o pcr7.sha256
-> $ tpm2_policypcr -S session.ctx -L sha256:7 -F pcr7.sha256 -f
-> pcr7.policy
-> policy-digest:
-> 0x321FBD28B60FCC23017D501B133BD5DBF2889814588E8A23510FE10105CB2CC9
-> 
-> Input the policy handle to load trusted key:
-> $ keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001
-> policyhandle=0x3000000" @u
-> add_key: Operation not permitted
-> 
-> The error should be policy check failed, because I use TPM command to
-> unseal directly with error of policy check failed. 
-> $ tpm2_unseal -c 0x81000001 -L sha256:7
-> ERROR on line: "81" in file: "./lib/log.h": Tss2_Sys_Unseal(0x99D) -
-> tpm:session(1):a policy check failed
-> ERROR on line: "213" in file: "tools/tpm2_unseal.c": Unseal failed!
-> ERROR on line: "166" in file: "tools/tpm2_tool.c": Unable to run
-> tpm2_unseal
+Hi,
 
-I think there's a miscommunication here: you're complaining about the
-error returned from a trusted key unseal operation that *should* fail,
-correct?  You think it should return a TPM error but instead it returns
--EPERM.  That's completely correct: we translate all TPM errors into
-linux ones as we pass them up to userspace, so the best we can do is
-operation not permitted.
+On Wed, Nov 27, 2019 at 06:44:34PM +0100, Maxime Ripard wrote:
+> Hi,
+> 
+> On Tue, Nov 26, 2019 at 09:29:30PM -0800, Vasily Khoruzhick wrote:
+> > From: Yangtao Li <tiny.windzz@gmail.com>
+> >
+> > sun8i-thermal driver supports thermal sensor in wide range of Allwinner
+> > SoCs. Add YAML schema for its bindings.
+> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > ---
+> >  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 103 ++++++++++++++++++
+> >  1 file changed, 103 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> > new file mode 100644
+> > index 000000000000..e622f0a4be90
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> > @@ -0,0 +1,103 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Yangtao Li <tiny.windzz@gmail.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - const: allwinner,sun8i-a83t-ths
+> > +      - const: allwinner,sun8i-h3-ths
+> > +      - const: allwinner,sun8i-r40-ths
+> > +      - const: allwinner,sun50i-a64-ths
+> > +      - const: allwinner,sun50i-h5-ths
+> > +      - const: allwinner,sun50i-h6-ths
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    anyOf:
+> > +      - items:
+> > +        - const: bus
+> > +        - const: mod
+> > +      - items:
+> > +        - const: bus
+> 
+> This can be:
+> 
+> clock-names:
+>   minItems: 1
 
-James
+Additionally, minItems should be 0, since A83T doesn't have bus clock/reset. And
+then there should be a special case for A83T too with min/maxItems = 0 for both
+resets and clocks.
+
+regards,
+	o.
+
+>   maxItems: 2
+>   items:
+>     - const: bus
+>     - const: mod
+> 
+> And the length should be checked based on the compatible value, with
+> something like
+> 
+> if:
+>   properties:
+>     compatible:
+>       contains:
+>         const: allwinner,sun50i-h6-ths
+> 
+> then:
+>   properties:
+>     clocks:
+>       maxItems: 1
+> 
+>     clock-names:
+>       maxItems: 1
+> 
+> else:
+>   properties:
+>     clocks:
+>       maxItems: 2
+> 
+>     clock-names:
+>       maxItems: 2
+> 
+> > +
+> > +  '#thermal-sensor-cells':
+> > +    enum: [ 0, 1 ]
+> > +    description: |
+> > +      Definition depends on soc version:
+> > +
+> > +      For "allwinner,sun8i-h3-ths",
+> > +      value must be 0.
+> > +      For all other compatibles
+> > +      value must be 1.
+> 
+> This should be checked using an if as well.
+> 
+> > +
+> > +  nvmem-cells:
+> > +    maxItems: 1
+> > +    items:
+> > +      - description: Calibration data for thermal sensors
+> 
+> You can drop the items and just move the description up one level,
+> under nvmem-cells
+> 
+> > +
+> > +  nvmem-cell-names:
+> > +    items:
+> > +      - const: calibration
+> 
+> Ditto for the const
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - '#thermal-sensor-cells'
+> 
+> Whether clocks, clock-names and resets are thereshould be check using
+> an if statement as well.
+> 
+> > +
+> > +examples:
+> > +  - |
+> > +    ths_a83t: ths@1f04000 {
+> 
+> You don't need the label at all, and the node name should be
+> temperature-sensor according to the DT spec, not ths. This applies to
+> all you examples.
+> 
+> > +         compatible = "allwinner,sun8i-a83t-ths";
+> > +         reg = <0x01f04000 0x100>;
+> > +         interrupts = <0 31 0>;
+> > +         nvmem-cells = <&ths_calibration>;
+> > +         nvmem-cell-names = "calibration";
+> > +         #thermal-sensor-cells = <1>;
+> > +    };
+> 
+> New line.
+> 
+> Thanks!
+> Maxime
+
 
