@@ -2,73 +2,111 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D59C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9CFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B9320722
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VM//JCOW"
+	by mail.kernel.org (Postfix) with ESMTP id 6D2E2207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfK0B1M (ORCPT
+        id S1727287AbfK0B2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 20:27:12 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41212 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfK0B1L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 20:27:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ks8+NJHBfsPY3+JLhd/+2xG48ybtFps79bejbZJBn6w=; b=VM//JCOWuc5p7lONPOW3Oqp+X
-        QCo+PObYUymI+92e5PEAjfv7QoaWLm9glA0CUVQ+pAIvGWP63KzP5j7xvUInggrd+6caJGOsIzQpA
-        yUJgzwKLI9Nip9u4cszMbs/0pXYHLpZQcDEo/09eVG3crrEuH+qWjPelatvmftY30BdD/1YgRRpOA
-        RH7U8iQvIauvJm0hWc1+nFzDNSfgxSZjXJTcK4W8/axASdIfEBEd036UTIU3It4vDlgAwshwDoRFD
-        a+prhKxg//kMM2OgfWhKFhN7B7QZEbgcCvBQmcIeefvvqA3A7/iq3FDtauqx6Sryzvmew+R2AJCD5
-        13tK0CRjg==;
-Received: from [2603:3004:32:9a00::f45c]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iZm6o-0001e3-Bp; Wed, 27 Nov 2019 01:27:10 +0000
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: m68k Kconfig warning
-Message-ID: <021330b6-67a2-0b74-c129-5c725dd23810@infradead.org>
-Date:   Tue, 26 Nov 2019 17:27:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 26 Nov 2019 20:28:36 -0500
+Received: from mga07.intel.com ([134.134.136.100]:50972 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727259AbfK0B2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 20:28:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 17:28:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,247,1571727600"; 
+   d="scan'208";a="202905417"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 26 Nov 2019 17:28:35 -0800
+Received: from [10.226.38.16] (unknown [10.226.38.16])
+        by linux.intel.com (Postfix) with ESMTP id 97EB0580332;
+        Tue, 26 Nov 2019 17:28:33 -0800 (PST)
+Subject: Re: [PATCH v6 0/2] phy: intel,lgm-emmc-phy: Add support for eMMC PHY
+ on Intel LGM SoC
+To:     kishon@ti.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        peter.harliman.liem@intel.com
+References: <20191021095436.50303-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <8a29dc7e-8d81-2630-f086-e1ac400f5718@linux.intel.com>
+Date:   Wed, 27 Nov 2019 09:28:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191021095436.50303-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Hi Kishon,
 
-Just noticed this.  I don't know what the right fix is.
-Would you take care of it, please?
+   Kindly , can you please review the eMMC-PHY driver series of patches 
+if you have time.
 
-on Linux 5.4, m68k allmodconfig:
-
-WARNING: unmet direct dependencies detected for NEED_MULTIPLE_NODES
-  Depends on [n]: DISCONTIGMEM [=n] || NUMA
-  Selected by [y]:
-  - SINGLE_MEMORY_CHUNK [=y] && MMU [=y]
-
-
-thanks.
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+---
+With Best Regards
+Vadivel Murugan
+On 21/10/2019 5:54 PM, Ramuthevar,Vadivel MuruganX wrote:
+>   Rebased to kernel verson 5.4
+>
+> dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+> changes in v6:
+>     - cobined comaptible strings
+>     - added as contiguous and can be a single entry for reg properties
+> changes in v5:
+>     - earlier Review-by tag given by Rob
+>     - rework done with syscon parent node.
+>
+>   changes in v4:
+>     - As per Rob's review: validate 5.2 and 5.3
+>     - drop unrelated items.
+>
+>   changes in v3:
+>     - resolve 'make dt_binding_check' warnings
+>
+>   changes in v2:
+>     As per Rob Herring review comments, the following updates
+>    - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+>    - filename is the compatible string plus .yaml
+>    - LGM: Lightning Mountain
+>    - update maintainer
+>    - add intel,syscon under property list
+>    - keep one example instead of two
+>
+> phy: intel-lgm-emmc: Add support for eMMC PHY
+>    No changes from  patchV5
+>   
+> Ramuthevar Vadivel Murugan (2):
+>    dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+> 	
+>    phy: intel-lgm-emmc: Add support for eMMC PHY
+>
+>   .../bindings/phy/intel,lgm-emmc-phy.yaml           |  63 +++++
+>   drivers/phy/Kconfig                                |   1 +
+>   drivers/phy/Makefile                               |   1 +
+>   drivers/phy/intel/Kconfig                          |   9 +
+>   drivers/phy/intel/Makefile                         |   2 +
+>   drivers/phy/intel/phy-intel-emmc.c                 | 283 +++++++++++++++++++++
+>   6 files changed, 359 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>   create mode 100644 drivers/phy/intel/Kconfig
+>   create mode 100644 drivers/phy/intel/Makefile
+>   create mode 100644 drivers/phy/intel/phy-intel-emmc.c
+>
