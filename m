@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C46C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C6DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB5B206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C03A20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890239;
-	bh=WdjUGu7X/CWFXaVOckev9LeqnWq4q9ChzD+8yMwavRo=;
+	s=default; t=1574890247;
+	bh=7B3lhqLFlPVFKC1uvf1QDN3dBhA4isXKHtqt43nj7FE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ma4DNSrVmGOZ3GOfq8VfAhKKew+xaz3ht2acixnmTX7hsyhBLDnL11b02tTIbesLW
-	 TBjY6ACcspOeNvVFS7c/PSMn4/i3IBVX0GRbg36Q9rk/+6eJlImk7e+1cWVYJBEtvh
-	 LUtRLFO7B3m8pfZjtNGI6zMcR7oy4zYJLgfol1ys=
+	b=r89uRa1p13ORTZV5ltrYhKRYHy6PrwiiiB9Ip+FkdCdDOAs988M4ZzD58KroFLUEs
+	 i4VpiOfg/CLcPO84TrxoDXXXnpoLQV/N7/Rt9cW3WwKvHUSrGOXY41G6aI6fNPr2cm
+	 BczTm+BjQqAHCi6a6GTwtuozxuhSKy+CVe/7j1Tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbfK0Vah (ORCPT
+        id S1731558AbfK0Vaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:30:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46140 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:30:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730356AbfK0Uzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:55:37 -0500
+        id S1730956AbfK0Uz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:55:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43A5520862;
-        Wed, 27 Nov 2019 20:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D31D20862;
+        Wed, 27 Nov 2019 20:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888136;
-        bh=WdjUGu7X/CWFXaVOckev9LeqnWq4q9ChzD+8yMwavRo=;
+        s=default; t=1574888127;
+        bh=7B3lhqLFlPVFKC1uvf1QDN3dBhA4isXKHtqt43nj7FE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oOlWx8t4NQ8BsjF/6BbaNZbzGR8ihnn90wGkAL8a9sQmb74RSzaLpXr2o8eoXVeQf
-         HuSqcrXz/YQIzLqLeAPBTtzyt9NlXVZefmGxNAXzPeq0TXaLLoPjPq0XWaxyqpjrFK
-         JxJODFywskCyuIRwX6YJo0zkBNZAAwqsQdQSRh4Y=
+        b=0gYG2omwc2+Yu6/YgBHyxpXN7vRYe8S/SG6HqIrq5zFD/NJkcmxyuVC8qM9PGevui
+         cXbLwSdQCN0hjpbxecgLk+IQ64ZW2nrhMGYT2lFpSrHfTpqACLHca/sCMvv3J933g+
+         4lL2jSnN7M1/uTH8HQKZ51gmbuZ4y+baxsX1JkXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 4.19 019/306] drm/i915/pmu: "Frequency" is reported as accumulated cycles
-Date:   Wed, 27 Nov 2019 21:27:49 +0100
-Message-Id: <20191127203116.103201032@linuxfoundation.org>
+        stable@vger.kernel.org, mst@redhat.com,
+        Laurent Vivier <lvivier@redhat.com>
+Subject: [PATCH 4.19 015/306] virtio_console: allocate inbufs in add_port() only if it is needed
+Date:   Wed, 27 Nov 2019 21:27:45 +0100
+Message-Id: <20191127203115.820868466@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,42 +59,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Laurent Vivier <lvivier@redhat.com>
 
-commit add3eeed3683e2636ef524db48e1a678757c8e96 upstream.
+commit d791cfcbf98191122af70b053a21075cb450d119 upstream.
 
-We report "frequencies" (actual-frequency, requested-frequency) as the
-number of accumulated cycles so that the average frequency over that
-period may be determined by the user. This means the units we report to
-the user are Mcycles (or just M), not MHz.
+When we hot unplug a virtserialport and then try to hot plug again,
+it fails:
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+(qemu) chardev-add socket,id=serial0,path=/tmp/serial0,server,nowait
+(qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
+                  chardev=serial0,id=serial0,name=serial0
+(qemu) device_del serial0
+(qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
+                  chardev=serial0,id=serial0,name=serial0
+kernel error:
+  virtio-ports vport2p2: Error allocating inbufs
+qemu error:
+  virtio-serial-bus: Guest failure in adding port 2 for device \
+                     virtio-serial0.0
+
+This happens because buffers for the in_vq are allocated when the port is
+added but are not released when the port is unplugged.
+
+They are only released when virtconsole is removed (see a7a69ec0d8e4)
+
+To avoid the problem and to be symmetric, we could allocate all the buffers
+in init_vqs() as they are released in remove_vqs(), but it sounds like
+a waste of memory.
+
+Rather than that, this patch changes add_port() logic to ignore ENOSPC
+error in fill_queue(), which means queue has already been filled.
+
+Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+Cc: mst@redhat.com
 Cc: stable@vger.kernel.org
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191109105356.5273-1-chris@chris-wilson.co.uk
-(cherry picked from commit e88866ef02851c88fe95a4bb97820b94b4d46f36)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-(cherry picked from commit a7d87b70d6da96c6772e50728c8b4e78e4cbfd55)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_pmu.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/char/virtio_console.c |   28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_pmu.c
-+++ b/drivers/gpu/drm/i915/i915_pmu.c
-@@ -827,8 +827,8 @@ create_event_attributes(struct drm_i915_
- 		const char *name;
- 		const char *unit;
- 	} events[] = {
--		__event(I915_PMU_ACTUAL_FREQUENCY, "actual-frequency", "MHz"),
--		__event(I915_PMU_REQUESTED_FREQUENCY, "requested-frequency", "MHz"),
-+		__event(I915_PMU_ACTUAL_FREQUENCY, "actual-frequency", "M"),
-+		__event(I915_PMU_REQUESTED_FREQUENCY, "requested-frequency", "M"),
- 		__event(I915_PMU_INTERRUPTS, "interrupts", NULL),
- 		__event(I915_PMU_RC6_RESIDENCY, "rc6-residency", "ns"),
- 	};
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -1349,24 +1349,24 @@ static void set_console_size(struct port
+ 	port->cons.ws.ws_col = cols;
+ }
+ 
+-static unsigned int fill_queue(struct virtqueue *vq, spinlock_t *lock)
++static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
+ {
+ 	struct port_buffer *buf;
+-	unsigned int nr_added_bufs;
++	int nr_added_bufs;
+ 	int ret;
+ 
+ 	nr_added_bufs = 0;
+ 	do {
+ 		buf = alloc_buf(vq->vdev, PAGE_SIZE, 0);
+ 		if (!buf)
+-			break;
++			return -ENOMEM;
+ 
+ 		spin_lock_irq(lock);
+ 		ret = add_inbuf(vq, buf);
+ 		if (ret < 0) {
+ 			spin_unlock_irq(lock);
+ 			free_buf(buf, true);
+-			break;
++			return ret;
+ 		}
+ 		nr_added_bufs++;
+ 		spin_unlock_irq(lock);
+@@ -1386,7 +1386,6 @@ static int add_port(struct ports_device
+ 	char debugfs_name[16];
+ 	struct port *port;
+ 	dev_t devt;
+-	unsigned int nr_added_bufs;
+ 	int err;
+ 
+ 	port = kmalloc(sizeof(*port), GFP_KERNEL);
+@@ -1445,11 +1444,13 @@ static int add_port(struct ports_device
+ 	spin_lock_init(&port->outvq_lock);
+ 	init_waitqueue_head(&port->waitqueue);
+ 
+-	/* Fill the in_vq with buffers so the host can send us data. */
+-	nr_added_bufs = fill_queue(port->in_vq, &port->inbuf_lock);
+-	if (!nr_added_bufs) {
++	/* We can safely ignore ENOSPC because it means
++	 * the queue already has buffers. Buffers are removed
++	 * only by virtcons_remove(), not by unplug_port()
++	 */
++	err = fill_queue(port->in_vq, &port->inbuf_lock);
++	if (err < 0 && err != -ENOSPC) {
+ 		dev_err(port->dev, "Error allocating inbufs\n");
+-		err = -ENOMEM;
+ 		goto free_device;
+ 	}
+ 
+@@ -2083,14 +2084,11 @@ static int virtcons_probe(struct virtio_
+ 	INIT_WORK(&portdev->control_work, &control_work_handler);
+ 
+ 	if (multiport) {
+-		unsigned int nr_added_bufs;
+-
+ 		spin_lock_init(&portdev->c_ivq_lock);
+ 		spin_lock_init(&portdev->c_ovq_lock);
+ 
+-		nr_added_bufs = fill_queue(portdev->c_ivq,
+-					   &portdev->c_ivq_lock);
+-		if (!nr_added_bufs) {
++		err = fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
++		if (err < 0) {
+ 			dev_err(&vdev->dev,
+ 				"Error allocating buffers for control queue\n");
+ 			/*
+@@ -2101,7 +2099,7 @@ static int virtcons_probe(struct virtio_
+ 					   VIRTIO_CONSOLE_DEVICE_READY, 0);
+ 			/* Device was functional: we need full cleanup. */
+ 			virtcons_remove(vdev);
+-			return -ENOMEM;
++			return err;
+ 		}
+ 	} else {
+ 		/*
 
 
