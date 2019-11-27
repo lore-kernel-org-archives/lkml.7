@@ -4,59 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12458C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1095C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F9420869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72FF20870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891027;
-	bh=yjg5mbcT2qayoGiXGeuj4+AiaU2IiMtfvk/0rI/sPF0=;
+	s=default; t=1574891031;
+	bh=nQbGLp7kUFBI5MTtVDyufswpa9SdBhEAvYm8NlWKD2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ik6wBJXhpi8MtI+z/EM81U1SeO/Kvrsjml6Plxbby/E1wY9TUJ1zhqBHwm5/eyvwy
-	 sGGYvaIKd97eZWjZU0+2mTP+BH7uCXu9Y0sSa6Zh6CaMPMsWmQ6mOGDV0BzccXOl/g
-	 +p9BUfCpYaHKLe5eShnOMGLNsPKp2XjhgP5NrPLs=
+	b=nk1PfE5yV2A273GxOAyeSoese89ufY0K7Ng4Os32GEV0O2ytsiiMXxu7xQ93i2pkL
+	 hiFGLcOyIGoIJ/KmgmaBdwQ+wtzkCY+M/KYt70Etzy3VmNjPX743uiBmaY7Wd0RHDj
+	 hbQVXukqaJmCR6m6O8E6UhwfA1U2laRDTtjeKBqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfK0UiQ (ORCPT
+        id S1728704AbfK0UiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:38:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbfK0UiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 15:38:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727784AbfK0UiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:38:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50B4A21772;
-        Wed, 27 Nov 2019 20:38:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B24F6216F4;
+        Wed, 27 Nov 2019 20:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887092;
-        bh=yjg5mbcT2qayoGiXGeuj4+AiaU2IiMtfvk/0rI/sPF0=;
+        s=default; t=1574887085;
+        bh=nQbGLp7kUFBI5MTtVDyufswpa9SdBhEAvYm8NlWKD2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ad+oVc0xmlkOVwbgR+SvEI2aMhmB1mI9wwz8Ugymg7WON7z40RpgIfe0TWSnZXK1H
-         lmZrRex2yCY9sknUljTVN4W4maKh+2Awb6Pic/AAFGCjnaLVr/JTHLdo5/bMlFNof8
-         LXUqKveaiCo6e6FAWkM70rkyAIUatEl1sitzKxd4=
+        b=v7tQFzwNfoIcSg6g0GuM9Ws2QGdztat7+6qU5J5WQz7RZ3JPHX0eQixfbU6Mh7ocD
+         JeV1njKB/Y8gDSxVcB34M92e1c9XZP85SVT1cA0sn0r/C+pW3E5eRAI1krm62lSxa1
+         LmbcSKjK14sXCrBNAIiQorCdNNcKi4z4Re4bmF/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-doc@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Tyler Hicks <tyhicks@canonical.com>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.4 108/132] x86/speculation: Fix incorrect MDS/TAA mitigation status
-Date:   Wed, 27 Nov 2019 21:31:39 +0100
-Message-Id: <20191127203027.431819899@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.4 106/132] ARC: perf: Accommodate big-endian CPU
+Date:   Wed, 27 Nov 2019 21:31:37 +0100
+Message-Id: <20191127203026.308055463@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -69,154 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
 
-commit 64870ed1b12e235cfca3f6c6da75b542c973ff78 upstream.
+commit 5effc09c4907901f0e71e68e5f2e14211d9a203f upstream.
 
-For MDS vulnerable processors with TSX support, enabling either MDS or
-TAA mitigations will enable the use of VERW to flush internal processor
-buffers at the right code path. IOW, they are either both mitigated
-or both not. However, if the command line options are inconsistent,
-the vulnerabilites sysfs files may not report the mitigation status
-correctly.
+8-letter strings representing ARC perf events are stores in two
+32-bit registers as ASCII characters like that: "IJMP", "IALL", "IJMPTAK" etc.
 
-For example, with only the "mds=off" option:
+And the same order of bytes in the word is used regardless CPU endianness.
 
-  vulnerabilities/mds:Vulnerable; SMT vulnerable
-  vulnerabilities/tsx_async_abort:Mitigation: Clear CPU buffers; SMT vulnerable
+Which means in case of big-endian CPU core we need to swap bytes to get
+the same order as if it was on little-endian CPU.
 
-The mds vulnerabilities file has wrong status in this case. Similarly,
-the taa vulnerability file will be wrong with mds mitigation on, but
-taa off.
+Otherwise we're seeing the following error message on boot:
+------------------------->8----------------------
+ARC perf        : 8 counters (32 bits), 40 conditions, [overflow IRQ support]
+sysfs: cannot create duplicate filename '/devices/arc_pct/events/pmji'
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
+Stack Trace:
+  arc_unwind_core+0xd4/0xfc
+  dump_stack+0x64/0x80
+  sysfs_warn_dup+0x46/0x58
+  sysfs_add_file_mode_ns+0xb2/0x168
+  create_files+0x70/0x2a0
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at kernel/events/core.c:12144 perf_event_sysfs_init+0x70/0xa0
+Failed to register pmu: arc_pct, reason -17
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
+Stack Trace:
+  arc_unwind_core+0xd4/0xfc
+  dump_stack+0x64/0x80
+  __warn+0x9c/0xd4
+  warn_slowpath_fmt+0x22/0x2c
+  perf_event_sysfs_init+0x70/0xa0
+---[ end trace a75fb9a9837bd1ec ]---
+------------------------->8----------------------
 
-Change taa_select_mitigation() to sync up the two mitigation status
-and have them turned off if both "mds=off" and "tsx_async_abort=off"
-are present.
+What happens here we're trying to register more than one raw perf event
+with the same name "PMJI". Why? Because ARC perf events are 4 to 8 letters
+and encoded into two 32-bit words. In this particular case we deal with 2
+events:
+ * "IJMP____" which counts all jump & branch instructions
+ * "IJMPC___" which counts only conditional jumps & branches
 
-Update documentation to emphasize the fact that both "mds=off" and
-"tsx_async_abort=off" have to be specified together for processors that
-are affected by both TAA and MDS to be effective.
+Those strings are split in two 32-bit words this way "IJMP" + "____" &
+"IJMP" + "C___" correspondingly. Now if we read them swapped due to CPU core
+being big-endian then we read "PMJI" + "____" & "PMJI" + "___C".
 
- [ bp: Massage and add kernel-parameters.txt change too. ]
+And since we interpret read array of ASCII letters as a null-terminated string
+on big-endian CPU we end up with 2 events of the same name "PMJI".
 
-Fixes: 1b42f017415b ("x86/speculation/taa: Add mitigation for TSX Async Abort")
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: linux-doc@vger.kernel.org
-Cc: Mark Gross <mgross@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Tyler Hicks <tyhicks@canonical.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191115161445.30809-2-longman@redhat.com
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- Documentation/hw-vuln/mds.rst             |    7 +++++--
- Documentation/hw-vuln/tsx_async_abort.rst |    5 ++++-
- Documentation/kernel-parameters.txt       |   11 +++++++++++
- arch/x86/kernel/cpu/bugs.c                |   17 +++++++++++++++--
- 4 files changed, 35 insertions(+), 5 deletions(-)
 
---- a/Documentation/hw-vuln/mds.rst
-+++ b/Documentation/hw-vuln/mds.rst
-@@ -262,8 +262,11 @@ time with the option "mds=". The valid a
+
+---
+ arch/arc/kernel/perf_event.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/arch/arc/kernel/perf_event.c
++++ b/arch/arc/kernel/perf_event.c
+@@ -486,8 +486,8 @@ static int arc_pmu_device_probe(struct p
+ 	/* loop thru all available h/w condition indexes */
+ 	for (j = 0; j < cc_bcr.c; j++) {
+ 		write_aux_reg(ARC_REG_CC_INDEX, j);
+-		cc_name.indiv.word0 = read_aux_reg(ARC_REG_CC_NAME0);
+-		cc_name.indiv.word1 = read_aux_reg(ARC_REG_CC_NAME1);
++		cc_name.indiv.word0 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME0));
++		cc_name.indiv.word1 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME1));
  
-   ============  =============================================================
- 
--Not specifying this option is equivalent to "mds=full".
--
-+Not specifying this option is equivalent to "mds=full". For processors
-+that are affected by both TAA (TSX Asynchronous Abort) and MDS,
-+specifying just "mds=off" without an accompanying "tsx_async_abort=off"
-+will have no effect as the same mitigation is used for both
-+vulnerabilities.
- 
- Mitigation selection guide
- --------------------------
---- a/Documentation/hw-vuln/tsx_async_abort.rst
-+++ b/Documentation/hw-vuln/tsx_async_abort.rst
-@@ -169,7 +169,10 @@ the option "tsx_async_abort=". The valid
-                 systems will have no effect.
-   ============  =============================================================
- 
--Not specifying this option is equivalent to "tsx_async_abort=full".
-+Not specifying this option is equivalent to "tsx_async_abort=full". For
-+processors that are affected by both TAA and MDS, specifying just
-+"tsx_async_abort=off" without an accompanying "mds=off" will have no
-+effect as the same mitigation is used for both vulnerabilities.
- 
- The kernel command line also allows to control the TSX feature using the
- parameter "tsx=" on CPUs which support TSX control. MSR_IA32_TSX_CTRL is used
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -2054,6 +2054,12 @@ bytes respectively. Such letter suffixes
- 			full    - Enable MDS mitigation on vulnerable CPUs
- 			off     - Unconditionally disable MDS mitigation
- 
-+			On TAA-affected machines, mds=off can be prevented by
-+			an active TAA mitigation as both vulnerabilities are
-+			mitigated with the same mechanism so in order to disable
-+			this mitigation, you need to specify tsx_async_abort=off
-+			too.
-+
- 			Not specifying this option is equivalent to
- 			mds=full.
- 
-@@ -4105,6 +4111,11 @@ bytes respectively. Such letter suffixes
- 
- 			off        - Unconditionally disable TAA mitigation
- 
-+			On MDS-affected machines, tsx_async_abort=off can be
-+			prevented by an active MDS mitigation as both vulnerabilities
-+			are mitigated with the same mechanism so in order to disable
-+			this mitigation, you need to specify mds=off too.
-+
- 			Not specifying this option is equivalent to
- 			tsx_async_abort=full.  On CPUs which are MDS affected
- 			and deploy MDS mitigation, TAA mitigation is not
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -283,8 +283,12 @@ static void __init taa_select_mitigation
- 		return;
- 	}
- 
--	/* TAA mitigation is turned off on the cmdline (tsx_async_abort=off) */
--	if (taa_mitigation == TAA_MITIGATION_OFF)
-+	/*
-+	 * TAA mitigation via VERW is turned off if both
-+	 * tsx_async_abort=off and mds=off are specified.
-+	 */
-+	if (taa_mitigation == TAA_MITIGATION_OFF &&
-+	    mds_mitigation == MDS_MITIGATION_OFF)
- 		goto out;
- 
- 	if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
-@@ -315,6 +319,15 @@ static void __init taa_select_mitigation
- 	 */
- 	static_branch_enable(&mds_user_clear);
- 
-+	/*
-+	 * Update MDS mitigation, if necessary, as the mds_user_clear is
-+	 * now enabled for TAA mitigation.
-+	 */
-+	if (mds_mitigation == MDS_MITIGATION_OFF &&
-+	    boot_cpu_has_bug(X86_BUG_MDS)) {
-+		mds_mitigation = MDS_MITIGATION_FULL;
-+		mds_select_mitigation();
-+	}
- out:
- 	pr_info("%s\n", taa_strings[taa_mitigation]);
- }
+ 		/* See if it has been mapped to a perf event_id */
+ 		for (i = 0; i < ARRAY_SIZE(arc_pmu_ev_hw_map); i++) {
 
 
