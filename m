@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9CEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F53BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E692086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B12F2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889198;
-	bh=eaBjrtbhJ62pLWppLNZsKpx+Q5x1JcT00JxRyiiPxLQ=;
+	s=default; t=1574889203;
+	bh=m+9gLKLJPVKmbMVfTrjUnkZTGNhO4OvqC2oDE5gvC5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bOR7zA5XE8uumjC0bYDjOL6FBTMSTZE0zz/VYE2Kd5vgSm/Lbaq9KFuaqyCFykKyX
-	 SJneLbZUockNhLEGCBMLPTsf3NL+lt4gf/Jb2ENt/X/GjIkP/W8GatUoBK95045h7c
-	 zHzsy0ugm2+cN2ie2UaCIUdqts/mFCSsCh4uvtys=
+	b=lBIRYkzgkIGLbpo/iXmaueC3qkKItT9XlFXK3J7xS1LTedBUekV78Hm5aEIODxg0O
+	 nzOa3/B2kW8fJBqmy2dIScAY8/reMIIhfmmui4f0cTsxzJclgHQetNg36rr47lDHHm
+	 7kPUgaJ31+mwDY8fdPu3ZX1GPqnUx6JE0tSB0iz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387459AbfK0VNR (ORCPT
+        id S1732920AbfK0VNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:13:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45208 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:13:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732929AbfK0VNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:13:13 -0500
+        id S1732929AbfK0VNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:13:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C45182154A;
-        Wed, 27 Nov 2019 21:13:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDAC12154A;
+        Wed, 27 Nov 2019 21:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889192;
-        bh=eaBjrtbhJ62pLWppLNZsKpx+Q5x1JcT00JxRyiiPxLQ=;
+        s=default; t=1574889197;
+        bh=m+9gLKLJPVKmbMVfTrjUnkZTGNhO4OvqC2oDE5gvC5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rARyE4HL1WpJaw5156SjSFDcyT2X8Jh0df2cRRuk8XkYulUlxWOOP6FZ2iCH/zzoI
-         Rw6HFadWt8uxHrzVHhIxlDLBIEE1RiINS3kalpIAbiW6BLgIp4A70xFoiEVugKw7zL
-         FyDtsFOOTIHT/VOwbKSWIcQHj29ALUu4w+hEFK5M=
+        b=lKtRZVRPTplDnoujuYT0+Oph/LsRl5SEs0QdLQ/r05Llo6zTJnwMqSf7cken7wCMg
+         ukBBgVPdVBk8xWWfx00jST4HMQarfue7gVW7KBvVgWU0b/gLeq5WN16NjkBZfMEOC1
+         kxUBfBUZY0axLyyGZqIh9GwW7eLDjC2zgBO1W15Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org
-Subject: [PATCH 5.4 24/66] selftests/x86/mov_ss_trap: Fix the SYSENTER test
-Date:   Wed, 27 Nov 2019 21:32:19 +0100
-Message-Id: <20191127202657.801767125@linuxfoundation.org>
+        stable@vger.kernel.org, John Pittman <jpittman@redhat.com>,
+        David Jeffery <djeffery@redhat.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.4 08/66] md/raid10: prevent access of uninitialized resync_pages offset
+Date:   Wed, 27 Nov 2019 21:32:03 +0100
+Message-Id: <20191127202644.311484265@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -59,40 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: John Pittman <jpittman@redhat.com>
 
-commit 8caa016bfc129f2c925d52da43022171d1d1de91 upstream.
+commit 45422b704db392a6d79d07ee3e3670b11048bd53 upstream.
 
-For reasons that I haven't quite fully diagnosed, running
-mov_ss_trap_32 on a 32-bit kernel results in an infinite loop in
-userspace.  This appears to be because the hacky SYSENTER test
-doesn't segfault as desired; instead it corrupts the program state
-such that it infinite loops.
+Due to unneeded multiplication in the out_free_pages portion of
+r10buf_pool_alloc(), when using a 3-copy raid10 layout, it is
+possible to access a resync_pages offset that has not been
+initialized.  This access translates into a crash of the system
+within resync_free_pages() while passing a bad pointer to
+put_page().  Remove the multiplication, preventing access to the
+uninitialized area.
 
-Fix it by explicitly clearing EBP before doing SYSENTER.  This will
-give a more reliable segfault.
-
-Fixes: 59c2a7226fc5 ("x86/selftests: Add mov_to_ss test")
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@kernel.org
+Fixes: f0250618361db ("md: raid10: don't use bio's vec table to manage resync pages")
+Cc: stable@vger.kernel.org # 4.12+
+Signed-off-by: John Pittman <jpittman@redhat.com>
+Suggested-by: David Jeffery <djeffery@redhat.com>
+Reviewed-by: Laurence Oberman <loberman@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/x86/mov_ss_trap.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/raid10.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/testing/selftests/x86/mov_ss_trap.c
-+++ b/tools/testing/selftests/x86/mov_ss_trap.c
-@@ -257,7 +257,8 @@ int main()
- 			err(1, "sigaltstack");
- 		sethandler(SIGSEGV, handle_and_longjmp, SA_RESETHAND | SA_ONSTACK);
- 		nr = SYS_getpid;
--		asm volatile ("mov %[ss], %%ss; SYSENTER" : "+a" (nr)
-+		/* Clear EBP first to make sure we segfault cleanly. */
-+		asm volatile ("xorl %%ebp, %%ebp; mov %[ss], %%ss; SYSENTER" : "+a" (nr)
- 			      : [ss] "m" (ss) : "flags", "rcx"
- #ifdef __x86_64__
- 				, "r11"
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -191,7 +191,7 @@ static void * r10buf_pool_alloc(gfp_t gf
+ 
+ out_free_pages:
+ 	while (--j >= 0)
+-		resync_free_pages(&rps[j * 2]);
++		resync_free_pages(&rps[j]);
+ 
+ 	j = 0;
+ out_free_bio:
 
 
