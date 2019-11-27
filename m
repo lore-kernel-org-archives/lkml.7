@@ -2,53 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35F2C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C1AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 799172075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9782D2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890596;
-	bh=GZD3uAk6DI5PWc10Rt+WpS7JYxwVfGIWzFPTCmpQz4A=;
+	s=default; t=1574890603;
+	bh=UgCUPv+FXXkrqQZEGsb62ZUpxRa20bdJWsSt6ZQqkLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mKe9eG5Ax/j1lzhpS5TebVJl5q6EitDoSpt/9fqxkgisolDOLoZdhxNBu7ImdWkgK
-	 Vn22IGorH8nE2T2aZRqmx1bQ2lr2byOUCeP29jJTjiWqTGhASNG2uaHd219sjYgdbo
-	 0x4Z19SBKmkSN8KKmWfD/8dvkrwpAOylOJ/DGyoE=
+	b=t7ndeeqfQo55hfD1qnFD9znxUZKGReEL5GPhBSJwogrzWLP1T19xdeY4oIVa3TeIw
+	 v+tCuB0OHE9XeVBkthXA0ZUoQmwTQMu86W14kPa+ayO4+diNKpXmdKeCoHiODKgE4y
+	 fXqjcgDT//VP0YcYgCgO9pN4rUsh3hKPyDmW+sz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbfK0UsK (ORCPT
+        id S1730048AbfK0Urv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:48:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33102 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:47:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730082AbfK0UsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:48:04 -0500
+        id S1730031AbfK0Urt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:47:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BC1D217C3;
-        Wed, 27 Nov 2019 20:48:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C27DE217C3;
+        Wed, 27 Nov 2019 20:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887683;
-        bh=GZD3uAk6DI5PWc10Rt+WpS7JYxwVfGIWzFPTCmpQz4A=;
+        s=default; t=1574887668;
+        bh=UgCUPv+FXXkrqQZEGsb62ZUpxRa20bdJWsSt6ZQqkLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=njutYqgVZBaqRW0LPC16W1rY6jTfYi3Jo7iPOe9i1Qea0uFPjJqBjeHKWbYXdX1EF
-         0wmTSIXPPlufmR+PiR2pm9gqWtHHcoEeNnlA8km9wjWoxP12RUwNIPvatMt4i7WRev
-         KPxjzaUVO6LFFL7iwj9ikCQHh8PPg59O2WR+7IeM=
+        b=B8A3/iCXMIC/p7sXtzwW/hysbvnwN5buueRELOjbaDQH6JKygXrvibixXFfsinj/J
+         Em24btStRUPBHdpRanOb+dLNlxzFMjs+ARwCkvKAk3NVy+P8DJO2IqcQr5HvhkOub3
+         LvUI28raW3wZs6sGmM0admS8DZ6vjRu3BZLn06hM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 047/211] scsi: isci: Change sci_controller_start_tasks return type to sci_status
-Date:   Wed, 27 Nov 2019 21:29:40 +0100
-Message-Id: <20191127203058.542130368@linuxfoundation.org>
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 007/211] vhost/vsock: split packets to send using multiple buffers
+Date:   Wed, 27 Nov 2019 21:29:00 +0100
+Message-Id: <20191127203050.278790438@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,106 +61,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-[ Upstream commit 362b5da3dfceada6e74ecdd7af3991bbe42c0c0f ]
+commit 6dbd3e66e7785a2f055bf84d98de9b8fd31ff3f5 upstream.
 
-Clang warns when an enumerated type is implicitly converted to another.
+If the packets to sent to the guest are bigger than the buffer
+available, we can split them, using multiple buffers and fixing
+the length in the packet header.
+This is safe since virtio-vsock supports only stream sockets.
 
-drivers/scsi/isci/request.c:3476:13: warning: implicit conversion from
-enumeration type 'enum sci_task_status' to different enumeration type
-'enum sci_status' [-Wenum-conversion]
-                        status = sci_controller_start_task(ihost,
-                               ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/isci/host.c:2744:10: warning: implicit conversion from
-enumeration type 'enum sci_status' to different enumeration type 'enum
-sci_task_status' [-Wenum-conversion]
-                return SCI_SUCCESS;
-                ~~~~~~ ^~~~~~~~~~~
-drivers/scsi/isci/host.c:2753:9: warning: implicit conversion from
-enumeration type 'enum sci_status' to different enumeration type 'enum
-sci_task_status' [-Wenum-conversion]
-        return status;
-        ~~~~~~ ^~~~~~
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Avoid all of these implicit conversion by just making
-sci_controller_start_task use sci_status. This silences
-Clang and has no functional change since sci_task_status
-has all of its values mapped to something in sci_status.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/153
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/isci/host.c | 8 ++++----
- drivers/scsi/isci/host.h | 2 +-
- drivers/scsi/isci/task.c | 4 ++--
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/vhost/vsock.c                   |   66 +++++++++++++++++++++++---------
+ net/vmw_vsock/virtio_transport_common.c |   15 +++++--
+ 2 files changed, 60 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/scsi/isci/host.c b/drivers/scsi/isci/host.c
-index 609dafd661d14..da4583a2fa23e 100644
---- a/drivers/scsi/isci/host.c
-+++ b/drivers/scsi/isci/host.c
-@@ -2717,9 +2717,9 @@ enum sci_status sci_controller_continue_io(struct isci_request *ireq)
-  *    the task management request.
-  * @task_request: the handle to the task request object to start.
-  */
--enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
--					       struct isci_remote_device *idev,
--					       struct isci_request *ireq)
-+enum sci_status sci_controller_start_task(struct isci_host *ihost,
-+					  struct isci_remote_device *idev,
-+					  struct isci_request *ireq)
- {
- 	enum sci_status status;
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -103,7 +103,7 @@ vhost_transport_do_send_pkt(struct vhost
+ 		struct iov_iter iov_iter;
+ 		unsigned out, in;
+ 		size_t nbytes;
+-		size_t len;
++		size_t iov_len, payload_len;
+ 		int head;
  
-@@ -2728,7 +2728,7 @@ enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
- 			 "%s: SCIC Controller starting task from invalid "
- 			 "state\n",
- 			 __func__);
--		return SCI_TASK_FAILURE_INVALID_STATE;
-+		return SCI_FAILURE_INVALID_STATE;
+ 		spin_lock_bh(&vsock->send_pkt_list_lock);
+@@ -148,8 +148,24 @@ vhost_transport_do_send_pkt(struct vhost
+ 			break;
+ 		}
+ 
+-		len = iov_length(&vq->iov[out], in);
+-		iov_iter_init(&iov_iter, READ, &vq->iov[out], in, len);
++		iov_len = iov_length(&vq->iov[out], in);
++		if (iov_len < sizeof(pkt->hdr)) {
++			virtio_transport_free_pkt(pkt);
++			vq_err(vq, "Buffer len [%zu] too small\n", iov_len);
++			break;
++		}
++
++		iov_iter_init(&iov_iter, READ, &vq->iov[out], in, iov_len);
++		payload_len = pkt->len - pkt->off;
++
++		/* If the packet is greater than the space available in the
++		 * buffer, we split it using multiple buffers.
++		 */
++		if (payload_len > iov_len - sizeof(pkt->hdr))
++			payload_len = iov_len - sizeof(pkt->hdr);
++
++		/* Set the correct length in the header */
++		pkt->hdr.len = cpu_to_le32(payload_len);
+ 
+ 		nbytes = copy_to_iter(&pkt->hdr, sizeof(pkt->hdr), &iov_iter);
+ 		if (nbytes != sizeof(pkt->hdr)) {
+@@ -158,33 +174,47 @@ vhost_transport_do_send_pkt(struct vhost
+ 			break;
+ 		}
+ 
+-		nbytes = copy_to_iter(pkt->buf, pkt->len, &iov_iter);
+-		if (nbytes != pkt->len) {
++		nbytes = copy_to_iter(pkt->buf + pkt->off, payload_len,
++				      &iov_iter);
++		if (nbytes != payload_len) {
+ 			virtio_transport_free_pkt(pkt);
+ 			vq_err(vq, "Faulted on copying pkt buf\n");
+ 			break;
+ 		}
+ 
+-		vhost_add_used(vq, head, sizeof(pkt->hdr) + pkt->len);
++		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
+ 		added = true;
+ 
+-		if (pkt->reply) {
+-			int val;
+-
+-			val = atomic_dec_return(&vsock->queued_replies);
+-
+-			/* Do we have resources to resume tx processing? */
+-			if (val + 1 == tx_vq->num)
+-				restart_tx = true;
+-		}
+-
+ 		/* Deliver to monitoring devices all correctly transmitted
+ 		 * packets.
+ 		 */
+ 		virtio_transport_deliver_tap_pkt(pkt);
+ 
+-		total_len += pkt->len;
+-		virtio_transport_free_pkt(pkt);
++		pkt->off += payload_len;
++		total_len += payload_len;
++
++		/* If we didn't send all the payload we can requeue the packet
++		 * to send it with the next available buffer.
++		 */
++		if (pkt->off < pkt->len) {
++			spin_lock_bh(&vsock->send_pkt_list_lock);
++			list_add(&pkt->list, &vsock->send_pkt_list);
++			spin_unlock_bh(&vsock->send_pkt_list_lock);
++		} else {
++			if (pkt->reply) {
++				int val;
++
++				val = atomic_dec_return(&vsock->queued_replies);
++
++				/* Do we have resources to resume tx
++				 * processing?
++				 */
++				if (val + 1 == tx_vq->num)
++					restart_tx = true;
++			}
++
++			virtio_transport_free_pkt(pkt);
++		}
+ 	} while(likely(!vhost_exceeds_weight(vq, ++pkts, total_len)));
+ 	if (added)
+ 		vhost_signal(&vsock->dev, vq);
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -92,8 +92,17 @@ static struct sk_buff *virtio_transport_
+ 	struct virtio_vsock_pkt *pkt = opaque;
+ 	struct af_vsockmon_hdr *hdr;
+ 	struct sk_buff *skb;
++	size_t payload_len;
++	void *payload_buf;
+ 
+-	skb = alloc_skb(sizeof(*hdr) + sizeof(pkt->hdr) + pkt->len,
++	/* A packet could be split to fit the RX buffer, so we can retrieve
++	 * the payload length from the header and the buffer pointer taking
++	 * care of the offset in the original packet.
++	 */
++	payload_len = le32_to_cpu(pkt->hdr.len);
++	payload_buf = pkt->buf + pkt->off;
++
++	skb = alloc_skb(sizeof(*hdr) + sizeof(pkt->hdr) + payload_len,
+ 			GFP_ATOMIC);
+ 	if (!skb)
+ 		return NULL;
+@@ -133,8 +142,8 @@ static struct sk_buff *virtio_transport_
+ 
+ 	skb_put_data(skb, &pkt->hdr, sizeof(pkt->hdr));
+ 
+-	if (pkt->len) {
+-		skb_put_data(skb, pkt->buf, pkt->len);
++	if (payload_len) {
++		skb_put_data(skb, payload_buf, payload_len);
  	}
  
- 	status = sci_remote_device_start_task(ihost, idev, ireq);
-diff --git a/drivers/scsi/isci/host.h b/drivers/scsi/isci/host.h
-index b3539928073c6..6bc3f022630a2 100644
---- a/drivers/scsi/isci/host.h
-+++ b/drivers/scsi/isci/host.h
-@@ -489,7 +489,7 @@ enum sci_status sci_controller_start_io(
- 	struct isci_remote_device *idev,
- 	struct isci_request *ireq);
- 
--enum sci_task_status sci_controller_start_task(
-+enum sci_status sci_controller_start_task(
- 	struct isci_host *ihost,
- 	struct isci_remote_device *idev,
- 	struct isci_request *ireq);
-diff --git a/drivers/scsi/isci/task.c b/drivers/scsi/isci/task.c
-index 6dcaed0c1fc8c..fb6eba331ac6e 100644
---- a/drivers/scsi/isci/task.c
-+++ b/drivers/scsi/isci/task.c
-@@ -258,7 +258,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
- 				 struct isci_tmf *tmf, unsigned long timeout_ms)
- {
- 	DECLARE_COMPLETION_ONSTACK(completion);
--	enum sci_task_status status = SCI_TASK_FAILURE;
-+	enum sci_status status = SCI_FAILURE;
- 	struct isci_request *ireq;
- 	int ret = TMF_RESP_FUNC_FAILED;
- 	unsigned long flags;
-@@ -301,7 +301,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
- 	/* start the TMF io. */
- 	status = sci_controller_start_task(ihost, idev, ireq);
- 
--	if (status != SCI_TASK_SUCCESS) {
-+	if (status != SCI_SUCCESS) {
- 		dev_dbg(&ihost->pdev->dev,
- 			 "%s: start_io failed - status = 0x%x, request = %p\n",
- 			 __func__,
--- 
-2.20.1
-
+ 	return skb;
 
 
