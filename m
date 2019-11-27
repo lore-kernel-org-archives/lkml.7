@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837B4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25980C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571FD21771
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC44D2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888585;
-	bh=d9nxKcst+qQU3OV1rFInKjs+FqAyZY6FfLLPYATbVhY=;
+	s=default; t=1574888589;
+	bh=66OswkvPZoALuafR5qsSA0Pwjf5yODcChCiMsXuUxx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zx/3jE3+B6TW8eBV6DnDd9NwtnWyPBM5j6nW82KMyrAvXZ+JAz69q+MOU9FZbszF5
-	 DWc0ENGfJLzs1DLhanLQUZjk+tVukupeEUkyPdJQKXDyT1ZnpYT0c6xn2KujzQTUIG
-	 50tzGOnDy5alisJLkQZQZ8tNwd+cODSpNK2i/Ocw=
+	b=prKXqKnc3uqzxj8B2oG0iR37b0l4739igmx1Rpzv/0u1VPBtfMN+ASlwB1nxZKszg
+	 xfhv9C6yfEgNejsZOdRe4eFdAw4k2f7NPrPM8geBDoXE94TaO1WEkpncVByiP5otvD
+	 qNESCP8t6hekZVsTsDB0Ctm88n6n/oYLpDVuPI3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbfK0VDE (ORCPT
+        id S1731997AbfK0VDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:03:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:03:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731980AbfK0VDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:03:00 -0500
+        id S1731980AbfK0VDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:03:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C85B21775;
-        Wed, 27 Nov 2019 21:02:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BF7B21569;
+        Wed, 27 Nov 2019 21:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888579;
-        bh=d9nxKcst+qQU3OV1rFInKjs+FqAyZY6FfLLPYATbVhY=;
+        s=default; t=1574888584;
+        bh=66OswkvPZoALuafR5qsSA0Pwjf5yODcChCiMsXuUxx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a74s0WzOIWMtz0JSy7yiQvp8GpBMVHAyQlvAPZdQ+gQLDJ5Js1RZLINKcV+NQB6XF
-         ipiTE/0Mlaoi/vHGsyng3XmfBMSP+IrEjIMEHstCF88H+CBZ1TYk8nKR9eI6ez4oSX
-         xrytKNmmGdaUnwAIYiSCP24NGintRpgQD4+ycmM4=
+        b=I5iRmP4/+8KlWGbcWNwOnS/SHUW5bi/qndO2GEAcHCuVUTONzJ3nCnZOau35hiDv7
+         ZJwXoWOOv4m259xYrvx9g1DDa15GkKnjV0c3JFyXmoX2mCGONjkTsQ2BJV94p6ykiX
+         4LuT2PS4MSaQu8eKQu7nXP46S86hHOrtBlmAMgwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        stable@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 147/306] fs/ocfs2/dlm/dlmdebug.c: fix a sleep-in-atomic-context bug in dlm_print_one_mle()
-Date:   Wed, 27 Nov 2019 21:29:57 +0100
-Message-Id: <20191127203126.165957854@linuxfoundation.org>
+Subject: [PATCH 4.19 149/306] tools/testing/selftests/vm/gup_benchmark.c: fix write flag usage
+Date:   Wed, 27 Nov 2019 21:29:59 +0100
+Message-Id: <20191127203126.388274174@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -66,58 +64,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit 999865764f5f128896402572b439269acb471022 ]
+[ Upstream commit 319e0bec1aecb36c5ac6d23812af487ff2c8f47f ]
 
-The kernel module may sleep with holding a spinlock.
+If the '-w' parameter was provided, the benchmark would exit due to a
+mssing 'break'.
 
-The function call paths (from bottom to top) in Linux-4.16 are:
-
-[FUNC] get_zeroed_page(GFP_NOFS)
-fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
-fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
-fs/ocfs2/dlm/dlmmaster.c, 255: __dlm_put_mle in dlm_put_mle
-fs/ocfs2/dlm/dlmmaster.c, 254: spin_lock in dlm_put_ml
-
-[FUNC] get_zeroed_page(GFP_NOFS)
-fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
-fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
-fs/ocfs2/dlm/dlmmaster.c, 222: __dlm_put_mle in dlm_put_mle_inuse
-fs/ocfs2/dlm/dlmmaster.c, 219: spin_lock in dlm_put_mle_inuse
-
-To fix this bug, GFP_NOFS is replaced with GFP_ATOMIC.
-
-This bug is found by my static analysis tool DSAC.
-
-Link: http://lkml.kernel.org/r/20180901112528.27025-1-baijiaju1990@gmail.com
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: http://lkml.kernel.org/r/20181010195605.10689-3-keith.busch@intel.com
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Joseph Qi <jiangqi903@gmail.com>
-Cc: Changwei Ge <ge.changwei@h3c.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/dlm/dlmdebug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/vm/gup_benchmark.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ocfs2/dlm/dlmdebug.c b/fs/ocfs2/dlm/dlmdebug.c
-index 9b984cae4c4e0..1d6dc8422899b 100644
---- a/fs/ocfs2/dlm/dlmdebug.c
-+++ b/fs/ocfs2/dlm/dlmdebug.c
-@@ -329,7 +329,7 @@ void dlm_print_one_mle(struct dlm_master_list_entry *mle)
- {
- 	char *buf;
- 
--	buf = (char *) get_zeroed_page(GFP_NOFS);
-+	buf = (char *) get_zeroed_page(GFP_ATOMIC);
- 	if (buf) {
- 		dump_mle(mle, buf, PAGE_SIZE - 1);
- 		free_page((unsigned long)buf);
+diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/selftests/vm/gup_benchmark.c
+index 9601bc24454d9..17da711f26afb 100644
+--- a/tools/testing/selftests/vm/gup_benchmark.c
++++ b/tools/testing/selftests/vm/gup_benchmark.c
+@@ -51,6 +51,7 @@ int main(int argc, char **argv)
+ 			break;
+ 		case 'w':
+ 			write = 1;
++			break;
+ 		default:
+ 			return -1;
+ 		}
 -- 
 2.20.1
 
