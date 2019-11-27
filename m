@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95781C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301E0C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D62620863
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE400215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887244;
-	bh=Jq7yV1cMB4AnFU+bp4wsDh/McG2TBw5lyeKLoiGpng0=;
+	s=default; t=1574887247;
+	bh=zVi3l48Dj1pEq/lXVT7CWip3HEIXhUTRhaX6jVURMJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iRXK7Rs4o8ptE/ZV3oGZrnqJlf7XA1sOxwjNylXgXAUag8KuWBDntTvSwrAneJXgh
-	 MZ2gr/WUbGc8rwyk+IQadkM5fREnhx8mkQcDgsNRwbFLEfShNI1d1x3EKdyxNpXtEi
-	 NwHZwDZrxq2rcbzyzrioI8vEpOG7F6Xyi+JXsoCM=
+	b=w/3ttqCJIK61H/u/tM5DbpFHZKOIxY54jh2kvmU0SHtBtJGKMgtyySQWVKrskNTLy
+	 t0JSF/2rMl7pznCYAVJ35Tv+SwUcHXUJJdpKbIE8VfQA/DCvzC90YR/X/DxcYjuCCm
+	 H4lR4g3XdEmwmorrxgCkgkNun8A3XFLuKJChlwjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfK0Ukn (ORCPT
+        id S1729074AbfK0Ukp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:40:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45326 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:40:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728863AbfK0Uki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:40:38 -0500
+        id S1727418AbfK0Ukl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:40:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06F47215A4;
-        Wed, 27 Nov 2019 20:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7462C21772;
+        Wed, 27 Nov 2019 20:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887238;
-        bh=Jq7yV1cMB4AnFU+bp4wsDh/McG2TBw5lyeKLoiGpng0=;
+        s=default; t=1574887240;
+        bh=zVi3l48Dj1pEq/lXVT7CWip3HEIXhUTRhaX6jVURMJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IglgtzjhYojM7edMrJ5tt49+batQ2H45dezd0zswHvqVpfgkWart1OVGyfXgOMSsn
-         HuGfNLTnTzjJWACloXtg1xi7lBR1vlh1/0+KvLhi85/209pLmimcpA8AefQBnLzhCq
-         14ZQlSM8s9kX2VNJmaLmgm7pTKuvw1XuS7Ow/Llo=
+        b=cqdVzfG9eGzlQoHGTG48kshgDGuLwezzXWBZaauzNseCJPa1ixUOZCN7Vil6h9mVC
+         udb/VHP30i3FtJkOitucPBOQhNpil/kxnay2i8sIAAPLO3n47J3VMN6qAhwf+VZPI5
+         t1nrPqiHV37A3gTvPOqHMROEaxmvXNDIE4bi3v28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 034/151] ASoC: tegra_sgtl5000: fix device_node refcounting
-Date:   Wed, 27 Nov 2019 21:30:17 +0100
-Message-Id: <20191127203021.756052898@linuxfoundation.org>
+Subject: [PATCH 4.9 035/151] scsi: dc395x: fix dma API usage in srb_done
+Date:   Wed, 27 Nov 2019 21:30:18 +0100
+Message-Id: <20191127203022.003091759@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -62,72 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit a85227da2dcc291b762c8482a505bc7d0d2d4b07 ]
+[ Upstream commit 3a5bd7021184dec2946f2a4d7a8943f8a5713e52 ]
 
-Similar to the following:
+We can't just transfer ownership to the CPU and then unmap, as this will
+break with swiotlb.
 
-commit 4321723648b0 ("ASoC: tegra_alc5632: fix device_node refcounting")
+Instead unmap the command and sense buffer a little earlier in the I/O
+completion handler and get rid of the pci_dma_sync_sg_for_cpu call
+entirely.
 
-commit 7c5dfd549617 ("ASoC: tegra: fix device_node refcounting")
-
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/tegra/tegra_sgtl5000.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/scsi/dc395x.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/tegra/tegra_sgtl5000.c b/sound/soc/tegra/tegra_sgtl5000.c
-index 1e76869dd4880..863e04809a6b8 100644
---- a/sound/soc/tegra/tegra_sgtl5000.c
-+++ b/sound/soc/tegra/tegra_sgtl5000.c
-@@ -152,14 +152,14 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,i2s-controller' missing/invalid\n");
- 		ret = -EINVAL;
--		goto err;
-+		goto err_put_codec_of_node;
+diff --git a/drivers/scsi/dc395x.c b/drivers/scsi/dc395x.c
+index 5ee7f44cf869b..9da0ac360848f 100644
+--- a/drivers/scsi/dc395x.c
++++ b/drivers/scsi/dc395x.c
+@@ -3450,14 +3450,12 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
+ 		}
  	}
  
- 	tegra_sgtl5000_dai.platform_of_node = tegra_sgtl5000_dai.cpu_of_node;
+-	if (dir != PCI_DMA_NONE && scsi_sg_count(cmd))
+-		pci_dma_sync_sg_for_cpu(acb->dev, scsi_sglist(cmd),
+-					scsi_sg_count(cmd), dir);
+-
+ 	ckc_only = 0;
+ /* Check Error Conditions */
+       ckc_e:
  
- 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
- 	if (ret)
--		goto err;
-+		goto err_put_cpu_of_node;
- 
- 	ret = snd_soc_register_card(card);
- 	if (ret) {
-@@ -172,6 +172,13 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
- 
- err_fini_utils:
- 	tegra_asoc_utils_fini(&machine->util_data);
-+err_put_cpu_of_node:
-+	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
-+	tegra_sgtl5000_dai.cpu_of_node = NULL;
-+	tegra_sgtl5000_dai.platform_of_node = NULL;
-+err_put_codec_of_node:
-+	of_node_put(tegra_sgtl5000_dai.codec_of_node);
-+	tegra_sgtl5000_dai.codec_of_node = NULL;
- err:
- 	return ret;
- }
-@@ -186,6 +193,12 @@ static int tegra_sgtl5000_driver_remove(struct platform_device *pdev)
- 
- 	tegra_asoc_utils_fini(&machine->util_data);
- 
-+	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
-+	tegra_sgtl5000_dai.cpu_of_node = NULL;
-+	tegra_sgtl5000_dai.platform_of_node = NULL;
-+	of_node_put(tegra_sgtl5000_dai.codec_of_node);
-+	tegra_sgtl5000_dai.codec_of_node = NULL;
++	pci_unmap_srb(acb, srb);
 +
- 	return ret;
- }
+ 	if (cmd->cmnd[0] == INQUIRY) {
+ 		unsigned char *base = NULL;
+ 		struct ScsiInqData *ptr;
+@@ -3511,7 +3509,6 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
+ 			cmd, cmd->result);
+ 		srb_free_insert(acb, srb);
+ 	}
+-	pci_unmap_srb(acb, srb);
  
+ 	cmd->scsi_done(cmd);
+ 	waiting_process_next(acb);
 -- 
 2.20.1
 
