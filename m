@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4FCC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2ED1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52058215F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B778215E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888966;
-	bh=j4+Z2IPEngF5+fke5jSBA0vOLXve52pBnioAKf+yoUE=;
+	s=default; t=1574888968;
+	bh=wScifd68h+gQx5dyRt++C5BZ7UGdxYK9bvdoiiUa1PM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZjuSHsYAoEScYqoXPWuA9GkmIMPVWUsDpSp4wu8DwgEqREok22wMa+5lUAdRgHaf
-	 Mry97UbHQ0o1PJuEAESVQsAbnkAy/DTTQEVxKXMUfehCXkOi8yQ9xrn1OknZSYvqK5
-	 hg3+Xf8maPiMVXzpLJdXkPo349mH3Vh/2vaUO45A=
+	b=reE1g5M7OPpX+w9lEocYgY+u+3Jro+Thn2GVBma+WssIzW0vlIHTBxAbevLV314cK
+	 sdtwMRFylwA7cbfXlpWUcNXHpOUqF1ZeNr5rDuU+4KZHt9TqdZzUmUn6FAMnXAKVx7
+	 YRlTue104GlIHnmyuvpigzQk6jvEWEMChXPyjlPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732883AbfK0VJZ (ORCPT
+        id S1732506AbfK0VJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:09:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36060 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:09:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732875AbfK0VJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:09:20 -0500
+        id S1732881AbfK0VJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:09:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCCD1215E5;
-        Wed, 27 Nov 2019 21:09:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 398B92176D;
+        Wed, 27 Nov 2019 21:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888960;
-        bh=j4+Z2IPEngF5+fke5jSBA0vOLXve52pBnioAKf+yoUE=;
+        s=default; t=1574888962;
+        bh=wScifd68h+gQx5dyRt++C5BZ7UGdxYK9bvdoiiUa1PM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IaTJS9n8dageWOFTnh+ceQ1HJxnV2xmrWgUzW5J4r3LU/niF178bXrTXMwnTSlsCK
-         iRXR7ylDBk/VE1JAaJn5u/os3+pfnujbXK//LHxtkOcEff0SqEfkNanz3OlXbqOczg
-         bkta0+rWb3sJ/HLG49nkNQjhjaqk94uzWBm6rEhw=
+        b=QZkQZvSIB6otj9iaEyhOCOdjJ1BQT8ugqSJGnYn+TBdYbpFh5HIdN8mkc0QShKISX
+         9Smu6XsZSarXrjgl6skXgM2i+ryJ4fPkZnqm0ts+mJUBVcTg4gxtSEx06oBLG+RDO4
+         dJFgDpdlR+6li7UaD1y5DMJAgyyLUFS7zfDQ1hlw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 29/95] mm/ksm.c: dont WARN if page is still mapped in remove_stable_node()
-Date:   Wed, 27 Nov 2019 21:31:46 +0100
-Message-Id: <20191127202856.468507270@linuxfoundation.org>
+        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 03/95] net/mlx4_en: Fix wrong limitation for number of TX rings
+Date:   Wed, 27 Nov 2019 21:31:20 +0100
+Message-Id: <20191127202849.416538837@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -62,63 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Ryabinin <aryabinin@virtuozzo.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-commit 9a63236f1ad82d71a98aa80320b6cb618fb32f44 upstream.
+[ Upstream commit 2744bf42680f64ebf2ee8a00354897857c073331 ]
 
-It's possible to hit the WARN_ON_ONCE(page_mapped(page)) in
-remove_stable_node() when it races with __mmput() and squeezes in
-between ksm_exit() and exit_mmap().
+XDP_TX rings should not be limited by max_num_tx_rings_p_up.
+To make sure total number of TX rings never exceed MAX_TX_RINGS,
+add similar check in mlx4_en_alloc_tx_queue_per_tc(), where
+a new value is assigned for num_up.
 
-  WARNING: CPU: 0 PID: 3295 at mm/ksm.c:888 remove_stable_node+0x10c/0x150
-
-  Call Trace:
-   remove_all_stable_nodes+0x12b/0x330
-   run_store+0x4ef/0x7b0
-   kernfs_fop_write+0x200/0x420
-   vfs_write+0x154/0x450
-   ksys_write+0xf9/0x1d0
-   do_syscall_64+0x99/0x510
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Remove the warning as there is nothing scary going on.
-
-Link: http://lkml.kernel.org/r/20191119131850.5675-1-aryabinin@virtuozzo.com
-Fixes: cbf86cfe04a6 ("ksm: remove old stable nodes more thoroughly")
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Acked-by: Hugh Dickins <hughd@google.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 7e1dc5e926d5 ("net/mlx4_en: Limit the number of TX rings")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/ksm.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/mellanox/mlx4/en_ethtool.c |    8 ++++----
+ drivers/net/ethernet/mellanox/mlx4/en_netdev.c  |    9 +++++++++
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -885,13 +885,13 @@ static int remove_stable_node(struct sta
- 		return 0;
+--- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
+@@ -1812,6 +1812,7 @@ static int mlx4_en_set_channels(struct n
+ 	struct mlx4_en_dev *mdev = priv->mdev;
+ 	struct mlx4_en_port_profile new_prof;
+ 	struct mlx4_en_priv *tmp;
++	int total_tx_count;
+ 	int port_up = 0;
+ 	int xdp_count;
+ 	int err = 0;
+@@ -1826,13 +1827,12 @@ static int mlx4_en_set_channels(struct n
+ 
+ 	mutex_lock(&mdev->state_lock);
+ 	xdp_count = priv->tx_ring_num[TX_XDP] ? channel->rx_count : 0;
+-	if (channel->tx_count * priv->prof->num_up + xdp_count >
+-	    priv->mdev->profile.max_num_tx_rings_p_up * priv->prof->num_up) {
++	total_tx_count = channel->tx_count * priv->prof->num_up + xdp_count;
++	if (total_tx_count > MAX_TX_RINGS) {
+ 		err = -EINVAL;
+ 		en_err(priv,
+ 		       "Total number of TX and XDP rings (%d) exceeds the maximum supported (%d)\n",
+-		       channel->tx_count * priv->prof->num_up  + xdp_count,
+-		       MAX_TX_RINGS);
++		       total_tx_count, MAX_TX_RINGS);
+ 		goto out;
  	}
  
--	if (WARN_ON_ONCE(page_mapped(page))) {
--		/*
--		 * This should not happen: but if it does, just refuse to let
--		 * merge_across_nodes be switched - there is no need to panic.
--		 */
--		err = -EBUSY;
--	} else {
-+	/*
-+	 * Page could be still mapped if this races with __mmput() running in
-+	 * between ksm_exit() and exit_mmap(). Just refuse to let
-+	 * merge_across_nodes/max_page_sharing be switched.
-+	 */
-+	err = -EBUSY;
-+	if (!page_mapped(page)) {
- 		/*
- 		 * The stable node did not yet appear stale to get_ksm_page(),
- 		 * since that allows for an unmapped ksm page to be recognized
+--- a/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
+@@ -91,6 +91,7 @@ int mlx4_en_alloc_tx_queue_per_tc(struct
+ 	struct mlx4_en_dev *mdev = priv->mdev;
+ 	struct mlx4_en_port_profile new_prof;
+ 	struct mlx4_en_priv *tmp;
++	int total_count;
+ 	int port_up = 0;
+ 	int err = 0;
+ 
+@@ -104,6 +105,14 @@ int mlx4_en_alloc_tx_queue_per_tc(struct
+ 				      MLX4_EN_NUM_UP_HIGH;
+ 	new_prof.tx_ring_num[TX] = new_prof.num_tx_rings_p_up *
+ 				   new_prof.num_up;
++	total_count = new_prof.tx_ring_num[TX] + new_prof.tx_ring_num[TX_XDP];
++	if (total_count > MAX_TX_RINGS) {
++		err = -EINVAL;
++		en_err(priv,
++		       "Total number of TX and XDP rings (%d) exceeds the maximum supported (%d)\n",
++		       total_count, MAX_TX_RINGS);
++		goto out;
++	}
+ 	err = mlx4_en_try_alloc_resources(priv, tmp, &new_prof, true);
+ 	if (err)
+ 		goto out;
 
 
