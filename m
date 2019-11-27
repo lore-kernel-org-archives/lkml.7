@@ -2,95 +2,156 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E27C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D640C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23792051A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:43:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PvBbnjaf"
+	by mail.kernel.org (Postfix) with ESMTP id 387BF20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfK0XnH (ORCPT
+        id S1727510AbfK0Xnx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 18:43:07 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:36686 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbfK0XnG (ORCPT
+        Wed, 27 Nov 2019 18:43:53 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:37750 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbfK0Xnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 18:43:06 -0500
-Received: by mail-vk1-f196.google.com with SMTP id d10so5938970vke.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 15:43:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5V1U7K9kHqSmBC9GKmbu10OmsvEfDZWHZBAkdynx/3A=;
-        b=PvBbnjafdCvEjlwAHLsw4Jkf5UKDz6s7witD5jd3/x70kOObX+EhN8IhEu1l0vMDao
-         eyFB2VR6+BiVNsnhas396vPiie5zwGNVANUKDHufBAXVc0+9hKfbW030dFWNG3Cv/J7l
-         hqmrKydCIurQVBzzegb3UutaspJwhtGXO/gKSvIA6Sq2HhXhwRAghpC1UbE1oDheTz8S
-         qX4ZaH6B1tEQxHPimTogvOFaHeUSQzd1sKhIPU+fef2bGXQspLHe1EyC9nEza/asyLzJ
-         b/YquzQ4e8aWWFpfl2u+fQMt+7m4lbuhnN1p9eHjdQdOaCsEYyXNqrWJj/1kRgyr8e+w
-         v8Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5V1U7K9kHqSmBC9GKmbu10OmsvEfDZWHZBAkdynx/3A=;
-        b=qZkePn7fIqhhEJaj4xWJP4AquD2oVWrWJ6Y7Iq/Oa7LNrxluua4c4oRm50s+j2csCq
-         7DPfpKJdX9e5y8yvnvt0xS+IXVM0hJoCiVoBHY6QJpk5Ft9fzYiGKKXV7t4IZr3JA2FV
-         GYTpPu0Vezku8EV6sC/pcpY8BOku1Hg6vBTgoa6aEVXJ9LLLN8G4ASDPYFYE3klC7wir
-         t0KxsE0L1XyvPMccqb40bxOv8hgGI7aoIzVAK+qfc7pOtGiMjkp9zkAQIAsGM9PuaFT/
-         eUDH860u8KeZsXjhuMQW4k3IFxyWr2fRrHgat9VTyFRcUXmiPZI+EX34oI47S3/LB9AB
-         jWNg==
-X-Gm-Message-State: APjAAAWQnI8HZUi+V69XlRoMtLJyQRT08cOvZMUnKKSI/a5cHew+p6k4
-        6bbGpysCifwNVxaR9cqh0SqBQDxBt4WvzL1+EkXqXw==
-X-Google-Smtp-Source: APXvYqx1i0KATXqkxu2iu7n10l5sJYYFz7lSnecvNV9HWF093zCgA7YZz4hfleScYvfvsSSdbbjLOGlrCFIaftAte+A=
-X-Received: by 2002:a1f:7d88:: with SMTP id y130mr4689848vkc.71.1574898185282;
- Wed, 27 Nov 2019 15:43:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20191112223046.176097-1-samitolvanen@google.com>
- <20191119201353.2589-1-samitolvanen@google.com> <20191127181940.GB49214@sol.localdomain>
-In-Reply-To: <20191127181940.GB49214@sol.localdomain>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 27 Nov 2019 15:42:53 -0800
-Message-ID: <CABCJKud-JRT8mNmP8yMobeFajk1gU_iwss9w43keZyX9jasPXw@mail.gmail.com>
-Subject: Re: [PATCH v3] crypto: arm64/sha: fix function types
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 27 Nov 2019 18:43:52 -0500
+Received: from localhost (c-73-35-209-67.hsd1.wa.comcast.net [73.35.209.67])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 21B2914B8FE24;
+        Wed, 27 Nov 2019 15:43:52 -0800 (PST)
+Date:   Wed, 27 Nov 2019 15:43:49 -0800 (PST)
+Message-Id: <20191127.154349.1004587494590963649.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-2
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 27 Nov 2019 15:43:52 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 10:19 AM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Tue, Nov 19, 2019 at 12:13:53PM -0800, Sami Tolvanen wrote:
-> > +static void __sha1_ce_transform(struct sha1_state *sst, u8 const *src,
-> > +                             int blocks)
-> > +{
-> > +     return sha1_ce_transform(container_of(sst, struct sha1_ce_state, sst),
-> > +                              src, blocks);
-> > +}
-> > +
->
-> 'return' isn't needed in functions that return void.
->
-> Likewise everywhere else in this patch.
->
-> Otherwise this patch looks fine.
 
-Thanks for taking a look, Eric. I'll send out v4 with this fixed.
+This is mostly to fix the iwlwifi regression:
 
-Sami
+1) Flush GRO state properly in iwlwifi driver, from Alexander Lobakin.
+
+2) Validate TIPC link name with properly length macro, from John
+   Rutherford.
+
+3) Fix completion init and device query timeouts in ibmvnic, from
+   Thomas Falcon.
+
+4) Fix SKB size calculation for netlink messages in psample, from
+   Nikolay Aleksandrov.
+
+5) Similar kind of fix for OVS flow dumps, from Paolo Abeni.
+
+6) Handle queue allocation failure unwind properly in gve driver, we
+   could try to release pages we didn't allocate.  From Jeroen de
+   Borst.
+
+7) Serialize TX queue SKB list accesses properly in mscc ocelot
+   driver.  From Yangbo Lu.
+
+Please pull, thanks a lot!
+
+The following changes since commit be2eca94d144e3ffed565c483a58ecc76a869c98:
+
+  Merge tag 'for-linus-5.5-1' of git://github.com/cminyard/linux-ipmi (2019-11-25 21:41:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net 
+
+for you to fetch changes up to bac139a846697b290c74fefd6af54a9e192de315:
+
+  net: usb: aqc111: Use the correct style for SPDX License Identifier (2019-11-27 11:27:01 -0800)
+
+----------------------------------------------------------------
+Alexander Lobakin (1):
+      net: wireless: intel: iwlwifi: fix GRO_NORMAL packet stalling
+
+Dan Murphy (1):
+      net: phy: dp83869: Fix return paths to return proper values
+
+David S. Miller (3):
+      Merge branch 'ibmvnic-Harden-device-commands-and-queries'
+      Merge branch 'net-func-cast'
+      Merge branch 'mscc-skb-lists'
+
+Jeroen de Borst (1):
+      gve: Fix the queue page list allocated pages count
+
+John Rutherford (1):
+      tipc: fix link name length check
+
+Maciej ¯enczykowski (4):
+      net: Fix a documentation bug wrt. ip_unprivileged_port_start
+      net-sctp: replace some sock_net(sk) with just 'net'
+      net: port < inet_prot_sock(net) --> inet_port_requires_bind_service(net, port)
+      net: inet_is_local_reserved_port() port arg should be unsigned short
+
+Nikolay Aleksandrov (1):
+      net: psample: fix skb_over_panic
+
+Nishad Kamdar (2):
+      net: phy: Use the correct style for SPDX License Identifier
+      net: usb: aqc111: Use the correct style for SPDX License Identifier
+
+Paolo Abeni (1):
+      openvswitch: fix flow command message size
+
+Phong Tran (2):
+      net: hso: Fix -Wcast-function-type
+      net: usbnet: Fix -Wcast-function-type
+
+Thomas Falcon (4):
+      ibmvnic: Fix completion structure initialization
+      ibmvnic: Terminate waiting device threads after loss of service
+      ibmvnic: Bound waits for device queries
+      ibmvnic: Serialize device queries
+
+Yangbo Lu (2):
+      net: mscc: ocelot: avoid incorrect consuming in skbs list
+      net: mscc: ocelot: use skb queue instead of skbs list
+
+ Documentation/networking/ip-sysctl.txt       |   9 ++---
+ drivers/net/ethernet/google/gve/gve_main.c   |   3 +-
+ drivers/net/ethernet/ibm/ibmvnic.c           | 192 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------------
+ drivers/net/ethernet/ibm/ibmvnic.h           |   2 ++
+ drivers/net/ethernet/mscc/ocelot.c           |  55 ++++++++++-------------------
+ drivers/net/phy/aquantia.h                   |   4 +--
+ drivers/net/phy/bcm-phy-lib.h                |   2 +-
+ drivers/net/phy/dp83869.c                    |  49 +++++++++++++-------------
+ drivers/net/phy/mdio-cavium.h                |   2 +-
+ drivers/net/phy/mdio-i2c.h                   |   2 +-
+ drivers/net/phy/mdio-xgene.h                 |   2 +-
+ drivers/net/usb/aqc111.h                     |   4 +--
+ drivers/net/usb/hso.c                        |   5 +--
+ drivers/net/usb/usbnet.c                     |   9 ++++-
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c |  13 +++++--
+ include/net/ip.h                             |  12 +++----
+ include/soc/mscc/ocelot.h                    |   9 +----
+ net/ipv4/af_inet.c                           |   2 +-
+ net/ipv6/af_inet6.c                          |   2 +-
+ net/netfilter/ipvs/ip_vs_ctl.c               |   2 +-
+ net/openvswitch/datapath.c                   |   6 +++-
+ net/psample/psample.c                        |   2 +-
+ net/sctp/socket.c                            |  16 ++++-----
+ net/tipc/netlink_compat.c                    |   4 +--
+ security/selinux/hooks.c                     |   4 +--
+ 25 files changed, 277 insertions(+), 135 deletions(-)
