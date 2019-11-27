@@ -2,52 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF03CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C19C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E0A21843
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1927021845
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887755;
-	bh=QGsz8Ks1Tojt059lcycjgRGYNsiZ059yMmZcprWBtGc=;
+	s=default; t=1574887758;
+	bh=dP+PCoNwoOWfPuFe01TtS/TXqgxB3zZdYBB2ROF1FZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lfefd0jXae08QayU4Po7fs0f8s9K92iQmCigN734V3opYsCq0Sv/FlI7yDjflcxm6
-	 mUiaVpLa4EnlIali8XCLiTLvfL9Kyt9pf5nGnHfIqmKfpASL6hPJVz8VcOS0EmnWqr
-	 EBFgMN1ffLkaHkbUD3HArb97sc3Vbf4utSvfaHMU=
+	b=CX3Fl2GLK9j62hwGzQSDSJ1zdxouEDpypT87Z8hFaNvoKKRt5pd9oFJZcAmuBTCql
+	 vHXPGS5KPJrenv7Jz0kJgAOZv9FNXz7TPGBnn+mr38nnrJC/QSUCou8/QqB29xP4He
+	 tRXImZTWxsRWww3paKgOLWz46f98fAFAlWJOJuGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfK0UtO (ORCPT
+        id S1729776AbfK0UtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:49:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34666 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:49:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbfK0UtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:49:11 -0500
+        id S1729599AbfK0UtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:49:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7B3A21787;
-        Wed, 27 Nov 2019 20:49:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE6C0217C3;
+        Wed, 27 Nov 2019 20:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887751;
-        bh=QGsz8Ks1Tojt059lcycjgRGYNsiZ059yMmZcprWBtGc=;
+        s=default; t=1574887748;
+        bh=dP+PCoNwoOWfPuFe01TtS/TXqgxB3zZdYBB2ROF1FZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wA5YYSjdsY+rGh8ls0dtLJlZJ7rejo8OuJSFWaRnSm2l2HwGo7fJgUJdAWYdnO9IM
-         +CLvBcP5jAmBTsHxaGtofxt0xASPKNYEGRtspC+lSz9jfGRkLXkBtJJBnOelYa+OjG
-         pUY2ExGP5RT0OEi/rXBoo+tez9FBQOjrqStpfStU=
+        b=TkPkq7U1De0b7+0iaUZbya1FoHCkWlAKP21fUX3o0r1I2T4Yu8/Jk0JGIwTIJ+gG7
+         SQaGXIMxT19p5mdQRHaRhFlYEsfHaQMhKHaYvx3Ow/twrzW1fh8I8tSgLWg2FuiWPZ
+         aENB2yrLUP2tN+clv1tFFmbR0yYlTML/2l9li3XA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 079/211] qlcnic: fix a return in qlcnic_dcb_get_capability()
-Date:   Wed, 27 Nov 2019 21:30:12 +0100
-Message-Id: <20191127203101.270614373@linuxfoundation.org>
+Subject: [PATCH 4.14 078/211] mISDN: Fix type of switch control variable in ctrl_teimanager
+Date:   Wed, 27 Nov 2019 21:30:11 +0100
+Message-Id: <20191127203101.188989333@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,38 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit c94f026fb742b2d3199422751dbc4f6fc0e753d8 ]
+[ Upstream commit aeb5e02aca91522733eb1db595ac607d30c87767 ]
 
-These functions are supposed to return one on failure and zero on
-success.  Returning a zero here could cause uninitialized variable
-bugs in several of the callers.  For example:
+Clang warns (trimmed for brevity):
 
-    drivers/scsi/cxgbi/cxgb4i/cxgb4i.c:1660 get_iscsi_dcb_priority()
-    error: uninitialized symbol 'caps'.
+drivers/isdn/mISDN/tei.c:1193:7: warning: overflow converting case value
+to switch condition type (2147764552 to 18446744071562348872) [-Wswitch]
+        case IMHOLD_L1:
+             ^
+drivers/isdn/mISDN/tei.c:1187:7: warning: overflow converting case value
+to switch condition type (2147764550 to 18446744071562348870) [-Wswitch]
+        case IMCLEAR_L2:
+             ^
+2 warnings generated.
 
-Fixes: 48365e485275 ("qlcnic: dcb: Add support for CEE Netlink interface.")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+The root cause is that the _IOC macro can generate really large numbers,
+which don't find into type int. My research into how GCC and Clang are
+handling this at a low level didn't prove fruitful and surveying the
+kernel tree shows that aside from here and a few places in the scsi
+subsystem, everything that uses _IOC is at least of type 'unsigned int'.
+Make that change here because as nothing in this function cares about
+the signedness of the variable and it removes ambiguity, which is never
+good when dealing with compilers.
+
+While we're here, remove the unnecessary local variable ret (just return
+-EINVAL and 0 directly).
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/67
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/isdn/mISDN/tei.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
-index 4b76c69fe86d2..834208e55f7b8 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
-@@ -883,7 +883,7 @@ static u8 qlcnic_dcb_get_capability(struct net_device *netdev, int capid,
- 	struct qlcnic_adapter *adapter = netdev_priv(netdev);
+diff --git a/drivers/isdn/mISDN/tei.c b/drivers/isdn/mISDN/tei.c
+index 12d9e5f4beb1f..58635b5f296f0 100644
+--- a/drivers/isdn/mISDN/tei.c
++++ b/drivers/isdn/mISDN/tei.c
+@@ -1180,8 +1180,7 @@ static int
+ ctrl_teimanager(struct manager *mgr, void *arg)
+ {
+ 	/* currently we only have one option */
+-	int	*val = (int *)arg;
+-	int	ret = 0;
++	unsigned int *val = (unsigned int *)arg;
  
- 	if (!test_bit(QLCNIC_DCB_STATE, &adapter->dcb->state))
--		return 0;
-+		return 1;
+ 	switch (val[0]) {
+ 	case IMCLEAR_L2:
+@@ -1197,9 +1196,9 @@ ctrl_teimanager(struct manager *mgr, void *arg)
+ 			test_and_clear_bit(OPTION_L1_HOLD, &mgr->options);
+ 		break;
+ 	default:
+-		ret = -EINVAL;
++		return -EINVAL;
+ 	}
+-	return ret;
++	return 0;
+ }
  
- 	switch (capid) {
- 	case DCB_CAP_ATTR_PG:
+ /* This function does create a L2 for fixed TEI in NT Mode */
 -- 
 2.20.1
 
