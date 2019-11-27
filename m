@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EAFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C53FC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F07C21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1408A21789
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889514;
-	bh=IZD60WKOoIIwQZ0XlG9VB+VgoMwu1UzQuNA7TjHizyw=;
+	s=default; t=1574889517;
+	bh=XewPO8fLf1dj292J0MSmdr6EgWIOaBabmwa/gqziDyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f/iD0zbZ1UduvBe5c7lldCaVHPxaRAF/B6Zt6DP7368GHgx1XE0JVnHbcCMB16/Ry
-	 zjC0eT5sWUqeX2AKBdV4ggjLTqN0UF9ngkG873sSRGbp+U351wKzyrxiipACSHs8DX
-	 ixN1l1sqieTuTYOj3dAYCdVPsg5ggWVHR/bh89FY=
+	b=AYku0iGZ/Oo3+uLexKiHSAXFnVT2cHxndUy/6c+OQcAqHlAf51QvsIsBfV+SqqzJm
+	 TIOBVXVQ6mH+sW3XY72qTiiFLUhkTcWr/bmXzn8P+jmbN0o9M7/AXIoUI9gRHaUV8y
+	 yw44t0NRS87KyxKkGCS49Iab1hTLHfwoHtWTlmeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733181AbfK0VSd (ORCPT
+        id S1733160AbfK0VLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:18:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39862 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:11:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728335AbfK0VLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:11:24 -0500
+        id S1733135AbfK0VLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63D952086A;
-        Wed, 27 Nov 2019 21:11:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D82272086A;
+        Wed, 27 Nov 2019 21:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889083;
-        bh=IZD60WKOoIIwQZ0XlG9VB+VgoMwu1UzQuNA7TjHizyw=;
+        s=default; t=1574889073;
+        bh=XewPO8fLf1dj292J0MSmdr6EgWIOaBabmwa/gqziDyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pvMIPncckvPJeTcBds/zi81bKDNKVqgWoFrdsDYN9T6bq0km4GgnPJTY7K1ItboaQ
-         xuriVPxZn3o4Vb77Pqo1uQ9ZF2z0T8LX7dotnj4zjvM0/P+YYFfo1Z3g1O5xQjExug
-         unLv46ZIYiDBFPO754/GVKy/icFLowhldzDVTUbQ=
+        b=I268DJvKlmCQ1QK0yGgYJ7Tg965WnWura3nJWGNTQc/tm0BxdKWWYghiOah49DG0B
+         FEUP1fEKrNMsfvZd/OC36qgm1ps+6EVTmHEcZS4dEgfhk7EGcorAAnAB3jxt/8jhpM
+         Kt9H4V/s4wjNKCld+FjxVnzRUKg/3t9mqe8E79Mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 5.3 76/95] media: b2c2-flexcop-usb: add sanity checking
-Date:   Wed, 27 Nov 2019 21:32:33 +0100
-Message-Id: <20191127202943.105318630@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com
+Subject: [PATCH 5.3 72/95] media: usbvision: Fix invalid accesses after device disconnect
+Date:   Wed, 27 Nov 2019 21:32:29 +0100
+Message-Id: <20191127202938.704789013@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -61,34 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 1b976fc6d684e3282914cdbe7a8d68fdce19095c upstream.
+commit c7a191464078262bf799136317c95824e26a222b upstream.
 
-The driver needs an isochronous endpoint to be present. It will
-oops in its absence. Add checking for it.
+The syzbot fuzzer found two invalid-access bugs in the usbvision
+driver.  These bugs occur when userspace keeps the device file open
+after the device has been disconnected and usbvision_disconnect() has
+set usbvision->dev to NULL:
 
-Reported-by: syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+	When the device file is closed, usbvision_radio_close() tries
+	to issue a usb_set_interface() call, passing the NULL pointer
+	as its first argument.
+
+	If userspace performs a querycap ioctl call, vidioc_querycap()
+	calls usb_make_path() with the same NULL pointer.
+
+This patch fixes the problems by making the appropriate tests
+beforehand.  Note that vidioc_querycap() is protected by
+usbvision->v4l2_lock, acquired in a higher layer of the V4L2
+subsystem.
+
+Reported-and-tested-by: syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/b2c2/flexcop-usb.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/usb/usbvision/usbvision-video.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -538,6 +538,9 @@ static int flexcop_usb_probe(struct usb_
- 	struct flexcop_device *fc = NULL;
- 	int ret;
+--- a/drivers/media/usb/usbvision/usbvision-video.c
++++ b/drivers/media/usb/usbvision/usbvision-video.c
+@@ -453,6 +453,9 @@ static int vidioc_querycap(struct file *
+ {
+ 	struct usb_usbvision *usbvision = video_drvdata(file);
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
++	if (!usbvision->dev)
 +		return -ENODEV;
 +
- 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
- 		err("out of memory\n");
- 		return -ENOMEM;
+ 	strscpy(vc->driver, "USBVision", sizeof(vc->driver));
+ 	strscpy(vc->card,
+ 		usbvision_device_data[usbvision->dev_model].model_string,
+@@ -1111,8 +1114,9 @@ static int usbvision_radio_close(struct
+ 	mutex_lock(&usbvision->v4l2_lock);
+ 	/* Set packet size to 0 */
+ 	usbvision->iface_alt = 0;
+-	usb_set_interface(usbvision->dev, usbvision->iface,
+-				    usbvision->iface_alt);
++	if (usbvision->dev)
++		usb_set_interface(usbvision->dev, usbvision->iface,
++				  usbvision->iface_alt);
+ 
+ 	usbvision_audio_off(usbvision);
+ 	usbvision->radio = 0;
 
 
