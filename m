@@ -2,55 +2,51 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F356C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EC8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421CB218A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E17421903
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888007;
-	bh=p6TVB7m8UPJaDVQp43MW63MiIcuG/GbRpd+rHfbiTTg=;
+	s=default; t=1574888010;
+	bh=rMbU6ZdTyqmaJm652PJ0y8rsplYjV86nTgjhjbsJCn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L0tXHLcFHYEHAxVhOFfmW/Bt7EqvO2HjCxtmkzxRspHJGX8j8zzRKUbcUzhDPrsv1
-	 fjAWxLuvUks4Zi8csj1HflRBViBCuY7itvxRYwG56JpoGao0Sfw0tSNe6zhvTQh5U8
-	 AmsnL7+gxLsrDEPXmHps9Qig2tmU26y06dAb0VBI=
+	b=UAO3tS87HmKAFzkCcNASEXbjppsHv0QPt7HVHzCO+O6F3UHBZmobOlCNdYCzQAlNj
+	 MrjkTlNvwu4Mkd2Y/Q9IadqVryEy8wz7Q0Y+HB8x2QqNtMKqvkhcGsUWCB5gdMmkqD
+	 12pTM85LhKrsJGLIQJU2Ed/KWb/4gG6ZLvw5KVw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbfK0UxZ (ORCPT
+        id S1730732AbfK0Ux2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:53:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41970 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:53:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730707AbfK0UxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:22 -0500
+        id S1730716AbfK0UxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C74121850;
-        Wed, 27 Nov 2019 20:53:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83E7F218A3;
+        Wed, 27 Nov 2019 20:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888001;
-        bh=p6TVB7m8UPJaDVQp43MW63MiIcuG/GbRpd+rHfbiTTg=;
+        s=default; t=1574888004;
+        bh=rMbU6ZdTyqmaJm652PJ0y8rsplYjV86nTgjhjbsJCn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PXJSRo7jwPgpeScZ67YwCcEaqBWe6MgJEAMQ/9MGBV/nkOkUBDMnPIXqzq+Zp4hc2
-         sgTBjL58HT3NXyslAGmNobOm5OfEPZPcVN+yaawbmLDETgGPpghRKgjgOVm3SU4egc
-         gMm9YydEbt88kDyg29beHmDpWrF8CthzwliWVxkA=
+        b=EWr9VwmOGFEk1UZtYBdDDYUywfZw8b8XjFb0giJ+j4Oab5WF6oUQaVw5rZubNz3MQ
+         JN4uEvqNJBk8SjOM3ISJWBTeaiftK9Qrd7waOzKDJbNviXWqAuEjAIq7EqUDZvE6G0
+         06ITWDjyWr7I+CBlzrQuJve7O+KpiXZgohffWDog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 140/211] scsi: mpt3sas: Fix Sync cache command failure during driver unload
-Date:   Wed, 27 Nov 2019 21:31:13 +0100
-Message-Id: <20191127203107.239461394@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.14 176/211] ARC: perf: Accommodate big-endian CPU
+Date:   Wed, 27 Nov 2019 21:31:49 +0100
+Message-Id: <20191127203110.464433949@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -63,87 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
 
-[ Upstream commit 9029a72500b95578a35877a43473b82cb0386c53 ]
+commit 5effc09c4907901f0e71e68e5f2e14211d9a203f upstream.
 
-This is to fix SYNC CACHE and START STOP command failures with
-DID_NO_CONNECT during driver unload.
+8-letter strings representing ARC perf events are stores in two
+32-bit registers as ASCII characters like that: "IJMP", "IALL", "IJMPTAK" etc.
 
-In driver's IO submission patch (i.e. in driver's .queuecommand()) driver
-won't allow any SCSI commands to the IOC when ioc->remove_host flag is set
-and hence SYNC CACHE commands which are issued to the target drives (where
-write cache is enabled) during driver unload time is failed with
-DID_NO_CONNECT status.
+And the same order of bytes in the word is used regardless CPU endianness.
 
-Now modified the driver to allow SYNC CACHE and START STOP commands to IOC,
-even when remove_host flag is set.
+Which means in case of big-endian CPU core we need to swap bytes to get
+the same order as if it was on little-endian CPU.
 
-Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Otherwise we're seeing the following error message on boot:
+------------------------->8----------------------
+ARC perf        : 8 counters (32 bits), 40 conditions, [overflow IRQ support]
+sysfs: cannot create duplicate filename '/devices/arc_pct/events/pmji'
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
+Stack Trace:
+  arc_unwind_core+0xd4/0xfc
+  dump_stack+0x64/0x80
+  sysfs_warn_dup+0x46/0x58
+  sysfs_add_file_mode_ns+0xb2/0x168
+  create_files+0x70/0x2a0
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at kernel/events/core.c:12144 perf_event_sysfs_init+0x70/0xa0
+Failed to register pmu: arc_pct, reason -17
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
+Stack Trace:
+  arc_unwind_core+0xd4/0xfc
+  dump_stack+0x64/0x80
+  __warn+0x9c/0xd4
+  warn_slowpath_fmt+0x22/0x2c
+  perf_event_sysfs_init+0x70/0xa0
+---[ end trace a75fb9a9837bd1ec ]---
+------------------------->8----------------------
+
+What happens here we're trying to register more than one raw perf event
+with the same name "PMJI". Why? Because ARC perf events are 4 to 8 letters
+and encoded into two 32-bit words. In this particular case we deal with 2
+events:
+ * "IJMP____" which counts all jump & branch instructions
+ * "IJMPC___" which counts only conditional jumps & branches
+
+Those strings are split in two 32-bit words this way "IJMP" + "____" &
+"IJMP" + "C___" correspondingly. Now if we read them swapped due to CPU core
+being big-endian then we read "PMJI" + "____" & "PMJI" + "___C".
+
+And since we interpret read array of ASCII letters as a null-terminated string
+on big-endian CPU we end up with 2 events of the same name "PMJI".
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
+
 ---
- drivers/scsi/mpt3sas/mpt3sas_scsih.c | 36 +++++++++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
+ arch/arc/kernel/perf_event.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index b28efddab7b1a..9ef0c6265cd2b 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -3328,6 +3328,40 @@ _scsih_tm_tr_complete(struct MPT3SAS_ADAPTER *ioc, u16 smid, u8 msix_index,
- 	return _scsih_check_for_pending_tm(ioc, smid);
- }
+--- a/arch/arc/kernel/perf_event.c
++++ b/arch/arc/kernel/perf_event.c
+@@ -488,8 +488,8 @@ static int arc_pmu_device_probe(struct p
+ 	/* loop thru all available h/w condition indexes */
+ 	for (j = 0; j < cc_bcr.c; j++) {
+ 		write_aux_reg(ARC_REG_CC_INDEX, j);
+-		cc_name.indiv.word0 = read_aux_reg(ARC_REG_CC_NAME0);
+-		cc_name.indiv.word1 = read_aux_reg(ARC_REG_CC_NAME1);
++		cc_name.indiv.word0 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME0));
++		cc_name.indiv.word1 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME1));
  
-+/** _scsih_allow_scmd_to_device - check whether scmd needs to
-+ *				 issue to IOC or not.
-+ * @ioc: per adapter object
-+ * @scmd: pointer to scsi command object
-+ *
-+ * Returns true if scmd can be issued to IOC otherwise returns false.
-+ */
-+inline bool _scsih_allow_scmd_to_device(struct MPT3SAS_ADAPTER *ioc,
-+	struct scsi_cmnd *scmd)
-+{
-+
-+	if (ioc->pci_error_recovery)
-+		return false;
-+
-+	if (ioc->hba_mpi_version_belonged == MPI2_VERSION) {
-+		if (ioc->remove_host)
-+			return false;
-+
-+		return true;
-+	}
-+
-+	if (ioc->remove_host) {
-+
-+		switch (scmd->cmnd[0]) {
-+		case SYNCHRONIZE_CACHE:
-+		case START_STOP:
-+			return true;
-+		default:
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
- 
- /**
-  * _scsih_sas_control_complete - completion routine
-@@ -4100,7 +4134,7 @@ scsih_qcmd(struct Scsi_Host *shost, struct scsi_cmnd *scmd)
- 		return 0;
- 	}
- 
--	if (ioc->pci_error_recovery || ioc->remove_host) {
-+	if (!(_scsih_allow_scmd_to_device(ioc, scmd))) {
- 		scmd->result = DID_NO_CONNECT << 16;
- 		scmd->scsi_done(scmd);
- 		return 0;
--- 
-2.20.1
-
+ 		/* See if it has been mapped to a perf event_id */
+ 		for (i = 0; i < ARRAY_SIZE(arc_pmu_ev_hw_map); i++) {
 
 
