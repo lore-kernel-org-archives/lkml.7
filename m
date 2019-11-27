@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9463C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 304A2C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871E82075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AA02075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890862;
-	bh=jPgVZdWq1uxqLuuFB4zn5NW/loTd09gJehXLV22OFX8=;
+	s=default; t=1574890873;
+	bh=Dr/MgV0CT6e61/f8fbdA16ZEvfZhrv4OxigPBFLptW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OlhjwbsWnonwuaHV45ntcguQEGUJWRlYj4RkkVOgFBY0AbT2KJ7qYxRzRLJkk6efH
-	 y0nowc8lM1i+rNvPgdikVwT5W/YShkxggqM9wGITkqbKXJoeySYAA5AJYkysv/qV+H
-	 Mjb5AYT8o5c0v6iiI9Gz+t+Iic0KdHrXiMOty4MA=
+	b=tTYPmDT1FnTQlPnsn1HPzGwkfJEvIicD8QEUd7uTJc84WHCiqwOqVLmgcTJmCJ3Ry
+	 yGnemuUKvK0dw+YUHTZmqW3vVTGs495Zcq7RBSTiCoaLslAmHMiszGkhX+8zZZHXcv
+	 hzUW4LK4B1tCoJNDIsUb7D66mK0L7lmeDsMUUpgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbfK0VlB (ORCPT
+        id S1729905AbfK0VlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:41:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48326 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:41:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728777AbfK0UmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:42:13 -0500
+        id S1728266AbfK0Ul4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:41:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D67C21787;
-        Wed, 27 Nov 2019 20:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4288E20863;
+        Wed, 27 Nov 2019 20:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887333;
-        bh=jPgVZdWq1uxqLuuFB4zn5NW/loTd09gJehXLV22OFX8=;
+        s=default; t=1574887315;
+        bh=Dr/MgV0CT6e61/f8fbdA16ZEvfZhrv4OxigPBFLptW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZTdpZN86waNrmhU83ixguHqTSUPT4lgzkbgu/9P4QELczjRy3xVusXLCn8fr3xYb
-         UnZGY61PfMga/aLrdA0GQUg3rMPUZAfM68zAqbCKsdw1ixF4hPontosGMisNRA78t4
-         iGQfivRMLe6XPU1SnLFN4NMJ/Bk1rOqmwdNX7mos=
+        b=lU35ufVGFWCzWnJ8Sf5jMQWVy6YIDHxwLFXj8CeGm6xL1tJJiafK4jr2xg7JuJZGd
+         M5StydQ4x61iYOtfwzcgZFgMDIoaRim0VwCs6ZIFYP1/+Tsq/A60NAgcjSY7AtgsBP
+         vAqKUOiOgXiz5niyikwL/3XrDt6ik0A97Ru2xxOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Eduardo Valentin <edubezval@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 018/151] powerpc/eeh: Fix use of EEH_PE_KEEP on wrong field
-Date:   Wed, 27 Nov 2019 21:30:01 +0100
-Message-Id: <20191127203011.441618804@linuxfoundation.org>
+Subject: [PATCH 4.9 061/151] thermal: rcar_thermal: Prevent hardware access during system suspend
+Date:   Wed, 27 Nov 2019 21:30:44 +0100
+Message-Id: <20191127203033.128457230@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -60,41 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 473af09b56dc4be68e4af33220ceca6be67aa60d ]
+[ Upstream commit 3a31386217628ffe2491695be2db933c25dde785 ]
 
-eeh_add_to_parent_pe() sometimes removes the EEH_PE_KEEP flag, but it
-incorrectly removes it from pe->type, instead of pe->state.
+On r8a7791/koelsch, sometimes the following message is printed during
+system suspend:
 
-However, rather than clearing it from the correct field, remove it.
-Inspection of the code shows that it can't ever have had any effect
-(even if it had been cleared from the correct field), because the
-field is never tested after it is cleared by the statement in
-question.
+    rcar_thermal e61f0000.thermal: thermal sensor was broken
 
-The clear statement was added by commit 807a827d4e74 ("powerpc/eeh:
-Keep PE during hotplug"), but it didn't explain why it was necessary.
+This happens if the workqueue runs while the device is already
+suspended.  Fix this by using the freezable system workqueue instead,
+cfr. commit 51e20d0e3a60cf46 ("thermal: Prevent polling from happening
+during system suspend").
 
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: e0a5172e9eec7f0d ("thermal: rcar: add interrupt support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh_pe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thermal/rcar_thermal.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/eeh_pe.c b/arch/powerpc/kernel/eeh_pe.c
-index 1abd8dd77ec13..eee2131a97e61 100644
---- a/arch/powerpc/kernel/eeh_pe.c
-+++ b/arch/powerpc/kernel/eeh_pe.c
-@@ -370,7 +370,7 @@ int eeh_add_to_parent_pe(struct eeh_dev *edev)
- 		while (parent) {
- 			if (!(parent->type & EEH_PE_INVALID))
- 				break;
--			parent->type &= ~(EEH_PE_INVALID | EEH_PE_KEEP);
-+			parent->type &= ~EEH_PE_INVALID;
- 			parent = parent->parent;
+diff --git a/drivers/thermal/rcar_thermal.c b/drivers/thermal/rcar_thermal.c
+index 73e5fee6cf1d5..83126e2dce36d 100644
+--- a/drivers/thermal/rcar_thermal.c
++++ b/drivers/thermal/rcar_thermal.c
+@@ -401,8 +401,8 @@ static irqreturn_t rcar_thermal_irq(int irq, void *data)
+ 	rcar_thermal_for_each_priv(priv, common) {
+ 		if (rcar_thermal_had_changed(priv, status)) {
+ 			rcar_thermal_irq_disable(priv);
+-			schedule_delayed_work(&priv->work,
+-					      msecs_to_jiffies(300));
++			queue_delayed_work(system_freezable_wq, &priv->work,
++					   msecs_to_jiffies(300));
  		}
+ 	}
  
 -- 
 2.20.1
