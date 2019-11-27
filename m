@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E231AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C682C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75B22154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8062154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574886849;
-	bh=2IvSz474/nJsAxoQnDH2bnp3mXZ8JqDaEXq3s1C68uU=;
+	s=default; t=1574886851;
+	bh=OKKWQqyXkhSIYFjR8vOEa/YrOO1kajFe+zhoq3cmyFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VYfzAQCLJMCh309xIoI1WVqQc/KYgC/7KXKJINU1xpR0FccZWkuEuFqVY9Q/zio2H
-	 X+gvVaPS801eAHn7cLysKkp+4BHa9iNd5QySo4pa5sTj5hDkeHvg+lSJpk7vCLER5t
-	 WH2gXET4hXlc2VkTPiBLx/5v67aWf2738S4kfcFU=
+	b=WutTKNY2sO2HZx21+Cfl1878+rUSTvnNnwPGKH15aNXIWpzNEBW0ZE+UA6ixXw2si
+	 cPnzaruXtIAK5KylkFtmU+8yshCJ9CKbnQztnIUhXezcjSmAeK8813C8JUULjWGDYP
+	 x74UrTaL4BRrjQ9ijM/0Ama2ojTnb16nXdhLB26M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfK0UeI (ORCPT
+        id S1727517AbfK0UeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:34:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34216 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:34:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727428AbfK0UeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:34:04 -0500
+        id S1727471AbfK0UeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:34:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07F8220866;
-        Wed, 27 Nov 2019 20:34:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872402154A;
+        Wed, 27 Nov 2019 20:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886843;
-        bh=2IvSz474/nJsAxoQnDH2bnp3mXZ8JqDaEXq3s1C68uU=;
+        s=default; t=1574886846;
+        bh=OKKWQqyXkhSIYFjR8vOEa/YrOO1kajFe+zhoq3cmyFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tLdp4ja3qeRjOPi1MFI3KQlVBF0UwSPdIT9x1SzLdlgrzIcNBekPCbgHXOzTiTv0V
-         +2lcdsXka/JQXjN/vkJka7ZkhELDh252chfaIAOsVlZVewq+reFEWwCmkS4F7pnlIs
-         nKNjRLwPB37CKL3PUtyC7u3gC51hqDnjjj/GOPeU=
+        b=13VgK4AqbbU5CK2hrbbpi/qJelqTYNK9dsW9rMVvsh8q5R7y9MFoRawBCPfWusbsF
+         ycQiyP9m21+FgYjY0gnIHNWm83i5luo7hrMUWcSuvxfv5DclmfWpGNbCVsg7Wjch8O
+         niwmTaUPlLHN33SZdHPs0fwzV9F8Khm+RqnIIW4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Oleksij Rempel <linux@rempel-privat.de>,
-        Darren Hart <dvhart@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 015/132] asus-wmi: provide access to ALS control
-Date:   Wed, 27 Nov 2019 21:30:06 +0100
-Message-Id: <20191127202912.084782439@linuxfoundation.org>
+Subject: [PATCH 4.4 016/132] platform/x86: asus-wmi: try to set als by default
+Date:   Wed, 27 Nov 2019 21:30:07 +0100
+Message-Id: <20191127202912.948960780@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -62,58 +62,148 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oleksij Rempel <linux@rempel-privat.de>
 
-[ Upstream commit aca234f6378864d85514be558746c0ea6eabfa8e ]
+[ Upstream commit e9b615186805e2c18a0ac76aca62c1543ecfdbb8 ]
 
-Asus Zenbook ux31a is providing ACPI0008 interface for ALS
-(Ambient Light Sensor), which is accessible for OS => Win 7.
-This sensor can be used with iio/acpi-als driver.
-Since it is disabled by default, we should use asus-wmi
-interface to enable it.
+some laptops, for example ASUS UX330UAK, have brocken als_get function
+but working als_set funktion. In this case, ALS will stay turned off.
+
+             Method (WMNB, 3, Serialized)
+            {
+	    ...
+               If (Local0 == 0x53545344)
+                {
+		...
+                    If (IIA0 == 0x00050001)
+                    {
+                        If (!ALSP)
+                        {
+                            Return (0x02)
+                        }
+
+                        Local0 = (GALS & 0x10)    <<<---- bug,
+                                                    should be: (GALS () & 0x10)
+                        If (Local0)
+                        {
+                            Return (0x00050001)
+                        }
+                        Else
+                        {
+                            Return (0x00050000)
+                        }
+                    }
+
+             .....
+                If (Local0 == 0x53564544)
+                {
+		...
+                    If (IIA0 == 0x00050001)
+                    {
+                        Return (ALSC (IIA1))
+                    }
+
+                  ......
+                    Method (GALS, 0, NotSerialized)
+                    {
+                        Local0 = Zero
+                        Local0 |= 0x20
+                        If (ALAE)
+                        {
+                            Local0 |= 0x10
+                        }
+
+                        Local1 = 0x0A
+                        Local1 <<= 0x08
+                        Local0 |= Local1
+                        Return (Local0)
+                    }
+
+Since it works without problems on Windows I assume ASUS WMI driver for Win
+never trying to get ALS state, and instead it is setting it by default to ON.
+
+This patch will do the same. Turn ALS on by default.
 
 Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
-Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-wmi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+ drivers/platform/x86/asus-wmi.c    | 12 ++++++++++++
+ drivers/platform/x86/asus-wmi.h    |  1 +
+ 3 files changed, 26 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index a2174f01d3122..2dee91537123e 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -117,6 +117,7 @@ MODULE_LICENSE("GPL");
- #define ASUS_WMI_DEVID_LED6		0x00020016
- 
- /* Backlight and Brightness */
-+#define ASUS_WMI_DEVID_ALS_ENABLE	0x00050001 /* Ambient Light Sensor */
- #define ASUS_WMI_DEVID_BACKLIGHT	0x00050011
- #define ASUS_WMI_DEVID_BRIGHTNESS	0x00050012
- #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
-@@ -1759,6 +1760,7 @@ ASUS_WMI_CREATE_DEVICE_ATTR(touchpad, 0644, ASUS_WMI_DEVID_TOUCHPAD);
- ASUS_WMI_CREATE_DEVICE_ATTR(camera, 0644, ASUS_WMI_DEVID_CAMERA);
- ASUS_WMI_CREATE_DEVICE_ATTR(cardr, 0644, ASUS_WMI_DEVID_CARDREADER);
- ASUS_WMI_CREATE_DEVICE_ATTR(lid_resume, 0644, ASUS_WMI_DEVID_LID_RESUME);
-+ASUS_WMI_CREATE_DEVICE_ATTR(als_enable, 0644, ASUS_WMI_DEVID_ALS_ENABLE);
- 
- static ssize_t store_cpufv(struct device *dev, struct device_attribute *attr,
- 			   const char *buf, size_t count)
-@@ -1785,6 +1787,7 @@ static struct attribute *platform_attributes[] = {
- 	&dev_attr_cardr.attr,
- 	&dev_attr_touchpad.attr,
- 	&dev_attr_lid_resume.attr,
-+	&dev_attr_als_enable.attr,
- 	NULL
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 7f7d6ca864771..bf9e48010b98b 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -120,6 +120,10 @@ static struct quirk_entry quirk_asus_x550lb = {
+ 	.xusb2pr = 0x01D9,
  };
  
-@@ -1805,6 +1808,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 		devid = ASUS_WMI_DEVID_TOUCHPAD;
- 	else if (attr == &dev_attr_lid_resume.attr)
- 		devid = ASUS_WMI_DEVID_LID_RESUME;
-+	else if (attr == &dev_attr_als_enable.attr)
-+		devid = ASUS_WMI_DEVID_ALS_ENABLE;
++static struct quirk_entry quirk_asus_ux330uak = {
++	.wmi_force_als_set = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	quirks = dmi->driver_data;
+@@ -411,6 +415,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_ux303ub,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. UX330UAK",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "UX330UAK"),
++		},
++		.driver_data = &quirk_asus_ux330uak,
++	},
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. X550LB",
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 2dee91537123e..c06cdc5522b48 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1109,6 +1109,15 @@ static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
+ 			orig_ports_available, ports_available);
+ }
  
- 	if (devid != -1)
- 		ok = !(asus_wmi_get_devstate_simple(asus, devid) < 0);
++/*
++ * Some devices dont support or have borcken get_als method
++ * but still support set method.
++ */
++static void asus_wmi_set_als(void)
++{
++	asus_wmi_set_devstate(ASUS_WMI_DEVID_ALS_ENABLE, 1, NULL);
++}
++
+ /*
+  * Hwmon device
+  */
+@@ -2104,6 +2113,9 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 			goto fail_rfkill;
+ 	}
+ 
++	if (asus->driver->quirks->wmi_force_als_set)
++		asus_wmi_set_als();
++
+ 	/* Some Asus desktop boards export an acpi-video backlight interface,
+ 	   stop this from showing up */
+ 	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index fdff626c3b51b..5db052d1de1e1 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -45,6 +45,7 @@ struct quirk_entry {
+ 	bool store_backlight_power;
+ 	bool wmi_backlight_power;
+ 	bool wmi_backlight_native;
++	bool wmi_force_als_set;
+ 	int wapf;
+ 	/*
+ 	 * For machines with AMD graphic chips, it will send out WMI event
 -- 
 2.20.1
 
