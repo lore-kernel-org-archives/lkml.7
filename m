@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8142C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBD2C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69F720665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A4420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890255;
-	bh=blL2aDoHMdLG65fkrbWhUYWBxVjCgv/p6v3dzAKgrRQ=;
+	s=default; t=1574890258;
+	bh=VAuPGxZCIYsAgk/b9uxIyvWkBkmJL4yAMIffas4UNes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MBXZvXjDjPxXJaB28/PWA1T46B6UlosCwm/SMdoC7nY+QTaa564Q361+n28EencUS
-	 5FLmUiJaVRwdKceDPJU3c99Bwt961dbsWz1YKrA+G6Jtv9KHoBd9Csm6iW/0+x50qM
-	 PzTGmFhg8pM/7cGItB1UotRoTfUXkN8qEky8xtyk=
+	b=XCMxRUjzieyif2pI3U5gCept5ql0p7hbdWkg6U+nhfiL9IqBW9S1z8UgQZc4iuo+g
+	 Be5ISMD9zt2ldX/7FJIy5Mz3ugG0CzOzrtMu7Hr5Q6EfIG7khddWLTOMQRa0WLn9oc
+	 k6YnkOApCNkwuF7xcOMDu8KpdGsu5HaMiEWTkBjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbfK0UzW (ORCPT
+        id S1730929AbfK0UzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:55:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45710 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:55:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730937AbfK0UzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:55:16 -0500
+        id S1730570AbfK0UzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:55:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B5232070B;
-        Wed, 27 Nov 2019 20:55:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 549DA21556;
+        Wed, 27 Nov 2019 20:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888115;
-        bh=blL2aDoHMdLG65fkrbWhUYWBxVjCgv/p6v3dzAKgrRQ=;
+        s=default; t=1574888102;
+        bh=VAuPGxZCIYsAgk/b9uxIyvWkBkmJL4yAMIffas4UNes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l8xtkeL5mBBWqLctjXyfCJY9K0NZPBMLJLtPhoIguc9Ouhf6eOO4EBItB7FEIsS1+
-         Ul+1EW1469TtwmdZhmQeTtp2dTNrOWSMuuSI2sFK4bmxOCJHLzhg+CWE3OSxv17CRH
-         cFjqlzlLnrwNyVX9M9m2T9g0o5Uiixb1Iv+ZsbLg=
+        b=c17+S9psA6h07DglUtDqTSkn5YfnMMPTEckw7tMMxqsVP2opSvwVqa+Irkcs9tuq/
+         rgZvb/M51I3ERqNcQ24F4BBeUBN2+njLMkuases9juO3DWFKRPeKZd77Fpe0hvFFw2
+         w5sF2K7UicaJakCXEqKQdaQ4E7NHoXMN6i5/jhpk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 003/306] net/mlx4_en: Fix wrong limitation for number of TX rings
-Date:   Wed, 27 Nov 2019 21:27:33 +0100
-Message-Id: <20191127203115.010578056@linuxfoundation.org>
+        stable@vger.kernel.org, Vandana BN <bnvandana@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.14 188/211] media: vivid: Set vid_cap_streaming and vid_out_streaming to true
+Date:   Wed, 27 Nov 2019 21:32:01 +0100
+Message-Id: <20191127203111.472635191@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
-References: <20191127203114.766709977@linuxfoundation.org>
+In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
+References: <20191127203049.431810767@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,75 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
+From: Vandana BN <bnvandana@gmail.com>
 
-[ Upstream commit 2744bf42680f64ebf2ee8a00354897857c073331 ]
+commit b4add02d2236fd5f568db141cfd8eb4290972eb3 upstream.
 
-XDP_TX rings should not be limited by max_num_tx_rings_p_up.
-To make sure total number of TX rings never exceed MAX_TX_RINGS,
-add similar check in mlx4_en_alloc_tx_queue_per_tc(), where
-a new value is assigned for num_up.
+When vbi stream is started, followed by video streaming,
+the vid_cap_streaming and vid_out_streaming were not being set to true,
+which would cause the video stream to stop when vbi stream is stopped.
+This patch allows to set vid_cap_streaming and vid_out_streaming to true.
+According to Hans Verkuil it appears that these 'if (dev->kthread_vid_cap)'
+checks are a left-over from the original vivid development and should never
+have been there.
 
-Fixes: 7e1dc5e926d5 ("net/mlx4_en: Limit the number of TX rings")
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
+Cc: <stable@vger.kernel.org>      # for v3.18 and up
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx4/en_ethtool.c |    8 ++++----
- drivers/net/ethernet/mellanox/mlx4/en_netdev.c  |    9 +++++++++
- 2 files changed, 13 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-@@ -1812,6 +1812,7 @@ static int mlx4_en_set_channels(struct n
- 	struct mlx4_en_dev *mdev = priv->mdev;
- 	struct mlx4_en_port_profile new_prof;
- 	struct mlx4_en_priv *tmp;
-+	int total_tx_count;
- 	int port_up = 0;
- 	int xdp_count;
- 	int err = 0;
-@@ -1826,13 +1827,12 @@ static int mlx4_en_set_channels(struct n
+---
+ drivers/media/platform/vivid/vivid-vid-cap.c |    3 ---
+ drivers/media/platform/vivid/vivid-vid-out.c |    3 ---
+ 2 files changed, 6 deletions(-)
+
+--- a/drivers/media/platform/vivid/vivid-vid-cap.c
++++ b/drivers/media/platform/vivid/vivid-vid-cap.c
+@@ -239,9 +239,6 @@ static int vid_cap_start_streaming(struc
+ 	if (vb2_is_streaming(&dev->vb_vid_out_q))
+ 		dev->can_loop_video = vivid_vid_can_loop(dev);
  
- 	mutex_lock(&mdev->state_lock);
- 	xdp_count = priv->tx_ring_num[TX_XDP] ? channel->rx_count : 0;
--	if (channel->tx_count * priv->prof->num_up + xdp_count >
--	    priv->mdev->profile.max_num_tx_rings_p_up * priv->prof->num_up) {
-+	total_tx_count = channel->tx_count * priv->prof->num_up + xdp_count;
-+	if (total_tx_count > MAX_TX_RINGS) {
- 		err = -EINVAL;
- 		en_err(priv,
- 		       "Total number of TX and XDP rings (%d) exceeds the maximum supported (%d)\n",
--		       channel->tx_count * priv->prof->num_up  + xdp_count,
--		       MAX_TX_RINGS);
-+		       total_tx_count, MAX_TX_RINGS);
- 		goto out;
- 	}
+-	if (dev->kthread_vid_cap)
+-		return 0;
+-
+ 	dev->vid_cap_seq_count = 0;
+ 	dprintk(dev, 1, "%s\n", __func__);
+ 	for (i = 0; i < VIDEO_MAX_FRAME; i++)
+--- a/drivers/media/platform/vivid/vivid-vid-out.c
++++ b/drivers/media/platform/vivid/vivid-vid-out.c
+@@ -158,9 +158,6 @@ static int vid_out_start_streaming(struc
+ 	if (vb2_is_streaming(&dev->vb_vid_cap_q))
+ 		dev->can_loop_video = vivid_vid_can_loop(dev);
  
---- a/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
-@@ -92,6 +92,7 @@ int mlx4_en_alloc_tx_queue_per_tc(struct
- 	struct mlx4_en_dev *mdev = priv->mdev;
- 	struct mlx4_en_port_profile new_prof;
- 	struct mlx4_en_priv *tmp;
-+	int total_count;
- 	int port_up = 0;
- 	int err = 0;
- 
-@@ -105,6 +106,14 @@ int mlx4_en_alloc_tx_queue_per_tc(struct
- 				      MLX4_EN_NUM_UP_HIGH;
- 	new_prof.tx_ring_num[TX] = new_prof.num_tx_rings_p_up *
- 				   new_prof.num_up;
-+	total_count = new_prof.tx_ring_num[TX] + new_prof.tx_ring_num[TX_XDP];
-+	if (total_count > MAX_TX_RINGS) {
-+		err = -EINVAL;
-+		en_err(priv,
-+		       "Total number of TX and XDP rings (%d) exceeds the maximum supported (%d)\n",
-+		       total_count, MAX_TX_RINGS);
-+		goto out;
-+	}
- 	err = mlx4_en_try_alloc_resources(priv, tmp, &new_prof, true);
- 	if (err)
- 		goto out;
+-	if (dev->kthread_vid_out)
+-		return 0;
+-
+ 	dev->vid_out_seq_count = 0;
+ 	dprintk(dev, 1, "%s\n", __func__);
+ 	if (dev->start_streaming_error) {
 
 
