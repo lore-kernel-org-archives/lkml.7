@@ -2,259 +2,134 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F8FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E47C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C059C215F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:28:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890115;
-	bh=nyKkzBi6H7Uh8OTeR56ZnuDUxLI1jcTiVleAkU5JdKQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IgJRWmOr+rxlE+cL0B2rMYYKfSDcymRG577saUAC/rrgeEHbiiYQ5q2XQYhvRk6I+
-	 ifxrcnxhaSltFCTz/LNbkDtoQwMcrqYIOL5sDvl03H8WS0WTOyISht612tk2aWrELq
-	 FX3LjESyQzjAN1Oss9DszPU0G1DuqKHPt6J/QQng=
+	by mail.kernel.org (Postfix) with ESMTP id 18AB72080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731293AbfK0U6S (ORCPT
+        id S1731140AbfK0V2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:58:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49472 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:28:43 -0500
+Received: from mga07.intel.com ([134.134.136.100]:52526 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730090AbfK0U6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:58:14 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 552AE20862;
-        Wed, 27 Nov 2019 20:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888292;
-        bh=nyKkzBi6H7Uh8OTeR56ZnuDUxLI1jcTiVleAkU5JdKQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7piuzW7C3Zf7qYQ3Zo5HCAn8nLNgB8LEJEbg1pCMHK1TJrjjB0oXFPVUHgtk6h5P
-         RJR2/qFGAqVuNZeRWKpebe3Y/K0yeN8dwlNGXgol03rNRSdkEoPq1hv8fQPZrUJGVk
-         hUwjmPepdAVNnriqjzsluwsaOREfAf5HVNOcrm20=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Honghui Zhang <honghui.zhang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 078/306] PCI: mediatek: Fixup MSI enablement logic by enabling MSI before clocks
-Date:   Wed, 27 Nov 2019 21:28:48 +0100
-Message-Id: <20191127203120.582753149@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
-References: <20191127203114.766709977@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730054AbfK0U6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:58:06 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 12:58:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,250,1571727600"; 
+   d="scan'208";a="211805140"
+Received: from gtau-mobl.ger.corp.intel.com (HELO localhost) ([10.251.83.243])
+  by orsmga003.jf.intel.com with ESMTP; 27 Nov 2019 12:58:02 -0800
+Date:   Wed, 27 Nov 2019 22:58:00 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, James Morris <jmorris@namei.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [GIT PULL] tpmdd updates for Linux v5.4
+Message-ID: <20191127205800.GA14290@linux.intel.com>
+References: <20190902143121.pjnykevzlajlcrh6@linux.intel.com>
+ <CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+On Wed, Nov 20, 2019 at 08:48:25PM -0800, Dan Williams wrote:
+> On Mon, Sep 2, 2019 at 7:34 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > Hi
+> >
+> > A new driver for fTPM living inside ARM TEE was added this round. In
+> > addition to that, there is three bug fixes and one clean up.
+> >
+> > /Jarkko
+> >
+> > The following changes since commit 8fb8e9e46261e0117cb3cffb6dd8bb7e08f8649b:
+> >
+> >   Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2019-08-30 09:23:45 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20190902
+> >
+> > for you to fetch changes up to e8bd417aab0c72bfb54465596b16085702ba0405:
+> >
+> >   tpm/tpm_ftpm_tee: Document fTPM TEE driver (2019-09-02 17:08:35 +0300)
+> >
+> > ----------------------------------------------------------------
+> > tpmdd updates for Linux v5.4
+> >
+> > ----------------------------------------------------------------
+> > Jarkko Sakkinen (1):
+> >       tpm: Remove a deprecated comments about implicit sysfs locking
+> >
+> > Lukas Bulwahn (1):
+> >       MAINTAINERS: fix style in KEYS-TRUSTED entry
+> >
+> > Sasha Levin (2):
+> >       tpm/tpm_ftpm_tee: A driver for firmware TPM running inside TEE
+> >       tpm/tpm_ftpm_tee: Document fTPM TEE driver
+> >
+> > Stefan Berger (2):
+> >       tpm_tis_core: Turn on the TPM before probing IRQ's
+> >       tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+> 
+> Hi Jarrko,
+> 
+> I'm replying here because I can't find the patches to reply to
+> directly from LKML.
+> 
+> Commit 7f064c378e2c "tpm_tis_core: Turn on the TPM before probing
+> IRQ's" in the v5.3-stable tree caused a regression on a pre-release
+> platform with a TPM2 device. The interrupt starts screaming when the
+> driver is loaded and does not stop until the device is force unbond
+> from the driver by:
+> 
+>      echo IFX0740:00 > /sys/bus/platform/drivers/tpm_tis/unbind
+> 
+> I checked v5.4-rc8 and it has the same problem. I tried reverting:
+> 
+> 1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+> 5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
+> 
+> Which silenced the screaming interrupt problem, but now the TPM is reporting:
+> 
+> [    3.725131] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
+> [    3.725358] tpm tpm0: tpm_try_transmit: send(): error -5
+> [    3.725359] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
+> polling instead
+> 
+> ...at load, where it was not reporting this previously. Can you take a look?
 
-[ Upstream commit 3828d60fd2ef99f97a677c1f95af2ab3e65e2576 ]
+It is already in WiP:
 
-Commit 43e6409db64d ("PCI: mediatek: Add MSI support for MT2712 and
-MT7622") added MSI support but enabled MSI in the wrong place, at a step
-in the probe sequence where clocks were not still enabled.
+https://patchwork.kernel.org/patch/11240111/
 
-Fix this issue by calling mtk_pcie_enable_msi() in mtk_pcie_startup_port_v2()
-since clocks are enabled when mtk_pcie_startup_port_v2() is called.
+Stefan also sent patches that revert to changes that you described:
 
-To avoid forward declaration of mtk_pcie_enable_msi(), move the
-mtk_pcie_startup_port_v2() function definition in the file.
+https://patchwork.kernel.org/cover/11262363/
 
-Fixes: 43e6409db64d ("PCI: mediatek: Add MSI support for MT2712 and MT7622")
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-[lorenzo.pieralisi@arm.com: squashed commit and adapted log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/pcie-mediatek.c | 143 +++++++++++++------------
- 1 file changed, 72 insertions(+), 71 deletions(-)
+Probably better first to fix the issue on top of master before deciding
+actions.
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 8d1364c317747..1bfbceb9f4458 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -394,75 +394,6 @@ static struct pci_ops mtk_pcie_ops_v2 = {
- 	.write = mtk_pcie_config_write,
- };
- 
--static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
--{
--	struct mtk_pcie *pcie = port->pcie;
--	struct resource *mem = &pcie->mem;
--	const struct mtk_pcie_soc *soc = port->pcie->soc;
--	u32 val;
--	size_t size;
--	int err;
--
--	/* MT7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
--	if (pcie->base) {
--		val = readl(pcie->base + PCIE_SYS_CFG_V2);
--		val |= PCIE_CSR_LTSSM_EN(port->slot) |
--		       PCIE_CSR_ASPM_L1_EN(port->slot);
--		writel(val, pcie->base + PCIE_SYS_CFG_V2);
--	}
--
--	/* Assert all reset signals */
--	writel(0, port->base + PCIE_RST_CTRL);
--
--	/*
--	 * Enable PCIe link down reset, if link status changed from link up to
--	 * link down, this will reset MAC control registers and configuration
--	 * space.
--	 */
--	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
--
--	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
--	val = readl(port->base + PCIE_RST_CTRL);
--	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
--	       PCIE_MAC_SRSTB | PCIE_CRSTB;
--	writel(val, port->base + PCIE_RST_CTRL);
--
--	/* Set up vendor ID and class code */
--	if (soc->need_fix_class_id) {
--		val = PCI_VENDOR_ID_MEDIATEK;
--		writew(val, port->base + PCIE_CONF_VEND_ID);
--
--		val = PCI_CLASS_BRIDGE_PCI;
--		writew(val, port->base + PCIE_CONF_CLASS_ID);
--	}
--
--	/* 100ms timeout value should be enough for Gen1/2 training */
--	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
--				 !!(val & PCIE_PORT_LINKUP_V2), 20,
--				 100 * USEC_PER_MSEC);
--	if (err)
--		return -ETIMEDOUT;
--
--	/* Set INTx mask */
--	val = readl(port->base + PCIE_INT_MASK);
--	val &= ~INTX_MASK;
--	writel(val, port->base + PCIE_INT_MASK);
--
--	/* Set AHB to PCIe translation windows */
--	size = mem->end - mem->start;
--	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
--	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
--
--	val = upper_32_bits(mem->start);
--	writel(val, port->base + PCIE_AHB_TRANS_BASE0_H);
--
--	/* Set PCIe to AXI translation memory space.*/
--	val = fls(0xffffffff) | WIN_ENABLE;
--	writel(val, port->base + PCIE_AXI_WINDOW0);
--
--	return 0;
--}
--
- static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
- 	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
-@@ -639,8 +570,6 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
- 		ret = mtk_pcie_allocate_msi_domains(port);
- 		if (ret)
- 			return ret;
--
--		mtk_pcie_enable_msi(port);
- 	}
- 
- 	return 0;
-@@ -707,6 +636,78 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
- 	return 0;
- }
- 
-+static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
-+{
-+	struct mtk_pcie *pcie = port->pcie;
-+	struct resource *mem = &pcie->mem;
-+	const struct mtk_pcie_soc *soc = port->pcie->soc;
-+	u32 val;
-+	size_t size;
-+	int err;
-+
-+	/* MT7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
-+	if (pcie->base) {
-+		val = readl(pcie->base + PCIE_SYS_CFG_V2);
-+		val |= PCIE_CSR_LTSSM_EN(port->slot) |
-+		       PCIE_CSR_ASPM_L1_EN(port->slot);
-+		writel(val, pcie->base + PCIE_SYS_CFG_V2);
-+	}
-+
-+	/* Assert all reset signals */
-+	writel(0, port->base + PCIE_RST_CTRL);
-+
-+	/*
-+	 * Enable PCIe link down reset, if link status changed from link up to
-+	 * link down, this will reset MAC control registers and configuration
-+	 * space.
-+	 */
-+	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
-+
-+	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
-+	val = readl(port->base + PCIE_RST_CTRL);
-+	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
-+	       PCIE_MAC_SRSTB | PCIE_CRSTB;
-+	writel(val, port->base + PCIE_RST_CTRL);
-+
-+	/* Set up vendor ID and class code */
-+	if (soc->need_fix_class_id) {
-+		val = PCI_VENDOR_ID_MEDIATEK;
-+		writew(val, port->base + PCIE_CONF_VEND_ID);
-+
-+		val = PCI_CLASS_BRIDGE_PCI;
-+		writew(val, port->base + PCIE_CONF_CLASS_ID);
-+	}
-+
-+	/* 100ms timeout value should be enough for Gen1/2 training */
-+	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
-+				 !!(val & PCIE_PORT_LINKUP_V2), 20,
-+				 100 * USEC_PER_MSEC);
-+	if (err)
-+		return -ETIMEDOUT;
-+
-+	/* Set INTx mask */
-+	val = readl(port->base + PCIE_INT_MASK);
-+	val &= ~INTX_MASK;
-+	writel(val, port->base + PCIE_INT_MASK);
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI))
-+		mtk_pcie_enable_msi(port);
-+
-+	/* Set AHB to PCIe translation windows */
-+	size = mem->end - mem->start;
-+	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
-+	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
-+
-+	val = upper_32_bits(mem->start);
-+	writel(val, port->base + PCIE_AHB_TRANS_BASE0_H);
-+
-+	/* Set PCIe to AXI translation memory space.*/
-+	val = fls(0xffffffff) | WIN_ENABLE;
-+	writel(val, port->base + PCIE_AXI_WINDOW0);
-+
-+	return 0;
-+}
-+
- static void __iomem *mtk_pcie_map_bus(struct pci_bus *bus,
- 				      unsigned int devfn, int where)
- {
--- 
-2.20.1
-
-
-
+/Jarkko
