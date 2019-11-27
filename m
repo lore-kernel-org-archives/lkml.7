@@ -2,149 +2,124 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B41CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE522C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4267020836
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:36:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574818578;
-	bh=PtrJiqBjDc3rtnxMlcXBxBsaFk0bKWUIMRupAqH/g2w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=CoYy8yD0SZojXGWsR44L4I0fcU4w9HaFOYCtGlgAtYPEGpCBVsHhJp3GRAPR3SMj5
-	 iG9d4iFVGLGrK5oGcOfmFDBYgiPOOE+hTg6AdXI+AqZ5Fdrj9mOhHK8SLAxXHXvJSy
-	 daKi6VjKJDyGduEWjAzI9Szr099yKfv3LmG/Zx8w=
+	by mail.kernel.org (Postfix) with ESMTP id C1FE020722
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:39:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpsOGGnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfK0BgR (ORCPT
+        id S1727051AbfK0BjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 20:36:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfK0BgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 20:36:16 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72C5F2075C;
-        Wed, 27 Nov 2019 01:36:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574818576;
-        bh=PtrJiqBjDc3rtnxMlcXBxBsaFk0bKWUIMRupAqH/g2w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sjrOU+jOy+/woZ6WbwBIpQAhvP51U5A9H0p72S/lP6s0CO3b1sqdLycRXDKdqwfV8
-         /3ZwN2QAp7qYtYFawpAHcW3SwqG5efV4J500UqQzNK4vPlygxXO1iYhFYc3xUt6uge
-         ERymIeZwWyCj5SoCOHH4JA6YWc6uTMS+doTgJaQs=
-Date:   Tue, 26 Nov 2019 19:36:13 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-Subject: Re: [PATCH v4 1/3] PCI: pciehp: Add support for disabling in-band
- presence
-Message-ID: <20191127013613.GA233706@google.com>
+        Tue, 26 Nov 2019 20:39:06 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46806 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbfK0BjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 20:39:05 -0500
+Received: by mail-qk1-f195.google.com with SMTP id h15so18013478qka.13;
+        Tue, 26 Nov 2019 17:39:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=15pddQ+tJiIXUfy3ihFVIOBDW7KImamgJuRtImRC8/8=;
+        b=JpsOGGnmffjuhrKG3Xn/W8jh9MetQvivpVP1UDN3ItLqXlzeuYVFJlHSBAciEqQ8cR
+         hggzbzT6n1imn8zpPvLUI+Tu2NAGgx4Z9iRT3bKCUgFdxvbGMpeUf9LH2cLN3ccxbaIu
+         LqNCQ+PmPgWy5jZnbxLQNXHVFqjxvwVdfXZWr/h0mvVUOLaud4aUa1zGoJRt2Bi2aC4j
+         jDXYbkZDkY0EiM3L8vJivLUvBHElfGmzLFpguphf9hnGGJyiXLg4942Pq4bVPjaJ8HO5
+         l7LMqP3sRdZOVw/kQXAqJ+TZ1JqVgYu8xBo2M5+6hDa5XH5gXyO74Wq5UGkminHJvzzZ
+         tAzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=15pddQ+tJiIXUfy3ihFVIOBDW7KImamgJuRtImRC8/8=;
+        b=nxc54wds44IM4UiuerJ5rfAVoSePuRYDu55V00AHMLh5t96zEqj0IlaS0SCJMH5gKR
+         GuXW7tJ8UKN81M1P9MiNiqKyIW6USzLZ0VQ7xbgLJekK/j+56Mx4gnUHi1DwI03PCh8c
+         q7VCzGVeM7qN73o0vEfw+wlfXkUctmefH8sppkllDNJ8JBJgI4w3qFecCfVD/18DJqDG
+         uz65Wwg0UNfpkAYWBwcaUpZjtC2t/tkffRsBQJJOad1eGjGpPf/ETY1RJDgKCTyJFj1W
+         RKNNLVveXrQZaz0TRMsBKdvAD+KOhUnX3yGNTQbnIkRd2jGajAxwc7C/Xi+iqWeWvML4
+         NLFw==
+X-Gm-Message-State: APjAAAV2d2aUBSAyvKArVoVFxo61UHCOhlMgHldqda1hHA3A9lQP8z8z
+        b5+1PJJkPXYKaFzNclV5aSw=
+X-Google-Smtp-Source: APXvYqxyqfW1iC0L6IJaIs2yrtW6M2tsaXpXRL10YGWr5f+FMbMJnZYV8EUGHOf2mk1pGCVhXiaduA==
+X-Received: by 2002:a05:620a:14bc:: with SMTP id x28mr1746213qkj.494.1574818744384;
+        Tue, 26 Nov 2019 17:39:04 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id n185sm5990392qkd.32.2019.11.26.17.39.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 17:39:03 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3660740D3E; Tue, 26 Nov 2019 22:39:01 -0300 (-03)
+Date:   Tue, 26 Nov 2019 22:39:01 -0300
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Stanislav Fomichev <sdf@fomichev.me>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
+Message-ID: <20191127013901.GE29071@kernel.org>
+References: <87imn6y4n9.fsf@toke.dk>
+ <20191126183451.GC29071@kernel.org>
+ <87d0dexyij.fsf@toke.dk>
+ <20191126190450.GD29071@kernel.org>
+ <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
+ <20191126221018.GA22719@kernel.org>
+ <20191126221733.GB22719@kernel.org>
+ <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+ <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net>
+ <20191126155228.0e6ed54c@cakuba.netronome.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191025190047.38130-2-stuart.w.hayes@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191126155228.0e6ed54c@cakuba.netronome.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 03:00:45PM -0400, Stuart Hayes wrote:
-> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> 
-> The presence detect state (PDS) is normally a logical or of in-band and
-> out-of-band presence. As of PCIe 4.0, there is the option to disable
-> in-band presence so that the PDS bit always reflects the state of the
-> out-of-band presence.
-> 
-> The recommendation of the PCIe spec is to disable in-band presence
-> whenever supported.
+Em Tue, Nov 26, 2019 at 03:52:28PM -0800, Jakub Kicinski escreveu:
+> On Tue, 26 Nov 2019 15:10:30 -0800, Stanislav Fomichev wrote:
+> > We are using this script with python2.7, works just fine :-)
+> > So maybe doing s/python3/python/ is the way to go, whatever
+> > default python is installed, it should work with that.
 
-I think I'm fine with this patch, but I would like to include the
-specific reference for this recommendation.  If you have it handy, I
-can just insert it.
+> That increases the risk someone will make a python2-only change 
+> and break Python 3.
+ 
+> Python 2 is dead, I'm honestly surprised this needs to be said :)
 
-> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> ---
->  drivers/pci/hotplug/pciehp.h     | 1 +
->  drivers/pci/hotplug/pciehp_hpc.c | 9 ++++++++-
->  include/uapi/linux/pci_regs.h    | 2 ++
->  3 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-> index 654c972b8ea0..27e4cd6529b0 100644
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> @@ -83,6 +83,7 @@ struct controller {
->  	struct pcie_device *pcie;
->  
->  	u32 slot_cap;				/* capabilities and quirks */
-> +	unsigned int inband_presence_disabled:1;
->  
->  	u16 slot_ctrl;				/* control register access */
->  	struct mutex ctrl_lock;
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 1a522c1c4177..dc109d521f30 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -811,7 +811,7 @@ static inline void dbg_ctrl(struct controller *ctrl)
->  struct controller *pcie_init(struct pcie_device *dev)
->  {
->  	struct controller *ctrl;
-> -	u32 slot_cap, link_cap;
-> +	u32 slot_cap, slot_cap2, link_cap;
->  	u8 poweron;
->  	struct pci_dev *pdev = dev->port;
->  	struct pci_bus *subordinate = pdev->subordinate;
-> @@ -869,6 +869,13 @@ struct controller *pcie_init(struct pcie_device *dev)
->  		FLAG(link_cap, PCI_EXP_LNKCAP_DLLLARC),
->  		pdev->broken_cmd_compl ? " (with Cmd Compl erratum)" : "");
->  
-> +	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP2, &slot_cap2);
-> +	if (slot_cap2 & PCI_EXP_SLTCAP2_IBPD) {
-> +		pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_IBPD_DISABLE,
-> +				      PCI_EXP_SLTCTL_IBPD_DISABLE);
-> +		ctrl->inband_presence_disabled = 1;
-> +	}
-> +
->  	/*
->  	 * If empty slot's power status is on, turn power off.  The IRQ isn't
->  	 * requested yet, so avoid triggering a notification with this command.
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 29d6e93fd15e..ea1cf9546e4d 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -604,6 +604,7 @@
->  #define  PCI_EXP_SLTCTL_PWR_OFF        0x0400 /* Power Off */
->  #define  PCI_EXP_SLTCTL_EIC	0x0800	/* Electromechanical Interlock Control */
->  #define  PCI_EXP_SLTCTL_DLLSCE	0x1000	/* Data Link Layer State Changed Enable */
-> +#define  PCI_EXP_SLTCTL_IBPD_DISABLE	0x4000 /* In-band PD disable */
->  #define PCI_EXP_SLTSTA		26	/* Slot Status */
->  #define  PCI_EXP_SLTSTA_ABP	0x0001	/* Attention Button Pressed */
->  #define  PCI_EXP_SLTSTA_PFD	0x0002	/* Power Fault Detected */
-> @@ -676,6 +677,7 @@
->  #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
->  #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
->  #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
-> +#define  PCI_EXP_SLTCAP2_IBPD	0x0001	/* In-band PD Disable Supported */
->  #define PCI_EXP_SLTCTL2		56	/* Slot Control 2 */
->  #define PCI_EXP_SLTSTA2		58	/* Slot Status 2 */
->  
-> -- 
-> 2.18.1
-> 
+It shouldn't have to be said, and probably it is old school to try and
+keep things portable when there is no need to use new stuff for simple
+tasks like this.
+
+Anyway, it seems its just a matter of adding the python3 package to the
+old container images and then most of them will work with what is in
+that script, what doesn't work is really old and then NO_LIBBPF=1 is the
+way to go.
+
+In the end, kinda nothing to see here, go back to adding cool new stuff,
+lets not hold eBPF from progressing ;-P
+
+- Arnaldo
