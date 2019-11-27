@@ -2,169 +2,132 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8895C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C79FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4E520684
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543B82075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:56:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zQX7Z4UT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PzOTKkC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfK0Pzi (ORCPT
+        id S1727139AbfK0P4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:55:38 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:32868 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfK0Pzi (ORCPT
+        Wed, 27 Nov 2019 10:56:02 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37252 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfK0P4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:55:38 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xARFtVCr071721;
-        Wed, 27 Nov 2019 09:55:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574870131;
-        bh=K63GQIrw0Sq+EfiUZbTAW80xzjkoZlaK1Fs4iboltMg=;
-        h=From:To:CC:Subject:Date;
-        b=zQX7Z4UT0A8dKZvD6orrZ+/oPB5evEms9YJ3zsSzVsBHntXBAkrJLIkeY4y3doXXD
-         XGYFeUuggkKX3Up/yaC4aWXlAfE1//+4z6BLYaKXef53frVWwippMjijuWdpcoKRKN
-         3PPFXeBCs1LWTXWqCPuscRbMBTGONt4RTEe6+sR8=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xARFtVkc104403;
-        Wed, 27 Nov 2019 09:55:31 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
- Nov 2019 09:55:31 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 27 Nov 2019 09:55:31 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xARFtUwu019376;
-        Wed, 27 Nov 2019 09:55:30 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] dt-bindings: net: ti: cpsw-switch: update to fix comments
-Date:   Wed, 27 Nov 2019 17:55:26 +0200
-Message-ID: <20191127155526.22746-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 Nov 2019 10:56:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3iLIidMssZl9d6PrGezfyNaB0BMUcnGVIulOgI4kuAE=; b=PzOTKkC7unuoES0OGlMuf21uf
+        xroZeZ83LZ/s43XO2hmGm6VZOm3wxokxseSI+a/nkev26HRxbhxNCXqzuqzUrC2jgMAalU8W0brsQ
+        ZsryDSyHaq2yJ/Y4MsvRbQPGi6o45CAG89PTE257mW93scnxt2sKj8XxzhkT+uEl8nmub88ZFLZcG
+        Y3CrpvqOESne3xp1NItxbfhvzvtxXxcdggKZfUkda/ruNVvc/u2mPlRbzzEgaj+Rnex/OtuuENONY
+        UZDqdgOdx3Kc+OkWT2uz1/vbYU3ObLUnHcKMH9nNQQ9yAZyjh4EWgcZ8tRwb4KPCg9s9Wjcdx3jjH
+        L+dHlHPLA==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iZzfb-0000rZ-Tn; Wed, 27 Nov 2019 15:56:00 +0000
+Subject: Re: linux-next: Tree for Nov 27
+ (drivers/pci/controller/dwc/pcie-designware-host.c)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+References: <20191127155717.400a60de@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <fc3586ef-a0a1-84b3-2e0e-b8ba5c41f229@infradead.org>
+Date:   Wed, 27 Nov 2019 07:55:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191127155717.400a60de@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After original patch was merged there were additional comments/requests
-provided by Rob Herring [1]. Mostly they are related to json-schema usage,
-and this patch fixes them. Also SPDX-License-Identifier has been changed to
-(GPL-2.0-only OR BSD-2-Clause) as requested.
+On 11/26/19 8:57 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Please do not add any material for v5.6 to your linux-next included
+> trees until after v5.5-rc1 has been released.
+> 
+> Changes since 20191126:
+> 
 
-[1] https://lkml.org/lkml/2019/11/21/875
-Fixes: ef63fe72f698 ("dt-bindings: net: ti: add new cpsw switch driver bindings")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- .../bindings/net/ti,cpsw-switch.yaml          | 20 +++++++------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+on i386:
+# CONFIG_PCI_MSI is not set
 
-diff --git a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-index 81ae8cafabc1..4e072a023f3e 100644
---- a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-+++ b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: GPL-2.0
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
- $id: http://devicetree.org/schemas/net/ti,cpsw-switch.yaml#
-@@ -44,7 +44,6 @@ properties:
-     description: CPSW functional clock
- 
-   clock-names:
--    maxItems: 1
-     items:
-       - const: fck
- 
-@@ -70,7 +69,6 @@ properties:
-       Phandle to the system control device node which provides access to
-       efuse IO range with MAC addresses
- 
--
-   ethernet-ports:
-     type: object
-     properties:
-@@ -82,8 +80,6 @@ properties:
-     patternProperties:
-       "^port@[0-9]+$":
-           type: object
--          minItems: 1
--          maxItems: 2
-           description: CPSW external ports
- 
-           allOf:
-@@ -92,21 +88,20 @@ properties:
-           properties:
-             reg:
-               maxItems: 1
--              enum: [1, 2]
-+              items:
-+                - enum: [1, 2]
-               description: CPSW port number
- 
-             phys:
--              $ref: /schemas/types.yaml#definitions/phandle-array
-               maxItems: 1
-               description:  phandle on phy-gmii-sel PHY
- 
-             label:
--              $ref: /schemas/types.yaml#/definitions/string-array
--              maxItems: 1
-               description: label associated with this port
- 
-             ti,dual-emac-pvid:
--              $ref: /schemas/types.yaml#/definitions/uint32
-+              allOf:
-+                - $ref: /schemas/types.yaml#/definitions/uint32
-               maxItems: 1
-               minimum: 1
-               maximum: 1024
-@@ -136,7 +131,6 @@ properties:
-         description: CPTS reference clock
- 
-       clock-names:
--        maxItems: 1
-         items:
-           - const: cpts
- 
-@@ -201,7 +195,7 @@ examples:
-                         phys = <&phy_gmii_sel 1>;
-                         phy-handle = <&ethphy0_sw>;
-                         phy-mode = "rgmii";
--                        ti,dual_emac_pvid = <1>;
-+                        ti,dual-emac-pvid = <1>;
-                 };
- 
-                 cpsw_port2: port@2 {
-@@ -211,7 +205,7 @@ examples:
-                         phys = <&phy_gmii_sel 2>;
-                         phy-handle = <&ethphy1_sw>;
-                         phy-mode = "rgmii";
--                        ti,dual_emac_pvid = <2>;
-+                        ti,dual-emac-pvid = <2>;
-                 };
-         };
- 
+
+WARNING: unmet direct dependencies detected for PCIE_DW_HOST
+  Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
+  Selected by [y]:
+  - PCIE_INTEL_GW [=y] && PCI [=y] && OF [=y] && (X86 [=y] || COMPILE_TEST [=n])
+
+and related build errors:
+
+../drivers/pci/controller/dwc/pcie-designware-host.c:72:15: error: variable ‘dw_pcie_msi_domain_info’ has initializer but incomplete type
+ static struct msi_domain_info dw_pcie_msi_domain_info = {
+               ^~~~~~~~~~~~~~~
+../drivers/pci/controller/dwc/pcie-designware-host.c:73:3: error: ‘struct msi_domain_info’ has no member named ‘flags’
+  .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+   ^~~~~
+../drivers/pci/controller/dwc/pcie-designware-host.c:73:12: error: ‘MSI_FLAG_USE_DEF_DOM_OPS’ undeclared here (not in a function); did you mean ‘SIMPLE_DEV_PM_OPS’?
+  .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+            ^~~~~~~~~~~~~~~~~~~~~~~~
+            SIMPLE_DEV_PM_OPS
+../drivers/pci/controller/dwc/pcie-designware-host.c:73:39: error: ‘MSI_FLAG_USE_DEF_CHIP_OPS’ undeclared here (not in a function); did you mean ‘MSI_FLAG_USE_DEF_DOM_OPS’?
+  .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+                                       ^~~~~~~~~~~~~~~~~~~~~~~~~
+                                       MSI_FLAG_USE_DEF_DOM_OPS
+../drivers/pci/controller/dwc/pcie-designware-host.c:74:6: error: ‘MSI_FLAG_PCI_MSIX’ undeclared here (not in a function); did you mean ‘SS_FLAG_BITS’?
+      MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
+      ^~~~~~~~~~~~~~~~~
+      SS_FLAG_BITS
+../drivers/pci/controller/dwc/pcie-designware-host.c:74:26: error: ‘MSI_FLAG_MULTI_PCI_MSI’ undeclared here (not in a function); did you mean ‘MSI_FLAG_PCI_MSIX’?
+      MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
+                          ^~~~~~~~~~~~~~~~~~~~~~
+                          MSI_FLAG_PCI_MSIX
+../drivers/pci/controller/dwc/pcie-designware-host.c:73:11: warning: excess elements in struct initializer
+  .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+           ^
+../drivers/pci/controller/dwc/pcie-designware-host.c:73:11: note: (near initialization for ‘dw_pcie_msi_domain_info’)
+../drivers/pci/controller/dwc/pcie-designware-host.c:75:3: error: ‘struct msi_domain_info’ has no member named ‘chip’
+  .chip = &dw_pcie_msi_irq_chip,
+   ^~~~
+../drivers/pci/controller/dwc/pcie-designware-host.c:75:10: warning: excess elements in struct initializer
+  .chip = &dw_pcie_msi_irq_chip,
+          ^
+../drivers/pci/controller/dwc/pcie-designware-host.c:75:10: note: (near initialization for ‘dw_pcie_msi_domain_info’)
+../drivers/pci/controller/dwc/pcie-designware-host.c: In function ‘dw_pcie_allocate_domains’:
+../drivers/pci/controller/dwc/pcie-designware-host.c:267:19: error: implicit declaration of function ‘pci_msi_create_irq_domain’; did you mean ‘pci_msi_get_device_domain’? [-Werror=implicit-function-declaration]
+  pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~
+                   pci_msi_get_device_domain
+../drivers/pci/controller/dwc/pcie-designware-host.c:267:17: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+  pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+                 ^
+../drivers/pci/controller/dwc/pcie-designware-host.c: At top level:
+../drivers/pci/controller/dwc/pcie-designware-host.c:72:31: error: storage size of ‘dw_pcie_msi_domain_info’ isn’t known
+ static struct msi_domain_info dw_pcie_msi_domain_info = {
+                               ^~~~~~~~~~~~~~~~~~~~~~~
+
+
 -- 
-2.17.1
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
