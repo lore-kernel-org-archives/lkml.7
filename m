@@ -2,158 +2,146 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96ABC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14685C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A892C20722
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87B72053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="jkIbwlyP";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="KOjBhQ4R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F+uLGpmf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfK0PSm (ORCPT
+        id S1727254AbfK0PS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:18:42 -0500
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:19735 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfK0PSm (ORCPT
+        Wed, 27 Nov 2019 10:18:57 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:41910 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727072AbfK0PS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:18:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1574867921; x=1606403921;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Bo8MzFgvGxtzCJaxSfImAfU0PntONaQGD0lp/gQssMM=;
-  b=jkIbwlyP4tndKdNY2n76qtF/y86G9pzNlR+yhWKb4DHu25yFz6T2foBt
-   aVheGnhjYnbrVgpmykuV/IMnv2LadGwhSnHxWGo1oRQtGPWpC7QAodiFc
-   N+akYK+aMCjTUai0YoYXgXlmM7RaAldXDMWdS2FiTjQsC6aWYuLUh0FB/
-   N5FlxtywsrKBlNlsELG6HE1upNTov59OQAB+eVmaUBNnVy9qIsr392YJz
-   gjO5pvmNwtr8wcetQKaLkfHcxuP6pmgOuFp7XeMwN4mJCEh7y3bW3yzoO
-   5dPausAR7Dw43/Ezt48qUyoXe4bNPdC5fshKERnKgZirxeK9SNPderOcz
-   Q==;
-IronPort-SDR: ks0jcStx4JaxyjphXvtIhL7Gun2VxRuRdDDFF0VmsfczG2umkJTmBYZy1gEQGUZA0esMNtEJsg
- 4mKOIGETE3g8sN3cFzFJAGQtSYgEydmxbq3rvYUFb129o3vDfHTLFT7O2tIODjE/cop0EmD74W
- 5byOnA7Y8vNYbNXSJZhoYTNmcR6WKcl4r7hTbcP1CyRvi8bEPmxtq+g9NLezFnNXWUYM8IipWf
- XNovk9n7CQx1D069C6guwYy6znNlALASjbNsXlsrx80hP5E6vQQX9ub4tvib+r0gG2zoPCvc2z
- ngI=
-X-IronPort-AV: E=Sophos;i="5.69,249,1571673600"; 
-   d="scan'208";a="231577989"
-Received: from mail-bn3nam01lp2057.outbound.protection.outlook.com (HELO NAM01-BN3-obe.outbound.protection.outlook.com) ([104.47.33.57])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Nov 2019 23:18:39 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FAV2Nifg6+9TGqghSF1tvUTpeMVh4tDj3tmM/PiRD1pAOi94ADbG49epEThGEA+Y0A8ANeX15hCl2pK1w/rXs9r+4ln4OQVLcD9l0XJwxtxsbcyB2Zu/S0pHbKg6hcBmeH/CPnDfNsM0Z2K4jezcmCvvdCfP1uIbcrtXLRnJWW2idunBCPD52EX1mIdGl2TiuCX4pbeDbmEDPj2Suy5b+3NkiD7uxOcGtizftP/YObK6pfzUXHzU71Fe/1NvP60ithYCfGP2LdCS0GImpoYf8Q44Xr061VW5dOHq02U0O3q8QvcWTZbvtMqxu2Ui0MwW4jHH5YxM2ntKEQMMaU3C8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bo8MzFgvGxtzCJaxSfImAfU0PntONaQGD0lp/gQssMM=;
- b=AuO2lI8wouiBYiZzmZFxl+vVP7IWS7Hf2QQH6WrPtujbCXKcGw68tTQeV+02JRN6n7A97bvrVOjAs0wGxCKv7MtxbjetLxhX1WdOv39eiDwVp0IFLvgSJVP+Rkc0hIWnHBtf1gx0pIpjsjwx+JZApxCTORGGxMeZ5Acishkchjx0zkNYnwoSLb+GNwd3+LcmdCmaWOp2U/sJ5WUIrTKM0Eh2mwxAVbpd8iCGET+fNznjSrv4j3lRu84ao2JuyY7DopKR1r6f4/l2ra/Jmyy8byUbOYWaHvTqazd4oa8Y8taRHQ+0XJcYEKvCS/bcna9bQpz2IB+5v+K37+h9EIp7qQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Wed, 27 Nov 2019 10:18:56 -0500
+Received: by mail-qv1-f65.google.com with SMTP id g18so9017812qvp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 07:18:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bo8MzFgvGxtzCJaxSfImAfU0PntONaQGD0lp/gQssMM=;
- b=KOjBhQ4RbAkkUAimqR2VWeitozUjA9rZxhBEKBbt4vpLbPmHqLNvtx6NtzTl87j2eePWVr+yzEmexGLnCGTVkZdoKPREONY/dUCA0dvTXN09uKEJKNymqIhK/gNzED17ZKltvFYINgAP/2C94rf35k3W7ZMxACF4sIDwxtTUM20=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
- MN2PR04MB6797.namprd04.prod.outlook.com (10.186.146.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17; Wed, 27 Nov 2019 15:18:38 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::5852:6199:7952:c2ce]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::5852:6199:7952:c2ce%7]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
- 15:18:38 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Alim Akhtar <alim.akhtar@samsung.com>,
-        'Vignesh Raghavendra' <vigneshr@ti.com>,
-        'Alim Akhtar' <alim.akhtar@gmail.com>,
-        'sheebab' <sheebab@cadence.com>
-CC:     'Pedro Sousa' <pedrom.sousa@synopsys.com>,
-        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        'Stanley Chu' <stanley.chu@mediatek.com>,
-        "'Bean Huo (beanhuo)'" <beanhuo@micron.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        'open list' <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "rafalc@cadence.com" <rafalc@cadence.com>,
-        "mparab@cadence.com" <mparab@cadence.com>
-Subject: RE: [PATCH RESEND 2/2] scsi: ufs: Update L4 attributes on manual
- hibern8 exit in Cadence UFS.
-Thread-Topic: [PATCH RESEND 2/2] scsi: ufs: Update L4 attributes on manual
- hibern8 exit in Cadence UFS.
-Thread-Index: AQHedmnDsV+0XJYctqc2u08WFWQfYAIz26ApAn51KZIBSarR9wJHdWspp0qfzwCAAMLdUA==
-Date:   Wed, 27 Nov 2019 15:18:37 +0000
-Message-ID: <MN2PR04MB6991BBE44D8B58DDF8631EA0FC440@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1574147082-22725-1-git-send-email-sheebab@cadence.com>
-        <1574147082-22725-3-git-send-email-sheebab@cadence.com>
-        <CAGOxZ53Lotp6sBUryHsE2S1dbkQNZhPhWNMXidoi=BOmV074VA@mail.gmail.com>
-        <CGME20191121105613epcas4p1a83df10f9f8dcf9edaa583648cad449e@epcas4p1.samsung.com>
-        <cfc2c86f-f9ae-ac91-39ac-8bb48c41b243@ti.com>
- <08c701d5a4d4$b20c7300$16255900$@samsung.com>
-In-Reply-To: <08c701d5a4d4$b20c7300$16255900$@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7496fee6-f91a-4b08-3b57-08d7734d13f4
-x-ms-traffictypediagnostic: MN2PR04MB6797:
-x-microsoft-antispam-prvs: <MN2PR04MB67973B3E22D2F2C480C0B7F5FC440@MN2PR04MB6797.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 023495660C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(39860400002)(136003)(396003)(376002)(189003)(199004)(55016002)(229853002)(9686003)(446003)(66066001)(478600001)(14444005)(11346002)(256004)(99286004)(76116006)(66556008)(66446008)(64756008)(66476007)(3846002)(26005)(6116002)(86362001)(66946007)(186003)(102836004)(76176011)(7696005)(14454004)(6506007)(53546011)(110136005)(7736002)(54906003)(316002)(7416002)(5660300002)(74316002)(305945005)(6436002)(52536014)(8936002)(71200400001)(71190400001)(81156014)(81166006)(2906002)(33656002)(4326008)(8676002)(25786009)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6797;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qaPj5MTJNgbiSDrun5woz6cWhauSyA1fBtwfiu/ZhJhL4QFY6eeGapYh1T2lsmRcD333RJ/cUwKWwJKsEDDMJKJVhs5MdLM00zfHLAtcrpW6u5WtYOhc+irYfIvkEXlQ9YMozCvZgb3hTkTMhIhSFo5rmelOvo2wTOm2F3NBeS/QRxbnX5bRXNyG3uT5Y57UiUxOW+OKf3xJQIpWHD31emxwDe9ezmBirZgEmGxx9xT1r7LKO/RjD3C9RJpFOfU6qFqgkezFZbNle/iQOnI/fJKXwFXYcDUtk8uLQiDbmJ3b3rkrBrGVUpJPQK1xvc1ZdCDBOJUY6H28v0JoLeeFun85aBvDdL7MWHnQ8JMq62q39BVW9FI259GVau9CwhLRoRa+cRXuOjm6wGbJac43IWkw30MMNxhd0SZMjAnyeswkOlFTAJvi4KmX6XoUoK+0
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Zys7zsjkt1m0RnQUfslYJUalywAfCs8j/JmRSdhUUts=;
+        b=F+uLGpmf5nAR/f+UaS87JHCuVg7uI2Go/nnhOr8k/n1HkFI7eYjKsFDPkoIjPlEJ9b
+         ZP9s5kNkz+HgVIPEeMZXfXt6+9eoW6YsyZcQo5UwEE7xS+NxSoyf2izxMZJSXA6V6IgS
+         HEVonGKeazGdHY+mTi+cd6LUvso5kDne1Z2T4FO25MHZqfS35v5f3TbJANJe8ROSVPSU
+         p93sB1beUU/x+ikiBM+n8ZknIgD/7zLdUShyznvXEEyIttTJwCwbtyVf2l1VBA00i/Tx
+         1D3bCQ0tg3ZQ+2PJSQtnt4xBk3LJV/e1V1QLUo1gNW2LVUJF8gZL+XPHROqrpZxrqXqE
+         FtEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zys7zsjkt1m0RnQUfslYJUalywAfCs8j/JmRSdhUUts=;
+        b=FO71JvyR1zjNr2rPGsHb+rrAzOfogPEH0xm5mQPRUIDMJRwVZX8Zb46YAEL6DGU75p
+         rzhRQlRvDhz3ERn7N/VHk4eCHwM2T3cEsWFS0v3LqxsLsm9QTqrLnQUR8PFqah6e8AbW
+         15mO8KAoBN8OM1g/8Wlr50KJeD93s4cHZCPw9GYFyjFiH2s4L2IGyoAGW/7sbEWzsKml
+         sxsgNkEmw5Rd3jeO2ZebE53/TM/3o12Hm4+N4QjyNXkZ3AaNxHbgznP5nSYAdjd4ihp0
+         YSaZ72W16NYd3hutjf+oHM9nyN4NXghCUkqcrN5xXTQXgS9gyg9Zzo8s3H1N7C19hJfo
+         cmPg==
+X-Gm-Message-State: APjAAAVEyD1zjV4ERaNRsBnS2fd3s0hRPjp3Xw/JdTCq2KGdSicgMASK
+        RYKUHK2BYBciptB2T/xPDhLjRRGLBm8=
+X-Google-Smtp-Source: APXvYqxjMWstOXxnYtQbaq7zg14WId27aS+0GcKiP3VguPC8qQ7u1OVcUgaDWhO5t1JgL71YqfNT4Q==
+X-Received: by 2002:ad4:496f:: with SMTP id p15mr1182216qvy.191.1574867935472;
+        Wed, 27 Nov 2019 07:18:55 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id i4sm2380813qki.45.2019.11.27.07.18.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 07:18:54 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D386C40D3E; Wed, 27 Nov 2019 12:18:52 -0300 (-03)
+Date:   Wed, 27 Nov 2019 12:18:52 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 2/2] perf script: Fix invalid LBR/binary mismatch error
+Message-ID: <20191127151852.GH22719@kernel.org>
+References: <20191127095631.15663-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7496fee6-f91a-4b08-3b57-08d7734d13f4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2019 15:18:37.8483
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0GiYiJ9KuwCNM0FPGl2mm1ShbEodq4A42VgiZKPVJcMRLTQAUGVks5Qs+lIjNPrMeYle4WiutJFOP4JGii2Sqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6797
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127095631.15663-1-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IA0KDQo+ID4NCj4gPg0KPiA+IE9uIDIwLzExLzE5IDk6NTAgUE0sIEFsaW0gQWtodGFyIHdyb3Rl
-Og0KPiA+ID4gSGkgU2hlZWJhYg0KPiA+ID4NCj4gPiA+IE9uIFR1ZSwgTm92IDE5LCAyMDE5IGF0
-IDEyOjM4IFBNIHNoZWViYWIgPHNoZWViYWJAY2FkZW5jZS5jb20+DQo+IHdyb3RlOg0KPiA+ID4+
-DQo+ID4gPj4gQmFja3VwIEw0IGF0dHJpYnV0ZXMgZHVpcm5nIG1hbnVhbCBoaWJlcm44IGVudHJ5
-IGFuZCByZXN0b3JlIHRoZSBMNA0KPiA+ID4+IGF0dHJpYnV0ZXMgb24gbWFudWFsIGhpYmVybjgg
-ZXhpdCBhcyBwZXIgSkVTRDIyMEMuDQo+ID4gPj4NCj4gPiA+IENhbiB5b3UgcG9pbnQgbWUgdG8g
-dGhlIHJlbGV2YW50IHNlY3Rpb24gb24gdGhlIHNwZWM/DQo+ID4gPg0KPiA+DQo+ID4gUGVyIEpF
-U0QgMjIwQyA5LjQgVW5pUHJvL1VGUyBDb250cm9sIEludGVyZmFjZSAoQ29udHJvbCBQbGFuZSk6
-DQo+ID4NCj4gPiAiTk9URSBBZnRlciBleGl0IGZyb20gSGliZXJuYXRlIGFsbCBVbmlQcm8gVHJh
-bnNwb3J0IExheWVyIGF0dHJpYnV0ZXMNCj4gPiAoaW5jbHVkaW5nDQo+ID4gTDQgVF9QZWVyRGV2
-aWNlSUQsDQo+ID4NCj4gPiBMNCBUX1BlZXJDUG9ydElELCBMNCBUX0Nvbm5lY3Rpb25TdGF0ZSwg
-ZXRjLikgd2lsbCBiZSByZXNldCB0byB0aGVpciByZXNldA0KPiB2YWx1ZXMuDQo+ID4gQWxsIHJl
-cXVpcmVkIGF0dHJpYnV0ZXMNCj4gPg0KPiA+IG11c3QgYmUgcmVzdG9yZWQgcHJvcGVybHkgb24g
-Ym90aCBlbmRzIGJlZm9yZSBjb21tdW5pY2F0aW9uIGNhbiByZXN1bWUuIg0KPiA+DQo+ID4gQnV0
-IGl0cyBub3QgY2xlYXIgd2hldGhlciBTVyBuZWVkcyB0byByZXN0b3JlIHRoZXNlIGF0dHJpYnV0
-ZXMgb3INCj4gPiBoYXJkd2FyZQ0KPiA+DQo+IFRoYW5rcyBWaWduZXNoIGZvciBwb2ludGluZyBv
-dXQgdGhlIHNwZWMgc2VjdGlvbiwgeWVzIGl0IGlzIG5vdCBjbGVhciwgb25lIHdheSB0bw0KPiBj
-b25maXJtIHRoaXMgaXMganVzdCBieSByZWFkIEw0IGF0dHJpYnV0ZXMgYmVmb3JlIEFuZCBhZnRl
-ciBoaW5lcm44IGVudHJ5L2V4aXQuDQo+IChhdCBsZWFzdCBpbiB0aGUgY3VycmVudCBwbGF0Zm9y
-bSBpdCBpcyBub3QgYmVpbmcgZG9uZSkgQUZBIHRoaXMgcGF0Y2ggaXMgY29uY2VybnMsDQo+IHRo
-aXMgbG9va3Mgb2sgdG8gbWUuDQo+IEAgQXZyaSAsIGFueSB0aG91Z2h0IG9uIHRoaXM/DQpZZXMs
-IGl0IGxvb2tzIGZpbmUuDQoNClRoYW5rcywNCkF2cmkNCg0KDQo=
+Em Wed, Nov 27, 2019 at 11:56:31AM +0200, Adrian Hunter escreveu:
+> The 'len' returned by grab_bb() includes an extra MAXINSN bytes to allow
+> for the last instruction, so the the final 'offs' will not be 'len'.
+> Fix the error condition logic accordingly.
+> 
+> Before:
+> 
+>   $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
+>   [ perf record: Woken up 19 times to write data ]
+>   [ perf record: Captured and wrote 2.274 MB perf.data ]
+>   $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
+>             grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
+>         bmexec+2485:
+>         00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
+>         00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
+>         00005641d5806bd6                        add %rdi, %rax
+>         00005641d5806bd9                        movzxb  -0x1(%rax), %edx
+>         00005641d5806bdd                        cmp %rax, %r14
+>         00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
+>         mismatch of LBR data and executable
+>         00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
+> 
+> After:
+> 
+>   $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
+>             grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
+>         bmexec+2485:
+>         00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
+>         00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
+>         00005641d5806bd6                        add %rdi, %rax
+>         00005641d5806bd9                        movzxb  -0x1(%rax), %edx
+>         00005641d5806bdd                        cmp %rax, %r14
+>         00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
+>         00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
+>         00005641d58069c6                        add %rax, %rdi
+
+Thanks, applied,
+
+- Arnaldo
+ 
+> Reported-by: Andi Kleen <ak@linux.intel.com>
+> Fixes: e98df280bc2a ("perf script brstackinsn: Fix recovery from LBR/binary mismatch")
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/builtin-script.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index e8db26b9b29e..e2406b291c1c 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -1126,7 +1126,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  				insn++;
+>  			}
+>  		}
+> -		if (off != (unsigned)len)
+> +		if (off != end - start)
+>  			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
+>  	}
+>  
+> -- 
+> 2.17.1
+
+-- 
+
+- Arnaldo
