@@ -5,50 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE3DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671D1C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6523921556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D74C21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889781;
-	bh=fD3i4LF56F5nF67qI1WpmKo+F44vFHcpbntZ+Ul8q2o=;
+	s=default; t=1574889785;
+	bh=v2Lr6UhqiPVvG1GHncj3T4v9MmrlPcSOl5zQ1vp0id0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DBU/Grxah91e5HYBQQUtNToGydiLf98YRUbmk34wj6lBHEpXpfpCIoao2Bbyl3kQS
-	 Q2FucZKvHtrxj7RqeZ/ZjXpBZ8GOV3tSmJN/eqxwb2Vct22OfjRacChBdP6BgP2r+O
-	 CXZolRcyt00nkEv6imtJB9GJHOMUr7Iv1CFnyKlE=
+	b=1UF728rmKCRtXGNIxhXXNrXZ6qcB6bgANEsFzkzXztgNRfUbF2QtQPKfXsvOvcehq
+	 yTWXCsW1Ht7i0rMj2gkuqRlxkMEKr08YL1pmgElONQB2j3nfJWznVfKnoz6YQO2J4y
+	 tXDaiZ+FGx5DZ2owQcrOEBFugJzc138vsIPI7Xds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732236AbfK0VFE (ORCPT
+        id S1732556AbfK0VXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:05:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58596 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:23:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732228AbfK0VE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:04:59 -0500
+        id S1727468AbfK0VFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:05:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 661412166E;
-        Wed, 27 Nov 2019 21:04:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BAAB215F1;
+        Wed, 27 Nov 2019 21:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888698;
-        bh=fD3i4LF56F5nF67qI1WpmKo+F44vFHcpbntZ+Ul8q2o=;
+        s=default; t=1574888707;
+        bh=v2Lr6UhqiPVvG1GHncj3T4v9MmrlPcSOl5zQ1vp0id0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yLoSy5Cmo4tckbcgd9PLFtH0lf20zk16shtFQE6bFiwUuRBef0ritpk8FxpJq31H1
-         rmHJmV0bCW99DfptZazYfIyteqNUbOJVbG4NTvorPkgJ3/eRQTZLgnoJ6+aR0j3YRH
-         JPywK1NezUsWbfdyLqn0efjt9/GV5MZg9xt3HZaE=
+        b=dDRHbfyXr9z26QK/JcM5flg7ze0J6WqwTqnxdw4jxHSAsaOjH1ekHHb66wPPiojGD
+         H19t+ytahxYX52b1A5n9eaqhAZWIuD4wW17IatWiJOXCvnTz+HLZ1JvygujE0PP/df
+         2+T6czjFYA+KllBaIeAkfnv6y2+0vFjrA1BFaE0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Mike Galbraith <efault@gmx.de>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 192/306] nvme-pci: fix conflicting p2p resource adds
-Date:   Wed, 27 Nov 2019 21:30:42 +0100
-Message-Id: <20191127203129.250504127@linuxfoundation.org>
+Subject: [PATCH 4.19 195/306] mm: handle no memcg case in memcg_kmem_charge() properly
+Date:   Wed, 27 Nov 2019 21:30:45 +0100
+Message-Id: <20191127203129.442793037@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,76 +67,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <keith.busch@intel.com>
+From: Roman Gushchin <guro@fb.com>
 
-[ Upstream commit 9fe5c59ff6a1e5e26a39b75489a1420e7eaaf0b1 ]
+[ Upstream commit e68599a3c3ad0f3171a7cb4e48aa6f9a69381902 ]
 
-The nvme pci driver had been adding its CMB resource to the P2P DMA
-subsystem everytime on on a controller reset. This results in the
-following warning:
+Mike Galbraith reported a regression caused by the commit 9b6f7e163cd0
+("mm: rework memcg kernel stack accounting") on a system with
+"cgroup_disable=memory" boot option: the system panics with the following
+stack trace:
 
-    ------------[ cut here ]------------
-    nvme 0000:00:03.0: Conflicting mapping in same section
-    WARNING: CPU: 7 PID: 81 at kernel/memremap.c:155 devm_memremap_pages+0xa6/0x380
-    ...
-    Call Trace:
-     pci_p2pdma_add_resource+0x153/0x370
-     nvme_reset_work+0x28c/0x17b1 [nvme]
-     ? add_timer+0x107/0x1e0
-     ? dequeue_entity+0x81/0x660
-     ? dequeue_entity+0x3b0/0x660
-     ? pick_next_task_fair+0xaf/0x610
-     ? __switch_to+0xbc/0x410
-     process_one_work+0x1cf/0x350
-     worker_thread+0x215/0x3d0
-     ? process_one_work+0x350/0x350
-     kthread+0x107/0x120
-     ? kthread_park+0x80/0x80
-     ret_from_fork+0x1f/0x30
-    ---[ end trace f7ea76ac6ee72727 ]---
-    nvme nvme0: failed to register the CMB
+  BUG: unable to handle kernel NULL pointer dereference at 00000000000000f8
+  PGD 0 P4D 0
+  Oops: 0002 [#1] PREEMPT SMP PTI
+  CPU: 0 PID: 1 Comm: systemd Not tainted 4.19.0-preempt+ #410
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180531_142017-buildhw-08.phx2.fed4
+  RIP: 0010:page_counter_try_charge+0x22/0xc0
+  Code: 41 5d c3 c3 0f 1f 40 00 0f 1f 44 00 00 48 85 ff 0f 84 a7 00 00 00 41 56 48 89 f8 49 89 fe 49
+  Call Trace:
+   try_charge+0xcb/0x780
+   memcg_kmem_charge_memcg+0x28/0x80
+   memcg_kmem_charge+0x8b/0x1d0
+   copy_process.part.41+0x1ca/0x2070
+   _do_fork+0xd7/0x3d0
+   do_syscall_64+0x5a/0x180
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-This patch fixes this by registering the CMB with P2P only once.
+The problem occurs because get_mem_cgroup_from_current() returns the NULL
+pointer if memory controller is disabled.  Let's check if this is a case
+at the beginning of memcg_kmem_charge() and just return 0 if
+mem_cgroup_disabled() returns true.  This is how we handle this case in
+many other places in the memory controller code.
 
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: http://lkml.kernel.org/r/20181029215123.17830-1-guro@fb.com
+Fixes: 9b6f7e163cd0 ("mm: rework memcg kernel stack accounting")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Reported-by: Mike Galbraith <efault@gmx.de>
+Acked-by: Rik van Riel <riel@surriel.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ mm/memcontrol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 9479c0db08f62..124f41157173e 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1652,6 +1652,9 @@ static void nvme_map_cmb(struct nvme_dev *dev)
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
- 	int bar;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 5af38d8a9afd3..3a3d109dce215 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2678,7 +2678,7 @@ int memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
+ 	struct mem_cgroup *memcg;
+ 	int ret = 0;
  
-+	if (dev->cmb_size)
-+		return;
-+
- 	dev->cmbsz = readl(dev->bar + NVME_REG_CMBSZ);
- 	if (!dev->cmbsz)
- 		return;
-@@ -2136,7 +2139,6 @@ static void nvme_pci_disable(struct nvme_dev *dev)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+-	if (memcg_kmem_bypass())
++	if (mem_cgroup_disabled() || memcg_kmem_bypass())
+ 		return 0;
  
--	nvme_release_cmb(dev);
- 	pci_free_irq_vectors(pdev);
- 
- 	if (pci_is_enabled(pdev)) {
-@@ -2595,6 +2597,7 @@ static void nvme_remove(struct pci_dev *pdev)
- 	nvme_stop_ctrl(&dev->ctrl);
- 	nvme_remove_namespaces(&dev->ctrl);
- 	nvme_dev_disable(dev, true);
-+	nvme_release_cmb(dev);
- 	nvme_free_host_mem(dev);
- 	nvme_dev_remove_admin(dev);
- 	nvme_free_queues(dev, 0);
+ 	memcg = get_mem_cgroup_from_current();
 -- 
 2.20.1
 
