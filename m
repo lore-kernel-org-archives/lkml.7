@@ -2,104 +2,112 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C34C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379772053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:20:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TZil/3o0"
+	by mail.kernel.org (Postfix) with ESMTP id 091E920665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfK0LUV (ORCPT
+        id S1726540AbfK0LZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 06:20:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35847 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726194AbfK0LUV (ORCPT
+        Wed, 27 Nov 2019 06:25:40 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:41683 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbfK0LZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 06:20:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574853620;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=b1jwX0+kFyvJLoHZCjhoZfUDuQq3oSl9K34fOPDmtEs=;
-        b=TZil/3o0gFVi2NnAg9QKWnYnBj/BlprqgaduqLXtfUUqc04Epfa8EHtWSTiHViHADGuIon
-        /btjFx6+PNFvuMjI3evsKOPXYeXP2pEYFEwYe3sJTshFYmfizTo5H6LHN5Ffa/C2CoXGZb
-        AXGNnzDHo0ZNWHmrNaatmexdGZlLaNk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-E8e9PrJtO5K-UimWlnF5Lg-1; Wed, 27 Nov 2019 06:20:15 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 27 Nov 2019 06:25:39 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id CFD583C0579;
+        Wed, 27 Nov 2019 12:25:36 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id n11AOOZ_Mvdq; Wed, 27 Nov 2019 12:25:31 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CE19DBA3;
-        Wed, 27 Nov 2019 11:20:14 +0000 (UTC)
-Received: from localhost (holly.tpb.lab.eng.brq.redhat.com [10.43.134.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 460D819486;
-        Wed, 27 Nov 2019 11:20:13 +0000 (UTC)
-Date:   Wed, 27 Nov 2019 12:20:11 +0100
-From:   Miroslav Lichvar <mlichvar@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Prarit Bhargava <prarit@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Unreliable 11-minute RTC sync
-Message-ID: <20191127112011.GT2634@localhost>
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id D50FC3C00BE;
+        Wed, 27 Nov 2019 12:25:31 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 27 Nov
+ 2019 12:25:31 +0100
+Date:   Wed, 27 Nov 2019 12:25:28 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] checkpatch: whitelist Originally-by: signature
+Message-ID: <20191127112445.GA21836@vmlxhi-102.adit-jv.com>
+References: <20191115150202.15208-1-erosca@de.adit-jv.com>
+ <05ba4e29fb78885cf9abf7bfc87e0a7bcda099fe.camel@perches.com>
+ <20191115154627.GA2187@lxhi-065.adit-jv.com>
+ <20191115092943.7c79f81e@lwn.net>
+ <20191115172141.GA3085@lxhi-065.adit-jv.com>
+ <CAMuHMdUhPV2B4dpgpPogpFQPprX-VOCC5RuwLLv3MiHzp-pq3Q@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: E8e9PrJtO5K-UimWlnF5Lg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
+In-Reply-To: <CAMuHMdUhPV2B4dpgpPogpFQPprX-VOCC5RuwLLv3MiHzp-pq3Q@mail.gmail.com>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the system clock is synchronized (i.e. the STA_UNSYNC flag is
-cleared by NTP/PTP), the kernel is expected to copy the system time to
-the RTC every 11 minutes.
+Hi Geert,
 
-There are reports that it doesn't work. I checked some of my machines
-and indeed some have their RTC off by more than a second. IIRC this
-worked better few years ago.
+On Wed, Nov 27, 2019 at 10:25:29AM +0100, Geert Uytterhoeven wrote:
+[..]
+> On Fri, Nov 15, 2019 at 6:24 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+[..]
+> > I will give a real-life example. Say, I have some patches in my
+> > local tree and they've been developed by somebody who is no longer
+> > interested/paid to upstream those.
+> >
+> > I first submit those patches with the original authorship, plus my SoB.
+> > Then, the reviewers post their findings. I put my time into fixing those
+> > and re-testing the patch or the entire series. The final patch/series
+> > may look totally different compared to the original one.
+> >
+> > Which way would you suggest to give credits to the original author?
+> > I personally think that "Co-developed-by:" conveys the idea/feeling of
+> > "teaming up" with somebody, which doesn't happen in my example.
+> 
+> What I typically do is this:
+>   1. If the changes due to review are minor, I just add my SoB below the
+>      original SoB,
+>   2. If the changes are not insignificant, I also add a line "[geert: Did foo]"
+>      in between the original SoB and mine,
+>   3. If the patch needed a complete rewrite, I assume ownership, and add
+>      "Based on/inspired by ..." to the patch description to give credit.
+> 
+> Hope this helps (and is acceptable for other people ;-)
 
-In order for the RTC to be set precisely the update needs to happen at
-some fraction of the second (e.g. 0.5s on x86_64). Originally, the RTC
-was set only if it the update was scheduled correctly to one jiffie.
-Later this requirement was relaxed to 5 jiffies. It seems with current
-kernels that rarely happens. The update seems to be consistently late
-by tens of milliseconds, sometimes by hundreds of milliseconds. This
-repeats every second until an update is on time with some luck.
-Apparently, this may take days or longer.
+Thank you for your time to share the best practices from the heart of
+Linux kernel community. This looks like a reasonable blueprint to follow
+and I will personally bookmark and quote it whenever appropriate.
 
-I'm not sure if workqueues changed how they behave, or they now have
-more work to do, preventing the RTC update to be on time. I tried
-switching to the non-power-efficient wq and also the high priority wq.
-The former worked best in my tests, taking about 5 attempts on average
-to make an update. I suspect that may be specific to this machine and
-workload.
+The way I see "Originally-by" is that it attempts to replace the free
+wording implied at #3 (i.e. patch rewrite case) and hence its benefit.
 
-I'm not sure what would be the best fix.
+The less words I have to creatively write by myself, the less errors
+I'll make, the less ambiguous my patch will be, the more time I'll have
+to dedicate to the important parts of the patch description (feature
+overview, bug reproduction, test scenario, etc).
 
-Some ideas:
-- relax the requirements on accuracy even more (e.g. 0.1 second)
-- limit the number of retries (e.g. to 5) and force the update on the
-  last one, no matter how inaccurate it is
-- measure the scheduling delay and try to compensate for it
-- randomize the requested delay
-- switch to timer
+I also understand the desire not to make the process more complicated
+than it needs to be. I expect the signature to still pop up here and
+there and whether it makes sense to whitelist it, time will tell.
 
-Suggestions?
-
---=20
-Miroslav Lichvar
-
+-- 
+Best Regards,
+Eugeniu
