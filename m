@@ -2,215 +2,266 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26F8C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1EEC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CEC20722
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6E32084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:36:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="I1TSdGL3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yHpRnVxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfK0Ice (ORCPT
+        id S1726296AbfK0IgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:32:34 -0500
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:35792 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfK0IcM (ORCPT
+        Wed, 27 Nov 2019 03:36:24 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44010 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfK0IgY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:32:12 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 572F03F5E0;
-        Wed, 27 Nov 2019 09:32:10 +0100 (CET)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=I1TSdGL3;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bHNccKRAXQug; Wed, 27 Nov 2019 09:32:05 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 4340D3F5BF;
-        Wed, 27 Nov 2019 09:32:05 +0100 (CET)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 0C26436060F;
-        Wed, 27 Nov 2019 09:32:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1574843523; bh=yW4Kv+tDJBfAXwh/Zhx3QElV1XLWl/OFJo8EITEcphM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I1TSdGL39WpjjsQ2vSeU9iiNq16d55INmsc+XWaIEanIkMa6S+WwcROTsKAJiRiVr
-         h7J04Wum3zSasmPtK2kGe8rGzik5iBffxWJWaoGfbvhuRIUzfweRmjRoKzd/FaaItI
-         FkY5sYwAlCsxxOaGRz1nLUbwSDOZe8fLn8494EKY=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-graphics-maintainer@vmware.com
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: [RFC PATCH 6/7] drm/ttm: Introduce a huge page aligning TTM range manager.
-Date:   Wed, 27 Nov 2019 09:31:19 +0100
-Message-Id: <20191127083120.34611-7-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191127083120.34611-1-thomas_os@shipmail.org>
-References: <20191127083120.34611-1-thomas_os@shipmail.org>
+        Wed, 27 Nov 2019 03:36:24 -0500
+Received: by mail-pf1-f195.google.com with SMTP id h14so436208pfe.10
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 00:36:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kEWlTxImZpdkwXhGS8325FceSNRBs8VLhunG13s9KAM=;
+        b=yHpRnVxIjSPnmIdbMbeu/tYzFBYDtKTTB287cO1KR1bARwSmREn/eQP74Bl7Af9/y8
+         a82ewmL2RBQDxl2XmBxTNBAL+KaxJmKAwlKSRl+2cOkk7//wvP6vjlBiIup/h7v2jo8V
+         hD3ZtLbo9ZCwivNiTAZq2pUpGLBvhYf0Fvj3PTlMiN0akT2u3kqKvVPIDeYgrbSC2Cb9
+         ERUMql/9D07dmErr5NA8VCMA753S+WHPa1jovOmvlhsanFxOuurKFWr5XnitU2n4yk0s
+         6g95m1QCflgnf2y6N/vMnCzgc3LucbF8wwRMWAlX49Y/dCTaJfA0G0K6Ehqx6Ay7WAr2
+         baJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kEWlTxImZpdkwXhGS8325FceSNRBs8VLhunG13s9KAM=;
+        b=p68p1vXZoIVaaZVPZYNd8TPidVWDmiSOnzN1AAs7iGDcG1jBnE9SSdK2zl/xZ56Xlk
+         8+Rv46yZpR1gIXU0qJgvnursy0UjA4TmnGwgMYCrqSruN5cSX/27Uw9e4psPBGVbjZxx
+         brGB763yTKD2LeusSujW7l9ZyAg4AmFwDhCP25Sy+9SK8y72lk1gidK/FBCusiFeQ+7L
+         fCZdUj1k1iJW8RrJ0v4UUXmmIlKQiROOODcYYqS3b2yPTI+jw7wmpTQaLysLlwjapcuU
+         3dSBavv7qU/CdsQa4fSvqjvsBlojYmXZCQ0yu+s3voyn3lh6eBmuizG7dOBJUFbSt260
+         IWMw==
+X-Gm-Message-State: APjAAAWbxB0t2R1R6TQUutDdf0j9CjBmFdMkr0YFLws2fnyAa308r1y/
+        +Jcz8biA5tMSVtVjtX0YNQVpvg==
+X-Google-Smtp-Source: APXvYqz6ciA/bE2sIdxV8IrR+vllOp4Mb3eFxMKadK3NK074FLo5rfjIe4sBJET8JrQj229M/EAXpQ==
+X-Received: by 2002:a63:1b1f:: with SMTP id b31mr3451053pgb.177.1574843782900;
+        Wed, 27 Nov 2019 00:36:22 -0800 (PST)
+Received: from localhost ([122.171.112.123])
+        by smtp.gmail.com with ESMTPSA id k24sm15884442pfk.63.2019.11.27.00.36.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Nov 2019 00:36:21 -0800 (PST)
+Date:   Wed, 27 Nov 2019 14:06:19 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, fan.chen@mediatek.com
+Subject: Re: [v5, PATCH 4/5] cpufreq: mediatek: add opp notification for SVS
+ support
+Message-ID: <20191127083619.etocnhpyyut3hzwq@vireshk-i7>
+References: <1574769046-28449-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1574769046-28449-5-git-send-email-andrew-sh.cheng@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574769046-28449-5-git-send-email-andrew-sh.cheng@mediatek.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+On 26-11-19, 19:50, Andrew-sh.Cheng wrote:
+> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
+> index 4b0cc50dd93b..7c37ab31230a 100644
+> --- a/drivers/cpufreq/mediatek-cpufreq.c
+> +++ b/drivers/cpufreq/mediatek-cpufreq.c
+> @@ -42,6 +42,10 @@ struct mtk_cpu_dvfs_info {
+>  	struct list_head list_head;
+>  	int intermediate_voltage;
+>  	bool need_voltage_tracking;
+> +	struct mutex lock; /* avoid notify and policy race condition */
 
-Using huge page-table entries require that the start of a buffer object
-is huge page size aligned. So introduce a ttm_bo_man_get_node_huge()
-function that attempts to accomplish this for allocations that are larger
-than the huge page size, and provide a new range-manager instance that
-uses that function.
+Will a read-write lock be better suited here for performance reasons ?
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
----
- drivers/gpu/drm/ttm/ttm_bo_manager.c | 92 ++++++++++++++++++++++++++++
- include/drm/ttm/ttm_bo_driver.h      |  1 +
- 2 files changed, 93 insertions(+)
+> +	struct notifier_block opp_nb;
+> +	int opp_cpu;
+> +	unsigned long opp_freq;
+>  };
+>  
+>  static LIST_HEAD(dvfs_info_list);
+> @@ -231,6 +235,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  	vproc = dev_pm_opp_get_voltage(opp);
+>  	dev_pm_opp_put(opp);
+>  
+> +	mutex_lock(&info->lock);
+>  	/*
+>  	 * If the new voltage or the intermediate voltage is higher than the
+>  	 * current voltage, scale up voltage first.
+> @@ -242,6 +247,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  			pr_err("cpu%d: failed to scale up voltage!\n",
+>  			       policy->cpu);
+>  			mtk_cpufreq_set_voltage(info, old_vproc);
+> +			mutex_unlock(&info->lock);
+>  			return ret;
+>  		}
+>  	}
+> @@ -253,6 +259,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  		       policy->cpu);
+>  		mtk_cpufreq_set_voltage(info, old_vproc);
+>  		WARN_ON(1);
+> +		mutex_unlock(&info->lock);
+>  		return ret;
+>  	}
+>  
+> @@ -263,6 +270,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  		       policy->cpu);
+>  		clk_set_parent(cpu_clk, armpll);
+>  		mtk_cpufreq_set_voltage(info, old_vproc);
+> +		mutex_unlock(&info->lock);
+>  		return ret;
+>  	}
+>  
+> @@ -273,6 +281,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  		       policy->cpu);
+>  		mtk_cpufreq_set_voltage(info, inter_vproc);
+>  		WARN_ON(1);
+> +		mutex_unlock(&info->lock);
+>  		return ret;
+>  	}
+>  
+> @@ -288,15 +297,75 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  			clk_set_parent(cpu_clk, info->inter_clk);
+>  			clk_set_rate(armpll, old_freq_hz);
+>  			clk_set_parent(cpu_clk, armpll);
+> +			mutex_unlock(&info->lock);
+>  			return ret;
+>  		}
+>  	}
+>  
+> +	info->opp_freq = freq_hz;
+> +	mutex_unlock(&info->lock);
+> +
+>  	return 0;
+>  }
+>  
+>  #define DYNAMIC_POWER "dynamic-power-coefficient"
+>  
+> +static int mtk_cpufreq_opp_notifier(struct notifier_block *nb,
+> +				    unsigned long event, void *data)
+> +{
+> +	struct dev_pm_opp *opp = data;
+> +	struct dev_pm_opp *opp_item;
+> +	struct mtk_cpu_dvfs_info *info =
+> +		container_of(nb, struct mtk_cpu_dvfs_info, opp_nb);
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_manager.c b/drivers/gpu/drm/ttm/ttm_bo_manager.c
-index 18d3debcc949..26aa1a2ae7f1 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_manager.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_manager.c
-@@ -89,6 +89,89 @@ static int ttm_bo_man_get_node(struct ttm_mem_type_manager *man,
- 	return 0;
- }
- 
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+static int ttm_bo_insert_aligned(struct drm_mm *mm, struct drm_mm_node *node,
-+				 unsigned long align_pages,
-+				 const struct ttm_place *place,
-+				 struct ttm_mem_reg *mem,
-+				 unsigned long lpfn,
-+				 enum drm_mm_insert_mode mode)
-+{
-+	if (align_pages >= mem->page_alignment &&
-+	    (!mem->page_alignment || align_pages % mem->page_alignment == 0)) {
-+		return drm_mm_insert_node_in_range(mm, node,
-+						   mem->num_pages,
-+						   align_pages, 0,
-+						   place->fpfn, lpfn, mode);
-+	}
-+
-+	return -ENOSPC;
-+}
-+
-+static int ttm_bo_man_get_node_huge(struct ttm_mem_type_manager *man,
-+				    struct ttm_buffer_object *bo,
-+				    const struct ttm_place *place,
-+				    struct ttm_mem_reg *mem)
-+{
-+	struct ttm_range_manager *rman = (struct ttm_range_manager *) man->priv;
-+	struct drm_mm *mm = &rman->mm;
-+	struct drm_mm_node *node;
-+	unsigned long align_pages;
-+	unsigned long lpfn;
-+	enum drm_mm_insert_mode mode = DRM_MM_INSERT_BEST;
-+	int ret;
-+
-+	node = kzalloc(sizeof(*node), GFP_KERNEL);
-+	if (!node)
-+		return -ENOMEM;
-+
-+	lpfn = place->lpfn;
-+	if (!lpfn)
-+		lpfn = man->size;
-+
-+	mode = DRM_MM_INSERT_BEST;
-+	if (place->flags & TTM_PL_FLAG_TOPDOWN)
-+		mode = DRM_MM_INSERT_HIGH;
-+
-+	spin_lock(&rman->lock);
-+	if (IS_ENABLED(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)) {
-+		align_pages = (HPAGE_PUD_SIZE >> PAGE_SHIFT);
-+		if (mem->num_pages >= align_pages) {
-+			ret = ttm_bo_insert_aligned(mm, node, align_pages,
-+						    place, mem, lpfn, mode);
-+			if (!ret)
-+				goto found_unlock;
-+		}
-+	}
-+
-+	align_pages = (HPAGE_PMD_SIZE >> PAGE_SHIFT);
-+	if (mem->num_pages >= align_pages) {
-+		ret = ttm_bo_insert_aligned(mm, node, align_pages, place, mem,
-+					    lpfn, mode);
-+		if (!ret)
-+			goto found_unlock;
-+	}
-+
-+	ret = drm_mm_insert_node_in_range(mm, node, mem->num_pages,
-+					  mem->page_alignment, 0,
-+					  place->fpfn, lpfn, mode);
-+found_unlock:
-+	spin_unlock(&rman->lock);
-+
-+	if (unlikely(ret)) {
-+		kfree(node);
-+	} else {
-+		mem->mm_node = node;
-+		mem->start = node->start;
-+	}
-+
-+	return 0;
-+}
-+#else
-+#define ttm_bo_man_get_node_huge ttm_bo_man_get_node
-+#endif
-+
-+
- static void ttm_bo_man_put_node(struct ttm_mem_type_manager *man,
- 				struct ttm_mem_reg *mem)
- {
-@@ -154,3 +237,12 @@ const struct ttm_mem_type_manager_func ttm_bo_manager_func = {
- 	.debug = ttm_bo_man_debug
- };
- EXPORT_SYMBOL(ttm_bo_manager_func);
-+
-+const struct ttm_mem_type_manager_func ttm_bo_manager_huge_func = {
-+	.init = ttm_bo_man_init,
-+	.takedown = ttm_bo_man_takedown,
-+	.get_node = ttm_bo_man_get_node_huge,
-+	.put_node = ttm_bo_man_put_node,
-+	.debug = ttm_bo_man_debug
-+};
-+EXPORT_SYMBOL(ttm_bo_manager_huge_func);
-diff --git a/include/drm/ttm/ttm_bo_driver.h b/include/drm/ttm/ttm_bo_driver.h
-index cac7a8a0825a..868bd0d4be6a 100644
---- a/include/drm/ttm/ttm_bo_driver.h
-+++ b/include/drm/ttm/ttm_bo_driver.h
-@@ -888,5 +888,6 @@ int ttm_bo_pipeline_gutting(struct ttm_buffer_object *bo);
- pgprot_t ttm_io_prot(uint32_t caching_flags, pgprot_t tmp);
- 
- extern const struct ttm_mem_type_manager_func ttm_bo_manager_func;
-+extern const struct ttm_mem_type_manager_func ttm_bo_manager_huge_func;
- 
- #endif
+Do the assignment after all definitions, instead of awkwardly breaking
+the line here.
+
+> +	unsigned long freq, volt;
+> +	struct cpufreq_policy *policy;
+> +	int ret = 0;
+> +
+> +	if (event == OPP_EVENT_ADJUST_VOLTAGE) {
+> +		freq = dev_pm_opp_get_freq(opp);
+> +
+> +		mutex_lock(&info->lock);
+> +		if (info->opp_freq == freq) {
+> +			volt = dev_pm_opp_get_voltage(opp);
+> +			ret = mtk_cpufreq_set_voltage(info, volt);
+> +			if (ret)
+> +				dev_err(info->cpu_dev, "failed to scale voltage: %d\n",
+> +					ret);
+> +		}
+> +		mutex_unlock(&info->lock);
+> +	} else if (event == OPP_EVENT_DISABLE) {
+> +		freq = info->opp_freq;
+> +		opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev, &freq);
+
+name it new_opp instead of opp_item.
+
+> +		if (!IS_ERR(opp_item))
+> +			dev_pm_opp_put(opp_item);
+> +		else
+> +			freq = 0;
+> +
+
+What is the purpose of the above code ?
+
+> +		/* case of current opp is disabled */
+> +		if (freq == 0 || freq != info->opp_freq) {
+> +			// find an enable opp item
+
+Use proper commenting style please.
+
+> +			freq = 1;
+> +			opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev,
+> +							     &freq);
+> +			if (!IS_ERR(opp_item)) {
+> +				dev_pm_opp_put(opp_item);
+> +				policy = cpufreq_cpu_get(info->opp_cpu);
+> +				if (policy) {
+> +					cpufreq_driver_target(policy,
+> +						freq / 1000,
+> +						CPUFREQ_RELATION_L);
+
+Why don't you simply call this instead of all the code in the else
+block ?
+
+> +					cpufreq_cpu_put(policy);
+> +				}
+> +			} else {
+> +				pr_err("%s: all opp items are disabled\n",
+> +				       __func__);
+> +			}
+> +		}
+> +	}
+> +
+> +	return notifier_from_errno(ret);
+> +}
+> +
+>  static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>  {
+>  	struct device *cpu_dev;
+> @@ -383,11 +452,21 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>  	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
+>  	dev_pm_opp_put(opp);
+>  
+> +	info->opp_cpu = cpu;
+> +	info->opp_nb.notifier_call = mtk_cpufreq_opp_notifier;
+> +	ret = dev_pm_opp_register_notifier(cpu_dev, &info->opp_nb);
+> +	if (ret) {
+> +		pr_warn("cannot register opp notification\n");
+> +		goto out_free_opp_table;
+> +	}
+> +
+> +	mutex_init(&info->lock);
+>  	info->cpu_dev = cpu_dev;
+>  	info->proc_reg = proc_reg;
+>  	info->sram_reg = IS_ERR(sram_reg) ? NULL : sram_reg;
+>  	info->cpu_clk = cpu_clk;
+>  	info->inter_clk = inter_clk;
+> +	info->opp_freq = clk_get_rate(cpu_clk);
+>  
+>  	/*
+>  	 * If SRAM regulator is present, software "voltage tracking" is needed
+> -- 
+> 2.12.5
+
 -- 
-2.21.0
-
+viresh
