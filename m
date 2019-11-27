@@ -2,202 +2,154 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9D4C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924D0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F6720678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574848152;
-	bh=nJvgfziQZ5qxpPdpQsa/lvhi0nOmAu/aS/yU9C8g9Mo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GxtUmIZZrvUrQxcvljZ3joufhM5RSW6o98zgEt/05Cf3Yynt/lKWwUNgnaPUBnn8V
-	 4TIGLB/VhS9qiJEYT1vqe14LgocuNA4sVb8emjEOSNcaVwjmLk5NnSfva+yPzJoQkO
-	 RVnWV7F21dbs0Kf8G1rhalOb5ijr2PbB2qkNVcsk=
+	by mail.kernel.org (Postfix) with ESMTP id 6E6A120678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfK0JtF convert rfc822-to-8bit (ORCPT
+        id S1727126AbfK0JtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 04:49:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53927 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726920AbfK0JtC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 04:49:02 -0500
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-N8QNudZsNuOKTM7DqNQzcw-1; Wed, 27 Nov 2019 04:49:00 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB3FB107ACE3;
-        Wed, 27 Nov 2019 09:48:57 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A52305D6C8;
-        Wed, 27 Nov 2019 09:48:54 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: [PATCH 3/3] bpftool: Allow to link libbpf dynamically
-Date:   Wed, 27 Nov 2019 10:48:37 +0100
-Message-Id: <20191127094837.4045-4-jolsa@kernel.org>
-In-Reply-To: <20191127094837.4045-1-jolsa@kernel.org>
-References: <20191127094837.4045-1-jolsa@kernel.org>
+        Wed, 27 Nov 2019 04:49:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53326 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727110AbfK0JtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 04:49:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 42736B1DF;
+        Wed, 27 Nov 2019 09:49:06 +0000 (UTC)
+Date:   Wed, 27 Nov 2019 10:49:00 +0100
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Breno Leitao <leitao@debian.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Romero <gromero@linux.ibm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 29/35] powerpc/perf: remove current_is_64bit()
+Message-ID: <20191127094900.GA11661@kitsune.suse.cz>
+References: <cover.1574798487.git.msuchanek@suse.de>
+ <83795e9690ad8b51a2d991919bc102351a3bbb20.1574798487.git.msuchanek@suse.de>
+ <ecceebf5-391a-c75d-28a7-44623adc06e8@c-s.fr>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: N8QNudZsNuOKTM7DqNQzcw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ecceebf5-391a-c75d-28a7-44623adc06e8@c-s.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we support only static linking with kernel's libbpf
-(tools/lib/bpf). This patch adds LIBBPF_DYNAMIC compile variable
-that triggers libbpf detection and bpf dynamic linking:
+On Wed, Nov 27, 2019 at 06:41:09AM +0100, Christophe Leroy wrote:
+> 
+> 
+> Le 26/11/2019 à 21:13, Michal Suchanek a écrit :
+> > Since commit ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
+> > current_is_64bit() is quivalent to !is_32bit_task().
+> > Remove the redundant function.
+> > 
+> > Link: https://github.com/linuxppc/issues/issues/275
+> > Link: https://lkml.org/lkml/2019/9/12/540
+> > 
+> > Fixes: linuxppc#275
+> > Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> 
+> This change is already in powerpc/next, see https://github.com/linuxppc/linux/commit/42484d2c0f82b666292faf6668c77b49a3a04bc0
 
-  $ make -C tools/bpf/bpftool make LIBBPF_DYNAMIC=1
+Right, needs rebase.
 
-If libbpf is not installed, build (with LIBBPF_DYNAMIC=1) stops with:
+Thanks
 
-  $ make -C tools/bpf/bpftool LIBBPF_DYNAMIC=1
-    Auto-detecting system features:
-    ...                        libbfd: [ on  ]
-    ...        disassembler-four-args: [ on  ]
-    ...                          zlib: [ on  ]
-    ...                        libbpf: [ OFF ]
-
-  Makefile:102: *** Error: libbpf-devel is missing, please install it.  Stop.
-
-Adding specific bpftool's libbpf check for libbpf_netlink_open (LIBBPF_0.0.6)
-which is the latest we need for bpftool at the moment.
-
-Adding LIBBPF_DIR compile variable to allow linking with
-libbpf installed into specific directory:
-
-  $ make -C tools/lib/bpf/ prefix=/tmp/libbpf/ install_lib install_headers
-  $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/libbpf/
-
-It might be needed to clean build tree first because features
-framework does not detect the change properly:
-
-  $ make -C tools/build/feature clean
-  $ make -C tools/bpf/bpftool/ clean
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/bpf/bpftool/Makefile        | 40 ++++++++++++++++++++++++++++++-
- tools/build/feature/test-libbpf.c |  9 +++++++
- 2 files changed, 48 insertions(+), 1 deletion(-)
-
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index 39bc6f0f4f0b..2b6ed08cb31e 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -1,6 +1,15 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+# LIBBPF_DYNAMIC to enable libbpf dynamic linking.
-+
- include ../../scripts/Makefile.include
- include ../../scripts/utilities.mak
-+include ../../scripts/Makefile.arch
-+
-+ifeq ($(LP64), 1)
-+  libdir_relative = lib64
-+else
-+  libdir_relative = lib
-+endif
- 
- ifeq ($(srctree),)
- srctree := $(patsubst %/,%,$(dir $(CURDIR)))
-@@ -55,7 +64,7 @@ ifneq ($(EXTRA_LDFLAGS),)
- LDFLAGS += $(EXTRA_LDFLAGS)
- endif
- 
--LIBS = $(LIBBPF) -lelf -lz
-+LIBS = -lelf -lz
- 
- INSTALL ?= install
- RM ?= rm -f
-@@ -64,6 +73,23 @@ FEATURE_USER = .bpftool
- FEATURE_TESTS = libbfd disassembler-four-args reallocarray zlib
- FEATURE_DISPLAY = libbfd disassembler-four-args zlib
- 
-+ifdef LIBBPF_DYNAMIC
-+  # Add libbpf check with the flags to ensure bpftool
-+  # specific version is detected.
-+  FEATURE_CHECK_CFLAGS-libbpf := -DBPFTOOL
-+  FEATURE_TESTS   += libbpf
-+  FEATURE_DISPLAY += libbpf
-+
-+  # for linking with debug library run:
-+  # make LIBBPF_DYNAMIC=1 LIBBPF_DIR=/opt/libbpf
-+  ifdef LIBBPF_DIR
-+    LIBBPF_CFLAGS  := -I$(LIBBPF_DIR)/include
-+    LIBBPF_LDFLAGS := -L$(LIBBPF_DIR)/$(libdir_relative)
-+    FEATURE_CHECK_CFLAGS-libbpf  := $(LIBBPF_CFLAGS)
-+    FEATURE_CHECK_LDFLAGS-libbpf := $(LIBBPF_LDFLAGS)
-+  endif
-+endif
-+
- check_feat := 1
- NON_CHECK_FEAT_TARGETS := clean uninstall doc doc-clean doc-install doc-uninstall
- ifdef MAKECMDGOALS
-@@ -88,6 +114,18 @@ ifeq ($(feature-reallocarray), 0)
- CFLAGS += -DCOMPAT_NEED_REALLOCARRAY
- endif
- 
-+ifdef LIBBPF_DYNAMIC
-+  ifeq ($(feature-libbpf), 1)
-+    LIBS    += -lbpf
-+    CFLAGS  += $(LIBBPF_CFLAGS)
-+    LDFLAGS += $(LIBBPF_LDFLAGS)
-+  else
-+    dummy := $(error Error: No libbpf devel library found, please install libbpf-devel)
-+  endif
-+else
-+  LIBS += $(LIBBPF)
-+endif
-+
- include $(wildcard $(OUTPUT)*.d)
- 
- all: $(OUTPUT)bpftool
-diff --git a/tools/build/feature/test-libbpf.c b/tools/build/feature/test-libbpf.c
-index a508756cf4cc..93566d105a64 100644
---- a/tools/build/feature/test-libbpf.c
-+++ b/tools/build/feature/test-libbpf.c
-@@ -3,5 +3,14 @@
- 
- int main(void)
- {
-+#ifdef BPFTOOL
-+	/*
-+	 * libbpf_netlink_open (LIBBPF_0.0.6) is the latest
-+	 * we need for bpftool at the moment
-+	 */
-+	libbpf_netlink_open(NULL);
-+	return 0;
-+#else
- 	return bpf_object__open("test") ? 0 : -1;
-+#endif
- }
--- 
-2.21.0
-
+Michal
+> 
+> Christophe
+> 
+> > ---
+> >   arch/powerpc/perf/callchain.c | 17 +----------------
+> >   1 file changed, 1 insertion(+), 16 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+> > index c84bbd4298a0..35d542515faf 100644
+> > --- a/arch/powerpc/perf/callchain.c
+> > +++ b/arch/powerpc/perf/callchain.c
+> > @@ -284,16 +284,6 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+> >   	}
+> >   }
+> > -static inline int current_is_64bit(void)
+> > -{
+> > -	/*
+> > -	 * We can't use test_thread_flag() here because we may be on an
+> > -	 * interrupt stack, and the thread flags don't get copied over
+> > -	 * from the thread_info on the main stack to the interrupt stack.
+> > -	 */
+> > -	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
+> > -}
+> > -
+> >   #else  /* CONFIG_PPC64 */
+> >   /*
+> >    * On 32-bit we just access the address and let hash_page create a
+> > @@ -321,11 +311,6 @@ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry
+> >   {
+> >   }
+> > -static inline int current_is_64bit(void)
+> > -{
+> > -	return 0;
+> > -}
+> > -
+> >   static inline int valid_user_sp(unsigned long sp, int is_64)
+> >   {
+> >   	if (!sp || (sp & 7) || sp > TASK_SIZE - 32)
+> > @@ -486,7 +471,7 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> >   void
+> >   perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+> >   {
+> > -	if (current_is_64bit())
+> > +	if (!is_32bit_task())
+> >   		perf_callchain_user_64(entry, regs);
+> >   	else
+> >   		perf_callchain_user_32(entry, regs);
+> > 
