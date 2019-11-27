@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA44C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4A6C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2794216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F86C2154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889594;
-	bh=eS1BJnBh8mOWUbVmRx/IREx1XEcFwiiQtlXaaqSffLE=;
+	s=default; t=1574889599;
+	bh=zCgDrU9ezIbzq7CMalImPFPEn0zCQPijFbbT/nGqanM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WC78XX6MnXNn4aW/M4OHe0f5Vqm3eDlauCtq0jdOqX//JUzyoZvR+2PoIMqT/Mh0h
-	 anibSIJHcdEcxG9x/6fS30gzVn+ToTMJAqU6G+SN5seUcOjDH0verldRWDzsl4smlA
-	 JYtAaErqQz5oN5LTLKDo+7WrfvZgI3+6BRPg9Z0s=
+	b=zCNjF2c+90ZN5y+i8LKkojSK6mXesYWGlJ7WHMXaeejSJC6YV3zY+wbhi5A4EyIHT
+	 JZIN/hDyMKJHcS60tZQkdwrcrSg43ijeAAlsXQ+pMm7e9GHhgXAKIFVTKyb9bZotyk
+	 vExo72o8v2kIU1Pqa8JPWd/FlGEo00lJ7EdG3rQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732339AbfK0VTx (ORCPT
+        id S1727766AbfK0VJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:19:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36818 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:09:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbfK0VJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:09:56 -0500
+        id S1732272AbfK0VJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:09:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E51F12176D;
-        Wed, 27 Nov 2019 21:09:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2403A2176D;
+        Wed, 27 Nov 2019 21:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888996;
-        bh=eS1BJnBh8mOWUbVmRx/IREx1XEcFwiiQtlXaaqSffLE=;
+        s=default; t=1574888983;
+        bh=zCgDrU9ezIbzq7CMalImPFPEn0zCQPijFbbT/nGqanM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ELUdncm9k8Ug1CyEyVRyd0YGQBr1H9dNtAO4NCP+hnU3plvmHkV5WfN5MIorUdLIa
-         6biuiPLcgUcJhzj3zNUHU7BzYtadijsAO54YvfdNIlSOK3yyCaX2CuL85VuNIT+1p5
-         DMVer54fWIInJgl/0te+DgxDDGwdd4IggfhGhw5s=
+        b=sNcmbRO163bWazM4EU2RRpeDVY8BQfrccoe64GODT0j0gKsgDKy0BFbCsg+h8G/zY
+         NXcQYRbj7PoUnE/6E+3/bIEEvcxVaK7ehMzf5LtNEvAAFuuz6D/GWZc+Pz/XciRT/d
+         0gMv+eRspThqvBjd/QsdwMgY1/wur03jN6OKGpcE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.3 41/95] Revert "Bluetooth: hci_ll: set operational frequency earlier"
-Date:   Wed, 27 Nov 2019 21:31:58 +0100
-Message-Id: <20191127202908.243531316@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.3 37/95] ath10k: restore QCA9880-AR1A (v1) detection
+Date:   Wed, 27 Nov 2019 21:31:54 +0100
+Message-Id: <20191127202902.258066364@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,89 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit cef456cd354ef485f12d57000c455e83e416a2b6 upstream.
+commit f8914a14623a79b73f72b2b1ee4cd9b2cb91b735 upstream.
 
-As nice as it would be to update firmware faster, that patch broke
-at least two different boards, an OMAP4+WL1285 based Motorola Droid
-4, as reported by Sebasian Reichel and the Logic PD i.MX6Q +
-WL1837MOD.
+This patch restores the old behavior that read
+the chip_id on the QCA988x before resetting the
+chip. This needs to be done in this order since
+the unsupported QCA988x AR1A chips fall off the
+bus when resetted. Otherwise the next MMIO Op
+after the reset causes a BUS ERROR and panic.
 
-This reverts commit a2e02f38eff84f199c8e32359eb213f81f270047.
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 1a7fecb766c8 ("ath10k: reset chip before reading chip_id in probe")
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/hci_ll.c |   39 ++++++++++++++++++---------------------
- 1 file changed, 18 insertions(+), 21 deletions(-)
+ drivers/net/wireless/ath/ath10k/pci.c |   36 +++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
---- a/drivers/bluetooth/hci_ll.c
-+++ b/drivers/bluetooth/hci_ll.c
-@@ -621,13 +621,6 @@ static int ll_setup(struct hci_uart *hu)
- 
- 	serdev_device_set_flow_control(serdev, true);
- 
--	if (hu->oper_speed)
--		speed = hu->oper_speed;
--	else if (hu->proto->oper_speed)
--		speed = hu->proto->oper_speed;
--	else
--		speed = 0;
--
- 	do {
- 		/* Reset the Bluetooth device */
- 		gpiod_set_value_cansleep(lldev->enable_gpio, 0);
-@@ -639,20 +632,6 @@ static int ll_setup(struct hci_uart *hu)
- 			return err;
- 		}
- 
--		if (speed) {
--			__le32 speed_le = cpu_to_le32(speed);
--			struct sk_buff *skb;
--
--			skb = __hci_cmd_sync(hu->hdev,
--					     HCI_VS_UPDATE_UART_HCI_BAUDRATE,
--					     sizeof(speed_le), &speed_le,
--					     HCI_INIT_TIMEOUT);
--			if (!IS_ERR(skb)) {
--				kfree_skb(skb);
--				serdev_device_set_baudrate(serdev, speed);
--			}
--		}
--
- 		err = download_firmware(lldev);
- 		if (!err)
- 			break;
-@@ -677,7 +656,25 @@ static int ll_setup(struct hci_uart *hu)
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -3490,7 +3490,7 @@ static int ath10k_pci_probe(struct pci_d
+ 	struct ath10k_pci *ar_pci;
+ 	enum ath10k_hw_rev hw_rev;
+ 	struct ath10k_bus_params bus_params = {};
+-	bool pci_ps;
++	bool pci_ps, is_qca988x = false;
+ 	int (*pci_soft_reset)(struct ath10k *ar);
+ 	int (*pci_hard_reset)(struct ath10k *ar);
+ 	u32 (*targ_cpu_to_ce_addr)(struct ath10k *ar, u32 addr);
+@@ -3500,6 +3500,7 @@ static int ath10k_pci_probe(struct pci_d
+ 	case QCA988X_2_0_DEVICE_ID:
+ 		hw_rev = ATH10K_HW_QCA988X;
+ 		pci_ps = false;
++		is_qca988x = true;
+ 		pci_soft_reset = ath10k_pci_warm_reset;
+ 		pci_hard_reset = ath10k_pci_qca988x_chip_reset;
+ 		targ_cpu_to_ce_addr = ath10k_pci_qca988x_targ_cpu_to_ce_addr;
+@@ -3619,25 +3620,34 @@ static int ath10k_pci_probe(struct pci_d
+ 		goto err_deinit_irq;
  	}
  
- 	/* Operational speed if any */
-+	if (hu->oper_speed)
-+		speed = hu->oper_speed;
-+	else if (hu->proto->oper_speed)
-+		speed = hu->proto->oper_speed;
-+	else
-+		speed = 0;
- 
-+	if (speed) {
-+		__le32 speed_le = cpu_to_le32(speed);
-+		struct sk_buff *skb;
-+
-+		skb = __hci_cmd_sync(hu->hdev, HCI_VS_UPDATE_UART_HCI_BAUDRATE,
-+				     sizeof(speed_le), &speed_le,
-+				     HCI_INIT_TIMEOUT);
-+		if (!IS_ERR(skb)) {
-+			kfree_skb(skb);
-+			serdev_device_set_baudrate(serdev, speed);
++	bus_params.dev_type = ATH10K_DEV_TYPE_LL;
++	bus_params.link_can_suspend = true;
++	/* Read CHIP_ID before reset to catch QCA9880-AR1A v1 devices that
++	 * fall off the bus during chip_reset. These chips have the same pci
++	 * device id as the QCA9880 BR4A or 2R4E. So that's why the check.
++	 */
++	if (is_qca988x) {
++		bus_params.chip_id =
++			ath10k_pci_soc_read32(ar, SOC_CHIP_ID_ADDRESS);
++		if (bus_params.chip_id != 0xffffffff) {
++			if (!ath10k_pci_chip_is_supported(pdev->device,
++							  bus_params.chip_id))
++				goto err_unsupported;
 +		}
 +	}
++
+ 	ret = ath10k_pci_chip_reset(ar);
+ 	if (ret) {
+ 		ath10k_err(ar, "failed to reset chip: %d\n", ret);
+ 		goto err_free_irq;
+ 	}
+ 
+-	bus_params.dev_type = ATH10K_DEV_TYPE_LL;
+-	bus_params.link_can_suspend = true;
+ 	bus_params.chip_id = ath10k_pci_soc_read32(ar, SOC_CHIP_ID_ADDRESS);
+-	if (bus_params.chip_id == 0xffffffff) {
+-		ath10k_err(ar, "failed to get chip id\n");
+-		goto err_free_irq;
+-	}
++	if (bus_params.chip_id == 0xffffffff)
++		goto err_unsupported;
+ 
+-	if (!ath10k_pci_chip_is_supported(pdev->device, bus_params.chip_id)) {
+-		ath10k_err(ar, "device %04x with chip_id %08x isn't supported\n",
+-			   pdev->device, bus_params.chip_id);
++	if (!ath10k_pci_chip_is_supported(pdev->device, bus_params.chip_id))
+ 		goto err_free_irq;
+-	}
+ 
+ 	ret = ath10k_core_register(ar, &bus_params);
+ 	if (ret) {
+@@ -3647,6 +3657,10 @@ static int ath10k_pci_probe(struct pci_d
  
  	return 0;
- }
+ 
++err_unsupported:
++	ath10k_err(ar, "device %04x with chip_id %08x isn't supported\n",
++		   pdev->device, bus_params.chip_id);
++
+ err_free_irq:
+ 	ath10k_pci_free_irq(ar);
+ 	ath10k_pci_rx_retry_sync(ar);
 
 
