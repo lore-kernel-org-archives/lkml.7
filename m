@@ -2,137 +2,178 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB08C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A59C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F337D20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1870820665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:42:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NP4zJgSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfK0PlU (ORCPT
+        id S1727133AbfK0PmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:41:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:49276 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbfK0PlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:41:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42FDF1045;
-        Wed, 27 Nov 2019 07:41:19 -0800 (PST)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB58F3F68E;
-        Wed, 27 Nov 2019 07:41:17 -0800 (PST)
-Date:   Wed, 27 Nov 2019 15:40:29 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: vexpress-spc: Fix wrong alternation of
- policy->related_cpus during CPU hp
-Message-ID: <20191127154029.GA4826@bogus>
-References: <20191127114801.23837-1-dietmar.eggemann@arm.com>
- <20191127120816.GC29301@bogus>
- <20191127121402.vd3tul4gmqm6qtyb@vireshk-i7>
- <20191127133200.GE29301@bogus>
- <a60cab69-4d47-d418-94bd-74630bf9e846@arm.com>
+        Wed, 27 Nov 2019 10:42:09 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42789 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726593AbfK0PmJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 10:42:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574869327;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rTiplu3jVVG57/goTxX/EWtlHVQFyeygebJxT1iF7jE=;
+        b=NP4zJgSxRdtEh5kJoYt6wHBchePLp7N22H5wxOT7UVjdejkqmQtyETS+1Yhtv8xPEPyXdm
+        AdN/Dknww0GOIs6rwzK6C01c00vviANp4AJ8rN1KfalK5zv+5PQu56uh5AovJ4moBBT5Om
+        b5diZsepnkFSN5tUIjvmNXKGxnVKlOk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-165-KTmG-I0VOJaQbcSWsc6Yig-1; Wed, 27 Nov 2019 10:42:06 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E31A101F4E0;
+        Wed, 27 Nov 2019 15:42:04 +0000 (UTC)
+Received: from fogou.chygwyn.com (unknown [10.33.36.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 43F691001DE1;
+        Wed, 27 Nov 2019 15:41:55 +0000 (UTC)
+Subject: Re: [PATCH] mm/filemap: do not allocate cache pages beyond end of
+ file at read
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     =?UTF-8?Q?Andreas_Gr=c3=bcnbacher?= <andreas.gruenbacher@gmail.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <sfrench@samba.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+References: <157225677483.3442.4227193290486305330.stgit@buzz>
+ <20191028124222.ld6u3dhhujfqcn7w@box>
+ <CAHk-=wgQ-Dcs2keNJPovTb4gG33M81yANH6KZM9d5NLUb-cJ1g@mail.gmail.com>
+ <20191028125702.xdfbs7rqhm3wer5t@box>
+ <ac83fee6-9bcd-8c66-3596-2c0fbe6bcf96@yandex-team.ru>
+ <CAHk-=who0HS=NT8U7vFDT7er_CD7+ZreRJMxjYrRXs5G6dbpyw@mail.gmail.com>
+ <f0140b13-cca2-af9e-eb4b-82eda134eb8f@redhat.com>
+ <CAHk-=wh4SKRxKQf5LawRMSijtjRVQevaFioBK+tOZAVPt7ek0Q@mail.gmail.com>
+ <640bbe51-706b-8d9f-4abc-5f184de6a701@redhat.com>
+ <CAHpGcM+o2OwXdrj+A2_OqRg6YokfauFNiBJF-BQp0dJFvq_BrQ@mail.gmail.com>
+ <22f04f02-86e4-b379-81c8-08c002a648f0@redhat.com>
+ <CAHk-=whRuPkm7zFUiGe_BXkLvEdShZGngkb=uRufgU65ogCxfg@mail.gmail.com>
+From:   Steven Whitehouse <swhiteho@redhat.com>
+Message-ID: <cdd48a4d-42a4-dd15-2701-e08e26fef17f@redhat.com>
+Date:   Wed, 27 Nov 2019 15:41:53 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a60cab69-4d47-d418-94bd-74630bf9e846@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHk-=whRuPkm7zFUiGe_BXkLvEdShZGngkb=uRufgU65ogCxfg@mail.gmail.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: KTmG-I0VOJaQbcSWsc6Yig-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 03:58:49PM +0100, Dietmar Eggemann wrote:
-> On 27/11/2019 14:32, Sudeep Holla wrote:
+Hi,
 
-[...]
-
-> >
-> > Yes but there's no architectural way. I need to revise and see tc2_pm.c
-> > to check if we can do any magic there.
+On 25/11/2019 17:05, Linus Torvalds wrote:
+> On Mon, Nov 25, 2019 at 2:53 AM Steven Whitehouse <swhiteho@redhat.com> wrote:
+>> Linus, is that roughly what you were thinking of?
+> So the concept looks ok, but I don't really like the new flags as they
+> seem to be gfs2-specific rather than generic.
 >
-> I'm fine with finding a better solution to return a fixed topology core
-> cpumask or calling this patch a workaround. AFAICS, only TC2 is affected.
+> That said, I don't _gate_ them either, since they aren't in any
+> critical code sequence, and it's not like they do anything really odd.
 >
-> ("arm: Fix topology setup in case of CPU hotplug for CONFIG_SCHED_MC")
-> is needed for other systems as well in case we have commit ca74b316df96
-> ("arm: Use common cpu_topology structure and functions."). We probably
-> don't want to revert commit ca74b316df96?
+> I still think the whole gfs2 approach is broken. You're magically ok
+> with using stale data from the cache just because it's cached, even if
+> another client might have truncated the file or something.
+
+If another node tries to truncate the file, that will require an 
+exclusive glock, and in turn that means the all the other nodes will 
+have to drop their glock(s) shared or exclusive. That process 
+invalidates the page cache on those nodes, such that any further 
+requests on those nodes will find the cache empty and have to call into 
+the filesystem.
+
+If a page is truncated on another node, then when the local node gives 
+up its glock, after any copying (e.g. for read) has completed then the 
+truncate will take place. The local node will then have to reread any 
+data relating to new pages or return an error in case the next page to 
+be read has vanished due to the truncate. It is a pretty small window, 
+and the advantage is that in cases where the page is in cache, we can 
+directly use the cached page without having to call into the filesystem 
+at all. So it is page atomic in that sense.
+
+The overall aim here is to avoid taking (potentially slow) cluster locks 
+when at all possible, yet at the same time deliver close to local fs 
+semantics whenever we can. You can think of GFS2's glock concept (at 
+least as far as the inodes we are discussing here) as providing a 
+combination of (page) cache control and cluster (dlm) locking.
+
 >
+> So you're ok with saying "the file used to be X bytes in size, so
+> we'll just give you this data because we trust that the X is correct".
+>
+> But you're not ok to say "oh, the file used to be X bytes in size, but
+> we don't want to give you a short read because it might not be correct
+> any more".
+>
+> See the disconnect? You trust the size in one situation, but not in another one.
 
-Correct
+Well we are not trusting the size at all... the original algorithm 
+worked entirely off "is this page in cache and uptodate?" and for 
+exactly the reason that we know the size in the inode might be out of 
+date, if we are not currently holding a glock in either shared or 
+exclusive mode. We also know that if there is a page in cache and 
+uptodate then we must be holding the glock too.
 
-> We do CPU hp stress tests in our EAS mainline integration test suite
-> https://developer.arm.com/tools-and-software/open-source-software/linux-kernel/energy-aware-scheduling/eas-mainline-development
-> and there is where we initially encountered this issue on TC2.
 
-I could come up with the patch below. If this is any cleaner and acceptable
-I am happy to post it. One advantage of moving the use of topology_core_cpumask
-inside ve_spc_clk_init is that it's just device_initcall and not a module.
-It allows to handle ve_spc_cpufreq as module. I prefer this than the
-previous solution/workaround. Let me know.
+>
+> I also don't really see that you *need* the new flag at all. Since
+> you're doing to do a speculative read and then a real read anyway, and
+> since the only thing that you seem to care about is the file size
+> (because the *data* you will trust if it is cached), then why don't
+> you just use the *existing* generic read, and *IFF* you get a
+> truncated return value, then you go and double-check that the file
+> hasn't changed in size?
+>
+> See what I'm saying? I think gfs2 is being very inconsistent in when
+> it trusts the file size, and I don't see that you even need the new
+> behavior that patch gives, because you might as well just use the
+> existing code (just move the i_size check earlier, and then teach gfs2
+> to double-check the "I didn't get as much as I expected" case).
+>
+>                   Linus
 
-Regards,
-Sudeep
+I'll leave the finer details to Andreas here, since it is his patch, and 
+hopefully we can figure out a good path forward. We are perhaps also a 
+bit reluctant to go off and (nearly) duplicate code that is already in 
+the core vfs library functions, since that often leads to things getting 
+out of sync (our implementation of ->writepages is one case where that 
+happened in the past) and missing important bug fixes/features in some 
+cases. Hopefully though we can iterate on this a bit and come up with 
+something which will resolve all the issues,
 
--->8
+Steve.
 
-diff --git i/arch/arm/mach-vexpress/spc.c w/arch/arm/mach-vexpress/spc.c
-index 354e0e7025ae..e0e2e789a0b7 100644
---- i/arch/arm/mach-vexpress/spc.c
-+++ w/arch/arm/mach-vexpress/spc.c
-@@ -551,8 +551,9 @@ static struct clk *ve_spc_clk_register(struct device *cpu_dev)
 
- static int __init ve_spc_clk_init(void)
- {
--       int cpu;
-+       int cpu, cluster;
-        struct clk *clk;
-+       bool init_opp_table[MAX_CLUSTERS] = { false };
-
-        if (!info)
-                return 0; /* Continue only if SPC is initialised */
-@@ -578,8 +579,17 @@ static int __init ve_spc_clk_init(void)
-                        continue;
-                }
-
-+               cluster = topology_physical_package_id(cpu_dev->id);
-+               if (init_opp_table[cluster])
-+                       continue;
-+
-                if (ve_init_opp_table(cpu_dev))
-                        pr_warn("failed to initialise cpu%d opp table\n", cpu);
-+               else if (dev_pm_opp_set_sharing_cpus(cpu_dev,
-+                        topology_core_cpumask(cpu_dev->id)))
-+                       pr_warn("failed to mark OPPs shared for cpu%d\n", cpu);
-+
-+               init_opp_table[cluster] = true;
-        }
-
-        platform_device_register_simple("vexpress-spc-cpufreq", -1, NULL, 0);
-diff --git i/drivers/cpufreq/vexpress-spc-cpufreq.c w/drivers/cpufreq/vexpress-spc-cpufreq.c
-index 506e3f2bf53a..83c85d3d67e3 100644
---- i/drivers/cpufreq/vexpress-spc-cpufreq.c
-+++ w/drivers/cpufreq/vexpress-spc-cpufreq.c
-@@ -434,7 +434,7 @@ static int ve_spc_cpufreq_init(struct cpufreq_policy *policy)
-        if (cur_cluster < MAX_CLUSTERS) {
-                int cpu;
-
--               cpumask_copy(policy->cpus, topology_core_cpumask(policy->cpu));
-+               dev_pm_opp_get_sharing_cpus(cpu_dev, policy->cpus);
-
-                for_each_cpu(cpu, policy->cpus)
-                        per_cpu(physical_cluster, cpu) = cur_cluster;
+>
 
