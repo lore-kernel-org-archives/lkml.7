@@ -2,150 +2,137 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787CFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1391FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F112073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D242920885
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIViTYeh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmYX4ABN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbfK0F3E (ORCPT
+        id S1726448AbfK0FaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 00:29:04 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34793 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfK0F3E (ORCPT
+        Wed, 27 Nov 2019 00:30:03 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33393 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfK0FaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 00:29:04 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z188so10208869pgb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 21:29:03 -0800 (PST)
+        Wed, 27 Nov 2019 00:30:02 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y206so1762821pfb.0;
+        Tue, 26 Nov 2019 21:30:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hGK+ULtfQAwtVprH1HVEYd0b3Bl+iwzMbxZKRpXwyhA=;
-        b=VIViTYeh7HxV+i9Gir8odWMfV02isZz3zK3o0eY3y1n+WyM4ki8jABXSBq7KmtssLG
-         y8c1Mh18pvZL3nOWiYIqxtKB6yoErwjuxT6yjMLok690nnZivrm8AxV40bZ3N2OT1JVe
-         1F0XIi+yXdfiRcMKnQ0W6D5a05Dxa0lHj1AQxmPk9QwmM0cBVwfvlZZ5GUKsN8GBLoLl
-         oOU6kcYsx3LJF+Ahy+8BOXjYhCXLz6LyMgtpzCefYEu/239pheqI9zEkxIsK4IT4eYXu
-         LE9lgMHATwpOu0RA7V6xtTT2/mUIf9+knrSDxaUiXYV5oD7YF2ZHbGrHzeJDLDyLfT9d
-         ZSbA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NVGiAl8Dh/YJ44QiDFm1FDcXCaNLT2bn+snjxKuoTiA=;
+        b=dmYX4ABNhxkr2PDMHvkxaLU7lLez5GCZu36zShR+3opCKFN9xeiZHjRdw0yvUmECpd
+         9IJ78wFOqlX2x45ribrm3k863gfoujqH4thQ5z/gfGfNgKH+Yc3L0ghF5xgdjEwmsj1a
+         dHsU5oWZN5iBk6fOJFjRr3yYzApMJ29a4ikM/5m7Px0UR3APBSCJTfRa/hAC+awCfghQ
+         SvrCWbqxtzW7RkHF6yqmv0O50JohkCD9yMeJIdbGaWZmLsxsKxMjQjSOit6kup4wX9lG
+         rl+Ui/SnK5/M4l49KpS+dBDqs6GucaBe250umeJegqjkJ3Mn/vaw7pMWsLNNfKS9dvFR
+         Y/7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hGK+ULtfQAwtVprH1HVEYd0b3Bl+iwzMbxZKRpXwyhA=;
-        b=GJlNYNiluZWs9Q2HyPj1GsfZd4JOL2A46gITuB6Dkq7IfwXbVi3pgvtx6ujmykMPDU
-         ooZT8RxFpNEDJVzleA3RaFzzbw5a1SI5jhj+LSOTp04ihDOTrh09ZTA2V3jSOF53WpqS
-         KDwfJPpREgmGuCH/yaVVWJFQ1gFh8SVihHgyDr7qDGDdEtVjEbZ4+goJ8S35FZoGwhk9
-         IPYooQNL0vgqQKev4ZKRVdd5Czuhw9dbn3pRQOpmFSmfg533QATWnhe1IOtrooX5RZBi
-         IKmDOIyGnWQq4zVxiAXeBIizH+fRbQdS0JZN7wqh4mcaRupRhoSZFLMtRUStslVHnbxR
-         fm2A==
-X-Gm-Message-State: APjAAAUiWZp/+t6eDiUrORGDuf0Y7UK26MMNCXnv7VBsGkxZjfLaY/Bm
-        LYD0IgtEITp2ZIvMow13Fgo=
-X-Google-Smtp-Source: APXvYqzxw222HkDIvEgoVoeHtvUCNMvqOSbBGEu3aSnUiacJfErpDJTINHnrg4lFk5kWawSMOii5PA==
-X-Received: by 2002:a63:204e:: with SMTP id r14mr2830105pgm.101.1574832543122;
-        Tue, 26 Nov 2019 21:29:03 -0800 (PST)
-Received: from workstation-portable ([139.5.253.146])
-        by smtp.gmail.com with ESMTPSA id m5sm4801910pjl.30.2019.11.26.21.29.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NVGiAl8Dh/YJ44QiDFm1FDcXCaNLT2bn+snjxKuoTiA=;
+        b=Hynz0tSj/6tobwhogFgVtrf8Hj2zsBKu/JG9gtfLc8zHKpf5fcCFUKQDiD1AQCnFYN
+         24ieMhO9MS57T9vXyKustZnLQHQCdajVLk/Gwg+zY3ZTlHwBT9s0pXGNRbdq56CDK0g2
+         elZFbfLDltJGibdH8x/2PRyIR2E9vzI1zR+eyFSLODS5TvlOHYja0XIjkDzR2SRgnYG7
+         RMq6S6aOH+K5QxK/ohUNQC2rEVDyN/QPr7N2qv/HBvuRtrVvhpFK1s6o94eSojzVrefS
+         9ZWFi1Nh/TXcOted/63zyMn3jl2mQUb2lwufuIj9806POAuOQvYj2OihLQLk08cUrXki
+         WY7g==
+X-Gm-Message-State: APjAAAXoJE9KIt++4gm4iooN86BQSW5hSzwIHtAjcUhjAH1csVy4mwF0
+        nh1k9hjAnCRryRnNd3gxRRc=
+X-Google-Smtp-Source: APXvYqxxWXVOcqEI6A8tpVbbrr0/wVcFJgHw1+FRuXU1s33USdwQLQ4LqEiCt9x5VHRbZA5i2b76xA==
+X-Received: by 2002:a63:f702:: with SMTP id x2mr2611989pgh.300.1574832601637;
+        Tue, 26 Nov 2019 21:30:01 -0800 (PST)
+Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
+        by smtp.gmail.com with ESMTPSA id p38sm4360825pjp.27.2019.11.26.21.30.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 21:29:02 -0800 (PST)
-Date:   Wed, 27 Nov 2019 10:58:27 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>, linux-audit@redhat.com,
+        Tue, 26 Nov 2019 21:30:00 -0800 (PST)
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel: audit.c: Add __rcu notation to RCU pointer
-Message-ID: <20191127052827.GA9782@workstation-portable>
-References: <20191126172723.GA12759@workstation-kernel-dev>
- <20191127022925.GB157739@google.com>
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH v6 0/7] add thermal sensor driver for A64, A83T, H3, H5, H6, R40
+Date:   Tue, 26 Nov 2019 21:29:28 -0800
+Message-Id: <20191127052935.1719897-1-anarsoul@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127022925.GB157739@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 09:29:25PM -0500, Joel Fernandes wrote:
-> On Tue, Nov 26, 2019 at 10:57:23PM +0530, Amol Grover wrote:
-> > add __rcu notation to RCU protected global pointer auditd_conn
-> > 
-> > Fixes multiple instances of sparse error:
-> > error: incompatible types in comparison expression
-> > (different address spaces)
-> > 
-> > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> > ---
-> >  kernel/audit.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index da8dc0db5bd3..30e7fc9b8da2 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -102,12 +102,14 @@ struct audit_net {
-> >   * This struct is RCU protected; you must either hold the RCU lock for reading
-> >   * or the associated spinlock for writing.
-> >   */
-> > -static struct auditd_connection {
-> > +struct auditd_connection {
-> >  	struct pid *pid;
-> >  	u32 portid;
-> >  	struct net *net;
-> >  	struct rcu_head rcu;
-> > -} *auditd_conn = NULL;
-> > +};
-> > +static struct auditd_connection __rcu *auditd_conn;
-> > +RCU_INIT_POINTER(auditd_conn);
-> 
-> Looks like this causes a build error. Always please build test your patches
-> in the very least. And I also did not understand how RCU_INIT_POINTER can
-> even be used outside of a function. In C, executable code cannot be outside
-> functions.
-> 
-> Is doing the following not sufficient to fix the sparse issue?
-> 
-> thanks,
-> 
->  - Joel
-> 
-> ---8<-----------------------
-> 
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index 49b6049b26ac..c5d4b5a2dea1 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -108,8 +108,8 @@ struct auditd_connection {
->  	struct net *net;
->  	struct rcu_head rcu;
->  };
-> -static struct auditd_connection __rcu *auditd_conn;
-> -RCU_INIT_POINTER(auditd_conn);
-> +static struct auditd_connection __rcu *auditd_conn = NULL;
+This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+H6 and R40 SoCs.
 
-I ran a quick checkpatch and it gave me this error:
-ERROR: do not initialise statics to NULL
+v6:
+	- [ondrej, vasily] Squash all driver related changes into a
+			   single patch
+	- [ondrej] Rename calib -> calibration
+	- [ondrej] Fix thermal zone registration check
+	- [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
+	- [ondrej] Rework scale/offset values, H6 calibration
+	- [ondrej] Explicitly set mod clock to 24 MHz
+	- [ondrej] Set undocumented bits in CTRL0 for H6
+	- [ondrej] Add support for A83T
+	- [ondrej] Add dts changes for A83T, H3, H5, H6
+	- [vasily] Add dts changes for A64
+	- [vasily] Address Maxime's comments for YAML scheme
+	- [vasily] Make .calc_temp callback mandatory
+	- [vasily] Set .max_register in regmap config, so regs can be
+		   inspected using debugfs
 
-So in order to fix it I decided to INIT the pointer (and failed)
+Ondrej Jirman (4):
+  ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
+  ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
+  arm64: dts: allwinner: sun50i-h5: Add thermal sensor and thermal zones
+  arm64: dts: allwinner: sun50i-h6: Add thermal sensor and thermal zones
 
-Should I consider this as a false positive?
+Vasily Khoruzhick (1):
+  arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
 
-Thanks
-Amol
+Yangtao Li (2):
+  thermal: sun8i: add thermal driver for H6/H5/H3/A64/R40
+  dt-bindings: thermal: add YAML schema for sun8i-thermal driver
+    bindings
 
-> +
->  static DEFINE_SPINLOCK(auditd_conn_lock);
->  
->  /* If audit_rate_limit is non-zero, limit the rate of sending audit records
+ .../thermal/allwinner,sun8i-a83t-ths.yaml     | 103 +++
+ MAINTAINERS                                   |   7 +
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
+ arch/arm/boot/dts/sun8i-h3.dtsi               |  26 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  32 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
+ drivers/thermal/Kconfig                       |  14 +
+ drivers/thermal/Makefile                      |   1 +
+ drivers/thermal/sun8i_thermal.c               | 643 ++++++++++++++++++
+ 10 files changed, 937 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+ create mode 100644 drivers/thermal/sun8i_thermal.c
+
+-- 
+2.24.0
+
