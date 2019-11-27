@@ -2,107 +2,134 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5D9C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5E8C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21255207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574827471;
-	bh=WrHVImCShCE7ibbXaLwhnf0BKiDWobWzq4KI8FNv7kU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1TjRxG0GbPTRZE2USugc/tSLfKgo6qO+adUUAcDtjc7cq6gJxqqv6ATtvDdSpYp4w
-	 R29UAFuVUq3rzWsuQvtWbMQ804gENgj5Y1SXfN62WoLNh4KFpEfKhncO0u8WhbdFXn
-	 EN9e7ePYaI5vYRVk2sYNSydd9NXuvx5j/YdcUWNY=
+	by mail.kernel.org (Postfix) with ESMTP id 840AA2071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:06:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JCmQk2Z6";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="SDjJ1wxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfK0EEa (ORCPT
+        id S1726920AbfK0EGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 23:04:30 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37045 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbfK0EE3 (ORCPT
+        Tue, 26 Nov 2019 23:06:51 -0500
+Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:57010
+        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726525AbfK0EGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 23:04:29 -0500
-Received: by mail-lj1-f196.google.com with SMTP id d5so22781097ljl.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 20:04:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rd62a4+kKdVGM6mxx4wZ7hE246doAaPmYNs4HO65uTc=;
-        b=f2lBh8HSNpUVoEVI7YAMjgFbAjJ4qgZOSy1I+ycg6K4sEyb1f6UqlcqcJgY8LlrEaY
-         C2cwcHjQqk6W16tM9JIvKKArAVS8TolUZdFdX844nnJq42jJOxmEslFLvYYxAZQNOz/J
-         FtVpsiY8U/lssN472Ro2p7e2XrppLWv+x8l9o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rd62a4+kKdVGM6mxx4wZ7hE246doAaPmYNs4HO65uTc=;
-        b=P7yVcvTWdOf38la/IHvZAEiiIEWgqPJBdqgh1EOTjCRqTo2yGuHzAcOigRN+wV0XAV
-         AHzCXijspnp1Z7lkNdVOh9ZPfULBPE7gg/M9LaPU9VoYXEvs+2jaWvN3hcDBMkuI+BJU
-         hwDz5Iwiyy+5DcOtOqEpAvAxeSU8SspprkZzzO96FcuwQWjKWV41YXQCWZehjeuVqoAH
-         8k2j+6eXffvCavOK3bEQkoV921omk81S1jECV1qtcLK4m+bsWjmuuqO9b0Svq1pTuPCN
-         1OiO/1Bcne06ZyFvkTMJqCFAx3LBpK5YU5b8AMMROkIGxfz5f3oUHJGASAaW8AsAdz5U
-         FNNg==
-X-Gm-Message-State: APjAAAVG9nEqEVjDz/P7E537BSJuuzebxZ0isgxbS524al/mKZD932P8
-        PVRTIDDlvliFjjYTi1pWUlLixmsw4Sw=
-X-Google-Smtp-Source: APXvYqyzl8WlAcFlu/5+4YfbBBVgMv6ImzWnMkh/qWJrxkhmtxOuECqhFsWiy64HXlgclzao1318iQ==
-X-Received: by 2002:a2e:85d5:: with SMTP id h21mr28752855ljj.243.1574827466467;
-        Tue, 26 Nov 2019 20:04:26 -0800 (PST)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id f11sm1634693lfa.9.2019.11.26.20.04.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Nov 2019 20:04:25 -0800 (PST)
-Received: by mail-lf1-f44.google.com with SMTP id f16so15943785lfm.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 20:04:24 -0800 (PST)
-X-Received: by 2002:a19:4bd4:: with SMTP id y203mr24700097lfa.61.1574827464261;
- Tue, 26 Nov 2019 20:04:24 -0800 (PST)
+        Tue, 26 Nov 2019 23:06:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574827610;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=5ARwXEreVexfeHJvosDOjQ5dg3IjsVVnM3f/Nqmw6W0=;
+        b=JCmQk2Z6dcatoaCXep4HC6AfnatpEIN49DnbxJHgxzw2GjQDkdHKdSm27WhVVOGV
+        gzmXDtZZyRs8DIiemflHgONuIiKw63So+zAxixOoMBtl7u1XXdnKL16zhZT/NqD1Bkt
+        VWaL93ZDp7BODCzUaAtNEqjv1l+WUjclvX44qYng=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574827609;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=5ARwXEreVexfeHJvosDOjQ5dg3IjsVVnM3f/Nqmw6W0=;
+        b=SDjJ1wxlm3fUlda1VoPEHzxNZTVBWKkrKLTYlqsZj5nbKYfXmitca2y1xFWTlnTV
+        TDLsAXNBEMtm9NXdDYweOOqnQpUJ6CaTkEkTynTPWBjbmZYB6GqXuRHjZ+6hsb4xLLm
+        MLXG2dzjp94r47aQooYygyvmywe9KtzaND7wOJ9A=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 57FA4C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 3/8] dt-bindings: clock: Add YAML schemas for the QCOM
+ GPUCC clock bindings
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+References: <1573812304-24074-1-git-send-email-tdas@codeaurora.org>
+ <1573812304-24074-4-git-send-email-tdas@codeaurora.org>
+ <CAOCk7NqfHe6jRPmw6o650fyd6EyVfFObHhJ9=21ipuAqJo6oGA@mail.gmail.com>
+ <20191126181154.275EA20727@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <0101016eab0a4e76-b8eb44c5-d076-46b9-a156-b80dc650ca31-000000@us-west-2.amazonses.com>
+Date:   Wed, 27 Nov 2019 04:06:49 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191126110659.GA14042@redhat.com> <20191126110758.GA14051@redhat.com>
-In-Reply-To: <20191126110758.GA14051@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 26 Nov 2019 20:04:08 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whrhuNg_53wc3pBVToH-AUwKDbC5P_cb7=8bYfn=BYCJA@mail.gmail.com>
-Message-ID: <CAHk-=whrhuNg_53wc3pBVToH-AUwKDbC5P_cb7=8bYfn=BYCJA@mail.gmail.com>
-Subject: Re: [PATCH] ptrace/x86: introduce TS_COMPAT_RESTART to fix get_nr_restart_syscall()
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Jan Kratochvil <jan.kratochvil@redhat.com>,
-        Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191126181154.275EA20727@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SES-Outgoing: 2019.11.27-54.240.27.10
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 3:08 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> Alternatively we could add ->compat_restart into struct restart_block,
-> logically this is the same thing.
 
-That sounds like the better model to me. That's what the restart_block
-is about: it's supposed to contain the restart information.
 
-I'd much rather see the system call number added into the restart
-block (or just the "compat bit" - but we have that X32 case too, so
-why not put it all there). And then the get_nr_restart_syscall() hack
-goes away and is just "set state from the restart block".
+On 11/26/2019 11:41 PM, Stephen Boyd wrote:
+> Quoting Jeffrey Hugo (2019-11-15 07:11:01)
+>> On Fri, Nov 15, 2019 at 3:07 AM Taniya Das <tdas@codeaurora.org> wrote:
+>>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+>>> new file mode 100644
+>>> index 0000000..c2d6243
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+>>> @@ -0,0 +1,69 @@
+>>> +# SPDX-License-Identifier: GPL-2.0-only
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/bindings/clock/qcom,gpucc.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Qualcomm Graphics Clock & Reset Controller Binding
+>>> +
+>>> +maintainers:
+>>> +  - Taniya Das <tdas@codeaurora.org>
+>>> +
+>>> +description: |
+>>> +  Qualcomm grpahics clock control module which supports the clocks, resets and
+>>> +  power domains.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - qcom,msm8998-gpucc
+>>> +      - qcom,sdm845-gpucc
+>>> +
+>>> +  clocks:
+>>> +    minItems: 1
+>>> +    maxItems: 2
+>>> +    items:
+>>> +      - description: Board XO source
+>>> +      - description: GPLL0 source from GCC
+>>
+>> This is not an accurate conversion.  GPLL0 was not valid for 845, and
+>> is required for 8998.
+> 
+> Thanks for checking Jeff.
+> 
+> It looks like on 845 there are two gpll0 clocks going to gpucc. From
+> gpu_cc_parent_map_0:
+> 
+> 	"gcc_gpu_gpll0_clk_src",
+> 	"gcc_gpu_gpll0_div_clk_src",
+> 
 
-How painful would that be? I guess right now we always just set all
-the restart_block info manually in all the restart cases, and that
-could make it a bit painful to add this kind of architecture-specific
-flag, but it _sounds_ conceptually like the right thing to do.
+There are branches of GPLL0 which would be connected to most external 
+CCs. It is upto to the external CCs to either use them to source a 
+frequency or not.
 
-I definitely don't love the "magic sticky bit in thread status" field model.
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-             Linus
+--
