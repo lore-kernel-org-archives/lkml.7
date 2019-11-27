@@ -2,51 +2,54 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB22BC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE12DC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B20218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C39B2218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887970;
-	bh=oh0ks+X54M4go9LLQLOV8qujEqe3WNtVIJ2zrYgMEqc=;
+	s=default; t=1574887974;
+	bh=2co9lHg6uzJ9YvHrVxx5Q7MS4Y0UybG2r3nFMozNXKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cEc9RGDNXWWv0WcPDYnu1O07vA4YGMG2jBnpqsjfl3SZjYqXruLvjxeSJ/VtXYIEr
-	 yWJe02G4it0lF9OwufCb0e+9+gINATKEIlE0nvyJEFvbyWwixOtN95crURZ3N9Uag7
-	 9lr/U+XzzD4JQX4SxoEkWy33OxDe0+esmgDzioIQ=
+	b=dk5if4mm6Fzt0xPfMSxG7QMM0FwRcGO2hMD7sm/KlRenP+5TX4uJVEfFGRSijg62W
+	 xFeaWr31LeCe9NiKTh2YpSRWC+sjz+9t4eKu9R44GtHf6KxPtY7DZc4ZMdCrjYiEDh
+	 szYFm2Vdi+eJweguVXnuHcmmFYQhJpghy62CDHYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730658AbfK0Uwt (ORCPT
+        id S1730660AbfK0Uwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:52:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:52:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729982AbfK0Uwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:52:45 -0500
+        id S1728367AbfK0Uwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:52:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C58F5218BA;
-        Wed, 27 Nov 2019 20:52:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7DD9218BA;
+        Wed, 27 Nov 2019 20:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887965;
-        bh=oh0ks+X54M4go9LLQLOV8qujEqe3WNtVIJ2zrYgMEqc=;
+        s=default; t=1574887970;
+        bh=2co9lHg6uzJ9YvHrVxx5Q7MS4Y0UybG2r3nFMozNXKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OoWv/Dt8q95AdnWR1XEAbMcYtFRkhUlMEcjXV7yHQlr6fSbL5ljAduryv5c1vArpN
-         nby0k6Dge+u8TjhaHE6qa2m/B+6XGrvUZK8NmQiFQVpqsRLez2FJd8ocv75HFVHxfx
-         0prBzlrMv599Y1gy4ywMcXLwqUV58DdhthW7guHM=
+        b=l7qXflnD5vBxeOFJiipXU/VM5XKQ4IPrPD7Wl4uX5xQSH+aD9KLZi7vTwWTrJVeiE
+         BTnYJTekcx6ToWLkfGdxnn2IbaPJJOqOzpmkMDYyEt7JaLb8HcRhNrz311JmSVIm7T
+         wIEtuKVpadiZN+xAGeGfEGzlHy/GAeaXueNG9WEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 163/211] cfg80211: call disconnect_wk when AP stops
-Date:   Wed, 27 Nov 2019 21:31:36 +0100
-Message-Id: <20191127203109.296527722@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH 4.14 165/211] KVM: MMU: Do not treat ZONE_DEVICE pages as being reserved
+Date:   Wed, 27 Nov 2019 21:31:38 +0100
+Message-Id: <20191127203109.490545555@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -59,68 +62,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit e005bd7ddea06784c1eb91ac5bb6b171a94f3b05 ]
+commit a78986aae9b2988f8493f9f65a587ee433e83bc3 upstream.
 
-Since we now prevent regulatory restore during STA disconnect
-if concurrent AP interfaces are active, we need to reschedule
-this check when the AP state changes. This fixes never doing
-a restore when an AP is the last interface to stop. Or to put
-it another way: we need to re-check after anything we check
-here changes.
+Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
+instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
+like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
+pages, e.g. put pages grabbed via gup().  But for flows such as setting
+A/D bits or shifting refcounts for transparent huge pages, KVM needs to
+to avoid processing ZONE_DEVICE pages as the flows in question lack the
+underlying machinery for proper handling of ZONE_DEVICE pages.
 
+This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
+when running a KVM guest backed with /dev/dax memory, as KVM straight up
+doesn't put any references to ZONE_DEVICE pages acquired by gup().
+
+Note, Dan Williams proposed an alternative solution of doing put_page()
+on ZONE_DEVICE pages immediately after gup() in order to simplify the
+auditing needed to ensure is_zone_device_page() is called if and only if
+the backing device is pinned (via gup()).  But that approach would break
+kvm_vcpu_{un}map() as KVM requires the page to be pinned from map() 'til
+unmap() when accessing guest memory, unlike KVM's secondary MMU, which
+coordinates with mmu_notifier invalidations to avoid creating stale
+page references, i.e. doesn't rely on pages being pinned.
+
+[*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
+
+Reported-by: Adam Borowski <kilobyte@angband.pl>
+Analyzed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
 Cc: stable@vger.kernel.org
-Fixes: 113f3aaa81bd ("cfg80211: Prevent regulatory restore during STA disconnect in concurrent interfaces")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 3565fce3a659 ("mm, x86: get_user_pages() for dax mappings")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[sean: backport to 4.x; resolve conflict in mmu.c]
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/wireless/ap.c   | 2 ++
- net/wireless/core.h | 2 ++
- net/wireless/sme.c  | 2 +-
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu.c       |    8 ++++----
+ include/linux/kvm_host.h |    1 +
+ virt/kvm/kvm_main.c      |   26 +++++++++++++++++++++++---
+ 3 files changed, 28 insertions(+), 7 deletions(-)
 
-diff --git a/net/wireless/ap.c b/net/wireless/ap.c
-index 63682176c96cb..c4bd3ecef5089 100644
---- a/net/wireless/ap.c
-+++ b/net/wireless/ap.c
-@@ -40,6 +40,8 @@ int __cfg80211_stop_ap(struct cfg80211_registered_device *rdev,
- 		cfg80211_sched_dfs_chan_update(rdev);
- 	}
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -3177,7 +3177,7 @@ static void transparent_hugepage_adjust(
+ 	 * here.
+ 	 */
+ 	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
+-	    level == PT_PAGE_TABLE_LEVEL &&
++	    !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
+ 	    PageTransCompoundMap(pfn_to_page(pfn)) &&
+ 	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
+ 		unsigned long mask;
+@@ -5344,9 +5344,9 @@ restart:
+ 		 * the guest, and the guest page table is using 4K page size
+ 		 * mapping if the indirect sp has level = 1.
+ 		 */
+-		if (sp->role.direct &&
+-			!kvm_is_reserved_pfn(pfn) &&
+-			PageTransCompoundMap(pfn_to_page(pfn))) {
++		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
++		    !kvm_is_zone_device_pfn(pfn) &&
++		    PageTransCompoundMap(pfn_to_page(pfn))) {
+ 			drop_spte(kvm, sptep);
+ 			need_tlb_flush = 1;
+ 			goto restart;
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -890,6 +890,7 @@ int kvm_cpu_has_pending_timer(struct kvm
+ void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
  
-+	schedule_work(&cfg80211_disconnect_work);
-+
- 	return err;
+ bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
++bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
+ 
+ struct kvm_irq_ack_notifier {
+ 	struct hlist_node link;
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -142,10 +142,30 @@ __weak void kvm_arch_mmu_notifier_invali
+ {
  }
  
-diff --git a/net/wireless/core.h b/net/wireless/core.h
-index 90f90c7d8bf9b..507ec6446eb67 100644
---- a/net/wireless/core.h
-+++ b/net/wireless/core.h
-@@ -429,6 +429,8 @@ void cfg80211_process_wdev_events(struct wireless_dev *wdev);
- bool cfg80211_does_bw_fit_range(const struct ieee80211_freq_range *freq_range,
- 				u32 center_freq_khz, u32 bw_khz);
- 
-+extern struct work_struct cfg80211_disconnect_work;
++bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
++{
++	/*
++	 * The metadata used by is_zone_device_page() to determine whether or
++	 * not a page is ZONE_DEVICE is guaranteed to be valid if and only if
++	 * the device has been pinned, e.g. by get_user_pages().  WARN if the
++	 * page_count() is zero to help detect bad usage of this helper.
++	 */
++	if (!pfn_valid(pfn) || WARN_ON_ONCE(!page_count(pfn_to_page(pfn))))
++		return false;
 +
- /**
-  * cfg80211_chandef_dfs_usable - checks if chandef is DFS usable
-  * @wiphy: the wiphy to validate against
-diff --git a/net/wireless/sme.c b/net/wireless/sme.c
-index 66cccd16c24af..8344153800e27 100644
---- a/net/wireless/sme.c
-+++ b/net/wireless/sme.c
-@@ -667,7 +667,7 @@ static void disconnect_work(struct work_struct *work)
- 	rtnl_unlock();
++	return is_zone_device_page(pfn_to_page(pfn));
++}
++
+ bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
+ {
++	/*
++	 * ZONE_DEVICE pages currently set PG_reserved, but from a refcounting
++	 * perspective they are "normal" pages, albeit with slightly different
++	 * usage rules.
++	 */
+ 	if (pfn_valid(pfn))
+-		return PageReserved(pfn_to_page(pfn));
++		return PageReserved(pfn_to_page(pfn)) &&
++		       !kvm_is_zone_device_pfn(pfn);
+ 
+ 	return true;
  }
+@@ -1730,7 +1750,7 @@ static void kvm_release_pfn_dirty(kvm_pf
  
--static DECLARE_WORK(cfg80211_disconnect_work, disconnect_work);
-+DECLARE_WORK(cfg80211_disconnect_work, disconnect_work);
+ void kvm_set_pfn_dirty(kvm_pfn_t pfn)
+ {
+-	if (!kvm_is_reserved_pfn(pfn)) {
++	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn)) {
+ 		struct page *page = pfn_to_page(pfn);
  
+ 		if (!PageReserved(page))
+@@ -1741,7 +1761,7 @@ EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
  
- /*
--- 
-2.20.1
-
+ void kvm_set_pfn_accessed(kvm_pfn_t pfn)
+ {
+-	if (!kvm_is_reserved_pfn(pfn))
++	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn))
+ 		mark_page_accessed(pfn_to_page(pfn));
+ }
+ EXPORT_SYMBOL_GPL(kvm_set_pfn_accessed);
 
 
