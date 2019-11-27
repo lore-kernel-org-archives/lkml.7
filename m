@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39886C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37868C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB872084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08CCD20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888346;
-	bh=ItMXgs/Q9kt+48rsthlnVhaH6dBjICpKcSlbQsKI+IQ=;
+	s=default; t=1574888354;
+	bh=omppKKnMzlwMUO/lGjPYMr5FWF7KOGGvHMhEJD4Ko/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K458B7y3mWGeCqaGo7KRk+K8uBinZBGtSX8qXXAGidIUMr5AGqURPRDv7NNGYOa0L
-	 g6NosKEXMjE2Pis4g607xYG4ka3l9jaTgN3PCOy8G+QKW7BPhbjOwTpn6cTmkrxTl3
-	 qOBMKt6G9yYBqt/hZrovG4G9tt38ZdV3wlnTbG8o=
+	b=MFz9dniOl86O+aMnIsSa3L1YKwXgCbnQ5vEddQp+FXCU0kVyjET73arMfQ/Rpe7yV
+	 lmtsdQQmkO7Sj1x2bmPxO+s09U/2hlQMffbvUuRi1tiQP+AlYcdNSrK3AruyK/xd6+
+	 QP0kdpUARBlR4xIQjjsDEthvS4BoQi0mPJiAhOtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfK0U7E (ORCPT
+        id S1730618AbfK0U7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:59:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50376 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:59:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731348AbfK0U66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:58:58 -0500
+        id S1731376AbfK0U7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:59:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C69DC20678;
-        Wed, 27 Nov 2019 20:58:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A2B820862;
+        Wed, 27 Nov 2019 20:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888337;
-        bh=ItMXgs/Q9kt+48rsthlnVhaH6dBjICpKcSlbQsKI+IQ=;
+        s=default; t=1574888342;
+        bh=omppKKnMzlwMUO/lGjPYMr5FWF7KOGGvHMhEJD4Ko/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XDkRLcI0DEgfPG3rkpoEVm4H8DFoVQ0lRrRDb1v6vMrwsTdn4JpEO3+xBA01DuUdc
-         oly70ywgF0iKGIGnMPLzVQNpt0VJsZKodWKB8Fa3xN8pyJlGUasp1cM2TdYAg54Nnm
-         M6+tOjsBhsiQRhuortZCWY3tVauS5fEcuLKCgUX4=
+        b=yIf0qjIOvHEelswmeytunDtWuOSL6ur/3J/ZvU6oE00um1Xt8HYyndlus41IhCV56
+         567dR3glo+AvkMPX1Xavq3WjOLGREGerN768CN4HhLX4XehGn0snTSl4K/eL9itpXW
+         S68JcOvi1SSjRwFB8di+mU17FWBHUWTp0/nefeOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Klocke <philipp97kl@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 093/306] ALSA: i2c/cs8427: Fix int to char conversion
-Date:   Wed, 27 Nov 2019 21:29:03 +0100
-Message-Id: <20191127203121.701840129@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 095/306] PCI: vmd: Detach resources after stopping root bus
+Date:   Wed, 27 Nov 2019 21:29:05 +0100
+Message-Id: <20191127203121.842234236@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -59,43 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Klocke <philipp97kl@gmail.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-[ Upstream commit eb7ebfa3c1989aa8e59d5e68ab3cddd7df1bfb27 ]
+[ Upstream commit dc8af3a827df6d4bb925d3b81b7ec94a7cce9482 ]
 
-Compiling with clang yields the following warning:
+The VMD removal path calls pci_stop_root_busi(), which tears down the pcie
+tree, including detaching all of the attached drivers. During driver
+detachment, devices may use pci_release_region() to release resources.
+This path relies on the resource being accessible in resource tree.
 
-sound/i2c/cs8427.c:140:31: warning: implicit conversion from 'int'
-to 'char' changes value from 160 to -96 [-Wconstant-conversion]
-    data[0] = CS8427_REG_AUTOINC | CS8427_REG_CORU_DATABUF;
-            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+By detaching the child domain from the parent resource domain prior to
+stopping the bus, we are preventing the list traversal from finding the
+resource to be freed. If we instead detach the resource after stopping
+the bus, we will have properly freed the resource and detaching is
+simply accounting at that point.
 
-Because CS8427_REG_AUTOINC is defined as 128, it is too big for a
-char field.
-So change data from char to unsigned char, that it can hold the value.
+Without this order, the resource is never freed and is orphaned on VMD
+removal, leading to a warning:
 
-This patch does not change the generated code.
+[  181.940162] Trying to free nonexistent resource <e5a10000-e5a13fff>
 
-Signed-off-by: Philipp Klocke <philipp97kl@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 2c2c5c5cd213 ("x86/PCI: VMD: Attach VMD resources to parent domain's resource tree")
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+[lorenzo.pieralisi@arm.com: updated commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/i2c/cs8427.c | 2 +-
+ drivers/pci/controller/vmd.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/i2c/cs8427.c b/sound/i2c/cs8427.c
-index 2647309bc6757..8afa2f8884660 100644
---- a/sound/i2c/cs8427.c
-+++ b/sound/i2c/cs8427.c
-@@ -118,7 +118,7 @@ static int snd_cs8427_send_corudata(struct snd_i2c_device *device,
- 	struct cs8427 *chip = device->private_data;
- 	char *hw_data = udata ?
- 		chip->playback.hw_udata : chip->playback.hw_status;
--	char data[32];
-+	unsigned char data[32];
- 	int err, idx;
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 65eaa6b618685..ab36e5ca1aca3 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -818,12 +818,12 @@ static void vmd_remove(struct pci_dev *dev)
+ {
+ 	struct vmd_dev *vmd = pci_get_drvdata(dev);
  
- 	if (!memcmp(hw_data, ndata, count))
+-	vmd_detach_resources(vmd);
+ 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+ 	pci_stop_root_bus(vmd->bus);
+ 	pci_remove_root_bus(vmd->bus);
+ 	vmd_cleanup_srcu(vmd);
+ 	vmd_teardown_dma_ops(vmd);
++	vmd_detach_resources(vmd);
+ 	irq_domain_remove(vmd->irq_domain);
+ }
+ 
 -- 
 2.20.1
 
