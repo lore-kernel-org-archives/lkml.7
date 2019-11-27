@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690DAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D90C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C74A21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E642154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889629;
-	bh=zvYRrz4rzu32n8VzU68nDZUGzYohu/DbbQ7Rr99+HhM=;
+	s=default; t=1574889633;
+	bh=Rq5DdZ8123CMC8hW6qHy+m29omraP1Rwc8iVyAMnxRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mLD6M8lexQ6WKbFh75aLFQve4ZatbIis/k5gP7i0iZ1U7mIGZHDZn+rQMp3VLhJOz
-	 wCQ5HavPPEqp7fFG0scJxHV0lZaaOkUaUr4IHpAC8NZnk3If21hySzLEpTikZnIAEJ
-	 K6Pco+WWnHbvVdFkIyfg3dDJ3OllRDQaABBEDOUE=
+	b=2sPvmo6GgjhiEmgk0GPw2v+jWhQaewW+HYvtS8S8Zw5wACptzpB4RAii9j8++ECxi
+	 WK5CYj4ktRF7FuWuX19y2lI2tzkZ/TKmdUwSuq06lK2uKvM/8+Wu6xirdZadQHUhru
+	 C73ev9ithnkoBqFy6uxhUeXjjdU2Y1nUc0SXcscM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732821AbfK0VU1 (ORCPT
+        id S1732795AbfK0VIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:20:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35532 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:08:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732817AbfK0VI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:08:59 -0500
+        id S1732780AbfK0VIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:08:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54B6F2086A;
-        Wed, 27 Nov 2019 21:08:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECDC7217BA;
+        Wed, 27 Nov 2019 21:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888938;
-        bh=zvYRrz4rzu32n8VzU68nDZUGzYohu/DbbQ7Rr99+HhM=;
+        s=default; t=1574888920;
+        bh=Rq5DdZ8123CMC8hW6qHy+m29omraP1Rwc8iVyAMnxRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eMuT0ZGWGko8P+uaJr4zVGFeSu7J8ODAqhXyWfVgKVSAP5fmky29Z0FOoSxG6RiTG
-         CGxCc43JzfHWROH+xzt+pYTAWVMurQYcIi+NyR6A77PMwDWwVUezXst5UFmPPHyW7K
-         jiu0VxvKhnShFEeufy5vmdLImO5fjhTc52eIKYkE=
+        b=VkdAtN3BGGQXqM1FfYZl+Ql9n2tUF1xx1uHuaPW9Qy96xqJZlAGg4OFDmyWAnv/UE
+         bOZggQpToMhenqEc7/rkuRUNM5tGt0anlRe8cbOZdqeXFjSruNn+q+HXEc5xvB58i7
+         zJrtMdxXeoc38GwsjS0rjVf1lIbVr6LhRVwir3zM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 5.3 21/95] tools: gpio: Correctly add make dependencies for gpio_utils
-Date:   Wed, 27 Nov 2019 21:31:38 +0100
-Message-Id: <20191127202850.501283175@linuxfoundation.org>
+        stable@vger.kernel.org, Eli Cohen <eli@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.3 15/95] net/mlx5e: Fix error flow cleanup in mlx5e_tc_tun_create_header_ipv4/6
+Date:   Wed, 27 Nov 2019 21:31:32 +0100
+Message-Id: <20191127202850.194784009@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -59,74 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@redhat.com>
+From: Eli Cohen <eli@mellanox.com>
 
-commit 0161a94e2d1c713bd34d72bc0239d87c31747bf7 upstream.
+[ Upstream commit a86db2269fca8019074b720baf2e0a35cddac4e9 ]
 
-gpio tools fail to build correctly with make parallelization:
+Be sure to release the neighbour in case of failures after successful
+route lookup.
 
-$ make -s -j24
-ld: gpio-utils.o: file not recognized: file truncated
-make[1]: *** [/home/labbott/linux_upstream/tools/build/Makefile.build:145: lsgpio-in.o] Error 1
-make: *** [Makefile:43: lsgpio-in.o] Error 2
-make: *** Waiting for unfinished jobs....
-
-This is because gpio-utils.o is used across multiple targets.
-Fix this by making gpio-utios.o a proper dependency.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fixes: 101f4de9dd52 ("net/mlx5e: Move TC tunnel offloading code to separate source file")
+Signed-off-by: Eli Cohen <eli@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/gpio/Build    |    1 +
- tools/gpio/Makefile |   10 +++++++---
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/tools/gpio/Build
-+++ b/tools/gpio/Build
-@@ -1,3 +1,4 @@
-+gpio-utils-y += gpio-utils.o
- lsgpio-y += lsgpio.o gpio-utils.o
- gpio-hammer-y += gpio-hammer.o gpio-utils.o
- gpio-event-mon-y += gpio-event-mon.o gpio-utils.o
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -35,11 +35,15 @@ $(OUTPUT)include/linux/gpio.h: ../../inc
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c
+@@ -232,12 +232,15 @@ int mlx5e_tc_tun_create_header_ipv4(stru
+ 	if (max_encap_size < ipv4_encap_size) {
+ 		mlx5_core_warn(priv->mdev, "encap size %d too big, max supported is %d\n",
+ 			       ipv4_encap_size, max_encap_size);
+-		return -EOPNOTSUPP;
++		err = -EOPNOTSUPP;
++		goto out;
+ 	}
  
- prepare: $(OUTPUT)include/linux/gpio.h
+ 	encap_header = kzalloc(ipv4_encap_size, GFP_KERNEL);
+-	if (!encap_header)
+-		return -ENOMEM;
++	if (!encap_header) {
++		err = -ENOMEM;
++		goto out;
++	}
  
-+GPIO_UTILS_IN := $(output)gpio-utils-in.o
-+$(GPIO_UTILS_IN): prepare FORCE
-+	$(Q)$(MAKE) $(build)=gpio-utils
-+
- #
- # lsgpio
- #
- LSGPIO_IN := $(OUTPUT)lsgpio-in.o
--$(LSGPIO_IN): prepare FORCE
-+$(LSGPIO_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- 	$(Q)$(MAKE) $(build)=lsgpio
- $(OUTPUT)lsgpio: $(LSGPIO_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-@@ -48,7 +52,7 @@ $(OUTPUT)lsgpio: $(LSGPIO_IN)
- # gpio-hammer
- #
- GPIO_HAMMER_IN := $(OUTPUT)gpio-hammer-in.o
--$(GPIO_HAMMER_IN): prepare FORCE
-+$(GPIO_HAMMER_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- 	$(Q)$(MAKE) $(build)=gpio-hammer
- $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-@@ -57,7 +61,7 @@ $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
- # gpio-event-mon
- #
- GPIO_EVENT_MON_IN := $(OUTPUT)gpio-event-mon-in.o
--$(GPIO_EVENT_MON_IN): prepare FORCE
-+$(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- 	$(Q)$(MAKE) $(build)=gpio-event-mon
- $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+ 	/* used by mlx5e_detach_encap to lookup a neigh hash table
+ 	 * entry in the neigh hash table when a user deletes a rule
+@@ -348,12 +351,15 @@ int mlx5e_tc_tun_create_header_ipv6(stru
+ 	if (max_encap_size < ipv6_encap_size) {
+ 		mlx5_core_warn(priv->mdev, "encap size %d too big, max supported is %d\n",
+ 			       ipv6_encap_size, max_encap_size);
+-		return -EOPNOTSUPP;
++		err = -EOPNOTSUPP;
++		goto out;
+ 	}
+ 
+ 	encap_header = kzalloc(ipv6_encap_size, GFP_KERNEL);
+-	if (!encap_header)
+-		return -ENOMEM;
++	if (!encap_header) {
++		err = -ENOMEM;
++		goto out;
++	}
+ 
+ 	/* used by mlx5e_detach_encap to lookup a neigh hash table
+ 	 * entry in the neigh hash table when a user deletes a rule
 
 
