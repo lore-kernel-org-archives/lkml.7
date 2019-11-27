@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAB4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697F8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E92821843
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E3E21845
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887779;
-	bh=lVm6YqHpo7guvAgq3Pxt5xirqFmtv4mPKPJex/8STw8=;
+	s=default; t=1574887783;
+	bh=Dr/MgV0CT6e61/f8fbdA16ZEvfZhrv4OxigPBFLptW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1bh9RxaEedfkjf+M/pbKUVjNPqqdiXzWYV5b8WZ1e3XYG82ZZQLOI7CCXlQUY32kL
-	 vzY1eiYTv6ogHew/LX1Xh+dodCE8b/ASrfgoYVkiPu+gTXaWftiNVnqL0QEBLwjymu
-	 VLkvV+gZD8dsRgHa3EmfrDtYiRa7fT7PMPO/1v70=
+	b=nkZphlfZ9htCi5Rc2dx8ouYQuqxW7HpoqUAdvsXbec2PbSAz+03TSlrbqw74v9hPk
+	 e6TRY30a75AbGp3jpdv0JlDygGITSbKUIWZXUbatL+ps+Jckb8NEhGqYPbvLRCRscw
+	 0mrhUZaz7BGeb2bfsrLj3BMXZ5gSZcR9/8SKHhos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfK0Uth (ORCPT
+        id S1730270AbfK0Utm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:49:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35174 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:49:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730243AbfK0Utb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:49:31 -0500
+        id S1730263AbfK0Uth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:49:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7B8721774;
-        Wed, 27 Nov 2019 20:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97D3D21780;
+        Wed, 27 Nov 2019 20:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887771;
-        bh=lVm6YqHpo7guvAgq3Pxt5xirqFmtv4mPKPJex/8STw8=;
+        s=default; t=1574887777;
+        bh=Dr/MgV0CT6e61/f8fbdA16ZEvfZhrv4OxigPBFLptW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YOxQp+ImXN6OObzUQTOmZq4oHQnk8bZz6xn7aFbtPAP4LjMqo4ukfrOUfdLsfkdOZ
-         8cLdgG5ciaLn5SoQjoGdhD57EfCj/aGoFwm6lXEBbbjQYIa6gJwQidSFKV31hSXKRH
-         IG5iW87DXo+d2r3B97BWI4j/VPEobqL1oM+W/7f0=
+        b=ryXuPiUnZwswpihqcPw9/BCPqeeGesJiO5gjW6cJaA+UgRNzrBiGpwdBqXuotNYtX
+         LFeSKJ5fR+S8e8zPw0O+rP2RJFJXRIwH51Gi5rSewSRxWY/5A7t5Q3RppFkpf2mBYS
+         p/jrhRszSgt0ztfUJj+ddSZZre1RLfdjrSI4guZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Shuah Khan (Samsung OSG)" <shuah@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Eduardo Valentin <edubezval@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 086/211] selftests: watchdog: fix message when /dev/watchdog open fails
-Date:   Wed, 27 Nov 2019 21:30:19 +0100
-Message-Id: <20191127203101.888525419@linuxfoundation.org>
+Subject: [PATCH 4.14 088/211] thermal: rcar_thermal: Prevent hardware access during system suspend
+Date:   Wed, 27 Nov 2019 21:30:21 +0100
+Message-Id: <20191127203102.063666237@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,39 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan (Samsung OSG) <shuah@kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 9a244229a4b850b11952a0df79607c69b18fd8df ]
+[ Upstream commit 3a31386217628ffe2491695be2db933c25dde785 ]
 
-When /dev/watchdog open fails, watchdog exits with "watchdog not enabled"
-message. This is incorrect when open fails due to insufficient privilege.
+On r8a7791/koelsch, sometimes the following message is printed during
+system suspend:
 
-Fix message to clearly state the reason when open fails with EACCESS when
-a non-root user runs it.
+    rcar_thermal e61f0000.thermal: thermal sensor was broken
 
-Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
+This happens if the workqueue runs while the device is already
+suspended.  Fix this by using the freezable system workqueue instead,
+cfr. commit 51e20d0e3a60cf46 ("thermal: Prevent polling from happening
+during system suspend").
+
+Fixes: e0a5172e9eec7f0d ("thermal: rcar: add interrupt support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/watchdog/watchdog-test.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/thermal/rcar_thermal.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-index 6e290874b70e2..e029e2017280f 100644
---- a/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -89,7 +89,13 @@ int main(int argc, char *argv[])
- 	fd = open("/dev/watchdog", O_WRONLY);
- 
- 	if (fd == -1) {
--		printf("Watchdog device not enabled.\n");
-+		if (errno == ENOENT)
-+			printf("Watchdog device not enabled.\n");
-+		else if (errno == EACCES)
-+			printf("Run watchdog as root.\n");
-+		else
-+			printf("Watchdog device open failed %s\n",
-+				strerror(errno));
- 		exit(-1);
+diff --git a/drivers/thermal/rcar_thermal.c b/drivers/thermal/rcar_thermal.c
+index 73e5fee6cf1d5..83126e2dce36d 100644
+--- a/drivers/thermal/rcar_thermal.c
++++ b/drivers/thermal/rcar_thermal.c
+@@ -401,8 +401,8 @@ static irqreturn_t rcar_thermal_irq(int irq, void *data)
+ 	rcar_thermal_for_each_priv(priv, common) {
+ 		if (rcar_thermal_had_changed(priv, status)) {
+ 			rcar_thermal_irq_disable(priv);
+-			schedule_delayed_work(&priv->work,
+-					      msecs_to_jiffies(300));
++			queue_delayed_work(system_freezable_wq, &priv->work,
++					   msecs_to_jiffies(300));
+ 		}
  	}
  
 -- 
