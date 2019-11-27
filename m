@@ -2,53 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28DDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 981FFC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C783C21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706DE21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574886953;
-	bh=D6JT7FvDOOq9sWuwoDemas30vIqXwcUFtXk+E/9t1d8=;
+	s=default; t=1574886955;
+	bh=sgFMomuJpgJia9iF3oPr/+Riich2tDYbIAx20glD344=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UUsdnGdOvKbfKeNOQGrE9FjTnweaWK93kXYELcSxkHzu1QObtbAe+W/PHkEQg9R+L
-	 iYr0Oh10Twry8Do4qDv8cwgnUnBvRnOx5gLFivNPiGnkTwCoPx83Mf2z6rBIHKnCbP
-	 K0tXOdvPxWmplPL6ibdRhqOmUmRQT/TvsqEBfae4=
+	b=ibmLfNyU7+KcLfSxKAn6GTJZWkU6RlBGNv6EjrIy3RrUSzD6qDv50ZFZUV+toMQxr
+	 7uDHoP0Wf/SSLhKbYHnrzoyBlPJWun+rWD1WOm1t9SOttSA1WHOT5hy5VJ+BH/87vI
+	 +y2Lg9PzTKRguc6xFRCULQFv6QzYnOPuIoBS+42o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfK0Ufw (ORCPT
+        id S1727984AbfK0Ufu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:35:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37354 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:35:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727969AbfK0Uft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:35:49 -0500
+        id S1727955AbfK0Ufq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:35:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF0F7207DD;
-        Wed, 27 Nov 2019 20:35:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6367F21569;
+        Wed, 27 Nov 2019 20:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886948;
-        bh=D6JT7FvDOOq9sWuwoDemas30vIqXwcUFtXk+E/9t1d8=;
+        s=default; t=1574886945;
+        bh=sgFMomuJpgJia9iF3oPr/+Riich2tDYbIAx20glD344=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w0l7jFV4DWJEKiyScQchP5HpNID8P55vWWkHdqALAaIfA8O+LmyV7L5+Ws55wmwDK
-         bwdZzrijb0ndzhGkfR7E1TIvbXKe2sQWWfJ+zKnFYIlULvwyVM59MCrqHD6RaS+lxJ
-         TSAfRhisIpvrEoNJ6wI4yWzU/5Q/yjlQQ7qlevpM=
+        b=N/FViRwxe9HBepXBhd2hrgIWhYTySpMZx+a/NjW8xA0b9aLDtvRRGjiuK8MRsBPpi
+         4W17RXaKTMIk8mVVvt+3+3zCPCdNXLhBtc8qkiRED3AVYKzE13HnCPkAAP5VDn4mmn
+         A4N0xhiEpTyvxeMAwnyeXDKxI9UlTpKTS2g8gY2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 053/132] rtc: s35390a: Change bufs type to u8 in s35390a_init
-Date:   Wed, 27 Nov 2019 21:30:44 +0100
-Message-Id: <20191127202951.811690952@linuxfoundation.org>
+Subject: [PATCH 4.4 052/132] ceph: fix dentry leak in ceph_readdir_prepopulate
+Date:   Wed, 27 Nov 2019 21:30:43 +0100
+Message-Id: <20191127202950.126491988@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,42 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Yan, Zheng <zyan@redhat.com>
 
-[ Upstream commit ef0f02fd69a02b50e468a4ddbe33e3d81671e248 ]
+[ Upstream commit c58f450bd61511d897efc2ea472c69630635b557 ]
 
-Clang warns:
-
-drivers/rtc/rtc-s35390a.c:124:27: warning: implicit conversion from
-'int' to 'char' changes value from 192 to -64 [-Wconstant-conversion]
-        buf = S35390A_FLAG_RESET | S35390A_FLAG_24H;
-            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
-1 warning generated.
-
-Update buf to be an unsigned 8-bit integer, which matches the buf member
-in struct i2c_msg.
-
-https://github.com/ClangBuiltLinux/linux/issues/145
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-s35390a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/inode.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
-index 00662dd28d66a..9a931efd50d36 100644
---- a/drivers/rtc/rtc-s35390a.c
-+++ b/drivers/rtc/rtc-s35390a.c
-@@ -106,7 +106,7 @@ static int s35390a_get_reg(struct s35390a *s35390a, int reg, char *buf, int len)
-  */
- static int s35390a_reset(struct s35390a *s35390a, char *status1)
- {
--	char buf;
-+	u8 buf;
- 	int ret;
- 	unsigned initcount = 0;
- 
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 2ad3f4ab4dcfa..0be931cf3c44c 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -1515,7 +1515,6 @@ int ceph_readdir_prepopulate(struct ceph_mds_request *req,
+ 			if (IS_ERR(realdn)) {
+ 				err = PTR_ERR(realdn);
+ 				d_drop(dn);
+-				dn = NULL;
+ 				goto next_item;
+ 			}
+ 			dn = realdn;
 -- 
 2.20.1
 
