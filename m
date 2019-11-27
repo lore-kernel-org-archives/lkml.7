@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3571C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7420FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D5521736
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD5F21741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889506;
-	bh=2Z0PeulUKiddpx7Y+aKFqPHyf9rEQImC8/nS7AD3Qp8=;
+	s=default; t=1574889509;
+	bh=v3MWzvn0YJzItHPCQQwMkMqD7KQdqDf1JizHExGJBTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z47bQkIPKk05YTX1UxRLshDi4dUwUuE07IHYEEvqNxRsiQssau+Vxo2whBDTHuf8L
-	 HBAZqt8hSqVD+mElV58EHfsOeKrSRmgwBfBkLNHQT6bA1QZCnEV6XZY8v6wq63vYl9
-	 KzZ77PGP94KW3m5IGVl5lMSyXtq+FVNS3Wo5HfUI=
+	b=pMpM0tnfQuySmxBRXAMyTMCLQ52WE5d2X2ZCn32pSFaeJ4ab1JmMy4ZRdeHC59l+p
+	 godmYXhj39cPJp4da30Xl1TUFA8vmTIJQdwCoswRj473AV2GoJdgJUrKUY/aoJhP2T
+	 ZDkJIpP245WfFtkH+3RnuaYGvsREo6t3ZgjaTq5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732896AbfK0VSZ (ORCPT
+        id S1732490AbfK0VLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:18:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40490 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:11:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfK0VLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:11:40 -0500
+        id S1733179AbfK0VL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34C612176D;
-        Wed, 27 Nov 2019 21:11:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBAE8216F4;
+        Wed, 27 Nov 2019 21:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889099;
-        bh=2Z0PeulUKiddpx7Y+aKFqPHyf9rEQImC8/nS7AD3Qp8=;
+        s=default; t=1574889086;
+        bh=v3MWzvn0YJzItHPCQQwMkMqD7KQdqDf1JizHExGJBTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CRzWJikJe4KEQ0edlndVCp5e+kxREnLj+bW8Sdd+1hYrmrkwykj+5KhUEZ07SB5ZQ
-         xeOZQ5Z5MtFey/yWTIbfx7pzpodGLnszW49nY0tp4lgmhLEOcaO55Rf3l2y13QiI4N
-         XHIxguMg9iH/SGfCV/q+q9IhhdjPOSl2jjsq+iMQ=
+        b=XghcoleIVyy1Eb2cXg7kqQv+WHTkZISEj896c1D5fMADrBxb9CM15lkYIRy0hchrX
+         dCiuWvUkXoJeuEe76FlMWyP+m9IkgSDPnQq8ezjm2o5RK0onuPKyqyQrfyLMB+8LNi
+         okzZMqC/QQEGkmesfERyvOrsfyEis5wDcztO5k8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 5.3 46/95] x86/insn: Fix awk regexp warnings
-Date:   Wed, 27 Nov 2019 21:32:03 +0100
-Message-Id: <20191127202912.086499210@linuxfoundation.org>
+        stable@vger.kernel.org, Vito Caputo <vcaputo@pengaru.com>,
+        syzbot <syzkaller@googlegroups.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.3 77/95] media: cxusb: detect cxusb_ctrl_msg error in query
+Date:   Wed, 27 Nov 2019 21:32:34 +0100
+Message-Id: <20191127202945.633083568@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -67,88 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+From: Vito Caputo <vcaputo@pengaru.com>
 
-commit 700c1018b86d0d4b3f1f2d459708c0cdf42b521d upstream.
+commit ca8f245f284eeffa56f3b7a5eb6fc503159ee028 upstream.
 
-gawk 5.0.1 generates the following regexp warnings:
+Don't use uninitialized ircode[] in cxusb_rc_query() when
+cxusb_ctrl_msg() fails to populate its contents.
 
-  GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
-  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
-  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is  not a known regexp operator
+syzbot reported:
 
-Ealier versions of gawk are not known to generate these warnings. The
-gawk manual referenced below does not list characters ':' and '&' as
-needing escaping, so 'unescape' them. See
+dvb-usb: bulk message failed: -22 (1/-30591)
+=====================================================
+BUG: KMSAN: uninit-value in ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
+BUG: KMSAN: uninit-value in rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
+BUG: KMSAN: uninit-value in rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
+CPU: 1 PID: 11436 Comm: kworker/1:2 Not tainted 5.3.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events dvb_usb_read_remote_control
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+ kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
+ __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
+ bsearch+0x1dd/0x250 lib/bsearch.c:41
+ ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
+ rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
+ rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
+ cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
+ dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
+ process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+ worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+ kthread+0x4b5/0x4f0 kernel/kthread.c:256
+ ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-  https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
+ kmsan_internal_chain_origin+0xd2/0x170 mm/kmsan/kmsan.c:314
+ __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:184
+ rc_g_keycode_from_table drivers/media/rc/rc-main.c:583 [inline]
+ rc_keydown+0x2c4/0x6f0 drivers/media/rc/rc-main.c:816
+ cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
+ dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
+ process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+ worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+ kthread+0x4b5/0x4f0 kernel/kthread.c:256
+ ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-for more info.
+Local variable description: ----ircode@cxusb_rc_query
+Variable was created at:
+ cxusb_rc_query+0x4d/0x360 drivers/media/usb/dvb-usb/cxusb.c:543
+ dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
 
-Running diff on the output generated by the script before and after
-applying the patch reported no differences.
-
- [ bp: Massage commit message. ]
-
-[ Caught the respective tools header discrepancy. ]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190924044659.3785-1-alexander.kapshuk@gmail.com
+Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/tools/gen-insn-attr-x86.awk               |    4 ++--
- tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/media/usb/dvb-usb/cxusb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
+--- a/drivers/media/usb/dvb-usb/cxusb.c
++++ b/drivers/media/usb/dvb-usb/cxusb.c
+@@ -542,7 +542,8 @@ static int cxusb_rc_query(struct dvb_usb
+ {
+ 	u8 ircode[4];
  
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
+-	cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4);
++	if (cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4) < 0)
++		return 0;
  
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,
- 	return add_flags(imm, mod)
- }
- 
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
---- a/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
- 
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
- 
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,
- 	return add_flags(imm, mod)
- }
- 
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
+ 	if (ircode[2] || ircode[3])
+ 		rc_keydown(d->rc_dev, RC_PROTO_NEC,
 
 
