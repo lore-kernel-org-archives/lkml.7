@@ -2,143 +2,95 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A9FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E27C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8721C2051A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23792051A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lMUaEIEF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PvBbnjaf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfK0XkC (ORCPT
+        id S1727378AbfK0XnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 18:40:02 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:47003 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbfK0XkC (ORCPT
+        Wed, 27 Nov 2019 18:43:07 -0500
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:36686 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbfK0XnG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 18:40:02 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 193so12006417pfc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 15:40:01 -0800 (PST)
+        Wed, 27 Nov 2019 18:43:06 -0500
+Received: by mail-vk1-f196.google.com with SMTP id d10so5938970vke.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 15:43:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=raddepcS3XU/VKmJZp7vh07W9acc4obuzJakh7dtDEc=;
-        b=lMUaEIEF/K8o7ISuIzD701KA5iJfJ5QQN3kOxf7daHFO90oqdvjU4qDL035s5iaUAD
-         HJIO+RQjstGi9TvP3WvYABOU07+/BCQR89mGYmIH7ddA/VTBp/T8VKn2xcp5EdsMrJqg
-         HmJmg9meuWINbhZq9L8OXg6SYEMQuUOiDZjlQ=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5V1U7K9kHqSmBC9GKmbu10OmsvEfDZWHZBAkdynx/3A=;
+        b=PvBbnjafdCvEjlwAHLsw4Jkf5UKDz6s7witD5jd3/x70kOObX+EhN8IhEu1l0vMDao
+         eyFB2VR6+BiVNsnhas396vPiie5zwGNVANUKDHufBAXVc0+9hKfbW030dFWNG3Cv/J7l
+         hqmrKydCIurQVBzzegb3UutaspJwhtGXO/gKSvIA6Sq2HhXhwRAghpC1UbE1oDheTz8S
+         qX4ZaH6B1tEQxHPimTogvOFaHeUSQzd1sKhIPU+fef2bGXQspLHe1EyC9nEza/asyLzJ
+         b/YquzQ4e8aWWFpfl2u+fQMt+7m4lbuhnN1p9eHjdQdOaCsEYyXNqrWJj/1kRgyr8e+w
+         v8Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=raddepcS3XU/VKmJZp7vh07W9acc4obuzJakh7dtDEc=;
-        b=UkTMyC3OB+eIZQDEs6nW/CqRSCIA8eD5ytqMCOG68HVFAGT6MiX+OhDkX76MB1XBo1
-         xZQSmRgW02TU+0BGu501PlrXdA9gM9g4mV2HfqdkQ9YzUcWGIQIoJk9xii91mdJvUKWQ
-         RBoQ1VP14nfWcfI3YQEvibTsMP7kDHCTEWs6EQYxen1AbqDyFw03Q/yogX4ag3F/fk6T
-         eYz+0iZK39I8HDb6UQbbSbQPRugiHNJCLwo/UlfSrFfOSwT+/YEYrRUe+oSzBGGE5rdF
-         HkY0MdFLRer89UT1Ta+PLgQu0uhh+s2uIo0JizIgUSOd/X2HqTyPTKnvDYRrjPzv1zpk
-         dqoQ==
-X-Gm-Message-State: APjAAAXDBNE9qXBKRxwkRdcEb8WzeQmKiXRCfGhbPBOvr20ALoszVAg3
-        mB29WOllKMKBUyxMOfbTYei/2g==
-X-Google-Smtp-Source: APXvYqypr/l+jjqzsq81qEK0oqfxAiDdCm613PhZMl4MTaSlBPa6Q24tTOmN+mvg8FpR1scT/s6jDQ==
-X-Received: by 2002:aa7:9465:: with SMTP id t5mr6471353pfq.18.1574898001530;
-        Wed, 27 Nov 2019 15:40:01 -0800 (PST)
-Received: from google.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id k13sm17737283pgl.69.2019.11.27.15.40.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 15:40:00 -0800 (PST)
-Date:   Wed, 27 Nov 2019 15:39:58 -0800
-From:   Brian Norris <briannorris@chromium.org>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH] wireless: Use offsetof instead of custom macro.
-Message-ID: <20191127233957.GA217817@google.com>
-References: <20190418075016.252988-1-pihsun@chromium.org>
- <CANMq1KCwcVawg6L1hTKXBgBi66EKdHQrvxr_chR9Kv1ifFREnA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5V1U7K9kHqSmBC9GKmbu10OmsvEfDZWHZBAkdynx/3A=;
+        b=qZkePn7fIqhhEJaj4xWJP4AquD2oVWrWJ6Y7Iq/Oa7LNrxluua4c4oRm50s+j2csCq
+         7DPfpKJdX9e5y8yvnvt0xS+IXVM0hJoCiVoBHY6QJpk5Ft9fzYiGKKXV7t4IZr3JA2FV
+         GYTpPu0Vezku8EV6sC/pcpY8BOku1Hg6vBTgoa6aEVXJ9LLLN8G4ASDPYFYE3klC7wir
+         t0KxsE0L1XyvPMccqb40bxOv8hgGI7aoIzVAK+qfc7pOtGiMjkp9zkAQIAsGM9PuaFT/
+         eUDH860u8KeZsXjhuMQW4k3IFxyWr2fRrHgat9VTyFRcUXmiPZI+EX34oI47S3/LB9AB
+         jWNg==
+X-Gm-Message-State: APjAAAWQnI8HZUi+V69XlRoMtLJyQRT08cOvZMUnKKSI/a5cHew+p6k4
+        6bbGpysCifwNVxaR9cqh0SqBQDxBt4WvzL1+EkXqXw==
+X-Google-Smtp-Source: APXvYqx1i0KATXqkxu2iu7n10l5sJYYFz7lSnecvNV9HWF093zCgA7YZz4hfleScYvfvsSSdbbjLOGlrCFIaftAte+A=
+X-Received: by 2002:a1f:7d88:: with SMTP id y130mr4689848vkc.71.1574898185282;
+ Wed, 27 Nov 2019 15:43:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANMq1KCwcVawg6L1hTKXBgBi66EKdHQrvxr_chR9Kv1ifFREnA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191112223046.176097-1-samitolvanen@google.com>
+ <20191119201353.2589-1-samitolvanen@google.com> <20191127181940.GB49214@sol.localdomain>
+In-Reply-To: <20191127181940.GB49214@sol.localdomain>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Wed, 27 Nov 2019 15:42:53 -0800
+Message-ID: <CABCJKud-JRT8mNmP8yMobeFajk1gU_iwss9w43keZyX9jasPXw@mail.gmail.com>
+Subject: Re: [PATCH v3] crypto: arm64/sha: fix function types
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ linux-wireless
+On Wed, Nov 27, 2019 at 10:19 AM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Tue, Nov 19, 2019 at 12:13:53PM -0800, Sami Tolvanen wrote:
+> > +static void __sha1_ce_transform(struct sha1_state *sst, u8 const *src,
+> > +                             int blocks)
+> > +{
+> > +     return sha1_ce_transform(container_of(sst, struct sha1_ce_state, sst),
+> > +                              src, blocks);
+> > +}
+> > +
+>
+> 'return' isn't needed in functions that return void.
+>
+> Likewise everywhere else in this patch.
+>
+> Otherwise this patch looks fine.
 
-[Top-posting because the important stuff is up here, and the rest is
-missing from linux-wireless]
+Thanks for taking a look, Eric. I'll send out v4 with this fixed.
 
-Hey Pi-Hsun, Nicolas: you failed to copy linux-wireless, so no one's
-going to pick this patch up. Please re-send if you care.
-
-Regards,
-Brian
-
-On Thu, May 02, 2019 at 03:56:33PM +0800, Nicolas Boichat wrote:
-> On Thu, Apr 18, 2019 at 3:50 PM Pi-Hsun Shih <pihsun@chromium.org> wrote:
-> >
-> > Use offsetof to calculate offset of a field to take advantage of
-> > compiler built-in version when possible, and avoid UBSAN warning when
-> > compiling with Clang:
-> >
-> > ==================================================================
-> > UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
-> > member access within null pointer of type 'struct iw_point'
-> > CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
-> > Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
-> > Call trace:
-> >  dump_backtrace+0x0/0x194
-> >  show_stack+0x20/0x2c
-> >  __dump_stack+0x20/0x28
-> >  dump_stack+0x70/0x94
-> >  ubsan_epilogue+0x14/0x44
-> >  ubsan_type_mismatch_common+0xf4/0xfc
-> >  __ubsan_handle_type_mismatch_v1+0x34/0x54
-> >  wireless_send_event+0x3cc/0x470
-> >  ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
-> >  __cfg80211_scan_done+0x28/0x34 [cfg80211]
-> >  process_one_work+0x170/0x35c
-> >  worker_thread+0x254/0x380
-> >  kthread+0x13c/0x158
-> >  ret_from_fork+0x10/0x18
-> > ===================================================================
-> >
-> > Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> 
-> The warning from clang is spurious, but in another case, we felt that
-> the cleanup was worth it, nevertheless
-> (https://lore.kernel.org/patchwork/patch/1050040/).
-> 
-> Reviewed-By: Nicolas Boichat <drinkcat@chromium.org>
-> 
-> > ---
-> >  include/uapi/linux/wireless.h | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/include/uapi/linux/wireless.h b/include/uapi/linux/wireless.h
-> > index 86eca3208b6b..f259cca5cc2b 100644
-> > --- a/include/uapi/linux/wireless.h
-> > +++ b/include/uapi/linux/wireless.h
-> > @@ -1090,8 +1090,7 @@ struct iw_event {
-> >  /* iw_point events are special. First, the payload (extra data) come at
-> >   * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
-> >   * we omit the pointer, so start at an offset. */
-> > -#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
-> > -                         (char *) NULL)
-> > +#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
-> >  #define IW_EV_POINT_LEN        (IW_EV_LCP_LEN + sizeof(struct iw_point) - \
-> >                          IW_EV_POINT_OFF)
-> >
-> > --
-> > 2.21.0.392.gf8f6787159e-goog
-> >
+Sami
