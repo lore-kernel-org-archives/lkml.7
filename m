@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D5AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB7AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D077021882
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EAE21882
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887933;
-	bh=Ip6hU7yXg9AcHOr9vr8JdMkTGx+/SfF3tqPyui4JfNY=;
+	s=default; t=1574887936;
+	bh=J8nLv1zzZihBjk9Qf7MzVMFSXvKTV4N1SPSE8aD/4sA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S0VV3cs5c0sfFwvb958rT1jxNI7MhGBlTAYq3s9TsZm51AzVyGd93Xr77AvVLVtoG
-	 ZX3FWzG2ErOiylFyo6JWaHiISIyhWc3XUeO6V9KKA+kVO4jW+CdkEehDHYIQmn4ALQ
-	 DyazBXKQ6en3BK6v2evMRM6FE/ZGCWj6L7Dqzbpc=
+	b=xEjoKPdMrYeU4S06y4E2eRL5dGUEv0jDSdK7zYk2ECQ/hqB2gzOX0K+wxUlrySxgn
+	 nVO1Ij9SQOIcsd0aORzzF49JXbzW+tZ6JJG+ey8WmztDgpxc7S2LY9Yn/j+DyLJkY/
+	 D3wI2bSQ9BcXsqkdpIf4VYsVRY796PeNzmWW20f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfK0UwM (ORCPT
+        id S1730587AbfK0UwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:52:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39158 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:52:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729887AbfK0UwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:52:00 -0500
+        id S1730570AbfK0UwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:52:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88BB121774;
-        Wed, 27 Nov 2019 20:51:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 011C42184C;
+        Wed, 27 Nov 2019 20:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887919;
-        bh=Ip6hU7yXg9AcHOr9vr8JdMkTGx+/SfF3tqPyui4JfNY=;
+        s=default; t=1574887926;
+        bh=J8nLv1zzZihBjk9Qf7MzVMFSXvKTV4N1SPSE8aD/4sA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W00pJEVproSXbytRSm5bPbDzYqniyiGnhJZp/CdIwbw5p73GhZpWGpkgg9elgLl3z
-         IPjvrGkmLUYVdIvc4yyO+EY/JXFe4mNfd8Echa++tgxLLF8vHG1Kku8StBwfrne4ZE
-         WoyWZ9xbF42VBQT71CGx4d1HM6dfzb8LAZxUrSzc=
+        b=X6lfIAHBL/H5IlRIPS/SOlGnTs6WGPWJrVlYKmyFEfwRr47WzEdG2rJYBviosYluP
+         NT+Fab0tC7n3eanm6gJeiee32Ha7arHPuo6JaJV6XxNNXjVNZ87Pf5f6B0vpBnAwFn
+         gZpfzxZaqC2hBpJkbOIkSyDrLcTuWQ5NBA+rQwUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Mike Manning <mmanning@vyatta.att-mail.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 146/211] scsi: lpfc: Correct loss of fc4 type on remote port address change
-Date:   Wed, 27 Nov 2019 21:31:19 +0100
-Message-Id: <20191127203107.814390844@linuxfoundation.org>
+Subject: [PATCH 4.14 149/211] vrf: mark skb for multicast or link-local as enslaved to VRF
+Date:   Wed, 27 Nov 2019 21:31:22 +0100
+Message-Id: <20191127203108.083769323@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -62,103 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Mike Manning <mmanning@vyatta.att-mail.com>
 
-[ Upstream commit d83ca3ea833d7a66d49225e4191c4e37cab8f079 ]
+[ Upstream commit 6f12fa775530195a501fb090d092c637f32d0cc5 ]
 
-An address change for a remote port cause PRLI for the wrong protocol
-to be sent.  The node copy done in the discovery code skipped copying
-the fc4 protocols supported as well.
+The skb for packets that are multicast or to a link-local address are
+not marked as being enslaved to a VRF, if they are received on a socket
+bound to the VRF. This is needed for ND and it is preferable for the
+kernel not to have to deal with the additional use-cases if ll or mcast
+packets are handled as enslaved. However, this does not allow service
+instances listening on unbound and bound to VRF sockets to distinguish
+the VRF used, if packets are sent as multicast or to a link-local
+address. The fix is for the VRF driver to also mark these skb as being
+enslaved to the VRF.
 
-Fix the copy logic for the address change.  Beefed up log messages in
-this area as well.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Tested-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c       | 26 +++++++++++++++++++++++---
- drivers/scsi/lpfc/lpfc_nportdisc.c |  5 +++--
- 2 files changed, 26 insertions(+), 5 deletions(-)
+ drivers/net/vrf.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index 95449f97101d3..e5db20e8979d5 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -1550,8 +1550,10 @@ lpfc_plogi_confirm_nport(struct lpfc_hba *phba, uint32_t *prsp,
+diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
+index 03e4fcdfeab73..e0cea5c05f0e2 100644
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -996,24 +996,23 @@ static struct sk_buff *vrf_ip6_rcv(struct net_device *vrf_dev,
+ 				   struct sk_buff *skb)
+ {
+ 	int orig_iif = skb->skb_iif;
+-	bool need_strict;
++	bool need_strict = rt6_need_strict(&ipv6_hdr(skb)->daddr);
++	bool is_ndisc = ipv6_ndisc_frame(skb);
+ 
+-	/* loopback traffic; do not push through packet taps again.
+-	 * Reset pkt_type for upper layers to process skb
++	/* loopback, multicast & non-ND link-local traffic; do not push through
++	 * packet taps again. Reset pkt_type for upper layers to process skb
  	 */
- 	new_ndlp = lpfc_findnode_wwpn(vport, &sp->portName);
- 
-+	/* return immediately if the WWPN matches ndlp */
- 	if (new_ndlp == ndlp && NLP_CHK_NODE_ACT(new_ndlp))
- 		return ndlp;
-+
- 	if (phba->sli_rev == LPFC_SLI_REV4) {
- 		active_rrqs_xri_bitmap = mempool_alloc(phba->active_rrq_pool,
- 						       GFP_KERNEL);
-@@ -1560,9 +1562,13 @@ lpfc_plogi_confirm_nport(struct lpfc_hba *phba, uint32_t *prsp,
- 			       phba->cfg_rrq_xri_bitmap_sz);
+-	if (skb->pkt_type == PACKET_LOOPBACK) {
++	if (skb->pkt_type == PACKET_LOOPBACK || (need_strict && !is_ndisc)) {
+ 		skb->dev = vrf_dev;
+ 		skb->skb_iif = vrf_dev->ifindex;
+ 		IP6CB(skb)->flags |= IP6SKB_L3SLAVE;
+-		skb->pkt_type = PACKET_HOST;
++		if (skb->pkt_type == PACKET_LOOPBACK)
++			skb->pkt_type = PACKET_HOST;
+ 		goto out;
  	}
  
--	lpfc_printf_vlog(vport, KERN_INFO, LOG_ELS,
--		 "3178 PLOGI confirm: ndlp %p x%x: new_ndlp %p\n",
--		 ndlp, ndlp->nlp_DID, new_ndlp);
-+	lpfc_printf_vlog(vport, KERN_INFO, LOG_ELS | LOG_NODE,
-+			 "3178 PLOGI confirm: ndlp x%x x%x x%x: "
-+			 "new_ndlp x%x x%x x%x\n",
-+			 ndlp->nlp_DID, ndlp->nlp_flag,  ndlp->nlp_fc4_type,
-+			 (new_ndlp ? new_ndlp->nlp_DID : 0),
-+			 (new_ndlp ? new_ndlp->nlp_flag : 0),
-+			 (new_ndlp ? new_ndlp->nlp_fc4_type : 0));
- 
- 	if (!new_ndlp) {
- 		rc = memcmp(&ndlp->nlp_portname, name,
-@@ -1611,6 +1617,14 @@ lpfc_plogi_confirm_nport(struct lpfc_hba *phba, uint32_t *prsp,
- 			       phba->cfg_rrq_xri_bitmap_sz);
- 	}
- 
-+	/* At this point in this routine, we know new_ndlp will be
-+	 * returned. however, any previous GID_FTs that were done
-+	 * would have updated nlp_fc4_type in ndlp, so we must ensure
-+	 * new_ndlp has the right value.
-+	 */
-+	if (vport->fc_flag & FC_FABRIC)
-+		new_ndlp->nlp_fc4_type = ndlp->nlp_fc4_type;
-+
- 	lpfc_unreg_rpi(vport, new_ndlp);
- 	new_ndlp->nlp_DID = ndlp->nlp_DID;
- 	new_ndlp->nlp_prev_state = ndlp->nlp_prev_state;
-@@ -1732,6 +1746,12 @@ lpfc_plogi_confirm_nport(struct lpfc_hba *phba, uint32_t *prsp,
- 	    active_rrqs_xri_bitmap)
- 		mempool_free(active_rrqs_xri_bitmap,
- 			     phba->active_rrq_pool);
-+
-+	lpfc_printf_vlog(vport, KERN_INFO, LOG_ELS | LOG_NODE,
-+			 "3173 PLOGI confirm exit: new_ndlp x%x x%x x%x\n",
-+			 new_ndlp->nlp_DID, new_ndlp->nlp_flag,
-+			 new_ndlp->nlp_fc4_type);
-+
- 	return new_ndlp;
- }
- 
-diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
-index a0658d1582287..043bca6449cd0 100644
---- a/drivers/scsi/lpfc/lpfc_nportdisc.c
-+++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
-@@ -2829,8 +2829,9 @@ lpfc_disc_state_machine(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
- 	/* DSM in event <evt> on NPort <nlp_DID> in state <cur_state> */
- 	lpfc_printf_vlog(vport, KERN_INFO, LOG_DISCOVERY,
- 			 "0211 DSM in event x%x on NPort x%x in "
--			 "state %d Data: x%x\n",
--			 evt, ndlp->nlp_DID, cur_state, ndlp->nlp_flag);
-+			 "state %d Data: x%x x%x\n",
-+			 evt, ndlp->nlp_DID, cur_state,
-+			 ndlp->nlp_flag, ndlp->nlp_fc4_type);
- 
- 	lpfc_debugfs_disc_trc(vport, LPFC_DISC_TRC_DSM,
- 		 "DSM in:          evt:%d ste:%d did:x%x",
+-	/* if packet is NDISC or addressed to multicast or link-local
+-	 * then keep the ingress interface
+-	 */
+-	need_strict = rt6_need_strict(&ipv6_hdr(skb)->daddr);
+-	if (!ipv6_ndisc_frame(skb) && !need_strict) {
++	/* if packet is NDISC then keep the ingress interface */
++	if (!is_ndisc) {
+ 		vrf_rx_stats(vrf_dev, skb->len);
+ 		skb->dev = vrf_dev;
+ 		skb->skb_iif = vrf_dev->ifindex;
 -- 
 2.20.1
 
