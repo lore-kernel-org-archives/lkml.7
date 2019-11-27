@@ -3,49 +3,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74A7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E494C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A35206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D07206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbfK0Q0M (ORCPT
+        id S1727116AbfK0Q0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:26:12 -0500
-Received: from gentwo.org ([3.19.106.255]:39458 "EHLO gentwo.org"
+        Wed, 27 Nov 2019 11:26:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:49798 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfK0Q0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:26:12 -0500
-Received: by gentwo.org (Postfix, from userid 1002)
-        id DCF9B3EF16; Wed, 27 Nov 2019 16:26:11 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id DC2BB3EC1C;
-        Wed, 27 Nov 2019 16:26:11 +0000 (UTC)
-Date:   Wed, 27 Nov 2019 16:26:11 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Michal Hocko <mhocko@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
-In-Reply-To: <20191127162400.GT20912@dhcp22.suse.cz>
-Message-ID: <alpine.DEB.2.21.1911271625110.17727@www.lameter.com>
-References: <20191126121901.GE20912@dhcp22.suse.cz> <alpine.DEB.2.21.1911261632030.9857@www.lameter.com> <20191126165420.GL20912@dhcp22.suse.cz> <alpine.DEB.2.21.1911271535560.16935@www.lameter.com> <20191127162400.GT20912@dhcp22.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1726514AbfK0Q0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 11:26:20 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C90AC30E;
+        Wed, 27 Nov 2019 08:26:19 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 943073F68E;
+        Wed, 27 Nov 2019 08:26:18 -0800 (PST)
+Date:   Wed, 27 Nov 2019 16:26:14 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, eswara.kota@linux.intel.com,
+        bhelgaas@google.com
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: Re: linux-next: Tree for Nov 27
+ (drivers/pci/controller/dwc/pcie-designware-host.c)
+Message-ID: <20191127162614.GA6423@e121166-lin.cambridge.arm.com>
+References: <20191127155717.400a60de@canb.auug.org.au>
+ <fc3586ef-a0a1-84b3-2e0e-b8ba5c41f229@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fc3586ef-a0a1-84b3-2e0e-b8ba5c41f229@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Nov 2019, Michal Hocko wrote:
+On Wed, Nov 27, 2019 at 07:55:57AM -0800, Randy Dunlap wrote:
+> On 11/26/19 8:57 PM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Please do not add any material for v5.6 to your linux-next included
+> > trees until after v5.5-rc1 has been released.
+> > 
+> > Changes since 20191126:
+> > 
+> 
+> on i386:
+> # CONFIG_PCI_MSI is not set
+> 
+> 
+> WARNING: unmet direct dependencies detected for PCIE_DW_HOST
+>   Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
+>   Selected by [y]:
+>   - PCIE_INTEL_GW [=y] && PCI [=y] && OF [=y] && (X86 [=y] || COMPILE_TEST [=n])
+> 
+> and related build errors:
 
-> Would you mind a patch that would add a kernel command line parameter
-> that would work like memcg_sysfs_enabled? The default for the config
-> would be on. Or it would be preferrable to simply drop only events?
+Dilip,
 
-Just drop the events may be best. Then we know if someone is using it.
+I will have to drop your series which unfortunately forces Bjorn to pull
+my pci/dwc branch again, I don't think there is time for fixing it,
+given release timing and Stephen's request above.
 
+Lorenzo
+
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:72:15: error: variable ‘dw_pcie_msi_domain_info’ has initializer but incomplete type
+>  static struct msi_domain_info dw_pcie_msi_domain_info = {
+>                ^~~~~~~~~~~~~~~
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:3: error: ‘struct msi_domain_info’ has no member named ‘flags’
+>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>    ^~~~~
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:12: error: ‘MSI_FLAG_USE_DEF_DOM_OPS’ undeclared here (not in a function); did you mean ‘SIMPLE_DEV_PM_OPS’?
+>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>             ^~~~~~~~~~~~~~~~~~~~~~~~
+>             SIMPLE_DEV_PM_OPS
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:39: error: ‘MSI_FLAG_USE_DEF_CHIP_OPS’ undeclared here (not in a function); did you mean ‘MSI_FLAG_USE_DEF_DOM_OPS’?
+>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>                                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+>                                        MSI_FLAG_USE_DEF_DOM_OPS
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:74:6: error: ‘MSI_FLAG_PCI_MSIX’ undeclared here (not in a function); did you mean ‘SS_FLAG_BITS’?
+>       MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
+>       ^~~~~~~~~~~~~~~~~
+>       SS_FLAG_BITS
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:74:26: error: ‘MSI_FLAG_MULTI_PCI_MSI’ undeclared here (not in a function); did you mean ‘MSI_FLAG_PCI_MSIX’?
+>       MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
+>                           ^~~~~~~~~~~~~~~~~~~~~~
+>                           MSI_FLAG_PCI_MSIX
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:11: warning: excess elements in struct initializer
+>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>            ^
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:11: note: (near initialization for ‘dw_pcie_msi_domain_info’)
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:75:3: error: ‘struct msi_domain_info’ has no member named ‘chip’
+>   .chip = &dw_pcie_msi_irq_chip,
+>    ^~~~
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:75:10: warning: excess elements in struct initializer
+>   .chip = &dw_pcie_msi_irq_chip,
+>           ^
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:75:10: note: (near initialization for ‘dw_pcie_msi_domain_info’)
+> ../drivers/pci/controller/dwc/pcie-designware-host.c: In function ‘dw_pcie_allocate_domains’:
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:267:19: error: implicit declaration of function ‘pci_msi_create_irq_domain’; did you mean ‘pci_msi_get_device_domain’? [-Werror=implicit-function-declaration]
+>   pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+>                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+>                    pci_msi_get_device_domain
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:267:17: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+>   pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+>                  ^
+> ../drivers/pci/controller/dwc/pcie-designware-host.c: At top level:
+> ../drivers/pci/controller/dwc/pcie-designware-host.c:72:31: error: storage size of ‘dw_pcie_msi_domain_info’ isn’t known
+>  static struct msi_domain_info dw_pcie_msi_domain_info = {
+>                                ^~~~~~~~~~~~~~~~~~~~~~~
+> 
+> 
+> -- 
+> ~Randy
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
