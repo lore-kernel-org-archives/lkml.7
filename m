@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94AFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F812176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8472176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889268;
-	bh=IZD60WKOoIIwQZ0XlG9VB+VgoMwu1UzQuNA7TjHizyw=;
+	s=default; t=1574889272;
+	bh=85fGGUmNc6aJLbEGpfmynlbgA0s6PvO/ENe7anqmj50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zSaMWV/fvdtvAdxJ1YcYPAcOFXxvkojec+VvAXEodHn64TX4AvXuq0oKQgwEShxot
-	 yPB82xQXlWpgACnyzDcLBo9cI5J3qhlTwbYG6rMt+BUP+4APL2Bj27SY3w2XxyOzT2
-	 0rvY4fipi8sF+HvfJWuPkUlI/Mb29lkUK1796m34=
+	b=1g3wfXGP4YCLaDAfIVLA57yHi03BTWv4Pp7LtM25u7wc9eRDToqcuOgTVhDaAJa1w
+	 xQH8iaO2yNHk+VHRlfxxAX8FRhskbTWQUG5gTtNsF+vavTftgMHlS0SSrqPeYdPDnf
+	 Wfh/5+j0RKDhiiDKtdmjiiamDgfdVE/q0TNzsNPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387535AbfK0VO1 (ORCPT
+        id S2387550AbfK0VOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:14:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47922 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:14:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727469AbfK0VOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:14:21 -0500
+        id S2387531AbfK0VO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:14:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5C692154A;
-        Wed, 27 Nov 2019 21:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAB5121736;
+        Wed, 27 Nov 2019 21:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889261;
-        bh=IZD60WKOoIIwQZ0XlG9VB+VgoMwu1UzQuNA7TjHizyw=;
+        s=default; t=1574889266;
+        bh=85fGGUmNc6aJLbEGpfmynlbgA0s6PvO/ENe7anqmj50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TQserSO+kBTmbvaCGuV09yS9Da1lYKDYqhilJ3L+kLfjkIlgDmrecHXnae5E7Xh0p
-         cNry9Bvr9a4HmfAiv4cX0kVUhmzDPqpnzAgHXIQeZspIY6/+u9W9YKzdarW677wXLB
-         IQDFcMlUzC2TCebhjrcwhcduwo55nNPR/cpBaoRA=
+        b=KxPF2RvSudTBlfxNtFLDrgb3xD0KKaKEWchpqAJB/n6o+aLcd0cnzY4DC0eoteEN6
+         r2Q8Jm3dib6GzfJj5TF/50kkl25Yc18uRINcryz/lecHUPoBXn3OpkaOndKs9xrq5a
+         nHhqjlzolb7oK2joVfQzWH/jsvYn2dzf0iz8+XqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 5.4 48/66] media: b2c2-flexcop-usb: add sanity checking
-Date:   Wed, 27 Nov 2019 21:32:43 +0100
-Message-Id: <20191127202727.964604266@linuxfoundation.org>
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Waiman Long <longman@redhat.com>, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Tyler Hicks <tyhicks@canonical.com>, x86-ml <x86@kernel.org>
+Subject: [PATCH 5.4 11/66] x86/speculation: Fix redundant MDS mitigation message
+Date:   Wed, 27 Nov 2019 21:32:06 +0100
+Message-Id: <20191127202647.211071184@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -61,34 +68,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Waiman Long <longman@redhat.com>
 
-commit 1b976fc6d684e3282914cdbe7a8d68fdce19095c upstream.
+commit cd5a2aa89e847bdda7b62029d94e95488d73f6b2 upstream.
 
-The driver needs an isochronous endpoint to be present. It will
-oops in its absence. Add checking for it.
+Since MDS and TAA mitigations are inter-related for processors that are
+affected by both vulnerabilities, the followiing confusing messages can
+be printed in the kernel log:
 
-Reported-by: syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+  MDS: Vulnerable
+  MDS: Mitigation: Clear CPU buffers
+
+To avoid the first incorrect message, defer the printing of MDS
+mitigation after the TAA mitigation selection has been done. However,
+that has the side effect of printing TAA mitigation first before MDS
+mitigation.
+
+ [ bp: Check box is affected/mitigations are disabled first before
+   printing and massage. ]
+
+Suggested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Mark Gross <mgross@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Tyler Hicks <tyhicks@canonical.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191115161445.30809-3-longman@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/b2c2/flexcop-usb.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/cpu/bugs.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -538,6 +538,9 @@ static int flexcop_usb_probe(struct usb_
- 	struct flexcop_device *fc = NULL;
- 	int ret;
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -39,6 +39,7 @@ static void __init spectre_v2_select_mit
+ static void __init ssb_select_mitigation(void);
+ static void __init l1tf_select_mitigation(void);
+ static void __init mds_select_mitigation(void);
++static void __init mds_print_mitigation(void);
+ static void __init taa_select_mitigation(void);
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
-+		return -ENODEV;
+ /* The base value of the SPEC_CTRL MSR that always has to be preserved. */
+@@ -108,6 +109,12 @@ void __init check_bugs(void)
+ 	mds_select_mitigation();
+ 	taa_select_mitigation();
+ 
++	/*
++	 * As MDS and TAA mitigations are inter-related, print MDS
++	 * mitigation until after TAA mitigation selection is done.
++	 */
++	mds_print_mitigation();
 +
- 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
- 		err("out of memory\n");
- 		return -ENOMEM;
+ 	arch_smt_update();
+ 
+ #ifdef CONFIG_X86_32
+@@ -245,6 +252,12 @@ static void __init mds_select_mitigation
+ 		    (mds_nosmt || cpu_mitigations_auto_nosmt()))
+ 			cpu_smt_disable(false);
+ 	}
++}
++
++static void __init mds_print_mitigation(void)
++{
++	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off())
++		return;
+ 
+ 	pr_info("%s\n", mds_strings[mds_mitigation]);
+ }
 
 
