@@ -2,109 +2,77 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006C6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2D5C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9B720665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890369;
-	bh=Nyiitl+7iWoJjEOTOIv7UE6xC61zyO0DGnwSNPYfu4M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i//ujTtn95sbge80fNJFnUm2LXuWfLJcAjKCN85rffmoiyf+XtF+bkAROsDVUzhCa
-	 VhMon9RAM4IM6p3WgXbMOVKfEAQ8/l0rV5QgjSXTRaAUvrSC4NbWJ7wxhqLvNTyYZ8
-	 IwMWbIls5/IeJhIi4laVyqVyKOWgEp8FmEfy8lxk=
+	by mail.kernel.org (Postfix) with ESMTP id 248C620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HOJIQDi0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbfK0Vcr (ORCPT
+        id S1730853AbfK0Vcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:32:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730002AbfK0Uws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:52:48 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46D0C218AF;
-        Wed, 27 Nov 2019 20:52:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887967;
-        bh=Nyiitl+7iWoJjEOTOIv7UE6xC61zyO0DGnwSNPYfu4M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ArpSS7A0msoOwkXM/WfaAZ5kaRZk5Z+E83cModB/3SStwyqHaRudyX3wMmo4imS+W
-         H30ncH6TAQvPsAMXvu2ty5Z+tuSq1QlTGn+wbkPUXdLVS8nj42w3tOHGa/mTkeREGJ
-         v6jcCxIOiZLe7+D2vqTGFUtpsfVsZC+AtkptNOtQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
-        syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Alexander Potapenko <glider@google.com>
-Subject: [PATCH 4.14 164/211] Bluetooth: Fix invalid-free in bcsp_close()
-Date:   Wed, 27 Nov 2019 21:31:37 +0100
-Message-Id: <20191127203109.402191925@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
-References: <20191127203049.431810767@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 27 Nov 2019 16:32:54 -0500
+Received: from mail-qv1-f54.google.com ([209.85.219.54]:34068 "EHLO
+        mail-qv1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730167AbfK0Vcv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:32:51 -0500
+Received: by mail-qv1-f54.google.com with SMTP id o18so2278579qvf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 13:32:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b9dTNAP7mQf8HMqT2jeCa6ztoJ7KiGrHK94/agAtg+c=;
+        b=HOJIQDi0rZeZGqMrKJi3MlbucykVVvq2RnhBkuFZh96G1a57D7c1APHNXW10dPjAdo
+         TDRCnkyn5YG6w6a30Ck09rF7FjFYcQkKhv73PVO5EyFnMRarR52a/Q0Izw1GO4yhHWZE
+         +8ZiSx8C9eSomD0866UfdAE2VpXVEJlV7bEQafvk4thjESa+2p18FNj+0vA37a5LujwL
+         JYrzkOUq6TCRXCDwOlgq6neRqaed93ZW/SYLH5EhXFc4g4/ZrrflXyAufbGHK2JkxEF2
+         Xxh+jIj7ShXJFsuLn1sB92D1lB5yMxV8iffjJMB+a6EtAbbWzi8/axvLDclxz0cvGrxP
+         JVsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b9dTNAP7mQf8HMqT2jeCa6ztoJ7KiGrHK94/agAtg+c=;
+        b=bUvciErQPz1yeLWphpUWJozohzNFvkD65joEbY+vYXA+WWkHbwk2PBA9lVljvtwLdn
+         TH9Y3ztzvPpYdGBGoQNbL3zQrYb17aPlx0Yz95pLZpxfTxMA0Aa/co+wh9aXGcOicmHr
+         drgsyUH+zcLZZ0ffz0rl9I+SMj6m5n+/ZEn7TFblqXKQt+gzuF3gXKY8CZPwOmwapnT0
+         mQC3g5t2pjnxk0LxbeVIccD3jLdXp6mtbifgZVwZgd+CWXmhRjF8eV3qA35zW82BvDkP
+         xnq7MC/VpBQXMwmUzsRxQ9BLxw4bOQ4YF3KugDYKv7/57YeG9aYp7ppb/CJfUmV9+9Sh
+         4FwQ==
+X-Gm-Message-State: APjAAAWAnNDXlriPZF9wnqVPFCvvQwheaZqhLdXz326Zp2yC/FyIbuXr
+        +lk6iQAmL3WsbYThYB2rNstwSeH1J/0DRTWArZ7m
+X-Google-Smtp-Source: APXvYqzcs0OiCArf6MiDwH4jPYV7YLGqiQ6hj+ITorUSUVEAZNGa10BVAQyRsoh4Pncusp+I+4MqbKpcupLj/rRNPbg=
+X-Received: by 2002:a0c:ee90:: with SMTP id u16mr7344058qvr.56.1574890370159;
+ Wed, 27 Nov 2019 13:32:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191127095459.168324-1-zenczykowski@gmail.com> <CAB=NE6Ufwg4mkF8Xu9tjajb=bp74pfPiMFYHRATszMqkS7sR0g@mail.gmail.com>
+In-Reply-To: <CAB=NE6Ufwg4mkF8Xu9tjajb=bp74pfPiMFYHRATszMqkS7sR0g@mail.gmail.com>
+From:   Iurii Zaikin <yzaikin@google.com>
+Date:   Wed, 27 Nov 2019 13:32:14 -0800
+Message-ID: <CAAXuY3o3JvzgchmTVrTBhPXdKDZFgyVXJ+WB5TRLo5EYpHY1Rg@mail.gmail.com>
+Subject: Re: [PATCH] proc_do_large_bitmap - return error on writes to
+ non-existant bitmap
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>,
+        =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus FS Devel Mailing List <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Bortoli <tomasbortoli@gmail.com>
-
-commit cf94da6f502d8caecabd56b194541c873c8a7a3c upstream.
-
-Syzbot reported an invalid-free that I introduced fixing a memleak.
-
-bcsp_recv() also frees bcsp->rx_skb but never nullifies its value.
-Nullify bcsp->rx_skb every time it is freed.
-
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Cc: Alexander Potapenko <glider@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/bluetooth/hci_bcsp.c |    3 +++
- 1 file changed, 3 insertions(+)
-
---- a/drivers/bluetooth/hci_bcsp.c
-+++ b/drivers/bluetooth/hci_bcsp.c
-@@ -605,6 +605,7 @@ static int bcsp_recv(struct hci_uart *hu
- 			if (*ptr == 0xc0) {
- 				BT_ERR("Short BCSP packet");
- 				kfree_skb(bcsp->rx_skb);
-+				bcsp->rx_skb = NULL;
- 				bcsp->rx_state = BCSP_W4_PKT_START;
- 				bcsp->rx_count = 0;
- 			} else
-@@ -620,6 +621,7 @@ static int bcsp_recv(struct hci_uart *hu
- 			    bcsp->rx_skb->data[2])) != bcsp->rx_skb->data[3]) {
- 				BT_ERR("Error in BCSP hdr checksum");
- 				kfree_skb(bcsp->rx_skb);
-+				bcsp->rx_skb = NULL;
- 				bcsp->rx_state = BCSP_W4_PKT_DELIMITER;
- 				bcsp->rx_count = 0;
- 				continue;
-@@ -644,6 +646,7 @@ static int bcsp_recv(struct hci_uart *hu
- 				       bscp_get_crc(bcsp));
- 
- 				kfree_skb(bcsp->rx_skb);
-+				bcsp->rx_skb = NULL;
- 				bcsp->rx_state = BCSP_W4_PKT_DELIMITER;
- 				bcsp->rx_count = 0;
- 				continue;
-
-
+On Wed, Nov 27, 2019 at 4:44 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+>Can you also extend the tools/testing/selftests/sysctl and respectful lib/test_sysctl.c if needed with a test to cover this case or other cases you can think of to trigger this issue?
++1
