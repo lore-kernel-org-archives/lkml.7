@@ -2,73 +2,125 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED29C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB59CC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44409206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D3A215F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:05:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OCxCKTdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfK0WFa (ORCPT
+        id S1727465AbfK0WF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 17:05:30 -0500
-Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:55432 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727105AbfK0WFa (ORCPT
+        Wed, 27 Nov 2019 17:05:58 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:59974 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727105AbfK0WF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 17:05:30 -0500
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1ia5R7-0006H0-W4; Wed, 27 Nov 2019 23:05:26 +0100
-Date:   Wed, 27 Nov 2019 23:05:25 +0100
-From:   Florian Westphal <fw@strlen.de>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Florian Westphal <fw@strlen.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        pablo@netfilter.org, jeffrin@rajagiritech.edu.in,
-        horms@verge.net.au, yanhaishuang@cmss.chinamobile.com,
-        lkft-triage@lists.linaro.org
-Subject: Re: selftests:netfilter: nft_nat.sh: internal00-0 Error Could not
- open file \"-\" No such file or directory
-Message-ID: <20191127220525.GH795@breakpoint.cc>
-References: <CA+G9fYtgEfa=bq5C8yZeF6P563Gw3Fbs+-h_oy1e4G_1G0jrgw@mail.gmail.com>
- <20191126155632.GF795@breakpoint.cc>
- <CA+G9fYur6RHnz2nzy9RwZ64yUDv0bRs4eP9odLud0mDP9SAA-w@mail.gmail.com>
+        Wed, 27 Nov 2019 17:05:58 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 1307D20B7185;
+        Wed, 27 Nov 2019 14:05:57 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1307D20B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1574892357;
+        bh=hG7ELv5aoHY2Qr84UCJGjmO7ITc/C6N/N/uFC2cKEps=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=OCxCKTdWd7awntGqJ/+sm2/Tr90MgIXgXkgkcWf9/pIdQ2LZXJIb7XBPOOliBxbXT
+         uwFMGMnQeBNHefQQnjMlfY1hRPdpxqtrdr0hauXViFvagJThLxYmrfkT/Ls91T+0n6
+         r4pd1QDtFuIg2TVjIy1NO+kr81uJmxHBcf4BTe34=
+Subject: Re: [PATCH v9 6/6] IMA: Read keyrings= option from the IMA policy
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+References: <20191127015654.3744-1-nramas@linux.microsoft.com>
+ <20191127015654.3744-7-nramas@linux.microsoft.com>
+ <1574883174.4793.318.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <3fb64c8a-59d3-3390-07c6-283099f55f86@linux.microsoft.com>
+Date:   Wed, 27 Nov 2019 14:05:56 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYur6RHnz2nzy9RwZ64yUDv0bRs4eP9odLud0mDP9SAA-w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1574883174.4793.318.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> On Tue, 26 Nov 2019 at 21:26, Florian Westphal <fw@strlen.de> wrote:
-> >
-> > Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > > Do you see the following error while running selftests netfilter
-> > > nft_nat.sh test ?
-> > > Are we missing any kernel config fragments ? We are merging configs
-> > > from the directory.
-> > >
-> > > # selftests netfilter nft_nat.sh
-> > > netfilter: nft_nat.sh_ #
-> > > # Cannot create namespace file \"/var/run/netns/ns1\" File exists
-> >
-> > 'ns1' is not a good name.
-> > What is the output of nft --version?
+On 11/27/19 11:32 AM, Mimi Zohar wrote:
+
 > 
-> nftables v0.7 (Scrooge McDuck)
+> The example is really too colloquial/verbose.  Please truncate it,
+> leaving just a sample "key" policy rule, with directions for verifying
+> the template data against the digest included in the measurement list.
 
-Oh, that explains it.  "-" only works
-since 0.8.4 ...
+I'll truncate the example and keep it to the point.
 
-I will submit another patch that uses /dev/stdin instead.
+>> The following command verifies if the SHA256 hash generated from
+>> the payload in the IMA log entry (listed above) for the .ima key
+>> matches the SHA256 hash in the IMA log entry. The output of this
+>> command should match the SHA256 hash given in the IMA log entry
+>> (In this case, it should be
+>> 27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b)
+> 
+> Previously you didn't use the hash value, but ".ima" to locate the
+> "key" measurement in the measurement list.  In each of the commands
+> above, it might be clearer.
+
+If the IMA measurement list has only one IMA key then locating it with 
+".ima" would work - hash won't be needed for locating the entry.
+
+But for describing key verification we can have just one IMA key. I'll 
+change the description to locate the entry using ".ima".
+
+>> # cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements
+>> | grep
+>> 27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b |
+> 
+>> cut -d' ' -f 6 | xxd -r -p |tee ima-cert.der | sha256sum | cut -d' '
+>> -f 1
+>>
+>> The above command also creates a binary file namely ima-cert.der
+>> using the payload in the IMA log entry. This file should be a valid
+>> x509 certificate which can be verified using openssl as given below:
+>>
+>> root@nramas:/home/nramas
+> 
+> ditto
+> 
+> 
+>> # openssl x509 -in ima-cert.der -inform DER -text
+>>
+>> The above command should display the contents of the file ima-cert.der
+>> as an x509 certificate.
+> 
+> Either the comments should be above or below the commands, not both.
+
+I'll update the comment.
+
+> 
+>>
+>> The IMA policy used here allows measurement of keys added to
+>> ".ima" and ".evm" keyrings only. Add a key to any other keyring and
+>> verify that the key is not measured.
+> 
+> This comment would be included, if desired, when defining the policy
+> rule, not here.
+
+Will remove the above from this patch description.
+
+thanks,
+  -lakshmi
+
+
