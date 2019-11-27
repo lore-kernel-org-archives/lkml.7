@@ -2,112 +2,256 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F3FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F437C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A3420835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:32:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ku7K6WZ4"
+	by mail.kernel.org (Postfix) with ESMTP id EE2882080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfK0Ecn (ORCPT
+        id S1726722AbfK0EyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 23:32:43 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41567 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbfK0Ecn (ORCPT
+        Tue, 26 Nov 2019 23:54:15 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61740 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726548AbfK0EyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 23:32:43 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m30so14112511lfp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 20:32:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2/+w5JosJ1scZlVFlMwGfpa9YngqJD9Yc3KXus09hIo=;
-        b=Ku7K6WZ4GJPBzmFqi3gQW5lBRTX79tvn4SiyT+jOfHpmhgAVSsirgSMX/i8rISdgmS
-         2wjex6vE6rLf2VgeQ2E1aCIzdeEsaPzfSevXC+TFy0pwxNVzhnlGItsJknLt7OlBAujH
-         ipFXIBxPeoAboNg7zEqPe+pBa3KM2Yb1gQccNZ0I5dGv5ntebEb+gagDf6kuYxH3Ucjl
-         Emalfl2SUjvLrH0Sosz/6XZfJXMBSRpMk38ZdoEru+mfO6mTMsrkoJ+1i667fG5n7i5i
-         sW5W3AcswJHruZEpOqx+K3Gb4LxkQxDq9EqCRRNQAIS22BOiQ0MEL8qjYjwPAyNQpq/t
-         KBCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2/+w5JosJ1scZlVFlMwGfpa9YngqJD9Yc3KXus09hIo=;
-        b=ITJ+6X2pFZvgRS8dQ90Jik4BJNEi9vljsXrNIe35+e29fhj+y+20tt3sjIMFjEyITj
-         yibJ1NO2HAXBWco8TDuY+ewlJUajSyhMZPHE89EcOvjB8gMPY98UXvvA+j++NhGjEi3v
-         IDxXZV9FRlrJ4OaElZOiNZfp9amUDUPw7lqMZDij5S9cN2zMxoq33WTwmhgw7F4j+p4b
-         H9vvL5IsGvDBrSKtfLA6U+xALnKuvG6HL/lY75lwXnUNizqflHkpbE1WLj0f4haidtNa
-         cBJU9ds7Feo/wkzbaA3Hh+QLAd6jYsg7vlg6+EECkJETpv6m9JTpW0S4loBjjBpQPybH
-         bp4A==
-X-Gm-Message-State: APjAAAW1hjjMQmTvp3WdWW9KtBP41KEqXSnvT9+XZLM/OcL4uJozT6Oa
-        q9mdG55d4ad+xDDaCzxJlaHVUVfJfLf6J8mGIJE=
-X-Google-Smtp-Source: APXvYqw16HX9U8K2zmXneNLXJH8rHjOzEss/g+vbiBWtTArINds9S/AzCm1bIxDFqFaRN0c1bEN1373EJr43gH6N8vI=
-X-Received: by 2002:a19:6e06:: with SMTP id j6mr27462233lfc.6.1574829160974;
- Tue, 26 Nov 2019 20:32:40 -0800 (PST)
+        Tue, 26 Nov 2019 23:54:14 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAR4ldD0123482
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 23:54:13 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxns3n4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 23:54:13 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Wed, 27 Nov 2019 04:54:11 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 27 Nov 2019 04:54:09 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAR4s8vJ37945446
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Nov 2019 04:54:08 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C4D15207A;
+        Wed, 27 Nov 2019 04:54:08 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.35.154])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 20BB952050;
+        Wed, 27 Nov 2019 04:54:06 +0000 (GMT)
+Subject: Re: [PATCH v3 2/4] powerpc/fadump: reorganize /sys/kernel/fadump_*
+ sysfs files
+To:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
+Cc:     corbet@lwn.net, mahesh@linux.vnet.ibm.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@ozlabs.org, hbathini@linux.ibm.com
+References: <20191109122339.20484-1-sourabhjain@linux.ibm.com>
+ <20191109122339.20484-3-sourabhjain@linux.ibm.com>
+ <20191109125933.GF1384@kitsune.suse.cz>
+ <8c1ec297-0c34-12de-2528-be436697215a@linux.ibm.com>
+ <20191124184059.GP11661@kitsune.suse.cz>
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+Date:   Wed, 27 Nov 2019 10:24:06 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20191111131252.921588318@infradead.org> <20191125125534.2aaaccf00c38a9a25dee623a@kernel.org>
- <20191125123245.5ae9cb60@gandalf.local.home> <20191126091104.5e0cdc61e3b143fae4ed4cfd@kernel.org>
- <20191126175812.c6e0cd1249422989007c91fe@kernel.org> <20191126185809.91574fb8eb02f3b2dd3af863@kernel.org>
- <20191127084854.55ce1916e4f6d372f9731ed4@kernel.org> <CAADnVQK4twuXzFhD-qLHmCVK0n1h-GDENQLu+4PVV3Hp++R6kQ@mail.gmail.com>
-In-Reply-To: <CAADnVQK4twuXzFhD-qLHmCVK0n1h-GDENQLu+4PVV3Hp++R6kQ@mail.gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 26 Nov 2019 20:32:29 -0800
-Message-ID: <CAADnVQ+y9-JRA1u+UMD8uWjq1dt9AZrJKeOMe_zDNRL=wZ39TA@mail.gmail.com>
-Subject: Re: [PATCH -v5 00/17] Rewrite x86/ftrace to use text_poke (and more)
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        bristot <bristot@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        jbaron@akamai.com, Jessica Yu <jeyu@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191124184059.GP11661@kitsune.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19112704-0028-0000-0000-000003C07E12
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112704-0029-0000-0000-0000248382FB
+Message-Id: <ea97b5e3-e1e2-2aff-8227-7cfb551c8ebc@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-26_08:2019-11-26,2019-11-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ phishscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ bulkscore=0 impostorscore=0 spamscore=0 clxscore=1015 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911270037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 4:03 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
->
->
-> On Tue, Nov 26, 2019 at 3:49 PM Masami Hiramatsu <mhiramat@kernel.org> wr=
-ote:
->>
->> On Tue, 26 Nov 2019 18:58:09 +0900
->> Masami Hiramatsu <mhiramat@kernel.org> wrote:
->> > I applied following patch, but it seems not enough. While disabling 25=
-6 kprobes,
->> > system was frozen (no BUG message).
->>
->> Aah, this is another bug in optprobe. I'll send a series for fix these b=
-ugs.
->
->
-> Awesome! I=E2=80=99ve started looking at this crash as well.
-> Could you share a brief description of the bug and cc me on fixes?
-> I=E2=80=99d like to test them too.
-> Thanks
 
-I noticed that your config doesn't have CONFIG_KPROBES_ON_FTRACE=3Dy
-and without it most test.d/kprobe/ tests fail, but in your log they are pas=
-sing.
-Also do you have KPROBE_EVENTS_ON_NOTRACE=3Dy ?
-Since without these two configs the crash wasn't reproducing for me.
-Anyhow waiting for your fixes.
+
+On 11/25/19 12:10 AM, Michal Suchánek wrote:
+> On Sat, Nov 16, 2019 at 08:07:29PM +0530, Sourabh Jain wrote:
+>>
+>>
+>> On 11/9/19 6:29 PM, Michal Suchánek wrote:
+>>> On Sat, Nov 09, 2019 at 05:53:37PM +0530, Sourabh Jain wrote:
+>>>> As the number of FADump sysfs files increases it is hard to manage all of
+>>>> them inside /sys/kernel directory. It's better to have all the FADump
+>>>> related sysfs files in a dedicated directory /sys/kernel/fadump. But in
+>>>> order to maintain the backward compatibility the /sys/kernel/fadump_*
+>>>> sysfs files are replicated inside /sys/kernel/fadump/ and eventually get
+>>>> removed in future.
+>>>>
+>>>> As the FADump sysfs files are now part of dedicated directory there is no
+>>>> need to prefix their name with fadump_, hence sysfs file names are also
+>>>> updated. For example fadump_enabled sysfs file is now referred as enabled.
+>>>>
+>>>> Also consolidate ABI documentation for all the FADump sysfs files in a
+>>>> single file Documentation/ABI/testing/sysfs-kernel-fadump.
+>>>>
+>>>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>>>> ---
+>>>>  Documentation/ABI/testing/sysfs-kernel-fadump | 41 +++++++++++++++++++
+>>>>  arch/powerpc/kernel/fadump.c                  | 38 +++++++++++++++++
+>>>>  arch/powerpc/platforms/powernv/opal-core.c    | 10 +++--
+>>>>  3 files changed, 86 insertions(+), 3 deletions(-)
+>>>>  create mode 100644 Documentation/ABI/testing/sysfs-kernel-fadump
+>>>>
+>>>> diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump b/Documentation/ABI/testing/sysfs-kernel-fadump
+>>>> new file mode 100644
+>>>> index 000000000000..a77f1a5ba389
+>>>> --- /dev/null
+>>>> +++ b/Documentation/ABI/testing/sysfs-kernel-fadump
+>>>> @@ -0,0 +1,41 @@
+>>>> +What:		/sys/kernel/fadump/*
+>>>> +Date:		Nov 2019
+>>>> +Contact:	linuxppc-dev@lists.ozlabs.org
+>>>> +Description:
+>>>> +		The /sys/kernel/fadump/* is a collection of FADump sysfs
+>>>> +		file provide information about the configuration status
+>>>> +		of Firmware Assisted Dump (FADump).
+>>>> +
+>>>> +What:		/sys/kernel/fadump/enabled
+>>>> +Date:		Nov 2019
+>>>> +Contact:	linuxppc-dev@lists.ozlabs.org
+>>>> +Description:	read only
+>>>> +		Primarily used to identify whether the FADump is enabled in
+>>>> +		the kernel or not.
+>>>> +User:		Kdump service
+>>>> +
+>>>> +What:		/sys/kernel/fadump/registered
+>>>> +Date:		Nov 2019
+>>>> +Contact:	linuxppc-dev@lists.ozlabs.org
+>>>> +Description:	read/write
+>>>> +		Helps to control the dump collect feature from userspace.
+>>>> +		Setting 1 to this file enables the system to collect the
+>>>> +		dump and 0 to disable it.
+>>>> +User:		Kdump service
+>>>> +
+>>>> +What:		/sys/kernel/fadump/release_mem
+>>>> +Date:		Nov 2019
+>>>> +Contact:	linuxppc-dev@lists.ozlabs.org
+>>>> +Description:	write only
+>>>> +		This is a special sysfs file and only available when
+>>>> +		the system is booted to capture the vmcore using FADump.
+>>>> +		It is used to release the memory reserved by FADump to
+>>>> +		save the crash dump.
+>>>> +
+>>>> +What:		/sys/kernel/fadump/release_opalcore
+>>>> +Date:		Nov 2019
+>>>> +Contact:	linuxppc-dev@lists.ozlabs.org
+>>>> +Description:	write only
+>>>> +		The sysfs file is available when the system is booted to
+>>>> +		collect the dump on OPAL based machine. It used to release
+>>>> +		the memory used to collect the opalcore.
+>>>> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+>>>> index ed59855430b9..a9591def0c84 100644
+>>>> --- a/arch/powerpc/kernel/fadump.c
+>>>> +++ b/arch/powerpc/kernel/fadump.c
+>>>> @@ -1418,6 +1418,9 @@ static int fadump_region_show(struct seq_file *m, void *private)
+>>>>  	return 0;
+>>>>  }
+>>>>  
+>>>> +struct kobject *fadump_kobj;
+>>>> +EXPORT_SYMBOL_GPL(fadump_kobj);
+>>>> +
+>>>>  static struct kobj_attribute fadump_release_attr = __ATTR(fadump_release_mem,
+>>>>  						0200, NULL,
+>>>>  						fadump_release_memory_store);
+>>>> @@ -1428,6 +1431,16 @@ static struct kobj_attribute fadump_register_attr = __ATTR(fadump_registered,
+>>>>  						0644, fadump_register_show,
+>>>>  						fadump_register_store);
+>>>>  
+>>>> +static struct kobj_attribute release_attr = __ATTR(release_mem,
+>>>> +						0200, NULL,
+>>>> +						fadump_release_memory_store);
+>>>> +static struct kobj_attribute enable_attr = __ATTR(enabled,
+>>>> +						0444, fadump_enabled_show,
+>>>> +						NULL);
+>>>> +static struct kobj_attribute register_attr = __ATTR(registered,
+>>>> +						0644, fadump_register_show,
+>>>> +						fadump_register_store);
+>>>> +
+>>>>  DEFINE_SHOW_ATTRIBUTE(fadump_region);
+>>>>  
+>>>>  static void fadump_init_files(void)
+>>>> @@ -1435,6 +1448,11 @@ static void fadump_init_files(void)
+>>>>  	struct dentry *debugfs_file;
+>>>>  	int rc = 0;
+>>>>  
+>>>> +	fadump_kobj = kobject_create_and_add("fadump", kernel_kobj);
+>>>> +	if (!fadump_kobj) {
+>>>> +		pr_err("failed to create fadump kobject\n");
+>>>> +		return;
+>>>> +	}
+>>>>  	rc = sysfs_create_file(kernel_kobj, &fadump_attr.attr);
+>>>>  	if (rc)
+>>>>  		printk(KERN_ERR "fadump: unable to create sysfs file"
+>>>> @@ -1458,6 +1476,26 @@ static void fadump_init_files(void)
+>>>>  			printk(KERN_ERR "fadump: unable to create sysfs file"
+>>>>  				" fadump_release_mem (%d)\n", rc);
+>>>>  	}
+>>>> +	/* Replicating the following sysfs attributes under FADump kobject.
+>>>> +	 *
+>>>> +	 *	- fadump_enabled -> enabled
+>>>> +	 *	- fadump_registered -> registered
+>>>> +	 *	- fadump_release_mem -> release_mem
+>>>> +	 */
+>>>> +	rc = sysfs_create_file(fadump_kobj, &enable_attr.attr);
+>>>> +	if (rc)
+>>>> +		pr_err("unable to create enabled sysfs file (%d)\n",
+>>>> +		       rc);
+>>>> +	rc = sysfs_create_file(fadump_kobj, &register_attr.attr);
+>>>> +	if (rc)
+>>>> +		pr_err("unable to create registered sysfs file (%d)\n",
+>>>> +		       rc);
+>>>> +	if (fw_dump.dump_active) {
+>>>> +		rc = sysfs_create_file(fadump_kobj, &release_attr.attr);
+>>>> +		if (rc)
+>>>> +			pr_err("unable to create release_mem sysfs file (%d)\n",
+>>>> +			       rc);
+>>>> +	}
+>>>>  	return;
+>>>>  }
+>>> Hello,
+>>>
+>>
+>> I’m so sorry for taking this long to write you back. 
+>>
+>>> wouldn't it make more sense to create the files in the new location and
+>>> add a symlink at the old location?
+>>
+>> There are APIs which allow to create a symlink for an entire kobject but
+>> I did not find a way to create symlink of an individual sysfs file.
+>>
+>> Do you have any approach in mind to achieve the same?
+> 
+> There is at least one example of plain symlink:
+> 
+> find /sys -type l -xtype f
+> /sys/kernel/security/evm
+
+Yes, there are APIs available in debugfs and securityfs that allow creatinga symlink of sysfs files. But I did not find a generic API at sysfs level tocreate symlink.
+
+Let's wait for others to put in their view on this. Meanwhile, I'll start
+exploring how we can replace the older FADump sysfs files with symlink.
+
+Thanks,
+Sourabh Jain
+
