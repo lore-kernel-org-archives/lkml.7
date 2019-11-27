@@ -2,57 +2,169 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298EAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8895C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0944820684
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4E520684
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:55:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zQX7Z4UT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfK0PzU (ORCPT
+        id S1727105AbfK0Pzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:55:20 -0500
-Received: from gentwo.org ([3.19.106.255]:39434 "EHLO gentwo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfK0PzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:55:20 -0500
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 3C4263EF16; Wed, 27 Nov 2019 15:55:19 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 3A32F3EC1C;
-        Wed, 27 Nov 2019 15:55:19 +0000 (UTC)
-Date:   Wed, 27 Nov 2019 15:55:19 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-cc:     Dennis Zhou <dennis@kernel.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] fix __percpu annotation in asm-generic
-In-Reply-To: <20191126200619.63348-1-luc.vanoostenryck@gmail.com>
-Message-ID: <alpine.DEB.2.21.1911271553560.16980@www.lameter.com>
-References: <20191126200619.63348-1-luc.vanoostenryck@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 27 Nov 2019 10:55:38 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:32868 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfK0Pzi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 10:55:38 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xARFtVCr071721;
+        Wed, 27 Nov 2019 09:55:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574870131;
+        bh=K63GQIrw0Sq+EfiUZbTAW80xzjkoZlaK1Fs4iboltMg=;
+        h=From:To:CC:Subject:Date;
+        b=zQX7Z4UT0A8dKZvD6orrZ+/oPB5evEms9YJ3zsSzVsBHntXBAkrJLIkeY4y3doXXD
+         XGYFeUuggkKX3Up/yaC4aWXlAfE1//+4z6BLYaKXef53frVWwippMjijuWdpcoKRKN
+         3PPFXeBCs1LWTXWqCPuscRbMBTGONt4RTEe6+sR8=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xARFtVkc104403;
+        Wed, 27 Nov 2019 09:55:31 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
+ Nov 2019 09:55:31 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 27 Nov 2019 09:55:31 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xARFtUwu019376;
+        Wed, 27 Nov 2019 09:55:30 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] dt-bindings: net: ti: cpsw-switch: update to fix comments
+Date:   Wed, 27 Nov 2019 17:55:26 +0200
+Message-ID: <20191127155526.22746-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019, Luc Van Oostenryck wrote:
+After original patch was merged there were additional comments/requests
+provided by Rob Herring [1]. Mostly they are related to json-schema usage,
+and this patch fixes them. Also SPDX-License-Identifier has been changed to
+(GPL-2.0-only OR BSD-2-Clause) as requested.
 
-> So, fix the declaration of the 'pcp' variable to its correct type:
-> the plain (non-percpu) pointer corresponding to its address.
-> Same for raw_cpu_generic_xchg(), raw_cpu_generic_cmpxchg() &
-> raw_cpu_generic_cmpxchg_double().
+[1] https://lkml.org/lkml/2019/11/21/875
+Fixes: ef63fe72f698 ("dt-bindings: net: ti: add new cpsw switch driver bindings")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ .../bindings/net/ti,cpsw-switch.yaml          | 20 +++++++------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-Acked-by: Christoph Lameter <cl@linux.com>
+diff --git a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
+index 81ae8cafabc1..4e072a023f3e 100644
+--- a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
++++ b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
+@@ -1,4 +1,4 @@
+-# SPDX-License-Identifier: GPL-2.0
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+ $id: http://devicetree.org/schemas/net/ti,cpsw-switch.yaml#
+@@ -44,7 +44,6 @@ properties:
+     description: CPSW functional clock
+ 
+   clock-names:
+-    maxItems: 1
+     items:
+       - const: fck
+ 
+@@ -70,7 +69,6 @@ properties:
+       Phandle to the system control device node which provides access to
+       efuse IO range with MAC addresses
+ 
+-
+   ethernet-ports:
+     type: object
+     properties:
+@@ -82,8 +80,6 @@ properties:
+     patternProperties:
+       "^port@[0-9]+$":
+           type: object
+-          minItems: 1
+-          maxItems: 2
+           description: CPSW external ports
+ 
+           allOf:
+@@ -92,21 +88,20 @@ properties:
+           properties:
+             reg:
+               maxItems: 1
+-              enum: [1, 2]
++              items:
++                - enum: [1, 2]
+               description: CPSW port number
+ 
+             phys:
+-              $ref: /schemas/types.yaml#definitions/phandle-array
+               maxItems: 1
+               description:  phandle on phy-gmii-sel PHY
+ 
+             label:
+-              $ref: /schemas/types.yaml#/definitions/string-array
+-              maxItems: 1
+               description: label associated with this port
+ 
+             ti,dual-emac-pvid:
+-              $ref: /schemas/types.yaml#/definitions/uint32
++              allOf:
++                - $ref: /schemas/types.yaml#/definitions/uint32
+               maxItems: 1
+               minimum: 1
+               maximum: 1024
+@@ -136,7 +131,6 @@ properties:
+         description: CPTS reference clock
+ 
+       clock-names:
+-        maxItems: 1
+         items:
+           - const: cpts
+ 
+@@ -201,7 +195,7 @@ examples:
+                         phys = <&phy_gmii_sel 1>;
+                         phy-handle = <&ethphy0_sw>;
+                         phy-mode = "rgmii";
+-                        ti,dual_emac_pvid = <1>;
++                        ti,dual-emac-pvid = <1>;
+                 };
+ 
+                 cpsw_port2: port@2 {
+@@ -211,7 +205,7 @@ examples:
+                         phys = <&phy_gmii_sel 2>;
+                         phy-handle = <&ethphy1_sw>;
+                         phy-mode = "rgmii";
+-                        ti,dual_emac_pvid = <2>;
++                        ti,dual-emac-pvid = <2>;
+                 };
+         };
+ 
+-- 
+2.17.1
 
-Maybe a better fix is to come up with a typeof_strip_percu() or so
-macro for all the places where this needs to be done?
