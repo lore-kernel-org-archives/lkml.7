@@ -2,111 +2,126 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45469C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987A1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDD220878
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792062070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfK0SG0 (ORCPT
+        id S1727120AbfK0SHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:06:26 -0500
-Received: from foss.arm.com ([217.140.110.172]:51138 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbfK0SG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:06:26 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1924431B;
-        Wed, 27 Nov 2019 10:06:25 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 210853F6C4;
-        Wed, 27 Nov 2019 10:06:20 -0800 (PST)
-Subject: Re: [PATCH v3 1/7] linux/log2.h: Add roundup/rounddown_pow_two64()
- family of functions
-To:     Leon Romanovsky <leon@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
- <20191126091946.7970-2-nsaenzjulienne@suse.de>
- <20191126125137.GA10331@unreal>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6e0b9079-9efd-2884-26d1-3db2d622079d@arm.com>
-Date:   Wed, 27 Nov 2019 18:06:18 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 13:07:14 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:38490 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726729AbfK0SHO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 13:07:14 -0500
+Received: (qmail 2901 invoked by uid 2102); 27 Nov 2019 13:07:13 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 27 Nov 2019 13:07:13 -0500
+Date:   Wed, 27 Nov 2019 13:07:13 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <hverkuil@xs4all.nl>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <mchehab@kernel.org>,
+        <oneukum@suse.com>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
+In-Reply-To: <0000000000001dec4905985682c9@google.com>
+Message-ID: <Pine.LNX.4.44L0.1911271304410.1319-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20191126125137.GA10331@unreal>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/11/2019 12:51 pm, Leon Romanovsky wrote:
-> On Tue, Nov 26, 2019 at 10:19:39AM +0100, Nicolas Saenz Julienne wrote:
->> Some users need to make sure their rounding function accepts and returns
->> 64bit long variables regardless of the architecture. Sadly
->> roundup/rounddown_pow_two() takes and returns unsigned longs. Create a
->> new generic 64bit variant of the function and cleanup rougue custom
->> implementations.
+On Wed, 27 Nov 2019, syzbot wrote:
+
+> Hello,
 > 
-> Is it possible to create general roundup/rounddown_pow_two() which will
-> work correctly for any type of variables, instead of creating special
-> variant for every type?
+> syzbot has tested the proposed patch but the reproducer still triggered  
+> crash:
+> INFO: rcu detected stall in dummy_timer
+> 
+> radio-si470x 5-1:0.0: non-zero urb status (-71)
+> radio-si470x 3-1:0.0: non-zero urb status (-71)
+> rcu: INFO: rcu_sched self-detected stall on CPU
+> rcu: 	1-....: (8213 ticks this GP) idle=4f6/1/0x4000000000000004  
 
-In fact, that is sort of the case already - roundup_pow_of_two() itself 
-wraps ilog2() such that the constant case *is* type-independent. And 
-since ilog2() handles non-constant values anyway, might it be reasonable 
-to just take the strongly-typed __roundup_pow_of_two() helper out of the 
-loop as below?
+Almost the same as Oliver's patch, but this one stops when the 
+interrupt-IN URB gets an unrecognized error status.
 
-Robin
+Alan Stern
 
------>8-----
-diff --git a/include/linux/log2.h b/include/linux/log2.h
-index 83a4a3ca3e8a..e825f8a6e8b5 100644
---- a/include/linux/log2.h
-+++ b/include/linux/log2.h
-@@ -172,11 +172,8 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
-   */
-  #define roundup_pow_of_two(n)			\
-  (						\
--	__builtin_constant_p(n) ? (		\
--		(n == 1) ? 1 :			\
--		(1UL << (ilog2((n) - 1) + 1))	\
--				   ) :		\
--	__roundup_pow_of_two(n)			\
-+	(__builtin_constant_p(n) && (n == 1)) ?	\
-+	1 : (1UL << (ilog2((n) - 1) + 1))	\
-   )
+#syz test: https://github.com/google/kasan.git 22be26f7
 
-  /**
+Index: usb-devel/drivers/media/radio/si470x/radio-si470x-usb.c
+===================================================================
+--- usb-devel.orig/drivers/media/radio/si470x/radio-si470x-usb.c
++++ usb-devel/drivers/media/radio/si470x/radio-si470x-usb.c
+@@ -370,15 +370,14 @@ static void si470x_int_in_callback(struc
+ 	unsigned char tmpbuf[3];
+ 
+ 	if (urb->status) {
+-		if (urb->status == -ENOENT ||
++		if (!(urb->status == -ENOENT ||
+ 				urb->status == -ECONNRESET ||
+-				urb->status == -ESHUTDOWN) {
+-			return;
+-		} else {
++				urb->status == -ESHUTDOWN))
+ 			dev_warn(&radio->intf->dev,
+-			 "non-zero urb status (%d)\n", urb->status);
+-			goto resubmit; /* Maybe we can recover. */
+-		}
++					"unrecognized urb status (%d)\n",
++					urb->status);
++		radio->int_in_running = 0;
++		return;
+ 	}
+ 
+ 	/* Sometimes the device returns len 0 packets */
+@@ -542,6 +541,8 @@ static int si470x_start_usb(struct si470
+ 		radio->int_in_running = 0;
+ 	}
+ 	radio->status_rssi_auto_update = radio->int_in_running;
++	if (retval < 0)
++		return retval;
+ 
+ 	/* start radio */
+ 	retval = si470x_start(radio);
+@@ -734,7 +735,8 @@ static int si470x_usb_driver_probe(struc
+ 	/* start radio */
+ 	retval = si470x_start_usb(radio);
+ 	if (retval < 0)
+-		goto err_buf;
++		/* the urb may be running even after an error */
++		goto err_all;
+ 
+ 	/* set initial frequency */
+ 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
+@@ -749,7 +751,7 @@ static int si470x_usb_driver_probe(struc
+ 
+ 	return 0;
+ err_all:
+-	usb_kill_urb(radio->int_in_urb);
++	usb_poison_urb(radio->int_in_urb);
+ err_buf:
+ 	kfree(radio->buffer);
+ err_ctrl:
+@@ -824,7 +826,7 @@ static void si470x_usb_driver_disconnect
+ 	mutex_lock(&radio->lock);
+ 	v4l2_device_disconnect(&radio->v4l2_dev);
+ 	video_unregister_device(&radio->videodev);
+-	usb_kill_urb(radio->int_in_urb);
++	usb_poison_urb(radio->int_in_urb);
+ 	usb_set_intfdata(intf, NULL);
+ 	mutex_unlock(&radio->lock);
+ 	v4l2_device_put(&radio->v4l2_dev);
+
