@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC6BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B35C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6737B21774
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11546215E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889150;
-	bh=RG8vYIHnuEWj2Tb+5D7zIBsWjNbdzNVj9T/gUWsKNrc=;
+	s=default; t=1574889153;
+	bh=29b7VrHROTMlit8ERvOnu2DmGqWVGdm3/WYYa9MMMK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b+loP/gJXG4SA7AXgKUYUN5pOLTEGU7flruZ/wB1KSDm37O8wJlfk20nRUqNksyNF
-	 BmShyZ7i15qCq8hS+fzf2Nq50Yblk1QNGOZrESiTf+5lUwN+uudlT+ugY7zCeftZqd
-	 pvLnQBJhe7E5KPEnC7hzKXRCqgL0Del3G+AdWybk=
+	b=GtwuQYGS2uWqNi3ptleokAjpfby/cbjyTGGehMoNwGzaAyEraxLw1Nq6gVu4cxA/4
+	 QWUoanBnxidK9VZFlYn3Cc+wkyi6bQhGaoAdZ0vqxPcIx6Q7f44qXdba0PaRXpkwtB
+	 Dky4LyTRkbuz9OoFYU5NRUCbzqJbvi8vtzjbRXTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733289AbfK0VM3 (ORCPT
+        id S1733286AbfK0VMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:12:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43088 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:12:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733277AbfK0VM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:12:26 -0500
+        id S1732768AbfK0VMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:12:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62FB32176D;
-        Wed, 27 Nov 2019 21:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49BA72176D;
+        Wed, 27 Nov 2019 21:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889145;
-        bh=RG8vYIHnuEWj2Tb+5D7zIBsWjNbdzNVj9T/gUWsKNrc=;
+        s=default; t=1574889150;
+        bh=29b7VrHROTMlit8ERvOnu2DmGqWVGdm3/WYYa9MMMK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1CCg9QNKSIwX4lZjv0RSbi8cVgeMEsIFWNoJ0OXdBdDUozOLzOiNZjWYnPwVwtyNV
-         qAqA7vyk7BTdv8LmrSLIbzz/ggoUHatX3+f/uB0LZQzSyT3RtT26m9PrGnCOSh1ftx
-         gxFjqATGclt/7zNEDLol9luubdz3o0R9lOuSEW9s=
+        b=GM1xUhjP8SUBqc1cILdIpDGVFMKph66tzBFcLcUxBBr+fX8+gcAKmOiY+vUJyzFMy
+         /TOFWGv4ZZYPIAsL09g+z4Hc9d4RgUERnriouonmDK3Xtd/aGFbeGykSW7tYQEYq/R
+         Rra3aSCCCBU9ZhuSGQdpMjPQq3cRvvoFhyvBQix4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.3 94/95] powerpc/book3s64: Fix link stack flush on context switch
-Date:   Wed, 27 Nov 2019 21:32:51 +0100
-Message-Id: <20191127203002.470451796@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 88/95] USB: serial: mos7720: fix remote wakeup
+Date:   Wed, 27 Nov 2019 21:32:45 +0100
+Message-Id: <20191127202957.096500648@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,196 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Johan Hovold <johan@kernel.org>
 
-commit 39e72bf96f5847ba87cc5bd7a3ce0fed813dc9ad upstream.
+commit ea422312a462696093b5db59d294439796cba4ad upstream.
 
-In commit ee13cb249fab ("powerpc/64s: Add support for software count
-cache flush"), I added support for software to flush the count
-cache (indirect branch cache) on context switch if firmware told us
-that was the required mitigation for Spectre v2.
+The driver was setting the device remote-wakeup feature during probe in
+violation of the USB specification (which says it should only be set
+just prior to suspending the device). This could potentially waste
+power during suspend as well as lead to spurious wakeups.
 
-As part of that code we also added a software flush of the link
-stack (return address stack), which protects against Spectre-RSB
-between user processes.
+Note that USB core would clear the remote-wakeup feature at first
+resume.
 
-That is all correct for CPUs that activate that mitigation, which is
-currently Power9 Nimbus DD2.3.
-
-What I got wrong is that on older CPUs, where firmware has disabled
-the count cache, we also need to flush the link stack on context
-switch.
-
-To fix it we create a new feature bit which is not set by firmware,
-which tells us we need to flush the link stack. We set that when
-firmware tells us that either of the existing Spectre v2 mitigations
-are enabled.
-
-Then we adjust the patching code so that if we see that feature bit we
-enable the link stack flush. If we're also told to flush the count
-cache in software then we fall through and do that also.
-
-On the older CPUs we don't need to do do the software count cache
-flush, firmware has disabled it, so in that case we patch in an early
-return after the link stack flush.
-
-The naming of some of the functions is awkward after this patch,
-because they're called "count cache" but they also do link stack. But
-we'll fix that up in a later commit to ease backporting.
-
-This is the fix for CVE-2019-18660.
-
-Reported-by: Anthony Steinhauser <asteinhauser@google.com>
-Fixes: ee13cb249fab ("powerpc/64s: Add support for software count cache flush")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 0f64478cbc7a ("USB: add USB serial mos7720 driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.19
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/include/asm/asm-prototypes.h    |    1 
- arch/powerpc/include/asm/security_features.h |    3 +
- arch/powerpc/kernel/entry_64.S               |    6 +++
- arch/powerpc/kernel/security.c               |   48 ++++++++++++++++++++++++---
- 4 files changed, 54 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/include/asm/asm-prototypes.h
-+++ b/arch/powerpc/include/asm/asm-prototypes.h
-@@ -140,6 +140,7 @@ void _kvmppc_save_tm_pr(struct kvm_vcpu
- /* Patch sites */
- extern s32 patch__call_flush_count_cache;
- extern s32 patch__flush_count_cache_return;
-+extern s32 patch__flush_link_stack_return;
- extern s32 patch__memset_nocache, patch__memcpy_nocache;
+---
+ drivers/usb/serial/mos7720.c |    4 ----
+ 1 file changed, 4 deletions(-)
+
+--- a/drivers/usb/serial/mos7720.c
++++ b/drivers/usb/serial/mos7720.c
+@@ -1833,10 +1833,6 @@ static int mos7720_startup(struct usb_se
+ 	product = le16_to_cpu(serial->dev->descriptor.idProduct);
+ 	dev = serial->dev;
  
- extern long flush_count_cache;
---- a/arch/powerpc/include/asm/security_features.h
-+++ b/arch/powerpc/include/asm/security_features.h
-@@ -81,6 +81,9 @@ static inline bool security_ftr_enabled(
- // Software required to flush count cache on context switch
- #define SEC_FTR_FLUSH_COUNT_CACHE	0x0000000000000400ull
- 
-+// Software required to flush link stack on context switch
-+#define SEC_FTR_FLUSH_LINK_STACK	0x0000000000001000ull
-+
- 
- // Features enabled by default
- #define SEC_FTR_DEFAULT \
---- a/arch/powerpc/kernel/entry_64.S
-+++ b/arch/powerpc/kernel/entry_64.S
-@@ -546,6 +546,7 @@ flush_count_cache:
- 	/* Save LR into r9 */
- 	mflr	r9
- 
-+	// Flush the link stack
- 	.rept 64
- 	bl	.+4
- 	.endr
-@@ -555,6 +556,11 @@ flush_count_cache:
- 	.balign 32
- 	/* Restore LR */
- 1:	mtlr	r9
-+
-+	// If we're just flushing the link stack, return here
-+3:	nop
-+	patch_site 3b patch__flush_link_stack_return
-+
- 	li	r9,0x7fff
- 	mtctr	r9
- 
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -24,6 +24,7 @@ enum count_cache_flush_type {
- 	COUNT_CACHE_FLUSH_HW	= 0x4,
- };
- static enum count_cache_flush_type count_cache_flush_type = COUNT_CACHE_FLUSH_NONE;
-+static bool link_stack_flush_enabled;
- 
- bool barrier_nospec_enabled;
- static bool no_nospec;
-@@ -212,11 +213,19 @@ ssize_t cpu_show_spectre_v2(struct devic
- 
- 		if (ccd)
- 			seq_buf_printf(&s, "Indirect branch cache disabled");
-+
-+		if (link_stack_flush_enabled)
-+			seq_buf_printf(&s, ", Software link stack flush");
-+
- 	} else if (count_cache_flush_type != COUNT_CACHE_FLUSH_NONE) {
- 		seq_buf_printf(&s, "Mitigation: Software count cache flush");
- 
- 		if (count_cache_flush_type == COUNT_CACHE_FLUSH_HW)
- 			seq_buf_printf(&s, " (hardware accelerated)");
-+
-+		if (link_stack_flush_enabled)
-+			seq_buf_printf(&s, ", Software link stack flush");
-+
- 	} else if (btb_flush_enabled) {
- 		seq_buf_printf(&s, "Mitigation: Branch predictor state flush");
- 	} else {
-@@ -377,18 +386,40 @@ static __init int stf_barrier_debugfs_in
- device_initcall(stf_barrier_debugfs_init);
- #endif /* CONFIG_DEBUG_FS */
- 
-+static void no_count_cache_flush(void)
-+{
-+	count_cache_flush_type = COUNT_CACHE_FLUSH_NONE;
-+	pr_info("count-cache-flush: software flush disabled.\n");
-+}
-+
- static void toggle_count_cache_flush(bool enable)
- {
--	if (!enable || !security_ftr_enabled(SEC_FTR_FLUSH_COUNT_CACHE)) {
-+	if (!security_ftr_enabled(SEC_FTR_FLUSH_COUNT_CACHE) &&
-+	    !security_ftr_enabled(SEC_FTR_FLUSH_LINK_STACK))
-+		enable = false;
-+
-+	if (!enable) {
- 		patch_instruction_site(&patch__call_flush_count_cache, PPC_INST_NOP);
--		count_cache_flush_type = COUNT_CACHE_FLUSH_NONE;
--		pr_info("count-cache-flush: software flush disabled.\n");
-+		pr_info("link-stack-flush: software flush disabled.\n");
-+		link_stack_flush_enabled = false;
-+		no_count_cache_flush();
- 		return;
- 	}
- 
-+	// This enables the branch from _switch to flush_count_cache
- 	patch_branch_site(&patch__call_flush_count_cache,
- 			  (u64)&flush_count_cache, BRANCH_SET_LINK);
- 
-+	pr_info("link-stack-flush: software flush enabled.\n");
-+	link_stack_flush_enabled = true;
-+
-+	// If we just need to flush the link stack, patch an early return
-+	if (!security_ftr_enabled(SEC_FTR_FLUSH_COUNT_CACHE)) {
-+		patch_instruction_site(&patch__flush_link_stack_return, PPC_INST_BLR);
-+		no_count_cache_flush();
-+		return;
-+	}
-+
- 	if (!security_ftr_enabled(SEC_FTR_BCCTR_FLUSH_ASSIST)) {
- 		count_cache_flush_type = COUNT_CACHE_FLUSH_SW;
- 		pr_info("count-cache-flush: full software flush sequence enabled.\n");
-@@ -407,11 +438,20 @@ void setup_count_cache_flush(void)
- 	if (no_spectrev2 || cpu_mitigations_off()) {
- 		if (security_ftr_enabled(SEC_FTR_BCCTRL_SERIALISED) ||
- 		    security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED))
--			pr_warn("Spectre v2 mitigations not under software control, can't disable\n");
-+			pr_warn("Spectre v2 mitigations not fully under software control, can't disable\n");
- 
- 		enable = false;
- 	}
- 
-+	/*
-+	 * There's no firmware feature flag/hypervisor bit to tell us we need to
-+	 * flush the link stack on context switch. So we set it here if we see
-+	 * either of the Spectre v2 mitigations that aim to protect userspace.
-+	 */
-+	if (security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED) ||
-+	    security_ftr_enabled(SEC_FTR_FLUSH_COUNT_CACHE))
-+		security_ftr_set(SEC_FTR_FLUSH_LINK_STACK);
-+
- 	toggle_count_cache_flush(enable);
- }
+-	/* setting configuration feature to one */
+-	usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+-			(__u8)0x03, 0x00, 0x01, 0x00, NULL, 0x00, 5000);
+-
+ 	if (product == MOSCHIP_DEVICE_ID_7715) {
+ 		struct urb *urb = serial->port[0]->interrupt_in_urb;
  
 
 
