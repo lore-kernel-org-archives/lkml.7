@@ -2,109 +2,97 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A88DC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8A6C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0A920684
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0603F207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574834209;
+	bh=gu2X0WNJdhA3w0Ambt+LbL8y0naoQCMYirELsEbZETo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TVekVfmIDi2vjuo9INE5RkniHCiS63lKOc7QyfXKhvzHC9Pdp55uvttyaFALuxFnS
+	 eFZmxe0B9fbvdTJ8OAxy/sQrBcENgoGpIDTfQoOpxd7gnmpwBCal2j5m8LfUqMNYOP
+	 qmBwJjwCdeY+eQsi9aHRQ90RTcetOTVlv3C/5IXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbfK0FyU (ORCPT
+        id S1726252AbfK0F4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 00:54:20 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:42135 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726078AbfK0FyT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 00:54:19 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0TjCTZdE_1574834051;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TjCTZdE_1574834051)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 27 Nov 2019 13:54:11 +0800
-Subject: Re: [PATCH v2 3/3] sched/numa: documentation for per-cgroup numa stat
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <cc35a710-c2ec-6c61-e30e-ee707798c5e9@linux.alibaba.com>
- <9ce01935-84ba-e8b4-461b-8be388433950@infradead.org>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <7169fba4-220f-a4a7-d6e7-0f025a3cd308@linux.alibaba.com>
-Date:   Wed, 27 Nov 2019 13:54:11 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Wed, 27 Nov 2019 00:56:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726092AbfK0F4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 00:56:47 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 980D220684;
+        Wed, 27 Nov 2019 05:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574834206;
+        bh=gu2X0WNJdhA3w0Ambt+LbL8y0naoQCMYirELsEbZETo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PAymuJ4cAwN4ZCIUvlvPyJ1ANCFqKHO5SJFOK2l9iW5Z+LQN+wMjd64uKPz7/nqkz
+         jgw+OkABMvWGkUDw+1R/F3MWu3tBRchUG6DnXSlZ1E8ojzlKpxWPzyDXIedwxLwmT6
+         3A69mC74gEIgrFNtIPNB6OK4xzueqgmW4g3/XQ+I=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, namit@vmware.com, hpa@zytor.com,
+        luto@kernel.org, ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        jeyu@kernel.org, alexei.starovoitov@gmail.com,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH -tip 0/2] x86/kprobes: Fix 2 issues related to text_poke_bp and optprobe
+Date:   Wed, 27 Nov 2019 14:56:41 +0900
+Message-Id: <157483420094.25881.9190014521050510942.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <9ce01935-84ba-e8b4-461b-8be388433950@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Randy
+Hi,
 
-On 2019/11/27 下午12:58, Randy Dunlap wrote:
-> On 11/26/19 5:50 PM, 王贇 wrote:
->> Since v1:
->>   * thanks to Iurii for the better sentence
->>   * thanks to Jonathan for the better format
->>
->> Add the description for 'cg_numa_stat', also a new doc to explain
->> the details on how to deal with the per-cgroup numa statistics.
->>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Michal Koutný <mkoutny@suse.com>
->> Cc: Mel Gorman <mgorman@suse.de>
->> Cc: Jonathan Corbet <corbet@lwn.net>
->> Cc: Iurii Zaikin <yzaikin@google.com>
->> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-> 
-> Hi,
-> I have a few comments/corrections. Please see below.
+Here are the patches which I've faced while testing ftracetest
+without function tracer. While investigating I found there were
+2 different bugs there.
 
-Thanks for the comments :-) will apply them all in next version.
+The 1st bug is a timing bug caused by wrong global variable
+update and syncing in text_poke_bp_batch(). This can cause a
+kernel panic if we hit int3 in between bp_patching.vec = NULL
+and bp_patching.nr_entries = 0. This is actually a wrong order
+and no synchronization. Steve suggested we can fix it with
+reordering and adding sync_core() between them.
 
-> 
->> ---
->>  Documentation/admin-guide/cg-numa-stat.rst      | 163 
-[snip]
->> +if you want to have the whole history.
->> +
->> +We have per-task migfailed counter to tell how many page migration has been
-> 
-> I can't find any occurrence of 'migfailed' in the entire kernel source tree.
-> Maybe it is misspelled?
+The 2nd bug is in the optprobe, which is caused by wrong flag
+update order. Currently kprobes update optimized flag before
+unoptimizing code. But if the kprobe is hit unoptimizing
+intermediate state, it can go back from int3 to the middle of
+modified instruction and cause a kernel panic. This can be
+fixed by updating flag after unoptimized code. 
 
-This one is added by the secondary patch:
-  [PATCH v2 2/3] sched/numa: expose per-task pages-migration-failure
+Thank you,
 
-As suggested by Mel.
+---
 
-Regards,
-Michael Wang
+Masami Hiramatsu (2):
+      x86/alternative: Sync bp_patching update for avoiding NULL pointer exception
+      kprobes: Set unoptimized flag after unoptimizing code
 
-> 
->> +failed for a particular task, you will find it in /proc/PID/sched entry.
-> 
-> 
-> HTH.
-> 
+
+ arch/x86/kernel/alternative.c |    8 +++++++-
+ kernel/kprobes.c              |    4 +++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
