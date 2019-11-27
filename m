@@ -2,193 +2,179 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C73C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597BBC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BEF2073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:29:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yw5W/UMq"
+	by mail.kernel.org (Postfix) with ESMTP id 338372073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfK0Q3w (ORCPT
+        id S1727091AbfK0QaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:29:52 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51940 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726909AbfK0Q3w (ORCPT
+        Wed, 27 Nov 2019 11:30:02 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:42936 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbfK0QaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:29:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574872190;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rcyN5dGoMhhF+8wU9SDW3LRuwC7oWgcs+VV9XVwODaY=;
-        b=Yw5W/UMqNqUmrbAFYputbQRJ7zaP481weijO0JcJ/Vp7E1rJYG9aqHuBFUD8e1KMof2w0b
-        LEuuj1POtDd6ojKawlO9UBRMpFNxMzWZ0o9re2Yw8p9FdZIXMr2s7Tp8+zwgrk00clQJqh
-        v9ufNFvboWhfzf2pbaK7eaUoJkGdwSY=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-mVhujEwSPeG9LurHXTTbiQ-1; Wed, 27 Nov 2019 11:29:48 -0500
-Received: by mail-ot1-f71.google.com with SMTP id m7so12122325otr.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 08:29:48 -0800 (PST)
+        Wed, 27 Nov 2019 11:30:02 -0500
+Received: by mail-il1-f199.google.com with SMTP id n16so19902488ilm.9
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 08:30:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kIu1VyYGNbaIKqeZUoUtiDvput7821e7oFhQavConxk=;
-        b=Otg/tie63r25BU5ZqGYHt5KqO0+4Z5S21AiBB2B3zKUDY43+OAvRA4E9t/CnWQI+Ee
-         KIgJaxX0c6rHcD994vKw7sfcFlMDj/AwhI4Mrr79fF2JaMwBzGnpablh8el6YPxfoxR3
-         /5e/nJPnvNx67QbyxVMn9Fr7ktx3HN8J9owTCNLSI0dmhm82JsPtGdgHPkqMxivt6pZr
-         RQ2PjrwWoagp6FaO0pb0eisVUgX/AFok7WOVRvQzJQJRlcmLFgR2YaWru1s+DfUeAkGO
-         ZlzjHJFP1StCi/3xj81cmTwLGBZaYJm/B91gp85nl4NaSbK3Qfnp0mht4BuYscHaHeOq
-         lEkQ==
-X-Gm-Message-State: APjAAAVjWI2a9LBcmwbm4uTqWzrijsg+/5gvtB3SuAhhurUCBrXj3uQ+
-        bn5z3xM+WsUJCOF1YU1BW2CXnErxCYxSyf0CsJPW4MQUD3cofE+95Pv24pSA5Q3s0hPXEvbTp5E
-        rwwj1YVLxftA2BuDCXSqKAgGIf4ByLe+syEMVzE9O
-X-Received: by 2002:aca:d14:: with SMTP id 20mr4877848oin.178.1574872187662;
-        Wed, 27 Nov 2019 08:29:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw3yLKNT7wsw1AqyVf2knKKoyFNMFDOQF5O+7hYYWvVBZw57Km8zJVbATfvGULvCZMZmqbPRh8opF4b2Zj5pdE=
-X-Received: by 2002:aca:d14:: with SMTP id 20mr4877821oin.178.1574872187328;
- Wed, 27 Nov 2019 08:29:47 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=/v0Hc4dmadTjmLQ47Pq0iPN4XeBjrXjDm/J4YGW+vXM=;
+        b=syeUJomf828JpB8u7tF72rqES9L5FYShQd3GId6Bu6032K0e6d0iK6l0ZEb6pwF7H5
+         D1Cv7UfH4vWPT6lAy0JtDYiJ3xb6DKKHcW85whEbR/aQGK5wJIIEWr9Ns1KAtvfibfHv
+         7lq4HH/LkclDyVCf7EEbUaFSYcY2IwgW6Scmptfc0ZFvl6EEOoZUe2hMT4yXkljAdsRv
+         1HbuTpqPaGtuPWJvcoKF0dxeMx3G30eH7f9IlDkd6fiO7/iNAp1lI72SGXs5iLpcEEpi
+         XQ5pr8y0nOsvxma1BgLjnq15qdJbUf7ZvC7Xi4PQPiyqIL/3WSP0jThufZ8DcYSxmi5j
+         tXYg==
+X-Gm-Message-State: APjAAAUgTAaY0pCy89jd//TQQa5X4h4rAvjpGfYm9zyJQihW2IBFHuwc
+        WoP3PZ6Efe8+KRz0ZpKGdZ2+AAPpO+o40sEJYxxjLvQe/FJ+
+X-Google-Smtp-Source: APXvYqweiOhb0X7bKUsqOaVzESnajjnOfo+XaUTkk4+XLeHQemnaAqH5FKDJ/G/9YTevZc0kIqEuRJ3DGFhDxDJdKs6N0HCqqrzC
 MIME-Version: 1.0
-References: <157225677483.3442.4227193290486305330.stgit@buzz>
- <20191028124222.ld6u3dhhujfqcn7w@box> <CAHk-=wgQ-Dcs2keNJPovTb4gG33M81yANH6KZM9d5NLUb-cJ1g@mail.gmail.com>
- <20191028125702.xdfbs7rqhm3wer5t@box> <ac83fee6-9bcd-8c66-3596-2c0fbe6bcf96@yandex-team.ru>
- <CAHk-=who0HS=NT8U7vFDT7er_CD7+ZreRJMxjYrRXs5G6dbpyw@mail.gmail.com>
- <f0140b13-cca2-af9e-eb4b-82eda134eb8f@redhat.com> <CAHk-=wh4SKRxKQf5LawRMSijtjRVQevaFioBK+tOZAVPt7ek0Q@mail.gmail.com>
- <640bbe51-706b-8d9f-4abc-5f184de6a701@redhat.com> <CAHpGcM+o2OwXdrj+A2_OqRg6YokfauFNiBJF-BQp0dJFvq_BrQ@mail.gmail.com>
- <22f04f02-86e4-b379-81c8-08c002a648f0@redhat.com> <CAHk-=whRuPkm7zFUiGe_BXkLvEdShZGngkb=uRufgU65ogCxfg@mail.gmail.com>
- <cdd48a4d-42a4-dd15-2701-e08e26fef17f@redhat.com>
-In-Reply-To: <cdd48a4d-42a4-dd15-2701-e08e26fef17f@redhat.com>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Wed, 27 Nov 2019 17:29:36 +0100
-Message-ID: <CAHc6FU4Mx_=qMYOBc0VYdn-paFXKVffq=k72LCJgTWONv9chng@mail.gmail.com>
-Subject: Re: [PATCH] mm/filemap: do not allocate cache pages beyond end of
- file at read
-To:     Steven Whitehouse <swhiteho@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <sfrench@samba.org>,
-        Bob Peterson <rpeterso@redhat.com>
-X-MC-Unique: mVhujEwSPeG9LurHXTTbiQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a92:906:: with SMTP id y6mr7675093ilg.157.1574872201158;
+ Wed, 27 Nov 2019 08:30:01 -0800 (PST)
+Date:   Wed, 27 Nov 2019 08:30:01 -0800
+In-Reply-To: <1574850465.2485.10.camel@suse.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001dec4905985682c9@google.com>
+Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
+From:   syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, hverkuil@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org, oneukum@suse.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 4:42 PM Steven Whitehouse <swhiteho@redhat.com> wro=
-te:
-> Hi,
->
-> On 25/11/2019 17:05, Linus Torvalds wrote:
-> > On Mon, Nov 25, 2019 at 2:53 AM Steven Whitehouse <swhiteho@redhat.com>=
- wrote:
-> >> Linus, is that roughly what you were thinking of?
-> > So the concept looks ok, but I don't really like the new flags as they
-> > seem to be gfs2-specific rather than generic.
-> >
-> > That said, I don't _gate_ them either, since they aren't in any
-> > critical code sequence, and it's not like they do anything really odd.
-> >
-> > I still think the whole gfs2 approach is broken. You're magically ok
-> > with using stale data from the cache just because it's cached, even if
-> > another client might have truncated the file or something.
->
-> If another node tries to truncate the file, that will require an
-> exclusive glock, and in turn that means the all the other nodes will
-> have to drop their glock(s) shared or exclusive. That process
-> invalidates the page cache on those nodes, such that any further
-> requests on those nodes will find the cache empty and have to call into
-> the filesystem.
->
-> If a page is truncated on another node, then when the local node gives
-> up its glock, after any copying (e.g. for read) has completed then the
-> truncate will take place. The local node will then have to reread any
-> data relating to new pages or return an error in case the next page to
-> be read has vanished due to the truncate. It is a pretty small window,
-> and the advantage is that in cases where the page is in cache, we can
-> directly use the cached page without having to call into the filesystem
-> at all. So it is page atomic in that sense.
->
-> The overall aim here is to avoid taking (potentially slow) cluster locks
-> when at all possible, yet at the same time deliver close to local fs
-> semantics whenever we can. You can think of GFS2's glock concept (at
-> least as far as the inodes we are discussing here) as providing a
-> combination of (page) cache control and cluster (dlm) locking.
->
-> >
-> > So you're ok with saying "the file used to be X bytes in size, so
-> > we'll just give you this data because we trust that the X is correct".
-> >
-> > But you're not ok to say "oh, the file used to be X bytes in size, but
-> > we don't want to give you a short read because it might not be correct
-> > any more".
-> >
-> > See the disconnect? You trust the size in one situation, but not in ano=
-ther one.
->
-> Well we are not trusting the size at all... the original algorithm
-> worked entirely off "is this page in cache and uptodate?" and for
-> exactly the reason that we know the size in the inode might be out of
-> date, if we are not currently holding a glock in either shared or
-> exclusive mode. We also know that if there is a page in cache and
-> uptodate then we must be holding the glock too.
->
->
-> >
-> > I also don't really see that you *need* the new flag at all. Since
-> > you're doing to do a speculative read and then a real read anyway, and
-> > since the only thing that you seem to care about is the file size
-> > (because the *data* you will trust if it is cached), then why don't
-> > you just use the *existing* generic read, and *IFF* you get a
-> > truncated return value, then you go and double-check that the file
-> > hasn't changed in size?
-> >
-> > See what I'm saying? I think gfs2 is being very inconsistent in when
-> > it trusts the file size, and I don't see that you even need the new
-> > behavior that patch gives, because you might as well just use the
-> > existing code (just move the i_size check earlier, and then teach gfs2
-> > to double-check the "I didn't get as much as I expected" case).
+Hello,
 
-We can identify short reads, but we won't get information about
-readahead back from generic_file_read_iter or filemap_fault. We could
-try to work around this with filesystem specific flags for ->readpage
-and ->readpages, but that would break down with multiple concurrent
-readers in addition to being a real mess. I'm currently out of better
-ideas that avoid duplicating the generic code.
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+INFO: rcu detected stall in dummy_timer
 
-> >                   Linus
->
-> I'll leave the finer details to Andreas here, since it is his patch, and
-> hopefully we can figure out a good path forward. We are perhaps also a
-> bit reluctant to go off and (nearly) duplicate code that is already in
-> the core vfs library functions, since that often leads to things getting
-> out of sync (our implementation of ->writepages is one case where that
-> happened in the past) and missing important bug fixes/features in some
-> cases. Hopefully though we can iterate on this a bit and come up with
-> something which will resolve all the issues,
->
-> Steve.
+radio-si470x 5-1:0.0: non-zero urb status (-71)
+radio-si470x 3-1:0.0: non-zero urb status (-71)
+rcu: INFO: rcu_sched self-detected stall on CPU
+rcu: 	1-....: (8213 ticks this GP) idle=4f6/1/0x4000000000000004  
+softirq=3368/3368 fqs=3
+	(t=10501 jiffies g=2713 q=134)
+NMI backtrace for cpu 1
+CPU: 1 PID: 1853 Comm: syz-executor.2 Not tainted 5.4.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x55/0x96 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x1b0/0x1c7 lib/nmi_backtrace.c:62
+  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+  rcu_dump_cpu_stacks+0x169/0x1b3 kernel/rcu/tree_stall.h:254
+  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
+  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
+  rcu_pending kernel/rcu/tree.c:2795 [inline]
+  rcu_sched_clock_irq.cold+0x4da/0x936 kernel/rcu/tree.c:2244
+  update_process_times+0x25/0x60 kernel/time/timer.c:1726
+  tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:167
+  tick_sched_timer+0x42/0x130 kernel/time/tick-sched.c:1299
+  __run_hrtimer kernel/time/hrtimer.c:1514 [inline]
+  __hrtimer_run_queues+0x303/0xc60 kernel/time/hrtimer.c:1576
+  hrtimer_interrupt+0x2e8/0x730 kernel/time/hrtimer.c:1638
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
+  smp_apic_timer_interrupt+0xf5/0x500 arch/x86/kernel/apic/apic.c:1135
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160  
+[inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x40/0x50  
+kernel/locking/spinlock.c:191
+Code: e8 95 14 b3 fb 48 89 ef e8 6d f3 b3 fb f6 c7 02 75 11 53 9d e8 61 ba  
+d0 fb 65 ff 0d a2 67 8f 7a 5b 5d c3 e8 02 be d0 fb 53 9d <eb> ed 0f 1f 40  
+00 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 fd 65 ff
+RSP: 0018:ffff8881db309b08 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: 0000000000000206 RCX: 0000000000000002
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8881ce7fb84c
+RBP: ffff8881d50f0000 R08: ffff8881ce7fb000 R09: fffffbfff11b23b8
+R10: fffffbfff11b23b7 R11: ffffffff88d91dbf R12: 0000000000000080
+R13: 0000000000000000 R14: dffffc0000000000 R15: ffff8881c6617500
+  spin_unlock_irqrestore include/linux/spinlock.h:393 [inline]
+  dummy_timer+0x131b/0x2fa2 drivers/usb/gadget/udc/dummy_hcd.c:1980
+  call_timer_fn+0x179/0x650 kernel/time/timer.c:1404
+  expire_timers kernel/time/timer.c:1449 [inline]
+  __run_timers kernel/time/timer.c:1773 [inline]
+  __run_timers kernel/time/timer.c:1740 [inline]
+  run_timer_softirq+0x5e3/0x1490 kernel/time/timer.c:1786
+  __do_softirq+0x221/0x912 kernel/softirq.c:292
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0x178/0x1a0 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0x12f/0x500 arch/x86/kernel/apic/apic.c:1137
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+  </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160  
+[inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x40/0x50  
+kernel/locking/spinlock.c:191
+Code: e8 95 14 b3 fb 48 89 ef e8 6d f3 b3 fb f6 c7 02 75 11 53 9d e8 61 ba  
+d0 fb 65 ff 0d a2 67 8f 7a 5b 5d c3 e8 02 be d0 fb 53 9d <eb> ed 0f 1f 40  
+00 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 fd 65 ff
+RSP: 0018:ffff8881cd477ba8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: 0000000000000246 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8881ce7fb84c
+RBP: ffff8881db325b00 R08: ffff8881ce7fb000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff8881db325b80 R14: 0000000000000000 R15: ffff8881db325b00
+  unlock_hrtimer_base kernel/time/hrtimer.c:898 [inline]
+  hrtimer_start_range_ns+0x5bf/0xb00 kernel/time/hrtimer.c:1133
+  hrtimer_start_expires include/linux/hrtimer.h:435 [inline]
+  hrtimer_sleeper_start_expires kernel/time/hrtimer.c:1792 [inline]
+  do_nanosleep+0x1b9/0x650 kernel/time/hrtimer.c:1868
+  hrtimer_nanosleep+0x249/0x4f0 kernel/time/hrtimer.c:1924
+  __do_sys_nanosleep kernel/time/hrtimer.c:1958 [inline]
+  __se_sys_nanosleep kernel/time/hrtimer.c:1945 [inline]
+  __x64_sys_nanosleep+0x19d/0x220 kernel/time/hrtimer.c:1945
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x457f00
+Code: c0 5b 5d c3 66 0f 1f 44 00 00 8b 04 24 48 83 c4 18 5b 5d c3 66 0f 1f  
+44 00 00 83 3d 51 e8 61 00 00 75 14 b8 23 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 24 d3 fb ff c3 48 83 ec 08 e8 ea 46 00 00
+RSP: 002b:00007ffe6aaf7d48 EFLAGS: 00000246 ORIG_RAX: 0000000000000023
+RAX: ffffffffffffffda RBX: 000000000000961f RCX: 0000000000457f00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffe6aaf7d50
+RBP: 0000000000000004 R08: 0000000000000001 R09: 0000000002432940
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
+R13: 00007ffe6aaf7da0 R14: 0000000000008efa R15: 00007ffe6aaf7db0
+radio-si470x 1-1:0.0: non-zero urb status (-71)
+radio-si470x 5-1:0.0: non-zero urb status (-71)
+radio-si470x 3-1:0.0: non-zero urb status (-71)
+radio-si470x 4-1:0.0: non-zero urb status (-71)
+radio-si470x 1-1:0.0: non-zero urb status (-71)
+radio-si470x 2-1:0.0: non-zero urb status (-71)
+radio-si470x 6-1:0.0: non-zero urb status (-71)
+radio-si470x 6-1:0.0: non-zero urb status (-71)
+radio-si470x 2-1:0.0: non-zero urb status (-71)
 
-Thanks,
-Andreas
+
+Tested on:
+
+commit:         22be26f7 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=177ca17ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
+dashboard link: https://syzkaller.appspot.com/bug?extid=9ca7a12fd736d93e0232
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1226e536e00000
 
