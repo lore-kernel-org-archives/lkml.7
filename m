@@ -2,60 +2,61 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1391FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FB3C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D242920885
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C919620835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmYX4ABN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhEmJx9h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfK0FaD (ORCPT
+        id S1726556AbfK0FaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 00:30:03 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33393 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfK0FaC (ORCPT
+        Wed, 27 Nov 2019 00:30:06 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41347 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfK0FaF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 00:30:02 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y206so1762821pfb.0;
-        Tue, 26 Nov 2019 21:30:02 -0800 (PST)
+        Wed, 27 Nov 2019 00:30:05 -0500
+Received: by mail-pg1-f193.google.com with SMTP id l26so60549pgb.8;
+        Tue, 26 Nov 2019 21:30:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NVGiAl8Dh/YJ44QiDFm1FDcXCaNLT2bn+snjxKuoTiA=;
-        b=dmYX4ABNhxkr2PDMHvkxaLU7lLez5GCZu36zShR+3opCKFN9xeiZHjRdw0yvUmECpd
-         9IJ78wFOqlX2x45ribrm3k863gfoujqH4thQ5z/gfGfNgKH+Yc3L0ghF5xgdjEwmsj1a
-         dHsU5oWZN5iBk6fOJFjRr3yYzApMJ29a4ikM/5m7Px0UR3APBSCJTfRa/hAC+awCfghQ
-         SvrCWbqxtzW7RkHF6yqmv0O50JohkCD9yMeJIdbGaWZmLsxsKxMjQjSOit6kup4wX9lG
-         rl+Ui/SnK5/M4l49KpS+dBDqs6GucaBe250umeJegqjkJ3Mn/vaw7pMWsLNNfKS9dvFR
-         Y/7Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=irJ5JXDAAWtDIqC+IX6BV3MY5DktCoDeX+ljdjsD0XI=;
+        b=mhEmJx9hcwu5d1h9HTaGxnILMXdc/7kSoKUUBfqVL0r1k5OXwgnv8wBTxtEFm7Osky
+         BFg1rZoQso8y0b6302pp7BaU6+l+veKvr2d2k2iM9ye60J0mT9tzXyyvA0jRbtNO2KzX
+         lOq5tGLsjneCg9GQMW/nq6V5gV7PSiMxUD0S2YbTNYlq5pZ+mCIMmN+GQPRZdXawACG0
+         St975uAtwxmbBvx8FfOv9jB0VDJXxkgm+CeqXCFg+Klenk6sTyMuIFK/ADzAwSy0H6bG
+         CFgWgJacIFBmfjca5oLZD5f4LJyyKsjICugTWvcXlMJPGHkJ33kkPALH0jtrNDtwIcPz
+         YEpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NVGiAl8Dh/YJ44QiDFm1FDcXCaNLT2bn+snjxKuoTiA=;
-        b=Hynz0tSj/6tobwhogFgVtrf8Hj2zsBKu/JG9gtfLc8zHKpf5fcCFUKQDiD1AQCnFYN
-         24ieMhO9MS57T9vXyKustZnLQHQCdajVLk/Gwg+zY3ZTlHwBT9s0pXGNRbdq56CDK0g2
-         elZFbfLDltJGibdH8x/2PRyIR2E9vzI1zR+eyFSLODS5TvlOHYja0XIjkDzR2SRgnYG7
-         RMq6S6aOH+K5QxK/ohUNQC2rEVDyN/QPr7N2qv/HBvuRtrVvhpFK1s6o94eSojzVrefS
-         9ZWFi1Nh/TXcOted/63zyMn3jl2mQUb2lwufuIj9806POAuOQvYj2OihLQLk08cUrXki
-         WY7g==
-X-Gm-Message-State: APjAAAXoJE9KIt++4gm4iooN86BQSW5hSzwIHtAjcUhjAH1csVy4mwF0
-        nh1k9hjAnCRryRnNd3gxRRc=
-X-Google-Smtp-Source: APXvYqxxWXVOcqEI6A8tpVbbrr0/wVcFJgHw1+FRuXU1s33USdwQLQ4LqEiCt9x5VHRbZA5i2b76xA==
-X-Received: by 2002:a63:f702:: with SMTP id x2mr2611989pgh.300.1574832601637;
-        Tue, 26 Nov 2019 21:30:01 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=irJ5JXDAAWtDIqC+IX6BV3MY5DktCoDeX+ljdjsD0XI=;
+        b=HfasC3yCll+lZTH537H9OtK5cheipYXWDEL8snloZPFZ2um8QnTKJYTVKWpe6XCtt9
+         F/BagAjKPS5F2akhIhEDcVHXaICByQT4WrP+94aQZGMwlkVFWwRDilW8cmpg07VuraO/
+         59vuFWd7vbyynU2Lh7ZH97XVWfcY8ze3iIGJJ2kMsZSYQJNjrq5CTvU+92Av0GPpR7ae
+         Lx6YNs7bowqyPTJw/TGL3F3hk8aTpEdEOpMIpMkADSXYrr/CFsf0i4Fs5VO3Y+utmKeh
+         O80WMrSANj/y6Rx9EtRwD6t6ggJTC+ccI4rHJ/Ly1Gjd/BG8Od9oWmq2pCj4D1FFooki
+         WVNg==
+X-Gm-Message-State: APjAAAW1GJecPZsAdWNZ5Xn501jC7Rv+RrCciGQUOqL+MRyRcnB8zflH
+        EhRstXcefj7tqDl3G2AQ/So=
+X-Google-Smtp-Source: APXvYqz8sVivaA2EbLiosDrKvBFKz+ssRSlkYw2TUmhAhOCKERRFiVZSgC2YBw7AstdoX0IbBoWQPg==
+X-Received: by 2002:a63:2b51:: with SMTP id r78mr2801429pgr.4.1574832605006;
+        Tue, 26 Nov 2019 21:30:05 -0800 (PST)
 Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id p38sm4360825pjp.27.2019.11.26.21.30.00
+        by smtp.gmail.com with ESMTPSA id p38sm4360825pjp.27.2019.11.26.21.30.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 21:30:00 -0800 (PST)
+        Tue, 26 Nov 2019 21:30:04 -0800 (PST)
 From:   Vasily Khoruzhick <anarsoul@gmail.com>
 To:     Yangtao Li <tiny.windzz@gmail.com>,
         Zhang Rui <rui.zhang@intel.com>,
@@ -74,10 +75,12 @@ To:     Yangtao Li <tiny.windzz@gmail.com>,
         =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
         linux-kernel@vger.kernel.org
 Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v6 0/7] add thermal sensor driver for A64, A83T, H3, H5, H6, R40
-Date:   Tue, 26 Nov 2019 21:29:28 -0800
-Message-Id: <20191127052935.1719897-1-anarsoul@gmail.com>
+Subject: [PATCH v6 3/7] ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
+Date:   Tue, 26 Nov 2019 21:29:31 -0800
+Message-Id: <20191127052935.1719897-4-anarsoul@gmail.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127052935.1719897-1-anarsoul@gmail.com>
+References: <20191127052935.1719897-1-anarsoul@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,54 +88,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
-H6 and R40 SoCs.
+From: Ondrej Jirman <megous@megous.com>
 
-v6:
-	- [ondrej, vasily] Squash all driver related changes into a
-			   single patch
-	- [ondrej] Rename calib -> calibration
-	- [ondrej] Fix thermal zone registration check
-	- [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
-	- [ondrej] Rework scale/offset values, H6 calibration
-	- [ondrej] Explicitly set mod clock to 24 MHz
-	- [ondrej] Set undocumented bits in CTRL0 for H6
-	- [ondrej] Add support for A83T
-	- [ondrej] Add dts changes for A83T, H3, H5, H6
-	- [vasily] Add dts changes for A64
-	- [vasily] Address Maxime's comments for YAML scheme
-	- [vasily] Make .calc_temp callback mandatory
-	- [vasily] Set .max_register in regmap config, so regs can be
-		   inspected using debugfs
+There are three sensors, two for each CPU cluster, one for GPU.
 
-Ondrej Jirman (4):
-  ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
-  ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
-  arm64: dts: allwinner: sun50i-h5: Add thermal sensor and thermal zones
-  arm64: dts: allwinner: sun50i-h6: Add thermal sensor and thermal zones
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 36 +++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Vasily Khoruzhick (1):
-  arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
-
-Yangtao Li (2):
-  thermal: sun8i: add thermal driver for H6/H5/H3/A64/R40
-  dt-bindings: thermal: add YAML schema for sun8i-thermal driver
-    bindings
-
- .../thermal/allwinner,sun8i-a83t-ths.yaml     | 103 +++
- MAINTAINERS                                   |   7 +
- arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
- arch/arm/boot/dts/sun8i-h3.dtsi               |  26 +
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  32 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
- drivers/thermal/Kconfig                       |  14 +
- drivers/thermal/Makefile                      |   1 +
- drivers/thermal/sun8i_thermal.c               | 643 ++++++++++++++++++
- 10 files changed, 937 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
- create mode 100644 drivers/thermal/sun8i_thermal.c
-
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 74bb053cf23c..902fee8be688 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -50,6 +50,7 @@
+ #include <dt-bindings/reset/sun8i-a83t-ccu.h>
+ #include <dt-bindings/reset/sun8i-de2.h>
+ #include <dt-bindings/reset/sun8i-r-ccu.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	interrupt-parent = <&gic>;
+@@ -581,6 +582,12 @@
+ 		sid: eeprom@1c14000 {
+ 			compatible = "allwinner,sun8i-a83t-sid";
+ 			reg = <0x1c14000 0x400>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			ths_calibration: thermal-sensor-calibration@34 {
++				reg = <0x34 8>;
++			};
+ 		};
+ 
+ 		usb_otg: usb@1c19000 {
+@@ -1156,5 +1163,34 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 		};
++
++		ths: ths@1f04000 {
++			compatible = "allwinner,sun8i-a83t-ths";
++			reg = <0x01f04000 0x100>;
++			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++			nvmem-cells = <&ths_calibration>;
++			nvmem-cell-names = "calibration";
++			#thermal-sensor-cells = <1>;
++		};
++	};
++
++	thermal-zones {
++		cpu0_thermal: cpu0-thermal {
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
++			thermal-sensors = <&ths 0>;
++		};
++
++		cpu1_thermal: cpu1-thermal {
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
++			thermal-sensors = <&ths 1>;
++		};
++
++		gpu_thermal: gpu-thermal {
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
++			thermal-sensors = <&ths 2>;
++		};
+ 	};
+ };
 -- 
 2.24.0
 
