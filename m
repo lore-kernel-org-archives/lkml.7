@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08479C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9FCC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD4E4206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071DD20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890199;
-	bh=wyyl9s9xZv7JFxye6DTH7V7QfW8oBgfEhI9UUGwxt0g=;
+	s=default; t=1574890206;
+	bh=OS/5XB3eSaY5RKOQ6B/n+XCJ2R6bB2P+uS/f2k4ORzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g3vHAR+3AftYRoCDMHLru/AI66W8ZYI06oioCxE0KKChzCvuZnTm0dI6SWohn6pkJ
-	 ktHTSjA6CUK/uEulDvQsPXKSvMtb+TNlt9XHY/PnwAO2KtesduPaVN5YrKFuZGwu+o
-	 9kdFeXkqdHYXVm8i76gfdfbe3Si6Gv0kQj3OnaYo=
+	b=L+eqRF4Ny6D0l1i8ck9moSC4kh0vYxLlyYPx8AGwMoUKN4YUbdY63E6QQfMOwg4A9
+	 65jyh7TRjur9sBFoWGga/fboNmIVwZnegeBSgbUblrhs+HZzy7HMR5jg+zZx6JEFKD
+	 qtyuEg2ytQbyuDiPKag5hpdLLkuK4lV9gHhBunh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbfK0U41 (ORCPT
+        id S1730427AbfK0VaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:56:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:30:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731046AbfK0U4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:56:24 -0500
+        id S1728290AbfK0U4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:56:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 929F820862;
-        Wed, 27 Nov 2019 20:56:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62CFD2154A;
+        Wed, 27 Nov 2019 20:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888183;
-        bh=wyyl9s9xZv7JFxye6DTH7V7QfW8oBgfEhI9UUGwxt0g=;
+        s=default; t=1574888177;
+        bh=OS/5XB3eSaY5RKOQ6B/n+XCJ2R6bB2P+uS/f2k4ORzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZzmSTblfv1VgGE+TFX90+iEt+xqfci6GuMl20NtRx3Fi4bOfRYPCUPT6avy4A3sQZ
-         JV5BMMtScuHfMSWgbBRUgTjn/nowtZg37WNUo/8RDPpbdiiY7vXujfje1Ri21gjVkj
-         C33D8vSgru/zVDPCsX8UYS7q68LCZ9vMNWlW7ktI=
+        b=KOy/pBi1JtH0H6tGCHDTXcciCSDRHbLE7kOhbW6svNcmE6vlom+AmrYtYk3WyCr6L
+         g61LLmKXQhGS/6kB1krG9A5xaKz6NIY/EygEGdysPhnTzyKkr05Megn6z0Rz5lOToF
+         XbrnsXwnHb/y/c1+VjdbGNvJhTTJmirIQZ/M5oZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/306] powerpc/eeh: Fix use of EEH_PE_KEEP on wrong field
-Date:   Wed, 27 Nov 2019 21:28:05 +0100
-Message-Id: <20191127203117.379300257@linuxfoundation.org>
+Subject: [PATCH 4.19 034/306] powerpc/eeh: Fix null deref for devices removed during EEH
+Date:   Wed, 27 Nov 2019 21:28:04 +0100
+Message-Id: <20191127203117.281953759@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,40 +62,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit 473af09b56dc4be68e4af33220ceca6be67aa60d ]
+[ Upstream commit bcbe3730531239abd45ab6c6af4a18078b37dd47 ]
 
-eeh_add_to_parent_pe() sometimes removes the EEH_PE_KEEP flag, but it
-incorrectly removes it from pe->type, instead of pe->state.
+If a device is removed during EEH processing (either by a driver's
+handler or as part of recovery), it can lead to a null dereference
+in eeh_pe_report_edev().
 
-However, rather than clearing it from the correct field, remove it.
-Inspection of the code shows that it can't ever have had any effect
-(even if it had been cleared from the correct field), because the
-field is never tested after it is cleared by the statement in
-question.
-
-The clear statement was added by commit 807a827d4e74 ("powerpc/eeh:
-Keep PE during hotplug"), but it didn't explain why it was necessary.
+To handle this, skip devices that have been removed.
 
 Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh_pe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/eeh_driver.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/kernel/eeh_pe.c b/arch/powerpc/kernel/eeh_pe.c
-index 1b238ecc553e2..210d239a93950 100644
---- a/arch/powerpc/kernel/eeh_pe.c
-+++ b/arch/powerpc/kernel/eeh_pe.c
-@@ -379,7 +379,7 @@ int eeh_add_to_parent_pe(struct eeh_dev *edev)
- 		while (parent) {
- 			if (!(parent->type & EEH_PE_INVALID))
- 				break;
--			parent->type &= ~(EEH_PE_INVALID | EEH_PE_KEEP);
-+			parent->type &= ~EEH_PE_INVALID;
- 			parent = parent->parent;
- 		}
+diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+index 110eba400de7c..af1f3d5f9a0f7 100644
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -281,6 +281,10 @@ static void eeh_pe_report_edev(struct eeh_dev *edev, eeh_report_fn fn,
+ 	struct pci_driver *driver;
+ 	enum pci_ers_result new_result;
  
++	if (!edev->pdev) {
++		eeh_edev_info(edev, "no device");
++		return;
++	}
+ 	device_lock(&edev->pdev->dev);
+ 	if (eeh_edev_actionable(edev)) {
+ 		driver = eeh_pcid_get(edev->pdev);
 -- 
 2.20.1
 
