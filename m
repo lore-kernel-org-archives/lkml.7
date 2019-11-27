@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A661C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DE8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0C62075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7D22075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890697;
-	bh=TippZJTy33GeSa3bImf31KkUie2r6+fsZXDRV9ED9fw=;
+	s=default; t=1574890705;
+	bh=DeFJWPhFtF9RPI2zIaWSc+XHgGD8AYSBWHu+7NqVOKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1YLTWd5OeofaXCK3d7h4O7T2t2hedcyNSQ442dD99lXQhNoe6Z5X0WWdOl4OwPiS/
-	 nppZc23Vt34SPhfAdJ0lslXuSaGUKU8J1TbcAY6TpXQOJ+TZMxEIFNdXk8DNMPVhwu
-	 k1ND1brmPYy3USvVKp6OKWjzAsy48F0Lkzgw1brY=
+	b=KNMplWKomr6+p9rl7oZIHa9NVtESptWxX8gQn7ZkZxr+4LKlZou1nzD9HIxtc3+Dx
+	 iNrtj3l3okoN5Ou6mrpw6OB8OZWwc3jkhB07uw208tB2YyY1khSY/MY/FH34HrIwe4
+	 cJNqszxdCH4NyNyB5Xh/K/Lv6eYZZGMHv2GC8dpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfK0ViQ (ORCPT
+        id S1730066AbfK0ViX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:38:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56994 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:38:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728698AbfK0Upr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:45:47 -0500
+        id S1728286AbfK0Upe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:45:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E250F2158A;
-        Wed, 27 Nov 2019 20:45:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E869A21741;
+        Wed, 27 Nov 2019 20:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887546;
-        bh=TippZJTy33GeSa3bImf31KkUie2r6+fsZXDRV9ED9fw=;
+        s=default; t=1574887533;
+        bh=DeFJWPhFtF9RPI2zIaWSc+XHgGD8AYSBWHu+7NqVOKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jbKKYSf2WpbuPJh8t6XHzeULwjBAM/F+UiBEGrATUzO+IAbt9dqCLYCvZ1I2HXyKp
-         pAUNDTG3yUM8iIRwYYRxarU20Cc2W6z/5XBWHoBoyy9RYDGsxUUhTvGK4cTzRc5yS5
-         CIOfVEQqUj1PD8s2p/SGNCBBWfpZr+NJOjjV0fCk=
+        b=NqHpUnge6T91RmE+giLxTQddJLIbIc8KUB57G3UKipUps+gNlRSty3r0qUCI1xm1j
+         FjVWJUvU3q8B6Pb0ZFYdX3KHippQZ75MqYPNK1NGlJNJHiKhCJhWVAIk7NScWlwC9L
+         lHUvdYPhB+ywqpWwhx3fV5d2qlt3EaP4IgDX4CME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Axtens <dja@axtens.net>
-Subject: [PATCH 4.9 151/151] KVM: PPC: Book3S HV: Flush link stack on guest exit to host kernel
-Date:   Wed, 27 Nov 2019 21:32:14 +0100
-Message-Id: <20191127203047.774806743@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Aleksander Morgado <aleksander@aleksander.es>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 147/151] USB: serial: option: add support for Foxconn T77W968 LTE modules
+Date:   Wed, 27 Nov 2019 21:32:10 +0100
+Message-Id: <20191127203047.509900041@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -59,119 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Aleksander Morgado <aleksander@aleksander.es>
 
-commit af2e8c68b9c5403f77096969c516f742f5bb29e0 upstream.
+commit f0797095423e6ea3b4be61134ee353c7f504d440 upstream.
 
-On some systems that are vulnerable to Spectre v2, it is up to
-software to flush the link stack (return address stack), in order to
-protect against Spectre-RSB.
+These are the Foxconn-branded variants of the Dell DW5821e modules,
+same USB layout as those. The device exposes AT, NMEA and DIAG ports
+in both USB configurations.
 
-When exiting from a guest we do some house keeping and then
-potentially exit to C code which is several stack frames deep in the
-host kernel. We will then execute a series of returns without
-preceeding calls, opening up the possiblity that the guest could have
-poisoned the link stack, and direct speculative execution of the host
-to a gadget of some sort.
+P:  Vendor=0489 ProdID=e0b4 Rev=03.18
+S:  Manufacturer=FII
+S:  Product=T77W968 LTE
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
 
-To prevent this we add a flush of the link stack on exit from a guest.
+P:  Vendor=0489 ProdID=e0b4 Rev=03.18
+S:  Manufacturer=FII
+S:  Product=T77W968 LTE
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 7 Cfg#= 2 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
+I:  If#=0x1 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x6 Alt= 0 #EPs= 1 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[dja: straightforward backport to v4.14]
-Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
+[ johan: drop id defines ]
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/include/asm/asm-prototypes.h |    2 ++
- arch/powerpc/kernel/security.c            |    9 +++++++++
- arch/powerpc/kvm/book3s_hv_rmhandlers.S   |   27 +++++++++++++++++++++++++++
- 3 files changed, 38 insertions(+)
 
---- a/arch/powerpc/include/asm/asm-prototypes.h
-+++ b/arch/powerpc/include/asm/asm-prototypes.h
-@@ -125,7 +125,9 @@ extern int __ucmpdi2(u64, u64);
- extern s32 patch__call_flush_count_cache;
- extern s32 patch__flush_count_cache_return;
- extern s32 patch__flush_link_stack_return;
-+extern s32 patch__call_kvm_flush_link_stack;
- 
- extern long flush_count_cache;
-+extern long kvm_flush_link_stack;
- 
- #endif /* _ASM_POWERPC_ASM_PROTOTYPES_H */
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -393,6 +393,9 @@ static void toggle_count_cache_flush(boo
- 
- 	if (!enable) {
- 		patch_instruction_site(&patch__call_flush_count_cache, PPC_INST_NOP);
-+#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
-+		patch_instruction_site(&patch__call_kvm_flush_link_stack, PPC_INST_NOP);
-+#endif
- 		pr_info("link-stack-flush: software flush disabled.\n");
- 		link_stack_flush_enabled = false;
- 		no_count_cache_flush();
-@@ -403,6 +406,12 @@ static void toggle_count_cache_flush(boo
- 	patch_branch_site(&patch__call_flush_count_cache,
- 			  (u64)&flush_count_cache, BRANCH_SET_LINK);
- 
-+#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
-+	// This enables the branch from guest_exit_cont to kvm_flush_link_stack
-+	patch_branch_site(&patch__call_kvm_flush_link_stack,
-+			  (u64)&kvm_flush_link_stack, BRANCH_SET_LINK);
-+#endif
-+
- 	pr_info("link-stack-flush: software flush enabled.\n");
- 	link_stack_flush_enabled = true;
- 
---- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-+++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-@@ -18,6 +18,7 @@
-  */
- 
- #include <asm/ppc_asm.h>
-+#include <asm/code-patching-asm.h>
- #include <asm/kvm_asm.h>
- #include <asm/reg.h>
- #include <asm/mmu.h>
-@@ -1266,6 +1267,10 @@ mc_cont:
- 	bl	kvmhv_accumulate_time
- #endif
- 
-+	/* Possibly flush the link stack here. */
-+1:	nop
-+	patch_site 1b patch__call_kvm_flush_link_stack
-+
- 	stw	r12, STACK_SLOT_TRAP(r1)
- 	mr 	r3, r12
- 	/* Increment exit count, poke other threads to exit */
-@@ -1685,6 +1690,28 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
- 	mtlr	r0
- 	blr
- 
-+.balign 32
-+.global kvm_flush_link_stack
-+kvm_flush_link_stack:
-+	/* Save LR into r0 */
-+	mflr	r0
-+
-+	/* Flush the link stack. On Power8 it's up to 32 entries in size. */
-+	.rept 32
-+	bl	.+4
-+	.endr
-+
-+	/* And on Power9 it's up to 64. */
-+BEGIN_FTR_SECTION
-+	.rept 32
-+	bl	.+4
-+	.endr
-+END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
-+
-+	/* Restore LR */
-+	mtlr	r0
-+	blr
-+
- /*
-  * Check whether an HDSI is an HPTE not found fault or something else.
-  * If it is an HPTE not found fault that is due to the guest accessing
+---
+ drivers/usb/serial/option.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1990,6 +1990,10 @@ static const struct usb_device_id option
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x13) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x14) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x1b) },
++	{ USB_DEVICE(0x0489, 0xe0b4),						/* Foxconn T77W968 */
++	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
++	{ USB_DEVICE(0x0489, 0xe0b5),						/* Foxconn T77W968 ESIM */
++	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
+ 	{ USB_DEVICE(0x1508, 0x1001),						/* Fibocom NL668 */
+ 	  .driver_info = RSVD(4) | RSVD(5) | RSVD(6) },
+ 	{ USB_DEVICE(0x2cb7, 0x0104),						/* Fibocom NL678 series */
 
 
