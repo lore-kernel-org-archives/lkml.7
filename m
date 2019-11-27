@@ -2,109 +2,84 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE69C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A0BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9F42070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0002068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:48:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J5vSWBY2"
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="kvW9Z1ci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfK0Mqr (ORCPT
+        id S1727017AbfK0Msk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 07:46:47 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50625 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfK0Mqr (ORCPT
+        Wed, 27 Nov 2019 07:48:40 -0500
+Received: from mail-qt1-f179.google.com ([209.85.160.179]:33701 "EHLO
+        mail-qt1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfK0Msk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 07:46:47 -0500
-Received: by mail-wm1-f66.google.com with SMTP id l17so6975479wmh.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 04:46:45 -0800 (PST)
+        Wed, 27 Nov 2019 07:48:40 -0500
+Received: by mail-qt1-f179.google.com with SMTP id y39so25211421qty.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 04:48:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=qERnKv0tOOCfJjOfEE5blBnr7WHRcvWStEnbvb2aF0g=;
-        b=J5vSWBY25deEcYjyrsrcOIy+XQBwg+kFxlEPoHPIkqdNnuTnbbjQX2hSreOloziNsq
-         VSpBkcS+PsXVkXWwIfn6lycmoQD0DxFn86Yw+l5JHbxgLBYoUYFN0pvlAGKXlGHQp6Ps
-         LkbuAv2QBezgfJw5/kDmN94hVTC2nMXptwDllsznuKyaTAesULZ+ANsL/wGaH8ESiUU3
-         R0N5m1EFnkmr9MWbvCn+erMKqnCgpQiFQgy2jSCq5Z29oDJ0ho9luo+4xUu/9lxYoCIQ
-         4w+ytdLXvPiGVJpKbZUcoFjDk6xOfdETwnQjDqleWjcqvIqf7Wd+ZFhaHRvGMF3sV2WA
-         X1bg==
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tGwyIKoVSTSDVQc5rcJNfdSD4C5j9jIXNWmLacJmp+s=;
+        b=kvW9Z1cila5wlFeElHAI+CETLkXmJ7VqeVmmhGn2iVJPDivEWSRn6vyYDmf3wdvPO6
+         jmWKNfeH8zDab2MYkCEuxCD3fJM3ir3uq+enaGlTmNsa2AaX6KHNnF9tqVCDmDqFJMWz
+         C08/CtlCupR83nBD1jn8KjFnVK4B9Gwz9wiqDc9TEoF+Es0K2afYeYD74EPnvEc+0RCK
+         tX85HhzEK+r240MSMCF+fH+l0yrizmjC7p+vlXZwnXpcCMnGycDzhkATLofgGqh1MSBL
+         ufgDndRGl1aKkOyzuoJGs5yb6Ix8fppHJuhcUcTiUaMwH8nFf+6w98Epa7zNFWtYhpOv
+         p3qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qERnKv0tOOCfJjOfEE5blBnr7WHRcvWStEnbvb2aF0g=;
-        b=V2xjpxId4HaHoBHqtFk/hE/b+KiKZOAGJfQtR6reHmvehJpR9SQwbWnPgsOZTAhsej
-         Xge8jsktP0KMJRIJOeJeF5Fn4f2ZArS2nVuOc2SXLbFF85qgvbDrRDlhCFz6coRodyIb
-         XhoP/EgyR+YTjef336Q6stzQXODVd3DTsNfDXWeFmCe12XYqw4G/TNS12qt9twxFGc5r
-         LUjQJVLA9PzW++9XqKw0AiMxqCA5iNU9QzL/Woyb56e5JI/QP3OHGGg2miGZwqrSxY32
-         4e2msOY/wDkEP4NGZoFmZZBpyqmb1kvks7rr4vc6j8Qn4HuvU1Jz4K5i5bpDDGx7KFwu
-         PIPw==
-X-Gm-Message-State: APjAAAX1di24+hC+Rt68qWzzNCoYoyd1pFSFAefX0oyABhlxa4wF5dU0
-        5mg8ErTJ2m/JV6RNKJZzSuQ=
-X-Google-Smtp-Source: APXvYqyjuY2NlQHia9pXct7GlLOBZAwtHBiHOsFyYDzLstDrLlgMr6IlILfQ0PbSaEvs8h/KYMhiWg==
-X-Received: by 2002:a05:600c:2058:: with SMTP id p24mr3903416wmg.134.1574858805137;
-        Wed, 27 Nov 2019 04:46:45 -0800 (PST)
-Received: from localhost ([193.47.161.132])
-        by smtp.gmail.com with ESMTPSA id i71sm20950628wri.68.2019.11.27.04.46.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Nov 2019 04:46:44 -0800 (PST)
-Date:   Wed, 27 Nov 2019 13:46:38 +0100
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Peng Fan <peng.fan@nxp.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH] arm64: defconfig: Change CONFIG_AT803X_PHY from m to y
-Message-ID: <20191127124638.GC5108@optiplex>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tGwyIKoVSTSDVQc5rcJNfdSD4C5j9jIXNWmLacJmp+s=;
+        b=T4ZCpwyJ8g8qvHf4h6LamCXBRzeAd/JFOhmqgc+IRyzxBniEDCnQcRVY1eF+VVP6VX
+         eU7QbS/u5BLy4YCqv6zIQunnkQB4lr/ZrZDU5puUuuTWkZSe8aygSL1EahEp2UXCwGSU
+         p+z5FDHkvgaz8AZ7nrK92yG6rMD5EXN+FHBHQ0xyqlb4M4MLgpvSjd3hRLg4CPV9OBiL
+         g1KYcRR/4XOFiR/0fjiMKlPPM6xZfIlkhJNGFsqrui7kX3de/ZhVb1vu40HBHERzrppf
+         CslW6x6qWaMud8m45UBWJqwfPMSpS6/CSMN9av80bRWrsORk0SKlaamkb3okvtAExnG2
+         juQw==
+X-Gm-Message-State: APjAAAUh33VU6/8RhUtn5z0I1L0upB815cKSXqvWvwcFbM4Gex97EoRm
+        E6bXcyErTsckK+4rndw/TN9bSnEzDw+HG7l7vSKHlA==
+X-Google-Smtp-Source: APXvYqyQW5p1T+6tDo7Vd44ox6ytIZkKwYCSMkVhX3YfVzriqzbA4J3IQbGjaBsQr9PXiQodkruQ2t85s/zfmyyaSJE=
+X-Received: by 2002:ac8:66d7:: with SMTP id m23mr30807597qtp.53.1574858919038;
+ Wed, 27 Nov 2019 04:48:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e39c043d-d098-283d-97b0-2a44aefec2f1@free.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CA+G9fYtgEfa=bq5C8yZeF6P563Gw3Fbs+-h_oy1e4G_1G0jrgw@mail.gmail.com>
+ <20191126155632.GF795@breakpoint.cc> <20191127001931.GA3717@debian> <CAG=yYwnm4vRLRpjT2VOj5fynPhBfhvpVjfbSOvPrs-bwv09mTA@mail.gmail.com>
+In-Reply-To: <CAG=yYwnm4vRLRpjT2VOj5fynPhBfhvpVjfbSOvPrs-bwv09mTA@mail.gmail.com>
+From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Date:   Wed, 27 Nov 2019 18:18:03 +0530
+Message-ID: <CAG=yYwnx9y3ph74ARdSocca1rqoDVz5vt7WBL=5Qhw1fVEnPNA@mail.gmail.com>
+Subject: Re: selftests:netfilter: nft_nat.sh: internal00-0 Error Could not
+ open file \"-\" No such file or directory
+To:     Florian Westphal <fw@strlen.de>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>, horms@verge.net.au,
+        yanhaishuang@cmss.chinamobile.com, lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/11/19, Marc Gonzalez wrote:
-> On 26/11/2019 15:54, Oliver Graute wrote:
-> 
-> > this patch broke my imx8qm nfs setup. With the generic phy driver my
-> > board is booting fine. But with the AT803X_PHY=y enabled  I'm running
-> > into the following phy issue. So on my side it looks inverse as on
-> > yours. What is the best proposal to fix this?
-> > 
-> > [    5.550442] fec 5b040000.ethernet eth0: Link is Up - 1Gbps/Full - flow control off
-> > [    5.573206] Sending DHCP requests ...... timed out!
-> > [   95.339702] IP-Config: Retrying forever (NFS root)...
-> > [   95.348873] Atheros 8035 ethernet 5b040000.ethernet-1:06: attached PHY driver [Atheros 8035 ethernet] (mii_bus:phy_addr=5b040000.ethernet-1:06, irq=POLL)
-> > [   99.438443] fec 5b040000.ethernet eth0: Link is Up - 1Gbps/Full - flow control off
-> > [   99.461206] Sending DHCP requests ...... timed out!
-> 
-> Which DTS are you using?
+> > Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+> > Signed-off-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
 
-I'am using this DTS which I'am currently working on:
+"i do not know if i deserve Signed-off-by "
 
-https://lists.infradead.org/pipermail/linux-arm-kernel/2019-October/689501.html
-> 
-> I bet one dollar that 6d4cd041f0af triggered a latent bug in the DTS.
 
-So what should I fix in my device tree?
-
-Best regards,
-
-Oliver
+-- 
+software engineer
+rajagiri school of engineering and technology
