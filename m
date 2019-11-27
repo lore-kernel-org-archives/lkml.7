@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9C2C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5367DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E9D2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2E120835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WtbQzuZI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyGVp04Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfK0RvB (ORCPT
+        id S1727279AbfK0RvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:51:01 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:45442 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfK0RvA (ORCPT
+        Wed, 27 Nov 2019 12:51:04 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35832 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfK0RvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:51:00 -0500
-Received: by mail-il1-f194.google.com with SMTP id o18so21740008ils.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 09:50:58 -0800 (PST)
+        Wed, 27 Nov 2019 12:51:02 -0500
+Received: by mail-il1-f193.google.com with SMTP id g12so12325615ild.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 09:51:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=/stFClXYrFISZefBb+JDS4GEu+QGCmV4uRwHZjJAkoE=;
-        b=WtbQzuZI5b1TaYrehfBirydN35Ren4ZIo00zSBYkzZEL8CHiSswnIK373C2LaXRosk
-         PdOzdvuvK+LKqtlG7bLOWn1/sm7t6c64Pa8ya9DOcx/uzYudr5+dZoEkuLYxxP8+VZE6
-         313BBdHqbNzAo2N1VXBsIcwTEui0zH+7r8qoU/u7LvJsx11nPDMov4O2asLsOGofNmON
-         am2+YO+QQCuX5pyR7cWtQ4+w4vJZ2RgOAxLELzPZZugSqeU7OTgQOrLZ9Yxu0VCcm2z8
-         6kJAlebfwnARnQ376P3aVx+/IqKhr9sPKq97qEHZLKgNnJYvdJj73/VP5/+kdP3lzyZL
-         l/ag==
+        bh=JBvCUJLGzPXX0Pn9enxN3cNtWBdwerBLUit9nHVW5Gk=;
+        b=kyGVp04QChNhrcDytyBm+e8HM7yIeAysxnAW7WR701jqbTnJC+psbtgEmE9dQROAmC
+         CWiHA8wGuDXbZwJGABZ5UMBWMwFBDfBRjKQ4yb5HtQRb3Q96a0TozWUm8AfQ0xjZZ9Xh
+         YLiyKw5GmU3Xi3QZls6EAQIaSw+5NPYDDkhfgCZ2SCbkTDD+7MyQIv8RH+Kz0FKIXYYs
+         umd0bj6hddy79+84ge7xGVGM7E7cb/m6GswBA+pa9lMo9OWibOlwEp5SnSx7j2yitH24
+         io5nt1AFCTHsJZf5+xHnU8YJ1lAKZetcs+OAT/ssr+hGYXMhp0SRMTwlg3INj3T+8zmz
+         5bzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=/stFClXYrFISZefBb+JDS4GEu+QGCmV4uRwHZjJAkoE=;
-        b=TkFSz5grt8m0UpRFQvD8B+5qVPWkIBuSZxX3iHQdMdu0QqqRmHjQ6HFLV2DLCr33db
-         b05z3+PaS2kojGQoKiEBpqdrp34j+93LroVbp1vXRkFAodbAaakCArfJG5g8qxIhI89C
-         cooRRjbnlbgrvtGZthmk3EklP0nflrli7O/74VTzYzeJtHPsleO4XRSt4WsURlCNR350
-         KNQKQ1ST5xowEDHTZcY8h4OPpX4XUxWE78gu2y9+NbX85ym/AvSvxDc9ibCy4WJVcFhc
-         qbNwSw5bMIbrrXHs4foUCKaKUT8e9TTrW4g1r6YEEWV3GTmcdppb/wv6BUbOHXz+JzcO
-         hhVQ==
-X-Gm-Message-State: APjAAAW81aW8xphepx5v4OAu9942E04JvMgIpGbCE+L5drY5b4Df2dxd
-        NCZohgtboY/OqS3olv0eu3k=
-X-Google-Smtp-Source: APXvYqw33q5dwfgXuAvjHEwh1sOHN1/oHi4JN+Dh0iY0aN5kpGDMS+7rqL7n/NxscLGUm7Waac49Bw==
-X-Received: by 2002:a92:d7cf:: with SMTP id g15mr46202361ilq.171.1574877058325;
-        Wed, 27 Nov 2019 09:50:58 -0800 (PST)
+        bh=JBvCUJLGzPXX0Pn9enxN3cNtWBdwerBLUit9nHVW5Gk=;
+        b=TutOMPYNJSTj49hRZb65YtqYkyArcFRwdCBpZ7UVARRzbMdtXAjZXBqQZCgxbW6Ql4
+         WzDYYaaLKGr3ZX+XWMXoJcAKUA8wCBa/BBZN4D7XLzX6Ebmod7Ayw2YtbaBwNoeUuJ2x
+         TMQwfLtvuU0NW9jKGlNJ4XJOdYdqK7eoVDGkVJJ/OHhv4d2xaoFd/7PMRBmoTv51p683
+         zirQSWWNV8t/8TJHmunJ9Ek0gd+6AD/CV9XON5fxYuT5y1WW3E7ANJs9v5NdX143THdF
+         b9JJxqzwdBxmJI/W8fapkpQxpCnDZXPFay5CxjmJE+GavSCRY5gZTMIsIkMzDxsNmfLs
+         8+WQ==
+X-Gm-Message-State: APjAAAWSMaWXfT7v/PK2Hx7TA36222ksL3tCHHbYrIi0hWMPneZl2wue
+        b/ZjCpijprr7DlgCB/AYC0U=
+X-Google-Smtp-Source: APXvYqysi+xUXxse8kUjtUg4JMB1tULU8dkPD1ZpTyIJAMyHe+XKtKKbdbz6/XsC+dDfYoapvlVYKg==
+X-Received: by 2002:a92:5b86:: with SMTP id c6mr44156249ilg.135.1574877061578;
+        Wed, 27 Nov 2019 09:51:01 -0800 (PST)
 Received: from localhost.localdomain (c-24-9-77-57.hsd1.co.comcast.net. [24.9.77.57])
-        by smtp.googlemail.com with ESMTPSA id v123sm3855442ioe.35.2019.11.27.09.50.57
+        by smtp.googlemail.com with ESMTPSA id e15sm669445ioe.18.2019.11.27.09.51.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 09:50:57 -0800 (PST)
+        Wed, 27 Nov 2019 09:51:00 -0800 (PST)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org
 Cc:     linux@rasmusvillemoes.dk, greg@kroah.com,
         Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH 05/16] dyndbg: fix overcounting of ram used by dyndbg
-Date:   Wed, 27 Nov 2019 10:50:55 -0700
-Message-Id: <20191127175055.1351403-1-jim.cromie@gmail.com>
+Subject: [PATCH 06/16] dyndbg: fix a BUG_ON in ddebug_describe_flags
+Date:   Wed, 27 Nov 2019 10:50:58 -0700
+Message-Id: <20191127175058.1351461-1-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,55 +72,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-during dyndbg init, verbose logging prints its ram overhead.  It
-counted strlens of struct _ddebug's 4 string members, in all callsite
-entries, which would be approximately correct if each had been
-mallocd.  But they are pointers into shared .rodata; for example, all
-10 kobject callsites have identical filename, module values.
+ddebug_describe_flags currently fills a caller provided string buffer,
+after testing its size (also passed) in a BUG_ON.
 
-Its best not to count that memory at all, since we cannot know they
-were linked in because of CONFIG_DYNAMIC_DEBUG=y, and we want to
-report a number that reflects what ram is saved by deconfiguring it.
+Fix this with a struct containing a known-big-enough string buffer,
+and passing it instead.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ lib/dynamic_debug.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 0a4588fe342e..b5fb0aa0fbc3 100644
+index b5fb0aa0fbc3..0e4783e11755 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -1008,7 +1008,6 @@ static int __init dynamic_debug_init(void)
- 	char *cmdline;
- 	int ret = 0;
- 	int n = 0, entries = 0, modct = 0;
--	int verbose_bytes = 0;
+@@ -62,6 +62,8 @@ struct ddebug_iter {
+ 	unsigned int idx;
+ };
  
- 	if (__start___dyndbg == __stop___dyndbg) {
- 		pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
-@@ -1019,9 +1018,6 @@ static int __init dynamic_debug_init(void)
- 	iter_start = iter;
- 	for (; iter < __stop___dyndbg; iter++) {
- 		entries++;
--		verbose_bytes += strlen(iter->modname) + strlen(iter->function)
--			+ strlen(iter->filename) + strlen(iter->format);
--
- 		if (strcmp(modname, iter->modname)) {
- 			modct++;
- 			ret = ddebug_add_module(iter_start, n, modname);
-@@ -1038,9 +1034,9 @@ static int __init dynamic_debug_init(void)
- 		goto out_err;
++struct flagsbuf { char buf[12]; };	/* big enough to hold all the flags */
++
+ static DEFINE_MUTEX(ddebug_lock);
+ static LIST_HEAD(ddebug_tables);
+ static int verbose;
+@@ -88,21 +90,19 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
+ };
  
- 	ddebug_init_success = 1;
--	vpr_info("%d modules, %d entries and %d bytes in ddebug tables, %d bytes in (readonly) verbose section\n",
-+	vpr_info("%d modules, %d entries and %d bytes in ddebug tables, %d bytes in __dyndbg section\n",
- 		 modct, entries, (int)(modct * sizeof(struct ddebug_table)),
--		 verbose_bytes + (int)(__stop___dyndbg - __start___dyndbg));
-+		 (int)(entries * sizeof(struct _ddebug)));
+ /* format a string into buf[] which describes the _ddebug's flags */
+-static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
+-				    size_t maxlen)
++static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *fb)
+ {
+-	char *p = buf;
++	char *p = fb->buf;
+ 	int i;
  
- 	/* apply ddebug_query boot param, dont unload tables on err */
- 	if (ddebug_setup_string[0] != '\0') {
+-	BUG_ON(maxlen < 6);
+ 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
+-		if (dp->flags & opt_array[i].flag)
++		if (flags & opt_array[i].flag)
+ 			*p++ = opt_array[i].opt_char;
+-	if (p == buf)
++	if (p == fb->buf)
+ 		*p++ = '_';
+ 	*p = '\0';
+ 
+-	return buf;
++	return fb->buf;
+ }
+ 
+ #define vnpr_info(lvl, fmt, ...)				\
+@@ -148,7 +148,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 	struct ddebug_table *dt;
+ 	unsigned int newflags;
+ 	unsigned int nfound = 0;
+-	char flagbuf[10];
++	struct flagsbuf flags;
+ 
+ 	/* search for matching ddebugs */
+ 	mutex_lock(&ddebug_lock);
+@@ -205,8 +205,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 			vpr_info("changed %s:%d [%s]%s =%s\n",
+ 				 trim_prefix(dp->filename), dp->lineno,
+ 				 dt->mod_name, dp->function,
+-				 ddebug_describe_flags(dp, flagbuf,
+-						       sizeof(flagbuf)));
++				 ddebug_describe_flags(dp->flags, &flags));
+ 		}
+ 	}
+ 	mutex_unlock(&ddebug_lock);
+@@ -820,7 +819,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ {
+ 	struct ddebug_iter *iter = m->private;
+ 	struct _ddebug *dp = p;
+-	char flagsbuf[10];
++	struct flagsbuf flags;
+ 
+ 	v9pr_info("called m=%p p=%p\n", m, p);
+ 
+@@ -833,7 +832,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ 	seq_printf(m, "%s:%u [%s]%s =%s \"",
+ 		   trim_prefix(dp->filename), dp->lineno,
+ 		   iter->table->mod_name, dp->function,
+-		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
++		   ddebug_describe_flags(dp->flags, &flags));
+ 	seq_escape(m, dp->format, "\t\r\n\"");
+ 	seq_puts(m, "\"\n");
+ 
 -- 
 2.23.0
 
