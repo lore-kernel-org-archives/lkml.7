@@ -2,257 +2,157 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81444C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24224C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CED920869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890278;
-	bh=+6aS1ImT4WmV3f7OiaiYoesrNZb5/9pfsLPO4niE78A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AeGagDhBMaUkrs9ujIWY5LQ6KWmMgk88uR/0G9NRJo1NHK7zgI7WMub4rVZIl9bU4
-	 F4B99nRRTX+AGvKw07bgG+/toYaar9s/Emh6Fylfg+u4hF+iGSPaQPUzZxJkZJauPR
-	 LWDhJ92pO/g4rmvCdShBuMQMiKOVRv0xqWe/wn28=
+	by mail.kernel.org (Postfix) with ESMTP id E6D8A206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:31:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="X7zFzPXI";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="qwkVc1j+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730878AbfK0Uyu (ORCPT
+        id S1730875AbfK0Uys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:54:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730528AbfK0Uyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:54:43 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 049EA21582;
-        Wed, 27 Nov 2019 20:54:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888082;
-        bh=+6aS1ImT4WmV3f7OiaiYoesrNZb5/9pfsLPO4niE78A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XZ78xCCqTrdRSlyJR2L7Y6xK4ia3NngnfQvPtrXOTS2aOekxEFX8vYpAsKvgKaTT0
-         5ez5/UbBaMOKRPpvyeUKo/C1Qn/0Jczmvcr4HRlthS/t95naPpya0lYG5sZ9KZEWTi
-         iWYC3AjO8W+8dL6StfRUP5fYn10zgp4TIVDrEHfk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Axtens <dja@axtens.net>
-Subject: [PATCH 4.14 209/211] powerpc/book3s64: Fix link stack flush on context switch
-Date:   Wed, 27 Nov 2019 21:32:22 +0100
-Message-Id: <20191127203113.272304781@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
-References: <20191127203049.431810767@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 27 Nov 2019 15:54:48 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:6840 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730862AbfK0Uyl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:54:41 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARKpI3j003192;
+        Wed, 27 Nov 2019 12:54:14 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=1d0LFJkeyE5NppHnagEy72vdwuyCl21k5W5s7dT9yAc=;
+ b=X7zFzPXIaEdbvNjLBuznVHZKe9omNcT/uZqln8jhMwSmPqbd09xcwufCqqfQMiUv55xu
+ CBZIisoahn0DFhEetuXFwyQIHFJ/CoOrhFu5ptNFXfTD37liZYZTQtAZmgNkuive2jIf
+ u4HOoZpPST+0cyR8NcCxEaH2bu/H4w6nGOPKKwyqZhiN4tfGYCmv3vA8//gjHgSrG5mX
+ JGpQ1HvOvzuDzoeCe0ZHiHYZYbBNvktR7Mb5vlrHKlw6Uvb+UrKtRQz1ZfCT8M3cQokZ
+ Um7uAIP5dBuUtrvkbMBjzFKDurcgLaHMyARF7CaGv1FRtxBCy8/pVMOk8CKaBvfTK7uH nQ== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2whmdyay6n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 12:54:14 -0800
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 27 Nov
+ 2019 12:54:13 -0800
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.53) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 27 Nov 2019 12:54:13 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nBGr89TWuPl6vlE+NqHqEC4cVvi/KJOGpbrbk13z/qLsVRiZovUeci3nPFpVsHM19D5vBtYhxoBPE5tHhnPsFaW6ckAuWbTyIqxkRqiEbKW9lvRyPquVk02X1CdsigFDFaMOjx7Qa1Lq6SRa+ff6cQDggnrTnJZ7KmgrN2t+sGmmRRek89SR/DhdpraXFJU1Dw5coGFz4QgrSYUM3o9TQURvy9VUfw+e33b5mmCv0kA+mTPnSkPP/98ZM9XiXaaujPqfGV3+Z1/6G2mVqWEb9IfnEXEfYYuXFQUmXVVmoTE18bq3Plir8uKXyeHnfoCBQeLSUVHvVEqklN3tWoPj3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1d0LFJkeyE5NppHnagEy72vdwuyCl21k5W5s7dT9yAc=;
+ b=aiLCvcA0iFTdzQqPdWo5e1e3h+Iy7g0RetUwVJxAAFoQUnkVJMybgZ/8UF9f6a0QC4lPBiU2+IS0dF2HmLYnnLQOCOUPUwU8oqM+OMUBhbeVCT+iz7nIYqJOTxJURg4Cj4zLlrxdQWdAKQi2uQbgPxthFWpLOP01In1W8G1EAaKKcgSNq4PW6qQura5Op1Uk11log3rVDJOxPPfksEfi32cNagTVo73f8qcd0Rc1NMLFFGGiRjBdN8n+7z8n+LtsNK9ht0UFqGzU/o6pXZzmKA15hKSmwdEZ/V/86eI91tlZB0CLyGi1+5F6UTzl/0g2H5x8fkML5G+FJNQdhuZXHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1d0LFJkeyE5NppHnagEy72vdwuyCl21k5W5s7dT9yAc=;
+ b=qwkVc1j+ucBNsD4ZMW5GD7vdicdu3DmssYvQoVlJKjxTroUBcm7Ecc/xQjQOi96jZ+T9LEzopf8tnT9Zh8SXdsGIslghXfqTyZNOvT3cyaA1pRRV1cpEcS9Hrqz7WGtSOrC9EyywTA25ys6cL7UrGoaIut7la9fh+WLqr8d6BZg=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB3246.namprd18.prod.outlook.com (10.255.238.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.19; Wed, 27 Nov 2019 20:54:10 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::657c:6c81:859d:106]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::657c:6c81:859d:106%7]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
+ 20:54:10 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     John Garry <john.garry@huawei.com>
+CC:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        wanghuiqiang <wanghuiqiang@huawei.com>,
+        Xiaofei Tan <tanxiaofei@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Huangming (Mark)" <huangming23@huawei.com>
+Subject: Re: linuxnext-2019127 edac warns (was Re: edac KASAN warning in
+ experimental arm64 allmodconfig boot)
+Thread-Topic: linuxnext-2019127 edac warns (was Re: edac KASAN warning in
+ experimental arm64 allmodconfig boot)
+Thread-Index: AQHVpWTR2gZqHUZXukW6XQHUnJa5QA==
+Date:   Wed, 27 Nov 2019 20:54:10 +0000
+Message-ID: <20191127205400.cip7hdbhcdokofel@rric.localdomain>
+References: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
+ <93bdc04e-9e8f-b766-6e97-9fd9e1460a8c@huawei.com>
+ <20191121142302.rhvgkgqpiubidhtu@rric.localdomain>
+ <4ff7631f-fbb7-e45f-87dd-9223beca4da7@huawei.com>
+ <20191122112842.tmf4lkj52hpv6tqd@rric.localdomain>
+ <4c1bd075-75ec-8445-9595-467b88a406b3@huawei.com>
+ <957a809b-9efd-0979-df5d-a4f095da6147@huawei.com>
+In-Reply-To: <957a809b-9efd-0979-df5d-a4f095da6147@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0155.eurprd05.prod.outlook.com
+ (2603:10a6:7:28::42) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8b518bce-3b06-4d0f-1d9b-08d7737bf36d
+x-ms-traffictypediagnostic: MN2PR18MB3246:
+x-microsoft-antispam-prvs: <MN2PR18MB3246C4B8C8FF569349A14933D9440@MN2PR18MB3246.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 023495660C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(346002)(39860400002)(376002)(199004)(189003)(66946007)(229853002)(6486002)(66556008)(66476007)(99286004)(66446008)(64756008)(5660300002)(71190400001)(14454004)(54906003)(7416002)(6916009)(25786009)(305945005)(256004)(71200400001)(7736002)(558084003)(478600001)(11346002)(1076003)(2906002)(81156014)(8936002)(4326008)(66066001)(81166006)(8676002)(6512007)(9686003)(76176011)(316002)(86362001)(6246003)(6436002)(26005)(102836004)(186003)(386003)(53546011)(446003)(6506007)(6116002)(3846002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3246;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gVT2fP5rY8QbpoznHvfHph9kNG30SH4jzQcbaOrRlPM6FQZfS4OZ4XlRMYZ5U3FK8sO5CWFTEJ7HoDF3pxY94h8ESeOJvqgu+amElgG4gsaCzKlh9uJpMQiThCzlJTXsHgHhzfrjlXsnI/VypdEggYuarbiUFsLxUCvkpq7EFveNjjiq8u5dUAT/2qBlgLWWk1Qb9uaEuXvKZsxXA7BrmMGwnNHX65QSrtOjGnmlF5nPrBiLi9Uwq0LSreerL44vAAJ8sybYyVK1IpQ9vUuVzAGDhJyN4v2rU8Gpep7or8O0SupxdsSBdG56NO+q9NeZtfpJLwS8XloQZtb5AvWnjX9o49H8ksPZauzTFqYrl3ZqHaVqnfpYzIwLtcc5Lh2JagkbaYhehTfek0p0z/rp6o6eUyDlWSp1jCVfiAyIeZhSWqrrrFljh3hvyal0+1cx
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2881E330720F714F9B52D725214E008E@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b518bce-3b06-4d0f-1d9b-08d7737bf36d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2019 20:54:10.1109
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: d5OdxyTu+Sqh6Ae2mAjLvl+LFqhAIdW77zyIJyeH5Ehm/sYGBBRwGUIGLbIM+nB4jglCAtVU2mlGpUcP5Mz4AA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3246
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+Hi John,
 
-commit 39e72bf96f5847ba87cc5bd7a3ce0fed813dc9ad upstream.
+thank you for testing.
 
-In commit ee13cb249fab ("powerpc/64s: Add support for software count
-cache flush"), I added support for software to flush the count
-cache (indirect branch cache) on context switch if firmware told us
-that was the required mitigation for Spectre v2.
+On 27.11.19 17:07:33, John Garry wrote:
 
-As part of that code we also added a software flush of the link
-stack (return address stack), which protects against Spectre-RSB
-between user processes.
+> [snip]
+>=20
+> I have test enabled:
+> +CONFIG_DEBUG_TEST_DRIVER_REMOVE=3Dy
+> +CONFIG_KASAN=3Dy
+> +CONFIG_DEBUG_KMEMLEAK=3Dy
 
-That is all correct for CPUs that activate that mitigation, which is
-currently Power9 Nimbus DD2.3.
+Is this a regression (did it work before?), or a new test that you
+newly run?
 
-What I got wrong is that on older CPUs, where firmware has disabled
-the count cache, we also need to flush the link stack on context
-switch.
+Thanks,
 
-To fix it we create a new feature bit which is not set by firmware,
-which tells us we need to flush the link stack. We set that when
-firmware tells us that either of the existing Spectre v2 mitigations
-are enabled.
-
-Then we adjust the patching code so that if we see that feature bit we
-enable the link stack flush. If we're also told to flush the count
-cache in software then we fall through and do that also.
-
-On the older CPUs we don't need to do do the software count cache
-flush, firmware has disabled it, so in that case we patch in an early
-return after the link stack flush.
-
-The naming of some of the functions is awkward after this patch,
-because they're called "count cache" but they also do link stack. But
-we'll fix that up in a later commit to ease backporting.
-
-This is the fix for CVE-2019-18660.
-
-Reported-by: Anthony Steinhauser <asteinhauser@google.com>
-Fixes: ee13cb249fab ("powerpc/64s: Add support for software count cache flush")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[dja: straightforward backport to v4.14]
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/include/asm/asm-prototypes.h    |    1 
- arch/powerpc/include/asm/security_features.h |    3 +
- arch/powerpc/kernel/entry_64.S               |    6 +++
- arch/powerpc/kernel/security.c               |   48 ++++++++++++++++++++++++---
- 4 files changed, 54 insertions(+), 4 deletions(-)
-
---- a/arch/powerpc/include/asm/asm-prototypes.h
-+++ b/arch/powerpc/include/asm/asm-prototypes.h
-@@ -129,6 +129,7 @@ unsigned long prepare_ftrace_return(unsi
- /* Patch sites */
- extern s32 patch__call_flush_count_cache;
- extern s32 patch__flush_count_cache_return;
-+extern s32 patch__flush_link_stack_return;
- 
- extern long flush_count_cache;
- 
---- a/arch/powerpc/include/asm/security_features.h
-+++ b/arch/powerpc/include/asm/security_features.h
-@@ -81,6 +81,9 @@ static inline bool security_ftr_enabled(
- // Software required to flush count cache on context switch
- #define SEC_FTR_FLUSH_COUNT_CACHE	0x0000000000000400ull
- 
-+// Software required to flush link stack on context switch
-+#define SEC_FTR_FLUSH_LINK_STACK	0x0000000000001000ull
-+
- 
- // Features enabled by default
- #define SEC_FTR_DEFAULT \
---- a/arch/powerpc/kernel/entry_64.S
-+++ b/arch/powerpc/kernel/entry_64.S
-@@ -524,6 +524,7 @@ flush_count_cache:
- 	/* Save LR into r9 */
- 	mflr	r9
- 
-+	// Flush the link stack
- 	.rept 64
- 	bl	.+4
- 	.endr
-@@ -533,6 +534,11 @@ flush_count_cache:
- 	.balign 32
- 	/* Restore LR */
- 1:	mtlr	r9
-+
-+	// If we're just flushing the link stack, return here
-+3:	nop
-+	patch_site 3b patch__flush_link_stack_return
-+
- 	li	r9,0x7fff
- 	mtctr	r9
- 
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -24,6 +24,7 @@ enum count_cache_flush_type {
- 	COUNT_CACHE_FLUSH_HW	= 0x4,
- };
- static enum count_cache_flush_type count_cache_flush_type = COUNT_CACHE_FLUSH_NONE;
-+static bool link_stack_flush_enabled;
- 
- bool barrier_nospec_enabled;
- static bool no_nospec;
-@@ -204,11 +205,19 @@ ssize_t cpu_show_spectre_v2(struct devic
- 
- 		if (ccd)
- 			seq_buf_printf(&s, "Indirect branch cache disabled");
-+
-+		if (link_stack_flush_enabled)
-+			seq_buf_printf(&s, ", Software link stack flush");
-+
- 	} else if (count_cache_flush_type != COUNT_CACHE_FLUSH_NONE) {
- 		seq_buf_printf(&s, "Mitigation: Software count cache flush");
- 
- 		if (count_cache_flush_type == COUNT_CACHE_FLUSH_HW)
- 			seq_buf_printf(&s, " (hardware accelerated)");
-+
-+		if (link_stack_flush_enabled)
-+			seq_buf_printf(&s, ", Software link stack flush");
-+
- 	} else if (btb_flush_enabled) {
- 		seq_buf_printf(&s, "Mitigation: Branch predictor state flush");
- 	} else {
-@@ -369,18 +378,40 @@ static __init int stf_barrier_debugfs_in
- device_initcall(stf_barrier_debugfs_init);
- #endif /* CONFIG_DEBUG_FS */
- 
-+static void no_count_cache_flush(void)
-+{
-+	count_cache_flush_type = COUNT_CACHE_FLUSH_NONE;
-+	pr_info("count-cache-flush: software flush disabled.\n");
-+}
-+
- static void toggle_count_cache_flush(bool enable)
- {
--	if (!enable || !security_ftr_enabled(SEC_FTR_FLUSH_COUNT_CACHE)) {
-+	if (!security_ftr_enabled(SEC_FTR_FLUSH_COUNT_CACHE) &&
-+	    !security_ftr_enabled(SEC_FTR_FLUSH_LINK_STACK))
-+		enable = false;
-+
-+	if (!enable) {
- 		patch_instruction_site(&patch__call_flush_count_cache, PPC_INST_NOP);
--		count_cache_flush_type = COUNT_CACHE_FLUSH_NONE;
--		pr_info("count-cache-flush: software flush disabled.\n");
-+		pr_info("link-stack-flush: software flush disabled.\n");
-+		link_stack_flush_enabled = false;
-+		no_count_cache_flush();
- 		return;
- 	}
- 
-+	// This enables the branch from _switch to flush_count_cache
- 	patch_branch_site(&patch__call_flush_count_cache,
- 			  (u64)&flush_count_cache, BRANCH_SET_LINK);
- 
-+	pr_info("link-stack-flush: software flush enabled.\n");
-+	link_stack_flush_enabled = true;
-+
-+	// If we just need to flush the link stack, patch an early return
-+	if (!security_ftr_enabled(SEC_FTR_FLUSH_COUNT_CACHE)) {
-+		patch_instruction_site(&patch__flush_link_stack_return, PPC_INST_BLR);
-+		no_count_cache_flush();
-+		return;
-+	}
-+
- 	if (!security_ftr_enabled(SEC_FTR_BCCTR_FLUSH_ASSIST)) {
- 		count_cache_flush_type = COUNT_CACHE_FLUSH_SW;
- 		pr_info("count-cache-flush: full software flush sequence enabled.\n");
-@@ -399,11 +430,20 @@ void setup_count_cache_flush(void)
- 	if (no_spectrev2 || cpu_mitigations_off()) {
- 		if (security_ftr_enabled(SEC_FTR_BCCTRL_SERIALISED) ||
- 		    security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED))
--			pr_warn("Spectre v2 mitigations not under software control, can't disable\n");
-+			pr_warn("Spectre v2 mitigations not fully under software control, can't disable\n");
- 
- 		enable = false;
- 	}
- 
-+	/*
-+	 * There's no firmware feature flag/hypervisor bit to tell us we need to
-+	 * flush the link stack on context switch. So we set it here if we see
-+	 * either of the Spectre v2 mitigations that aim to protect userspace.
-+	 */
-+	if (security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED) ||
-+	    security_ftr_enabled(SEC_FTR_FLUSH_COUNT_CACHE))
-+		security_ftr_set(SEC_FTR_FLUSH_LINK_STACK);
-+
- 	toggle_count_cache_flush(enable);
- }
- 
-
-
+-Robert
