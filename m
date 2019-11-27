@@ -2,139 +2,237 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF540C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE89FC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DD020722
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:12:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="QB9oNjfy"
+	by mail.kernel.org (Postfix) with ESMTP id A692320722
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbfK0KMw (ORCPT
+        id S1726603AbfK0KOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:12:52 -0500
-Received: from fd.dlink.ru ([178.170.168.18]:50230 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbfK0KMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:12:52 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 1E90F1B20138; Wed, 27 Nov 2019 13:12:49 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 1E90F1B20138
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1574849569; bh=lE5ZjRG9JmDTb+3gD8rd1avjZlPCQcl4MjmyxAXK12o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=QB9oNjfyB6ZyhhLnx62KtkficOqyPSHP8yIDJwE2LObLbVmXPhskf5KpTlacf5Bs+
-         9v2Tfn0DQvgfZcyr9ZiUUMgsvOlW4VISs7qr+g3lAIfeMasSZb/MzGIaBrW/gPdddk
-         E5HAgR6xE5vgKT+xP05CAUgFN0NmchUGIL6Z6KtQ=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 98EEC1B20153;
-        Wed, 27 Nov 2019 13:12:34 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 98EEC1B20153
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 420D21B22678;
-        Wed, 27 Nov 2019 13:12:34 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Wed, 27 Nov 2019 13:12:34 +0300 (MSK)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 27 Nov 2019 13:12:34 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Luciano Coelho <luciano.coelho@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Edward Cree <ecree@solarflare.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        "Kenneth R. Crudup" <kenny@panix.com>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: wireless: intel: iwlwifi: fix GRO_NORMAL packet
- stalling
-In-Reply-To: <7a9332bf645fbb8c9fff634a3640c092fb9b4b79.camel@intel.com>
-References: <20191127094123.18161-1-alobakin@dlink.ru>
- <7a9332bf645fbb8c9fff634a3640c092fb9b4b79.camel@intel.com>
-User-Agent: Roundcube Webmail/1.4.0
-Message-ID: <c571a88c15c4a70a61cde6ca270af033@dlink.ru>
-X-Sender: alobakin@dlink.ru
+        Wed, 27 Nov 2019 05:14:47 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:62512 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726194AbfK0KOr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:14:47 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 27 Nov 2019 15:44:41 +0530
+IronPort-SDR: OjeLSeKxqZJDKOn+jHfn9L2iiTiZ5GzCQ39WQkShVImSP8mcFG9R5/L/Nv9Ff78Qd6DZ12xQk0
+ mP9y2MUSGxGHICILBYLEZKFpxHkDkMe/eId3nkwIRASH2d0QPulXtwgGWoRFYZwNQ1+xhWgXlv
+ pTaRJYZO7g5NvF51eu+R3zATLNrvPqQcYlyrnOtIrgSHeaXScj2x4tiF0DCwOWjFNOmG9rRMwe
+ 79Q/Ahtbf25BYTVFQgapXKL2TLFHgMuZL7mf/ospL9JY9Hjj2gWuK6ZV84YIs5ZgjD5vwH1OG7
+ LEj2FDopUPb0JjLbihfLm3UZ
+Received: from dhar-linux.qualcomm.com ([10.204.66.25])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 27 Nov 2019 15:44:16 +0530
+Received: by dhar-linux.qualcomm.com (Postfix, from userid 2306995)
+        id EB87A3B5B; Wed, 27 Nov 2019 15:44:15 +0530 (IST)
+From:   Shubhashree Dhar <dhar@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Shubhashree Dhar <dhar@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org,
+        Raviteja Tamatam <travitej@codeaurora.org>
+Subject: [PATCH] msm:disp:dpu1: add scaler support on SC7180 display
+Date:   Wed, 27 Nov 2019 15:44:12 +0530
+Message-Id: <1574849652-5429-1-git-send-email-dhar@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luciano Coelho wrote 27.11.2019 12:58:
-> On Wed, 2019-11-27 at 12:41 +0300, Alexander Lobakin wrote:
->> Commit 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in
->> napi_gro_receive()") has applied batched GRO_NORMAL packets processing
->> to all napi_gro_receive() users, including mac80211-based drivers.
->> 
->> However, this change has led to a regression in iwlwifi driver [1][2] 
->> as
->> it is required for NAPI users to call napi_complete_done() or
->> napi_complete() and the end of every polling iteration, whilst iwlwifi
->> doesn't use NAPI scheduling at all and just calls napi_gro_flush().
->> In that particular case, packets which have not been already flushed
->> from napi->rx_list stall in it until at least next Rx cycle.
->> 
->> Fix this by adding a manual flushing of the list to iwlwifi driver 
->> right
->> before napi_gro_flush() call to mimic napi_complete() logics.
->> 
->> I prefer to open-code gro_normal_list() rather than exporting it for 2
->> reasons:
->> * to prevent from using it and napi_gro_flush() in any new drivers,
->>   as it is the *really* bad way to use NAPI that should be avoided;
->> * to keep gro_normal_list() static and don't lose any CC 
->> optimizations.
->> 
->> I also don't add the "Fixes:" tag as the mentioned commit was only a
->> trigger that only exposed an improper usage of NAPI in this particular
->> driver.
->> 
->> [1] 
->> https://lore.kernel.org/netdev/PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
->> [2] https://bugzilla.kernel.org/show_bug.cgi?id=205647
->> 
->> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
->> ---
-> 
-> We don't usually use "net: wireless: intel:" in the commit message, we
-> would use "iwlwifi: pcie:", but I don't care much.
-> 
-> Otherwise:
-> 
-> Acked-by: Luca Coelho <luciano.coelho@intel.com>
+Add scaler support for display driver.
 
-Thank you!
+This patch has dependency on the below series
 
-> Thanks a lot for the fix!
-> 
-> Dave, I'm assuming you'll take this directly into your tree, right?
+https://patchwork.kernel.org/patch/11260267/
 
-Also please let me know if I should send v2 with Ack and fixed commit
-subject!
+Co-developed-by: Raviteja Tamatam <travitej@codeaurora.org>
+Signed-off-by: Raviteja Tamatam <travitej@codeaurora.org>
+Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 21 ++++++++++++++-------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |  3 +++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c    |  4 +++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h    |  3 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c      | 20 +++++++++++++++++---
+ 5 files changed, 39 insertions(+), 12 deletions(-)
 
-> --
-> Cheers,
-> Luca.
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 1f2ac6e..89df411 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -182,7 +182,7 @@
+ 	.maxvdeciexp = MAX_VERT_DECIMATION,
+ };
+ 
+-#define _VIG_SBLK(num, sdma_pri) \
++#define _VIG_SBLK(num, sdma_pri, qseed_ver) \
+ 	{ \
+ 	.common = &sdm845_sspp_common, \
+ 	.maxdwnscale = MAX_DOWNSCALE_RATIO, \
+@@ -191,7 +191,7 @@
+ 	.src_blk = {.name = STRCAT("sspp_src_", num), \
+ 		.id = DPU_SSPP_SRC, .base = 0x00, .len = 0x150,}, \
+ 	.scaler_blk = {.name = STRCAT("sspp_scaler", num), \
+-		.id = DPU_SSPP_SCALER_QSEED3, \
++		.id = qseed_ver, \
+ 		.base = 0xa00, .len = 0xa0,}, \
+ 	.csc_blk = {.name = STRCAT("sspp_csc", num), \
+ 		.id = DPU_SSPP_CSC_10BIT, \
+@@ -216,10 +216,14 @@
+ 	.virt_num_formats = ARRAY_SIZE(plane_formats), \
+ 	}
+ 
+-static const struct dpu_sspp_sub_blks sdm845_vig_sblk_0 = _VIG_SBLK("0", 5);
+-static const struct dpu_sspp_sub_blks sdm845_vig_sblk_1 = _VIG_SBLK("1", 6);
+-static const struct dpu_sspp_sub_blks sdm845_vig_sblk_2 = _VIG_SBLK("2", 7);
+-static const struct dpu_sspp_sub_blks sdm845_vig_sblk_3 = _VIG_SBLK("3", 8);
++static const struct dpu_sspp_sub_blks sdm845_vig_sblk_0 =
++				_VIG_SBLK("0", 5, DPU_SSPP_SCALER_QSEED3);
++static const struct dpu_sspp_sub_blks sdm845_vig_sblk_1 =
++				_VIG_SBLK("1", 6, DPU_SSPP_SCALER_QSEED3);
++static const struct dpu_sspp_sub_blks sdm845_vig_sblk_2 =
++				_VIG_SBLK("2", 7, DPU_SSPP_SCALER_QSEED3);
++static const struct dpu_sspp_sub_blks sdm845_vig_sblk_3 =
++				_VIG_SBLK("3", 8, DPU_SSPP_SCALER_QSEED3);
+ 
+ static const struct dpu_sspp_sub_blks sdm845_dma_sblk_0 = _DMA_SBLK("8", 1);
+ static const struct dpu_sspp_sub_blks sdm845_dma_sblk_1 = _DMA_SBLK("9", 2);
+@@ -257,9 +261,12 @@
+ 		sdm845_dma_sblk_3, 13, SSPP_TYPE_DMA, DPU_CLK_CTRL_CURSOR1),
+ };
+ 
++static const struct dpu_sspp_sub_blks sc7180_vig_sblk_0 =
++				_VIG_SBLK("0", 4, DPU_SSPP_SCALER_QSEED4);
++
+ static struct dpu_sspp_cfg sc7180_sspp[] = {
+ 	SSPP_BLK("sspp_0", SSPP_VIG0, 0x4000, VIG_SC7180_MASK,
+-		sdm845_vig_sblk_0, 0,  SSPP_TYPE_VIG, DPU_CLK_CTRL_VIG0),
++		sc7180_vig_sblk_0, 0,  SSPP_TYPE_VIG, DPU_CLK_CTRL_VIG0),
+ 	SSPP_BLK("sspp_8", SSPP_DMA0, 0x24000,  DMA_SDM845_MASK,
+ 		sdm845_dma_sblk_0, 1, SSPP_TYPE_DMA, DPU_CLK_CTRL_DMA0),
+ 	SSPP_BLK("sspp_9", SSPP_DMA1, 0x26000,  DMA_SDM845_MASK,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+index e7e731b..a5b124d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+@@ -94,6 +94,7 @@ enum {
+  * @DPU_SSPP_SRC             Src and fetch part of the pipes,
+  * @DPU_SSPP_SCALER_QSEED2,  QSEED2 algorithm support
+  * @DPU_SSPP_SCALER_QSEED3,  QSEED3 alogorithm support
++ * @DPU_SSPP_SCALER_QSEED4,  QSEED4 algorithm support
+  * @DPU_SSPP_SCALER_RGB,     RGB Scaler, supported by RGB pipes
+  * @DPU_SSPP_CSC,            Support of Color space converion
+  * @DPU_SSPP_CSC_10BIT,      Support of 10-bit Color space conversion
+@@ -324,6 +325,7 @@ struct dpu_sspp_blks_common {
+  * @maxupscale:  maxupscale ratio supported
+  * @smart_dma_priority: hw priority of rect1 of multirect pipe
+  * @max_per_pipe_bw: maximum allowable bandwidth of this pipe in kBps
++ * @qseed_ver: qseed version
+  * @src_blk:
+  * @scaler_blk:
+  * @csc_blk:
+@@ -344,6 +346,7 @@ struct dpu_sspp_sub_blks {
+ 	u32 maxupscale;
+ 	u32 smart_dma_priority;
+ 	u32 max_per_pipe_bw;
++	u32 qseed_ver;
+ 	struct dpu_src_blk src_blk;
+ 	struct dpu_scaler_blk scaler_blk;
+ 	struct dpu_pp_blk csc_blk;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
+index 4f8b813..a8e30de 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
+@@ -132,6 +132,7 @@
+ /* traffic shaper clock in Hz */
+ #define TS_CLK			19200000
+ 
++
+ static int _sspp_subblk_offset(struct dpu_hw_pipe *ctx,
+ 		int s_id,
+ 		u32 *idx)
+@@ -657,7 +658,8 @@ static void _setup_layer_ops(struct dpu_hw_pipe *c,
+ 		test_bit(DPU_SSPP_SMART_DMA_V2, &c->cap->features))
+ 		c->ops.setup_multirect = dpu_hw_sspp_setup_multirect;
+ 
+-	if (test_bit(DPU_SSPP_SCALER_QSEED3, &features)) {
++	if (test_bit(DPU_SSPP_SCALER_QSEED3, &features) ||
++			test_bit(DPU_SSPP_SCALER_QSEED4, &features)) {
+ 		c->ops.setup_scaler = _dpu_hw_sspp_setup_scaler3;
+ 		c->ops.get_scaler_ver = _dpu_hw_sspp_get_scaler3_ver;
+ 	}
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h
+index a3680b4..ed7a3bd 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h
+@@ -27,7 +27,8 @@
+  */
+ #define DPU_SSPP_SCALER ((1UL << DPU_SSPP_SCALER_RGB) | \
+ 	(1UL << DPU_SSPP_SCALER_QSEED2) | \
+-	(1UL << DPU_SSPP_SCALER_QSEED3))
++	 (1UL << DPU_SSPP_SCALER_QSEED3) | \
++	  (1UL << DPU_SSPP_SCALER_QSEED4))
+ 
+ /**
+  * Component indices
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 58d5acb..3914753 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -53,8 +53,13 @@ enum {
+ 	R_MAX
+ };
+ 
++/*
++ * Default Preload Values
++ */
+ #define DPU_QSEED3_DEFAULT_PRELOAD_H 0x4
+ #define DPU_QSEED3_DEFAULT_PRELOAD_V 0x3
++#define DPU_QSEED4_DEFAULT_PRELOAD_V 0x2
++#define DPU_QSEED4_DEFAULT_PRELOAD_H 0x4
+ 
+ #define DEFAULT_REFRESH_RATE	60
+ 
+@@ -477,8 +482,16 @@ static void _dpu_plane_setup_scaler3(struct dpu_plane *pdpu,
+ 			scale_cfg->src_width[i] /= chroma_subsmpl_h;
+ 			scale_cfg->src_height[i] /= chroma_subsmpl_v;
+ 		}
+-		scale_cfg->preload_x[i] = DPU_QSEED3_DEFAULT_PRELOAD_H;
+-		scale_cfg->preload_y[i] = DPU_QSEED3_DEFAULT_PRELOAD_V;
++
++		if (pdpu->pipe_hw->cap->features &
++			BIT(DPU_SSPP_SCALER_QSEED4)) {
++			scale_cfg->preload_x[i] = DPU_QSEED4_DEFAULT_PRELOAD_H;
++			scale_cfg->preload_y[i] = DPU_QSEED4_DEFAULT_PRELOAD_V;
++		} else {
++			scale_cfg->preload_x[i] = DPU_QSEED3_DEFAULT_PRELOAD_H;
++			scale_cfg->preload_y[i] = DPU_QSEED3_DEFAULT_PRELOAD_V;
++		}
++
+ 		pstate->pixel_ext.num_ext_pxls_top[i] =
+ 			scale_cfg->src_height[i];
+ 		pstate->pixel_ext.num_ext_pxls_left[i] =
+@@ -1337,7 +1350,8 @@ static int _dpu_plane_init_debugfs(struct drm_plane *plane)
+ 			pdpu->debugfs_root, &pdpu->debugfs_src);
+ 
+ 	if (cfg->features & BIT(DPU_SSPP_SCALER_QSEED3) ||
+-			cfg->features & BIT(DPU_SSPP_SCALER_QSEED2)) {
++			cfg->features & BIT(DPU_SSPP_SCALER_QSEED2) ||
++			cfg->features & BIT(DPU_SSPP_SCALER_QSEED4)) {
+ 		dpu_debugfs_setup_regset32(&pdpu->debugfs_scaler,
+ 				sblk->scaler_blk.base + cfg->base,
+ 				sblk->scaler_blk.len,
+-- 
+1.9.1
 
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
