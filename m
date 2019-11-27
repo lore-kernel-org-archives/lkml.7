@@ -2,226 +2,1177 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849D6C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621F8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC3D20722
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:42:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZrbVV6Ym"
+	by mail.kernel.org (Postfix) with ESMTP id 044592071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574819127;
+	bh=gJW7Gft73KPRVhLyPzQ9WQxFwRwi8/Lq6h2r1o2V81w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ji1dFxX2dd36Ve2LnkFWDFKakf+O9HJnXJZLyc2pNs79JlL1g0wuudTbAi3M49Lfs
+	 gxY+Yt/RhZB6kNVUcB0GqPtlpQ/SYNaKVA8VO42/SrtA5bdmGtNhq1OZzHIRVKns5e
+	 5kDfGW7pj8fcB3LYJiXwUJrEdhV/Ngmx+6dZLfCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfK0BmC (ORCPT
+        id S1726576AbfK0Bp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 20:42:02 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:10565 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725940AbfK0BmC (ORCPT
+        Tue, 26 Nov 2019 20:45:26 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34131 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbfK0BpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 20:42:02 -0500
-X-UUID: c1a02c8fc4e842489236df7f592723a9-20191127
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bpeIC/27WUq2ckUZMjs4NbBYFnnRBnPZhW6j/rfxdh0=;
-        b=ZrbVV6YmBGS/XTUhlbwx9050DJDrjFDc3n2oPWRriLmqMicAVeti3zu/CrnblE26IeY4i1u160oVG9qBfBKJKhF9JwiONc8V+OPSZPOY6Qzq0gRV1hkF6m+LB3448vwDZ1li8JJh7H5n6p6N2B80ga8rFH4mpQx4dbfh4x9f79g=;
-X-UUID: c1a02c8fc4e842489236df7f592723a9-20191127
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1578491610; Wed, 27 Nov 2019 09:41:54 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 27 Nov 2019 09:41:43 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 27 Nov 2019 09:41:02 +0800
-Message-ID: <1574818912.27852.2.camel@mtksdaap41>
-Subject: Re: [PATCH 1/7] drm/mediatek: fix atomic_state reference counting
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>
-Date:   Wed, 27 Nov 2019 09:41:52 +0800
-In-Reply-To: <20191126084951.GQ29965@phenom.ffwll.local>
-References: <20191126062932.19773-1-bibby.hsieh@mediatek.com>
-         <20191126062932.19773-2-bibby.hsieh@mediatek.com>
-         <20191126084951.GQ29965@phenom.ffwll.local>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 26 Nov 2019 20:45:25 -0500
+Received: by mail-pl1-f193.google.com with SMTP id h13so9015583plr.1;
+        Tue, 26 Nov 2019 17:45:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Gltv/+jH9c4UjF5jAX3xq9ozMHpKN8xQK+R+ga7Yf8I=;
+        b=Me8ikztWpins6fp9bjMXNNi9aNvJQDYc1MMwGTKA4bVCYoEJyqbXMrhrcaVvkjpGdZ
+         4FZ04OA+66o120wpVqQCj2AN9jPhocddBPA+A0HINNUbCxSve4wC8/ybKdkFUla09iov
+         FUh3eRcfyvebAQfYLB3M4kTMOi8Hhx+i+NxyHsx9Cdk1uiaPxxfTZTtSyAXqpHsPVOjH
+         QTDE5TLxhD4JrqgiZUc8zNjyyrghY0xiTO4T5ajQ0JPVD518TKpq0iU6Ud/XdDO3y6rS
+         OvEATP5La+r8I0U4gm+ukbF8G8/p5igCzMfCgek+kycoM2sPDHGEYqZ2AHpqs2WHkHty
+         Vq8Q==
+X-Gm-Message-State: APjAAAWs8MutnB2ZQc/4SvkV4cja7nswcNUoNMqyhw50tTfOouq9gZpk
+        Qq9fsXk0rn/mYc8SGB9KzCc=
+X-Google-Smtp-Source: APXvYqxyL4oLwXQG/PLUyYDH8/bfh+rSKxoeaV+WhAVYvK22FD5bmVkAu6HTPu+j5W9VhObOIvyJxA==
+X-Received: by 2002:a17:90a:25a1:: with SMTP id k30mr2907770pje.9.1574819123220;
+        Tue, 26 Nov 2019 17:45:23 -0800 (PST)
+Received: from localhost ([2601:647:5b00:424:6361:2bd9:c43a:bc72])
+        by smtp.gmail.com with ESMTPSA id 21sm14097496pfa.170.2019.11.26.17.45.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 17:45:22 -0800 (PST)
+Date:   Tue, 26 Nov 2019 17:45:20 -0800
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     mdf@kernel.org, will@kernel.org, mark.rutland@arm.com,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, atull@kernel.org,
+        gregkh@linuxfoundation.org, Luwei Kang <luwei.kang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v6 2/2] fpga: dfl: fme: add performance reporting support
+Message-ID: <20191127014520.GA168275@archbox>
+References: <1573622695-25607-1-git-send-email-hao.wu@intel.com>
+ <1573622695-25607-3-git-send-email-hao.wu@intel.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573622695-25607-3-git-send-email-hao.wu@intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTExLTI2IGF0IDA5OjQ5ICswMTAwLCBEYW5pZWwgVmV0dGVyIHdyb3RlOg0K
-PiBPbiBUdWUsIE5vdiAyNiwgMjAxOSBhdCAwMjoyOToyNlBNICswODAwLCBCaWJieSBIc2llaCB3
-cm90ZToNCj4gPiBUaGUgRFJNIGNvcmUgdGFrZXMgY2FyZSBvZiBhbGwgYXRvbWljIHN0YXRlIHJl
-ZmNvdW50aW5nLg0KPiA+IEhvd2V2ZXIsIG1lZGlhdGVrIGRybSBkZWZlcnMgc29tZSB3b3JrIHRo
-YXQgYWNjZXNzZXMgcGxhbmVzDQo+ID4gYW5kIHBsYW5lX3N0YXRlcyBpbiBkcm1fYXRvbWljX3N0
-YXRlLCBhbmQgbXVzdCB0aGVyZWZvcmUNCj4gPiBrZWVwIGl0cyBvd24gYXRvbWljIHN0YXRlIHJl
-ZmVyZW5jZXMgdW50aWwgdGhpcyB3b3JrIGNvbXBsZXRlLg0KPiA+IA0KPiA+IFdlIHRha2UgdGhl
-IGF0b21pY19zdGF0ZSByZWZlcmVuY2UgaW4gYXRvbWljX2Z1bHNoKCkgYW5kIGVuc3VyZSBhbGwg
-dGhlDQo+ID4gaW5mb3JtYXRpb24gaW4gYXRvbWljX3N0YXRlIGFscmVhZHkgd2FzIHVwZGF0ZWQg
-aW4gaGFyZHdhcmUgZm9yDQo+ID4gc2hvd2luZyBvbiBzY3JlZW4gYW5kIHRoZW4gc2NoZWR1bGVz
-IHVucmVmZXJlbmNlX3dvcmsgdG8gZHJvcCByZWZlcmVuY2VzDQo+ID4gb24gYXRvbWljX3N0YXRl
-Lg0KPiA+IA0KPiA+IEZpeGVzOiAxMTlmNTE3MzYyOGEgKCJkcm0vbWVkaWF0ZWs6IEFkZCBEUk0g
-RHJpdmVyIGZvciBNZWRpYXRlayBTb0MgTVQ4MTczLiIpDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1i
-eTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gDQo+IFRoaXMgbG9v
-a3Mgc3RyYW5nZS4gRm9yIG9uZSB5b3UgaW1wbGVtZW50IHlvdXIgb3duIHJlZmVyZW5jZSBjb3Vu
-dGluZyAtIGlmDQo+IGRyaXZlcnMgaGF2ZSBhIG5lZWQgZm9yIGRybV9hdG9taWNfc3RhdGVfcHV0
-X2lycSB0aGVuIEkNCj4gdGhpbmsgd2Ugc2hvdWxkIGltcGxlbWVudCB0aGlzIGluIHRoZSBjb3Jl
-IGNvZGUuDQo+IA0KPiBUaGUgb3RoZXIgYml0IGlzIHRoYXQgYXRvbWljIGNvbW1pdHMgYXJlIG1l
-YW50IHRvIHNpbXBseSB3YWl0IGZvcg0KPiBldmVyeXRoaW5nIHRvIGZpbmlzaCAtIGNvbW1pdF90
-YWlsIGRvZXNuJ3QgaG9sZCBsb2NrcywgaXQncyBvbmx5IG9yZGVyZWQNCj4gdGhyb3VnaCBkcm1f
-Y3J0Y19jb21taXQgZXZlbnRzIChhdCBsZWFzdCB3aXRoIHRoZSBhc3luYyBpbXBsZW1lbnRhdGlv
-biBpbg0KPiB0aGUgaGVscGVycyksIHNvIHlvdSBjYW4ganVzdCBibG9jayB0aGVyZSB1bnRpbCB5
-b3VyIGludGVycnVwdCBoYW5kbGVyIGlzDQo+IGRvbmUgcHJvY2Vzc2luZyB0aGUgY29tbWl0LiBE
-ZXBlbmRpbmcgaG93IHlvdSB3YW50IHRvIGRvIHRoaXMgeW91IG1pZ2h0DQo+IHdhbnQgdG8gd2Fp
-dCBiZWZvcmUgb3IgYWZ0ZXIgZHJtX2F0b21pY19oZWxwZXJfY29tbWl0X2h3X2RvbmUoKS4NCg0K
-T0ssIEkgd2lsbCB0cnkgdG8gYWRkIGEgc2ltcGxlIHdhaXQvY29tcGxldGlvbiBiZWZvcmUNCmRy
-bV9hdG9taWNfaGVscGVyX2NvbW1pdF9od19kb25lKCkgdW50aWwgdGhlIGNvbW1pdCB3YXMgcHJv
-Y2Vzc2VkLg0KDQpUaGFua3MuDQoNCkJpYmJ5DQo+IC1EYW5pZWwNCj4gDQo+ID4gLS0tDQo+ID4g
-IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyB8IDExICsrKy0NCj4gPiAg
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMgIHwgNzkgKysrKysrKysrKysr
-KysrKysrKysrKysrKw0KPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYu
-aCAgfCAgOSArKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA5NyBpbnNlcnRpb25zKCspLCAyIGRl
-bGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRj
-LmMNCj4gPiBpbmRleCAyOWQwNTgyZTkwZTkuLjY4YjkyYWRjOTZiYiAxMDA2NDQNCj4gPiAtLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gPiArKysgYi9kcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gPiBAQCAtNyw3ICs3LDcgQEAN
-Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4gPiAgDQo+ID4gICNpbmNsdWRl
-IDxhc20vYmFycmllci5oPg0KPiA+IC0NCj4gPiArI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljLmg+
-DQo+ID4gICNpbmNsdWRlIDxkcm0vZHJtX2F0b21pY19oZWxwZXIuaD4NCj4gPiAgI2luY2x1ZGUg
-PGRybS9kcm1fcGxhbmVfaGVscGVyLmg+DQo+ID4gICNpbmNsdWRlIDxkcm0vZHJtX3Byb2JlX2hl
-bHBlci5oPg0KPiA+IEBAIC00Nyw2ICs0Nyw3IEBAIHN0cnVjdCBtdGtfZHJtX2NydGMgew0KPiA+
-ICAJc3RydWN0IG10a19kaXNwX211dGV4CQkqbXV0ZXg7DQo+ID4gIAl1bnNpZ25lZCBpbnQJCQlk
-ZHBfY29tcF9ucjsNCj4gPiAgCXN0cnVjdCBtdGtfZGRwX2NvbXAJCSoqZGRwX2NvbXA7DQo+ID4g
-KwlzdHJ1Y3QgZHJtX2NydGNfc3RhdGUJCSpvbGRfY3J0Y19zdGF0ZTsNCj4gPiAgfTsNCj4gPiAg
-DQo+ID4gIHN0cnVjdCBtdGtfY3J0Y19zdGF0ZSB7DQo+ID4gQEAgLTM2Miw2ICszNjMsNyBAQCBz
-dGF0aWMgdm9pZCBtdGtfY3J0Y19kZHBfaHdfZmluaShzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtf
-Y3J0YykNCj4gPiAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2NvbmZpZyhzdHJ1Y3QgZHJtX2Ny
-dGMgKmNydGMpDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjID0g
-dG9fbXRrX2NydGMoY3J0Yyk7DQo+ID4gKwlzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAqYXRvbWlj
-X3N0YXRlID0gbXRrX2NydGMtPm9sZF9jcnRjX3N0YXRlLT5zdGF0ZTsNCj4gPiAgCXN0cnVjdCBt
-dGtfY3J0Y19zdGF0ZSAqc3RhdGUgPSB0b19tdGtfY3J0Y19zdGF0ZShtdGtfY3J0Yy0+YmFzZS5z
-dGF0ZSk7DQo+ID4gIAlzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wID0gbXRrX2NydGMtPmRkcF9j
-b21wWzBdOw0KPiA+ICAJdW5zaWduZWQgaW50IGk7DQo+ID4gQEAgLTM5OSw2ICs0MDEsNyBAQCBz
-dGF0aWMgdm9pZCBtdGtfY3J0Y19kZHBfY29uZmlnKHN0cnVjdCBkcm1fY3J0YyAqY3J0YykNCj4g
-PiAgCQkJcGxhbmVfc3RhdGUtPnBlbmRpbmcuY29uZmlnID0gZmFsc2U7DQo+ID4gIAkJfQ0KPiA+
-ICAJCW10a19jcnRjLT5wZW5kaW5nX3BsYW5lcyA9IGZhbHNlOw0KPiA+ICsJCW10a19hdG9taWNf
-c3RhdGVfcHV0X3F1ZXVlKGF0b21pY19zdGF0ZSk7DQo+ID4gIAl9DQo+ID4gIH0NCj4gPiAgDQo+
-ID4gQEAgLTQ5NCw2ICs0OTcsNyBAQCBzdGF0aWMgdm9pZCBtdGtfZHJtX2NydGNfYXRvbWljX2Jl
-Z2luKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywNCj4gPiAgc3RhdGljIHZvaWQgbXRrX2RybV9jcnRj
-X2F0b21pY19mbHVzaChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsDQo+ID4gIAkJCQkgICAgICBzdHJ1
-Y3QgZHJtX2NydGNfc3RhdGUgKm9sZF9jcnRjX3N0YXRlKQ0KPiA+ICB7DQo+ID4gKwlzdHJ1Y3Qg
-ZHJtX2F0b21pY19zdGF0ZSAqb2xkX2F0b21pY19zdGF0ZSA9IG9sZF9jcnRjX3N0YXRlLT5zdGF0
-ZTsNCj4gPiAgCXN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjID0gdG9fbXRrX2NydGMoY3J0
-Yyk7DQo+ID4gIAlzdHJ1Y3QgbXRrX2RybV9wcml2YXRlICpwcml2ID0gY3J0Yy0+ZGV2LT5kZXZf
-cHJpdmF0ZTsNCj4gPiAgCXVuc2lnbmVkIGludCBwZW5kaW5nX3BsYW5lcyA9IDA7DQo+ID4gQEAg
-LTUxMiw4ICs1MTYsMTEgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9jcnRjX2F0b21pY19mbHVzaChz
-dHJ1Y3QgZHJtX2NydGMgKmNydGMsDQo+ID4gIAkJCXBlbmRpbmdfcGxhbmVzIHw9IEJJVChpKTsN
-Cj4gPiAgCQl9DQo+ID4gIAl9DQo+ID4gLQlpZiAocGVuZGluZ19wbGFuZXMpDQo+ID4gKwlpZiAo
-cGVuZGluZ19wbGFuZXMpIHsNCj4gPiAgCQltdGtfY3J0Yy0+cGVuZGluZ19wbGFuZXMgPSB0cnVl
-Ow0KPiA+ICsJCWRybV9hdG9taWNfc3RhdGVfZ2V0KG9sZF9hdG9taWNfc3RhdGUpOw0KPiA+ICsJ
-CW10a19jcnRjLT5vbGRfY3J0Y19zdGF0ZSA9IG9sZF9jcnRjX3N0YXRlOw0KPiA+ICsJfQ0KPiA+
-ICAJaWYgKGNydGMtPnN0YXRlLT5jb2xvcl9tZ210X2NoYW5nZWQpDQo+ID4gIAkJZm9yIChpID0g
-MDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9ucjsgaSsrKQ0KPiA+ICAJCQltdGtfZGRwX2dhbW1h
-X3NldChtdGtfY3J0Yy0+ZGRwX2NvbXBbaV0sIGNydGMtPnN0YXRlKTsNCj4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMgYi9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYw0KPiA+IGluZGV4IDY1ODhkYzZkZDVlMy4uNmM2ODI4
-M2I2MTI0IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2Rydi5jDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMN
-Cj4gPiBAQCAtMTE1LDEwICsxMTUsODUgQEAgc3RhdGljIGludCBtdGtfYXRvbWljX2NvbW1pdChz
-dHJ1Y3QgZHJtX2RldmljZSAqZHJtLA0KPiA+ICAJcmV0dXJuIDA7DQo+ID4gIH0NCj4gPiAgDQo+
-ID4gK3N0cnVjdCBtdGtfYXRvbWljX3N0YXRlIHsNCj4gPiArCXN0cnVjdCBkcm1fYXRvbWljX3N0
-YXRlIGJhc2U7DQo+ID4gKwlzdHJ1Y3QgbGlzdF9oZWFkIGxpc3Q7DQo+ID4gK307DQo+ID4gKw0K
-PiA+ICtzdGF0aWMgaW5saW5lIHN0cnVjdCBtdGtfYXRvbWljX3N0YXRlICp0b19tdGtfc3RhdGUo
-c3RydWN0IGRybV9hdG9taWNfc3RhdGUgKnMpDQo+ID4gK3sNCj4gPiArCXJldHVybiBjb250YWlu
-ZXJfb2Yocywgc3RydWN0IG10a19hdG9taWNfc3RhdGUsIGJhc2UpOw0KPiA+ICt9DQo+ID4gKw0K
-PiA+ICt2b2lkIG10a19hdG9taWNfc3RhdGVfcHV0X3F1ZXVlKHN0cnVjdCBkcm1fYXRvbWljX3N0
-YXRlICpzdGF0ZSkNCj4gPiArew0KPiA+ICsJc3RydWN0IGRybV9kZXZpY2UgKmRybSA9IHN0YXRl
-LT5kZXY7DQo+ID4gKwlzdHJ1Y3QgbXRrX2RybV9wcml2YXRlICptdGtfZHJtID0gZHJtLT5kZXZf
-cHJpdmF0ZTsNCj4gPiArCXN0cnVjdCBtdGtfYXRvbWljX3N0YXRlICptdGtfc3RhdGUgPSB0b19t
-dGtfc3RhdGUoc3RhdGUpOw0KPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiArDQo+ID4g
-KwlzcGluX2xvY2tfaXJxc2F2ZSgmbXRrX2RybS0+dW5yZWZlcmVuY2UubG9jaywgZmxhZ3MpOw0K
-PiA+ICsJbGlzdF9hZGRfdGFpbCgmbXRrX3N0YXRlLT5saXN0LCAmbXRrX2RybS0+dW5yZWZlcmVu
-Y2UubGlzdCk7DQo+ID4gKwlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZtdGtfZHJtLT51bnJlZmVy
-ZW5jZS5sb2NrLCBmbGFncyk7DQo+ID4gKw0KPiA+ICsJc2NoZWR1bGVfd29yaygmbXRrX2RybS0+
-dW5yZWZlcmVuY2Uud29yayk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIG10a191
-bnJlZmVyZW5jZV93b3JrKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29yaykNCj4gPiArew0KPiA+ICsJ
-c3RydWN0IG10a19kcm1fcHJpdmF0ZSAqbXRrX2RybSA9IGNvbnRhaW5lcl9vZih3b3JrLA0KPiA+
-ICsJCQlzdHJ1Y3QgbXRrX2RybV9wcml2YXRlLCB1bnJlZmVyZW5jZS53b3JrKTsNCj4gPiArCXVu
-c2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gKwlzdHJ1Y3QgbXRrX2F0b21pY19zdGF0ZSAqc3RhdGUs
-ICp0bXA7DQo+ID4gKw0KPiA+ICsJLyoNCj4gPiArCSAqIGZyYW1lYnVmZmVycyBjYW5ub3QgYmUg
-dW5yZWZlcmVuY2VkIGluIGF0b21pYyBjb250ZXh0Lg0KPiA+ICsJICogVGhlcmVmb3JlLCBvbmx5
-IGhvbGQgdGhlIHNwaW5sb2NrIHdoZW4gaXRlcmF0aW5nIHVucmVmZXJlbmNlX2xpc3QsDQo+ID4g
-KwkgKiBhbmQgZHJvcCBpdCB3aGVuIGRvaW5nIHRoZSB1bnJlZmVyZW5jZS4NCj4gPiArCSAqLw0K
-PiA+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJm10a19kcm0tPnVucmVmZXJlbmNlLmxvY2ssIGZsYWdz
-KTsNCj4gPiArCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZShzdGF0ZSwgdG1wLCAmbXRrX2RybS0+
-dW5yZWZlcmVuY2UubGlzdCwgbGlzdCkgew0KPiA+ICsJCWxpc3RfZGVsKCZzdGF0ZS0+bGlzdCk7
-DQo+ID4gKwkJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmbXRrX2RybS0+dW5yZWZlcmVuY2UubG9j
-aywgZmxhZ3MpOw0KPiA+ICsJCWRybV9hdG9taWNfc3RhdGVfcHV0KCZzdGF0ZS0+YmFzZSk7DQo+
-ID4gKwkJc3Bpbl9sb2NrX2lycXNhdmUoJm10a19kcm0tPnVucmVmZXJlbmNlLmxvY2ssIGZsYWdz
-KTsNCj4gPiArCX0NCj4gPiArCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJm10a19kcm0tPnVucmVm
-ZXJlbmNlLmxvY2ssIGZsYWdzKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCBk
-cm1fYXRvbWljX3N0YXRlICoNCj4gPiArCQltdGtfZHJtX2F0b21pY19zdGF0ZV9hbGxvYyhzdHJ1
-Y3QgZHJtX2RldmljZSAqZGV2KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgbXRrX2F0b21pY19zdGF0
-ZSAqbXRrX3N0YXRlOw0KPiA+ICsNCj4gPiArCW10a19zdGF0ZSA9IGt6YWxsb2Moc2l6ZW9mKCpt
-dGtfc3RhdGUpLCBHRlBfS0VSTkVMKTsNCj4gPiArCWlmICghbXRrX3N0YXRlKQ0KPiA+ICsJCXJl
-dHVybiBOVUxMOw0KPiA+ICsNCj4gPiArCWlmIChkcm1fYXRvbWljX3N0YXRlX2luaXQoZGV2LCAm
-bXRrX3N0YXRlLT5iYXNlKSA8IDApIHsNCj4gPiArCQlrZnJlZShtdGtfc3RhdGUpOw0KPiA+ICsJ
-CXJldHVybiBOVUxMOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCUlOSVRfTElTVF9IRUFEKCZtdGtf
-c3RhdGUtPmxpc3QpOw0KPiA+ICsNCj4gPiArCXJldHVybiAmbXRrX3N0YXRlLT5iYXNlOw0KPiA+
-ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBtdGtfZHJtX2F0b21pY19zdGF0ZV9mcmVlKHN0
-cnVjdCBkcm1fYXRvbWljX3N0YXRlICpzdGF0ZSkNCj4gPiArew0KPiA+ICsJc3RydWN0IG10a19h
-dG9taWNfc3RhdGUgKm10a19zdGF0ZSA9IHRvX210a19zdGF0ZShzdGF0ZSk7DQo+ID4gKw0KPiA+
-ICsJZHJtX2F0b21pY19zdGF0ZV9kZWZhdWx0X3JlbGVhc2Uoc3RhdGUpOw0KPiA+ICsJa2ZyZWUo
-bXRrX3N0YXRlKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1f
-bW9kZV9jb25maWdfZnVuY3MgbXRrX2RybV9tb2RlX2NvbmZpZ19mdW5jcyA9IHsNCj4gPiAgCS5m
-Yl9jcmVhdGUgPSBtdGtfZHJtX21vZGVfZmJfY3JlYXRlLA0KPiA+ICAJLmF0b21pY19jaGVjayA9
-IGRybV9hdG9taWNfaGVscGVyX2NoZWNrLA0KPiA+ICAJLmF0b21pY19jb21taXQgPSBtdGtfYXRv
-bWljX2NvbW1pdCwNCj4gPiArCS5hdG9taWNfc3RhdGVfYWxsb2MgPSBtdGtfZHJtX2F0b21pY19z
-dGF0ZV9hbGxvYywNCj4gPiArCS5hdG9taWNfc3RhdGVfZnJlZSA9IG10a19kcm1fYXRvbWljX3N0
-YXRlX2ZyZWUNCj4gPiAgfTsNCj4gPiAgDQo+ID4gIHN0YXRpYyBjb25zdCBlbnVtIG10a19kZHBf
-Y29tcF9pZCBtdDI3MDFfbXRrX2RkcF9tYWluW10gPSB7DQo+ID4gQEAgLTMzNyw2ICs0MTIsMTAg
-QEAgc3RhdGljIGludCBtdGtfZHJtX2ttc19pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkcm0pDQo+
-ID4gIAlkcm1fa21zX2hlbHBlcl9wb2xsX2luaXQoZHJtKTsNCj4gPiAgCWRybV9tb2RlX2NvbmZp
-Z19yZXNldChkcm0pOw0KPiA+ICANCj4gPiArCUlOSVRfV09SSygmcHJpdmF0ZS0+dW5yZWZlcmVu
-Y2Uud29yaywgbXRrX3VucmVmZXJlbmNlX3dvcmspOw0KPiA+ICsJSU5JVF9MSVNUX0hFQUQoJnBy
-aXZhdGUtPnVucmVmZXJlbmNlLmxpc3QpOw0KPiA+ICsJc3Bpbl9sb2NrX2luaXQoJnByaXZhdGUt
-PnVucmVmZXJlbmNlLmxvY2spOw0KPiA+ICsNCj4gPiAgCXJldHVybiAwOw0KPiA+ICANCj4gPiAg
-ZXJyX3Vuc2V0X2RtYV9wYXJtczoNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZHJ2LmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
-cnYuaA0KPiA+IGluZGV4IGI2YTgyNzI4ZDU2My4uYzM3ZDgzNWNmOTQ5IDEwMDY0NA0KPiA+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oDQo+ID4gKysrIGIvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmgNCj4gPiBAQCAtNTUsNiArNTUsMTMg
-QEAgc3RydWN0IG10a19kcm1fcHJpdmF0ZSB7DQo+ID4gIA0KPiA+ICAJc3RydWN0IGRybV9hdG9t
-aWNfc3RhdGUgKnN1c3BlbmRfc3RhdGU7DQo+ID4gIA0KPiA+ICsJc3RydWN0IHsNCj4gPiArCQlz
-dHJ1Y3Qgd29ya19zdHJ1Y3QJd29yazsNCj4gPiArCQlzdHJ1Y3QgbGlzdF9oZWFkCWxpc3Q7DQo+
-ID4gKwkJLyogbG9jayBmb3IgdW5yZWZlcmVuY2UgbGlzdCAqLw0KPiA+ICsJCXNwaW5sb2NrX3QJ
-CWxvY2s7DQo+ID4gKwl9IHVucmVmZXJlbmNlOw0KPiA+ICsNCj4gPiAgCWJvb2wgZG1hX3Bhcm1z
-X2FsbG9jYXRlZDsNCj4gPiAgfTsNCj4gPiAgDQo+ID4gQEAgLTY2LDQgKzczLDYgQEAgZXh0ZXJu
-IHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgbXRrX2RwaV9kcml2ZXI7DQo+ID4gIGV4dGVybiBzdHJ1
-Y3QgcGxhdGZvcm1fZHJpdmVyIG10a19kc2lfZHJpdmVyOw0KPiA+ICBleHRlcm4gc3RydWN0IHBs
-YXRmb3JtX2RyaXZlciBtdGtfbWlwaV90eF9kcml2ZXI7DQo+ID4gIA0KPiA+ICt2b2lkIG10a19h
-dG9taWNfc3RhdGVfcHV0X3F1ZXVlKHN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpzdGF0ZSk7DQo+
-ID4gKw0KPiA+ICAjZW5kaWYgLyogTVRLX0RSTV9EUlZfSCAqLw0KPiA+IC0tIA0KPiA+IDIuMTgu
-MA0KPiANCg0K
+Hi Hao,
 
+On Wed, Nov 13, 2019 at 01:24:55PM +0800, Wu Hao wrote:
+> This patch adds support for performance reporting private feature
+> for FPGA Management Engine (FME). Now it supports several different
+> performance counters, including 'basic', 'cache', 'fabric', 'vtd'
+> and 'vtd_sip'. It allows user to use standard linux tools to access
+> these performance counters.
+> 
+> e.g. List all events by "perf list"
+> 
+>   perf list | grep fme
+> 
+>   fme0/cache_read_hit/                         [Kernel PMU event]
+>   fme0/cache_read_miss/                        [Kernel PMU event]
+>   ...
+> 
+>   fme0/fab_mmio_read/                          [Kernel PMU event]
+>   fme0/fab_mmio_write/                         [Kernel PMU event]
+>   ...
+> 
+>   fme0/fab_port_mmio_read,portid=?/            [Kernel PMU event]
+>   fme0/fab_port_mmio_write,portid=?/           [Kernel PMU event]
+>   ...
+> 
+>   fme0/vtd_port_devtlb_1g_fill,portid=?/       [Kernel PMU event]
+>   fme0/vtd_port_devtlb_2m_fill,portid=?/       [Kernel PMU event]
+>   ...
+> 
+>   fme0/vtd_sip_iotlb_1g_hit/                   [Kernel PMU event]
+>   fme0/vtd_sip_iotlb_1g_miss/                  [Kernel PMU event]
+>   ...
+> 
+>   fme0/clock                                   [Kernel PMU event]
+>   ...
+> 
+> e.g. check increased counter value after run one application using
+> "perf stat" command.
+> 
+>  perf stat -e fme0/fab_mmio_read/,fme0/fab_mmio_write/, ./test
+> 
+>  Performance counter stats for './test':
+> 
+>                  1      fme0/fab_mmio_read/
+>                  2      fme0/fab_mmio_write/
+> 
+>        1.009496520 seconds time elapsed
+> 
+> Please note that fabric counters support both fab_* and fab_port_*, but
+> actually they are sharing one set of performance counters in hardware.
+> If user wants to monitor overall data events on fab_* then fab_port_*
+> can't be supported at the same time, see example below:
+> 
+> perf stat -e fme0/fab_mmio_read/,fme0/fab_port_mmio_write,portid=0/
+> 
+>  Performance counter stats for 'system wide':
+> 
+>                  0      fme0/fab_mmio_read/
+>    <not supported>      fme0/fab_port_mmio_write,portid=0/
+> 
+>        2.141064085 seconds time elapsed
+> 
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> ---
+> v3: replace scnprintf with sprintf in sysfs interfaces.
+>     update sysfs doc kernel version and date.
+>     fix sysfs doc issue for fabric counter.
+>     refine PERF_OBJ_ATTR_* macro, doesn't count on __ATTR anymore.
+>     introduce PERF_OBJ_ATTR_F_* macro, as it needs to use different
+>     filenames for some of the sysfs attributes.
+>     remove kobject_del when destroy kobject, kobject_put is enough.
+>     do sysfs_remove_groups first when destroying perf_obj.
+>     WARN_ON_ONCE in case internal parms are wrong in read_*_count().
+> v4: rework this patch to use standard perf API as user interfaces.
+> v5: rebase and clean up.
+> v6: use dev_ext_attribute instead of creating new fme_perf_attribute
+>     use is_visible function to decide which events to expose per
+>     hardware capability, and add event_init checking for all events.
+> ---
+>  drivers/fpga/Makefile       |   1 +
+>  drivers/fpga/dfl-fme-main.c |   4 +
+>  drivers/fpga/dfl-fme-perf.c | 943 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/fpga/dfl-fme.h      |   2 +
+>  drivers/fpga/dfl.h          |   2 +
+>  5 files changed, 952 insertions(+)
+>  create mode 100644 drivers/fpga/dfl-fme-perf.c
+> 
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index 4865b74..d8e21df 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -40,6 +40,7 @@ obj-$(CONFIG_FPGA_DFL_FME_REGION)	+= dfl-fme-region.o
+>  obj-$(CONFIG_FPGA_DFL_AFU)		+= dfl-afu.o
+>  
+>  dfl-fme-objs := dfl-fme-main.o dfl-fme-pr.o dfl-fme-error.o
+> +dfl-fme-objs += dfl-fme-perf.o
+>  dfl-afu-objs := dfl-afu-main.o dfl-afu-region.o dfl-afu-dma-region.o
+>  dfl-afu-objs += dfl-afu-error.o
+>  
+> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> index 7c930e6..53a1447 100644
+> --- a/drivers/fpga/dfl-fme-main.c
+> +++ b/drivers/fpga/dfl-fme-main.c
+> @@ -580,6 +580,10 @@ static int fme_power_mgmt_init(struct platform_device *pdev,
+>  		.ops = &fme_power_mgmt_ops,
+>  	},
+>  	{
+> +		.id_table = fme_perf_id_table,
+> +		.ops = &fme_perf_ops,
+> +	},
+> +	{
+>  		.ops = NULL,
+>  	},
+>  };
+> diff --git a/drivers/fpga/dfl-fme-perf.c b/drivers/fpga/dfl-fme-perf.c
+> new file mode 100644
+> index 0000000..5e51727
+> --- /dev/null
+> +++ b/drivers/fpga/dfl-fme-perf.c
+> @@ -0,0 +1,943 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for FPGA Management Engine (FME) Global Performance Reporting
+> + *
+> + * Copyright 2019 Intel Corporation, Inc.
+> + *
+> + * Authors:
+> + *   Kang Luwei <luwei.kang@intel.com>
+> + *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
+> + *   Wu Hao <hao.wu@intel.com>
+> + *   Xu Yilun <yilun.xu@intel.com>
+> + *   Joseph Grecco <joe.grecco@intel.com>
+> + *   Enno Luebbers <enno.luebbers@intel.com>
+> + *   Tim Whisonant <tim.whisonant@intel.com>
+> + *   Ananda Ravuri <ananda.ravuri@intel.com>
+> + *   Mitchel, Henry <henry.mitchel@intel.com>
+> + */
+> +
+> +#include <linux/perf_event.h>
+> +#include "dfl.h"
+> +#include "dfl-fme.h"
+> +
+> +/*
+> + * Performance Counter Registers for Cache.
+> + *
+> + * Cache Events are listed below as CACHE_EVNT_*.
+> + */
+> +#define CACHE_CTRL			0x8
+> +#define CACHE_RESET_CNTR		BIT_ULL(0)
+> +#define CACHE_FREEZE_CNTR		BIT_ULL(8)
+> +#define CACHE_CTRL_EVNT			GENMASK_ULL(19, 16)
+> +#define CACHE_EVNT_RD_HIT		0x0
+> +#define CACHE_EVNT_WR_HIT		0x1
+> +#define CACHE_EVNT_RD_MISS		0x2
+> +#define CACHE_EVNT_WR_MISS		0x3
+> +#define CACHE_EVNT_RSVD			0x4
+> +#define CACHE_EVNT_HOLD_REQ		0x5
+> +#define CACHE_EVNT_DATA_WR_PORT_CONTEN	0x6
+> +#define CACHE_EVNT_TAG_WR_PORT_CONTEN	0x7
+> +#define CACHE_EVNT_TX_REQ_STALL		0x8
+> +#define CACHE_EVNT_RX_REQ_STALL		0x9
+> +#define CACHE_EVNT_EVICTIONS		0xa
+> +#define CACHE_EVNT_MAX			CACHE_EVNT_EVICTIONS
+> +#define CACHE_CHANNEL_SEL		BIT_ULL(20)
+> +#define CACHE_CHANNEL_RD		0
+> +#define CACHE_CHANNEL_WR		1
+> +#define CACHE_CNTR0			0x10
+> +#define CACHE_CNTR1			0x18
+> +#define CACHE_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
+> +#define CACHE_CNTR_EVNT			GENMASK_ULL(63, 60)
+> +
+> +/*
+> + * Performance Counter Registers for Fabric.
+> + *
+> + * Fabric Events are listed below as FAB_EVNT_*
+> + */
+> +#define FAB_CTRL			0x20
+> +#define FAB_RESET_CNTR			BIT_ULL(0)
+> +#define FAB_FREEZE_CNTR			BIT_ULL(8)
+> +#define FAB_CTRL_EVNT			GENMASK_ULL(19, 16)
+> +#define FAB_EVNT_PCIE0_RD		0x0
+> +#define FAB_EVNT_PCIE0_WR		0x1
+> +#define FAB_EVNT_PCIE1_RD		0x2
+> +#define FAB_EVNT_PCIE1_WR		0x3
+> +#define FAB_EVNT_UPI_RD			0x4
+> +#define FAB_EVNT_UPI_WR			0x5
+> +#define FAB_EVNT_MMIO_RD		0x6
+> +#define FAB_EVNT_MMIO_WR		0x7
+> +#define FAB_EVNT_MAX			FAB_EVNT_MMIO_WR
+> +#define FAB_PORT_ID			GENMASK_ULL(21, 20)
+> +#define FAB_PORT_FILTER			BIT_ULL(23)
+> +#define FAB_PORT_FILTER_DISABLE		0
+> +#define FAB_PORT_FILTER_ENABLE		1
+> +#define FAB_CNTR			0x28
+> +#define FAB_CNTR_EVNT_CNTR		GENMASK_ULL(59, 0)
+> +#define FAB_CNTR_EVNT			GENMASK_ULL(63, 60)
+> +
+> +/*
+> + * Performance Counter Registers for Clock.
+> + *
+> + * Clock Counter can't be reset or frozen by SW.
+> + */
+> +#define CLK_CNTR			0x30
+> +#define BASIC_EVNT_CLK			0x0
+> +#define BASIC_EVNT_MAX			BASIC_EVNT_CLK
+> +
+> +/*
+> + * Performance Counter Registers for IOMMU / VT-D.
+> + *
+> + * VT-D Events are listed below as VTD_EVNT_* and VTD_SIP_EVNT_*
+> + */
+> +#define VTD_CTRL			0x38
+> +#define VTD_RESET_CNTR			BIT_ULL(0)
+> +#define VTD_FREEZE_CNTR			BIT_ULL(8)
+> +#define VTD_CTRL_EVNT			GENMASK_ULL(19, 16)
+> +#define VTD_EVNT_AFU_MEM_RD_TRANS	0x0
+> +#define VTD_EVNT_AFU_MEM_WR_TRANS	0x1
+> +#define VTD_EVNT_AFU_DEVTLB_RD_HIT	0x2
+> +#define VTD_EVNT_AFU_DEVTLB_WR_HIT	0x3
+> +#define VTD_EVNT_DEVTLB_4K_FILL		0x4
+> +#define VTD_EVNT_DEVTLB_2M_FILL		0x5
+> +#define VTD_EVNT_DEVTLB_1G_FILL		0x6
+> +#define VTD_EVNT_MAX			VTD_EVNT_DEVTLB_1G_FILL
+> +#define VTD_CNTR			0x40
+> +#define VTD_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
+> +#define VTD_CNTR_EVNT			GENMASK_ULL(63, 60)
+> +
+> +#define VTD_SIP_CTRL			0x48
+> +#define VTD_SIP_RESET_CNTR		BIT_ULL(0)
+> +#define VTD_SIP_FREEZE_CNTR		BIT_ULL(8)
+> +#define VTD_SIP_CTRL_EVNT		GENMASK_ULL(19, 16)
+> +#define VTD_SIP_EVNT_IOTLB_4K_HIT	0x0
+> +#define VTD_SIP_EVNT_IOTLB_2M_HIT	0x1
+> +#define VTD_SIP_EVNT_IOTLB_1G_HIT	0x2
+> +#define VTD_SIP_EVNT_SLPWC_L3_HIT	0x3
+> +#define VTD_SIP_EVNT_SLPWC_L4_HIT	0x4
+> +#define VTD_SIP_EVNT_RCC_HIT		0x5
+> +#define VTD_SIP_EVNT_IOTLB_4K_MISS	0x6
+> +#define VTD_SIP_EVNT_IOTLB_2M_MISS	0x7
+> +#define VTD_SIP_EVNT_IOTLB_1G_MISS	0x8
+> +#define VTD_SIP_EVNT_SLPWC_L3_MISS	0x9
+> +#define VTD_SIP_EVNT_SLPWC_L4_MISS	0xa
+> +#define VTD_SIP_EVNT_RCC_MISS		0xb
+> +#define VTD_SIP_EVNT_MAX		VTD_SIP_EVNT_SLPWC_L4_MISS
+> +#define VTD_SIP_CNTR			0X50
+> +#define VTD_SIP_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
+> +#define VTD_SIP_CNTR_EVNT		GENMASK_ULL(63, 60)
+> +
+> +#define PERF_TIMEOUT			30
+> +
+> +#define PERF_MAX_PORT_NUM		1U
+> +
+> +/**
+> + * struct fme_perf_priv - priv data structure for fme perf driver
+> + *
+> + * @dev: parent device.
+> + * @ioaddr: mapped base address of mmio region.
+> + * @pmu: pmu data structure for fme perf counters.
+> + * @id: id of this fme performance report private feature.
+> + * @fab_users: current user number on fabric counters.
+> + * @fab_port_id: used to indicate current working mode of fabric counters.
+> + * @fab_lock: lock to protect fabric counters working mode.
+> + */
+> +struct fme_perf_priv {
+> +	struct device *dev;
+> +	void __iomem *ioaddr;
+> +	struct pmu pmu;
+> +	u64 id;
+> +
+> +	u32 fab_users;
+> +	u32 fab_port_id;
+> +	spinlock_t fab_lock;
+> +};
+> +
+> +/**
+> + * struct fme_perf_event_ops - callbacks for fme perf events
+> + *
+> + * @event_init: callback invoked during event init.
+> + * @event_destroy: callback invoked during event destroy.
+> + * @read_counter: callback to read hardware counters.
+> + */
+> +struct fme_perf_event_ops {
+> +	int (*event_init)(struct fme_perf_priv *priv, u32 event, u32 portid);
+> +	void (*event_destroy)(struct fme_perf_priv *priv, u32 event,
+> +			      u32 portid);
+> +	u64 (*read_counter)(struct fme_perf_priv *priv, u32 event, u32 portid);
+> +};
+> +
+> +#define to_fme_perf_priv(_pmu)	container_of(_pmu, struct fme_perf_priv, pmu)
+> +
+> +static cpumask_t fme_perf_cpumask = CPU_MASK_CPU0;
+> +
+> +static ssize_t cpumask_show(struct device *dev,
+> +			    struct device_attribute *attr, char *buf)
+> +{
+> +	return cpumap_print_to_pagebuf(true, buf, &fme_perf_cpumask);
+> +}
+> +static DEVICE_ATTR_RO(cpumask);
+> +
+> +static struct attribute *fme_perf_cpumask_attrs[] = {
+> +	&dev_attr_cpumask.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group fme_perf_cpumask_group = {
+> +	.attrs = fme_perf_cpumask_attrs,
+> +};
+> +
+> +#define FME_EVENT_MASK		GENMASK_ULL(11, 0)
+> +#define FME_EVENT_SHIFT		0
+> +#define FME_EVTYPE_MASK		GENMASK_ULL(15, 12)
+> +#define FME_EVTYPE_SHIFT	12
+> +#define FME_EVTYPE_BASIC	0
+> +#define FME_EVTYPE_CACHE	1
+> +#define FME_EVTYPE_FABRIC	2
+> +#define FME_EVTYPE_VTD		3
+> +#define FME_EVTYPE_VTD_SIP	4
+> +#define FME_EVTYPE_MAX		FME_EVTYPE_VTD_SIP
+> +#define FME_PORTID_MASK		GENMASK_ULL(23, 16)
+> +#define FME_PORTID_SHIFT	16
+> +#define FME_PORTID_ROOT		(0xffU)
+> +
+> +#define get_event(_config)	FIELD_GET(FME_EVENT_MASK, _config)
+> +#define get_evtype(_config)	FIELD_GET(FME_EVTYPE_MASK, _config)
+> +#define get_portid(_config)	FIELD_GET(FME_PORTID_MASK, _config)
+> +
+> +PMU_FORMAT_ATTR(event,		"config:0-11");
+> +PMU_FORMAT_ATTR(evtype,		"config:12-15");
+> +PMU_FORMAT_ATTR(portid,		"config:16-23");
+> +
+> +static struct attribute *fme_perf_format_attrs[] = {
+> +	&format_attr_event.attr,
+> +	&format_attr_evtype.attr,
+> +	&format_attr_portid.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group fme_perf_format_group = {
+> +	.name = "format",
+> +	.attrs = fme_perf_format_attrs,
+> +};
+> +
+> +static struct attribute *fme_perf_events_attrs_empty[] = {
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group fme_perf_events_group = {
+> +	.name = "events",
+> +	.attrs = fme_perf_events_attrs_empty,
+> +};
+> +
+> +static const struct attribute_group *fme_perf_groups[] = {
+> +	&fme_perf_format_group,
+> +	&fme_perf_cpumask_group,
+> +	&fme_perf_events_group,
+> +	NULL,
+> +};
+> +
+> +static bool is_portid_root(u32 portid)
+> +{
+> +	return portid == FME_PORTID_ROOT;
+> +}
+> +
+> +static bool is_portid_port(u32 portid)
+> +{
+> +	return portid < PERF_MAX_PORT_NUM;
+> +}
+> +
+> +static bool is_portid_root_or_port(u32 portid)
+> +{
+> +	return is_portid_root(portid) || is_portid_port(portid);
+> +}
+> +
+> +static int basic_event_init(struct fme_perf_priv *priv, u32 event, u32 portid)
+> +{
+> +	if (event <= BASIC_EVNT_MAX && is_portid_root(portid))
+> +		return 0;
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static u64 basic_read_event_counter(struct fme_perf_priv *priv,
+> +				    u32 event, u32 portid)
+> +{
+> +	void __iomem *base = priv->ioaddr;
+> +
+> +	return readq(base + CLK_CNTR);
+> +}
+> +
+> +static int cache_event_init(struct fme_perf_priv *priv, u32 event, u32 portid)
+> +{
+> +	if (priv->id == FME_FEATURE_ID_GLOBAL_IPERF &&
+> +	    event <= CACHE_EVNT_MAX && is_portid_root(portid))
+> +		return 0;
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static u64 cache_read_event_counter(struct fme_perf_priv *priv,
+> +				    u32 event, u32 portid)
+> +{
+> +	void __iomem *base = priv->ioaddr;
+> +	u64 v, count;
+> +	u8 channel;
+> +
+> +	if (event == CACHE_EVNT_WR_HIT || event == CACHE_EVNT_WR_MISS ||
+> +	    event == CACHE_EVNT_DATA_WR_PORT_CONTEN ||
+> +	    event == CACHE_EVNT_TAG_WR_PORT_CONTEN)
+> +		channel = CACHE_CHANNEL_WR;
+> +	else
+> +		channel = CACHE_CHANNEL_RD;
+> +
+> +	/* set channel access type and cache event code. */
+> +	v = readq(base + CACHE_CTRL);
+> +	v &= ~(CACHE_CHANNEL_SEL | CACHE_CTRL_EVNT);
+> +	v |= FIELD_PREP(CACHE_CHANNEL_SEL, channel);
+> +	v |= FIELD_PREP(CACHE_CTRL_EVNT, event);
+> +	writeq(v, base + CACHE_CTRL);
+> +
+> +	if (readq_poll_timeout_atomic(base + CACHE_CNTR0, v,
+> +				      FIELD_GET(CACHE_CNTR_EVNT, v) == event,
+> +				      1, PERF_TIMEOUT)) {
+> +		dev_err(priv->dev, "timeout, unmatched cache event code in counter register.\n");
+> +		return 0;
+> +	}
+> +
+> +	v = readq(base + CACHE_CNTR0);
+> +	count = FIELD_GET(CACHE_CNTR_EVNT_CNTR, v);
+> +	v = readq(base + CACHE_CNTR1);
+> +	count += FIELD_GET(CACHE_CNTR_EVNT_CNTR, v);
+> +
+> +	return count;
+> +}
+> +
+> +static bool is_fabric_event_supported(struct fme_perf_priv *priv, u32 event,
+> +				      u32 portid)
+> +{
+> +	if (event > FAB_EVNT_MAX || !is_portid_root_or_port(portid))
+> +		return false;
+> +
+> +	if (priv->id == FME_FEATURE_ID_GLOBAL_DPERF &&
+> +	    (event == FAB_EVNT_PCIE1_RD || event == FAB_EVNT_UPI_RD ||
+> +	     event == FAB_EVNT_PCIE1_WR || event == FAB_EVNT_UPI_WR))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static int fabric_event_init(struct fme_perf_priv *priv, u32 event, u32 portid)
+> +{
+> +	void __iomem *base = priv->ioaddr;
+> +	int ret = 0;
+> +	u64 v;
+> +
+> +	if (!is_fabric_event_supported(priv, event, portid))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * as fabric counter set only can be in either overall or port mode.
+> +	 * In overall mode, it counts overall data for FPGA, and in port mode,
+> +	 * it is configured to monitor on one individual port.
+> +	 *
+> +	 * so every time, a new event is initialized, driver checks
+> +	 * current working mode and if someone is using this counter set.
+> +	 */
+> +	spin_lock(&priv->fab_lock);
+> +	if (priv->fab_users && priv->fab_port_id != portid) {
+> +		dev_dbg(priv->dev, "conflict fabric event monitoring mode.\n");
+> +		ret = -EOPNOTSUPP;
+> +		goto exit;
+> +	}
+> +
+> +	priv->fab_users++;
+> +
+> +	/*
+> +	 * skip if current working mode matches, otherwise change the working
+> +	 * mode per input port_id, to monitor overall data or another port.
+> +	 */
+> +	if (priv->fab_port_id == portid)
+> +		goto exit;
+> +
+> +	priv->fab_port_id = portid;
+> +
+> +	v = readq(base + FAB_CTRL);
+> +	v &= ~(FAB_PORT_FILTER | FAB_PORT_ID);
+> +
+> +	if (is_portid_root(portid)) {
+> +		v |= FIELD_PREP(FAB_PORT_FILTER, FAB_PORT_FILTER_DISABLE);
+> +	} else {
+> +		v |= FIELD_PREP(FAB_PORT_FILTER, FAB_PORT_FILTER_ENABLE);
+> +		v |= FIELD_PREP(FAB_PORT_ID, portid);
+> +	}
+> +	writeq(v, base + FAB_CTRL);
+> +
+> +exit:
+> +	spin_unlock(&priv->fab_lock);
+> +	return ret;
+> +}
+> +
+> +static void fabric_event_destroy(struct fme_perf_priv *priv, u32 event,
+> +				 u32 portid)
+> +{
+> +	spin_lock(&priv->fab_lock);
+> +	priv->fab_users--;
+> +	spin_unlock(&priv->fab_lock);
+> +}
+> +
+> +static u64 fabric_read_event_counter(struct fme_perf_priv *priv, u32 event,
+> +				     u32 portid)
+> +{
+> +	void __iomem *base = priv->ioaddr;
+> +	u64 v;
+> +
+> +	v = readq(base + FAB_CTRL);
+> +	v &= ~FAB_CTRL_EVNT;
+> +	v |= FIELD_PREP(FAB_CTRL_EVNT, event);
+> +	writeq(v, base + FAB_CTRL);
+> +
+> +	if (readq_poll_timeout_atomic(base + FAB_CNTR, v,
+> +				      FIELD_GET(FAB_CNTR_EVNT, v) == event,
+> +				      1, PERF_TIMEOUT)) {
+> +		dev_err(priv->dev, "timeout, unmatched fab event code in counter register.\n");
+> +		return 0;
+> +	}
+> +
+> +	v = readq(base + FAB_CNTR);
+> +	return FIELD_GET(FAB_CNTR_EVNT_CNTR, v);
+> +}
+> +
+> +static int vtd_event_init(struct fme_perf_priv *priv, u32 event, u32 portid)
+> +{
+> +	if (priv->id == FME_FEATURE_ID_GLOBAL_IPERF &&
+> +	    event <= VTD_EVNT_MAX && is_portid_port(portid))
+> +		return 0;
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static u64 vtd_read_event_counter(struct fme_perf_priv *priv, u32 event,
+> +				  u32 portid)
+> +{
+> +	void __iomem *base = priv->ioaddr;
+> +	u64 v;
+> +
+> +	event += (portid * (VTD_EVNT_MAX + 1));
+> +
+> +	v = readq(base + VTD_CTRL);
+> +	v &= ~VTD_CTRL_EVNT;
+> +	v |= FIELD_PREP(VTD_CTRL_EVNT, event);
+> +	writeq(v, base + VTD_CTRL);
+> +
+> +	if (readq_poll_timeout_atomic(base + VTD_CNTR, v,
+> +				      FIELD_GET(VTD_CNTR_EVNT, v) == event,
+> +				      1, PERF_TIMEOUT)) {
+> +		dev_err(priv->dev, "timeout, unmatched vtd event code in counter register.\n");
+> +		return 0;
+> +	}
+> +
+> +	v = readq(base + VTD_CNTR);
+> +	return FIELD_GET(VTD_CNTR_EVNT_CNTR, v);
+> +}
+> +
+> +static int vtd_sip_event_init(struct fme_perf_priv *priv, u32 event, u32 portid)
+> +{
+> +	if (priv->id == FME_FEATURE_ID_GLOBAL_IPERF &&
+> +	    event <= VTD_SIP_EVNT_MAX && is_portid_root(portid))
+> +		return 0;
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static u64 vtd_sip_read_event_counter(struct fme_perf_priv *priv, u32 event,
+> +				      u32 portid)
+> +{
+> +	void __iomem *base = priv->ioaddr;
+> +	u64 v;
+> +
+> +	v = readq(base + VTD_SIP_CTRL);
+> +	v &= ~VTD_SIP_CTRL_EVNT;
+> +	v |= FIELD_PREP(VTD_SIP_CTRL_EVNT, event);
+> +	writeq(v, base + VTD_SIP_CTRL);
+> +
+> +	if (readq_poll_timeout_atomic(base + VTD_SIP_CNTR, v,
+> +				      FIELD_GET(VTD_SIP_CNTR_EVNT, v) == event,
+> +				      1, PERF_TIMEOUT)) {
+> +		dev_err(priv->dev, "timeout, unmatched vtd sip event code in counter register\n");
+> +		return 0;
+> +	}
+> +
+> +	v = readq(base + VTD_SIP_CNTR);
+> +	return FIELD_GET(VTD_SIP_CNTR_EVNT_CNTR, v);
+> +}
+> +
+> +static struct fme_perf_event_ops fme_perf_event_ops[] = {
+> +	[FME_EVTYPE_BASIC]	= {.event_init = basic_event_init,
+> +				   .read_counter = basic_read_event_counter,},
+> +	[FME_EVTYPE_CACHE]	= {.event_init = cache_event_init,
+> +				   .read_counter = cache_read_event_counter,},
+> +	[FME_EVTYPE_FABRIC]	= {.event_init = fabric_event_init,
+> +				   .event_destroy = fabric_event_destroy,
+> +				   .read_counter = fabric_read_event_counter,},
+> +	[FME_EVTYPE_VTD]	= {.event_init = vtd_event_init,
+> +				   .read_counter = vtd_read_event_counter,},
+> +	[FME_EVTYPE_VTD_SIP]	= {.event_init = vtd_sip_event_init,
+> +				   .read_counter = vtd_sip_read_event_counter,},
+> +};
+> +
+> +static ssize_t fme_perf_event_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct dev_ext_attribute *eattr;
+> +	unsigned long config;
+> +	char *ptr = buf;
+> +
+> +	eattr = container_of(attr, struct dev_ext_attribute, attr);
+> +	config = (unsigned long)eattr->var;
+> +
+> +	ptr += sprintf(ptr, "event=0x%02x", (unsigned int)get_event(config));
+> +	ptr += sprintf(ptr, ",evtype=0x%02x", (unsigned int)get_evtype(config));
+> +
+> +	if (is_portid_root(get_portid(config)))
+> +		ptr += sprintf(ptr, ",portid=0x%02x\n", FME_PORTID_ROOT);
+> +	else
+> +		ptr += sprintf(ptr, ",portid=?\n");
+> +
+> +	return (ssize_t)(ptr - buf);
+> +}
+> +
+> +#define FME_EVENT_ATTR(_name) \
+> +	__ATTR(_name, 0444, fme_perf_event_show, NULL)
+> +
+> +#define FME_PORT_EVENT_CONFIG(_event, _type)				\
+> +	(void *)((((_event) << FME_EVENT_SHIFT) & FME_EVENT_MASK) |	\
+> +		(((_type) << FME_EVTYPE_SHIFT) & FME_EVTYPE_MASK))
+> +
+> +#define FME_EVENT_CONFIG(_event, _type)					\
+> +	(void *)((((_event) << FME_EVENT_SHIFT) & FME_EVENT_MASK) |	\
+> +		(((_type) << FME_EVTYPE_SHIFT) & FME_EVTYPE_MASK) |	\
+> +		(FME_PORTID_ROOT << FME_PORTID_SHIFT))
+> +
+> +/* FME Perf Basic Events */
+> +#define FME_EVENT_BASIC(_name, _event)					\
+> +static struct dev_ext_attribute fme_perf_event_##_name = {		\
+> +	.attr = FME_EVENT_ATTR(_name),					\
+> +	.var = FME_EVENT_CONFIG(_event, FME_EVTYPE_BASIC),		\
+> +}
+> +
+> +FME_EVENT_BASIC(clock, BASIC_EVNT_CLK);
+> +
+> +static struct attribute *fme_perf_basic_events_attrs[] = {
+> +	&fme_perf_event_clock.attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group fme_perf_basic_events_group = {
+> +	.name = "events",
+> +	.attrs = fme_perf_basic_events_attrs,
+> +};
+> +
+> +/* FME Perf Fabric Events */
+> +#define FME_EVENT_FABRIC(_name, _event)					\
+> +static struct dev_ext_attribute fme_perf_event_fab_##_name = {		\
+> +	.attr = FME_EVENT_ATTR(fab_##_name),				\
+> +	.var = FME_EVENT_CONFIG(_event, FME_EVTYPE_FABRIC),		\
+> +}
+> +
+> +#define FME_EVENT_FABRIC_PORT(_name, _event)				\
+> +static struct dev_ext_attribute fme_perf_event_fab_port_##_name = {	\
+> +	.attr = FME_EVENT_ATTR(fab_port_##_name),			\
+> +	.var = FME_PORT_EVENT_CONFIG(_event, FME_EVTYPE_FABRIC),	\
+> +}
+> +
+> +FME_EVENT_FABRIC(pcie0_read,  FAB_EVNT_PCIE0_RD);
+> +FME_EVENT_FABRIC(pcie0_write, FAB_EVNT_PCIE0_WR);
+> +FME_EVENT_FABRIC(pcie1_read,  FAB_EVNT_PCIE1_RD);
+> +FME_EVENT_FABRIC(pcie1_write, FAB_EVNT_PCIE1_WR);
+> +FME_EVENT_FABRIC(upi_read,    FAB_EVNT_UPI_RD);
+> +FME_EVENT_FABRIC(upi_write,   FAB_EVNT_UPI_WR);
+> +FME_EVENT_FABRIC(mmio_read,   FAB_EVNT_MMIO_RD);
+> +FME_EVENT_FABRIC(mmio_write,  FAB_EVNT_MMIO_WR);
+> +
+> +FME_EVENT_FABRIC_PORT(pcie0_read,  FAB_EVNT_PCIE0_RD);
+> +FME_EVENT_FABRIC_PORT(pcie0_write, FAB_EVNT_PCIE0_WR);
+> +FME_EVENT_FABRIC_PORT(pcie1_read,  FAB_EVNT_PCIE1_RD);
+> +FME_EVENT_FABRIC_PORT(pcie1_write, FAB_EVNT_PCIE1_WR);
+> +FME_EVENT_FABRIC_PORT(upi_read,    FAB_EVNT_UPI_RD);
+> +FME_EVENT_FABRIC_PORT(upi_write,   FAB_EVNT_UPI_WR);
+> +FME_EVENT_FABRIC_PORT(mmio_read,   FAB_EVNT_MMIO_RD);
+> +FME_EVENT_FABRIC_PORT(mmio_write,  FAB_EVNT_MMIO_WR);
+> +
+> +static struct attribute *fme_perf_fabric_events_attrs[] = {
+> +	&fme_perf_event_fab_pcie0_read.attr.attr,
+> +	&fme_perf_event_fab_pcie0_write.attr.attr,
+> +	&fme_perf_event_fab_pcie1_read.attr.attr,
+> +	&fme_perf_event_fab_pcie1_write.attr.attr,
+> +	&fme_perf_event_fab_upi_read.attr.attr,
+> +	&fme_perf_event_fab_upi_write.attr.attr,
+> +	&fme_perf_event_fab_mmio_read.attr.attr,
+> +	&fme_perf_event_fab_mmio_write.attr.attr,
+> +	&fme_perf_event_fab_port_pcie0_read.attr.attr,
+> +	&fme_perf_event_fab_port_pcie0_write.attr.attr,
+> +	&fme_perf_event_fab_port_pcie1_read.attr.attr,
+> +	&fme_perf_event_fab_port_pcie1_write.attr.attr,
+> +	&fme_perf_event_fab_port_upi_read.attr.attr,
+> +	&fme_perf_event_fab_port_upi_write.attr.attr,
+> +	&fme_perf_event_fab_port_mmio_read.attr.attr,
+> +	&fme_perf_event_fab_port_mmio_write.attr.attr,
+> +	NULL,
+> +};
+> +
+> +static umode_t fme_perf_fabric_events_visible(struct kobject *kobj,
+> +					      struct attribute *attr, int n)
+> +{
+> +	struct pmu *pmu = dev_get_drvdata(kobj_to_dev(kobj));
+> +	struct fme_perf_priv *priv = to_fme_perf_priv(pmu);
+> +	struct dev_ext_attribute *eattr;
+> +	u64 var;
+> +
+> +	eattr = container_of(attr, struct dev_ext_attribute, attr.attr);
+> +	var = (u64)eattr->var;
+> +
+> +	if (is_fabric_event_supported(priv, get_event(var), get_portid(var)))
+> +		return attr->mode;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct attribute_group fme_perf_fabric_events_group = {
+> +	.name = "events",
+> +	.attrs = fme_perf_fabric_events_attrs,
+> +	.is_visible = fme_perf_fabric_events_visible,
+> +};
+> +
+> +/* FME Perf Cache Events */
+> +#define FME_EVENT_CACHE(_name, _event)					\
+> +static struct dev_ext_attribute fme_perf_event_cache_##_name = {	\
+> +	.attr = FME_EVENT_ATTR(cache_##_name),				\
+> +	.var = FME_EVENT_CONFIG(_event, FME_EVTYPE_CACHE),		\
+> +}
+> +
+> +FME_EVENT_CACHE(read_hit,     CACHE_EVNT_RD_HIT);
+> +FME_EVENT_CACHE(read_miss,    CACHE_EVNT_RD_MISS);
+> +FME_EVENT_CACHE(write_hit,    CACHE_EVNT_WR_HIT);
+> +FME_EVENT_CACHE(write_miss,   CACHE_EVNT_WR_MISS);
+> +FME_EVENT_CACHE(hold_request, CACHE_EVNT_HOLD_REQ);
+> +FME_EVENT_CACHE(tx_req_stall, CACHE_EVNT_TX_REQ_STALL);
+> +FME_EVENT_CACHE(rx_req_stall, CACHE_EVNT_RX_REQ_STALL);
+> +FME_EVENT_CACHE(eviction,     CACHE_EVNT_EVICTIONS);
+> +FME_EVENT_CACHE(data_write_port_contention, CACHE_EVNT_DATA_WR_PORT_CONTEN);
+> +FME_EVENT_CACHE(tag_write_port_contention,  CACHE_EVNT_TAG_WR_PORT_CONTEN);
+> +
+> +static struct attribute *fme_perf_cache_events_attrs[] = {
+> +	&fme_perf_event_cache_read_hit.attr.attr,
+> +	&fme_perf_event_cache_read_miss.attr.attr,
+> +	&fme_perf_event_cache_write_hit.attr.attr,
+> +	&fme_perf_event_cache_write_miss.attr.attr,
+> +	&fme_perf_event_cache_hold_request.attr.attr,
+> +	&fme_perf_event_cache_tx_req_stall.attr.attr,
+> +	&fme_perf_event_cache_rx_req_stall.attr.attr,
+> +	&fme_perf_event_cache_eviction.attr.attr,
+> +	&fme_perf_event_cache_data_write_port_contention.attr.attr,
+> +	&fme_perf_event_cache_tag_write_port_contention.attr.attr,
+> +	NULL,
+> +};
+> +
+> +static umode_t fme_perf_events_visible(struct kobject *kobj,
+> +				       struct attribute *attr, int n)
+> +{
+> +	struct pmu *pmu = dev_get_drvdata(kobj_to_dev(kobj));
+> +	struct fme_perf_priv *priv = to_fme_perf_priv(pmu);
+> +
+> +	return (priv->id == FME_FEATURE_ID_GLOBAL_IPERF) ? attr->mode : 0;
+> +}
+> +
+> +static const struct attribute_group fme_perf_cache_events_group = {
+> +	.name = "events",
+> +	.attrs = fme_perf_cache_events_attrs,
+> +	.is_visible = fme_perf_events_visible,
+> +};
+> +
+> +/* FME Perf VTD Events */
+> +#define FME_EVENT_VTD_PORT(_name, _event)				\
+> +static struct dev_ext_attribute fme_perf_event_vtd_port_##_name = {	\
+> +	.attr = FME_EVENT_ATTR(vtd_port_##_name),			\
+> +	.var = FME_PORT_EVENT_CONFIG(_event, FME_EVTYPE_VTD),		\
+> +}
+> +
+> +FME_EVENT_VTD_PORT(read_transaction,  VTD_EVNT_AFU_MEM_RD_TRANS);
+> +FME_EVENT_VTD_PORT(write_transaction, VTD_EVNT_AFU_MEM_WR_TRANS);
+> +FME_EVENT_VTD_PORT(devtlb_read_hit,   VTD_EVNT_AFU_DEVTLB_RD_HIT);
+> +FME_EVENT_VTD_PORT(devtlb_write_hit,  VTD_EVNT_AFU_DEVTLB_WR_HIT);
+> +FME_EVENT_VTD_PORT(devtlb_4k_fill,    VTD_EVNT_DEVTLB_4K_FILL);
+> +FME_EVENT_VTD_PORT(devtlb_2m_fill,    VTD_EVNT_DEVTLB_2M_FILL);
+> +FME_EVENT_VTD_PORT(devtlb_1g_fill,    VTD_EVNT_DEVTLB_1G_FILL);
+> +
+> +static struct attribute *fme_perf_vtd_events_attrs[] = {
+> +	&fme_perf_event_vtd_port_read_transaction.attr.attr,
+> +	&fme_perf_event_vtd_port_write_transaction.attr.attr,
+> +	&fme_perf_event_vtd_port_devtlb_read_hit.attr.attr,
+> +	&fme_perf_event_vtd_port_devtlb_write_hit.attr.attr,
+> +	&fme_perf_event_vtd_port_devtlb_4k_fill.attr.attr,
+> +	&fme_perf_event_vtd_port_devtlb_2m_fill.attr.attr,
+> +	&fme_perf_event_vtd_port_devtlb_1g_fill.attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group fme_perf_vtd_events_group = {
+> +	.name = "events",
+> +	.attrs = fme_perf_vtd_events_attrs,
+> +	.is_visible = fme_perf_events_visible,
+> +};
+> +
+> +/* FME Perf VTD SIP Events */
+> +#define FME_EVENT_VTD_SIP(_name, _event)				\
+> +static struct dev_ext_attribute fme_perf_event_vtd_sip_##_name = {	\
+> +	.attr = FME_EVENT_ATTR(vtd_sip_##_name),			\
+> +	.var = FME_EVENT_CONFIG(_event, FME_EVTYPE_VTD_SIP),		\
+> +}
+> +
+> +FME_EVENT_VTD_SIP(iotlb_4k_hit,  VTD_SIP_EVNT_IOTLB_4K_HIT);
+> +FME_EVENT_VTD_SIP(iotlb_2m_hit,  VTD_SIP_EVNT_IOTLB_2M_HIT);
+> +FME_EVENT_VTD_SIP(iotlb_1g_hit,  VTD_SIP_EVNT_IOTLB_1G_HIT);
+> +FME_EVENT_VTD_SIP(slpwc_l3_hit,  VTD_SIP_EVNT_SLPWC_L3_HIT);
+> +FME_EVENT_VTD_SIP(slpwc_l4_hit,  VTD_SIP_EVNT_SLPWC_L4_HIT);
+> +FME_EVENT_VTD_SIP(rcc_hit,       VTD_SIP_EVNT_RCC_HIT);
+> +FME_EVENT_VTD_SIP(iotlb_4k_miss, VTD_SIP_EVNT_IOTLB_4K_MISS);
+> +FME_EVENT_VTD_SIP(iotlb_2m_miss, VTD_SIP_EVNT_IOTLB_2M_MISS);
+> +FME_EVENT_VTD_SIP(iotlb_1g_miss, VTD_SIP_EVNT_IOTLB_1G_MISS);
+> +FME_EVENT_VTD_SIP(slpwc_l3_miss, VTD_SIP_EVNT_SLPWC_L3_MISS);
+> +FME_EVENT_VTD_SIP(slpwc_l4_miss, VTD_SIP_EVNT_SLPWC_L4_MISS);
+> +FME_EVENT_VTD_SIP(rcc_miss,      VTD_SIP_EVNT_RCC_MISS);
+> +
+> +static struct attribute *fme_perf_vtd_sip_events_attrs[] = {
+> +	&fme_perf_event_vtd_sip_iotlb_4k_hit.attr.attr,
+> +	&fme_perf_event_vtd_sip_iotlb_2m_hit.attr.attr,
+> +	&fme_perf_event_vtd_sip_iotlb_1g_hit.attr.attr,
+> +	&fme_perf_event_vtd_sip_slpwc_l3_hit.attr.attr,
+> +	&fme_perf_event_vtd_sip_slpwc_l4_hit.attr.attr,
+> +	&fme_perf_event_vtd_sip_rcc_hit.attr.attr,
+> +	&fme_perf_event_vtd_sip_iotlb_4k_miss.attr.attr,
+> +	&fme_perf_event_vtd_sip_iotlb_2m_miss.attr.attr,
+> +	&fme_perf_event_vtd_sip_iotlb_1g_miss.attr.attr,
+> +	&fme_perf_event_vtd_sip_slpwc_l3_miss.attr.attr,
+> +	&fme_perf_event_vtd_sip_slpwc_l4_miss.attr.attr,
+> +	&fme_perf_event_vtd_sip_rcc_miss.attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group fme_perf_vtd_sip_events_group = {
+> +	.name = "events",
+> +	.attrs = fme_perf_vtd_sip_events_attrs,
+> +	.is_visible = fme_perf_events_visible,
+> +};
+> +
+> +static const struct attribute_group *fme_perf_events_groups[] = {
+> +	&fme_perf_basic_events_group,
+> +	&fme_perf_cache_events_group,
+> +	&fme_perf_fabric_events_group,
+> +	&fme_perf_vtd_events_group,
+> +	&fme_perf_vtd_sip_events_group,
+> +	NULL,
+> +};
+> +
+> +static struct fme_perf_event_ops *get_event_ops(u32 evtype)
+> +{
+> +	if (evtype > FME_EVTYPE_MAX)
+> +		return NULL;
+> +
+> +	return &fme_perf_event_ops[evtype];
+> +}
+> +
+> +static void fme_perf_event_destroy(struct perf_event *event)
+> +{
+> +	struct fme_perf_event_ops *ops = get_event_ops(event->hw.event_base);
+> +	struct fme_perf_priv *priv = to_fme_perf_priv(event->pmu);
+> +
+> +	if (ops->event_destroy)
+> +		ops->event_destroy(priv, event->hw.idx, event->hw.config_base);
+> +}
+> +
+> +static int fme_perf_event_init(struct perf_event *event)
+> +{
+> +	struct fme_perf_priv *priv = to_fme_perf_priv(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	struct fme_perf_event_ops *ops;
+> +	u32 eventid, evtype, portid;
+> +
+> +	/* test the event attr type check for PMU enumeration */
+> +	if (event->attr.type != event->pmu->type)
+> +		return -ENOENT;
+> +
+> +	/*
+> +	 * fme counters are shared across all cores.
+> +	 * Therefore, it does not support per-process mode.
+> +	 * Also, it does not support event sampling mode.
+> +	 */
+> +	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+> +		return -EINVAL;
+> +
+> +	if (event->cpu < 0)
+> +		return -EINVAL;
+> +
+> +	eventid = get_event(event->attr.config);
+> +	portid = get_portid(event->attr.config);
+> +	evtype = get_evtype(event->attr.config);
+> +	if (evtype > FME_EVTYPE_MAX)
+> +		return -EINVAL;
+> +
+> +	hwc->event_base = evtype;
+> +	hwc->idx = (int)eventid;
+> +	hwc->config_base = portid;
+> +
+> +	event->destroy = fme_perf_event_destroy;
+> +
+> +	dev_dbg(priv->dev, "%s event=0x%x, evtype=0x%x, portid=0x%x,\n",
+> +		__func__, eventid, evtype, portid);
+> +
+> +	ops = get_event_ops(evtype);
+> +	if (ops->event_init)
+> +		return ops->event_init(priv, eventid, portid);
+> +
+> +	return 0;
+> +}
+> +
+> +static void fme_perf_event_update(struct perf_event *event)
+> +{
+> +	struct fme_perf_event_ops *ops = get_event_ops(event->hw.event_base);
+> +	struct fme_perf_priv *priv = to_fme_perf_priv(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	u64 now, prev, delta;
+> +
+> +	now = ops->read_counter(priv, (u32)hwc->idx, hwc->config_base);
+> +	prev = local64_read(&hwc->prev_count);
+> +	delta = now - prev;
+> +
+> +	local64_add(delta, &event->count);
+> +}
+> +
+> +static void fme_perf_event_start(struct perf_event *event, int flags)
+> +{
+> +	struct fme_perf_event_ops *ops = get_event_ops(event->hw.event_base);
+> +	struct fme_perf_priv *priv = to_fme_perf_priv(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	u64 count;
+> +
+> +	count = ops->read_counter(priv, (u32)hwc->idx, hwc->config_base);
+> +	local64_set(&hwc->prev_count, count);
+> +}
+> +
+> +static void fme_perf_event_stop(struct perf_event *event, int flags)
+> +{
+> +	fme_perf_event_update(event);
+> +}
+> +
+> +static int fme_perf_event_add(struct perf_event *event, int flags)
+> +{
+> +	if (flags & PERF_EF_START)
+> +		fme_perf_event_start(event, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static void fme_perf_event_del(struct perf_event *event, int flags)
+> +{
+> +	fme_perf_event_stop(event, PERF_EF_UPDATE);
+> +}
+> +
+> +static void fme_perf_event_read(struct perf_event *event)
+> +{
+> +	fme_perf_event_update(event);
+> +}
+> +
+> +static void fme_perf_setup_hardware(struct fme_perf_priv *priv)
+> +{
+> +	void __iomem *base = priv->ioaddr;
+> +	u64 v;
+> +
+> +	/* read and save current working mode for fabric counters */
+> +	v = readq(base + FAB_CTRL);
+> +
+> +	if (FIELD_GET(FAB_PORT_FILTER, v) == FAB_PORT_FILTER_DISABLE)
+> +		priv->fab_port_id = FME_PORTID_ROOT;
+> +	else
+> +		priv->fab_port_id = FIELD_GET(FAB_PORT_ID, v);
+> +}
+> +
+> +static int fme_perf_pmu_register(struct platform_device *pdev,
+> +				 struct fme_perf_priv *priv)
+> +{
+> +	struct pmu *pmu = &priv->pmu;
+> +	char *name;
+> +	int ret;
+> +
+> +	spin_lock_init(&priv->fab_lock);
+> +
+> +	fme_perf_setup_hardware(priv);
+> +
+> +	pmu->task_ctx_nr =	perf_invalid_context;
+> +	pmu->attr_groups =	fme_perf_groups;
+> +	pmu->attr_update =	fme_perf_events_groups;
+> +	pmu->event_init =	fme_perf_event_init;
+> +	pmu->add =		fme_perf_event_add;
+> +	pmu->del =		fme_perf_event_del;
+> +	pmu->start =		fme_perf_event_start;
+> +	pmu->stop =		fme_perf_event_stop;
+> +	pmu->read =		fme_perf_event_read;
+> +	pmu->capabilities =	PERF_PMU_CAP_NO_INTERRUPT |
+> +				PERF_PMU_CAP_NO_EXCLUDE;
+> +
+> +	name = devm_kasprintf(priv->dev, GFP_KERNEL, "fme%d", pdev->id);
+> +
+> +	ret = perf_pmu_register(pmu, name, -1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static void fme_perf_pmu_unregister(struct fme_perf_priv *priv)
+> +{
+> +	perf_pmu_unregister(&priv->pmu);
+> +}
+> +
+> +static int fme_perf_init(struct platform_device *pdev,
+> +			 struct dfl_feature *feature)
+> +{
+> +	struct fme_perf_priv *priv;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->dev = &pdev->dev;
+> +	priv->ioaddr = feature->ioaddr;
+> +	priv->id = feature->id;
+> +
+> +	ret = fme_perf_pmu_register(pdev, priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	feature->priv = priv;
+> +	return 0;
+> +}
+> +
+> +static void fme_perf_uinit(struct platform_device *pdev,
+> +			   struct dfl_feature *feature)
+> +{
+> +	struct fme_perf_priv *priv = feature->priv;
+> +
+> +	fme_perf_pmu_unregister(priv);
+> +}
+> +
+> +const struct dfl_feature_id fme_perf_id_table[] = {
+> +	{.id = FME_FEATURE_ID_GLOBAL_IPERF,},
+> +	{.id = FME_FEATURE_ID_GLOBAL_DPERF,},
+> +	{0,}
+> +};
+> +
+> +const struct dfl_feature_ops fme_perf_ops = {
+> +	.init = fme_perf_init,
+> +	.uinit = fme_perf_uinit,
+> +};
+> diff --git a/drivers/fpga/dfl-fme.h b/drivers/fpga/dfl-fme.h
+> index 6685c8e..4195dd6 100644
+> --- a/drivers/fpga/dfl-fme.h
+> +++ b/drivers/fpga/dfl-fme.h
+> @@ -38,5 +38,7 @@ struct dfl_fme {
+>  extern const struct dfl_feature_ops fme_global_err_ops;
+>  extern const struct dfl_feature_id fme_global_err_id_table[];
+>  extern const struct attribute_group fme_global_err_group;
+> +extern const struct dfl_feature_ops fme_perf_ops;
+> +extern const struct dfl_feature_id fme_perf_id_table[];
+>  
+>  #endif /* __DFL_FME_H */
+> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> index 9f0e656..d312678 100644
+> --- a/drivers/fpga/dfl.h
+> +++ b/drivers/fpga/dfl.h
+> @@ -197,12 +197,14 @@ struct dfl_feature_driver {
+>   *		    feature dev (platform device)'s reources.
+>   * @ioaddr: mapped mmio resource address.
+>   * @ops: ops of this sub feature.
+> + * @priv: priv data of this feature.
+>   */
+>  struct dfl_feature {
+>  	u64 id;
+>  	int resource_index;
+>  	void __iomem *ioaddr;
+>  	const struct dfl_feature_ops *ops;
+> +	void *priv;
+>  };
+>  
+>  #define DEV_STATUS_IN_USE	0
+> -- 
+> 1.8.3.1
+> 
+
+For the fpga part, looks good to me. Let me take a look at the rest.
+
+Thanks,
+Moritz
