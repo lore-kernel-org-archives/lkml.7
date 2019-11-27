@@ -2,94 +2,181 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3E1C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382CFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5763E20715
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0352A20715
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:01:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eHCTU1QY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y/58F3q4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfK0S7g (ORCPT
+        id S1727179AbfK0TBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:59:36 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:44828 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbfK0S7g (ORCPT
+        Wed, 27 Nov 2019 14:01:19 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36652 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfK0TBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:59:36 -0500
-Received: by mail-qv1-f68.google.com with SMTP id t11so545124qvz.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:59:35 -0800 (PST)
+        Wed, 27 Nov 2019 14:01:19 -0500
+Received: by mail-pl1-f196.google.com with SMTP id d7so10202335pls.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 11:01:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=geVGu8MBW5PeHjvdy4rCo2MPVBJQGl//bajAqe2ly1A=;
-        b=eHCTU1QYxVuGhChIncMyHJ9Pm+6/dZy6dgMluWm3zrkYV9jdgNv+PuDkJdqjp/SQ68
-         OAUxXumGOl5myH27v6FfcWTuDGABtRiSSQMK+xtAX4a4jCFMCvADUT2oCN+GwyYYlTZV
-         YwQw+7TMamciR05gVvQZS1Tq4jRYuOAcAwghj/slaAzH/qIFSG5+RwI6zyiw2aVEwPI8
-         UBfV74BpdOo0iL2DNIcEMk6Metyucdu2pJfjg8BNCka4XchEnxLK4ZVVPzXe53AZXFys
-         XRx3BjrqTHHfWOezDRDr3bKoncCv+SKdRT/bXor99Ezi6spieeClLT4gsoP1gmDb9XWj
-         kehA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eAnHFgyJiPx1fiIRfzMvTGcNXS0KAsf3uk+CKAYZmOQ=;
+        b=Y/58F3q4kFg6bgZ+GKBOeyRth14K4XJaXSaX7j0JV73eKg0WGAUKypXjTwmXkCuJGb
+         r79Yfdh5ucPuwARv+OZi99p7jqBkeE4mULwsXqr0scuuJje9msDNz+2ZP6/WXYgDLZ7N
+         8cilwxePecUuN3ps77W903OmEQJG6xCFo5zKc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=geVGu8MBW5PeHjvdy4rCo2MPVBJQGl//bajAqe2ly1A=;
-        b=jBCmB76FCSmWKZntXnCj/ijfCu79GdBPA3IyW0EjkEwKzEwzLKGsnltVRWOih5+nBe
-         /sreDthTOzTRNg+tWf43gbxkAFiqntS0UvUssixQy64SVwI/OuR0bH6f5Hn0mPProNWs
-         0zemueHWhbtGgHWT2OtjV7uW09vbqbnUsQ1GVCtamxtzeEVSX90vCchVOMJw3DPO2CfN
-         BKnaHlQT4GK8q/dNJTcJL3rGAzm/p4sEC6CbjX16SHLpYCmFyzIj/TGdLiOtgkRvE+68
-         MRLKkLwlWBAN4Yo9sZDHF0Vchh0QBBRujrdo7OBjAlhCuljjvJxqCjMhF7hojIH3dVZ9
-         uhnw==
-X-Gm-Message-State: APjAAAW2cQp8BwCj3foDC7CHy7/iIUraUoT1rGeQxiyv9K3MPH71hbk1
-        BjPA4nBrlchFWJhDGwgK7hkVWevyIDgc5Tk23zDRiw==
-X-Google-Smtp-Source: APXvYqwzbioROwUxTls76I+kI8XT3+8LulhD/EKcnF1Xcb3Thi0WYWiroVHFIWuQe7i3Hx6HMIOZ7Twk+gkVIhU3wA0=
-X-Received: by 2002:ad4:4c4e:: with SMTP id cs14mr6646423qvb.198.1574881174864;
- Wed, 27 Nov 2019 10:59:34 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eAnHFgyJiPx1fiIRfzMvTGcNXS0KAsf3uk+CKAYZmOQ=;
+        b=D0jmIVh0IweRkqX1PKnbNOsekBAHwmiiPz5LfdBhTjRBWYAlOWxuslHJ4aGT300+Kn
+         DsnqKccoXjBhNCtVnPJKEI55xmLNIe822bq02v6E20JjU4uBxtxkHGMgd2jgPsprLYjy
+         MI9FOiftNNckWCBPjC2mOmVx3sz+nXGHwOMnSs1/CJpEvUwNZ8AiIMGz2AXRoOU0KWJT
+         ue9AMZvV2hVyJ8tZfg1/i+USWbW+kR5cf+GvCtTHxjFNatzuxg3ZizWxFWHscCKSg6P+
+         lZLTIvZEfupxTKjhVdScomm2Qln7Pad1VmCubJRNxulFegamRJzOs8z1saRRfhDgvTRy
+         XU3g==
+X-Gm-Message-State: APjAAAXb8Fe4nUxFojyXNR7j4riafYPB/W2WXWKBfr0sqxDR5SxUg9MM
+        3wH/4A8KzFVEeU7qqOICvX2A4CDvWzI=
+X-Google-Smtp-Source: APXvYqy79iv7PnhQlqmrqNVJxtIPIP4rBMv3lsjmDCXDY39LKJHn0NP4iNUzzX1iuf6k+2TtPWhpuQ==
+X-Received: by 2002:a17:902:6b45:: with SMTP id g5mr375764plt.159.1574881277136;
+        Wed, 27 Nov 2019 11:01:17 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l11sm3185823pff.120.2019.11.27.11.01.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 11:01:16 -0800 (PST)
+Date:   Wed, 27 Nov 2019 11:01:15 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     "Shiyunming (Seth, RTOS)" <shiyunming@huawei.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lizi (D)" <lizi4@huawei.com>, "Sunke (SK)" <sunke09@huawei.com>,
+        Jiangyangyang <jiangyangyang@huawei.com>,
+        Linzichang <linzichang@huawei.com>,
+        kernel-hardening@lists.openwall.com, Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: Questions about "security functions" and "suppression of
+ compilation alarms".
+Message-ID: <201911271013.38BA7015C6@keescook>
+References: <18FA40DC4B7A9742B8E58FC4CDA67429AFC83C55@dggeml526-mbx.china.huawei.com>
 MIME-Version: 1.0
-References: <20191127082145.6100-1-yuehaibing@huawei.com>
-In-Reply-To: <20191127082145.6100-1-yuehaibing@huawei.com>
-From:   Curtis Malainey <cujomalainey@google.com>
-Date:   Wed, 27 Nov 2019 10:59:24 -0800
-Message-ID: <CAOReqxhf4qU7DwLN104Mq_Q2BCdmPSC9sjJv2QsGY4uPEK-u6g@mail.gmail.com>
-Subject: Re: [PATCH -next] ASoC: rt5677: Fix build error without CONFIG_SPI
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Bard Liao <bardliao@realtek.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Ben Zhang <benzh@chromium.org>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <18FA40DC4B7A9742B8E58FC4CDA67429AFC83C55@dggeml526-mbx.china.huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 12:22 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> If CONFIG_SPI is n, SND_SOC_RT5677_SPI also is n, building fails:
->
-> sound/soc/codecs/rt5677.o: In function `rt5677_irq':
-> rt5677.c:(.text+0x2dbf): undefined reference to `rt5677_spi_hotword_detected'
-> sound/soc/codecs/rt5677.o: In function `rt5677_dsp_work':
-> rt5677.c:(.text+0x3709): undefined reference to `rt5677_spi_write'
->
-> This adds stub helpers to fix this.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 461c623270e4 ("ASoC: rt5677: Load firmware via SPI using delayed work")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Curtis Malainey <cujomalainey@chromium.org>
-> ---
->  sound/soc/codecs/rt5677-spi.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+On Wed, Nov 27, 2019 at 01:11:50PM +0000, Shiyunming (Seth, RTOS) wrote:
+> During the use of Linux, I found lots of C standard functions such
+> as memcpy and strcpy etc. These functions did not check the size of
+> the target buffer and easily introduced the security vulnerability of
+> buffer overflow.
+
+See CONFIG_FORTIFY_SOURCE (which enables such bounds checking):
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/string.h#n262
+and the plans for improvement: https://github.com/KSPP/linux/issues/6
+
+> And some compilation options are enabled to suppress compilation alarms,
+> for example (Wno-format-security Wno-pointer-sign Wno-frame-address
+> Wno-maybe-uninitialized Wno-format-overflow Wno-int-in-bool-context),
+> which may bring potential security problems.
+
+Each of these needs to be handled on a case-by-case basis. Kernel builds
+are expected to build without warnings, so before a new compiler flag
+can be added to the global build, all the instances need to be
+addressed. (Flags are regularly turned off because they are enabled by
+default in newer compiler versions but this causes too many warnings.)
+See the "W=1", "W=2", etc build options for enabling these:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/Makefile.extrawarn
+
+Once all instances of a warning are eliminated, these warnings can be
+moved to the top-level Makefile. Arnd Bergmann does a lot of this work
+and might be able to speak more coherently about this. :) For example,
+here is enabling of -Wmaybe-uninitialized back in the v4.10 kernel:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4324cb23f4569edcf76e637cdb3c1dfe8e8a85e4
+
+Speaking specifically to your list:
+
+-Wformat-security
+  This has tons of false positives, and likely requires fixing the
+  compiler.
+
+-Wpointer-sign
+  Lots of things in the kernel pass pointers around in weird ways. This
+  is disabled to allow normal operation (which, combined with
+  -fwrapv-pointer and -fwrapv via -fno-strict-overflow) means signed
+  things and pointers behave without "undefined behavior". A lot of work
+  would be needed all over the kernel to enable this warning (and part
+  of that would be incrementally removing unexpected overflows of both
+  unsigned and signed arithmetic).
+
+-Wframe-address
+  __builtin_frame_address() gets used in "safe" places on the
+  architectures where the limitations are understood, so adding this
+  warning doesn't gain anything because it's already rare and gets
+  some scrutiny.
+
+-Wmaybe-uninitialized
+  And linked above, this is enabled by default since v4.10.
+
+-Wformat-overflow
+  See https://git.kernel.org/linus/bd664f6b3e376a8ef4990f87d08271cc2d01ba9a
+  for details. Eliminating these warnings (there were 1500) needs to
+  happen before they can be turned back on. Any help here is very
+  welcome!
+
+-Wint-in-bool-context
+  See https://git.kernel.org/linus/a3bc88645e9293f5aaac9c05a185d9f1c0594c6c
+  where it was enabled again in v5.2 after Arnd cleaned up the associated
+  warnings.
+
+> In response to these circumstances, my question is:
+> (1) Does the kernel community think that using these functions and
+> compiling alarm suppression have security problems?
+
+Generally speaking, yes, of course, if we have tools that provide the
+code base with better security (or more specifically, a reduction in all
+bugs, not just those that may have security implications), we want to
+use them. However, such things need to have a false positive rate that is
+close to zero. If it has a high false positive rate, then there needs to
+be a strong indication that the true positives are very serious problems
+and some mechanism can be implemented to silence the false positives.
+
+>     If it is considered as a problem, will the developer be promoted
+> to fix it?
+
+Warnings seen from newly introduced code get fixed very quickly, yes.
+Problems that were already existing and are surfaced by new warnings
+tend to get less direct attention by maintainers since it creates a
+large amount of work where it is hard to measure the benefit. However,
+people contributing changes in these areas tend to be very well received.
+For example, Gustavo A. R. Silva did a huge amount of work to enable
+-Wimplicit-fallthrough: https://lwn.net/Articles/794944/
+
+>     If it is not considered as a problem, what is the reason?
+
+Hopefully I've explained the nuances in this email. :)
+
+> (2) The C11 specification contains security enhancement functions. What
+> is the policy of the community about them? Is there any plan to use
+> these functions?
+
+Which do you mean specifically? Generally speaking, the community is
+open to anything that can be reasonably maintained. :)
+
+Are there any features you've tried to enable and you'd be interested in
+submitting patches to fix?
+
+Thanks for the questions!
+
+-- 
+Kees Cook
