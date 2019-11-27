@@ -2,131 +2,152 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E494C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA79C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D07206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A53206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:27:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZymfxeSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfK0Q0V (ORCPT
+        id S1727130AbfK0Q1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:26:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:49798 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfK0Q0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:26:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C90AC30E;
-        Wed, 27 Nov 2019 08:26:19 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 943073F68E;
-        Wed, 27 Nov 2019 08:26:18 -0800 (PST)
-Date:   Wed, 27 Nov 2019 16:26:14 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Randy Dunlap <rdunlap@infradead.org>, eswara.kota@linux.intel.com,
-        bhelgaas@google.com
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: linux-next: Tree for Nov 27
- (drivers/pci/controller/dwc/pcie-designware-host.c)
-Message-ID: <20191127162614.GA6423@e121166-lin.cambridge.arm.com>
-References: <20191127155717.400a60de@canb.auug.org.au>
- <fc3586ef-a0a1-84b3-2e0e-b8ba5c41f229@infradead.org>
+        Wed, 27 Nov 2019 11:27:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42961 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726514AbfK0Q1A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 11:27:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574872019;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=K5j6toD0BFeVtaIARVqGdTgt6vile1DqjAIyA0acZ78=;
+        b=ZymfxeSvFWlzhaduOpHmbumIq2tUY7+Vv2sSAK313Azy71orDSk938FVt8LxHTwo8rRbgP
+        3UulzmKJ13YGr0WC/wHIlXXRI9NTxb+phyZH6igiZ1c5oHuwZ0MXTUv/4Y5CNZzKP84tf6
+        xTHxTQ235Yp4B8OmNbGbGZ10P9utSCc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-1MrmtW4TONip9Xmkn6yp9g-1; Wed, 27 Nov 2019 11:26:55 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F3F2010C58DA;
+        Wed, 27 Nov 2019 16:26:53 +0000 (UTC)
+Received: from ovpn-118-152.ams2.redhat.com (unknown [10.36.118.152])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8414E5D9D6;
+        Wed, 27 Nov 2019 16:26:49 +0000 (UTC)
+Message-ID: <0b8d7447e129539aec559fa797c07047f5a6a1b2.camel@redhat.com>
+Subject: Re: epoll_wait() performance
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        David Laight <David.Laight@ACULAB.COM>
+Cc:     'Marek Majkowski' <marek@cloudflare.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Date:   Wed, 27 Nov 2019 17:26:48 +0100
+In-Reply-To: <20191127164821.1c41deff@carbon>
+References: <bc84e68c0980466096b0d2f6aec95747@AcuMS.aculab.com>
+         <CAJPywTJYDxGQtDWLferh8ObjGp3JsvOn1om1dCiTOtY6S3qyVg@mail.gmail.com>
+         <5f4028c48a1a4673bd3b38728e8ade07@AcuMS.aculab.com>
+         <20191127164821.1c41deff@carbon>
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fc3586ef-a0a1-84b3-2e0e-b8ba5c41f229@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: 1MrmtW4TONip9Xmkn6yp9g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 07:55:57AM -0800, Randy Dunlap wrote:
-> On 11/26/19 8:57 PM, Stephen Rothwell wrote:
-> > Hi all,
+On Wed, 2019-11-27 at 16:48 +0100, Jesper Dangaard Brouer wrote:
+> On Wed, 27 Nov 2019 10:39:44 +0000 David Laight <David.Laight@ACULAB.COM> wrote:
+> 
+> > ...
+> > > > While using recvmmsg() to read multiple messages might seem a good idea, it is much
+> > > > slower than recv() when there is only one message (even recvmsg() is a lot slower).
+> > > > (I'm not sure why the code paths are so slow, I suspect it is all the copy_from_user()
+> > > > and faffing with the user iov[].)
+> > > > 
+> > > > So using poll() we repoll the fd after calling recv() to find is there is a second message.
+> > > > However the second poll has a significant performance cost (but less than using recvmmsg()).  
+> > > 
+> > > That sounds wrong. Single recvmmsg(), even when receiving only a
+> > > single message, should be faster than two syscalls - recv() and
+> > > poll().  
 > > 
-> > Please do not add any material for v5.6 to your linux-next included
-> > trees until after v5.5-rc1 has been released.
+> > My suspicion is the extra two copy_from_user() needed for each recvmsg are a
+> > significant overhead, most likely due to the crappy code that tries to stop
+> > the kernel buffer being overrun.
 > > 
-> > Changes since 20191126:
+> > I need to run the tests on a system with a 'home built' kernel to see how much
+> > difference this make (by seeing how much slower duplicating the copy makes it).
 > > 
+> > The system call cost of poll() gets factored over a reasonable number of sockets.
+> > So doing poll() on a socket with no data is a lot faster that the setup for recvmsg
+> > even allowing for looking up the fd.
+> > 
+> > This could be fixed by an extra flag to recvmmsg() to indicate that you only really
+> > expect one message and to call the poll() function before each subsequent receive.
+> > 
+> > There is also the 'reschedule' that Eric added to the loop in recvmmsg.
+> > I don't know how much that actually costs.
+> > In this case the process is likely to be running at a RT priority and pinned to a cpu.
+> > In some cases the cpu is also reserved (at boot time) so that 'random' other code can't use it.
+> > 
+> > We really do want to receive all these UDP packets in a timely manner.
+> > Although very low latency isn't itself an issue.
+> > The data is telephony audio with (typically) one packet every 20ms.
+> > The code only looks for packets every 10ms - that helps no end since, in principle,
+> > only a single poll()/epoll_wait() call (on all the sockets) is needed every 10ms.
 > 
-> on i386:
-> # CONFIG_PCI_MSI is not set
+> I have a simple udp_sink tool[1] that cycle through the different
+> receive socket system calls.  I gave it a quick spin on a F31 kernel
+> 5.3.12-300.fc31.x86_64 on a mlx5 100G interface, and I'm very surprised
+> to see a significant regression/slowdown for recvMmsg.
 > 
+> $ sudo ./udp_sink --port 9 --repeat 1 --count $((10**7))
+>           	run      count   	ns/pkt	pps		cycles	payload
+> recvMmsg/32  	run:  0	10000000	1461.41	684270.96	5261	18	 demux:1
+> recvmsg   	run:  0	10000000	889.82	1123824.84	3203	18	 demux:1
+> read      	run:  0	10000000	974.81	1025841.68	3509	18	 demux:1
+> recvfrom  	run:  0	10000000	1056.51	946513.44	3803	18	 demux:1
 > 
-> WARNING: unmet direct dependencies detected for PCIE_DW_HOST
->   Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
->   Selected by [y]:
->   - PCIE_INTEL_GW [=y] && PCI [=y] && OF [=y] && (X86 [=y] || COMPILE_TEST [=n])
-> 
-> and related build errors:
+> Normal recvmsg almost have double performance that recvmmsg.
 
-Dilip,
+For stream tests, the above is true, if the BH is able to push the
+packets to the socket fast enough. Otherwise the recvmmsg() will make
+the user space even faster, the BH will find the user space process
+sleeping more often and the BH will have to spend more time waking-up
+the process.
 
-I will have to drop your series which unfortunately forces Bjorn to pull
-my pci/dwc branch again, I don't think there is time for fixing it,
-given release timing and Stephen's request above.
+If a single receive queue is in use this condition is not easy to meet.
 
-Lorenzo
+Before spectre/meltdown and others mitigations using connected sockets
+and removing ct/nf was usually sufficient - at least in my scenarios -
+to make BH fast enough. 
 
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:72:15: error: variable ‘dw_pcie_msi_domain_info’ has initializer but incomplete type
->  static struct msi_domain_info dw_pcie_msi_domain_info = {
->                ^~~~~~~~~~~~~~~
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:3: error: ‘struct msi_domain_info’ has no member named ‘flags’
->   .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
->    ^~~~~
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:12: error: ‘MSI_FLAG_USE_DEF_DOM_OPS’ undeclared here (not in a function); did you mean ‘SIMPLE_DEV_PM_OPS’?
->   .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
->             ^~~~~~~~~~~~~~~~~~~~~~~~
->             SIMPLE_DEV_PM_OPS
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:39: error: ‘MSI_FLAG_USE_DEF_CHIP_OPS’ undeclared here (not in a function); did you mean ‘MSI_FLAG_USE_DEF_DOM_OPS’?
->   .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
->                                        ^~~~~~~~~~~~~~~~~~~~~~~~~
->                                        MSI_FLAG_USE_DEF_DOM_OPS
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:74:6: error: ‘MSI_FLAG_PCI_MSIX’ undeclared here (not in a function); did you mean ‘SS_FLAG_BITS’?
->       MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
->       ^~~~~~~~~~~~~~~~~
->       SS_FLAG_BITS
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:74:26: error: ‘MSI_FLAG_MULTI_PCI_MSI’ undeclared here (not in a function); did you mean ‘MSI_FLAG_PCI_MSIX’?
->       MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
->                           ^~~~~~~~~~~~~~~~~~~~~~
->                           MSI_FLAG_PCI_MSIX
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:11: warning: excess elements in struct initializer
->   .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
->            ^
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:11: note: (near initialization for ‘dw_pcie_msi_domain_info’)
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:75:3: error: ‘struct msi_domain_info’ has no member named ‘chip’
->   .chip = &dw_pcie_msi_irq_chip,
->    ^~~~
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:75:10: warning: excess elements in struct initializer
->   .chip = &dw_pcie_msi_irq_chip,
->           ^
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:75:10: note: (near initialization for ‘dw_pcie_msi_domain_info’)
-> ../drivers/pci/controller/dwc/pcie-designware-host.c: In function ‘dw_pcie_allocate_domains’:
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:267:19: error: implicit declaration of function ‘pci_msi_create_irq_domain’; did you mean ‘pci_msi_get_device_domain’? [-Werror=implicit-function-declaration]
->   pp->msi_domain = pci_msi_create_irq_domain(fwnode,
->                    ^~~~~~~~~~~~~~~~~~~~~~~~~
->                    pci_msi_get_device_domain
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:267:17: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
->   pp->msi_domain = pci_msi_create_irq_domain(fwnode,
->                  ^
-> ../drivers/pci/controller/dwc/pcie-designware-host.c: At top level:
-> ../drivers/pci/controller/dwc/pcie-designware-host.c:72:31: error: storage size of ‘dw_pcie_msi_domain_info’ isn’t known
->  static struct msi_domain_info dw_pcie_msi_domain_info = {
->                                ^~~~~~~~~~~~~~~~~~~~~~~
-> 
-> 
-> -- 
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+But it's no more the case, and I have to use 2 or more different
+receive queues.
+
+@David: If I read your message correctly, the pkt rate you are dealing
+with is quite low... are we talking about tput or latency? I guess
+latency could be measurably higher with recvmmsg() in respect to other
+syscall. How do you measure the releative performances of recvmmsg()
+and recv() ? with micro-benchmark/rdtsc()? Am I right that you are
+usually getting a single packet per recvmmsg() call?
+
+Thanks,
+
+PAolo
+
