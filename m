@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2A0C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F104C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED34221771
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7280C21789
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888598;
-	bh=Hkb8CNfhy9QgqCbkcvJJlCm1/a3KGg7NG2/yzxtl838=;
+	s=default; t=1574888602;
+	bh=0ptIyz2rwTGU2srGHJGqVEpxkJkoXMIW8fkoSVCQ1YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KNYN8kRaeZ+Jnr4fZjMuouiKsbXd8VHz0amsHeb/+i48+cBA2fFJ4AHXFlXCfnIs7
-	 D3hMXA3OgbhnvYp4OqlbeoVHzXurmmQUn9foftcjbl+eZBkrVfd3GvfhrCT+u3/Leb
-	 ttw3gg7aRBxX4PmfJ1IQEePLfaKCQDEBQ6cvqRk0=
+	b=BWtyue9RNb5DdBnXQRvpU8xtFOMzZBwpNPjSxNx54Qa5sdgU3Pi1yG3ddTMNsGjJt
+	 jjPM1YuOWSn/F3WuYAI2WA8+rwVt9CnVcDrLf7dNiOCFl9rxttifUOVk8j9f61bY8+
+	 XVqE95PcJNLWKB5P5N0rylzAgKuBBizQz/FMc/Fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732021AbfK0VDR (ORCPT
+        id S1732025AbfK0VDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:03:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56360 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:03:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732014AbfK0VDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:03:13 -0500
+        id S1730860AbfK0VDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:03:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A88C21850;
-        Wed, 27 Nov 2019 21:03:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF6722176D;
+        Wed, 27 Nov 2019 21:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888592;
-        bh=Hkb8CNfhy9QgqCbkcvJJlCm1/a3KGg7NG2/yzxtl838=;
+        s=default; t=1574888595;
+        bh=0ptIyz2rwTGU2srGHJGqVEpxkJkoXMIW8fkoSVCQ1YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yMi5XBOlpCJBcTLFBGLgNoov26E9MSGTRKOySKdYS5htRbi243LXQHtaILO1aB4o9
-         EAGG6AurlF+mjU7DBuypGIohFg2zaSvwYOQ+LkIxrHTNYhyhmrhui9yawksLdxTte2
-         uvlb+pKVoHnkxwfn4XoAOnoJSC5D0ENWpLn+I7Uk=
+        b=lGT/7KDiGupKPZgJtTobamnxAtmplylwvn681e8DMddj518Vv+nUCAu2DWblEa3KS
+         AY1XFZqj5Vf5ORhkWJJtZlZOFKFEDAUVXF+Q5TofT87/QiFBj8fGHeYr02ZDuYAibg
+         ChBxO0iSpaJF2GbpXzk3htS3MOSwjvTAcvIFWWbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 142/306] bpf: devmap: fix wrong interface selection in notifier_call
-Date:   Wed, 27 Nov 2019 21:29:52 +0100
-Message-Id: <20191127203125.715486640@linuxfoundation.org>
+Subject: [PATCH 4.19 188/306] net: hns3: bugfix for hclge_mdio_write and hclge_mdio_read
+Date:   Wed, 27 Nov 2019 21:30:38 +0100
+Message-Id: <20191127203128.992694144@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,42 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit f592f804831f1cf9d1f9966f58c80f150e6829b5 ]
+[ Upstream commit 1c12493809924deda6c0834cb2f2c5a6dc786390 ]
 
-The dev_map_notification() removes interface in devmap if
-unregistering interface's ifindex is same.
-But only checking ifindex is not enough because other netns can have
-same ifindex. so that wrong interface selection could occurred.
-Hence netdev pointer comparison code is added.
+When there is a PHY, the driver needs to complete some operations through
+MDIO during reset reinitialization, so HCLGE_STATE_CMD_DISABLE is more
+suitable than HCLGE_STATE_RST_HANDLING to prevent the MDIO operation from
+being sent during the hardware reset.
 
-v2: compare netdev pointer instead of using net_eq() (Daniel Borkmann)
-v1: Initial patch
-
-Fixes: 2ddf71e23cc2 ("net: add notifier hooks for devmap bpf map")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: b50ae26c57cb ("net: hns3: never send command queue message to IMP when reset)
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/devmap.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index fc500ca464d00..1defea4b27553 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -520,8 +520,7 @@ static int dev_map_notification(struct notifier_block *notifier,
- 				struct bpf_dtab_netdev *dev, *odev;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
+index 398971a062f47..03491e8ebb730 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
+@@ -54,7 +54,7 @@ static int hclge_mdio_write(struct mii_bus *bus, int phyid, int regnum,
+ 	struct hclge_desc desc;
+ 	int ret;
  
- 				dev = READ_ONCE(dtab->netdev_map[i]);
--				if (!dev ||
--				    dev->dev->ifindex != netdev->ifindex)
-+				if (!dev || netdev != dev->dev)
- 					continue;
- 				odev = cmpxchg(&dtab->netdev_map[i], dev, NULL);
- 				if (dev == odev)
+-	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
++	if (test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state))
+ 		return 0;
+ 
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_MDIO_CONFIG, false);
+@@ -92,7 +92,7 @@ static int hclge_mdio_read(struct mii_bus *bus, int phyid, int regnum)
+ 	struct hclge_desc desc;
+ 	int ret;
+ 
+-	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
++	if (test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state))
+ 		return 0;
+ 
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_MDIO_CONFIG, true);
 -- 
 2.20.1
 
