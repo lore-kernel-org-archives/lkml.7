@@ -2,52 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EABC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73591C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E6B21780
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C9862178F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887387;
-	bh=0NAakbf0aFFUr3C1ssYzRRr9w/w1NNglKrosxTZzK+w=;
+	s=default; t=1574887391;
+	bh=q1PI2dTJwyLmqkca9709uEYoymtSc7EhaZx1/pKiNBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZF+PPd20m//506QO4bcUTLy1SzRQd7NliifzSN9QrQd7mSAH0IiOn5Am1n/OZ9/CM
-	 lqNc+Bfs9AYQPjIVlDTqlvNKPIhsjbDIBAaoGuTvEI5GO/5sH96pHyXF7X7VmD7kWu
-	 QmSJfEesDjQRojmsy0Oz17rDlfu6tna6Q/M0sCQA=
+	b=OnQODpmMkt4MJ5KjIDCYkB6BBO7pbDmX6fp0wUZzMg/pr2cJJIUjoV8qe30UUhKMf
+	 Ae2BjUidCDciIxpa63OuE9TsXcYuibJc0IAsfVe9I4s3+t5Nzw2t0iSNIpUL40y7T7
+	 F2QOPBM0m8Lmnkqs3NLiu5099a9yTtbSD8dA+P+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbfK0UnG (ORCPT
+        id S1728240AbfK0UnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:43:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50142 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:43:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727985AbfK0UnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:43:02 -0500
+        id S1727985AbfK0UnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:43:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86369217BA;
-        Wed, 27 Nov 2019 20:43:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ECFC217BA;
+        Wed, 27 Nov 2019 20:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887382;
-        bh=0NAakbf0aFFUr3C1ssYzRRr9w/w1NNglKrosxTZzK+w=;
+        s=default; t=1574887386;
+        bh=q1PI2dTJwyLmqkca9709uEYoymtSc7EhaZx1/pKiNBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WamoV0JqFOmtx6ME1e3D1xKO9o36JA1A2dc+3QsD8dNP9gv1kksWy0gPrNRIWKbce
-         Dfgy1gIs95ooqQF2i1EiW4TqFjJeTHxL6WspF4gYgPVU2W+oyX8K+KnqRnkvnl1vFM
-         PMYa8aQA9sBgSguxaZj6MVdNCEEe9myUiRWpxzwM=
+        b=LJ2FMl7bfD7vYetC4AtWoNtuIUtvGO93lpIUJlWQ++AeBMq+09ZQb2qGxEtROWBA7
+         d3OdKXbedWLtZRqPSqfG6R8Yp+26tUbEbwgr8byKvmhXRnjlkaYrTRMO1Kc9FQw2eS
+         Znx/TVGcLd5JTWY9UExnFSF3WVz4hFmxN8KSC0SE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Guy Briggs <rgb@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 089/151] audit: print empty EXECVE args
-Date:   Wed, 27 Nov 2019 21:31:12 +0100
-Message-Id: <20191127203037.037579187@linuxfoundation.org>
+Subject: [PATCH 4.9 091/151] rtl8xxxu: Fix missing break in switch
+Date:   Wed, 27 Nov 2019 21:31:14 +0100
+Message-Id: <20191127203037.298509334@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -60,47 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Guy Briggs <rgb@redhat.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-[ Upstream commit ea956d8be91edc702a98b7fe1f9463e7ca8c42ab ]
+[ Upstream commit 307b00c5e695857ca92fc6a4b8ab6c48f988a1b1 ]
 
-Empty executable arguments were being skipped when printing out the list
-of arguments in an EXECVE record, making it appear they were somehow
-lost.  Include empty arguments as an itemized empty string.
+Add missing break statement in order to prevent the code from falling
+through to the default case.
 
-Reproducer:
-	autrace /bin/ls "" "/etc"
-	ausearch --start recent -m execve -i | grep EXECVE
-	type=EXECVE msg=audit(10/03/2018 13:04:03.208:1391) : argc=3 a0=/bin/ls a2=/etc
-
-With fix:
-	type=EXECVE msg=audit(10/03/2018 21:51:38.290:194) : argc=3 a0=/bin/ls a1= a2=/etc
-	type=EXECVE msg=audit(1538617898.290:194): argc=3 a0="/bin/ls" a1="" a2="/etc"
-
-Passes audit-testsuite.  GH issue tracker at
-https://github.com/linux-audit/audit-kernel/issues/99
-
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-[PM: cleaned up the commit metadata]
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/auditsc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index c2aaf539728fb..854e90be1a023 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -1096,7 +1096,7 @@ static void audit_log_execve_info(struct audit_context *context,
- 		}
- 
- 		/* write as much as we can to the audit log */
--		if (len_buf > 0) {
-+		if (len_buf >= 0) {
- 			/* NOTE: some magic numbers here - basically if we
- 			 *       can't fit a reasonable amount of data into the
- 			 *       existing audit buffer, flush it and start with
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 4e725d165aa60..e78545d4add3c 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -5660,6 +5660,7 @@ static int rtl8xxxu_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
+ 		break;
+ 	case WLAN_CIPHER_SUITE_TKIP:
+ 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_MMIC;
++		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
 -- 
 2.20.1
 
