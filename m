@@ -2,85 +2,143 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDE4C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF61CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBACD20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF9620835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Wf5h3r66"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAHd+Ygp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfK0ThM (ORCPT
+        id S1728267AbfK0Tjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 14:37:12 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45518 "EHLO
+        Wed, 27 Nov 2019 14:39:31 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33104 "EHLO
         mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbfK0ThL (ORCPT
+        with ESMTP id S1728092AbfK0Tjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 14:37:11 -0500
-Received: by mail-qt1-f193.google.com with SMTP id 30so26515057qtz.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 11:37:11 -0800 (PST)
+        Wed, 27 Nov 2019 14:39:31 -0500
+Received: by mail-qt1-f193.google.com with SMTP id y39so26569652qty.0;
+        Wed, 27 Nov 2019 11:39:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=o0zrvyMBRXYkoG1uZ9FuMgX8jM9nuRXtxw/a+cZ+hwQ=;
-        b=Wf5h3r664CU1Lu3IcZIgTny0LBq5BgU54bDVwuXTpS6CtF6pRmgYKM1qnNOLXUFMQF
-         PUtiDgN9cDJCE3oUHDQ3PGaWtynOJ3qMrzYUe5kBNWikeiA2bFzyigp7JIy0mdWUKjyG
-         0lj7KO3Cq1+nbnzUv2MVJEziVx+NHYU6PUuDNezHJOrm/vd3H2o7yB4QGrmphxfqeAVf
-         7Mzn3Hr6apHI/WFXcRgI5tuNPOa12080jjJpkV3Gyk+DkHHRZO2wsu+6gHBX4wqRVATk
-         EDg7GhKoy6Sn1u1o83eaPzvM0X2O8ohJ93CEWJjw9t55DoVYUL4fFHHLdkRoAtC3De9Z
-         Uayg==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hvh4ApSOq4vH8WRE4/4kJ0XOOD72pG3W3faiSBH+W8I=;
+        b=DAHd+Ygpowq2ZOzmJF6j1c/JPuN75msi8S3XSbonSHGfmtLhWA9NftJ8F7W3CHabVC
+         BEAPldIeYObsikZP+ITC4YV/wU9ZdmjoP4I5xtNp9D0hcd9qoKEO8rMiR2xN/t0TNMGK
+         RlSwRGdTHP9ZlkV74W6HU/UTTWSZP6OvzqCRif8GFnR5BFOGvJntoe2T1VEWCUa+9wED
+         BWJCi6HW5X/ncrQP3cyR1YJh9j3dTWkU34E23kTUZ9lMi4Cq8muHUoWA8NEaeEZZTSM0
+         an3Han93Ya9qs/YXDwp5Nr9JDIzcJtf3YqkMz8+65DtmbNyq7GiJQ24iOcLUR0s7HWL8
+         8Ziw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=o0zrvyMBRXYkoG1uZ9FuMgX8jM9nuRXtxw/a+cZ+hwQ=;
-        b=a7QMXJ+57ro1xyP4mSAEwdWzGFpPqhAMyfkNnoVz3KzKzPh+MqmIKzDMCzGBvK30Gx
-         JdaGK9WvrxDTLqD4AyVAtWfnPrZAYOTN0ZLJ/d8SenlNyEi4lugrueLpLzU67MOQ4mOp
-         /XY1c8DlcjfXJFX8b5yMbeh90FSQ/cbzcLqW2IpS4WB0RtyqFOiQFsinZQuk5pFRzeam
-         z93zGX0049WAG0AswLijwvAtVCe2z64EVGo4h3A0I3HVYaILm7TVFrd9z+K08thvbGIN
-         t1dOqtk9oR2mLpefJEt1q7YtX3E3F5kCEbPPS6mesJ2aaKLB/JtpLLyvsdpuD6Lo/WFc
-         e0Tg==
-X-Gm-Message-State: APjAAAWFYR8Uwh1Wvem6idcDPOB97DRodlf2Qo0PIwpUs1YcnlugJgJz
-        wNxF4sacnwAB50d026e9XvP7kA==
-X-Google-Smtp-Source: APXvYqxGlPV+4tr2yZvZ8TnVOLOXHwvOWaWGqj044iJNZi51DnFtdbCi51oPe/3NvHuinWxS/WbuXQ==
-X-Received: by 2002:ac8:2a1d:: with SMTP id k29mr43170806qtk.336.1574883430580;
-        Wed, 27 Nov 2019 11:37:10 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id g7sm7291726qkl.20.2019.11.27.11.37.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2019 11:37:09 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hvh4ApSOq4vH8WRE4/4kJ0XOOD72pG3W3faiSBH+W8I=;
+        b=kbc1g8Eg6c6wbK+WaH9GRKSr0cp6jykBd/DZtx2GltzyQ5qihlZkSpDlxfpyIIFZTK
+         BOtmuLVo+Ry2qbEm2MSUn0iTzD7jmFdf7urlxVMDrWiwcTPVIctNH76ZnXYMiXGJ1u0R
+         77/oshzx7Y+Z+rk7s45Q8F0yICFHifOeE+mBcFLHdAF8hTwKqDMVwqd4S8Ue+2VFWno1
+         0/pR5A76MhogaNkBYFq7EbqGcMY/tBeJ20CzrtllyxqdatHTeqJYfvaSMVqbOUfhFCj7
+         QGdfoGVhScd0smtKMbcOvrLZeKCRr6x3QdeYJ9hjWdj9bEzbVDQnNY6x6QI88pJm4ZoC
+         UL5g==
+X-Gm-Message-State: APjAAAVzaoxVXLq+zoMrEMHZGTwaDoqUuN18nzMGPhA778f6Gaumt9t0
+        BW3IFVn1FgrEq2672/MMQlvVHhrt4e3hbQ==
+X-Google-Smtp-Source: APXvYqw4tBiud3vxaep4ankqGufF9gEPFqUW/nVDKv9gnvZooJkRfrlLQMSfKLMN3NcMFqs3cD+nrg==
+X-Received: by 2002:ac8:41c9:: with SMTP id o9mr9288836qtm.82.1574883570009;
+        Wed, 27 Nov 2019 11:39:30 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id q15sm7352458qkq.120.2019.11.27.11.39.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 11:39:29 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C6106405B6; Wed, 27 Nov 2019 16:39:25 -0300 (-03)
+Date:   Wed, 27 Nov 2019 16:39:25 -0300
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on
+ 32-bit arches
+Message-ID: <20191127193925.GC4063@kernel.org>
+References: <20191126221018.GA22719@kernel.org>
+ <20191126221733.GB22719@kernel.org>
+ <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+ <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net>
+ <20191126155228.0e6ed54c@cakuba.netronome.com>
+ <20191127013901.GE29071@kernel.org>
+ <20191127134553.GC22719@kernel.org>
+ <CAADnVQKkEqhdTOxytVbcm1QnBcf4MQ+q4KYaHzsuqkq3r=X-VA@mail.gmail.com>
+ <20191127184526.GB4063@kernel.org>
+ <CAADnVQLs-=f8E8ahiW7F+_Qb1JiR4-7tXwVNbdyH1FF04RrOHA@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v1] mm/memory_hotplug: don't check the nid in find_(smallest|biggest)_section_pfn
-Date:   Wed, 27 Nov 2019 14:37:09 -0500
-Message-Id: <CE5C4BD6-FAA6-4439-B869-679D24C17298@lca.pw>
-References: <1F8C5EE3-4F07-4B23-9612-25FA265557C5@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>
-In-Reply-To: <1F8C5EE3-4F07-4B23-9612-25FA265557C5@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-X-Mailer: iPhone Mail (17A878)
+Content-Disposition: inline
+In-Reply-To: <CAADnVQLs-=f8E8ahiW7F+_Qb1JiR4-7tXwVNbdyH1FF04RrOHA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Wed, Nov 27, 2019 at 10:55:31AM -0800, Alexei Starovoitov escreveu:
+> On Wed, Nov 27, 2019 at 10:45 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Wed, Nov 27, 2019 at 08:39:28AM -0800, Alexei Starovoitov escreveu:
+> > > On Wed, Nov 27, 2019 at 5:45 AM Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> wrote:
+> > > >
+> > > > Another fix I'm carrying in my perf/core branch,
+> >
+> > > Why in perf/core?
+> > > I very much prefer all libbpf patches to go via normal route via bpf/net trees.
+> > > We had enough conflicts in this merge window. Let's avoid them.
+> >
+> > Humm, if we both carry the same patch the merge process can do its magic
+> > and nobody gets hurt? Besides these are really minor things, no?
+> 
+> I thought so too, but learned the hard lesson recently.
+> We should try to avoid that as much as possible.
+> Andrii's is fixing stuff in the same lines:
+> https://patchwork.ozlabs.org/patch/1201344/
+> these two patches will likely conflict. I'd rather have them both in bpf tree.
+> What is the value for this patch in perf tree?
+> To fix the build on 32-bit arches, right?
+> But how urgent is it? Can you wait few days until this one and other
+> libbpf fixes
+> land via bpf/net trees?
 
+Ok, I'll add a note to the pull request report about where the perf
+build is clean in all containers because I added these two patches, but
+that they'll go via the bpf tree, as soon as that gets merged, the
+problem will go away.
 
-> On Nov 27, 2019, at 2:06 PM, David Hildenbrand <david@redhat.com> wrote:
->=20
-> The zone pointer is unique for every node. (in contrast to the zone index)=
-.
+And I wasn't strictly defending that I should carry this in perf/core,
+just said I was, to fix something minor that I found while doing my
+usual testing, patch was posted, you got notified and got the patch,
+I'll remove it from perf/core now since you stated that it'll eventually
+land upstream.
 
-I am not sure if it is worth optimizing there. The existing nid check looks q=
-uite straight-forward and cheap.=
+Thanks,
+
+- Arnaldo
