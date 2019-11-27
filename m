@@ -2,115 +2,122 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0319FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9D7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC741207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DCD207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pETy2f8i"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j6yRt0oa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfK0Sim (ORCPT
+        id S1727120AbfK0Smv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:38:42 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37603 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfK0Sim (ORCPT
+        Wed, 27 Nov 2019 13:42:51 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:46406 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727051AbfK0Smv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:38:42 -0500
-Received: by mail-qt1-f194.google.com with SMTP id w47so22252258qtk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:38:41 -0800 (PST)
+        Wed, 27 Nov 2019 13:42:51 -0500
+Received: by mail-pj1-f66.google.com with SMTP id a16so10404433pjs.13
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:42:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=wdp1lywqmKgyuKU1G9KHrqyijHJooeS6kbCPCzKFfhw=;
-        b=pETy2f8iLffpdhZh+eVuVvnU3GhOO1uvMItulY+h7B3z85q6xdoNYd4SKAstjtNEvB
-         8BJ5NgiNYX/Fio5ruP0etID8HD3CQP+lpSz1GKxz74Vo0ee9rgUHWK/kIDavvhRzf+Si
-         vuOKZi2OE49OG9mPUdlJfMRkEE3ZYcTtRGC2uYBTv6reipUO2En4vIHVcCSI9e+Mo9ms
-         0AFi67qx/YHk4j1ZfaKdoYBxt1nk6PWRNsS10d15FWf5FwYEiuH77ac6cCzKjMDOwu6/
-         ISiJMPFZW02dTFvIEvRdQ6jJxYGiTscLb8e4fXne/hIccz8E+BkRJyV+ckSXg4rghckV
-         /e9g==
+        d=google.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CZVXp4jTn3AxGkNEiypeb8rdOk5szYATq8RNyz6w/wM=;
+        b=j6yRt0oaznyATDXrogCBscbi+Vg8MB0M2Z2pRH8rI3wIaFOVfPcEcp8qRb3zaNI8k+
+         4jt5U8C8uD/xHkGHbIW2o3uH6cYJaKYKkVw/ItpOgENvfkyYoEw7c/HGR4yCMihM1v3f
+         /zTXWOZd6w0TdXp0A66ksIzqq35QkODSG0GAZAebRcNg18gb64gx9cpVxiKbMWafXx+i
+         u8Cf4XFxbVXtPHZHyeA5bmZp5X5zbaqUacB5uFtDWo2lXREJi1Q3OrK/Ay6MmeNmtMBS
+         +c91qeiUPBlqlvoiu2yR2w6STXJe0ACUog4Lb356VHDKs9SgkdCfF7N4seEIgslGkjRl
+         zfcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=wdp1lywqmKgyuKU1G9KHrqyijHJooeS6kbCPCzKFfhw=;
-        b=g93H9lwz/ENF4fr+J/TUFbSRYGPRstLxRJKoilnKoIiBk8h5C1qExC4Mrso1M8UXZK
-         zWytshpNdWH4V713GVc++N9J6E6cnhi0jX1hq+BLk6LBl33/DEEHeeMevrgrLaotW3L0
-         CXbr4NUiLSwZTvPrkBFnyFmv+1qtqqH1VK2H5NKY1Q2Nfr1hswl0QbmviK1RKF1Soful
-         ejrpETZQaJFsspnauEPVVzx5jkIjIkYhf20INBuXR1vlvMwHU62mzVQuKbTLV60a6gQC
-         /WEk5c9y1CwyPP3CBc695X6yGrnA8CRvMfwKeLx78ztCSti+T8HUrGITQFv/ECqSE+u9
-         PFHg==
-X-Gm-Message-State: APjAAAXmT0Kpw9UuRobUDAdOOuabWTsI/oRjIDOdlDhFQWQ/FltbKWH4
-        HZWth7C6a1uFH4h4Ad3uH4hewQ==
-X-Google-Smtp-Source: APXvYqyqhtOn92/ve8YTh8k7+IFMsV1kDxuJs8W1r/wyRn3LTpEBKCwZy8HajcqXt77kdv+Abk7yaQ==
-X-Received: by 2002:ac8:7612:: with SMTP id t18mr30473363qtq.143.1574879921076;
-        Wed, 27 Nov 2019 10:38:41 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id o62sm2739257qte.76.2019.11.27.10.38.40
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CZVXp4jTn3AxGkNEiypeb8rdOk5szYATq8RNyz6w/wM=;
+        b=tBvYJ63IHk2OjBsKSCYfRLsFCD12qHA6JHYrMKhPDqkqjWqw04rqgdr9JlO/3tgxwb
+         ++IxhiQZbE3g6u5b2oGMSjyy4kCs0Wk98H2u4QSOixZQfcu/+Vbm7Zz1HaABiJnjQh5e
+         1tuFtVVrXQJt98pigGCoSBWmkXLlvNwdbqUnmak1CaloLYyuF9DnmZispsHTLp+mGCnB
+         Byj+kz+vCabl8LcLjtfWt2mh2YLh4qhUb2H1M//i4nO74oH9//MISseA7KzcsmzuCcoH
+         wjN/5nhp8RM6BO/8z4fmH/CsG5Xix5W/cs9gqQE2PQHY55uewRJVG6eLAWzcy0AAql08
+         ZueA==
+X-Gm-Message-State: APjAAAWvd7Wzj4vfN0YR3e8wGVYnGna4WzcRq27BV5sRCEE/bVb0MnzB
+        qSbkf6YTAPcl1i74nm4gUKg2iQ==
+X-Google-Smtp-Source: APXvYqwkG6dHA1vS8RkBB3zlZfXMnaqbdTG/2aVXx/SvoAEkJtlFZADwufTjQcvmUjql/dBgQ7mpFg==
+X-Received: by 2002:a17:902:900b:: with SMTP id a11mr5485790plp.116.1574880170025;
+        Wed, 27 Nov 2019 10:42:50 -0800 (PST)
+Received: from gnomeregan.cam.corp.google.com ([2620:15c:6:14:ad22:1cbb:d8fa:7d55])
+        by smtp.googlemail.com with ESMTPSA id u9sm17413696pfm.102.2019.11.27.10.42.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2019 10:38:40 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 1/3] iommu: match the original algorithm
-Date:   Wed, 27 Nov 2019 13:38:39 -0500
-Message-Id: <FD54B9BA-53FE-4CF0-954F-8DC8418DAE3F@lca.pw>
-References: <9ac29292-bc3d-ae57-daff-5b3264020fe2@huawei.com>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-In-Reply-To: <9ac29292-bc3d-ae57-daff-5b3264020fe2@huawei.com>
-To:     John Garry <john.garry@huawei.com>
-X-Mailer: iPhone Mail (17A878)
+        Wed, 27 Nov 2019 10:42:49 -0800 (PST)
+Subject: Re: [PATCH] x86/fpu: Don't cache access to fpu_fpregs_owner_ctx
+To:     Borislav Petkov <bp@alien8.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Josh Bleecher Snyder <josharian@gmail.com>,
+        "Rik van Riel\"" <riel@surriel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, ian@airs.com
+References: <c87e93c3-5f30-f242-74b7-6c7ccc91158a@google.com>
+ <20191126202026.csrmjre6vn2nxq7c@linutronix.de>
+ <e4d6406b-0d47-5cc5-f3a8-6d14bd90760b@google.com>
+ <20191127124243.u74osvlkhcmsskng@linutronix.de>
+ <20191127140754.GB3812@zn.tnic>
+From:   Barret Rhoden <brho@google.com>
+Message-ID: <f4d5ca28-a388-c382-4b1a-4b65c9f9e6e7@google.com>
+Date:   Wed, 27 Nov 2019 13:42:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191127140754.GB3812@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>> Use this_cpu_read() instead this_cpu_read_stable() to avoid caching of
+>> fpu_fpregs_owner_ctx during preemption points.
+>>
+>> Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
+> 
+> Or
+> 
+> a352a3b7b792 ("x86/fpu: Prepare copy_fpstate_to_sigframe() for TIF_NEED_FPU_LOAD")
+> 
+> maybe, which adds the fpregs_unlock() ?
 
+Using this_cpu_read_stable() (or some variant) seems to go back quite a 
+while; not sure when exactly it became a problem.  If it helps, commit 
+d9c9ce34ed5c ("x86/fpu: Fault-in user stack if 
+copy_fpstate_to_sigframe() fails") was the one that popped up the most 
+during Austin's bisection.
 
-> On Nov 27, 2019, at 1:01 PM, John Garry <john.garry@huawei.com> wrote:
->=20
-> I haven't gone into the details, but this patch alone is giving this:
->=20
-> root@(none)$ [  123.857024] kmemleak: 8 new suspected memory leaks (see /s=
-ys/kernel/debug/kmemleak)
->=20
-> root@(none)$ cat /sys/kernel/debug/kmemleak
-> unreferenced object 0xffff002339843000 (size 2048):
->  comm "swapper/0", pid 1, jiffies 4294898165 (age 122.688s)
->  hex dump (first 32 bytes):
->    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->  backtrace:
->    [<000000001d2710bf>] kmem_cache_alloc+0x188/0x260
->    [<00000000cc229a78>] init_iova_domain+0x1e8/0x2a8
->    [<000000002646fc92>] iommu_setup_dma_ops+0x200/0x710
->    [<00000000acc5fe46>] arch_setup_dma_ops+0x80/0x128
->    [<00000000994e1e43>] acpi_dma_configure+0x11c/0x140
->    [<00000000effe9374>] pci_dma_configure+0xe0/0x108
->    [<00000000f614ae1e>] really_probe+0x210/0x548
->    [<0000000087884b1b>] driver_probe_device+0x7c/0x148
->    [<0000000010af2936>] device_driver_attach+0x94/0xa0
->    [<00000000c92b2971>] __driver_attach+0xa4/0x110
->    [<00000000c873500f>] bus_for_each_dev+0xe8/0x158
->    [<00000000c7d0e008>] driver_attach+0x30/0x40
->    [<000000003cf39ba8>] bus_add_driver+0x234/0x2f0
->    [<0000000043830a45>] driver_register+0xbc/0x1d0
->    [<00000000c8a41162>] __pci_register_driver+0xb0/0xc8
->    [<00000000e562eeec>] sas_v3_pci_driver_init+0x20/0x28
-> unreferenced object 0xffff002339844000 (size 2048):
->  comm "swapper/0", pid 1, jiffies 4294898165 (age 122.688s)
->=20
-> [snip]
->=20
-> And I don't feel like continuing until it's resolved....
+>> Also I would like to add
+>> 	Debugged-by: Ian Lance Taylor
+> 
+> Yes, pls. CCed.
 
-Thanks for talking a hit by this before me. It is frustrating that people te=
-nd not to test their patches properly  with things like kmemleak.=
+To close the loop on this, here's what Austin wrote on the bugzilla:
+
+> --- Comment #2 from Austin Clements (austin@google.com) ---
+> I can confirm that the patch posted by Sebastian Andrzej Siewior at
+> https://lkml.org/lkml/2019/11/27/304 fixes the issue both in our C reproducer
+> and in our original Go reproducer. (Sorry, I'm not subscribed to LKML, so I
+> can't reply there, and I'm on an airplane, so it's hard to get subscribed :)
+> 
+> Regarding the question about the "Debugged-by" line in the patch, debugging was
+> a joint effort between myself (Austin Clements <austin@google.com>), David
+> Chase <drchase@golang.org>, and Ian Lance Taylor <ian@airs.com>.
+
+Thanks,
+
+Barret
