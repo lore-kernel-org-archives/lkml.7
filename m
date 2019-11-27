@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF68EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E60C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3E4B21772
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DF521741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887090;
-	bh=HK2xquq36bYBWwcTDwpjNXQgQBGzBWVirfylhRvR+ao=;
+	s=default; t=1574887093;
+	bh=CeRThS9HKrxmScjaCrZFhLlWJfYbNfFzVbSAcI3ZP1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rqWml5XHjKBo00mabyprOdxOPj9pFjhlHS2SGZ7x9hCDdxg7JbQZB4gYBEnIagQAU
-	 YQpUCOYMADqocvMHkv9AAP2QbN0Hl4znufmsqZ2kV4W4kWlCvrn8jFYD9txPiDQPGe
-	 Zb3UNHyUK09O6eooHazL7si/EnzVYB6hr4Zt2XSY=
+	b=Ag4WW3gAcIF6C0rv2zP5xG/wND7dZSPq+WTN/dvwvyuhN0Q/YpcFSyvmlc3UkNIB6
+	 ueMMDIiQobKFMz0TCwaw3DsLd3Dz5NQkIBPWhKnJvJNaW0F/Dwf8lMYO/bAd4XKFAs
+	 qcrlvXgB8Esgw5nRbQBcRI9EN+TqVq1Xmo6ozLuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbfK0UiG (ORCPT
+        id S1728693AbfK0UiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:38:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41282 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:38:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbfK0UiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:38:01 -0500
+        id S1727792AbfK0UiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:38:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE4DF215E5;
-        Wed, 27 Nov 2019 20:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1A67216F4;
+        Wed, 27 Nov 2019 20:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887080;
-        bh=HK2xquq36bYBWwcTDwpjNXQgQBGzBWVirfylhRvR+ao=;
+        s=default; t=1574887088;
+        bh=CeRThS9HKrxmScjaCrZFhLlWJfYbNfFzVbSAcI3ZP1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jw7nvZ0v9DyM0GSbX2taR5dFDmJ45mupHpfmhczo2rmyaUQlT3LwcT9Zfxy6RHU2/
-         PkQfhnDbqbCU5aXx5In+7dsDts44d7h4R4hwfFdSB7A11+dcNxkTwDiyl1Bn+CS8OR
-         qZzrEW3wcQp+I9q/BNLsI5OCBmwtqe2p+y6ERlhs=
+        b=iRsngQjf1oNvoCH7SdKSreiSRKos+S3624noKjHy5okYaHHGs6zjkL/w8b++/EE/q
+         Q0xxYtLflCfyjIcnVRsr00+LKkZXTyoQzKYs2/3m4zPJdZXpRV+lRtQ7qoy/xulWzq
+         mdBljYuxAJiLXWoJxZWauniVMUYmG/VvtEBo6404=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gang He <ghe@suse.com>,
-        Joseph Qi <jiangqi903@gmail.com>, Eric Ren <zren@suse.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.4 104/132] ocfs2: remove ocfs2_is_o2cb_active()
-Date:   Wed, 27 Nov 2019 21:31:35 +0100
-Message-Id: <20191127203025.567094543@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.4 107/132] x86/insn: Fix awk regexp warnings
+Date:   Wed, 27 Nov 2019 21:31:38 +0100
+Message-Id: <20191127203027.050537016@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -66,71 +67,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gang He <ghe@suse.com>
+From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
 
-commit a634644751c46238df58bbfe992e30c1668388db upstream.
+commit 700c1018b86d0d4b3f1f2d459708c0cdf42b521d upstream.
 
-Remove ocfs2_is_o2cb_active().  We have similar functions to identify
-which cluster stack is being used via osb->osb_cluster_stack.
+gawk 5.0.1 generates the following regexp warnings:
 
-Secondly, the current implementation of ocfs2_is_o2cb_active() is not
-totally safe.  Based on the design of stackglue, we need to get
-ocfs2_stack_lock before using ocfs2_stack related data structures, and
-that active_stack pointer can be NULL in the case of mount failure.
+  GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
+  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
+  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is  not a known regexp operator
 
-Link: http://lkml.kernel.org/r/1495441079-11708-1-git-send-email-ghe@suse.com
-Signed-off-by: Gang He <ghe@suse.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Reviewed-by: Eric Ren <zren@suse.com>
-Acked-by: Changwei Ge <ge.changwei@h3c.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Ealier versions of gawk are not known to generate these warnings. The
+gawk manual referenced below does not list characters ':' and '&' as
+needing escaping, so 'unescape' them. See
+
+  https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html
+
+for more info.
+
+Running diff on the output generated by the script before and after
+applying the patch reported no differences.
+
+ [ bp: Massage commit message. ]
+
+[ Caught the respective tools header discrepancy. ]
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190924044659.3785-1-alexander.kapshuk@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/ocfs2/dlmglue.c   |    2 +-
- fs/ocfs2/stackglue.c |    6 ------
- fs/ocfs2/stackglue.h |    3 ---
- 3 files changed, 1 insertion(+), 10 deletions(-)
 
---- a/fs/ocfs2/dlmglue.c
-+++ b/fs/ocfs2/dlmglue.c
-@@ -3426,7 +3426,7 @@ static int ocfs2_downconvert_lock(struct
- 	 * we can recover correctly from node failure. Otherwise, we may get
- 	 * invalid LVB in LKB, but without DLM_SBF_VALNOTVALID being set.
- 	 */
--	if (!ocfs2_is_o2cb_active() &&
-+	if (ocfs2_userspace_stack(osb) &&
- 	    lockres->l_ops->flags & LOCK_TYPE_USES_LVB)
- 		lvb = 1;
+---
+ arch/x86/tools/gen-insn-attr-x86.awk                   |    4 ++--
+ tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+--- a/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -68,7 +68,7 @@ BEGIN {
  
---- a/fs/ocfs2/stackglue.c
-+++ b/fs/ocfs2/stackglue.c
-@@ -48,12 +48,6 @@ static char ocfs2_hb_ctl_path[OCFS2_MAX_
-  */
- static struct ocfs2_stack_plugin *active_stack;
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
+-	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
++	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+ 	lprefix_expr = "\\((66|F2|F3)\\)"
+ 	max_lprefix = 4
  
--inline int ocfs2_is_o2cb_active(void)
--{
--	return !strcmp(active_stack->sp_name, OCFS2_STACK_PLUGIN_O2CB);
--}
--EXPORT_SYMBOL_GPL(ocfs2_is_o2cb_active);
--
- static struct ocfs2_stack_plugin *ocfs2_stack_lookup(const char *name)
- {
- 	struct ocfs2_stack_plugin *p;
---- a/fs/ocfs2/stackglue.h
-+++ b/fs/ocfs2/stackglue.h
-@@ -298,7 +298,4 @@ void ocfs2_stack_glue_set_max_proto_vers
- int ocfs2_stack_glue_register(struct ocfs2_stack_plugin *plugin);
- void ocfs2_stack_glue_unregister(struct ocfs2_stack_plugin *plugin);
+@@ -253,7 +253,7 @@ function convert_operands(count,opnd,
+ 	return add_flags(imm, mod)
+ }
  
--/* In ocfs2_downconvert_lock(), we need to know which stack we are using */
--int ocfs2_is_o2cb_active(void);
--
- #endif  /* STACKGLUE_H */
+-/^[0-9a-f]+\:/ {
++/^[0-9a-f]+:/ {
+ 	if (NR == 1)
+ 		next
+ 	# get index
+--- a/tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
++++ b/tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
+@@ -68,7 +68,7 @@ BEGIN {
+ 
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
+-	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
++	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+ 	lprefix_expr = "\\((66|F2|F3)\\)"
+ 	max_lprefix = 4
+ 
+@@ -253,7 +253,7 @@ function convert_operands(count,opnd,
+ 	return add_flags(imm, mod)
+ }
+ 
+-/^[0-9a-f]+\:/ {
++/^[0-9a-f]+:/ {
+ 	if (NR == 1)
+ 		next
+ 	# get index
 
 
