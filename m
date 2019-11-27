@@ -2,266 +2,854 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FA2C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE3DC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3283B2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574834503;
-	bh=GQL5eQ9+Hch/EyfVAAlb+xEVvTg2dFj3z5JsdSMOvKM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=u/EtFKI2ImjP3NecEnMn8n1uv5S5BxOZE7AbNChM9nnc55OKqUQFNU8+7IolyU2yJ
-	 IHWofYlO9WbaRjsCIQ15CgVggIPn1D/O1K/cLys3EotZ0H+2ucgoQQVmeXHRj4sMmz
-	 uJ31jjd97VS3KreaJtHA91gza0eiMhnGUTFDyHsc=
+	by mail.kernel.org (Postfix) with ESMTP id 9D0C32084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:06:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TV+1RzKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbfK0GBm (ORCPT
+        id S1726227AbfK0GGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 01:01:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59870 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbfK0GBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 01:01:41 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DBC420684;
-        Wed, 27 Nov 2019 06:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574834500;
-        bh=GQL5eQ9+Hch/EyfVAAlb+xEVvTg2dFj3z5JsdSMOvKM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WZQuLHwmW4xbPCvZr9Se+28+z1W9wrk/8k9TyYUosKAXkGUOjykJjO0PwosE4+Ryx
-         xyUuDR3lmWGgFgXrLUZXVB2hXQbSFYRO7+PQDgNmPOu7YRbGkkJwaHWMEovl9xksRx
-         MM+/SgD9LsHcCD+SgtTCg2g/9v9mPXktc2k/UUOA=
-Date:   Tue, 26 Nov 2019 22:01:38 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        linux-sctp@vger.kernel.org
-Cc:     syzbot <syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com,
-        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: KMSAN: uninit-value in __crc32c_le_base
-Message-ID: <20191127060138.GB227319@sol.localdomain>
+        Wed, 27 Nov 2019 01:06:44 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50470 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfK0GGn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 01:06:43 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR667Dw026326;
+        Wed, 27 Nov 2019 00:06:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574834767;
+        bh=gtuxN7XUN2cz1m9niC5Rtzh/VQ2wPTBJLhZUpjJtuwo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TV+1RzKV2xFPXfOVdI5y/vrCFyAcmQd64AN3iE1BJqTtAIjuXkObK0eiwhb40JshR
+         mfzpVMGF5jmpKbo2hC7M1h5Zr9XjNjNZGC4FJj2qD+o3b1w8VIs+Mvr+wswmN7biPR
+         cRO1lU2uSqr7OSfQAbKBJudLZC2kPMZKGNXrHVM4=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR667EF106584;
+        Wed, 27 Nov 2019 00:06:07 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
+ Nov 2019 00:06:07 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 27 Nov 2019 00:06:07 -0600
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR65sdl023033;
+        Wed, 27 Nov 2019 00:05:55 -0600
+Subject: Re: [PATCH 2/5] pci: endpoint: add support to handle multiple base
+ for mapping outbound memory
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        <linux-pci@vger.kernel.org>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <linux-rockchip@lists.infradead.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <51563ddf-381f-3290-d9c0-82eb23aaa674@ti.com>
+Date:   Wed, 27 Nov 2019 11:35:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000004b2df0598075fc8@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191106193609.19645-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like a bug in net/sctp/ where it's passing uninitialized memory into the
-crc32c() function.  SCTP maintainers, can you please take a look?
+Hi Prabhakar,
 
-Also, this might be a duplicate of "KMSAN: uninit-value in __skb_checksum_complete (4)"
-(https://lore.kernel.org/lkml/0000000000000924780598075f4b@google.com/T/#u).
+On 07/11/19 1:06 AM, Lad Prabhakar wrote:
+> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> rcar pcie controller has support to map multiple memory regions
+> for mapping the outbound memory in local system, this feature
+> inspires to add support for handling multiple memory bases in
+> endpoint framework. In case of multiple memory regions only chunk
+> or complete region can be mapped and this window needs to be
+> passed to the controller driver.
 
-On Sat, Nov 23, 2019 at 10:05:09AM -0800, syzbot wrote:
-> Hello,
+Wouldn't this result in lot of unused address and exhausting the memory regions
+quickly? I think we could have a "type" associated with each of these regions
+and smaller allocations could use one "type" and larger allocation could use a
+different "type"? For instance we allocate memory regions for MSI interrupt and
+for data transfer. We could use smaller allocations for MSI and larger
+allocations for data transfers.
+
+We could also extend the "type" for certain special requirements. For instance
+I've seen platforms which have dedicated address space for high priority data
+transfers (uses higher virtual channel numbers) and dedicated address space for
+low priority data transfers (uses lower virtual channel numbers).
+
+Here too we could give a special flag or type for higher priority address
+regions and different type for lower priority address. While allocating, the
+function drivers should provide a flag specifying the region where memory
+should be allocated.
+
+Can you add flags in struct pci_epc_mem_window and see how that comes out?
+
+Thanks
+Kishon
+
 > 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    3db92f3b kmsan: process DMA pages separately in kmsan_hand..
-> git tree:       https://github.com/google/kmsan.git master
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17bad222e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9e324dfe9c7b0360
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6dcbfea81cd3d4dd0b02
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=128145cee00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com
-> 
-> =====================================================
-> BUG: KMSAN: uninit-value in crc32_body lib/crc32.c:112 [inline]
-> BUG: KMSAN: uninit-value in crc32_le_generic lib/crc32.c:179 [inline]
-> BUG: KMSAN: uninit-value in __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
-> CPU: 1 PID: 12411 Comm: syz-executor.1 Not tainted 5.4.0-rc5-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->  kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
->  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
->  crc32_body lib/crc32.c:112 [inline]
->  crc32_le_generic lib/crc32.c:179 [inline]
->  __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
->  chksum_update+0xb2/0x110 crypto/crc32c_generic.c:90
->  crypto_shash_update+0x4c5/0x530 crypto/shash.c:107
->  crc32c+0x150/0x220 lib/libcrc32c.c:47
->  sctp_csum_update+0x89/0xa0 include/net/sctp/checksum.h:36
->  __skb_checksum+0x1297/0x12a0 net/core/skbuff.c:2640
->  sctp_compute_cksum include/net/sctp/checksum.h:59 [inline]
->  sctp_packet_pack net/sctp/output.c:528 [inline]
->  sctp_packet_transmit+0x40fb/0x4250 net/sctp/output.c:597
->  sctp_outq_flush_transports net/sctp/outqueue.c:1146 [inline]
->  sctp_outq_flush+0x1823/0x5d80 net/sctp/outqueue.c:1194
->  sctp_outq_uncork+0xd0/0xf0 net/sctp/outqueue.c:757
->  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1781 [inline]
->  sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
->  sctp_do_sm+0x8fe1/0x9720 net/sctp/sm_sideeffect.c:1155
->  sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
->  sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
->  sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
->  sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
->  sock_common_setsockopt+0x13b/0x170 net/core/sock.c:3151
->  __sys_setsockopt+0x7c3/0xa30 net/socket.c:2084
->  __do_sys_setsockopt net/socket.c:2100 [inline]
->  __se_sys_setsockopt+0xdd/0x100 net/socket.c:2097
->  __x64_sys_setsockopt+0x62/0x80 net/socket.c:2097
->  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
->  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> RIP: 0033:0x45a639
-> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f2a8cb65c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-> RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 000000000045a639
-> RDX: 0000000000000009 RSI: 0000000000000084 RDI: 0000000000000004
-> RBP: 000000000075bfc8 R08: 0000000000000098 R09: 0000000000000000
-> R10: 0000000020000440 R11: 0000000000000246 R12: 00007f2a8cb666d4
-> R13: 00000000004d1a88 R14: 00000000004e08f0 R15: 00000000ffffffff
-> 
-> Uninit was stored to memory at:
->  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
->  kmsan_internal_chain_origin+0xbd/0x180 mm/kmsan/kmsan.c:319
->  kmsan_memcpy_memmove_metadata+0x25c/0x2e0 mm/kmsan/kmsan.c:254
->  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:274
->  __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:129
->  skb_put_data include/linux/skbuff.h:2217 [inline]
->  sctp_packet_pack net/sctp/output.c:470 [inline]
->  sctp_packet_transmit+0x1d9e/0x4250 net/sctp/output.c:597
->  sctp_outq_flush_transports net/sctp/outqueue.c:1146 [inline]
->  sctp_outq_flush+0x1823/0x5d80 net/sctp/outqueue.c:1194
->  sctp_outq_uncork+0xd0/0xf0 net/sctp/outqueue.c:757
->  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1781 [inline]
->  sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
->  sctp_do_sm+0x8fe1/0x9720 net/sctp/sm_sideeffect.c:1155
->  sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
->  sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
->  sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
->  sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
->  sock_common_setsockopt+0x13b/0x170 net/core/sock.c:3151
->  __sys_setsockopt+0x7c3/0xa30 net/socket.c:2084
->  __do_sys_setsockopt net/socket.c:2100 [inline]
->  __se_sys_setsockopt+0xdd/0x100 net/socket.c:2097
->  __x64_sys_setsockopt+0x62/0x80 net/socket.c:2097
->  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
->  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> 
-> Uninit was stored to memory at:
->  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
->  kmsan_internal_chain_origin+0xbd/0x180 mm/kmsan/kmsan.c:319
->  kmsan_memcpy_memmove_metadata+0x25c/0x2e0 mm/kmsan/kmsan.c:254
->  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:274
->  __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:129
->  skb_put_data include/linux/skbuff.h:2217 [inline]
->  sctp_addto_chunk net/sctp/sm_make_chunk.c:1494 [inline]
->  sctp_make_heartbeat+0x612/0x9e0 net/sctp/sm_make_chunk.c:1164
->  sctp_sf_heartbeat net/sctp/sm_statefuns.c:990 [inline]
->  sctp_sf_do_prm_requestheartbeat+0x8f/0x4b0 net/sctp/sm_statefuns.c:5329
->  sctp_do_sm+0x2b2/0x9720 net/sctp/sm_sideeffect.c:1152
->  sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
->  sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
->  sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
->  sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
->  sock_common_setsockopt+0x13b/0x170 net/core/sock.c:3151
->  __sys_setsockopt+0x7c3/0xa30 net/socket.c:2084
->  __do_sys_setsockopt net/socket.c:2100 [inline]
->  __se_sys_setsockopt+0xdd/0x100 net/socket.c:2097
->  __x64_sys_setsockopt+0x62/0x80 net/socket.c:2097
->  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
->  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> 
-> Uninit was stored to memory at:
->  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
->  kmsan_internal_chain_origin+0xbd/0x180 mm/kmsan/kmsan.c:319
->  kmsan_memcpy_memmove_metadata+0x25c/0x2e0 mm/kmsan/kmsan.c:254
->  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:274
->  __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:129
->  sctp_make_heartbeat+0x3e9/0x9e0 net/sctp/sm_make_chunk.c:1156
->  sctp_sf_heartbeat net/sctp/sm_statefuns.c:990 [inline]
->  sctp_sf_do_prm_requestheartbeat+0x8f/0x4b0 net/sctp/sm_statefuns.c:5329
->  sctp_do_sm+0x2b2/0x9720 net/sctp/sm_sideeffect.c:1152
->  sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
->  sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
->  sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
->  sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
->  sock_common_setsockopt+0x13b/0x170 net/core/sock.c:3151
->  __sys_setsockopt+0x7c3/0xa30 net/socket.c:2084
->  __do_sys_setsockopt net/socket.c:2100 [inline]
->  __se_sys_setsockopt+0xdd/0x100 net/socket.c:2097
->  __x64_sys_setsockopt+0x62/0x80 net/socket.c:2097
->  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
->  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> 
-> Uninit was stored to memory at:
->  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
->  kmsan_internal_chain_origin+0xbd/0x180 mm/kmsan/kmsan.c:319
->  kmsan_memcpy_memmove_metadata+0x25c/0x2e0 mm/kmsan/kmsan.c:254
->  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:274
->  __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:129
->  sctp_transport_init net/sctp/transport.c:47 [inline]
->  sctp_transport_new+0x248/0xa00 net/sctp/transport.c:100
->  sctp_assoc_add_peer+0x5ba/0x2030 net/sctp/associola.c:611
->  sctp_process_param net/sctp/sm_make_chunk.c:2524 [inline]
->  sctp_process_init+0x162b/0x3e30 net/sctp/sm_make_chunk.c:2345
->  sctp_cmd_process_init net/sctp/sm_sideeffect.c:667 [inline]
->  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1374 [inline]
->  sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
->  sctp_do_sm+0x1b8b/0x9720 net/sctp/sm_sideeffect.c:1155
->  sctp_assoc_bh_rcv+0x65a/0xd80 net/sctp/associola.c:1048
->  sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:80
->  sctp_backlog_rcv+0x2d7/0x11a0 net/sctp/input.c:344
->  sk_backlog_rcv include/net/sock.h:950 [inline]
->  __release_sock+0x448/0x640 net/core/sock.c:2439
->  release_sock+0x99/0x2a0 net/core/sock.c:2955
->  sctp_wait_for_connect+0x3d7/0x840 net/sctp/socket.c:9167
->  __sctp_connect+0x1e9d/0x1f20 net/sctp/socket.c:1226
->  __sctp_setsockopt_connectx net/sctp/socket.c:1322 [inline]
->  sctp_setsockopt_connectx_old net/sctp/socket.c:1338 [inline]
->  sctp_setsockopt+0x960d/0x19090 net/sctp/socket.c:4647
->  sock_common_setsockopt+0x13b/0x170 net/core/sock.c:3151
->  __sys_setsockopt+0x7c3/0xa30 net/socket.c:2084
->  __do_sys_setsockopt net/socket.c:2100 [inline]
->  __se_sys_setsockopt+0xdd/0x100 net/socket.c:2097
->  __x64_sys_setsockopt+0x62/0x80 net/socket.c:2097
->  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
->  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> 
-> Local variable description: ----addr.i@sctp_process_init
-> Variable was created at:
->  sctp_process_param net/sctp/sm_make_chunk.c:2495 [inline]
->  sctp_process_init+0x603/0x3e30 net/sctp/sm_make_chunk.c:2345
->  sctp_process_param net/sctp/sm_make_chunk.c:2495 [inline]
->  sctp_process_init+0x603/0x3e30 net/sctp/sm_make_chunk.c:2345
-> =====================================================
-> 
-> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Cc: <linux-rockchip@lists.infradead.org>
+> Cc: Shawn Lin <shawn.lin@rock-chips.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Tom Joseph <tjoseph@cadence.com>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  30 ++-
+>  drivers/pci/controller/pcie-cadence-ep.c      |  11 +-
+>  drivers/pci/controller/pcie-rockchip-ep.c     |  13 +-
+>  drivers/pci/endpoint/functions/pci-epf-test.c |  29 +--
+>  drivers/pci/endpoint/pci-epc-core.c           |   7 +-
+>  drivers/pci/endpoint/pci-epc-mem.c            | 189 ++++++++++++++----
+>  include/linux/pci-epc.h                       |  43 ++--
+>  7 files changed, 234 insertions(+), 88 deletions(-)
 > 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 3dd2e2697294..8d23c20b9afd 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -195,7 +195,7 @@ static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, u8 func_no,
+>  }
+>  
+>  static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no,
+> -			       phys_addr_t addr,
+> +			       phys_addr_t addr, int window,
+>  			       u64 pci_addr, size_t size)
+>  {
+>  	int ret;
+> @@ -367,6 +367,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	unsigned int aligned_offset;
+>  	u16 msg_ctrl, msg_data;
+>  	u32 msg_addr_lower, msg_addr_upper, reg;
+> +	int window = PCI_EPC_DEFAULT_WINDOW;
+>  	u64 msg_addr;
+>  	bool has_upper;
+>  	int ret;
+> @@ -390,11 +391,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  		reg = ep->msi_cap + PCI_MSI_DATA_32;
+>  		msg_data = dw_pcie_readw_dbi(pci, reg);
+>  	}
+> -	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
+> +	aligned_offset = msg_addr_lower & (epc->mem[window]->page_size - 1);
+>  	msg_addr = ((u64)msg_addr_upper) << 32 |
+>  			(msg_addr_lower & ~aligned_offset);
+> -	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+> -				  epc->mem->page_size);
+> +	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, window,
+> +				  msg_addr, epc->mem[window]->page_size);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -416,6 +417,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	u32 reg, msg_data, vec_ctrl;
+>  	u64 tbl_addr, msg_addr, reg_u64;
+>  	void __iomem *msix_tbl;
+> +	int window = PCI_EPC_DEFAULT_WINDOW;
+>  	int ret;
+>  
+>  	reg = ep->msix_cap + PCI_MSIX_TABLE;
+> @@ -452,8 +454,8 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  		return -EPERM;
+>  	}
+>  
+> -	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+> -				  epc->mem->page_size);
+> +	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, window,
+> +				  msg_addr, epc->mem[window]->page_size);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -466,10 +468,11 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  
+>  void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>  {
+> +	int window = PCI_EPC_DEFAULT_WINDOW;
+>  	struct pci_epc *epc = ep->epc;
+>  
+>  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+> -			      epc->mem->page_size);
+> +			      epc->mem[window]->page_size);
+>  
+>  	pci_epc_mem_exit(epc);
+>  }
+> @@ -499,9 +502,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	u32 reg;
+>  	void *addr;
+>  	u8 hdr_type;
+> +	int window;
+>  	unsigned int nbars;
+>  	unsigned int offset;
+>  	struct pci_epc *epc;
+> +	size_t msi_page_size;
+> +	struct pci_epc_mem_window mem_window;
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	struct device *dev = pci->dev;
+>  	struct device_node *np = dev->of_node;
+> @@ -574,15 +580,17 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	if (ret < 0)
+>  		epc->max_functions = 1;
+>  
+> -	ret = __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
+> -				 ep->page_size);
+> +	mem_window.phys_base = ep->phys_base;
+> +	mem_window.size = ep->addr_size;
+> +	ret = __pci_epc_mem_init(epc, &mem_window, 1, ep->page_size);
+>  	if (ret < 0) {
+>  		dev_err(dev, "Failed to initialize address space\n");
+>  		return ret;
+>  	}
+>  
+> -	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
+> -					     epc->mem->page_size);
+> +	msi_page_size = epc->mem[PCI_EPC_DEFAULT_WINDOW]->page_size;
+> +	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys, &window,
+> +					     msi_page_size);
+>  	if (!ep->msi_mem) {
+>  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>  		return -ENOMEM;
+> diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+> index def7820cb824..7991b38a5350 100644
+> --- a/drivers/pci/controller/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/pcie-cadence-ep.c
+> @@ -172,7 +172,7 @@ static void cdns_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+>  }
+>  
+>  static int cdns_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, phys_addr_t addr,
+> -				 u64 pci_addr, size_t size)
+> +				 int window, u64 pci_addr, size_t size)
+>  {
+>  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct cdns_pcie *pcie = &ep->pcie;
+> @@ -434,12 +434,14 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct device_node *np = dev->of_node;
+> +	struct pci_epc_mem_window mem_window;
+>  	struct cdns_pcie_ep *ep;
+>  	struct cdns_pcie *pcie;
+>  	struct pci_epc *epc;
+>  	struct resource *res;
+>  	int ret;
+>  	int phy_count;
+> +	int window;
+>  
+>  	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+>  	if (!ep)
+> @@ -502,15 +504,16 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+>  	if (of_property_read_u8(np, "max-functions", &epc->max_functions) < 0)
+>  		epc->max_functions = 1;
+>  
+> -	ret = pci_epc_mem_init(epc, pcie->mem_res->start,
+> -			       resource_size(pcie->mem_res));
+> +	mem_window.phys_base = pcie->mem_res->start;
+> +	mem_window.size = resource_size(pcie->mem_res);
+> +	ret = pci_epc_mem_init(epc, &mem_window, 1);
+>  	if (ret < 0) {
+>  		dev_err(dev, "failed to initialize the memory space\n");
+>  		goto err_init;
+>  	}
+>  
+>  	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+> -						  SZ_128K);
+> +						  &window, SZ_128K);
+>  	if (!ep->irq_cpu_addr) {
+>  		dev_err(dev, "failed to reserve memory space for MSI\n");
+>  		ret = -ENOMEM;
+> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> index d743b0a48988..d59e85c8d319 100644
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -256,8 +256,8 @@ static void rockchip_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+>  }
+>  
+>  static int rockchip_pcie_ep_map_addr(struct pci_epc *epc, u8 fn,
+> -				     phys_addr_t addr, u64 pci_addr,
+> -				     size_t size)
+> +				     phys_addr_t addr, int window,
+> +				     u64 pci_addr, size_t size)
+>  {
+>  	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct rockchip_pcie *pcie = &ep->rockchip;
+> @@ -562,11 +562,13 @@ static const struct of_device_id rockchip_pcie_ep_of_match[] = {
+>  
+>  static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+>  {
+> +	struct pci_epc_mem_window mem_window;
+>  	struct device *dev = &pdev->dev;
+>  	struct rockchip_pcie_ep *ep;
+>  	struct rockchip_pcie *rockchip;
+>  	struct pci_epc *epc;
+>  	size_t max_regions;
+> +	int window;
+>  	int err;
+>  
+>  	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+> @@ -614,15 +616,16 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+>  	/* Only enable function 0 by default */
+>  	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
+>  
+> -	err = pci_epc_mem_init(epc, rockchip->mem_res->start,
+> -			       resource_size(rockchip->mem_res));
+> +	mem_window.phys_base = rockchip->mem_res->start;
+> +	mem_window.size = resource_size(rockchip->mem_res);
+> +	err = pci_epc_mem_init(epc, &mem_window, 1);
+>  	if (err < 0) {
+>  		dev_err(dev, "failed to initialize the memory space\n");
+>  		goto err_uninit_port;
+>  	}
+>  
+>  	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+> -						  SZ_128K);
+> +						  &window, SZ_128K);
+>  	if (!ep->irq_cpu_addr) {
+>  		dev_err(dev, "failed to reserve memory space for MSI\n");
+>  		err = -ENOMEM;
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 5d74f81ddfe4..475228011703 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -84,8 +84,10 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>  	struct pci_epc *epc = epf->epc;
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>  	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> +	int window;
+>  
+> -	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
+> +	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr,
+> +					  &window, reg->size);
+>  	if (!src_addr) {
+>  		dev_err(dev, "Failed to allocate source address\n");
+>  		reg->status = STATUS_SRC_ADDR_INVALID;
+> @@ -93,15 +95,16 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>  		goto err;
+>  	}
+>  
+> -	ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, reg->src_addr,
+> -			       reg->size);
+> +	ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, window,
+> +			       reg->src_addr, reg->size);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to map source address\n");
+>  		reg->status = STATUS_SRC_ADDR_INVALID;
+>  		goto err_src_addr;
+>  	}
+>  
+> -	dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr, reg->size);
+> +	dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr,
+> +					  &window, reg->size);
+>  	if (!dst_addr) {
+>  		dev_err(dev, "Failed to allocate destination address\n");
+>  		reg->status = STATUS_DST_ADDR_INVALID;
+> @@ -109,8 +112,8 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>  		goto err_src_map_addr;
+>  	}
+>  
+> -	ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, reg->dst_addr,
+> -			       reg->size);
+> +	ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, window,
+> +			       reg->dst_addr, reg->size);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to map destination address\n");
+>  		reg->status = STATUS_DST_ADDR_INVALID;
+> @@ -146,8 +149,9 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>  	struct pci_epc *epc = epf->epc;
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>  	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> +	int window;
+>  
+> -	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+> +	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, &window, reg->size);
+>  	if (!src_addr) {
+>  		dev_err(dev, "Failed to allocate address\n");
+>  		reg->status = STATUS_SRC_ADDR_INVALID;
+> @@ -155,8 +159,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>  		goto err;
+>  	}
+>  
+> -	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->src_addr,
+> -			       reg->size);
+> +	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, window,
+> +			       reg->src_addr, reg->size);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to map address\n");
+>  		reg->status = STATUS_SRC_ADDR_INVALID;
+> @@ -193,13 +197,14 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>  	void __iomem *dst_addr;
+>  	void *buf;
+>  	phys_addr_t phys_addr;
+> +	int window;
+>  	struct pci_epf *epf = epf_test->epf;
+>  	struct device *dev = &epf->dev;
+>  	struct pci_epc *epc = epf->epc;
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>  	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+>  
+> -	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+> +	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, &window, reg->size);
+>  	if (!dst_addr) {
+>  		dev_err(dev, "Failed to allocate address\n");
+>  		reg->status = STATUS_DST_ADDR_INVALID;
+> @@ -207,8 +212,8 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>  		goto err;
+>  	}
+>  
+> -	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->dst_addr,
+> -			       reg->size);
+> +	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, window,
+> +			       reg->dst_addr, reg->size);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to map address\n");
+>  		reg->status = STATUS_DST_ADDR_INVALID;
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index 2091508c1620..289c266c2d90 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -358,13 +358,15 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
+>   * @epc: the EPC device on which address is allocated
+>   * @func_no: the endpoint function number in the EPC device
+>   * @phys_addr: physical address of the local system
+> + * @window: index to the window region where PCI address will be mapped
+>   * @pci_addr: PCI address to which the physical address should be mapped
+>   * @size: the size of the allocation
+>   *
+>   * Invoke to map CPU address with PCI address.
+>   */
+>  int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+> -		     phys_addr_t phys_addr, u64 pci_addr, size_t size)
+> +		     phys_addr_t phys_addr, int window,
+> +		     u64 pci_addr, size_t size)
+>  {
+>  	int ret;
+>  	unsigned long flags;
+> @@ -376,7 +378,8 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+>  		return 0;
+>  
+>  	spin_lock_irqsave(&epc->lock, flags);
+> -	ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr, size);
+> +	ret = epc->ops->map_addr(epc, func_no, phys_addr,
+> +				 window, pci_addr, size);
+>  	spin_unlock_irqrestore(&epc->lock, flags);
+>  
+>  	return ret;
+> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> index d2b174ce15de..c955f2c97944 100644
+> --- a/drivers/pci/endpoint/pci-epc-mem.c
+> +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> @@ -39,56 +39,77 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+>   * __pci_epc_mem_init() - initialize the pci_epc_mem structure
+>   * @epc: the EPC device that invoked pci_epc_mem_init
+>   * @phys_base: the physical address of the base
+> - * @size: the size of the address space
+> + * @num_windows: number of windows device supports
+>   * @page_size: size of each page
+>   *
+>   * Invoke to initialize the pci_epc_mem structure used by the
+>   * endpoint functions to allocate mapped PCI address.
+>   */
+> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
+> -		       size_t page_size)
+> +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *windows,
+> +		       int num_windows, size_t page_size)
+>  {
+> -	int ret;
+> -	struct pci_epc_mem *mem;
+> -	unsigned long *bitmap;
+> +	struct pci_epc_mem *mem = NULL;
+> +	unsigned long *bitmap = NULL;
+>  	unsigned int page_shift;
+> -	int pages;
+>  	int bitmap_size;
+> +	int pages;
+> +	int ret;
+> +	int i;
+> +
+> +	epc->mem_windows = 0;
+> +
+> +	if (!windows)
+> +		return -EINVAL;
+> +
+> +	if (num_windows <= 0)
+> +		return -EINVAL;
+>  
+>  	if (page_size < PAGE_SIZE)
+>  		page_size = PAGE_SIZE;
+>  
+>  	page_shift = ilog2(page_size);
+> -	pages = size >> page_shift;
+> -	bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+>  
+> -	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> -	if (!mem) {
+> -		ret = -ENOMEM;
+> -		goto err;
+> -	}
+> +	epc->mem = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
+> +	if (!epc->mem)
+> +		return -EINVAL;
+>  
+> -	bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> -	if (!bitmap) {
+> -		ret = -ENOMEM;
+> -		goto err_mem;
+> -	}
+> +	for (i = 0; i < num_windows; i++) {
+> +		pages = windows[i].phys_base >> page_shift;
+> +		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+>  
+> -	mem->bitmap = bitmap;
+> -	mem->phys_base = phys_base;
+> -	mem->page_size = page_size;
+> -	mem->pages = pages;
+> -	mem->size = size;
+> +		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> +		if (!mem) {
+> +			ret = -ENOMEM;
+> +			goto err_mem;
+> +		}
+>  
+> -	epc->mem = mem;
+> +		bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> +		if (!bitmap) {
+> +			ret = -ENOMEM;
+> +			goto err_mem;
+> +		}
+> +
+> +		mem->bitmap = bitmap;
+> +		mem->window.phys_base = windows[i].phys_base;
+> +		mem->page_size = page_size;
+> +		mem->pages = pages;
+> +		mem->window.size = windows[i].size;
+> +		mem->window.map_size = 0;
+> +
+> +		epc->mem[i] = mem;
+> +	}
+> +	epc->mem_windows = num_windows;
+>  
+>  	return 0;
+>  
+>  err_mem:
+> -	kfree(mem);
+> +	for (; i >= 0; i--) {
+> +		kfree(mem->bitmap);
+> +		kfree(epc->mem[i]);
+> +	}
+> +	kfree(epc->mem);
+>  
+> -err:
+> -return ret;
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+>  
+> @@ -101,48 +122,126 @@ EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+>   */
+>  void pci_epc_mem_exit(struct pci_epc *epc)
+>  {
+> -	struct pci_epc_mem *mem = epc->mem;
+> +	struct pci_epc_mem *mem;
+> +	int i;
+> +
+> +	if (!epc->mem_windows)
+> +		return;
+> +
+> +	for (i = 0; i <= epc->mem_windows; i--) {
+> +		mem = epc->mem[i];
+> +		kfree(mem->bitmap);
+> +		kfree(epc->mem[i]);
+> +	}
+> +	kfree(epc->mem);
+>  
+>  	epc->mem = NULL;
+> -	kfree(mem->bitmap);
+> -	kfree(mem);
+> +	epc->mem_windows = 0;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+>  
+> +static int pci_epc_find_best_fit_window(struct pci_epc *epc, size_t size)
+> +{
+> +	size_t window_least_size = 0;
+> +	int best_fit_window = -1;
+> +	struct pci_epc_mem *mem;
+> +	size_t actual_size;
+> +	int i;
+> +
+> +	for (i = 0; i < epc->mem_windows; i++) {
+> +		mem = epc->mem[i];
+> +
+> +		/* if chunk from this region is already used skip it */
+> +		if (mem->window.map_size)
+> +			continue;
+> +
+> +		actual_size = ALIGN(size, mem->page_size);
+> +
+> +		if (best_fit_window == -1) {
+> +			best_fit_window = i;
+> +			window_least_size = mem->window.size;
+> +		} else {
+> +			if (actual_size <= mem->window.size &&
+> +			    mem->window.size < window_least_size) {
+> +				best_fit_window = i;
+> +				window_least_size = mem->window.size;
+> +			}
+> +		}
+> +	}
+> +
+> +	return best_fit_window;
+> +}
+> +
+>  /**
+>   * pci_epc_mem_alloc_addr() - allocate memory address from EPC addr space
+>   * @epc: the EPC device on which memory has to be allocated
+>   * @phys_addr: populate the allocated physical address here
+> + * @window: populate the window here which will be used to map PCI address
+>   * @size: the size of the address space that has to be allocated
+>   *
+>   * Invoke to allocate memory address from the EPC address space. This
+>   * is usually done to map the remote RC address into the local system.
+>   */
+>  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+> -				     phys_addr_t *phys_addr, size_t size)
+> +				     phys_addr_t *phys_addr,
+> +				     int *window, size_t size)
+>  {
+> +	int best_fit = PCI_EPC_DEFAULT_WINDOW;
+> +	void __iomem *virt_addr = NULL;
+> +	struct pci_epc_mem *mem;
+> +	unsigned int page_shift;
+>  	int pageno;
+> -	void __iomem *virt_addr;
+> -	struct pci_epc_mem *mem = epc->mem;
+> -	unsigned int page_shift = ilog2(mem->page_size);
+>  	int order;
+>  
+> +	if (epc->mem_windows <= 0)
+> +		return NULL;
+> +
+> +	if (epc->mem_windows > 1) {
+> +		best_fit = pci_epc_find_best_fit_window(epc, size);
+> +		if (best_fit < 0)
+> +			return NULL;
+> +	}
+> +
+> +	mem = epc->mem[best_fit];
+>  	size = ALIGN(size, mem->page_size);
+> +	if (size > (mem->window.size - mem->window.map_size))
+> +		return NULL;
+> +	page_shift = ilog2(mem->page_size);
+>  	order = pci_epc_mem_get_order(mem, size);
+>  
+>  	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
+>  	if (pageno < 0)
+>  		return NULL;
+>  
+> -	*phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
+> +	*phys_addr = mem->window.phys_base + (pageno << page_shift);
+>  	virt_addr = ioremap(*phys_addr, size);
+> -	if (!virt_addr)
+> +	if (!virt_addr) {
+>  		bitmap_release_region(mem->bitmap, pageno, order);
+> +	} else {
+> +		mem->window.map_size += size;
+> +		*window = best_fit;
+> +	}
+>  
+>  	return virt_addr;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+>  
+> +static int pci_epc_get_matching_window(struct pci_epc *epc,
+> +				       phys_addr_t phys_addr)
+> +{
+> +	struct pci_epc_mem *mem;
+> +	int i;
+> +
+> +	for (i = 0; i < epc->mem_windows; i++) {
+> +		mem = epc->mem[i];
+> +
+> +		if (mem->window.phys_base == phys_addr)
+> +			return i;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  /**
+>   * pci_epc_mem_free_addr() - free the allocated memory address
+>   * @epc: the EPC device on which memory was allocated
+> @@ -155,16 +254,26 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+>  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
+>  			   void __iomem *virt_addr, size_t size)
+>  {
+> +	struct pci_epc_mem *mem;
+> +	unsigned int page_shift;
+> +	int window = 0;
+>  	int pageno;
+> -	struct pci_epc_mem *mem = epc->mem;
+> -	unsigned int page_shift = ilog2(mem->page_size);
+>  	int order;
+>  
+> +	if (epc->mem_windows > 1) {
+> +		window = pci_epc_get_matching_window(epc, phys_addr);
+> +		if (window < 0)
+> +			return;
+> +	}
+> +
+> +	mem = epc->mem[window];
+> +	page_shift = ilog2(mem->page_size);
+>  	iounmap(virt_addr);
+> -	pageno = (phys_addr - mem->phys_base) >> page_shift;
+> +	pageno = (phys_addr - mem->window.phys_base) >> page_shift;
+>  	size = ALIGN(size, mem->page_size);
+>  	order = pci_epc_mem_get_order(mem, size);
+>  	bitmap_release_region(mem->bitmap, pageno, order);
+> +	mem->window.map_size -= size;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
+>  
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index 56f1846b9d39..5e86d22dd5c5 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -48,7 +48,8 @@ struct pci_epc_ops {
+>  	void	(*clear_bar)(struct pci_epc *epc, u8 func_no,
+>  			     struct pci_epf_bar *epf_bar);
+>  	int	(*map_addr)(struct pci_epc *epc, u8 func_no,
+> -			    phys_addr_t addr, u64 pci_addr, size_t size);
+> +			    phys_addr_t addr, int window,
+> +			    u64 pci_addr, size_t size);
+>  	void	(*unmap_addr)(struct pci_epc *epc, u8 func_no,
+>  			      phys_addr_t addr);
+>  	int	(*set_msi)(struct pci_epc *epc, u8 func_no, u8 interrupts);
+> @@ -64,17 +65,28 @@ struct pci_epc_ops {
+>  	struct module *owner;
+>  };
+>  
+> +#define PCI_EPC_DEFAULT_WINDOW		0
+> +
+> +/**
+> + * struct pci_epc_mem_window - address window of the endpoint controller
+> + * @phys_base: physical base address of the PCI address window
+> + * @size: the size of the PCI address window
+> + */
+> +struct pci_epc_mem_window {
+> +	phys_addr_t	phys_base;
+> +	size_t		size;
+> +	size_t		map_size;
+> +};
+> +
+>  /**
+>   * struct pci_epc_mem - address space of the endpoint controller
+> - * @phys_base: physical base address of the PCI address space
+> - * @size: the size of the PCI address space
+> + * @window: address window of the endpoint controller
+>   * @bitmap: bitmap to manage the PCI address space
+> - * @pages: number of bits representing the address region
+>   * @page_size: size of each page
+> + * @pages: number of bits representing the address region
+>   */
+>  struct pci_epc_mem {
+> -	phys_addr_t	phys_base;
+> -	size_t		size;
+> +	struct pci_epc_mem_window window;
+>  	unsigned long	*bitmap;
+>  	size_t		page_size;
+>  	int		pages;
+> @@ -85,7 +97,8 @@ struct pci_epc_mem {
+>   * @dev: PCI EPC device
+>   * @pci_epf: list of endpoint functions present in this EPC device
+>   * @ops: function pointers for performing endpoint operations
+> - * @mem: address space of the endpoint controller
+> + * @mem: array of address space of the endpoint controller
+> + * @mem_windows: number of windows supported by device
+>   * @max_functions: max number of functions that can be configured in this EPC
+>   * @group: configfs group representing the PCI EPC device
+>   * @lock: spinlock to protect pci_epc ops
+> @@ -94,7 +107,8 @@ struct pci_epc {
+>  	struct device			dev;
+>  	struct list_head		pci_epf;
+>  	const struct pci_epc_ops	*ops;
+> -	struct pci_epc_mem		*mem;
+> +	struct pci_epc_mem		**mem;
+> +	int				mem_windows;
+>  	u8				max_functions;
+>  	struct config_group		*group;
+>  	/* spinlock to protect against concurrent access of EP controller */
+> @@ -128,8 +142,8 @@ struct pci_epc_features {
+>  #define devm_pci_epc_create(dev, ops)    \
+>  		__devm_pci_epc_create((dev), (ops), THIS_MODULE)
+>  
+> -#define pci_epc_mem_init(epc, phys_addr, size)	\
+> -		__pci_epc_mem_init((epc), (phys_addr), (size), PAGE_SIZE)
+> +#define pci_epc_mem_init(epc, windows, num_windows)	\
+> +		__pci_epc_mem_init((epc), windows, num_windows, PAGE_SIZE)
+>  
+>  static inline void epc_set_drvdata(struct pci_epc *epc, void *data)
+>  {
+> @@ -159,7 +173,7 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no,
+>  void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no,
+>  		       struct pci_epf_bar *epf_bar);
+>  int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+> -		     phys_addr_t phys_addr,
+> +		     phys_addr_t phys_addr, int window,
+>  		     u64 pci_addr, size_t size);
+>  void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no,
+>  			phys_addr_t phys_addr);
+> @@ -178,11 +192,12 @@ unsigned int pci_epc_get_first_free_bar(const struct pci_epc_features
+>  struct pci_epc *pci_epc_get(const char *epc_name);
+>  void pci_epc_put(struct pci_epc *epc);
+>  
+> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_addr, size_t size,
+> -		       size_t page_size);
+> +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *window,
+> +		       int num_windows, size_t page_size);
+>  void pci_epc_mem_exit(struct pci_epc *epc);
+>  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+> -				     phys_addr_t *phys_addr, size_t size);
+> +				     phys_addr_t *phys_addr,
+> +				     int *window, size_t size);
+>  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
+>  			   void __iomem *virt_addr, size_t size);
+>  #endif /* __LINUX_PCI_EPC_H */
 > 
-> -- 
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000004b2df0598075fc8%40google.com.
