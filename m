@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB873C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B92C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83E1021903
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0553621903
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887881;
-	bh=IM1t6g1nMjKWhDLnyHsa0pI2DuK8mSYSBKumetio6Ws=;
+	s=default; t=1574887885;
+	bh=Y4lAoQyQxZwgpe8S14AlWKNoT/13S/b0oclnwxddKWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GBs8uWxn0STgp73Lz0MsJ0nriwOv94EO0D2j+qDzzM911OGS7BV95qFUnRMzCXqXX
-	 V2h0kOjZcG+TRpg+MdNXNMT4IcPDmfn1dCUTSApqros63nwzJMsakcfKms/0fdBTim
-	 o5HRyRY1UeM9Pm0vOFbHhlNgQg6edcM+p5cnHKOQ=
+	b=mfyTwMtZilAU1RZRr4XkMYL/t+J6w/b3GOcat+B1te2fOQ0i4oL+aFVMMF7AzGROe
+	 MzB64M0MkUCeRkj4BIS1Ief4XRLoj8wgOnA/qnfwZmjXdVyv6ntwOQt3JHumc76ieP
+	 rdgCETC8kpuYKhZfgXM1N2SNLQrUMiJi2tHkGERY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbfK0UvU (ORCPT
+        id S1729251AbfK0UvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:51:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37810 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:51:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730454AbfK0UvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:51:15 -0500
+        id S1730462AbfK0UvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:51:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1A5721847;
-        Wed, 27 Nov 2019 20:51:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F6132184C;
+        Wed, 27 Nov 2019 20:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887875;
-        bh=IM1t6g1nMjKWhDLnyHsa0pI2DuK8mSYSBKumetio6Ws=;
+        s=default; t=1574887879;
+        bh=Y4lAoQyQxZwgpe8S14AlWKNoT/13S/b0oclnwxddKWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xysraq16mvTf55O7A9cdEOBNuRp7rSNUpIA3c4bqTpysgCtA8a/vzYqQ/LwCfQEeF
-         M4Aqw1m0AuVhCNV73TFBIryDQVgsKvyMkdqnou3TvckrP6KmbaBvR4jX7ZK+jfQ6F2
-         p4PGhQyuVUvQlVoQaRmM3YN6g4vGluulFDk6x2Jo=
+        b=vYqPotm8GTsuqhrJ7qaPf0UmjPoKpl5O2H5OXmYS5Z2xQJlN8D1K40oEgS+XGLX1G
+         iKhgrBiKfeAu8w2/5ZeJI59Lg2j2YulA3/Y9KfGF7vdbmUy6GIEYziuMnTpPWMCVoT
+         Z2O42BL3hVM0c9aojzB7vW5EKch0uEvjDvoLmISI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 127/211] sched/topology: Fix off by one bug
-Date:   Wed, 27 Nov 2019 21:31:00 +0100
-Message-Id: <20191127203106.103789668@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 129/211] openvswitch: fix linking without CONFIG_NF_CONNTRACK_LABELS
+Date:   Wed, 27 Nov 2019 21:31:02 +0100
+Message-Id: <20191127203106.276796645@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -62,38 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 993f0b0510dad98b4e6e39506834dab0d13fd539 ]
+[ Upstream commit a277d516de5f498c91d91189717ef7e01102ad27 ]
 
-With the addition of the NUMA identity level, we increased @level by
-one and will run off the end of the array in the distance sort loop.
+When CONFIG_CC_OPTIMIZE_FOR_DEBUGGING is enabled, the compiler
+fails to optimize out a dead code path, which leads to a link failure:
 
-Fixed: 051f3ca02e46 ("sched/topology: Introduce NUMA identity node sched domain")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+net/openvswitch/conntrack.o: In function `ovs_ct_set_labels':
+conntrack.c:(.text+0x2e60): undefined reference to `nf_connlabels_replace'
+
+In this configuration, we can take a shortcut, and completely
+remove the contrack label code. This may also help the regular
+optimization.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/openvswitch/conntrack.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 9dcd80ed9d4c1..867d173dab482 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1347,7 +1347,7 @@ void sched_init_numa(void)
- 	int level = 0;
- 	int i, j, k;
- 
--	sched_domains_numa_distance = kzalloc(sizeof(int) * nr_node_ids, GFP_KERNEL);
-+	sched_domains_numa_distance = kzalloc(sizeof(int) * (nr_node_ids + 1), GFP_KERNEL);
- 	if (!sched_domains_numa_distance)
- 		return;
- 
+diff --git a/net/openvswitch/conntrack.c b/net/openvswitch/conntrack.c
+index 0171b27a2b81b..48d81857961ca 100644
+--- a/net/openvswitch/conntrack.c
++++ b/net/openvswitch/conntrack.c
+@@ -1083,7 +1083,8 @@ static int ovs_ct_commit(struct net *net, struct sw_flow_key *key,
+ 					 &info->labels.mask);
+ 		if (err)
+ 			return err;
+-	} else if (labels_nonzero(&info->labels.mask)) {
++	} else if (IS_ENABLED(CONFIG_NF_CONNTRACK_LABELS) &&
++		   labels_nonzero(&info->labels.mask)) {
+ 		err = ovs_ct_set_labels(ct, key, &info->labels.value,
+ 					&info->labels.mask);
+ 		if (err)
 -- 
 2.20.1
 
