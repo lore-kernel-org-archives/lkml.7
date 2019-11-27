@@ -2,51 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC84C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9590EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60CB32166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB18217C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887602;
-	bh=wMAJKq3zt9WGbUuDR1jnSVCwQkmkUvyIQkE4Axf/nFA=;
+	s=default; t=1574887604;
+	bh=aJtFH0CzECT2feA/hIGxX4skKXjsT+Xn0WFyS4eiy04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z3oFiIe7GPENeeItIqE1s1y2Z0qhRwYu/z23NAk7me25HLzFm1R98SLzgJlPMw9oN
-	 xqmAW7MJynauOBwOFhOe3Fi7jORCYhXLfYjpYqPELYS7E/zywEMmy0GwVuW3dTnrJD
-	 6qNdX+janQPPXrW3kTU/3Ohvz2Fadp1R9Vh3V/Vs=
+	b=iRINhE0FLFt4zTt5av2Okqwa2qLLCf8/E+z9sRgbbD+tfBJwdYavXyv2QKrR6vR3T
+	 1OpW6nQ7cI1dvo50DKuvSabhi5A1K2L7darVM4ew6Exckzo+CyMyZMQsBmPmmLIdYU
+	 F7FWqIvsxg1pjqP8bqqJLM2dx7rwXOcKK6tnLkTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbfK0Uqk (ORCPT
+        id S1729913AbfK0Uqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:46:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58678 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:46:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbfK0Uqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:46:37 -0500
+        id S1729909AbfK0Uqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:46:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F68F2182A;
-        Wed, 27 Nov 2019 20:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1D212166E;
+        Wed, 27 Nov 2019 20:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887596;
-        bh=wMAJKq3zt9WGbUuDR1jnSVCwQkmkUvyIQkE4Axf/nFA=;
+        s=default; t=1574887599;
+        bh=aJtFH0CzECT2feA/hIGxX4skKXjsT+Xn0WFyS4eiy04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j63MC3I1YZ+qTLxa1c1axGV5DdvKEDWWzoK83N+Qp2ibU0OyOpwXpo3scErvRfC6B
-         oMcKYFjO/tJ/oWa6Srp9KsxvaxAbveeQepGLIrDpo7CziJa0Rb6r3rCM4M0a/Ug0Nv
-         NCMf0c45VNm7LwaNZO4ls5XZDQmnOzMAnpUAE+Hg=
+        b=GyWzdLYI7wXZFKgPoSNvHg4x15/zmHxttcQkcoEo3rwVAB45bRG4g2OUzoyIIyHyU
+         xuFxKgQBdT1vsXcynHIGK6HrcQc9/GFrvVZ9c52LOnp5u31zCcaREIkV/6X3dTMjmd
+         4DW6RH6jRkZPjaQnZ3q0Rlow2E3W2yZUMXc+pLfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 021/211] pty: fix compat ioctls
-Date:   Wed, 27 Nov 2019 21:29:14 +0100
-Message-Id: <20191127203053.040404097@linuxfoundation.org>
+        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.14 004/211] net/mlx5e: Fix set vf link state error flow
+Date:   Wed, 27 Nov 2019 21:28:57 +0100
+Message-Id: <20191127203049.881825779@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -59,75 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit 50f45326afab723df529eca54095e2feac24da2d ]
+[ Upstream commit 751021218f7e66ee9bbaa2be23056e447cd75ec4 ]
 
-pointer-taking ones need compat_ptr(); int-taking one doesn't.
+Before this commit the ndo always returned success.
+Fix that.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1ab2068a4c66 ("net/mlx5: Implement vports admin state backup/restore")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/tty/pty.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/pty.c b/drivers/tty/pty.c
-index 9e26c530d2ddb..b3208b1b1028d 100644
---- a/drivers/tty/pty.c
-+++ b/drivers/tty/pty.c
-@@ -28,6 +28,7 @@
- #include <linux/mount.h>
- #include <linux/file.h>
- #include <linux/ioctl.h>
-+#include <linux/compat.h>
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -1783,7 +1783,7 @@ int mlx5_eswitch_set_vport_state(struct
  
- #undef TTY_DEBUG_HANGUP
- #ifdef TTY_DEBUG_HANGUP
-@@ -488,6 +489,7 @@ static int pty_bsd_ioctl(struct tty_struct *tty,
- 	return -ENOIOCTLCMD;
+ unlock:
+ 	mutex_unlock(&esw->state_lock);
+-	return 0;
++	return err;
  }
  
-+#ifdef CONFIG_COMPAT
- static long pty_bsd_compat_ioctl(struct tty_struct *tty,
- 				 unsigned int cmd, unsigned long arg)
- {
-@@ -495,8 +497,11 @@ static long pty_bsd_compat_ioctl(struct tty_struct *tty,
- 	 * PTY ioctls don't require any special translation between 32-bit and
- 	 * 64-bit userspace, they are already compatible.
- 	 */
--	return pty_bsd_ioctl(tty, cmd, arg);
-+	return pty_bsd_ioctl(tty, cmd, (unsigned long)compat_ptr(arg));
- }
-+#else
-+#define pty_bsd_compat_ioctl NULL
-+#endif
- 
- static int legacy_count = CONFIG_LEGACY_PTY_COUNT;
- /*
-@@ -676,6 +681,7 @@ static int pty_unix98_ioctl(struct tty_struct *tty,
- 	return -ENOIOCTLCMD;
- }
- 
-+#ifdef CONFIG_COMPAT
- static long pty_unix98_compat_ioctl(struct tty_struct *tty,
- 				 unsigned int cmd, unsigned long arg)
- {
-@@ -683,8 +689,12 @@ static long pty_unix98_compat_ioctl(struct tty_struct *tty,
- 	 * PTY ioctls don't require any special translation between 32-bit and
- 	 * 64-bit userspace, they are already compatible.
- 	 */
--	return pty_unix98_ioctl(tty, cmd, arg);
-+	return pty_unix98_ioctl(tty, cmd,
-+		cmd == TIOCSIG ? arg : (unsigned long)compat_ptr(arg));
- }
-+#else
-+#define pty_unix98_compat_ioctl NULL
-+#endif
- 
- /**
-  *	ptm_unix98_lookup	-	find a pty master
--- 
-2.20.1
-
+ int mlx5_eswitch_get_vport_config(struct mlx5_eswitch *esw,
 
 
