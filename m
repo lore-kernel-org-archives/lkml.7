@@ -2,170 +2,138 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93334C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEFAC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6860A215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890055;
-	bh=Mr7tKvRZ502cywgXVcx/jiSQvnfQj4wn5VzQkntfH5o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T4pyzZrs1Ggbugrq6wjflXOD7Gwem6VANy0p5iHfMntM51J6SvWcUZcgh7xz1F892
-	 ETKxSWMsRDEY9wTUvgZmIGffqZbAkC2VKM3hhKblRZ/KlqDLAYwwQ4yxZF7Gp6vOVU
-	 +wlT4SBrM1cFGi5FvF8A9lo7G2xlliuCdkYeNQTg=
+	by mail.kernel.org (Postfix) with ESMTP id 2C487215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbfK0V1d (ORCPT
+        id S1731516AbfK0V1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:27:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50890 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:27:39 -0500
+Received: from mga06.intel.com ([134.134.136.31]:23224 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731411AbfK0U7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:59:24 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7C6E20678;
-        Wed, 27 Nov 2019 20:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888363;
-        bh=Mr7tKvRZ502cywgXVcx/jiSQvnfQj4wn5VzQkntfH5o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cxIHABpsMtR1pcMfIdpfH6BBC+cjFyZHP/aWndX3bL7xXlizUhIn3EToKD014EZy2
-         jM7Gf7ZlH0BmID07GnyNi97I2GvDC37UdIIwSPedNT4JEGKHcCOKwETvtdtry5hZER
-         I2jbabiDXGVh3LwdEEHwX/SloHms3I+s5cnhGR8Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 106/306] spi: omap2-mcspi: Set FIFO DMA trigger level to word length
-Date:   Wed, 27 Nov 2019 21:29:16 +0100
-Message-Id: <20191127203123.065567740@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
-References: <20191127203114.766709977@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731392AbfK0U7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:59:19 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 12:59:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,250,1571727600"; 
+   d="scan'208";a="383616943"
+Received: from gtau-mobl.ger.corp.intel.com (HELO localhost) ([10.251.83.243])
+  by orsmga005.jf.intel.com with ESMTP; 27 Nov 2019 12:59:14 -0800
+Date:   Wed, 27 Nov 2019 22:59:12 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, James Morris <jmorris@namei.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [GIT PULL] tpmdd updates for Linux v5.4
+Message-ID: <20191127205912.GB14290@linux.intel.com>
+References: <20190902143121.pjnykevzlajlcrh6@linux.intel.com>
+ <CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com>
+ <20191127205800.GA14290@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127205800.GA14290@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh R <vigneshr@ti.com>
+On Wed, Nov 27, 2019 at 10:58:00PM +0200, Jarkko Sakkinen wrote:
+> On Wed, Nov 20, 2019 at 08:48:25PM -0800, Dan Williams wrote:
+> > On Mon, Sep 2, 2019 at 7:34 AM Jarkko Sakkinen
+> > <jarkko.sakkinen@linux.intel.com> wrote:
+> > >
+> > > Hi
+> > >
+> > > A new driver for fTPM living inside ARM TEE was added this round. In
+> > > addition to that, there is three bug fixes and one clean up.
+> > >
+> > > /Jarkko
+> > >
+> > > The following changes since commit 8fb8e9e46261e0117cb3cffb6dd8bb7e08f8649b:
+> > >
+> > >   Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2019-08-30 09:23:45 -0700)
+> > >
+> > > are available in the Git repository at:
+> > >
+> > >   git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20190902
+> > >
+> > > for you to fetch changes up to e8bd417aab0c72bfb54465596b16085702ba0405:
+> > >
+> > >   tpm/tpm_ftpm_tee: Document fTPM TEE driver (2019-09-02 17:08:35 +0300)
+> > >
+> > > ----------------------------------------------------------------
+> > > tpmdd updates for Linux v5.4
+> > >
+> > > ----------------------------------------------------------------
+> > > Jarkko Sakkinen (1):
+> > >       tpm: Remove a deprecated comments about implicit sysfs locking
+> > >
+> > > Lukas Bulwahn (1):
+> > >       MAINTAINERS: fix style in KEYS-TRUSTED entry
+> > >
+> > > Sasha Levin (2):
+> > >       tpm/tpm_ftpm_tee: A driver for firmware TPM running inside TEE
+> > >       tpm/tpm_ftpm_tee: Document fTPM TEE driver
+> > >
+> > > Stefan Berger (2):
+> > >       tpm_tis_core: Turn on the TPM before probing IRQ's
+> > >       tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+> > 
+> > Hi Jarrko,
+> > 
+> > I'm replying here because I can't find the patches to reply to
+> > directly from LKML.
+> > 
+> > Commit 7f064c378e2c "tpm_tis_core: Turn on the TPM before probing
+> > IRQ's" in the v5.3-stable tree caused a regression on a pre-release
+> > platform with a TPM2 device. The interrupt starts screaming when the
+> > driver is loaded and does not stop until the device is force unbond
+> > from the driver by:
+> > 
+> >      echo IFX0740:00 > /sys/bus/platform/drivers/tpm_tis/unbind
+> > 
+> > I checked v5.4-rc8 and it has the same problem. I tried reverting:
+> > 
+> > 1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+> > 5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
+> > 
+> > Which silenced the screaming interrupt problem, but now the TPM is reporting:
+> > 
+> > [    3.725131] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
+> > [    3.725358] tpm tpm0: tpm_try_transmit: send(): error -5
+> > [    3.725359] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
+> > polling instead
+> > 
+> > ...at load, where it was not reporting this previously. Can you take a look?
+> 
+> It is already in WiP:
+> 
+> https://patchwork.kernel.org/patch/11240111/
+> 
+> Stefan also sent patches that revert to changes that you described:
+> 
+> https://patchwork.kernel.org/cover/11262363/
+> 
+> Probably better first to fix the issue on top of master before deciding
+> actions.
 
-[ Upstream commit b682cffa3ac6d9d9e16e9b413c45caee3b391fab ]
+... and apologies for late response.
 
-McSPI has 32 byte FIFO in Transmit-Receive mode. Current code tries to
-configuration FIFO watermark level for DMA trigger to be GCD of transfer
-length and max FIFO size which would mean trigger level may be set to 32
-for transmit-receive mode if length is aligned. This does not work in
-case of SPI slave mode where FIFO always needs to have data ready
-whenever master starts the clock. With DMA trigger size of 32 there will
-be a small window during slave TX where DMA is still putting data into
-FIFO but master would have started clock for next byte, resulting in
-shifting out of stale data. Similarly, on Slave RX side there may be RX
-FIFO overflow
-Fix this by setting FIFO watermark for DMA trigger to word
-length. This means DMA is triggered as soon as FIFO has space for word
-length bytes and DMA would make sure FIFO is almost always full
-therefore improving FIFO occupancy in both master and slave mode.
-
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/spi/spi-omap2-mcspi.c | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index e2be7da743438..f50cb8a4b4138 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -299,7 +299,7 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
- 	struct omap2_mcspi_cs *cs = spi->controller_state;
- 	struct omap2_mcspi *mcspi;
- 	unsigned int wcnt;
--	int max_fifo_depth, fifo_depth, bytes_per_word;
-+	int max_fifo_depth, bytes_per_word;
- 	u32 chconf, xferlevel;
- 
- 	mcspi = spi_master_get_devdata(master);
-@@ -315,10 +315,6 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
- 		else
- 			max_fifo_depth = OMAP2_MCSPI_MAX_FIFODEPTH;
- 
--		fifo_depth = gcd(t->len, max_fifo_depth);
--		if (fifo_depth < 2 || fifo_depth % bytes_per_word != 0)
--			goto disable_fifo;
--
- 		wcnt = t->len / bytes_per_word;
- 		if (wcnt > OMAP2_MCSPI_MAX_FIFOWCNT)
- 			goto disable_fifo;
-@@ -326,16 +322,17 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
- 		xferlevel = wcnt << 16;
- 		if (t->rx_buf != NULL) {
- 			chconf |= OMAP2_MCSPI_CHCONF_FFER;
--			xferlevel |= (fifo_depth - 1) << 8;
-+			xferlevel |= (bytes_per_word - 1) << 8;
- 		}
-+
- 		if (t->tx_buf != NULL) {
- 			chconf |= OMAP2_MCSPI_CHCONF_FFET;
--			xferlevel |= fifo_depth - 1;
-+			xferlevel |= bytes_per_word - 1;
- 		}
- 
- 		mcspi_write_reg(master, OMAP2_MCSPI_XFERLEVEL, xferlevel);
- 		mcspi_write_chconf0(spi, chconf);
--		mcspi->fifo_depth = fifo_depth;
-+		mcspi->fifo_depth = max_fifo_depth;
- 
- 		return;
- 	}
-@@ -585,7 +582,6 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
- 	struct dma_slave_config	cfg;
- 	enum dma_slave_buswidth width;
- 	unsigned es;
--	u32			burst;
- 	void __iomem		*chstat_reg;
- 	void __iomem            *irqstat_reg;
- 	int			wait_res;
-@@ -605,22 +601,14 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
- 	}
- 
- 	count = xfer->len;
--	burst = 1;
--
--	if (mcspi->fifo_depth > 0) {
--		if (count > mcspi->fifo_depth)
--			burst = mcspi->fifo_depth / es;
--		else
--			burst = count / es;
--	}
- 
- 	memset(&cfg, 0, sizeof(cfg));
- 	cfg.src_addr = cs->phys + OMAP2_MCSPI_RX0;
- 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
- 	cfg.src_addr_width = width;
- 	cfg.dst_addr_width = width;
--	cfg.src_maxburst = burst;
--	cfg.dst_maxburst = burst;
-+	cfg.src_maxburst = es;
-+	cfg.dst_maxburst = es;
- 
- 	rx = xfer->rx_buf;
- 	tx = xfer->tx_buf;
--- 
-2.20.1
-
-
-
+/Jarkko
