@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1583EC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE490C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB1E2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B587D2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888875;
-	bh=F2JsfBtc2GSihRVgSKDuj9dNn5knM3fBq6e/3aibmxo=;
+	s=default; t=1574888880;
+	bh=TjK6ymxqY67uPx9haMeBRwGjjLaIwExRBNJ32pxvHWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Az4jrPOT7FmA2b8IArxaHAChnrQvv/gDhIEqv22QT5HRNI/9ghAB6suvysm6cy9e
-	 cZxkX6xiTb7eU0+9DnCKh0ImMYa2EjasTOABqOYC5gkmUTmO5G7iMAjF2prPrH+gGT
-	 indwtRKobD8Ffe24Ew+F0wZKVQzJM1Ilt2JrhmJw=
+	b=Bin4ZQ6TiD/bqslO7lLZAgFaxDIAg3GWRvaIRs4GF2Z6XUA1RHUeEyq6DND4CStCi
+	 NvroP/H6haMmDCxR+tWIWFDDJEoMqomrwzYSTRwXFYyLL9+EUOLvQvCM/K9PuPdUQi
+	 ORwBOjauQcCPKi3YOGEg/+Gi8HVj0IrYBm645BpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732669AbfK0VHy (ORCPT
+        id S1732686AbfK0VH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:07:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34118 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:07:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732659AbfK0VHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:07:51 -0500
+        id S1732674AbfK0VH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:07:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9F7E2176D;
-        Wed, 27 Nov 2019 21:07:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2CA920637;
+        Wed, 27 Nov 2019 21:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888871;
-        bh=F2JsfBtc2GSihRVgSKDuj9dNn5knM3fBq6e/3aibmxo=;
+        s=default; t=1574888876;
+        bh=TjK6ymxqY67uPx9haMeBRwGjjLaIwExRBNJ32pxvHWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0O4gE6QYXsU3momygNLewikejizIUYfzlZClK6Hcv39cW2/wkPf8SM3q8tw5m2AI/
-         c+7YJtf88yyuX0t3cHIMQt4/FCwTgWFW1RONtaWjsZTqgrLn5OgHll4qdG1yTUJaCH
-         kFnKYW2spEpQD+cMeTonSFgFucV8u86P1XY6t3pY=
+        b=g1J+7Eqh/YTbvYSErPSvDgIQdtcNrc1sKhecfBt6cy66N41CZtMIUdrnAA3gZyPPy
+         gjVOCPJ2PyAklSP0gdzAP7QhZm9HmodqjqrdJG/ROTchgQaGdrJX2DhT9nPVkrUFxN
+         fkwkuEpsF0E8TKg0EeyFBA1pMeleg5PB7Cm1Xp/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 302/306] USB: serial: option: add support for Foxconn T77W968 LTE modules
-Date:   Wed, 27 Nov 2019 21:32:32 +0100
-Message-Id: <20191127203136.793964103@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        "Christopher M. Riedl" <cmr@informatik.wtf>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Daniel Axtens <dja@axtens.net>
+Subject: [PATCH 4.19 304/306] powerpc/64s: support nospectre_v2 cmdline option
+Date:   Wed, 27 Nov 2019 21:32:34 +0100
+Message-Id: <20191127203136.927449924@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,61 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksander Morgado <aleksander@aleksander.es>
+From: "Christopher M. Riedl" <cmr@informatik.wtf>
 
-commit f0797095423e6ea3b4be61134ee353c7f504d440 upstream.
+commit d8f0e0b073e1ec52a05f0c2a56318b47387d2f10 upstream.
 
-These are the Foxconn-branded variants of the Dell DW5821e modules,
-same USB layout as those. The device exposes AT, NMEA and DIAG ports
-in both USB configurations.
+Add support for disabling the kernel implemented spectre v2 mitigation
+(count cache flush on context switch) via the nospectre_v2 and
+mitigations=off cmdline options.
 
-P:  Vendor=0489 ProdID=e0b4 Rev=03.18
-S:  Manufacturer=FII
-S:  Product=T77W968 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-
-P:  Vendor=0489 ProdID=e0b4 Rev=03.18
-S:  Manufacturer=FII
-S:  Product=T77W968 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 7 Cfg#= 2 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
-I:  If#=0x1 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x6 Alt= 0 #EPs= 1 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-
-Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
-[ johan: drop id defines ]
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Christopher M. Riedl <cmr@informatik.wtf>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190524024647.381-1-cmr@informatik.wtf
+Signed-off-by: Daniel Axtens <dja@axtens.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/option.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/kernel/security.c |   19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1993,6 +1993,10 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x13) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x14) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x1b) },
-+	{ USB_DEVICE(0x0489, 0xe0b4),						/* Foxconn T77W968 */
-+	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
-+	{ USB_DEVICE(0x0489, 0xe0b5),						/* Foxconn T77W968 ESIM */
-+	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
- 	{ USB_DEVICE(0x1508, 0x1001),						/* Fibocom NL668 */
- 	  .driver_info = RSVD(4) | RSVD(5) | RSVD(6) },
- 	{ USB_DEVICE(0x2cb7, 0x0104),						/* Fibocom NL678 series */
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -28,7 +28,7 @@ static enum count_cache_flush_type count
+ bool barrier_nospec_enabled;
+ static bool no_nospec;
+ static bool btb_flush_enabled;
+-#ifdef CONFIG_PPC_FSL_BOOK3E
++#if defined(CONFIG_PPC_FSL_BOOK3E) || defined(CONFIG_PPC_BOOK3S_64)
+ static bool no_spectrev2;
+ #endif
+ 
+@@ -106,7 +106,7 @@ static __init int barrier_nospec_debugfs
+ device_initcall(barrier_nospec_debugfs_init);
+ #endif /* CONFIG_DEBUG_FS */
+ 
+-#ifdef CONFIG_PPC_FSL_BOOK3E
++#if defined(CONFIG_PPC_FSL_BOOK3E) || defined(CONFIG_PPC_BOOK3S_64)
+ static int __init handle_nospectre_v2(char *p)
+ {
+ 	no_spectrev2 = true;
+@@ -114,6 +114,9 @@ static int __init handle_nospectre_v2(ch
+ 	return 0;
+ }
+ early_param("nospectre_v2", handle_nospectre_v2);
++#endif /* CONFIG_PPC_FSL_BOOK3E || CONFIG_PPC_BOOK3S_64 */
++
++#ifdef CONFIG_PPC_FSL_BOOK3E
+ void setup_spectre_v2(void)
+ {
+ 	if (no_spectrev2 || cpu_mitigations_off())
+@@ -391,7 +394,17 @@ static void toggle_count_cache_flush(boo
+ 
+ void setup_count_cache_flush(void)
+ {
+-	toggle_count_cache_flush(true);
++	bool enable = true;
++
++	if (no_spectrev2 || cpu_mitigations_off()) {
++		if (security_ftr_enabled(SEC_FTR_BCCTRL_SERIALISED) ||
++		    security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED))
++			pr_warn("Spectre v2 mitigations not under software control, can't disable\n");
++
++		enable = false;
++	}
++
++	toggle_count_cache_flush(enable);
+ }
+ 
+ #ifdef CONFIG_DEBUG_FS
 
 
