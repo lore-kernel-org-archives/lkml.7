@@ -2,91 +2,120 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F53C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A33C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 936C620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F05120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574890399;
+	bh=NTM8CJ9PHb5mufU8UMamaiDxsdIWtBjO8nryc/eljy0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q7Ii7TsaLOmqkTtoD3XRZzlPdsFjFfzeJe/GN3YRduuDJ0wZhdgSvCMGiOxgcKvqh
+	 hlp9ckP7lC5dsQGi4g0/6LLJ0svxBObiBoKJ5FB9lm8bju+wQXFnHVBq++Aud2jYG3
+	 LtUZLbPCBvFSnw4UfvZY2NWbzEaSEr0PX+VDjWww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731074AbfK0VdN (ORCPT
+        id S1730801AbfK0VdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:33:13 -0500
-Received: from smtprelay0241.hostedemail.com ([216.40.44.241]:54075 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730628AbfK0VdK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:33:10 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 49DF1180020E4;
-        Wed, 27 Nov 2019 21:33:08 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cows61_381bf37cb8f3e
-X-Filterd-Recvd-Size: 2684
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 27 Nov 2019 21:33:05 +0000 (UTC)
-Message-ID: <b2cbe247a33dd9f6c747fce180f964b88d5dc70a.camel@perches.com>
-Subject: Re: [PATCH 4/5] pinctrl: sh-pfc: Use the correct style for SPDX
- License Identifier
-From:   Joe Perches <joe@perches.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Sean Wang <sean.wang@kernel.org>,
+        Wed, 27 Nov 2019 16:33:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730600AbfK0UwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:52:22 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 901D021871;
+        Wed, 27 Nov 2019 20:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574887942;
+        bh=NTM8CJ9PHb5mufU8UMamaiDxsdIWtBjO8nryc/eljy0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p8b0uwHud0mal4Ugki8jBMPg7IaxWSVDSHh8GiEeVhEWulnB1c0DsszRwgY5TzkjF
+         YOWu6QLe71yitJm/wA05+oUQhb0+BGZvaBuBEl3SOKl6XF42Ah1A1Vgob4qsxa2K3y
+         Jr5TP+XxeRD7FxuTimWi8Y1LDyeCKT3tZRPyKLp8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-amlogic <linux-amlogic@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 27 Nov 2019 13:32:39 -0800
-In-Reply-To: <CAMuHMdUSSHvQ74c156tuhWShp05TQuSmXa-kY3HNbYj0VL_d4g@mail.gmail.com>
-References: <cover.1574871463.git.nishadkamdar@gmail.com>
-         <5a7ed2e4b58ba7ff2f0638a2435a3a1e1c62c9f6.1574871463.git.nishadkamdar@gmail.com>
-         <CAMuHMdUqfRioTBV27AKx9zv9YuSqEod6x+A4aguf=h20TDXr6w@mail.gmail.com>
-         <9bacc7d9-6bd9-0b7c-18cd-d614796397dd@suse.de>
-         <ae40eb808f420f5de4a140b8757dfbc426a8cf90.camel@perches.com>
-         <CAMuHMdUSSHvQ74c156tuhWShp05TQuSmXa-kY3HNbYj0VL_d4g@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 155/211] pinctrl: qcom: spmi-gpio: fix gpio-hog related boot issues
+Date:   Wed, 27 Nov 2019 21:31:28 +0100
+Message-Id: <20191127203108.647142057@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
+References: <20191127203049.431810767@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-27 at 22:12 +0100, Geert Uytterhoeven wrote:
-> On Wed, Nov 27, 2019 at 9:59 PM Joe Perches <joe@perches.com> wrote:
-> > On Wed, 2019-11-27 at 21:55 +0100, Andreas Färber wrote:
-> > > However, if we're touching these lines anyway, shouldn't we be updating
-> > > the SPDX Identifier to GPL-2.0-only while at it?
-> > 
-> > Probably better to do that with a treewide script one day.
-> 
-> Yeah... But it's already more than one year after
-> 
-> > https://lkml.org/lkml/2018/8/16/487
-> 
-> and Documentation/process/license-rules.rst (which is the authoritive
-> rule?) still hasn't been updated...
+From: Brian Masney <masneyb@onstation.org>
 
-The patch still applies today...
+[ Upstream commit 149a96047237574b756d872007c006acd0cc6687 ]
+
+When attempting to setup up a gpio hog, device probing would repeatedly
+fail with -EPROBE_DEFERED errors. It was caused by a circular dependency
+between the gpio and pinctrl frameworks. If the gpio-ranges property is
+present in device tree, then the gpio framework will handle the gpio pin
+registration and eliminate the circular dependency.
+
+See Christian Lamparter's commit a86caa9ba5d7 ("pinctrl: msm: fix
+gpio-hog related boot issues") for a detailed commit message that
+explains the issue in much more detail. The code comment in this commit
+came from Christian's commit.
+
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index 22aaf4375fac0..0f0049dfaa3a1 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -1023,10 +1023,23 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0, npins);
+-	if (ret) {
+-		dev_err(dev, "failed to add pin range\n");
+-		goto err_range;
++	/*
++	 * For DeviceTree-supported systems, the gpio core checks the
++	 * pinctrl's device node for the "gpio-ranges" property.
++	 * If it is present, it takes care of adding the pin ranges
++	 * for the driver. In this case the driver can skip ahead.
++	 *
++	 * In order to remain compatible with older, existing DeviceTree
++	 * files which don't set the "gpio-ranges" property or systems that
++	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
++	 */
++	if (!of_property_read_bool(dev->of_node, "gpio-ranges")) {
++		ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0,
++					     npins);
++		if (ret) {
++			dev_err(dev, "failed to add pin range\n");
++			goto err_range;
++		}
+ 	}
+ 
+ 	return 0;
+-- 
+2.20.1
+
 
 
