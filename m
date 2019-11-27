@@ -2,85 +2,202 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E16C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A64C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1BF20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA0620862
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:51:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="W7VStLqv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D/I1PI3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfK0Svk (ORCPT
+        id S1727693AbfK0Sv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:51:40 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:58478 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbfK0Svj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:51:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=XSKKVUPKZ3rsp1iAxeHXZOxHiZxYRg6StJOPPccU3D8=; b=W7VStLqvxdVf/jbuoXVgb5b2sK
-        r5i2VA//OJpMVGmQ+CMFbFkwpPvT2xDgBcjCV61Yn5ZzVmuFppVW4//gM6F45bV0lg48kRtzMiqhi
-        jAi5QSp+EVFiB7e8cQG6EHPpgExnf1mUVftHFAq8FiZtLddIdDLVnSiXXlDTftH0dHuM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ia2PR-0000Mv-4k; Wed, 27 Nov 2019 19:51:29 +0100
-Date:   Wed, 27 Nov 2019 19:51:29 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Nicolas.Ferre@microchip.com
-Cc:     mparab@cadence.com, antoine.tenart@bootlin.com,
-        davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux-kernel@vger.kernel.org,
-        dkangude@cadence.com, pthombar@cadence.com,
-        rmk+kernel@arm.linux.org.uk
-Subject: Re: [PATCH 2/3] net: macb: add support for C45 MDIO read/write
-Message-ID: <20191127185129.GU6602@lunn.ch>
-References: <1574759354-102696-1-git-send-email-mparab@cadence.com>
- <1574759389-103118-1-git-send-email-mparab@cadence.com>
- <20191126143717.GP6602@lunn.ch>
- <19694e5a-17df-608f-5db7-5da288e5e7cd@microchip.com>
+        Wed, 27 Nov 2019 13:51:57 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35716 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbfK0Sv4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 13:51:56 -0500
+Received: by mail-pl1-f196.google.com with SMTP id s10so10192050plp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:51:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YimDLRO44EFdVpsrruJmPdiNyDfnYjYesEmjPbE4iug=;
+        b=D/I1PI3/xRstodfiyXqR1BgtCy/ajR8WN0uJqbYuGeWhpekpVi8hrssvJ6Uej9JgIC
+         OQiXNI3dbKwmTz8Opz4WZIL67/55kCioIxXRa5OrTNIM/kclnAYk1eDIm9peYJE5fqNn
+         LFNTa/mOB4TkrVqFH/GHRejPJk47fxpl9tYV8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YimDLRO44EFdVpsrruJmPdiNyDfnYjYesEmjPbE4iug=;
+        b=Ym2uIo3whKJ54A8OtxqhPK+6W+UaOt8jf8uDwgSS5JVDbwfwat2P3Cw+DjSNDKKxo/
+         mVqLNHdaBNC3tGf+onUK5eDloVEcvzvaKQQIwb35enI8PH2N35694fqK7OC8iNY50Xgq
+         K8lI8+y5QpuBTdYKWOgzjIz8VkYtvsjlBsBUDmcQ0cAX7SwHML2hIiOWG1pDH2/7B9qy
+         4cVy5FMMoXzmsMRUNWPZ7lITXu7XHTX1+X2w56uilqb//fozMpcswo3ITNCAdXwx8Z9n
+         jsnrluj/ON26rMyZnx6vzjSq7cPibZposXJ1LE+BVtEfY+aFxCDd5fA2DwJgdkRs5GLz
+         EWkQ==
+X-Gm-Message-State: APjAAAUprckqF7+tUaD3B2MwmTHeyOgvnSojZzmRU7fFHAcEFkIU4Qe2
+        buzYM+3VYPFIf98OvKMVdpcV5Q==
+X-Google-Smtp-Source: APXvYqwu01IvMOa1VFObRaM/KHPJkHSkKDJA8DuUDOHFFKgjF15kURy3Urf9LJqzyG7YUQ3N0tLSGQ==
+X-Received: by 2002:a17:90a:c68f:: with SMTP id n15mr7977113pjt.20.1574880715835;
+        Wed, 27 Nov 2019 10:51:55 -0800 (PST)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id x2sm17088680pgc.67.2019.11.27.10.51.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 10:51:55 -0800 (PST)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     linux-input@vger.kernel.org
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        linux-bluetooth@vger.kernel.org,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kirill Smelkov <kirr@nexedi.com>
+Subject: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
+Date:   Wed, 27 Nov 2019 10:51:39 -0800
+Message-Id: <20191127185139.65048-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19694e5a-17df-608f-5db7-5da288e5e7cd@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 06:31:54PM +0000, Nicolas.Ferre@microchip.com wrote:
-> On 26/11/2019 at 15:37, Andrew Lunn wrote:
-> > On Tue, Nov 26, 2019 at 09:09:49AM +0000, Milind Parab wrote:
-> >> This patch modify MDIO read/write functions to support
-> >> communication with C45 PHY.
-> > 
-> > I think i've asked this before, at least once, but you have not added
-> > it to the commit messages. Do all generations of the macb support C45?
-> 
-> For what I can tell from the different IP revisions that we implemented 
-> throughout the years in Atmel then Microchip products (back to 
-> at91rm9200 and at91sam9263), it seems yes.
-> 
-> The "PHY Maintenance Register" "MACB_MAN_*" was always present with the 
-> same bits 32-28 layout (with somehow different names).
-> 
-> But definitively we would need to hear that from Cadence itself which 
-> would be far better.
+Support setting the uniq attribute of the input device. The uniq
+attribute is used as a unique identifier for the connected device.
 
-Hi Nicolas
+For example, uinput devices created by BlueZ will store the address of
+the connected device as the uniq property.
 
-Thanks, that is useful.
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
+Hi input maintainers,
 
-I'm just trying to avoid backward compatibility issues, somebody
-issues a C45 request on old silicon and it all goes horribly wrong.
+I added this change to allow BlueZ to display the peer device address in
+udev. BlueZ has been setting ATTR{name} to the peer address since it
+isn't possible to set the uniq attribute currently.
 
-       Andrew
+I've tested this on a Chromebook running kernel v4.19 with this patch.
+
+$ uname -r
+4.19.85
+
+$ dmesg | grep "input:" | tail -1
+[   69.604752] input: BeatsStudio Wireless as /devices/virtual/input/input17
+
+$ udevadm info -a -p /sys/devices/virtual/input/input17
+
+Udevadm info starts with the device specified by the devpath and then
+walks up the chain of parent devices. It prints for every device
+found, all possible attributes in the udev rules key format.
+A rule to match, can be composed by the attributes of the device
+and the attributes from one single parent device.
+
+  looking at device '/devices/virtual/input/input17':
+    KERNEL=="input17"
+    SUBSYSTEM=="input"
+    DRIVER==""
+    ATTR{inhibited}=="0"
+    ATTR{name}=="BeatsStudio Wireless"
+    ATTR{phys}=="00:00:00:6e:d0:74"
+    ATTR{properties}=="0"
+    ATTR{uniq}=="00:00:00:cc:1c:f3"
+
+(I zeroed out part of the addresses above. The phys attribute
+corresponds to the address of the Bluetooth controller on the Chromebook
+and the uniq is the address of the headphones)
+
+
+ drivers/input/misc/uinput.c | 21 ++++++++++++++++++++-
+ include/uapi/linux/uinput.h |  1 +
+ 2 files changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
+index 84051f20b18a..68319bda41b8 100644
+--- a/drivers/input/misc/uinput.c
++++ b/drivers/input/misc/uinput.c
+@@ -280,7 +280,7 @@ static int uinput_dev_flush(struct input_dev *dev, struct file *file)
+ 
+ static void uinput_destroy_device(struct uinput_device *udev)
+ {
+-	const char *name, *phys;
++	const char *name, *phys, *uniq;
+ 	struct input_dev *dev = udev->dev;
+ 	enum uinput_state old_state = udev->state;
+ 
+@@ -289,6 +289,7 @@ static void uinput_destroy_device(struct uinput_device *udev)
+ 	if (dev) {
+ 		name = dev->name;
+ 		phys = dev->phys;
++		uniq = dev->uniq;
+ 		if (old_state == UIST_CREATED) {
+ 			uinput_flush_requests(udev);
+ 			input_unregister_device(dev);
+@@ -297,6 +298,7 @@ static void uinput_destroy_device(struct uinput_device *udev)
+ 		}
+ 		kfree(name);
+ 		kfree(phys);
++		kfree(uniq);
+ 		udev->dev = NULL;
+ 	}
+ }
+@@ -840,6 +842,7 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
+ 	struct uinput_ff_erase  ff_erase;
+ 	struct uinput_request   *req;
+ 	char			*phys;
++	char			*uniq;
+ 	const char		*name;
+ 	unsigned int		size;
+ 
+@@ -931,6 +934,22 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
+ 		udev->dev->phys = phys;
+ 		goto out;
+ 
++	case UI_SET_UNIQ:
++		if (udev->state == UIST_CREATED) {
++			retval = -EINVAL;
++			goto out;
++		}
++
++		uniq = strndup_user(p, 1024);
++		if (IS_ERR(uniq)) {
++			retval = PTR_ERR(uniq);
++			goto out;
++		}
++
++		kfree(udev->dev->uniq);
++		udev->dev->uniq = uniq;
++		goto out;
++
+ 	case UI_BEGIN_FF_UPLOAD:
+ 		retval = uinput_ff_upload_from_user(p, &ff_up);
+ 		if (retval)
+diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uinput.h
+index c9e677e3af1d..d5b7767c1b02 100644
+--- a/include/uapi/linux/uinput.h
++++ b/include/uapi/linux/uinput.h
+@@ -145,6 +145,7 @@ struct uinput_abs_setup {
+ #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
+ #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
+ #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
++#define UI_SET_UNIQ		_IOW(UINPUT_IOCTL_BASE, 111, char*)
+ 
+ #define UI_BEGIN_FF_UPLOAD	_IOWR(UINPUT_IOCTL_BASE, 200, struct uinput_ff_upload)
+ #define UI_END_FF_UPLOAD	_IOW(UINPUT_IOCTL_BASE, 201, struct uinput_ff_upload)
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
