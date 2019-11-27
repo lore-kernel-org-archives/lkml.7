@@ -2,144 +2,150 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15313C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787CFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63EC207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F112073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIViTYeh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbfK0FZL (ORCPT
+        id S1726136AbfK0F3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 00:25:11 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:44912 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfK0FZK (ORCPT
+        Wed, 27 Nov 2019 00:29:04 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34793 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfK0F3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 00:25:10 -0500
-Received: by mail-il1-f200.google.com with SMTP id h4so365306ilh.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 21:25:08 -0800 (PST)
+        Wed, 27 Nov 2019 00:29:04 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z188so10208869pgb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 21:29:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hGK+ULtfQAwtVprH1HVEYd0b3Bl+iwzMbxZKRpXwyhA=;
+        b=VIViTYeh7HxV+i9Gir8odWMfV02isZz3zK3o0eY3y1n+WyM4ki8jABXSBq7KmtssLG
+         y8c1Mh18pvZL3nOWiYIqxtKB6yoErwjuxT6yjMLok690nnZivrm8AxV40bZ3N2OT1JVe
+         1F0XIi+yXdfiRcMKnQ0W6D5a05Dxa0lHj1AQxmPk9QwmM0cBVwfvlZZ5GUKsN8GBLoLl
+         oOU6kcYsx3LJF+Ahy+8BOXjYhCXLz6LyMgtpzCefYEu/239pheqI9zEkxIsK4IT4eYXu
+         LE9lgMHATwpOu0RA7V6xtTT2/mUIf9+knrSDxaUiXYV5oD7YF2ZHbGrHzeJDLDyLfT9d
+         ZSbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=sCpnitGcLr+rzXdjfijH3mSKiHousAn0LnZ2pRdnHDw=;
-        b=adsR9FYDcB5YczEGPqEcwZWZarzSIU00UT0NJ5D8vHpORG8j80a2PFsRPI/8e6mHle
-         2pwiEojs7sBAagPsaCsq3cUTZ10rmuk35yD9i/0xpRFHt+4jxqBClMYAw+6z0rmZ444c
-         yzU0MwO4sza9CsXoiLCS4sk/H+HjidVgNhCMei/Foi3X+USFqFT5qSZFBQz8nA7wIce3
-         cpRd1+nCPFbyF2DE8k6suIh5dn7BJ8dphItJWHFuD226jQEkSoCz4IyWetb2WMDuDW9w
-         4P8KhKVXQGBp37EtRjX1nZ16cYjdjyR7MEkRRZGqqYM+E4Sl+yASEAqL2oxmkObNoO5l
-         UZRw==
-X-Gm-Message-State: APjAAAU45uI4ZMGXaMkj42QbV7eEjnIWrszgI3UZYynzk3sLhDy+eXAL
-        XUNky93CaSvG5qscP0a8TUBkkTi0WePaeA27yq+5tzKYS/C0
-X-Google-Smtp-Source: APXvYqwEotJl6Q1E87MnwoVAtFUuh8qtS15hyJWYJK4OzMu3bRJaxgEHYvk9sy01xY8RNAtP1x+dCnjFSalYmuCUR2Y9oEZ+WDRx
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hGK+ULtfQAwtVprH1HVEYd0b3Bl+iwzMbxZKRpXwyhA=;
+        b=GJlNYNiluZWs9Q2HyPj1GsfZd4JOL2A46gITuB6Dkq7IfwXbVi3pgvtx6ujmykMPDU
+         ooZT8RxFpNEDJVzleA3RaFzzbw5a1SI5jhj+LSOTp04ihDOTrh09ZTA2V3jSOF53WpqS
+         KDwfJPpREgmGuCH/yaVVWJFQ1gFh8SVihHgyDr7qDGDdEtVjEbZ4+goJ8S35FZoGwhk9
+         IPYooQNL0vgqQKev4ZKRVdd5Czuhw9dbn3pRQOpmFSmfg533QATWnhe1IOtrooX5RZBi
+         IKmDOIyGnWQq4zVxiAXeBIizH+fRbQdS0JZN7wqh4mcaRupRhoSZFLMtRUStslVHnbxR
+         fm2A==
+X-Gm-Message-State: APjAAAUiWZp/+t6eDiUrORGDuf0Y7UK26MMNCXnv7VBsGkxZjfLaY/Bm
+        LYD0IgtEITp2ZIvMow13Fgo=
+X-Google-Smtp-Source: APXvYqzxw222HkDIvEgoVoeHtvUCNMvqOSbBGEu3aSnUiacJfErpDJTINHnrg4lFk5kWawSMOii5PA==
+X-Received: by 2002:a63:204e:: with SMTP id r14mr2830105pgm.101.1574832543122;
+        Tue, 26 Nov 2019 21:29:03 -0800 (PST)
+Received: from workstation-portable ([139.5.253.146])
+        by smtp.gmail.com with ESMTPSA id m5sm4801910pjl.30.2019.11.26.21.29.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 21:29:02 -0800 (PST)
+Date:   Wed, 27 Nov 2019 10:58:27 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: audit.c: Add __rcu notation to RCU pointer
+Message-ID: <20191127052827.GA9782@workstation-portable>
+References: <20191126172723.GA12759@workstation-kernel-dev>
+ <20191127022925.GB157739@google.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:c0c7:: with SMTP id q190mr17925448iof.256.1574832308317;
- Tue, 26 Nov 2019 21:25:08 -0800 (PST)
-Date:   Tue, 26 Nov 2019 21:25:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000051770905984d38d3@google.com>
-Subject: WARNING in exfat_bdev_read
-From:   syzbot <syzbot+1930da7118e99b06e4ab@syzkaller.appspotmail.com>
-To:     alexander.levin@microsoft.com, davem@davemloft.net,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mchehab+samsung@kernel.org, syzkaller-bugs@googlegroups.com,
-        valdis.kletnieks@vt.edu
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127022925.GB157739@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
-bW1pdDogICAgYjlkM2QwMTQgQWRkIGxpbnV4LW5leHQgc3BlY2lmaWMgZmlsZXMgZm9yIDIwMTkx
-MTIyDQpnaXQgdHJlZTogICAgICAgbGludXgtbmV4dA0KY29uc29sZSBvdXRwdXQ6IGh0dHBzOi8v
-c3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvbG9nLnR4dD94PTEyMzQ4ZGNlZTAwMDAwDQprZXJuZWwg
-Y29uZmlnOiAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC8uY29uZmlnP3g9NmMyNGM0
-NWNlMjliMTc1Yw0KZGFzaGJvYXJkIGxpbms6IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29t
-L2J1Zz9leHRpZD0xOTMwZGE3MTE4ZTk5YjA2ZTRhYg0KY29tcGlsZXI6ICAgICAgIGdjYyAoR0ND
-KSA5LjAuMCAyMDE4MTIzMSAoZXhwZXJpbWVudGFsKQ0Kc3l6IHJlcHJvOiAgICAgIGh0dHBzOi8v
-c3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvcmVwcm8uc3l6P3g9MTU0MWE3MTZlMDAwMDANCkMgcmVw
-cm9kdWNlcjogICBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L3JlcHJvLmM/eD0xMjhm
-ZjM4Y2UwMDAwMA0KDQpUaGUgYnVnIHdhcyBiaXNlY3RlZCB0bzoNCg0KY29tbWl0IGM0OGM5Zjdm
-ZjMyYjhiMzk2NWEwOGU0MGViNjc2MzY4MmQ5MDViNWQNCkF1dGhvcjogVmFsZGlzIEtsxJN0bmll
-a3MgPHZhbGRpcy5rbGV0bmlla3NAdnQuZWR1Pg0KRGF0ZTogICBXZWQgQXVnIDI4IDE2OjA4OjE3
-IDIwMTkgKzAwMDANCg0KICAgICBzdGFnaW5nOiBleGZhdDogYWRkIGV4ZmF0IGZpbGVzeXN0ZW0g
-Y29kZSB0byBzdGFnaW5nDQoNCmJpc2VjdGlvbiBsb2c6ICBodHRwczovL3N5emthbGxlci5hcHBz
-cG90LmNvbS94L2Jpc2VjdC50eHQ/eD0xNTQ3NmI1YWUwMDAwMA0KZmluYWwgY3Jhc2g6ICAgIGh0
-dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvcmVwb3J0LnR4dD94PTE3NDc2YjVhZTAwMDAw
-DQpjb25zb2xlIG91dHB1dDogaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9sb2cudHh0
-P3g9MTM0NzZiNWFlMDAwMDANCg0KSU1QT1JUQU5UOiBpZiB5b3UgZml4IHRoZSBidWcsIHBsZWFz
-ZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcgdG8gdGhlIGNvbW1pdDoNClJlcG9ydGVkLWJ5OiBzeXpi
-b3QrMTkzMGRhNzExOGU5OWIwNmU0YWJAc3l6a2FsbGVyLmFwcHNwb3RtYWlsLmNvbQ0KRml4ZXM6
-IGM0OGM5ZjdmZjMyYiAoInN0YWdpbmc6IGV4ZmF0OiBhZGQgZXhmYXQgZmlsZXN5c3RlbSBjb2Rl
-IHRvIHN0YWdpbmciKQ0KDQpbRVhGQVRdIHRyeWluZyB0byBtb3VudC4uLg0KLS0tLS0tLS0tLS0t
-WyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0tDQpbRVhGQVRdIE5vIGJoLCBkZXZpY2Ugc2VlbXMgd3Jv
-bmcgb3IgdG8gYmUgZWplY3RlZC4NCldBUk5JTkc6IENQVTogMSBQSUQ6IDg4NDQgYXQgZHJpdmVy
-cy9zdGFnaW5nL2V4ZmF0L2V4ZmF0X2Jsa2Rldi5jOjYyICANCmV4ZmF0X2JkZXZfcmVhZCsweDI0
-Zi8weDJiMCBkcml2ZXJzL3N0YWdpbmcvZXhmYXQvZXhmYXRfYmxrZGV2LmM6NjINCktlcm5lbCBw
-YW5pYyAtIG5vdCBzeW5jaW5nOiBwYW5pY19vbl93YXJuIHNldCAuLi4NCkNQVTogMSBQSUQ6IDg4
-NDQgQ29tbTogc3l6LWV4ZWN1dG9yNzM1IE5vdCB0YWludGVkICANCjUuNC4wLXJjOC1uZXh0LTIw
-MTkxMTIyLXN5emthbGxlciAjMA0KSGFyZHdhcmUgbmFtZTogR29vZ2xlIEdvb2dsZSBDb21wdXRl
-IEVuZ2luZS9Hb29nbGUgQ29tcHV0ZSBFbmdpbmUsIEJJT1MgIA0KR29vZ2xlIDAxLzAxLzIwMTEN
-CkNhbGwgVHJhY2U6DQogIF9fZHVtcF9zdGFjayBsaWIvZHVtcF9zdGFjay5jOjc3IFtpbmxpbmVd
-DQogIGR1bXBfc3RhY2srMHgxOTcvMHgyMTAgbGliL2R1bXBfc3RhY2suYzoxMTgNCiAgcGFuaWMr
-MHgyZTMvMHg3NWMga2VybmVsL3BhbmljLmM6MjIxDQogIF9fd2Fybi5jb2xkKzB4MmYvMHgzNSBr
-ZXJuZWwvcGFuaWMuYzo1ODINCiAgcmVwb3J0X2J1ZysweDI4OS8weDMwMCBsaWIvYnVnLmM6MTk1
-DQogIGZpeHVwX2J1ZyBhcmNoL3g4Ni9rZXJuZWwvdHJhcHMuYzoxNzQgW2lubGluZV0NCiAgZml4
-dXBfYnVnIGFyY2gveDg2L2tlcm5lbC90cmFwcy5jOjE2OSBbaW5saW5lXQ0KICBkb19lcnJvcl90
-cmFwKzB4MTFiLzB4MjAwIGFyY2gveDg2L2tlcm5lbC90cmFwcy5jOjI2Nw0KICBkb19pbnZhbGlk
-X29wKzB4MzcvMHg1MCBhcmNoL3g4Ni9rZXJuZWwvdHJhcHMuYzoyODYNCiAgaW52YWxpZF9vcCsw
-eDIzLzB4MzAgYXJjaC94ODYvZW50cnkvZW50cnlfNjQuUzoxMDI3DQpSSVA6IDAwMTA6ZXhmYXRf
-YmRldl9yZWFkKzB4MjRmLzB4MmIwICANCmRyaXZlcnMvc3RhZ2luZy9leGZhdC9leGZhdF9ibGtk
-ZXYuYzo2Mg0KQ29kZTogMDAgMDAgMzEgZmYgNDEgYmMgZmIgZmYgZmYgZmYgODkgZGUgZTggYWEg
-M2UgZjcgZmIgODUgZGIgMGYgODUgNWQgZmYgIA0KZmYgZmYgZTggMWQgM2QgZjcgZmIgNDggYzcg
-YzcgYTAgYTYgM2UgODggZTggODkgMzEgYzggZmIgPDBmPiAwYiBlOSA0NSBmZiAgDQpmZiBmZiBl
-OCAyNSBjOSAzMyBmYyBlOSBhZCBmZSBmZiBmZiBlOCBkYiBjOCAzMyBmYw0KUlNQOiAwMDE4OmZm
-ZmY4ODgwYTczZGZhYTAgRUZMQUdTOiAwMDAxMDI4Mg0KUkFYOiAwMDAwMDAwMDAwMDAwMDAwIFJC
-WDogMDAwMDAwMDAwMDAwMDAwMCBSQ1g6IDAwMDAwMDAwMDAwMDAwMDANClJEWDogMDAwMDAwMDAw
-MDAwMDAwMCBSU0k6IGZmZmZmZmZmODE1ZDg4YzYgUkRJOiBmZmZmZWQxMDE0ZTdiZjQ2DQpSQlA6
-IGZmZmY4ODgwYTczZGZhZDggUjA4OiBmZmZmODg4MDk1MTgyMWMwIFIwOTogZmZmZmVkMTAxNWQy
-NjYyMQ0KUjEwOiBmZmZmZWQxMDE1ZDI2NjIwIFIxMTogZmZmZjg4ODBhZTkzMzEwNyBSMTI6IDAw
-MDAwMDAwZmZmZmZmZmINClIxMzogZmZmZjg4ODA4YWVhMDAwMCBSMTQ6IDAwMDAwMDAwMDAwMDAw
-MDEgUjE1OiAwMDAwMDAwMDAwMDAwMDAwDQogIHNlY3Rvcl9yZWFkKzB4MTQwLzB4MWYwIGRyaXZl
-cnMvc3RhZ2luZy9leGZhdC9leGZhdF9jb3JlLmM6MjUzNw0KICBmZnNNb3VudFZvbCBkcml2ZXJz
-L3N0YWdpbmcvZXhmYXQvZXhmYXRfc3VwZXIuYzozNzYgW2lubGluZV0NCiAgZXhmYXRfZmlsbF9z
-dXBlci5jb2xkKzB4MmU0LzB4ODk1IGRyaXZlcnMvc3RhZ2luZy9leGZhdC9leGZhdF9zdXBlci5j
-OjM3MTYNCiAgbW91bnRfYmRldisweDMwNC8weDNjMCBmcy9zdXBlci5jOjE0MTUNCiAgZXhmYXRf
-ZnNfbW91bnQrMHgzNS8weDQwIGRyaXZlcnMvc3RhZ2luZy9leGZhdC9leGZhdF9zdXBlci5jOjM3
-NzINCiAgbGVnYWN5X2dldF90cmVlKzB4MTA4LzB4MjIwIGZzL2ZzX2NvbnRleHQuYzo2NDcNCiAg
-dmZzX2dldF90cmVlKzB4OGUvMHgzMDAgZnMvc3VwZXIuYzoxNTQ1DQogIGRvX25ld19tb3VudCBm
-cy9uYW1lc3BhY2UuYzoyODIyIFtpbmxpbmVdDQogIGRvX21vdW50KzB4MTM1YS8weDFiNTAgZnMv
-bmFtZXNwYWNlLmM6MzE0Mg0KICBrc3lzX21vdW50KzB4ZGIvMHgxNTAgZnMvbmFtZXNwYWNlLmM6
-MzM1MQ0KICBfX2RvX3N5c19tb3VudCBmcy9uYW1lc3BhY2UuYzozMzY1IFtpbmxpbmVdDQogIF9f
-c2Vfc3lzX21vdW50IGZzL25hbWVzcGFjZS5jOjMzNjIgW2lubGluZV0NCiAgX194NjRfc3lzX21v
-dW50KzB4YmUvMHgxNTAgZnMvbmFtZXNwYWNlLmM6MzM2Mg0KICBkb19zeXNjYWxsXzY0KzB4ZmEv
-MHg3OTAgYXJjaC94ODYvZW50cnkvY29tbW9uLmM6Mjk0DQogIGVudHJ5X1NZU0NBTExfNjRfYWZ0
-ZXJfaHdmcmFtZSsweDQ5LzB4YmUNClJJUDogMDAzMzoweDQ0MDE3OQ0KQ29kZTogMTggODkgZDAg
-YzMgNjYgMmUgMGYgMWYgODQgMDAgMDAgMDAgMDAgMDAgMGYgMWYgMDAgNDggODkgZjggNDggODkg
-ZjcgIA0KNDggODkgZDYgNDggODkgY2EgNGQgODkgYzIgNGQgODkgYzggNGMgOGIgNGMgMjQgMDgg
-MGYgMDUgPDQ4PiAzZCAwMSBmMCBmZiAgDQpmZiAwZiA4MyBmYiAxMyBmYyBmZiBjMyA2NiAyZSAw
-ZiAxZiA4NCAwMCAwMCAwMCAwMA0KUlNQOiAwMDJiOjAwMDA3ZmZlOGY3N2ZmYzggRUZMQUdTOiAw
-MDAwMDI0NiBPUklHX1JBWDogMDAwMDAwMDAwMDAwMDBhNQ0KUkFYOiBmZmZmZmZmZmZmZmZmZmRh
-IFJCWDogMDAzMDY1NmM2OTY2MmYyZSBSQ1g6IDAwMDAwMDAwMDA0NDAxNzkNClJEWDogMDAwMDAw
-MDAyMDAwMDA4MCBSU0k6IDAwMDAwMDAwMjAwMDAxODAgUkRJOiAwMDAwMDAwMDIwMDAwMDAwDQpS
-QlA6IDAwMDAwMDAwMDA2Y2EwMTggUjA4OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTogMDAwMDAwMDAw
-MDAwMDAwMA0KUjEwOiAwMDAwMDAwMDAwMDA0MDAwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6
-IDAwMDAwMDAwMDA0MDFhMDANClIxMzogMDAwMDAwMDAwMDQwMWE5MCBSMTQ6IDAwMDAwMDAwMDAw
-MDAwMDAgUjE1OiAwMDAwMDAwMDAwMDAwMDAwDQpLZXJuZWwgT2Zmc2V0OiBkaXNhYmxlZA0KUmVi
-b290aW5nIGluIDg2NDAwIHNlY29uZHMuLg0KDQoNCi0tLQ0KVGhpcyBidWcgaXMgZ2VuZXJhdGVk
-IGJ5IGEgYm90LiBJdCBtYXkgY29udGFpbiBlcnJvcnMuDQpTZWUgaHR0cHM6Ly9nb28uZ2wvdHBz
-bUVKIGZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0IHN5emJvdC4NCnN5emJvdCBlbmdpbmVlcnMg
-Y2FuIGJlIHJlYWNoZWQgYXQgc3l6a2FsbGVyQGdvb2dsZWdyb3Vwcy5jb20uDQoNCnN5emJvdCB3
-aWxsIGtlZXAgdHJhY2sgb2YgdGhpcyBidWcgcmVwb3J0LiBTZWU6DQpodHRwczovL2dvby5nbC90
-cHNtRUojc3RhdHVzIGZvciBob3cgdG8gY29tbXVuaWNhdGUgd2l0aCBzeXpib3QuDQpGb3IgaW5m
-b3JtYXRpb24gYWJvdXQgYmlzZWN0aW9uIHByb2Nlc3Mgc2VlOiBodHRwczovL2dvby5nbC90cHNt
-RUojYmlzZWN0aW9uDQpzeXpib3QgY2FuIHRlc3QgcGF0Y2hlcyBmb3IgdGhpcyBidWcsIGZvciBk
-ZXRhaWxzIHNlZToNCmh0dHBzOi8vZ29vLmdsL3Rwc21FSiN0ZXN0aW5nLXBhdGNoZXMNCg==
+On Tue, Nov 26, 2019 at 09:29:25PM -0500, Joel Fernandes wrote:
+> On Tue, Nov 26, 2019 at 10:57:23PM +0530, Amol Grover wrote:
+> > add __rcu notation to RCU protected global pointer auditd_conn
+> > 
+> > Fixes multiple instances of sparse error:
+> > error: incompatible types in comparison expression
+> > (different address spaces)
+> > 
+> > Signed-off-by: Amol Grover <frextrite@gmail.com>
+> > ---
+> >  kernel/audit.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index da8dc0db5bd3..30e7fc9b8da2 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -102,12 +102,14 @@ struct audit_net {
+> >   * This struct is RCU protected; you must either hold the RCU lock for reading
+> >   * or the associated spinlock for writing.
+> >   */
+> > -static struct auditd_connection {
+> > +struct auditd_connection {
+> >  	struct pid *pid;
+> >  	u32 portid;
+> >  	struct net *net;
+> >  	struct rcu_head rcu;
+> > -} *auditd_conn = NULL;
+> > +};
+> > +static struct auditd_connection __rcu *auditd_conn;
+> > +RCU_INIT_POINTER(auditd_conn);
+> 
+> Looks like this causes a build error. Always please build test your patches
+> in the very least. And I also did not understand how RCU_INIT_POINTER can
+> even be used outside of a function. In C, executable code cannot be outside
+> functions.
+> 
+> Is doing the following not sufficient to fix the sparse issue?
+> 
+> thanks,
+> 
+>  - Joel
+> 
+> ---8<-----------------------
+> 
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index 49b6049b26ac..c5d4b5a2dea1 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -108,8 +108,8 @@ struct auditd_connection {
+>  	struct net *net;
+>  	struct rcu_head rcu;
+>  };
+> -static struct auditd_connection __rcu *auditd_conn;
+> -RCU_INIT_POINTER(auditd_conn);
+> +static struct auditd_connection __rcu *auditd_conn = NULL;
+
+I ran a quick checkpatch and it gave me this error:
+ERROR: do not initialise statics to NULL
+
+So in order to fix it I decided to INIT the pointer (and failed)
+
+Should I consider this as a false positive?
+
+Thanks
+Amol
+
+> +
+>  static DEFINE_SPINLOCK(auditd_conn_lock);
+>  
+>  /* If audit_rate_limit is non-zero, limit the rate of sending audit records
