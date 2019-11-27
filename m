@@ -2,157 +2,73 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4829AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F84C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178A320674
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:31:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="A5YVd+ac"
+	by mail.kernel.org (Postfix) with ESMTP id B289A206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfK0Obg (ORCPT
+        id S1727197AbfK0Obm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:31:36 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44202 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfK0Obg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:31:36 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i12so26886647wrn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 06:31:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qlAkHZOA6eXoiGp7sT9AQUtpqqqurE9XZGWxcrGi//M=;
-        b=A5YVd+acZGDhd+1hH+jbmPL/SwGWX3TrjcWs7IsrSDw2YmrcGa4QLRa/f+B3Zizbrp
-         N2bbtsSbdkIJxEiBaUy4XZAEBGyHM88S1qYd8e/xteMXKjy5vtn95UXQ3cW13YKlxcYH
-         /zMDGiXAiCjsaFkTp0SrVxsMFjmUBK9Fn4bpCR63vQdbvZDp4fLOAC8rvFsyQWkqx/aa
-         VUqO/p1qxOz0tMW5OCt7dRno+Bk+T/PiBrxRxAru8NrEdFYmFG3df0tGKpe0mOmoD1VG
-         Bd1W4vKKU8AubmIwwwydB7KeT+WapOGUM21DpPPzbOjW5X1HYNitXuVqM1Y2m8BwWLSn
-         +8KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=qlAkHZOA6eXoiGp7sT9AQUtpqqqurE9XZGWxcrGi//M=;
-        b=JCJPmpJDCccZSxIhf8iBEOjGKM/njsrH5wqjOdwDkn5eMlBzSgGSUqCVEv2UvOEp9B
-         tM2r9bsTmT2acrf/LX+oVFlIM3sJAv/UztU0OzZeJA2+eIVlJ2+eh2ApqepzE5Gqz3TD
-         Y7JtxmVo2xiCCtBQ5b7IKCyMyrwsX6DKgHv0WVPSw2TBYSp0FTDYnDnsVhOexgOh1J+/
-         hGBjyfbUDVWx2tNbHY7gd6rFQKvZWLyjbVHmbFFRX851fQfFCDuCm+VOBaX6t737BI1p
-         y7ALTTbjIqeS0NdyHYWmarkKFv5l/vS86n518hV8x0UybOdFh2SQHTXHZLjtafzb2XUs
-         +86Q==
-X-Gm-Message-State: APjAAAUP5nTZEw00h2sSOnlkjwmrUY09NjZYif4CB+9iooCATA7CVz1p
-        d+a5vwPkBDGPEsI5dIwDeTUrBA==
-X-Google-Smtp-Source: APXvYqzQftFz1wipVzan1q9hzzjSrPto9OLFbPUa1nTEwkWP8BIPbcKJprDpo1HEAwR24iXufwOCXg==
-X-Received: by 2002:a5d:50c3:: with SMTP id f3mr41563628wrt.14.1574865093420;
-        Wed, 27 Nov 2019 06:31:33 -0800 (PST)
-Received: from [172.20.1.104] ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id 189sm7016379wmc.7.2019.11.27.06.31.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Nov 2019 06:31:32 -0800 (PST)
-Subject: Re: [PATCH 3/3] bpftool: Allow to link libbpf dynamically
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-References: <20191127094837.4045-1-jolsa@kernel.org>
- <20191127094837.4045-4-jolsa@kernel.org>
- <fd22660f-2f70-4ffa-b45f-bb417d006d0a@netronome.com>
- <20191127141520.GJ32367@krava> <20191127142449.GD22719@kernel.org>
-From:   Quentin Monnet <quentin.monnet@netronome.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
- 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
- RHhSHGnKaQ6MfrTge5Q0h5A=
-Message-ID: <d9bc04a6-0f72-9408-7c2e-2fb30e6a8f74@netronome.com>
-Date:   Wed, 27 Nov 2019 14:31:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 27 Nov 2019 09:31:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:48410 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbfK0Obl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 09:31:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 065A831B;
+        Wed, 27 Nov 2019 06:31:41 -0800 (PST)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF94F3F68E;
+        Wed, 27 Nov 2019 06:31:39 -0800 (PST)
+Subject: Re: [PATCH] arm: Fix topology setup in case of CPU hotplug for
+ CONFIG_SCHED_MC
+To:     Atish Patra <atish.patra@wdc.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <20191120104212.14791-1-dietmar.eggemann@arm.com>
+ <20191124214753.m6lwcdemnddltctw@core.my.home>
+ <50dfafee-55c3-767c-55f4-7d263feafe87@arm.com>
+ <20191126214557.53afmorihwqimq2n@core.my.home>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <9119c1db-b98d-67d4-ce4c-d9a9b298937a@arm.com>
+Date:   Wed, 27 Nov 2019 15:31:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191127142449.GD22719@kernel.org>
+In-Reply-To: <20191126214557.53afmorihwqimq2n@core.my.home>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-11-27 11:24 UTC-0300 ~ Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com>
-> Em Wed, Nov 27, 2019 at 03:15:20PM +0100, Jiri Olsa escreveu:
->> On Wed, Nov 27, 2019 at 01:38:55PM +0000, Quentin Monnet wrote:
->>> 2019-11-27 10:48 UTC+0100 ~ Jiri Olsa <jolsa@kernel.org>
->>> On the plus side, all build attempts from
->>> tools/testing/selftests/bpf/test_bpftool_build.sh pass successfully on
->>> my setup with dynamic linking from your branch.
->>
->> cool, had no idea there was such test ;-)
-> 
-> Should be the the equivalent to 'make -C tools/perf build-test' :-)
-> 
-> Perhaps we should make tools/testing/selftests/perf/ link to that?
+On 26/11/2019 22:45, Ondřej Jirman wrote:
+> On Tue, Nov 26, 2019 at 11:42:02AM +0100, Dietmar Eggemann wrote:
+>> On 24/11/2019 22:47, Ondřej Jirman wrote:
+>>> Hello,
+>>>
+>>> On Wed, Nov 20, 2019 at 10:42:12AM +0000, Dietmar Eggemann wrote:
 
-It is already run as part of the bpf selftests, so probably no need.
+[...]
 
-Thanks,
-Quentin
+>> Thanks for testing! Which Cpufreq driver is your system using?
+> 
+> Hello,
+> 
+> it's using cpufreq-dt.
+
+Thanks for the info! It's dt-based so this one is safe in regards to
+retrieving the correct topology core mask during CPU hp stress (i.e.
+from multiple CPUs at the same time).
+
+[...]
