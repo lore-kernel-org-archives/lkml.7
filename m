@@ -2,157 +2,107 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC37C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022A0C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26DF52084D
+	by mail.kernel.org (Postfix) with ESMTP id C9A5720866
 	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="C8h4I5Jw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfK0K3S (ORCPT
+        id S1727104AbfK0K3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 27 Nov 2019 05:29:18 -0500
-Received: from mga14.intel.com ([192.55.52.115]:65447 "EHLO mga14.intel.com"
+Received: from fd.dlink.ru ([178.170.168.18]:53404 "EHLO fd.dlink.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbfK0K3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726149AbfK0K3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 05:29:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 02:29:17 -0800
-X-IronPort-AV: E=Sophos;i="5.69,249,1571727600"; 
-   d="scan'208";a="199142767"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 02:29:13 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Allen Chen <allen.chen@ite.com.tw>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list\:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Pi-Hsun Shih <pihsun@chromium.org>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking timings logic
-In-Reply-To: <1574761572-26585-1-git-send-email-allen.chen@ite.com.tw>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <1574761572-26585-1-git-send-email-allen.chen@ite.com.tw>
-Date:   Wed, 27 Nov 2019 12:29:11 +0200
-Message-ID: <87pnhdobns.fsf@intel.com>
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id BB5C21B2120E; Wed, 27 Nov 2019 13:29:13 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru BB5C21B2120E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1574850553; bh=EsvGsnpDTlUlkRudAZRaGscbrq1rpDXrPl2b4VXesCU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=C8h4I5Jw3GU/gGodtmFJfokOxM+MnPrYiEZvOPpR71NzZllqQbJk9oc8NGhbVJr8Z
+         lcMdvh7BDkng/94rgxrdml69FW+P1g5E3QMiZ3SReLzFvfvGG3Gshrdkqps/s+IFNF
+         V0BcM5VO7ddfkkJ8v8opMOcHx1yMNStorUpx65nw=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id EE0721B2089D;
+        Wed, 27 Nov 2019 13:29:03 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru EE0721B2089D
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 9206C1B22678;
+        Wed, 27 Nov 2019 13:29:03 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Wed, 27 Nov 2019 13:29:03 +0300 (MSK)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 27 Nov 2019 13:29:03 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Luciano Coelho <luciano.coelho@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Edward Cree <ecree@solarflare.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "Kenneth R. Crudup" <kenny@panix.com>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: wireless: intel: iwlwifi: fix GRO_NORMAL packet
+ stalling
+In-Reply-To: <PSXP216MB0438B2F163C635F8B8B4AD8AA4440@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <20191127094123.18161-1-alobakin@dlink.ru>
+ <7a9332bf645fbb8c9fff634a3640c092fb9b4b79.camel@intel.com>,<c571a88c15c4a70a61cde6ca270af033@dlink.ru>
+ <PSXP216MB0438B2F163C635F8B8B4AD8AA4440@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <a638ab877999dbc4ded87bfaebe784f5@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019, allen <allen.chen@ite.com.tw> wrote:
-> According to VESA ENHANCED EXTENDED DISPLAY IDENTIFICATION DATA STANDARD
-> (Defines EDID Structure Version 1, Revision 4) page: 39
-> How to determine whether the monitor support RB timing or not?
-> EDID 1.4
-> First:  read detailed timing descriptor and make sure byte 0 = 0x00,
-> 	byte 1 = 0x00, byte 2 = 0x00 and byte 3 = 0xFD
-> Second: read EDID bit 0 in feature support byte at address 18h = 1
-> 	and detailed timing descriptor byte 10 = 0x04
-> Third:  if EDID bit 0 in feature support byte = 1 &&
-> 	detailed timing descriptor byte 10 = 0x04
-> 	then we can check byte 15, if bit 4 in byte 15 = 1 is support RB
->         if EDID bit 0 in feature support byte != 1 ||
-> 	detailed timing descriptor byte 10 != 0x04,
-> 	then byte 15 can not be used
->
-> The linux code is_rb function not follow the VESA's rule
->
-> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> ---
->  drivers/gpu/drm/drm_edid.c | 36 ++++++++++++++++++++++++++++++------
->  1 file changed, 30 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index f5926bf..e11e585 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -93,6 +93,12 @@ struct detailed_mode_closure {
->  	int modes;
->  };
->  
-> +struct edid_support_rb_closure {
-> +	struct edid *edid;
-> +	bool valid_support_rb;
-> +	bool support_rb;
-> +};
-> +
->  #define LEVEL_DMT	0
->  #define LEVEL_GTF	1
->  #define LEVEL_GTF2	2
-> @@ -2017,23 +2023,41 @@ struct drm_display_mode *drm_mode_find_dmt(struct drm_device *dev,
->  	}
->  }
->  
-> +static bool
-> +is_display_descriptor(const u8 *r, u8 tag)
-> +{
-> +	return (!r[0] && !r[1] && !r[2] && r[3] == tag) ? true : false;
-> +}
-> +
->  static void
->  is_rb(struct detailed_timing *t, void *data)
->  {
->  	u8 *r = (u8 *)t;
-> -	if (r[3] == EDID_DETAIL_MONITOR_RANGE)
-> -		if (r[15] & 0x10)
-> -			*(bool *)data = true;
-> +	struct edid_support_rb_closure *closure = data;
-> +	struct edid *edid = closure->edid;
-> +
-> +	if (is_display_descriptor(r, EDID_DETAIL_MONITOR_RANGE)) {
-> +		if (edid->features & BIT(0) && r[10] == BIT(2)) {
-> +			closure->valid_support_rb = true;
-> +			closure->support_rb = (r[15] & 0x10) ? true : false;
-> +		}
-> +	}
->  }
->  
->  /* EDID 1.4 defines this explicitly.  For EDID 1.3, we guess, badly. */
->  static bool
->  drm_monitor_supports_rb(struct edid *edid)
->  {
-> +	struct edid_support_rb_closure closure = {
-> +		.edid = edid,
-> +		.valid_support_rb = false,
-> +		.support_rb = false,
-> +	};
-> +
->  	if (edid->revision >= 4) {
-> -		bool ret = false;
-> -		drm_for_each_detailed_block((u8 *)edid, is_rb, &ret);
-> -		return ret;
-> +		drm_for_each_detailed_block((u8 *)edid, is_rb, &closure);
-> +		if (closure.valid_support_rb)
-> +			return closure.support_rb;
+Nicholas Johnson wrote 27.11.2019 13:23:
+> Hi,
 
-Are you planning on extending the closure use somehow?
+Hi Nicholas,
 
-I did not look up the spec, but purely on the code changes alone, you
-could just move the edid->features bit check at this level, and not pass
-it down, and nothing would change. I.e. don't iterate the EDID at all if
-the bit is not set.
+>  Sorry for top down reply, stuck with my phone. If it replies HTML
+> then I am so done with Outlook client.
+> 
+>  Does my Reported-by tag apply here?
+> 
+>  As the reporter, should I check to see that it indeed solves the
+> issue on the original hardware setup? I can do this within two hours
+> and give Tested-by then.
 
-You also don't actually use the distinction between valid_support_rb
-vs. support_rb for anything, so the closure just adds code.
+Oops, I'm sorry I forgot to mention you in the commit message. Let's
+see what Dave will say, I have no problems with waiting for your test
+results and publishing v2.
 
-BR,
-Jani.
+>  Thanks
+> 
+>  Regards,
+> 
+>  Nicholas
 
-
->  	}
->  
->  	return ((edid->input & DRM_EDID_INPUT_DIGITAL) != 0);
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
