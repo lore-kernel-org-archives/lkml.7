@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC260C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8671C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A6421739
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7176821739
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889734;
-	bh=50r3+lS2bYLKDE8An6J7pWIC2ESHw5CG8oao+HF9j7c=;
+	s=default; t=1574889740;
+	bh=fplUeAm3cYMRQPtLwx2S5Y4Mzzno+mFsrYPL27frXLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcd1o7dOULObxKGo5Q1nMSSqeWe9vkaBjaMrfFKZSUZsUKwVXhfiEUGif+MbakPD5
-	 zZBZlOvzdZiCi0pN/fcI9HTbcRsJt66FSkoSYwOUFZqcGTtqwNy9WSWeZoJLGBWQt2
-	 oDLneW81YE7htrcZVpt9ZtdNkIQIzixpn36kDU4c=
+	b=gXn+3+49Zizvot3VLjjMg9N/OLRHMGnFw5X9P10aigd9MMjRaTR6A8N3tWuc3YO8o
+	 ZZe2OEPjtjKr8c3r9kaL8NHTsLVjnwK8oxVdXmuLnNAHZcEbfgByz3MPVeq7almJX1
+	 6Otj1STPCoGuO2WPk0p6+cK4Hwlxw4LLGynwew+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732403AbfK0VGU (ORCPT
+        id S1732380AbfK0VGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:06:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60246 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:06:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731779AbfK0VGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:06:15 -0500
+        id S1727440AbfK0VGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:06:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C19921770;
-        Wed, 27 Nov 2019 21:06:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E0332086A;
+        Wed, 27 Nov 2019 21:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888775;
-        bh=50r3+lS2bYLKDE8An6J7pWIC2ESHw5CG8oao+HF9j7c=;
+        s=default; t=1574888763;
+        bh=fplUeAm3cYMRQPtLwx2S5Y4Mzzno+mFsrYPL27frXLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJZxlQPabG/l2W7VkpWZoKzUgLsnencR/Ei3o7TAOgkJPNzNDb0JAjhcDPIhqzhZl
-         r5mN4qPeEJXnNuIQFOl8IPHCRxObuZJrBCYyzjybIE56nTNpQAAUOEi1nYQqZ7E7eA
-         B23MfJ7jEHYX00diIqY3u2D2FKJAnyGuZV1nR41Q=
+        b=P16GRtQWt0NaKtxQaeHt0rZS82qu/6PF7oB80+NfwtjWAMwvGZMJtYUx7u+q4/gxH
+         XsIxnVRj0KGEEtu1k8ePUjpe+mssXaZHk85p+dahnFZxcixTkelVeKuaR0MWoBT56J
+         yKQc2iJhKs3N4PYAAAMzHwAR8TTc2yHL2US9BSTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Uvarov <muvarov@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Adrian Bunk <bunk@kernel.org>
-Subject: [PATCH 4.19 263/306] net: phy: dp83867: increase SGMII autoneg timer duration
-Date:   Wed, 27 Nov 2019 21:31:53 +0100
-Message-Id: <20191127203134.051968917@linuxfoundation.org>
+        stable@vger.kernel.org, John Pittman <jpittman@redhat.com>,
+        David Jeffery <djeffery@redhat.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.19 260/306] md/raid10: prevent access of uninitialized resync_pages offset
+Date:   Wed, 27 Nov 2019 21:31:50 +0100
+Message-Id: <20191127203133.828677762@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,59 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Uvarov <muvarov@gmail.com>
+From: John Pittman <jpittman@redhat.com>
 
-commit 1a97a477e666cbdededab93bd3754e508f0c09d7 upstream.
+commit 45422b704db392a6d79d07ee3e3670b11048bd53 upstream.
 
-After reset SGMII Autoneg timer is set to 2us (bits 6 and 5 are 01).
-That is not enough to finalize autonegatiation on some devices.
-Increase this timer duration to maximum supported 16ms.
+Due to unneeded multiplication in the out_free_pages portion of
+r10buf_pool_alloc(), when using a 3-copy raid10 layout, it is
+possible to access a resync_pages offset that has not been
+initialized.  This access translates into a crash of the system
+within resync_free_pages() while passing a bad pointer to
+put_page().  Remove the multiplication, preventing access to the
+uninitialized area.
 
-Signed-off-by: Max Uvarov <muvarov@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[ adapted for kernels without phy_modify_mmd ]
-Signed-off-by: Adrian Bunk <bunk@kernel.org>
+Fixes: f0250618361db ("md: raid10: don't use bio's vec table to manage resync pages")
+Cc: stable@vger.kernel.org # 4.12+
+Signed-off-by: John Pittman <jpittman@redhat.com>
+Suggested-by: David Jeffery <djeffery@redhat.com>
+Reviewed-by: Laurence Oberman <loberman@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/phy/dp83867.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/md/raid10.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -33,6 +33,12 @@
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -229,7 +229,7 @@ static void * r10buf_pool_alloc(gfp_t gf
  
- /* Extended Registers */
- #define DP83867_CFG4            0x0031
-+#define DP83867_CFG4_SGMII_ANEG_MASK (BIT(5) | BIT(6))
-+#define DP83867_CFG4_SGMII_ANEG_TIMER_11MS   (3 << 5)
-+#define DP83867_CFG4_SGMII_ANEG_TIMER_800US  (2 << 5)
-+#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    (1 << 5)
-+#define DP83867_CFG4_SGMII_ANEG_TIMER_16MS   (0 << 5)
-+
- #define DP83867_RGMIICTL	0x0032
- #define DP83867_STRAP_STS1	0x006E
- #define DP83867_RGMIIDCTL	0x0086
-@@ -311,6 +317,18 @@ static int dp83867_config_init(struct ph
+ out_free_pages:
+ 	while (--j >= 0)
+-		resync_free_pages(&rps[j * 2]);
++		resync_free_pages(&rps[j]);
  
- 		if (ret)
- 			return ret;
-+
-+		/* After reset SGMII Autoneg timer is set to 2us (bits 6 and 5
-+		 * are 01). That is not enough to finalize autoneg on some
-+		 * devices. Increase this timer duration to maximum 16ms.
-+		 */
-+		val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_CFG4);
-+		val &= ~DP83867_CFG4_SGMII_ANEG_MASK;
-+		val |= DP83867_CFG4_SGMII_ANEG_TIMER_16MS;
-+		ret = phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_CFG4, val);
-+
-+		if (ret)
-+			return ret;
- 	}
- 
- 	/* Enable Interrupt output INT_OE in CFG3 register */
+ 	j = 0;
+ out_free_bio:
 
 
