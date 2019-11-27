@@ -2,243 +2,105 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A11C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B93C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11FC5206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0F22071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:23:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ygulLg2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfK0KTk (ORCPT
+        id S1726383AbfK0KXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:19:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43110 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726149AbfK0KTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:19:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8F09BB209;
-        Wed, 27 Nov 2019 10:19:36 +0000 (UTC)
-Date:   Wed, 27 Nov 2019 10:19:32 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     ?????? <yun.wang@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Michal Koutn? <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH v2 1/3] sched/numa: advanced per-cgroup numa statistic
-Message-ID: <20191127101932.GN28938@suse.de>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <9354ffe8-81ba-9e76-e0b3-222bc942b3fc@linux.alibaba.com>
+        Wed, 27 Nov 2019 05:23:03 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27280 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726149AbfK0KXD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:23:03 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARAM3r3006174;
+        Wed, 27 Nov 2019 11:22:51 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=DGAu8nBd8sSn0yVexjpoA/8nuPadx0SdCFMZkuAqTjI=;
+ b=ygulLg2e5rLFuUd584h0vuVZhD+RKemgd493AWF3vztp/dF30AIlPn83ICzuODlilTxU
+ 68GX8ZqJt66704So7IBm4ukcmBA8GkDdLslHejaaqixJcgaRkjF4QV4GlSuEqvIBc29i
+ mJXPz/6TRQqMtI9NOvyTIFIZVOTr3E1MxaRbvXKanIGnsjB2vYegAlDIYVe95fUGzwTH
+ TIa7QobmHTOohdnwiXst1FjfyPY0PnoyjiRDohKzq/ZdTHdjt1LGIJ7puffGWhwdB21A
+ jueEyE2x/gECpq6uTHG6hwTYfZLyQ6ePA6pSWlnSMDu3aBgDsku+AvNgXJ3yDN+V2OmP JA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2whcxj2xh5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 11:22:51 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BF3FB10002A;
+        Wed, 27 Nov 2019 11:22:50 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 199782B1211;
+        Wed, 27 Nov 2019 11:22:51 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Nov 2019 11:22:50
+ +0100
+From:   Yannick Fertre <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/bridge/synopsys: dsi: check post disable
+Date:   Wed, 27 Nov 2019 11:22:45 +0100
+Message-ID: <1574850165-13135-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9354ffe8-81ba-9e76-e0b3-222bc942b3fc@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-27_02:2019-11-27,2019-11-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 09:49:34AM +0800, ?????? wrote:
-> Currently there are no good approach to monitoring the per-cgroup
-> numa efficiency, this could be a trouble especially when groups
-> are sharing CPUs, it's impossible to tell which one caused the
-> remote-memory access by reading hardware counter since multiple
-> workloads could sharing the same CPU, which make it painful when
-> one want to find out the root cause and fix the issue.
-> 
+From: Yannick FertrÃ© <yannick.fertre@st.com>
 
-It's already possible to identify specific tasks triggering PMU events
-so this is not exactly true.
+Some bridges did not registered the post_disable function.
+To avoid a crash, check it before calling.
 
-> In order to address this, we introduced new per-cgroup statistic
-> for numa:
->   * the numa locality to imply the numa balancing efficiency
->   * the numa execution time on each node
-> 
-> The task locality is the local page accessing ratio traced on numa
-> balancing PF, and the group locality is the topology of task execution
-> time, sectioned by the locality into 7 regions.
-> 
-> For example the new entry 'cpu.numa_stat' show:
->   locality 39541 60962 36842 72519 118605 721778 946553
->   exectime 1220127 1458684
-> 
-> Here we know the workloads in hierarchy executed 1220127ms on node_0
-> and 1458684ms on node_1 in total, tasks with locality around 0~13%
-> executed for 39541 ms, and tasks with locality around 86~100% executed
-> for 946553 ms, which imply most of the memory access are local access.
-> 
-> By monitoring the new statistic, we will be able to know the numa
-> efficiency of each per-cgroup workloads on machine, whatever they
-> sharing the CPUs or not, we will be able to find out which one
-> introduced the remote access mostly.
-> 
-> Besides, per-node memory topology from 'memory.numa_stat' become
-> more useful when we have the per-node execution time, workloads
-> always executing on node_0 while it's memory is all on node_1 is
-> usually a bad case.
-> 
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Koutný <mkoutny@suse.com>
-> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-> ---
->  include/linux/sched.h        | 18 ++++++++-
->  include/linux/sched/sysctl.h |  6 +++
->  init/Kconfig                 |  9 +++++
->  kernel/sched/core.c          | 91 ++++++++++++++++++++++++++++++++++++++++++++
->  kernel/sched/fair.c          | 33 ++++++++++++++++
->  kernel/sched/sched.h         | 17 +++++++++
->  kernel/sysctl.c              | 11 ++++++
->  7 files changed, 184 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 8f6607cd40ac..505b041594ef 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1118,9 +1118,25 @@ struct task_struct {
->  	 * numa_faults_locality tracks if faults recorded during the last
->  	 * scan window were remote/local or failed to migrate. The task scan
->  	 * period is adapted based on the locality of the faults with different
-> -	 * weights depending on whether they were shared or private faults
-> +	 * weights depending on whether they were shared or private faults.
-> +	 *
-> +	 * Counter id stand for:
-> +	 * 0 -- remote faults
-> +	 * 1 -- local faults
-> +	 * 2 -- page migration failure
-> +	 *
-> +	 * Extra counters when CONFIG_CGROUP_NUMA_STAT enabled:
-> +	 * 3 -- remote page accessing
-> +	 * 4 -- local page accessing
-> +	 *
-> +	 * The 'remote/local faults' records the cpu-page relationship before
-> +	 * page migration, while the 'remote/local page accessing' is after.
->  	 */
-> +#ifndef CONFIG_CGROUP_NUMA_STAT
->  	unsigned long			numa_faults_locality[3];
-> +#else
-> +	unsigned long			numa_faults_locality[5];
-> +#endif
-> 
->  	unsigned long			numa_pages_migrated;
->  #endif /* CONFIG_NUMA_BALANCING */
-> diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-> index 89f55e914673..2d6a515df544 100644
-> --- a/include/linux/sched/sysctl.h
-> +++ b/include/linux/sched/sysctl.h
-> @@ -102,4 +102,10 @@ extern int sched_energy_aware_handler(struct ctl_table *table, int write,
->  				 loff_t *ppos);
->  #endif
-> 
-> +#ifdef CONFIG_CGROUP_NUMA_STAT
-> +extern int sysctl_cg_numa_stat(struct ctl_table *table, int write,
-> +				 void __user *buffer, size_t *lenp,
-> +				 loff_t *ppos);
-> +#endif
-> +
->  #endif /* _LINUX_SCHED_SYSCTL_H */
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 4d8d145c41d2..b31d2b560493 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -817,6 +817,15 @@ config NUMA_BALANCING_DEFAULT_ENABLED
->  	  If set, automatic NUMA balancing will be enabled if running on a NUMA
->  	  machine.
-> 
-> +config CGROUP_NUMA_STAT
-> +	bool "Advanced per-cgroup NUMA statistics"
-> +	default n
-> +	depends on CGROUP_SCHED && NUMA_BALANCING
-> +	help
-> +	  This option adds support for per-cgroup NUMA locality/execution
-> +	  statistics, for monitoring NUMA efficiency of per-cgroup workloads
-> +	  on NUMA platforms with NUMA Balancing enabled.
-> +
->  menuconfig CGROUPS
->  	bool "Control Group support"
->  	select KERNFS
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index aaa1740e6497..eabcab25be50 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -7657,6 +7657,84 @@ static u64 cpu_rt_period_read_uint(struct cgroup_subsys_state *css,
->  }
->  #endif /* CONFIG_RT_GROUP_SCHED */
-> 
-> +#ifdef CONFIG_CGROUP_NUMA_STAT
-> +DEFINE_STATIC_KEY_FALSE(sched_cg_numa_stat);
-> +
-> +#ifdef CONFIG_PROC_SYSCTL
-> +int sysctl_cg_numa_stat(struct ctl_table *table, int write,
-> +			 void __user *buffer, size_t *lenp, loff_t *ppos)
-> +{
-> +	struct ctl_table t;
-> +	int err;
-> +	int state = static_branch_likely(&sched_cg_numa_stat);
-> +
-> +	if (write && !capable(CAP_SYS_ADMIN))
-> +		return -EPERM;
-> +
-> +	t = *table;
-> +	t.data = &state;
-> +	err = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
-> +	if (err < 0 || !write)
-> +		return err;
-> +
-> +	if (state)
-> +		static_branch_enable(&sched_cg_numa_stat);
-> +	else
-> +		static_branch_disable(&sched_cg_numa_stat);
-> +
-> +	return err;
-> +}
-> +#endif
-> +
+Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+---
+ drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Why is this implemented as a toggle? I'm finding it hard to make sense
-of this. The numa_stat should not even exist if the feature is disabled.
-
-Assuming that is fixed then the runtime overhead is fine but the same
-issues with the quality of the information relying on NUMA balancing
-limits the usefulness of this. Disabling NUMA balancing or the scan rate
-dropping to a very low frequency would lead in misleading conclusions as
-well as false positives if the CPU and memory policies force remote memory
-usage. Similarly, the timing of the information available is variable du
-to how numa_faults_locality gets reset so sometimes the information is
-fine-grained and sometimes it's coarse grained. It will also pretend to
-display useful information even if NUMA balancing is disabled.
-
-I find it hard to believe it would be useful in practice and I think users
-would have real trouble interpreting the data given how much it relies on
-internal implementation details of NUMA balancing. I cannot be certain
-as clearly something motivated the creation of this patch although it's
-unclear if it has ever been used to debug and fix an actual problem in
-the field. Hence, I'm neutral on the patch and will neither ack or nack
-it and will defer to the scheduler maintainers but if I was pushed on it,
-I would be disinclined to merge the patch due to the potential confusion
-caused by users who believe it provides accurate information when at best
-it gives a rough approximation with variable granularity.
-
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+index cc806ba..1e37233 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+@@ -886,7 +886,8 @@ static void dw_mipi_dsi_bridge_post_disable(struct drm_bridge *bridge)
+ 	 * This needs to be fixed in the drm_bridge framework and the API
+ 	 * needs to be updated to manage our own call chains...
+ 	 */
+-	dsi->panel_bridge->funcs->post_disable(dsi->panel_bridge);
++	if (dsi->panel_bridge->funcs->post_disable)
++		dsi->panel_bridge->funcs->post_disable(dsi->panel_bridge);
+ 
+ 	if (dsi->slave) {
+ 		dw_mipi_dsi_disable(dsi->slave);
 -- 
-Mel Gorman
-SUSE Labs
+2.7.4
+
