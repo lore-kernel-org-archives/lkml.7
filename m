@@ -2,99 +2,90 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A5CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C8CC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06EC120678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D8920722
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="autV2GM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfK0Nyl (ORCPT
+        id S1726858AbfK0N7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:54:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35182 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726558AbfK0Nyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:54:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DDB51AD54;
-        Wed, 27 Nov 2019 13:54:38 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id A8D30DA733; Wed, 27 Nov 2019 14:54:36 +0100 (CET)
-Date:   Wed, 27 Nov 2019 14:54:36 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] btrfs: Increase buffer size for zlib functions
-Message-ID: <20191127135436.GR2734@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Zaslonko Mikhail <zaslonko@linux.ibm.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191126144130.75710-1-zaslonko@linux.ibm.com>
- <20191126144130.75710-6-zaslonko@linux.ibm.com>
- <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
- <11377b99-b66c-fdc3-5c8f-0bae34c92c03@linux.ibm.com>
+        Wed, 27 Nov 2019 08:59:02 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:33902 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfK0N7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 08:59:02 -0500
+Received: by mail-vs1-f68.google.com with SMTP id y23so15268618vso.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 05:59:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gAq++vOmWlGE0rfhdloa1GAF3bf8ceEKuBq/5jw6JRM=;
+        b=autV2GM15bvqwiA+NNcmk4/aTXU/HSFEF/5su4++BbyqM9TTPEl160Dl4aSSi4PSHx
+         7dEzEqyacVs+yewRvnBZ83UHqscNkWGpzMcJWLLLi+QCkk1xhjhnBlxejNfHU/qVmTuj
+         T8igdSS/tZRj5c7YLCT4H6AYMtIaHIBwPBfL+kI7kHRiUmSNwFnRVIFTZRS1Wyt1h3R3
+         cyqBUvI2GSXDWeDlgidAaqloDquB80gWY3CD6nCyEEBi1JxlLSFZcsLD22SLWLifDTD2
+         +z7R1ny87pHoyTM6Q6jqCBqMtdOrTs+pljEMTkDmflCfHXKg6KEMU4pBGfyFDHpkZxXz
+         MSgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gAq++vOmWlGE0rfhdloa1GAF3bf8ceEKuBq/5jw6JRM=;
+        b=DUFpOLrJfhD0OG5g/rkvkFJKk/uX55UwqKPvDXJHrbs23IBP8sB4y/lcRD5lJHg0RK
+         jzbv1WfvRkWpcnQ36F+ygj5Y5xPX6MT/XNDDIxcsUARbCaXxOh2MhRkSspWo/5jH/zoI
+         K8F72wk1tJ6LY5QuQ1fd1GGSTYuR5+foEcc34KXF6U1bMMZvqFgIAk08za5LyYkgXJmi
+         N+FvFa5NOV7H+iKCcn+d9sHxDeumF9vXInCzG0mmpTp+G/fGekW+t4weU3RApQGmb/AJ
+         QmIEUluKxFwTvbAW7UE9Xp7FUuF3LzVwFMGGCvi0/PFwMnX3tRvNAuMucjgiaOAh9bSb
+         z8NQ==
+X-Gm-Message-State: APjAAAV92zT6shKhWAuGDGXROW/zJiOK0KvKzz5DMknsunsWGHi3GdAX
+        U/QBCNlBZu/dbfamxLIT3GBVBNocdw4iWym2y3xJY+r8ZvQ=
+X-Google-Smtp-Source: APXvYqyf8H0dROBB9bvOXaLHvIe1OfTnJRLDLNL9AnIDcuNOVVLHNLEtVlUz2d1I4D3NhQ2ISu26ZnJQDRyo/JcRIiU=
+X-Received: by 2002:a67:88c8:: with SMTP id k191mr3366250vsd.86.1574863141682;
+ Wed, 27 Nov 2019 05:59:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11377b99-b66c-fdc3-5c8f-0bae34c92c03@linux.ibm.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+References: <20191124195728.32226-1-stephan@gerhold.net>
+In-Reply-To: <20191124195728.32226-1-stephan@gerhold.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 27 Nov 2019 14:58:50 +0100
+Message-ID: <CACRpkdagXoVamNGj6hQ-0YQAoDpwTVOY8uUCVB8wwsXY9aQj4A@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: ux500: Add "simple-bus" compatible to soc node
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 02:42:20PM +0100, Zaslonko Mikhail wrote:
-> Hello,
-> 
-> On 26.11.2019 16:52, Josef Bacik wrote:
-> > On Tue, Nov 26, 2019 at 03:41:30PM +0100, Mikhail Zaslonko wrote:
-> >> Due to the small size of zlib buffer (1 page) set in btrfs code, s390
-> >> hardware compression is rather limited in terms of performance. Increasing
-> >> the buffer size to 4 pages would bring significant benefit for s390
-> >> hardware compression (up to 60% better performance compared to the
-> >> PAGE_SIZE buffer) and should not bring much overhead in terms of memory
-> >> consumption due to order 2 allocations.
-> >>
-> >> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-> > 
-> > We may have to make these allocations under memory pressure in the IO context,
-> > order 2 allocations here is going to be not awesome.  If you really want it then
-> > you need to at least be able to fall back to single page if you fail to get the
-> > allocation.  Thanks,
-> 
-> As far as I understand GFP_KERNEL allocations would never fail for the order <= 
-> PAGE_ALLOC_COSTLY_ORDER.
+On Sun, Nov 24, 2019 at 8:58 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 
-There's no guaranteed no-fail semantics for GFP flags (obviously besides
-__GFP_NOFAIL), GFP_KERNEL can fail and GFP_NOFS is unlikely to fail for
-order below costly allocations. This depends on the allocator internals
-and has never been an API-level guarantee AFAIK. There's ongoing to work
-to relax the allocator constraints and allow to fail in more cases
-(like for GFP_NOFS).
+> The "soc" node in the Ux500 device tree does not need any special
+> handling - it is just a simple I/O bus that can be accessed without
+> additional configuration.
+>
+> Therefore we can additionally describe it as compatible with "simple-bus".
+> This can be used by platforms to probe devices under the soc node without
+> special handling for our custom "stericsson,db8500" compatible
+> (e.g. in U-Boot).
+>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
-> How else can the memory pressure condition be identified
-> here?
+Patch applied.
 
-All data write paths must consider what happens under memory pressure,
-because the reason to write the data could be started by an allocation
-that can get free memory by writing dirty data. So it's kind of implied
-here.
+Yours,
+Linus Walleij
