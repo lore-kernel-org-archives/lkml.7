@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E73C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C326EC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E402154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BB4F2154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889398;
-	bh=YLyGdyG2GbF2+WCjoHDmiZSalR1OSon7kNEebSIaPzA=;
+	s=default; t=1574889405;
+	bh=nHVmU/oIFzQsYfQS/3JhrMAgd1hf4fvK2RzpONW5VZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oK/HGTXJQmLMKY6r7ulYbeHs9rDdI/2Ym+zE0dnfZxCjgrsoTnYzXmHuCfXm9l7yF
-	 fXKL01gtuSm6cpXjVOEqngRIU3uJdRlbsG2YR7aGUbWadD+jHC+CP3fDKEZmycbARs
-	 3zOqK5pV7Gj/XqQ9ZnOLNR52LZQDuJjDUhn+aZFo=
+	b=wvgs+Q5MhoRYCPCci4X0heoR5JyN07+7n6odd9pPAoKvHZhj+f8w0yNnEaVvqHfDE
+	 25DNAOzkAObMmdqkq8WTo1MG/EAKj7SoAJ4yp3dV3aNAfhyXFvmNHDoxOvfl2iIDVL
+	 WaIEZHTSN99PmxgtiA7R/08trczH88/63dEPI8t8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732895AbfK0VQh (ORCPT
+        id S1733025AbfK0VQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:16:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:16:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732784AbfK0VNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:13:53 -0500
+        id S1732618AbfK0VNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:13:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A67321741;
-        Wed, 27 Nov 2019 21:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1DB0215F1;
+        Wed, 27 Nov 2019 21:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889233;
-        bh=YLyGdyG2GbF2+WCjoHDmiZSalR1OSon7kNEebSIaPzA=;
+        s=default; t=1574889223;
+        bh=nHVmU/oIFzQsYfQS/3JhrMAgd1hf4fvK2RzpONW5VZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rmhuvF6XYW46HzCTHKf76Sj+6RSY6ETZWYgLCmZs/DSb9MfjrECgqyL6WuzLqaTym
-         Y1hrUOzuRTjFtCeBNLBKONiD5BMkbg7BboWXIgqx1AqgnyH7+K2Nly67io7ISXlHCT
-         n6S8jXj0sVc29goYNiSH5cSt2OImsOPSeNvtdYr0=
+        b=V5ncSDYf8Nnlo5o6V1aHiTK/BlmKrrjBmPPekQDLKSAwLjeRCLTD1gvXzzyn4jLw4
+         At1UVw2lCxTpqtffdi0Ra5miXFWVhN/Me3c2Ahl4PmZaaE+dDzCVccIu+mV2YBxdtt
+         6JJu4Z0Q6J7rnkEs2+/bSiA8bKYFdFJ6QcyZXHO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.4 38/66] exit/exec: Seperate mm_release()
-Date:   Wed, 27 Nov 2019 21:32:33 +0100
-Message-Id: <20191127202718.958636413@linuxfoundation.org>
+        stable@vger.kernel.org, Kai Shen <shenkai8@huawei.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 35/66] cpufreq: Add NULL checks to show() and store() methods of cpufreq
+Date:   Wed, 27 Nov 2019 21:32:30 +0100
+Message-Id: <20191127202713.995299070@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -60,98 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Kai Shen <shenkai8@huawei.com>
 
-commit 4610ba7ad877fafc0a25a30c6c82015304120426 upstream.
+commit e6e8df07268c1f75dd9215536e2ce4587b70f977 upstream.
 
-mm_release() contains the futex exit handling. mm_release() is called from
-do_exit()->exit_mm() and from exec()->exec_mm().
+Add NULL checks to show() and store() in cpufreq.c to avoid attempts
+to invoke a NULL callback.
 
-In the exit_mm() case PF_EXITING and the futex state is updated. In the
-exec_mm() case these states are not touched.
+Though some interfaces of cpufreq are set as read-only, users can
+still get write permission using chmod which can lead to a kernel
+crash, as follows:
 
-As the futex exit code needs further protections against exit races, this
-needs to be split into two functions.
+chmod +w /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+echo 1 >  /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
 
-Preparatory only, no functional change.
+This bug was found in linux 4.19.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191106224556.240518241@linutronix.de
+Signed-off-by: Kai Shen <shenkai8@huawei.com>
+Reported-by: Feilong Lin <linfeilong@huawei.com>
+Reviewed-by: Feilong Lin <linfeilong@huawei.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+[ rjw: Subject & changelog ]
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/exec.c                |    2 +-
- include/linux/sched/mm.h |    6 ++++--
- kernel/exit.c            |    2 +-
- kernel/fork.c            |   12 +++++++++++-
- 4 files changed, 17 insertions(+), 5 deletions(-)
+ drivers/cpufreq/cpufreq.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1015,7 +1015,7 @@ static int exec_mmap(struct mm_struct *m
- 	/* Notify parent that we're no longer interested in the old VM */
- 	tsk = current;
- 	old_mm = current->mm;
--	mm_release(tsk, old_mm);
-+	exec_mm_release(tsk, old_mm);
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -933,6 +933,9 @@ static ssize_t show(struct kobject *kobj
+ 	struct freq_attr *fattr = to_attr(attr);
+ 	ssize_t ret;
  
- 	if (old_mm) {
- 		sync_mm_rss(old_mm);
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -117,8 +117,10 @@ extern struct mm_struct *get_task_mm(str
-  * succeeds.
-  */
- extern struct mm_struct *mm_access(struct task_struct *task, unsigned int mode);
--/* Remove the current tasks stale references to the old mm_struct */
--extern void mm_release(struct task_struct *, struct mm_struct *);
-+/* Remove the current tasks stale references to the old mm_struct on exit() */
-+extern void exit_mm_release(struct task_struct *, struct mm_struct *);
-+/* Remove the current tasks stale references to the old mm_struct on exec() */
-+extern void exec_mm_release(struct task_struct *, struct mm_struct *);
- 
- #ifdef CONFIG_MEMCG
- extern void mm_update_next_owner(struct mm_struct *mm);
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -437,7 +437,7 @@ static void exit_mm(void)
- 	struct mm_struct *mm = current->mm;
- 	struct core_state *core_state;
- 
--	mm_release(current, mm);
-+	exit_mm_release(current, mm);
- 	if (!mm)
- 		return;
- 	sync_mm_rss(mm);
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1283,7 +1283,7 @@ static int wait_for_vfork_done(struct ta
-  * restoring the old one. . .
-  * Eric Biederman 10 January 1998
-  */
--void mm_release(struct task_struct *tsk, struct mm_struct *mm)
-+static void mm_release(struct task_struct *tsk, struct mm_struct *mm)
- {
- 	/* Get rid of any futexes when releasing the mm */
- 	futex_mm_release(tsk);
-@@ -1320,6 +1320,16 @@ void mm_release(struct task_struct *tsk,
- 		complete_vfork_done(tsk);
- }
- 
-+void exit_mm_release(struct task_struct *tsk, struct mm_struct *mm)
-+{
-+	mm_release(tsk, mm);
-+}
++	if (!fattr->show)
++		return -EIO;
 +
-+void exec_mm_release(struct task_struct *tsk, struct mm_struct *mm)
-+{
-+	mm_release(tsk, mm);
-+}
+ 	down_read(&policy->rwsem);
+ 	ret = fattr->show(policy, buf);
+ 	up_read(&policy->rwsem);
+@@ -947,6 +950,9 @@ static ssize_t store(struct kobject *kob
+ 	struct freq_attr *fattr = to_attr(attr);
+ 	ssize_t ret = -EINVAL;
+ 
++	if (!fattr->store)
++		return -EIO;
 +
- /**
-  * dup_mm() - duplicates an existing mm structure
-  * @tsk: the task_struct with which the new mm will be associated.
+ 	/*
+ 	 * cpus_read_trylock() is used here to work around a circular lock
+ 	 * dependency problem with respect to the cpufreq_register_driver().
 
 
