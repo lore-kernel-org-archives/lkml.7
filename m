@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44088C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA16C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6A5217AB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F28B21741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887397;
-	bh=RIQTKhDDQiNcNFXqGKPVnrkTgxXZnNicodfxzrmhHKY=;
+	s=default; t=1574887401;
+	bh=luqP4xoGP1K9bacavhN3oKuBE214qMJYyj/o2cLvzy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UHcc3hSAgVT1AKK61UK/mQHU9EW1TAU7N3GwY3nwRMsVTMU/Mspe4vV4uL1sUnvWa
-	 DMHdZ4Z7Gc/QvDH1BalZqgMRoMqAK2V4MW86uhyIAhLHvWkiadlMDDzX4T47zGpDG/
-	 8AJYokO7Rw1xtiHOja2mjxZhn3gQMQ1EtK/FgQqM=
+	b=q1oOkpduresAfpuxAHRAQ6TrT+Hi09V3WP3fWzbHBbG3kd06DnnBEIEvm5BVIiLXW
+	 LEQA6ex2Wmap+CE4IF+jusGrDDNc1yfgjFoiKZhwwmZ3FwPLWKriLxLStIAHJDlnEL
+	 QHm8cUY5FIbYoOKXjWvhJJbh5GFV1WQeS5HMkADo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfK0UnP (ORCPT
+        id S1728855AbfK0UnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:43:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50606 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:43:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729423AbfK0UnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:43:13 -0500
+        id S1728620AbfK0UnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:43:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E229217AB;
-        Wed, 27 Nov 2019 20:43:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 938BB21780;
+        Wed, 27 Nov 2019 20:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887392;
-        bh=RIQTKhDDQiNcNFXqGKPVnrkTgxXZnNicodfxzrmhHKY=;
+        s=default; t=1574887395;
+        bh=luqP4xoGP1K9bacavhN3oKuBE214qMJYyj/o2cLvzy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w0rdMBn0c0eP3SZlcP0pHN24HG5miqlufU67CYEI8OEpVMPRD/NyFvPujm/t5rcx9
-         b/HE+UaJurECdscLR9SvE0eB6MVPMR1PJmQao4+E8SxPeHYaB2Jvgj8m7Hu6tq7Q0n
-         ZH9qrSvbBEYPleJX9DIMtFUZ9toRD8a9EvbDfJH4=
+        b=q22AyfxIPYneqZMW2cvwCBgwqW8YTjoAytZdBhgrqZiR4xc0k2rl6Z7SPtn4nrROK
+         kr9ljNaBibp/cCbFX4vMIWTO91Dyo6ISnclCzEC2y9nmTNjRugmKhTSpxGzf1+yTh1
+         g/rTcAVdFF2W/KSZ2BxCs+gE/A8H/5hwlBnSMb0A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radu Rendec <radu.rendec@gmail.com>,
-        Patrick Talbert <ptalbert@redhat.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 066/151] macsec: update operstate when lower device changes
-Date:   Wed, 27 Nov 2019 21:30:49 +0100
-Message-Id: <20191127203033.956899010@linuxfoundation.org>
+Subject: [PATCH 4.9 093/151] wireless: airo: potential buffer overflow in sprintf()
+Date:   Wed, 27 Nov 2019 21:31:16 +0100
+Message-Id: <20191127203037.520387798@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -62,68 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit e6ac075882b2afcdf2d5ab328ce4ab42a1eb9593 ]
+[ Upstream commit 3d39e1bb1c88f32820c5f9271f2c8c2fb9a52bac ]
 
-Like all other virtual devices (macvlan, vlan), the operstate of a
-macsec device should match the state of its lower device. This is done
-by calling netif_stacked_transfer_operstate from its netdevice notifier.
+It looks like we wanted to print a maximum of BSSList_rid.ssidLen bytes
+of the ssid, but we accidentally use "%*s" (width) instead of "%.*s"
+(precision) so if the ssid doesn't have a NUL terminator this could lead
+to an overflow.
 
-We also need to call netif_stacked_transfer_operstate when a new macsec
-device is created, so that its operstate is set properly. This is only
-relevant when we try to bring the device up directly when we create it.
+Static analysis.  Not tested.
 
-Radu Rendec proposed a similar patch, inspired from the 802.1q driver,
-that included changing the administrative state of the macsec device,
-instead of just the operstate. This version is similar to what the
-macvlan driver does, and updates only the operstate.
-
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Reported-by: Radu Rendec <radu.rendec@gmail.com>
-Reported-by: Patrick Talbert <ptalbert@redhat.com>
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e174961ca1a0 ("net: convert print_mac to %pM")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/net/wireless/cisco/airo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index da10104be16cf..d2a3825376be5 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -3275,6 +3275,9 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
- 	if (err < 0)
- 		goto del_dev;
- 
-+	netif_stacked_transfer_operstate(real_dev, dev);
-+	linkwatch_fire_event(dev);
-+
- 	macsec_generation++;
- 
- 	return 0;
-@@ -3446,6 +3449,20 @@ static int macsec_notify(struct notifier_block *this, unsigned long event,
- 		return NOTIFY_DONE;
- 
- 	switch (event) {
-+	case NETDEV_DOWN:
-+	case NETDEV_UP:
-+	case NETDEV_CHANGE: {
-+		struct macsec_dev *m, *n;
-+		struct macsec_rxh_data *rxd;
-+
-+		rxd = macsec_data_rtnl(real_dev);
-+		list_for_each_entry_safe(m, n, &rxd->secys, secys) {
-+			struct net_device *dev = m->secy.netdev;
-+
-+			netif_stacked_transfer_operstate(real_dev, dev);
-+		}
-+		break;
-+	}
- 	case NETDEV_UNREGISTER: {
- 		struct macsec_dev *m, *n;
- 		struct macsec_rxh_data *rxd;
+diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
+index 69b826d229c5b..04939e576ee02 100644
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -5472,7 +5472,7 @@ static int proc_BSSList_open( struct inode *inode, struct file *file ) {
+            we have to add a spin lock... */
+ 	rc = readBSSListRid(ai, doLoseSync, &BSSList_rid);
+ 	while(rc == 0 && BSSList_rid.index != cpu_to_le16(0xffff)) {
+-		ptr += sprintf(ptr, "%pM %*s rssi = %d",
++		ptr += sprintf(ptr, "%pM %.*s rssi = %d",
+ 			       BSSList_rid.bssid,
+ 				(int)BSSList_rid.ssidLen,
+ 				BSSList_rid.ssid,
 -- 
 2.20.1
 
