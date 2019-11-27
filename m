@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BD5C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02677C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E242154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5862154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889672;
-	bh=ofE2EqY7W9xW3Wu4tt2rqooLZDzue3n24dtJOdV27bA=;
+	s=default; t=1574889679;
+	bh=LfA1WHC3J8XPfL/CFiTC6sNIBPjDAA/6b3KwEk0Dals=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MpozaGaCdfyADKS7Ag5qLYZnsyMB1+ghxcvZtmJIgya8dG9LBH5fJtHFMzdili2nB
-	 Mlf2SgzCR5l/WValCWCwvGghJ6eMQH6CIV72rcjaC3vQdSjWuM1VExPYIoUX6WZ1bf
-	 FqmTeCqwIeRteUXT/JvkshwNl28TcYL/2vFv1i+I=
+	b=mxnTAKspsKlggTmzLk/+WZZbFLGH5cN6L1oI/wtsHKe+PyNhVKgk2wsh2hg5Cwh37
+	 n6E/eXfSfW9wWMi3gXpbMThP9hu5varBOD/xFNpKs5SX6i9uPJqPhGBcuxW1hAPe2Z
+	 viIqgoEpQ+akvNoEpNe3gsrLdENVOlFU6HQ3TSUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732640AbfK0VVK (ORCPT
+        id S1731610AbfK0VVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:21:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34008 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:21:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732043AbfK0VHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:07:46 -0500
+        id S1727192AbfK0VHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:07:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D155020637;
-        Wed, 27 Nov 2019 21:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A033720637;
+        Wed, 27 Nov 2019 21:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888866;
-        bh=ofE2EqY7W9xW3Wu4tt2rqooLZDzue3n24dtJOdV27bA=;
+        s=default; t=1574888853;
+        bh=LfA1WHC3J8XPfL/CFiTC6sNIBPjDAA/6b3KwEk0Dals=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AJoHCIPM9L8Zw8C9jpQHph3fRYurI783V79vSz6B/sJmxaWIPA65/YU7itMWuxI6Q
-         oBrt6489RhtRH2A/L4namlHRxsZjk1zI29Nt/wWLIde1cYtFVoLnOLzh/7Zn3taLmr
-         ml3BDKqAeUzW2TPx3SycT6mGh/NVTrfdC2hWCpsk=
+        b=iVj9HS/xNmicmALGRfGp8EV8MHr5Hk9MQNgJvke5w2fuQM+9zwSkrGq9l0ksj27zK
+         O/CTPv/0pVYjyfdstQKXRmWWgR1A1DWT4tOgBGwlihRv1sJHUp9wp+xlPqliZFYN1S
+         jxw8OYcDxg0lywO9+Pai+ovon+9QY7vj4CEklLxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 300/306] USB: serial: mos7840: fix remote wakeup
-Date:   Wed, 27 Nov 2019 21:32:30 +0100
-Message-Id: <20191127203136.638683675@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.de>
+Subject: [PATCH 4.19 296/306] USB: chaoskey: fix error case of a timeout
+Date:   Wed, 27 Nov 2019 21:32:26 +0100
+Message-Id: <20191127203136.364101637@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -58,41 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 92fe35fb9c70a00d8fbbf5bd6172c921dd9c7815 upstream.
+commit 92aa5986f4f7b5a8bf282ca0f50967f4326559f5 upstream.
 
-The driver was setting the device remote-wakeup feature during probe in
-violation of the USB specification (which says it should only be set
-just prior to suspending the device). This could potentially waste
-power during suspend as well as lead to spurious wakeups.
+In case of a timeout or if a signal aborts a read
+communication with the device needs to be ended
+lest we overwrite an active URB the next time we
+do IO to the device, as the URB may still be active.
 
-Note that USB core would clear the remote-wakeup feature at first
-resume.
-
-Fixes: 3f5429746d91 ("USB: Moschip 7840 USB-Serial Driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.19
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Oliver Neukum <oneukum@suse.de>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191107142856.16774-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/mos7840.c |    5 -----
- 1 file changed, 5 deletions(-)
+ drivers/usb/misc/chaoskey.c |   24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/serial/mos7840.c
-+++ b/drivers/usb/serial/mos7840.c
-@@ -2325,11 +2325,6 @@ out:
- 			goto error;
- 		} else
- 			dev_dbg(&port->dev, "ZLP_REG5 Writing success status%d\n", status);
--
--		/* setting configuration feature to one */
--		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
--				0x03, 0x00, 0x01, 0x00, NULL, 0x00,
--				MOS_WDR_TIMEOUT);
- 	}
+--- a/drivers/usb/misc/chaoskey.c
++++ b/drivers/usb/misc/chaoskey.c
+@@ -384,13 +384,17 @@ static int _chaoskey_fill(struct chaoske
+ 		!dev->reading,
+ 		(started ? NAK_TIMEOUT : ALEA_FIRST_TIMEOUT) );
+ 
+-	if (result < 0)
++	if (result < 0) {
++		usb_kill_urb(dev->urb);
+ 		goto out;
++	}
+ 
+-	if (result == 0)
++	if (result == 0) {
+ 		result = -ETIMEDOUT;
+-	else
++		usb_kill_urb(dev->urb);
++	} else {
+ 		result = dev->valid;
++	}
+ out:
+ 	/* Let the device go back to sleep eventually */
+ 	usb_autopm_put_interface(dev->interface);
+@@ -526,7 +530,21 @@ static int chaoskey_suspend(struct usb_i
+ 
+ static int chaoskey_resume(struct usb_interface *interface)
+ {
++	struct chaoskey *dev;
++	struct usb_device *udev = interface_to_usbdev(interface);
++
+ 	usb_dbg(interface, "resume");
++	dev = usb_get_intfdata(interface);
++
++	/*
++	 * We may have lost power.
++	 * In that case the device that needs a long time
++	 * for the first requests needs an extended timeout
++	 * again
++	 */
++	if (le16_to_cpu(udev->descriptor.idVendor) == ALEA_VENDOR_ID)
++		dev->reads_started = false;
++
  	return 0;
- error:
+ }
+ #else
 
 
