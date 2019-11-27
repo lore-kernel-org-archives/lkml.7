@@ -2,52 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C302BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66D3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993D421582
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AF42084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888276;
-	bh=tWAdVYLHMTE3vCjickhx0yIbPKCzlQ9aZb9fEW8zGJA=;
+	s=default; t=1574888280;
+	bh=RUmIk2AyAHnF+oOB0qFKnfPjkDLo8tbmg3+ir3tzxSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTQqiDajR5whra36XidEk5d97qXdAzaRHEfPfkjgPMEbuI/lVG0THA04aI6NWnAeh
-	 5YW9xjtxgaLA2XwE+h3q9UKcOBQHyr6ZG7+f+NXzBW2qY2V4kptjUOJ7OoRqPuVlNG
-	 ldqmdPNYjSUxPZpNo26GvTwDwqfqBEoJzkmZYtQk=
+	b=GK2Gdo0IsffZi2DijeBnhkf07s4P9mP/7h70tvPOWDwtmf8p3TcemX28BBZl9LpUM
+	 2oNv2DgNH46JnZt1c3PIeHQIT4fEPGCAdKOz/hS661AlNFueL8aGnZ8ONQWuqnNNq6
+	 A9DS0eroGmqV8Q33cKkbH4hkFNVhGO/ykT5+fUcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731249AbfK0U5z (ORCPT
+        id S1728379AbfK0U56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:57:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48948 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:57:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731239AbfK0U5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:57:50 -0500
+        id S1730688AbfK0U5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:57:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0B1D2084D;
-        Wed, 27 Nov 2019 20:57:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED61E20862;
+        Wed, 27 Nov 2019 20:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888269;
-        bh=tWAdVYLHMTE3vCjickhx0yIbPKCzlQ9aZb9fEW8zGJA=;
+        s=default; t=1574888272;
+        bh=RUmIk2AyAHnF+oOB0qFKnfPjkDLo8tbmg3+ir3tzxSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqTCP74x59/ksvlo72GTIbAsBmt5fPR8FBd1xbh51XY/ZsrcETctvxq9bfA71yZXA
-         9Uz29DCutv7Pf9ywKAxQc3OkI68S3HAc9EXBtvemDRThFoHhYbru+KL+nx5WvEr6AI
-         lSD9dL7SHRYk2KdMNroAqZVGeLvgvrP1BiOKecE4=
+        b=mqHkS8xT67Qj1lAlAhQXmasSNIRbbD0GkfHDaQBqfcHQdathyMflw6E3jxeL/mTwN
+         HlY5cXADhPP8S8wiT4SYnc22TUGR433DCx5GODmWytGQBDmcDtds/2/bfd0IBJv0y/
+         30n1itdA/VGaC9ZR/cB75mvOBIDL3Dic407jazIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Folly <julien.folly@gmail.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/306] w1: IAD Register is yet readable trough iad sys file. Fix snprintf (%u for unsigned, count for max size).
-Date:   Wed, 27 Nov 2019 21:28:22 +0100
-Message-Id: <20191127203118.582601484@linuxfoundation.org>
+Subject: [PATCH 4.19 070/306] scsi: isci: Use proper enumerated type in atapi_d2h_reg_frame_handler
+Date:   Wed, 27 Nov 2019 21:28:40 +0100
+Message-Id: <20191127203119.915281460@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,173 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Folly <julien.folly@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 6eaafbb6998e999467cf78a76e155ee00e372b14 ]
+[ Upstream commit e9e9a103528c7e199ead6e5374c9c52cf16b5802 ]
 
-IAD Register is yet readable trough the "iad" sys file.
+Clang warns when one enumerated type is implicitly converted to another.
 
-A write to the "iad" sys file enables or disables the current
-measurement, but it was not possible to get the measured value by
-reading it.
-Fix: %u in snprintf for unsigned values (vdd and vad)
-Fix: Avoid possibles overflows (Usage of the 'count' variables)
+drivers/scsi/isci/request.c:1629:13: warning: implicit conversion from
+enumeration type 'enum sci_io_status' to different enumeration type
+'enum sci_status' [-Wenum-conversion]
+                        status = SCI_IO_FAILURE_RESPONSE_VALID;
+                               ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/isci/request.c:1631:12: warning: implicit conversion from
+enumeration type 'enum sci_io_status' to different enumeration type
+'enum sci_status' [-Wenum-conversion]
+                status = SCI_IO_FAILURE_RESPONSE_VALID;
+                       ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Julien Folly <julien.folly@gmail.com>
-Acked-by: Evgeniy Polyakov <zbr@ioremap.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+status is of type sci_status but SCI_IO_FAILURE_RESPONSE_VALID is of
+type sci_io_status. Use SCI_FAILURE_IO_RESPONSE_VALID, which is from
+sci_status and has SCI_IO_FAILURE_RESPONSE_VALID's exact value since
+that is what SCI_IO_FAILURE_RESPONSE_VALID is mapped to in the isci.h
+file.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/153
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/w1/slaves/w1_ds2438.c | 66 +++++++++++++++++++++++++++--------
- 1 file changed, 52 insertions(+), 14 deletions(-)
+ drivers/scsi/isci/request.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/w1/slaves/w1_ds2438.c b/drivers/w1/slaves/w1_ds2438.c
-index bf641a191d077..7c4e33dbee4d5 100644
---- a/drivers/w1/slaves/w1_ds2438.c
-+++ b/drivers/w1/slaves/w1_ds2438.c
-@@ -186,8 +186,8 @@ static int w1_ds2438_change_config_bit(struct w1_slave *sl, u8 mask, u8 value)
- 	return -1;
- }
+diff --git a/drivers/scsi/isci/request.c b/drivers/scsi/isci/request.c
+index ed197bc8e801a..2f151708b59ae 100644
+--- a/drivers/scsi/isci/request.c
++++ b/drivers/scsi/isci/request.c
+@@ -1626,9 +1626,9 @@ static enum sci_status atapi_d2h_reg_frame_handler(struct isci_request *ireq,
  
--static uint16_t w1_ds2438_get_voltage(struct w1_slave *sl,
--				      int adc_input, uint16_t *voltage)
-+static int w1_ds2438_get_voltage(struct w1_slave *sl,
-+				 int adc_input, uint16_t *voltage)
- {
- 	unsigned int retries = W1_DS2438_RETRIES;
- 	u8 w1_buf[DS2438_PAGE_SIZE + 1 /*for CRC*/];
-@@ -235,6 +235,25 @@ static uint16_t w1_ds2438_get_voltage(struct w1_slave *sl,
- 	return ret;
- }
+ 	if (status == SCI_SUCCESS) {
+ 		if (ireq->stp.rsp.status & ATA_ERR)
+-			status = SCI_IO_FAILURE_RESPONSE_VALID;
++			status = SCI_FAILURE_IO_RESPONSE_VALID;
+ 	} else {
+-		status = SCI_IO_FAILURE_RESPONSE_VALID;
++		status = SCI_FAILURE_IO_RESPONSE_VALID;
+ 	}
  
-+static int w1_ds2438_get_current(struct w1_slave *sl, int16_t *voltage)
-+{
-+	u8 w1_buf[DS2438_PAGE_SIZE + 1 /*for CRC*/];
-+	int ret;
-+
-+	mutex_lock(&sl->master->bus_mutex);
-+
-+	if (w1_ds2438_get_page(sl, 0, w1_buf) == 0) {
-+		/* The voltage measured across current sense resistor RSENS. */
-+		*voltage = (((int16_t) w1_buf[DS2438_CURRENT_MSB]) << 8) | ((int16_t) w1_buf[DS2438_CURRENT_LSB]);
-+		ret = 0;
-+	} else
-+		ret = -1;
-+
-+	mutex_unlock(&sl->master->bus_mutex);
-+
-+	return ret;
-+}
-+
- static ssize_t iad_write(struct file *filp, struct kobject *kobj,
- 			 struct bin_attribute *bin_attr, char *buf,
- 			 loff_t off, size_t count)
-@@ -257,6 +276,27 @@ static ssize_t iad_write(struct file *filp, struct kobject *kobj,
- 	return ret;
- }
- 
-+static ssize_t iad_read(struct file *filp, struct kobject *kobj,
-+			struct bin_attribute *bin_attr, char *buf,
-+			loff_t off, size_t count)
-+{
-+	struct w1_slave *sl = kobj_to_w1_slave(kobj);
-+	int ret;
-+	int16_t voltage;
-+
-+	if (off != 0)
-+		return 0;
-+	if (!buf)
-+		return -EINVAL;
-+
-+	if (w1_ds2438_get_current(sl, &voltage) == 0) {
-+		ret = snprintf(buf, count, "%i\n", voltage);
-+	} else
-+		ret = -EIO;
-+
-+	return ret;
-+}
-+
- static ssize_t page0_read(struct file *filp, struct kobject *kobj,
- 			  struct bin_attribute *bin_attr, char *buf,
- 			  loff_t off, size_t count)
-@@ -272,9 +312,13 @@ static ssize_t page0_read(struct file *filp, struct kobject *kobj,
- 
- 	mutex_lock(&sl->master->bus_mutex);
- 
-+	/* Read no more than page0 size */
-+	if (count > DS2438_PAGE_SIZE)
-+		count = DS2438_PAGE_SIZE;
-+
- 	if (w1_ds2438_get_page(sl, 0, w1_buf) == 0) {
--		memcpy(buf, &w1_buf, DS2438_PAGE_SIZE);
--		ret = DS2438_PAGE_SIZE;
-+		memcpy(buf, &w1_buf, count);
-+		ret = count;
- 	} else
- 		ret = -EIO;
- 
-@@ -289,7 +333,6 @@ static ssize_t temperature_read(struct file *filp, struct kobject *kobj,
- {
- 	struct w1_slave *sl = kobj_to_w1_slave(kobj);
- 	int ret;
--	ssize_t c = PAGE_SIZE;
- 	int16_t temp;
- 
- 	if (off != 0)
-@@ -298,8 +341,7 @@ static ssize_t temperature_read(struct file *filp, struct kobject *kobj,
- 		return -EINVAL;
- 
- 	if (w1_ds2438_get_temperature(sl, &temp) == 0) {
--		c -= snprintf(buf + PAGE_SIZE - c, c, "%d\n", temp);
--		ret = PAGE_SIZE - c;
-+		ret = snprintf(buf, count, "%i\n", temp);
- 	} else
- 		ret = -EIO;
- 
-@@ -312,7 +354,6 @@ static ssize_t vad_read(struct file *filp, struct kobject *kobj,
- {
- 	struct w1_slave *sl = kobj_to_w1_slave(kobj);
- 	int ret;
--	ssize_t c = PAGE_SIZE;
- 	uint16_t voltage;
- 
- 	if (off != 0)
-@@ -321,8 +362,7 @@ static ssize_t vad_read(struct file *filp, struct kobject *kobj,
- 		return -EINVAL;
- 
- 	if (w1_ds2438_get_voltage(sl, DS2438_ADC_INPUT_VAD, &voltage) == 0) {
--		c -= snprintf(buf + PAGE_SIZE - c, c, "%d\n", voltage);
--		ret = PAGE_SIZE - c;
-+		ret = snprintf(buf, count, "%u\n", voltage);
- 	} else
- 		ret = -EIO;
- 
-@@ -335,7 +375,6 @@ static ssize_t vdd_read(struct file *filp, struct kobject *kobj,
- {
- 	struct w1_slave *sl = kobj_to_w1_slave(kobj);
- 	int ret;
--	ssize_t c = PAGE_SIZE;
- 	uint16_t voltage;
- 
- 	if (off != 0)
-@@ -344,15 +383,14 @@ static ssize_t vdd_read(struct file *filp, struct kobject *kobj,
- 		return -EINVAL;
- 
- 	if (w1_ds2438_get_voltage(sl, DS2438_ADC_INPUT_VDD, &voltage) == 0) {
--		c -= snprintf(buf + PAGE_SIZE - c, c, "%d\n", voltage);
--		ret = PAGE_SIZE - c;
-+		ret = snprintf(buf, count, "%u\n", voltage);
- 	} else
- 		ret = -EIO;
- 
- 	return ret;
- }
- 
--static BIN_ATTR(iad, S_IRUGO | S_IWUSR | S_IWGRP, NULL, iad_write, 1);
-+static BIN_ATTR(iad, S_IRUGO | S_IWUSR | S_IWGRP, iad_read, iad_write, 0);
- static BIN_ATTR_RO(page0, DS2438_PAGE_SIZE);
- static BIN_ATTR_RO(temperature, 0/* real length varies */);
- static BIN_ATTR_RO(vad, 0/* real length varies */);
+ 	if (status != SCI_SUCCESS) {
 -- 
 2.20.1
 
