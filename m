@@ -2,79 +2,107 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDCDC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 03:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BC4C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 03:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68DA20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 03:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4201B2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 03:05:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pfm4Jbgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfK0DBk (ORCPT
+        id S1726747AbfK0DFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 22:01:40 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:50564 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfK0DBk (ORCPT
+        Tue, 26 Nov 2019 22:05:41 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40881 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfK0DFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 22:01:40 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAR31C2b020528, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAR31C2b020528
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 27 Nov 2019 11:01:12 +0800
-Received: from localhost.localdomain (172.21.83.238) by
- RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server id
- 14.3.468.0; Wed, 27 Nov 2019 11:01:11 +0800
-From:   <max.chou@realtek.com>
-To:     <marcel@holtmann.org>
-CC:     <johan.hedberg@gmail.com>, <matthias.bgg@gmail.com>,
-        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <alex_lu@realsil.com.cn>,
-        <max.chou@realtek.com>
-Subject: [PATCH] Bluetooth: btusb: Edit the logical value for Realtek Bluetooth reset
-Date:   Wed, 27 Nov 2019 11:01:07 +0800
-Message-ID: <20191127030107.17604-1-max.chou@realtek.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 26 Nov 2019 22:05:41 -0500
+Received: by mail-pj1-f67.google.com with SMTP id ep1so9249123pjb.7;
+        Tue, 26 Nov 2019 19:05:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=i34ebQ7c/s5886cOtfqmhdiKMr1NWUArCMVccSTOyxU=;
+        b=Pfm4JbgbDK8Hg8YjSkmdCPGylzWp994a1QuRB61z+ZK0BmYqGgYlLY1KUekaYs2Djd
+         4gZozuSsPwNNcNh47tXjoMMX0AvaRYVmz510JslIjS2LGIV6UcEDvkueNR6zfTwM5cag
+         FrVXMdyOlub4ccCM3B0pjz9I8GBwKYjslxy27Cye6AClqADDkd0aoLMXUFcEtA6H2XiM
+         maqHJMuK+xbdkGg1NY+zo0od8Kcb88H0DTLtXeBwPHOnhin64DRbii6/6IygZEUNaEsi
+         WH/9+af1phMZGFeU8dhsPDw8DG8EJH5uqDZ9gqehpJ5I/dZE56vKw5QQSHkqZk6vWcbU
+         dehg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=i34ebQ7c/s5886cOtfqmhdiKMr1NWUArCMVccSTOyxU=;
+        b=UDh4XxFVYLZvFvkDECZpfLN75J4RVUO2+9J/51pFFqeXJ2WLaGvGreI0hjoCMW51Ga
+         /rdg/EJNRBjITc2sCk/tUZMpWyDIUB5eznYKPcWp9C+Io6lx7UECwLOfYdLD49S/N8nn
+         ax7LrA3ZsAa2YJrAzjrvoB+DkCMOGvVWxPCUknTHMvL5XPKp3YiF9S8hpr5mZKM5fE5e
+         225kFqj3bU8Cwd65RrCyrBI2mMI6Rjy82v8vNcISmr+cPzWywyukJZyykYet5KYTeAn1
+         T0KCD0rs2odZXbksQQ4cryp04VF541Dm6B+W9zg+KdgIMeocJ1pgg9W8dZ0B07+Iavkl
+         eoFw==
+X-Gm-Message-State: APjAAAWMkFBSEiX/vL1SM5Wait4AUmvyLJshZkhgOvRGw4uZiWHdI5zM
+        mwr23zr+a40QQcezAVCnbA==
+X-Google-Smtp-Source: APXvYqwkqFrtKPql4uSZmaiVCUopiUt+Vc/mcofIk3c8sjgtYAEWiAqNAIZKx7yR75jVY9qqGm95nA==
+X-Received: by 2002:a17:90a:2c1:: with SMTP id d1mr2925498pjd.137.1574823940271;
+        Tue, 26 Nov 2019 19:05:40 -0800 (PST)
+Received: from [10.72.166.40] ([203.205.141.123])
+        by smtp.gmail.com with ESMTPSA id x4sm3841439pgg.61.2019.11.26.19.05.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2019 19:05:39 -0800 (PST)
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+From:   Haiwei Li <lihaiwei.kernel@gmail.com>
+Subject: [PATCH] KVM: SVM: Fix "error" isn't initialized
+Message-ID: <f0bac432-ad0f-8d6a-eb92-6135f68d16d6@gmail.com>
+Date:   Wed, 27 Nov 2019 11:05:30 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.21.83.238]
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Chou <max.chou@realtek.com>
+ From d32ebcf6f426385942fe6c469255e73188cd7d38 Mon Sep 17 00:00:00 2001
+From: Haiwei Li <lihaiwei@tencent.com>
+Date: Wed, 27 Nov 2019 11:03:21 +0800
+Subject: [PATCH] initialize 'error'
 
-It should be pull low and pull high on the physical line for the Realtek
-Bluetooth reset. gpiod_set_value_cansleep() takes ACTIVE_LOW status for
-the logical value settings, so the original commit should be corrected.
+There are a bunch of error paths were "error" isn't initialized.
 
-Signed-off-by: Max Chou <max.chou@realtek.com>
+Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/bluetooth/btusb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+  arch/x86/kvm/svm.c | 3 ++-
+  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 70e385987d41..82fb2e7b2892 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -552,9 +552,9 @@ static void btusb_rtl_cmd_timeout(struct hci_dev *hdev)
- 	}
- 
- 	bt_dev_err(hdev, "Reset Realtek device via gpio");
--	gpiod_set_value_cansleep(reset_gpio, 0);
--	msleep(200);
- 	gpiod_set_value_cansleep(reset_gpio, 1);
-+	msleep(200);
-+	gpiod_set_value_cansleep(reset_gpio, 0);
- }
- 
- static inline void btusb_free_frags(struct btusb_data *data)
--- 
-2.17.1
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 362e874..0b3d49c 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6294,7 +6294,8 @@ static int enable_smi_window(struct kvm_vcpu *vcpu)
 
+  static int sev_flush_asids(void)
+  {
+-	int ret, error;
++	int ret;
++	int error = 0;
+
+  	/*
+  	 * DEACTIVATE will clear the WBINVD indicator causing DF_FLUSH to fail,
+--
+1.8.3.1
