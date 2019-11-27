@@ -2,142 +2,86 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACD0C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260ADC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2AC207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E8120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574837948;
+	bh=zK1jCwlGOD78VxyRYdiQ6t+wN6eJspibjYTJfiHAKZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q3LjOvd11NJTfAortigkKQhlHBW2rtbDbgvKilG19UTrKhg+L7CesK7TT/OMtHpsW
+	 Nf90yaNaKOD58nmbCBSgYfMf8D3H67e0iUulDRQg3pl5EYkZWVdbzAdpIKuowDT8PQ
+	 //cF2as0Zm8ArDnUuozAHxjD9lvv0vn/iuj9Z60s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfK0G4i (ORCPT
+        id S1726146AbfK0G7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 01:56:38 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42256 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726478AbfK0G4h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 01:56:37 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAR6plrJ138264
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 01:56:36 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxq4ecf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 01:56:36 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 27 Nov 2019 06:56:34 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 27 Nov 2019 06:56:29 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAR6uSmL44302394
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 06:56:28 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2F16711C054;
-        Wed, 27 Nov 2019 06:56:28 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07AD911C04A;
-        Wed, 27 Nov 2019 06:56:27 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.105])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 27 Nov 2019 06:56:26 +0000 (GMT)
-Date:   Wed, 27 Nov 2019 08:56:25 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arch@vger.kernel.org, darren@stevens-zone.net,
-        mad skateman <madskateman@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        paulus@samba.org, rtd2@xtra.co.nz,
-        "contact@a-eon.com" <contact@a-eon.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        nsaenzjulienne@suse.de
-Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board
- installed, unless RAM size limited to 3500M
-References: <20191121072943.GA24024@lst.de>
- <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
- <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de>
- <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com>
- <b3217742-2c0b-8447-c9ac-608b93265363@xenosoft.de>
- <20191121180226.GA3852@lst.de>
- <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
- <20191125073923.GA30168@lst.de>
- <4681f5fe-c095-15f5-9221-4b55e940bafc@xenosoft.de>
- <20191126164026.GA8026@lst.de>
+        Wed, 27 Nov 2019 01:59:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbfK0G7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 01:59:06 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F410320665;
+        Wed, 27 Nov 2019 06:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574837945;
+        bh=zK1jCwlGOD78VxyRYdiQ6t+wN6eJspibjYTJfiHAKZQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nfhs7ssBftD+Mla9meYRq1vCMBrSJKx547gAd6rSP8aIjOOI2qauAyKMhSvV/7FSC
+         sPtAYOWwFIWOA2gSoD+79mwGyX0raoNh9UohHsXsJvPwqokDmzZenbE2lr0WwxY6lb
+         WEZeU9bJ2EiT1QxAaaCXIU4oQFbGx60wD2rvr3Nk=
+Date:   Wed, 27 Nov 2019 07:59:03 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Je Yen Tam <je.yen.tam@ni.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "serial/8250: Add support for NI-Serial
+ PXI/PXIe+485 devices"
+Message-ID: <20191127065903.GA1725222@kroah.com>
+References: <20191127031751.9082-1-je.yen.tam@ni.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191126164026.GA8026@lst.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19112706-0012-0000-0000-0000036CCE06
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112706-0013-0000-0000-000021A875C1
-Message-Id: <20191127065624.GB16913@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_01:2019-11-26,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0
- impostorscore=0 phishscore=0 spamscore=0 malwarescore=0 mlxscore=0
- suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270055
+In-Reply-To: <20191127031751.9082-1-je.yen.tam@ni.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 05:40:26PM +0100, Christoph Hellwig wrote:
-> On Tue, Nov 26, 2019 at 12:26:38PM +0100, Christian Zigotzky wrote:
-> > Hello Christoph,
-> >
-> > The PCI TV card works with your patch! I was able to patch your Git kernel 
-> > with the patch above.
-> >
-> > I haven't found any error messages in the dmesg yet.
-> 
-> Thanks.  Unfortunately this is a bit of a hack as we need to set
-> the mask based on runtime information like the magic FSL PCIe window.
-> Let me try to draft something better up, and thanks already for testing
-> this one!
+On Wed, Nov 27, 2019 at 11:17:51AM +0800, Je Yen Tam wrote:
+> This reverts commit fdc2de87124f5183a98ea7eced1f76dbdba22951 which is
+> commit 225607f75454 ("serial/8250: Add support for NI-Serial PXI/PXIe+485 devices").
 
-Maybe we'll simply force bottom up allocation before calling
-swiotlb_init()? Anyway, it's the last memblock allocation.
+That sentance does not make sense.  fdc2de87124f ("serial/8250: Add
+support for NI-Serial PXI/PXIe+485 devices") is in the 5.4 kernel tree,
+where did the commit id "225607f75454" come from?  I don't see it
+anywhere in Linus's tree.
 
+> The upstream introduced a breakage on NI-Serial PXI(e)-RS485 devices,
+> RS-232 variants have no issue. The Linux system can enumerate the Serial
+> PXI(e)-RS485 devices, but it broke the R/W operation on the ports.
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 62f74b1b33bd..771e6cf7e2b9 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -286,14 +286,15 @@ void __init mem_init(void)
- 	/*
- 	 * book3s is limited to 16 page sizes due to encoding this in
- 	 * a 4-bit field for slices.
- 	 */
- 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
- 
- #ifdef CONFIG_SWIOTLB
-+	memblock_set_bottom_up(true);
- 	swiotlb_init(0);
- #endif
- 
- 	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
- 	set_max_mapnr(max_pfn);
- 	memblock_free_all();
- 
- 
+I can not parse this paragraph either, what do you mean by "The
+upstream"?
 
+> However, the implementation is working on the NI internal Linux RT kernel
+> but it does not work in the Linux main tree kernel. This is only affecting
+> NI products, specifically the RS-485 variants. Reverting the upstream
+> until a proper implementation that can apply to both NI internal Linux
+> kernel and Linux mainline kernel is figured out.
 
--- 
-Sincerely yours,
-Mike.
+So this patch really does not work at all?  Can't you just find a simple
+fix to go on top of it to resolve the issue?  You really want it all
+ripped out for 5.5 and 5.4.y?
 
+thanks,
+
+greg k-h
