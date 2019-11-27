@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F1AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687A2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30ED52184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3576321847
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887817;
-	bh=+jRBefN1uwEbzARKvRxsl294CfyeOzMo4klRHllFCY8=;
+	s=default; t=1574887820;
+	bh=9B51i506uoit8PvzKsp8Hnm676PvlawhR2kOkoqXzLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KhgwhQT9Jmjy+xDirfJK2KkeyqfE6oDv2VgLN67Ga/xK0hujprT9DedaXoo9Qih4n
-	 2GcpjnJ4loHW1jATdrbXaqaz70D/n0PnjxeuJVLPopaxLjyNrrhIAstGxmRbGGMiGo
-	 cy3HuMgA+yXa+fXxZyHgaaddRW4KJlq/T2xBLPqk=
+	b=mXjhrQEVW2jq3Vp7Q+v4mUHfB2CZqbinLgrHUsehk2hrfPf16oQJLxrYqY5Ip9fIk
+	 mz0DSrJvFX2GPozOYN7wP9MVOF5o6frll/HB6q4JMGlSMJ2uEgGvSkY/UrHVV4gA/3
+	 bAt/aB3FyyUv4xDWqvR1FWBABgY3+9lkMK4T6OzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbfK0UuP (ORCPT
+        id S1730341AbfK0UuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:50:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35984 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:50:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729907AbfK0UuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:50:10 -0500
+        id S1729927AbfK0UuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:50:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A265721843;
-        Wed, 27 Nov 2019 20:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5905121847;
+        Wed, 27 Nov 2019 20:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887810;
-        bh=+jRBefN1uwEbzARKvRxsl294CfyeOzMo4klRHllFCY8=;
+        s=default; t=1574887815;
+        bh=9B51i506uoit8PvzKsp8Hnm676PvlawhR2kOkoqXzLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SFH2UYN7fkXj1Jo8Zy0vWgFIRnF9knI1hMsY5raImIynlnC5Hg+IduICbHJLtb2LU
-         me9r3TdYrNo3F5z7rncunaqGIUAQ6YLXkoElJ/SYmuciJKzlytCYkBwMH6oBVDVhoT
-         zF9p7jlpBuRFunpU7cx5Yg1mZ0h7HLGl5Xkzji2M=
+        b=omi2j4pAGFp0JR173ACENYnk56QFyoiERU3N04TQOTGLk7b1ZNX3zrjiqmp2wAWnS
+         M42A+HmDSoG2Sx1VPca4N5ojWlpk47vGQqIHCu+nzZKu4pARQSM8ODTaeyPLcDs8yi
+         ejtmO1E2uRFkhtbDLb1aWGi60lVBSHbFAWkCm+Eo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/211] selftests/powerpc/signal: Fix out-of-tree build
-Date:   Wed, 27 Nov 2019 21:30:37 +0100
-Message-Id: <20191127203103.526628802@linuxfoundation.org>
+Subject: [PATCH 4.14 106/211] selftests/powerpc/cache_shape: Fix out-of-tree build
+Date:   Wed, 27 Nov 2019 21:30:39 +0100
+Message-Id: <20191127203104.016375778@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,48 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 27825349d7b238533a47e3d98b8bb0efd886b752 ]
+[ Upstream commit 69f8117f17b332a68cd8f4bf8c2d0d3d5b84efc5 ]
 
-We should use TEST_GEN_PROGS, not TEST_PROGS. That tells the selftests
-makefile (lib.mk) that those tests are generated (built), and so it
-adds the $(OUTPUT) prefix for us, making the out-of-tree build work
-correctly.
+Use TEST_GEN_PROGS and don't redefine all, this makes the out-of-tree
+build work. We need to move the extra dependencies below the include
+of lib.mk, because it adds the $(OUTPUT) prefix if it's defined.
 
-It also means we don't need our own clean rule, lib.mk does it.
+We can also drop the clean rule, lib.mk does it for us.
 
-We also have to update the signal_tm rule to use $(OUTPUT).
-
-Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/signal/Makefile | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ tools/testing/selftests/powerpc/cache_shape/Makefile | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/signal/Makefile b/tools/testing/selftests/powerpc/signal/Makefile
-index a7cbd5082e271..4213978f3ee2c 100644
---- a/tools/testing/selftests/powerpc/signal/Makefile
-+++ b/tools/testing/selftests/powerpc/signal/Makefile
-@@ -1,14 +1,9 @@
+diff --git a/tools/testing/selftests/powerpc/cache_shape/Makefile b/tools/testing/selftests/powerpc/cache_shape/Makefile
+index 1be547434a49c..7e0c175b82978 100644
+--- a/tools/testing/selftests/powerpc/cache_shape/Makefile
++++ b/tools/testing/selftests/powerpc/cache_shape/Makefile
+@@ -1,11 +1,6 @@
  # SPDX-License-Identifier: GPL-2.0
--TEST_PROGS := signal signal_tm
+-TEST_PROGS := cache_shape
 -
 -all: $(TEST_PROGS)
 -
--$(TEST_PROGS): ../harness.c ../utils.c signal.S
-+TEST_GEN_PROGS := signal signal_tm
- 
- CFLAGS += -maltivec
--signal_tm: CFLAGS += -mhtm
-+$(OUTPUT)/signal_tm: CFLAGS += -mhtm
+-$(TEST_PROGS): ../harness.c ../utils.c
++TEST_GEN_PROGS := cache_shape
  
  include ../../lib.mk
  
 -clean:
 -	rm -f $(TEST_PROGS) *.o
-+$(TEST_GEN_PROGS): ../harness.c ../utils.c signal.S
++$(TEST_GEN_PROGS): ../harness.c ../utils.c
 -- 
 2.20.1
 
