@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A1FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5CFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC13421555
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E922176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888985;
-	bh=vqMW5dtzYH8+pdzDl5X+kiSDaTGXOnHbne2Iug37/gc=;
+	s=default; t=1574888990;
+	bh=L+jYQkLDbz7jdGIFvd7QPd5vlf8ZtyBtC/ptRMlOHZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMoqVsCIm/ejulwGPmMFGBBQ9xEkskT9hzO5zSygAfYsFIodhfH1MACZQvObxsCKY
-	 iHErypbo+muBZ0VMW8kcuuyai3b1LXyToFwLOVbQBVrsSuUyAoKYD884Qxh5KhCmTN
-	 rzNpHbRTVc1jR3sgHBedft8mrYEeHb41Sq47HMHU=
+	b=rfj6+SkL0LIIbiV1nVDdFH3pmNPOcwBdoLTpn95Ab10e4XyJrkbigvWVO6T8neTgd
+	 mpzL5UXFN9jH9wztwYFkoZEqWYHfuF7XjIqwV9NhAsXR+o1+cI05ylLj/cHYRLfcAA
+	 R3+zalTtERG0HUxMKyIIYkRb2ELZXFQWLJ4scERI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731666AbfK0VJo (ORCPT
+        id S1732934AbfK0VJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:09:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36386 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:09:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727729AbfK0VJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:09:36 -0500
+        id S1732287AbfK0VJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:09:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF439216F4;
-        Wed, 27 Nov 2019 21:09:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99FC02154A;
+        Wed, 27 Nov 2019 21:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888976;
-        bh=vqMW5dtzYH8+pdzDl5X+kiSDaTGXOnHbne2Iug37/gc=;
+        s=default; t=1574888986;
+        bh=L+jYQkLDbz7jdGIFvd7QPd5vlf8ZtyBtC/ptRMlOHZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xY7cGE1BXxpzbIh36o7LVJRdGW8xwKSQeqqe6QAlwD+Z0kuY0gZ5eWD16Y8BZXAOv
-         eVHD+ftEwJHGb/qTHYN0MhMiwKxlOcSd6g8ALX4T8/EVcfANyUbH/POiUR2a98n87H
-         0opPIHOeqG+Fxp5++nqsf80G/4aLzpvt09yByMxI=
+        b=lHO8MNRz7HxQS5oZBLxHSPe8iYX8Mhil0qqMwOpFj5mcpBEsd4fpIYxw6TwKh8Mt9
+         gyOGs9PF3lAQNkPp9hI8ToPlvhh+a6BdzSTVjhY8WXGsoSndSGdG34I9p0PAo2Fe0L
+         ordUByjdoGuh3Ox0CShjyKyqVeCQ3quRPLMKSz/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.3 34/95] drm/i915/pmu: "Frequency" is reported as accumulated cycles
-Date:   Wed, 27 Nov 2019 21:31:51 +0100
-Message-Id: <20191127202858.796926776@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.3 38/95] ath10k: Fix HOST capability QMI incompatibility
+Date:   Wed, 27 Nov 2019 21:31:55 +0100
+Message-Id: <20191127202903.182812979@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -61,42 +61,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-commit add3eeed3683e2636ef524db48e1a678757c8e96 upstream.
+commit 7165ef890a4c44cf16db66b82fd78448f4bde6ba upstream.
 
-We report "frequencies" (actual-frequency, requested-frequency) as the
-number of accumulated cycles so that the average frequency over that
-period may be determined by the user. This means the units we report to
-the user are Mcycles (or just M), not MHz.
+The introduction of 768ec4c012ac ("ath10k: update HOST capability QMI
+message") served the purpose of supporting the new and extended HOST
+capability QMI message.
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+But while the new message adds a slew of optional members it changes the
+data type of the "daemon_support" member, which means that older
+versions of the firmware will fail to decode the incoming request
+message.
+
+There is no way to detect this breakage from Linux and there's no way to
+recover from sending the wrong message (i.e. we can't just try one
+format and then fallback to the other), so a quirk is introduced in
+DeviceTree to indicate to the driver that the firmware requires the 8bit
+version of this message.
+
 Cc: stable@vger.kernel.org
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191109105356.5273-1-chris@chris-wilson.co.uk
-(cherry picked from commit e88866ef02851c88fe95a4bb97820b94b4d46f36)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-(cherry picked from commit a7d87b70d6da96c6772e50728c8b4e78e4cbfd55)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Fixes: 768ec4c012ac ("ath10k: update HOST capability qmi message")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_pmu.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt |    6 ++
+ drivers/net/wireless/ath/ath10k/qmi.c                          |   13 ++++-
+ drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c                 |   22 ++++++++++
+ drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h                 |    1 
+ drivers/net/wireless/ath/ath10k/snoc.c                         |   11 +++++
+ drivers/net/wireless/ath/ath10k/snoc.h                         |    1 
+ 6 files changed, 51 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_pmu.c
-+++ b/drivers/gpu/drm/i915/i915_pmu.c
-@@ -833,8 +833,8 @@ create_event_attributes(struct drm_i915_
- 		const char *name;
- 		const char *unit;
- 	} events[] = {
--		__event(I915_PMU_ACTUAL_FREQUENCY, "actual-frequency", "MHz"),
--		__event(I915_PMU_REQUESTED_FREQUENCY, "requested-frequency", "MHz"),
-+		__event(I915_PMU_ACTUAL_FREQUENCY, "actual-frequency", "M"),
-+		__event(I915_PMU_REQUESTED_FREQUENCY, "requested-frequency", "M"),
- 		__event(I915_PMU_INTERRUPTS, "interrupts", NULL),
- 		__event(I915_PMU_RC6_RESIDENCY, "rc6-residency", "ns"),
- 	};
+--- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+@@ -81,6 +81,12 @@ Optional properties:
+ 	Definition: Name of external front end module used. Some valid FEM names
+ 		    for example: "microsemi-lx5586", "sky85703-11"
+ 		    and "sky85803" etc.
++- qcom,snoc-host-cap-8bit-quirk:
++	Usage: Optional
++	Value type: <empty>
++	Definition: Quirk specifying that the firmware expects the 8bit version
++		    of the host capability QMI request
++
+ 
+ Example (to supply PCI based wifi block details):
+ 
+--- a/drivers/net/wireless/ath/ath10k/qmi.c
++++ b/drivers/net/wireless/ath/ath10k/qmi.c
+@@ -581,22 +581,29 @@ static int ath10k_qmi_host_cap_send_sync
+ {
+ 	struct wlfw_host_cap_resp_msg_v01 resp = {};
+ 	struct wlfw_host_cap_req_msg_v01 req = {};
++	struct qmi_elem_info *req_ei;
+ 	struct ath10k *ar = qmi->ar;
++	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 	struct qmi_txn txn;
+ 	int ret;
+ 
+ 	req.daemon_support_valid = 1;
+ 	req.daemon_support = 0;
+ 
+-	ret = qmi_txn_init(&qmi->qmi_hdl, &txn,
+-			   wlfw_host_cap_resp_msg_v01_ei, &resp);
++	ret = qmi_txn_init(&qmi->qmi_hdl, &txn, wlfw_host_cap_resp_msg_v01_ei,
++			   &resp);
+ 	if (ret < 0)
+ 		goto out;
+ 
++	if (test_bit(ATH10K_SNOC_FLAG_8BIT_HOST_CAP_QUIRK, &ar_snoc->flags))
++		req_ei = wlfw_host_cap_8bit_req_msg_v01_ei;
++	else
++		req_ei = wlfw_host_cap_req_msg_v01_ei;
++
+ 	ret = qmi_send_request(&qmi->qmi_hdl, NULL, &txn,
+ 			       QMI_WLFW_HOST_CAP_REQ_V01,
+ 			       WLFW_HOST_CAP_REQ_MSG_V01_MAX_MSG_LEN,
+-			       wlfw_host_cap_req_msg_v01_ei, &req);
++			       req_ei, &req);
+ 	if (ret < 0) {
+ 		qmi_txn_cancel(&txn);
+ 		ath10k_err(ar, "failed to send host capability request: %d\n", ret);
+--- a/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c
++++ b/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c
+@@ -1988,6 +1988,28 @@ struct qmi_elem_info wlfw_host_cap_req_m
+ 	{}
+ };
+ 
++struct qmi_elem_info wlfw_host_cap_8bit_req_msg_v01_ei[] = {
++	{
++		.data_type      = QMI_OPT_FLAG,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type     = NO_ARRAY,
++		.tlv_type       = 0x10,
++		.offset         = offsetof(struct wlfw_host_cap_req_msg_v01,
++					   daemon_support_valid),
++	},
++	{
++		.data_type      = QMI_UNSIGNED_1_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type     = NO_ARRAY,
++		.tlv_type       = 0x10,
++		.offset         = offsetof(struct wlfw_host_cap_req_msg_v01,
++					   daemon_support),
++	},
++	{}
++};
++
+ struct qmi_elem_info wlfw_host_cap_resp_msg_v01_ei[] = {
+ 	{
+ 		.data_type      = QMI_STRUCT,
+--- a/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h
++++ b/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h
+@@ -575,6 +575,7 @@ struct wlfw_host_cap_req_msg_v01 {
+ 
+ #define WLFW_HOST_CAP_REQ_MSG_V01_MAX_MSG_LEN 189
+ extern struct qmi_elem_info wlfw_host_cap_req_msg_v01_ei[];
++extern struct qmi_elem_info wlfw_host_cap_8bit_req_msg_v01_ei[];
+ 
+ struct wlfw_host_cap_resp_msg_v01 {
+ 	struct qmi_response_type_v01 resp;
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -1261,6 +1261,15 @@ out:
+ 	return ret;
+ }
+ 
++static void ath10k_snoc_quirks_init(struct ath10k *ar)
++{
++	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
++	struct device *dev = &ar_snoc->dev->dev;
++
++	if (of_property_read_bool(dev->of_node, "qcom,snoc-host-cap-8bit-quirk"))
++		set_bit(ATH10K_SNOC_FLAG_8BIT_HOST_CAP_QUIRK, &ar_snoc->flags);
++}
++
+ int ath10k_snoc_fw_indication(struct ath10k *ar, u64 type)
+ {
+ 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+@@ -1678,6 +1687,8 @@ static int ath10k_snoc_probe(struct plat
+ 	ar->ce_priv = &ar_snoc->ce;
+ 	msa_size = drv_data->msa_size;
+ 
++	ath10k_snoc_quirks_init(ar);
++
+ 	ret = ath10k_snoc_resource_init(ar);
+ 	if (ret) {
+ 		ath10k_warn(ar, "failed to initialize resource: %d\n", ret);
+--- a/drivers/net/wireless/ath/ath10k/snoc.h
++++ b/drivers/net/wireless/ath/ath10k/snoc.h
+@@ -63,6 +63,7 @@ enum ath10k_snoc_flags {
+ 	ATH10K_SNOC_FLAG_REGISTERED,
+ 	ATH10K_SNOC_FLAG_UNREGISTERING,
+ 	ATH10K_SNOC_FLAG_RECOVERY,
++	ATH10K_SNOC_FLAG_8BIT_HOST_CAP_QUIRK,
+ };
+ 
+ struct ath10k_snoc {
 
 
