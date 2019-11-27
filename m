@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47753C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7A7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBFA21845
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9986521847
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887683;
-	bh=1MWREmX53yQ9QQFDFRugDP7QzeX5bWAcw/ywG/g9DdI=;
+	s=default; t=1574887686;
+	bh=3+2qPBqMq2vPe8cQ/qEcgviJt45HAH7L00LRwQGUYDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Urhip0WrVMzls3q2fBh0slLDyZNlSuOR1rjp1uehrAHgTKMvhZ9qWKQi6WarMHkOm
-	 HBmz3nasNPHH93xrh/WJP++iLzQ1OWxrhmOQA8zV9tTBW6A3ITafEaLdH71/CPBAOV
-	 Fc+EhjkO/ASSGm/roj2je1bOR+yje96JQfmBCc2s=
+	b=1iwgpPdDnjBYFAxflfxsRSKEbSZtOjM9VwL59s1BN5XKWTDBzvafIFozGNVvEgT7f
+	 a+kMaquQIehMOIknWg+smen0qO690mMeVL42Nv/NHeIc1PFGC7oO7znM4DfWWKwnYw
+	 h3DlW7l5ACpzit9sLYIPf4lMVqSMbkwYPSrb92JI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbfK0UsC (ORCPT
+        id S1730085AbfK0UsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:48:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32954 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:48:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728261AbfK0Ur7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:47:59 -0500
+        id S1730075AbfK0UsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:48:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3803D21845;
-        Wed, 27 Nov 2019 20:47:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EFEB21847;
+        Wed, 27 Nov 2019 20:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887678;
-        bh=1MWREmX53yQ9QQFDFRugDP7QzeX5bWAcw/ywG/g9DdI=;
+        s=default; t=1574887681;
+        bh=3+2qPBqMq2vPe8cQ/qEcgviJt45HAH7L00LRwQGUYDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J9N5fiBG7mvwUy80sYXGDlXqOIchQBWVK6G1XN0mfzBOu3g7wRJS2BYjcfMXl0R/G
-         hv0cFcp+DKnBQL/ZpzDHvv8gpiqg2bLCWfmMczft3onfAyRSyGwzC14zmCRt9Q2jyo
-         KcUmI72Gij/XoRp5CsdzoKbuQThPKjT/s9i5SKyk=
+        b=eyAcCZHxSd27sPkl45FWsyMtUQN65lwLPLRy7q2zyF4jV897DKrFQFYpkVV6o3A2r
+         94YV027ZjhK7OPXfwUAf0Sv/QjJjlVwaG004ZSmiXG05cNGOoP6+cs2z7yzqvtb7Og
+         urr3jJVJTZHcXxUJga/OsVzNFovSv2YpYTr+Cn68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, mst@redhat.com,
-        Laurent Vivier <lvivier@redhat.com>
-Subject: [PATCH 4.14 011/211] virtio_console: allocate inbufs in add_port() only if it is needed
-Date:   Wed, 27 Nov 2019 21:29:04 +0100
-Message-Id: <20191127203050.999718897@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 002/211] net: rtnetlink: prevent underflows in do_setvfinfo()
+Date:   Wed, 27 Nov 2019 21:28:55 +0100
+Message-Id: <20191127203049.683476232@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -59,130 +59,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Vivier <lvivier@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit d791cfcbf98191122af70b053a21075cb450d119 upstream.
+[ Upstream commit d658c8f56ec7b3de8051a24afb25da9ba3c388c5 ]
 
-When we hot unplug a virtserialport and then try to hot plug again,
-it fails:
+The "ivm->vf" variable is a u32, but the problem is that a number of
+drivers cast it to an int and then forget to check for negatives.  An
+example of this is in the cxgb4 driver.
 
-(qemu) chardev-add socket,id=serial0,path=/tmp/serial0,server,nowait
-(qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
-                  chardev=serial0,id=serial0,name=serial0
-(qemu) device_del serial0
-(qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
-                  chardev=serial0,id=serial0,name=serial0
-kernel error:
-  virtio-ports vport2p2: Error allocating inbufs
-qemu error:
-  virtio-serial-bus: Guest failure in adding port 2 for device \
-                     virtio-serial0.0
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+  2890  static int cxgb4_mgmt_get_vf_config(struct net_device *dev,
+  2891                                      int vf, struct ifla_vf_info *ivi)
+                                            ^^^^^^
+  2892  {
+  2893          struct port_info *pi = netdev_priv(dev);
+  2894          struct adapter *adap = pi->adapter;
+  2895          struct vf_info *vfinfo;
+  2896
+  2897          if (vf >= adap->num_vfs)
+                    ^^^^^^^^^^^^^^^^^^^
+  2898                  return -EINVAL;
+  2899          vfinfo = &adap->vfinfo[vf];
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This happens because buffers for the in_vq are allocated when the port is
-added but are not released when the port is unplugged.
+There are 48 functions affected.
 
-They are only released when virtconsole is removed (see a7a69ec0d8e4)
+drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c:8435 hclge_set_vf_vlan_filter() warn: can 'vfid' underflow 's32min-2147483646'
+drivers/net/ethernet/freescale/enetc/enetc_pf.c:377 enetc_pf_set_vf_mac() warn: can 'vf' underflow 's32min-2147483646'
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:2899 cxgb4_mgmt_get_vf_config() warn: can 'vf' underflow 's32min-254'
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:2960 cxgb4_mgmt_set_vf_rate() warn: can 'vf' underflow 's32min-254'
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:3019 cxgb4_mgmt_set_vf_rate() warn: can 'vf' underflow 's32min-254'
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:3038 cxgb4_mgmt_set_vf_vlan() warn: can 'vf' underflow 's32min-254'
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:3086 cxgb4_mgmt_set_vf_link_state() warn: can 'vf' underflow 's32min-254'
+drivers/net/ethernet/chelsio/cxgb/cxgb2.c:791 get_eeprom() warn: can 'i' underflow 's32min-(-4),0,4-s32max'
+drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c:82 bnxt_set_vf_spoofchk() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c:164 bnxt_set_vf_trust() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c:186 bnxt_get_vf_config() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c:228 bnxt_set_vf_mac() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c:264 bnxt_set_vf_vlan() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c:293 bnxt_set_vf_bw() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c:333 bnxt_set_vf_link_state() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c:2595 bnx2x_vf_op_prep() warn: can 'vfidx' underflow 's32min-63'
+drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c:2595 bnx2x_vf_op_prep() warn: can 'vfidx' underflow 's32min-63'
+drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c:2281 bnx2x_post_vf_bulletin() warn: can 'vf' underflow 's32min-63'
+drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c:2285 bnx2x_post_vf_bulletin() warn: can 'vf' underflow 's32min-63'
+drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c:2286 bnx2x_post_vf_bulletin() warn: can 'vf' underflow 's32min-63'
+drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c:2292 bnx2x_post_vf_bulletin() warn: can 'vf' underflow 's32min-63'
+drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c:2297 bnx2x_post_vf_bulletin() warn: can 'vf' underflow 's32min-63'
+drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_pf.c:1832 qlcnic_sriov_set_vf_mac() warn: can 'vf' underflow 's32min-254'
+drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_pf.c:1864 qlcnic_sriov_set_vf_tx_rate() warn: can 'vf' underflow 's32min-254'
+drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_pf.c:1937 qlcnic_sriov_set_vf_vlan() warn: can 'vf' underflow 's32min-254'
+drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_pf.c:2005 qlcnic_sriov_get_vf_config() warn: can 'vf' underflow 's32min-254'
+drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_pf.c:2036 qlcnic_sriov_set_vf_spoofchk() warn: can 'vf' underflow 's32min-254'
+drivers/net/ethernet/emulex/benet/be_main.c:1914 be_get_vf_config() warn: can 'vf' underflow 's32min-65534'
+drivers/net/ethernet/emulex/benet/be_main.c:1915 be_get_vf_config() warn: can 'vf' underflow 's32min-65534'
+drivers/net/ethernet/emulex/benet/be_main.c:1922 be_set_vf_tvt() warn: can 'vf' underflow 's32min-65534'
+drivers/net/ethernet/emulex/benet/be_main.c:1951 be_clear_vf_tvt() warn: can 'vf' underflow 's32min-65534'
+drivers/net/ethernet/emulex/benet/be_main.c:2063 be_set_vf_tx_rate() warn: can 'vf' underflow 's32min-65534'
+drivers/net/ethernet/emulex/benet/be_main.c:2091 be_set_vf_link_state() warn: can 'vf' underflow 's32min-65534'
+drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c:2609 ice_set_vf_port_vlan() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c:3050 ice_get_vf_cfg() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c:3103 ice_set_vf_spoofchk() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c:3181 ice_set_vf_mac() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c:3237 ice_set_vf_trust() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c:3286 ice_set_vf_link_state() warn: can 'vf_id' underflow 's32min-65534'
+drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:3919 i40e_validate_vf() warn: can 'vf_id' underflow 's32min-2147483646'
+drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:3957 i40e_ndo_set_vf_mac() warn: can 'vf_id' underflow 's32min-2147483646'
+drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:4104 i40e_ndo_set_vf_port_vlan() warn: can 'vf_id' underflow 's32min-2147483646'
+drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:4263 i40e_ndo_set_vf_bw() warn: can 'vf_id' underflow 's32min-2147483646'
+drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:4309 i40e_ndo_get_vf_config() warn: can 'vf_id' underflow 's32min-2147483646'
+drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:4371 i40e_ndo_set_vf_link_state() warn: can 'vf_id' underflow 's32min-2147483646'
+drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:4441 i40e_ndo_set_vf_spoofchk() warn: can 'vf_id' underflow 's32min-2147483646'
+drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:4441 i40e_ndo_set_vf_spoofchk() warn: can 'vf_id' underflow 's32min-2147483646'
+drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:4504 i40e_ndo_set_vf_trust() warn: can 'vf_id' underflow 's32min-2147483646'
 
-To avoid the problem and to be symmetric, we could allocate all the buffers
-in init_vqs() as they are released in remove_vqs(), but it sounds like
-a waste of memory.
-
-Rather than that, this patch changes add_port() logic to ignore ENOSPC
-error in fill_queue(), which means queue has already been filled.
-
-Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-Cc: mst@redhat.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Laurent Vivier <lvivier@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/char/virtio_console.c |   28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ net/core/rtnetlink.c |   23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
---- a/drivers/char/virtio_console.c
-+++ b/drivers/char/virtio_console.c
-@@ -1366,24 +1366,24 @@ static void set_console_size(struct port
- 	port->cons.ws.ws_col = cols;
- }
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -1767,6 +1767,8 @@ static int do_setvfinfo(struct net_devic
+ 	if (tb[IFLA_VF_MAC]) {
+ 		struct ifla_vf_mac *ivm = nla_data(tb[IFLA_VF_MAC]);
  
--static unsigned int fill_queue(struct virtqueue *vq, spinlock_t *lock)
-+static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
- {
- 	struct port_buffer *buf;
--	unsigned int nr_added_bufs;
-+	int nr_added_bufs;
- 	int ret;
++		if (ivm->vf >= INT_MAX)
++			return -EINVAL;
+ 		err = -EOPNOTSUPP;
+ 		if (ops->ndo_set_vf_mac)
+ 			err = ops->ndo_set_vf_mac(dev, ivm->vf,
+@@ -1778,6 +1780,8 @@ static int do_setvfinfo(struct net_devic
+ 	if (tb[IFLA_VF_VLAN]) {
+ 		struct ifla_vf_vlan *ivv = nla_data(tb[IFLA_VF_VLAN]);
  
- 	nr_added_bufs = 0;
- 	do {
- 		buf = alloc_buf(vq->vdev, PAGE_SIZE, 0);
- 		if (!buf)
--			break;
-+			return -ENOMEM;
++		if (ivv->vf >= INT_MAX)
++			return -EINVAL;
+ 		err = -EOPNOTSUPP;
+ 		if (ops->ndo_set_vf_vlan)
+ 			err = ops->ndo_set_vf_vlan(dev, ivv->vf, ivv->vlan,
+@@ -1810,6 +1814,8 @@ static int do_setvfinfo(struct net_devic
+ 		if (len == 0)
+ 			return -EINVAL;
  
- 		spin_lock_irq(lock);
- 		ret = add_inbuf(vq, buf);
- 		if (ret < 0) {
- 			spin_unlock_irq(lock);
- 			free_buf(buf, true);
--			break;
-+			return ret;
- 		}
- 		nr_added_bufs++;
- 		spin_unlock_irq(lock);
-@@ -1403,7 +1403,6 @@ static int add_port(struct ports_device
- 	char debugfs_name[16];
- 	struct port *port;
- 	dev_t devt;
--	unsigned int nr_added_bufs;
- 	int err;
++		if (ivvl[0]->vf >= INT_MAX)
++			return -EINVAL;
+ 		err = ops->ndo_set_vf_vlan(dev, ivvl[0]->vf, ivvl[0]->vlan,
+ 					   ivvl[0]->qos, ivvl[0]->vlan_proto);
+ 		if (err < 0)
+@@ -1820,6 +1826,8 @@ static int do_setvfinfo(struct net_devic
+ 		struct ifla_vf_tx_rate *ivt = nla_data(tb[IFLA_VF_TX_RATE]);
+ 		struct ifla_vf_info ivf;
  
- 	port = kmalloc(sizeof(*port), GFP_KERNEL);
-@@ -1462,11 +1461,13 @@ static int add_port(struct ports_device
- 	spin_lock_init(&port->outvq_lock);
- 	init_waitqueue_head(&port->waitqueue);
++		if (ivt->vf >= INT_MAX)
++			return -EINVAL;
+ 		err = -EOPNOTSUPP;
+ 		if (ops->ndo_get_vf_config)
+ 			err = ops->ndo_get_vf_config(dev, ivt->vf, &ivf);
+@@ -1838,6 +1846,8 @@ static int do_setvfinfo(struct net_devic
+ 	if (tb[IFLA_VF_RATE]) {
+ 		struct ifla_vf_rate *ivt = nla_data(tb[IFLA_VF_RATE]);
  
--	/* Fill the in_vq with buffers so the host can send us data. */
--	nr_added_bufs = fill_queue(port->in_vq, &port->inbuf_lock);
--	if (!nr_added_bufs) {
-+	/* We can safely ignore ENOSPC because it means
-+	 * the queue already has buffers. Buffers are removed
-+	 * only by virtcons_remove(), not by unplug_port()
-+	 */
-+	err = fill_queue(port->in_vq, &port->inbuf_lock);
-+	if (err < 0 && err != -ENOSPC) {
- 		dev_err(port->dev, "Error allocating inbufs\n");
--		err = -ENOMEM;
- 		goto free_device;
++		if (ivt->vf >= INT_MAX)
++			return -EINVAL;
+ 		err = -EOPNOTSUPP;
+ 		if (ops->ndo_set_vf_rate)
+ 			err = ops->ndo_set_vf_rate(dev, ivt->vf,
+@@ -1850,6 +1860,8 @@ static int do_setvfinfo(struct net_devic
+ 	if (tb[IFLA_VF_SPOOFCHK]) {
+ 		struct ifla_vf_spoofchk *ivs = nla_data(tb[IFLA_VF_SPOOFCHK]);
+ 
++		if (ivs->vf >= INT_MAX)
++			return -EINVAL;
+ 		err = -EOPNOTSUPP;
+ 		if (ops->ndo_set_vf_spoofchk)
+ 			err = ops->ndo_set_vf_spoofchk(dev, ivs->vf,
+@@ -1861,6 +1873,8 @@ static int do_setvfinfo(struct net_devic
+ 	if (tb[IFLA_VF_LINK_STATE]) {
+ 		struct ifla_vf_link_state *ivl = nla_data(tb[IFLA_VF_LINK_STATE]);
+ 
++		if (ivl->vf >= INT_MAX)
++			return -EINVAL;
+ 		err = -EOPNOTSUPP;
+ 		if (ops->ndo_set_vf_link_state)
+ 			err = ops->ndo_set_vf_link_state(dev, ivl->vf,
+@@ -1874,6 +1888,8 @@ static int do_setvfinfo(struct net_devic
+ 
+ 		err = -EOPNOTSUPP;
+ 		ivrssq_en = nla_data(tb[IFLA_VF_RSS_QUERY_EN]);
++		if (ivrssq_en->vf >= INT_MAX)
++			return -EINVAL;
+ 		if (ops->ndo_set_vf_rss_query_en)
+ 			err = ops->ndo_set_vf_rss_query_en(dev, ivrssq_en->vf,
+ 							   ivrssq_en->setting);
+@@ -1884,6 +1900,8 @@ static int do_setvfinfo(struct net_devic
+ 	if (tb[IFLA_VF_TRUST]) {
+ 		struct ifla_vf_trust *ivt = nla_data(tb[IFLA_VF_TRUST]);
+ 
++		if (ivt->vf >= INT_MAX)
++			return -EINVAL;
+ 		err = -EOPNOTSUPP;
+ 		if (ops->ndo_set_vf_trust)
+ 			err = ops->ndo_set_vf_trust(dev, ivt->vf, ivt->setting);
+@@ -1894,15 +1912,18 @@ static int do_setvfinfo(struct net_devic
+ 	if (tb[IFLA_VF_IB_NODE_GUID]) {
+ 		struct ifla_vf_guid *ivt = nla_data(tb[IFLA_VF_IB_NODE_GUID]);
+ 
++		if (ivt->vf >= INT_MAX)
++			return -EINVAL;
+ 		if (!ops->ndo_set_vf_guid)
+ 			return -EOPNOTSUPP;
+-
+ 		return handle_vf_guid(dev, ivt, IFLA_VF_IB_NODE_GUID);
  	}
  
-@@ -2099,14 +2100,11 @@ static int virtcons_probe(struct virtio_
- 	INIT_WORK(&portdev->control_work, &control_work_handler);
+ 	if (tb[IFLA_VF_IB_PORT_GUID]) {
+ 		struct ifla_vf_guid *ivt = nla_data(tb[IFLA_VF_IB_PORT_GUID]);
  
- 	if (multiport) {
--		unsigned int nr_added_bufs;
--
- 		spin_lock_init(&portdev->c_ivq_lock);
- 		spin_lock_init(&portdev->c_ovq_lock);
++		if (ivt->vf >= INT_MAX)
++			return -EINVAL;
+ 		if (!ops->ndo_set_vf_guid)
+ 			return -EOPNOTSUPP;
  
--		nr_added_bufs = fill_queue(portdev->c_ivq,
--					   &portdev->c_ivq_lock);
--		if (!nr_added_bufs) {
-+		err = fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
-+		if (err < 0) {
- 			dev_err(&vdev->dev,
- 				"Error allocating buffers for control queue\n");
- 			/*
-@@ -2117,7 +2115,7 @@ static int virtcons_probe(struct virtio_
- 					   VIRTIO_CONSOLE_DEVICE_READY, 0);
- 			/* Device was functional: we need full cleanup. */
- 			virtcons_remove(vdev);
--			return -ENOMEM;
-+			return err;
- 		}
- 	} else {
- 		/*
 
 
