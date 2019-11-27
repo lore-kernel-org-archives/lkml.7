@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2650EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAFFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DB0217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA14217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887569;
-	bh=sF0MbDNgGvZVLd10BjgaxgtQZf6HRf/9lU77UlNzvtE=;
+	s=default; t=1574887576;
+	bh=lugFMPJ1DzJF5JJ73kFrDkZQ7895HclbYHXx7hxytII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WP0gk90H5eJnqmQT7OelkGalxQT7QupxpUMIBlYGDbI4zxkl9f7tkt1Pj9WgrQx0O
-	 VVlJZg+zp5mzffZOno6MmzSTHqo5KoykxE9rS8W1+adup60Xmyo5R4Sk2Bvk8jh0Rr
-	 TYAT1wzs+ZcbishfKnsWvrD4bLO4ePbZ88ZcKayg=
+	b=wyVprh6aG2jikt7wt5YlQ1egJUCT3fU+GQQolU46Fttav3OJBFwANsZ2aQjFzBlre
+	 LqZck23LE3cL3APps2adTQa3RoWPMa5/7PFWR/vfW8Mo0FryIV+5q7QcepU9O697Z8
+	 oEv9l2JpdFSFtm+qqjw+upUvEFC5OxgWzQwf8jco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfK0UqI (ORCPT
+        id S1729849AbfK0UqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:46:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57596 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:46:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729820AbfK0UqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:46:04 -0500
+        id S1729843AbfK0UqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:46:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6A1F21835;
-        Wed, 27 Nov 2019 20:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFE1E217D6;
+        Wed, 27 Nov 2019 20:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887564;
-        bh=sF0MbDNgGvZVLd10BjgaxgtQZf6HRf/9lU77UlNzvtE=;
+        s=default; t=1574887570;
+        bh=lugFMPJ1DzJF5JJ73kFrDkZQ7895HclbYHXx7hxytII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jBb6L9pvVfLIR84kYSu6ve9kg4W2RacEmT++tjClvV2c60gHuUxCh0j/K5dctIEAJ
-         ebPcuCmYToG52FnGO9nUX9oUgjqeNCbwnsrNUqCTnFgHvT7AMJiSrVOv9COckjgSAH
-         wn12uP1+ve50TaPnLEjNebkjGEaOsMBLB4qZK4Tg=
+        b=OOASrjOCZ0pyRdyl0CMSiGxXpMCB5G22FqoBEH85JbXefzCVfpS41Jww1WLwYEIT8
+         jbWamz/7pHhvoUGayMoAfwO67oX6GfHx8Y++VLAG+uIdCVOzrt70C+HQdbRWlgJheF
+         VMKqhPBURw1baGAlN9yjOCAVzmuhvIQHSe7mftw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luigi Rizzo <lrizzo@google.com>,
-        Tariq Toukan <tariqt@mellanox.com>
-Subject: [PATCH 4.14 001/211] net/mlx4_en: fix mlx4 ethtool -N insertion
-Date:   Wed, 27 Nov 2019 21:28:54 +0100
-Message-Id: <20191127203049.588851589@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Habets <mhabets@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 003/211] sfc: Only cancel the PPS workqueue if it exists
+Date:   Wed, 27 Nov 2019 21:28:56 +0100
+Message-Id: <20191127203049.791674783@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,35 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luigi Rizzo <lrizzo@google.com>
+From: Martin Habets <mhabets@solarflare.com>
 
-[ Upstream commit 34e59836565e36fade1464e054a3551c1a0364be ]
+[ Upstream commit 723eb53690041740a13ac78efeaf6804f5d684c9 ]
 
-ethtool expects ETHTOOL_GRXCLSRLALL to set ethtool_rxnfc->data with the
-total number of entries in the rx classifier table.  Surprisingly, mlx4
-is missing this part (in principle ethtool could still move forward and
-try the insert).
+The workqueue only exists for the primary PF. For other functions
+we hit a WARN_ON in kernel/workqueue.c.
 
-Tested: compiled and run command:
-	phh13:~# ethtool -N eth1 flow-type udp4  queue 4
-	Added rule with ID 255
-
-Signed-off-by: Luigi Rizzo <lrizzo@google.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Fixes: 7c236c43b838 ("sfc: Add support for IEEE-1588 PTP")
+Signed-off-by: Martin Habets <mhabets@solarflare.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/en_ethtool.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/sfc/ptp.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-@@ -1722,6 +1722,7 @@ static int mlx4_en_get_rxnfc(struct net_
- 		err = mlx4_en_get_flow(dev, cmd, cmd->fs.location);
- 		break;
- 	case ETHTOOL_GRXCLSRLALL:
-+		cmd->data = MAX_NUM_OF_FS_RULES;
- 		while ((!err || err == -ENOENT) && priority < cmd->rule_cnt) {
- 			err = mlx4_en_get_flow(dev, cmd, i);
- 			if (!err)
+--- a/drivers/net/ethernet/sfc/ptp.c
++++ b/drivers/net/ethernet/sfc/ptp.c
+@@ -1320,7 +1320,8 @@ void efx_ptp_remove(struct efx_nic *efx)
+ 	(void)efx_ptp_disable(efx);
+ 
+ 	cancel_work_sync(&efx->ptp_data->work);
+-	cancel_work_sync(&efx->ptp_data->pps_work);
++	if (efx->ptp_data->pps_workwq)
++		cancel_work_sync(&efx->ptp_data->pps_work);
+ 
+ 	skb_queue_purge(&efx->ptp_data->rxq);
+ 	skb_queue_purge(&efx->ptp_data->txq);
 
 
