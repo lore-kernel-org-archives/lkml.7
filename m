@@ -2,55 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829E1C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3D0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9AC21774
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86AF521741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887126;
-	bh=5gfP24dMqrv9mnRttBvyp7g7wxSBjCJ0/+8lbvTZPAY=;
+	s=default; t=1574887129;
+	bh=sV6V6px7SnpPCHUQXwR8GTmlMRu+09tlY5oHH0QhhIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ksA30qPpsr+/QXdDY0CIyEssCyCoJefKmy3+E1hCu/WcwIxH3WQrgxtHWVPk6Hi1C
-	 Sh+5NcYiBcU8F7M4pOd8Q3YrmbOdaBykByF8wCa1WAXST0cIKDbHXI45cSY7+daeb1
-	 Vy+TpaACS1JfH7OVdtlKtgKhkrVGsiyQcapwbDDo=
+	b=jH5m0IV4sZ8GtIpQAC7t4TGrJ+nBrRGoglvAUiPnRNGNsmtQgK/JdpQlq498lJYqf
+	 fnAVri4q+cnoNzaonkGxSRf55/R7bo/bTfz0n19v/1m++onfmFSM51CUEBdrpOgsxw
+	 aQQJc9NHCBUdvpBiMdctfBm4tqdFjxGnxvK/R92U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfK0Uio (ORCPT
+        id S1728804AbfK0Uis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:38:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42532 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:38:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbfK0Uil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:38:41 -0500
+        id S1728787AbfK0Uip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:38:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D84F21770;
-        Wed, 27 Nov 2019 20:38:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A89721569;
+        Wed, 27 Nov 2019 20:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887120;
-        bh=5gfP24dMqrv9mnRttBvyp7g7wxSBjCJ0/+8lbvTZPAY=;
+        s=default; t=1574887123;
+        bh=sV6V6px7SnpPCHUQXwR8GTmlMRu+09tlY5oHH0QhhIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k6uCiqmM2Z192T/vFjQ+uE5OdkMcY8lirGZcrvsCUwH1AqRJ9edLRgw0kFTuFTBQ7
-         ihPk+skgdM5betqtO2d+VVeSMBRRRcevFl7xsVWLcD94n9pIta4kwyQ0E64to56Rc3
-         wfq4/3x7F4eDaErRSA28PDbbM3W4bQ9W/zykQnB0=
+        b=x3htHEJ3DC+fKKbiF2h4usurNL7YROUVoFhWIoMAZKmJdD2334kwu47K3Qbrp21ek
+         3ZHFmWwLfwiLlvIY6j8ldcTxMkhl77N/AhDgCNTsOej5RgfEeQw2OiOaOuPeMmZ5Sl
+         uwP1oJJGbfbBH4/bElWUZ9z+agUcczCGSQ1tWGgQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "=?UTF-8?q?Ernesto=20A . =20Fern=C3=A1ndez?=" 
-        <ernesto.mnd.fernandez@gmail.com>, Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 068/132] hfsplus: prevent btree data loss on ENOSPC
-Date:   Wed, 27 Nov 2019 21:30:59 +0100
-Message-Id: <20191127203004.418932823@linuxfoundation.org>
+        syzbot+f49d12d34f2321cf4df2@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.4 115/132] media: imon: invalid dereference in imon_touch_event
+Date:   Wed, 27 Nov 2019 21:31:46 +0100
+Message-Id: <20191127203031.662349030@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -63,217 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+From: Sean Young <sean@mess.org>
 
-[ Upstream commit d92915c35bfaf763d78bf1d5ac7f183420e3bd99 ]
+commit f3f5ba42c58d56d50f539854d8cc188944e96087 upstream.
 
-Inserting or deleting a record in a btree may require splitting several of
-its nodes.  If we hit ENOSPC halfway through, the new nodes will be left
-orphaned and their records will be lost.  This could mean lost inodes,
-extents or xattrs.
+The touch timer is set up in intf1. If the second interface does not exist,
+the timer and touch input device are not setup and we get the following
+error, when touch events are reported via intf0.
 
-Henceforth, check the available disk space before making any changes.
-This still leaves the potential problem of corruption on ENOMEM.
+kernel BUG at kernel/time/timer.c:956!
+invalid opcode: 0000 [#1] SMP KASAN
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc1+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__mod_timer kernel/time/timer.c:956 [inline]
+RIP: 0010:__mod_timer kernel/time/timer.c:949 [inline]
+RIP: 0010:mod_timer+0x5a2/0xb50 kernel/time/timer.c:1100
+Code: 45 10 c7 44 24 14 ff ff ff ff 48 89 44 24 08 48 8d 45 20 48 c7 44 24 18 00 00 00 00 48 89 04 24 e9 5a fc ff ff e8 ae ce 0e 00 <0f> 0b e8 a7 ce 0e 00 4c 89 74 24 20 e9 37 fe ff ff e8 98 ce 0e 00
+RSP: 0018:ffff8881db209930 EFLAGS: 00010006
+RAX: ffffffff86c2b200 RBX: 00000000ffffa688 RCX: ffffffff83efc583
+RDX: 0000000000000100 RSI: ffffffff812f4d82 RDI: ffff8881d2356200
+RBP: ffff8881d23561e8 R08: ffffffff86c2b200 R09: ffffed103a46abeb
+R10: ffffed103a46abea R11: ffff8881d2355f53 R12: dffffc0000000000
+R13: 1ffff1103b64132d R14: ffff8881d2355f50 R15: 0000000000000006
+FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f75e2799000 CR3: 00000001d3b07000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ imon_touch_event drivers/media/rc/imon.c:1348 [inline]
+ imon_incoming_packet.isra.0+0x2546/0x2f10 drivers/media/rc/imon.c:1603
+ usb_rx_callback_intf0+0x151/0x1e0 drivers/media/rc/imon.c:1734
+ __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1654
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1719
+ dummy_timer+0x120f/0x2fa2 drivers/usb/gadget/udc/dummy_hcd.c:1965
+ call_timer_fn+0x179/0x650 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x5e3/0x1490 kernel/time/timer.c:1786
+ __do_softirq+0x221/0x912 kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x178/0x1a0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0x12f/0x500 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ </IRQ>
+RIP: 0010:default_idle+0x28/0x2e0 arch/x86/kernel/process.c:581
+Code: 90 90 41 56 41 55 65 44 8b 2d 44 3a 8f 7a 41 54 55 53 0f 1f 44 00 00 e8 36 ee d0 fb e9 07 00 00 00 0f 00 2d fa dd 4f 00 fb f4 <65> 44 8b 2d 20 3a 8f 7a 0f 1f 44 00 00 5b 5d 41 5c 41 5d 41 5e c3
+RSP: 0018:ffffffff86c07da8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: ffffffff86c2b200 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffffffff86c2ba4c
+RBP: fffffbfff0d85640 R08: ffffffff86c2b200 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x3b6/0x500 kernel/sched/idle.c:263
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:355
+ start_kernel+0x82a/0x864 init/main.c:784
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+Modules linked in:
 
-The patch can be tested with xfstests generic/027.
+Reported-by: syzbot+f49d12d34f2321cf4df2@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: http://lkml.kernel.org/r/4596eef22fbda137b4ffa0272d92f0da15364421.1536269129.git.ernesto.mnd.fernandez@gmail.com
-Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfsplus/attributes.c | 10 ++++++++++
- fs/hfsplus/btree.c      | 44 ++++++++++++++++++++++++++---------------
- fs/hfsplus/catalog.c    | 24 ++++++++++++++++++++++
- fs/hfsplus/extents.c    |  4 ++++
- fs/hfsplus/hfsplus_fs.h |  2 ++
- 5 files changed, 68 insertions(+), 16 deletions(-)
+ drivers/media/rc/imon.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/hfsplus/attributes.c b/fs/hfsplus/attributes.c
-index e5b221de7de63..d7455ea702878 100644
---- a/fs/hfsplus/attributes.c
-+++ b/fs/hfsplus/attributes.c
-@@ -216,6 +216,11 @@ int hfsplus_create_attr(struct inode *inode,
- 	if (err)
- 		goto failed_init_create_attr;
+--- a/drivers/media/rc/imon.c
++++ b/drivers/media/rc/imon.c
+@@ -1644,8 +1644,7 @@ static void imon_incoming_packet(struct
+ 	spin_unlock_irqrestore(&ictx->kc_lock, flags);
  
-+	/* Fail early and avoid ENOSPC during the btree operation */
-+	err = hfs_bmap_reserve(fd.tree, fd.tree->depth + 1);
-+	if (err)
-+		goto failed_create_attr;
-+
- 	if (name) {
- 		err = hfsplus_attr_build_key(sb, fd.search_key,
- 						inode->i_ino, name);
-@@ -312,6 +317,11 @@ int hfsplus_delete_attr(struct inode *inode, const char *name)
- 	if (err)
- 		return err;
+ 	/* send touchscreen events through input subsystem if touchpad data */
+-	if (ictx->display_type == IMON_DISPLAY_TYPE_VGA && len == 8 &&
+-	    buf[7] == 0x86) {
++	if (ictx->touch && len == 8 && buf[7] == 0x86) {
+ 		imon_touch_event(ictx, buf);
+ 		return;
  
-+	/* Fail early and avoid ENOSPC during the btree operation */
-+	err = hfs_bmap_reserve(fd.tree, fd.tree->depth);
-+	if (err)
-+		goto out;
-+
- 	if (name) {
- 		err = hfsplus_attr_build_key(sb, fd.search_key,
- 						inode->i_ino, name);
-diff --git a/fs/hfsplus/btree.c b/fs/hfsplus/btree.c
-index 7adc8a327e03a..1ae3e187bc9d0 100644
---- a/fs/hfsplus/btree.c
-+++ b/fs/hfsplus/btree.c
-@@ -341,26 +341,21 @@ static struct hfs_bnode *hfs_bmap_new_bmap(struct hfs_bnode *prev, u32 idx)
- 	return node;
- }
- 
--struct hfs_bnode *hfs_bmap_alloc(struct hfs_btree *tree)
-+/* Make sure @tree has enough space for the @rsvd_nodes */
-+int hfs_bmap_reserve(struct hfs_btree *tree, int rsvd_nodes)
- {
--	struct hfs_bnode *node, *next_node;
--	struct page **pagep;
--	u32 nidx, idx;
--	unsigned off;
--	u16 off16;
--	u16 len;
--	u8 *data, byte, m;
--	int i;
-+	struct inode *inode = tree->inode;
-+	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
-+	u32 count;
-+	int res;
- 
--	while (!tree->free_nodes) {
--		struct inode *inode = tree->inode;
--		struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
--		u32 count;
--		int res;
-+	if (rsvd_nodes <= 0)
-+		return 0;
- 
-+	while (tree->free_nodes < rsvd_nodes) {
- 		res = hfsplus_file_extend(inode, hfs_bnode_need_zeroout(tree));
- 		if (res)
--			return ERR_PTR(res);
-+			return res;
- 		hip->phys_size = inode->i_size =
- 			(loff_t)hip->alloc_blocks <<
- 				HFSPLUS_SB(tree->sb)->alloc_blksz_shift;
-@@ -368,9 +363,26 @@ struct hfs_bnode *hfs_bmap_alloc(struct hfs_btree *tree)
- 			hip->alloc_blocks << HFSPLUS_SB(tree->sb)->fs_shift;
- 		inode_set_bytes(inode, inode->i_size);
- 		count = inode->i_size >> tree->node_size_shift;
--		tree->free_nodes = count - tree->node_count;
-+		tree->free_nodes += count - tree->node_count;
- 		tree->node_count = count;
- 	}
-+	return 0;
-+}
-+
-+struct hfs_bnode *hfs_bmap_alloc(struct hfs_btree *tree)
-+{
-+	struct hfs_bnode *node, *next_node;
-+	struct page **pagep;
-+	u32 nidx, idx;
-+	unsigned off;
-+	u16 off16;
-+	u16 len;
-+	u8 *data, byte, m;
-+	int i, res;
-+
-+	res = hfs_bmap_reserve(tree, 1);
-+	if (res)
-+		return ERR_PTR(res);
- 
- 	nidx = 0;
- 	node = hfs_bnode_find(tree, nidx);
-diff --git a/fs/hfsplus/catalog.c b/fs/hfsplus/catalog.c
-index 022974ab6e3cc..e35df33583c4f 100644
---- a/fs/hfsplus/catalog.c
-+++ b/fs/hfsplus/catalog.c
-@@ -264,6 +264,14 @@ int hfsplus_create_cat(u32 cnid, struct inode *dir,
- 	if (err)
- 		return err;
- 
-+	/*
-+	 * Fail early and avoid ENOSPC during the btree operations. We may
-+	 * have to split the root node at most once.
-+	 */
-+	err = hfs_bmap_reserve(fd.tree, 2 * fd.tree->depth);
-+	if (err)
-+		goto err2;
-+
- 	hfsplus_cat_build_key_with_cnid(sb, fd.search_key, cnid);
- 	entry_size = hfsplus_fill_cat_thread(sb, &entry,
- 		S_ISDIR(inode->i_mode) ?
-@@ -332,6 +340,14 @@ int hfsplus_delete_cat(u32 cnid, struct inode *dir, struct qstr *str)
- 	if (err)
- 		return err;
- 
-+	/*
-+	 * Fail early and avoid ENOSPC during the btree operations. We may
-+	 * have to split the root node at most once.
-+	 */
-+	err = hfs_bmap_reserve(fd.tree, 2 * (int)fd.tree->depth - 2);
-+	if (err)
-+		goto out;
-+
- 	if (!str) {
- 		int len;
- 
-@@ -429,6 +445,14 @@ int hfsplus_rename_cat(u32 cnid,
- 		return err;
- 	dst_fd = src_fd;
- 
-+	/*
-+	 * Fail early and avoid ENOSPC during the btree operations. We may
-+	 * have to split the root node at most twice.
-+	 */
-+	err = hfs_bmap_reserve(src_fd.tree, 4 * (int)src_fd.tree->depth - 1);
-+	if (err)
-+		goto out;
-+
- 	/* find the old dir entry and read the data */
- 	err = hfsplus_cat_build_key(sb, src_fd.search_key,
- 			src_dir->i_ino, src_name);
-diff --git a/fs/hfsplus/extents.c b/fs/hfsplus/extents.c
-index feca524ce2a5c..ce0b8f8374081 100644
---- a/fs/hfsplus/extents.c
-+++ b/fs/hfsplus/extents.c
-@@ -99,6 +99,10 @@ static int __hfsplus_ext_write_extent(struct inode *inode,
- 	if (hip->extent_state & HFSPLUS_EXT_NEW) {
- 		if (res != -ENOENT)
- 			return res;
-+		/* Fail early and avoid ENOSPC during the btree operation */
-+		res = hfs_bmap_reserve(fd->tree, fd->tree->depth + 1);
-+		if (res)
-+			return res;
- 		hfs_brec_insert(fd, hip->cached_extents,
- 				sizeof(hfsplus_extent_rec));
- 		hip->extent_state &= ~(HFSPLUS_EXT_DIRTY | HFSPLUS_EXT_NEW);
-diff --git a/fs/hfsplus/hfsplus_fs.h b/fs/hfsplus/hfsplus_fs.h
-index f91a1faf819e9..0ab6541493405 100644
---- a/fs/hfsplus/hfsplus_fs.h
-+++ b/fs/hfsplus/hfsplus_fs.h
-@@ -310,6 +310,7 @@ static inline unsigned short hfsplus_min_io_size(struct super_block *sb)
- #define hfs_btree_open hfsplus_btree_open
- #define hfs_btree_close hfsplus_btree_close
- #define hfs_btree_write hfsplus_btree_write
-+#define hfs_bmap_reserve hfsplus_bmap_reserve
- #define hfs_bmap_alloc hfsplus_bmap_alloc
- #define hfs_bmap_free hfsplus_bmap_free
- #define hfs_bnode_read hfsplus_bnode_read
-@@ -394,6 +395,7 @@ u32 hfsplus_calc_btree_clump_size(u32 block_size, u32 node_size, u64 sectors,
- struct hfs_btree *hfs_btree_open(struct super_block *sb, u32 id);
- void hfs_btree_close(struct hfs_btree *tree);
- int hfs_btree_write(struct hfs_btree *tree);
-+int hfs_bmap_reserve(struct hfs_btree *tree, int rsvd_nodes);
- struct hfs_bnode *hfs_bmap_alloc(struct hfs_btree *tree);
- void hfs_bmap_free(struct hfs_bnode *node);
- 
--- 
-2.20.1
-
 
 
