@@ -2,111 +2,157 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCDAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC37C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57767207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:29:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Pr3Z78mC"
+	by mail.kernel.org (Postfix) with ESMTP id 26DF52084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfK0K3H (ORCPT
+        id S1727080AbfK0K3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:29:07 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:30728 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726546AbfK0K3H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:29:07 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARAR2dk031886;
-        Wed, 27 Nov 2019 11:29:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=Bmi9ZxvHiIlWxe/sSml2LTtA26zSCPWx7oIRLedeHJE=;
- b=Pr3Z78mCwyJ9TShbbI12Na03BJ4OiVZwMtDSWYVnuxhayk6LzKq3YiFopT8c55DlgFSA
- xoig3XdJcgk6oAQW5qS3Wa2/b+2XMcsRa0/4GZvKNLzmnNibvsBDsIuT0wPuNl5dtXZD
- rFQfnC9r1f3yMcg1+Z62xKHxSNkbycdsGcxvFzhcyH2dOPocP0JZEigZ2ggqmkAnZSd1
- v2F+69ysw+FZPYYNwlw9g4bwoUfnaFNVF+J6dmn+fMvgBDDAYuK0WXxDGgccU3MVZno5
- orgZNCBILAxnNgA5AQ0S3WzeZIY1lfRT+bAf/ZK6pMNB2I+sNHc5YB58ZzGKJjs1iSmU OQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2whcxsb1hc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 11:29:03 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0235910002A;
-        Wed, 27 Nov 2019 11:29:03 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5591E2B1868;
-        Wed, 27 Nov 2019 11:29:03 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Nov 2019 11:29:02
- +0100
-From:   Yannick Fertre <yannick.fertre@st.com>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] Input: goodix: request_irq: convert gpio to irq
-Date:   Wed, 27 Nov 2019 11:29:01 +0100
-Message-ID: <1574850541-13577-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 27 Nov 2019 05:29:18 -0500
+Received: from mga14.intel.com ([192.55.52.115]:65447 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726520AbfK0K3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:29:17 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 02:29:17 -0800
+X-IronPort-AV: E=Sophos;i="5.69,249,1571727600"; 
+   d="scan'208";a="199142767"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 02:29:13 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Allen Chen <allen.chen@ite.com.tw>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list\:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Pi-Hsun Shih <pihsun@chromium.org>, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking timings logic
+In-Reply-To: <1574761572-26585-1-git-send-email-allen.chen@ite.com.tw>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <1574761572-26585-1-git-send-email-allen.chen@ite.com.tw>
+Date:   Wed, 27 Nov 2019 12:29:11 +0200
+Message-ID: <87pnhdobns.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_02:2019-11-27,2019-11-27 signatures=0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yannick Fertré <yannick.fertre@st.com>
+On Tue, 26 Nov 2019, allen <allen.chen@ite.com.tw> wrote:
+> According to VESA ENHANCED EXTENDED DISPLAY IDENTIFICATION DATA STANDARD
+> (Defines EDID Structure Version 1, Revision 4) page: 39
+> How to determine whether the monitor support RB timing or not?
+> EDID 1.4
+> First:  read detailed timing descriptor and make sure byte 0 = 0x00,
+> 	byte 1 = 0x00, byte 2 = 0x00 and byte 3 = 0xFD
+> Second: read EDID bit 0 in feature support byte at address 18h = 1
+> 	and detailed timing descriptor byte 10 = 0x04
+> Third:  if EDID bit 0 in feature support byte = 1 &&
+> 	detailed timing descriptor byte 10 = 0x04
+> 	then we can check byte 15, if bit 4 in byte 15 = 1 is support RB
+>         if EDID bit 0 in feature support byte != 1 ||
+> 	detailed timing descriptor byte 10 != 0x04,
+> 	then byte 15 can not be used
+>
+> The linux code is_rb function not follow the VESA's rule
+>
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> ---
+>  drivers/gpu/drm/drm_edid.c | 36 ++++++++++++++++++++++++++++++------
+>  1 file changed, 30 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index f5926bf..e11e585 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -93,6 +93,12 @@ struct detailed_mode_closure {
+>  	int modes;
+>  };
+>  
+> +struct edid_support_rb_closure {
+> +	struct edid *edid;
+> +	bool valid_support_rb;
+> +	bool support_rb;
+> +};
+> +
+>  #define LEVEL_DMT	0
+>  #define LEVEL_GTF	1
+>  #define LEVEL_GTF2	2
+> @@ -2017,23 +2023,41 @@ struct drm_display_mode *drm_mode_find_dmt(struct drm_device *dev,
+>  	}
+>  }
+>  
+> +static bool
+> +is_display_descriptor(const u8 *r, u8 tag)
+> +{
+> +	return (!r[0] && !r[1] && !r[2] && r[3] == tag) ? true : false;
+> +}
+> +
+>  static void
+>  is_rb(struct detailed_timing *t, void *data)
+>  {
+>  	u8 *r = (u8 *)t;
+> -	if (r[3] == EDID_DETAIL_MONITOR_RANGE)
+> -		if (r[15] & 0x10)
+> -			*(bool *)data = true;
+> +	struct edid_support_rb_closure *closure = data;
+> +	struct edid *edid = closure->edid;
+> +
+> +	if (is_display_descriptor(r, EDID_DETAIL_MONITOR_RANGE)) {
+> +		if (edid->features & BIT(0) && r[10] == BIT(2)) {
+> +			closure->valid_support_rb = true;
+> +			closure->support_rb = (r[15] & 0x10) ? true : false;
+> +		}
+> +	}
+>  }
+>  
+>  /* EDID 1.4 defines this explicitly.  For EDID 1.3, we guess, badly. */
+>  static bool
+>  drm_monitor_supports_rb(struct edid *edid)
+>  {
+> +	struct edid_support_rb_closure closure = {
+> +		.edid = edid,
+> +		.valid_support_rb = false,
+> +		.support_rb = false,
+> +	};
+> +
+>  	if (edid->revision >= 4) {
+> -		bool ret = false;
+> -		drm_for_each_detailed_block((u8 *)edid, is_rb, &ret);
+> -		return ret;
+> +		drm_for_each_detailed_block((u8 *)edid, is_rb, &closure);
+> +		if (closure.valid_support_rb)
+> +			return closure.support_rb;
 
-Convert gpio to irq if not already done by gpio lib.
+Are you planning on extending the closure use somehow?
 
-Signed-off-by: Yannick Fertré <yannick.fertre
----
- drivers/input/touchscreen/goodix.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I did not look up the spec, but purely on the code changes alone, you
+could just move the edid->features bit check at this level, and not pass
+it down, and nothing would change. I.e. don't iterate the EDID at all if
+the bit is not set.
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index b470773..f1d9d5e 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -23,6 +23,7 @@
- #include <linux/delay.h>
- #include <linux/irq.h>
- #include <linux/interrupt.h>
-+#include <linux/gpio.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
-@@ -392,6 +393,13 @@ static void goodix_free_irq(struct goodix_ts_data *ts)
- 
- static int goodix_request_irq(struct goodix_ts_data *ts)
- {
-+	int gpio;
-+
-+	gpio = desc_to_gpio(ts->gpiod_int);
-+
-+	if (gpio_is_valid(gpio))
-+		ts->client->irq = gpio_to_irq(gpio);
-+
- 	return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
- 					 NULL, goodix_ts_irq_handler,
- 					 ts->irq_flags, ts->client->name, ts);
+You also don't actually use the distinction between valid_support_rb
+vs. support_rb for anything, so the closure just adds code.
+
+BR,
+Jani.
+
+
+>  	}
+>  
+>  	return ((edid->input & DRM_EDID_INPUT_DIGITAL) != 0);
+
 -- 
-2.7.4
-
+Jani Nikula, Intel Open Source Graphics Center
