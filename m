@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48346C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDE4C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B1821826
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176CE21845
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887707;
-	bh=pz831w1FYuAKytC2tJGnO7bVucvEVuEDHUgUhpkzv/Y=;
+	s=default; t=1574887710;
+	bh=jTWzCOQwRiWhKbKWMLAjSFDku8KDuyLw1gEEl2r4qbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lSE0cA0+mgdq1Melf6xbf9fpZnummcloTYKLrCxOheWTuY5jMhBfL2SSI4j4tmAdK
-	 asJ3036ZwxJ0l27HHw6rZoNWGMWjGbvvMSOyB7J+06oJO7K/quhXRMF7PCqb/5ThhN
-	 hPgoHJiPgCwSTyfdrGbCNBEUpjxc4q5hLxxSJ+lM=
+	b=i4dSht2whssHl5iBTVasOemmjblbkSL0+m8WBlOQ45UQPxs6lAxYhJwXzpd+bKUFk
+	 W6M2JOo7s7MiGAlTMceop7X4dGWihVYPug3gy7wO/XT4zZdg+6KX0uiv8OouyX8GK5
+	 JThDBFfrKfboJbivU36OLfMt7LbLKO4eEFKB6LY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbfK0Us0 (ORCPT
+        id S1730144AbfK0Us2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:48:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33600 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:48:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730121AbfK0UsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:48:22 -0500
+        id S1729667AbfK0UsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:48:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 755E221826;
-        Wed, 27 Nov 2019 20:48:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA8F921826;
+        Wed, 27 Nov 2019 20:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887701;
-        bh=pz831w1FYuAKytC2tJGnO7bVucvEVuEDHUgUhpkzv/Y=;
+        s=default; t=1574887704;
+        bh=jTWzCOQwRiWhKbKWMLAjSFDku8KDuyLw1gEEl2r4qbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0+Gr1CZ1S6MCIWT4gOOe467Jf5SrQpfDMS1ACR/IuPaqVbms4wChNXyQo/waErV+0
-         EKdflakHp9t37E6qGIuwTyij2OmVUrfFBUCVNuKpR0XWFf66AhSpxa6qx3VIj4iP9g
-         zQE3Fr4vZkKDReMtaB8EsmnARMuFmI/ELE0+zgeY=
+        b=NKsr1jSFgB8z1elWj7zTC4y3Wq7ZH0mpCD6f9Ucr6y0bW08lD/fotMqnmBRt2cL9o
+         PeNa9yw+6AbEWxXSq0AuSD/51F1kHlEuNlGga1WC2peVL8PkIx+X03U4ePizBc+eaS
+         yC3gXgZPiAwW4OqbSxdaX5J5CcLS3nUKqxuYYXT4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Klocke <philipp97kl@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 062/211] ALSA: i2c/cs8427: Fix int to char conversion
-Date:   Wed, 27 Nov 2019 21:29:55 +0100
-Message-Id: <20191127203059.828096114@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 063/211] macintosh/windfarm_smu_sat: Fix debug output
+Date:   Wed, 27 Nov 2019 21:29:56 +0100
+Message-Id: <20191127203059.905535526@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -59,43 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Klocke <philipp97kl@gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-[ Upstream commit eb7ebfa3c1989aa8e59d5e68ab3cddd7df1bfb27 ]
+[ Upstream commit fc0c8b36d379a046525eacb9c3323ca635283757 ]
 
-Compiling with clang yields the following warning:
+There's some antiquated debug output that's trying
+to do a hand-made hexdump and turning into horrible
+1-byte-per-line output these days.
 
-sound/i2c/cs8427.c:140:31: warning: implicit conversion from 'int'
-to 'char' changes value from 160 to -96 [-Wconstant-conversion]
-    data[0] = CS8427_REG_AUTOINC | CS8427_REG_CORU_DATABUF;
-            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+Use print_hex_dump() instead
 
-Because CS8427_REG_AUTOINC is defined as 128, it is too big for a
-char field.
-So change data from char to unsigned char, that it can hold the value.
-
-This patch does not change the generated code.
-
-Signed-off-by: Philipp Klocke <philipp97kl@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/i2c/cs8427.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/macintosh/windfarm_smu_sat.c | 25 +++++++------------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
 
-diff --git a/sound/i2c/cs8427.c b/sound/i2c/cs8427.c
-index 7e21621e492a4..7fd1b40008838 100644
---- a/sound/i2c/cs8427.c
-+++ b/sound/i2c/cs8427.c
-@@ -118,7 +118,7 @@ static int snd_cs8427_send_corudata(struct snd_i2c_device *device,
- 	struct cs8427 *chip = device->private_data;
- 	char *hw_data = udata ?
- 		chip->playback.hw_udata : chip->playback.hw_status;
--	char data[32];
-+	unsigned char data[32];
- 	int err, idx;
+diff --git a/drivers/macintosh/windfarm_smu_sat.c b/drivers/macintosh/windfarm_smu_sat.c
+index da7f4fc1a51d1..a0f61eb853c55 100644
+--- a/drivers/macintosh/windfarm_smu_sat.c
++++ b/drivers/macintosh/windfarm_smu_sat.c
+@@ -22,14 +22,6 @@
  
- 	if (!memcmp(hw_data, ndata, count))
+ #define VERSION "1.0"
+ 
+-#define DEBUG
+-
+-#ifdef DEBUG
+-#define DBG(args...)	printk(args)
+-#else
+-#define DBG(args...)	do { } while(0)
+-#endif
+-
+ /* If the cache is older than 800ms we'll refetch it */
+ #define MAX_AGE		msecs_to_jiffies(800)
+ 
+@@ -106,13 +98,10 @@ struct smu_sdbp_header *smu_sat_get_sdb_partition(unsigned int sat_id, int id,
+ 		buf[i+2] = data[3];
+ 		buf[i+3] = data[2];
+ 	}
+-#ifdef DEBUG
+-	DBG(KERN_DEBUG "sat %d partition %x:", sat_id, id);
+-	for (i = 0; i < len; ++i)
+-		DBG(" %x", buf[i]);
+-	DBG("\n");
+-#endif
+ 
++	printk(KERN_DEBUG "sat %d partition %x:", sat_id, id);
++	print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
++		       16, 1, buf, len, false);
+ 	if (size)
+ 		*size = len;
+ 	return (struct smu_sdbp_header *) buf;
+@@ -132,13 +121,13 @@ static int wf_sat_read_cache(struct wf_sat *sat)
+ 	if (err < 0)
+ 		return err;
+ 	sat->last_read = jiffies;
++
+ #ifdef LOTSA_DEBUG
+ 	{
+ 		int i;
+-		DBG(KERN_DEBUG "wf_sat_get: data is");
+-		for (i = 0; i < 16; ++i)
+-			DBG(" %.2x", sat->cache[i]);
+-		DBG("\n");
++		printk(KERN_DEBUG "wf_sat_get: data is");
++		print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
++			       16, 1, sat->cache, 16, false);
+ 	}
+ #endif
+ 	return 0;
 -- 
 2.20.1
 
