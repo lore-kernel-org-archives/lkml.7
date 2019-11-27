@@ -2,104 +2,82 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D993C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3B5C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4678F2068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9042068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYIM8e6H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vVu30Kdk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfK0ORo (ORCPT
+        id S1726970AbfK0OUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:17:44 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46514 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfK0ORn (ORCPT
+        Wed, 27 Nov 2019 09:20:17 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36764 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfK0OUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:17:43 -0500
-Received: by mail-ot1-f66.google.com with SMTP id n23so19195568otr.13;
-        Wed, 27 Nov 2019 06:17:43 -0800 (PST)
+        Wed, 27 Nov 2019 09:20:16 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f16so17327515lfm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 06:20:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zWxVmrfdBI7EDKg3dfR6vKDNrAF55vPOgfsHWCewUK0=;
-        b=IYIM8e6HXQi7ulG8kN3IT+IPiPfRg2rr/m0N9K1sSb0D+OX/5LMfP7jWmGw0+RGNMQ
-         xLRdrremAQeQ7ZWQBO1aFloCoBF6txaVCWu9YFVH+HudO2/hqJ5yT9b3iX0UgO5LFV2Y
-         VW0sYg4lbuahz/iD+hWikI/THGaBAhJruGeu44tll7u2DPCujggMtGQEB0P7Cvl5ocdu
-         a5qtCw06RnIPpmmJDamYHDqHjJryypgYrhcpirQmBm1S8/xZnIuuAGTRYdiuxqW1btvd
-         zkF+7KGxyRCxNw1MtWgzyKnKTiWX5Hs9KMZ8gx/tEJsqOSBdyW1EwNDLjgftwEGkJv5S
-         c9kA==
+        h=date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wamHMBQaa4XOhsaqDdFSh25XfJO0kMdpYEg3ciRI0K8=;
+        b=vVu30KdkT0zhpzUN8Ukh8+YTght0YZI0KH+emGcTm1Z51FzzgKoupMOPetuYGZPmhr
+         hm5Dj2o4GeNaITiezt50OtHC/6IBJgSdJZ+TRScGAVgyq0oV3yytazLjjLQs5aM74qjJ
+         +D7KDKCNVe/tBd4NYpx0zqY//yw8HNn0wyv1xBGbCnbaq3TsTM2HHFMC3doY69KpI/cI
+         6tQ5DKfq7DHLxkYGkK/yZIMQXHXSz0O4M3RJwpCoQ1QmRFJFaVNM4RNk0npLH0LWJKYi
+         qn7J/1oGBUVOYpJoOKO0i4DcbnSRxMcDCT/UdYvOmxcjHEEIgSLZk4kJpV8jkon05gn5
+         HLmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-transfer-encoding;
-        bh=zWxVmrfdBI7EDKg3dfR6vKDNrAF55vPOgfsHWCewUK0=;
-        b=XUnWekslTAIS4DeVDPjmK0dbpv9VDgNDLcgkMIQ0NObl4ZDaR6G6R20P3LYYphArLV
-         xgYyKdZ6yyaIuqt4t2hHv50ft1fD1dTEeYyC7C+R+MCuJmeQiQkYtULDrdoAGJ/7EEIY
-         tfOgCo8FGGFupw7isJ75B8bsLOuXuhmW9EuzGdOgBK/6anIio6d6CJqYfEpXfJhCLqEG
-         6sHsT2H/YPvdkcisyN86OeWKZ41V4P10WD83LZ3sIrFoUcQOlqenG7FoqXId94oyauBi
-         Dq5+R5LKHALnuARU7MJn5IX8ixDaach2dUffopS85wKBcxJnhRicB2+wmMzxKs9SOlLf
-         NHqg==
-X-Gm-Message-State: APjAAAWQzIE5lBCGP/eIs+TuoP2+qIkF3apa8ySs6unEfYgExuKOXKIT
-        kJeOBuj19yYh1NE9isdJ6SY9S0Dt
-X-Google-Smtp-Source: APXvYqwDF1uD4aFvgN141kMr9cBfYEj70rfO2WHqwAxpSxnYajIvLOGIslkCbsoA1rzvI8tZ24Npew==
-X-Received: by 2002:a9d:6344:: with SMTP id y4mr3895824otk.29.1574864262493;
-        Wed, 27 Nov 2019 06:17:42 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w26sm4855691otm.28.2019.11.27.06.17.40
+        bh=wamHMBQaa4XOhsaqDdFSh25XfJO0kMdpYEg3ciRI0K8=;
+        b=b7AEQDxVOqhivbf4KsHDF8ktbqLSoE2ZSO5HM+tkextz5SOGhNEhOO8+Gd1z951xP4
+         cPSPWx+633mvizSq65CfvoaDx9eVJOeoHGe17uu4yYu1PKdqbLZoIly8rw4PWDLW/eLi
+         yPy7Px6i/3o32xZIoz6gbsOAXC7rU91e5eAnc4k1ozH+SKGvJy5jzJZrGU01t7pEiFH8
+         w0CspjLw14Udl/3MzS9wYGm6+UGUHrE9K9TpaYKMBirN2OZnW+PXBo2SNPfaSMBKNs9o
+         rtAwmBDRc761qLxlcQpSdBNlzi2YT4/1zuilhc//MsvKhp3AHA1E9qECtTmde41VYVYS
+         r7kA==
+X-Gm-Message-State: APjAAAWZu5R7b2eySbCJ2YJnGbMy5UsX9WPzHRy6hcNLlCEvGL0mMJIi
+        mtijQq235F+8Qz95CJkqQEEtfKHZ
+X-Google-Smtp-Source: APXvYqyiAZYFPERTWujiH3a5NMZ8DA7T0CNpf3G1csYEXG+vEgi4m3JUEXIJc9dXySzHtDgL6iEnjQ==
+X-Received: by 2002:ac2:5549:: with SMTP id l9mr5868027lfk.53.1574864414623;
+        Wed, 27 Nov 2019 06:20:14 -0800 (PST)
+Received: from seldlx21914.corpusers.net ([37.139.156.40])
+        by smtp.gmail.com with ESMTPSA id r20sm6521570lfi.91.2019.11.27.06.20.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Nov 2019 06:17:41 -0800 (PST)
-Subject: Re: [PATCH] watchdog: max77620_wdt: fix potential build errors
-To:     David Engraf <david.engraf@sysgo.com>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20191127084617.16937-1-david.engraf@sysgo.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <7325c440-aa55-92ce-ec74-b420fd90a24b@roeck-us.net>
-Date:   Wed, 27 Nov 2019 06:17:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191127084617.16937-1-david.engraf@sysgo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Wed, 27 Nov 2019 06:20:13 -0800 (PST)
+Date:   Wed, 27 Nov 2019 15:20:12 +0100
+From:   Vitaly Wool <vitalywool@gmail.com>
+To:     <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 0/3] z3fold fixes for intra-page compaction
+Message-Id: <20191127152012.17a4b35f9e7f6e50f9aaca9c@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; x86_64-unknown-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/27/19 12:46 AM, David Engraf wrote:
-> max77620_wdt uses watchdog core functions. Enable CONFIG_WATCHDOG_CORE
-> to fix potential build errors.
-> 
-> Signed-off-by: David Engraf <david.engraf@sysgo.com>
+This is a consolidation of z3fold stability fixes for the new intra-page
+compaction functionality.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Vitaly Wool (3):
+    z3fold: avoid subtle race when freeing slots
+    z3fold: compact objects more accurately
+    z3fold: protect handle reads
 
-> ---
->   drivers/watchdog/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 58e7c100b6ad..c9cc34f4e541 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -687,6 +687,7 @@ config MAX63XX_WATCHDOG
->   config MAX77620_WATCHDOG
->   	tristate "Maxim Max77620 Watchdog Timer"
->   	depends on MFD_MAX77620 || COMPILE_TEST
-> +	select WATCHDOG_CORE
->   	help
->   	 This is the driver for the Max77620 watchdog timer.
->   	 Say 'Y' here to enable the watchdog timer support for
-> 
-
+ mm/z3fold.c |   30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
