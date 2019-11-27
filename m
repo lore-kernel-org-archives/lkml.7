@@ -2,53 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFCEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C5AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9516C21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0A0215B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888053;
-	bh=9g0VDAiO7v6skVpYkFvuxrUHXJfpcXe6xW0ulDnGKY0=;
+	s=default; t=1574888058;
+	bh=nOASPME7oBHDUaltT3oebX6cvhcGZFVv/TX6DPCoUc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RHtv5CNUrVFtdsLWnTIYosVMFNuvFK4zapDyhRAfPkCCTT8mbh+or29qsMyr9dFJd
-	 q+9tjuf9NetMOx0kL3toj7okjWLmxNTvsQ87Bnceh54Q/GO7cKjJeKx+gYqKBWG0JI
-	 AmFy7rdQ6mjYIMsv2qoeCyootoWfkRRiNvS2fx+0=
+	b=zzmrgpcC5MHtYj4zUs3uraJaKLbpMh7h4YmhOFCuqlj4enKYKyrVcdrnV9Hje8U/D
+	 f2lw9wEcis2feDieaGIzpYkND7jR/dDs2BThD8r35RL6eB9iIWkWpYZx81ls+/doDF
+	 a+VSGXke0BbTWjiR0rFUu1pci9pjLUdwvOhGitxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbfK0UyM (ORCPT
+        id S1730481AbfK0UyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:54:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43792 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:54:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730441AbfK0UyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:54:07 -0500
+        id S1730805AbfK0UyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:54:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 498AA2086A;
-        Wed, 27 Nov 2019 20:54:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CA1E2154A;
+        Wed, 27 Nov 2019 20:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888046;
-        bh=9g0VDAiO7v6skVpYkFvuxrUHXJfpcXe6xW0ulDnGKY0=;
+        s=default; t=1574888052;
+        bh=nOASPME7oBHDUaltT3oebX6cvhcGZFVv/TX6DPCoUc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U1UTsK+ZyMfdM9jzPpgivlTF0+vbPf8AIVv4kuZ0FI3uHyC0fnmLG/p8tXHo4nMd6
-         q/9RGUak+ARrYAoZPpuKSbXfU1dt2vU49CYJO+ZSZETpVQGfB8xXUrHEj3l64uOc63
-         b/RgAydSj0cz4Ep/80HcXCsSI1S0S25fRA7vhke4=
+        b=mP6luWYD8GvtcF67o6fZs/WPwMV2aFs8mwlLTydfau+j5d8KI2KnZDWxWo5OUwDFl
+         TN6BLoEuHI9KSIl5EVGlQBcmeYEG4sESnGRFsJ9StJN/smzE8PmJCkcPMeOYGG9aBC
+         jqAnKCt/jiouLCWhtByA8o3XxLRUWk9GwGixSVF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 196/211] virtio_ring: fix return code on DMA mapping fails
-Date:   Wed, 27 Nov 2019 21:32:09 +0100
-Message-Id: <20191127203112.156790907@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Suwan Kim <suwan.kim027@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 4.14 198/211] usbip: Fix uninitialized symbol nents in stub_recv_cmd_submit()
+Date:   Wed, 27 Nov 2019 21:32:11 +0100
+Message-Id: <20191127203112.327804232@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,48 +61,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Halil Pasic <pasic@linux.ibm.com>
+From: Suwan Kim <suwan.kim027@gmail.com>
 
-[ Upstream commit f7728002c1c7bfa787b276a31c3ef458739b8e7c ]
+commit 2a9125317b247f2cf35c196f968906dcf062ae2d upstream.
 
-Commit 780bc7903a32 ("virtio_ring: Support DMA APIs")  makes
-virtqueue_add() return -EIO when we fail to map our I/O buffers. This is
-a very realistic scenario for guests with encrypted memory, as swiotlb
-may run out of space, depending on it's size and the I/O load.
+Smatch reported that nents is not initialized and used in
+stub_recv_cmd_submit(). nents is currently initialized by sgl_alloc()
+and used to allocate multiple URBs when host controller doesn't
+support scatter-gather DMA. The use of uninitialized nents means that
+buf_len is zero and use_sg is true. But buffer length should not be
+zero when an URB uses scatter-gather DMA.
 
-The virtio-blk driver interprets -EIO form virtqueue_add() as an IO
-error, despite the fact that swiotlb full is in absence of bugs a
-recoverable condition.
+To prevent this situation, add the conditional that checks buf_len
+and use_sg. And move the use of nents right after the sgl_alloc() to
+avoid the use of uninitialized nents.
 
-Let us change the return code to -ENOMEM, and make the block layer
-recover form these failures when virtio-blk encounters the condition
-described above.
+If the error occurs, it adds SDEV_EVENT_ERROR_MALLOC and stub_priv
+will be released by stub event handler and connection will be shut
+down.
 
-Cc: stable@vger.kernel.org
-Fixes: 780bc7903a32 ("virtio_ring: Support DMA APIs")
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Tested-by: Michael Mueller <mimu@linux.ibm.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ea44d190764b ("usbip: Implement SG support to vhci-hcd and stub driver")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191111141035.27788-1-suwan.kim027@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/virtio/virtio_ring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/usbip/stub_rx.c |   50 ++++++++++++++++++++++++++++----------------
+ 1 file changed, 32 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index cc9d421c0929b..b82bb0b081615 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -432,7 +432,7 @@ unmap_release:
- 		kfree(desc);
+--- a/drivers/usb/usbip/stub_rx.c
++++ b/drivers/usb/usbip/stub_rx.c
+@@ -487,18 +487,50 @@ static void stub_recv_cmd_submit(struct
+ 	if (pipe == -1)
+ 		return;
  
- 	END_USE(vq);
--	return -EIO;
-+	return -ENOMEM;
- }
++	/*
++	 * Smatch reported the error case where use_sg is true and buf_len is 0.
++	 * In this case, It adds SDEV_EVENT_ERROR_MALLOC and stub_priv will be
++	 * released by stub event handler and connection will be shut down.
++	 */
+ 	priv = stub_priv_alloc(sdev, pdu);
+ 	if (!priv)
+ 		return;
  
- /**
--- 
-2.20.1
-
+ 	buf_len = (unsigned long long)pdu->u.cmd_submit.transfer_buffer_length;
+ 
++	if (use_sg && !buf_len) {
++		dev_err(&udev->dev, "sg buffer with zero length\n");
++		goto err_malloc;
++	}
++
+ 	/* allocate urb transfer buffer, if needed */
+ 	if (buf_len) {
+ 		if (use_sg) {
+ 			sgl = sgl_alloc(buf_len, GFP_KERNEL, &nents);
+ 			if (!sgl)
+ 				goto err_malloc;
++
++			/* Check if the server's HCD supports SG */
++			if (!udev->bus->sg_tablesize) {
++				/*
++				 * If the server's HCD doesn't support SG, break
++				 * a single SG request into several URBs and map
++				 * each SG list entry to corresponding URB
++				 * buffer. The previously allocated SG list is
++				 * stored in priv->sgl (If the server's HCD
++				 * support SG, SG list is stored only in
++				 * urb->sg) and it is used as an indicator that
++				 * the server split single SG request into
++				 * several URBs. Later, priv->sgl is used by
++				 * stub_complete() and stub_send_ret_submit() to
++				 * reassemble the divied URBs.
++				 */
++				support_sg = 0;
++				num_urbs = nents;
++				priv->completed_urbs = 0;
++				pdu->u.cmd_submit.transfer_flags &=
++								~URB_DMA_MAP_SG;
++			}
+ 		} else {
+ 			buffer = kzalloc(buf_len, GFP_KERNEL);
+ 			if (!buffer)
+@@ -506,24 +538,6 @@ static void stub_recv_cmd_submit(struct
+ 		}
+ 	}
+ 
+-	/* Check if the server's HCD supports SG */
+-	if (use_sg && !udev->bus->sg_tablesize) {
+-		/*
+-		 * If the server's HCD doesn't support SG, break a single SG
+-		 * request into several URBs and map each SG list entry to
+-		 * corresponding URB buffer. The previously allocated SG
+-		 * list is stored in priv->sgl (If the server's HCD support SG,
+-		 * SG list is stored only in urb->sg) and it is used as an
+-		 * indicator that the server split single SG request into
+-		 * several URBs. Later, priv->sgl is used by stub_complete() and
+-		 * stub_send_ret_submit() to reassemble the divied URBs.
+-		 */
+-		support_sg = 0;
+-		num_urbs = nents;
+-		priv->completed_urbs = 0;
+-		pdu->u.cmd_submit.transfer_flags &= ~URB_DMA_MAP_SG;
+-	}
+-
+ 	/* allocate urb array */
+ 	priv->num_urbs = num_urbs;
+ 	priv->urbs = kmalloc_array(num_urbs, sizeof(*priv->urbs), GFP_KERNEL);
 
 
