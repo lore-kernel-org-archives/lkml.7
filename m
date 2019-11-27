@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AAFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971A7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFAB21775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB1821783
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887141;
-	bh=DeFJWPhFtF9RPI2zIaWSc+XHgGD8AYSBWHu+7NqVOKc=;
+	s=default; t=1574887143;
+	bh=gla/T9epZxieOxWiss8ElTZqXZOTcBewGKHUizRHzyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVGQYeqcL3kbn1HkixKerkb37ouZHzNIB7L2TcBTLHVvJe8zToiGjKcoBJeqOZmke
-	 MLzj4NPfLC93FvK8AouLOTYNTKtgqipw6NWpEUC49evqfnuqiMvv8FHVvl479tOjGk
-	 M94x/hph3fWy6NQ3HvXX0FzgYS2vMMAm70gYlvUw=
+	b=s2WT9+OBWr0CbW1ljJVRVXHei+x9zZEg5F2vXHjjkE09C/uY4Ij7fTeqYGw1sDjC2
+	 cSthf5hTcLMRHDWKHhjiR/VL0h7XINsKZvVzNvPuz4oa0/f6tsuSV4pEWm940F2bHq
+	 Wkw03qurWAFQzJz94BmiLPhZgdc4+9BY/FQ0lAME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbfK0Ui7 (ORCPT
+        id S1728021AbfK0UjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:38:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42908 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:39:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727991AbfK0Ui5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:38:57 -0500
+        id S1728848AbfK0UjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:39:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 226D320863;
-        Wed, 27 Nov 2019 20:38:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D5CF20863;
+        Wed, 27 Nov 2019 20:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887136;
-        bh=DeFJWPhFtF9RPI2zIaWSc+XHgGD8AYSBWHu+7NqVOKc=;
+        s=default; t=1574887139;
+        bh=gla/T9epZxieOxWiss8ElTZqXZOTcBewGKHUizRHzyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lylViujUogB8qN1rjpqowVHBCRVIzVkfl1VVq/m2qVvlICNShPErT70BT7wC9qehi
-         hfi4BrIHj7fZuiptb4JKjqZT81DO061U+VXUbr3K4UknTEee0F/0GWIRmGOeiyQTbf
-         jrf38TM0e2b6xGKIt2qT1awnM9g0DKv+V3S3ylP4=
+        b=wrMuV/NBgn8Tc9CQ5d1pHxqD64Zm9aGXHAm3q7q+b22j22nlouagBI3PXBFJv2fK2
+         S+Kg6GGauBNcH3nWi6Dw2KZ9JwwF6iHqWmlhSInJ9TgB5Xju+o6DsUi2c8K/uMXNdJ
+         iYwf5IgnjzuJz1E6nn0z9JJ/Qu0pkiNxhF7H1lUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 128/132] USB: serial: option: add support for Foxconn T77W968 LTE modules
-Date:   Wed, 27 Nov 2019 21:31:59 +0100
-Message-Id: <20191127203033.950163850@linuxfoundation.org>
+        stable@vger.kernel.org, Bernd Porr <mail@berndporr.me.uk>,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.4 129/132] staging: comedi: usbduxfast: usbduxfast_ai_cmdtest rounding error
+Date:   Wed, 27 Nov 2019 21:32:00 +0100
+Message-Id: <20191127203034.120669234@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -60,61 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksander Morgado <aleksander@aleksander.es>
+From: Bernd Porr <mail@berndporr.me.uk>
 
-commit f0797095423e6ea3b4be61134ee353c7f504d440 upstream.
+commit 5618332e5b955b4bff06d0b88146b971c8dd7b32 upstream.
 
-These are the Foxconn-branded variants of the Dell DW5821e modules,
-same USB layout as those. The device exposes AT, NMEA and DIAG ports
-in both USB configurations.
+The userspace comedilib function 'get_cmd_generic_timed' fills
+the cmd structure with an informed guess and then calls the
+function 'usbduxfast_ai_cmdtest' in this driver repeatedly while
+'usbduxfast_ai_cmdtest' is modifying the cmd struct until it
+no longer changes. However, because of rounding errors this never
+converged because 'steps = (cmd->convert_arg * 30) / 1000' and then
+back to 'cmd->convert_arg = (steps * 1000) / 30' won't be the same
+because of rounding errors. 'Steps' should only be converted back to
+the 'convert_arg' if 'steps' has actually been modified. In addition
+the case of steps being 0 wasn't checked which is also now done.
 
-P:  Vendor=0489 ProdID=e0b4 Rev=03.18
-S:  Manufacturer=FII
-S:  Product=T77W968 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-
-P:  Vendor=0489 ProdID=e0b4 Rev=03.18
-S:  Manufacturer=FII
-S:  Product=T77W968 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 7 Cfg#= 2 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
-I:  If#=0x1 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x6 Alt= 0 #EPs= 1 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-
-Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
-[ johan: drop id defines ]
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Bernd Porr <mail@berndporr.me.uk>
+Cc: <stable@vger.kernel.org> # 4.4+
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20191118230759.1727-1-mail@berndporr.me.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/staging/comedi/drivers/usbduxfast.c |   21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1990,6 +1990,10 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x13) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x14) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0xa31d, 0xff, 0x06, 0x1b) },
-+	{ USB_DEVICE(0x0489, 0xe0b4),						/* Foxconn T77W968 */
-+	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
-+	{ USB_DEVICE(0x0489, 0xe0b5),						/* Foxconn T77W968 ESIM */
-+	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
- 	{ USB_DEVICE(0x1508, 0x1001),						/* Fibocom NL668 */
- 	  .driver_info = RSVD(4) | RSVD(5) | RSVD(6) },
- 	{ USB_DEVICE(0x2cb7, 0x0104),						/* Fibocom NL678 series */
+--- a/drivers/staging/comedi/drivers/usbduxfast.c
++++ b/drivers/staging/comedi/drivers/usbduxfast.c
+@@ -1,5 +1,5 @@
+ /*
+- *  Copyright (C) 2004-2014 Bernd Porr, mail@berndporr.me.uk
++ *  Copyright (C) 2004-2019 Bernd Porr, mail@berndporr.me.uk
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -17,7 +17,7 @@
+  * Description: University of Stirling USB DAQ & INCITE Technology Limited
+  * Devices: [ITL] USB-DUX-FAST (usbduxfast)
+  * Author: Bernd Porr <mail@berndporr.me.uk>
+- * Updated: 10 Oct 2014
++ * Updated: 16 Nov 2019
+  * Status: stable
+  */
+ 
+@@ -31,6 +31,7 @@
+  *
+  *
+  * Revision history:
++ * 1.0: Fixed a rounding error in usbduxfast_ai_cmdtest
+  * 0.9: Dropping the first data packet which seems to be from the last transfer.
+  *      Buffer overflows in the FX2 are handed over to comedi.
+  * 0.92: Dropping now 4 packets. The quad buffer has to be emptied.
+@@ -359,6 +360,7 @@ static int usbduxfast_ai_cmdtest(struct
+ 				 struct comedi_cmd *cmd)
+ {
+ 	int err = 0;
++	int err2 = 0;
+ 	unsigned int steps;
+ 	unsigned int arg;
+ 
+@@ -408,11 +410,16 @@ static int usbduxfast_ai_cmdtest(struct
+ 	 */
+ 	steps = (cmd->convert_arg * 30) / 1000;
+ 	if (cmd->chanlist_len !=  1)
+-		err |= comedi_check_trigger_arg_min(&steps,
+-						    MIN_SAMPLING_PERIOD);
+-	err |= comedi_check_trigger_arg_max(&steps, MAX_SAMPLING_PERIOD);
+-	arg = (steps * 1000) / 30;
+-	err |= comedi_check_trigger_arg_is(&cmd->convert_arg, arg);
++		err2 |= comedi_check_trigger_arg_min(&steps,
++						     MIN_SAMPLING_PERIOD);
++	else
++		err2 |= comedi_check_trigger_arg_min(&steps, 1);
++	err2 |= comedi_check_trigger_arg_max(&steps, MAX_SAMPLING_PERIOD);
++	if (err2) {
++		err |= err2;
++		arg = (steps * 1000) / 30;
++		err |= comedi_check_trigger_arg_is(&cmd->convert_arg, arg);
++	}
+ 
+ 	if (cmd->stop_src == TRIG_COUNT)
+ 		err |= comedi_check_trigger_arg_min(&cmd->stop_arg, 1);
 
 
