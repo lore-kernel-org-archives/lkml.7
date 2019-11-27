@@ -2,109 +2,59 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18117C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE90C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFD42071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:08:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUq1DwyF"
+	by mail.kernel.org (Postfix) with ESMTP id 793432071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 02:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfK0CIT (ORCPT
+        id S1726618AbfK0CPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 21:08:19 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44834 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfK0CIS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 21:08:18 -0500
-Received: by mail-io1-f66.google.com with SMTP id j20so22933772ioo.11;
-        Tue, 26 Nov 2019 18:08:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vc2RxzN2G+Q75lUn7LwY1ASPWwSzMQXp8gM6PX3LxHU=;
-        b=MUq1DwyFLOs5oP/HPRxbiUmvBRCGi00NAYxgMtw9cNV4kc/gsWKSDdfCFjeGPmus6H
-         2i1p2w11dkD6ew0foxbMCNrxeAv0o5rVDj6S+o1JOYNdwtA8qTDWNj+bA0qoaV4aB8Il
-         qDvCvbikGz4UbXAxAPIqLD+EsF8r5m5UrizYYxdco2vNHaNZhEyRDRB9RLgAgXUAr7wo
-         zeMPRSPydacfEu2/2lXr/x70/yCcQtlsT+9KgDVDU0aukPTQ4BWIcn3AVK8AI6xSL18p
-         TK/4rnhsa+SbgCBsLdmU6dsNSqXtH7CSoBe3WcBuKJ+fHrk8Efw6PH/dkzNXPSJVwVYc
-         1U5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vc2RxzN2G+Q75lUn7LwY1ASPWwSzMQXp8gM6PX3LxHU=;
-        b=LLlMmDaf9qjkDA0WIJEIkTPpPSEgCruBNisx2akJuINGfAKHXWMVi/0zWDZKddLZQn
-         3paEFJ3rc4barLobaNPyaYQxsikixr0FYQfhwLDnEvso0kZ+gpqmTrKbcjR1pAesWbkd
-         BMAPfSVs/+qGBbBpJWEqNxrs1H+a5A3r7F8aYhRxl11S+B83QVsikqdloo94oXyy7gcO
-         jO4UfP1b28QDBYT2QLNxsNahQwYDP1f7bp6qB3OvxPu56uYe0YDQQDdQ9JNVytfHl0ZG
-         PLS552dzhhNTGa1r1p+qQRLzTbKR68r3oHwdnEKS+f2UVWBpBmyWMsipb2gJBSO+SeZr
-         uJmw==
-X-Gm-Message-State: APjAAAVLIk50YllBynl5cepTsPngGnofKrxdaoxCmuKb+/E/pmzyW+jJ
-        ORQcJ9+XbYVT9qnlGs2pM+RUNyum155h9HF4pnCthbtj
-X-Google-Smtp-Source: APXvYqwyoWWy58G5bSBNPoIYQD18Fo7FWvbwcQwpfoceQP7ZSktqeABnXZXWg/Ea9zWlc2S8EfouR8Bxy2CXpETfR/k=
-X-Received: by 2002:a05:6638:2b1:: with SMTP id d17mr1970514jaq.3.1574820496639;
- Tue, 26 Nov 2019 18:08:16 -0800 (PST)
+        Tue, 26 Nov 2019 21:15:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbfK0CPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 21:15:33 -0500
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CB992071A;
+        Wed, 27 Nov 2019 02:15:31 +0000 (UTC)
+Date:   Tue, 26 Nov 2019 21:15:30 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     shuah <shuah@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH v4 2/4] selftests/ftrace: Fix ftrace test cases
+ to check unsupported
+Message-ID: <20191126211530.79a3d8f4@oasis.local.home>
+In-Reply-To: <cc4c66dd-6f9d-6763-8172-02235e8e60ae@kernel.org>
+References: <157475724667.3389.15752644047898709246.stgit@devnote2>
+        <157475726452.3389.3778488615487716476.stgit@devnote2>
+        <20191126124901.22ae2f9f@gandalf.local.home>
+        <20191127083123.0257d2c450bfd87b0691300d@kernel.org>
+        <cc4c66dd-6f9d-6763-8172-02235e8e60ae@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191029124211.15052-1-aford173@gmail.com>
-In-Reply-To: <20191029124211.15052-1-aford173@gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 26 Nov 2019 20:08:05 -0600
-Message-ID: <CAHCN7xKAJ3koJc1H2zyGFG3J6qu+uw0jozT=pQ_0i8HStX5TbQ@mail.gmail.com>
-Subject: Re: [PATCH] media: ov5640: Fix check for PLL1 exceeding max allowed rate
-To:     linux-media <linux-media@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 7:42 AM Adam Ford <aford173@gmail.com> wrote:
->
-> The variable _rate is by ov5640_compute_sys_clk() which returns
-> zero if the PLL exceeds 1GHz.  Unfortunately, the check to see
-> if the max PLL1 output is checking 'rate' and not '_rate' and
-> 'rate' does not ever appear to be 0.
->
-> This patch changes the check against the returned value of
-> '_rate' to determine if the PLL1 output exceeds 1GHz.
->
-> Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
->
+On Tue, 26 Nov 2019 16:50:54 -0700
+shuah <shuah@kernel.org> wrote:
 
-I haven't seen any responses to this patch.  Has anyone had a chance
-to review this?  It's been nearly a month.
-I think it would be appropriate to backport to stable if deemed acceptable.
+> No worries. Take your time. I won't pull in until things settle down.
+> I noticed Steve gave you review comments.
 
-adam
+Masami's last patch should be good to go.
 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
->
-> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> index 5e495c833d32..bb968e764f31 100644
-> --- a/drivers/media/i2c/ov5640.c
-> +++ b/drivers/media/i2c/ov5640.c
-> @@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
->                          * We have reached the maximum allowed PLL1 output,
->                          * increase sysdiv.
->                          */
-> -                       if (!rate)
-> +                       if (!_rate)
->                                 break;
->
->                         /*
-> --
-> 2.17.1
->
+Thanks Shuah,
+
+-- Steve
