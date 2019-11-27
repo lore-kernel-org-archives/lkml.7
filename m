@@ -2,130 +2,94 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D83C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61209C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287822084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:14:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MJV43Ktf"
+	by mail.kernel.org (Postfix) with ESMTP id 401BD2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfK0MOG (ORCPT
+        id S1726858AbfK0MO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 07:14:06 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36827 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfK0MOF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 07:14:05 -0500
-Received: by mail-pf1-f193.google.com with SMTP id b19so10916160pfd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 04:14:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7BbLhqWTTG2Etn1jUokhvCpbFC9M+0mSaR7SHkjHB38=;
-        b=MJV43KtfU5dh6w6aXoZKp8+WYygfis1sjvm07Kl9Wd2wNneinEn9vQZrPavzQrE2CW
-         An4nyqIzxlGj2Uo04rQvD5QQ8E2bKZvL3K7REcobBBGj+ZIeP45pAwN51u05YbYjMYpI
-         k0cJPlotmo9gi6yJxu6kZX7dwVfqaZoZ0xos/iPV1VMqs84HRBSw0mfakGzaZU7YJjT7
-         /enzk9H6qXC02B3XolxZ9hyB0j/3AKfz03WOdPpltou7SEkO3bdeCatGXYnCp3Nml1f+
-         Px8qwJrGFvmCqWMZvTF+k1Vcxj8wZf+r6TJgOp3FB3DagUvJWrOycjBoRDKl7DkFqDGF
-         PtXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7BbLhqWTTG2Etn1jUokhvCpbFC9M+0mSaR7SHkjHB38=;
-        b=kPxSk9fBFpXXUxgklfrpo+rjT8crrF6dARr7uAA0TmkF4ljActR2XurGEtNey6+dTk
-         7YNe8BWQvPnoLJtfzIV8M4DFddU2Fx5jXlocpnxZjxNrx5226SxqDWSHVnSldOdvFsit
-         xHP2LG50Tit9YgeEgATScK4tYhQQVFCVS0PrsEluY7QwM2rdpOQA2Jr8LsH91nY0mjDX
-         a80TXueh06uPw1Stitf8cLGgqMVdwWH5I3npC9bgrPbgZ60TCqF8BvS3kYiL6as8blW7
-         YZOnW7gwt2NtESANKyg4O3/PNBFxxgxXw/upEVfBVI7IzO7geCYiVmNoe23culx02dJa
-         p61A==
-X-Gm-Message-State: APjAAAXTEqL+ZUou2y9BgQJMnEleT4eF3WHB/OQK0GMQBVuIV4+1Cz+H
-        eVsAAqYcN9jsVGpl3Hu7uTrGWg==
-X-Google-Smtp-Source: APXvYqwzOguWLwbfuOMSUTEFzH0IEWbfLeEU8s4GwdBdvUFeC/cQe/AC6XVbhE9JsWqq2Fvg6hcDAw==
-X-Received: by 2002:a62:2a4c:: with SMTP id q73mr46113496pfq.94.1574856844848;
-        Wed, 27 Nov 2019 04:14:04 -0800 (PST)
-Received: from localhost ([122.171.112.123])
-        by smtp.gmail.com with ESMTPSA id z10sm16126812pgg.39.2019.11.27.04.14.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Nov 2019 04:14:04 -0800 (PST)
-Date:   Wed, 27 Nov 2019 17:44:02 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: vexpress-spc: Fix wrong alternation of
- policy->related_cpus during CPU hp
-Message-ID: <20191127121402.vd3tul4gmqm6qtyb@vireshk-i7>
-References: <20191127114801.23837-1-dietmar.eggemann@arm.com>
- <20191127120816.GC29301@bogus>
+        Wed, 27 Nov 2019 07:14:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54400 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726515AbfK0MO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 07:14:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C33C1ADB3;
+        Wed, 27 Nov 2019 12:14:25 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 6649CDA733; Wed, 27 Nov 2019 13:14:23 +0100 (CET)
+Date:   Wed, 27 Nov 2019 13:14:23 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] btrfs: Increase buffer size for zlib functions
+Message-ID: <20191127121423.GQ2734@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Josef Bacik <josef@toxicpanda.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191126144130.75710-1-zaslonko@linux.ibm.com>
+ <20191126144130.75710-6-zaslonko@linux.ibm.com>
+ <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191127120816.GC29301@bogus>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-11-19, 12:08, Sudeep Holla wrote:
-> On Wed, Nov 27, 2019 at 12:48:01PM +0100, Dietmar Eggemann wrote:
-> > Since commit ca74b316df96 ("arm: Use common cpu_topology structure and
-> > functions.") the core cpumask has to be modified during cpu hotplug
-> > operations.
-> >
-> > ("arm: Fix topology setup in case of CPU hotplug for CONFIG_SCHED_MC")
-> > [1] fixed that but revealed another issue on TC2, i.e in its cpufreq
-> > driver.
-> >
-> > During CPU hp stress operations on multiple CPUs, policy->related_cpus
-> > can be altered. This is wrong since this cpumask should contain the
-> > online and offline CPUs.
-> >
-> > The WARN_ON(!cpumask_test_cpu(cpu, policy->related_cpus)) in
-> > cpufreq_online() triggers in this case.
-> >
-> > The core cpumask can't be used to set the policy->cpus in
-> > ve_spc_cpufreq_init() anymore in case it is called via
-> > cpuhp_cpufreq_online()->cpufreq_online()->cpufreq_driver->init().
-> >
-> > An empty online() callback can be used to avoid that the init()
-> > driver function is called during CPU hotplug in so that
-> > policy->related_cpus will not be changed.
-> >
+On Tue, Nov 26, 2019 at 10:52:49AM -0500, Josef Bacik wrote:
+> On Tue, Nov 26, 2019 at 03:41:30PM +0100, Mikhail Zaslonko wrote:
+> > Due to the small size of zlib buffer (1 page) set in btrfs code, s390
+> > hardware compression is rather limited in terms of performance. Increasing
+> > the buffer size to 4 pages would bring significant benefit for s390
+> > hardware compression (up to 60% better performance compared to the
+> > PAGE_SIZE buffer) and should not bring much overhead in terms of memory
+> > consumption due to order 2 allocations.
+> > 
+> > Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
 > 
-> Unlike DT based drivers, it not easy to get the fixed cpumask unless we
-> add some mechanism to extract it based on clks/OPP added. I prefer
-> this simple solution instead.
+> We may have to make these allocations under memory pressure in the IO context,
+> order 2 allocations here is going to be not awesome.  If you really want it then
+> you need to at least be able to fall back to single page if you fail to get the
+> allocation.  Thanks,
 
-I will call this a work-around for the problem and not really the
-solution, though I won't necessarily oppose it. There are cases which
-will break even with this solution.
+The allocation is only for the workspace and it does not happen on the
+IO path for each call. There's the pool and if
 
-- Boot board with cpufreq driver as module.
-- Offline all CPUs except CPU0.
-- insert cpufreq driver.
-- online all CPUs.
+btrfs_get_workspace
+  alloc_workspace
 
-Now there is no guarantee that the last online will get the mask
-properly, if I have understood the problem well :)
+fails, then there's fallback path to wait for an existing workspace to
+be free.
 
-But yeah, who does this kind of messy work anyway :)
+The order 2 allocation can put more pressure on the allocator though so
+it's possible to have effects in some corner cases, but not in general.
+I don't think the single page fallback code is needed.
 
-FWIW, we need a proper way (may be from architecture code) to find
-list of all CPUs that share clock line.
-
--- 
-viresh
+And of course evaluation of the effects of the larger zlib buffer should
+be done, it could improve compression but probably at the cost of cpu
+time. Also decompression of blocks created on new code (4 pages) must
+work on the old code (1 page).
