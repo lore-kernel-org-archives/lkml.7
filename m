@@ -2,114 +2,132 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00547C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8142C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4DA220665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69F720665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574890255;
+	bh=blL2aDoHMdLG65fkrbWhUYWBxVjCgv/p6v3dzAKgrRQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MBXZvXjDjPxXJaB28/PWA1T46B6UlosCwm/SMdoC7nY+QTaa564Q361+n28EencUS
+	 5FLmUiJaVRwdKceDPJU3c99Bwt961dbsWz1YKrA+G6Jtv9KHoBd9Csm6iW/0+x50qM
+	 PzTGmFhg8pM/7cGItB1UotRoTfUXkN8qEky8xtyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731478AbfK0Vap (ORCPT
+        id S1728309AbfK0UzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:30:45 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36718 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730315AbfK0Vam (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:30:42 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 6ECFA1C228B; Wed, 27 Nov 2019 22:30:38 +0100 (CET)
-Date:   Wed, 27 Nov 2019 22:30:37 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v2 11/12] ACPI/sleep: Convert acpi_wakeup_address into a
- function
-Message-ID: <20191127213037.GB20612@amd>
-References: <20191126165417.22423-1-sean.j.christopherson@intel.com>
- <20191126165417.22423-12-sean.j.christopherson@intel.com>
+        Wed, 27 Nov 2019 15:55:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730937AbfK0UzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:55:16 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B5232070B;
+        Wed, 27 Nov 2019 20:55:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574888115;
+        bh=blL2aDoHMdLG65fkrbWhUYWBxVjCgv/p6v3dzAKgrRQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l8xtkeL5mBBWqLctjXyfCJY9K0NZPBMLJLtPhoIguc9Ouhf6eOO4EBItB7FEIsS1+
+         Ul+1EW1469TtwmdZhmQeTtp2dTNrOWSMuuSI2sFK4bmxOCJHLzhg+CWE3OSxv17CRH
+         cFjqlzlLnrwNyVX9M9m2T9g0o5Uiixb1Iv+ZsbLg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 003/306] net/mlx4_en: Fix wrong limitation for number of TX rings
+Date:   Wed, 27 Nov 2019 21:27:33 +0100
+Message-Id: <20191127203115.010578056@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
+References: <20191127203114.766709977@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
-Content-Disposition: inline
-In-Reply-To: <20191126165417.22423-12-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tariq Toukan <tariqt@mellanox.com>
 
---ZfOjI3PrQbgiZnxM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 2744bf42680f64ebf2ee8a00354897857c073331 ]
 
-On Tue 2019-11-26 08:54:16, Sean Christopherson wrote:
-> Convert acpi_wakeup_address from a raw variable into a function so that
-> x86 can wrap its dereference of the real mode boot header in a function
-> instead of broadcasting it to the world via a #define.  This sets the
-> stage for a future patch to move x86's definition of the new function,
-> acpi_get_wakeup_address(), out of asm/acpi.h and thus break acpi.h's
-> dependency on asm/realmode.h.
->=20
-> No functional change intended.
->=20
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+XDP_TX rings should not be limited by max_num_tx_rings_p_up.
+To make sure total number of TX rings never exceed MAX_TX_RINGS,
+add similar check in mlx4_en_alloc_tx_queue_per_tc(), where
+a new value is assigned for num_up.
 
-Thanks!
+Fixes: 7e1dc5e926d5 ("net/mlx4_en: Limit the number of TX rings")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/mellanox/mlx4/en_ethtool.c |    8 ++++----
+ drivers/net/ethernet/mellanox/mlx4/en_netdev.c  |    9 +++++++++
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+--- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
+@@ -1812,6 +1812,7 @@ static int mlx4_en_set_channels(struct n
+ 	struct mlx4_en_dev *mdev = priv->mdev;
+ 	struct mlx4_en_port_profile new_prof;
+ 	struct mlx4_en_priv *tmp;
++	int total_tx_count;
+ 	int port_up = 0;
+ 	int xdp_count;
+ 	int err = 0;
+@@ -1826,13 +1827,12 @@ static int mlx4_en_set_channels(struct n
+ 
+ 	mutex_lock(&mdev->state_lock);
+ 	xdp_count = priv->tx_ring_num[TX_XDP] ? channel->rx_count : 0;
+-	if (channel->tx_count * priv->prof->num_up + xdp_count >
+-	    priv->mdev->profile.max_num_tx_rings_p_up * priv->prof->num_up) {
++	total_tx_count = channel->tx_count * priv->prof->num_up + xdp_count;
++	if (total_tx_count > MAX_TX_RINGS) {
+ 		err = -EINVAL;
+ 		en_err(priv,
+ 		       "Total number of TX and XDP rings (%d) exceeds the maximum supported (%d)\n",
+-		       channel->tx_count * priv->prof->num_up  + xdp_count,
+-		       MAX_TX_RINGS);
++		       total_tx_count, MAX_TX_RINGS);
+ 		goto out;
+ 	}
+ 
+--- a/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
+@@ -92,6 +92,7 @@ int mlx4_en_alloc_tx_queue_per_tc(struct
+ 	struct mlx4_en_dev *mdev = priv->mdev;
+ 	struct mlx4_en_port_profile new_prof;
+ 	struct mlx4_en_priv *tmp;
++	int total_count;
+ 	int port_up = 0;
+ 	int err = 0;
+ 
+@@ -105,6 +106,14 @@ int mlx4_en_alloc_tx_queue_per_tc(struct
+ 				      MLX4_EN_NUM_UP_HIGH;
+ 	new_prof.tx_ring_num[TX] = new_prof.num_tx_rings_p_up *
+ 				   new_prof.num_up;
++	total_count = new_prof.tx_ring_num[TX] + new_prof.tx_ring_num[TX_XDP];
++	if (total_count > MAX_TX_RINGS) {
++		err = -EINVAL;
++		en_err(priv,
++		       "Total number of TX and XDP rings (%d) exceeds the maximum supported (%d)\n",
++		       total_count, MAX_TX_RINGS);
++		goto out;
++	}
+ 	err = mlx4_en_try_alloc_resources(priv, tmp, &new_prof, true);
+ 	if (err)
+ 		goto out;
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---ZfOjI3PrQbgiZnxM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3e6v0ACgkQMOfwapXb+vIvKgCgj+csmgRVJU3LjSgRtQ9xs4OL
-1n8An0cFCD4JerAugYVERVISU8Tw+N8s
-=cvdZ
------END PGP SIGNATURE-----
-
---ZfOjI3PrQbgiZnxM--
