@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57E3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2DBC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930C8215F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A60D2178F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889020;
-	bh=m+9gLKLJPVKmbMVfTrjUnkZTGNhO4OvqC2oDE5gvC5o=;
+	s=default; t=1574889022;
+	bh=Lm3tkdQR5+KE9wfD6jeQJJF/nlpNrVgcbeXGht6aZa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Imz13KE6+kdzwu6LYLV3/1H5Y9bz14l18hmTo3o9hXs1+Lhnsjpse8nuO4NkjEs9F
-	 pVe+N5/G0b0O+hGkyCs9mbzc67D19/xqqpveZWH/+H87ZHltB6SDQSRurnnOd3k/Xh
-	 4p6XE7PJyPoBr/jQaSK6DM2H2Qi+xKfokGXGFma0=
+	b=Xpi8b5m0yqwahSOUcpJsixyhxvjcRDIPXird9qFyZwXLGEzPWSbapHEitbHbI7jQO
+	 0nHXpGhjxoJh5PAYc99O9OY23sK/oFE2fpSWmWg4Ha9z57/nyieVSuEueUcBwrUutu
+	 WEWNk+tLUkBvI4VuL94eXgQIk7u83udmCWj977RM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732624AbfK0VKT (ORCPT
+        id S1733022AbfK0VKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:10:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37264 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:10:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732996AbfK0VKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:10:14 -0500
+        id S1733009AbfK0VKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:10:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1C10215F1;
-        Wed, 27 Nov 2019 21:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 646FB215E5;
+        Wed, 27 Nov 2019 21:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889014;
-        bh=m+9gLKLJPVKmbMVfTrjUnkZTGNhO4OvqC2oDE5gvC5o=;
+        s=default; t=1574889016;
+        bh=Lm3tkdQR5+KE9wfD6jeQJJF/nlpNrVgcbeXGht6aZa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V1nPJkuCEsaqstC7ZrLenH2hXGt7MZVJ0Az/1younoBpzkNsqI129S9CpMJCpfX5W
-         X2UDMV8gV0oRKLvKWplKRb85Ei6ZqmIiIw/bvjwLdblrxynN47gThr3FmKqSu1dUFM
-         T1kEl3zhR0MMm5cmBZyXQEaaBxzTpA0iciz9i+ds=
+        b=z3DMhgJAe8uC78+zujkEQe8EAt1jSJem4xRajbrcTXu7L2VKHSIXNRvpJooDcRlhu
+         u8HvqSo5x05+iIgeGI7yi8Oxj/oJJfLzOcDfH0/uuTP+lAkdHQDd0e0RqHpMHHkUZR
+         eq5TUXvfgwFIdBNYYPNtPZOlnU73EnqVf13BJZpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Pittman <jpittman@redhat.com>,
-        David Jeffery <djeffery@redhat.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.3 43/95] md/raid10: prevent access of uninitialized resync_pages offset
-Date:   Wed, 27 Nov 2019 21:32:00 +0100
-Message-Id: <20191127202908.779733578@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 5.3 52/95] x86/xen/32: Make xen_iret_crit_fixup() independent of frame layout
+Date:   Wed, 27 Nov 2019 21:32:09 +0100
+Message-Id: <20191127202918.358119566@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -61,40 +60,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Pittman <jpittman@redhat.com>
+From: Jan Beulich <jbeulich@suse.com>
 
-commit 45422b704db392a6d79d07ee3e3670b11048bd53 upstream.
+commit 29b810f5a5ec127d3143770098e05981baa3eb77 upstream.
 
-Due to unneeded multiplication in the out_free_pages portion of
-r10buf_pool_alloc(), when using a 3-copy raid10 layout, it is
-possible to access a resync_pages offset that has not been
-initialized.  This access translates into a crash of the system
-within resync_free_pages() while passing a bad pointer to
-put_page().  Remove the multiplication, preventing access to the
-uninitialized area.
+Now that SS:ESP always get saved by SAVE_ALL, this also needs to be
+accounted for in xen_iret_crit_fixup(). Otherwise the old_ax value gets
+interpreted as EFLAGS, and hence VM86 mode appears to be active all the
+time, leading to random "vm86_32: no user_vm86: BAD" log messages alongside
+processes randomly crashing.
 
-Fixes: f0250618361db ("md: raid10: don't use bio's vec table to manage resync pages")
-Cc: stable@vger.kernel.org # 4.12+
-Signed-off-by: John Pittman <jpittman@redhat.com>
-Suggested-by: David Jeffery <djeffery@redhat.com>
-Reviewed-by: Laurence Oberman <loberman@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Since following the previous model (sitting after SAVE_ALL) would further
+complicate the code _and_ retain the dependency of xen_iret_crit_fixup() on
+frame manipulations done by entry_32.S, switch things around and do the
+adjustment ahead of SAVE_ALL.
+
+Fixes: 3c88c692c287 ("x86/stackframe/32: Provide consistent pt_regs")
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: Stable Team <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/32d8713d-25a7-84ab-b74b-aa3e88abce6b@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid10.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/entry/entry_32.S |   22 +++++---------
+ arch/x86/xen/xen-asm_32.S |   70 +++++++++++++++++-----------------------------
+ 2 files changed, 35 insertions(+), 57 deletions(-)
 
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -191,7 +191,7 @@ static void * r10buf_pool_alloc(gfp_t gf
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1341,11 +1341,6 @@ END(spurious_interrupt_bug)
  
- out_free_pages:
- 	while (--j >= 0)
--		resync_free_pages(&rps[j * 2]);
-+		resync_free_pages(&rps[j]);
+ #ifdef CONFIG_XEN_PV
+ ENTRY(xen_hypervisor_callback)
+-	pushl	$-1				/* orig_ax = -1 => not a system call */
+-	SAVE_ALL
+-	ENCODE_FRAME_POINTER
+-	TRACE_IRQS_OFF
+-
+ 	/*
+ 	 * Check to see if we got the event in the critical
+ 	 * region in xen_iret_direct, after we've reenabled
+@@ -1353,16 +1348,17 @@ ENTRY(xen_hypervisor_callback)
+ 	 * iret instruction's behaviour where it delivers a
+ 	 * pending interrupt when enabling interrupts:
+ 	 */
+-	movl	PT_EIP(%esp), %eax
+-	cmpl	$xen_iret_start_crit, %eax
++	cmpl	$xen_iret_start_crit, (%esp)
+ 	jb	1f
+-	cmpl	$xen_iret_end_crit, %eax
++	cmpl	$xen_iret_end_crit, (%esp)
+ 	jae	1f
+-
+-	jmp	xen_iret_crit_fixup
+-
+-ENTRY(xen_do_upcall)
+-1:	mov	%esp, %eax
++	call	xen_iret_crit_fixup
++1:
++	pushl	$-1				/* orig_ax = -1 => not a system call */
++	SAVE_ALL
++	ENCODE_FRAME_POINTER
++	TRACE_IRQS_OFF
++	mov	%esp, %eax
+ 	call	xen_evtchn_do_upcall
+ #ifndef CONFIG_PREEMPT
+ 	call	xen_maybe_preempt_hcall
+--- a/arch/x86/xen/xen-asm_32.S
++++ b/arch/x86/xen/xen-asm_32.S
+@@ -126,10 +126,9 @@ hyper_iret:
+ 	.globl xen_iret_start_crit, xen_iret_end_crit
  
- 	j = 0;
- out_free_bio:
+ /*
+- * This is called by xen_hypervisor_callback in entry.S when it sees
++ * This is called by xen_hypervisor_callback in entry_32.S when it sees
+  * that the EIP at the time of interrupt was between
+- * xen_iret_start_crit and xen_iret_end_crit.  We're passed the EIP in
+- * %eax so we can do a more refined determination of what to do.
++ * xen_iret_start_crit and xen_iret_end_crit.
+  *
+  * The stack format at this point is:
+  *	----------------
+@@ -138,34 +137,23 @@ hyper_iret:
+  *	 eflags		}  outer exception info
+  *	 cs		}
+  *	 eip		}
+- *	---------------- <- edi (copy dest)
+- *	 eax		:  outer eax if it hasn't been restored
+  *	----------------
+- *	 eflags		}  nested exception info
+- *	 cs		}   (no ss/esp because we're nested
+- *	 eip		}    from the same ring)
+- *	 orig_eax	}<- esi (copy src)
+- *	 - - - - - - - -
+- *	 fs		}
+- *	 es		}
+- *	 ds		}  SAVE_ALL state
+- *	 eax		}
+- *	  :		:
+- *	 ebx		}<- esp
++ *	 eax		:  outer eax if it hasn't been restored
+  *	----------------
++ *	 eflags		}
++ *	 cs		}  nested exception info
++ *	 eip		}
++ *	 return address	: (into xen_hypervisor_callback)
+  *
+- * In order to deliver the nested exception properly, we need to shift
+- * everything from the return addr up to the error code so it sits
+- * just under the outer exception info.  This means that when we
+- * handle the exception, we do it in the context of the outer
+- * exception rather than starting a new one.
++ * In order to deliver the nested exception properly, we need to discard the
++ * nested exception frame such that when we handle the exception, we do it
++ * in the context of the outer exception rather than starting a new one.
+  *
+- * The only caveat is that if the outer eax hasn't been restored yet
+- * (ie, it's still on stack), we need to insert its value into the
+- * SAVE_ALL state before going on, since it's usermode state which we
+- * eventually need to restore.
++ * The only caveat is that if the outer eax hasn't been restored yet (i.e.
++ * it's still on stack), we need to restore its value here.
+  */
+ ENTRY(xen_iret_crit_fixup)
++	pushl %ecx
+ 	/*
+ 	 * Paranoia: Make sure we're really coming from kernel space.
+ 	 * One could imagine a case where userspace jumps into the
+@@ -176,32 +164,26 @@ ENTRY(xen_iret_crit_fixup)
+ 	 * jump instruction itself, not the destination, but some
+ 	 * virtual environments get this wrong.
+ 	 */
+-	movl PT_CS(%esp), %ecx
++	movl 3*4(%esp), %ecx		/* nested CS */
+ 	andl $SEGMENT_RPL_MASK, %ecx
+ 	cmpl $USER_RPL, %ecx
++	popl %ecx
+ 	je 2f
+ 
+-	lea PT_ORIG_EAX(%esp), %esi
+-	lea PT_EFLAGS(%esp), %edi
+-
+ 	/*
+ 	 * If eip is before iret_restore_end then stack
+ 	 * hasn't been restored yet.
+ 	 */
+-	cmp $iret_restore_end, %eax
++	cmpl $iret_restore_end, 1*4(%esp)
+ 	jae 1f
+ 
+-	movl 0+4(%edi), %eax		/* copy EAX (just above top of frame) */
+-	movl %eax, PT_EAX(%esp)
+-
+-	lea ESP_OFFSET(%edi), %edi	/* move dest up over saved regs */
+-
+-	/* set up the copy */
+-1:	std
+-	mov $PT_EIP / 4, %ecx		/* saved regs up to orig_eax */
+-	rep movsl
+-	cld
+-
+-	lea 4(%edi), %esp		/* point esp to new frame */
+-2:	jmp xen_do_upcall
+-
++	movl 4*4(%esp), %eax		/* load outer EAX */
++	ret $4*4			/* discard nested EIP, CS, and EFLAGS as
++					 * well as the just restored EAX */
++
++1:
++	ret $3*4			/* discard nested EIP, CS, and EFLAGS */
++
++2:
++	ret
++END(xen_iret_crit_fixup)
 
 
