@@ -2,56 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE927C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA14AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A526820870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A264B20870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891055;
-	bh=4s8e4vFMSbvxkOqzZBgfRHrA0gBMSbB8WI/S0IuJjVM=;
+	s=default; t=1574891056;
+	bh=awQvIKTfUYWNu69iro6jB5+ZflEGxlK8ruMsEgXoNEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2pHaEHr771Durl8+nJeMBz6gceEm0d0ovFFm8rAtuZw8Vc4mV/zEBH5DlnG2wMaiw
-	 j7CUI4TLHuleaQl21pR8R+pkXsVIt0OAHdRbMJLKqi6TbFM1d1BuczDLNg11DGV4ug
-	 JSCWSe4B5zd2809HO9OcBglNcYS4XOCpv5tBN4lE=
+	b=A8bjzr0/HBtQKsWRRlWlz8cV1/NI+5UXrt+4m6P6yp7dmYGEkEPfiabEzPXuxof8s
+	 A9GPP/SRnU8T6KsAV+2/2ArHeq8Gez0f6c0q/WEvcOqucpFXMZzLwzfqnfP5MBcY95
+	 Xx8jg7kgzQ9g4kR9jvSUQbyTf0VJBFs6S80xTIMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfK0Uhv (ORCPT
+        id S1728087AbfK0Uhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:37:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40858 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:37:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727722AbfK0Uhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:37:42 -0500
+        id S1728607AbfK0Uhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:37:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23A18215B2;
-        Wed, 27 Nov 2019 20:37:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0F5A21569;
+        Wed, 27 Nov 2019 20:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887061;
-        bh=4s8e4vFMSbvxkOqzZBgfRHrA0gBMSbB8WI/S0IuJjVM=;
+        s=default; t=1574887059;
+        bh=awQvIKTfUYWNu69iro6jB5+ZflEGxlK8ruMsEgXoNEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D6UB94fcmPySBDsFzujMo6319Cc4x4xTt4FxgzrCyttsbGE/Vi+3wzWG2frKiuXHW
-         AYJCmHu/GhAzcejqzdKa2xRsgGJRVIw05pWAS4hHDVDU1D9Wh7GAZgAqfHunhxnM3W
-         F+3XyS/fqoD+m3/LJM6AHrL9it4BM2q75SHik5eA=
+        b=NjqK3er893u6MNJHo0doqYwYlwJvMvuRLdocvG97AcaLKSjOxHEeFa1KAEofGBCJj
+         W5KIG4eh6SnEHiPgLHsDm20A0L9xDxEjFDi3AXXZvQ39zMeJdVcOxg9p2smRSZSMEr
+         ac6Yv2oRAu/QCcnkw7hy5ZaE5Ci7SH2PpFgUlGyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "=?UTF-8?q?Ernesto=20A . =20Fern=C3=A1ndez?=" 
-        <ernesto.mnd.fernandez@gmail.com>,
-        Vyacheslav Dubeyko <slava@dubeyko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, David Lechner <david@lechnology.com>,
+        Vignesh R <vigneshr@ti.com>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 071/132] hfs: fix return value of hfs_get_block()
-Date:   Wed, 27 Nov 2019 21:31:02 +0100
-Message-Id: <20191127203006.746354737@linuxfoundation.org>
+Subject: [PATCH 4.4 097/132] spi: omap2-mcspi: Fix DMA and FIFO event trigger size mismatch
+Date:   Wed, 27 Nov 2019 21:31:28 +0100
+Message-Id: <20191127203022.521896485@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -64,43 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+From: Vignesh R <vigneshr@ti.com>
 
-[ Upstream commit 1267a07be5ebbff2d2739290f3d043ae137c15b4 ]
+[ Upstream commit baf8b9f8d260c55a86405f70a384c29cda888476 ]
 
-Direct writes to empty inodes fail with EIO.  The generic direct-io code
-is in part to blame (a patch has been submitted as "direct-io: allow
-direct writes to empty inodes"), but hfs is worse affected than the other
-filesystems because the fallback to buffered I/O doesn't happen.
+Commit b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
+broke SPI transfers where bits_per_word != 8. This is because of
+mimsatch between McSPI FIFO level event trigger size (SPI word length) and
+DMA request size(word length * maxburst). This leads to data
+corruption, lockup and errors like:
 
-The problem is the return value of hfs_get_block() when called with
-!create.  Change it to be more consistent with the other modules.
+	spi1.0: EOW timed out
 
-Link: http://lkml.kernel.org/r/4538ab8c35ea37338490525f0f24cbc37227528c.1539195310.git.ernesto.mnd.fernandez@gmail.com
-Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fix this by setting DMA maxburst size to 1 so that
+McSPI FIFO level event trigger size matches DMA request size.
+
+Fixes: b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
+Cc: stable@vger.kernel.org
+Reported-by: David Lechner <david@lechnology.com>
+Tested-by: David Lechner <david@lechnology.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfs/extent.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/spi/spi-omap2-mcspi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
-index 1bd1afefe2538..16819d2a978b4 100644
---- a/fs/hfs/extent.c
-+++ b/fs/hfs/extent.c
-@@ -345,7 +345,9 @@ int hfs_get_block(struct inode *inode, sector_t block,
- 	ablock = (u32)block / HFS_SB(sb)->fs_div;
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index 2e35fc735ba6a..79fa237f76c42 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -593,8 +593,8 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
+ 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
+ 	cfg.src_addr_width = width;
+ 	cfg.dst_addr_width = width;
+-	cfg.src_maxburst = es;
+-	cfg.dst_maxburst = es;
++	cfg.src_maxburst = 1;
++	cfg.dst_maxburst = 1;
  
- 	if (block >= HFS_I(inode)->fs_blocks) {
--		if (block > HFS_I(inode)->fs_blocks || !create)
-+		if (!create)
-+			return 0;
-+		if (block > HFS_I(inode)->fs_blocks)
- 			return -EIO;
- 		if (ablock >= HFS_I(inode)->alloc_blocks) {
- 			res = hfs_extend_file(inode);
+ 	rx = xfer->rx_buf;
+ 	tx = xfer->tx_buf;
 -- 
 2.20.1
 
