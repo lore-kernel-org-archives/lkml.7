@@ -2,152 +2,131 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBB0C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA29CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C168E206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC5020665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:03:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXf/BFVW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aCWxwjQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfK0RCr (ORCPT
+        id S1727126AbfK0RDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:02:47 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27659 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726984AbfK0RCr (ORCPT
+        Wed, 27 Nov 2019 12:03:36 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50145 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726984AbfK0RDg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:02:47 -0500
+        Wed, 27 Nov 2019 12:03:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574874166;
+        s=mimecast20190719; t=1574874214;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PFznFDlZHRH6jRkPfupU/SWMKG2b5n/tHVJYWZ7aun8=;
-        b=iXf/BFVW6/MXIIqck8MXGoL690M3sZdGrwHiAhkZleptYQEAkajSZioUZgKIDUiQ8BpWqB
-        RmFN5cjgwaEt0jK6DUrCoxBrl/ClWonOeg3Tjrq+3ptrx4qh4SOyArHH91nWnOCm82P5H3
-        qoStCUDt0Y6d38OKV1oJXDlaTf5MM48=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-400-so-q2ANANmuDtfaY4tta0Q-1; Wed, 27 Nov 2019 12:02:43 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38EBA8017D9;
-        Wed, 27 Nov 2019 17:02:41 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 841AB5C219;
-        Wed, 27 Nov 2019 17:02:36 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 27 Nov 2019 18:02:40 +0100 (CET)
-Date:   Wed, 27 Nov 2019 18:02:35 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Jan Kratochvil <jan.kratochvil@redhat.com>,
-        Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH] ptrace/x86: introduce TS_COMPAT_RESTART to fix
- get_nr_restart_syscall()
-Message-ID: <20191127170234.GA26180@redhat.com>
-References: <20191126110659.GA14042@redhat.com>
- <20191126110758.GA14051@redhat.com>
- <CAHk-=whrhuNg_53wc3pBVToH-AUwKDbC5P_cb7=8bYfn=BYCJA@mail.gmail.com>
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=RK6Z/QC8Et+4Op0x7LlPHwcCsvq5DcwP1lX31wAzH+8=;
+        b=aCWxwjQfedbHOGozTVdnTIv94eyal/NbyP8rv2HGYrJhFhYhOR0Wb9rVtmypboeVMkkL55
+        /xVjcmxbzZ3SaYCWR+gzvCv7m8j+xyg5D55k/KP6+2iwifatYupl+D1l21LoQZFBX+i7Al
+        OVx3ZZOdbuQVxU210MVhZ1nFUERgEmE=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-348-lLGEjrDlM0-Q9MUrHhkVAw-1; Wed, 27 Nov 2019 12:03:33 -0500
+Received: by mail-pl1-f199.google.com with SMTP id q14so9888810plr.15
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 09:03:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=sXvH1TCWEfM5kCCRo+pVEE1B743fcSSjGvOi9uUGkxY=;
+        b=nNgQyJ4tXWCSY/CdrTbEBqBcy+xOkLYpEnUhYxzqbbZuSMAhwTgfEcV46gFJqhCW9j
+         GKI41JxQ8eMWqtD8AeAgdhy+abrS278Yz7yqmUVziWjdIa0aXUA+udMaj5KK4xI0ssmp
+         ir6Zyx91w77lI4noY5SPCu7YNSLeWiStCShSgo551c5Gv6kWBQzAcuaGoczvNGmL8zt7
+         ua556aTc1opYLOOty6poV1ldiwz3p4KEPhnRVa6TuhIXTDT9U0VOYTlkQdVX4iDOg7FS
+         URoGz5LRjBrhyjQmkq97p7pJskNLfecFdgcTjFi358Be0CuyiCaRjWRV+wOfimgfya5c
+         UEsg==
+X-Gm-Message-State: APjAAAWSfMtAZq8YOpeAw9U8uwzfX5JXc/cmn4HCiTQZAgfF7Xgx9kTm
+        y/etQTwtC8Pq5ihbG0C5moX3XuEdS4kcQo9kLOgHJS+lP+lL0l7PDTNuzVuzjYJu2cXS3yETmud
+        tiCJplKGooTB9I12b0lXgiaXG
+X-Received: by 2002:a63:9d41:: with SMTP id i62mr6329539pgd.310.1574874212192;
+        Wed, 27 Nov 2019 09:03:32 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyNbbZqoES/yWF7zu4dbbYEYKtP44S3BiMCEXJwSLbN+tUj7THW30dCd22yzMN2OQccHLo13A==
+X-Received: by 2002:a63:9d41:: with SMTP id i62mr6329402pgd.310.1574874210962;
+        Wed, 27 Nov 2019 09:03:30 -0800 (PST)
+Received: from trix.remote.csb ([75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id ce22sm1766266pjb.17.2019.11.27.09.03.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Nov 2019 09:03:30 -0800 (PST)
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+From:   Tom Rix <trix@redhat.com>
+Subject: [PATCH] sched: remove noop function task_fork_dl
+Message-ID: <56b066c2-90fd-4263-cf31-0a08ea44fd53@redhat.com>
+Date:   Wed, 27 Nov 2019 09:03:28 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whrhuNg_53wc3pBVToH-AUwKDbC5P_cb7=8bYfn=BYCJA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: so-q2ANANmuDtfaY4tta0Q-1
+Content-Language: en-US
+X-MC-Unique: lLGEjrDlM0-Q9MUrHhkVAw-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/26, Linus Torvalds wrote:
->
-> On Tue, Nov 26, 2019 at 3:08 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > Alternatively we could add ->compat_restart into struct restart_block,
-> > logically this is the same thing.
->
-> That sounds like the better model to me. That's what the restart_block
-> is about: it's supposed to contain the restart information.
 
-I knew ;) OK, I won't argue, I'll send V2.
+task_fork_dl is an empty function used only for dl's
+sched_class.task_fork.=C2=A0 Removing it cleans up the code a bit
+and saves a function call in sched_fork.
 
-> I'd much rather see the system call number added into the restart
-> block (or just the "compat bit" - but we have that X32 case too, so
-> why not put it all there).
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+=C2=A0kernel/sched/deadline.c | 10 ----------
+=C2=A01 file changed, 10 deletions(-)
 
-apart from x86, who else can use it? after the quick grep I think nobody,
-even arm64 and mips which have compat nr_restart's do not need it.
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index a8a08030a8f7..fbafd97d883a 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1821,14 +1821,6 @@ static void task_tick_dl(struct rq *rq, struct task_=
+struct *p, int queued)
+=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 start_hrtick_dl(rq, p);
+=C2=A0}
+=C2=A0
+-static void task_fork_dl(struct task_struct *p)
+-{
+-=C2=A0=C2=A0=C2=A0 /*
+-=C2=A0=C2=A0=C2=A0 =C2=A0* SCHED_DEADLINE tasks cannot fork and this is ac=
+hieved through
+-=C2=A0=C2=A0=C2=A0 =C2=A0* sched_fork()
+-=C2=A0=C2=A0=C2=A0 =C2=A0*/
+-}
+-
+=C2=A0#ifdef CONFIG_SMP
+=C2=A0
+=C2=A0/* Only try algorithms three times */
+@@ -2451,8 +2443,6 @@ const struct sched_class dl_sched_class =3D {
+=C2=A0#endif
+=C2=A0
+=C2=A0=C2=A0=C2=A0=C2=A0 .task_tick=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =
+=3D task_tick_dl,
+-=C2=A0=C2=A0=C2=A0 .task_fork=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D task_fork_dl,
+-
+=C2=A0=C2=A0=C2=A0=C2=A0 .prio_changed=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 =3D prio_changed_dl,
+=C2=A0=C2=A0=C2=A0=C2=A0 .switched_from=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
+=A0 =3D switched_from_dl,
+=C2=A0=C2=A0=C2=A0=C2=A0 .switched_to=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =
+=3D switched_to_dl,
+--=20
+2.23.0
 
-restart_block.arch_restart_block_infp makes more sense, but that would be
-even more painful, I do not want to add asm/restart_block.h or
-HAVE_ARCH_RESTART_INFO, or use CONFIG_IA32_EMULATION.
-
-OK, lets add the new restart_block.nr_restart_syscall field, then we need
-
-=09void set_restart_block_fn(restart, fn)
-=09{
-=09=09restart->nr_restart_syscall =3D arch_get_nr_restart_syscall()
-=09=09restart->fn =3D fn;
-=09}
-
-but somehow I do not see a good place for
-
-=09#ifndef arch_get_nr_restart_syscall()
-=09#define arch_get_nr_restart_syscall()=090
-=09#endif
-
-Can you suggest a simple solution?
-
-Hmm. Or may be HAVE_ARCH_RESTART is better after all? Say, just
-
-=09--- a/include/linux/restart_block.h
-=09+++ b/include/linux/restart_block.h
-=09@@ -24,6 +24,9 @@ enum timespec_type {
-=09  */
-=09 struct restart_block {
-=09=09long (*fn)(struct restart_block *);
-=09+#ifdef=09CONFIG_HAVE_ARCH_RESTART_XXX
-=09+=09int=09nr_restart_syscall;
-=09+#endif
-=09=09union {
-=09=09=09/* For futex_wait and futex_wait_requeue_pi */
-=09=09=09struct {
-=09@@ -55,6 +58,15 @@ struct restart_block {
-=09=09};
-=09 };
-=09=20
-=09+static inline void set_restart_block_fn(restart, fn)
-=09+{
-=09+#ifdef=09CONFIG_HAVE_ARCH_RESTART_XXX
-=09+=09extern int arch_get_nr_restart_syscall();
-=09+=09restart->nr_restart_syscall =3D arch_get_nr_restart_syscall();
-=09+#endif
-=09+=09restart->fn =3D fn;
-=09+}
-=09+
-=09 extern long do_no_restart_syscall(struct restart_block *parm);
-=09=20
-=09 #endif /* __LINUX_RESTART_BLOCK_H */
-
-?
-
-Oleg.
 
