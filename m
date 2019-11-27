@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9CCC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12179C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54EEC215F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D12EC217BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889070;
-	bh=sDzY29B+fqQFh7q2y2OrABZsUQVM1JjkS1wKHq8bNn0=;
+	s=default; t=1574889083;
+	bh=nHVmU/oIFzQsYfQS/3JhrMAgd1hf4fvK2RzpONW5VZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EcDL7fe2a9ZfyuBZBe0PNOs3GN/kFqs9rnADLLTmeuSJsoNU1YEM1Vt2NLj4bD6Ig
-	 nWuHmc4SyYoNWueD9iGCCy7Jh+WOKpcbzv256ppMmTNZHFbYdRTm8wGpqQy8R9Ygac
-	 yRgQ60OhWyt8vEReeWEGuxk0eviDaV/83JsHgVww=
+	b=CZpMoo7nkM3+vEkHdRJ1nvRmx+ZSLnfZnoQAn0kBGCPe91D3r7QOVuGKsX9AkeUeA
+	 HFGyyBbCY6FdyAgXKX8KiKUd4yGVyJCmQNkWkLVbAJnRNtNy++PlORl5rID7i/ujBJ
+	 JAnk8Xhwx68xG0lFWbGSAb8+YGgJgCTTo5KID/zA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733125AbfK0VLJ (ORCPT
+        id S1733171AbfK0VLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:11:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:11:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733097AbfK0VK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:10:58 -0500
+        id S1732646AbfK0VLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F79D21775;
-        Wed, 27 Nov 2019 21:10:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A38C2086A;
+        Wed, 27 Nov 2019 21:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889058;
-        bh=sDzY29B+fqQFh7q2y2OrABZsUQVM1JjkS1wKHq8bNn0=;
+        s=default; t=1574889079;
+        bh=nHVmU/oIFzQsYfQS/3JhrMAgd1hf4fvK2RzpONW5VZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xYxnYDWjnBfWFWdyHmz2s0AysIonH5CKJ/fOazP9b/qHocvdfnBhhtyo70BqV5H2y
-         orusAH0NeKjmGEPT5rU7IJP7jj2SWeLkoUjgQZysUHWcc96Slz5Du9fFDhlYC7fhZ7
-         1xr6qKA/iUURddKTxasGPWcG4YX4EX6LloYtuFpc=
+        b=CpJGbAYpN7qcP74UBaxYA8hgPjSmuJz1XlchmZ/CzGhbtVbOi1Z8MOblxRW15FdIy
+         cpjmNHxRmzTZOFcgE6VElaDBML8UaZwd7KmS1xRNzbAmBXVoynWFs3lgRhssdr65wf
+         42HqDtBHkJo3pcVVNrJad10kKYB/s5VJzLjRp6iM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 67/95] ALSA: usb-audio: Fix NULL dereference at parsing BADD
-Date:   Wed, 27 Nov 2019 21:32:24 +0100
-Message-Id: <20191127202932.253077014@linuxfoundation.org>
+        stable@vger.kernel.org, Kai Shen <shenkai8@huawei.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.3 74/95] cpufreq: Add NULL checks to show() and store() methods of cpufreq
+Date:   Wed, 27 Nov 2019 21:32:31 +0100
+Message-Id: <20191127202942.163808553@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -61,39 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Kai Shen <shenkai8@huawei.com>
 
-commit 9435f2bb66874a0c4dd25e7c978957a7ca2c93b1 upstream.
+commit e6e8df07268c1f75dd9215536e2ce4587b70f977 upstream.
 
-snd_usb_mixer_controls_badd() that parses UAC3 BADD profiles misses a
-NULL check for the given interfaces.  When a malformed USB descriptor
-is passed, this may lead to an Oops, as spotted by syzkaller.
-Skip the iteration if the interface doesn't exist for avoiding the
-crash.
+Add NULL checks to show() and store() in cpufreq.c to avoid attempts
+to invoke a NULL callback.
 
-Fixes: 17156f23e93c ("ALSA: usb: add UAC3 BADD profiles support")
-Reported-by: syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191122112840.24797-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Though some interfaces of cpufreq are set as read-only, users can
+still get write permission using chmod which can lead to a kernel
+crash, as follows:
+
+chmod +w /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+echo 1 >  /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+
+This bug was found in linux 4.19.
+
+Signed-off-by: Kai Shen <shenkai8@huawei.com>
+Reported-by: Feilong Lin <linfeilong@huawei.com>
+Reviewed-by: Feilong Lin <linfeilong@huawei.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+[ rjw: Subject & changelog ]
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/cpufreq/cpufreq.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2930,6 +2930,9 @@ static int snd_usb_mixer_controls_badd(s
- 			continue;
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -933,6 +933,9 @@ static ssize_t show(struct kobject *kobj
+ 	struct freq_attr *fattr = to_attr(attr);
+ 	ssize_t ret;
  
- 		iface = usb_ifnum_to_if(dev, intf);
-+		if (!iface)
-+			continue;
++	if (!fattr->show)
++		return -EIO;
 +
- 		num = iface->num_altsetting;
+ 	down_read(&policy->rwsem);
+ 	ret = fattr->show(policy, buf);
+ 	up_read(&policy->rwsem);
+@@ -947,6 +950,9 @@ static ssize_t store(struct kobject *kob
+ 	struct freq_attr *fattr = to_attr(attr);
+ 	ssize_t ret = -EINVAL;
  
- 		if (num < 2)
++	if (!fattr->store)
++		return -EIO;
++
+ 	/*
+ 	 * cpus_read_trylock() is used here to work around a circular lock
+ 	 * dependency problem with respect to the cpufreq_register_driver().
 
 
