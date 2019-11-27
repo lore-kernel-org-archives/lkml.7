@@ -2,105 +2,121 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA25C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64733C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6AD62073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A61E2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:42:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjE0Rhyu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaLImqaX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfK0Qlw (ORCPT
+        id S1727150AbfK0Qmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:41:52 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34499 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbfK0Qlw (ORCPT
+        Wed, 27 Nov 2019 11:42:46 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36861 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfK0Qmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:41:52 -0500
-Received: by mail-lf1-f67.google.com with SMTP id l28so17740403lfj.1;
-        Wed, 27 Nov 2019 08:41:49 -0800 (PST)
+        Wed, 27 Nov 2019 11:42:45 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k13so11169258pgh.3;
+        Wed, 27 Nov 2019 08:42:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/eWB2rCOMmX423AOdl9mozQ2GWqfxXSdgs//MzFs0+M=;
-        b=PjE0Rhyu81sYgLylgpTP49Qm6RDM7316CZq2qBpmlkMeVqPvRDx9xTAXQ6It4gyTeu
-         lxSoKlhqE6pHkozHig5mrPioaniP7qIlGkIFuvYjnFNniKEkuFYdSKB0atDKQlKJpwoh
-         AXbCs/Sfsgdrkg+FtSDwONO3995AlcHgtz1y6y6hqEOhp0EMIIlxDv5A2t8u4tdjk9q1
-         DRt33TLffLnmsvO7Iz9pWafhEQs+5gkgpMqoqZzCLLR+Bu6tCwIvakF0eZKyU7Hbaj/l
-         jYuOHipQnrz5S1LPjDLmEAbG5N8zh+UpFJs2losfuj0/y/qm5GR6db4/Ozi/sV5Rb2lD
-         /2Vw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Xl4Glegm6mdECeLqfmquxCwZlwbSQB4i6Znnj9ZE+DI=;
+        b=aaLImqaXXEFyDQoHrPEMGh8ndhdl9gZJuOmHyu+pZZDTZWbfo8bKC+whjrSQVWhuxU
+         NYt+PbFK7OG+rEYQVDWtB8A0KHHEIDstj61l0+aHTIFEZ3ibUY4OeJYXrC+28XbcaqqY
+         atqmBXE+O4sp1cYypiKae5R6bxlRt8myyVVJ1So1UTPM+Bv2pXNfGlal4+Fo2eYANxA/
+         b9F0B4VdjmNO6gO5aXgVhVpAa8kcNBSkcwJzRmb4430VOcNRZAgSNLtP/9Oiq7y1w4ne
+         sjDEqe9L1scDSQetQaLeZAncSNqzJT0GL8oFf05RRmWtALJqS5XFvK2+YIZ0W4zrVlL+
+         F/pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/eWB2rCOMmX423AOdl9mozQ2GWqfxXSdgs//MzFs0+M=;
-        b=AryOIlaAsuYHmXtwQY43nU0/6s/k2Uody/DBdfyscBCely1Btni3TkTWQruIzNbGu6
-         zfqYQxMTdDx3hkZ/xnPO8O3h+FL+0hGJn+QhigyRH2s9n/r5r/RtjSjvFcOUc9YuzLrd
-         +tyho4R5e0wNKF3J+i/j/N66zxpNrzkA4o+qIZtZ+P57ilT+kBcBUhyKewvOVvcYwelh
-         W5xjX9VBHZvq+G+yEcOopPjbeVMY2aj61yeAcIg3vsM0YrNiqokqY4bnZGO1SD5qeVSI
-         ePe6KOup9X5HHue3+UAKJpgoCOiWV7MoAOxJP3lq5n1oAVVC6H9FTNKWm+5Vk6J1qFUy
-         0ekg==
-X-Gm-Message-State: APjAAAWfU+7/tG2bLAhnQ8zq7QFVeJKaEH04OzjyveVYxEJ2wcdgOHBf
-        xDTuf679pah4HPKNHYQRrcma5x9tCq76I/8UcHs=
-X-Google-Smtp-Source: APXvYqw8XiZzJsCr/3/6hFAt3SNZuHFa9l5qi3WPi3It1HEt6ojoVz3oyCyzHungjh9pEXPIuP3Kr9yU76HqJGqBPK0=
-X-Received: by 2002:ac2:5462:: with SMTP id e2mr19863175lfn.181.1574872908250;
- Wed, 27 Nov 2019 08:41:48 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xl4Glegm6mdECeLqfmquxCwZlwbSQB4i6Znnj9ZE+DI=;
+        b=sm4zht0CJP5BCBiW8y2MeACz+wJL4q4J3xfdoFlOamvD22jT/LS+XIRWQUhAb2feui
+         gHUhHrWV0jloVV9qudV1bdwBxdVwG4hcD54gmTGHIvIzjg+AC5Xbw3r5/BFjxH20+pqW
+         XDf33ffB8OUs7CBnVat0JqiD07ytGPP0r0qAZVRWEwFUfImqzZl6FsxN+hLjwoiGVe9o
+         lfoAuUnz+p8fj2nxwRDaJSd4jy44o+YiMpbeP2IbIPKoUkh+YXZmB41WonXn5XkCKbsc
+         omfmGEIilmDAUT45eTXFHTfRqgb87S13jLs9luRETlayo0gqTzhu9eEkhAxGJ7zGHiC9
+         G1Nw==
+X-Gm-Message-State: APjAAAW/xX3we6aGAIunyDdJnj80aUaDDl2EP/L0JUFkd5oGzG1mo/ny
+        d88A2SopTZNBiG965T3VJeg=
+X-Google-Smtp-Source: APXvYqwlDU2Ab8PAuwqLDAc5/btU/U8B8e0EchIgGnZlTuxZOq1jBwxBcCm7mSvfv1ntAHxZjKgsbg==
+X-Received: by 2002:a65:590f:: with SMTP id f15mr5870948pgu.381.1574872964385;
+        Wed, 27 Nov 2019 08:42:44 -0800 (PST)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id v3sm16827100pfn.129.2019.11.27.08.42.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Nov 2019 08:42:43 -0800 (PST)
+Date:   Wed, 27 Nov 2019 22:12:33 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/5] pinctrl: mediatek: Use the correct style for SPDX
+ License Identifier
+Message-ID: <2994fb2f3375790e832396cdbb0a279dc8c8839f.1574871463.git.nishadkamdar@gmail.com>
+References: <cover.1574871463.git.nishadkamdar@gmail.com>
 MIME-Version: 1.0
-References: <20191127094837.4045-1-jolsa@kernel.org> <20191127094837.4045-4-jolsa@kernel.org>
-In-Reply-To: <20191127094837.4045-4-jolsa@kernel.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 27 Nov 2019 08:41:36 -0800
-Message-ID: <CAADnVQ+04C7BCH+UCMXLuHoP3vWcKmmycaZa-bMJDSFBUddo1g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] bpftool: Allow to link libbpf dynamically
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1574871463.git.nishadkamdar@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 1:49 AM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> diff --git a/tools/build/feature/test-libbpf.c b/tools/build/feature/test-libbpf.c
-> index a508756cf4cc..93566d105a64 100644
-> --- a/tools/build/feature/test-libbpf.c
-> +++ b/tools/build/feature/test-libbpf.c
-> @@ -3,5 +3,14 @@
->
->  int main(void)
->  {
-> +#ifdef BPFTOOL
-> +       /*
-> +        * libbpf_netlink_open (LIBBPF_0.0.6) is the latest
-> +        * we need for bpftool at the moment
-> +        */
-> +       libbpf_netlink_open(NULL);
-> +       return 0;
-> +#else
->         return bpf_object__open("test") ? 0 : -1;
-> +#endif
+This patch corrects the SPDX License Identifier style in
+header file related mediatek mt2712 pinctrl driver.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-Such hack should be a clear sign that it's not appropriate for libbpf to
-be public netlink api library. Few functions that it already has are for
-libbpf and bpftool internal usage only.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
+
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h b/drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h
+index ba2356a8ab89..845c408b5fdb 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2018 MediaTek Inc.
+  * Author: Zhiyong Tao <zhiyong.tao@mediatek.com>
+-- 
+2.17.1
+
