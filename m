@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545EDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D7AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217C3215E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED672086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888655;
-	bh=1EzmoxlhEX6IlHcaaJRCa8HqlvFEPSAV4f3se9ynVhc=;
+	s=default; t=1574888659;
+	bh=wX4O2JHToNm4AF5thow3+D7uWZoA5jbNZGRyT/NCEgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q+w4Aida7y5tAL8KI8Kju6i5ACSUvehB1fUxi3RkJ0mGvoAm8zS0+LcBotyLgVu8E
-	 BCkye8foa8NhB8qeTK/kwJd93tycmGOcmMgGNQIAZul83GyLYRo+/xkPNaOwpVBpfN
-	 QnTy0pfM1sthLGGY7QzHVUdh/aD75jJHzBg6sPpc=
+	b=MnDvcIv6voLTqUxk26JAA2gLMgLcq5esAgdEAcw4JZjztTpYi8oTzE4gFPmGxiw1R
+	 gb3KV8C2QaDuk7u0YEZ+40y2kkGJHNO7kIm8UHmSdxKdShLEEtgYgDsyaIy1QIdsDX
+	 dkS17P5A4FtdcFZONECgxt8f3eiuKid4oVyXMfJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731818AbfK0VEO (ORCPT
+        id S1732127AbfK0VES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:04:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57576 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:04:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731521AbfK0VEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:04:10 -0500
+        id S1731830AbfK0VEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:04:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 368952086A;
-        Wed, 27 Nov 2019 21:04:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3FF62086A;
+        Wed, 27 Nov 2019 21:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888649;
-        bh=1EzmoxlhEX6IlHcaaJRCa8HqlvFEPSAV4f3se9ynVhc=;
+        s=default; t=1574888652;
+        bh=wX4O2JHToNm4AF5thow3+D7uWZoA5jbNZGRyT/NCEgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XqEATSGVtfDAeM3v/59zDrtje653+l1feYJaqd15lYPHk4lsyKEHj5Urn/pebjcMS
-         HQ/qZ60jzLn0W2OeqXY6lZwHkANlmGvlrIkLbx3wRDp2DTZg9+NRLv5SP7DG0tvSPb
-         jLFe9YxvaYiwagmT9cYm+G5xvLV3AVc1FoYbUS4w=
+        b=ewHwGGK44y8Gs9z+JSlMCepYEPHKEtR9TP7Ap1/D6kgvJt39lzpC53mqEgoUpRrvO
+         LGbYbnpjSn3ktmlFBLcRFqjoZrwhb+d7aW46OZfOC5QufriBbsrg2HiAsF1HyajeIj
+         iCMrvzq8s9+oM6YsF3XrQ8VhtlRGf6z8PLQqpJn8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lior David <liord@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        Lucas Van <lucas.van@intel.com>, Jon Mason <jdmason@kudzu.us>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 216/306] wil6210: fix locking in wmi_call
-Date:   Wed, 27 Nov 2019 21:31:06 +0100
-Message-Id: <20191127203130.864518018@linuxfoundation.org>
+Subject: [PATCH 4.19 190/306] ntb: intel: fix return value for ndev_vec_mask()
+Date:   Wed, 27 Nov 2019 21:30:40 +0100
+Message-Id: <20191127203129.122203699@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,59 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lior David <liord@codeaurora.org>
+From: Dave Jiang <dave.jiang@intel.com>
 
-[ Upstream commit dc57731dbd535880fe6ced31c229262c34df7d64 ]
+[ Upstream commit 7756e2b5d68c36e170a111dceea22f7365f83256 ]
 
-Switch from spin_lock to spin_lock_irqsave, because
-wmi_ev_lock is used inside interrupt handler.
+ndev_vec_mask() should be returning u64 mask value instead of int.
+Otherwise the mask value returned can be incorrect for larger
+vectors.
 
-Signed-off-by: Lior David <liord@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: e26a5843f7f5 ("NTB: Split ntb_hw_intel and ntb_transport drivers")
+
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Tested-by: Lucas Van <lucas.van@intel.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/wmi.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/ntb/hw/intel/ntb_hw_gen1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
-index 2010f771478df..8a603432f5317 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.c
-+++ b/drivers/net/wireless/ath/wil6210/wmi.c
-@@ -1639,16 +1639,17 @@ int wmi_call(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf, u16 len,
+diff --git a/drivers/ntb/hw/intel/ntb_hw_gen1.c b/drivers/ntb/hw/intel/ntb_hw_gen1.c
+index 6aa5732272791..2ad263f708da7 100644
+--- a/drivers/ntb/hw/intel/ntb_hw_gen1.c
++++ b/drivers/ntb/hw/intel/ntb_hw_gen1.c
+@@ -265,7 +265,7 @@ static inline int ndev_db_clear_mask(struct intel_ntb_dev *ndev, u64 db_bits,
+ 	return 0;
+ }
+ 
+-static inline int ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
++static inline u64 ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
  {
- 	int rc;
- 	unsigned long remain;
-+	ulong flags;
- 
- 	mutex_lock(&wil->wmi_mutex);
- 
--	spin_lock(&wil->wmi_ev_lock);
-+	spin_lock_irqsave(&wil->wmi_ev_lock, flags);
- 	wil->reply_id = reply_id;
- 	wil->reply_mid = mid;
- 	wil->reply_buf = reply;
- 	wil->reply_size = reply_size;
- 	reinit_completion(&wil->wmi_call);
--	spin_unlock(&wil->wmi_ev_lock);
-+	spin_unlock_irqrestore(&wil->wmi_ev_lock, flags);
- 
- 	rc = __wmi_send(wil, cmdid, mid, buf, len);
- 	if (rc)
-@@ -1668,12 +1669,12 @@ int wmi_call(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf, u16 len,
- 	}
- 
- out:
--	spin_lock(&wil->wmi_ev_lock);
-+	spin_lock_irqsave(&wil->wmi_ev_lock, flags);
- 	wil->reply_id = 0;
- 	wil->reply_mid = U8_MAX;
- 	wil->reply_buf = NULL;
- 	wil->reply_size = 0;
--	spin_unlock(&wil->wmi_ev_lock);
-+	spin_unlock_irqrestore(&wil->wmi_ev_lock, flags);
- 
- 	mutex_unlock(&wil->wmi_mutex);
+ 	u64 shift, mask;
  
 -- 
 2.20.1
