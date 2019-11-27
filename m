@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D56C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B109C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C20E21852
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1152321871
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887866;
-	bh=cZPT0WojLQHBwL1aDDdvZwNQLqnruWSL0DxO3nlIPMU=;
+	s=default; t=1574887869;
+	bh=EXrFZR95aAwcDSeymXCCjFEvcW5PY/VBzSqJopYtqCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R46OIKQ2jKkcNoQf3dsSTYfSupl6F4cqGk0khzglpxeRU68H0BX+iy0enDCgDLkTz
-	 Zt9xewCwmkR5qU/ZNBVrj3qqfe2grSOYGNh/zIRbwF2ogpigXC3TQilxWQkg/L03/6
-	 iXNWY2XPde0N3fNDg/TiUwSqt5jZu3gldU1rUTZs=
+	b=zaU5zyO+MmO/r8SJ3PVw1X3ooBvl2bWNp5wWKqGqjKA7zslw2Qt/zTdqBgm1w82wL
+	 tjcetljpyGH0ZbaxMbSsK+AeaNLMEBsoV8YWdJJf1k+TAKYYGZZFCLeenJFNuRtBkV
+	 DS9PB49ctXTSf/Uqh/O8vvwMtOkGYUgaONBEIe6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730433AbfK0UvF (ORCPT
+        id S1730440AbfK0UvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:51:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37488 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:51:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729890AbfK0UvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:51:02 -0500
+        id S1730432AbfK0UvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:51:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF95E21852;
-        Wed, 27 Nov 2019 20:51:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27EFF21847;
+        Wed, 27 Nov 2019 20:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887862;
-        bh=cZPT0WojLQHBwL1aDDdvZwNQLqnruWSL0DxO3nlIPMU=;
+        s=default; t=1574887864;
+        bh=EXrFZR95aAwcDSeymXCCjFEvcW5PY/VBzSqJopYtqCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oon7ThSzxWxyY0Ii+IXOnUQrfDvbepXmVFYK6Pj2PhCXmhD60SAFLb0LWJFd0k5S8
-         6kamdK6et2U0/SjBgO8l2tlzgCU5buWrnkBl76Pk+xL6Zw1rsbGSh8QwnC8GExFcK7
-         VggkaB7TIFA/KZMa7uzAtSQN4l8BUJCk0WkhqjP0=
+        b=NpCHdrCWEybn90SsmPvCZlgtRPQA62xBuQ25sdWyxpzSdiP1MEwEr44RbF7wXWSRY
+         50YcZX00121d5sjTSzQFgYjJwiZvpqWYaxTAN1BAOQ4Eovj2S7fg+jXIU2GO+1KpB7
+         7E/qZ7byaeVzMzG4DVlnm9Fzd6Zcbc/QkmYYQik0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
-        Lucas Van <lucas.van@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        stable@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        Victor Kamensky <kamensky@cisco.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 122/211] ntb: intel: fix return value for ndev_vec_mask()
-Date:   Wed, 27 Nov 2019 21:30:55 +0100
-Message-Id: <20191127203105.690915268@linuxfoundation.org>
+Subject: [PATCH 4.14 123/211] arm64: makefile fix build of .i file in external module case
+Date:   Wed, 27 Nov 2019 21:30:56 +0100
+Message-Id: <20191127203105.792275916@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,37 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+From: Victor Kamensky <kamensky@cisco.com>
 
-[ Upstream commit 7756e2b5d68c36e170a111dceea22f7365f83256 ]
+[ Upstream commit 98356eb0ae499c63e78073ccedd9a5fc5c563288 ]
 
-ndev_vec_mask() should be returning u64 mask value instead of int.
-Otherwise the mask value returned can be incorrect for larger
-vectors.
+After 'a66649dab350 arm64: fix vdso-offsets.h dependency' if
+one will try to build .i file in case of external kernel module,
+build fails complaining that prepare0 target is missing. This
+issue came up with SystemTap when it tries to build variety
+of .i files for its own generated kernel modules trying to
+figure given kernel features/capabilities.
 
-Fixes: e26a5843f7f5 ("NTB: Split ntb_hw_intel and ntb_transport drivers")
+The issue is that prepare0 is defined in top level Makefile
+only if KBUILD_EXTMOD is not defined. .i file rule depends
+on prepare and in case KBUILD_EXTMOD defined top level Makefile
+contains empty rule for prepare. But after mentioned commit
+arch/arm64/Makefile would introduce dependency on prepare0
+through its own prepare target.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Tested-by: Lucas Van <lucas.van@intel.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fix it to put proper ifdef KBUILD_EXTMOD around code introduced
+by mentioned commit. It matches what top level Makefile does.
+
+Acked-by: Kevin Brodsky <kevin.brodsky@arm.com>
+Signed-off-by: Victor Kamensky <kamensky@cisco.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/hw/intel/ntb_hw_intel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/ntb/hw/intel/ntb_hw_intel.c b/drivers/ntb/hw/intel/ntb_hw_intel.c
-index 2557e2c05b90c..58068f1447bb2 100644
---- a/drivers/ntb/hw/intel/ntb_hw_intel.c
-+++ b/drivers/ntb/hw/intel/ntb_hw_intel.c
-@@ -348,7 +348,7 @@ static inline int ndev_db_clear_mask(struct intel_ntb_dev *ndev, u64 db_bits,
- 	return 0;
- }
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 0c5f70e6d5cfa..8c4bc5a2c61f4 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -149,6 +149,7 @@ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(boot)
+ 	$(Q)$(MAKE) $(clean)=$(boot)/dts
  
--static inline int ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
-+static inline u64 ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
- {
- 	u64 shift, mask;
++ifeq ($(KBUILD_EXTMOD),)
+ # We need to generate vdso-offsets.h before compiling certain files in kernel/.
+ # In order to do that, we should use the archprepare target, but we can't since
+ # asm-offsets.h is included in some files used to generate vdso-offsets.h, and
+@@ -158,6 +159,7 @@ archclean:
+ prepare: vdso_prepare
+ vdso_prepare: prepare0
+ 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso include/generated/vdso-offsets.h
++endif
  
+ define archhelp
+   echo  '* Image.gz      - Compressed kernel image (arch/$(ARCH)/boot/Image.gz)'
 -- 
 2.20.1
 
