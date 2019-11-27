@@ -2,112 +2,94 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9E7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453D1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091E920665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191B620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:26:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fEz4+Vgw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfK0LZk (ORCPT
+        id S1726560AbfK0L01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 06:25:40 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:41683 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbfK0LZj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 06:25:39 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id CFD583C0579;
-        Wed, 27 Nov 2019 12:25:36 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id n11AOOZ_Mvdq; Wed, 27 Nov 2019 12:25:31 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Wed, 27 Nov 2019 06:26:27 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:54506 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbfK0L01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 06:26:27 -0500
+Received: from zn.tnic (p200300EC2F0F37003034EE13CF148829.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:3700:3034:ee13:cf14:8829])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id D50FC3C00BE;
-        Wed, 27 Nov 2019 12:25:31 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 27 Nov
- 2019 12:25:31 +0100
-Date:   Wed, 27 Nov 2019 12:25:28 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] checkpatch: whitelist Originally-by: signature
-Message-ID: <20191127112445.GA21836@vmlxhi-102.adit-jv.com>
-References: <20191115150202.15208-1-erosca@de.adit-jv.com>
- <05ba4e29fb78885cf9abf7bfc87e0a7bcda099fe.camel@perches.com>
- <20191115154627.GA2187@lxhi-065.adit-jv.com>
- <20191115092943.7c79f81e@lwn.net>
- <20191115172141.GA3085@lxhi-065.adit-jv.com>
- <CAMuHMdUhPV2B4dpgpPogpFQPprX-VOCC5RuwLLv3MiHzp-pq3Q@mail.gmail.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 83C531EC0CEB;
+        Wed, 27 Nov 2019 12:26:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574853981;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=zkgYU9yQbCe3KqRjeSOv/Vsy6xOWdNuit7arXyBXsR8=;
+        b=fEz4+VgwlWzJgyGzRPmC9fQQXD8YKWUB2F6jMEnUiBY4w1cNtHIPxShAsjuFAu3zm7RRMI
+        CCHzwdQUrz96dXJFE+NTvM7Z7/wTnWU3kzkH3NwHk73GOs19sAgWhIH35AyQBJoKHx8qoR
+        qoNHcq4B8l062u8GGC6FstPOhFA7pqw=
+Date:   Wed, 27 Nov 2019 12:26:13 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Jules Irenge <jbi.octave@gmail.com>, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
+        mingo@redhat.com
+Subject: Re: [PATCH] cpu: microcode: Add comma to 0
+Message-ID: <20191127112613.GA3812@zn.tnic>
+References: <20191126221519.167145-1-jbi.octave@gmail.com>
+ <20191127065436.GC52731@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUhPV2B4dpgpPogpFQPprX-VOCC5RuwLLv3MiHzp-pq3Q@mail.gmail.com>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+In-Reply-To: <20191127065436.GC52731@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
-
-On Wed, Nov 27, 2019 at 10:25:29AM +0100, Geert Uytterhoeven wrote:
-[..]
-> On Fri, Nov 15, 2019 at 6:24 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-[..]
-> > I will give a real-life example. Say, I have some patches in my
-> > local tree and they've been developed by somebody who is no longer
-> > interested/paid to upstream those.
-> >
-> > I first submit those patches with the original authorship, plus my SoB.
-> > Then, the reviewers post their findings. I put my time into fixing those
-> > and re-testing the patch or the entire series. The final patch/series
-> > may look totally different compared to the original one.
-> >
-> > Which way would you suggest to give credits to the original author?
-> > I personally think that "Co-developed-by:" conveys the idea/feeling of
-> > "teaming up" with somebody, which doesn't happen in my example.
+On Wed, Nov 27, 2019 at 07:54:36AM +0100, Ingo Molnar wrote:
 > 
-> What I typically do is this:
->   1. If the changes due to review are minor, I just add my SoB below the
->      original SoB,
->   2. If the changes are not insignificant, I also add a line "[geert: Did foo]"
->      in between the original SoB and mine,
->   3. If the patch needed a complete rewrite, I assume ownership, and add
->      "Based on/inspired by ..." to the patch description to give credit.
+> * Jules Irenge <jbi.octave@gmail.com> wrote:
 > 
-> Hope this helps (and is acceptable for other people ;-)
+> > Add ","  after 0
+> > Because memory for the struct is being cleared
+> > and elements after "," are missing on purpose
+> >  as they are being cleared to
+> > 
+> > Recommended by Boris Petkov
+> > 
+> > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> > ---
+> >  arch/x86/kernel/cpu/microcode/amd.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+> > index a0e52bd00ecc..04ee649f4acb 100644
+> > --- a/arch/x86/kernel/cpu/microcode/amd.c
+> > +++ b/arch/x86/kernel/cpu/microcode/amd.c
+> > @@ -418,7 +418,7 @@ static int __apply_microcode_amd(struct microcode_amd *mc)
+> >  static bool
+> >  apply_microcode_early_amd(u32 cpuid_1_eax, void *ucode, size_t size, bool save_patch)
+> >  {
+> > -	struct cont_desc desc = { 0 };
+> > +	struct cont_desc desc = { 0, };
+> 
+> This is 100% unnecessary - " = { }" is enough of a structure initializer.
 
-Thank you for your time to share the best practices from the heart of
-Linux kernel community. This looks like a reasonable blueprint to follow
-and I will personally bookmark and quote it whenever appropriate.
-
-The way I see "Originally-by" is that it attempts to replace the free
-wording implied at #3 (i.e. patch rewrite case) and hence its benefit.
-
-The less words I have to creatively write by myself, the less errors
-I'll make, the less ambiguous my patch will be, the more time I'll have
-to dedicate to the important parts of the patch description (feature
-overview, bug reproduction, test scenario, etc).
-
-I also understand the desire not to make the process more complicated
-than it needs to be. I expect the signature to still pop up here and
-there and whether it makes sense to whitelist it, time will tell.
+That was my initial thought but empty initializers are not ISO C
+compliant, I've been told.
 
 -- 
-Best Regards,
-Eugeniu
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
