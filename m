@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F333CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42258C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C009C2195D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18636218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888012;
-	bh=HrcUwKkHlSK/RNoEZonL455GYgfvlpM2beplA3LdyN4=;
+	s=default; t=1574888015;
+	bh=85fGGUmNc6aJLbEGpfmynlbgA0s6PvO/ENe7anqmj50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eaHoY7DHINR8/r+THckPZd2AJLQ7Tz8o9f7jlN/7J2hC4d7HFC39ECocwBmMRHpVy
-	 bO4q1mKZIPsg006xMM3QuUSIJoCeAYJAa7eILSxs3tFT/WDbpa3VAM+oAt3ozTsddE
-	 yUlG4qbYLFETrCTWXCZ4xHKq6fjR6glrZwvHP6zg=
+	b=NYGOE5qIbWFZbyJ2vBnSU1O998YpfAUT1YVI+6+UXHyLV4hq3q0DkDB4GmbqvRa3t
+	 gp3Ia8NUoqr5z0NrIRRF8DaSLSRSfO7ZZ2GKel8qGWih5CqaocUvlo3P/3/K8pA21p
+	 wHvBmet2eiDJhuF001fzCASRy/RzcciivQVzGkmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbfK0Uxb (ORCPT
+        id S1730743AbfK0Uxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:53:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42284 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:53:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730729AbfK0Ux3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:29 -0500
+        id S1728292AbfK0Uxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D87F218AF;
-        Wed, 27 Nov 2019 20:53:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EDDF21903;
+        Wed, 27 Nov 2019 20:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888008;
-        bh=HrcUwKkHlSK/RNoEZonL455GYgfvlpM2beplA3LdyN4=;
+        s=default; t=1574888011;
+        bh=85fGGUmNc6aJLbEGpfmynlbgA0s6PvO/ENe7anqmj50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sphDqL4HRU5QS4O0Wd0N154fCOnXLT+cMILzPgVoURhkVKkMZG8kZDxws0zi+sLyu
-         UcWgLkKnfynqgLUIT+Gm/h/89oqqdI4sVaOSdRVdST6Oh662d7pwAt2UBrNisodfBQ
-         hC9LhO5kAxISPvfiZMdzuAsd9xOPNvQMWEg6jkxc=
+        b=UVnO6zLTICJ81hrs2Sivib1lFrnZrP+xoW4th38rD2fWwhv0k7B1c4x3jwqQEQ08e
+         JGyVoC6btCIWPmQm5szn1F21mG4UBU0UbQYow3JYaatiusA6RBQSMNALdK7REO8OmU
+         KoGrMib3vp5K+FsH0t3wuw1KiluR3dNZRfTyYE2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-doc@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
+        stable@vger.kernel.org,
         Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Waiman Long <longman@redhat.com>, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Tim Chen <tim.c.chen@linux.intel.com>,
         Tony Luck <tony.luck@intel.com>,
         Tyler Hicks <tyhicks@canonical.com>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.14 178/211] x86/speculation: Fix incorrect MDS/TAA mitigation status
-Date:   Wed, 27 Nov 2019 21:31:51 +0100
-Message-Id: <20191127203110.639688055@linuxfoundation.org>
+Subject: [PATCH 4.14 179/211] x86/speculation: Fix redundant MDS mitigation message
+Date:   Wed, 27 Nov 2019 21:31:52 +0100
+Message-Id: <20191127203110.723987467@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -71,152 +70,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Waiman Long <longman@redhat.com>
 
-commit 64870ed1b12e235cfca3f6c6da75b542c973ff78 upstream.
+commit cd5a2aa89e847bdda7b62029d94e95488d73f6b2 upstream.
 
-For MDS vulnerable processors with TSX support, enabling either MDS or
-TAA mitigations will enable the use of VERW to flush internal processor
-buffers at the right code path. IOW, they are either both mitigated
-or both not. However, if the command line options are inconsistent,
-the vulnerabilites sysfs files may not report the mitigation status
-correctly.
+Since MDS and TAA mitigations are inter-related for processors that are
+affected by both vulnerabilities, the followiing confusing messages can
+be printed in the kernel log:
 
-For example, with only the "mds=off" option:
+  MDS: Vulnerable
+  MDS: Mitigation: Clear CPU buffers
 
-  vulnerabilities/mds:Vulnerable; SMT vulnerable
-  vulnerabilities/tsx_async_abort:Mitigation: Clear CPU buffers; SMT vulnerable
+To avoid the first incorrect message, defer the printing of MDS
+mitigation after the TAA mitigation selection has been done. However,
+that has the side effect of printing TAA mitigation first before MDS
+mitigation.
 
-The mds vulnerabilities file has wrong status in this case. Similarly,
-the taa vulnerability file will be wrong with mds mitigation on, but
-taa off.
+ [ bp: Check box is affected/mitigations are disabled first before
+   printing and massage. ]
 
-Change taa_select_mitigation() to sync up the two mitigation status
-and have them turned off if both "mds=off" and "tsx_async_abort=off"
-are present.
-
-Update documentation to emphasize the fact that both "mds=off" and
-"tsx_async_abort=off" have to be specified together for processors that
-are affected by both TAA and MDS to be effective.
-
- [ bp: Massage and add kernel-parameters.txt change too. ]
-
-Fixes: 1b42f017415b ("x86/speculation/taa: Add mitigation for TSX Async Abort")
+Suggested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Waiman Long <longman@redhat.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: linux-doc@vger.kernel.org
 Cc: Mark Gross <mgross@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Tim Chen <tim.c.chen@linux.intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
 Cc: Tyler Hicks <tyhicks@canonical.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191115161445.30809-2-longman@redhat.com
+Link: https://lkml.kernel.org/r/20191115161445.30809-3-longman@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/admin-guide/hw-vuln/mds.rst             |    7 +++++--
- Documentation/admin-guide/hw-vuln/tsx_async_abort.rst |    5 ++++-
- Documentation/admin-guide/kernel-parameters.txt       |   11 +++++++++++
- arch/x86/kernel/cpu/bugs.c                            |   17 +++++++++++++++--
- 4 files changed, 35 insertions(+), 5 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/Documentation/admin-guide/hw-vuln/mds.rst
-+++ b/Documentation/admin-guide/hw-vuln/mds.rst
-@@ -265,8 +265,11 @@ time with the option "mds=". The valid a
- 
-   ============  =============================================================
- 
--Not specifying this option is equivalent to "mds=full".
--
-+Not specifying this option is equivalent to "mds=full". For processors
-+that are affected by both TAA (TSX Asynchronous Abort) and MDS,
-+specifying just "mds=off" without an accompanying "tsx_async_abort=off"
-+will have no effect as the same mitigation is used for both
-+vulnerabilities.
- 
- Mitigation selection guide
- --------------------------
---- a/Documentation/admin-guide/hw-vuln/tsx_async_abort.rst
-+++ b/Documentation/admin-guide/hw-vuln/tsx_async_abort.rst
-@@ -174,7 +174,10 @@ the option "tsx_async_abort=". The valid
-                 CPU is not vulnerable to cross-thread TAA attacks.
-   ============  =============================================================
- 
--Not specifying this option is equivalent to "tsx_async_abort=full".
-+Not specifying this option is equivalent to "tsx_async_abort=full". For
-+processors that are affected by both TAA and MDS, specifying just
-+"tsx_async_abort=off" without an accompanying "mds=off" will have no
-+effect as the same mitigation is used for both vulnerabilities.
- 
- The kernel command line also allows to control the TSX feature using the
- parameter "tsx=" on CPUs which support TSX control. MSR_IA32_TSX_CTRL is used
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2254,6 +2254,12 @@
- 				     SMT on vulnerable CPUs
- 			off        - Unconditionally disable MDS mitigation
- 
-+			On TAA-affected machines, mds=off can be prevented by
-+			an active TAA mitigation as both vulnerabilities are
-+			mitigated with the same mechanism so in order to disable
-+			this mitigation, you need to specify tsx_async_abort=off
-+			too.
-+
- 			Not specifying this option is equivalent to
- 			mds=full.
- 
-@@ -4588,6 +4594,11 @@
- 				     vulnerable to cross-thread TAA attacks.
- 			off        - Unconditionally disable TAA mitigation
- 
-+			On MDS-affected machines, tsx_async_abort=off can be
-+			prevented by an active MDS mitigation as both vulnerabilities
-+			are mitigated with the same mechanism so in order to disable
-+			this mitigation, you need to specify mds=off too.
-+
- 			Not specifying this option is equivalent to
- 			tsx_async_abort=full.  On CPUs which are MDS affected
- 			and deploy MDS mitigation, TAA mitigation is not
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -304,8 +304,12 @@ static void __init taa_select_mitigation
- 		return;
+@@ -39,6 +39,7 @@ static void __init spectre_v2_select_mit
+ static void __init ssb_select_mitigation(void);
+ static void __init l1tf_select_mitigation(void);
+ static void __init mds_select_mitigation(void);
++static void __init mds_print_mitigation(void);
+ static void __init taa_select_mitigation(void);
+ 
+ /* The base value of the SPEC_CTRL MSR that always has to be preserved. */
+@@ -108,6 +109,12 @@ void __init check_bugs(void)
+ 	mds_select_mitigation();
+ 	taa_select_mitigation();
+ 
++	/*
++	 * As MDS and TAA mitigations are inter-related, print MDS
++	 * mitigation until after TAA mitigation selection is done.
++	 */
++	mds_print_mitigation();
++
+ 	arch_smt_update();
+ 
+ #ifdef CONFIG_X86_32
+@@ -245,6 +252,12 @@ static void __init mds_select_mitigation
+ 		    (mds_nosmt || cpu_mitigations_auto_nosmt()))
+ 			cpu_smt_disable(false);
  	}
++}
++
++static void __init mds_print_mitigation(void)
++{
++	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off())
++		return;
  
--	/* TAA mitigation is turned off on the cmdline (tsx_async_abort=off) */
--	if (taa_mitigation == TAA_MITIGATION_OFF)
-+	/*
-+	 * TAA mitigation via VERW is turned off if both
-+	 * tsx_async_abort=off and mds=off are specified.
-+	 */
-+	if (taa_mitigation == TAA_MITIGATION_OFF &&
-+	    mds_mitigation == MDS_MITIGATION_OFF)
- 		goto out;
- 
- 	if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
-@@ -339,6 +343,15 @@ static void __init taa_select_mitigation
- 	if (taa_nosmt || cpu_mitigations_auto_nosmt())
- 		cpu_smt_disable(false);
- 
-+	/*
-+	 * Update MDS mitigation, if necessary, as the mds_user_clear is
-+	 * now enabled for TAA mitigation.
-+	 */
-+	if (mds_mitigation == MDS_MITIGATION_OFF &&
-+	    boot_cpu_has_bug(X86_BUG_MDS)) {
-+		mds_mitigation = MDS_MITIGATION_FULL;
-+		mds_select_mitigation();
-+	}
- out:
- 	pr_info("%s\n", taa_strings[taa_mitigation]);
+ 	pr_info("%s\n", mds_strings[mds_mitigation]);
  }
 
 
