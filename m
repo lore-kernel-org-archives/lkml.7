@@ -2,164 +2,76 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AF6C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B65C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFA5215B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888105;
-	bh=5sVxnb408V3TlrbZLrj+UKz2T8LnaptQoJmh3OJCdHg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vsMltkMfTDtRPYrcBvSy0cPPZNmlzGmmFYfIWF4C912EOC6ax7HEM62zq58wo7k/P
-	 jzDRbyiv42e6vug6+eGWOXHviEq0mE95nqeEzLiDAzPQFOPbxcOgPKNK0Utoo/JJa/
-	 t0cLNua8kppln+rhIFmnOTwTFLh5ZeT0RFvl7nxE=
+	by mail.kernel.org (Postfix) with ESMTP id 68B0121582
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbfK0UzE (ORCPT
+        id S1730919AbfK0UzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:55:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbfK0UzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:55:07 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:33307 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730071AbfK0UzB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 15:55:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C55C221556;
-        Wed, 27 Nov 2019 20:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888100;
-        bh=5sVxnb408V3TlrbZLrj+UKz2T8LnaptQoJmh3OJCdHg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JPh5eyQBu9RZVSe7S+0vQvzO+kJ8sKQ7hjvVSCnX2dylroNZvPJbx09a6sIOBhhgs
-         0o7I1aC2HALKLqWFRYJbd2R9Hg8D7FdlKwsUiVB7XlCvrbAVBqsuttCo6k2n45Qcmq
-         A8l/WUdkYcNb5aQpmc9IFPKYP8WUfbzKVmpeEJyU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>
-Subject: [PATCH 4.14 187/211] net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
-Date:   Wed, 27 Nov 2019 21:32:00 +0100
-Message-Id: <20191127203111.387710023@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
-References: <20191127203049.431810767@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-io1-f70.google.com with SMTP id p19so16705136iog.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 12:55:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=jQLnoHsKmxpPtDkOoFd6eJabpY7m6+AA5JOgA8Ybj74=;
+        b=s/kvgrW2huaEdWoFiqWq8EKNRnC374yldKKJO16VL+YWzfWYWHMg387WncMAGKt4s0
+         7Xswk+6zh0XpzCpd6O9UsNq/qig2+B/xkFhRBZEjWRF3GrP3v0oBhmPq+Kz7q7Hkawyv
+         qlLyL1STQqth+Nw8z1xvoAk2rRpSXVNwA8eCTMLn2WbztDfNauLjQm/zxZgxWDqy3R5t
+         TNdSAjgdK3tqOzHpkEXFWYOvI2LVREcSBp3CATFeFYH7SDMR44O/lGMWAFMOwCMivXHU
+         C2pKBaf1IK6b4IIO3U75xoaaGru6zbOOAlpdzbYvtz5FyIeyiEs1dgWG/aMtPfnd4+v5
+         ITUQ==
+X-Gm-Message-State: APjAAAXiKRdtIK48gUgXCTpPOx2jis1Iulo6XdenlhNheBqeeF7zUqgl
+        UAxomywd4v2GF0ZtiLa9/F2+lx/fiIJurt4YKv1tdEZIubyx
+X-Google-Smtp-Source: APXvYqz+j/dvUG9sE4PEZA0jKLg/e6cGp5QCogVMjQ5p0MyvvAZ6Ah/N2Rq/BOV+Mzxf0pLx9L1JYqP+zVSMEy27mnZ/q9ADIFgK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5e:8505:: with SMTP id i5mr6587567ioj.158.1574888100803;
+ Wed, 27 Nov 2019 12:55:00 -0800 (PST)
+Date:   Wed, 27 Nov 2019 12:55:00 -0800
+In-Reply-To: <Pine.LNX.4.44L0.1911271304410.1319-100000@iolanthe.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cf39d205985a35b0@google.com>
+Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
+From:   syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, hverkuil@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org, oneukum@suse.com,
+        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+Hello,
 
-commit b8eb718348b8fb30b5a7d0a8fce26fb3f4ac741b upstream.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-kobject_init_and_add takes reference even when it fails. This has
-to be given up by the caller in error handling. Otherwise memory
-allocated by kobject_init_and_add is never freed. Originally found
-by Syzkaller:
+Reported-and-tested-by:  
+syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com
 
-BUG: memory leak
-unreferenced object 0xffff8880679f8b08 (size 8):
-  comm "netdev_register", pid 269, jiffies 4294693094 (age 12.132s)
-  hex dump (first 8 bytes):
-    72 78 2d 30 00 36 20 d4                          rx-0.6 .
-  backtrace:
-    [<000000008c93818e>] __kmalloc_track_caller+0x16e/0x290
-    [<000000001f2e4e49>] kvasprintf+0xb1/0x140
-    [<000000007f313394>] kvasprintf_const+0x56/0x160
-    [<00000000aeca11c8>] kobject_set_name_vargs+0x5b/0x140
-    [<0000000073a0367c>] kobject_init_and_add+0xd8/0x170
-    [<0000000088838e4b>] net_rx_queue_update_kobjects+0x152/0x560
-    [<000000006be5f104>] netdev_register_kobject+0x210/0x380
-    [<00000000e31dab9d>] register_netdevice+0xa1b/0xf00
-    [<00000000f68b2465>] __tun_chr_ioctl+0x20d5/0x3dd0
-    [<000000004c50599f>] tun_chr_ioctl+0x2f/0x40
-    [<00000000bbd4c317>] do_vfs_ioctl+0x1c7/0x1510
-    [<00000000d4c59e8f>] ksys_ioctl+0x99/0xb0
-    [<00000000946aea81>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000038d946e5>] do_syscall_64+0x16f/0x580
-    [<00000000e0aa5d8f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<00000000285b3d1a>] 0xffffffffffffffff
+Tested on:
 
-Cc: David Miller <davem@davemloft.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+commit:         22be26f7 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
+dashboard link: https://syzkaller.appspot.com/bug?extid=9ca7a12fd736d93e0232
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17d13f6ae00000
 
----
- net/core/net-sysfs.c |   24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
-
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -915,21 +915,23 @@ static int rx_queue_add_kobject(struct n
- 	error = kobject_init_and_add(kobj, &rx_queue_ktype, NULL,
- 				     "rx-%u", index);
- 	if (error)
--		return error;
-+		goto err;
- 
- 	dev_hold(queue->dev);
- 
- 	if (dev->sysfs_rx_queue_group) {
- 		error = sysfs_create_group(kobj, dev->sysfs_rx_queue_group);
--		if (error) {
--			kobject_put(kobj);
--			return error;
--		}
-+		if (error)
-+			goto err;
- 	}
- 
- 	kobject_uevent(kobj, KOBJ_ADD);
- 
- 	return error;
-+
-+err:
-+	kobject_put(kobj);
-+	return error;
- }
- #endif /* CONFIG_SYSFS */
- 
-@@ -1326,21 +1328,21 @@ static int netdev_queue_add_kobject(stru
- 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
- 				     "tx-%u", index);
- 	if (error)
--		return error;
-+		goto err;
- 
- 	dev_hold(queue->dev);
- 
- #ifdef CONFIG_BQL
- 	error = sysfs_create_group(kobj, &dql_group);
--	if (error) {
--		kobject_put(kobj);
--		return error;
--	}
-+	if (error)
-+		goto err;
- #endif
- 
- 	kobject_uevent(kobj, KOBJ_ADD);
- 
--	return 0;
-+err:
-+	kobject_put(kobj);
-+	return error;
- }
- #endif /* CONFIG_SYSFS */
- 
-
-
+Note: testing is done by a robot and is best-effort only.
