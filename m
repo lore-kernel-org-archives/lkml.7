@@ -2,96 +2,123 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDACC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299B6C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9194207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:43:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574880203;
-	bh=gmFE4t6cKUmwpn+kz/HoOEzx7IrAq5xkHTpv6f8+GWE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1//RQ8O2Rc+Wi2LP5qaVT1sZLb/QuTMpA7tGInmDjczWSIPzXOWip6acmubpD1EmI
-	 hB/l0Nyvgf7flzzeLjmKj/Pmdcgd6VmGV8WoCcnN821zsVZLCc95c0sloH/uFO39/l
-	 ojkzLurS8oWVPvH5MD0K/V54vu80KNkAEw2AmekE=
+	by mail.kernel.org (Postfix) with ESMTP id EE456207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:44:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJ+P4iz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfK0SnW (ORCPT
+        id S1727158AbfK0SoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:43:22 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34053 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfK0SnW (ORCPT
+        Wed, 27 Nov 2019 13:44:07 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38004 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfK0SoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:43:22 -0500
-Received: by mail-lf1-f67.google.com with SMTP id l28so18038347lfj.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:43:19 -0800 (PST)
+        Wed, 27 Nov 2019 13:44:07 -0500
+Received: by mail-qt1-f196.google.com with SMTP id 14so26384272qtf.5;
+        Wed, 27 Nov 2019 10:44:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cbp4DRGdKYx7atlFA7GlUWnZYZVPUU8tNJviwLPMwP8=;
-        b=HM5iTj817tbd8cgI9ROFiU+5J5YRbcS7MYRE/ldgJRbpHkbNqHSUly1N+3IW3ABvaP
-         0AnDO9ZClvsfdopZ7slk2K/U954EKFibZ0xJNi38LaKsXU7ctKWaPktwa9Oe4vB6CzGj
-         MlL/2ANydkNTMbGaraqikAd4dKM9Y6DcDCxkg=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vLYRgEqQraqD/jRbKwCGJCTuqQIUu2eT37zrYdLloVI=;
+        b=nJ+P4iz7K1/DdSVU64e3WR10Y5BWSkScNTlF35QpsGFfzfe2LkwADm77GfF23oEAzX
+         ChXEdSxrkcPbEpZV0UtPYDPo17JK5jbcSgWwGOWN/Ql12Mfia2zKvweOig/ilUui4++G
+         I9liubb+CgMfS5/zYVGGOGcBfDXx0MH8gqMnHIFGf304dcSD1MfcKFJFhY0iHOOTuamM
+         6PNP8l6nvSddiDmN0DRTYgTsEoeJJuDMSng3qASLI+1pyxGc/f4LVssZgxIdMaOLFnMV
+         d9k1w+FifS7kDQJLf1IzBit0oURjWCMzV62pG93cMWI3g0TE+751jHOj/t9YeSrBtNMr
+         NY3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cbp4DRGdKYx7atlFA7GlUWnZYZVPUU8tNJviwLPMwP8=;
-        b=l2ioMJfoW9lrNPfsSalxA/n0UKOAWfLulHUF1enDgh36Df/UyA8TEaK0OGvvHZoFIL
-         amdH9KRXY9OXjK9+lvzj4rVQL+jGk3FMLP9OlyWjHD5qF9yzEhI7HdYYWqFANtIbmr+h
-         2anTko/CDFwdvoqaGwWn4olaLtzIn1Zq5JA8bIAKpvXeUeBH1Nx42/R1jtEBncXQ+NdX
-         BUH0o4fQPJpM9bO1ILC8zsZ/ehwXyJBDQQamugEMoaODDfA7C+aOiLN8aNHkMlWP+nz+
-         UG9hzSG5rvapMo9nTYWqXTGyF2WloKTySSG8HPBDMrNr1OUDzOCKDj44l1ps5B46EBUU
-         uXXg==
-X-Gm-Message-State: APjAAAXzz0bk21f96TNwMqtrAjhDRdOhKW3Y+E1rp8OgoRYXeaBLaVo2
-        iRB1dZXVCt39F/KUr1RlrtF/UNpSqLM=
-X-Google-Smtp-Source: APXvYqwVBx0l8EkUuGikeu0Bl/MO5idAnxy6f2xclLRj8fZMSVt4wndLhIntzdmJ6z1eVLR0vy+5Bw==
-X-Received: by 2002:a19:8c4e:: with SMTP id i14mr16268118lfj.90.1574880198611;
-        Wed, 27 Nov 2019 10:43:18 -0800 (PST)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id v28sm2806434lfd.93.2019.11.27.10.43.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2019 10:43:17 -0800 (PST)
-Received: by mail-lj1-f175.google.com with SMTP id m4so25578301ljj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:43:17 -0800 (PST)
-X-Received: by 2002:a2e:2c19:: with SMTP id s25mr31789522ljs.26.1574880197221;
- Wed, 27 Nov 2019 10:43:17 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vLYRgEqQraqD/jRbKwCGJCTuqQIUu2eT37zrYdLloVI=;
+        b=AAoim3ojxicW/WoXT2o+B8vJaryV3OUXY/dioj5ITru0Q+uup/W7EuEemE8UwntsiT
+         S/spAXZfCgoneqymmvoxHzHoVQ4V3zne7VhsxAM8nvJSKxwICXMonfoTxE+MZhHLg0Xp
+         zP94iur9J8URfBBox7NoSzTlBwEyvd6re68RpRuJL6ADZ29IgtPJN+jpLHrDfCje0Bhn
+         rh8N0xNWllNPsPfd7rGGDQxJZQKO2scPCF6po9LcatV0dM3js0LspHeaTv6mY18hwkJF
+         G4CWViiVZznNfjayOuj1/o3GnsSa2AgLeaMyBJYIzj0AqmdGXXHkvvjMoNEo7X1L5kiD
+         ifAg==
+X-Gm-Message-State: APjAAAXTNwn77uA3c3/ox2ifUHF9vxkZLXpWhfnrDdO1sE6+IkGiuu1A
+        1xlnHVDbEzomo3hxa470GDi7n2JitId3zA==
+X-Google-Smtp-Source: APXvYqza+dZLDafmoYQJI1Bsn0z4hENX6OJOQ4Ofq+mRxeXSofLRpVnd2slRTjKLtZLI2mYQQ66nAQ==
+X-Received: by 2002:ac8:2a65:: with SMTP id l34mr8257242qtl.105.1574880246225;
+        Wed, 27 Nov 2019 10:44:06 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id x1sm7924206qtf.81.2019.11.27.10.44.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 10:44:06 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id EDCAC40D3E; Wed, 27 Nov 2019 15:44:00 -0300 (-03)
+Date:   Wed, 27 Nov 2019 15:44:00 -0300
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191127184400.GA4063@kernel.org>
+References: <20191127094837.4045-1-jolsa@kernel.org>
+ <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
 MIME-Version: 1.0
-References: <CACRpkdZYR=5-vf29vYN-gZWRNta3axWNxMTve+hoK_ugkUhcnA@mail.gmail.com>
-In-Reply-To: <CACRpkdZYR=5-vf29vYN-gZWRNta3axWNxMTve+hoK_ugkUhcnA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 27 Nov 2019 10:43:01 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgTCNr1e9g7U6irHxhdHqB3PZJ9hL1SZmPK32NNtuEcZQ@mail.gmail.com>
-Message-ID: <CAHk-=wgTCNr1e9g7U6irHxhdHqB3PZJ9hL1SZmPK32NNtuEcZQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Bulk pin control changes for v5.5
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 7:01 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> Rahul Tanwar :
->       pinctrl: Add pinmux & GPIO controller driver for a new SoC
+Em Wed, Nov 27, 2019 at 08:37:59AM -0800, Alexei Starovoitov escreveu:
+> On Wed, Nov 27, 2019 at 1:48 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> > adding support to link bpftool with libbpf dynamically,
+> > and config change for perf.
 
-Hmm. This results in
+> > It's now possible to use:
+> >   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1
 
-  WARNING: modpost: missing MODULE_LICENSE() in
-drivers/pinctrl/pinctrl-equilibrium.o
+> > which will detect libbpf devel package with needed version,
+> > and if found, link it with bpftool.
 
-I've pulled it, but can you please fix it up?
+> > It's possible to use arbitrary installed libbpf:
+> >   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/libbpf/
 
-               Linus
+> > I based this change on top of Arnaldo's perf/core, because
+> > it contains libbpf feature detection code as dependency.
+> > It's now also synced with latest bpf-next, so Toke's change
+> > applies correctly.
+ 
+> I don't like it.
+> Especially Toke's patch to expose netlink as public and stable libbpf api.
+> bpftools needs to stay tightly coupled with libbpf (and statically
+> linked for that reason).
+> Otherwise libbpf will grow a ton of public api that would have to be stable
+> and will quickly become a burden.
+
+I can relate to that, tools/lib/perf/ is only now getting put in place
+because of these fears, hopefully the evsel/evlist/cpumap/etc
+abstractions there have been in use for a long time and will be not be a
+burden... :-)
+
+- Arnaldo
