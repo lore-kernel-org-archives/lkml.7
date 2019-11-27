@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E29C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7275C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC4F21774
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF34C21774
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887891;
-	bh=/hFGSIbqhRdSb3z0BkOSlqGrwcilsXLi6GZ64g98xaQ=;
+	s=default; t=1574887894;
+	bh=e0kwQxqjl/q5q36XpJycaaUijSZMetJRcSRLw0P4rkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CIc5syDtyA0hwcUfuyJQ43Yl3LaBnxFSMLAujGIY/pzrXey+6NnIsyZo6P38+Hsxk
-	 EoDW4kiG8K5+MbEc5un4K4vwqYjk6ZLY0lra7S7f77kPaF0I1cmIT/dvBrrq/DlwDl
-	 Wh9gWWWFW8oI4DQ2JXlQ2A69e5k+jR8hxLMP6LoA=
+	b=0GKuaBPi3d2gsDWXEmeGogtmLVAUT7htN9n+t73qTS2uSWF8JRc0xvQzImQFBe3Fj
+	 ns8Y6v0vj5NTZnCfwFkP5CZbjukC00t3bacPG2pvByxUG79Y3E/teXkq535A2V66ir
+	 cO+AcnAUeD6TI6IAAyr97nNrpXrOSgGxr/6GwFyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbfK0Uva (ORCPT
+        id S1730498AbfK0Uvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:51:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38216 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:51:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730473AbfK0Uv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:51:27 -0500
+        id S1730490AbfK0Uva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:51:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDDE021847;
-        Wed, 27 Nov 2019 20:51:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 610682084D;
+        Wed, 27 Nov 2019 20:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887887;
-        bh=/hFGSIbqhRdSb3z0BkOSlqGrwcilsXLi6GZ64g98xaQ=;
+        s=default; t=1574887889;
+        bh=e0kwQxqjl/q5q36XpJycaaUijSZMetJRcSRLw0P4rkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tTXZbvuiMQq5Y25GpHXDu8hfbKS1HYN/dZm/tKNA2DOM270ZtHAL5BKIjQApFpn9V
-         wTiVNOPQea8fh1GBcBXXfWmzb1Jmzc4xmahvkJyr4c2lGaDvkQfDcEagTJGWHhjr8W
-         YzX1r9C3hDANrEt5JqLXgMNb5gQLPTklt+iiiPIo=
+        b=zNGSA3f6nTzl6qLfsC/XwtWchdVBvyBusLhvqYLM6ZZ+Wb5+MUkrfYHuqe+PNEVnR
+         0Jw1lvaIixoQrgOAKW5hHpqKJR+pw46qCAgDnOP46jOFTwHsMX0fiU+fzaVoiMb0Vf
+         Er9j6S/5OH70e+pxOAapIIHOHwWcQIgGXBZLDhS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radu Rendec <radu.rendec@gmail.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Changbin Du <changbin.du@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 096/211] macsec: let the administrator set UP state even if lowerdev is down
-Date:   Wed, 27 Nov 2019 21:30:29 +0100
-Message-Id: <20191127203102.774805953@linuxfoundation.org>
+Subject: [PATCH 4.14 132/211] btrfs: avoid link error with CONFIG_NO_AUTO_INLINE
+Date:   Wed, 27 Nov 2019 21:31:05 +0100
+Message-Id: <20191127203106.519625908@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,41 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 07bddef9839378bd6f95b393cf24c420529b4ef1 ]
+[ Upstream commit 7e17916b35797396f681a3270245fd29c1e4c250 ]
 
-Currently, the kernel doesn't let the administrator set a macsec device
-up unless its lower device is currently up. This is inconsistent, as a
-macsec device that is up won't automatically go down when its lower
-device goes down.
+Note: this patch fixes a problem in a feature outside of btrfs ("kernel
+hacking: add a config option to disable compiler auto-inlining") and is
+applied ahead of time due to cross-subsystem dependencies.
 
-Now that linkstate propagation works, there's really no reason for this
-limitation, so let's remove it.
+On 32-bit ARM with gcc-8, I see a link error with the addition of the
+CONFIG_NO_AUTO_INLINE option:
 
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Reported-by: Radu Rendec <radu.rendec@gmail.com>
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+fs/btrfs/super.o: In function `btrfs_statfs':
+super.c:(.text+0x67b8): undefined reference to `__aeabi_uldivmod'
+super.c:(.text+0x67fc): undefined reference to `__aeabi_uldivmod'
+super.c:(.text+0x6858): undefined reference to `__aeabi_uldivmod'
+super.c:(.text+0x6920): undefined reference to `__aeabi_uldivmod'
+super.c:(.text+0x693c): undefined reference to `__aeabi_uldivmod'
+fs/btrfs/super.o:super.c:(.text+0x6958): more undefined references to `__aeabi_uldivmod' follow
+
+So far this is the only file that shows the behavior, so I'd propose
+to just work around it by marking the functions as 'static inline'
+that normally get inlined here.
+
+The reference to __aeabi_uldivmod comes from a div_u64() which has an
+optimization for a constant division that uses a straight '/' operator
+when the result should be known to the compiler. My interpretation is
+that as we turn off inlining, gcc still expects the result to be constant
+but fails to use that constant value.
+
+Link: https://lkml.kernel.org/r/20181103153941.1881966-1-arnd@arndb.de
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[ add the note ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 3 ---
- 1 file changed, 3 deletions(-)
+ fs/btrfs/super.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index 40e8f11f20cbf..9bb65e0af7dd7 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -2798,9 +2798,6 @@ static int macsec_dev_open(struct net_device *dev)
- 	struct net_device *real_dev = macsec->real_dev;
- 	int err;
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 49a02bf091aea..204d585e012a8 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -1863,7 +1863,7 @@ static int btrfs_remount(struct super_block *sb, int *flags, char *data)
+ }
  
--	if (!(real_dev->flags & IFF_UP))
--		return -ENETDOWN;
--
- 	err = dev_uc_add(real_dev, dev->dev_addr);
- 	if (err < 0)
- 		return err;
+ /* Used to sort the devices by max_avail(descending sort) */
+-static int btrfs_cmp_device_free_bytes(const void *dev_info1,
++static inline int btrfs_cmp_device_free_bytes(const void *dev_info1,
+ 				       const void *dev_info2)
+ {
+ 	if (((struct btrfs_device_info *)dev_info1)->max_avail >
+@@ -1892,8 +1892,8 @@ static inline void btrfs_descending_sort_devices(
+  * The helper to calc the free space on the devices that can be used to store
+  * file data.
+  */
+-static int btrfs_calc_avail_data_space(struct btrfs_fs_info *fs_info,
+-				       u64 *free_bytes)
++static inline int btrfs_calc_avail_data_space(struct btrfs_fs_info *fs_info,
++					      u64 *free_bytes)
+ {
+ 	struct btrfs_device_info *devices_info;
+ 	struct btrfs_fs_devices *fs_devices = fs_info->fs_devices;
 -- 
 2.20.1
 
