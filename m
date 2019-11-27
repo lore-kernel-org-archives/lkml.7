@@ -2,56 +2,58 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF03C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0D8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A88215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7624215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888556;
-	bh=W6T0qxVUQejosUr+bj/+5xttfCFxqDgrSuXmTQbWXog=;
+	s=default; t=1574888558;
+	bh=veA1u/NFRMPjxmg2z9Ts0nba0JTcv5GCfC6drOMXbiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jK02JiDOGlo6XIQlRr0PpRyucYuFTMCVkBN8whhEjDYDMYe+Yk26WXVP4FHnv5rby
-	 Ugqml8VY1w0QE+JVfJ/mt19bLNbSzYFHTurs66pz0ELQnUi+VHiUaXcqmyxCnwqO21
-	 LQ1rSRdo3gWWjMoOOEuSV27Dk9i31woSa53GukqA=
+	b=WLuUAJ2+sfupXizf3q0Vj2j5U+pW/re8I/GKhY0VghwB0trdZebj5KerNMH47DvfA
+	 yWiSUorit2uT+SUH/EHpS4fulY7UIIB9n2TZBhRiMl3jnfu7pJY5P0KDYjkkr+6dMX
+	 ZjHDiFwWNLcqBoZSTYxZhjt+s9O9SgsNpijfRiis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbfK0VCe (ORCPT
+        id S1731914AbfK0VCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:02:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55206 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:02:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731898AbfK0VCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:02:30 -0500
+        id S1731898AbfK0VCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:02:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EB49215A5;
-        Wed, 27 Nov 2019 21:02:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 311E3215A4;
+        Wed, 27 Nov 2019 21:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888549;
-        bh=W6T0qxVUQejosUr+bj/+5xttfCFxqDgrSuXmTQbWXog=;
+        s=default; t=1574888554;
+        bh=veA1u/NFRMPjxmg2z9Ts0nba0JTcv5GCfC6drOMXbiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EbhSmuKQxB+liV0fakzcz46cC9IEKCqC72QezjmzgNimS643ZZEk1nCIZHPQ2XZgA
-         HYPinaPA7iccZgCVtU/8ys5Pd08UtJgZsd377/f/MBwbGqQ6cohElLD1B9WLl1laAY
-         ESI3G4F2jp2pbrstb6pjWHxSxYnWljbJY7NF6Y6E=
+        b=N43HgLyZCKfoUf7kH7PwIdKUzpw4+yUZsFqOJTE0oPJVjiHu3fTXM2jM6AYMb20Xk
+         eH49CX3jSaxOCplusMBavEp8p87pLcuSb9WeRvCh7exobuSv4TPbcE5VZ0JxNeeTvy
+         2F1nzSErWSbhQHYJ3FyV2WYxnKRcRet9ASMliFAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "=?UTF-8?q?Ernesto=20A . =20Fern=C3=A1ndez?=" 
-        <ernesto.mnd.fernandez@gmail.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "Ernesto A. Fernndez" <ernesto.mnd.fernandez@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Hin-Tak Leung <htl10@users.sourceforge.net>,
         Vyacheslav Dubeyko <slava@dubeyko.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 176/306] hfsplus: update timestamps on truncate()
-Date:   Wed, 27 Nov 2019 21:30:26 +0100
-Message-Id: <20191127203128.212013365@linuxfoundation.org>
+Subject: [PATCH 4.19 178/306] fs/hfs/extent.c: fix array out of bounds read of array extent
+Date:   Wed, 27 Nov 2019 21:30:28 +0100
+Message-Id: <20191127203128.342409822@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -64,37 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit dc8844aada735890a6de109bef327f5df36a982e ]
+[ Upstream commit 6c9a3f843a29d6894dfc40df338b91dbd78f0ae3 ]
 
-The vfs takes care of updating ctime and mtime on ftruncate(), but on
-truncate() it must be done by the module.
+Currently extent and index i are both being incremented causing an array
+out of bounds read on extent[i].  Fix this by removing the extraneous
+increment of extent.
 
-This patch can be tested with xfstests generic/313.
+Ernesto said:
 
-Link: http://lkml.kernel.org/r/9beb0913eea37288599e8e1b7cec8768fb52d1b8.1539316825.git.ernesto.mnd.fernandez@gmail.com
-Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
+: This is only triggered when deleting a file with a resource fork.  I
+: may be wrong because the documentation isn't clear, but I don't think
+: you can create those under linux.  So I guess nobody was testing them.
+:
+: > A disk space leak, perhaps?
+:
+: That's what it looks like in general.  hfs_free_extents() won't do
+: anything if the block count doesn't add up, and the error will be
+: ignored.  Now, if the block count randomly does add up, we could see
+: some corruption.
+
+Detected by CoverityScan, CID#711541 ("Out of bounds read")
+
+Link: http://lkml.kernel.org/r/20180831140538.31566-1-colin.king@canonical.com
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Ernesto A. Fernndez <ernesto.mnd.fernandez@gmail.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Hin-Tak Leung <htl10@users.sourceforge.net>
+Cc: Vyacheslav Dubeyko <slava@dubeyko.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfsplus/inode.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/hfs/extent.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
-index 8e9427a42b819..d7ab9d8c4b674 100644
---- a/fs/hfsplus/inode.c
-+++ b/fs/hfsplus/inode.c
-@@ -261,6 +261,7 @@ static int hfsplus_setattr(struct dentry *dentry, struct iattr *attr)
- 		}
- 		truncate_setsize(inode, attr->ia_size);
- 		hfsplus_file_truncate(inode);
-+		inode->i_mtime = inode->i_ctime = current_time(inode);
- 	}
+diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
+index 5f1ff97a3b987..263d5028d9d18 100644
+--- a/fs/hfs/extent.c
++++ b/fs/hfs/extent.c
+@@ -304,7 +304,7 @@ int hfs_free_fork(struct super_block *sb, struct hfs_cat_file *file, int type)
+ 		return 0;
  
- 	setattr_copy(inode, attr);
+ 	blocks = 0;
+-	for (i = 0; i < 3; extent++, i++)
++	for (i = 0; i < 3; i++)
+ 		blocks += be16_to_cpu(extent[i].count);
+ 
+ 	res = hfs_free_extents(sb, extent, blocks, blocks);
 -- 
 2.20.1
 
