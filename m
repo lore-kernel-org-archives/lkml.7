@@ -2,100 +2,93 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073F4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0366C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE332075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574858001;
-	bh=LzYhxJZwT/5cPL9ppG3GIvLklUK/CrB3gpOUIIGf6vg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NapFfDZ5oIqoC4AjKqTIU9JHspltjzWU0050TNj0rW3WbZcWRB9u2D20gCnvnLof4
-	 4Yfr1ksmQfUkmwBDqU+oqxQlSF3J3i1PCEU8GJBlx2FN5q1ke40RPMJ5+bCpsKgxPi
-	 wXaJTqCndQWmfnjo6zIQdtkaD1PUX5R10sS8vNMs=
+	by mail.kernel.org (Postfix) with ESMTP id 917BA2068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfK0MdV (ORCPT
+        id S1727091AbfK0MkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 07:33:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:47118 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfK0MdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 07:33:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3B9C30E;
-        Wed, 27 Nov 2019 04:33:19 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70AFC3F6C4;
-        Wed, 27 Nov 2019 04:33:19 -0800 (PST)
-Date:   Wed, 27 Nov 2019 12:33:17 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>
-Subject: Re: [PATCHv2 6/6] ASoC: da7213: Add default clock handling
-Message-ID: <20191127123317.GA4879@sirena.org.uk>
-References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
- <20191120152406.2744-7-sebastian.reichel@collabora.com>
- <AM5PR1001MB0994720A0D615339A978E35C804E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <AM5PR1001MB0994E628439F021F97B872D480450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191126170841.GC4205@sirena.org.uk>
- <AM5PR1001MB09949D557742E8817545637F80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191126175040.GD4205@sirena.org.uk>
- <AM5PR1001MB09940CF764711F1F13A6B37E80440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Wed, 27 Nov 2019 07:40:07 -0500
+Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:50420 "EHLO
+        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726546AbfK0MkE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 07:40:04 -0500
+Received: from faui04s.informatik.uni-erlangen.de (faui04s.informatik.uni-erlangen.de [IPv6:2001:638:a000:4130:131:188:30:149])
+        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 89A2C24163F;
+        Wed, 27 Nov 2019 13:31:02 +0100 (CET)
+Received: by faui04s.informatik.uni-erlangen.de (Postfix, from userid 66121)
+        id 7016815E0581; Wed, 27 Nov 2019 13:31:02 +0100 (CET)
+From:   Dorothea Ehrl <dorothea.ehrl@fau.de>
+To:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     linux-kernel@i4.cs.fau.de, Dorothea Ehrl <dorothea.ehrl@fau.de>,
+        Vanessa Hack <vanessa.hack@fau.de>
+Subject: [PATCH 2/5] staging/qlge: add blank lines after declarations
+Date:   Wed, 27 Nov 2019 13:30:49 +0100
+Message-Id: <20191127123052.16424-2-dorothea.ehrl@fau.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191127123052.16424-1-dorothea.ehrl@fau.de>
+References: <20191127123052.16424-1-dorothea.ehrl@fau.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
-Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB09940CF764711F1F13A6B37E80440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Cookie: In the war of wits, he's unarmed.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch fixes "WARNING: Missing a blank line after declarations" by
+checkpatch.pl.
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Dorothea Ehrl <dorothea.ehrl@fau.de>
+Co-developed-by: Vanessa Hack <vanessa.hack@fau.de>
+Signed-off-by: Vanessa Hack <vanessa.hack@fau.de>
+---
+ drivers/staging/qlge/qlge_ethtool.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Wed, Nov 27, 2019 at 11:32:54AM +0000, Adam Thomson wrote:
+diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/staging/qlge/qlge_ethtool.c
+index 0c3f8eb34094..c03153b95844 100644
+--- a/drivers/staging/qlge/qlge_ethtool.c
++++ b/drivers/staging/qlge/qlge_ethtool.c
+@@ -332,6 +332,7 @@ static void ql_update_stats(struct ql_adapter *qdev)
+ static void ql_get_strings(struct net_device *dev, u32 stringset, u8 *buf)
+ {
+ 	int index;
++
+ 	switch (stringset) {
+ 	case ETH_SS_TEST:
+ 		memcpy(buf, *ql_gstrings_test, QLGE_TEST_LEN * ETH_GSTRING_LEN);
+@@ -412,6 +413,7 @@ static void ql_get_drvinfo(struct net_device *ndev,
+ 			   struct ethtool_drvinfo *drvinfo)
+ {
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
++
+ 	strlcpy(drvinfo->driver, qlge_driver_name, sizeof(drvinfo->driver));
+ 	strlcpy(drvinfo->version, qlge_driver_version,
+ 		sizeof(drvinfo->version));
+@@ -703,12 +705,14 @@ static int ql_set_pauseparam(struct net_device *netdev,
+ static u32 ql_get_msglevel(struct net_device *ndev)
+ {
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
++
+ 	return qdev->msg_enable;
+ }
 
-> As I said it's a small thing and requires a specific use-case to occur, but
-> having the PLL configured twice for the very first stream in that scenario
-> seems messy. Regarding the SYSCLK approach you mention, I'm not clear how that
-> would work so I'm obviously missing something. If we had some init stage
-> indication though that auto PLL was required then we're golden.
+ static void ql_set_msglevel(struct net_device *ndev, u32 value)
+ {
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
++
+ 	qdev->msg_enable = value;
+ }
 
-There's a bunch of other drivers using the SYSCLK thing, when you call
-set_sysclk() they provide a different SYSCLK number if they want to use
-manual mode.  If there's a concern about drivers doing stuff on init you
-could always ask them to set the PLL during init, even if only briefly.
+--
+2.20.1
 
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3ebQoACgkQJNaLcl1U
-h9BDaQf/ZAlgmS17icedamvRKebKOojZ+VtpiJMgMsOiLs1eMu10rJm/6XiCT5sh
-dvPRA9mGno4nal5L/s8UHj3CFPkHSYqPGI/uwY4Gf4Ek2B9cyMHiW3ht1MozjcDH
-I2QMxZxMhqHCf1p5a8fh+2jlyFfwC8lpluRg57rLT5PTdb27MBbrshYHlPuuxKtk
-p7U1irpsbnO6iW3CAp9N8kIc996SItJ7230JQCHXdLJ0X773ekOLQTSb5Ypn0Y/f
-kD+NRNoggRWJ70XZqm3DwMQRdGIW33IWR/nS+W0ncP93hfneMjYpp4byZ+BGWOwy
-CozlfXK15fWw/kq+9Gw1LGWv9CKSxw==
-=thrJ
------END PGP SIGNATURE-----
-
---GvXjxJ+pjyke8COw--
