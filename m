@@ -2,81 +2,150 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5D6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D35C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C675720656
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C042070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574839266;
+	bh=h7jPTRwlhPHVe30IJ41+OdHKFf3sZXa2AMCxSvFboeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UKv+p8tte/A0i6dKJVLnglrpe9xWQVkAPy6Sn1kIbd49LHUGZpCioUShaen3fJgbt
+	 tnRdXLEKZRe9PYpAZt96+9+JIwMl0ByarElCVzNlfu76Z6h+H2kDDKn5wKbAojVWwG
+	 5eltLzYzL0Jze/ku9IR9ugyWI7FKHHqrHrBwiS3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfK0HNH (ORCPT
+        id S1726252AbfK0HVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 02:13:07 -0500
-Received: from mail-oi1-f181.google.com ([209.85.167.181]:38138 "EHLO
-        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfK0HNH (ORCPT
+        Wed, 27 Nov 2019 02:21:05 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56139 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfK0HVE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 02:13:07 -0500
-Received: by mail-oi1-f181.google.com with SMTP id a14so19180455oid.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 23:13:05 -0800 (PST)
+        Wed, 27 Nov 2019 02:21:04 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a131so1567216wme.5;
+        Tue, 26 Nov 2019 23:21:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kCncgZfNLfu/DMj0wXER7XvmqE7+H8NXbrnKF+xxq0U=;
+        b=RSC3imGkI2eVKkgg38Jlm1TsR+Yjp09v6ffKoandFuxhXe+nBgW9uOHL+l020Y7rdF
+         tSYsjMmQCs6HaS/TUMfPNAarUe2TJ0CqybUceItnNLhGo9az8T3Y5fNOH3GLZnX3jWQm
+         jisTx/sLc7NDTLdHJbfTfFjGwYGuuKVV4/d96w5zdcKRtmsI6jd1GM9EA/jQgTY8Vu4z
+         83O39LSKtgLiosa1NNh8Vo9Cv1oYVXNALrsUmYDlpqUlQKgLeOzmXyrSO9N3UJef1UAD
+         dUG5ZLwAMqKaIBiXpIpT8vxX4HmooGbATxlPXMKIaxtINEPsboG+CsqGwvTnCJnfU8tC
+         a9sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k+iy+I2ql514V3Li/xFx77FCnKZwhQ5z9HPShasnZfo=;
-        b=FKIvXRj/JLMkeMstrbQjwyHmz/Ezo7lNzTW1ZAV49BhmsnAcVHJYL3Ncwxf42s/vVU
-         PLVskTUDQfxNPBGC4p7WebGOq7BwNewmcVIBt7Ad1Rtf+PbPFniGEWyf4upZnwhb9eat
-         ri1Z6hC8BDB6xui/Q4BYheEu31lWSqxHvuuuM4sTASeVh/s/IFV3XA7VaPFzaPZ1FKi8
-         r0O/pXf5gQ6rgVVWa1Qpl/eFadXhNJK23GaGrnQY6NF9iYwsXzFA4SNXplz9aVyP6mP0
-         hRFV3uTAjAyXpCVo9jnksYgEctZwOwSLtC9D844QITTv4nmP7wb7tOrlxyy19L4dL8xn
-         Wytw==
-X-Gm-Message-State: APjAAAW+MH1IjZpQxWVRnCt6y9k5xMIizQpW5jjvZ345GbwCFSUM3YIL
-        6eku7QhPLbeGrReClDzzX4HpBOjJ5+HTOnDhoCPyLg==
-X-Google-Smtp-Source: APXvYqyZ2w8lOKLiT2FaBfylkCaKfdFRizjqdBv4MizQEgr6Ph9CvBqOrFucHbN3CAOeySC9FQyUe7DaaT4gxgMOhJY=
-X-Received: by 2002:aca:fdd0:: with SMTP id b199mr2649178oii.153.1574838785251;
- Tue, 26 Nov 2019 23:13:05 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kCncgZfNLfu/DMj0wXER7XvmqE7+H8NXbrnKF+xxq0U=;
+        b=aEGDG5mmXMLRGDRcVRsffO/4UtSqO1bkmRzqczOe8OkeYGyXe8jrOuNCzuNGr7A3Rz
+         MmTKtqXE2tAqK+pWgrltl6Oi7qp/HH/OKkyhg+roCIgtaIRdlu9xJnwbvPJ/VsTLxJ+L
+         WgJ429DjqQj3hcDJ+RuiR2zqAYho0lbfxcEIYI0JgM/Gxwl5gg3jIE3L90D0FDgicP/j
+         jkX6VT8Sp0qsQ8j6iu9twhQMn8I+g6cFSNLbAMBMausB1Hj2Aw3QB31h6onrqFOc8Y2O
+         CmRaGeYSkSv2zWPQSaH5AgPqOSFC4zIrc1sEXD4cSh/QuDJTpyMHFqDxRsqWfUFnT/HS
+         5tGg==
+X-Gm-Message-State: APjAAAVYHnihbxknaVIdujTUljq8TUMZugws2HLG1lQ3htEoMFCkOPSk
+        xg/UccLFR1zk/a/O0z847C5MyIjJ
+X-Google-Smtp-Source: APXvYqxrSAjRPVtPzeiTNsYJZTIC0WUoeM08Y93jY7ZHuWeAPoH8sbaPbhCv3NuqgLVIdvVnq6xVHw==
+X-Received: by 2002:a1c:5415:: with SMTP id i21mr2803843wmb.120.1574839261678;
+        Tue, 26 Nov 2019 23:21:01 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id h2sm18649610wrt.45.2019.11.26.23.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 23:21:00 -0800 (PST)
+Date:   Wed, 27 Nov 2019 08:20:57 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v2 00/12] treewide: break dependencies on x86's RM header
+Message-ID: <20191127072057.GB94748@gmail.com>
+References: <20191126165417.22423-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <021330b6-67a2-0b74-c129-5c725dd23810@infradead.org>
-In-Reply-To: <021330b6-67a2-0b74-c129-5c725dd23810@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 Nov 2019 08:12:54 +0100
-Message-ID: <CAMuHMdVLusDDB5G1R7=-53sK1bd2+3=s42hr9xkgPtWyjOrozg@mail.gmail.com>
-Subject: Re: m68k Kconfig warning
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126165417.22423-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
 
-On Wed, Nov 27, 2019 at 2:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> Just noticed this.  I don't know what the right fix is.
-> Would you take care of it, please?
->
-> on Linux 5.4, m68k allmodconfig:
->
-> WARNING: unmet direct dependencies detected for NEED_MULTIPLE_NODES
->   Depends on [n]: DISCONTIGMEM [=n] || NUMA
->   Selected by [y]:
->   - SINGLE_MEMORY_CHUNK [=y] && MMU [=y]
+* Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-This has been basically there forever, but working.
+> x86's asm/realmode.h, which defines low level structures, variables and
+> helpers used to bring up APs during SMP boot, ends up getting included in
+> practically every nook and cranny of the kernel because the address used
+> by ACPI for resuming from S3 also happens to be stored in the real mode
+> header, and ACPI bleeds the dependency into its widely included headers.
+> 
+> As a result, modifying realmode.h for even the most trivial change to the
+> boot code triggers a full kernel rebuild, which is frustrating to say the
+> least as it some of the most difficult code to get exactly right *and* is
+> also some of the most functionally isolated code in the kernel.
+> 
+> To break the kernel's widespread dependency on realmode.h, add a wrapper
+> in the aforementioned ACPI S3 code to access the real mode header instead
+> of derefencing the header directly in asm/acpi.h and thereby exposing it
+> to the world via linux/acpi.h.
+> 
+> v2:
+>   - Rebased on tip/x86/cleanups, commit b74374fef924 ("x86/setup: Enhance
+>     the comments").
+>   - Use acpi_get_wakeup_address() as new function name. [Boris and Pavel]
+>   - Capture acpi_get_wakeup_address() in a local address. [Pavel]
+>   - Collect acks.  I didn't add Rafael's acks on patches 11 and 12 due to
+>     the above changes.
+>   - Explicitly call out the removal of <asm/realmode.h> from <asm/acpi.h>
+>     in patch 12. [Ingo]
+>   - Remove superfluous Fixes: tags. [Ard]
 
-Gr{oetje,eeting}s,
+You didn't include every patch from v1 though, such us my fix to Quark:
 
-                        Geert
+  [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h for virt_to_phys()
 
+I've applied that one too and your updated patches, and it's now all 
+pushed out into tip:WIP.core/headers.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thanks,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	Ingo
