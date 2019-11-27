@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B35C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11546215E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65DE2215F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889153;
-	bh=29b7VrHROTMlit8ERvOnu2DmGqWVGdm3/WYYa9MMMK4=;
+	s=default; t=1574889157;
+	bh=IKdccxMPNFCHWURegItuiQel6JPzSusxwke9CMW8mUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GtwuQYGS2uWqNi3ptleokAjpfby/cbjyTGGehMoNwGzaAyEraxLw1Nq6gVu4cxA/4
-	 QWUoanBnxidK9VZFlYn3Cc+wkyi6bQhGaoAdZ0vqxPcIx6Q7f44qXdba0PaRXpkwtB
-	 Dky4LyTRkbuz9OoFYU5NRUCbzqJbvi8vtzjbRXTg=
+	b=MPkcePNsEykK0sw6Y4fo3WVD18r4rFtlEj9j1NqFuKYG6QLCxt3UzN3MB5+CRedbE
+	 NkrI2DGvVnIuigzbs7t694RPElMWUcAw4MSHNqrjFf0e/dvilb+w7HqkCVHGwbWxoz
+	 GbncLSYO06QqQFk3SSdCkYAtsTvXdR/9ArGqiKmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733286AbfK0VMc (ORCPT
+        id S1733298AbfK0VMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:12:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43312 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:12:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732768AbfK0VMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:12:31 -0500
+        id S1731441AbfK0VMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:12:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49BA72176D;
-        Wed, 27 Nov 2019 21:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E21ED21556;
+        Wed, 27 Nov 2019 21:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889150;
-        bh=29b7VrHROTMlit8ERvOnu2DmGqWVGdm3/WYYa9MMMK4=;
+        s=default; t=1574889153;
+        bh=IKdccxMPNFCHWURegItuiQel6JPzSusxwke9CMW8mUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GM1xUhjP8SUBqc1cILdIpDGVFMKph66tzBFcLcUxBBr+fX8+gcAKmOiY+vUJyzFMy
-         /TOFWGv4ZZYPIAsL09g+z4Hc9d4RgUERnriouonmDK3Xtd/aGFbeGykSW7tYQEYq/R
-         Rra3aSCCCBU9ZhuSGQdpMjPQq3cRvvoFhyvBQix4=
+        b=T+HIdrc9i2b0BWJYRXwuu7SGtckymIurkViId5fnD0WAJTuCAC1IW3TVE8KKEAA5z
+         DaReLvQIQzLDKOVbw375iPXRU39IjlzCOjA8pfiPh0WMh8QwqVdjaT8LzO6t+RjoGh
+         5vdEszxU7gPHSYbO+8pp4qvc0SVP+ppwrKgRZgqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 88/95] USB: serial: mos7720: fix remote wakeup
-Date:   Wed, 27 Nov 2019 21:32:45 +0100
-Message-Id: <20191127202957.096500648@linuxfoundation.org>
+        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
+        syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Alexander Potapenko <glider@google.com>
+Subject: [PATCH 5.4 01/66] Bluetooth: Fix invalid-free in bcsp_close()
+Date:   Wed, 27 Nov 2019 21:31:56 +0100
+Message-Id: <20191127202636.031177277@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
-References: <20191127202845.651587549@linuxfoundation.org>
+In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
+References: <20191127202632.536277063@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -58,40 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Tomas Bortoli <tomasbortoli@gmail.com>
 
-commit ea422312a462696093b5db59d294439796cba4ad upstream.
+commit cf94da6f502d8caecabd56b194541c873c8a7a3c upstream.
 
-The driver was setting the device remote-wakeup feature during probe in
-violation of the USB specification (which says it should only be set
-just prior to suspending the device). This could potentially waste
-power during suspend as well as lead to spurious wakeups.
+Syzbot reported an invalid-free that I introduced fixing a memleak.
 
-Note that USB core would clear the remote-wakeup feature at first
-resume.
+bcsp_recv() also frees bcsp->rx_skb but never nullifies its value.
+Nullify bcsp->rx_skb every time it is freed.
 
-Fixes: 0f64478cbc7a ("USB: add USB serial mos7720 driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.19
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: Alexander Potapenko <glider@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/mos7720.c |    4 ----
- 1 file changed, 4 deletions(-)
+ drivers/bluetooth/hci_bcsp.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/serial/mos7720.c
-+++ b/drivers/usb/serial/mos7720.c
-@@ -1833,10 +1833,6 @@ static int mos7720_startup(struct usb_se
- 	product = le16_to_cpu(serial->dev->descriptor.idProduct);
- 	dev = serial->dev;
+--- a/drivers/bluetooth/hci_bcsp.c
++++ b/drivers/bluetooth/hci_bcsp.c
+@@ -591,6 +591,7 @@ static int bcsp_recv(struct hci_uart *hu
+ 			if (*ptr == 0xc0) {
+ 				BT_ERR("Short BCSP packet");
+ 				kfree_skb(bcsp->rx_skb);
++				bcsp->rx_skb = NULL;
+ 				bcsp->rx_state = BCSP_W4_PKT_START;
+ 				bcsp->rx_count = 0;
+ 			} else
+@@ -606,6 +607,7 @@ static int bcsp_recv(struct hci_uart *hu
+ 			    bcsp->rx_skb->data[2])) != bcsp->rx_skb->data[3]) {
+ 				BT_ERR("Error in BCSP hdr checksum");
+ 				kfree_skb(bcsp->rx_skb);
++				bcsp->rx_skb = NULL;
+ 				bcsp->rx_state = BCSP_W4_PKT_DELIMITER;
+ 				bcsp->rx_count = 0;
+ 				continue;
+@@ -630,6 +632,7 @@ static int bcsp_recv(struct hci_uart *hu
+ 				       bscp_get_crc(bcsp));
  
--	/* setting configuration feature to one */
--	usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
--			(__u8)0x03, 0x00, 0x01, 0x00, NULL, 0x00, 5000);
--
- 	if (product == MOSCHIP_DEVICE_ID_7715) {
- 		struct urb *urb = serial->port[0]->interrupt_in_urb;
- 
+ 				kfree_skb(bcsp->rx_skb);
++				bcsp->rx_skb = NULL;
+ 				bcsp->rx_state = BCSP_W4_PKT_DELIMITER;
+ 				bcsp->rx_count = 0;
+ 				continue;
 
 
