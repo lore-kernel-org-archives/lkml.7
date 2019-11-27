@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478BEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B87AC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA96215F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64BE5215F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889915;
-	bh=t6h2MdHKYMubMCHj2hQ1lpKMgX+mo2ybIpeMq9ud7/4=;
+	s=default; t=1574889919;
+	bh=VPtjYK0w0uuloqDArLaAMixd8sNqxlmnTNrSoitDDRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pi6keherEXitUT4d+pIQfQj4kS36H+1N4WB6PnNunxWTAuHeHJVP2kbr4PaqKFDsE
-	 xdRvVOwtDyIs3Xzw4rGMjK08z+B9X6rXWZB21NFb9g83ghT8D7BbJTBBnHR1gX6qvg
-	 2/YbAb2RrpgLi7LT9q8E/LxwOgHOgEzo+TQK7nKk=
+	b=YcFKBNvA7gihYL7MOScpSuWl0KBpfc8JQryC5fNpXJEHx0md61kgnUDVItuWOphIl
+	 28btJA14bHipX4aC30jgiD5NVYqDl/K0mxjxkAwCVRtxQ8mj6/GOh36+kskh2gZS/y
+	 DQ+EVUtsBVl0cFS2zlVrz/5a0uEiLIf9xPsZCwiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731828AbfK0VCG (ORCPT
+        id S1731242AbfK0VB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:02:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54568 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:01:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727303AbfK0VCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:02:04 -0500
+        id S1729757AbfK0VBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:01:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B512D20862;
-        Wed, 27 Nov 2019 21:02:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DF8921741;
+        Wed, 27 Nov 2019 21:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888523;
-        bh=t6h2MdHKYMubMCHj2hQ1lpKMgX+mo2ybIpeMq9ud7/4=;
+        s=default; t=1574888515;
+        bh=VPtjYK0w0uuloqDArLaAMixd8sNqxlmnTNrSoitDDRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z69TRZIaM/U+SCYjEfsm0iUCzXgAOsUK+2gJPxzzPZeVA3Mts4VKqCBbApjbdD0CZ
-         e/sz+vRkogs6StMUyVpVsArA9zPtmlB932tAeWD7q3tekj2nDKHqdteiDreTO2Y0eI
-         /0rC0gNDToWAJFZZWWCAHoEw20modlDE5aKNSVAE=
+        b=YKzdSvct2Kt3JVpO1lSp67ytYywdt52Ivq9RhpJJNa6kkjeXJDdY+AFvm02l0OFDC
+         ojZpsVMxESLNis9SYCVOzspxGjfubBrKbPL5qMjuJFPzmu6SrdtXXQzam9fXRwPL86
+         a9is3hgH3xRSH/dOUMUfZo63L3qbXiT+RqtvCaTw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 167/306] linux/bitmap.h: handle constant zero-size bitmaps correctly
-Date:   Wed, 27 Nov 2019 21:30:17 +0100
-Message-Id: <20191127203127.614192983@linuxfoundation.org>
+Subject: [PATCH 4.19 164/306] selftests/powerpc/cache_shape: Fix out-of-tree build
+Date:   Wed, 27 Nov 2019 21:30:14 +0100
+Message-Id: <20191127203127.433244913@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -65,58 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 7275b097851a5e2e0dd4da039c7e96b59ac5314e ]
+[ Upstream commit 69f8117f17b332a68cd8f4bf8c2d0d3d5b84efc5 ]
 
-The static inlines in bitmap.h do not handle a compile-time constant
-nbits==0 correctly (they dereference the passed src or dst pointers,
-despite only 0 words being valid to access).  I had the 0-day buildbot
-chew on a patch [1] that would cause build failures for such cases without
-complaining, suggesting that we don't have any such users currently, at
-least for the 70 .config/arch combinations that was built.  Should any
-turn up, make sure they use the out-of-line versions, which do handle
-nbits==0 correctly.
+Use TEST_GEN_PROGS and don't redefine all, this makes the out-of-tree
+build work. We need to move the extra dependencies below the include
+of lib.mk, because it adds the $(OUTPUT) prefix if it's defined.
 
-This is of course not the most efficient, but it's much less churn than
-teaching all the static inlines an "if (zero_const_nbits())", and since we
-don't have any current instances, this doesn't affect existing code at
-all.
+We can also drop the clean rule, lib.mk does it for us.
 
-[1] lkml.kernel.org/r/20180815085539.27485-1-linux@rasmusvillemoes.dk
-
-Link: http://lkml.kernel.org/r/20180818131623.8755-3-linux@rasmusvillemoes.dk
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Yury Norov <ynorov@caviumnetworks.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bitmap.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/testing/selftests/powerpc/cache_shape/Makefile | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index acf5e8df3504f..a9805bacbd7ca 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -204,8 +204,13 @@ extern int bitmap_print_to_pagebuf(bool list, char *buf,
- #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
- #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
+diff --git a/tools/testing/selftests/powerpc/cache_shape/Makefile b/tools/testing/selftests/powerpc/cache_shape/Makefile
+index ede4d3dae7505..689f6c8ebcd8d 100644
+--- a/tools/testing/selftests/powerpc/cache_shape/Makefile
++++ b/tools/testing/selftests/powerpc/cache_shape/Makefile
+@@ -1,12 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+-TEST_PROGS := cache_shape
+-
+-all: $(TEST_PROGS)
+-
+-$(TEST_PROGS): ../harness.c ../utils.c
++TEST_GEN_PROGS := cache_shape
  
-+/*
-+ * The static inlines below do not handle constant nbits==0 correctly,
-+ * so make such users (should any ever turn up) call the out-of-line
-+ * versions.
-+ */
- #define small_const_nbits(nbits) \
--	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG)
-+	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG && (nbits) > 0)
+ top_srcdir = ../../../../..
+ include ../../lib.mk
  
- static inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
- {
+-clean:
+-	rm -f $(TEST_PROGS) *.o
++$(TEST_GEN_PROGS): ../harness.c ../utils.c
 -- 
 2.20.1
 
