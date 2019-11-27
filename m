@@ -2,113 +2,121 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57682C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D87C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29CB52075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03412075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:31:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DZLPCoWW"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="is2hCZ6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfK0QbH (ORCPT
+        id S1727194AbfK0Qb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:31:07 -0500
-Received: from mail-qk1-f177.google.com ([209.85.222.177]:39393 "EHLO
-        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfK0QbG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:31:06 -0500
-Received: by mail-qk1-f177.google.com with SMTP id d124so4850306qke.6
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 08:31:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BW8Iv3F/t56rMQHhfpUtEUowOT8/SKG2l+YOWV4ch3Q=;
-        b=DZLPCoWWf9i/wY3MVP1zzdkriDFBGt6cV8bQnsF+Ln3QBVp1IbVekkQm8L9+zFtkEW
-         o4qxi+keC9Zj/naaZlTlxv41GMTcEbr4c0G2Yw8BC73boBIr5mGPfij0xc7zy2x/b6Yq
-         TofhfxOi84OqqmAaK+XbdfgBfkhRGEkQpHi3Y6CydRTaMYbdZvo4A/X3Grcoat5DuzOi
-         +0sGaBUgWV1EnHawe3Nf+HZFTnl0zLFQq/q4bbvdb2wb5KZkNr9ydFffZsVxwE/bXxnT
-         eJbYQqkAJoeRbaDeOsJJDLwBnt+n/YNg0hYZBv9/IcyW6Aegaxgu1GXv4g0qKt+qyT5y
-         Qd4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BW8Iv3F/t56rMQHhfpUtEUowOT8/SKG2l+YOWV4ch3Q=;
-        b=VW+C12HVPS0xVpYwOLw/zSMwOeaj9xRoPq/I8W6IGFDfEE7FX6GlHLPTFn3bTwA8fl
-         dzNAFNwclupycV2z7pmONqwDwVab0Ov7UQORAMUHNCPv4j1IIt6qpFjsRPGTT2XiptV4
-         4fKhJdlr8EX5B8Vuk34gsZklxrHZUt+i5XocfK/oeNiXW23RFxLzrqE5OYDMKQ+dYL48
-         CqB+WVgntSIqrSoLtYXOgou/4JQLJ0qWYEO5G8f4zdw15IbiGEYxmSwHlsza/RNVXOzf
-         t0tg4kCipKe7R3co6pVCr5vFSXrAR/OJXFwsaqlPkBYwUTX9i3tfAVcRo9i2pbYU/fwj
-         cBuA==
-X-Gm-Message-State: APjAAAUTj0JwS/3U1cig4OAMe9H+bcI6bJdlcT3wMttIBEORzTHWXytt
-        1/kt4qiLiIMycwcUunCLTCgYTWgQdoPzirUivXE4tg==
-X-Google-Smtp-Source: APXvYqwdJ1XE2muy3vyx4R8AKGSK9LqACjb+OkAbWKhSS1EzFIwSHnHXkEHGgdc4XKpW8iSqXpPRgCxd+W7JrLtsQVY=
-X-Received: by 2002:a37:7f45:: with SMTP id a66mr4762213qkd.427.1574872265669;
- Wed, 27 Nov 2019 08:31:05 -0800 (PST)
+        Wed, 27 Nov 2019 11:31:29 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:43016 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbfK0Qb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 11:31:29 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 906C71B21254; Wed, 27 Nov 2019 19:31:25 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 906C71B21254
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1574872285; bh=D0U/yoZIFmLHwjF+Ayn7vsDRMvJ2hdz+rD6jAk4olMc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=is2hCZ6d7g97DxekjT754vqL7o2BoJRRA51ExITKCw3Ec8ZS42WJPee6O/x7R9hme
+         H648HBJxdeER+b85BgYjiQJKA+CK2c2hJ5tbAeQ9oSTWfsjow2umhlnavKaU4+cSfX
+         4HeTICyus0f/DPKpKllbwup9OUPRvTyr/Vsv6X7c=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id BB8D91B2029D;
+        Wed, 27 Nov 2019 19:31:08 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru BB8D91B2029D
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 3F34A1B20AE9;
+        Wed, 27 Nov 2019 19:31:08 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Wed, 27 Nov 2019 19:31:08 +0300 (MSK)
 MIME-Version: 1.0
-References: <20191126131541.47393-1-mihail.atanassov@arm.com>
- <20191126131541.47393-29-mihail.atanassov@arm.com> <20191126193740.GC2044@ravnborg.org>
- <2161383.jsAorMfJJG@e123338-lin> <20191127161907.GA17176@ravnborg.org>
-In-Reply-To: <20191127161907.GA17176@ravnborg.org>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Wed, 27 Nov 2019 17:30:54 +0100
-Message-ID: <CA+M3ks43CrCqXiQzs=Y2hd6_Z7TK36h98tGHSOGi3BPoWMX9WQ@mail.gmail.com>
-Subject: Re: [PATCH 28/30] drm/sti: sti_vdo: Use drm_bridge_init()
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        David Airlie <airlied@linux.ie>, nd <nd@arm.com>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 27 Nov 2019 19:31:08 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Edward Cree <ecree@solarflare.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "Kenneth R. Crudup" <kenny@panix.com>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: wireless: intel: iwlwifi: fix GRO_NORMAL packet
+ stalling
+In-Reply-To: <20a018a6-827a-de47-a0e4-45ff8c02087b@solarflare.com>
+References: <20191127094123.18161-1-alobakin@dlink.ru>
+ <20a018a6-827a-de47-a0e4-45ff8c02087b@solarflare.com>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <c9dfc89a893ef412d4fcf9c79d28766a@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mer. 27 nov. 2019 =C3=A0 17:19, Sam Ravnborg <sam@ravnborg.org> a =C3=A9=
-crit :
->
-> Hi Mihail.
->
-> > >
-> > > I can see from grepping that bridge.driver_private is used
-> > > in a couple of other files in sti/
-> > >
-> > > Like sti_hdmi.c:
-> > >         bridge->driver_private =3D hdmi;
-> > >         bridge->funcs =3D &sti_hdmi_bridge_funcs;
-> > >         drm_bridge_attach(encoder, bridge, NULL);
-> > >
-> > >
-> > > I wonder if a drm_bridge_init() should be added there.
-> > > I did not look closely - but it looked suspisiously.
-> >
-> > My goal with drm_bridge_init() was to get devlinks sorted out for
-> > cross-module uses of a drm_bridge (via of_drm_find_bridge()), so I only
-> > considered locations where drm_bridge_add/remove() were used.
-> >
-> > Would you be okay with a promise to push a cleanup of this one and the
-> > one in sti_hda.c after patch 1/30 lands in some form? I'd rather not
-> > make this series much longer, it's already pushing it at 30 :).
->
-> Absolutely - my drive-by comment was more out of concern if this
-> was missing. A clean-up later souns good.
+Edward Cree wrote 27.11.2019 19:05:
+> On 27/11/2019 09:41, Alexander Lobakin wrote:
+>> Commit 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in
+>> napi_gro_receive()") has applied batched GRO_NORMAL packets processing
+>> to all napi_gro_receive() users, including mac80211-based drivers.
+>> 
+>> However, this change has led to a regression in iwlwifi driver [1][2] 
+>> as
+>> it is required for NAPI users to call napi_complete_done() or
+>> napi_complete() and the end of every polling iteration, whilst iwlwifi
+>> doesn't use NAPI scheduling at all and just calls napi_gro_flush().
+>> In that particular case, packets which have not been already flushed
+>> from napi->rx_list stall in it until at least next Rx cycle.
+>> 
+>> Fix this by adding a manual flushing of the list to iwlwifi driver 
+>> right
+>> before napi_gro_flush() call to mimic napi_complete() logics.
+>> 
+>> I prefer to open-code gro_normal_list() rather than exporting it for 2
+>> reasons:
+>> * to prevent from using it and napi_gro_flush() in any new drivers,
+>>   as it is the *really* bad way to use NAPI that should be avoided;
+>> * to keep gro_normal_list() static and don't lose any CC 
+>> optimizations.
+>> 
+>> I also don't add the "Fixes:" tag as the mentioned commit was only a
+>> trigger that only exposed an improper usage of NAPI in this particular
+>> driver.
+>> 
+>> [1] 
+>> https://lore.kernel.org/netdev/PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+>> [2] https://bugzilla.kernel.org/show_bug.cgi?id=205647
+>> 
+>> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> Reviewed-by: Edward Cree <ecree@solarflare.com>
 
-Or you can just do the changes for sti_hdmi and sti_hda in this patch too.
+Thanks! And you were the first who's found the root of the issue.
 
-Benjamin
-
->
->         Sam
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
