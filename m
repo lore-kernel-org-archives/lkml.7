@@ -2,95 +2,149 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003FBC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B41CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBDFB207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:32:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Bq7Fl4Oi"
+	by mail.kernel.org (Postfix) with ESMTP id 4267020836
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 01:36:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574818578;
+	bh=PtrJiqBjDc3rtnxMlcXBxBsaFk0bKWUIMRupAqH/g2w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=CoYy8yD0SZojXGWsR44L4I0fcU4w9HaFOYCtGlgAtYPEGpCBVsHhJp3GRAPR3SMj5
+	 iG9d4iFVGLGrK5oGcOfmFDBYgiPOOE+hTg6AdXI+AqZ5Fdrj9mOhHK8SLAxXHXvJSy
+	 daKi6VjKJDyGduEWjAzI9Szr099yKfv3LmG/Zx8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfK0Bb7 (ORCPT
+        id S1726934AbfK0BgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 20:31:59 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:2774 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727662AbfK0Bb7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 20:31:59 -0500
-X-UUID: 624387a667234246a9ecf48859cfa127-20191127
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=FfLWy7hYVqt6twZ6RqO6oRqpE+bo5f378iJWtJ09HPs=;
-        b=Bq7Fl4Oi+Lk1tD3cPumLCx2s10Mu4jWil28A3RTJo3pWHNRK6aRpiAyIkLsR8RogIH3PV81b/J+K1sXYDQszV4IbWbTuRajebbtueiosyRG1tkg2Gic46Iwkp/q53UENRRkapchJ+tsK+GkA7c0SvuOlR+ZBHH/WuIBtE3zTPzw=;
-X-UUID: 624387a667234246a9ecf48859cfa127-20191127
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1287883452; Wed, 27 Nov 2019 09:31:47 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 27 Nov 2019 09:31:44 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 27 Nov 2019 09:30:52 +0800
-Message-ID: <1574818303.15691.10.camel@mtksdaap41>
-Subject: Re: [PATCH v1] drm/mediatek: fix up 1440x900 dp display black
- screen issue
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 27 Nov 2019 09:31:43 +0800
-In-Reply-To: <1574750869-12611-1-git-send-email-yongqiang.niu@mediatek.com>
-References: <1574750869-12611-1-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 26 Nov 2019 20:36:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfK0BgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 20:36:16 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72C5F2075C;
+        Wed, 27 Nov 2019 01:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574818576;
+        bh=PtrJiqBjDc3rtnxMlcXBxBsaFk0bKWUIMRupAqH/g2w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=sjrOU+jOy+/woZ6WbwBIpQAhvP51U5A9H0p72S/lP6s0CO3b1sqdLycRXDKdqwfV8
+         /3ZwN2QAp7qYtYFawpAHcW3SwqG5efV4J500UqQzNK4vPlygxXO1iYhFYc3xUt6uge
+         ERymIeZwWyCj5SoCOHH4JA6YWc6uTMS+doTgJaQs=
+Date:   Tue, 26 Nov 2019 19:36:13 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de
+Subject: Re: [PATCH v4 1/3] PCI: pciehp: Add support for disabling in-band
+ presence
+Message-ID: <20191127013613.GA233706@google.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: B6B9FEC13DEDCAA3FED78A3946FCFD3C5E46997A32C15BEB208086C51E86B01A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025190047.38130-2-stuart.w.hayes@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoNCg0KT24gVHVlLCAyMDE5LTExLTI2IGF0IDE0OjQ3ICswODAwLCB5b25n
-cWlhbmcubml1QG1lZGlhdGVrLmNvbSB3cm90ZToNCj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9u
-Z3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+IA0KPiBUaGlzIHBhdGNoIGZpeCB1cCAxNDQweDkw
-MCBkcCBkaXNwbGF5IGJsYWNrIHNjcmVlbiBpc3N1ZQ0KPiB0aGUgY29tcHV0ZWQgcmVzdWx0IHdp
-bGwgb3ZlcmZsb3cgcmRtYTEgZmlmbyBtYXggc2l6ZQ0KPiB3aGVuIGV4dGVybmFsIGRpc3BsYXkg
-cGl4ZWwgY2xvY2sgYmlnZ2VyIHRoYW4gNzRNSFoNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFlvbmdx
-aWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgfCA0ICsrKysNCj4gIDEgZmlsZSBjaGFu
-Z2VkLCA0IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-aXNwX3JkbWEuYw0KPiBpbmRleCBjMWFiZGUzLi40MTE0M2Y1IDEwMDY0NA0KPiAtLS0gYS9kcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMNCj4gQEAgLTE1Miw2ICsxNTIsMTAgQEAgc3Rh
-dGljIHZvaWQgbXRrX3JkbWFfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsIHVuc2ln
-bmVkIGludCB3aWR0aCwNCj4gIAkgKiBhY2NvdW50IGZvciBibGFua2luZywgYW5kIHdpdGggYSBw
-aXhlbCBkZXB0aCBvZiA0IGJ5dGVzOg0KPiAgCSAqLw0KPiAgCXRocmVzaG9sZCA9IHdpZHRoICog
-aGVpZ2h0ICogdnJlZnJlc2ggKiA0ICogNyAvIDEwMDAwMDA7DQo+ICsNCj4gKwlpZiAodGhyZXNo
-b2xkID4gcmRtYV9maWZvX3NpemUpDQo+ICsJCXRocmVzaG9sZCA9IHJkbWFfZmlmb19zaXplOw0K
-PiArDQoNClRoaXMgbG9va3MgbGlrZSB0aGF0IHRocmVzaG9sZCBpcyBvdmVyIHNwZWMuIEkgdGhp
-bmsgdGhpcyBGSUZPIGlzIHVzZWQNCnRvIGNvdmVyIHRoZSBsYXRlbmN5IG9mIHJlYWRpbmcgZGF0
-YSBmcm9tIERSQU0uIFdoZW4gZGF0YSBpcyByZWFkIGZyb20NCk9WTCBub3QgUkRNQSwgT1ZMIGFs
-cmVhZHkgaGFzIGEgRklGTywgc28gUkRNQSBGSUZPIGlzIHVzZWxlc3MuIFNvIEkNCnRoaW5rIHlv
-dSBzaG91bGQgc2V0IHRocmVzaG9sZCB0byBhIHNwZWNpYWwgdmFsdWUgd2hlbiBSRE1BIGlzIGlu
-IGRpcmVjdA0KbGluayBtb2RlLg0KDQpSZWdhcmRzLA0KQ0sNCg0KPiAgCXJlZyA9IFJETUFfRklG
-T19VTkRFUkZMT1dfRU4gfA0KPiAgCSAgICAgIFJETUFfRklGT19QU0VVRE9fU0laRShyZG1hX2Zp
-Zm9fc2l6ZSkgfA0KPiAgCSAgICAgIFJETUFfT1VUUFVUX1ZBTElEX0ZJRk9fVEhSRVNIT0xEKHRo
-cmVzaG9sZCk7DQoNCg==
+On Fri, Oct 25, 2019 at 03:00:45PM -0400, Stuart Hayes wrote:
+> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> 
+> The presence detect state (PDS) is normally a logical or of in-band and
+> out-of-band presence. As of PCIe 4.0, there is the option to disable
+> in-band presence so that the PDS bit always reflects the state of the
+> out-of-band presence.
+> 
+> The recommendation of the PCIe spec is to disable in-band presence
+> whenever supported.
 
+I think I'm fine with this patch, but I would like to include the
+specific reference for this recommendation.  If you have it handy, I
+can just insert it.
+
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> ---
+>  drivers/pci/hotplug/pciehp.h     | 1 +
+>  drivers/pci/hotplug/pciehp_hpc.c | 9 ++++++++-
+>  include/uapi/linux/pci_regs.h    | 2 ++
+>  3 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index 654c972b8ea0..27e4cd6529b0 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -83,6 +83,7 @@ struct controller {
+>  	struct pcie_device *pcie;
+>  
+>  	u32 slot_cap;				/* capabilities and quirks */
+> +	unsigned int inband_presence_disabled:1;
+>  
+>  	u16 slot_ctrl;				/* control register access */
+>  	struct mutex ctrl_lock;
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 1a522c1c4177..dc109d521f30 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -811,7 +811,7 @@ static inline void dbg_ctrl(struct controller *ctrl)
+>  struct controller *pcie_init(struct pcie_device *dev)
+>  {
+>  	struct controller *ctrl;
+> -	u32 slot_cap, link_cap;
+> +	u32 slot_cap, slot_cap2, link_cap;
+>  	u8 poweron;
+>  	struct pci_dev *pdev = dev->port;
+>  	struct pci_bus *subordinate = pdev->subordinate;
+> @@ -869,6 +869,13 @@ struct controller *pcie_init(struct pcie_device *dev)
+>  		FLAG(link_cap, PCI_EXP_LNKCAP_DLLLARC),
+>  		pdev->broken_cmd_compl ? " (with Cmd Compl erratum)" : "");
+>  
+> +	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP2, &slot_cap2);
+> +	if (slot_cap2 & PCI_EXP_SLTCAP2_IBPD) {
+> +		pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_IBPD_DISABLE,
+> +				      PCI_EXP_SLTCTL_IBPD_DISABLE);
+> +		ctrl->inband_presence_disabled = 1;
+> +	}
+> +
+>  	/*
+>  	 * If empty slot's power status is on, turn power off.  The IRQ isn't
+>  	 * requested yet, so avoid triggering a notification with this command.
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 29d6e93fd15e..ea1cf9546e4d 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -604,6 +604,7 @@
+>  #define  PCI_EXP_SLTCTL_PWR_OFF        0x0400 /* Power Off */
+>  #define  PCI_EXP_SLTCTL_EIC	0x0800	/* Electromechanical Interlock Control */
+>  #define  PCI_EXP_SLTCTL_DLLSCE	0x1000	/* Data Link Layer State Changed Enable */
+> +#define  PCI_EXP_SLTCTL_IBPD_DISABLE	0x4000 /* In-band PD disable */
+>  #define PCI_EXP_SLTSTA		26	/* Slot Status */
+>  #define  PCI_EXP_SLTSTA_ABP	0x0001	/* Attention Button Pressed */
+>  #define  PCI_EXP_SLTSTA_PFD	0x0002	/* Power Fault Detected */
+> @@ -676,6 +677,7 @@
+>  #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
+>  #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
+>  #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
+> +#define  PCI_EXP_SLTCAP2_IBPD	0x0001	/* In-band PD Disable Supported */
+>  #define PCI_EXP_SLTCTL2		56	/* Slot Control 2 */
+>  #define PCI_EXP_SLTSTA2		58	/* Slot Status 2 */
+>  
+> -- 
+> 2.18.1
+> 
