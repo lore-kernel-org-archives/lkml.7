@@ -2,83 +2,75 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AA5C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 03:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1B2C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 03:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FF2206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 03:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34BE206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 03:33:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="C7LeFy5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfK0DaL (ORCPT
+        id S1726933AbfK0Dds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 22:30:11 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2462 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726454AbfK0DaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 22:30:11 -0500
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 983BD91351143F91A5AC;
-        Wed, 27 Nov 2019 11:30:07 +0800 (CST)
-Received: from dggeme714-chm.china.huawei.com (10.1.199.110) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 27 Nov 2019 11:30:06 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme714-chm.china.huawei.com (10.1.199.110) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 27 Nov 2019 11:30:07 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Wed, 27 Nov 2019 11:30:06 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Haiwei Li <lihaiwei.kernel@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH] KVM: SVM: Fix "error" isn't initialized
-Thread-Topic: [PATCH] KVM: SVM: Fix "error" isn't initialized
-Thread-Index: AdWk0V/ezR/D5Gv1EUeQk58gmO3fng==
-Date:   Wed, 27 Nov 2019 03:30:06 +0000
-Message-ID: <3b418fab6b804c6cba48e372cce875c1@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Tue, 26 Nov 2019 22:33:48 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25885 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbfK0Dds (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 22:33:48 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574825608; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=MurykgZIXLdz+OUVTTOoPhnDFLLScP3XNvDuJ3lHVW/19v66/AKi9bLhrJVKDwV4HWze35Hj/g6Jmd3F35joRsIgFZAO4k2x22SuxOT9VXZlECoxvaT7M8V2OqEx69OVxd4WsD24kPmZ/kOHbCKcm/8ZuD7U/cx4ZZk+JXcEshI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574825608; h=Cc:Date:From:Message-ID:Subject:To; 
+        bh=TuRbAqCJtixX3GUqtL+gHnjT/Sm9uZHarcGIf7Ov5ZE=; 
+        b=ViHteWGIlE3+rTYb+Db0Lh6GJ54YF6oIEzBdOw3KWNWbh+5q6ICqSdUWBTiTrk0g+l09VtrCs8tBAu5GKT1czYdV0XPoR63AIksbl/0liOVGi9q0MrxOjjbww+P5WJCncquFXQXgfaJ/6kLsRln+oYOo0vf7K9FLpVZUBpiI3+E=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=A9HeLtKq2ekABrRsofmQJ++RrJDZJYOc4R5TMfDxofQ1wbhpLgzke4a32YDZX3IA5l77hOa8cFYY
+    BX2CEN2Rzue0nTSSLdMDxw6EL4yhaBmZ98GMVuHiDMJ5VAf2LkGM  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574825608;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=TuRbAqCJtixX3GUqtL+gHnjT/Sm9uZHarcGIf7Ov5ZE=;
+        b=C7LeFy5ZPg9NqLr+7PRUK8EOgHagcP9opkaiwwjVPPvJkVa6n3XLLCo3+EHBl68m
+        MwhH0MMIl2Y+3L0wj24+utLkLufQrRwnsInXRWqiJTgzGFp111bPV7YC/5Sa0IuheW1
+        uu270LUmhO5BfzmJO3CJLXSS1Qq+H5k6bTRWz0co=
+Received: from zhouyanjie-virtual-machine.localdomain (139.207.174.158 [139.207.174.158]) by mx.zohomail.com
+        with SMTPS id 1574825607870597.1454791514287; Tue, 26 Nov 2019 19:33:27 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, paul@crapouillou.net, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: clk: Ingenic: Add support for the X1830 and add USB clk for X1000.
+Date:   Wed, 27 Nov 2019 11:32:51 +0800
+Message-Id: <1574825576-91028-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IEZyb206IEhhaXdlaSBMaSA8bGloYWl3ZWlAdGVuY2VudC5jb20+DQo+IFN1YmplY3Q6IFtQ
-QVRDSF0gaW5pdGlhbGl6ZSAnZXJyb3InDQo+DQo+IFRoZXJlIGFyZSBhIGJ1bmNoIG9mIGVycm9y
-IHBhdGhzIHdlcmUgImVycm9yIiBpc24ndCBpbml0aWFsaXplZC4NCkhpLA0KSW4gY2FzZSBlcnJv
-ciBjYXNlLCBzZXZfZ3Vlc3RfZGZfZmx1c2goKSBkbyBub3Qgc2V0IHRoZSBlcnJvci4NCkNhbiB5
-b3Ugc2V0IHRoZSB2YWx1ZSBvZiBlcnJvciB0byByZWZsZWN0IHdoYXQgZXJyb3IgaGFwcGVuZWQN
-CmluIHNldl9ndWVzdF9kZl9mbHVzaCgpPw0KVGhlIGN1cnJlbnQgZml4IG1heSBsb29rcyBjb25m
-dXNlZCB3aGVuIHByaW50ICJERl9GTFVTSCBmYWlsZWQiIHdpdGgNCmVycm9yID0gMC4NClRoYW5r
-cy4gDQoNClBTOiBUaGlzIGlzIGp1c3QgbXkgcGVyc29uYWwgcG9pbnQuDQo+DQo+IFNpZ25lZC1v
-ZmYtYnk6IEhhaXdlaSBMaSA8bGloYWl3ZWlAdGVuY2VudC5jb20+DQo+IFJlcG9ydGVkLWJ5OiBE
-YW4gQ2FycGVudGVyIDxkYW4uY2FycGVudGVyQG9yYWNsZS5jb20+DQo+LS0tIGEvYXJjaC94ODYv
-a3ZtL3N2bS5jDQo+KysrIGIvYXJjaC94ODYva3ZtL3N2bS5jDQo+QEAgLTYyOTQsNyArNjI5NCw4
-IEBAIHN0YXRpYyBpbnQgZW5hYmxlX3NtaV93aW5kb3coc3RydWN0IGt2bV92Y3B1ICp2Y3B1KQ0K
-Pg0KPiBzdGF0aWMgaW50IHNldl9mbHVzaF9hc2lkcyh2b2lkKQ0KPiB7DQo+LQlpbnQgcmV0LCBl
-cnJvcjsNCj4rCWludCByZXQ7DQo+KwlpbnQgZXJyb3IgPSAwOw0KPg0KPiAJLyoNCj4gCSAqIERF
-QUNUSVZBVEUgd2lsbCBjbGVhciB0aGUgV0JJTlZEIGluZGljYXRvciBjYXVzaW5nIERGX0ZMVVNI
-IHRvIGZhaWwsDQo=
+1.Adjust existing code to make it compatible with Ingenic X1830 SoC.
+2.Add support for the clocks provided by the CGU in the Ingenic X1830
+  SoC, making use of the cgu code to do the heavy lifting.
+3.Add USB related clock for the Ingenic X1000 SoC, and use the
+  "CLK_OF_DECLARE_DRIVER" instead "CLK_OF_DECLARE" like the
+  other CGU drivers.
+
+
