@@ -2,188 +2,212 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1906DC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE3FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34522070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDC22086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:50:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mw1uKelo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i5Gxn3xz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfK0Xtp (ORCPT
+        id S1727472AbfK0Xu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 18:49:45 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33558 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfK0Xto (ORCPT
+        Wed, 27 Nov 2019 18:50:29 -0500
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:56770 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbfK0Xu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 18:49:44 -0500
-Received: by mail-io1-f65.google.com with SMTP id j13so26952451ioe.0;
-        Wed, 27 Nov 2019 15:49:43 -0800 (PST)
+        Wed, 27 Nov 2019 18:50:28 -0500
+Received: by mail-qt1-f202.google.com with SMTP id b26so15844867qtr.23
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 15:50:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=gSj2pWdZX1PdXEy1vq4ly43WymfbEpVIP+x3vEhoi3c=;
-        b=Mw1uKeloCBfJYGuEaZeon622BcZkt9xCzt5+HNrdOlgekuf2MCHxl6axxMTaPfZ3ni
-         3SEsgCqx9kjqypACw3CNBsF5JB50tsV2Y8/nInyKxozI80sZFbBPMR8eQN7K6B2Pr68J
-         Q1Hmv3JnGyx+PqWIIFTpNTUUlvnf9ImukhtnYTR63YX8k+xGi9mQ/gdj5BllaQO5/7x3
-         XLmtlWmuDrodlBrBmWCPeN61jkOk92PemxB3QZLFohgmJITVLyZ/KGM8OuQYDNFM62X/
-         lckHjqzgw/bSE2sokC9KpJ1Lbz+XRpX/k1ArWUvA0v8r1nmny0BZoTmINWflSl32SIMw
-         K14g==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=sslQZgUjF8mS7PYbCqQtrDtVZrFkyPKopZymkUPtEMY=;
+        b=i5Gxn3xz5Z2H5deMr0kzv7a9JQtZnurOcQsMzo6bpUAx+9HtZQIx0MnDd2OLfdWppN
+         Jndq+x4P0e0IQVBhejozG0Z5Itk5KZsEQCYeAs3g7IbS/StrFoprcvFsZdaTzk3O9LUT
+         BpAJCnPK4pxUJaHVGuAiUw3V7+yx7dwNQMJE9jyuc0TBMuUS6wpxmIyB24xuMO/mv155
+         t0sXBlWhS8QcYBPa7ZVVqAeXAKVVG7ted1Cbjhc82WyyygqfTtSozbrsS9zaMSrnEL2T
+         TPuTV4w3R93Xxmz59zH0ixGXwQXxmVXb9xS6daI5S3b9gJfATRt79hnM6cZOjFKeAtyo
+         qNLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=gSj2pWdZX1PdXEy1vq4ly43WymfbEpVIP+x3vEhoi3c=;
-        b=ax4HWunZWlW6+p2HR5KgcWFKjIUyW5p+HutkEKPYki7RH1uESnznjZghk/t7uxQqss
-         oBIrlJF1t3LBBOZC7aGrM404lWqYNzxZpD1i40A/D5FTfezodC7T48Zo9BniezWh8cY7
-         EuHpgQl3vCNLaybZoDpscG7mq2aHmEhN+ai2pAWDbQw2cos8IepfuuY1DAyWjtPYJcL8
-         qzQDHen6Mzm6BEZ3+uGUt5jKrXhrpEsDKhllW9uJI6BZKMdKr5C97Ryx3oMVdCvoe9nF
-         Yfo/5SOYy752W9OoNGHgX8R+Ung4EqFfpF2P7FEWIX6quwv6txobDaBqvbFuermNghdI
-         0W/w==
-X-Gm-Message-State: APjAAAVnPkcSCOYGvL2F7EYZ/PeEbXq2c2hPNR56KRRDWhddioNuk9+v
-        MA5V3r8zYBTkkJj96XakmWz0zjX6TiiomakqVGByEU2O
-X-Google-Smtp-Source: APXvYqzqIEUCnQNmhAeENYKBRjkNwhAc2pztWO5oL7JoyJq4EKdOgBnNlcJkCUoc9O/kvCg5QnmcMVtCU0QxrTYoVo8=
-X-Received: by 2002:a5d:848c:: with SMTP id t12mr36778001iom.5.1574898583117;
- Wed, 27 Nov 2019 15:49:43 -0800 (PST)
-MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 27 Nov 2019 17:49:32 -0600
-Message-ID: <CAH2r5mtDpwY=MrQ=yN29JeWUqf+ozgYvgnzbnb91VoK8Vg4Zmw@mail.gmail.com>
-Subject: [GIT PULL] CIFS/SMB3 Fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=sslQZgUjF8mS7PYbCqQtrDtVZrFkyPKopZymkUPtEMY=;
+        b=oM9+P2pWnLvibx/B6bHjnBeodc86XlhBL++fC8+3e5cr4akqo5TwG5K3eYHWE+xuTS
+         01LJ1DwIk3cIEY3kJYXGNFyInpEF5Epz+pHU99IXUUhNS6WMXUD4ZgskrXohXk4nVv/t
+         BflWVc7kHGuqLAl9TuXYoUBhS5zN3vwl9fjWKKeo6o8qo4xcHzeQe+tZKBmBzR8xtcBt
+         HafKXfVnygkEAdCJrXlRr+n+xofrStt18qkqwOcWgusC9KVL1KcpC2PZzPO+WaCzk0oR
+         tttDsjrbPWmMFkCE5TqB+MpfjE/VnOUhcQmBYT/aUuM960FZ0I0OlMUks4fPiE5csLlI
+         fLPA==
+X-Gm-Message-State: APjAAAWmOA6aO/xfgBX+A4RSsvmL7zNIDGOCXeJBZBgYHQm5E83PXkI3
+        UF7dH70VpOe2q1dvEGieaMhYdwA1MQ==
+X-Google-Smtp-Source: APXvYqxKk3pq8bvD0ymUpPbJunE9ZqY6/NUll+mqHyW2ucxviSJPtx8WmwkTX/Pxf4fy+V4y/L1fs2cJTg==
+X-Received: by 2002:ac8:474a:: with SMTP id k10mr25607125qtp.338.1574898625703;
+ Wed, 27 Nov 2019 15:50:25 -0800 (PST)
+Date:   Thu, 28 Nov 2019 00:49:13 +0100
+Message-Id: <20191127234916.31175-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v5 1/4] x86/insn-eval: Add support for 64-bit kernel mode
+From:   Jann Horn <jannh@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        jannh@google.com
+Cc:     linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following changes since commit
-219d54332a09e8d8741c1e1982f5eae56099de85:
+To support evaluating 64-bit kernel mode instructions:
 
-  Linux 5.4 (2019-11-24 16:32:01 -0800)
+Replace existing checks for user_64bit_mode() with a new helper that
+checks whether code is being executed in either 64-bit kernel mode or
+64-bit user mode.
 
-are available in the Git repository at:
+Select the GS base depending on whether the instruction is being
+evaluated in kernel mode.
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/5.5-rc-smb3-fixes
+Signed-off-by: Jann Horn <jannh@google.com>
+---
 
-for you to fetch changes up to 68464b88cc0a735eaacd2c69beffb85d36f25292:
+Notes:
+    v2-v5:
+      no changes
 
-  CIFS: fix a white space issue in cifs_get_inode_info() (2019-11-27
-11:31:49 -0600)
+ arch/x86/include/asm/ptrace.h | 13 +++++++++++++
+ arch/x86/lib/insn-eval.c      | 26 +++++++++++++++-----------
+ 2 files changed, 28 insertions(+), 11 deletions(-)
 
-----------------------------------------------------------------
-Various smb3 fixes (including 12 for stable) and also features
-(addition of multichannel support).  This includes the first set of
-CIFS/SMB3 changes for 5.5.
-
-Buildbot automated regression testing results (passed):
-http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/286
-
-There are additional fixes for DFS (global name space) support and
-some multichannel enhancements and POSIX fixes that are still being
-tested and are not included in
-this pull request.
-----------------------------------------------------------------
-Aurelien Aptel (8):
-      cifs: sort interface list by speed
-      cifs: add multichannel mount options and data structs
-      cifs: add server param
-      cifs: switch servers depending on binding state
-      CIFS: refactor cifs_get_inode_info()
-      cifs: try opening channels after mounting
-      cifs: try harder to open new channels
-      cifs: dump channel info in DebugData
-
-Dan Carpenter (1):
-      cifs: rename a variable in SendReceive()
-
-Dan Carpenter via samba-technical (1):
-      CIFS: fix a white space issue in cifs_get_inode_info()
-
-Long Li (7):
-      cifs: Don't display RDMA transport on reconnect
-      cifs: smbd: Invalidate and deregister memory registration on
-re-send for direct I/O
-      cifs: smbd: Return -EINVAL when the number of iovs exceeds
-SMBDIRECT_MAX_SGE
-      cifs: smbd: Add messages on RDMA session destroy and reconnection
-      cifs: smbd: Return -ECONNABORTED when trasnport is not in connected state
-      cifs: smbd: Only queue work for error recovery on memory registration
-      cifs: smbd: Return -EAGAIN when transport is reconnecting
-
-Markus Elfring (3):
-      CIFS: Use memdup_user() rather than duplicating its implementation
-      CIFS: Use common error handling code in smb2_ioctl_query_info()
-      CIFS: Return directly after a failed build_path_from_dentry() in
-cifs_do_create()
-
-Paulo Alcantara (SUSE) (5):
-      cifs: Fix use-after-free bug in cifs_reconnect()
-      cifs: Fix lookup of root ses in DFS referral cache
-      cifs: Fix potential softlockups while refreshing DFS cache
-      cifs: Fix retrieval of DFS referrals in cifs_mount()
-      cifs: Always update signing key of first channel
-
-Pavel Shilovsky (6):
-      CIFS: Respect O_SYNC and O_DIRECT flags during reconnect
-      CIFS: Close open handle after interrupted close
-      CIFS: Fix NULL pointer dereference in mid callback
-      CIFS: Do not miss cancelled OPEN responses
-      CIFS: Fix SMB2 oplock break processing
-      CIFS: Properly process SMB3 lease breaks
-
-Ronnie Sahlberg (4):
-      cifs: close the shared root handle on tree disconnect
-      smb3: add debug messages for closing unmatched open
-      cifs: don't use 'pre:' for MODULE_SOFTDEP
-      cifs: move cifsFileInfo_put logic into a work-queue
-
-Steve French (4):
-      cifs: add support for flock
-      smb3: remove confusing dmesg when mounting with encryption ("seal")
-      smb3: dump in_send and num_waiters stats counters by default
-      cifs: update internal module version number
-
-YueHaibing (2):
-      cifs: remove unused variable 'sid_user'
-      CIFS: remove set but not used variables 'cinode' and 'netfid'
-
- fs/cifs/cifs_debug.c    |  43 +++++++++-
- fs/cifs/cifs_spnego.c   |   2 +-
- fs/cifs/cifsacl.c       |   2 -
- fs/cifs/cifsfs.c        |  44 ++++++++---
- fs/cifs/cifsfs.h        |   3 +-
- fs/cifs/cifsglob.h      |  90 +++++++++++++++------
- fs/cifs/cifsproto.h     |   8 ++
- fs/cifs/connect.c       | 191 +++++++++++++++++++++++++++++++++-----------
- fs/cifs/dfs_cache.c     |   3 +-
- fs/cifs/dir.c           |   6 +-
- fs/cifs/file.c          | 159 +++++++++++++++++++++++++++++--------
- fs/cifs/inode.c         | 333
-++++++++++++++++++++++++++++++++++++++++++++++-------------------------------
- fs/cifs/misc.c          |  17 +---
- fs/cifs/sess.c          | 230
-++++++++++++++++++++++++++++++++++++++++++++++++++++-
- fs/cifs/smb1ops.c       |   8 +-
- fs/cifs/smb2misc.c      | 175 ++++++++++++++++++++++++----------------
- fs/cifs/smb2ops.c       | 141 +++++++++++++++++++--------------
- fs/cifs/smb2pdu.c       | 168 ++++++++++++++++++++++++++-------------
- fs/cifs/smb2pdu.h       |   2 +-
- fs/cifs/smb2proto.h     |   6 +-
- fs/cifs/smb2transport.c | 165 +++++++++++++++++++++++++++++---------
- fs/cifs/smbdirect.c     |  36 +++++----
- fs/cifs/transport.c     |  37 +++++++--
- 23 files changed, 1340 insertions(+), 529 deletions(-)
-
+diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
+index 5057a8ed100b..ac45b06941a5 100644
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -159,6 +159,19 @@ static inline bool user_64bit_mode(struct pt_regs *regs)
+ #endif
+ }
+ 
++/*
++ * Determine whether the register set came from any context that is running in
++ * 64-bit mode.
++ */
++static inline bool any_64bit_mode(struct pt_regs *regs)
++{
++#ifdef CONFIG_X86_64
++	return !user_mode(regs) || user_64bit_mode(regs);
++#else
++	return false;
++#endif
++}
++
+ #ifdef CONFIG_X86_64
+ #define current_user_stack_pointer()	current_pt_regs()->sp
+ #define compat_user_stack_pointer()	current_pt_regs()->sp
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 306c3a0902ba..31600d851fd8 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -155,7 +155,7 @@ static bool check_seg_overrides(struct insn *insn, int regoff)
+  */
+ static int resolve_default_seg(struct insn *insn, struct pt_regs *regs, int off)
+ {
+-	if (user_64bit_mode(regs))
++	if (any_64bit_mode(regs))
+ 		return INAT_SEG_REG_IGNORE;
+ 	/*
+ 	 * Resolve the default segment register as described in Section 3.7.4
+@@ -266,7 +266,7 @@ static int resolve_seg_reg(struct insn *insn, struct pt_regs *regs, int regoff)
+ 	 * which may be invalid at this point.
+ 	 */
+ 	if (regoff == offsetof(struct pt_regs, ip)) {
+-		if (user_64bit_mode(regs))
++		if (any_64bit_mode(regs))
+ 			return INAT_SEG_REG_IGNORE;
+ 		else
+ 			return INAT_SEG_REG_CS;
+@@ -289,7 +289,7 @@ static int resolve_seg_reg(struct insn *insn, struct pt_regs *regs, int regoff)
+ 	 * In long mode, segment override prefixes are ignored, except for
+ 	 * overrides for FS and GS.
+ 	 */
+-	if (user_64bit_mode(regs)) {
++	if (any_64bit_mode(regs)) {
+ 		if (idx != INAT_SEG_REG_FS &&
+ 		    idx != INAT_SEG_REG_GS)
+ 			idx = INAT_SEG_REG_IGNORE;
+@@ -646,23 +646,27 @@ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx)
+ 		 */
+ 		return (unsigned long)(sel << 4);
+ 
+-	if (user_64bit_mode(regs)) {
++	if (any_64bit_mode(regs)) {
+ 		/*
+ 		 * Only FS or GS will have a base address, the rest of
+ 		 * the segments' bases are forced to 0.
+ 		 */
+ 		unsigned long base;
+ 
+-		if (seg_reg_idx == INAT_SEG_REG_FS)
++		if (seg_reg_idx == INAT_SEG_REG_FS) {
+ 			rdmsrl(MSR_FS_BASE, base);
+-		else if (seg_reg_idx == INAT_SEG_REG_GS)
++		} else if (seg_reg_idx == INAT_SEG_REG_GS) {
+ 			/*
+ 			 * swapgs was called at the kernel entry point. Thus,
+ 			 * MSR_KERNEL_GS_BASE will have the user-space GS base.
+ 			 */
+-			rdmsrl(MSR_KERNEL_GS_BASE, base);
+-		else
++			if (user_mode(regs))
++				rdmsrl(MSR_KERNEL_GS_BASE, base);
++			else
++				rdmsrl(MSR_GS_BASE, base);
++		} else {
+ 			base = 0;
++		}
+ 		return base;
+ 	}
+ 
+@@ -703,7 +707,7 @@ static unsigned long get_seg_limit(struct pt_regs *regs, int seg_reg_idx)
+ 	if (sel < 0)
+ 		return 0;
+ 
+-	if (user_64bit_mode(regs) || v8086_mode(regs))
++	if (any_64bit_mode(regs) || v8086_mode(regs))
+ 		return -1L;
+ 
+ 	if (!sel)
+@@ -948,7 +952,7 @@ static int get_eff_addr_modrm(struct insn *insn, struct pt_regs *regs,
+ 	 * following instruction.
+ 	 */
+ 	if (*regoff == -EDOM) {
+-		if (user_64bit_mode(regs))
++		if (any_64bit_mode(regs))
+ 			tmp = regs->ip + insn->length;
+ 		else
+ 			tmp = 0;
+@@ -1250,7 +1254,7 @@ static void __user *get_addr_ref_32(struct insn *insn, struct pt_regs *regs)
+ 	 * After computed, the effective address is treated as an unsigned
+ 	 * quantity.
+ 	 */
+-	if (!user_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
++	if (!any_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
+ 		goto out;
+ 
+ 	/*
 -- 
-Thanks,
+2.24.0.432.g9d3f5f5b63-goog
 
-Steve
