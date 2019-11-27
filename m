@@ -1,269 +1,124 @@
-Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0878C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBD6C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 00:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BB72064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EEC22075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 00:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TxxE/T4J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uurMhc0/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfKZX7U (ORCPT
+        id S1727016AbfK0AGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 18:59:20 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:47318 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfKZX7U (ORCPT
+        Tue, 26 Nov 2019 19:06:34 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38237 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbfK0AGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 18:59:20 -0500
-Received: by mail-pf1-f201.google.com with SMTP id w16so12877687pfq.14
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 15:59:19 -0800 (PST)
+        Tue, 26 Nov 2019 19:06:33 -0500
+Received: by mail-qt1-f195.google.com with SMTP id 14so23473926qtf.5;
+        Tue, 26 Nov 2019 16:06:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=t3y0ParnqjS12Zc5G+hJwx8XjnN+voVZwR5fnWpar50=;
-        b=TxxE/T4Jvb85hFXtiKfurQwkOL0eBkywjzDeghrE3w+GpTW8NSNCCwo4r8cNP/gb93
-         nj8WnuLndF6S8VGa/cCH3/0DzpBlx4FTqMMbv2vm5I4MUWjhsXJKSgrQmfWsz/vnGTTC
-         kkyxG0NsAjYhGVWCepAW94dReKwFQ4GYBHsLG04TJ5QsHQWl2PGtte/qfL6kMQTlUma+
-         CExqDwcwNdWUlHmNx18yAnDgpS6XjcjFjNtKrOePO6c2FUbSDj4xf+XP9Lbs4zevrQ8o
-         c2EcSseEV0sxWPcO7t3zXEtL99uKCpiamsZ0KFlVvhRNs4ESHpjGx6KAt4L5elTVtAPS
-         rjuA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=blwEJPZM1LwoJmXCJ81tx6CXl1QZ/gbiETqqfH17hCE=;
+        b=uurMhc0/9WIyPsqom/omTyoBP/D+SyOe0YMA03g/1lxa4J4NRkRf7PANnJVhR5z6gk
+         DRikQAVe8r7HG34tyE5Ce5O52mQ2KLkW4YcxjiHxn8PPjgog8HbY1qhgeGWJ01aAjODw
+         hnGa8Du/9aeAJ4hNzf5zV0JmijVSLoGUiM7/8YQBL3gTbhnbGSyXCsfwNv9fFA+EsgwG
+         d+gFzcBNADtFPAShkPUYLqKBUqaBHnfGMSG9Pgti3aEdK5RVpK9twHSyN4vfFGHTKwUQ
+         FVeoG2xfj/FgPEIzRNUmuEeyTfUhW30seeBj3ucTtFeinhCi/0fEXJOhSZGaD/vBC4YH
+         LZWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=t3y0ParnqjS12Zc5G+hJwx8XjnN+voVZwR5fnWpar50=;
-        b=pXZBvChfi0o/Yy6o5r1McXIOR2Ef/w22SyLEOBxMkIZJy5kfAZ8hVKSE2CBRm+ou03
-         GSUeCA44YmXAeJDrxMsgnb2qFB77g6sTPqiG+36ye1o609F7oIL3ym9GYphcAQm3Zt9D
-         uUcMglpn+iZ+8apjAGvohdIgUk1xpdx+jA2o+c/hQi+9hHEUhWDFf7G05/x7yigbHQBT
-         cxivHUjnIBbkYL8I8JpzsGOD0ip5eXywexmZa+acjIbrEkPAiGVBTf+cMT3/iRfqHVr/
-         9L13tadT/tpzFXMDbb8jkB5zBNezE9IYey0iKai8Dj9M/Nf3lIt5YsZm3hgZMTmEvcMK
-         g88w==
-X-Gm-Message-State: APjAAAXG494onmWs/dnjo2RyLLfsXlWbt4JttbA8oTJys4753o0UI97Z
-        1f9DehNT5KGqx4rWWOEt55Z5LyzHtsfP
-X-Google-Smtp-Source: APXvYqylJyQ+JT4DSbS2i8gGwBaqTvDBdjzC8mpEKBM/yHOgjbpG384/HdXTJ7yOEEX3cp08OS4UMn1yFsN8
-X-Received: by 2002:a63:4b03:: with SMTP id y3mr1298378pga.155.1574812758994;
- Tue, 26 Nov 2019 15:59:18 -0800 (PST)
-Date:   Tue, 26 Nov 2019 15:59:13 -0800
-Message-Id: <20191126235913.41855-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH] perf jit: move test functionality in to a test
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>, Leo Yan <leo.yan@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Cc:     Ian Rogers <irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=blwEJPZM1LwoJmXCJ81tx6CXl1QZ/gbiETqqfH17hCE=;
+        b=q7IxXyOEM+6lH+8uoP21Z9amAFTy16Qb2TOde5H2m38sgGhXfaTQEh5xl2w9a8Qlus
+         9FZYFNfxb2Nfda1cZbXiDUFaGwJpjQuF2aQMO5S0lCTHUVVgnrGv7mboBiK7HJVwHCFN
+         KjAeXNk00Srpl4IL7R9W3OvMdHQDj+E3pir1zilxkp6jrRuuBIMUhxwzu9RdbH1vjeE1
+         JpJqwx0R6TMuXjVFpVjynUCumJ8Hr9tWy0u5RWvBg0/N1KwfGH2PI766KemIPNpOo6Hu
+         00kSSufiVAzMc2NJ4MbGuthTvhfJQoiIwkoYAub9VSD+vThAdKtdDNGjAhs5D93qxS8Y
+         ODYA==
+X-Gm-Message-State: APjAAAVh6by97F/6saf8v5vfMqwpK59EQ0R2sA/N0ZJydZTYeVVHsTCb
+        KmGSfj+cBnpszWFRAtgnRYEB/srppONKF0IvzdU=
+X-Google-Smtp-Source: APXvYqxgIipg9JByOeSSia3UhSZgM/tRExQKLm3kt05xRhVsXoPTq99OO+g/bZv7VFfGXZfOpxxQ2QINgukymGWm1Yo=
+X-Received: by 2002:ac8:b87:: with SMTP id h7mr25371582qti.253.1574813192455;
+ Tue, 26 Nov 2019 16:06:32 -0800 (PST)
+MIME-Version: 1.0
+References: <a7ac93e3-9a1f-2cd5-bf0b-30b562bd707d@gmail.com> <20191126233735.GA215993@google.com>
+In-Reply-To: <20191126233735.GA215993@google.com>
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+Date:   Tue, 26 Nov 2019 18:06:19 -0600
+Message-ID: <CAL5oW01E=fE6=Z75THsBGd4XA67im5ivdzczAwmgCO1CaPzVng@mail.gmail.com>
+Subject: Re: [PATCH] PCI: pciehp: Make sure pciehp_isr clears interrupt events
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds a test for minimal jit_write_elf functionality.
+On Tue, Nov 26, 2019 at 5:37 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Nov 25, 2019 at 03:03:23PM -0600, Stuart Hayes wrote:
+> >
+> > On 11/12/19 3:59 PM, Stuart Hayes wrote:
+> > > The pciehp interrupt handler pciehp_isr() will read the slot status
+> > > register and then write back to it to clear just the bits that caused the
+> > > interrupt. If a different interrupt event bit gets set between the read and
+> > > the write, pciehp_isr() will exit without having cleared all of the
+> > > interrupt event bits, so we will never get another hotplug interrupt from
+> > > that device.
+> > >
+> > > That is expected behavior according to the PCI Express spec (v.5.0, section
+> > > 6.7.3.4, "Software Notification of Hot-Plug Events").
+> > >
+> > > Because the "presence detect changed" and "data link layer state changed"
+> > > event bits are both getting set at nearly the same time when a device is
+> > > added or removed, this is more likely to happen than it might seem. The
+> > > issue can be reproduced rather easily by connecting and disconnecting an
+> > > NVMe device on at least one system model.
+> > >
+> > > This patch fixes the issue by modifying pciehp_isr() to loop back and
+> > > re-read the slot status register immediately after writing to it, until
+> > > it sees that all of the event status bits have been cleared.
+> > >
+> > > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> >
+> > Bjorn,
+> >
+> > Do you have any comments or issues with this patch set?  Anything I can do?
+>
+> Were you planning to address Lukas' comments?
+>
+> https://lore.kernel.org/r/20191114025022.wz3gchr7w67fjtzn@wunner.de
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/Build          |  1 +
- tools/perf/tests/builtin-test.c |  4 +++
- tools/perf/tests/genelf.c       | 53 +++++++++++++++++++++++++++++++++
- tools/perf/tests/tests.h        |  1 +
- tools/perf/util/genelf.c        | 46 ----------------------------
- 5 files changed, 59 insertions(+), 46 deletions(-)
- create mode 100644 tools/perf/tests/genelf.c
+Yes, I submitted a V2 for this patch (https://lkml.org/lkml/2019/11/20/1147).
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index e72accefd669..a738e4a5b301 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -54,6 +54,7 @@ perf-y += unit_number__scnprintf.o
- perf-y += mem2node.o
- perf-y += map_groups.o
- perf-y += time-utils-test.o
-+perf-y += genelf.o
- 
- $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
- 	$(call rule_mkdir)
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 8b286e9b7549..6ab2e2346aab 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -300,6 +300,10 @@ static struct test generic_tests[] = {
- 		.desc = "map_groups__merge_in",
- 		.func = test__map_groups__merge_in,
- 	},
-+	{
-+		.desc = "Test jit_write_elf",
-+		.func = test__jit_write_elf,
-+	},
- 	{
- 		.func = NULL,
- 	},
-diff --git a/tools/perf/tests/genelf.c b/tools/perf/tests/genelf.c
-new file mode 100644
-index 000000000000..d392e9300881
---- /dev/null
-+++ b/tools/perf/tests/genelf.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <limits.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <linux/compiler.h>
-+
-+#include "debug.h"
-+#include "tests.h"
-+
-+
-+#ifdef HAVE_LIBELF_SUPPORT
-+#include <libelf.h>
-+#include "../util/genelf.h"
-+#endif
-+
-+#define TEMPL "/tmp/perf-test-XXXXXX"
-+
-+static unsigned char x86_code[] = {
-+	0xBB, 0x2A, 0x00, 0x00, 0x00, /* movl $42, %ebx */
-+	0xB8, 0x01, 0x00, 0x00, 0x00, /* movl $1, %eax */
-+	0xCD, 0x80            /* int $0x80 */
-+};
-+
-+int test__jit_write_elf(struct test *test __maybe_unused,
-+			int subtest __maybe_unused)
-+{
-+#ifdef HAVE_JITDUMP
-+	char path[PATH_MAX];
-+	int fd, ret;
-+
-+	strcpy(path, TEMPL);
-+
-+	fd = mkstemp(path);
-+	if (fd < 0) {
-+		perror("mkstemp failed");
-+		return TEST_FAIL;
-+	}
-+
-+	pr_info("Writing jit code to: %s\n", path);
-+
-+	ret = jit_write_elf(fd, 0, "main", x86_code, sizeof(x86_code),
-+			NULL, 0, NULL, 0, 0);
-+	close(fd);
-+
-+	unlink(path);
-+
-+	return ret ? TEST_FAIL : 0;
-+#else
-+	return TEST_SKIPPED;
-+#endif
-+}
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 9837b6e93023..5a53ab7294e9 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -109,6 +109,7 @@ int test__unit_number__scnprint(struct test *test, int subtest);
- int test__mem2node(struct test *t, int subtest);
- int test__map_groups__merge_in(struct test *t, int subtest);
- int test__time_utils(struct test *t, int subtest);
-+int test__jit_write_elf(struct test *test, int subtest);
- 
- bool test__bp_signal_is_supported(void);
- bool test__bp_account_is_supported(void);
-diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-index f9f18b8b1df9..aed49806a09b 100644
---- a/tools/perf/util/genelf.c
-+++ b/tools/perf/util/genelf.c
-@@ -8,15 +8,12 @@
-  */
- 
- #include <sys/types.h>
--#include <stdio.h>
--#include <getopt.h>
- #include <stddef.h>
- #include <libelf.h>
- #include <string.h>
- #include <stdlib.h>
- #include <unistd.h>
- #include <inttypes.h>
--#include <limits.h>
- #include <fcntl.h>
- #include <err.h>
- #ifdef HAVE_DWARF_SUPPORT
-@@ -31,8 +28,6 @@
- #define NT_GNU_BUILD_ID 3
- #endif
- 
--#define JVMTI
--
- #define BUILD_ID_URANDOM /* different uuid for each run */
- 
- #ifdef HAVE_LIBCRYPTO
-@@ -511,44 +506,3 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
- 
- 	return retval;
- }
--
--#ifndef JVMTI
--
--static unsigned char x86_code[] = {
--    0xBB, 0x2A, 0x00, 0x00, 0x00, /* movl $42, %ebx */
--    0xB8, 0x01, 0x00, 0x00, 0x00, /* movl $1, %eax */
--    0xCD, 0x80            /* int $0x80 */
--};
--
--static struct options options;
--
--int main(int argc, char **argv)
--{
--	int c, fd, ret;
--
--	while ((c = getopt(argc, argv, "o:h")) != -1) {
--		switch (c) {
--		case 'o':
--			options.output = optarg;
--			break;
--		case 'h':
--			printf("Usage: genelf -o output_file [-h]\n");
--			return 0;
--		default:
--			errx(1, "unknown option");
--		}
--	}
--
--	fd = open(options.output, O_CREAT|O_TRUNC|O_RDWR, 0666);
--	if (fd == -1)
--		err(1, "cannot create file %s", options.output);
--
--	ret = jit_write_elf(fd, "main", x86_code, sizeof(x86_code));
--	close(fd);
--
--	if (ret != 0)
--		unlink(options.output);
--
--	return ret;
--}
--#endif
--- 
-2.24.0.432.g9d3f5f5b63-goog
+But--I'm very sorry, I didn't mean to ask if you had any comments on
+this patch--I meant to ask about an earlier patch set, and
+accidentally replied to the wrong thread.
 
+I meant to ask you about this patch set:
+https://lore.kernel.org/lkml/20191025190047.38130-1-stuart.w.hayes@gmail.com/
+
+Thank you!  --Stuart
