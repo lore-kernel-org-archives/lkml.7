@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687A2C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CAFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3576321847
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B548E21882
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887820;
-	bh=9B51i506uoit8PvzKsp8Hnm676PvlawhR2kOkoqXzLA=;
+	s=default; t=1574887825;
+	bh=BZ47EP3bX73SeH4D91epy1Eo8HBrWZQvtoUKao3oJ0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXjhrQEVW2jq3Vp7Q+v4mUHfB2CZqbinLgrHUsehk2hrfPf16oQJLxrYqY5Ip9fIk
-	 mz0DSrJvFX2GPozOYN7wP9MVOF5o6frll/HB6q4JMGlSMJ2uEgGvSkY/UrHVV4gA/3
-	 bAt/aB3FyyUv4xDWqvR1FWBABgY3+9lkMK4T6OzA=
+	b=q+KXKO3YgAH9sO9wneXSsLCby7eXFEAmW0fwpiwnaiY1B15ZX/3JHZdm2iO20NyCn
+	 OpL2tH6IsX+Mugm0wGPHnnddN42Z1thOX2oOgrsIgINUVLM0D+BZFpIAVSITZ+RhzI
+	 Z24AdHph261rkGy+TlHAFcQ5c7dod/htPl0abX3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730341AbfK0UuT (ORCPT
+        id S1730353AbfK0UuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:50:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36118 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:50:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729927AbfK0UuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:50:16 -0500
+        id S1729654AbfK0UuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:50:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5905121847;
-        Wed, 27 Nov 2019 20:50:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 607E62186D;
+        Wed, 27 Nov 2019 20:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887815;
-        bh=9B51i506uoit8PvzKsp8Hnm676PvlawhR2kOkoqXzLA=;
+        s=default; t=1574887820;
+        bh=BZ47EP3bX73SeH4D91epy1Eo8HBrWZQvtoUKao3oJ0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=omi2j4pAGFp0JR173ACENYnk56QFyoiERU3N04TQOTGLk7b1ZNX3zrjiqmp2wAWnS
-         M42A+HmDSoG2Sx1VPca4N5ojWlpk47vGQqIHCu+nzZKu4pARQSM8ODTaeyPLcDs8yi
-         ejtmO1E2uRFkhtbDLb1aWGi60lVBSHbFAWkCm+Eo=
+        b=2vLZhAePDnODCpKHH4Uv5M0BF2E2a4CJnP6ZIPuo59asIsg17arjRubxKbv62/vnz
+         q/ZYUFNrl9L1NVbht+kkqIrv30CToOZzhOC79wBYz1yTpUxYyN+Q1fJQXNOiA304E1
+         eAlSFGOZcK4CiSFoefVk0Y1RJYhCv08yJn9TW2zc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 106/211] selftests/powerpc/cache_shape: Fix out-of-tree build
-Date:   Wed, 27 Nov 2019 21:30:39 +0100
-Message-Id: <20191127203104.016375778@linuxfoundation.org>
+Subject: [PATCH 4.14 108/211] linux/bitmap.h: fix type of nbits in bitmap_shift_right()
+Date:   Wed, 27 Nov 2019 21:30:41 +0100
+Message-Id: <20191127203104.229744123@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -59,40 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 69f8117f17b332a68cd8f4bf8c2d0d3d5b84efc5 ]
+[ Upstream commit d9873969fa8725dc6a5a21ab788c057fd8719751 ]
 
-Use TEST_GEN_PROGS and don't redefine all, this makes the out-of-tree
-build work. We need to move the extra dependencies below the include
-of lib.mk, because it adds the $(OUTPUT) prefix if it's defined.
+Most other bitmap API, including the OOL version __bitmap_shift_right,
+take unsigned nbits.  This was accidentally left out from 2fbad29917c98.
 
-We can also drop the clean rule, lib.mk does it for us.
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: http://lkml.kernel.org/r/20180818131623.8755-5-linux@rasmusvillemoes.dk
+Fixes: 2fbad29917c98 ("lib: bitmap: change bitmap_shift_right to take unsigned parameters")
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reported-by: Yury Norov <ynorov@caviumnetworks.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/cache_shape/Makefile | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ include/linux/bitmap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/powerpc/cache_shape/Makefile b/tools/testing/selftests/powerpc/cache_shape/Makefile
-index 1be547434a49c..7e0c175b82978 100644
---- a/tools/testing/selftests/powerpc/cache_shape/Makefile
-+++ b/tools/testing/selftests/powerpc/cache_shape/Makefile
-@@ -1,11 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
--TEST_PROGS := cache_shape
--
--all: $(TEST_PROGS)
--
--$(TEST_PROGS): ../harness.c ../utils.c
-+TEST_GEN_PROGS := cache_shape
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index 1990b88bd0ab2..aec255fb62aad 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -355,7 +355,7 @@ static __always_inline void bitmap_clear(unsigned long *map, unsigned int start,
+ }
  
- include ../../lib.mk
- 
--clean:
--	rm -f $(TEST_PROGS) *.o
-+$(TEST_GEN_PROGS): ../harness.c ../utils.c
+ static inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+-				unsigned int shift, int nbits)
++				unsigned int shift, unsigned int nbits)
+ {
+ 	if (small_const_nbits(nbits))
+ 		*dst = (*src & BITMAP_LAST_WORD_MASK(nbits)) >> shift;
 -- 
 2.20.1
 
