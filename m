@@ -2,106 +2,124 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361D5C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D677BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D46C20870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DBB206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="JyfZhtH6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CkWluTh8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SFs22QNC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfK0Wdy (ORCPT
+        id S1727330AbfK0WjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 17:33:54 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41781 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726947AbfK0Wdx (ORCPT
+        Wed, 27 Nov 2019 17:39:20 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39720 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfK0WjU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 17:33:53 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 32353226DF;
-        Wed, 27 Nov 2019 17:33:52 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 27 Nov 2019 17:33:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=IzkBKtsIWNt/0KHfahdEn8h/zDvhTn2
-        y2qgOjDS+X54=; b=JyfZhtH6I0ZKd2o2M57TsCUen61dfpyhBJHt1MIXtLQoq+m
-        +2SV44eMSwO3/Sg3qCJSQzC9ivUtSYXsGmQPjJx1x92rJGsl7jg4F3Q5kkIqS/3Q
-        TeMYsnZJix15P8V/a/Q704xp6FdQdOwNkTmacY8XgVnOU0z0YplSIS1yS/31rJLU
-        FD2hdDpUnu37PYM9byWslm84bFryGXoRbHA3XgHg0pnQn4YiXchz+H9KCI4BhHKX
-        S1MSNRCgJuzAyk/rq0SKAb7PHdCh2TaV8QgqOc/izm/fljxM23UEQYh6VAAYFCou
-        cXe2zHFlCv63fYqIRSutrZI9lcymfM820VwNejQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=IzkBKt
-        sIWNt/0KHfahdEn8h/zDvhTn2y2qgOjDS+X54=; b=CkWluTh8Tm5dT5epjP51lz
-        jx5K+LxQqnCvdtEo+rOmMggbUljcIaeSvt4GZrpi/CBMMN2fQpfnar53Sl4FC8ab
-        62BiZNuRSczkqqqKfOTf+pQfwmnlrf0eF7isYQijN+JU1G/PTE2IUIBhpzKeme0K
-        a4SYsLk2pofV41p9vwvlbfz9taVYkkHsQhb4+F27+NBG1QKivNfw+B2fXW5a67RF
-        0q4ZB1acSoXDf2Xbas7pyFvq1KGNPmBlJV8CRY6y2aLvNhAVW4TaQk+/rhSKwOdM
-        W9njISK6GvSGBakXljoJHbW55s7/ISiNUc2ohS8LlolIEkGfbxCCW3sfesUeimWg
-        ==
-X-ME-Sender: <xms:z_neXWo_Igav66JgJT3RYTIr2u4xyUZNi1yFgbw3Wy14hBTB9E0AIA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeihedgudeiudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehn
-    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushht
-    vghrufhiiigvpedt
-X-ME-Proxy: <xmx:z_neXepZLzgoxCq1TKoy6h_wUuwIOut7c0gQ21N767Ijq-tGRS5EsQ>
-    <xmx:z_neXR0T6G5V7ONdwjjHPXe5jUtOs4CAzG5U_3A8MjBUl8VAoCL-IQ>
-    <xmx:z_neXUEvcF8WiaBzxrpdy6Ggbfx9A5ZUuz1dSqQ_MNVaMbPtgNVzog>
-    <xmx:0PneXRjJxm8EcHfJjrEapQVWzrxWaqNwBpczZCUwNS8kJhVFDJohyA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 3D649E00A3; Wed, 27 Nov 2019 17:33:51 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
-Mime-Version: 1.0
-Message-Id: <ba027dc2-613c-40c6-bb5e-1d320e51b191@www.fastmail.com>
-In-Reply-To: <20191127132340.GA22672@cnn>
-References: <20191127132340.GA22672@cnn>
-Date:   Thu, 28 Nov 2019 09:05:21 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>
-Cc:     "Joel Stanley" <joel@jms.id.au>, "Sai Dasari" <sdasari@fb.com>,
-        "Vijay Khemka" <vijaykhemka@fb.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        manikandan.e@hcl.com
-Subject: Re: [PATCH v4] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Content-Type: text/plain
+        Wed, 27 Nov 2019 17:39:20 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x28so11915518pfo.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 14:39:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EHVbHRnSyLZIvpQSJdKBuo3vPPZlfvB1a4T9xCgdTuw=;
+        b=SFs22QNC5hMmqvZPW40mcmcBBPmEpdsOtYsMagwY9mLUglW4JRbrQ2P/YfKX6icomt
+         NLkRrpV4fVV4DqFWxY2+o1sPGR5wSnEhGfUZ7IaeX0l4QG1cLky+X1vAO9Oe3Z1+jozY
+         3Fc0j+mCHcHt0e2uOj7TE4FtHTgCkuVdKYlXI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EHVbHRnSyLZIvpQSJdKBuo3vPPZlfvB1a4T9xCgdTuw=;
+        b=lLWZvqYVduT9+XDzwB05MjiyCuVIj3IlYxHZcW74PSPcyMMe2Qf2LG19SXub5Ci+Cn
+         DK5dIJG8dbGuTEHyi3mmrYTL0OACNIgFH2zk65jEkulBJm0I176lqGIYr5TJpKoxXhoO
+         FijIXcgWLbAtPLGQtznJTyXqpuIJ5ZHOtdYOys2MIcEcmlVGEvhP+9j9F5kLP/cZqvo2
+         v8kMBv9uWDh/W1pXvMOAYilip//RDy/uEsGt/3P1l/H6D0qtbQIYm1HkdgdnFXBLxoeq
+         etolTwrlIGQfMaZm+r7lxn9tEuYB+PUgjMwii/XWcOoo6OkIyf9lYrTFQQbED19lXigO
+         mBQQ==
+X-Gm-Message-State: APjAAAWUum0ERWGSldX5AnQhqL0XuiHNIyJXC3ILf+KqC2A3rsfxPnyC
+        AdKOoJP8+ENwkpNKlKmPd/R8mA==
+X-Google-Smtp-Source: APXvYqzJpOpejjYn146jmpkBi176AhZDdn7NcHNIXMFDPoF5M4picmxeNcIUsNSjUqkWCk7fHfCosw==
+X-Received: by 2002:a63:1e47:: with SMTP id p7mr230935pgm.339.1574894358017;
+        Wed, 27 Nov 2019 14:39:18 -0800 (PST)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id d6sm17699992pfn.32.2019.11.27.14.39.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 14:39:17 -0800 (PST)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org
+Cc:     linux-bluetooth@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/1] ARM: dts: rockchip: Add brcm bluetooth for rk3288-veyron
+Date:   Wed, 27 Nov 2019 14:39:08 -0800
+Message-Id: <20191127223909.253873-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Hi Heiko,
 
-On Wed, 27 Nov 2019, at 23:53, manikandan-e wrote:
-> The Yosemite V2 is a facebook multi-node server
-> platform that host four OCP server. The BMC
-> in the Yosemite V2 platorm based on AST2500 SoC.
-> 
-> This patch adds linux device tree entry related to
-> Yosemite V2 specific devices connected to BMC SoC.
-> 
-> Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+The necessary patches for this change have been merged into
+bluetooth-next. Please pick this up at your convenience.
 
-If people have reviewed previous versions of your patches and sent
-Reviewed-by/Acked-by/Tested-by tags, please make sure to include
-them on future versions of the patches _unless_ there has been
-significant change that might invalidate the tag. In that case, also
-provide a short description as to why you dropped the tags. You can
-add free-form information below the `---` and it will not be included
-in the commit for the patch.
+This patch enables using the Broadcom HCI UART driver with the
+BCM43540 Wi-Fi + Bluetooth chip. This chip is used on a RK3288 based
+board (Veyron) and these changes have been tested on the Minnie variant
+of the board (i.e. rk3288-veyron-minnie.dts).
 
-Cheers,
+The changes are applicable to the minnie, mickey, speedy and brain
+variants (all of which use the Broadcom chips). The bt-activity node was
+removed for all Veyron boards and shouldn't affect the boards using
+Marvell chips since they aren't using this out-of-band wakeup gpio.
 
-Andrew
+A previous portion of this series adding the compatible string to the
+hci_bcm driver has already been merged into bluetooth-next:
+https://lore.kernel.org/r/4680AA6A-599F-4D5E-9A96-0655569BAE94@holtmann.org
+
+Another patch series to fix up the baudrate settings and configure the
+PCM parameters has meen merged on bluetooth-next:
+https://lore.kernel.org/linux-bluetooth/20191127071105.GA32820@akivisil-mobl1.ger.corp.intel.com/T/#t
+
+Thanks
+Abhishek
+
+Changes in v2:
+- Changed sco routing params to brcm,bt-pcm-int-params
+
+Abhishek Pandit-Subedi (1):
+  ARM: dts: rockchip: Add brcm bluetooth for rk3288-veyron
+
+ arch/arm/boot/dts/rk3288-veyron-brain.dts     |  9 +++
+ .../dts/rk3288-veyron-broadcom-bluetooth.dtsi | 22 +++++++
+ .../boot/dts/rk3288-veyron-chromebook.dtsi    | 21 -------
+ arch/arm/boot/dts/rk3288-veyron-fievel.dts    |  2 -
+ arch/arm/boot/dts/rk3288-veyron-jaq.dts       | 22 +++++++
+ arch/arm/boot/dts/rk3288-veyron-jerry.dts     | 22 +++++++
+ arch/arm/boot/dts/rk3288-veyron-mickey.dts    |  9 +++
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts    | 21 +++++++
+ arch/arm/boot/dts/rk3288-veyron-pinky.dts     | 22 +++++++
+ arch/arm/boot/dts/rk3288-veyron-speedy.dts    | 21 +++++++
+ arch/arm/boot/dts/rk3288-veyron.dtsi          | 59 +++----------------
+ 11 files changed, 155 insertions(+), 75 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3288-veyron-broadcom-bluetooth.dtsi
+
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
