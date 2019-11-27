@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FF9C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A16DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CEC9215F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E420217AB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889167;
-	bh=u1csPlVEfQUnMjHvNXx4OmNGhAz9+OVPfxVfdGG03Hw=;
+	s=default; t=1574889172;
+	bh=zCgDrU9ezIbzq7CMalImPFPEn0zCQPijFbbT/nGqanM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uRyYg9IVjDp78xHZlIXO/3bOy9g5XrdvvZo0FM87xXNDVo9ke/mEDU7P1n2emrDav
-	 ZQEyexA6fhg8f+1hs9eZMvXlavoI+yPmrHxmMIGlCSzbvLpgFjEozAWZmyVF4RGfAH
-	 aoZOjnp/IzideMLOr8b5RXzTkGB3Zru1JJBmIGfM=
+	b=RCtmVSHvA9U4CtrwRyW74N6tq4HDjrX9PCZXohIGaFEDAN+MEP9Gl+cxqYyevqTv0
+	 +vQ50sAWpnyAe9PR2UerahQLT357aY/64VuH/sIHx5HFUh3QP4uRy8Z0KcVk68odo7
+	 vwqYQRnRr3D0skYRgeNgiWPzRhmA39clxC32yWL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbfK0VMq (ORCPT
+        id S1732899AbfK0VMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:12:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43652 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:12:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727567AbfK0VMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:12:39 -0500
+        id S1731430AbfK0VMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:12:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18B8E21556;
-        Wed, 27 Nov 2019 21:12:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 321CB215F1;
+        Wed, 27 Nov 2019 21:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889158;
-        bh=u1csPlVEfQUnMjHvNXx4OmNGhAz9+OVPfxVfdGG03Hw=;
+        s=default; t=1574889163;
+        bh=zCgDrU9ezIbzq7CMalImPFPEn0zCQPijFbbT/nGqanM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h5Q2yifcrxkK0L+MaUSbcy0KeobqMcRD1HFnZyXpBoTDD7DTEP38yWk1xSDkVrQ5C
-         W5P1YpGNDEIOp8HAEkmO7YVt6iMvRqy/IiEr8zqalmEyZH/AKzIKQKeRQmhNo4ut1M
-         Y7DCS+Pr/8tCuxU9ok0Tn7fsHGgGNUH4lcw/T++g=
+        b=WkqSmkcGrwxNvmvwyM/No4Q0f4V8n9Ny57HvShTygMAfxOsNLAVKK3nW51yIJ34f2
+         BAI2okHkr5EoSsSuTOQnkgG4fTJEHaaFUPCWOe2ZeRaG9+8HjWtHqwosAZt6t4H9Nq
+         ZOYkkIBvrAy+aNUZlHTkZoSyR1hnXIf9VNxRXurE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
         Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 03/66] ath10k: Fix a NULL-ptr-deref bug in ath10k_usb_alloc_urb_from_pipe
-Date:   Wed, 27 Nov 2019 21:31:58 +0100
-Message-Id: <20191127202639.673049492@linuxfoundation.org>
+Subject: [PATCH 5.4 05/66] ath10k: restore QCA9880-AR1A (v1) detection
+Date:   Wed, 27 Nov 2019 21:32:00 +0100
+Message-Id: <20191127202642.423138310@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -61,74 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Peng <benquike@gmail.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit bfd6e6e6c5d2ee43a3d9902b36e01fc7527ebb27 upstream.
+commit f8914a14623a79b73f72b2b1ee4cd9b2cb91b735 upstream.
 
-The `ar_usb` field of `ath10k_usb_pipe_usb_pipe` objects
-are initialized to point to the containing `ath10k_usb` object
-according to endpoint descriptors read from the device side, as shown
-below in `ath10k_usb_setup_pipe_resources`:
+This patch restores the old behavior that read
+the chip_id on the QCA988x before resetting the
+chip. This needs to be done in this order since
+the unsupported QCA988x AR1A chips fall off the
+bus when resetted. Otherwise the next MMIO Op
+after the reset causes a BUS ERROR and panic.
 
-for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
-        endpoint = &iface_desc->endpoint[i].desc;
-
-        // get the address from endpoint descriptor
-        pipe_num = ath10k_usb_get_logical_pipe_num(ar_usb,
-                                                endpoint->bEndpointAddress,
-                                                &urbcount);
-        ......
-        // select the pipe object
-        pipe = &ar_usb->pipes[pipe_num];
-
-        // initialize the ar_usb field
-        pipe->ar_usb = ar_usb;
-}
-
-The driver assumes that the addresses reported in endpoint
-descriptors from device side  to be complete. If a device is
-malicious and does not report complete addresses, it may trigger
-NULL-ptr-deref `ath10k_usb_alloc_urb_from_pipe` and
-`ath10k_usb_free_urb_to_pipe`.
-
-This patch fixes the bug by preventing potential NULL-ptr-deref.
-
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[groeck: Add driver tag to subject, fix build warning]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Cc: stable@vger.kernel.org
+Fixes: 1a7fecb766c8 ("ath10k: reset chip before reading chip_id in probe")
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath10k/usb.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/wireless/ath/ath10k/pci.c |   36 +++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
---- a/drivers/net/wireless/ath/ath10k/usb.c
-+++ b/drivers/net/wireless/ath/ath10k/usb.c
-@@ -38,6 +38,10 @@ ath10k_usb_alloc_urb_from_pipe(struct at
- 	struct ath10k_urb_context *urb_context = NULL;
- 	unsigned long flags;
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -3490,7 +3490,7 @@ static int ath10k_pci_probe(struct pci_d
+ 	struct ath10k_pci *ar_pci;
+ 	enum ath10k_hw_rev hw_rev;
+ 	struct ath10k_bus_params bus_params = {};
+-	bool pci_ps;
++	bool pci_ps, is_qca988x = false;
+ 	int (*pci_soft_reset)(struct ath10k *ar);
+ 	int (*pci_hard_reset)(struct ath10k *ar);
+ 	u32 (*targ_cpu_to_ce_addr)(struct ath10k *ar, u32 addr);
+@@ -3500,6 +3500,7 @@ static int ath10k_pci_probe(struct pci_d
+ 	case QCA988X_2_0_DEVICE_ID:
+ 		hw_rev = ATH10K_HW_QCA988X;
+ 		pci_ps = false;
++		is_qca988x = true;
+ 		pci_soft_reset = ath10k_pci_warm_reset;
+ 		pci_hard_reset = ath10k_pci_qca988x_chip_reset;
+ 		targ_cpu_to_ce_addr = ath10k_pci_qca988x_targ_cpu_to_ce_addr;
+@@ -3619,25 +3620,34 @@ static int ath10k_pci_probe(struct pci_d
+ 		goto err_deinit_irq;
+ 	}
  
-+	/* bail if this pipe is not initialized */
-+	if (!pipe->ar_usb)
-+		return NULL;
++	bus_params.dev_type = ATH10K_DEV_TYPE_LL;
++	bus_params.link_can_suspend = true;
++	/* Read CHIP_ID before reset to catch QCA9880-AR1A v1 devices that
++	 * fall off the bus during chip_reset. These chips have the same pci
++	 * device id as the QCA9880 BR4A or 2R4E. So that's why the check.
++	 */
++	if (is_qca988x) {
++		bus_params.chip_id =
++			ath10k_pci_soc_read32(ar, SOC_CHIP_ID_ADDRESS);
++		if (bus_params.chip_id != 0xffffffff) {
++			if (!ath10k_pci_chip_is_supported(pdev->device,
++							  bus_params.chip_id))
++				goto err_unsupported;
++		}
++	}
 +
- 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
- 	if (!list_empty(&pipe->urb_list_head)) {
- 		urb_context = list_first_entry(&pipe->urb_list_head,
-@@ -55,6 +59,10 @@ static void ath10k_usb_free_urb_to_pipe(
- {
- 	unsigned long flags;
+ 	ret = ath10k_pci_chip_reset(ar);
+ 	if (ret) {
+ 		ath10k_err(ar, "failed to reset chip: %d\n", ret);
+ 		goto err_free_irq;
+ 	}
  
-+	/* bail if this pipe is not initialized */
-+	if (!pipe->ar_usb)
-+		return;
+-	bus_params.dev_type = ATH10K_DEV_TYPE_LL;
+-	bus_params.link_can_suspend = true;
+ 	bus_params.chip_id = ath10k_pci_soc_read32(ar, SOC_CHIP_ID_ADDRESS);
+-	if (bus_params.chip_id == 0xffffffff) {
+-		ath10k_err(ar, "failed to get chip id\n");
+-		goto err_free_irq;
+-	}
++	if (bus_params.chip_id == 0xffffffff)
++		goto err_unsupported;
+ 
+-	if (!ath10k_pci_chip_is_supported(pdev->device, bus_params.chip_id)) {
+-		ath10k_err(ar, "device %04x with chip_id %08x isn't supported\n",
+-			   pdev->device, bus_params.chip_id);
++	if (!ath10k_pci_chip_is_supported(pdev->device, bus_params.chip_id))
+ 		goto err_free_irq;
+-	}
+ 
+ 	ret = ath10k_core_register(ar, &bus_params);
+ 	if (ret) {
+@@ -3647,6 +3657,10 @@ static int ath10k_pci_probe(struct pci_d
+ 
+ 	return 0;
+ 
++err_unsupported:
++	ath10k_err(ar, "device %04x with chip_id %08x isn't supported\n",
++		   pdev->device, bus_params.chip_id);
 +
- 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
- 
- 	pipe->urb_cnt++;
+ err_free_irq:
+ 	ath10k_pci_free_irq(ar);
+ 	ath10k_pci_rx_retry_sync(ar);
 
 
