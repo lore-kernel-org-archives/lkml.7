@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF23CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1672BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C260520665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D777C20715
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890526;
-	bh=ArEb2f18QmJygKaaZnogCTVHbEhcpUrues3qVydbb7o=;
+	s=default; t=1574890529;
+	bh=G+bUnZIIGo0TF/ZYi61/DRntB0hbkjdnF5/2+ThSJ3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ctKoejW8FyxqnT2JlAbXIXn4aQfB3Q2vvuzlm+VxqyW6ZE387PyKDZOPlmlCM0fht
-	 ePDbNHdorp8G6au65VZuEdjAZDqsujjuc/Z/jeXD7x/u/Afu+0ljl3M5/B58LEXeFv
-	 6c2oRYK0yL8U7QfpR3U5NUnFPcReY+2mjKn00X8k=
+	b=SQis1XPPmxOIJQujNf1aJWyP2r5ZOx9s0OFtfHf05+kC01o1FznsiFC+mexvT4QSj
+	 GH7/a1eNEEJQ8qHWv7xtUfe7mLTqRtEJHI+osQeSBmi/5IGFWmXfWVBz1qADPjZGQ4
+	 VpBPK73rHfrqPaS254bQ4cUySv1JgDLW/AZUNZb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbfK0Vf0 (ORCPT
+        id S1729812AbfK0Ute (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:35:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35248 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:49:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729031AbfK0Utf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:49:35 -0500
+        id S1729506AbfK0Ut1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:49:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DE2421787;
-        Wed, 27 Nov 2019 20:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1637621774;
+        Wed, 27 Nov 2019 20:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887774;
-        bh=ArEb2f18QmJygKaaZnogCTVHbEhcpUrues3qVydbb7o=;
+        s=default; t=1574887766;
+        bh=G+bUnZIIGo0TF/ZYi61/DRntB0hbkjdnF5/2+ThSJ3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j9Ry6CGWMB18q8ChyGazloMHKT/mo4Baa/sEPsMuyp+NVco7g5cu4+5ocuYM0G2zY
-         8n3NX/aga1gOYplPXOtEgglfomayGTcp67lwftPXrRwf17C5atoOL/O7nQHTRzyJ+l
-         HLLiXrKD+3hE2PipJgfBUagEP+01H2t0XVJjbvSM=
+        b=W7vV3K507cEhNkuzHiZMQYrxnTsFwMmfRzGntHFiOrXo/DpwKKXgSNliLUUh54DDZ
+         5bAfWSl/Mgk/Nm1SfqDesGIMBmyzjFdDcRU8MkoWaFBzZQiEeZCWhKnswoEsfCZmaY
+         tZjwkWVQiR6WPSr5MtjZ7+obS3C12UFfN3Rj1aF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerry Hoemann <jerry.hoemann@hpe.com>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
         "Shuah Khan (Samsung OSG)" <shuah@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 087/211] selftests: watchdog: Fix error message.
-Date:   Wed, 27 Nov 2019 21:30:20 +0100
-Message-Id: <20191127203101.981889610@linuxfoundation.org>
+Subject: [PATCH 4.14 085/211] selftests/ftrace: Fix to test kprobe $comm arg only if available
+Date:   Wed, 27 Nov 2019 21:30:18 +0100
+Message-Id: <20191127203101.796912920@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,60 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerry Hoemann <jerry.hoemann@hpe.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 04d5e4bd37516ad60854eb74592c7dbddd75d277 ]
+[ Upstream commit 2452c96e617a0ff6fb2692e55217a3fa57a7322c ]
 
-Printf's say errno but print the string version of error.
-Make consistent.
+Test $comm in kprobe-event argument syntax testcase
+only if it is supported on the kernel because
+$comm has been introduced 4.8 kernel.
+So on older stable kernel, it should be skipped.
 
-Signed-off-by: Jerry Hoemann <jerry.hoemann@hpe.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/watchdog/watchdog-test.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc       | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-index e029e2017280f..f1c6e025cbe54 100644
---- a/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
- 				printf("Last boot is caused by: %s.\n", (flags != 0) ?
- 					"Watchdog" : "Power-On-Reset");
- 			else
--				printf("WDIOC_GETBOOTSTATUS errno '%s'\n", strerror(errno));
-+				printf("WDIOC_GETBOOTSTATUS error '%s'\n", strerror(errno));
- 			break;
- 		case 'd':
- 			flags = WDIOS_DISABLECARD;
-@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
- 			if (!ret)
- 				printf("Watchdog card disabled.\n");
- 			else
--				printf("WDIOS_DISABLECARD errno '%s'\n", strerror(errno));
-+				printf("WDIOS_DISABLECARD error '%s'\n", strerror(errno));
- 			break;
- 		case 'e':
- 			flags = WDIOS_ENABLECARD;
-@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
- 			if (!ret)
- 				printf("Watchdog card enabled.\n");
- 			else
--				printf("WDIOS_ENABLECARD errno '%s'\n", strerror(errno));
-+				printf("WDIOS_ENABLECARD error '%s'\n", strerror(errno));
- 			break;
- 		case 'p':
- 			ping_rate = strtoul(optarg, NULL, 0);
-@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
- 			if (!ret)
- 				printf("Watchdog timeout set to %u seconds.\n", flags);
- 			else
--				printf("WDIOC_SETTIMEOUT errno '%s'\n", strerror(errno));
-+				printf("WDIOC_SETTIMEOUT error '%s'\n", strerror(errno));
- 			break;
- 		default:
- 			usage(argv[0]);
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+index 231bcd2c4eb59..1e7ac6f3362ff 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+@@ -71,8 +71,11 @@ test_badarg "\$stackp" "\$stack0+10" "\$stack1-10"
+ echo "r ${PROBEFUNC} \$retval" > kprobe_events
+ ! echo "p ${PROBEFUNC} \$retval" > kprobe_events
+ 
++# $comm was introduced in 4.8, older kernels reject it.
++if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
+ : "Comm access"
+ test_goodarg "\$comm"
++fi
+ 
+ : "Indirect memory access"
+ test_goodarg "+0(${GOODREG})" "-0(${GOODREG})" "+10(\$stack)" \
 -- 
 2.20.1
 
