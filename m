@@ -2,294 +2,166 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B41C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE68CC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C10320835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C5820862
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pZQb8jWq"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="OGV5MB7v";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a9kBxkyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbfK0Tjw (ORCPT
+        id S1727217AbfK0Tkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 14:39:52 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:40792 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbfK0Tjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 14:39:51 -0500
-Received: from zn.tnic (p200300EC2F0F37001503A7D2BED37AE0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:3700:1503:a7d2:bed3:7ae0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 86B621EC0CCE;
-        Wed, 27 Nov 2019 20:39:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574883586;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=EUJy5Hjm/ijM1KVDCnc+ezgbZaFSphyf1CPFMJjaoG4=;
-        b=pZQb8jWqur8YhbAwa0fN8imydaEU2q/ExWUqQIFckfw5CnSEMis+hx7a5pSlrCo4CM3ZZQ
-        ohtoQv9qtViA03zZnSYObfnC3kymlA1rXuVy3PULu5KePPT9zRySmeEV3CmXKoJ8W/9TY8
-        89mdPkDRYM8NAMSDy+fYt/27rvqbBYQ=
-Date:   Wed, 27 Nov 2019 20:39:37 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     linux-tip-commits@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH] x86: Remove CONFIG_DOUBLEFAULT
-Message-ID: <20191127193937.GD3812@zn.tnic>
-References: <157484276997.21853.6533072564160468139.tip-bot2@tip-bot2>
+        Wed, 27 Nov 2019 14:40:45 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:40735 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728342AbfK0Tko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 14:40:44 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 0F7C96E1B;
+        Wed, 27 Nov 2019 14:40:43 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Wed, 27 Nov 2019 14:40:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        subject:to:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=E
+        /eIlh2168YayUz7yI7wcMUEWzVWY48EgCDeJX0YMmc=; b=OGV5MB7v9L4rOLaXQ
+        J2XEyZ+7vKPjJVyBSlgfr4asg+jthrU79qhCu9A77Kai+VIUoyMt/UspFCmISUvh
+        fN/SwO6HeCySalYiK5IWjFxCQjK1JuL/wR7Zq/rP/FPXus35l7U45dhoceTMpckw
+        koT4wVAThGHzQ+pR3pJGIef9HFXr4wln7d8bBA4PhWLWsRA/0g6MSkuONbA19g5z
+        0NHcFzKOxrDS881CzG4qU5bFBACrc2qJltShmQuEG+SlpGsFIrUn21Nv9SvWfS/a
+        ARl6kvtkpl52tZ26c0h1R2udVVGRSKeo9GNOhsxF2eRX57b4pBj0tGP8HisB4vT7
+        /o2AQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=E/eIlh2168YayUz7yI7wcMUEWzVWY48EgCDeJX0YM
+        mc=; b=a9kBxkyVK77sxjD/7mLsLVOu7ZRh8aqcB+qVA6ZhTszjPgdeGUsZCBr5W
+        9XdNCfEEx0Ki8DFVR2oeEvPlpperlCQCoBXlPOBLm3lS3aalBRSBCbkiLzPz0uPk
+        nF+lfeV1s+/abGu1wou3b+MktFjRpG/zLVHI7fJkZpeq5ovIdKzfoEsFTA4ZU8du
+        VsuGjH05IwzNfKqIuZzm9Pmh8jPE6CWerFIAQ2EAyG9ljYIsKHsO41A750agoNdP
+        IC0jeNj/pcF7thyz2zUKUUzaoTHhsDQ9eK4rpWvfi7FlkC8ih7r4Kss+UJ0HvAYN
+        Aq36RAcm02qB8ha8h7unRK98xAHKQ==
+X-ME-Sender: <xms:OdHeXUEWs5o7TXILYIJAwNVE41K8opmhTyiisUdezT0C-4kS03zb3w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeihedguddvjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghm
+    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
+    fkphepudefiedrfedvrdeifedrvdegvdenucfrrghrrghmpehmrghilhhfrhhomhepshgr
+    mhhuvghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:OdHeXX0aDv9YBuzW9gWZzwC_E7nc8j3Os2ip8HRqKFAqedL0SHn58w>
+    <xmx:OdHeXfQ8HroTLDfDwnRpl9fDY2QZ_IhN9kghtJznHLSIqw_3YNPjvw>
+    <xmx:OdHeXU0LaTyk-Lv0e1VJGkou9C58ojI5-GpBIUHTLFAdWC2enbrYxQ>
+    <xmx:O9HeXUNxhlDeXv0rzUm5lt1jPWYDVLAzSEZA_u4O5InPWEkSuoNgaw>
+Received: from [192.168.16.195] (unknown [136.32.63.242])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4BEF980059;
+        Wed, 27 Nov 2019 14:40:40 -0500 (EST)
+Subject: Re: [PATCH v6 4/7] ARM: dts: sun8i-h3: Add thermal sensor and thermal
+ zones
+To:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
+        linux-kernel@vger.kernel.org
+References: <20191127052935.1719897-1-anarsoul@gmail.com>
+ <20191127052935.1719897-5-anarsoul@gmail.com>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <78c38148-872d-6aa1-5848-c0df2c22c2b6@sholland.org>
+Date:   Wed, 27 Nov 2019 13:40:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20191127052935.1719897-5-anarsoul@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <157484276997.21853.6533072564160468139.tip-bot2@tip-bot2>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 08:19:29AM -0000, tip-bot2 for Andy Lutomirski wrote:
-> The following commit has been merged into the x86/urgent branch of tip:
+Hi,
+
+On 11/26/19 11:29 PM, Vasily Khoruzhick wrote:
+> From: Ondrej Jirman <megous@megous.com>
 > 
-> Commit-ID:     93efbde2c331004d8053f04b4bf0ca3e630b474a
-> Gitweb:        https://git.kernel.org/tip/93efbde2c331004d8053f04b4bf0ca3e630b474a
-> Author:        Andy Lutomirski <luto@kernel.org>
-> AuthorDate:    Wed, 20 Nov 2019 22:12:38 -08:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Tue, 26 Nov 2019 21:53:34 +01:00
+> There is just one sensor for the CPU.
 > 
-> x86/traps: Disentangle the 32-bit and 64-bit doublefault code
-> 
-> The 64-bit doublefault handler is much nicer than the 32-bit one.
-> As a first step toward unifying them, make the 64-bit handler
-> self-contained.  This should have no effect no functional effect
-> except in the odd case of x86_64 with CONFIG_DOUBLEFAULT=n in which
-> case it will change the logging a bit.
-> 
-> This also gets rid of CONFIG_DOUBLEFAULT configurability on 64-bit
-> kernels.  It didn't do anything useful -- CONFIG_DOUBLEFAULT=n
-> didn't actually disable doublefault handling on x86_64.
-> 
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 > ---
->  arch/x86/Kconfig.debug           |  2 +-
->  arch/x86/include/asm/processor.h |  1 -
->  arch/x86/kernel/doublefault.c    | 11 -----------
->  arch/x86/kernel/traps.c          | 12 +++---------
->  4 files changed, 4 insertions(+), 22 deletions(-)
+>  arch/arm/boot/dts/sun8i-h3.dtsi | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-> index 409c00f..c4eab8e 100644
-> --- a/arch/x86/Kconfig.debug
-> +++ b/arch/x86/Kconfig.debug
-> @@ -117,7 +117,7 @@ config DEBUG_WX
+> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+> index e37c30e811d3..42fd0418d678 100644
+> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> @@ -177,6 +177,26 @@
+>  			assigned-clocks = <&ccu CLK_GPU>;
+>  			assigned-clock-rates = <384000000>;
+>  		};
+> +
+> +		ths: ths@1c25000 {
+> +			compatible = "allwinner,sun8i-h3-ths";
+> +			reg = <0x01c25000 0x400>;
+> +			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+> +			resets = <&ccu RST_BUS_THS>;
+> +			clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
+> +			clock-names = "bus", "mod";
+> +			nvmem-cells = <&ths_calibration>;
+> +			nvmem-cell-names = "calibration";
+> +			#thermal-sensor-cells = <0>;
+> +		};
+> +	};
+> +
+> +	thermal-zones {
+> +		cpu_thermal: cpu-thermal {
+> +			polling-delay-passive = <0>;
+> +			polling-delay = <0>;
+> +			thermal-sensors = <&ths 0>;
+> +		};
+>  	};
+>  };
 >  
->  config DOUBLEFAULT
->  	default y
-> -	bool "Enable doublefault exception handler" if EXPERT
-> +	bool "Enable doublefault exception handler" if EXPERT && X86_32
+> @@ -234,4 +254,10 @@
+>  
+>  &sid {
+>  	compatible = "allwinner,sun8i-h3-sid";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	ths_calibration: thermal-sensor-calibration@34 {
+> +		reg = <0x34 4>;
+> +	};
 
-Yeah, how about we simplify the whole df code even more. It is clearly
-much better to always have a registered #DF handler so let's get rid of
-that silly config option.
+All of the lines added here are common between the H3 and H5, so they can go in
+the shared SID node in sunxi-h3-h5.dtsi.
 
-Only compile-tested.
+Cheers,
+Samuel
 
----
-From: Borislav Petkov <bp@suse.de>
-Date: Wed, 27 Nov 2019 19:12:29 +0100
-Subject: [RFC PATCH] x86: Remove CONFIG_DOUBLEFAULT
+>  };
+> 
 
-... and make it unconditional.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/Kconfig.debug             | 9 ---------
- arch/x86/entry/entry_32.S          | 2 --
- arch/x86/include/asm/doublefault.h | 6 ++----
- arch/x86/include/asm/traps.h       | 2 --
- arch/x86/kernel/Makefile           | 4 +---
- arch/x86/kernel/dumpstack_32.c     | 4 ----
- arch/x86/kernel/traps.c            | 2 --
- arch/x86/mm/cpu_entry_area.c       | 4 +---
- 8 files changed, 4 insertions(+), 29 deletions(-)
-
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index c4eab8ed33a3..f386068114d6 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -115,15 +115,6 @@ config DEBUG_WX
- 
- 	  If in doubt, say "Y".
- 
--config DOUBLEFAULT
--	default y
--	bool "Enable doublefault exception handler" if EXPERT && X86_32
--	---help---
--	  This option allows trapping of rare doublefault exceptions that
--	  would otherwise cause a system to silently reboot. Disabling this
--	  option saves about 4k and might cause you much additional grey
--	  hair.
--
- config DEBUG_TLBFLUSH
- 	bool "Set upper limit of TLB entries to flush one-by-one"
- 	depends on DEBUG_KERNEL
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 7e0560442538..8bd285617c21 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1536,7 +1536,6 @@ SYM_CODE_START(debug)
- 	jmp	common_exception
- SYM_CODE_END(debug)
- 
--#ifdef CONFIG_DOUBLEFAULT
- SYM_CODE_START(double_fault)
- 1:
- 	/*
-@@ -1576,7 +1575,6 @@ SYM_CODE_START(double_fault)
- 	hlt
- 	jmp 1b
- SYM_CODE_END(double_fault)
--#endif
- 
- /*
-  * NMI is doubly nasty.  It can happen on the first instruction of
-diff --git a/arch/x86/include/asm/doublefault.h b/arch/x86/include/asm/doublefault.h
-index af9a14ac8962..65b58363797e 100644
---- a/arch/x86/include/asm/doublefault.h
-+++ b/arch/x86/include/asm/doublefault.h
-@@ -2,12 +2,10 @@
- #ifndef _ASM_X86_DOUBLEFAULT_H
- #define _ASM_X86_DOUBLEFAULT_H
- 
--#if defined(CONFIG_X86_32) && defined(CONFIG_DOUBLEFAULT)
-+#ifdef CONFIG_X86_32
- extern void doublefault_init_cpu_tss(void);
- #else
--static inline void doublefault_init_cpu_tss(void)
--{
--}
-+static inline void doublefault_init_cpu_tss(void) { }
- #endif
- 
- #endif /* _ASM_X86_DOUBLEFAULT_H */
-diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-index ffa0dc8a535e..4580c8207da3 100644
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -69,9 +69,7 @@ dotraplinkage void do_overflow(struct pt_regs *regs, long error_code);
- dotraplinkage void do_bounds(struct pt_regs *regs, long error_code);
- dotraplinkage void do_invalid_op(struct pt_regs *regs, long error_code);
- dotraplinkage void do_device_not_available(struct pt_regs *regs, long error_code);
--#if defined(CONFIG_X86_64) || defined(CONFIG_DOUBLEFAULT)
- dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsigned long cr2);
--#endif
- dotraplinkage void do_coprocessor_segment_overrun(struct pt_regs *regs, long error_code);
- dotraplinkage void do_invalid_TSS(struct pt_regs *regs, long error_code);
- dotraplinkage void do_segment_not_present(struct pt_regs *regs, long error_code);
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index ccb13271895d..0f5bdf6dfce6 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -104,9 +104,7 @@ obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
- obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
- obj-y				+= kprobes/
- obj-$(CONFIG_MODULES)		+= module.o
--ifeq ($(CONFIG_X86_32),y)
--obj-$(CONFIG_DOUBLEFAULT)	+= doublefault_32.o
--endif
-+obj-$(CONFIG_X86_32)		+= doublefault_32.o
- obj-$(CONFIG_KGDB)		+= kgdb.o
- obj-$(CONFIG_VM86)		+= vm86_32.o
- obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
-diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
-index 8e3a8fedfa4d..722fd712e1cf 100644
---- a/arch/x86/kernel/dumpstack_32.c
-+++ b/arch/x86/kernel/dumpstack_32.c
-@@ -87,7 +87,6 @@ static bool in_softirq_stack(unsigned long *stack, struct stack_info *info)
- 
- static bool in_doublefault_stack(unsigned long *stack, struct stack_info *info)
- {
--#ifdef CONFIG_DOUBLEFAULT
- 	struct cpu_entry_area *cea = get_cpu_entry_area(raw_smp_processor_id());
- 	struct doublefault_stack *ss = &cea->doublefault_stack;
- 
-@@ -103,9 +102,6 @@ static bool in_doublefault_stack(unsigned long *stack, struct stack_info *info)
- 	info->next_sp	= (unsigned long *)this_cpu_read(cpu_tss_rw.x86_tss.sp);
- 
- 	return true;
--#else
--	return false;
--#endif
- }
- 
- 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index f19de6f45d48..3bcbf5c3d1f0 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -306,7 +306,6 @@ __visible void __noreturn handle_stack_overflow(const char *message,
- }
- #endif
- 
--#if defined(CONFIG_X86_64) || defined(CONFIG_DOUBLEFAULT)
- /*
-  * Runs on an IST stack for x86_64 and on a special task stack for x86_32.
-  *
-@@ -430,7 +429,6 @@ dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsign
- 	die("double fault", regs, error_code);
- 	panic("Machine halted.");
- }
--#endif
- 
- dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
- {
-diff --git a/arch/x86/mm/cpu_entry_area.c b/arch/x86/mm/cpu_entry_area.c
-index 56f9189bbadb..5199d8a1daf1 100644
---- a/arch/x86/mm/cpu_entry_area.c
-+++ b/arch/x86/mm/cpu_entry_area.c
-@@ -17,7 +17,7 @@ static DEFINE_PER_CPU_PAGE_ALIGNED(struct exception_stacks, exception_stacks);
- DEFINE_PER_CPU(struct cea_exception_stacks*, cea_exception_stacks);
- #endif
- 
--#if defined(CONFIG_X86_32) && defined(CONFIG_DOUBLEFAULT)
-+#ifdef CONFIG_X86_32
- DECLARE_PER_CPU_PAGE_ALIGNED(struct doublefault_stack, doublefault_stack);
- #endif
- 
-@@ -114,12 +114,10 @@ static void __init percpu_setup_exception_stacks(unsigned int cpu)
- #else
- static inline void percpu_setup_exception_stacks(unsigned int cpu)
- {
--#ifdef CONFIG_DOUBLEFAULT
- 	struct cpu_entry_area *cea = get_cpu_entry_area(cpu);
- 
- 	cea_map_percpu_pages(&cea->doublefault_stack,
- 			     &per_cpu(doublefault_stack, cpu), 1, PAGE_KERNEL);
--#endif
- }
- #endif
- 
--- 
-2.21.0
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
