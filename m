@@ -2,248 +2,211 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27A5C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4A1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99DD820835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574876678;
-	bh=0mnbkXpRIAs1oWs7887fZ1hqjmi1n2cupNv6F6qcqnM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yMDujMUt2yh5W3trEDwbTjvEwgFR/pUcEfxHl/jtGOQlVml37VP6Lxtf6fvtRElvj
-	 XnnaI6aSFL12u/1kklUnouhGHt2JKdVA6RsmuFWAWKhrcpaEDsFXN8b/0Oloh9ukLs
-	 LsGgY6TWgW4p1E6W9nW+INap3nFoAuhCjQf7c4ag=
+	by mail.kernel.org (Postfix) with ESMTP id F14BA2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:45:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y3gBej2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfK0Roh (ORCPT
+        id S1727150AbfK0RpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:44:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbfK0Roh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:44:37 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ECAE2071E;
-        Wed, 27 Nov 2019 17:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574876676;
-        bh=0mnbkXpRIAs1oWs7887fZ1hqjmi1n2cupNv6F6qcqnM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NVvBMB3wRKTxMbLvW7a7orEuxSa5qmKwIzhQPwJEA1hcD6wtHcM+iBbi2g12emuJU
-         uB3XB7t7NFQXZT8q4MH4UiBt1ALildwE7zg/wS2PR1F0vre2NXqdxkNdu7oayb0qlF
-         3D9AdyA4pjS85SjD7oeKkaiCzB5oYB9gDNB4U4zo=
-Date:   Wed, 27 Nov 2019 18:44:34 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        Wed, 27 Nov 2019 12:45:02 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:32856 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfK0RpC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 12:45:02 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 6so6698114pgk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 09:45:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vTwVNHGfaslmzIOZLky3qVmqZLhSuuddPt+3vhSrt20=;
+        b=Y3gBej2pMAYaD135FmDz7wFd7CKGnPhq2UTsznJ4G4NRkUC/4EcBYtTw8E5IPxcoER
+         K0KlpmIxhtAv3XIL/PWz6hESe7un5DV/xFeK2XtzMnuCAo/kLSROivitXUZUVk0k2VYK
+         i+8WNUaBz6md3cdIzzmfWsssffOF/uxi7Zrsw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vTwVNHGfaslmzIOZLky3qVmqZLhSuuddPt+3vhSrt20=;
+        b=Af0VGqS0Cw5R9OTEj0/oDebRunML6BqkfaVbpww622w/5tYdZ4e8VDxiaWF2nQvoPT
+         5hHmdsTf4jgFTCB/NX2zIxbAane6+4ppKWmPdyphuVvqCQmwxJZUn3NqDJAegDDBEFYO
+         hWaeAT2y6omBjKh9O9JoZt5pFDBInqz7HwEtE82nwlxUZmRjwgOOjbUULPXcPKUEVPHC
+         gpSz9MqS01dBqYrflIjNRvrHmxSrSvtnYeRwZO5t3PyqxvLMgB25hx8xZYcwORFOtVjs
+         9uFpFssZAcBlQaVgoGOrVsYEKAcMIEn7PSoXZ3d9ZP6onZOfQzmrKZs2HgUZBdEFoeEF
+         JpMQ==
+X-Gm-Message-State: APjAAAWoFgpD08ifMfCkNrtgGGkQQS32hL5kelDLa3BPORi48HZDv8FE
+        UouB8ec89RQj87VubEOXN9CVow==
+X-Google-Smtp-Source: APXvYqzbGSwKUJ4Noau1bQM4eNgbwqA6hn7o9JrHTNxVF5DVVi7DHYmfOkLXN+C7ZQwdjV/oYCLKSQ==
+X-Received: by 2002:a63:da13:: with SMTP id c19mr6164709pgh.435.1574876701803;
+        Wed, 27 Nov 2019 09:45:01 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f26sm16293199pgf.22.2019.11.27.09.45.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 09:45:00 -0800 (PST)
+Date:   Wed, 27 Nov 2019 09:44:59 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for
- sun8i-thermal driver bindings
-Message-ID: <20191127174434.wousbqosmm5vxcsu@gilmour.lan>
-References: <20191127052935.1719897-1-anarsoul@gmail.com>
- <20191127052935.1719897-3-anarsoul@gmail.com>
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [tip: x86/urgent] lkdtm: Add a DOUBLE_FAULT crash type on x86
+Message-ID: <201911270942.0F120BF82@keescook>
+References: <157484277010.21853.17013724751521586684.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vy5yg3fxo523fkw5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191127052935.1719897-3-anarsoul@gmail.com>
+In-Reply-To: <157484277010.21853.17013724751521586684.tip-bot2@tip-bot2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---vy5yg3fxo523fkw5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Tue, Nov 26, 2019 at 09:29:30PM -0800, Vasily Khoruzhick wrote:
-> From: Yangtao Li <tiny.windzz@gmail.com>
->
-> sun8i-thermal driver supports thermal sensor in wide range of Allwinner
-> SoCs. Add YAML schema for its bindings.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+On Wed, Nov 27, 2019 at 08:19:30AM -0000, tip-bot2 for Andy Lutomirski wrote:
+> The following commit has been merged into the x86/urgent branch of tip:
+> 
+> Commit-ID:     b09511c253e5c739a60952b97c071a93e92b2e88
+> Gitweb:        https://git.kernel.org/tip/b09511c253e5c739a60952b97c071a93e92b2e88
+> Author:        Andy Lutomirski <luto@kernel.org>
+> AuthorDate:    Sun, 24 Nov 2019 21:18:04 -08:00
+> Committer:     Ingo Molnar <mingo@kernel.org>
+> CommitterDate: Tue, 26 Nov 2019 21:53:34 +01:00
+> 
+> lkdtm: Add a DOUBLE_FAULT crash type on x86
+> 
+> The DOUBLE_FAULT crash does INT $8, which is a decent approximation
+> of a double fault.  This is useful for testing the double fault
+> handling.  Use it like:
+> 
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
 > ---
->  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 103 ++++++++++++++++++
->  1 file changed, 103 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> new file mode 100644
-> index 000000000000..e622f0a4be90
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> @@ -0,0 +1,103 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/misc/lkdtm/bugs.c  | 39 +++++++++++++++++++++++++++++++++++++-
+>  drivers/misc/lkdtm/core.c  |  3 +++-
+>  drivers/misc/lkdtm/lkdtm.h |  3 +++-
+>  3 files changed, 45 insertions(+)
+> 
+> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+> index 7284a22..a4fdad0 100644
+> --- a/drivers/misc/lkdtm/bugs.c
+> +++ b/drivers/misc/lkdtm/bugs.c
+> @@ -12,6 +12,10 @@
+>  #include <linux/sched/task_stack.h>
+>  #include <linux/uaccess.h>
+>  
+> +#ifdef CONFIG_X86_32
+> +#include <asm/desc.h>
+> +#endif
 > +
-> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+>  struct lkdtm_list {
+>  	struct list_head node;
+>  };
+> @@ -337,3 +341,38 @@ void lkdtm_UNSET_SMEP(void)
+>  	pr_err("FAIL: this test is x86_64-only\n");
+>  #endif
+>  }
 > +
-> +maintainers:
-> +  - Yangtao Li <tiny.windzz@gmail.com>
+> +#ifdef CONFIG_X86_32
+> +void lkdtm_DOUBLE_FAULT(void)
+> +{
+> +	/*
+> +	 * Trigger #DF by setting the stack limit to zero.  This clobbers
+> +	 * a GDT TLS slot, which is okay because the current task will die
+> +	 * anyway due to the double fault.
+> +	 */
+> +	struct desc_struct d = {
+> +		.type = 3,	/* expand-up, writable, accessed data */
+> +		.p = 1,		/* present */
+> +		.d = 1,		/* 32-bit */
+> +		.g = 0,		/* limit in bytes */
+> +		.s = 1,		/* not system */
+> +	};
 > +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: allwinner,sun8i-a83t-ths
-> +      - const: allwinner,sun8i-h3-ths
-> +      - const: allwinner,sun8i-r40-ths
-> +      - const: allwinner,sun50i-a64-ths
-> +      - const: allwinner,sun50i-h5-ths
-> +      - const: allwinner,sun50i-h6-ths
+> +	local_irq_disable();
+> +	write_gdt_entry(get_cpu_gdt_rw(smp_processor_id()),
+> +			GDT_ENTRY_TLS_MIN, &d, DESCTYPE_S);
 > +
-> +  reg:
-> +    maxItems: 1
+> +	/*
+> +	 * Put our zero-limit segment in SS and then trigger a fault.  The
+> +	 * 4-byte access to (%esp) will fault with #SS, and the attempt to
+> +	 * deliver the fault will recursively cause #SS and result in #DF.
+> +	 * This whole process happens while NMIs and MCEs are blocked by the
+> +	 * MOV SS window.  This is nice because an NMI with an invalid SS
+> +	 * would also double-fault, resulting in the NMI or MCE being lost.
+> +	 */
+> +	asm volatile ("movw %0, %%ss; addl $0, (%%esp)" ::
+> +		      "r" ((unsigned short)(GDT_ENTRY_TLS_MIN << 3)));
 > +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    anyOf:
-> +      - items:
-> +        - const: bus
-> +        - const: mod
-> +      - items:
-> +        - const: bus
+> +	panic("tried to double fault but didn't die\n");
 
-This can be:
+I'll modify this in some later patches, but I prefer the #ifdef inside
+the function so that all tests are visible on all
+architectures/configurations. And it should not panic on a test failure,
+it should continue (see the others) with something like:
 
-clock-names:
-  minItems: 1
-  maxItems: 2
-  items:
-    - const: bus
-    - const: mod
+	pr_err("FAIL: did not double fault!\n");
 
-And the length should be checked based on the compatible value, with
-something like
+E.g. an external system monitor would see the double-fault and the panic as
+both causing a system reboot, but only the double-fault should do that.
 
-if:
-  properties:
-    compatible:
-      contains:
-        const: allwinner,sun50i-h6-ths
+> +}
+> +#endif
+> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+> index cbc4c90..ee0d6e7 100644
+> --- a/drivers/misc/lkdtm/core.c
+> +++ b/drivers/misc/lkdtm/core.c
+> @@ -171,6 +171,9 @@ static const struct crashtype crashtypes[] = {
+>  	CRASHTYPE(USERCOPY_KERNEL_DS),
+>  	CRASHTYPE(STACKLEAK_ERASING),
+>  	CRASHTYPE(CFI_FORWARD_PROTO),
+> +#ifdef CONFIG_X86_32
+> +	CRASHTYPE(DOUBLE_FAULT),
+> +#endif
 
-then:
-  properties:
-    clocks:
-      maxItems: 1
+And then ifdefs aren't needed here either.
 
-    clock-names:
-      maxItems: 1
+>  };
+>  
+>  
+> diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+> index ab446e0..c56d23e 100644
+> --- a/drivers/misc/lkdtm/lkdtm.h
+> +++ b/drivers/misc/lkdtm/lkdtm.h
+> @@ -28,6 +28,9 @@ void lkdtm_CORRUPT_USER_DS(void);
+>  void lkdtm_STACK_GUARD_PAGE_LEADING(void);
+>  void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
+>  void lkdtm_UNSET_SMEP(void);
+> +#ifdef CONFIG_X86_32
+> +void lkdtm_DOUBLE_FAULT(void);
+> +#endif
 
-else:
-  properties:
-    clocks:
-      maxItems: 2
+Same.
 
-    clock-names:
-      maxItems: 2
+>  
+>  /* lkdtm_heap.c */
+>  void __init lkdtm_heap_init(void);
 
-> +
-> +  '#thermal-sensor-cells':
-> +    enum: [ 0, 1 ]
-> +    description: |
-> +      Definition depends on soc version:
-> +
-> +      For "allwinner,sun8i-h3-ths",
-> +      value must be 0.
-> +      For all other compatibles
-> +      value must be 1.
-
-This should be checked using an if as well.
-
-> +
-> +  nvmem-cells:
-> +    maxItems: 1
-> +    items:
-> +      - description: Calibration data for thermal sensors
-
-You can drop the items and just move the description up one level,
-under nvmem-cells
-
-> +
-> +  nvmem-cell-names:
-> +    items:
-> +      - const: calibration
-
-Ditto for the const
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - '#thermal-sensor-cells'
-
-Whether clocks, clock-names and resets are thereshould be check using
-an if statement as well.
-
-> +
-> +examples:
-> +  - |
-> +    ths_a83t: ths@1f04000 {
-
-You don't need the label at all, and the node name should be
-temperature-sensor according to the DT spec, not ths. This applies to
-all you examples.
-
-> +         compatible = "allwinner,sun8i-a83t-ths";
-> +         reg = <0x01f04000 0x100>;
-> +         interrupts = <0 31 0>;
-> +         nvmem-cells = <&ths_calibration>;
-> +         nvmem-cell-names = "calibration";
-> +         #thermal-sensor-cells = <1>;
-> +    };
-
-New line.
-
-Thanks!
-Maxime
-
---vy5yg3fxo523fkw5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXd62AgAKCRDj7w1vZxhR
-xZhDAP92TopSGYK0i/lNbBksUI+7RNfvt+FhK2eVaXRB2/XToAD/S4RzDGUA4BXe
-Cx5DhAlOJY+WchG8X6c4StMtLQAUwAM=
-=6CMd
------END PGP SIGNATURE-----
-
---vy5yg3fxo523fkw5--
+-- 
+Kees Cook
