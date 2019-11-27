@@ -5,235 +5,135 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE74C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7CAC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20C820678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D79520678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pw69BFmM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ac4MIf2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfK0IPz (ORCPT
+        id S1726296AbfK0ISy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:15:55 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50230 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfK0IPy (ORCPT
+        Wed, 27 Nov 2019 03:18:54 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59693 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726125AbfK0ISx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:15:54 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR8FdDj096811;
-        Wed, 27 Nov 2019 02:15:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574842539;
-        bh=vfBtNY+xbAV9gXZchLR1PUM9PQyW2elU9lS1sC+Tpkk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Pw69BFmMBBomCTtfL6fhdHtChk6wVo3b2N3aNuorM/l3fox27k/6WrX1k/Tj4SPU6
-         ZdvqnU2s2OvDKsyUWCnsJN/47eR95AyCshdijewAfeuREb4YIB82Bdf19yuIMorRC+
-         1VVOIRyG3TsfTGu/8+J2sh5OBJdJhbJwYYZc0quU=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR8FdfW030244
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 Nov 2019 02:15:39 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
- Nov 2019 02:15:39 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 27 Nov 2019 02:15:39 -0600
-Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR8FVqe112349;
-        Wed, 27 Nov 2019 02:15:33 -0600
-Subject: Re: [PATCH 1/4] PCI: dwc: Add new feature to skip core initialization
-To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>
-CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-2-vidyas@nvidia.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <973f239f-fdb8-b119-5ca1-b0a6307efe21@ti.com>
-Date:   Wed, 27 Nov 2019 13:44:49 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 03:18:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574842732;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ljhewKbxHJezSx+rS3E3FDX8oxHHWYHSlYwJHWJi7eA=;
+        b=Ac4MIf2xJASTiC0/XBL7c9nGCnseBqe/3tyDdfdMIzyu92pvS8Md0xjKjqaO7kCjGPZJLG
+        ad208g5CcmwLAeIRrHfbxt8hQ21OO7PXOaIPnjE0KdtFigyXklPZViGVbAuNHh9nPq1HDx
+        fpufYo1n9PF7oKnVmhr+LVJUWlx+SSs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-1jFMoWh8MuW10INoaOHqMA-1; Wed, 27 Nov 2019 03:18:49 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADAC0100A14C;
+        Wed, 27 Nov 2019 08:18:47 +0000 (UTC)
+Received: from krava (ovpn-204-226.brq.redhat.com [10.40.204.226])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4E1E5600C8;
+        Wed, 27 Nov 2019 08:18:45 +0000 (UTC)
+Date:   Wed, 27 Nov 2019 09:18:44 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf c2c: fix '-e list'
+Message-ID: <20191127081844.GH32367@krava>
+References: <20191127073442.174202-1-irogers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191113090851.26345-2-vidyas@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191127073442.174202-1-irogers@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: 1jFMoWh8MuW10INoaOHqMA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Nov 26, 2019 at 11:34:42PM -0800, Ian Rogers wrote:
+> When the event is passed as list, the default events should be listed as
+> per 'perf mem record -e list'. Previous behavior is:
+>=20
+> $ perf c2c record -e list
+> failed: event 'list' not found, use '-e list' to get list of available ev=
+ents
+>=20
+>  Usage: perf c2c record [<options>] [<command>]
+>     or: perf c2c record [<options>] -- <command> [<options>]
+>=20
+>     -e, --event <event>   event selector. Use 'perf mem record -e list' t=
+o list available events
 
-On 13/11/19 2:38 PM, Vidya Sagar wrote:
-> Add a new feature 'skip_core_init' that can be set by platform drivers
-> of devices that do not have their core registers available until reference
-> clock from host is available (Ex:- Tegra194) to indicate DesignWare
-> endpoint mode sub-system to not perform core registers initialization.
-> Existing dw_pcie_ep_init() is refactored and all the code that touches
-> registers is extracted to form a new API dw_pcie_ep_init_complete() that
-> can be called later by platform drivers setting 'skip_core_init' to '1'.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+man c2c page do say you should use 'perf mem' not 'perf c2c'
+could you please change the man page as well?
+
+>=20
+> New behavior:
+>=20
+> $ perf c2c record -e list
+> ldlat-loads  : available
+> ldlat-stores : available
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 72 +++++++++++--------
->  drivers/pci/controller/dwc/pcie-designware.h  |  6 ++
->  include/linux/pci-epc.h                       |  1 +
->  3 files changed, 51 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 3dd2e2697294..06f4379be8a3 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -492,19 +492,53 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
->  	return 0;
->  }
->  
-> -int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>  tools/perf/builtin-c2c.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index e69f44941aad..dd69cd218e4c 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -2872,10 +2872,26 @@ static int perf_c2c__report(int argc, const char =
+**argv)
+>  static int parse_record_events(const struct option *opt,
+>  =09=09=09       const char *str, int unset __maybe_unused)
 >  {
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	unsigned int offset;
-> +	unsigned int nbars;
-> +	u8 hdr_type;
-> +	u32 reg;
->  	int i;
+> +=09int j;
+>  =09bool *event_set =3D (bool *) opt->value;
+> =20
+> -=09*event_set =3D true;
+> -=09return perf_mem_events__parse(str);
+> +=09if (strcmp(str, "list")) {
+> +=09=09*event_set =3D true;
+> +=09=09if (!perf_mem_events__parse(str))
+> +=09=09=09return 0;
 > +
-> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-> +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-> +		dev_err(pci->dev,
-> +			"PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
-> +			hdr_type);
-> +		return -EIO;
-> +	}
+> +=09=09exit(-1);
+> +=09}
+> +=09for (j =3D 0; j < PERF_MEM_EVENTS__MAX; j++) {
+> +=09=09struct perf_mem_event *e =3D &perf_mem_events[j];
 > +
-> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-> +
-> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
-> +
-> +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> +	if (offset) {
-> +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> +			PCI_REBAR_CTRL_NBAR_SHIFT;
-> +
-> +		dw_pcie_dbi_ro_wr_en(pci);
-> +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
-> +		dw_pcie_dbi_ro_wr_dis(pci);
-> +	}
-> +
-> +	dw_pcie_setup(pci);
-> +
-> +	return 0;
-> +}
-> +
-> +int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> +{
->  	int ret;
-> -	u32 reg;
->  	void *addr;
-> -	u8 hdr_type;
-> -	unsigned int nbars;
-> -	unsigned int offset;
->  	struct pci_epc *epc;
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  	struct device *dev = pci->dev;
->  	struct device_node *np = dev->of_node;
-> +	const struct pci_epc_features *epc_features;
->  
->  	if (!pci->dbi_base || !pci->dbi_base2) {
->  		dev_err(dev, "dbi_base/dbi_base2 is not populated\n");
-> @@ -563,13 +597,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	if (ep->ops->ep_init)
->  		ep->ops->ep_init(ep);
->  
-> -	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-> -	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-> -		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
-> -			hdr_type);
-> -		return -EIO;
-> -	}
-> -
->  	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
->  	if (ret < 0)
->  		epc->max_functions = 1;
-> @@ -587,23 +614,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
->  		return -ENOMEM;
->  	}
-> -	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
->  
-> -	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
-> -
-> -	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> -	if (offset) {
-> -		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> -		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> -			PCI_REBAR_CTRL_NBAR_SHIFT;
-> -
-> -		dw_pcie_dbi_ro_wr_en(pci);
-> -		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> -			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
-> -		dw_pcie_dbi_ro_wr_dis(pci);
-> +	if (ep->ops->get_features) {
-> +		epc_features = ep->ops->get_features(ep);
-> +		if (epc_features->skip_core_init)
-> +			return 0;
->  	}
->  
-> -	dw_pcie_setup(pci);
-> -
-> -	return 0;
-> +	return dw_pcie_ep_init_complete(ep);
->  }
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 5accdd6bc388..340783e9032e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -399,6 +399,7 @@ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
->  #ifdef CONFIG_PCIE_DW_EP
->  void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
->  int dw_pcie_ep_init(struct dw_pcie_ep *ep);
-> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
->  void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
->  int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
->  int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
-> @@ -416,6 +417,11 @@ static inline int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	return 0;
->  }
->  
-> +static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->  {
->  }
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 36644ccd32ac..241e6a6f39fb 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -121,6 +121,7 @@ struct pci_epc_features {
->  	u8	bar_fixed_64bit;
->  	u64	bar_fixed_size[PCI_STD_NUM_BARS];
->  	size_t	align;
-> +	bool	skip_core_init;
+> +=09=09fprintf(stderr, "%-13s%-*s%s\n",
+> +=09=09=09e->tag,
+> +=09=09=09verbose > 0 ? 25 : 0,
+> +=09=09=09verbose > 0 ? perf_mem_events__name(j) : "",
+> +=09=09=09e->supported ? ": available" : "");
+> +=09}
 
-This looks more like a designware specific change. Why is it added to the core
-pci_epc_features?
+there's same loop in builtin-mem.c, could you please put it
+to function in mem-events.c?
 
-Thanks
-Kishon
+thanks,
+jirka
+
