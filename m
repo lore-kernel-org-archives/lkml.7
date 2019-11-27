@@ -2,51 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836C6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DEEC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566F9217C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78C7217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887662;
-	bh=DVwA5y0PtsAzbNU08Ymwy5VUpe7WAvseor28GDqW7fo=;
+	s=default; t=1574887663;
+	bh=I7BJNofsoP6hl8a//GDoTm7cBtYa5RqLyPJ2jwXpwQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NDZpmi0qQ4/CvT/x/4L1sQKfRLAOqduVFYvJSW2aoRIOm/CjUoVBUOxCopY6qZ+qm
-	 Y9ZAYnanXNXFbDz6CFnAj/cpVt4G3RcWVeCGKJfTk9mGAopKHCZZyKs8MMdSQ1CBeB
-	 EA7PHx+zuf7Gs9W9IWJNCVNHEvKIKJ9Fxn1PG5p0=
+	b=f0f/aSTXCqwZBAca8ZeNJk+j/hEHVQ2cxb1ijcxSprBdSnO4B0nQIscECQCA332hE
+	 2d//BEuONGlLKk8zqCTvaD6M4BpTAYofNcwstgMBbEN3K+x4ZjonJmUMqFZvaCBR3j
+	 rev59Qy/EmtWym2KQHeIgzmcu/5zO3WeX49UBeGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbfK0Url (ORCPT
+        id S1730027AbfK0Urm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:47:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60542 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:47:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727674AbfK0Urg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:47:36 -0500
+        id S1728115AbfK0Uri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:47:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E413F217C3;
-        Wed, 27 Nov 2019 20:47:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EECE21843;
+        Wed, 27 Nov 2019 20:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887655;
-        bh=DVwA5y0PtsAzbNU08Ymwy5VUpe7WAvseor28GDqW7fo=;
+        s=default; t=1574887657;
+        bh=I7BJNofsoP6hl8a//GDoTm7cBtYa5RqLyPJ2jwXpwQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hFV1632VgybA5MoB3s+785f0u+95ilizDOGfJdFhHmC4MP7k/eY8V8ACozJsZoG4m
-         hssfq6ha9LpTmT2nbqxHetByYDccg34i3YvICfYd5Bc6QZ+YJZEGhJ6BVh7LyOVHBe
-         wxw7PZQ0rMG1neAIA8fi2C3owUZcvpCTQX3jU+XE=
+        b=FiJa4tIwAx/t7dpJFRRk2xS3Acqpb6OqMkxej9N+3CY86vRDFC8hahaj51W/4O61t
+         NcQHn+D0GyuI4179jEnZqcPPWOJw1cygQuYvB82LW1iLyEt47LwkW0BG2s1AAfze9l
+         48ZqlQXHs4tqMufliggM01+acVbXHeNzFYc75p+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 006/211] net/sched: act_pedit: fix WARN() in the traffic path
-Date:   Wed, 27 Nov 2019 21:28:59 +0100
-Message-Id: <20191127203050.039523929@linuxfoundation.org>
+        stable@vger.kernel.org, Rahul Verma <rahul.verma@cavium.com>,
+        Ariel Elior <ariel.elior@cavium.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 042/211] qed: Align local and global PTT to propagate through the APIs.
+Date:   Wed, 27 Nov 2019 21:29:35 +0100
+Message-Id: <20191127203058.099147480@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -59,91 +61,201 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Rahul Verma <Rahul.Verma@cavium.com>
 
-[ Upstream commit f67169fef8dbcc1ac6a6a109ecaad0d3b259002c ]
+[ Upstream commit 706d08913d1f68610c32b4a001026aa989878dd9 ]
 
-when configuring act_pedit rules, the number of keys is validated only on
-addition of a new entry. This is not sufficient to avoid hitting a WARN()
-in the traffic path: for example, it is possible to replace a valid entry
-with a new one having 0 extended keys, thus causing splats in dmesg like:
+    Align the use of local PTT to propagate through the qed_mcp* API's.
+    Global ptt should not be used.
 
- pedit BUG: index 42
- WARNING: CPU: 2 PID: 4054 at net/sched/act_pedit.c:410 tcf_pedit_act+0xc84/0x1200 [act_pedit]
- [...]
- RIP: 0010:tcf_pedit_act+0xc84/0x1200 [act_pedit]
- Code: 89 fa 48 c1 ea 03 0f b6 04 02 84 c0 74 08 3c 03 0f 8e ac 00 00 00 48 8b 44 24 10 48 c7 c7 a0 c4 e4 c0 8b 70 18 e8 1c 30 95 ea <0f> 0b e9 a0 fa ff ff e8 00 03 f5 ea e9 14 f4 ff ff 48 89 58 40 e9
- RSP: 0018:ffff888077c9f320 EFLAGS: 00010286
- RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffac2983a2
- RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff888053927bec
- RBP: dffffc0000000000 R08: ffffed100a726209 R09: ffffed100a726209
- R10: 0000000000000001 R11: ffffed100a726208 R12: ffff88804beea780
- R13: ffff888079a77400 R14: ffff88804beea780 R15: ffff888027ab2000
- FS:  00007fdeec9bd740(0000) GS:ffff888053900000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007ffdb3dfd000 CR3: 000000004adb4006 CR4: 00000000001606e0
- Call Trace:
-  tcf_action_exec+0x105/0x3f0
-  tcf_classify+0xf2/0x410
-  __dev_queue_xmit+0xcbf/0x2ae0
-  ip_finish_output2+0x711/0x1fb0
-  ip_output+0x1bf/0x4b0
-  ip_send_skb+0x37/0xa0
-  raw_sendmsg+0x180c/0x2430
-  sock_sendmsg+0xdb/0x110
-  __sys_sendto+0x257/0x2b0
-  __x64_sys_sendto+0xdd/0x1b0
-  do_syscall_64+0xa5/0x4e0
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
- RIP: 0033:0x7fdeeb72e993
- Code: 48 8b 0d e0 74 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 0d d6 2c 00 00 75 13 49 89 ca b8 2c 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 34 c3 48 83 ec 08 e8 4b cc 00 00 48 89 04 24
- RSP: 002b:00007ffdb3de8a18 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
- RAX: ffffffffffffffda RBX: 000055c81972b700 RCX: 00007fdeeb72e993
- RDX: 0000000000000040 RSI: 000055c81972b700 RDI: 0000000000000003
- RBP: 00007ffdb3dea130 R08: 000055c819728510 R09: 0000000000000010
- R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000040
- R13: 000055c81972b6c0 R14: 000055c81972969c R15: 0000000000000080
+    Register access should be done through layers. Register address is
+    mapped into a PTT, PF translation table. Several interface functions
+    require a PTT to direct read/write into register. There is a pool of
+    PTT maintained, and several PTT are used simultaneously to access
+    device registers in different flows. Same PTT should not be used in
+    flows that can run concurrently.
+    To avoid running out of PTT resources, too many PTT should not be
+    acquired without releasing them. Every PF has a global PTT, which is
+    used throughout the life of PF, in most important flows for register
+    access. Generic functions acquire the PTT locally and release after
+    the use. This patch aligns the use of Global PTT and Local PTT
+    accordingly.
 
-Fix this moving the check on 'nkeys' earlier in tcf_pedit_init(), so that
-attempts to install rules having 0 keys are always rejected with -EINVAL.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Signed-off-by: Rahul Verma <rahul.verma@cavium.com>
+Signed-off-by: Ariel Elior <ariel.elior@cavium.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/act_pedit.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed.h      |  2 +-
+ drivers/net/ethernet/qlogic/qed/qed_main.c | 22 ++++++++++++++----
+ drivers/net/ethernet/qlogic/qed/qed_mcp.c  | 27 ++++++++++------------
+ drivers/net/ethernet/qlogic/qed/qed_mcp.h  |  5 ++--
+ drivers/net/ethernet/qlogic/qed/qed_vf.c   |  2 +-
+ 5 files changed, 35 insertions(+), 23 deletions(-)
 
---- a/net/sched/act_pedit.c
-+++ b/net/sched/act_pedit.c
-@@ -46,7 +46,7 @@ static struct tcf_pedit_key_ex *tcf_pedi
- 	int err = -EINVAL;
- 	int rem;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
+index 91003bc6f00bd..6c4714a8b54ce 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed.h
++++ b/drivers/net/ethernet/qlogic/qed/qed.h
+@@ -829,7 +829,7 @@ u16 qed_get_cm_pq_idx_vf(struct qed_hwfn *p_hwfn, u16 vf);
+ /* Prototypes */
+ int qed_fill_dev_info(struct qed_dev *cdev,
+ 		      struct qed_dev_info *dev_info);
+-void qed_link_update(struct qed_hwfn *hwfn);
++void qed_link_update(struct qed_hwfn *hwfn, struct qed_ptt *ptt);
+ u32 qed_unzip_data(struct qed_hwfn *p_hwfn,
+ 		   u32 input_len, u8 *input_buf,
+ 		   u32 max_size, u8 *unzip_buf);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
+index 557332f1f886c..52e747fd9c839 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_main.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+@@ -1389,6 +1389,7 @@ static int qed_get_link_data(struct qed_hwfn *hwfn,
+ }
  
--	if (!nla || !n)
-+	if (!nla)
- 		return NULL;
+ static void qed_fill_link(struct qed_hwfn *hwfn,
++			  struct qed_ptt *ptt,
+ 			  struct qed_link_output *if_link)
+ {
+ 	struct qed_mcp_link_params params;
+@@ -1469,7 +1470,7 @@ static void qed_fill_link(struct qed_hwfn *hwfn,
  
- 	keys_ex = kcalloc(n, sizeof(*k), GFP_KERNEL);
-@@ -163,6 +163,9 @@ static int tcf_pedit_init(struct net *ne
+ 	/* TODO - fill duplex properly */
+ 	if_link->duplex = DUPLEX_FULL;
+-	qed_mcp_get_media_type(hwfn->cdev, &media_type);
++	qed_mcp_get_media_type(hwfn, ptt, &media_type);
+ 	if_link->port = qed_get_port_type(media_type);
+ 
+ 	if_link->autoneg = params.speed.autoneg;
+@@ -1525,21 +1526,34 @@ static void qed_fill_link(struct qed_hwfn *hwfn,
+ static void qed_get_current_link(struct qed_dev *cdev,
+ 				 struct qed_link_output *if_link)
+ {
++	struct qed_hwfn *hwfn;
++	struct qed_ptt *ptt;
+ 	int i;
+ 
+-	qed_fill_link(&cdev->hwfns[0], if_link);
++	hwfn = &cdev->hwfns[0];
++	if (IS_PF(cdev)) {
++		ptt = qed_ptt_acquire(hwfn);
++		if (ptt) {
++			qed_fill_link(hwfn, ptt, if_link);
++			qed_ptt_release(hwfn, ptt);
++		} else {
++			DP_NOTICE(hwfn, "Failed to fill link; No PTT\n");
++		}
++	} else {
++		qed_fill_link(hwfn, NULL, if_link);
++	}
+ 
+ 	for_each_hwfn(cdev, i)
+ 		qed_inform_vf_link_state(&cdev->hwfns[i]);
+ }
+ 
+-void qed_link_update(struct qed_hwfn *hwfn)
++void qed_link_update(struct qed_hwfn *hwfn, struct qed_ptt *ptt)
+ {
+ 	void *cookie = hwfn->cdev->ops_cookie;
+ 	struct qed_common_cb_ops *op = hwfn->cdev->protocol_ops.common;
+ 	struct qed_link_output if_link;
+ 
+-	qed_fill_link(hwfn, &if_link);
++	qed_fill_link(hwfn, ptt, &if_link);
+ 	qed_inform_vf_link_state(hwfn);
+ 
+ 	if (IS_LEAD_HWFN(hwfn) && cookie)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.c b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+index 7938abe9a3010..ef17ca09d3038 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_mcp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+@@ -1352,7 +1352,7 @@ static void qed_mcp_handle_link_change(struct qed_hwfn *p_hwfn,
+ 	if (p_hwfn->mcp_info->capabilities & FW_MB_PARAM_FEATURE_SUPPORT_EEE)
+ 		qed_mcp_read_eee_config(p_hwfn, p_ptt, p_link);
+ 
+-	qed_link_update(p_hwfn);
++	qed_link_update(p_hwfn, p_ptt);
+ out:
+ 	spin_unlock_bh(&p_hwfn->mcp_info->link_lock);
+ }
+@@ -1722,12 +1722,10 @@ int qed_mcp_get_mbi_ver(struct qed_hwfn *p_hwfn,
+ 	return 0;
+ }
+ 
+-int qed_mcp_get_media_type(struct qed_dev *cdev, u32 *p_media_type)
++int qed_mcp_get_media_type(struct qed_hwfn *p_hwfn,
++			   struct qed_ptt *p_ptt, u32 *p_media_type)
+ {
+-	struct qed_hwfn *p_hwfn = &cdev->hwfns[0];
+-	struct qed_ptt  *p_ptt;
+-
+-	if (IS_VF(cdev))
++	if (IS_VF(p_hwfn->cdev))
  		return -EINVAL;
  
- 	parm = nla_data(pattr);
-+	if (!parm->nkeys)
+ 	if (!qed_mcp_is_init(p_hwfn)) {
+@@ -1735,16 +1733,15 @@ int qed_mcp_get_media_type(struct qed_dev *cdev, u32 *p_media_type)
+ 		return -EBUSY;
+ 	}
+ 
+-	*p_media_type = MEDIA_UNSPECIFIED;
+-
+-	p_ptt = qed_ptt_acquire(p_hwfn);
+-	if (!p_ptt)
+-		return -EBUSY;
+-
+-	*p_media_type = qed_rd(p_hwfn, p_ptt, p_hwfn->mcp_info->port_addr +
+-			       offsetof(struct public_port, media_type));
++	if (!p_ptt) {
++		*p_media_type = MEDIA_UNSPECIFIED;
 +		return -EINVAL;
-+
- 	ksize = parm->nkeys * sizeof(struct tc_pedit_key);
- 	if (nla_len(pattr) < sizeof(*parm) + ksize)
- 		return -EINVAL;
-@@ -172,8 +175,6 @@ static int tcf_pedit_init(struct net *ne
- 		return PTR_ERR(keys_ex);
++	}
  
- 	if (!tcf_idr_check(tn, parm->index, a, bind)) {
--		if (!parm->nkeys)
--			return -EINVAL;
- 		ret = tcf_idr_create(tn, parm->index, est, a,
- 				     &act_pedit_ops, bind, false);
- 		if (ret)
+-	qed_ptt_release(p_hwfn, p_ptt);
++	*p_media_type = qed_rd(p_hwfn, p_ptt,
++			       p_hwfn->mcp_info->port_addr +
++			       offsetof(struct public_port,
++					media_type));
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.h b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
+index f1fe5e3427ea5..8fcdb2c3e5dba 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_mcp.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
+@@ -284,14 +284,15 @@ int qed_mcp_get_mbi_ver(struct qed_hwfn *p_hwfn,
+  * @brief Get media type value of the port.
+  *
+  * @param cdev      - qed dev pointer
++ * @param p_ptt
+  * @param mfw_ver    - media type value
+  *
+  * @return int -
+  *      0 - Operation was successul.
+  *      -EBUSY - Operation failed
+  */
+-int qed_mcp_get_media_type(struct qed_dev      *cdev,
+-			   u32                  *media_type);
++int qed_mcp_get_media_type(struct qed_hwfn *p_hwfn,
++			   struct qed_ptt *p_ptt, u32 *media_type);
+ 
+ /**
+  * @brief General function for sending commands to the MCP
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+index 3220086f99dea..a2a9921b467b1 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+@@ -1669,7 +1669,7 @@ static void qed_handle_bulletin_change(struct qed_hwfn *hwfn)
+ 	ops->ports_update(cookie, vxlan_port, geneve_port);
+ 
+ 	/* Always update link configuration according to bulletin */
+-	qed_link_update(hwfn);
++	qed_link_update(hwfn, NULL);
+ }
+ 
+ void qed_iov_vf_task(struct work_struct *work)
+-- 
+2.20.1
+
 
 
