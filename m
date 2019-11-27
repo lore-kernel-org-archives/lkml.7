@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7856CC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7462C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41DDF2178F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C9421741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889657;
-	bh=bHDf1tUIQibMKmL2A/8ywKjSfjEElAGZ1UT0EPzYFHE=;
+	s=default; t=1574889663;
+	bh=LbTcu3fT1fR+3pBF+m5MvIQGLlUtoffzpz127ClyU+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TIflTwjnDPvQdik3s5dx1hzkiwnAnwOzCzn27um0PB+QMwKpjtfnc7HbS9ls8oAaP
-	 3pd6PCaJHETHuEBxjZs9oRLgR1f1d3MOFjGjoB19wFyzVw8J9kD83oMc7JHqnJVznD
-	 Hun7MBq0aewVwdbRC3gDUDz+v5rFOMdL1ig3Slcg=
+	b=R4KavxVmJH8hq2p0HVDG1lj0oO7B3YsgZRniV9mItlMoKQrKCkIrm7wC54ZL7hxQe
+	 iPC3t7ikLEPoCmdP7et62sccSvBkpw8vZ4kdtx4iVtEnpr29Qz8NhUgloJya/WmWAU
+	 aVKoKQLDLV96hf9sIGwn4V7svYzcYbDkI2EJw9jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733128AbfK0VU4 (ORCPT
+        id S1732068AbfK0VH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:20:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:07:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbfK0VIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:08:10 -0500
+        id S1732664AbfK0VHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:07:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FEDE216F4;
-        Wed, 27 Nov 2019 21:08:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41AF4217AB;
+        Wed, 27 Nov 2019 21:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888889;
-        bh=bHDf1tUIQibMKmL2A/8ywKjSfjEElAGZ1UT0EPzYFHE=;
+        s=default; t=1574888873;
+        bh=LbTcu3fT1fR+3pBF+m5MvIQGLlUtoffzpz127ClyU+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JUx8Cq7E0OJ9ioK8kqFTyHtpCGKIluS218V9df6GA1szycBmPYcLWIGAO+Y03f0/B
-         JavTvXMqw2Vw45PnavkMAk5XhPiyJC7Cd71hA4rROBPOJpCZaIij/VoojNjzlNMQCo
-         pVzPawVrrAuZRGjg66Uecx5mtXrBUQ4D8S2UMOtQ=
+        b=DrhGNOy9mLZieI3GPUbJ5yDF06fHkIlPwQIkrX2PPkQmxl/E4G727PzehaU4ew46n
+         flEo3nGRXJNw2YO0sUWVaaVB8XGG2K7suCcLI+SAzTaX7EpY+neRO7exghATdFVesV
+         SvPdjDVNBnbz5habLflcr8H1yBsxP8GMZBLrD0N8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vandana BN <bnvandana@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 283/306] media: vivid: Set vid_cap_streaming and vid_out_streaming to true
-Date:   Wed, 27 Nov 2019 21:32:13 +0100
-Message-Id: <20191127203135.453138297@linuxfoundation.org>
+        stable@vger.kernel.org, Bernd Porr <mail@berndporr.me.uk>,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.19 303/306] staging: comedi: usbduxfast: usbduxfast_ai_cmdtest rounding error
+Date:   Wed, 27 Nov 2019 21:32:33 +0100
+Message-Id: <20191127203136.861195377@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,52 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vandana BN <bnvandana@gmail.com>
+From: Bernd Porr <mail@berndporr.me.uk>
 
-commit b4add02d2236fd5f568db141cfd8eb4290972eb3 upstream.
+commit 5618332e5b955b4bff06d0b88146b971c8dd7b32 upstream.
 
-When vbi stream is started, followed by video streaming,
-the vid_cap_streaming and vid_out_streaming were not being set to true,
-which would cause the video stream to stop when vbi stream is stopped.
-This patch allows to set vid_cap_streaming and vid_out_streaming to true.
-According to Hans Verkuil it appears that these 'if (dev->kthread_vid_cap)'
-checks are a left-over from the original vivid development and should never
-have been there.
+The userspace comedilib function 'get_cmd_generic_timed' fills
+the cmd structure with an informed guess and then calls the
+function 'usbduxfast_ai_cmdtest' in this driver repeatedly while
+'usbduxfast_ai_cmdtest' is modifying the cmd struct until it
+no longer changes. However, because of rounding errors this never
+converged because 'steps = (cmd->convert_arg * 30) / 1000' and then
+back to 'cmd->convert_arg = (steps * 1000) / 30' won't be the same
+because of rounding errors. 'Steps' should only be converted back to
+the 'convert_arg' if 'steps' has actually been modified. In addition
+the case of steps being 0 wasn't checked which is also now done.
 
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
-Cc: <stable@vger.kernel.org>      # for v3.18 and up
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Bernd Porr <mail@berndporr.me.uk>
+Cc: <stable@vger.kernel.org> # 4.4+
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20191118230759.1727-1-mail@berndporr.me.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/vivid/vivid-vid-cap.c |    3 ---
- drivers/media/platform/vivid/vivid-vid-out.c |    3 ---
- 2 files changed, 6 deletions(-)
+ drivers/staging/comedi/drivers/usbduxfast.c |   21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
---- a/drivers/media/platform/vivid/vivid-vid-cap.c
-+++ b/drivers/media/platform/vivid/vivid-vid-cap.c
-@@ -222,9 +222,6 @@ static int vid_cap_start_streaming(struc
- 	if (vb2_is_streaming(&dev->vb_vid_out_q))
- 		dev->can_loop_video = vivid_vid_can_loop(dev);
+--- a/drivers/staging/comedi/drivers/usbduxfast.c
++++ b/drivers/staging/comedi/drivers/usbduxfast.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ /*
+- *  Copyright (C) 2004-2014 Bernd Porr, mail@berndporr.me.uk
++ *  Copyright (C) 2004-2019 Bernd Porr, mail@berndporr.me.uk
+  */
  
--	if (dev->kthread_vid_cap)
--		return 0;
--
- 	dev->vid_cap_seq_count = 0;
- 	dprintk(dev, 1, "%s\n", __func__);
- 	for (i = 0; i < VIDEO_MAX_FRAME; i++)
---- a/drivers/media/platform/vivid/vivid-vid-out.c
-+++ b/drivers/media/platform/vivid/vivid-vid-out.c
-@@ -146,9 +146,6 @@ static int vid_out_start_streaming(struc
- 	if (vb2_is_streaming(&dev->vb_vid_cap_q))
- 		dev->can_loop_video = vivid_vid_can_loop(dev);
+ /*
+@@ -8,7 +8,7 @@
+  * Description: University of Stirling USB DAQ & INCITE Technology Limited
+  * Devices: [ITL] USB-DUX-FAST (usbduxfast)
+  * Author: Bernd Porr <mail@berndporr.me.uk>
+- * Updated: 10 Oct 2014
++ * Updated: 16 Nov 2019
+  * Status: stable
+  */
  
--	if (dev->kthread_vid_out)
--		return 0;
--
- 	dev->vid_out_seq_count = 0;
- 	dprintk(dev, 1, "%s\n", __func__);
- 	if (dev->start_streaming_error) {
+@@ -22,6 +22,7 @@
+  *
+  *
+  * Revision history:
++ * 1.0: Fixed a rounding error in usbduxfast_ai_cmdtest
+  * 0.9: Dropping the first data packet which seems to be from the last transfer.
+  *      Buffer overflows in the FX2 are handed over to comedi.
+  * 0.92: Dropping now 4 packets. The quad buffer has to be emptied.
+@@ -350,6 +351,7 @@ static int usbduxfast_ai_cmdtest(struct
+ 				 struct comedi_cmd *cmd)
+ {
+ 	int err = 0;
++	int err2 = 0;
+ 	unsigned int steps;
+ 	unsigned int arg;
+ 
+@@ -399,11 +401,16 @@ static int usbduxfast_ai_cmdtest(struct
+ 	 */
+ 	steps = (cmd->convert_arg * 30) / 1000;
+ 	if (cmd->chanlist_len !=  1)
+-		err |= comedi_check_trigger_arg_min(&steps,
+-						    MIN_SAMPLING_PERIOD);
+-	err |= comedi_check_trigger_arg_max(&steps, MAX_SAMPLING_PERIOD);
+-	arg = (steps * 1000) / 30;
+-	err |= comedi_check_trigger_arg_is(&cmd->convert_arg, arg);
++		err2 |= comedi_check_trigger_arg_min(&steps,
++						     MIN_SAMPLING_PERIOD);
++	else
++		err2 |= comedi_check_trigger_arg_min(&steps, 1);
++	err2 |= comedi_check_trigger_arg_max(&steps, MAX_SAMPLING_PERIOD);
++	if (err2) {
++		err |= err2;
++		arg = (steps * 1000) / 30;
++		err |= comedi_check_trigger_arg_is(&cmd->convert_arg, arg);
++	}
+ 
+ 	if (cmd->stop_src == TRIG_COUNT)
+ 		err |= comedi_check_trigger_arg_min(&cmd->stop_arg, 1);
 
 
