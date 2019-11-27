@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03BEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646B8C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED1D21770
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33AB8217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887188;
-	bh=yaJoh/7AyG+itmJ2dxC94svgjgemr1sqw9xtDGBeWVA=;
+	s=default; t=1574887191;
+	bh=D4J9kptsdpQYRZbIx3FsfXWT+1IJAe5QFdMwKbDmH2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5DdkvH7nQBo/l5K33nxOftL4ToIKlIWUQ5CzQevFWFQmIuebAvFDYnctpxVGDBm/
-	 MX7QpL3Yq+rWWMCxvFseoJ/r8fylJ3KDuHSaeZOqGu3peMh9EQWiWmU6hSuD4GuDdD
-	 eTt5t/YtVK0ACMnWvztheQ2Acc42ltuGxnydurv4=
+	b=co8gqxxA/YLyTLKpvjQruuAzmWE/ZmafhygbrWzAxTptKRaQA/5ryFtz+M8gSQ9U+
+	 qXeQI2QYZ9F9cAyJNOyYkc6ugArWq4Dx3i1KyOu3OCYnibTeaqlOMWE4/60AkiyGEb
+	 LGsEbZ6BgJg1Z7V7dYzSgCZxQxJUjQDQ33VFBSZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbfK0Ujr (ORCPT
+        id S1728961AbfK0Uju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:39:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43966 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:39:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbfK0Ujn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:39:43 -0500
+        id S1727969AbfK0Ujq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:39:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93B8C20863;
-        Wed, 27 Nov 2019 20:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A74421741;
+        Wed, 27 Nov 2019 20:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887183;
-        bh=yaJoh/7AyG+itmJ2dxC94svgjgemr1sqw9xtDGBeWVA=;
+        s=default; t=1574887185;
+        bh=D4J9kptsdpQYRZbIx3FsfXWT+1IJAe5QFdMwKbDmH2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m3jnV+4lhUNGzXZ8BNFzZFvo1RgN9+nRZ3SXLjhclfHvEjclH1kFCRafM7AQ3rjpP
-         2JaEsLj7e5cxTL/WuOgFlB1zrns+Ea3tZM/JKAmPHX6nrgTKxznfVUw2N3MlHzVJM8
-         UnJgucRpDqB19q+xwZ9B6cnhqfyzGE94UTlquRr4=
+        b=TDsgBa58RNWTi1GO5FyHGKMc7E66PJewxeeHpip/Flfsi9v5LLYNLdW/3IjQ5uOZe
+         N5OY3HymOJeJJf21h9dwZ0MTO9b/e1D5cNB7+2WWu6wv0qT5jrm0pXxKiYV1B+g96+
+         15urhBR2nm3fvfaJXzyKJg6Q4CEd3YSlvl68tmjM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 013/151] ALSA: isight: fix leak of reference to firewire unit in error path of .probe callback
-Date:   Wed, 27 Nov 2019 21:29:56 +0100
-Message-Id: <20191127203008.996732126@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 014/151] printk: fix integer overflow in setup_log_buf()
+Date:   Wed, 27 Nov 2019 21:29:57 +0100
+Message-Id: <20191127203009.181328741@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -59,51 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-[ Upstream commit 51e68fb0929c29e47e9074ca3e99ffd6021a1c5a ]
+[ Upstream commit d2130e82e9454304e9b91ba9da551b5989af8c27 ]
 
-In some error paths, reference count of firewire unit is not decreased.
-This commit fixes the bug.
+The way we calculate logbuf free space percentage overflows signed
+integer:
 
-Fixes: 5b14ec25a79b('ALSA: firewire: release reference count of firewire unit in .remove callback of bus driver')
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+	int free;
+
+	free = __LOG_BUF_LEN - log_next_idx;
+	pr_info("early log buf free: %u(%u%%)\n",
+		free, (free * 100) / __LOG_BUF_LEN);
+
+We support LOG_BUF_LEN of up to 1<<25 bytes. Since setup_log_buf() is
+called during early init, logbuf is mostly empty, so
+
+	__LOG_BUF_LEN - log_next_idx
+
+is close to 1<<25. Thus when we multiply it by 100, we overflow signed
+integer value range: 100 is 2^6 + 2^5 + 2^2.
+
+Example, booting with LOG_BUF_LEN 1<<25 and log_buf_len=2G
+boot param:
+
+[    0.075317] log_buf_len: -2147483648 bytes
+[    0.075319] early log buf free: 33549896(-28%)
+
+Make "free" unsigned integer and use appropriate printk() specifier.
+
+Link: http://lkml.kernel.org/r/20181010113308.9337-1-sergey.senozhatsky@gmail.com
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/isight.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ kernel/printk/printk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/firewire/isight.c b/sound/firewire/isight.c
-index 48d6dca471c6b..6c8daf5b391ff 100644
---- a/sound/firewire/isight.c
-+++ b/sound/firewire/isight.c
-@@ -639,7 +639,7 @@ static int isight_probe(struct fw_unit *unit,
- 	if (!isight->audio_base) {
- 		dev_err(&unit->device, "audio unit base not found\n");
- 		err = -ENXIO;
--		goto err_unit;
-+		goto error;
- 	}
- 	fw_iso_resources_init(&isight->resources, unit);
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index a0339c458c140..c1873d325ebda 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -1050,7 +1050,7 @@ void __init setup_log_buf(int early)
+ {
+ 	unsigned long flags;
+ 	char *new_log_buf;
+-	int free;
++	unsigned int free;
  
-@@ -668,12 +668,12 @@ static int isight_probe(struct fw_unit *unit,
- 	dev_set_drvdata(&unit->device, isight);
- 
- 	return 0;
--
--err_unit:
--	fw_unit_put(isight->unit);
--	mutex_destroy(&isight->mutex);
- error:
- 	snd_card_free(card);
-+
-+	mutex_destroy(&isight->mutex);
-+	fw_unit_put(isight->unit);
-+
- 	return err;
- }
- 
+ 	if (log_buf != __log_buf)
+ 		return;
 -- 
 2.20.1
 
