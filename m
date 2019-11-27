@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171AFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDF0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E027C21844
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F84D21844
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887629;
-	bh=QcODrW0g2h0eVNaS81B9LTAQCEmFSlUp4VTfBNQ8rU8=;
+	s=default; t=1574887634;
+	bh=A6r981WiwlLsuLjXzBrf8L+e7ByY9YU5xFewKaitogw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0uQxMB+chSwtT//A6iWMKPzWNHD7JSvXmHurCXZhH9VOARUDoWjkGTUm2kOLD8tav
-	 /xHZYSw7CoqeSCIoaL3Asaqgodp8YB12lFGIAl7HWVoPJTYqgyU1EKGDcKrFIgd0N5
-	 jpNt3L1Fzt+elvg9BpIFaYxM7FYYRlAGV1frG69U=
+	b=uOvLD9wr0QjXSIzsD4G9/Dt0WOrAQuB9j0U51KIvV5++p03YA0HfdlRJrPIeA84qV
+	 DGHWT+yzFMnVpCA+zmrwNFh+P31otR/x2HfsNQ0FzxWHQcpCPj29n9QqJR33cDI0hT
+	 UBQYjpXaEk+dEbZW2nHTu5ZokohGr2uc9AFE+D40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbfK0UrI (ORCPT
+        id S1729974AbfK0UrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:47:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59382 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:47:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729945AbfK0Uq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:46:58 -0500
+        id S1729950AbfK0UrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:47:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C01082182A;
-        Wed, 27 Nov 2019 20:46:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF0D72166E;
+        Wed, 27 Nov 2019 20:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887617;
-        bh=QcODrW0g2h0eVNaS81B9LTAQCEmFSlUp4VTfBNQ8rU8=;
+        s=default; t=1574887622;
+        bh=A6r981WiwlLsuLjXzBrf8L+e7ByY9YU5xFewKaitogw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x3N69S6+wL02fwYnvhaP9W2vJgE/R9c4FCm1gABNXY7krMCV2/uXOY9xhF1gFJAyd
-         UTCH2UU/RnFnM3JCV6CC/pYlVUzhqawDOB5LbuSR3YZttlRHhZWI4LWx4xJwJmTqi+
-         p6BbqJjPOx3LG6i/rC7kz3yPn22lQBv/t528L5fQ=
+        b=Ee0w3e6LMjFYDlt27IbYOUxmjUj4S7iYJwiYNZ5OFupV0JJFkVkfbHX1Oe0kJ2PWk
+         L4iNsJ9gU//KTcJnWltuW91N/NCBGRLlk2PhcHNuGhlov0i5r/aH9YC1EnfEM/GTJd
+         uTFJkUvFEJr4PbEMewx90w+uTqgyJj5CUSx1xDgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Carl Huang <cjhuang@codeaurora.org>,
-        Brian Norris <briannorris@chomium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 028/211] ath10k: allocate small size dma memory in ath10k_pci_diag_write_mem
-Date:   Wed, 27 Nov 2019 21:29:21 +0100
-Message-Id: <20191127203053.892519794@linuxfoundation.org>
+        stable@vger.kernel.org, Ondrej Zary <linux@rainbow-software.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 030/211] cdrom: dont attempt to fiddle with cdo->capability
+Date:   Wed, 27 Nov 2019 21:29:23 +0100
+Message-Id: <20191127203054.355605248@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,111 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Carl Huang <cjhuang@codeaurora.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 0738b4998c6d1caf9ca2447b946709a7278c70f1 ]
+[ Upstream commit 8f94004e2a51a3ea195cf3447eb5d5906f36d8b3 ]
 
-ath10k_pci_diag_write_mem may allocate big size of the dma memory
-based on the parameter nbytes. Take firmware diag download as
-example, the biggest size is about 500K. In some systems, the
-allocation is likely to fail because it can't acquire such a large
-contiguous dma memory.
+We can't modify cdo->capability as it is defined as a const.
+Change the modification hack to just WARN_ON_ONCE() if we hit
+any of the invalid combinations.
 
-The fix is to allocate a small size dma memory. In the loop,
-driver copies the data to the allocated dma memory and writes to
-the destination until all the data is written.
+This fixes a regression for pcd, which doesn't work after the
+constify patch.
 
-Tested with QCA6174 PCI with
-firmware-6.bin_WLAN.RM.4.4.1-00119-QCARMSWP-1, this also affects
-QCA9377 PCI.
-
-Signed-off-by: Carl Huang <cjhuang@codeaurora.org>
-Reviewed-by: Brian Norris <briannorris@chomium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 853fe1bf7554 ("cdrom: Make device operations read-only")
+Tested-by: Ondrej Zary <linux@rainbow-software.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/pci.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ drivers/cdrom/cdrom.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index 27ab3eb47534f..0298ddc1ff060 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -1039,10 +1039,9 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 	struct ath10k_ce *ce = ath10k_ce_priv(ar);
- 	int ret = 0;
- 	u32 *buf;
--	unsigned int completed_nbytes, orig_nbytes, remaining_bytes;
-+	unsigned int completed_nbytes, alloc_nbytes, remaining_bytes;
- 	struct ath10k_ce_pipe *ce_diag;
- 	void *data_buf = NULL;
--	u32 ce_data;	/* Host buffer address in CE space */
- 	dma_addr_t ce_data_base = 0;
- 	int i;
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index ea6558d4864c0..90dd8e7291dab 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -410,10 +410,10 @@ static int cdrom_get_disc_info(struct cdrom_device_info *cdi,
+  * hack to have the capability flags defined const, while we can still
+  * change it here without gcc complaining at every line.
+  */
+-#define ENSURE(call, bits)			\
+-do {						\
+-	if (cdo->call == NULL)			\
+-		*change_capability &= ~(bits);	\
++#define ENSURE(cdo, call, bits)					\
++do {								\
++	if (cdo->call == NULL)					\
++		WARN_ON_ONCE((cdo)->capability & (bits));	\
+ } while (0)
  
-@@ -1056,9 +1055,10 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 	 *   1) 4-byte alignment
- 	 *   2) Buffer in DMA-able space
- 	 */
--	orig_nbytes = nbytes;
-+	alloc_nbytes = min_t(unsigned int, nbytes, DIAG_TRANSFER_LIMIT);
-+
- 	data_buf = (unsigned char *)dma_alloc_coherent(ar->dev,
--						       orig_nbytes,
-+						       alloc_nbytes,
- 						       &ce_data_base,
- 						       GFP_ATOMIC);
- 	if (!data_buf) {
-@@ -1066,9 +1066,6 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 		goto done;
+ /*
+@@ -589,7 +589,6 @@ int register_cdrom(struct cdrom_device_info *cdi)
+ {
+ 	static char banner_printed;
+ 	const struct cdrom_device_ops *cdo = cdi->ops;
+-	int *change_capability = (int *)&cdo->capability; /* hack */
+ 
+ 	cd_dbg(CD_OPEN, "entering register_cdrom\n");
+ 
+@@ -601,16 +600,16 @@ int register_cdrom(struct cdrom_device_info *cdi)
+ 		cdrom_sysctl_register();
  	}
  
--	/* Copy caller's data to allocated DMA buf */
--	memcpy(data_buf, data, orig_nbytes);
--
- 	/*
- 	 * The address supplied by the caller is in the
- 	 * Target CPU virtual address space.
-@@ -1081,12 +1078,14 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 	 */
- 	address = ath10k_pci_targ_cpu_to_ce_addr(ar, address);
- 
--	remaining_bytes = orig_nbytes;
--	ce_data = ce_data_base;
-+	remaining_bytes = nbytes;
- 	while (remaining_bytes) {
- 		/* FIXME: check cast */
- 		nbytes = min_t(int, remaining_bytes, DIAG_TRANSFER_LIMIT);
- 
-+		/* Copy caller's data to allocated DMA buf */
-+		memcpy(data_buf, data, nbytes);
-+
- 		/* Set up to receive directly into Target(!) address */
- 		ret = __ath10k_ce_rx_post_buf(ce_diag, &address, address);
- 		if (ret != 0)
-@@ -1096,7 +1095,7 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 		 * Request CE to send caller-supplied data that
- 		 * was copied to bounce buffer to Target(!) address.
- 		 */
--		ret = ath10k_ce_send_nolock(ce_diag, NULL, (u32)ce_data,
-+		ret = ath10k_ce_send_nolock(ce_diag, NULL, ce_data_base,
- 					    nbytes, 0, 0);
- 		if (ret != 0)
- 			goto done;
-@@ -1137,12 +1136,12 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
- 
- 		remaining_bytes -= nbytes;
- 		address += nbytes;
--		ce_data += nbytes;
-+		data += nbytes;
- 	}
- 
- done:
- 	if (data_buf) {
--		dma_free_coherent(ar->dev, orig_nbytes, data_buf,
-+		dma_free_coherent(ar->dev, alloc_nbytes, data_buf,
- 				  ce_data_base);
- 	}
+-	ENSURE(drive_status, CDC_DRIVE_STATUS);
++	ENSURE(cdo, drive_status, CDC_DRIVE_STATUS);
+ 	if (cdo->check_events == NULL && cdo->media_changed == NULL)
+-		*change_capability = ~(CDC_MEDIA_CHANGED | CDC_SELECT_DISC);
+-	ENSURE(tray_move, CDC_CLOSE_TRAY | CDC_OPEN_TRAY);
+-	ENSURE(lock_door, CDC_LOCK);
+-	ENSURE(select_speed, CDC_SELECT_SPEED);
+-	ENSURE(get_last_session, CDC_MULTI_SESSION);
+-	ENSURE(get_mcn, CDC_MCN);
+-	ENSURE(reset, CDC_RESET);
+-	ENSURE(generic_packet, CDC_GENERIC_PACKET);
++		WARN_ON_ONCE(cdo->capability & (CDC_MEDIA_CHANGED | CDC_SELECT_DISC));
++	ENSURE(cdo, tray_move, CDC_CLOSE_TRAY | CDC_OPEN_TRAY);
++	ENSURE(cdo, lock_door, CDC_LOCK);
++	ENSURE(cdo, select_speed, CDC_SELECT_SPEED);
++	ENSURE(cdo, get_last_session, CDC_MULTI_SESSION);
++	ENSURE(cdo, get_mcn, CDC_MCN);
++	ENSURE(cdo, reset, CDC_RESET);
++	ENSURE(cdo, generic_packet, CDC_GENERIC_PACKET);
+ 	cdi->mc_flags = 0;
+ 	cdi->options = CDO_USE_FFLAGS;
  
 -- 
 2.20.1
