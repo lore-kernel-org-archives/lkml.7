@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F443C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B2EC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0974A2154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FA62154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891181;
-	bh=7ELU8Vu6+GPSxNfHPinOpipkeIGoboas9zgz5lzP99o=;
+	s=default; t=1574891186;
+	bh=VzDAQEYHSJHf9amCtiA923IozZV4zQ8vtwzJFgfKeAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JkhPqV/MyhtPcSSJvgTMk3qT8RIJ/WaoogvBKH/lti9MOlgerHk/7IATq9Ebl2XD/
-	 zFsGDWsVO/jg7ie6/7IVI4Ejx9GoAONa5w0wQbTQr+AI3ZQ959+07yDLLIRua1eqyi
-	 TY5ZLARI47T43U5mMFQggAPS2EHYiqcsvdOr4jEU=
+	b=RnUQc9uLfwxWY1tyJPOHfvcrQt3aaI027HR5GB17Ggne+rrgVSpyFlBYCIZDiRl5z
+	 SLTa7x+YDIjqxrzCHEUJAdyNCYRnvioBgXZd7wVk1m58EuIvpQYZgXfwExzdA1D+th
+	 tp4quFava4Z4hvGjw5FJqq6iH2Qnrka9ffYLZWbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfK0VqU (ORCPT
+        id S1727480AbfK0UeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:46:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34502 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:34:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727538AbfK0UeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:34:14 -0500
+        id S1727401AbfK0UeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:34:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73D7D207DD;
-        Wed, 27 Nov 2019 20:34:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 876612154A;
+        Wed, 27 Nov 2019 20:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886853;
-        bh=7ELU8Vu6+GPSxNfHPinOpipkeIGoboas9zgz5lzP99o=;
+        s=default; t=1574886841;
+        bh=VzDAQEYHSJHf9amCtiA923IozZV4zQ8vtwzJFgfKeAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ge5uplF8zj8dD4hO+K+xABl7+6vdj5DPF1WFPWEdHNISm1CzE3EEgPYvz+mhjWgPF
-         EP7YxnNieHAenISYM3rqVWXhOEj1p65tagYz8JRoKjHcnJrCbW47jY0dsxcfPN3eZX
-         3KMqNvtEtikx9COz/1bhgMg7KhUvD695HwC6YwpM=
+        b=ZZpHafUWy2EcuoR8Q5iwEhRktbUSVsJQWFXp1LAQ03p4eEFss7FPydNrvvS0pM6Wm
+         aUTc5YglPE+nm0UKtwo/cGcD9uUuvVjQ7GkVdoL4r8pu0g4y7T/xKtChfCB3V3DJXh
+         MFTpENAKI85udZRbYM0akUWN/TmrKjvz7SL9nu2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Darren Hart <dvhart@linux.intel.com>,
+        stable@vger.kernel.org, Kai-Chuan Hsieh <kai.chiuan@gmail.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 019/132] platform/x86: asus-wmi: add SERIO_I8042 dependency
-Date:   Wed, 27 Nov 2019 21:30:10 +0100
-Message-Id: <20191127202916.307387184@linuxfoundation.org>
+Subject: [PATCH 4.4 014/132] platform/x86: asus-wmi: Set specified XUSB2PR value for X550LB
+Date:   Wed, 27 Nov 2019 21:30:05 +0100
+Message-Id: <20191127202911.771008431@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -60,40 +62,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Kai-Chuan Hsieh <kai.chiuan@gmail.com>
 
-[ Upstream commit ea893695ec1131a5fed0523ff8094bc6e8723bbe ]
+[ Upstream commit 8023eff10e7b0327898f17f0b553d2e45c71cef3 ]
 
-A recent bugfix added a call to i8042_install_filter but did
-not add the dependency, leading to possible link errors:
+The bluetooth adapter Atheros AR3012 can't be enumerated
+and make the bluetooth function broken.
 
-drivers/platform/built-in.o: In function `asus_nb_wmi_quirks':
-asus-nb-wmi.c:(.text+0x23af): undefined reference to `i8042_install_filter'
+T:  Bus=02 Lev=01 Prnt=01 Port=05 Cnt=02 Dev#=  5 Spd=12  MxCh= 0
+D:  Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=13d3 ProdID=3362 Rev=00.02
+S:  Manufacturer=Atheros Communications
+S:  Product=Bluetooth USB Host Controller
+S:  SerialNumber=Alaska Day 2006
+C:  #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
+I:  If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+I:  If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
 
-This adds a dependency on SERIO_I8042||SERIO_I8042=n to indicate
-that we can build the driver when the i8042 driver is disabled,
-but it cannot be built-in when that is a loadable module.
+The error is:
 
-Fixes: b5643539b825 ("platform/x86: asus-wmi: Filter buggy scan codes on ASUS Q500A")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+ usb 2-6: device not accepting address 7, error -62
+ usb usb2-port6: unable to enumerate USB device
+
+It is caused by adapter's connected port is mapped to xHC
+controller, but the xHCI is not supported by the usb device.
+
+The output of 'sudo lspci -nnxxx -s 00:14.0':
+
+ 00:14.0 USB controller [0c03]: Intel Corporation 8 Series USB xHCI HC [8086:9c31] (rev 04)
+ 00: 86 80 31 9c 06 04 90 02 04 30 03 0c 00 00 00 00
+ 10: 04 00 a0 f7 00 00 00 00 00 00 00 00 00 00 00 00
+ 20: 00 00 00 00 00 00 00 00 00 00 00 00 43 10 1f 20
+ 30: 00 00 00 00 70 00 00 00 00 00 00 00 0b 01 00 00
+ 40: fd 01 36 80 89 c6 0f 80 00 00 00 00 00 00 00 00
+ 50: 5f 2e ce 0f 00 00 00 00 00 00 00 00 00 00 00 00
+ 60: 30 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ 70: 01 80 c2 c1 08 00 00 00 00 00 00 00 00 00 00 00
+ 80: 05 00 87 00 0c a0 e0 fe 00 00 00 00 a1 41 00 00
+ 90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ a0: 00 01 04 00 00 00 00 00 00 00 00 00 00 00 00 00
+ b0: 0f 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00
+ c0: 03 c0 30 00 00 00 00 00 03 0c 00 00 00 00 00 00
+ d0: f9 01 00 00 f9 01 00 00 0f 00 00 00 0f 00 00 00
+ e0: 00 08 00 00 00 00 00 00 00 00 00 00 d8 d8 00 00
+ f0: 00 00 00 00 00 00 00 00 b1 0f 04 08 00 00 00 00
+
+By referencing Intel Platform Controller Hub(PCH) datasheet,
+the xHC USB 2.0 Port Routing(XUSB2PR) at offset 0xD0-0xD3h
+decides the setting of mapping the port to EHCI controller or
+xHC controller. And the port mapped to xHC will enable xHCI
+during bus resume.
+
+The setting of disabling bluetooth adapter's connected port is
+0x000001D9. The value can be obtained by few times 1 bit flip
+operation. The suited configuration should have the 'lsusb -t'
+result with bluetooth using ehci:
+
+/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/4p, 5000M
+/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/9p, 480M
+    |__ Port 5: Dev 2, If 0, Class=Video, Driver=uvcvideo, 480M
+    |__ Port 5: Dev 2, If 1, Class=Video, Driver=uvcvideo, 480M
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/2p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/8p, 480M
+        |__ Port 6: Dev 3, If 0, Class=Wireless, Driver=btusb, 12M
+        |__ Port 6: Dev 3, If 1, Class=Wireless, Driver=btusb, 12M
+
+Signed-off-by: Kai-Chuan Hsieh <kai.chiuan@gmail.com>
+Acked-by: Corentin Chary <corentin.chary@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+[andy: resolve merge conflict in asus-wmi.h]
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+ drivers/platform/x86/asus-wmi.c    | 29 +++++++++++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.h    |  1 +
+ 3 files changed, 43 insertions(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 953974b5a9a95..6487453c68b59 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -566,6 +566,7 @@ config ASUS_WMI
- config ASUS_NB_WMI
- 	tristate "Asus Notebook WMI Driver"
- 	depends on ASUS_WMI
-+	depends on SERIO_I8042 || SERIO_I8042 = n
- 	---help---
- 	  This is a driver for newer Asus notebooks. It adds extra features
- 	  like wireless radio and bluetooth control, leds, hotkeys, backlight...
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index a619cbe4e852f..7f7d6ca864771 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -116,6 +116,10 @@ static struct quirk_entry quirk_asus_ux303ub = {
+ 	.wmi_backlight_native = true,
+ };
+ 
++static struct quirk_entry quirk_asus_x550lb = {
++	.xusb2pr = 0x01D9,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	quirks = dmi->driver_data;
+@@ -407,6 +411,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_ux303ub,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X550LB",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X550LB"),
++		},
++		.driver_data = &quirk_asus_x550lb,
++	},
+ 	{},
+ };
+ 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index de131cf4d2e4d..a2174f01d3122 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -158,6 +158,9 @@ MODULE_LICENSE("GPL");
+ #define ASUS_FAN_CTRL_MANUAL		1
+ #define ASUS_FAN_CTRL_AUTO		2
+ 
++#define USB_INTEL_XUSB2PR		0xD0
++#define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
++
+ struct bios_args {
+ 	u32 arg0;
+ 	u32 arg1;
+@@ -1082,6 +1085,29 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+ 	return result;
+ }
+ 
++static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
++{
++	struct pci_dev *xhci_pdev;
++	u32 orig_ports_available;
++	u32 ports_available = asus->driver->quirks->xusb2pr;
++
++	xhci_pdev = pci_get_device(PCI_VENDOR_ID_INTEL,
++			PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI,
++			NULL);
++
++	if (!xhci_pdev)
++		return;
++
++	pci_read_config_dword(xhci_pdev, USB_INTEL_XUSB2PR,
++				&orig_ports_available);
++
++	pci_write_config_dword(xhci_pdev, USB_INTEL_XUSB2PR,
++				cpu_to_le32(ports_available));
++
++	pr_info("set USB_INTEL_XUSB2PR old: 0x%04x, new: 0x%04x\n",
++			orig_ports_available, ports_available);
++}
++
+ /*
+  * Hwmon device
+  */
+@@ -2085,6 +2111,9 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (asus->driver->quirks->wmi_backlight_native)
+ 		acpi_video_set_dmi_backlight_type(acpi_backlight_native);
+ 
++	if (asus->driver->quirks->xusb2pr)
++		asus_wmi_set_xusb2pr(asus);
++
+ 	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+ 		err = asus_wmi_backlight_init(asus);
+ 		if (err && err != -ENODEV)
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 0e19014e9f542..fdff626c3b51b 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -53,6 +53,7 @@ struct quirk_entry {
+ 	 * and let the ACPI interrupt to send out the key event.
+ 	 */
+ 	int no_display_toggle;
++	u32 xusb2pr;
+ 
+ 	bool (*i8042_filter)(unsigned char data, unsigned char str,
+ 			     struct serio *serio);
 -- 
 2.20.1
 
