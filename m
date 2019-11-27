@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C326EC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AD1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB4F2154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75FAB216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889405;
-	bh=nHVmU/oIFzQsYfQS/3JhrMAgd1hf4fvK2RzpONW5VZY=;
+	s=default; t=1574889408;
+	bh=oSmQcau+Dz+wLRGRWwAQ5Ji3N0rAjF1AMGTR5Sm7Omk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wvgs+Q5MhoRYCPCci4X0heoR5JyN07+7n6odd9pPAoKvHZhj+f8w0yNnEaVvqHfDE
-	 25DNAOzkAObMmdqkq8WTo1MG/EAKj7SoAJ4yp3dV3aNAfhyXFvmNHDoxOvfl2iIDVL
-	 WaIEZHTSN99PmxgtiA7R/08trczH88/63dEPI8t8=
+	b=Ja3HcKviewEDbvP28zjBpbMzZCk6UzW0ZBoXgs4zjxQ3zuLHw1Nrvf3btfwCrRH9R
+	 XpsTcDb7u9mTUrSOUMld2OdPGpxu+VTNC8cdZYjhYNxtAJZoXdOeTAIV0JtAXm43z8
+	 YYX+RhawtPDTN4wUpvL1/rbgdYKoPmSfGPQK8Sl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733025AbfK0VQo (ORCPT
+        id S1732854AbfK0VQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:16:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46226 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:16:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732618AbfK0VNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:13:43 -0500
+        id S1727139AbfK0VNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:13:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1DB0215F1;
-        Wed, 27 Nov 2019 21:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B2202086A;
+        Wed, 27 Nov 2019 21:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889223;
-        bh=nHVmU/oIFzQsYfQS/3JhrMAgd1hf4fvK2RzpONW5VZY=;
+        s=default; t=1574889220;
+        bh=oSmQcau+Dz+wLRGRWwAQ5Ji3N0rAjF1AMGTR5Sm7Omk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V5ncSDYf8Nnlo5o6V1aHiTK/BlmKrrjBmPPekQDLKSAwLjeRCLTD1gvXzzyn4jLw4
-         At1UVw2lCxTpqtffdi0Ra5miXFWVhN/Me3c2Ahl4PmZaaE+dDzCVccIu+mV2YBxdtt
-         6JJu4Z0Q6J7rnkEs2+/bSiA8bKYFdFJ6QcyZXHO0=
+        b=LqM/9xfmWqkuZtiaGNV7wBSc0Tb4gqrmlzQ4GrxBWYdJlC3nVZ8TKAAE5hID0Lob5
+         RJoS7K6zvF58FJl2Cfew+OsanLb1RIOakXhJK6FaLSPJ1lGBPInZ2MkMd7z1nhkoPP
+         PnJuhDRQJzKqPJQ8I9wQ0bNqPMVNlxH8jPcfthVY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai Shen <shenkai8@huawei.com>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 35/66] cpufreq: Add NULL checks to show() and store() methods of cpufreq
-Date:   Wed, 27 Nov 2019 21:32:30 +0100
-Message-Id: <20191127202713.995299070@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.4 34/66] media: usbvision: Fix races among open, close, and disconnect
+Date:   Wed, 27 Nov 2019 21:32:29 +0100
+Message-Id: <20191127202713.864639036@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -61,56 +60,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Shen <shenkai8@huawei.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit e6e8df07268c1f75dd9215536e2ce4587b70f977 upstream.
+commit 9e08117c9d4efc1e1bc6fce83dab856d9fd284b6 upstream.
 
-Add NULL checks to show() and store() in cpufreq.c to avoid attempts
-to invoke a NULL callback.
+Visual inspection of the usbvision driver shows that it suffers from
+three races between its open, close, and disconnect handlers.  In
+particular, the driver is careful to update its usbvision->user and
+usbvision->remove_pending flags while holding the private mutex, but:
 
-Though some interfaces of cpufreq are set as read-only, users can
-still get write permission using chmod which can lead to a kernel
-crash, as follows:
+	usbvision_v4l2_close() and usbvision_radio_close() don't hold
+	the mutex while they check the value of
+	usbvision->remove_pending;
 
-chmod +w /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
-echo 1 >  /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+	usbvision_disconnect() doesn't hold the mutex while checking
+	the value of usbvision->user; and
 
-This bug was found in linux 4.19.
+	also, usbvision_v4l2_open() and usbvision_radio_open() don't
+	check whether the device has been unplugged before allowing
+	the user to open the device files.
 
-Signed-off-by: Kai Shen <shenkai8@huawei.com>
-Reported-by: Feilong Lin <linfeilong@huawei.com>
-Reviewed-by: Feilong Lin <linfeilong@huawei.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-[ rjw: Subject & changelog ]
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Each of these can potentially lead to usbvision_release() being called
+twice and use-after-free errors.
+
+This patch fixes the races by reading the flags while the mutex is
+still held and checking for pending removes before allowing an open to
+succeed.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/cpufreq.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/media/usb/usbvision/usbvision-video.c |   21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -933,6 +933,9 @@ static ssize_t show(struct kobject *kobj
- 	struct freq_attr *fattr = to_attr(attr);
- 	ssize_t ret;
+--- a/drivers/media/usb/usbvision/usbvision-video.c
++++ b/drivers/media/usb/usbvision/usbvision-video.c
+@@ -314,6 +314,10 @@ static int usbvision_v4l2_open(struct fi
+ 	if (mutex_lock_interruptible(&usbvision->v4l2_lock))
+ 		return -ERESTARTSYS;
  
-+	if (!fattr->show)
-+		return -EIO;
-+
- 	down_read(&policy->rwsem);
- 	ret = fattr->show(policy, buf);
- 	up_read(&policy->rwsem);
-@@ -947,6 +950,9 @@ static ssize_t store(struct kobject *kob
- 	struct freq_attr *fattr = to_attr(attr);
- 	ssize_t ret = -EINVAL;
++	if (usbvision->remove_pending) {
++		err_code = -ENODEV;
++		goto unlock;
++	}
+ 	if (usbvision->user) {
+ 		err_code = -EBUSY;
+ 	} else {
+@@ -377,6 +381,7 @@ unlock:
+ static int usbvision_v4l2_close(struct file *file)
+ {
+ 	struct usb_usbvision *usbvision = video_drvdata(file);
++	int r;
  
-+	if (!fattr->store)
-+		return -EIO;
+ 	PDEBUG(DBG_IO, "close");
+ 
+@@ -391,9 +396,10 @@ static int usbvision_v4l2_close(struct f
+ 	usbvision_scratch_free(usbvision);
+ 
+ 	usbvision->user--;
++	r = usbvision->remove_pending;
+ 	mutex_unlock(&usbvision->v4l2_lock);
+ 
+-	if (usbvision->remove_pending) {
++	if (r) {
+ 		printk(KERN_INFO "%s: Final disconnect\n", __func__);
+ 		usbvision_release(usbvision);
+ 		return 0;
+@@ -1064,6 +1070,11 @@ static int usbvision_radio_open(struct f
+ 
+ 	if (mutex_lock_interruptible(&usbvision->v4l2_lock))
+ 		return -ERESTARTSYS;
 +
- 	/*
- 	 * cpus_read_trylock() is used here to work around a circular lock
- 	 * dependency problem with respect to the cpufreq_register_driver().
++	if (usbvision->remove_pending) {
++		err_code = -ENODEV;
++		goto out;
++	}
+ 	err_code = v4l2_fh_open(file);
+ 	if (err_code)
+ 		goto out;
+@@ -1096,6 +1107,7 @@ out:
+ static int usbvision_radio_close(struct file *file)
+ {
+ 	struct usb_usbvision *usbvision = video_drvdata(file);
++	int r;
+ 
+ 	PDEBUG(DBG_IO, "");
+ 
+@@ -1109,9 +1121,10 @@ static int usbvision_radio_close(struct
+ 	usbvision_audio_off(usbvision);
+ 	usbvision->radio = 0;
+ 	usbvision->user--;
++	r = usbvision->remove_pending;
+ 	mutex_unlock(&usbvision->v4l2_lock);
+ 
+-	if (usbvision->remove_pending) {
++	if (r) {
+ 		printk(KERN_INFO "%s: Final disconnect\n", __func__);
+ 		v4l2_fh_release(file);
+ 		usbvision_release(usbvision);
+@@ -1543,6 +1556,7 @@ err_usb:
+ static void usbvision_disconnect(struct usb_interface *intf)
+ {
+ 	struct usb_usbvision *usbvision = to_usbvision(usb_get_intfdata(intf));
++	int u;
+ 
+ 	PDEBUG(DBG_PROBE, "");
+ 
+@@ -1559,13 +1573,14 @@ static void usbvision_disconnect(struct
+ 	v4l2_device_disconnect(&usbvision->v4l2_dev);
+ 	usbvision_i2c_unregister(usbvision);
+ 	usbvision->remove_pending = 1;	/* Now all ISO data will be ignored */
++	u = usbvision->user;
+ 
+ 	usb_put_dev(usbvision->dev);
+ 	usbvision->dev = NULL;	/* USB device is no more */
+ 
+ 	mutex_unlock(&usbvision->v4l2_lock);
+ 
+-	if (usbvision->user) {
++	if (u) {
+ 		printk(KERN_INFO "%s: In use, disconnect pending\n",
+ 		       __func__);
+ 		wake_up_interruptible(&usbvision->wait_frame);
 
 
