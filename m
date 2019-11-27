@@ -2,52 +2,57 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BCFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1547FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C562176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FB4217AB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889097;
-	bh=zfIFOQ3NZnBRq39d2iHIIEDmt7mufSegivAASzrAJnI=;
+	s=default; t=1574889099;
+	bh=x0r3Mfd+VwYR6oqV1ER4Hs/zpIxUEsd0Q/jnlt4hZsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OnVaVuw3vu0REc/9Ks8ghhmdCAH+ee/k7eVYgUM0RAHpnOr4MPcBwJyxgT5tbLNf4
-	 YYSSc1VIPml9SD0r0sC5PJ7A8aYvV43om822E5de1FHxAsSCX59DQ+Pp/DhDdgkyMi
-	 sV4B5R0FCd6LPGkW7W8gSC4SJxCDK9hOP77e8R2A=
+	b=g1Jnheinrg2IFLqt9ey6y6CU3ZSbrc3vTypn4skyUPEiNC+sNc2EGE0NJbULiZL2d
+	 qfEJnM/oZMCqqHpxwjOFuXAsPZDQ7lKiAEW2xaV/x1V73FMW5izuLQoVO555FF7Ack
+	 4eELUASsB4N8YFLhcj+SStEWgdUDC8ayfXsOENB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbfK0VLf (ORCPT
+        id S1727955AbfK0VLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:11:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40176 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:11:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732759AbfK0VLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:11:32 -0500
+        id S1728507AbfK0VLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0FA42176D;
-        Wed, 27 Nov 2019 21:11:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE1D6217AB;
+        Wed, 27 Nov 2019 21:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889091;
-        bh=zfIFOQ3NZnBRq39d2iHIIEDmt7mufSegivAASzrAJnI=;
+        s=default; t=1574889094;
+        bh=x0r3Mfd+VwYR6oqV1ER4Hs/zpIxUEsd0Q/jnlt4hZsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pqnjYPAvH9mn5jqIJ1cT1td0kLjq4YuRpIgkzTqpuviNOOjXyfUzXaUJBgy7tBGJy
-         BLlZvpSIL4lUP8tiG3n+F63PV4W3NOwUqb6tOekgDM8BhAkhObfxiD59bFgpykPhQL
-         jcNNGVkcV5fPFBT3KrOltxMBIU1siX026fB7SXJU=
+        b=0GiTXa24RqaHyfbJp/3hNHTzjD3Kzw2CIDlUGUY9vAxvDeNVbFMPA9x063ac9qcnK
+         AjiqPgZ4WLIKvz/gD9pkefAW/0Kmjb9yGC3IUsa/XXS4HhuIcn/TlRqEKMqSqydEoY
+         bGrgtlXxaVdntk0wylCwYKxqKYuto2cC8Qhfzh+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, A Sun <as1033x@comcast.net>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.3 79/95] media: mceusb: fix out of bounds read in MCE receiver buffer
-Date:   Wed, 27 Nov 2019 21:32:36 +0100
-Message-Id: <20191127202947.573370059@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
+        Thibaut Sautereau <thibaut@sautereau.fr>,
+        Kees Cook <keescook@chromium.org>,
+        Christoph Lameter <cl@linux.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 80/95] mm/slub.c: init_on_free=1 should wipe freelist ptr for bulk allocations
+Date:   Wed, 27 Nov 2019 21:32:37 +0100
+Message-Id: <20191127202949.148851697@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,360 +65,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: A Sun <as1033x@comcast.net>
+From: Alexander Potapenko <glider@google.com>
 
-commit e43148645d18efc3072b1ba45afaa3f385299e55 upstream.
+[ Upstream commit 0f181f9fbea8bc7ea2f7e13ae7f8c256b39e254c ]
 
-Fix multiple cases of out of bounds (OOB) read associated with
-MCE device receive/input data handling.
+slab_alloc_node() already zeroed out the freelist pointer if
+init_on_free was on.  Thibaut Sautereau noticed that the same needs to
+be done for kmem_cache_alloc_bulk(), which performs the allocations
+separately.
 
-In reference for the OOB cases below, the incoming/read (byte) data
-format when the MCE device responds to a command is:
-    { cmd_prefix, subcmd, data0, data1, ... }
-where cmd_prefix are:
-    MCE_CMD_PORT_SYS
-    MCE_CMD_PORT_IR
-and subcmd examples are:
-    MCE_RSP_GETPORTSTATUS
-    MCE_RSP_EQIRNUMPORTS
-    ...
-Response size dynamically depends on cmd_prefix and subcmd.
-So data0, data1, ... may or may not be present on input.
-Multiple responses may return in a single receiver buffer.
+kmem_cache_alloc_bulk() is currently used in two places in the kernel,
+so this change is unlikely to have a major performance impact.
 
-The trigger condition for OOB read is typically random or
-corrupt input data that fills the mceusb receiver buffer.
+SLAB doesn't require a similar change, as auto-initialization makes the
+allocator store the freelist pointers off-slab.
 
-Case 1:
-
-mceusb_handle_command() reads data0 (var hi) and data1 (var lo)
-regardless of whether the response includes such data.
-If { cmd_prefix, subcmd } is at the end of the receiver buffer,
-read past end of buffer occurs.
-
-This case was reported by
-KASAN: slab-out-of-bounds Read in mceusb_dev_recv
-https://syzkaller.appspot.com/bug?extid=c7fdb6cb36e65f2fe8c9
-
-Fix: In mceusb_handle_command(), change variable hi and lo to
-pointers, and dereference only when required.
-
-Case 2:
-
-If response with data is truncated at end of buffer after
-{ cmd_prefix, subcmd }, mceusb_handle_command() reads past
-end of buffer for data0, data1, ...
-
-Fix: In mceusb_process_ir_data(), check response size with
-remaining buffer size before invoking mceusb_handle_command().
-+    if (i + ir->rem < buf_len)
-            mceusb_handle_command(ir, &ir->buf_in[i - 1]);
-
-Case 3:
-
-mceusb_handle_command() handles invalid/bad response such as
-{ 0x??, MCE_RSP_GETPORTSTATUS } of length 2 as a response
-{ MCE_CMD_PORT_SYS, MCE_RSP_GETPORTSTATUS, data0, ... }
-of length 7. Read OOB occurs for non-existent data0, data1, ...
-Cause is mceusb_handle_command() does not check cmd_prefix value.
-
-Fix: mceusb_handle_command() must test both cmd_prefix and subcmd.
-
-Case 4:
-
-mceusb_process_ir_data() receiver parser state SUBCMD is
-possible at start (i=0) of receiver buffer resulting in buffer
-offset=-1 passed to mceusb_dev_printdata().
-Bad offset results in OOB read before start of buffer.
-
-[1214218.580308] mceusb 1-1.3:1.0: rx data[0]: 00 80 (length=2)
-[1214218.580323] mceusb 1-1.3:1.0: Unknown command 0x00 0x80
-...
-[1214218.580406] mceusb 1-1.3:1.0: rx data[14]: 7f 7f (length=2)
-[1214218.679311] mceusb 1-1.3:1.0: rx data[-1]: 80 90 (length=2)
-[1214218.679325] mceusb 1-1.3:1.0: End of raw IR data
-[1214218.679340] mceusb 1-1.3:1.0: rx data[1]: 7f 7f (length=2)
-
-Fix: If parser_state is SUBCMD after processing receiver buffer,
-reset parser_state to CMD_HEADER.
-In effect, discard cmd_prefix at end of receiver buffer.
-In mceusb_dev_printdata(), abort if buffer offset is out of bounds.
-
-Case 5:
-
-If response with data is truncated at end of buffer after
-{ cmd_prefix, subcmd }, mceusb_dev_printdata() reads past
-end of buffer for data0, data1, ...
-while decoding the response to print out.
-
-Fix: In mceusb_dev_printdata(), remove unneeded buffer offset
-adjustments (var start and var skip) associated with MCE gen1 header.
-Test for truncated MCE cmd response (compare offset+len with buf_len)
-and skip decoding of incomplete response.
-Move IR data tracing to execute before the truncation test.
-
-Signed-off-by: A Sun <as1033x@comcast.net>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/20191007091605.30530-1-glider@google.com
+Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Reported-by: Thibaut Sautereau <thibaut@sautereau.fr>
+Reported-by: Kees Cook <keescook@chromium.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/mceusb.c |  141 +++++++++++++++++++++++++++++++---------------
- 1 file changed, 98 insertions(+), 43 deletions(-)
+ mm/slub.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/drivers/media/rc/mceusb.c
-+++ b/drivers/media/rc/mceusb.c
-@@ -562,7 +562,7 @@ static int mceusb_cmd_datasize(u8 cmd, u
- 			datasize = 4;
- 			break;
- 		case MCE_CMD_G_REVISION:
--			datasize = 2;
-+			datasize = 4;
- 			break;
- 		case MCE_RSP_EQWAKESUPPORT:
- 		case MCE_RSP_GETWAKESOURCE:
-@@ -598,14 +598,9 @@ static void mceusb_dev_printdata(struct
- 	char *inout;
- 	u8 cmd, subcmd, *data;
- 	struct device *dev = ir->dev;
--	int start, skip = 0;
- 	u32 carrier, period;
- 
--	/* skip meaningless 0xb1 0x60 header bytes on orig receiver */
--	if (ir->flags.microsoft_gen1 && !out && !offset)
--		skip = 2;
--
--	if (len <= skip)
-+	if (offset < 0 || offset >= buf_len)
- 		return;
- 
- 	dev_dbg(dev, "%cx data[%d]: %*ph (len=%d sz=%d)",
-@@ -614,11 +609,32 @@ static void mceusb_dev_printdata(struct
- 
- 	inout = out ? "Request" : "Got";
- 
--	start  = offset + skip;
--	cmd    = buf[start] & 0xff;
--	subcmd = buf[start + 1] & 0xff;
--	data = buf + start + 2;
-+	cmd    = buf[offset];
-+	subcmd = (offset + 1 < buf_len) ? buf[offset + 1] : 0;
-+	data   = &buf[offset] + 2;
-+
-+	/* Trace meaningless 0xb1 0x60 header bytes on original receiver */
-+	if (ir->flags.microsoft_gen1 && !out && !offset) {
-+		dev_dbg(dev, "MCE gen 1 header");
-+		return;
-+	}
- 
-+	/* Trace IR data header or trailer */
-+	if (cmd != MCE_CMD_PORT_IR &&
-+	    (cmd & MCE_PORT_MASK) == MCE_COMMAND_IRDATA) {
-+		if (cmd == MCE_IRDATA_TRAILER)
-+			dev_dbg(dev, "End of raw IR data");
-+		else
-+			dev_dbg(dev, "Raw IR data, %d pulse/space samples",
-+				cmd & MCE_PACKET_LENGTH_MASK);
-+		return;
-+	}
-+
-+	/* Unexpected end of buffer? */
-+	if (offset + len > buf_len)
-+		return;
-+
-+	/* Decode MCE command/response */
- 	switch (cmd) {
- 	case MCE_CMD_NULL:
- 		if (subcmd == MCE_CMD_NULL)
-@@ -642,7 +658,7 @@ static void mceusb_dev_printdata(struct
- 				dev_dbg(dev, "Get hw/sw rev?");
- 			else
- 				dev_dbg(dev, "hw/sw rev %*ph",
--					4, &buf[start + 2]);
-+					4, &buf[offset + 2]);
- 			break;
- 		case MCE_CMD_RESUME:
- 			dev_dbg(dev, "Device resume requested");
-@@ -744,13 +760,6 @@ static void mceusb_dev_printdata(struct
- 	default:
- 		break;
- 	}
--
--	if (cmd == MCE_IRDATA_TRAILER)
--		dev_dbg(dev, "End of raw IR data");
--	else if ((cmd != MCE_CMD_PORT_IR) &&
--		 ((cmd & MCE_PORT_MASK) == MCE_COMMAND_IRDATA))
--		dev_dbg(dev, "Raw IR data, %d pulse/space samples",
--			cmd & MCE_PACKET_LENGTH_MASK);
- #endif
+diff --git a/mm/slub.c b/mm/slub.c
+index d2445dd1c7eda..f24ea152cdbb3 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2648,6 +2648,17 @@ static void *__slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
+ 	return p;
  }
  
-@@ -1127,32 +1136,62 @@ static int mceusb_set_rx_carrier_report(
- }
- 
++/*
++ * If the object has been wiped upon free, make sure it's fully initialized by
++ * zeroing out freelist pointer.
++ */
++static __always_inline void maybe_wipe_obj_freeptr(struct kmem_cache *s,
++						   void *obj)
++{
++	if (unlikely(slab_want_init_on_free(s)) && obj)
++		memset((void *)((char *)obj + s->offset), 0, sizeof(void *));
++}
++
  /*
-+ * Handle PORT_SYS/IR command response received from the MCE device.
-+ *
-+ * Assumes single response with all its data (not truncated)
-+ * in buf_in[]. The response itself determines its total length
-+ * (mceusb_cmd_datasize() + 2) and hence the minimum size of buf_in[].
-+ *
-  * We don't do anything but print debug spew for many of the command bits
-  * we receive from the hardware, but some of them are useful information
-  * we want to store so that we can use them.
-  */
--static void mceusb_handle_command(struct mceusb_dev *ir, int index)
-+static void mceusb_handle_command(struct mceusb_dev *ir, u8 *buf_in)
- {
-+	u8 cmd = buf_in[0];
-+	u8 subcmd = buf_in[1];
-+	u8 *hi = &buf_in[2];		/* read only when required */
-+	u8 *lo = &buf_in[3];		/* read only when required */
- 	struct ir_raw_event rawir = {};
--	u8 hi = ir->buf_in[index + 1] & 0xff;
--	u8 lo = ir->buf_in[index + 2] & 0xff;
- 	u32 carrier_cycles;
- 	u32 cycles_fix;
+  * Inlined fastpath so that allocation functions (kmalloc, kmem_cache_alloc)
+  * have the fastpath folded into their functions. So no function call
+@@ -2736,12 +2747,8 @@ redo:
+ 		prefetch_freepointer(s, next_object);
+ 		stat(s, ALLOC_FASTPATH);
+ 	}
+-	/*
+-	 * If the object has been wiped upon free, make sure it's fully
+-	 * initialized by zeroing out freelist pointer.
+-	 */
+-	if (unlikely(slab_want_init_on_free(s)) && object)
+-		memset(object + s->offset, 0, sizeof(void *));
++
++	maybe_wipe_obj_freeptr(s, object);
  
--	switch (ir->buf_in[index]) {
--	/* the one and only 5-byte return value command */
--	case MCE_RSP_GETPORTSTATUS:
--		if ((ir->buf_in[index + 4] & 0xff) == 0x00)
--			ir->txports_cabled |= 1 << hi;
--		break;
-+	if (cmd == MCE_CMD_PORT_SYS) {
-+		switch (subcmd) {
-+		/* the one and only 5-byte return value command */
-+		case MCE_RSP_GETPORTSTATUS:
-+			if (buf_in[5] == 0)
-+				ir->txports_cabled |= 1 << *hi;
-+			break;
+ 	if (unlikely(slab_want_init_on_alloc(gfpflags, s)) && object)
+ 		memset(object, 0, s->object_size);
+@@ -3155,10 +3162,13 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
+ 				goto error;
  
-+		/* 1-byte return value commands */
-+		case MCE_RSP_EQEMVER:
-+			ir->emver = *hi;
-+			break;
+ 			c = this_cpu_ptr(s->cpu_slab);
++			maybe_wipe_obj_freeptr(s, p[i]);
 +
-+		/* No return value commands */
-+		case MCE_RSP_CMD_ILLEGAL:
-+			ir->need_reset = true;
-+			break;
-+
-+		default:
-+			break;
-+		}
-+
-+		return;
-+	}
-+
-+	if (cmd != MCE_CMD_PORT_IR)
-+		return;
-+
-+	switch (subcmd) {
- 	/* 2-byte return value commands */
- 	case MCE_RSP_EQIRTIMEOUT:
--		ir->rc->timeout = US_TO_NS((hi << 8 | lo) * MCE_TIME_UNIT);
-+		ir->rc->timeout = US_TO_NS((*hi << 8 | *lo) * MCE_TIME_UNIT);
- 		break;
- 	case MCE_RSP_EQIRNUMPORTS:
--		ir->num_txports = hi;
--		ir->num_rxports = lo;
-+		ir->num_txports = *hi;
-+		ir->num_rxports = *lo;
- 		break;
- 	case MCE_RSP_EQIRRXCFCNT:
- 		/*
-@@ -1165,7 +1204,7 @@ static void mceusb_handle_command(struct
- 		 */
- 		if (ir->carrier_report_enabled && ir->learning_active &&
- 		    ir->pulse_tunit > 0) {
--			carrier_cycles = (hi << 8 | lo);
-+			carrier_cycles = (*hi << 8 | *lo);
- 			/*
- 			 * Adjust carrier cycle count by adding
- 			 * 1 missed count per pulse "on"
-@@ -1183,24 +1222,24 @@ static void mceusb_handle_command(struct
- 		break;
- 
- 	/* 1-byte return value commands */
--	case MCE_RSP_EQEMVER:
--		ir->emver = hi;
--		break;
- 	case MCE_RSP_EQIRTXPORTS:
--		ir->tx_mask = hi;
-+		ir->tx_mask = *hi;
- 		break;
- 	case MCE_RSP_EQIRRXPORTEN:
--		ir->learning_active = ((hi & 0x02) == 0x02);
--		if (ir->rxports_active != hi) {
-+		ir->learning_active = ((*hi & 0x02) == 0x02);
-+		if (ir->rxports_active != *hi) {
- 			dev_info(ir->dev, "%s-range (0x%x) receiver active",
--				 ir->learning_active ? "short" : "long", hi);
--			ir->rxports_active = hi;
-+				 ir->learning_active ? "short" : "long", *hi);
-+			ir->rxports_active = *hi;
+ 			continue; /* goto for-loop */
  		}
- 		break;
-+
-+	/* No return value commands */
- 	case MCE_RSP_CMD_ILLEGAL:
- 	case MCE_RSP_TX_TIMEOUT:
- 		ir->need_reset = true;
- 		break;
-+
- 	default:
- 		break;
+ 		c->freelist = get_freepointer(s, object);
+ 		p[i] = object;
++		maybe_wipe_obj_freeptr(s, p[i]);
  	}
-@@ -1226,7 +1265,8 @@ static void mceusb_process_ir_data(struc
- 			ir->rem = mceusb_cmd_datasize(ir->cmd, ir->buf_in[i]);
- 			mceusb_dev_printdata(ir, ir->buf_in, buf_len, i - 1,
- 					     ir->rem + 2, false);
--			mceusb_handle_command(ir, i);
-+			if (i + ir->rem < buf_len)
-+				mceusb_handle_command(ir, &ir->buf_in[i - 1]);
- 			ir->parser_state = CMD_DATA;
- 			break;
- 		case PARSE_IRDATA:
-@@ -1255,15 +1295,22 @@ static void mceusb_process_ir_data(struc
- 			ir->rem--;
- 			break;
- 		case CMD_HEADER:
--			/* decode mce packets of the form (84),AA,BB,CC,DD */
--			/* IR data packets can span USB messages - rem */
- 			ir->cmd = ir->buf_in[i];
- 			if ((ir->cmd == MCE_CMD_PORT_IR) ||
- 			    ((ir->cmd & MCE_PORT_MASK) !=
- 			     MCE_COMMAND_IRDATA)) {
-+				/*
-+				 * got PORT_SYS, PORT_IR, or unknown
-+				 * command response prefix
-+				 */
- 				ir->parser_state = SUBCMD;
- 				continue;
- 			}
-+			/*
-+			 * got IR data prefix (0x80 + num_bytes)
-+			 * decode MCE packets of the form {0x83, AA, BB, CC}
-+			 * IR data packets can span USB messages
-+			 */
- 			ir->rem = (ir->cmd & MCE_PACKET_LENGTH_MASK);
- 			mceusb_dev_printdata(ir, ir->buf_in, buf_len,
- 					     i, ir->rem + 1, false);
-@@ -1287,6 +1334,14 @@ static void mceusb_process_ir_data(struc
- 		if (ir->parser_state != CMD_HEADER && !ir->rem)
- 			ir->parser_state = CMD_HEADER;
- 	}
-+
-+	/*
-+	 * Accept IR data spanning multiple rx buffers.
-+	 * Reject MCE command response spanning multiple rx buffers.
-+	 */
-+	if (ir->parser_state != PARSE_IRDATA || !ir->rem)
-+		ir->parser_state = CMD_HEADER;
-+
- 	if (event) {
- 		dev_dbg(ir->dev, "processed IR data");
- 		ir_raw_event_handle(ir->rc);
+ 	c->tid = next_tid(c->tid);
+ 	local_irq_enable();
+-- 
+2.20.1
+
 
 
