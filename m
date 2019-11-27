@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27556C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAE0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0EDD20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7470121775
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887437;
-	bh=X6ttkquxGdzmq27hYfoMMXPCacDoaTT04oI9WcFh5Pc=;
+	s=default; t=1574887440;
+	bh=ANpEzvaNrgTeJe+unM5bxWbDq76vUfMBryJX1h5/v5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DT6jOZYifyufQkn053sXstHOHQUYrqIsQMGBLgUG6k30eccxrcq4VazQT9w6vLKXC
-	 5Px1kZEjoo/ERk0eEFBPmwvv6aEK8x8RezczwknW6ECiJL90GL19HVbA8rE0pRZDER
-	 xgnnF14BWQ/ZXSliWR/hafWBk+zNWRm8t+YRKk8M=
+	b=KR+P7st/IOhO15IfHm1ikUL/se75BlxY/uMo5+pTybKIXaVxNRoengnfuLf/oiT2b
+	 9aVaIOv1dhVuk/vtjCbTPtVS0BX3O6QecSKC4+Yu8/ppTJpPU9EoaILfMZlLBSnPkM
+	 hxvnMLzpCxqGGSglgkGVGeoVG6WwtlExdyRsXi6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbfK0Unz (ORCPT
+        id S1729515AbfK0Un6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:43:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52286 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:43:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729498AbfK0Unw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:43:52 -0500
+        id S1728980AbfK0Uny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:43:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2B082080F;
-        Wed, 27 Nov 2019 20:43:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6759720862;
+        Wed, 27 Nov 2019 20:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887431;
-        bh=X6ttkquxGdzmq27hYfoMMXPCacDoaTT04oI9WcFh5Pc=;
+        s=default; t=1574887433;
+        bh=ANpEzvaNrgTeJe+unM5bxWbDq76vUfMBryJX1h5/v5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jjxqogca/VsWPMcOFXr36pg2fpdJ2z3B2dMV9HLbqSWQg7j1q5/5eZcY7WMoaFbmw
-         +r6+hLNdFGJHyR2CQ2/aGpmvgi3fM+G8vNn0O0PxyvNxhWP4CMLZhZ183mSGPoDqoY
-         0ZrhK+GrF6qQ19GgBVyKCE6Dj6kuy9fV4nLPSe3c=
+        b=f8/S6nalJ8vDCUIjWnGnSfgQFKcF1SyIBxNy5gKG8gfhWSaluzpKpi4aQT4sgYD1Z
+         Bd8KJ/bgDmQZ58vaW3xVKMXyU628GUwZqvbiAQcCqIcuuYoml3DoDtmrSGQOTtBr3B
+         J9PLE9Ad4s7iApQBUaVRWGODkPtzUjjShAOi9fww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 106/151] pinctrl: zynq: Use define directive for PIN_CONFIG_IO_STANDARD
-Date:   Wed, 27 Nov 2019 21:31:29 +0100
-Message-Id: <20191127203041.219369016@linuxfoundation.org>
+Subject: [PATCH 4.9 107/151] PCI: keystone: Use quirk to limit MRRS for K2G
+Date:   Wed, 27 Nov 2019 21:31:30 +0100
+Message-Id: <20191127203042.087223129@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -62,65 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit cd8a145a066a1a3beb0ae615c7cb2ee4217418d7 ]
+[ Upstream commit 148e340c0696369fadbbddc8f4bef801ed247d71 ]
 
-Clang warns when one enumerated type is implicitly converted to another:
+PCI controller in K2G also has a limitation that memory read request
+size (MRRS) must not exceed 256 bytes. Use the quirk to limit MRRS
+(added for K2HK, K2L and K2E) for K2G as well.
 
-drivers/pinctrl/pinctrl-zynq.c:985:18: warning: implicit conversion from
-enumeration type 'enum zynq_pin_config_param' to different enumeration
-type 'enum pin_config_param' [-Wenum-conversion]
-        {"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
-        ~               ^~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/pinctrl-zynq.c:990:16: warning: implicit conversion from
-enumeration type 'enum zynq_pin_config_param' to different enumeration
-type 'enum pin_config_param' [-Wenum-conversion]
-        = { PCONFDUMP(PIN_CONFIG_IOSTANDARD, "IO-standard", NULL, true),
-            ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
-macro 'PCONFDUMP'
-        .param = a, .display = b, .format = c, .has_arg = d     \
-                 ^
-2 warnings generated.
-
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-zynq.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/pci/host/pci-keystone.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-zynq.c b/drivers/pinctrl/pinctrl-zynq.c
-index e0ecffcbe11f6..f8b54cfc90c7d 100644
---- a/drivers/pinctrl/pinctrl-zynq.c
-+++ b/drivers/pinctrl/pinctrl-zynq.c
-@@ -967,15 +967,12 @@ enum zynq_io_standards {
- 	zynq_iostd_max
- };
+diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
+index eac0a1238e9d0..c690299d5c4a8 100644
+--- a/drivers/pci/host/pci-keystone.c
++++ b/drivers/pci/host/pci-keystone.c
+@@ -43,6 +43,7 @@
+ #define PCIE_RC_K2HK		0xb008
+ #define PCIE_RC_K2E		0xb009
+ #define PCIE_RC_K2L		0xb00a
++#define PCIE_RC_K2G		0xb00b
  
--/**
-- * enum zynq_pin_config_param - possible pin configuration parameters
-- * @PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
-+/*
-+ * PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
-  *	this parameter (on a custom format) tells the driver which alternative
-  *	IO standard to use.
-  */
--enum zynq_pin_config_param {
--	PIN_CONFIG_IOSTANDARD = PIN_CONFIG_END + 1,
--};
-+#define PIN_CONFIG_IOSTANDARD		(PIN_CONFIG_END + 1)
+ #define to_keystone_pcie(x)	container_of(x, struct keystone_pcie, pp)
  
- static const struct pinconf_generic_params zynq_dt_params[] = {
- 	{"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
+@@ -57,6 +58,8 @@ static void quirk_limit_mrrs(struct pci_dev *dev)
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2L),
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
++		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2G),
++		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ 0, },
+ 	};
+ 
 -- 
 2.20.1
 
