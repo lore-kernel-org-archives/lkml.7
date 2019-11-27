@@ -2,115 +2,236 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA2DC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FD1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033892073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Mi2dC0jl"
+	by mail.kernel.org (Postfix) with ESMTP id 990F6206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfK0RTT (ORCPT
+        id S1727128AbfK0RTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:19:19 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:57226 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfK0RTS (ORCPT
+        Wed, 27 Nov 2019 12:19:21 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55519 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfK0RTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:19:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574875156; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qm4Bp6xEH4gzTSGf8XJZFyOKVD9Yc5lDueukFVsJXso=;
-        b=Mi2dC0jlfct8iYYCs7ItSb/0U2+YIl19k4On1OhvNLogkankzwOreiyd7g0mcWHjxkDyEx
-        g01ky6cTtGskvSI9EM/3RkMVmo0C+W3Yg+nEBki/9budh5NsuUBLaXdNyRqgQK0rONa7Er
-        HTeoT02ffCoO5+/1x/I2Wzlu90rJ2MM=
-Date:   Wed, 27 Nov 2019 18:19:08 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 4/5] dt-bindings: clock: Add USB OTG clock for X1000.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Message-Id: <1574875148.3.3@crapouillou.net>
-In-Reply-To: <1574825576-91028-5-git-send-email-zhouyanjie@zoho.com>
-References: <1574825576-91028-1-git-send-email-zhouyanjie@zoho.com>
-        <1574825576-91028-5-git-send-email-zhouyanjie@zoho.com>
+        Wed, 27 Nov 2019 12:19:21 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-1-1480-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0A0C920005;
+        Wed, 27 Nov 2019 17:19:16 +0000 (UTC)
+Date:   Wed, 27 Nov 2019 18:19:15 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Matthias Wieloch <matthias.wieloch@few-bauer.de>
+Subject: Re: AT91: sama5d2: lockdep splat in sama5d2_pmc_of_clk_init_driver()
+Message-ID: <20191127171915.GK299836@piout.net>
+References: <20190726145406.GA16744@qmqm.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190726145406.GA16744@qmqm.qmqm.pl>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+Hi,
+
+On 26/07/2019 16:54:06+0200, Michał Mirosław wrote:
+> Dear Developers
+> 
+> Since upgrading to v5.2.2 from v5.1.x I keep getting lockdep complaints
+> (below) from clk initialization on SAMA5D2 board. Have you seen this?
+> Can you help me in finding a fix?
+> 
+
+I'm going to send that patch that fixes it:
+
+diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
+index 0de1108737db..ff7e3f727082 100644
+--- a/drivers/clk/at91/sama5d2.c
++++ b/drivers/clk/at91/sama5d2.c
+@@ -162,7 +162,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
+                return;
+        mainxtal_name = of_clk_get_parent_name(np, i);
+ 
+-       regmap = syscon_node_to_regmap(np);
++       regmap = device_node_to_regmap(np);
+        if (IS_ERR(regmap))
+                return;
+ 
 
 
-Le mer., nov. 27, 2019 at 11:32, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> Add the USB OTC clock bindings for the X1000 Soc from Ingenic.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->  include/dt-bindings/clock/x1000-cgu.h | 23 ++++++++++++-----------
->  1 file changed, 12 insertions(+), 11 deletions(-)
->=20
-> diff --git a/include/dt-bindings/clock/x1000-cgu.h=20
-> b/include/dt-bindings/clock/x1000-cgu.h
-> index bbaebaf..c401fce 100644
-> --- a/include/dt-bindings/clock/x1000-cgu.h
-> +++ b/include/dt-bindings/clock/x1000-cgu.h
-> @@ -29,16 +29,17 @@
->  #define X1000_CLK_MSCMUX	14
->  #define X1000_CLK_MSC0		15
->  #define X1000_CLK_MSC1		16
-> -#define X1000_CLK_SSIPLL	17
-> -#define X1000_CLK_SSIMUX	18
-> -#define X1000_CLK_SFC		19
-> -#define X1000_CLK_I2C0		20
-> -#define X1000_CLK_I2C1		21
-> -#define X1000_CLK_I2C2		22
-> -#define X1000_CLK_UART0		23
-> -#define X1000_CLK_UART1		24
-> -#define X1000_CLK_UART2		25
-> -#define X1000_CLK_SSI		26
-> -#define X1000_CLK_PDMA		27
+> Best Regards,
+> Michał Mirosław
+> 
+> ------- dmesg START ------
+> 
+> [    0.000000] Booting Linux on physical CPU 0x0
+> [    0.000000] Linux version 5.2.3+ (mirq@qmqm) (gcc version 8.3.0 (Debian 8.3.0-2)) #312 Fri Jul 26 15:32:06 CEST 2019
+> [    0.000000] CPU: ARMv7 Processor [410fc051] revision 1 (ARMv7), cr=10c53c7d
+> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+> [    0.000000] OF: fdt: Machine model: SAMA5D2 proto3
+> [    0.000000] printk: bootconsole [earlycon0] enabled
+> [    0.000000] Memory policy: Data cache writeback
+> [    0.000000] On node 0 totalpages: 65536
+> [    0.000000]   Normal zone: 512 pages used for memmap
+> [    0.000000]   Normal zone: 0 pages reserved
+> [    0.000000]   Normal zone: 65536 pages, LIFO batch:15
+> [    0.000000] CPU: All CPU(s) started in SVC mode.
+> [    0.000000] pcpu-alloc: s0 r0 d32768 u32768 alloc=1*32768
+> [    0.000000] pcpu-alloc: [0] 0 
+> [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 65024
+> [    0.000000] Kernel command line: console=ttyS0,115200 root=/dev/mmcblk0p1 rootfstype=squashfs debug loglevel=9 earlyprintk
+> [    0.000000] Dentry cache hash table entries: 32768 (order: 5, 131072 bytes)
+> [    0.000000] Inode-cache hash table entries: 16384 (order: 4, 65536 bytes)
+> [    0.000000] Memory: 239752K/262144K available (8192K kernel code, 578K rwdata, 2312K rodata, 1024K init, 7103K bss, 22392K reserved, 0K cma-reserved)
+> [    0.000000] ftrace: allocating 25429 entries in 50 pages
+> [    0.000000] Running RCU self tests
+> [    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+> [    0.000000] L2C-310 ID prefetch enabled, offset 2 lines
+> [    0.000000] L2C-310 dynamic clock gating enabled, standby mode enabled
+> [    0.000000] L2C-310 cache controller enabled, 8 ways, 128 kB
+> [    0.000000] L2C-310: CACHE_ID 0x410000c9, AUX_CTRL 0x36020000
+> [    0.000000] random: get_random_bytes called from start_kernel+0x2b8/0x450 with crng_init=0
+> 
+> [    0.000000] ======================================================
+> [    0.000000] WARNING: possible circular locking dependency detected
+> [    0.000000] 5.2.3+ #312 Not tainted
+> [    0.000000] ------------------------------------------------------
+> [    0.000000] swapper/0 is trying to acquire lock:
+> [    0.000000] (ptrval) (pmc_pcr_lock){....}, at: clk_sam9x5_peripheral_enable+0x28/0xac
+> [    0.000000] 
+>                but task is already holding lock:
+> [    0.000000] (ptrval) (enable_lock){....}, at: clk_enable_lock+0x38/0xf4
+> [    0.000000] 
+>                which lock already depends on the new lock.
+> 
+> [    0.000000] 
+>                the existing dependency chain (in reverse order) is:
+> [    0.000000] 
+>                -> #2 (enable_lock){....}:
+> [    0.000000]        clk_enable_lock+0x38/0xf4
+> [    0.000000]        clk_core_enable_lock+0x14/0x34
+> [    0.000000]        regmap_mmio_read+0x54/0x6c
+> [    0.000000]        _regmap_read+0x68/0x160
+> [    0.000000]        regmap_read+0x44/0x64
+> [    0.000000]        at91_clk_register_sam9x5_main+0xb0/0x108
+> [    0.000000]        sama5d2_pmc_of_clk_init_driver+0x15c/0x654
+> [    0.000000]        of_clk_init+0x154/0x21c
+> [    0.000000]        time_init+0x30/0x38
+> [    0.000000]        start_kernel+0x2ec/0x450
+> [    0.000000]        0x0
+> [    0.000000] 
+>                -> #1 (syscon:113:(&syscon_config)->lock){....}:
+> [    0.000000]        regmap_lock_spinlock+0x14/0x1c
+> [    0.000000]        regmap_write+0x34/0x64
+> [    0.000000]        clk_sam9x5_peripheral_recalc_rate+0x60/0xf4
+> [    0.000000]        __clk_register+0x28c/0x7f4
+> [    0.000000]        clk_hw_register+0x20/0x2c
+> [    0.000000]        at91_clk_register_sam9x5_peripheral+0xec/0x14c
+> [    0.000000]        sama5d2_pmc_of_clk_init_driver+0x42c/0x654
+> [    0.000000]        of_clk_init+0x154/0x21c
+> [    0.000000]        time_init+0x30/0x38
+> [    0.000000]        start_kernel+0x2ec/0x450
+> [    0.000000]        0x0
+> [    0.000000] 
+>                -> #0 (pmc_pcr_lock){....}:
+> [    0.000000]        _raw_spin_lock_irqsave+0x44/0x58
+> [    0.000000]        clk_sam9x5_peripheral_enable+0x28/0xac
+> [    0.000000]        clk_core_enable+0x88/0x258
+> [    0.000000]        clk_core_enable_lock+0x20/0x34
+> [    0.000000]        clk_prepare_enable+0x1c/0x34
+> [    0.000000]        tcb_clksrc_init+0x13c/0x4b8
+> [    0.000000]        timer_probe+0x78/0xe0
+> [    0.000000]        start_kernel+0x2ec/0x450
+> [    0.000000]        0x0
+> [    0.000000] 
+>                other info that might help us debug this:
+> 
+> [    0.000000] Chain exists of:
+>                  pmc_pcr_lock --> syscon:113:(&syscon_config)->lock --> enable_lock
+> 
+> [    0.000000]  Possible unsafe locking scenario:
+> 
+> [    0.000000]        CPU0                    CPU1
+> [    0.000000]        ----                    ----
+> [    0.000000]   lock(enable_lock);
+> [    0.000000]                                lock(syscon:113:(&syscon_config)->lock);
+> [    0.000000]                                lock(enable_lock);
+> [    0.000000]   lock(pmc_pcr_lock);
+> [    0.000000] 
+>                 *** DEADLOCK ***
+> 
+> [    0.000000] 1 lock held by swapper/0:
+> [    0.000000]  #0: (ptrval) (enable_lock){....}, at: clk_enable_lock+0x38/0xf4
+> [    0.000000] 
+>                stack backtrace:
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.2.3+ #312
+> [    0.000000] Hardware name: Atmel SAMA5
+> [    0.000000] [<c010edc0>] (unwind_backtrace) from [<c010c1a8>] (show_stack+0x18/0x1c)
+> [    0.000000] [<c010c1a8>] (show_stack) from [<c01515c4>] (print_circular_bug+0x220/0x25c)
+> [    0.000000] [<c01515c4>] (print_circular_bug) from [<c0154264>] (__lock_acquire+0x1600/0x1a80)
+> [    0.000000] [<c0154264>] (__lock_acquire) from [<c0154f08>] (lock_acquire+0xc4/0x168)
+> [    0.000000] [<c0154f08>] (lock_acquire) from [<c08330a8>] (_raw_spin_lock_irqsave+0x44/0x58)
+> [    0.000000] [<c08330a8>] (_raw_spin_lock_irqsave) from [<c042fabc>] (clk_sam9x5_peripheral_enable+0x28/0xac)
+> [    0.000000] [<c042fabc>] (clk_sam9x5_peripheral_enable) from [<c0424990>] (clk_core_enable+0x88/0x258)
+> [    0.000000] [<c0424990>] (clk_core_enable) from [<c0425c4c>] (clk_core_enable_lock+0x20/0x34)
+> [    0.000000] [<c0425c4c>] (clk_core_enable_lock) from [<c058d788>] (clk_prepare_enable+0x1c/0x34)
+> [    0.000000] [<c058d788>] (clk_prepare_enable) from [<c0c358bc>] (tcb_clksrc_init+0x13c/0x4b8)
+> [    0.000000] [<c0c358bc>] (tcb_clksrc_init) from [<c0c35718>] (timer_probe+0x78/0xe0)
+> [    0.000000] [<c0c35718>] (timer_probe) from [<c0c00dc4>] (start_kernel+0x2ec/0x450)
+> [    0.000000] [<c0c00dc4>] (start_kernel) from [<00000000>] (0x0)
+> [    0.000000] clocksource: timer@f800c000: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 184217874325 ns
+> [    0.000021] sched_clock: 32 bits at 10MHz, resolution 96ns, wraps every 206986376143ns
+> [    0.009762] Lock dependency validator: Copyright (c) 2006 Red Hat, Inc., Ingo Molnar
+> [    0.018365] ... MAX_LOCKDEP_SUBCLASSES:  8
+> [    0.022911] ... MAX_LOCK_DEPTH:          48
+> [    0.027546] ... MAX_LOCKDEP_KEYS:        8191
+> [    0.032367] ... CLASSHASH_SIZE:          4096
+> [    0.037190] ... MAX_LOCKDEP_ENTRIES:     32768
+> [    0.042109] ... MAX_LOCKDEP_CHAINS:      65536
+> [    0.047028] ... CHAINHASH_SIZE:          32768
+> [    0.051944]  memory used by lock dependency info: 4411 kB
+> [    0.057913]  per task-struct memory footprint: 1536 bytes
+> [    0.063965] Calibrating delay loop... 358.40 BogoMIPS (lpj=179200)
+> [    0.081133] pid_max: default: 32768 minimum: 301
+> [    0.086831] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes)
+> [    0.094201] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes)
+> [    0.104331] CPU: Testing write buffer coherency: ok
+> [    0.112611] Setting up static identity map for 0x20100000 - 0x20100060
+> [    0.122704] devtmpfs: initialized
+> [    0.151047] VFP support v0.3: implementor 41 architecture 2 part 30 variant 5 rev 1
+> [    0.160466] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+> [    0.171341] futex hash table entries: 256 (order: 1, 11264 bytes)
+> [    0.178738] pinctrl core: initialized pinctrl subsystem
+> [    0.186405] regulator-dummy: no parameters, enabled
+> [    0.194206] NET: Registered protocol family 16
+> [    0.207208] DMA: preallocated 256 KiB pool for atomic coherent allocations
+> [    0.292223] AT91: PM: standby: standby, suspend: ulp0
+> [    0.300092] atmel_tcb: probe of f800c000.timer failed with error -16
+> [    0.422319] random: fast init done
+> [    0.496218] at_xdmac f0010000.dma-controller: 16 channels, mapped at 0x(ptrval)
+> [    0.511573] at_xdmac f0004000.dma-controller: 16 channels, mapped at 0x(ptrval)
+> [    0.521731] AT91: Detected SoC family: sama5d2
+> [    0.526738] AT91: Detected SoC: sama5d27, revision 2
+> [...]
 
-You can't do that. These macros are ABI now, since they are used in the=20
-devicetree. Just use the next valid number for your OTG clock.
-
-Cheers,
--Paul
-
-> +#define X1000_CLK_OTG		17
-> +#define X1000_CLK_SSIPLL	18
-> +#define X1000_CLK_SSIMUX	19
-> +#define X1000_CLK_SFC		20
-> +#define X1000_CLK_I2C0		21
-> +#define X1000_CLK_I2C1		22
-> +#define X1000_CLK_I2C2		23
-> +#define X1000_CLK_UART0		24
-> +#define X1000_CLK_UART1		25
-> +#define X1000_CLK_UART2		26
-> +#define X1000_CLK_SSI		27
-> +#define X1000_CLK_PDMA		28
->=20
->  #endif /* __DT_BINDINGS_CLOCK_X1000_CGU_H__ */
-> --
-> 2.7.4
->=20
->=20
-
-=
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
