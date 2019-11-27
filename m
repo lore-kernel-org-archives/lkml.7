@@ -2,81 +2,144 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3133CC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C18C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1006E2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C942071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:22:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBaM3J5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfK0NUD (ORCPT
+        id S1726747AbfK0NWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:20:03 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:44799 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbfK0NUC (ORCPT
+        Wed, 27 Nov 2019 08:22:52 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:32974 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfK0NWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:20:02 -0500
-Received: by mail-il1-f198.google.com with SMTP id h4so1218224ilh.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 05:20:00 -0800 (PST)
+        Wed, 27 Nov 2019 08:22:51 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c124so15021671qkg.0;
+        Wed, 27 Nov 2019 05:22:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bT7huAeaJrxOt/OOAz/dFRoPCvzkLXC6+YmTWjfXTjU=;
+        b=JBaM3J5ssSF+BZ6b+O3zzUEQftJP89cPjMRg84yki/9rIK6RQXOEDffPsp+VMJc0zl
+         X97czddDf5v7dvcBxglRyZ4HZxPvbjBr397v8zfV/00XIhSFwyqM0u1DqNknVfRom+SZ
+         Aae4ZX8aVKZWg9JaaBMWAstrhjIpexBMJAqtrzKzNmH1AVbp3UHv6yEEo7qC1chn28km
+         dzuHhXlQS7xsl0ec4FzfPWV1CuTXPzYIti7+PNz7isfQUqY8Shcp0llWDrWMY0YQN3ev
+         HdstfSmZvAP3W8qBZPs+mblWJRpde7rGkmU4o/7VSEdrSL9e+V6qajS6Vm8IZghXEmQw
+         y1mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Dieb0lQvqlt6xFxUKoKJqEpe6Eum8R1EEaj/3uLPMYk=;
-        b=WEZroLyGi3eb3Mqgi4rYpkVSMDdstYVxpeExcwAXNIIjiwlRJ2Tgq42UhN5qigMqXV
-         OJbYmeRZGPEls+iUftbwPBwSHRuCxe+iMndfELhnjXqCBUasBgPHHCMV1WWztP0Jnr1Q
-         VvhKvK5u6/sbZOrcE+y2hEtl6zFyAp18bg/gPUw5i/hJ09Uz//34uxObMa+MYZcRzgDp
-         xECMlv+c6UzopBvzGJW1qbkr4Y6kpWOp3wzE/f57pOTpELDIW/t9e+7vgfG19lnR6o6/
-         lfBz8CpkvyJO6kDliBnw69ZDCgO4em2kTU5it/nxid+Nr8LpeaU04e5mjSRqgapzHQ9e
-         nztA==
-X-Gm-Message-State: APjAAAUdMMN0tmJ6U+9qIym25EB1e7D/2s6RDowJb6k3hsBb8JXHwLKu
-        C708Xj89xfq8iexjXnj6sdI7H8w4NVSjHcSxJ37MZnlAR0ik
-X-Google-Smtp-Source: APXvYqyLYMnPvrXLLHZp8gVP46nF3bGzrcXU111CNvKZooaehsGZ3tFx1Dz3uSdNW9AoXotiFgnLwnoRKF4IoeWFZEIVBi2ovtIo
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bT7huAeaJrxOt/OOAz/dFRoPCvzkLXC6+YmTWjfXTjU=;
+        b=EE12TAWmQ+8LkY0LWe6hvuYo4KJL+vGKoEqvgUNeKwAUXqeqeIEoWmDpaBWoooyndt
+         kjAQyyafHnfROBSEyDtk9M4Lz6wyJHTvoLiSfwiodohD0WK38Jmo6edYxhsv2AXE45wr
+         e9N425fIov/VcsL5hcmOD8A8cIwxOw9oUh/iUiVi+ST0+nJcd0bxGiCnyS1d9CUMVkNd
+         URPaUefBmoU1iJTmD38kZhGeV2xo433GqNPckr6vPmwnUhudoUJxKD4l7kCK21poXl0K
+         QufSjyHViSc/v5KEfonxyGCTVNOEADEHW5doflZOBvVWIP1/aWpbbSyl0E3BdC4xnOrw
+         +sTw==
+X-Gm-Message-State: APjAAAXCZ2E94KCD7p/hk5aMSFda7/YZ2NAJs7ctqleuh24JZcSJPeh2
+        +J/KXG5baTk1sjUFSirgeDHpGii+SD9Lww==
+X-Google-Smtp-Source: APXvYqxRxWHwQcE23vnQEloXZ4T2uJ+AnMKnvlWVgfZJXrna+veWEeRcoNzcofK0h6mJIZn2XO20Pg==
+X-Received: by 2002:a05:620a:15f8:: with SMTP id p24mr4298620qkm.438.1574860970402;
+        Wed, 27 Nov 2019 05:22:50 -0800 (PST)
+Received: from localhost.localdomain ([2001:1284:f013:3bac:6dc2:4a4b:b6a6:4365])
+        by smtp.gmail.com with ESMTPSA id y131sm2314498qkb.29.2019.11.27.05.22.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 05:22:49 -0800 (PST)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id C9D88C510E; Wed, 27 Nov 2019 10:22:46 -0300 (-03)
+Date:   Wed, 27 Nov 2019 10:22:46 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Xin Long <lucien.xin@gmail.com>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        linux-sctp@vger.kernel.org,
+        syzbot <syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com>,
+        davem <davem@davemloft.net>,
+        Alexander Potapenko <glider@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KMSAN: uninit-value in __crc32c_le_base
+Message-ID: <20191127132246.GN388551@localhost.localdomain>
+References: <00000000000004b2df0598075fc8@google.com>
+ <20191127060138.GB227319@sol.localdomain>
+ <CADvbK_fOZ+kLiOOOXN-qUzDC2376-UxHmg1L6xiAFRR6=+re3w@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:c0c2:: with SMTP id q185mr2514112iof.280.1574860800376;
- Wed, 27 Nov 2019 05:20:00 -0800 (PST)
-Date:   Wed, 27 Nov 2019 05:20:00 -0800
-In-Reply-To: <001a11441b6c6cb96c0569120042@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000093ca84059853da04@google.com>
-Subject: Re: KASAN: use-after-free Read in ntfs_read_locked_inode
-From:   syzbot <syzbot+19b469021157c136116a@syzkaller.appspotmail.com>
-To:     anton@tuxera.com, deller@gmx.de, jejb@parisc-linux.org,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-ntfs-dev@lists.sourceforge.net, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, syzkaller-bugs@googlegroups.com,
-        wad@chromium.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADvbK_fOZ+kLiOOOXN-qUzDC2376-UxHmg1L6xiAFRR6=+re3w@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Wed, Nov 27, 2019 at 04:49:46PM +0800, Xin Long wrote:
+> On Wed, Nov 27, 2019 at 2:02 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > Looks like a bug in net/sctp/ where it's passing uninitialized memory into the
+> > crc32c() function.  SCTP maintainers, can you please take a look?
+> Thanks.
+> 
+> The issue was caused by:
+> transport->ipaddr set with uninit addr param, which was passed by:
+> 
+>   sctp_transport_init net/sctp/transport.c:47 [inline]
+>   sctp_transport_new+0x248/0xa00 net/sctp/transport.c:100
+>   sctp_assoc_add_peer+0x5ba/0x2030 net/sctp/associola.c:611
+>   sctp_process_param net/sctp/sm_make_chunk.c:2524 [inline]
+> 
+> where 'addr' is set by sctp_v4_from_addr_param(), which doesn't initialize the
+> padding of addr->v4.
+> 
+> later when calling sctp_make_heartbeat(), hbinfo.daddr(=transport->ipaddr)
+> will become the part of skb, and the issue occurs.
 
-commit 910cd32e552ea09caa89cdbe328e468979b030dd
-Author: Helge Deller <deller@gmx.de>
-Date:   Wed Mar 30 12:14:31 2016 +0000
+Sweet.
 
-     parisc: Fix and enable seccomp filter support
+> 
+> The fix should be:
+> 
+> diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
+> index 09050c1d5517..0e73405eba4f 100644
+> --- a/net/sctp/sm_make_chunk.c
+> +++ b/net/sctp/sm_make_chunk.c
+> @@ -2516,6 +2516,7 @@ static int sctp_process_param(struct
+> sctp_association *asoc,
+>   if (ipv6_only_sock(asoc->base.sk))
+>   break;
+>  do_addr_param:
+> + memset(&addr, 0, sizeof(addr));
+>   af = sctp_get_af_specific(param_type2af(param.p->type));
+>   af->from_addr_param(&addr, param.addr, htons(asoc->peer.port), 0);
+>   scope = sctp_scope(peer_addr);
+> @@ -3040,6 +3041,7 @@ static __be16 sctp_process_asconf_param(struct
+> sctp_association *asoc,
+>   if (unlikely(!af))
+>   return SCTP_ERROR_DNS_FAILED;
+> 
+> + memset(&addr, 0, sizeof(addr));
+>   af->from_addr_param(&addr, addr_param, htons(asoc->peer.port), 0);
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=143090dee00000
-start commit:   3e968c9f Merge tag 'ext4_for_linus' of git://git.kernel.or..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=163090dee00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=123090dee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7e8c053ac965e0dd
-dashboard link: https://syzkaller.appspot.com/bug?extid=19b469021157c136116a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142d219b800000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143029db800000
+In sctp_v4_from_addr_param() itself seems cleaner.
+(Ditto for sctp_v4_to_addr_param() and related ones, like
+sctp_v4_dst_saddr())
 
-Reported-by: syzbot+19b469021157c136116a@syzkaller.appspotmail.com
-Fixes: 910cd32e552e ("parisc: Fix and enable seccomp filter support")
+These functions shouldn't trust that the caller initializes the
+memory. They are dealing with ipv4 but they know that the buffer
+they are writting into is larger and the size of it.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+  Marcelo
