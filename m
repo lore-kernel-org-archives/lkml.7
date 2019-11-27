@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDC8C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1DBC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AAD206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040E7206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfK0Inb (ORCPT
+        id S1727130AbfK0Inh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:43:31 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:43632 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfK0InK (ORCPT
+        Wed, 27 Nov 2019 03:43:37 -0500
+Received: from michel.telenet-ops.be ([195.130.137.88]:47534 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbfK0InK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 03:43:10 -0500
 Received: from ramsan ([84.195.182.253])
-        by andre.telenet-ops.be with bizsmtp
-        id Wwiu2100e5USYZQ01wiuXV; Wed, 27 Nov 2019 09:43:07 +0100
+        by michel.telenet-ops.be with bizsmtp
+        id Wwiu2100e5USYZQ06wiuWY; Wed, 27 Nov 2019 09:43:08 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iZsuU-0000xt-QR; Wed, 27 Nov 2019 09:42:54 +0100
+        id 1iZsuU-0000xe-KQ; Wed, 27 Nov 2019 09:42:54 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iZsuU-0004P0-Ny; Wed, 27 Nov 2019 09:42:54 +0100
+        id 1iZsuU-0004OJ-IG; Wed, 27 Nov 2019 09:42:54 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -49,9 +49,9 @@ Cc:     Alexander Graf <graf@amazon.com>,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater documentation
-Date:   Wed, 27 Nov 2019 09:42:52 +0100
-Message-Id: <20191127084253.16356-7-geert+renesas@glider.be>
+Subject: [PATCH v3 1/7] gpiolib: Add GPIOCHIP_NAME definition
+Date:   Wed, 27 Nov 2019 09:42:47 +0100
+Message-Id: <20191127084253.16356-2-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191127084253.16356-1-geert+renesas@glider.be>
 References: <20191127084253.16356-1-geert+renesas@glider.be>
@@ -60,147 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the GPIO Aggregator/Repeater, and the three typical use-cases.
+The string literal "gpiochip" is used in several places.
+Add a definition for it, and use it everywhere, to make sure everything
+stays in sync.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v3:
   - New.
 ---
- .../admin-guide/gpio/gpio-aggregator.rst      | 111 ++++++++++++++++++
- Documentation/admin-guide/gpio/index.rst      |   1 +
- 2 files changed, 112 insertions(+)
- create mode 100644 Documentation/admin-guide/gpio/gpio-aggregator.rst
+ drivers/gpio/gpiolib-sysfs.c | 7 +++----
+ drivers/gpio/gpiolib.c       | 4 ++--
+ drivers/gpio/gpiolib.h       | 2 ++
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/admin-guide/gpio/gpio-aggregator.rst b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-new file mode 100644
-index 0000000000000000..826146e260253299
---- /dev/null
-+++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-@@ -0,0 +1,111 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+GPIO Aggregator/Repeater
-+========================
-+
-+The GPIO Aggregator/Repeater allows to aggregate GPIOs, and expose them as a
-+new gpio_chip.  This supports the following use cases.
-+
-+
-+Aggregating GPIOs using Sysfs
-+-----------------------------
-+
-+GPIO controllers are exported to userspace using /dev/gpiochip* character
-+devices.  Access control to these devices is provided by standard UNIX file
-+system permissions, on an all-or-nothing basis: either a GPIO controller is
-+accessible for a user, or it is not.
-+
-+The GPIO Aggregator allows access control for individual GPIOs, by aggregating
-+them into a new gpio_chip, which can be assigned to a group or user using
-+standard UNIX file ownership and permissions.  Furthermore, this simplifies and
-+hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
-+GPIO controller, and no longer needs to care about which GPIOs to grab and
-+which not, reducing the attack surface.
-+
-+Aggregated GPIO controllers are instantiated and destroyed by writing to
-+write-only attribute files in sysfs.
-+
-+    /sys/bus/platform/drivers/gpio-aggregator/
-+
-+	"new_device" ...
-+		Userspace may ask the kernel to instantiate an aggregated GPIO
-+		controller by writing a string describing the GPIOs to
-+		aggregate to the "new_device" file, using the format
-+
-+		.. code-block:: none
-+
-+		    [<gpioA>] [<gpiochipB> <offsets>] ...
-+
-+		Where:
-+
-+		    "<gpioA>" ...
-+			    is a GPIO line name,
-+
-+		    "<gpiochipB>" ...
-+			    is a GPIO chip label or name, and
-+
-+		    "<offsets>" ...
-+			    is a comma-separated list of GPIO offsets and/or
-+			    GPIO offset ranges denoted by dashes.
-+
-+		Example: Instantiate a new GPIO aggregator by aggregating GPIO
-+		19 of "e6052000.gpio" and GPIOs 20-21 of "gpiochip2" into a new
-+		gpio_chip:
-+
-+		.. code-block:: bash
-+
-+		    echo 'e6052000.gpio 19 gpiochip2 20-21' > new_device
-+
-+	"delete_device" ...
-+		Userspace may ask the kernel to destroy an aggregated GPIO
-+		controller after use by writing its device name to the
-+		"delete_device" file.
-+
-+		Example: Destroy the previously-created aggregated GPIO
-+		controller "gpio-aggregator.0":
-+
-+		.. code-block:: bash
-+
-+		    echo gpio-aggregator.0 > delete_device
-+
-+
-+GPIO Repeater in Device Tree
-+----------------------------
-+
-+A GPIO Repeater is a node in a Device Tree representing a repeater for one or
-+more GPIOs, possibly including physical signal property translation (e.g.
-+polarity inversion).  This allows to model e.g. inverters in DT.
-+
-+See Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
-+
-+
-+Generic GPIO Driver
-+-------------------
-+
-+The GPIO Aggregator can also be used as a generic driver for a simple
-+GPIO-operated device described in DT, without a dedicated in-kernel driver.
-+This is not unlike e.g. spidev, which allows to communicated with an SPI device
-+from userspace.
-+
-+Binding a device to the GPIO Aggregator is performed either by modifying the
-+gpio-aggregator driver, or by writing to the "driver_override" file in Sysfs.
-+
-+Example: If "frobnicator" is a GPIO-operated device described in DT, using its
-+own compatible value::
-+
-+        frobnicator {
-+                compatible = "myvendor,frobnicator";
-+
-+                gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>,
-+                        <&gpio2 20 GPIO_ACTIVE_LOW>;
-+        };
-+
-+it can be bound to the GPIO Aggregator by either:
-+
-+1. Adding its compatible value to ``gpio_aggregator_dt_ids[]``,
-+2. Binding manually using "driver_override":
-+
-+.. code-block:: bash
-+
-+    echo gpio-aggregator > /sys/bus/platform/devices/frobnicator/driver_override
-+    echo frobnicator > /sys/bus/platform/drivers/gpio-aggregator/bind
-diff --git a/Documentation/admin-guide/gpio/index.rst b/Documentation/admin-guide/gpio/index.rst
-index a244ba4e87d5398a..ef2838638e967777 100644
---- a/Documentation/admin-guide/gpio/index.rst
-+++ b/Documentation/admin-guide/gpio/index.rst
-@@ -7,6 +7,7 @@ gpio
- .. toctree::
-     :maxdepth: 1
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index fbf6b1a0a4fae6ce..23e3d335cd543d53 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -762,10 +762,9 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
+ 		parent = &gdev->dev;
  
-+    gpio-aggregator
-     sysfs
+ 	/* use chip->base for the ID; it's already known to be unique */
+-	dev = device_create_with_groups(&gpio_class, parent,
+-					MKDEV(0, 0),
+-					chip, gpiochip_groups,
+-					"gpiochip%d", chip->base);
++	dev = device_create_with_groups(&gpio_class, parent, MKDEV(0, 0), chip,
++					gpiochip_groups, GPIOCHIP_NAME "%d",
++					chip->base);
+ 	if (IS_ERR(dev))
+ 		return PTR_ERR(dev);
  
- .. only::  subproject and html
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index dce0b31f4125a6b3..c9e47620d2434983 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1419,7 +1419,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
+ 		ret = gdev->id;
+ 		goto err_free_gdev;
+ 	}
+-	dev_set_name(&gdev->dev, "gpiochip%d", gdev->id);
++	dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
+ 	device_initialize(&gdev->dev);
+ 	dev_set_drvdata(&gdev->dev, gdev);
+ 	if (chip->parent && chip->parent->driver)
+@@ -5105,7 +5105,7 @@ static int __init gpiolib_dev_init(void)
+ 		return ret;
+ 	}
+ 
+-	ret = alloc_chrdev_region(&gpio_devt, 0, GPIO_DEV_MAX, "gpiochip");
++	ret = alloc_chrdev_region(&gpio_devt, 0, GPIO_DEV_MAX, GPIOCHIP_NAME);
+ 	if (ret < 0) {
+ 		pr_err("gpiolib: failed to allocate char dev region\n");
+ 		bus_unregister(&gpio_bus_type);
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index ca9bc1e4803c2979..a4a759920faa48ab 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -16,6 +16,8 @@
+ #include <linux/module.h>
+ #include <linux/cdev.h>
+ 
++#define GPIOCHIP_NAME	"gpiochip"
++
+ /**
+  * struct gpio_device - internal state container for GPIO devices
+  * @id: numerical ID number for the GPIO chip
 -- 
 2.17.1
 
