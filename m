@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37868C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A7DC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CCD20678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290E620678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888354;
-	bh=omppKKnMzlwMUO/lGjPYMr5FWF7KOGGvHMhEJD4Ko/A=;
+	s=default; t=1574888358;
+	bh=y5GylDGsCz7qIrBi3/WJS/VV0/tGA8o9bj7XaPDIqYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MFz9dniOl86O+aMnIsSa3L1YKwXgCbnQ5vEddQp+FXCU0kVyjET73arMfQ/Rpe7yV
-	 lmtsdQQmkO7Sj1x2bmPxO+s09U/2hlQMffbvUuRi1tiQP+AlYcdNSrK3AruyK/xd6+
-	 QP0kdpUARBlR4xIQjjsDEthvS4BoQi0mPJiAhOtw=
+	b=wkP6upeqChFU1+nrhhFNoUL/K4tHYWt6cmQaoUpQcbbuJvI5TCZZfjOLTlLVWty6A
+	 9/BqNooTuTMbvXd99vPvZMPJrdLvFDQyBHTDA6lro5g1V9jIp51JPcygs8q4Nsse3H
+	 wZQGOYLoQQVM1BCcIkmscOkPvcsgfRB789FyzDeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbfK0U7N (ORCPT
+        id S1731398AbfK0U7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:59:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50516 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:59:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731376AbfK0U7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:59:03 -0500
+        id S1731381AbfK0U7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:59:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A2B820862;
-        Wed, 27 Nov 2019 20:59:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 466852084B;
+        Wed, 27 Nov 2019 20:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888342;
-        bh=omppKKnMzlwMUO/lGjPYMr5FWF7KOGGvHMhEJD4Ko/A=;
+        s=default; t=1574888347;
+        bh=y5GylDGsCz7qIrBi3/WJS/VV0/tGA8o9bj7XaPDIqYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yIf0qjIOvHEelswmeytunDtWuOSL6ur/3J/ZvU6oE00um1Xt8HYyndlus41IhCV56
-         567dR3glo+AvkMPX1Xavq3WjOLGREGerN768CN4HhLX4XehGn0snTSl4K/eL9itpXW
-         S68JcOvi1SSjRwFB8di+mU17FWBHUWTp0/nefeOw=
+        b=NqSgk5WJHvMGgjmRm8qjwNWkSexFFFMriiZymPoZHnZd7E84VlvtQQQlg42Inq9BS
+         fEX/28jYIrPhMoW70qBWKsiAm23aHnS0FxzrkoYwYSU8PznFbEiL/h8JYsgGcBwAfC
+         mmzWDLXFUIFXxdV2PmkOZG+Nr/OqEsg/5xghWOdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <keith.busch@intel.com>,
+        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/306] PCI: vmd: Detach resources after stopping root bus
-Date:   Wed, 27 Nov 2019 21:29:05 +0100
-Message-Id: <20191127203121.842234236@linuxfoundation.org>
+Subject: [PATCH 4.19 056/306] scsi: hisi_sas: Free slot later in slot_complete_vx_hw()
+Date:   Wed, 27 Nov 2019 21:28:26 +0100
+Message-Id: <20191127203118.872281834@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,54 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-[ Upstream commit dc8af3a827df6d4bb925d3b81b7ec94a7cce9482 ]
+[ Upstream commit 3e178f3ecfcf91a258e832b0f0843a4cfd9059ac ]
 
-The VMD removal path calls pci_stop_root_busi(), which tears down the pcie
-tree, including detaching all of the attached drivers. During driver
-detachment, devices may use pci_release_region() to release resources.
-This path relies on the resource being accessible in resource tree.
+If an SSP/SMP IO times out, it may be actually in reality be
+simultaneously processing completion of the slot in
+slot_complete_vx_hw().
 
-By detaching the child domain from the parent resource domain prior to
-stopping the bus, we are preventing the list traversal from finding the
-resource to be freed. If we instead detach the resource after stopping
-the bus, we will have properly freed the resource and detaching is
-simply accounting at that point.
+Then if the slot is freed in slot_complete_vx_hw() (this IPTT is freed
+and it may be re-used by other slot), and we may abort the wrong slot in
+hisi_sas_abort_task().
 
-Without this order, the resource is never freed and is orphaned on VMD
-removal, leading to a warning:
+So to solve the issue, free the slot after the check of
+SAS_TASK_STATE_ABORTED in slot_complete_vx_hw().
 
-[  181.940162] Trying to free nonexistent resource <e5a10000-e5a13fff>
-
-Fixes: 2c2c5c5cd213 ("x86/PCI: VMD: Attach VMD resources to parent domain's resource tree")
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/vmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 2 +-
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 65eaa6b618685..ab36e5ca1aca3 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -818,12 +818,12 @@ static void vmd_remove(struct pci_dev *dev)
- {
- 	struct vmd_dev *vmd = pci_get_drvdata(dev);
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+index 1c4ea58da1ae1..c4774d63d5d04 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+@@ -2481,7 +2481,6 @@ slot_complete_v2_hw(struct hisi_hba *hisi_hba, struct hisi_sas_slot *slot)
+ 	}
  
--	vmd_detach_resources(vmd);
- 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
- 	pci_stop_root_bus(vmd->bus);
- 	pci_remove_root_bus(vmd->bus);
- 	vmd_cleanup_srcu(vmd);
- 	vmd_teardown_dma_ops(vmd);
-+	vmd_detach_resources(vmd);
- 	irq_domain_remove(vmd->irq_domain);
- }
+ out:
+-	hisi_sas_slot_task_free(hisi_hba, task, slot);
+ 	sts = ts->stat;
+ 	spin_lock_irqsave(&task->task_state_lock, flags);
+ 	if (task->task_state_flags & SAS_TASK_STATE_ABORTED) {
+@@ -2491,6 +2490,7 @@ slot_complete_v2_hw(struct hisi_hba *hisi_hba, struct hisi_sas_slot *slot)
+ 	}
+ 	task->task_state_flags |= SAS_TASK_STATE_DONE;
+ 	spin_unlock_irqrestore(&task->task_state_lock, flags);
++	hisi_sas_slot_task_free(hisi_hba, task, slot);
  
+ 	if (!is_internal && (task->task_proto != SAS_PROTOCOL_SMP)) {
+ 		spin_lock_irqsave(&device->done_lock, flags);
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index 3922b17e2ea39..fb2a5969181b5 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -1749,7 +1749,6 @@ slot_complete_v3_hw(struct hisi_hba *hisi_hba, struct hisi_sas_slot *slot)
+ 	}
+ 
+ out:
+-	hisi_sas_slot_task_free(hisi_hba, task, slot);
+ 	sts = ts->stat;
+ 	spin_lock_irqsave(&task->task_state_lock, flags);
+ 	if (task->task_state_flags & SAS_TASK_STATE_ABORTED) {
+@@ -1759,6 +1758,7 @@ slot_complete_v3_hw(struct hisi_hba *hisi_hba, struct hisi_sas_slot *slot)
+ 	}
+ 	task->task_state_flags |= SAS_TASK_STATE_DONE;
+ 	spin_unlock_irqrestore(&task->task_state_lock, flags);
++	hisi_sas_slot_task_free(hisi_hba, task, slot);
+ 
+ 	if (!is_internal && (task->task_proto != SAS_PROTOCOL_SMP)) {
+ 		spin_lock_irqsave(&device->done_lock, flags);
 -- 
 2.20.1
 
