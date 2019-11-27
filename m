@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15E9C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F959C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54C9215F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B4421739
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888700;
-	bh=he1wjEhFAwwWAUwEw1PmINc7L+xpclqFnPx9YRYPgPw=;
+	s=default; t=1574888707;
+	bh=kJetW/Z6Ckzen/8njzEpaOOotsP1WWeBNpmitgi3smI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LgsgikNpP9c16VivO7pEN21MI6WTLXwxA56+SaXJRq74Fi6SHaAupPcNVCGkmkSjf
-	 LyfOBglpvfCoMqBgzTJNAY/U2kMsmD0ssN1dwTx4Zpc9m7I6bpkZ8uC19BYcwHduh+
-	 X1/i9h0caINy/H5pgWTYHAmxRHFE4gGeCwGScbxc=
+	b=alH2IxEaHnmySQsvXO/UCrNabw+ziSHwf/SHOglPmBzaiC1fYa9dPP3v36Q93VstW
+	 VMc1PuT2ROqraoEmXUpARgSWQdBUAn9iOfHUVu2hul2SJjD5r/ed7kaN/faqtuqu5b
+	 +hN8pL8qpSHNefitXhW52FyQAkIoiv8yHAjlsKUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732231AbfK0VE7 (ORCPT
+        id S1732238AbfK0VFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:04:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58538 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:05:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732224AbfK0VE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:04:57 -0500
+        id S1731932AbfK0VFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:05:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1CF8215F1;
-        Wed, 27 Nov 2019 21:04:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D49D42178F;
+        Wed, 27 Nov 2019 21:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888696;
-        bh=he1wjEhFAwwWAUwEw1PmINc7L+xpclqFnPx9YRYPgPw=;
+        s=default; t=1574888701;
+        bh=kJetW/Z6Ckzen/8njzEpaOOotsP1WWeBNpmitgi3smI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jeV9UqfoC85sz/UW1ZTmRibLd/Jm2ztGrNgGGy/ZGC6I2y0Ppt7yxotT0bl3e7Kxc
-         OlMn6DaaDEMY+DfggqS+jg6Ddv3WIBm40i3aQDGtnhQHYOvhIITEx4QoIrVbN5YtTR
-         HC0swtzXBk4ePHPluJMrYAcLcNEt982aP+4kTLJY=
+        b=QoGFDiNJ18iWud2vLUZqSbIkMjyNDTAy2MoBUOHpZdZNyBFEFiMc+VXsSQFXU5qQJ
+         7TwQXJ3GPPE37u0ppRFtXIAvoPs5BenUYtFO1jpg++ypwZAmbNqI7JHCtTpPpfo0gs
+         jIX1wrgGba2Mm6fvv3YUe3mg7pAIuMy0FueOsGt8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Badhri Jagan Sridharan <badhri@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        stable@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        Victor Kamensky <kamensky@cisco.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 232/306] usb: typec: tcpm: charge current handling for sink during hard reset
-Date:   Wed, 27 Nov 2019 21:31:22 +0100
-Message-Id: <20191127203131.957163978@linuxfoundation.org>
+Subject: [PATCH 4.19 193/306] arm64: makefile fix build of .i file in external module case
+Date:   Wed, 27 Nov 2019 21:30:43 +0100
+Message-Id: <20191127203129.314361619@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,71 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Badhri Jagan Sridharan <badhri@google.com>
+From: Victor Kamensky <kamensky@cisco.com>
 
-[ Upstream commit 157c0f2f641a9938382b092c64548ebdabfe25e0 ]
+[ Upstream commit 98356eb0ae499c63e78073ccedd9a5fc5c563288 ]
 
-During the initial connect to a non-pd port, sink would hard reset
-twice before deeming that the port partner is non-pd. TCPM sets the
-the charge path to false during the hard reset. This causes unnecessary
-connects/disconnects of charge path and makes port take longer to
-charge from the non-pd ports. Avoid this by not setting the charge path
-to false unless the partner has already identified to be pd capable.
+After 'a66649dab350 arm64: fix vdso-offsets.h dependency' if
+one will try to build .i file in case of external kernel module,
+build fails complaining that prepare0 target is missing. This
+issue came up with SystemTap when it tries to build variety
+of .i files for its own generated kernel modules trying to
+figure given kernel features/capabilities.
 
-When partner is a pd port, set the charge path to false in
-SNK_HARD_RESET_SINK_OFF. Set the current limits to default value based
-of CC pull up and resume the charge path when port enters
-SNK_HARD_RESET_SINK_ON.
+The issue is that prepare0 is defined in top level Makefile
+only if KBUILD_EXTMOD is not defined. .i file rule depends
+on prepare and in case KBUILD_EXTMOD defined top level Makefile
+contains empty rule for prepare. But after mentioned commit
+arch/arm64/Makefile would introduce dependency on prepare0
+through its own prepare target.
 
-Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Fix it to put proper ifdef KBUILD_EXTMOD around code introduced
+by mentioned commit. It matches what top level Makefile does.
 
---------
-Changes in V3:
-Rebase on top of usb-next
-
-Changes in V2:
-Based on feedback of jackp@codeaurora.org
-- vsafe_5v_hard_reset flag from tcpc_config is removed
-- Patch only differentiates between pd port partner and non-pd port
-partner
-
-V1 version of the patch is here:
-https://lkml.org/lkml/2018/9/14/11
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Kevin Brodsky <kevin.brodsky@arm.com>
+Signed-off-by: Victor Kamensky <kamensky@cisco.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/typec/tcpm.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm64/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 819ae3b2bd7e8..39cf190012393 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -3322,7 +3322,8 @@ static void run_state_machine(struct tcpm_port *port)
- 	case SNK_HARD_RESET_SINK_OFF:
- 		memset(&port->pps_data, 0, sizeof(port->pps_data));
- 		tcpm_set_vconn(port, false);
--		tcpm_set_charge(port, false);
-+		if (port->pd_capable)
-+			tcpm_set_charge(port, false);
- 		tcpm_set_roles(port, port->self_powered, TYPEC_SINK,
- 			       TYPEC_DEVICE);
- 		/*
-@@ -3354,6 +3355,12 @@ static void run_state_machine(struct tcpm_port *port)
- 		 * Similar, dual-mode ports in source mode should transition
- 		 * to PE_SNK_Transition_to_default.
- 		 */
-+		if (port->pd_capable) {
-+			tcpm_set_current_limit(port,
-+					       tcpm_get_current_limit(port),
-+					       5000);
-+			tcpm_set_charge(port, true);
-+		}
- 		tcpm_set_attached_state(port, true);
- 		tcpm_set_state(port, SNK_STARTUP, 0);
- 		break;
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 5d8787f0ca5f9..9a5e281412116 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -148,6 +148,7 @@ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(boot)
+ 	$(Q)$(MAKE) $(clean)=$(boot)/dts
+ 
++ifeq ($(KBUILD_EXTMOD),)
+ # We need to generate vdso-offsets.h before compiling certain files in kernel/.
+ # In order to do that, we should use the archprepare target, but we can't since
+ # asm-offsets.h is included in some files used to generate vdso-offsets.h, and
+@@ -157,6 +158,7 @@ archclean:
+ prepare: vdso_prepare
+ vdso_prepare: prepare0
+ 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso include/generated/vdso-offsets.h
++endif
+ 
+ define archhelp
+   echo  '* Image.gz      - Compressed kernel image (arch/$(ARCH)/boot/Image.gz)'
 -- 
 2.20.1
 
