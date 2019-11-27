@@ -2,98 +2,158 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F72DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C608C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB803215F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C1621736
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G08yPCm7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IjC7afpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfK0XTc (ORCPT
+        id S1727182AbfK0XTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 18:19:32 -0500
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:38272 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfK0XTb (ORCPT
+        Wed, 27 Nov 2019 18:19:34 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:46064 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbfK0XTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 18:19:31 -0500
-Received: by mail-pg1-f202.google.com with SMTP id l13so916811pgt.5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 15:19:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=3DvG1Qi/9kLi2+lMfxuoRgIDiLfz9oW0Dvr00Re3MJI=;
-        b=G08yPCm7fV3eNIe0YnB6BkhBTG7Tpw/+wTOYlOFUt7oWMaoUlKrEP1phO2WI9m+MG7
-         5LSEO7HQ1GdibWwnc9GggdXa2Jgy3g0ESsAzVVjyRG7fvm3c602985pTOTAE/RWW5zZs
-         74Np5nhm9WcJltyOS2ROsj4A1/JnF7U3FXuj7yPLwAtajRwV8s0Cp/GEeCdbJWSYDueH
-         YK9OC4gr/M5Ug5o6CxK7zAVD+Rk5BPFcfKmr07k0F2ZhWc2OejnKhADzy/Hr7hY6hKq4
-         ouCddGLaKbRM0lvWY9W5Qq3WjqFdAgKwwzVWTyzLhYpxXVpSeuPC1auGokoZKKCwgydY
-         43dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=3DvG1Qi/9kLi2+lMfxuoRgIDiLfz9oW0Dvr00Re3MJI=;
-        b=OPcCKOkEbsAP4xFy1EuTiFsaua5SydBMYnnj5yHXvyUgZkW7+RftWDvz44Yc/CNTs+
-         6NGlXYFu/4JAVA+S5A4tL03zzO9MtkIHzVbk8eVFtv9GPoDF+6YH78tZbeKC5G+Fu2hX
-         YbXe23NqN2Yy2OPJY90XfSeRMUWnWmS3tmPlwmatJ3N+3yxy9ynrMHt5BqnxBnb+y5O9
-         z6sGzF4EaYGCWwmk7fqnmByoCEBh4+nfiW8OVB09XamWJlXL3LSCaq73rV+B3iOoPqPT
-         c01LehVYka8rdQ3Mlw/Ua7XKtu6cXqqp9vzWP1ln3phFhYbQgHytsIcNKr4DJRsxbO2o
-         KgtQ==
-X-Gm-Message-State: APjAAAVn1oewONu2lSIu9fAoJh7dvbgH/VtUCLCSPCr8ip1ihIzRrq5O
-        rPVeE3WBg2jFIngLFMxLavjSooMny23zemNM
-X-Google-Smtp-Source: APXvYqxawEYKLTsvj/e5/gqkRVZd4KqUw9qL6XftCyPY3DlpzNdVvSr4jDZF9Q+axqeQkstpIozJd31umW9KD3xD
-X-Received: by 2002:a63:565c:: with SMTP id g28mr7657844pgm.409.1574896770856;
- Wed, 27 Nov 2019 15:19:30 -0800 (PST)
-Date:   Wed, 27 Nov 2019 15:19:26 -0800
-Message-Id: <20191127231926.162437-1-heidifahim@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH] kunit: testing kunit: Bug fix in test_run_timeout function
-From:   Heidi Fahim <heidifahim@google.com>
-To:     brendanhiggins@google.com, davidgow@google.com, shuah@kernel.org
-Cc:     sj38.park@gmail.com, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        Heidi Fahim <heidifahim@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 27 Nov 2019 18:19:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ua2UG/3P9FGM6hlUDIsduttPdTTUDw7lB1+OC0/Vfew=; b=IjC7afpgiGMCcN4wtGhOcSgAp
+        IBpLPlsr+Nb0dfjpSQITFGlg9cdDYE+YLytWxj+dAlh1QFZ5rsVVHTJEjeuPXLA+ZLytfzENdxqJC
+        Xtl0lkHMghG6tdcGWtLM+Gu8QOjKU6T2NJXmkeUJuT3CDqrYgPC5CViy3LKtnRLd4YHPHmvAtD5oH
+        pXSPlBWSep8AOrtyYM2g+Jye9/vNXyiDr7Y2tgxMtpo+tRcRxNMQCqcsifEbTfE4PYXBg5MvnJsbp
+        w7ssCmpKKNTAQ+Nd9CTgcEIDsoFN/8MYItxVxm9ZNyqSdrlyuqCMfJH5QHd3NBzURQFvvtI0WOnA4
+        fL0WaxJzw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45502)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ia6aW-0005x5-LR; Wed, 27 Nov 2019 23:19:12 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ia6aK-0000gJ-V4; Wed, 27 Nov 2019 23:19:00 +0000
+Date:   Wed, 27 Nov 2019 23:19:00 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "natechancellor@gmail.com" <natechancellor@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: ARM expections for location of kernel, ramdisk and dtb
+Message-ID: <20191127231900.GG25745@shell.armlinux.org.uk>
+References: <e1f7cca54843abcef0c2703a5f7071c045b99baa.camel@alliedtelesis.co.nz>
+ <20191127092615.GC25745@shell.armlinux.org.uk>
+ <c108d58e3ee511040bb99edb28c893b27b238bdb.camel@alliedtelesis.co.nz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c108d58e3ee511040bb99edb28c893b27b238bdb.camel@alliedtelesis.co.nz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Assert in test_run_timeout was not updated with the build_dir argument
-and caused the following error:
-AssertionError: Expected call: run_kernel(timeout=3453)
-Actual call: run_kernel(build_dir=None, timeout=3453)
+On Wed, Nov 27, 2019 at 10:15:57PM +0000, Chris Packham wrote:
+> Hi Russell,
+> 
+> On Wed, 2019-11-27 at 09:26 +0000, Russell King - ARM Linux admin
+> wrote:
+> > On Wed, Nov 27, 2019 at 08:20:12AM +0000, Chris Packham wrote:
+> > > Hi All,
+> > > 
+> > > We're updating our systems to use the latest kernel. For many of them
+> > > this is a fairly large leap. One problem we've hit is that durng boot
+> > > the dtb is clobbered by the uncompressed kernel.
+> > > 
+> > > Here's a snippet of output from u-boot
+> > > 
+> > > ## Loading kernel from FIT Image at 62000000 ...
+> > >    Using 'XS916MXS@2' configuration
+> > >    Trying 'kernel@1' kernel subimage
+> > >      Description:  linux
+> > >      Created:      2019-11-27   6:53:48 UTC
+> > >      Type:         Kernel Image
+> > >      Compression:  uncompressed
+> > >      Data Start:   0x62000174
+> > >      Data Size:    3495432 Bytes = 3.3 MiB
+> > >      Architecture: ARM
+> > >      OS:           Linux
+> > >      Load Address: 0x00800000
+> > >      Entry Point:  0x60800000
+> > >    ...
+> > >    Booting using the fdt blob at 0x63b90f6c
+> > >    Loading Kernel Image ... OK
+> > >    Loading Ramdisk to 6e7c6000, end 70000000 ... OK
+> > >    Loading Device Tree to 607fb000, end 607fffd8 ... OK
+> > > 
+> > > Starting kernel ...
+> > > 
+> > > Uncompressing Linux... done, booting the kernel.
+> > > 
+> > > Error: invalid dtb and unrecognized/unsupported machine ID
+> > >   r1=0x0000206e, r2=0x00000000
+> > > 
+> > > Between old and new the location of the devicetree hasn't actually
+> > > changed. But what has changed is the size of the kernel the self
+> > > extracting kernel unpacks to 0x60008000 and with our current
+> > > configuration extends into where the dtb is located.
+> > > 
+> > > Documentation/arm/booting.rst says that "The dtb must be placed in a
+> > > region of memory where the kernel decompressor will not overwrite it". 
+> > > 
+> > > This suggests that the problem is with our u-boot configuration, but
+> > > how is u-boot supposed to know where the self-extracting kernel is
+> > > going to place things? As far as I can tell u-boot is doing a
+> > > reasonable job of finding a place to put the dtb which it thinks is
+> > > unused. I'm not sure why it's picked 0x607fb000 instead of putting it
+> > > just under the ramdisk but regardless with the information u-boot has
+> > > that address is up for grabs.
+> > > 
+> > > Has this come up before? The self-extraction code is fairly careful not
+> > > to overwrite itself but doesn't seem to pay any attention to the dtb
+> > > which surprised me. So I wonder if I'm missing something?
+> > 
+> > The self-extraction hasn't changed much over the years, and basically
+> > follows the same method which has worked for the vast majority of
+> > platforms.
+> > 
+> > Where things fall down is where things are placed too close, and yes,
+> > as the kernel grows, what was reasonable years ago becomes too close
+> > with modern kernels.
+> > 
+> > The problem has been compounded by the various different compression
+> > algorithms that can now be used for the compressed kernel.
+> > 
+> 
+> I don't think it's that we don't know how big the extracted kernel will
+> be. It's just that we aren't doing anything with that information w.r.t
+> the dtb.
 
-Needed to update kunit_tool_test to reflect this fix
-https://lkml.org/lkml/2019/9/6/3
+I believe u-boot tried at one point to instigate some kind of standard
+placement of the kernel / dtb with respect to the available RAM, but
+vendors tried hard to ignore u-boot and go their own way - resulting
+in systems that didn't boot without customising various u-boot
+environment variables.  It's very annoying when vendors ignore the
+community...
 
-Signed-off-by: Heidi Fahim <heidifahim@google.com>
-Change-Id: I6f161c72c6a5f071a4dc31582ba08b91974502ce
----
- tools/testing/kunit/kunit_tool_test.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-index 4a12baa0cd4e..a2a8ea6beae3 100755
---- a/tools/testing/kunit/kunit_tool_test.py
-+++ b/tools/testing/kunit/kunit_tool_test.py
-@@ -199,7 +199,7 @@ class KUnitMainTest(unittest.TestCase):
- 		timeout = 3453
- 		kunit.main(['run', '--timeout', str(timeout)], self.linux_source_mock)
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
--		self.linux_source_mock.run_kernel.assert_called_once_with(timeout=timeout)
-+		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=None, timeout=timeout)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
- 
- if __name__ == '__main__':
 -- 
-2.24.0.432.g9d3f5f5b63-goog
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
