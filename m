@@ -2,57 +2,57 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192BFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCCDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB39520869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F41920869
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890772;
-	bh=RO3NcGmMVyAPo8SoPW9CsQgCU3aD96mHNIyXuVrwtxU=;
+	s=default; t=1574890775;
+	bh=XGeaBPaoTRyL12hk8l8n/RDBwwRN4upaOnS/zIqnn14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a6sToGJ1du1O3dXmnxwCEI1xjrx2EVq9qxyvUbiBzAI26agNq5qLz5VB7dtXEAw7o
-	 lcsiNY7pct+TS6CdW4Q3YXIQyn2GCn1UJDYObx/yxn7E8mZUIAmkeP5d7vLdz0L15X
-	 xdXcn8UGRp3k9xjG7M8WhJs2+urxKS+eZGVdQwao=
+	b=0YZwnGSfem1ZaQ+Zax393h0aaixPnxVKqyVPqIg7WMUsUKujLR42C0iz34MrxnCbs
+	 A/JfFMEpeXahR6C19K7eubXU48r/UWQ0yzf2ONk8PlS+r6nCtv7j8Z9sEYlyeWe7+b
+	 TwWCKDXwaFoO+uTisg9KgxzE5UtsU7viWCDfzDHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbfK0UoG (ORCPT
+        id S1729700AbfK0Vje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:44:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52680 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:39:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbfK0UoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:44:01 -0500
+        id S1729532AbfK0UoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:44:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4C2B21783;
-        Wed, 27 Nov 2019 20:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6662217AB;
+        Wed, 27 Nov 2019 20:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887441;
-        bh=RO3NcGmMVyAPo8SoPW9CsQgCU3aD96mHNIyXuVrwtxU=;
+        s=default; t=1574887446;
+        bh=XGeaBPaoTRyL12hk8l8n/RDBwwRN4upaOnS/zIqnn14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=am2yr1ZbppQiQ3pg7GexT5OPA86pa5IFbYkIrGs5xGXMZ0Wh917X04loM8B+6Rqxk
-         SdfwzchKSObJMYmMlTGbiO05hUtm0vk8p8MIIT9ydBrr/HU1aUc+wZ/6+PkXJpJ/ou
-         4b1lxktpmed0oLhKXTKf3bYUyXUcVBwG7HgzZ0Ko=
+        b=OJ92rlksXB5Is6pbIVrWPfSZmxhnJjWl2f5Seb8w2IpxsG1vXF/VOVSmXkN9gTprh
+         YR8J1TwuDV6uIeHkPVmBJfCR3ocOqLtiODEWfAnEmcRaIlalfd65c5HulFCUPaCGyT
+         jIs1SNUx4Y0R923G82KUfMgJZpFQnLoI6T/qf6xg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        "=?UTF-8?q?Ernesto=20A . =20Fern=C3=A1ndez?=" 
+        <ernesto.mnd.fernandez@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Viacheslav Dubeyko <slava@dubeyko.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 070/151] linux/bitmap.h: fix type of nbits in bitmap_shift_right()
-Date:   Wed, 27 Nov 2019 21:30:53 +0100
-Message-Id: <20191127203034.426095508@linuxfoundation.org>
+Subject: [PATCH 4.9 072/151] hfs: fix BUG on bnode parent update
+Date:   Wed, 27 Nov 2019 21:30:55 +0100
+Message-Id: <20191127203034.728700754@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -65,40 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
 
-[ Upstream commit d9873969fa8725dc6a5a21ab788c057fd8719751 ]
+[ Upstream commit ef75bcc5763d130451a99825f247d301088b790b ]
 
-Most other bitmap API, including the OOL version __bitmap_shift_right,
-take unsigned nbits.  This was accidentally left out from 2fbad29917c98.
+hfs_brec_update_parent() may hit BUG_ON() if the first record of both a
+leaf node and its parent are changed, and if this forces the parent to
+be split.  It is not possible for this to happen on a valid hfs
+filesystem because the index nodes have fixed length keys.
 
-Link: http://lkml.kernel.org/r/20180818131623.8755-5-linux@rasmusvillemoes.dk
-Fixes: 2fbad29917c98 ("lib: bitmap: change bitmap_shift_right to take unsigned parameters")
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reported-by: Yury Norov <ynorov@caviumnetworks.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
+For reasons I ignore, the hfs module does have support for a number of
+hfsplus features.  A corrupt btree header may report variable length
+keys and trigger this BUG, so it's better to fix it.
+
+Link: http://lkml.kernel.org/r/cf9b02d57f806217a2b1bf5db8c3e39730d8f603.1535682463.git.ernesto.mnd.fernandez@gmail.com
+Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Viacheslav Dubeyko <slava@dubeyko.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bitmap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/hfs/brec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index dc56304ac829f..dec03c0dbc214 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -321,7 +321,7 @@ static __always_inline int bitmap_weight(const unsigned long *src, unsigned int
- }
+diff --git a/fs/hfs/brec.c b/fs/hfs/brec.c
+index 2e713673df42f..85dab71bee74f 100644
+--- a/fs/hfs/brec.c
++++ b/fs/hfs/brec.c
+@@ -444,6 +444,7 @@ static int hfs_brec_update_parent(struct hfs_find_data *fd)
+ 			/* restore search_key */
+ 			hfs_bnode_read_key(node, fd->search_key, 14);
+ 		}
++		new_node = NULL;
+ 	}
  
- static inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
--				unsigned int shift, int nbits)
-+				unsigned int shift, unsigned int nbits)
- {
- 	if (small_const_nbits(nbits))
- 		*dst = (*src & BITMAP_LAST_WORD_MASK(nbits)) >> shift;
+ 	if (!rec && node->parent)
 -- 
 2.20.1
 
