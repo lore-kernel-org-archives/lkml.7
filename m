@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4653C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C83C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1EA207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD03C21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574886962;
-	bh=QE+CGNDNhKU+qrVEKrUF0e4RK3I+KMAovBbubBxCR/s=;
+	s=default; t=1574886966;
+	bh=mZXpx8+xFCXZk4H+qNwB395xe4afMbtzQq2VjSn5N+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oc9KElcr62K/gWRzsgevIr8QjfjOtFPzLKxaNZVOyHOqbu+vKgj+kyuirYfrXicWv
-	 4L7B0qkionl3S0jFAbAMk/MMwE6ps8JcyY0oeStmOjvtnMutoqTxRc8uIXGLpsDYIz
-	 Yj+9n8vDjXBsagr+EsZ/9VDbif4EjWjmMfzUBU0o=
+	b=VKKDIdlc81BW5C72OpIoCtI1JSNQ0Mx5gZanG4RHhqdTDYYpptUFZnlncBeDMtVpL
+	 3zlYnfdWSZb+OOOk2jYRYqEpDqlhsXQQoalBFyuOSkBH6SZ/dLqyAkexd4BytF0iLm
+	 pL0x9lAYi0dMfYXjXIcskquZQqwMpVgRhjzw1jpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfK0UgB (ORCPT
+        id S1728041AbfK0UgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:36:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37676 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:36:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727987AbfK0Uf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:35:58 -0500
+        id S1728003AbfK0Uf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:35:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2400207DD;
-        Wed, 27 Nov 2019 20:35:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2932121569;
+        Wed, 27 Nov 2019 20:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886958;
-        bh=QE+CGNDNhKU+qrVEKrUF0e4RK3I+KMAovBbubBxCR/s=;
+        s=default; t=1574886955;
+        bh=mZXpx8+xFCXZk4H+qNwB395xe4afMbtzQq2VjSn5N+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UB8zYSp4ZbuWoD9jerk9r+P2EuPscnyU5rvKpRHV0O4T0l1hCAAR8+xU8ew4hegFi
-         9/tY/1j3UZePdRch07JVT/r/O6htzkWU3WINRPxkKTeIjNqMojFsH4gZT9k9m8PwHO
-         UCtnCQI9hIo5whQi+8vDCWXeBYXkOIXWG0tIF+jo=
+        b=dyJVTkEFyDU7CU2/LefrNS9NoKb5xNVL6yiqk2lV+cOJBG0hw7NBpocfddK+flyY2
+         SFp+FiIEHuJx7FZ1t4iT1O4EVlN7mtkB2Qu8aImDDVJnP5B2UGhsYuHpZTDnI4xe3L
+         00P3Xv6YVQGC5djPZ1+OVEyojQVVLAucix2MSAhY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 057/132] mfd: max8997: Enale irq-wakeup unconditionally
-Date:   Wed, 27 Nov 2019 21:30:48 +0100
-Message-Id: <20191127202957.096742863@linuxfoundation.org>
+Subject: [PATCH 4.4 056/132] mfd: mc13xxx-core: Fix PMIC shutdown when reading ADC values
+Date:   Wed, 27 Nov 2019 21:30:47 +0100
+Message-Id: <20191127202955.820527469@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -62,64 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-[ Upstream commit efddff27c886e729a7f84a7205bd84d7d4af7336 ]
+[ Upstream commit 55143439b7b501882bea9d95a54adfe00ffc79a3 ]
 
-IRQ wake up support for MAX8997 driver was initially configured by
-respective property in pdata. However, after the driver conversion to
-device-tree, setting it was left as 'todo'. Nowadays most of other PMIC MFD
-drivers initialized from device-tree assume that they can be an irq wakeup
-source, so enable it also for MAX8997. This fixes support for wakeup from
-MAX8997 RTC alarm.
+When trying to read any MC13892 ADC channel on a imx51-babbage board:
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+The MC13892 PMIC shutdowns completely.
+
+After debugging this issue and comparing the MC13892 and MC13783
+initializations done in the vendor kernel, it was noticed that the
+CHRGRAWDIV bit of the ADC0 register was not being set.
+
+This bit is set by default after power on, but the driver was
+clearing it.
+
+After setting this bit it is possible to read the ADC values correctly.
+
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+Tested-by: Chris Healy <cphealy@gmail.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/max8997.c       | 8 +-------
- include/linux/mfd/max8997.h | 1 -
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ drivers/mfd/mc13xxx-core.c  | 3 ++-
+ include/linux/mfd/mc13xxx.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
-index 156ed6f92aa32..2d9ae7cf948f8 100644
---- a/drivers/mfd/max8997.c
-+++ b/drivers/mfd/max8997.c
-@@ -156,12 +156,6 @@ static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
+diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
+index 8d74806b83c12..1494e7cbd593b 100644
+--- a/drivers/mfd/mc13xxx-core.c
++++ b/drivers/mfd/mc13xxx-core.c
+@@ -278,7 +278,8 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
+ 	if (ret)
+ 		goto out;
  
- 	pd->ono = irq_of_parse_and_map(dev->of_node, 1);
+-	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2;
++	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2 |
++	       MC13XXX_ADC0_CHRGRAWDIV;
+ 	adc1 = MC13XXX_ADC1_ADEN | MC13XXX_ADC1_ADTRIGIGN | MC13XXX_ADC1_ASC;
  
--	/*
--	 * ToDo: the 'wakeup' member in the platform data is more of a linux
--	 * specfic information. Hence, there is no binding for that yet and
--	 * not parsed here.
--	 */
--
- 	return pd;
- }
+ 	if (channel > 7)
+diff --git a/include/linux/mfd/mc13xxx.h b/include/linux/mfd/mc13xxx.h
+index 638222e43e489..93011c61aafd2 100644
+--- a/include/linux/mfd/mc13xxx.h
++++ b/include/linux/mfd/mc13xxx.h
+@@ -247,6 +247,7 @@ struct mc13xxx_platform_data {
+ #define MC13XXX_ADC0_TSMOD0		(1 << 12)
+ #define MC13XXX_ADC0_TSMOD1		(1 << 13)
+ #define MC13XXX_ADC0_TSMOD2		(1 << 14)
++#define MC13XXX_ADC0_CHRGRAWDIV		(1 << 15)
+ #define MC13XXX_ADC0_ADINC1		(1 << 16)
+ #define MC13XXX_ADC0_ADINC2		(1 << 17)
  
-@@ -249,7 +243,7 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
- 	 */
- 
- 	/* MAX8997 has a power button input. */
--	device_init_wakeup(max8997->dev, pdata->wakeup);
-+	device_init_wakeup(max8997->dev, true);
- 
- 	return ret;
- 
-diff --git a/include/linux/mfd/max8997.h b/include/linux/mfd/max8997.h
-index cf815577bd686..3ae1fe743bc34 100644
---- a/include/linux/mfd/max8997.h
-+++ b/include/linux/mfd/max8997.h
-@@ -178,7 +178,6 @@ struct max8997_led_platform_data {
- struct max8997_platform_data {
- 	/* IRQ */
- 	int ono;
--	int wakeup;
- 
- 	/* ---- PMIC ---- */
- 	struct max8997_regulator_data *regulators;
 -- 
 2.20.1
 
