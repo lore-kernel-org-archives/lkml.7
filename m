@@ -2,83 +2,86 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329E8C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2736CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06DC3204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF701204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfK0HXt (ORCPT
+        id S1726194AbfK0H13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 02:23:49 -0500
-Received: from mga07.intel.com ([134.134.136.100]:37770 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfK0HXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 02:23:48 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 23:23:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,248,1571727600"; 
-   d="scan'208";a="383413228"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
-  by orsmga005.jf.intel.com with ESMTP; 26 Nov 2019 23:23:46 -0800
-Date:   Wed, 27 Nov 2019 15:30:54 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     kernel test robot <lkp@intel.com>, LKP <lkp@lists.01.org>,
-        linaro-mm-sig@lists.linaro.org, dri-devel@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: 2989f64510 ("dma-buf: Add selftests for dma-fence"): WARNING:
- CPU: 0 PID: 1 at lib/debugobjects.c:524 __debug_object_init
-Message-ID: <20191127073054.GG30842@intel.com>
-References: <5dd63a8f.BFdOlqs/XZAJHDfR%lkp@intel.com>
- <157432116576.24852.2065478066028556019@skylake-alporthouse-com>
- <20191122013244.GC313@intel.com>
+        Wed, 27 Nov 2019 02:27:29 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35699 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfK0H13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 02:27:29 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iZrjQ-00036Y-IU; Wed, 27 Nov 2019 08:27:24 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iZrjP-00021s-Me; Wed, 27 Nov 2019 08:27:23 +0100
+Date:   Wed, 27 Nov 2019 08:27:23 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH] i2c: imx: Defer probing if EDMA not available
+Message-ID: <20191127072723.7twwbjafqdd22v6m@pengutronix.de>
+References: <20191127071136.5240-1-peng.ma@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191122013244.GC313@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191127071136.5240-1-peng.ma@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 09:32:45AM +0800, Philip Li wrote:
-> On Thu, Nov 21, 2019 at 07:26:05AM +0000, Chris Wilson wrote:
-> > Quoting kernel test robot (2019-11-21 07:19:43)
-> > > Greetings,
-> > > 
-> > > 0day kernel testing robot got the below dmesg and the first bad commit is
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > > 
-> > > commit 2989f6451084aed3f8cc9992477f7a9bf57a3716
-> > > Author:     Chris Wilson <chris@chris-wilson.co.uk>
-> > > AuthorDate: Mon Aug 19 10:59:27 2019 +0100
-> > > Commit:     Chris Wilson <chris@chris-wilson.co.uk>
-> > > CommitDate: Mon Aug 19 18:09:46 2019 +0100
-> > 
-> > That's a belated report, fixed by
-> Hi Chris, thanks for the feedback, we will double check this report and
-> provide update later.
-Hi Chris, it is confirmed that this report is false positive. 6ac3a0e had
-fixed the issue. Sorry for inconvenience.
+Hello, 
 
-> 
-> > 
-> > commit 6ac3a0ebfcc2f0c75ca0ca6974389ce421aa5cbd
-> > Author: Chris Wilson <chris@chris-wilson.co.uk>
-> > Date:   Tue Aug 20 13:21:18 2019 +0100
-> > 
-> > 	dmabuf: Mark up onstack timer for selftests
-> > 
-> > No?
-> > -Chris
+On Wed, Nov 27, 2019 at 07:12:09AM +0000, Peng Ma wrote:
+> EDMA may be not available or defered due to dependencies on
+> other modules, If these scenarios is encountered, we should
+> defer probing.
+
+I'd write:
+
+	i2c: imx: Defer probing if requesting DMA yields EPROBE_DEFER
+
+	DMA might not be available yet when the i2c device probes.
+	Properly handle EPROBE_DEFER on dma channel allocation by
+	passing on this error.
+
+It would be nice to point out where/how this failed for you.
+
+Other than that this looks reasonable.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
