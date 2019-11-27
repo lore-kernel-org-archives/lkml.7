@@ -2,131 +2,240 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F256C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D6BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F4820722
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA3D72068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:15:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W1Z5aeZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfK0OPl (ORCPT
+        id S1727017AbfK0OPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:15:41 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:43267 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfK0OPl (ORCPT
+        Wed, 27 Nov 2019 09:15:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21047 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726591AbfK0OPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:15:41 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E725A3C057C;
-        Wed, 27 Nov 2019 15:15:37 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bipKjdt3AzRZ; Wed, 27 Nov 2019 15:15:32 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Wed, 27 Nov 2019 09:15:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574864140;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=53cOmksCYXpfOMFyUAKABXaw+6aT23kyKZNlnHGL0ko=;
+        b=W1Z5aeZBZPzeD2KBxUAbxKyNC165MN3DM6O4jT2wlF9EA/b2q06jHbnfQjGWPowYwVUEfz
+        u3saTiIiA7gs4+5PFkzS7T5SRd5x/cQFtIGUWF0jEeAlyPF7W86zm2JuS/Xfu1NDF4UNPp
+        pT01M12kiVzy8JyqYavYdaLACgp83gA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-234-nuwJXhXVOJSWpsuYi26DAw-1; Wed, 27 Nov 2019 09:15:35 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id D79383C00BE;
-        Wed, 27 Nov 2019 15:15:32 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 27 Nov
- 2019 15:15:32 +0100
-Date:   Wed, 27 Nov 2019 15:15:29 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
-Message-ID: <20191127141529.GA18189@vmlxhi-102.adit-jv.com>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-6-geert+renesas@glider.be>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95E14108C310;
+        Wed, 27 Nov 2019 14:15:33 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4A2E5619DB;
+        Wed, 27 Nov 2019 14:15:21 +0000 (UTC)
+Date:   Wed, 27 Nov 2019 15:15:20 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Quentin Monnet <quentin.monnet@netronome.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH 3/3] bpftool: Allow to link libbpf dynamically
+Message-ID: <20191127141520.GJ32367@krava>
+References: <20191127094837.4045-1-jolsa@kernel.org>
+ <20191127094837.4045-4-jolsa@kernel.org>
+ <fd22660f-2f70-4ffa-b45f-bb417d006d0a@netronome.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <fd22660f-2f70-4ffa-b45f-bb417d006d0a@netronome.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: nuwJXhXVOJSWpsuYi26DAw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191127084253.16356-6-geert+renesas@glider.be>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Wed, Nov 27, 2019 at 01:38:55PM +0000, Quentin Monnet wrote:
+> 2019-11-27 10:48 UTC+0100 ~ Jiri Olsa <jolsa@kernel.org>
+> > Currently we support only static linking with kernel's libbpf
+> > (tools/lib/bpf). This patch adds LIBBPF_DYNAMIC compile variable
+> > that triggers libbpf detection and bpf dynamic linking:
+> >=20
+> >   $ make -C tools/bpf/bpftool make LIBBPF_DYNAMIC=3D1
+> >=20
+> > If libbpf is not installed, build (with LIBBPF_DYNAMIC=3D1) stops with:
+> >=20
+> >   $ make -C tools/bpf/bpftool LIBBPF_DYNAMIC=3D1
+> >     Auto-detecting system features:
+> >     ...                        libbfd: [ on  ]
+> >     ...        disassembler-four-args: [ on  ]
+> >     ...                          zlib: [ on  ]
+> >     ...                        libbpf: [ OFF ]
+> >=20
+> >   Makefile:102: *** Error: libbpf-devel is missing, please install it. =
+ Stop.
+> >=20
+> > Adding specific bpftool's libbpf check for libbpf_netlink_open (LIBBPF_=
+0.0.6)
+> > which is the latest we need for bpftool at the moment.
+> >=20
+> > Adding LIBBPF_DIR compile variable to allow linking with
+> > libbpf installed into specific directory:
+> >=20
+> >   $ make -C tools/lib/bpf/ prefix=3D/tmp/libbpf/ install_lib install_he=
+aders
+> >   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/tmp/lib=
+bpf/
+> >=20
+> > It might be needed to clean build tree first because features
+> > framework does not detect the change properly:
+> >=20
+> >   $ make -C tools/build/feature clean
+> >   $ make -C tools/bpf/bpftool/ clean
+> >=20
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/bpf/bpftool/Makefile        | 40 ++++++++++++++++++++++++++++++-
+> >  tools/build/feature/test-libbpf.c |  9 +++++++
+> >  2 files changed, 48 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> > index 39bc6f0f4f0b..2b6ed08cb31e 100644
+> > --- a/tools/bpf/bpftool/Makefile
+> > +++ b/tools/bpf/bpftool/Makefile
+>=20
+> > @@ -55,7 +64,7 @@ ifneq ($(EXTRA_LDFLAGS),)
+> >  LDFLAGS +=3D $(EXTRA_LDFLAGS)
+> >  endif
+> > =20
+> > -LIBS =3D $(LIBBPF) -lelf -lz
+> > +LIBS =3D -lelf -lz
+>=20
+> Hi Jiri,
+>=20
+> This change seems to be breaking the build with the static library for
+> me. I know you add back $(LIBBPF) later in the Makefile, see at the end
+> of this email...
+>=20
+> > =20
+> >  INSTALL ?=3D install
+> >  RM ?=3D rm -f
+> > @@ -64,6 +73,23 @@ FEATURE_USER =3D .bpftool
+> >  FEATURE_TESTS =3D libbfd disassembler-four-args reallocarray zlib
+> >  FEATURE_DISPLAY =3D libbfd disassembler-four-args zlib
+> > =20
+> > +ifdef LIBBPF_DYNAMIC
+> > +  # Add libbpf check with the flags to ensure bpftool
+> > +  # specific version is detected.
+>=20
+> Nit: We do not check for a specific bpftool version, we check for a
+> recent enough libbpf version?
 
-Many thanks for the series upgrade.
-A few static-analysis findings below (could be false positives).
+hi,
+we check for a version that has the latest exported function
+that bpftool needs, which is currently libbpf_netlink_open
 
-On Wed, Nov 27, 2019 at 09:42:51AM +0100, Geert Uytterhoeven wrote:
+please check the '#ifdef BPFTOOL' in feature/test-libbpf.c
 
-[..]
+it's like that because there's currently no support to check
+for particular library version in the build/features framework
 
-> +static bool isrange(const char *s)
-> +{
-> +	size_t n = strlen(s);
+I'll make that comment more clear
 
-Cppcheck 1.40-18521-ge6d692d96058:
-drivers/gpio/gpio-aggregator.c:69:11: style: Variable 'n' is assigned a value that is never used. [unreadVariable]
+>=20
+> > +  FEATURE_CHECK_CFLAGS-libbpf :=3D -DBPFTOOL
+> > +  FEATURE_TESTS   +=3D libbpf
+> > +  FEATURE_DISPLAY +=3D libbpf
+> > +
+> > +  # for linking with debug library run:
+> > +  # make LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/opt/libbpf
+> > +  ifdef LIBBPF_DIR
+> > +    LIBBPF_CFLAGS  :=3D -I$(LIBBPF_DIR)/include
+> > +    LIBBPF_LDFLAGS :=3D -L$(LIBBPF_DIR)/$(libdir_relative)
+> > +    FEATURE_CHECK_CFLAGS-libbpf  :=3D $(LIBBPF_CFLAGS)
+> > +    FEATURE_CHECK_LDFLAGS-libbpf :=3D $(LIBBPF_LDFLAGS)
+> > +  endif
+> > +endif
+> > +
+> >  check_feat :=3D 1
+> >  NON_CHECK_FEAT_TARGETS :=3D clean uninstall doc doc-clean doc-install =
+doc-uninstall
+> >  ifdef MAKECMDGOALS
+> > @@ -88,6 +114,18 @@ ifeq ($(feature-reallocarray), 0)
+> >  CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
+> >  endif
+> > =20
+> > +ifdef LIBBPF_DYNAMIC
+> > +  ifeq ($(feature-libbpf), 1)
+> > +    LIBS    +=3D -lbpf
+> > +    CFLAGS  +=3D $(LIBBPF_CFLAGS)
+> > +    LDFLAGS +=3D $(LIBBPF_LDFLAGS)
+> > +  else
+> > +    dummy :=3D $(error Error: No libbpf devel library found, please in=
+stall libbpf-devel)
+>=20
+> libbpf-devel sounds like a RH/Fedora package name, but other
+> distributions might have different names (Debian/Ubuntu would go by
+> libbpf-dev I suppose, although I don't believe such package exists at
+> the moment). Maybe use a more generic message?
 
-Smatch v0.5.0-6150-gc1ed13e4ee7b:
-drivers/gpio/gpio-aggregator.c:69 isrange() warn: unused return: n = strlen()
+sure, actually in perf we use both package names like:
 
-[..]
+  Error: No libbpf devel library found, please install libbpf-devel or libb=
+pf-dev.
 
-> +	aggr->lookups->dev_id = kasprintf(GFP_KERNEL, "%s.%d", DRV_NAME, id);
-> +	if (!aggr->lookups) {
-> +		res = -ENOMEM;
-> +		goto remove_idr;
-> +	}
+or we can go with generic message:
 
-s/aggr->lookups/aggr->lookups->dev_id/ ?
+  Error: No libbpf devel library found, please install.
 
-[..]
+>=20
+> > +  endif
+> > +else
+> > +  LIBS +=3D $(LIBBPF)
+>=20
+> ... I believe the order of the libraries is relevant, and it seems the
+> static libbpf should be passed before the dynamic libs. Here I could fix
+> the build with the static library on my setup by prepending the library
+> path instead, like this:
+>=20
+> =09LIBS :=3D $(LIBBPF) $(LIBS)
 
-> +static int gpio_fwd_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-> +				 unsigned long *bits)
-> +{
-> +	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> +	unsigned long *values, flags;
+could you please paste the build error? I don't see any on Fedora,
+anyway I can make the change you're proposing
 
-gcc 9.2.1:
-warning: ‘flags’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>=20
+> On the plus side, all build attempts from
+> tools/testing/selftests/bpf/test_bpftool_build.sh pass successfully on
+> my setup with dynamic linking from your branch.
 
-[..]
+cool, had no idea there was such test ;-)
 
-> +static void gpio_fwd_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-> +				  unsigned long *bits)
-> +{
-> +	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> +	unsigned long *values, flags;
+thanks,
+jirka
 
-gcc 9.2.1, same as above:
-warning: ‘flags’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-
-Should these be silenced like in 2bf593f101f3ca ("xilinx_uartps.c:
-suppress "may be used uninitialised" warning") ?
-
-I plan to do some runtime testing soon.
-
--- 
-Best Regards,
-Eugeniu
