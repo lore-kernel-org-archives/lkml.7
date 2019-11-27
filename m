@@ -2,129 +2,169 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9633C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637A9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6AFE2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355B720665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:23:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="GqDXHTwk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nyxjcgHA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfK0TX0 (ORCPT
+        id S1727182AbfK0TXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 14:23:26 -0500
-Received: from mail-eopbgr80054.outbound.protection.outlook.com ([40.107.8.54]:38534
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726593AbfK0TX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 14:23:26 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WB33nHUR0Zc5OITdAAaIVOrbOcYbeKLdELzgaMdaWbXELXtMySO8cpqNDYrRdI4ai6Tvl6sJeS2jNERhA9xR0huJM/GPGOAydhn2XjIPrxAYbzdlucXsgJ8oYEMHOlD8AUfUSQ5ZjF5/exxLqbOQKCxa0fgvUv/R8Hz8AvfynVyWOqjF5NViYaySC32DBu9DnjDO3KpwjpWK5T45pMNZ5YKqtH/uMfEcQrbFniIljKnq2TA0FZY39yajhu0wttdCyRrMtbHpMyHypXmowbBL2Hu+whqBHAGxzjCYun0OKT8N46EbGw78AhadTVUkB4MDFF+idBGAz1f1VmBLRYqYjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QerfRLXgovxYUgKnKYPFjD2dKNlF37N6oKL3+0xeMbc=;
- b=gnVyaxqp6rA5umFLH4G9A60km1vdxorzQ7LleytFFS4mZpTRUNrh2uHEVLk643jysD2sjtyjmaRHysgnWqyZ6gwZytFgi/Avd/58BXSi/uPNdS8n63L+NRR1J6dVe9GnbeZ5WP6ivqSSTKJgNQmbzt+DR+WTy6kHUn7OhoBQLMFzRc0Mo3y61rQQ/BAg0kaEEp7X9AKgekKzih7n/QRKNrCcf7wggJ8+cKk5j2R9hCOvRPf77pLC7zBxWjfoirSgGkyDwmvVgC1GKyUsQy52T7evvYBbTwuE46DY2l1MgSx3dMRFzMApRw23P1UhxEHjvpdiYrUDgRGaY6BHkl0dmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QerfRLXgovxYUgKnKYPFjD2dKNlF37N6oKL3+0xeMbc=;
- b=GqDXHTwknhQyn/ZwYoCpq2Y6KrH+sQhaxNpabWlqlH6LPjB6MroyOH8vGArJv7tRR4RPb9ra2dGly7MkQp2QiH6eH9uWEqOOXa/vy5kqWTHbMlthfHjkDFEUZ0AItZDOp56OoJPMg3PjMlDUIeK2Nos3ZcXjOxiaXcanwsxgRbQ=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB3295.eurprd05.prod.outlook.com (10.170.238.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17; Wed, 27 Nov 2019 19:23:22 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::18df:a0fe:18eb:a96b]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::18df:a0fe:18eb:a96b%6]) with mapi id 15.20.2495.014; Wed, 27 Nov 2019
- 19:23:21 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Topic: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Index: AQHVpLkPnC8STmq42Ee9zkHJq9D0u6efVRMAgAARtwA=
-Date:   Wed, 27 Nov 2019 19:23:21 +0000
-Message-ID: <20191127192316.GY7481@mellanox.com>
-References: <20191127002431.GA4861@ziepe.ca>
- <CAHk-=whUhSMUfCoAmk9YsP-R28a7+_Lda780JOfeVTVeopa_Fw@mail.gmail.com>
-In-Reply-To: <CAHk-=whUhSMUfCoAmk9YsP-R28a7+_Lda780JOfeVTVeopa_Fw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR15CA0012.namprd15.prod.outlook.com
- (2603:10b6:208:1b4::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.162.113.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8832172d-bb0d-4ed6-4514-08d7736f43f7
-x-ms-traffictypediagnostic: VI1PR05MB3295:
-x-microsoft-antispam-prvs: <VI1PR05MB329512083188A542FB508393CF440@VI1PR05MB3295.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 023495660C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(376002)(346002)(189003)(199004)(2616005)(11346002)(446003)(14454004)(66556008)(66446008)(64756008)(99286004)(8936002)(81166006)(66476007)(81156014)(229853002)(478600001)(76176011)(66066001)(6512007)(6916009)(8676002)(66946007)(6506007)(256004)(53546011)(386003)(52116002)(54906003)(5660300002)(25786009)(7736002)(71200400001)(6116002)(3846002)(26005)(102836004)(305945005)(33656002)(71190400001)(36756003)(316002)(4326008)(1076003)(186003)(4744005)(86362001)(6486002)(6246003)(6436002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3295;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JPyzHqm7fs+tq3LCxoknOqbfUJurtwKwYz/RO6mlKNdkzNNgxprEYIq/aUixtuZZE8W/0cQb5JpTnGe38ii4pxg7i2ozL4zuTJbqSatZ9nkvd0AAkuQnTc7DtDYXdCbPxKySFaWhpLVxYV7d/c1XTbpFt+5FZmGsqUxpufi+J9PemySrneNNKRP8Tx76IQL57Lj1zxeHbJfekXSuuYdQgtNnfNsHSuuPnIbyl/RpNYvAeYIX/CHX3f+eHQekt9AQsyTqkT9KUKT/F2ZLDUEEtATSXvHjQazMBeejWrIYKSLKwu//6SsZxtFYtlcLnzI/waun1zrkhIy5tRjsiSDZ2rS/qca3OftI9N8ZbAcUnFePtBMHGhybkJ9Aq2qIwQ2CWtPO1tgKDjXF2Nf8M73Z7rD2J8BwHN5j/RAyzuNBMpmoGyTdNauwPmmbU2xBpPQo
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9D5D41DADCB7DF43A29A9155F19D9658@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 27 Nov 2019 14:23:40 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37770 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfK0TXk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 14:23:40 -0500
+Received: by mail-oi1-f193.google.com with SMTP id 128so13064542oih.4
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 11:23:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Hw0kz+i9Mk8GNpNzBnmR7s/yayYdDJKPB0j3/83kv4=;
+        b=nyxjcgHAyOOTk376Ad6oVXa6b6/uZGiWdROp4ZAu14ImXIP2lRabEaWnZzN1qeKSre
+         RAiFxTIXlri7abDsc5Dr2ZEX7wc2VRyfE+rWwForgEue8rC+W0hnI/bDQD0TU3IQvJaI
+         ++Avuw3+7IxY6zxB6OIB+vmow7A3jVLN4vjELvLgvr1TbbGWLbE4CZ9r8G0toKPwwFXK
+         6cmPoeN8RcupeDZ3H2NWHcpSt8hivxj9+TLUW841txs8kM/v3D0lwTHyM1PoRD842YlA
+         cYGZP7o2CxIqOrmKDk0GGeV7i4hcfFya+YObWK3/+jtaHbDElKCM3a7XUma18MQw8pBl
+         fQ0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Hw0kz+i9Mk8GNpNzBnmR7s/yayYdDJKPB0j3/83kv4=;
+        b=lIhqZdM6shhQNfXCD0Qiefq4dI7m7NEPjoXjyOZSXDwtC6MS1Do0/AIpnwITvAqBBf
+         z/8lAMXt7mmri3QkSte3pERcXNYx2BI/VqDREdLeUY2eoX59KEWUntQlOnzHKBZcDISO
+         dx5eWTF70qHYLkN9fYCJukCca6quVi8NHKaNvehFT6X0cbsoQRbAhmBkY5iwH37LFjkg
+         bo1YvRC9Uv1MKiXE3dlVh64WFQXK4kACrXNnsNKpnhauigH/yNqqsN1kFrMVSmjcvJr6
+         94pqgrSnqv+J9QTzrKLuVutC1R5aubfRJjKuBp1Aft/Oi1ThoFAGa1uO5tmD5O+cnFmq
+         8HZw==
+X-Gm-Message-State: APjAAAVibgwMShwUK324vglVqw6bGxu78kRVAfACPXGFJh33cUQgFZ4q
+        XLK2+NRAEvUpxoqrbZl7Se1EkQ5vwky7RTJhp5/Phw==
+X-Google-Smtp-Source: APXvYqzd0diswvCyfrWBdO3wyErC5RMF3LoQj+2/Y8VPS1V/yCBMfWpMJ5+y7iCf4VMVajBy/G4v1znEhdboXyt4v1Q=
+X-Received: by 2002:aca:782:: with SMTP id 124mr5318377oih.47.1574882618639;
+ Wed, 27 Nov 2019 11:23:38 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8832172d-bb0d-4ed6-4514-08d7736f43f7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2019 19:23:21.7475
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mNIUsNYaBqtOx3Vw8hbWWAlTXTjlvQJiISqwu4rbrNMGMMVR5Dzp1Jfbif7AudETEH812eIE/0keJg7S8UdnUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3295
+References: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
+In-Reply-To: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 27 Nov 2019 20:23:12 +0100
+Message-ID: <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] signalfd: add support for SFD_TASK
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 10:19:52AM -0800, Linus Torvalds wrote:
-> On Tue, Nov 26, 2019 at 4:24 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
-> >
-> > There is one conflict with v5.4, the hunk should be resolved in favor o=
-f
-> > rdma.git
->=20
-> Ok, so no need for the (now two!) xa_erase() calls to be the
-> "xa_erase_irq()" one?
+On Wed, Nov 27, 2019 at 6:11 AM Jens Axboe <axboe@kernel.dk> wrote:
+> I posted this a few weeks back, took another look at it and refined it a
+> bit. I'd like some input on the viability of this approach.
+>
+> A new signalfd setup flag is added, SFD_TASK. This is only valid if used
+> with SFD_CLOEXEC. If set, the task setting up the signalfd descriptor is
+> remembered in the signalfd context, and will be the one we use for
+> checking signals in the poll/read handlers in signalfd.
+>
+> This is needed to make signalfd useful with io_uring and aio, of which
+> the former in particular has my interest.
+>
+> I _think_ this is sane. To prevent the case of a task clearing O_CLOEXEC
+> on the signalfd descriptor, forking, and then exiting, we grab a
+> reference to the task when we assign it. If that original task exits, we
+> catch it in signalfd_flush() and ensure waiters are woken up.
 
-Two? Yes dropping the irq is right.
+Mh... that's not really reliable, because you only get ->flush() from
+the last exiting thread (or more precisely, the last exiting task that
+shares the files_struct).
 
--rc still had the irq call xa_store, but that part was removed in
-this code in -next.
+What is your goal here? To have a reference to a task without keeping
+the entire task_struct around in memory if someone leaks the signalfd
+to another process - basically like a weak pointer? If so, you could
+store a refcounted reference to "struct pid" instead of a refcounted
+reference to the task_struct, and then do the lookup of the
+task_struct on ->poll and ->read (similar to what procfs does).
 
-This conflict is because the fixes sent to -rc accidently missed that
--rc still had the irq and had a wrong xa_store.
+In other words:
 
-I wanted to include the combined diff here, but git doesn't want to
-show it to me :\
+> diff --git a/fs/signalfd.c b/fs/signalfd.c
+> index 44b6845b071c..4bbdab9438c1 100644
+> --- a/fs/signalfd.c
+> +++ b/fs/signalfd.c
+> @@ -50,28 +50,62 @@ void signalfd_cleanup(struct sighand_struct *sighand)
+>
+>   struct signalfd_ctx {
+>         sigset_t sigmask;
+> +       struct task_struct *task;
 
-$ git show -c for-linus-merged drivers/infiniband/hw/mlx5/mr.c
-$ git show --cc for-linus-merged drivers/infiniband/hw/mlx5/mr.c
+Turn this into "struct pid *task_pid".
 
-It looks OK in your tree, thanks
+> +static int signalfd_flush(struct file *file, void *data)
+> +{
+> +       struct signalfd_ctx *ctx = file->private_data;
+> +       struct task_struct *tsk = ctx->task;
+> +
+> +       if (tsk == current) {
+> +               ctx->task = NULL;
+> +               wake_up(&tsk->sighand->signalfd_wqh);
+> +               put_task_struct(tsk);
+> +       }
+> +
+> +       return 0;
+> +}
 
-Jason
+Get rid of this.
+
+> +static struct task_struct *signalfd_get_task(struct signalfd_ctx *ctx)
+> +{
+> +       struct task_struct *tsk = ctx->task ?: current;
+> +
+> +       get_task_struct(tsk);
+> +       return tsk;
+> +}
+
+Replace this with something like:
+
+  if (ctx->task_pid)
+    return get_pid_task(ctx->task_pid, PIDTYPE_PID); /* will return
+NULL if the task is gone */
+  else
+    return get_task_struct(current);
+
+and add NULL checks to the places that call this.
+
+> @@ -167,10 +201,11 @@ static ssize_t signalfd_dequeue(struct signalfd_ctx *ctx, kernel_siginfo_t *info
+>                                 int nonblock)
+>   {
+>         ssize_t ret;
+> +       struct task_struct *tsk = signalfd_get_task(ctx);
+
+(Here we could even optimize away the refcounting using RCU if we
+wanted to, since unlike in the ->poll handler, we don't need to be
+able to block.)
+
+>         if (ufd == -1) {
+> -               ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
+> +               ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+>                 if (!ctx)
+>                         return -ENOMEM;
+>
+>                 ctx->sigmask = *mask;
+> +               if (flags & SFD_TASK) {
+> +                       ctx->task = current;
+> +                       get_task_struct(ctx->task);
+> +               }
+
+and here do "ctx->task_pid = get_task_pid(current, PIDTYPE_PID)"
