@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D89C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F8DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8426820869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF9820869
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891062;
-	bh=+UUgulf3umEery2eT/3tjTxrLJpprV9yV0f2vEDgfkE=;
+	s=default; t=1574891074;
+	bh=6KyFAcSvoN6cDs6QRqCUbq0QmDU347rw7jYBKRa41zk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxB8EzOpDsZkif4O3uro4sPNVXTYGAlWGeOGLZzWJgmbW9qRYCRDRAS/wNi8Xbp2t
-	 FFAiPr50SdTGQX7XmBftF7WcrMHY+rjJJLZ2GbeA/q/yqBgl3ARUHlB7xZ6oaHdslk
-	 C4ftMPfHLxwLkPewbFCzukvTzaEshnWNJUc50zDs=
+	b=HGysGGlPdoyG0rsBPoGGMG5+5sCGllel8rvYV5vr8ATKDZKGK8kUHhNz0rHfu/WR2
+	 K/QFUZHqqMGxR5hAM3+5Vs9yQ+SQdm8nOC2BCo4GzEYHczXjdPbZfHT7dogrczEdrN
+	 r6JHOO6wiBNxfKeDFtJkXpx++kRkE4+DUfVtDASs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbfK0VoV (ORCPT
+        id S1728543AbfK0UhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:44:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:37:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727681AbfK0Uhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:37:45 -0500
+        id S1728534AbfK0UhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:37:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DBF72158C;
-        Wed, 27 Nov 2019 20:37:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6D2F20862;
+        Wed, 27 Nov 2019 20:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887064;
-        bh=+UUgulf3umEery2eT/3tjTxrLJpprV9yV0f2vEDgfkE=;
+        s=default; t=1574887036;
+        bh=6KyFAcSvoN6cDs6QRqCUbq0QmDU347rw7jYBKRa41zk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KiaqL4TJWTiwq30s+m3y5oU4j9iavuBvXsNi+BVQCjqLpkceNuCNUifjIl1sD4/Ml
-         PzWNII/IEBbOJXnNnbHQAZ6vaLGVKYEyZhGC0Eecz7En7Tz4gyYhEbcF4wEwCK1aN4
-         ZbqRNtxPKIfH0eCMXj7JKlYXxAoDT2X2w6E4Qryc=
+        b=eP82VkG81guYD1yhqeLVJd//BisyEXss3CcDLRAmKOrsQxiRWRky9HRnYdqGPwvnS
+         lea8bdaltOyVdEIACUMxLVXqXk6bUbsQz3mafwM5SOtDRghw5E9Z9aFPNnpiGeZxDI
+         B/f2iQRWuUsyjL0OL7DLOlgofUQEWIwUYpfW/5L8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        James Erwin <james.erwin@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 098/132] IB/hfi1: Ensure full Gen3 speed in a Gen4 system
-Date:   Wed, 27 Nov 2019 21:31:29 +0100
-Message-Id: <20191127203023.103702509@linuxfoundation.org>
+Subject: [PATCH 4.4 088/132] scsi: megaraid_sas: Fix msleep granularity
+Date:   Wed, 27 Nov 2019 21:31:19 +0100
+Message-Id: <20191127203016.942508135@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -64,46 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Erwin <james.erwin@intel.com>
+From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 
-If an hfi1 card is inserted in a Gen4 systems, the driver will avoid the
-gen3 speed bump and the card will operate at half speed.
+[ Upstream commit 9155cf30a3c4ef97e225d6daddf9bd4b173267e8 ]
 
-This is because the driver avoids the gen3 speed bump when the parent bus
-speed isn't identical to gen3, 8.0GT/s.  This is not compatible with gen4
-and newer speeds.
+In megasas_transition_to_ready() driver waits 180seconds for controller to
+change FW state. Here we are calling msleep(1) in a loop for this.  As
+explained in timers-howto.txt, msleep(1) will actually sleep longer than
+1ms. If a faulty controller is connected, we will end up waiting for much
+more than 180 seconds causing unnecessary delays during load.
 
-Fix by relaxing the test to explicitly look for the lower capability
-speeds which inherently allows for gen4 and all future speeds.
+Change the granularity of msleep() call from 1ms to 1000ms.
 
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Link: https://lore.kernel.org/r/20191101192059.106248.1699.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: James Erwin <james.erwin@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rdma/hfi1/pcie.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/rdma/hfi1/pcie.c b/drivers/staging/rdma/hfi1/pcie.c
-index a956044459a2b..ea4df848d8405 100644
---- a/drivers/staging/rdma/hfi1/pcie.c
-+++ b/drivers/staging/rdma/hfi1/pcie.c
-@@ -389,7 +389,8 @@ int pcie_speeds(struct hfi1_devdata *dd)
- 	/*
- 	 * bus->max_bus_speed is set from the bridge's linkcap Max Link Speed
- 	 */
--	if (dd->pcidev->bus->max_bus_speed != PCIE_SPEED_8_0GT) {
-+	if (dd->pcidev->bus->max_bus_speed == PCIE_SPEED_2_5GT ||
-+	     dd->pcidev->bus->max_bus_speed == PCIE_SPEED_5_0GT) {
- 		dd_dev_info(dd, "Parent PCIe bridge does not support Gen3\n");
- 		dd->link_gen3_capable = 0;
- 	}
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 5e0bac8de6381..7be968f60b590 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -3585,12 +3585,12 @@ megasas_transition_to_ready(struct megasas_instance *instance, int ocr)
+ 		/*
+ 		 * The cur_state should not last for more than max_wait secs
+ 		 */
+-		for (i = 0; i < (max_wait * 1000); i++) {
++		for (i = 0; i < max_wait; i++) {
+ 			curr_abs_state = instance->instancet->
+ 				read_fw_status_reg(instance->reg_set);
+ 
+ 			if (abs_state == curr_abs_state) {
+-				msleep(1);
++				msleep(1000);
+ 			} else
+ 				break;
+ 		}
 -- 
 2.20.1
 
