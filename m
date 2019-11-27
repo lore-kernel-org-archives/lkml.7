@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699A6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A6EC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353C621781
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3665321772
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887154;
-	bh=t2XuCSyMG2zPL/eMs0BsLnk03CeFXwVGDD07/9DQJsY=;
+	s=default; t=1574887157;
+	bh=WtrCndhZCOt4K7hFDVg2mYom8qkt0Vjzm/evnWBH+ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f+JwLTdne81TcFCwshpC/FF/foi7tyllzhY/NWt2RkyU2TrZgzYDD1Dg6pw6IxvRA
-	 x0wiAfo8NpJxnFvdyexAHWA0Z2+sJnL8ei/vcFqWwxY8h9zE1iQd6Wkzg+h/EIztmz
-	 3fEVmgajhCkoZgVkHErcR0ngAj728yEdsRds0EKc=
+	b=fYG4powKUvlu3jysmPAeHucrMMlfPZbCUajH/gT/Ng8bqWEjM18rdIeiYcTaSZpI+
+	 aDSyeWSrYwCdhu9QIQwdBbU54LswxZQNGypXWS/KMzClyzSA1UKKrqC845nuDl+7ze
+	 GWw/Ft4s10izwoveGSgMP8KElxTr2r473GgiWoYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbfK0UjN (ORCPT
+        id S1728889AbfK0UjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:39:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43182 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:39:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbfK0UjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:39:11 -0500
+        id S1728877AbfK0UjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:39:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 275BD21771;
-        Wed, 27 Nov 2019 20:39:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BEE7215A5;
+        Wed, 27 Nov 2019 20:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887149;
-        bh=t2XuCSyMG2zPL/eMs0BsLnk03CeFXwVGDD07/9DQJsY=;
+        s=default; t=1574887152;
+        bh=WtrCndhZCOt4K7hFDVg2mYom8qkt0Vjzm/evnWBH+ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XT6xS+EjYLHaH/5RGoY8FIjaMkQ/Tq1sBhREZxCkvix4d1w41Jd64cVLcAdPUW2Yc
-         lg7lTPW1yS0Zh8TVvExSXmNb50t+b5Ut3RftjiJ4eX6HODq0GWHUQdv2Ix+BcddRtp
-         NLCo3AZdHuHuV04I5L9qlZOVbpWJvJi2UmmByGzs=
+        b=tZKvUJml/TMsKPRjC0D10uuhTSov4KUvSunVMw8aa9hhd/LyjDARcl0TQEo2VhTby
+         3rDwJfQogpITFDWfILUT0poGnk/7KCKhJ4tLMNLmHahpltBKaS8rL4tjOGnuSREF2r
+         r5EetMTwlh2qieh1SSNO+TyvzHi1stiXhOIlKKf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 116/132] virtio_console: reset on out of memory
-Date:   Wed, 27 Nov 2019 21:31:47 +0100
-Message-Id: <20191127203031.894165030@linuxfoundation.org>
+Subject: [PATCH 4.4 117/132] virtio_console: dont tie bufs to a vq
+Date:   Wed, 27 Nov 2019 21:31:48 +0100
+Message-Id: <20191127203032.170467614@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,64 +61,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael S. Tsirkin <mst@redhat.com>
 
-[ Upstream commit 5c60300d68da32ca77f7f978039dc72bfc78b06b ]
+[ Upstream commit 2855b33514d290c51d52d94e25d3ef942cd4d578 ]
 
-When out of memory and we can't add ctrl vq buffers,
-probe fails. Unfortunately the error handling is
-out of spec: it calls del_vqs without bothering
-to reset the device first.
-
-To fix, call the full cleanup function in this case.
+an allocated buffer doesn't need to be tied to a vq -
+only vq->vdev is ever used. Pass the function the
+just what it needs - the vdev.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/virtio_console.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/char/virtio_console.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-index df9eab91c2d25..78aab6e246e13 100644
+index 78aab6e246e13..1a566e3b16e07 100644
 --- a/drivers/char/virtio_console.c
 +++ b/drivers/char/virtio_console.c
-@@ -2067,6 +2067,7 @@ static int virtcons_probe(struct virtio_device *vdev)
+@@ -417,7 +417,7 @@ static void reclaim_dma_bufs(void)
+ 	}
+ }
  
- 	spin_lock_init(&portdev->ports_lock);
- 	INIT_LIST_HEAD(&portdev->ports);
-+	INIT_LIST_HEAD(&portdev->list);
+-static struct port_buffer *alloc_buf(struct virtqueue *vq, size_t buf_size,
++static struct port_buffer *alloc_buf(struct virtio_device *vdev, size_t buf_size,
+ 				     int pages)
+ {
+ 	struct port_buffer *buf;
+@@ -440,7 +440,7 @@ static struct port_buffer *alloc_buf(struct virtqueue *vq, size_t buf_size,
+ 		return buf;
+ 	}
  
- 	virtio_device_ready(portdev->vdev);
- 
-@@ -2084,8 +2085,15 @@ static int virtcons_probe(struct virtio_device *vdev)
- 		if (!nr_added_bufs) {
- 			dev_err(&vdev->dev,
- 				"Error allocating buffers for control queue\n");
--			err = -ENOMEM;
--			goto free_vqs;
-+			/*
-+			 * The host might want to notify mgmt sw about device
-+			 * add failure.
-+			 */
-+			__send_control_msg(portdev, VIRTIO_CONSOLE_BAD_ID,
-+					   VIRTIO_CONSOLE_DEVICE_READY, 0);
-+			/* Device was functional: we need full cleanup. */
-+			virtcons_remove(vdev);
-+			return -ENOMEM;
- 		}
- 	} else {
+-	if (is_rproc_serial(vq->vdev)) {
++	if (is_rproc_serial(vdev)) {
  		/*
-@@ -2116,11 +2124,6 @@ static int virtcons_probe(struct virtio_device *vdev)
+ 		 * Allocate DMA memory from ancestor. When a virtio
+ 		 * device is created by remoteproc, the DMA memory is
+@@ -450,9 +450,9 @@ static struct port_buffer *alloc_buf(struct virtqueue *vq, size_t buf_size,
+ 		 * DMA_MEMORY_INCLUDES_CHILDREN had been supported
+ 		 * in dma-coherent.c
+ 		 */
+-		if (!vq->vdev->dev.parent || !vq->vdev->dev.parent->parent)
++		if (!vdev->dev.parent || !vdev->dev.parent->parent)
+ 			goto free_buf;
+-		buf->dev = vq->vdev->dev.parent->parent;
++		buf->dev = vdev->dev.parent->parent;
  
- 	return 0;
+ 		/* Increase device refcnt to avoid freeing it */
+ 		get_device(buf->dev);
+@@ -835,7 +835,7 @@ static ssize_t port_fops_write(struct file *filp, const char __user *ubuf,
  
--free_vqs:
--	/* The host might want to notify mgmt sw about device add failure */
--	__send_control_msg(portdev, VIRTIO_CONSOLE_BAD_ID,
--			   VIRTIO_CONSOLE_DEVICE_READY, 0);
--	remove_vqs(portdev);
- free_chrdev:
- 	unregister_chrdev(portdev->chr_major, "virtio-portsdev");
- free:
+ 	count = min((size_t)(32 * 1024), count);
+ 
+-	buf = alloc_buf(port->out_vq, count, 0);
++	buf = alloc_buf(port->portdev->vdev, count, 0);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+@@ -954,7 +954,7 @@ static ssize_t port_fops_splice_write(struct pipe_inode_info *pipe,
+ 	if (ret < 0)
+ 		goto error_out;
+ 
+-	buf = alloc_buf(port->out_vq, 0, pipe->nrbufs);
++	buf = alloc_buf(port->portdev->vdev, 0, pipe->nrbufs);
+ 	if (!buf) {
+ 		ret = -ENOMEM;
+ 		goto error_out;
+@@ -1371,7 +1371,7 @@ static unsigned int fill_queue(struct virtqueue *vq, spinlock_t *lock)
+ 
+ 	nr_added_bufs = 0;
+ 	do {
+-		buf = alloc_buf(vq, PAGE_SIZE, 0);
++		buf = alloc_buf(vq->vdev, PAGE_SIZE, 0);
+ 		if (!buf)
+ 			break;
+ 
 -- 
 2.20.1
 
