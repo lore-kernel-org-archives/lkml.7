@@ -2,109 +2,97 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F7EC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C663C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6C120674
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:24:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B143iIgv"
+	by mail.kernel.org (Postfix) with ESMTP id 1CE3F2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:25:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfK0OYz (ORCPT
+        id S1727354AbfK0OZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:24:55 -0500
-Received: from mail-qt1-f182.google.com ([209.85.160.182]:44393 "EHLO
-        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfK0OYy (ORCPT
+        Wed, 27 Nov 2019 09:25:24 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:43124 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727313AbfK0OZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:24:54 -0500
-Received: by mail-qt1-f182.google.com with SMTP id g24so18673722qtq.11;
-        Wed, 27 Nov 2019 06:24:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/ZjRuCdf64agVgNamIpbcb5ZOt2c6JCXvZXZubn5ERY=;
-        b=B143iIgvlm1JsDexn4GCrp+qQaEsO5o/w7aq3nbuhAmsHjaG6+KxppfC/aTUpThg3M
-         nw2FJjBdoBJ+Qgxp4jLI49dlUsxKE6rIM6LxoIm/S11yoGdNjQOYCI7BfO8LixeCR+DK
-         RgmqQIQ2iwKtSH6c3OLh4Ri50zsueNjEH76p82tUcAqYAfx4ZuG83j59yDS7mN7ekdAr
-         rw5niVr8wL0lHNgqJHTQRcx7luADmimJpYZJA/UXduL2lPMCzkoESXk61EBEse6WYy+C
-         ZN4H5jEgIslRb9CLqmdDv6nfmZl0sWQRttiEzDlbI8JV+ewLipOdU/38LHh51WO4pWjS
-         dkDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/ZjRuCdf64agVgNamIpbcb5ZOt2c6JCXvZXZubn5ERY=;
-        b=AXaiCX8DURd36euyJJD62gcVPdp2FzFaM9Gx8EiWJ2iFpK6xu1VTP4MJfD/qj0QUv5
-         /o4FjqDHNhPM/jWwrWNn1lcoMqQiadAuUg+/FbG6hVXIV+7W1U09khE6Hy9iUrLp1gTh
-         5ppQh5AgKrzhvAGH8N075lJcLqwdVre10E1FZEJ1oLZCrgJXopBSYrk15JBjQMeGQ73n
-         hHdp29oEMCx8vzqdMX8/aTOyIDf+nLK711mH+23YyB5BuOllQEYVBg3WIFXssKEAMH0g
-         3yoiBhmEx65zVbUu+G7Bl4bIyuD2kai/r82rUFWTOSQTkJ3RA66zVzVHvIqWo2wBSyVJ
-         ZH2w==
-X-Gm-Message-State: APjAAAVPhezPgImYAj65h6PZLYvA+VmY2KdH+FNzbxHAL/O+wyyrqTj3
-        /i0uuFMxVdCJV1IAS6erBsA=
-X-Google-Smtp-Source: APXvYqxP+QOUP8hC+F9dIRxzhI6FukncbB5ALX6XcXCEOEdJlxtvCsiBmnKgICFiTpIOr8nfe4tFYg==
-X-Received: by 2002:ac8:544e:: with SMTP id d14mr7570367qtq.321.1574864693016;
-        Wed, 27 Nov 2019 06:24:53 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id f21sm6752243qkl.34.2019.11.27.06.24.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 06:24:52 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B433F40D3E; Wed, 27 Nov 2019 11:24:49 -0300 (-03)
-Date:   Wed, 27 Nov 2019 11:24:49 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Quentin Monnet <quentin.monnet@netronome.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: Re: [PATCH 3/3] bpftool: Allow to link libbpf dynamically
-Message-ID: <20191127142449.GD22719@kernel.org>
-References: <20191127094837.4045-1-jolsa@kernel.org>
- <20191127094837.4045-4-jolsa@kernel.org>
- <fd22660f-2f70-4ffa-b45f-bb417d006d0a@netronome.com>
- <20191127141520.GJ32367@krava>
+        Wed, 27 Nov 2019 09:25:23 -0500
+Received: from callcc.thunk.org (97-71-153.205.biz.bhn.net [97.71.153.205] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xAREP9Sx018154
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 09:25:10 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 9092F4202FD; Wed, 27 Nov 2019 09:25:08 -0500 (EST)
+Date:   Wed, 27 Nov 2019 09:25:08 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Daniel Phillips <daniel@phunq.net>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
+Message-ID: <20191127142508.GB5143@mit.edu>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191127141520.GJ32367@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Nov 27, 2019 at 03:15:20PM +0100, Jiri Olsa escreveu:
-> On Wed, Nov 27, 2019 at 01:38:55PM +0000, Quentin Monnet wrote:
-> > 2019-11-27 10:48 UTC+0100 ~ Jiri Olsa <jolsa@kernel.org>
-> > On the plus side, all build attempts from
-> > tools/testing/selftests/bpf/test_bpftool_build.sh pass successfully on
-> > my setup with dynamic linking from your branch.
-> 
-> cool, had no idea there was such test ;-)
+A couple of quick observations about Shardmap.
 
-Should be the the equivalent to 'make -C tools/perf build-test' :-)
+(1) It's licensed[1] under the GPLv3, so it's not compatible with the
+kernel license.  That doesn't matter much for ext4, because...
 
-Perhaps we should make tools/testing/selftests/perf/ link to that?
+[1] https://github.com/danielbot/Shardmap/blob/master/LICENSE
 
-- Arnaldo
+
+(2) It's implemented as userspace code (e.g., it uses open(2),
+mmap(2), et. al) and using C++, so it would need to be reimplemented
+from scratch for use in the kernel.
+
+
+(3) It's not particularly well documented, making the above more
+challenging, but it appears to be a variation of an extensible hashing
+scheme, which was used by dbx and Berkley DB.
+
+
+(4) Because of (2), we won't be able to do any actual benchmarks for a
+while.  I just checked the latest version of Tux3[2], and it appears
+to be be still using a linear search scheme for its directory ---
+e.g., an O(n) lookup ala ext2.  So I'm guessing Shardmap may have been
+*designed* for Tux3, but it has not yet been *implemented* for Tux3?
+
+[2] https://github.com/OGAWAHirofumi/linux-tux3/blob/hirofumi/fs/tux3/dir.c#L283
+
+
+(5) The claim is made that readdir() accesses files sequentially; but
+there is also mention in Shardmap of compressing shards (e.g.,
+rewriting them) to squeeze out deleted and tombstone entries.  This
+pretty much guarantees that it will not be possible to satisfy POSIX
+requirements of telldir(2)/seekdir(3) (using a 32-bit or 64-bitt
+cookie), NFS (which also requires use of a 32-bit or 64-bit cookie
+while doing readdir scan), or readdir() semantics in the face of
+directory entries getting inserted or removed from the directory.
+
+(To be specific, POSIX requires readdir returns each entry in a
+directory once and only once, and in the case of a directory entry
+which is removed or inserted, that directory entry must be returned
+exactly zero or one times.  This is true even if telldir(2) ort
+seekdir(2) is used to memoize a particular location in the directory,
+which means you have a 32-bit or 64-bit cookie to define a particular
+location in the readdir(2) stream.  If the file system wants to be
+exportable via NFS, it must meet similar requirements ---- except the
+32-bit or 64-bit cookie MUST survive a reboot.)
+
+Regards,
+
+						- Ted
