@@ -2,178 +2,104 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523F6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D780FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33ACE2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B190720835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:26:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U+xus56I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfK0T0N (ORCPT
+        id S1727269AbfK0T0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 14:26:13 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55226 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726729AbfK0T0M (ORCPT
+        Wed, 27 Nov 2019 14:26:23 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35465 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbfK0T0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 14:26:12 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARJH9IB172675;
-        Wed, 27 Nov 2019 14:26:02 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2whcxppxh1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 14:26:02 -0500
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xARJKBqU179923;
-        Wed, 27 Nov 2019 14:26:02 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2whcxppxgt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 14:26:02 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xARJPIHD009108;
-        Wed, 27 Nov 2019 19:26:06 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01wdc.us.ibm.com with ESMTP id 2wevd6fge3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 19:26:06 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARJQ17V51053022
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 19:26:01 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3BD72AE05F;
-        Wed, 27 Nov 2019 19:26:01 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F8D9AE05C;
-        Wed, 27 Nov 2019 19:26:00 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.137])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Nov 2019 19:25:59 +0000 (GMT)
-Message-ID: <adcfe1b4c5b36b3c398a5d456da9543e0390cba3.camel@linux.ibm.com>
-Subject: Re: [PATCH] KVM: Add separate helper for putting borrowed reference
- to kvm
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 27 Nov 2019 16:25:55 -0300
-In-Reply-To: <6beeff56-7676-5dfd-a578-1732730f8963@redhat.com>
-References: <20191021225842.23941-1-sean.j.christopherson@intel.com>
-         <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
-         <20191126171416.GA22233@linux.intel.com>
-         <0009c6c1bb635098fa68cb6db6414634555039fe.camel@linux.ibm.com>
-         <e1a4218f-2a70-3de3-1403-dbebf8a8abdf@redhat.com>
-         <bfa563e6a584bd85d3abe953ca088281dc0e167b.camel@linux.ibm.com>
-         <6beeff56-7676-5dfd-a578-1732730f8963@redhat.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-a9kzp034ppH43UyepBK6"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Wed, 27 Nov 2019 14:26:22 -0500
+Received: by mail-pj1-f67.google.com with SMTP id s8so10495863pji.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 11:26:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eVNNKDEwK+00GI4nXd9IX+dWdzOAiwJNjdPjOU+ejY0=;
+        b=U+xus56I5dr6Aqz7wXSwbowuREWFV2uxsdtZciqEjc59w56SO7/eYwEFYbRbNq7t3r
+         /z5JwgMRey9oFd9dGmRbOwyDt/UxPsAyJbhZY8wmo2Fl9A1YwXkrd8PQPXBMwFYhmxcS
+         AZzznEDKcHT6GlYef5U3newa8JYZBvm14OOSI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eVNNKDEwK+00GI4nXd9IX+dWdzOAiwJNjdPjOU+ejY0=;
+        b=S84U3jyOHEoa0y9hMhyPV2zYJtCeMsB9Hyhl+7qnbdyuNVbiXZIc18PJd0pf0LD7X4
+         HMRtnvWE3YglY06RlZzK6uNa4ec4W9mwgK25lGxkGKhyi6juBBgCefZ1QvDal7C/xDiP
+         Z4xGLcykJSSBciSmSmbmKYLG5KPkpm3bdIMOzumQH7qDVkfp9N23j4buvJdLeJHpFqq+
+         SkzkkyFN4hkQimQJcnoFaqV/iQNGwqkuVIJpQ4b4X30xmY++29BCM96arOLqJkDKzEdP
+         g6s6jVnGRkTrarjVT7XvRbZFrJkL9DvEKVXo+e84r1J8M1D7aUl6p8tIoYMnYfvExoD7
+         ABNw==
+X-Gm-Message-State: APjAAAXEpbq3TtkcTE6j48riUCmymO9WY1800a+cfknyHBP9BGFkc4r1
+        W6HEmAYQ5TauyVPj6jJuIuU8Aw==
+X-Google-Smtp-Source: APXvYqxyZCRdeC8jUm68R3lJljLtvG9x0YOYSTxJ4Qiw8dH/Q8nTdrPSERPqvHWi0TfhZ5eZN1cVIA==
+X-Received: by 2002:a17:902:bf01:: with SMTP id bi1mr5940322plb.241.1574882781626;
+        Wed, 27 Nov 2019 11:26:21 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 20sm16837474pgw.71.2019.11.27.11.26.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 11:26:20 -0800 (PST)
+Date:   Wed, 27 Nov 2019 11:26:19 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     syzbot <syzbot+21cfe1f803e0e158acf1@syzkaller.appspotmail.com>
+Cc:     00moses.alexander00@gmail.com, axboe@kernel.dk, bvanassche@acm.org,
+        hare@suse.com, hch@lst.de, idryomov@gmail.com,
+        joseph.qi@linux.alibaba.com, jthumshirn@suse.de,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ming.lei@redhat.com, sagi@grimberg.me, snitzer@redhat.com,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org,
+        torvalds@linux-foundation.org, wgh@torlan.ru, zkabelac@redhat.com
+Subject: Re: WARNING in generic_make_request_checks
+Message-ID: <201911271124.F01A0B37@keescook>
+References: <201911262053.C6317530@keescook>
+ <00000000000085ce5905984f2c8b@google.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- impostorscore=0 suspectscore=2 adultscore=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 mlxlogscore=779 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1911270157
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000085ce5905984f2c8b@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 26, 2019 at 11:45:00PM -0800, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger
+> crash:
+> 
+> Reported-and-tested-by:
+> syzbot+21cfe1f803e0e158acf1@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         8b2ded1c block: don't warn when doing fsync on read-only d..
+> git tree:
+> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d727e10a28207217
+> dashboard link: https://syzkaller.appspot.com/bug?extid=21cfe1f803e0e158acf1
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Note: testing is done by a robot and is best-effort only.
 
---=-a9kzp034ppH43UyepBK6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+It seems for successful tests, I still need to tell syzbot that this is
+fixed?
 
-On Wed, 2019-11-27 at 19:32 +0100, Paolo Bonzini wrote:
-> On 27/11/19 19:24, Leonardo Bras wrote:
-> > By what I could undestand up to now, these functions that use borrowed
-> > references can only be called while the reference (file descriptor)
-> > exists.=20
-> > So, suppose these threads, where:
-> > - T1 uses a borrowed reference, and=20
-> > - T2 is releasing the reference (close, release):
->=20
-> Nit: T2 is releasing the *last* reference (as implied by your reference
-> to close/release).
+#syz fix: block: don't warn when doing fsync on read-only devices
 
-Correct.
-
->=20
-> > T1				| T2
-> > kvm_get_kvm()			|
-> > ...				| kvm_put_kvm()
-> > kvm_put_kvm_no_destroy()	|
-> >=20
-> > The above would not trigger a use-after-free bug, but will cause a
-> > memory leak. Is my above understanding right?
->=20
-> Yes, this is correct.
->=20
-
-Then, what would not be a bug before (using kvm_put_kvm()) now is a
-memory leak (using kvm_put_kvm_no_destroy()).
-
-And it's the price to avoid use-after-free on other cases, which is a
-worse bug. Ok, I get it.=20
-
-> Paolo
-
-On Tue, 2019-11-26 at 10:14 -0800, Sean Christopherson wrote:
-> If one these kvm_put_kvm() calls did unexpectedly free @kvm (due to=20
-> a bug somewhere else), KVM would still hit a use-after-free scenario=20
-> as the caller still thinks @kvm is valid.  Currently, this would=20
-> only happen on a subsequent ioctl() on the caller's file descriptor
-> (which holds a pointer to @kvm), as the callers of these functions
-> don't directly dereference @kvm after the functions return.  But,=20
-> not deferencing @kvm isn't deliberate or functionally required, it's
-> just how the code happens to be written.
-
-So, testing if the kvm reference is valid before running ioctl would be
-enough to avoid these bugs? Is it possible?=20
-
-Humm, but if it frees kvm before running ->release(), would it mean the
-VM is destroyed incorrectly, and will probably crash?
-
-Thanks for the patience,
-
-Leonardo=20
-
-
-
-
-
---=-a9kzp034ppH43UyepBK6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3ezcMACgkQlQYWtz9S
-ttQQBw//fTReHUPDTqQ3dhlnVQc6KZ76CgG2P0n8wJYLoD1w8pnrynqmlniGaIQ6
-qcp+epmXKdexJ0dJm3LI8qKcOKVdQaflyUz7Krlko++aAPpO9eoJSH36wocXVfvI
-v1n9GCaPstG4b8sPGvdZ+pKiIwnNoG6Z137zM1EbK8GmpfXcYfJhvHx7alvPd+E6
-bKoAqlHrzsQk+wWpy9rj8PCB1q2aqE6/vVFYex2dBlQiprPwJcuoVxOeaR+t3S8q
-6MuDRJZvo3PXdMXFzrUhabjIWdYz7G59f7lA8wibgdtLfQyDVx0ELwcIBgaIhgTt
-2kqepMwa6D5YuSIDM2ZfF/yN/wvvNCDvSHHZexknY4Q2bisVMi8gB9DsRwqYv7aM
-h1NhqxgqMjdwjBeb10hqfT7wmlny8CqTYCZYiIprnDajw5cSyV9orrKg4VknfszN
-Rks2XwvyFqdu68Z6iWVml2cq3R7DuiE5JnHs3vqWP14SLlsMHJS/NC9HzTYHzEhq
-2ECnt2k9g2mdL2KSG/5urNJpL3UJ0m7is/+NG3k70Cml0eL7qcBYvJGh8opHXnP5
-24kOpjSWNtcLKOH3o+cDVF8g+LEQiebFzKFyIkUclhZQ+l1n2vbe9JvdPcfhvmRz
-5QiAnqjECEPCwj4Fq+EDjvTOd3tFcR72H4frypRpIPrGj4Uasf4=
-=AJN6
------END PGP SIGNATURE-----
-
---=-a9kzp034ppH43UyepBK6--
-
+-- 
+Kees Cook
