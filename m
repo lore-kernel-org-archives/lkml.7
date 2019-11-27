@@ -2,150 +2,132 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D35C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0ADC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C042070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574839266;
-	bh=h7jPTRwlhPHVe30IJ41+OdHKFf3sZXa2AMCxSvFboeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UKv+p8tte/A0i6dKJVLnglrpe9xWQVkAPy6Sn1kIbd49LHUGZpCioUShaen3fJgbt
-	 tnRdXLEKZRe9PYpAZt96+9+JIwMl0ByarElCVzNlfu76Z6h+H2kDDKn5wKbAojVWwG
-	 5eltLzYzL0Jze/ku9IR9ugyWI7FKHHqrHrBwiS3k=
+	by mail.kernel.org (Postfix) with ESMTP id 436A4206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUVyaSWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfK0HVF (ORCPT
+        id S1726591AbfK0HX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 02:21:05 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56139 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfK0HVE (ORCPT
+        Wed, 27 Nov 2019 02:23:26 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36414 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfK0HXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 02:21:04 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a131so1567216wme.5;
-        Tue, 26 Nov 2019 23:21:02 -0800 (PST)
+        Wed, 27 Nov 2019 02:23:25 -0500
+Received: by mail-pf1-f196.google.com with SMTP id b19so10535354pfd.3;
+        Tue, 26 Nov 2019 23:23:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kCncgZfNLfu/DMj0wXER7XvmqE7+H8NXbrnKF+xxq0U=;
-        b=RSC3imGkI2eVKkgg38Jlm1TsR+Yjp09v6ffKoandFuxhXe+nBgW9uOHL+l020Y7rdF
-         tSYsjMmQCs6HaS/TUMfPNAarUe2TJ0CqybUceItnNLhGo9az8T3Y5fNOH3GLZnX3jWQm
-         jisTx/sLc7NDTLdHJbfTfFjGwYGuuKVV4/d96w5zdcKRtmsI6jd1GM9EA/jQgTY8Vu4z
-         83O39LSKtgLiosa1NNh8Vo9Cv1oYVXNALrsUmYDlpqUlQKgLeOzmXyrSO9N3UJef1UAD
-         dUG5ZLwAMqKaIBiXpIpT8vxX4HmooGbATxlPXMKIaxtINEPsboG+CsqGwvTnCJnfU8tC
-         a9sw==
+        h=to:from:subject:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=+dIEa+jclTmXr02IdnKWGZL7TW+4WBFOQZr27PMe7Hc=;
+        b=LUVyaSWC8ur/hYdxkd01ssliYl8hgfyWz8MGHZr/pgpnMxFKjZpDYmTiv5Xbg35YPw
+         T7bstW0FN20orFDv24ZfFaJmwxuZnbyCm54i/lY2fVlxZbGc+I9mpTj4zMKF9Ao6ITw2
+         Pqnh/fqvQvU3kNZJNw/psAiDHpbFzjG3kozmrkJ8QM9ZMm6dGbruFw1jJA7yYEEGQdc1
+         tRj7XHGlxPWtJGHXutDg9aXe2QGMH7qZl3vERWQ2qifuLNk6n3KUgSvN+sVc3O5zlV55
+         Ku58NI1qssmv0EJdTyunl9MYkZI8Yro68/kLXxZNDAz/+hbcbrJn1ibZystLXwOv6OOY
+         Djrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kCncgZfNLfu/DMj0wXER7XvmqE7+H8NXbrnKF+xxq0U=;
-        b=aEGDG5mmXMLRGDRcVRsffO/4UtSqO1bkmRzqczOe8OkeYGyXe8jrOuNCzuNGr7A3Rz
-         MmTKtqXE2tAqK+pWgrltl6Oi7qp/HH/OKkyhg+roCIgtaIRdlu9xJnwbvPJ/VsTLxJ+L
-         WgJ429DjqQj3hcDJ+RuiR2zqAYho0lbfxcEIYI0JgM/Gxwl5gg3jIE3L90D0FDgicP/j
-         jkX6VT8Sp0qsQ8j6iu9twhQMn8I+g6cFSNLbAMBMausB1Hj2Aw3QB31h6onrqFOc8Y2O
-         CmRaGeYSkSv2zWPQSaH5AgPqOSFC4zIrc1sEXD4cSh/QuDJTpyMHFqDxRsqWfUFnT/HS
-         5tGg==
-X-Gm-Message-State: APjAAAVYHnihbxknaVIdujTUljq8TUMZugws2HLG1lQ3htEoMFCkOPSk
-        xg/UccLFR1zk/a/O0z847C5MyIjJ
-X-Google-Smtp-Source: APXvYqxrSAjRPVtPzeiTNsYJZTIC0WUoeM08Y93jY7ZHuWeAPoH8sbaPbhCv3NuqgLVIdvVnq6xVHw==
-X-Received: by 2002:a1c:5415:: with SMTP id i21mr2803843wmb.120.1574839261678;
-        Tue, 26 Nov 2019 23:21:01 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id h2sm18649610wrt.45.2019.11.26.23.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 23:21:00 -0800 (PST)
-Date:   Wed, 27 Nov 2019 08:20:57 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v2 00/12] treewide: break dependencies on x86's RM header
-Message-ID: <20191127072057.GB94748@gmail.com>
-References: <20191126165417.22423-1-sean.j.christopherson@intel.com>
+        h=x-gm-message-state:to:from:subject:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=+dIEa+jclTmXr02IdnKWGZL7TW+4WBFOQZr27PMe7Hc=;
+        b=EfnypMnCH7Jbfw/qBdSWtUoPPEypwm4ywGbAzIEZ3QdK+oS1KNkji2PZgDPMDWKIZo
+         +D+P1L8ra94nIVxbqHRYtngHeZPYnIzRqd0nSnIB9tK0eamAAhXm2k8ZLMVjNFZiz5VC
+         2EsNftTsn0Xg2w6w/Q4RXXSeCZPQ8YyN0a0gkMu4CAokD9s4Y7Olzj3g/xGn23anJqGr
+         l/+//tdjIuOnHdZPNjEhwl0EqGQ//weaUI/6zUeamY+PfCUyb4mNSEMYSPZ2XTinDDcv
+         suaPa73lHJa4bDmLdURaLceRF9ELSN2hzBywUFAhNqTLrdeuMehJE8EG20M75uzElX8c
+         8xYw==
+X-Gm-Message-State: APjAAAUtvVeXW33jJtnmZBisMSpHjQ8kwjlzT8B+Wi9l5+JvBVr5fYIs
+        ImGxWVZAhdS5A0XtghuIoQ==
+X-Google-Smtp-Source: APXvYqzS17o0cTwSBMikvDtpI2vJkGXunqmsk69ZCLz76soXE2RAFfo2u+HPnSMvKaOmoDyyDIMEnw==
+X-Received: by 2002:a63:ea09:: with SMTP id c9mr3283058pgi.232.1574839404727;
+        Tue, 26 Nov 2019 23:23:24 -0800 (PST)
+Received: from [127.0.0.1] ([203.205.141.52])
+        by smtp.gmail.com with ESMTPSA id g7sm14609829pgr.52.2019.11.26.23.23.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2019 23:23:24 -0800 (PST)
+To:     "x86@kernel.org" <x86@kernel.org>, kvm@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-crypto@vger.kernel.org
+From:   Haiwei Li <lihaiwei.kernel@gmail.com>
+Subject: [PATCH v2] KVM: SVM: Fix "error" isn't initialized
+Cc:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        thomas.lendacky@amd.com, gary.hook@amd.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net
+Message-ID: <2967bd12-21bf-3223-e90b-96b4eaa8c4c2@gmail.com>
+Date:   Wed, 27 Nov 2019 15:23:09 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126165417.22423-1-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ From e7f9c786e43ef4f890b8a01f15f8f00786f4b14a Mon Sep 17 00:00:00 2001
+From: Haiwei Li <lihaiwei@tencent.com>
+Date: Wed, 27 Nov 2019 15:00:49 +0800
+Subject: [PATCH v2] fix: 'error' is not initialized
 
-* Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+There are a bunch of error paths were "error" isn't initialized.
 
-> x86's asm/realmode.h, which defines low level structures, variables and
-> helpers used to bring up APs during SMP boot, ends up getting included in
-> practically every nook and cranny of the kernel because the address used
-> by ACPI for resuming from S3 also happens to be stored in the real mode
-> header, and ACPI bleeds the dependency into its widely included headers.
-> 
-> As a result, modifying realmode.h for even the most trivial change to the
-> boot code triggers a full kernel rebuild, which is frustrating to say the
-> least as it some of the most difficult code to get exactly right *and* is
-> also some of the most functionally isolated code in the kernel.
-> 
-> To break the kernel's widespread dependency on realmode.h, add a wrapper
-> in the aforementioned ACPI S3 code to access the real mode header instead
-> of derefencing the header directly in asm/acpi.h and thereby exposing it
-> to the world via linux/acpi.h.
-> 
-> v2:
->   - Rebased on tip/x86/cleanups, commit b74374fef924 ("x86/setup: Enhance
->     the comments").
->   - Use acpi_get_wakeup_address() as new function name. [Boris and Pavel]
->   - Capture acpi_get_wakeup_address() in a local address. [Pavel]
->   - Collect acks.  I didn't add Rafael's acks on patches 11 and 12 due to
->     the above changes.
->   - Explicitly call out the removal of <asm/realmode.h> from <asm/acpi.h>
->     in patch 12. [Ingo]
->   - Remove superfluous Fixes: tags. [Ard]
+Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+  arch/x86/kvm/svm.c           | 3 ++-
+  drivers/crypto/ccp/psp-dev.c | 2 ++
+  2 files changed, 4 insertions(+), 1 deletion(-)
 
-You didn't include every patch from v1 though, such us my fix to Quark:
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 362e874..9eef6fc 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6308,7 +6308,8 @@ static int sev_flush_asids(void)
+  	up_write(&sev_deactivate_lock);
 
-  [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h for virt_to_phys()
+  	if (ret)
+-		pr_err("SEV: DF_FLUSH failed, ret=%d, error=%#x\n", ret, error);
++		pr_err("SEV: DF_FLUSH failed, ret=%d. PSP returned error=%#x\n",
++		       ret, error);
 
-I've applied that one too and your updated patches, and it's now all 
-pushed out into tip:WIP.core/headers.
+  	return ret;
+  }
+diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
+index 39fdd06..c486c24 100644
+--- a/drivers/crypto/ccp/psp-dev.c
++++ b/drivers/crypto/ccp/psp-dev.c
+@@ -155,6 +155,8 @@ static int __sev_do_cmd_locked(int cmd, void *data, 
+int *psp_ret)
+  	unsigned int phys_lsb, phys_msb;
+  	unsigned int reg, ret = 0;
 
-Thanks,
++	*psp_ret = -1;
++
+  	if (!psp)
+  		return -ENODEV;
 
-	Ingo
+--
+1.8.3.1
