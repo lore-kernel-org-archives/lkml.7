@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821D2C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41946C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3702154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160AE2154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889415;
-	bh=QCpIL2Ww+mMyCTsJD1kUgjAx4MMrVpLoYYYZk619EqQ=;
+	s=default; t=1574889422;
+	bh=9RpqjVaDkw21znGwaR35XGWEXFWeKPABmjsg6rBpPiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qSKK104dEl8gtJrlb3iSKVeYmyzniXxHD0U5md8UWUezNkF4KWJCI0kDostotX/p1
-	 YHTjF5zFgsXLRKhIRQt/SmIpf6kn/pj4qXL67eMXv/Klub9Dp+apF8hicOy3Ohxtw9
-	 EhYeqSgQAYefT0h7lU7i7DSBRYSKXjijXxDvBOos=
+	b=1+tfoxDg9Hz3Cs5P84485zDFKTqEgQvzctpciHqjxLcfCcz0YRH5umRhbCbUEnCHm
+	 0ubS01B83tD17PW+mpHA2Thq6c9Wjt26ajw12TcYFSdC2m+MIzT9rFB6NkumuejZlH
+	 t5ZNCUb4SdwK5oQ7QqvRt/WhqpQXdnnt6e3Qa+Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733105AbfK0VQy (ORCPT
+        id S1732877AbfK0VRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:16:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45860 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:17:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733097AbfK0VNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:13:33 -0500
+        id S2387469AbfK0VNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:13:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FEA52154A;
-        Wed, 27 Nov 2019 21:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB8702176D;
+        Wed, 27 Nov 2019 21:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889212;
-        bh=QCpIL2Ww+mMyCTsJD1kUgjAx4MMrVpLoYYYZk619EqQ=;
+        s=default; t=1574889210;
+        bh=9RpqjVaDkw21znGwaR35XGWEXFWeKPABmjsg6rBpPiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O156pwXf1yjYbHAt0cnt/XT6+DSz/cjpnO0EIBSF1Zcd0t2xhpqXsjnwnZ5K70qVP
-         8zeEHO0uOYLbNGITwj/FtHVAhQcNXm24F1r7lf9OZMQNb0whZ1yFxzJNkchr6rj9y9
-         MafaQDg5/bO4pUzc95PkExfzpgqaOmzJno5o+VXo=
+        b=MGDcBaUjx5aPgjC4qAaoiuThXz9imRX5IjJj9cpUGe3noy/+uDKtiYkkDSzqs8r8A
+         WeurW3S8t1OFCstSFhvNYux+UzKSU1vznvh4dtHjATITRWVL+Hclbs6Md4cj+ON1Kl
+         EJqCx9UTbju6KQ+kE7m+7yXY0klNhT8yEdorGhQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vandana BN <bnvandana@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.4 31/66] media: vivid: Set vid_cap_streaming and vid_out_streaming to true
-Date:   Wed, 27 Nov 2019 21:32:26 +0100
-Message-Id: <20191127202705.630013245@linuxfoundation.org>
+        stable@vger.kernel.org, "Geoffrey D. Bennett" <g@b4.vu>,
+        Alex Fellows <alex.fellows@gmail.com>,
+        Markus Schroetter <project.m.schroetter@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 30/66] ALSA: usb-audio: Fix Scarlett 6i6 Gen 2 port data
+Date:   Wed, 27 Nov 2019 21:32:25 +0100
+Message-Id: <20191127202702.937992844@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -60,52 +61,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vandana BN <bnvandana@gmail.com>
+From: Geoffrey D. Bennett <g@b4.vu>
 
-commit b4add02d2236fd5f568db141cfd8eb4290972eb3 upstream.
+commit ce3cba788a1b7b8aed9380c3035d9e850884bd2d upstream.
 
-When vbi stream is started, followed by video streaming,
-the vid_cap_streaming and vid_out_streaming were not being set to true,
-which would cause the video stream to stop when vbi stream is stopped.
-This patch allows to set vid_cap_streaming and vid_out_streaming to true.
-According to Hans Verkuil it appears that these 'if (dev->kthread_vid_cap)'
-checks are a left-over from the original vivid development and should never
-have been there.
+The s6i6_gen2_info.ports[] array had the Mixer and PCM port type
+entries in the wrong place. Use designators to explicitly specify the
+array elements being set.
 
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
-Cc: <stable@vger.kernel.org>      # for v3.18 and up
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 9e4d5c1be21f ("ALSA: usb-audio: Scarlett Gen 2 mixer interface")
+Signed-off-by: Geoffrey D. Bennett <g@b4.vu>
+Tested-by: Alex Fellows <alex.fellows@gmail.com>
+Tested-by: Markus Schroetter <project.m.schroetter@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191110134356.GA31589@b4.vu
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/vivid/vivid-vid-cap.c |    3 ---
- drivers/media/platform/vivid/vivid-vid-out.c |    3 ---
- 2 files changed, 6 deletions(-)
+ sound/usb/mixer_scarlett_gen2.c |   36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
---- a/drivers/media/platform/vivid/vivid-vid-cap.c
-+++ b/drivers/media/platform/vivid/vivid-vid-cap.c
-@@ -223,9 +223,6 @@ static int vid_cap_start_streaming(struc
- 	if (vb2_is_streaming(&dev->vb_vid_out_q))
- 		dev->can_loop_video = vivid_vid_can_loop(dev);
+--- a/sound/usb/mixer_scarlett_gen2.c
++++ b/sound/usb/mixer_scarlett_gen2.c
+@@ -261,34 +261,34 @@ static const struct scarlett2_device_inf
+ 	},
  
--	if (dev->kthread_vid_cap)
--		return 0;
--
- 	dev->vid_cap_seq_count = 0;
- 	dprintk(dev, 1, "%s\n", __func__);
- 	for (i = 0; i < VIDEO_MAX_FRAME; i++)
---- a/drivers/media/platform/vivid/vivid-vid-out.c
-+++ b/drivers/media/platform/vivid/vivid-vid-out.c
-@@ -161,9 +161,6 @@ static int vid_out_start_streaming(struc
- 	if (vb2_is_streaming(&dev->vb_vid_cap_q))
- 		dev->can_loop_video = vivid_vid_can_loop(dev);
+ 	.ports = {
+-		{
++		[SCARLETT2_PORT_TYPE_NONE] = {
+ 			.id = 0x000,
+ 			.num = { 1, 0, 8, 8, 8 },
+ 			.src_descr = "Off",
+ 			.src_num_offset = 0,
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {
+ 			.id = 0x080,
+ 			.num = { 4, 4, 4, 4, 4 },
+ 			.src_descr = "Analogue %d",
+ 			.src_num_offset = 1,
+ 			.dst_descr = "Analogue Output %02d Playback"
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_SPDIF] = {
+ 			.id = 0x180,
+ 			.num = { 2, 2, 2, 2, 2 },
+ 			.src_descr = "S/PDIF %d",
+ 			.src_num_offset = 1,
+ 			.dst_descr = "S/PDIF Output %d Playback"
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_MIX] = {
+ 			.id = 0x300,
+ 			.num = { 10, 18, 18, 18, 18 },
+ 			.src_descr = "Mix %c",
+ 			.src_num_offset = 65,
+ 			.dst_descr = "Mixer Input %02d Capture"
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_PCM] = {
+ 			.id = 0x600,
+ 			.num = { 6, 6, 6, 6, 6 },
+ 			.src_descr = "PCM %d",
+@@ -317,44 +317,44 @@ static const struct scarlett2_device_inf
+ 	},
  
--	if (dev->kthread_vid_out)
--		return 0;
--
- 	dev->vid_out_seq_count = 0;
- 	dprintk(dev, 1, "%s\n", __func__);
- 	if (dev->start_streaming_error) {
+ 	.ports = {
+-		{
++		[SCARLETT2_PORT_TYPE_NONE] = {
+ 			.id = 0x000,
+ 			.num = { 1, 0, 8, 8, 4 },
+ 			.src_descr = "Off",
+ 			.src_num_offset = 0,
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {
+ 			.id = 0x080,
+ 			.num = { 8, 6, 6, 6, 6 },
+ 			.src_descr = "Analogue %d",
+ 			.src_num_offset = 1,
+ 			.dst_descr = "Analogue Output %02d Playback"
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_SPDIF] = {
++			.id = 0x180,
+ 			/* S/PDIF outputs aren't available at 192KHz
+ 			 * but are included in the USB mux I/O
+ 			 * assignment message anyway
+ 			 */
+-			.id = 0x180,
+ 			.num = { 2, 2, 2, 2, 2 },
+ 			.src_descr = "S/PDIF %d",
+ 			.src_num_offset = 1,
+ 			.dst_descr = "S/PDIF Output %d Playback"
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_ADAT] = {
+ 			.id = 0x200,
+ 			.num = { 8, 0, 0, 0, 0 },
+ 			.src_descr = "ADAT %d",
+ 			.src_num_offset = 1,
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_MIX] = {
+ 			.id = 0x300,
+ 			.num = { 10, 18, 18, 18, 18 },
+ 			.src_descr = "Mix %c",
+ 			.src_num_offset = 65,
+ 			.dst_descr = "Mixer Input %02d Capture"
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_PCM] = {
+ 			.id = 0x600,
+ 			.num = { 20, 18, 18, 14, 10 },
+ 			.src_descr = "PCM %d",
+@@ -387,20 +387,20 @@ static const struct scarlett2_device_inf
+ 	},
+ 
+ 	.ports = {
+-		{
++		[SCARLETT2_PORT_TYPE_NONE] = {
+ 			.id = 0x000,
+ 			.num = { 1, 0, 8, 8, 6 },
+ 			.src_descr = "Off",
+ 			.src_num_offset = 0,
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {
+ 			.id = 0x080,
+ 			.num = { 8, 10, 10, 10, 10 },
+ 			.src_descr = "Analogue %d",
+ 			.src_num_offset = 1,
+ 			.dst_descr = "Analogue Output %02d Playback"
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_SPDIF] = {
+ 			/* S/PDIF outputs aren't available at 192KHz
+ 			 * but are included in the USB mux I/O
+ 			 * assignment message anyway
+@@ -411,21 +411,21 @@ static const struct scarlett2_device_inf
+ 			.src_num_offset = 1,
+ 			.dst_descr = "S/PDIF Output %d Playback"
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_ADAT] = {
+ 			.id = 0x200,
+ 			.num = { 8, 8, 8, 4, 0 },
+ 			.src_descr = "ADAT %d",
+ 			.src_num_offset = 1,
+ 			.dst_descr = "ADAT Output %d Playback"
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_MIX] = {
+ 			.id = 0x300,
+ 			.num = { 10, 18, 18, 18, 18 },
+ 			.src_descr = "Mix %c",
+ 			.src_num_offset = 65,
+ 			.dst_descr = "Mixer Input %02d Capture"
+ 		},
+-		{
++		[SCARLETT2_PORT_TYPE_PCM] = {
+ 			.id = 0x600,
+ 			.num = { 20, 18, 18, 14, 10 },
+ 			.src_descr = "PCM %d",
 
 
