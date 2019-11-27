@@ -2,112 +2,99 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3603C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF36AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88CF92070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFCD20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q3UBmSxG"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="NcA3edqK";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="Hv26thj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfK0IXm (ORCPT
+        id S1726320AbfK0I1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:23:42 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51376 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfK0IXm (ORCPT
+        Wed, 27 Nov 2019 03:27:36 -0500
+Received: from mail187-16.suw11.mandrillapp.com ([198.2.187.16]:18789 "EHLO
+        mail187-16.suw11.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726125AbfK0I1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:23:42 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR8NSIX098777;
-        Wed, 27 Nov 2019 02:23:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574843008;
-        bh=c3p+untF1DqNrT7u8zgrjYKfBj2PhnudxBIzqK/7Ssw=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=q3UBmSxGuVraf7vXEpjmOGixV+UhQcS+sLztjkatVdN4cCq0q+fRG/GMRl8RbPobG
-         pt4479mm0BMlCdOZx42BesnU68CvKXu3oaG2tAmStmiXtiQcIJd1pI0OKTYWf0W0iG
-         aOHOlxTWqcPkiRVt96c/GWVVlZaaETb0+0Qzh6Yo=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR8NSpa041206
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 Nov 2019 02:23:28 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
- Nov 2019 02:23:28 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 27 Nov 2019 02:23:28 -0600
-Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR8NNBR024827;
-        Wed, 27 Nov 2019 02:23:24 -0600
-Subject: Re: [PATCH 2/4] PCI: endpoint: Add notification for core init
- completion
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>
-CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-3-vidyas@nvidia.com>
- <122c1625-2075-d34a-80da-8b73a03096d3@ti.com>
-Message-ID: <5ce04eb6-8afc-3248-4658-b191a0ef8012@ti.com>
-Date:   Wed, 27 Nov 2019 13:52:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 03:27:36 -0500
+X-Greylist: delayed 900 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Nov 2019 03:27:35 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=FyS2d7WYMN0XOjwqfqtBJxC7BKxHzrTUpalh89S9EPA=;
+ b=NcA3edqKKW328oETwaJrje3RWQsX3x+AuM+0PSExfg++KrUBadyB4hOU3GJyg50Lj3PI/1rjXbC/
+   DKUeH5RUjdIj7IuuomYjnQXx/ADcijd1qJvu+eJUej3uglxfXcHyAzOkWNLIlMdyDnBe4Axy7xjt
+   HJ9h2+kC8fMSX0Nz718=
+Received: from pmta01.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail187-16.suw11.mandrillapp.com id hropne174i46 for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 08:12:34 +0000 (envelope-from <bounce-md_31050260.5dde2ff2.v1-79c01fdeceb14bb68d395f4859771242@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1574842354; h=From : 
+ Subject : To : Cc : Message-Id : In-Reply-To : Date : MIME-Version : 
+ Content-Type : Content-Transfer-Encoding : From : Subject : Date : 
+ X-Mandrill-User : List-Unsubscribe; 
+ bh=FyS2d7WYMN0XOjwqfqtBJxC7BKxHzrTUpalh89S9EPA=; 
+ b=Hv26thj983lyL85quVozUQ8Kq7K/sjb9TulHzXDwrZIa16sBWaK1Hf9XxmA01hXJh+zfdv
+ +FS6/RY6I0yvfPcY/mzsx+mtybkYPpTXmXVS9Gr0HDW0+rtT63+v1HE/Qbpyqu85oVIe2E2T
+ 8ilVkSHbLs8f1mqtbWWG6DqajUMNg=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: Commit 0be0ee71 ("fs: properly and reliably lock f_pos in fdget_pos()") breaking userspace
+Received: from [87.98.221.171] by mandrillapp.com id 79c01fdeceb14bb68d395f4859771242; Wed, 27 Nov 2019 08:12:34 +0000
+To:     "Kenneth R. Crudup" <kenny@panix.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-Id: <20191127081229.GA3506@deco.navytux.spb.ru>
+In-Reply-To: <CAHk-=wh6w6U5FgZZXq-Eo8+aH1Y6ffp+Nwr_6GzmuzjVuGXmNw@mail.gmail.com> <alpine.DEB.2.21.1911260445170.6292@hp-x360n>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.79c01fdeceb14bb68d395f4859771242
+X-Mandrill-User: md_31050260
+Date:   Wed, 27 Nov 2019 08:12:34 +0000
 MIME-Version: 1.0
-In-Reply-To: <122c1625-2075-d34a-80da-8b73a03096d3@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 27/11/19 1:48 PM, Kishon Vijay Abraham I wrote:
-> Hi,
+On Tue, Nov 26, 2019 at 12:03:36PM -0800, Linus Torvalds wrote:
+> On Mon, Nov 25, 2019 at 7:39 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > I think I'll have to revert that trial commit. I'll give it another
+> > day in case somebody has a better idea, but it looks like it's too
+> > early to do that nice cleanup as things are now.
 > 
-> On 13/11/19 2:38 PM, Vidya Sagar wrote:
->> Add support to send notifications to EPF from EPC once the core
->> registers initialization is complete.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>  drivers/pci/endpoint/pci-epc-core.c | 19 ++++++++++++++++++-
->>  include/linux/pci-epc.h             |  1 +
->>  include/linux/pci-epf.h             |  5 +++++
->>  3 files changed, 24 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->> index 2f6436599fcb..fcc3f7fb19c0 100644
->> --- a/drivers/pci/endpoint/pci-epc-core.c
->> +++ b/drivers/pci/endpoint/pci-epc-core.c
->> @@ -542,10 +542,27 @@ void pci_epc_linkup(struct pci_epc *epc)
->>  	if (!epc || IS_ERR(epc))
->>  		return;
->>  
->> -	atomic_notifier_call_chain(&epc->notifier, 0, NULL);
->> +	atomic_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
->>  }
->>  EXPORT_SYMBOL_GPL(pci_epc_linkup);
+> I've reverted it for now,
 > 
-> Is this based on upstream kernel? or did you create this after applying [1]?
+> I don't want this problem to cause people to report known bugs during
+> the merge window. The fact that I saw no issues obviously is just a
+> matter of my workloads being too simple.
 
-never mind, you've mentioned this depends on my other series in your cover letter.
+I see, ok; let's move on incrementally. What is the fate of small
+net/socket.c cleanup patch? Should I resend it to netdev or something?
 
-Thanks
-Kishon
+
+On Tue, Nov 26, 2019 at 04:46:39AM -0800, Kenneth R. Crudup wrote:
+> 
+> On Tue, 26 Nov 2019, Kirill Smelkov wrote:
+> 
+> > P.S. even though I was put into cc there, somehow I did not received any
+> > notification email for commits d8e464ecc17b (vfs: mark pipes and sockets as
+> > stream-like file descriptors) and 0be0ee71816b (vfs: properly and
+> > reliably lock f_pos in fdget_pos()).
+> 
+> That's my fault; the CC: list for those commits was pretty long and I was
+> worried about it appearing like SPAMming anyone who'd signed off on it, so
+> I'd punted and sent it to Linus and the LKML only.
+
+I did not mean it was your fault. I was trying to say that there was no
+automatic notification just as those commits were pushed to master. And
+neither there is for 2be7d348fe92 (Revert "vfs: properly and reliably
+lock f_pos in fdget_pos()").
+
+Kirill
