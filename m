@@ -2,51 +2,54 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E26DC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C23C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDB32178F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB3C721780
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887510;
-	bh=KIESMiKpbaniYyzcqsRpnmAFJ4O+JMw36QeHJIea514=;
+	s=default; t=1574887513;
+	bh=qOxCD+CM2Y1IKGBln2CH2CVS0iSKh61BQUMC3vhM1w4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dsn4Jh/8htm0Fj6nhxUYAs3D8zie23UrdqbfZlLnEKFYX95904/qdunCeq/KZD06F
-	 z83xEj9b5HgVF/R7o8gKxV7udNQQvMzMdlrZa19RSaTHURK/MKYjm7T4nK1ZBr61bA
-	 WGEOo0eHMNY1y9iZtL0/9v8BbP/yZA0zgC3mxnzI=
+	b=g8QnjdYT4xWnXxWBOwMLIcNu7wC9i4Tb9moZi0+/ykyVoCYIU1oXPRYpPenSgNFVS
+	 Qn5dY6dnMyDgXiK2dJwMDpyRn3CmreqWitFK0MXSyE05b8b2FntuM3EtbdFZsFCjCs
+	 APDWF8pO7Xpv9Aqz2/NVRTX7wbIvhwFNgVVuLHLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729698AbfK0UpJ (ORCPT
+        id S1728660AbfK0UpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:45:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55422 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:45:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729688AbfK0UpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:45:05 -0500
+        id S1729701AbfK0UpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:45:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34CC5217BC;
-        Wed, 27 Nov 2019 20:45:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5FE82166E;
+        Wed, 27 Nov 2019 20:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887504;
-        bh=KIESMiKpbaniYyzcqsRpnmAFJ4O+JMw36QeHJIea514=;
+        s=default; t=1574887507;
+        bh=qOxCD+CM2Y1IKGBln2CH2CVS0iSKh61BQUMC3vhM1w4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gOgLKH9MrK2FmD3wtO5Jmi054iIArXOFnAEvGEnBv9OWvBoxmpS9vwG5BLfZdQpte
-         i+Ae1jAkTSMpXrGLbTgEFf1bMUcOkuSkXmzevtopcmKFDehBu6YktKAGs6EDq4FDQ3
-         f/w4p/YhsCWaL9U2SmobhMzRggg4c1O3N5fGKUsM=
+        b=a2lCO7f15pek3YfXenxU3lL6cje0UGrMYjX4HpJdO7Q2ihLr1IS+QdhD4hfeT5gTG
+         czTXvEW/w1XfgoKRsGLA/iJyBHcsMc7zl4ht7qvhCSQkdvoGp65ejJLPr/lsUu2FBr
+         Ro2DCAUfNe5zyD8mipSYsW+6MCi4xsbhuj5jWiA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 137/151] virtio_console: drop custom control queue cleanup
-Date:   Wed, 27 Nov 2019 21:32:00 +0100
-Message-Id: <20191127203046.869139354@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH 4.9 111/151] KVM: MMU: Do not treat ZONE_DEVICE pages as being reserved
+Date:   Wed, 27 Nov 2019 21:31:34 +0100
+Message-Id: <20191127203042.970127158@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -59,64 +62,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 61a8950c5c5708cf2068b29ffde94e454e528208 ]
+commit a78986aae9b2988f8493f9f65a587ee433e83bc3 upstream.
 
-We now cleanup all VQs on device removal - no need
-to handle the control VQ specially.
+Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
+instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
+like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
+pages, e.g. put pages grabbed via gup().  But for flows such as setting
+A/D bits or shifting refcounts for transparent huge pages, KVM needs to
+to avoid processing ZONE_DEVICE pages as the flows in question lack the
+underlying machinery for proper handling of ZONE_DEVICE pages.
 
+This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
+when running a KVM guest backed with /dev/dax memory, as KVM straight up
+doesn't put any references to ZONE_DEVICE pages acquired by gup().
+
+Note, Dan Williams proposed an alternative solution of doing put_page()
+on ZONE_DEVICE pages immediately after gup() in order to simplify the
+auditing needed to ensure is_zone_device_page() is called if and only if
+the backing device is pinned (via gup()).  But that approach would break
+kvm_vcpu_{un}map() as KVM requires the page to be pinned from map() 'til
+unmap() when accessing guest memory, unlike KVM's secondary MMU, which
+coordinates with mmu_notifier invalidations to avoid creating stale
+page references, i.e. doesn't rely on pages being pinned.
+
+[*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
+
+Reported-by: Adam Borowski <kilobyte@angband.pl>
+Analyzed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 3565fce3a659 ("mm, x86: get_user_pages() for dax mappings")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[sean: backport to 4.x; resolve conflict in mmu.c]
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- drivers/char/virtio_console.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ arch/x86/kvm/mmu.c       |    8 ++++----
+ include/linux/kvm_host.h |    1 +
+ virt/kvm/kvm_main.c      |   26 +++++++++++++++++++++++---
+ 3 files changed, 28 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-index 7de24040f39c1..8975ea08d6c01 100644
---- a/drivers/char/virtio_console.c
-+++ b/drivers/char/virtio_console.c
-@@ -1993,21 +1993,6 @@ static void remove_vqs(struct ports_device *portdev)
- 	kfree(portdev->out_vqs);
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -2934,7 +2934,7 @@ static void transparent_hugepage_adjust(
+ 	 * here.
+ 	 */
+ 	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
+-	    level == PT_PAGE_TABLE_LEVEL &&
++	    !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
+ 	    PageTransCompoundMap(pfn_to_page(pfn)) &&
+ 	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
+ 		unsigned long mask;
+@@ -4890,9 +4890,9 @@ restart:
+ 		 * the guest, and the guest page table is using 4K page size
+ 		 * mapping if the indirect sp has level = 1.
+ 		 */
+-		if (sp->role.direct &&
+-			!kvm_is_reserved_pfn(pfn) &&
+-			PageTransCompoundMap(pfn_to_page(pfn))) {
++		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
++		    !kvm_is_zone_device_pfn(pfn) &&
++		    PageTransCompoundMap(pfn_to_page(pfn))) {
+ 			drop_spte(kvm, sptep);
+ 			need_tlb_flush = 1;
+ 			goto restart;
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -843,6 +843,7 @@ int kvm_cpu_has_pending_timer(struct kvm
+ void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
+ 
+ bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
++bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
+ 
+ struct kvm_irq_ack_notifier {
+ 	struct hlist_node link;
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -131,10 +131,30 @@ __weak void kvm_arch_mmu_notifier_invali
+ {
  }
  
--static void remove_controlq_data(struct ports_device *portdev)
--{
--	struct port_buffer *buf;
--	unsigned int len;
--
--	if (!use_multiport(portdev))
--		return;
--
--	while ((buf = virtqueue_get_buf(portdev->c_ivq, &len)))
--		free_buf(buf, true);
--
--	while ((buf = virtqueue_detach_unused_buf(portdev->c_ivq)))
--		free_buf(buf, true);
--}
--
- /*
-  * Once we're further in boot, we get probed like any other virtio
-  * device.
-@@ -2168,7 +2153,6 @@ static void virtcons_remove(struct virtio_device *vdev)
- 	 * have to just stop using the port, as the vqs are going
- 	 * away.
- 	 */
--	remove_controlq_data(portdev);
- 	remove_vqs(portdev);
- 	kfree(portdev);
- }
-@@ -2213,7 +2197,6 @@ static int virtcons_freeze(struct virtio_device *vdev)
- 	 */
- 	if (use_multiport(portdev))
- 		virtqueue_disable_cb(portdev->c_ivq);
--	remove_controlq_data(portdev);
++bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
++{
++	/*
++	 * The metadata used by is_zone_device_page() to determine whether or
++	 * not a page is ZONE_DEVICE is guaranteed to be valid if and only if
++	 * the device has been pinned, e.g. by get_user_pages().  WARN if the
++	 * page_count() is zero to help detect bad usage of this helper.
++	 */
++	if (!pfn_valid(pfn) || WARN_ON_ONCE(!page_count(pfn_to_page(pfn))))
++		return false;
++
++	return is_zone_device_page(pfn_to_page(pfn));
++}
++
+ bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
+ {
++	/*
++	 * ZONE_DEVICE pages currently set PG_reserved, but from a refcounting
++	 * perspective they are "normal" pages, albeit with slightly different
++	 * usage rules.
++	 */
+ 	if (pfn_valid(pfn))
+-		return PageReserved(pfn_to_page(pfn));
++		return PageReserved(pfn_to_page(pfn)) &&
++		       !kvm_is_zone_device_pfn(pfn);
  
- 	list_for_each_entry(port, &portdev->ports, list) {
- 		virtqueue_disable_cb(port->in_vq);
--- 
-2.20.1
-
+ 	return true;
+ }
+@@ -1758,7 +1778,7 @@ static void kvm_release_pfn_dirty(kvm_pf
+ 
+ void kvm_set_pfn_dirty(kvm_pfn_t pfn)
+ {
+-	if (!kvm_is_reserved_pfn(pfn)) {
++	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn)) {
+ 		struct page *page = pfn_to_page(pfn);
+ 
+ 		if (!PageReserved(page))
+@@ -1769,7 +1789,7 @@ EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
+ 
+ void kvm_set_pfn_accessed(kvm_pfn_t pfn)
+ {
+-	if (!kvm_is_reserved_pfn(pfn))
++	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn))
+ 		mark_page_accessed(pfn_to_page(pfn));
+ }
+ EXPORT_SYMBOL_GPL(kvm_set_pfn_accessed);
 
 
