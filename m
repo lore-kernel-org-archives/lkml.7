@@ -2,81 +2,161 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3728C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1118C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893CF2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD7F206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2fTFwY2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlUM2Rjz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfK0NP6 (ORCPT
+        id S1726873AbfK0NTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:15:58 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42187 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfK0NP6 (ORCPT
+        Wed, 27 Nov 2019 08:19:17 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39034 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfK0NTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:15:58 -0500
-Received: by mail-oi1-f193.google.com with SMTP id o12so19996370oic.9;
-        Wed, 27 Nov 2019 05:15:55 -0800 (PST)
+        Wed, 27 Nov 2019 08:19:17 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x28so10985001pfo.6;
+        Wed, 27 Nov 2019 05:19:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6CkueVqYBVME4T6LCtYwHv1Eee1VzP9kC3ml8CBVr5I=;
-        b=W2fTFwY2oMJ1Pes7MKv0yHAiftsFHjSXYvZWG49vfD1BoEEwfYoNVMlc7Agv6f46iN
-         v08NnMe9nRV6QR5eFcvtjMQnJqNn1uCHnNBvhfmnb9kSIj+QCMiV0FH+5IQng7TGJhPQ
-         W53GMkuug3/ZJIIb1NQjuAciwaAHgdTOn4fa5CFaII9KcdFnW0rs4ZpYrblcl91hrJzw
-         jdCPAWS6POFUPm5MbqlVXq39nnal3JCMF1f4wne/iTNCdC5vrqMFSssO7CdScIRejg/8
-         BTZGy5MjCSGOHnXWGz2v2St3krrrJhhsj2hbOhQ7thRAdQzrQ4l6hKKKRt0lhhPP7CVc
-         DOsw==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=HSvzzY/G7lC73xlGrMu73kxZNzii6k+S2gUvGl4rWlM=;
+        b=MlUM2RjzlBn2unniM/WJl4TDvrx0YjlGycQFTXHiwoXbaH//v34CbIzU+Rfr4i1SjZ
+         ATVk70dyZZ2ONyNZU1rC7OSgnueL7CM7VJnMjWrGqUgo09O93KGbe+/WEAZwVjMdATx3
+         mB3gOgK1oDBnuClVaD2Zqcl16+ueoRgzcSrTgStrzWnIo0XgFSkWFI0rfAolixqnOazW
+         1s9vJy8tmtEuTZVsTMs6R4P1LYZj+O3kSk8/NmQiEmqk8b8GVe4SmCeELn0i0LcEeuI+
+         0qPx/HGUnY3jjcVRmZweVXki8m1iUdSVGU5atMojUzNGNSvQIA856Iy0kOY3Ma8WLCFK
+         cjGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6CkueVqYBVME4T6LCtYwHv1Eee1VzP9kC3ml8CBVr5I=;
-        b=JbH2tHhCYdzBJoB9uyvkaCfW+VR8LFr1QmOxeTyZe6J+0/VnFvrPjVSXVrBDffkAS/
-         pWHQmxzaGfExz7rwQ/0O6MN5Gqnv4oyQE6IE2D4t9w9SqKz+rgvgGzpHKHTmEUjn0n51
-         URViTWPcBfL0aasGLXL7sjC8WN9cLcMrdUZ+yNxx76hiXgu4RwWIp899hQ2U9P2ojiGa
-         saVEtZgJOPEdarLFMdjRU03SjUxKlU4qqUTyPvZxifK0EeTXQARVhTtQPaPwegMby+X9
-         GY0ns6WMCSy1CnY7sSvK6yv5aN+Bp1iWDjB6Q/yUZpH9guuXbTv09JenGac2NFGqZmR+
-         43Yw==
-X-Gm-Message-State: APjAAAUe2/a2pOixt7vBAHJVUjLuH+Kpt31e8zo5SVvzDVG41ii2J+VR
-        Oi8AC/nNV696WAS0V6jJbRM+gBw1yw2UdaQUAJw=
-X-Google-Smtp-Source: APXvYqxF1YpJNZWQuhLaSnKq95shVazEciEynAl3XJWt5hhnLgcF5FpqLpdnh48Ipc78REvTah8XXP9RsYyAozMphLg=
-X-Received: by 2002:aca:c5ca:: with SMTP id v193mr4176878oif.77.1574860555146;
- Wed, 27 Nov 2019 05:15:55 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=HSvzzY/G7lC73xlGrMu73kxZNzii6k+S2gUvGl4rWlM=;
+        b=aRYczHGY0EvxeXAnsp4zPo8PaXFAOh3TN6lSpKPpwPWg3VdwyHV9kIaPhzHGzL23it
+         W738Mm2d1qLpejAZm9mRT3+WCrI/KrT8idAwDZUMsYMFNXUNt1DmJKl1WJsH9J+Vq0cX
+         tYceygWJdRprsqfDo+TInRcAv7A4ze9hIYyfYfzQ/pVWLHbRICNcQpT4riQx9UvqIY+l
+         9GfYUiuhGpskU//wZzW3hFSjbI3VIYpVds5jF5PCw4DuvC7OV+ZsS6dOhFLww+MGmXaE
+         16pMrtsj+MmkWx+D0WPZZ+BowI/06DU0E5t/8npbyMjT+5eZ04SSabXTdo4mYxeqpJ/0
+         PVzg==
+X-Gm-Message-State: APjAAAVOvd1mb22taAilasqcjwBLlDlyStiJhEBFj7pprzpIaqmyHvOJ
+        nXqV2AMSsC4r7Tld4Hl/GQ3UwHkOErCMrA==
+X-Google-Smtp-Source: APXvYqzphMU1x4UjTe568wWqFDGp/UWVlLIHRgKsVhKnaVdDOWmCrzuYvlzznTz8o+Wyb3bRIZBR1Q==
+X-Received: by 2002:a63:e94d:: with SMTP id q13mr4832006pgj.209.1574860756204;
+        Wed, 27 Nov 2019 05:19:16 -0800 (PST)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id l7sm2597116pfl.11.2019.11.27.05.19.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Nov 2019 05:19:15 -0800 (PST)
+Date:   Wed, 27 Nov 2019 18:49:08 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] net: phy: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20191127131904.GA28829@nishad>
 MIME-Version: 1.0
-References: <20191121142726.22856-1-TheSven73@gmail.com> <4b64bc1d-681d-8916-7247-a9536afc00c6@gmail.com>
-In-Reply-To: <4b64bc1d-681d-8916-7247-a9536afc00c6@gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Wed, 27 Nov 2019 08:15:43 -0500
-Message-ID: <CAGngYiXXugLL7fky4DLUf=xwgem49dNd0YT2Hxj_YoYrcPOOqg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] tps6105x add devicetree and leds support
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+This patch corrects the SPDX License Identifier style in
+header files related to PHY Layer for Ethernet drivers.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used). This patch also gives an explicit
+block comment to the SPDX License Identifier.
 
-On Thu, Nov 21, 2019 at 1:20 PM Jacek Anaszewski
-<jacek.anaszewski@gmail.com> wrote:
->
-> For both patches:
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-Is there anything I can do to help get these into your tree?
-The other patches in the set have already been taken by their
-respective maintainers.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+Changes in v2:
+  - Remove unwanted blank space.
+---
+ drivers/net/phy/aquantia.h    | 4 ++--
+ drivers/net/phy/bcm-phy-lib.h | 2 +-
+ drivers/net/phy/mdio-cavium.h | 2 +-
+ drivers/net/phy/mdio-i2c.h    | 2 +-
+ drivers/net/phy/mdio-xgene.h  | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/phy/aquantia.h b/drivers/net/phy/aquantia.h
+index 5a16caab7b2f..c684b65c642c 100644
+--- a/drivers/net/phy/aquantia.h
++++ b/drivers/net/phy/aquantia.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- * HWMON driver for Aquantia PHY
++/* SPDX-License-Identifier: GPL-2.0 */
++/* HWMON driver for Aquantia PHY
+  *
+  * Author: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+  * Author: Andrew Lunn <andrew@lunn.ch>
+diff --git a/drivers/net/phy/bcm-phy-lib.h b/drivers/net/phy/bcm-phy-lib.h
+index 5ecacb4e64f0..c86fb9d1240c 100644
+--- a/drivers/net/phy/bcm-phy-lib.h
++++ b/drivers/net/phy/bcm-phy-lib.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2015 Broadcom Corporation
+  */
+diff --git a/drivers/net/phy/mdio-cavium.h b/drivers/net/phy/mdio-cavium.h
+index b7f89ad27465..e33d3ea9a907 100644
+--- a/drivers/net/phy/mdio-cavium.h
++++ b/drivers/net/phy/mdio-cavium.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2009-2016 Cavium, Inc.
+  */
+diff --git a/drivers/net/phy/mdio-i2c.h b/drivers/net/phy/mdio-i2c.h
+index 751dab281f57..b1d27f7cd23f 100644
+--- a/drivers/net/phy/mdio-i2c.h
++++ b/drivers/net/phy/mdio-i2c.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * MDIO I2C bridge
+  *
+diff --git a/drivers/net/phy/mdio-xgene.h b/drivers/net/phy/mdio-xgene.h
+index b1f5ccb4ad9c..8af93ada8b64 100644
+--- a/drivers/net/phy/mdio-xgene.h
++++ b/drivers/net/phy/mdio-xgene.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /* Applied Micro X-Gene SoC MDIO Driver
+  *
+  * Copyright (c) 2016, Applied Micro Circuits Corporation
+-- 
+2.17.1
+
