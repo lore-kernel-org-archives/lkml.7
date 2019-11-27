@@ -2,57 +2,56 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A6CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BEAC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07FE72184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C272D217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887442;
-	bh=Yvtuzvt96j/m3vUDcrPWoNYcOPxSaH8nSvE4tz47aU0=;
+	s=default; t=1574887448;
+	bh=99+ozqhw15jcn46i8tnsS5mRIbqSjBnEL4IOQNmNxSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OlK3wAWCXiSiJdQMw06tjBqy2sgpwPvOME1cf2tl1KTBd993WWVPS+7Om72DCwLVf
-	 +1chqKre95QwjJQJXHM1Qtstc7ZQbsDS7Jlu/NIEK1qxpnEuNf19XvWtKdjTkpF2pK
-	 ac/cK6kHnbPtJm74spxmxdlB+NhEC9lAPXOodGWs=
+	b=DOQrJKvmFudcMSbQFeX0yPfK3EQCmhGLReoDuf0npnQdO0wPUZITfWLDLGZxrRezu
+	 1YDz3+t8HInG8BpEWyR2OEX1xOIeV2bGTDA0xD/rc67PaTHv9HQDpjhEMwyW1P7VoJ
+	 nkGZbmXNhw44rZBk3XlJ1ZD8CAPwe2qNpkXvHkdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbfK0UoA (ORCPT
+        id S1729542AbfK0UoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:44:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:44:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729035AbfK0Un7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:43:59 -0500
+        id S1727894AbfK0UoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:44:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D6A5216C8;
-        Wed, 27 Nov 2019 20:43:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4976221775;
+        Wed, 27 Nov 2019 20:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887438;
-        bh=Yvtuzvt96j/m3vUDcrPWoNYcOPxSaH8nSvE4tz47aU0=;
+        s=default; t=1574887443;
+        bh=99+ozqhw15jcn46i8tnsS5mRIbqSjBnEL4IOQNmNxSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pp5gzDoVThY+SnXywd7Won498UY0HeIzzGhaYFbdoIWCJUmgfT9Ip9Fahd964PQ7M
-         EOZmXr3JuwjU+1yRdxXlLeuvzWxaryBkbZbl5qdvYfiAChyWHOyvLx6XJux55cyzsd
-         XobVFMdl2Wdt3x+qFBjRWQ39gTIx/QG+VH3JRoQc=
+        b=Fu4fXE75p9Y3wxeISfKvmur8vyLgkX5lT/yU8fYN5lgCAuv5K/PZttlpT65XKKyPS
+         r9DhmpJWYBINLoaj5S6ScoGfvp/+rX3a35VCXUOUbkdK9cam+QP5f2rcuusk94Fpbt
+         up6cXipHWxywlgIuIEsOTpQKOUYR+eHf0Sq1GXxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        "=?UTF-8?q?Ernesto=20A . =20Fern=C3=A1ndez?=" 
+        <ernesto.mnd.fernandez@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 069/151] linux/bitmap.h: handle constant zero-size bitmaps correctly
-Date:   Wed, 27 Nov 2019 21:30:52 +0100
-Message-Id: <20191127203034.333073586@linuxfoundation.org>
+Subject: [PATCH 4.9 071/151] hfsplus: fix BUG on bnode parent update
+Date:   Wed, 27 Nov 2019 21:30:54 +0100
+Message-Id: <20191127203034.579519020@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -65,58 +64,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
 
-[ Upstream commit 7275b097851a5e2e0dd4da039c7e96b59ac5314e ]
+[ Upstream commit 19a9d0f1acf75e8be8cfba19c1a34e941846fa2b ]
 
-The static inlines in bitmap.h do not handle a compile-time constant
-nbits==0 correctly (they dereference the passed src or dst pointers,
-despite only 0 words being valid to access).  I had the 0-day buildbot
-chew on a patch [1] that would cause build failures for such cases without
-complaining, suggesting that we don't have any such users currently, at
-least for the 70 .config/arch combinations that was built.  Should any
-turn up, make sure they use the out-of-line versions, which do handle
-nbits==0 correctly.
+Creating, renaming or deleting a file may hit BUG_ON() if the first
+record of both a leaf node and its parent are changed, and if this
+forces the parent to be split.  This bug is triggered by xfstests
+generic/027, somewhat rarely; here is a more reliable reproducer:
 
-This is of course not the most efficient, but it's much less churn than
-teaching all the static inlines an "if (zero_const_nbits())", and since we
-don't have any current instances, this doesn't affect existing code at
-all.
+  truncate -s 50M fs.iso
+  mkfs.hfsplus fs.iso
+  mount fs.iso /mnt
+  i=1000
+  while [ $i -le 2400 ]; do
+    touch /mnt/$i &>/dev/null
+    ((++i))
+  done
+  i=2400
+  while [ $i -ge 1000 ]; do
+    mv /mnt/$i /mnt/$(perl -e "print $i x61") &>/dev/null
+    ((--i))
+  done
 
-[1] lkml.kernel.org/r/20180815085539.27485-1-linux@rasmusvillemoes.dk
+The issue is that a newly created bnode is being put twice.  Reset
+new_node to NULL in hfs_brec_update_parent() before reaching goto again.
 
-Link: http://lkml.kernel.org/r/20180818131623.8755-3-linux@rasmusvillemoes.dk
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Yury Norov <ynorov@caviumnetworks.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
+Link: http://lkml.kernel.org/r/5ee1db09b60373a15890f6a7c835d00e76bf601d.1535682461.git.ernesto.mnd.fernandez@gmail.com
+Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bitmap.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/hfsplus/brec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index 3b77588a93602..dc56304ac829f 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -185,8 +185,13 @@ extern int bitmap_print_to_pagebuf(bool list, char *buf,
- #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
- #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
+diff --git a/fs/hfsplus/brec.c b/fs/hfsplus/brec.c
+index 1002a0c08319b..20ce698251ad1 100644
+--- a/fs/hfsplus/brec.c
++++ b/fs/hfsplus/brec.c
+@@ -447,6 +447,7 @@ static int hfs_brec_update_parent(struct hfs_find_data *fd)
+ 			/* restore search_key */
+ 			hfs_bnode_read_key(node, fd->search_key, 14);
+ 		}
++		new_node = NULL;
+ 	}
  
-+/*
-+ * The static inlines below do not handle constant nbits==0 correctly,
-+ * so make such users (should any ever turn up) call the out-of-line
-+ * versions.
-+ */
- #define small_const_nbits(nbits) \
--	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG)
-+	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG && (nbits) > 0)
- 
- static inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
- {
+ 	if (!rec && node->parent)
 -- 
 2.20.1
 
