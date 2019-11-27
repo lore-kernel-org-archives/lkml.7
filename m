@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A6EC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3665321772
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77224215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887157;
-	bh=WtrCndhZCOt4K7hFDVg2mYom8qkt0Vjzm/evnWBH+ug=;
+	s=default; t=1574887160;
+	bh=j6CA8H90Oqea5Y+5FqbiK5sFUNSLb0xxZbJYSv/r/3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fYG4powKUvlu3jysmPAeHucrMMlfPZbCUajH/gT/Ng8bqWEjM18rdIeiYcTaSZpI+
-	 aDSyeWSrYwCdhu9QIQwdBbU54LswxZQNGypXWS/KMzClyzSA1UKKrqC845nuDl+7ze
-	 GWw/Ft4s10izwoveGSgMP8KElxTr2r473GgiWoYI=
+	b=sq+VXU7t6vYQ9dl/MRKt4ykuDW3mEOjBbVTju9et/TnovemVUoyaKtlAtNeD45qZi
+	 8YorEhwS9+FSWZTIZ38iQW2FzE2+5mW8vlETFZK5mfEjFUa3GxPQX4u0EhSUrfOkHn
+	 InN8E6TeEQJolPqdxgx9WELZonEPGmflNp3vCado=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbfK0UjQ (ORCPT
+        id S1728912AbfK0UjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:39:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43250 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:39:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728877AbfK0UjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:39:12 -0500
+        id S1728897AbfK0UjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:39:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BEE7215A5;
-        Wed, 27 Nov 2019 20:39:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F2D9215A5;
+        Wed, 27 Nov 2019 20:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887152;
-        bh=WtrCndhZCOt4K7hFDVg2mYom8qkt0Vjzm/evnWBH+ug=;
+        s=default; t=1574887157;
+        bh=j6CA8H90Oqea5Y+5FqbiK5sFUNSLb0xxZbJYSv/r/3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tZKvUJml/TMsKPRjC0D10uuhTSov4KUvSunVMw8aa9hhd/LyjDARcl0TQEo2VhTby
-         3rDwJfQogpITFDWfILUT0poGnk/7KCKhJ4tLMNLmHahpltBKaS8rL4tjOGnuSREF2r
-         r5EetMTwlh2qieh1SSNO+TyvzHi1stiXhOIlKKf0=
+        b=f5mKVn4gktZzvlkrrpKz9C7GMYOWgxorI9g+ZcMrhVTYyERCFiPPBtzyH2CG35B0t
+         +pKaKDmQ49YnDfwlhs1R8WmAIf2gFocTMaUvkM6PGmlzv/+q1KP5ELvyHMgmN6F5T3
+         5X7KRYgTkn7lafT9rx8qLKDsye/o33LJ4cyVamis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        stable@vger.kernel.org, Mike Galbraith <efault@gmx.de>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 117/132] virtio_console: dont tie bufs to a vq
-Date:   Wed, 27 Nov 2019 21:31:48 +0100
-Message-Id: <20191127203032.170467614@linuxfoundation.org>
+Subject: [PATCH 4.4 119/132] virtio_console: fix uninitialized variable use
+Date:   Wed, 27 Nov 2019 21:31:50 +0100
+Message-Id: <20191127203032.434658701@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,80 +62,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael S. Tsirkin <mst@redhat.com>
 
-[ Upstream commit 2855b33514d290c51d52d94e25d3ef942cd4d578 ]
+[ Upstream commit 2055997f983c6db7b5c3940ce5f8f822657d5bc3 ]
 
-an allocated buffer doesn't need to be tied to a vq -
-only vq->vdev is ever used. Pass the function the
-just what it needs - the vdev.
+We try to disable callbacks on c_ivq even without multiport
+even though that vq is not initialized in this configuration.
 
-Cc: stable@vger.kernel.org
+Fixes: c743d09dbd01 ("virtio: console: Disable callbacks for virtqueues at start of S4 freeze")
+Suggested-by: Mike Galbraith <efault@gmx.de>
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/virtio_console.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/char/virtio_console.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-index 78aab6e246e13..1a566e3b16e07 100644
+index c5b89f6b0145e..1b002e1391f0a 100644
 --- a/drivers/char/virtio_console.c
 +++ b/drivers/char/virtio_console.c
-@@ -417,7 +417,7 @@ static void reclaim_dma_bufs(void)
- 	}
- }
+@@ -2197,14 +2197,16 @@ static int virtcons_freeze(struct virtio_device *vdev)
  
--static struct port_buffer *alloc_buf(struct virtqueue *vq, size_t buf_size,
-+static struct port_buffer *alloc_buf(struct virtio_device *vdev, size_t buf_size,
- 				     int pages)
- {
- 	struct port_buffer *buf;
-@@ -440,7 +440,7 @@ static struct port_buffer *alloc_buf(struct virtqueue *vq, size_t buf_size,
- 		return buf;
- 	}
+ 	vdev->config->reset(vdev);
  
--	if (is_rproc_serial(vq->vdev)) {
-+	if (is_rproc_serial(vdev)) {
- 		/*
- 		 * Allocate DMA memory from ancestor. When a virtio
- 		 * device is created by remoteproc, the DMA memory is
-@@ -450,9 +450,9 @@ static struct port_buffer *alloc_buf(struct virtqueue *vq, size_t buf_size,
- 		 * DMA_MEMORY_INCLUDES_CHILDREN had been supported
- 		 * in dma-coherent.c
- 		 */
--		if (!vq->vdev->dev.parent || !vq->vdev->dev.parent->parent)
-+		if (!vdev->dev.parent || !vdev->dev.parent->parent)
- 			goto free_buf;
--		buf->dev = vq->vdev->dev.parent->parent;
-+		buf->dev = vdev->dev.parent->parent;
+-	virtqueue_disable_cb(portdev->c_ivq);
++	if (use_multiport(portdev))
++		virtqueue_disable_cb(portdev->c_ivq);
+ 	cancel_work_sync(&portdev->control_work);
+ 	cancel_work_sync(&portdev->config_work);
+ 	/*
+ 	 * Once more: if control_work_handler() was running, it would
+ 	 * enable the cb as the last step.
+ 	 */
+-	virtqueue_disable_cb(portdev->c_ivq);
++	if (use_multiport(portdev))
++		virtqueue_disable_cb(portdev->c_ivq);
+ 	remove_controlq_data(portdev);
  
- 		/* Increase device refcnt to avoid freeing it */
- 		get_device(buf->dev);
-@@ -835,7 +835,7 @@ static ssize_t port_fops_write(struct file *filp, const char __user *ubuf,
- 
- 	count = min((size_t)(32 * 1024), count);
- 
--	buf = alloc_buf(port->out_vq, count, 0);
-+	buf = alloc_buf(port->portdev->vdev, count, 0);
- 	if (!buf)
- 		return -ENOMEM;
- 
-@@ -954,7 +954,7 @@ static ssize_t port_fops_splice_write(struct pipe_inode_info *pipe,
- 	if (ret < 0)
- 		goto error_out;
- 
--	buf = alloc_buf(port->out_vq, 0, pipe->nrbufs);
-+	buf = alloc_buf(port->portdev->vdev, 0, pipe->nrbufs);
- 	if (!buf) {
- 		ret = -ENOMEM;
- 		goto error_out;
-@@ -1371,7 +1371,7 @@ static unsigned int fill_queue(struct virtqueue *vq, spinlock_t *lock)
- 
- 	nr_added_bufs = 0;
- 	do {
--		buf = alloc_buf(vq, PAGE_SIZE, 0);
-+		buf = alloc_buf(vq->vdev, PAGE_SIZE, 0);
- 		if (!buf)
- 			break;
- 
+ 	list_for_each_entry(port, &portdev->ports, list) {
 -- 
 2.20.1
 
