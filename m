@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFDAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7555BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20AF21871
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4946021871
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887913;
-	bh=aTkknpA7PYRoAKFfak6Ht2aOudN4LbMl57GR686Cthc=;
+	s=default; t=1574887916;
+	bh=by66fafWIkFfkatStvHYRKlIhFEru2T56686wGJEHj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qyJ6fZMugZvHwjZHkz74k/niDBEnWE/4f3f49o8j0RSqEp0tQ/bKJziY9I39wgOAk
-	 TWXjmlKR7FMzODTYNtRluso+YN3tgVM13aM/EAN/8KvcWl8YeYlW8ms4yWHcDDW2hE
-	 VXYxNZHEBOknyIEdonxhtsqtrOF04u8flnvwHtRA=
+	b=Z6p24o3Tae5PZRThCEz2eIEcIRewbyFa/rtFA9rspM6ZB8Jt+qXQDCW1O+qIZm1nR
+	 KKWQit6HtFYzlwuKzshTOy6nDNTO0AoSr5tc/RtC5MLovJ7u+th8U5wkdTW6F+FGXa
+	 psEJx96gMyQl1ASxPkGaPZZrRwrnUST36vwVf51Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfK0Uvv (ORCPT
+        id S1730540AbfK0Uvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:51:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38760 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:51:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730533AbfK0Uvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:51:48 -0500
+        id S1728358AbfK0Uvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:51:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B155A218AE;
-        Wed, 27 Nov 2019 20:51:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3988B21871;
+        Wed, 27 Nov 2019 20:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887906;
-        bh=aTkknpA7PYRoAKFfak6Ht2aOudN4LbMl57GR686Cthc=;
+        s=default; t=1574887908;
+        bh=by66fafWIkFfkatStvHYRKlIhFEru2T56686wGJEHj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xn6bxmr7pv15X0gJ/4WKRpfLIJejXQhmOUx8L7K2YdQBNVHuyu6S1QkCmr2kRJe4y
-         AzjQAZwsoKmpL6e1U1rEta0hRKEyrZvtzRT3otWxwmang7yHvZ8P6cQGYG05vLvwxj
-         kDDSzjQcEWrhhyeHT8uR6yDLni3PnfDT2LjicspM=
+        b=U0XxXbDeFnHpQm3Yr1y3JgWSudMY/vRnkB+ZQ/s+DLDoq4TFiPM/SbDLD9bRGQyLj
+         rW6cch3B1Ptp1zsCKY86DtQliSNM1C3l5p6h2hLPy2R8KO9Y0g22yDSw+SZO3Ty5n+
+         BNbBlIjLuCFxxzNyFWyodOBzKNOvwCvfsI9zXKKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 099/211] i2c: uniphier-f: fix occasional timeout error
-Date:   Wed, 27 Nov 2019 21:30:32 +0100
-Message-Id: <20191127203103.046030866@linuxfoundation.org>
+Subject: [PATCH 4.14 100/211] i2c: uniphier-f: fix race condition when IRQ is cleared
+Date:   Wed, 27 Nov 2019 21:30:33 +0100
+Message-Id: <20191127203103.134044152@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -63,134 +63,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 39226aaa85f002d695e3cafade3309e12ffdaecd ]
+[ Upstream commit eaba68785c2d24ebf1f0d46c24e11b79cc2f94c7 ]
 
-Currently, a timeout error could happen at a repeated START condition.
+The current IRQ handler clears all the IRQ status bits when it bails
+out. This is dangerous because it might clear away the status bits
+that have just been set while processing the current handler. If this
+happens, the IRQ event for the latest transfer is lost forever.
 
-For a (non-repeated) START condition, the controller starts sending
-data when the UNIPHIER_FI2C_CR_STA bit is set. However, for a repeated
-START condition, the hardware starts running when the slave address is
-written to the TX FIFO - the write to the UNIPHIER_FI2C_CR register is
-actually unneeded.
-
-Because the hardware is already running before the IRQ is enabled for
-a repeated START, the driver may miss the IRQ event. In most cases,
-this problem does not show up since modern CPUs are much faster than
-the I2C transfer. However, it is still possible that a context switch
-happens after the controller starts, but before the IRQ register is
-set up.
-
-To fix this,
-
- - Do not write UNIPHIER_FI2C_CR for repeated START conditions.
-
- - Enable IRQ *before* writing the slave address to the TX FIFO.
-
- - Disable IRQ for the current CPU while queuing up the TX FIFO;
-   If the CPU is interrupted by some task, the interrupt handler
-   might be invoked due to the empty TX FIFO before completing the
-   setup.
+The IRQ status bits must be cleared *before* the next transfer is
+kicked.
 
 Fixes: 6a62974b667f ("i2c: uniphier_f: add UniPhier FIFO-builtin I2C driver")
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-uniphier-f.c | 33 ++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 8 deletions(-)
+ drivers/i2c/busses/i2c-uniphier-f.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
-index b9a0690b4fd73..bbd5b137aa216 100644
+index bbd5b137aa216..928ea9930d17e 100644
 --- a/drivers/i2c/busses/i2c-uniphier-f.c
 +++ b/drivers/i2c/busses/i2c-uniphier-f.c
-@@ -260,6 +260,8 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- static void uniphier_fi2c_tx_init(struct uniphier_fi2c_priv *priv, u16 addr)
- {
- 	priv->enabled_irqs |= UNIPHIER_FI2C_INT_TE;
-+	uniphier_fi2c_set_irqs(priv);
-+
- 	/* do not use TX byte counter */
- 	writel(0, priv->membase + UNIPHIER_FI2C_TBC);
- 	/* set slave address */
-@@ -292,6 +294,8 @@ static void uniphier_fi2c_rx_init(struct uniphier_fi2c_priv *priv, u16 addr)
- 		priv->enabled_irqs |= UNIPHIER_FI2C_INT_RF;
- 	}
- 
-+	uniphier_fi2c_set_irqs(priv);
-+
- 	/* set slave address with RD bit */
- 	writel(UNIPHIER_FI2C_DTTX_CMD | UNIPHIER_FI2C_DTTX_RD | addr << 1,
- 	       priv->membase + UNIPHIER_FI2C_DTTX);
-@@ -315,14 +319,16 @@ static void uniphier_fi2c_recover(struct uniphier_fi2c_priv *priv)
+@@ -143,9 +143,10 @@ static void uniphier_fi2c_set_irqs(struct uniphier_fi2c_priv *priv)
+ 	writel(priv->enabled_irqs, priv->membase + UNIPHIER_FI2C_IE);
  }
  
- static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
--					 struct i2c_msg *msg, bool stop)
-+					 struct i2c_msg *msg, bool repeat,
-+					 bool stop)
+-static void uniphier_fi2c_clear_irqs(struct uniphier_fi2c_priv *priv)
++static void uniphier_fi2c_clear_irqs(struct uniphier_fi2c_priv *priv,
++				     u32 mask)
  {
- 	struct uniphier_fi2c_priv *priv = i2c_get_adapdata(adap);
- 	bool is_read = msg->flags & I2C_M_RD;
- 	unsigned long time_left, flags;
+-	writel(-1, priv->membase + UNIPHIER_FI2C_IC);
++	writel(mask, priv->membase + UNIPHIER_FI2C_IC);
+ }
  
--	dev_dbg(&adap->dev, "%s: addr=0x%02x, len=%d, stop=%d\n",
--		is_read ? "receive" : "transmit", msg->addr, msg->len, stop);
-+	dev_dbg(&adap->dev, "%s: addr=0x%02x, len=%d, repeat=%d, stop=%d\n",
-+		is_read ? "receive" : "transmit", msg->addr, msg->len,
-+		repeat, stop);
+ static void uniphier_fi2c_stop(struct uniphier_fi2c_priv *priv)
+@@ -172,6 +173,8 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
+ 		"interrupt: enabled_irqs=%04x, irq_status=%04x\n",
+ 		priv->enabled_irqs, irq_status);
  
- 	priv->len = msg->len;
- 	priv->buf = msg->buf;
-@@ -338,16 +344,24 @@ static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
++	uniphier_fi2c_clear_irqs(priv, irq_status);
++
+ 	if (irq_status & UNIPHIER_FI2C_INT_STOP)
+ 		goto complete;
+ 
+@@ -250,8 +253,6 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
+ 	}
+ 
+ handled:
+-	uniphier_fi2c_clear_irqs(priv);
+-
+ 	spin_unlock(&priv->lock);
+ 
+ 	return IRQ_HANDLED;
+@@ -340,7 +341,7 @@ static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
+ 		priv->flags |= UNIPHIER_FI2C_STOP;
+ 
+ 	reinit_completion(&priv->comp);
+-	uniphier_fi2c_clear_irqs(priv);
++	uniphier_fi2c_clear_irqs(priv, U32_MAX);
  	writel(UNIPHIER_FI2C_RST_TBRST | UNIPHIER_FI2C_RST_RBRST,
  	       priv->membase + UNIPHIER_FI2C_RST);	/* reset TX/RX FIFO */
  
-+	spin_lock_irqsave(&priv->lock, flags);
-+
- 	if (is_read)
- 		uniphier_fi2c_rx_init(priv, msg->addr);
- 	else
- 		uniphier_fi2c_tx_init(priv, msg->addr);
- 
--	uniphier_fi2c_set_irqs(priv);
--
- 	dev_dbg(&adap->dev, "start condition\n");
--	writel(UNIPHIER_FI2C_CR_MST | UNIPHIER_FI2C_CR_STA,
--	       priv->membase + UNIPHIER_FI2C_CR);
-+	/*
-+	 * For a repeated START condition, writing a slave address to the FIFO
-+	 * kicks the controller. So, the UNIPHIER_FI2C_CR register should be
-+	 * written only for a non-repeated START condition.
-+	 */
-+	if (!repeat)
-+		writel(UNIPHIER_FI2C_CR_MST | UNIPHIER_FI2C_CR_STA,
-+		       priv->membase + UNIPHIER_FI2C_CR);
-+
-+	spin_unlock_irqrestore(&priv->lock, flags);
- 
- 	time_left = wait_for_completion_timeout(&priv->comp, adap->timeout);
- 
-@@ -408,6 +422,7 @@ static int uniphier_fi2c_master_xfer(struct i2c_adapter *adap,
- 				     struct i2c_msg *msgs, int num)
- {
- 	struct i2c_msg *msg, *emsg = msgs + num;
-+	bool repeat = false;
- 	int ret;
- 
- 	ret = uniphier_fi2c_check_bus_busy(adap);
-@@ -418,9 +433,11 @@ static int uniphier_fi2c_master_xfer(struct i2c_adapter *adap,
- 		/* Emit STOP if it is the last message or I2C_M_STOP is set. */
- 		bool stop = (msg + 1 == emsg) || (msg->flags & I2C_M_STOP);
- 
--		ret = uniphier_fi2c_master_xfer_one(adap, msg, stop);
-+		ret = uniphier_fi2c_master_xfer_one(adap, msg, repeat, stop);
- 		if (ret)
- 			return ret;
-+
-+		repeat = !stop;
- 	}
- 
- 	return num;
 -- 
 2.20.1
 
