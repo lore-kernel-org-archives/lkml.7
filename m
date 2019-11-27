@@ -2,201 +2,155 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875D6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE867C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5477220871
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:59:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J6979edA"
+	by mail.kernel.org (Postfix) with ESMTP id 9CB7020872
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfK0R7V (ORCPT
+        id S1727090AbfK0SBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:59:21 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37321 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfK0R7V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:59:21 -0500
-Received: by mail-pj1-f67.google.com with SMTP id bb19so6809599pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 09:59:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ezl2J7x0qEbob3yE0P5wX3Ui+Wbk0cG2BwPkP3kEj5Y=;
-        b=J6979edAXnvzD+DxpY1Rpdrv2sZQSBrfPzOX0P7q2tW9DBES7k4YGGkRgBBcvZppet
-         IHa/DiqfeH6r6w+303x8cyWIHSMaR9QpY4lQhnnJndwgODtWfMdSsDgTt2tT/BUTHZZU
-         BnosabZCMvc/C0GZYQyGZSpOvQytI62IR3phE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ezl2J7x0qEbob3yE0P5wX3Ui+Wbk0cG2BwPkP3kEj5Y=;
-        b=gNHihlfEdmlLUY6nIAaINgCww/k89A7ZAHtkUBFKtPuOEjVPQHTy2vNelMOhFutOAG
-         8RZbRBuTA2r8+gjZn8X9ZAbSALVCxb9Y/2HAL4JeKbexGVQfpl62a1dc3uC/HW/9kT7L
-         jBeLYdYQGfpHK/AZTr40jEM3tg5uMoAcazyYlpFl3iqetYr115Q28XPD4M6rdc/LyAWS
-         r1wzfARq+09NrySJycY2KNkeMoA5VqahrHPudSEgG38aw0cbkZ9uPM5qFRvoanLZC/B4
-         uDecdfIfbTPBeu7eMFkC1V1OnnYMWP7E0JAbqlwoZdX4y6c2R6myT8fa/x1rAQuTR0mE
-         gg+Q==
-X-Gm-Message-State: APjAAAUvOgw9i6/AVspM7vpgy1N2J8Dsr8BPbO7hpDPQw6KZOP5swVeq
-        vCtsb8z9vUwUKr1N33OUNbdVUg==
-X-Google-Smtp-Source: APXvYqzAsp2FzmJPhEiveHXqNvW+AhAHn0LqoWNyHVLFte5LKXXaOX9hV2I8WqQ5RrQ+7i6xI5V8lw==
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr2956841pjb.30.1574877560087;
-        Wed, 27 Nov 2019 09:59:20 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e8sm17373921pga.17.2019.11.27.09.59.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 09:59:19 -0800 (PST)
-Date:   Wed, 27 Nov 2019 09:59:18 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-hardening@lists.openwall.com,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: [PATCH v2 0/3] ubsan: Split out bounds checker
-Message-ID: <201911270952.D66CD15AEC@keescook>
-References: <20191121181519.28637-1-keescook@chromium.org>
- <CACT4Y+b3JZM=TSvUPZRMiJEPNH69otidRCqq9gmKX53UHxYqLg@mail.gmail.com>
- <201911262134.ED9E60965@keescook>
- <CACT4Y+bsLJ-wFx_TaXqax3JByUOWB3uk787LsyMVcfW6JzzGvg@mail.gmail.com>
- <CACT4Y+aFiwxT6SO-ABx695Yg3=Zam5saqCo4+FembPwKSV8cug@mail.gmail.com>
+        Wed, 27 Nov 2019 13:01:01 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2130 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726576AbfK0SBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 13:01:01 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 27BC0BDB9FE9DE7501A4;
+        Wed, 27 Nov 2019 18:01:00 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 27 Nov 2019 18:00:59 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 27 Nov
+ 2019 18:00:59 +0000
+Subject: Re: [PATCH 1/3] iommu: match the original algorithm
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        <iommu@lists.linux-foundation.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <20191121001348.27230-1-xiyou.wangcong@gmail.com>
+ <20191121001348.27230-2-xiyou.wangcong@gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <9ac29292-bc3d-ae57-daff-5b3264020fe2@huawei.com>
+Date:   Wed, 27 Nov 2019 18:00:58 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+aFiwxT6SO-ABx695Yg3=Zam5saqCo4+FembPwKSV8cug@mail.gmail.com>
+In-Reply-To: <20191121001348.27230-2-xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 10:34:24AM +0100, Dmitry Vyukov wrote:
-> On Wed, Nov 27, 2019 at 7:54 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > On Wed, Nov 27, 2019 at 6:42 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Fri, Nov 22, 2019 at 10:07:29AM +0100, Dmitry Vyukov wrote:
-> > > > On Thu, Nov 21, 2019 at 7:15 PM Kees Cook <keescook@chromium.org> wrote:
-> > > > >
-> > > > > v2:
-> > > > >     - clarify Kconfig help text (aryabinin)
-> > > > >     - add reviewed-by
-> > > > >     - aim series at akpm, which seems to be where ubsan goes through?
-> > > > > v1: https://lore.kernel.org/lkml/20191120010636.27368-1-keescook@chromium.org
-> > > > >
-> > > > > This splits out the bounds checker so it can be individually used. This
-> > > > > is expected to be enabled in Android and hopefully for syzbot. Includes
-> > > > > LKDTM tests for behavioral corner-cases (beyond just the bounds checker).
-> > > > >
-> > > > > -Kees
-> > > >
-> > > > +syzkaller mailing list
-> > > >
-> > > > This is great!
-> > >
-> > > BTW, can I consider this your Acked-by for these patches? :)
-> > >
-> > > > I wanted to enable UBSAN on syzbot for a long time. And it's
-> > > > _probably_ not lots of work. But it was stuck on somebody actually
-> > > > dedicating some time specifically for it.
-> > >
-> > > Do you have a general mechanism to test that syzkaller will actually
-> > > pick up the kernel log splat of a new check?
-> >
-> > Yes. That's one of the most important and critical parts of syzkaller :)
-> > The tests for different types of bugs are here:
-> > https://github.com/google/syzkaller/tree/master/pkg/report/testdata/linux/report
-> >
-> > But have 3 for UBSAN, but they may be old and it would be useful to
-> > have 1 example crash per bug type:
-> >
-> > syzkaller$ grep UBSAN pkg/report/testdata/linux/report/*
-> > pkg/report/testdata/linux/report/40:TITLE: UBSAN: Undefined behaviour
-> > in drivers/usb/core/devio.c:LINE
-> > pkg/report/testdata/linux/report/40:[    4.556972] UBSAN: Undefined
-> > behaviour in drivers/usb/core/devio.c:1517:25
-> > pkg/report/testdata/linux/report/41:TITLE: UBSAN: Undefined behaviour
-> > in ./arch/x86/include/asm/atomic.h:LINE
-> > pkg/report/testdata/linux/report/41:[    3.805453] UBSAN: Undefined
-> > behaviour in ./arch/x86/include/asm/atomic.h:156:2
-> > pkg/report/testdata/linux/report/42:TITLE: UBSAN: Undefined behaviour
-> > in kernel/time/hrtimer.c:LINE
-> > pkg/report/testdata/linux/report/42:[   50.583499] UBSAN: Undefined
-> > behaviour in kernel/time/hrtimer.c:310:16
-> >
-> > One of them is incomplete and is parsed as "corrupted kernel output"
-> > (won't be reported):
-> > https://github.com/google/syzkaller/blob/master/pkg/report/testdata/linux/report/42
-> >
-> > Also I see that report parsing just takes the first line, which
-> > includes file name, which is suboptimal (too long, can't report 2 bugs
-> > in the same file). We seem to converge on "bug-type in function-name"
-> > format.
-> > The thing about bug titles is that it's harder to change them later.
-> > If syzbot already reported 100 bugs and we change titles, it will
-> > start re-reporting the old one after new names and the old ones will
-> > look stale, yet they still relevant, just detected under different
-> > name.
-> > So we also need to get this part right before enabling.
-
-It Sounds like instead of "UBSAN: Undefined behaviour in $file", UBSAN
-should report something like "UBSAN: $behavior in $file"?
-
-e.g.
-40: UBSAN: bad shift in drivers/usb/core/devio.c:1517:25"
-41: UBSAN: signed integer overflow in ./arch/x86/include/asm/atomic.h:156:2
-
-I'll add one for the bounds checker.
-
-How are these reports used? (And is there a way to check a live kernel
-crash? i.e. to tell syzkaller "echo ARRAY_BOUNDS >/.../lkdtm..." and
-generate a report?
-
-> > > I noticed a few things
-> > > about the ubsan handlers: they don't use any of the common "warn"
-> > > infrastructure (neither does kasan from what I can see), and was missing
-> > > a check for panic_on_warn (kasan has this, but does it incorrectly).
-> >
-> > Yes, panic_on_warn we also need.
-> >
-> > I will look at the patches again for Acked-by.
+On 21/11/2019 00:13, Cong Wang wrote:
+> The IOVA cache algorithm implemented in IOMMU code does not
+> exactly match the original algorithm described in the paper.
 > 
+> Particularly, it doesn't need to free the loaded empty magazine
+> when trying to put it back to global depot.
 > 
-> Acked-by: Dmitry Vyukov <dvyukov@google.com>
-> for the series.
-
-Thanks!
-
+> This patch makes it exactly match the original algorithm.
 > 
-> I see you extended the test module, do you have samples of all UBSAN
-> report types that are triggered by these functions? Is so, please add
-> them to:
-> https://github.com/google/syzkaller/tree/master/pkg/report/testdata/linux/report
 
-Okay, cool.
+I haven't gone into the details, but this patch alone is giving this:
 
-> with whatever titles they are detected now. Improving titles will then
-> be the next step, but much simpler with a good collection of tests.
+root@(none)$ [  123.857024] kmemleak: 8 new suspected memory leaks (see 
+/sys/kernel/debug/kmemleak)
+
+root@(none)$ cat /sys/kernel/debug/kmemleak
+unreferenced object 0xffff002339843000 (size 2048):
+   comm "swapper/0", pid 1, jiffies 4294898165 (age 122.688s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<000000001d2710bf>] kmem_cache_alloc+0x188/0x260
+     [<00000000cc229a78>] init_iova_domain+0x1e8/0x2a8
+     [<000000002646fc92>] iommu_setup_dma_ops+0x200/0x710
+     [<00000000acc5fe46>] arch_setup_dma_ops+0x80/0x128
+     [<00000000994e1e43>] acpi_dma_configure+0x11c/0x140
+     [<00000000effe9374>] pci_dma_configure+0xe0/0x108
+     [<00000000f614ae1e>] really_probe+0x210/0x548
+     [<0000000087884b1b>] driver_probe_device+0x7c/0x148
+     [<0000000010af2936>] device_driver_attach+0x94/0xa0
+     [<00000000c92b2971>] __driver_attach+0xa4/0x110
+     [<00000000c873500f>] bus_for_each_dev+0xe8/0x158
+     [<00000000c7d0e008>] driver_attach+0x30/0x40
+     [<000000003cf39ba8>] bus_add_driver+0x234/0x2f0
+     [<0000000043830a45>] driver_register+0xbc/0x1d0
+     [<00000000c8a41162>] __pci_register_driver+0xb0/0xc8
+     [<00000000e562eeec>] sas_v3_pci_driver_init+0x20/0x28
+unreferenced object 0xffff002339844000 (size 2048):
+   comm "swapper/0", pid 1, jiffies 4294898165 (age 122.688s)
+
+[snip]
+
+And I don't feel like continuing until it's resolved....
+
+Thanks,
+John
+
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+> ---
+>   drivers/iommu/iova.c | 14 ++++++++------
+>   1 file changed, 8 insertions(+), 6 deletions(-)
 > 
-> Will you send the panic_on_want patch as well?
+> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+> index 41c605b0058f..92f72a85e62a 100644
+> --- a/drivers/iommu/iova.c
+> +++ b/drivers/iommu/iova.c
+> @@ -900,7 +900,7 @@ static bool __iova_rcache_insert(struct iova_domain *iovad,
+>   
+>   	if (!iova_magazine_full(cpu_rcache->loaded)) {
+>   		can_insert = true;
+> -	} else if (!iova_magazine_full(cpu_rcache->prev)) {
+> +	} else if (iova_magazine_empty(cpu_rcache->prev)) {
+>   		swap(cpu_rcache->prev, cpu_rcache->loaded);
+>   		can_insert = true;
+>   	} else {
+> @@ -909,8 +909,9 @@ static bool __iova_rcache_insert(struct iova_domain *iovad,
+>   		if (new_mag) {
+>   			spin_lock(&rcache->lock);
+>   			if (rcache->depot_size < MAX_GLOBAL_MAGS) {
+> -				rcache->depot[rcache->depot_size++] =
+> -						cpu_rcache->loaded;
+> +				swap(rcache->depot[rcache->depot_size], cpu_rcache->prev);
+> +				swap(cpu_rcache->prev, cpu_rcache->loaded);
+> +				rcache->depot_size++;
+>   			} else {
+>   				mag_to_free = cpu_rcache->loaded;
+>   			}
+> @@ -963,14 +964,15 @@ static unsigned long __iova_rcache_get(struct iova_rcache *rcache,
+>   
+>   	if (!iova_magazine_empty(cpu_rcache->loaded)) {
+>   		has_pfn = true;
+> -	} else if (!iova_magazine_empty(cpu_rcache->prev)) {
+> +	} else if (iova_magazine_full(cpu_rcache->prev)) {
+>   		swap(cpu_rcache->prev, cpu_rcache->loaded);
+>   		has_pfn = true;
+>   	} else {
+>   		spin_lock(&rcache->lock);
+>   		if (rcache->depot_size > 0) {
+> -			iova_magazine_free(cpu_rcache->loaded);
+> -			cpu_rcache->loaded = rcache->depot[--rcache->depot_size];
+> +			swap(rcache->depot[rcache->depot_size - 1], cpu_rcache->prev);
+> +			swap(cpu_rcache->prev, cpu_rcache->loaded);
+> +			rcache->depot_size--;
+>   			has_pfn = true;
+>   		}
+>   		spin_unlock(&rcache->lock);
+> 
 
-Yes; I wanted to make sure it was needed first (which you've confirmed
-now). I'll likely not send it until next week.
-
--- 
-Kees Cook
