@@ -5,56 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5ABC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFADC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E482168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19E40215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890088;
-	bh=BMFHvk5a88FT5YP9mQsEHlbl8cKcHQllCzfUDXjL5Qg=;
+	s=default; t=1574890093;
+	bh=kAqtKWCDZXsE9YhDOOmXD4HFJ72pPiA6mcNcJzI0bfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZVy4vrrbixfBFZljaM8Mn3yEnIM3Dj8tEm2K+fYzu/QLWuK4LnXvYJnLKiVcLBnZ
-	 eZMffetypNWzCCzNd3h3GzH+GoMQ782QTp0FD6dNrZAUDZslMUnwgcoS92e5bDHmaX
-	 Vo69Pr5mceS2YEahjz/AHQtByqI1+hLYakPJhN/s=
+	b=1wcp8qf7vJu94R6V4jKY0VVzhC5eq7Pte/3yCbpSSsIiQcPN5AhdW62ULVROa3/tR
+	 lCkKQXhx/mKObr2DmSUGSdu4h7k87zOxDsQuGLc4gmy7L9mROCbsGz4NilfrLCUoOS
+	 XGWUl1oBnUZbBLHWLuafMc5MMvE6Ezsg7qcOHbd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731990AbfK0V2F (ORCPT
+        id S1729963AbfK0U6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:28:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50206 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:58:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731350AbfK0U6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:58:50 -0500
+        id S1727423AbfK0U6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:58:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9655B2084D;
-        Wed, 27 Nov 2019 20:58:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5C79215B2;
+        Wed, 27 Nov 2019 20:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888329;
-        bh=BMFHvk5a88FT5YP9mQsEHlbl8cKcHQllCzfUDXjL5Qg=;
+        s=default; t=1574888316;
+        bh=kAqtKWCDZXsE9YhDOOmXD4HFJ72pPiA6mcNcJzI0bfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nNnhhFe+uHY7Pry/lssMSbjZ5w2wE253aTl4gzK7hrOrA8x31pd06Drw66rJvvtoV
-         vIsHj33x01hRYQqnKJZ1Tsv7Ao0uccrceq8js9FNqEU6ITKMSnHcTVHN0tfVhVpcx1
-         rrYuTissvM1k91xYgGyNp4PACKcHePg0FVkLdEJU=
+        b=hOwlJ3wzz8UJ++fmE886uAOT5krvZlvTfkvYykiWjjE28M+ZwNnFfAPeMi8a6MAzw
+         QInT732MFL6PCEmyl63ZjTMR0IK5OSmbfCAhrnRHT92TEeOY2PavjImQ5W2zdVPNE5
+         ea2SIi9HaRsNxelE/7LrcXVjTwJEvSmeBVGWnv1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 090/306] kprobes, x86/ptrace.h: Make regs_get_kernel_stack_nth() not fault on bad stack
-Date:   Wed, 27 Nov 2019 21:29:00 +0100
-Message-Id: <20191127203121.491777539@linuxfoundation.org>
+        stable@vger.kernel.org, Kyeongdon Kim <kyeongdon.kim@lge.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 086/306] net: fix warning in af_unix
+Date:   Wed, 27 Nov 2019 21:28:56 +0100
+Message-Id: <20191127203121.210938544@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -67,100 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Kyeongdon Kim <kyeongdon.kim@lge.com>
 
-[ Upstream commit c2712b858187f5bcd7b042fe4daa3ba3a12635c0 ]
+[ Upstream commit 33c4368ee2589c165aebd8d388cbd91e9adb9688 ]
 
-Andy had some concerns about using regs_get_kernel_stack_nth() in a new
-function regs_get_kernel_argument() as if there's any error in the stack
-code, it could cause a bad memory access. To be on the safe side, call
-probe_kernel_read() on the stack address to be extra careful in accessing
-the memory. A helper function, regs_get_kernel_stack_nth_addr(), was added
-to just return the stack address (or NULL if not on the stack), that will be
-used to find the address (and could be used by other functions) and read the
-address with kernel_probe_read().
+This fixes the "'hash' may be used uninitialized in this function"
 
-Requested-by: Andy Lutomirski <luto@amacapital.net>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20181017165951.09119177@gandalf.local.home
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+net/unix/af_unix.c:1041:20: warning: 'hash' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  addr->hash = hash ^ sk->sk_type;
+
+Signed-off-by: Kyeongdon Kim <kyeongdon.kim@lge.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/ptrace.h | 42 +++++++++++++++++++++++++++++------
- 1 file changed, 35 insertions(+), 7 deletions(-)
+ net/unix/af_unix.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index 6de1fd3d00974..ee696efec99fd 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -236,24 +236,52 @@ static inline int regs_within_kernel_stack(struct pt_regs *regs,
- 		(kernel_stack_pointer(regs) & ~(THREAD_SIZE - 1)));
- }
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 231b6c032d2c3..d2d6ff0c6265d 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -225,6 +225,8 @@ static inline void unix_release_addr(struct unix_address *addr)
  
-+/**
-+ * regs_get_kernel_stack_nth_addr() - get the address of the Nth entry on stack
-+ * @regs:	pt_regs which contains kernel stack pointer.
-+ * @n:		stack entry number.
-+ *
-+ * regs_get_kernel_stack_nth() returns the address of the @n th entry of the
-+ * kernel stack which is specified by @regs. If the @n th entry is NOT in
-+ * the kernel stack, this returns NULL.
-+ */
-+static inline unsigned long *regs_get_kernel_stack_nth_addr(struct pt_regs *regs, unsigned int n)
-+{
-+	unsigned long *addr = (unsigned long *)kernel_stack_pointer(regs);
-+
-+	addr += n;
-+	if (regs_within_kernel_stack(regs, (unsigned long)addr))
-+		return addr;
-+	else
-+		return NULL;
-+}
-+
-+/* To avoid include hell, we can't include uaccess.h */
-+extern long probe_kernel_read(void *dst, const void *src, size_t size);
-+
- /**
-  * regs_get_kernel_stack_nth() - get Nth entry of the stack
-  * @regs:	pt_regs which contains kernel stack pointer.
-  * @n:		stack entry number.
-  *
-  * regs_get_kernel_stack_nth() returns @n th entry of the kernel stack which
-- * is specified by @regs. If the @n th entry is NOT in the kernel stack,
-+ * is specified by @regs. If the @n th entry is NOT in the kernel stack
-  * this returns 0.
-  */
- static inline unsigned long regs_get_kernel_stack_nth(struct pt_regs *regs,
- 						      unsigned int n)
+ static int unix_mkname(struct sockaddr_un *sunaddr, int len, unsigned int *hashp)
  {
--	unsigned long *addr = (unsigned long *)kernel_stack_pointer(regs);
--	addr += n;
--	if (regs_within_kernel_stack(regs, (unsigned long)addr))
--		return *addr;
--	else
--		return 0;
-+	unsigned long *addr;
-+	unsigned long val;
-+	long ret;
++	*hashp = 0;
 +
-+	addr = regs_get_kernel_stack_nth_addr(regs, n);
-+	if (addr) {
-+		ret = probe_kernel_read(&val, addr, sizeof(val));
-+		if (!ret)
-+			return val;
-+	}
-+	return 0;
- }
- 
- #define arch_has_single_step()	(1)
+ 	if (len <= sizeof(short) || len > sizeof(*sunaddr))
+ 		return -EINVAL;
+ 	if (!sunaddr || sunaddr->sun_family != AF_UNIX)
 -- 
 2.20.1
 
