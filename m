@@ -2,102 +2,180 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C38AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DC8C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE9F20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574838522;
-	bh=UqlPXgYCB4OEuqIeo+OfzvDZdoCkNQAXuVafkKUn788=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IfVBD5hOurjZPnFj5k2/Kh/algl7sDARynnoVWdsAw+knL9+L4DaOYZsA0pt088t1
-	 1FOvfawNH3cu3J3kLGN+94NR88Gn+NdYkqLRKdFatxm6DK7Ya/8eWTSXucwFfbs5lG
-	 bh0eTrSdHmSVuh/VWmNICd4ZVLK2Xi+1EM1YiWi4=
+	by mail.kernel.org (Postfix) with ESMTP id 5031C20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:12:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MCbU0ZQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfK0HIl (ORCPT
+        id S1726383AbfK0HMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 02:08:41 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38686 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfK0HIk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 02:08:40 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z19so6129573wmk.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 23:08:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MvmIEpATuvMobwrVTFdR9fJXJjdJiximyoAaKAfPkU0=;
-        b=bIC5dDfkOY04fDcZFUcTbzETKsEMDmkJlaljnqs/1S5PvRJNllNE6mJ77CnQQFR6PM
-         geOCdgnfDkTTt5T3k6oKnyvKEDV+MUqeukaTYNCsdn+6HE5RVVqckmv+JozUWE/AXaRm
-         FzY+Sf5pyPzs86qOzrgDiubG58ARFwK8UojRCAU2hKh7s0hW2Gxf3wxFb3M+pgxyfV5N
-         bnr6ZqppWfeQyxATi72U7kKxXGuowdpyADQSHcqsUY6CQ6nXdQFx8gCSgyPLIQRnl1Iy
-         OMd7irP99iH7p5al7MiGkAmxyihIGQENI0N6jHNLDe9fbx1fPFSWqa7UYAV72H1+68uL
-         J2Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MvmIEpATuvMobwrVTFdR9fJXJjdJiximyoAaKAfPkU0=;
-        b=tLr3GbTkhzm1wz9ov8zSuohzY/68deYfb2AT8BK3Bg+4i/UkkJ/6vQs1o1z+zwFRn2
-         wN4b3UXpS25h2BWevcrJ6DOWNLpx9TJSzDrUpz05pJjky2uzTnCwU89GtmdjT7SUeJqd
-         YXFcVm+wxgEixPHhaTHdUe76qSkeqk60mWKMD3sIKnE0/aTbD59A/IL1wwYs2MEW4Qjn
-         1tPteK1xk/+7KpiGZWSGXkLsDPjzgmK+0iPCB7G7Ie15IPJdEiTg6otxclQYhS+ZWAAh
-         sSv4hZ89NL4EezvDzWatK+vDTIK/Hf0Lf3o7sBTvRpNS9Bli2I9qhJI1mjrZqYo6UNqG
-         tSBw==
-X-Gm-Message-State: APjAAAXF/OvXyQwNksyyocGXNx7OFhpHh5ZONeMXQau3gkwxPlivluGT
-        cIePps2WExDPPG6xljUQW9xUyUm+
-X-Google-Smtp-Source: APXvYqxhrlGFapEC7afU3Xwi8zSS+jvG4H2m4aZ4OP9RvUpUsHpcvTRbvNcaZYMn9DObgmomJk+WiA==
-X-Received: by 2002:a05:600c:2052:: with SMTP id p18mr2673767wmg.92.1574838518662;
-        Tue, 26 Nov 2019 23:08:38 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id m15sm18096496wrj.52.2019.11.26.23.08.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 23:08:38 -0800 (PST)
-Date:   Wed, 27 Nov 2019 08:08:36 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Andi Kleen <ak@linux.intel.com>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86: Filter MSR writes from luserspace
-Message-ID: <20191127070836.GA94748@gmail.com>
-References: <20191126112234.GA22393@zn.tnic>
- <87zhgie6nl.fsf@linux.intel.com>
- <20191126203336.GF31379@zn.tnic>
- <20191126205028.GJ84886@tassilo.jf.intel.com>
- <20191126205351.GG31379@zn.tnic>
+        Wed, 27 Nov 2019 02:12:17 -0500
+Received: from mail-eopbgr40064.outbound.protection.outlook.com ([40.107.4.64]:50146
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725861AbfK0HMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 02:12:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DoZNinUKvE+Ud7zrUJObzEnvXXXa4xIdhdfmr2qmj56NDMK9HtJIBhQxhNeIJko9wa9f8Ov/8Fg0Dw9EJqs/E6w+vExXCRHzQ6SVzLzdugAmSzydPFhfXT2a2QuOQEhtBA/5wZmzzO2JAdIfXZ4zjtxOQspyX1aMIDVKLMVuzg4jJmVenV2CQJQ8dbPvVN369dtVK0YjjolzaCPMC6xylbYc8SvNjURogrcrFnf2BL4XlkaoGYPV2A/EqWT99LvjSVJfkBehTxb2xJMfT3rAcy72n05fQOSWv4rEF0vik2zvDjxFHQVCSjsq1NMUaQAYQ0X974tWnVtGgBkzdc5OEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4RGGr3kSIpLUtwP5HUrdH6jKociEF/1zc4vaIm96Wrc=;
+ b=QF2STvvusTXsYgsn+OpRq2HUPYR5HgBDn+EkWEunWhEnlFi8C2TkBwMq2ZgCCTURPgWgR5+AuxQmd5csgakN95fMOTndt7fivcxzq2WvfOR1KDMnYE9ZKwIU+fCj05znakx4IySCAtmPYje7XaLJ7kkk04CX3fNX0oRG5oduiXvWTpx3hyvwBVszx+mOken2d6qB1Puv21SOCon+t6sfvEGbTRHqyZm2t2+kknO6zb4PbkdSnZShilb8Iojz5A8qC1aPPL1Uoi5MrApASyAVL+3luhvRTjNh3LKA6Wt4FVJaH1Kto46T2AuP9gxSFxMrrDEIo1UnJ/bKZqvqfrp4Hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4RGGr3kSIpLUtwP5HUrdH6jKociEF/1zc4vaIm96Wrc=;
+ b=MCbU0ZQV1MnsWc6pG97Zy+ZZ2jSbZulDYKsfsStwvcFR0ZQLbgyA044WdBFG4GYqkeX+cuGnlMHVOQ2MEfDqkwE8sfqAkdtiKv/tzARLF4WfDy/5tUDCy+00mwNWOBJVDKz+VGwVkOM4FtuvdXrLY63voIhO8dINBqJRVN/qEcI=
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
+ VI1PR04MB4829.eurprd04.prod.outlook.com (20.177.51.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.21; Wed, 27 Nov 2019 07:12:10 +0000
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::c947:5ae7:2a68:a4f2]) by VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::c947:5ae7:2a68:a4f2%3]) with mapi id 15.20.2495.014; Wed, 27 Nov 2019
+ 07:12:10 +0000
+From:   Peng Ma <peng.ma@nxp.com>
+To:     "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+CC:     "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Ma <peng.ma@nxp.com>
+Subject: [PATCH] i2c: imx: Defer probing if EDMA not available
+Thread-Topic: [PATCH] i2c: imx: Defer probing if EDMA not available
+Thread-Index: AQHVpPH7P18PyO0DCUWpmTSTyww0uQ==
+Date:   Wed, 27 Nov 2019 07:12:09 +0000
+Message-ID: <20191127071136.5240-1-peng.ma@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SGXP274CA0020.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::32)
+ To VI1PR04MB4431.eurprd04.prod.outlook.com (2603:10a6:803:6f::13)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.ma@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4f67f72e-cbca-4ae2-814a-08d773091e25
+x-ms-traffictypediagnostic: VI1PR04MB4829:|VI1PR04MB4829:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB4829A335D611A8F76530AE30ED440@VI1PR04MB4829.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:374;
+x-forefront-prvs: 023495660C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(39860400002)(376002)(136003)(199004)(189003)(50226002)(66946007)(64756008)(186003)(6512007)(66476007)(6486002)(66446008)(6436002)(316002)(66066001)(8676002)(66556008)(1076003)(81166006)(4326008)(8936002)(110136005)(81156014)(54906003)(2501003)(14454004)(305945005)(25786009)(2616005)(26005)(86362001)(2201001)(99286004)(3846002)(6116002)(7736002)(256004)(2906002)(52116002)(14444005)(386003)(6506007)(36756003)(478600001)(5660300002)(44832011)(71200400001)(71190400001)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4829;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XsCEll25OKnK7O5koICj57AJiO7CvdnYQ5Zbg9OwCFaoUVoDCmXV/k55XR7pfoy7yL9Y0f8ySFv0Ume3u0/kxzN8DonXLTZUkBZEkAUQpjfxl/TqrydmpCe051d8aGGsqPJokgkCyoxk9+0YY1gjBBcMlQQRRqXPr1yOxuGf2YZmFrd7RAO7pBPvpeRIZqNstpmQBL2ZM1ZrVagcgTOPytTdQ4MRCbqkh18XWGdrdqQF/OuqZ35bMf6+SDeeufVxP3tgPaOyffkVnIoVhCWfvc4jbJGg92TJDFjJtfd08p7knnhU5c4ZccXoY0G9w2oUDCLoQc48LsidS0xa7wvjOtLi62m0jLo8it+HdNbUDCGHyvXWbK62CV5J7w/Eb8Co3+JpfMIqIHPWzn7yYbJcZHGa0Ra8YQ/tgO/7RvRms80ra1fSkTJugzXj4qLoRbL2
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126205351.GG31379@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f67f72e-cbca-4ae2-814a-08d773091e25
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2019 07:12:09.9328
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z1OuEg5pnseeuiuq8uOffhwWYeFdKJAtYUEiAH3H5j0b+2QB0goswu0CtTLllCwU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4829
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+EDMA may be not available or defered due to dependencies on
+other modules, If these scenarios is encountered, we should
+defer probing.
 
-* Borislav Petkov <bp@alien8.de> wrote:
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+---
+ drivers/i2c/busses/i2c-imx.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-> On Tue, Nov 26, 2019 at 12:50:28PM -0800, Andi Kleen wrote:
-> > You'll almost certainly violate Linus' golden rule of application
-> > compatibility and the whole thing will be reverted in the end.
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index 40111a3..c2b0693 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -369,8 +369,8 @@ static void i2c_imx_reset_regs(struct imx_i2c_struct *i=
+2c_imx)
+ }
+=20
+ /* Functions for DMA support */
+-static void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
+-						dma_addr_t phy_addr)
++static int i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
++			       dma_addr_t phy_addr)
+ {
+ 	struct imx_i2c_dma *dma;
+ 	struct dma_slave_config dma_sconfig;
+@@ -379,7 +379,7 @@ static void i2c_imx_dma_request(struct imx_i2c_struct *=
+i2c_imx,
+=20
+ 	dma =3D devm_kzalloc(dev, sizeof(*dma), GFP_KERNEL);
+ 	if (!dma)
+-		return;
++		return -ENOMEM;
+=20
+ 	dma->chan_tx =3D dma_request_chan(dev, "tx");
+ 	if (IS_ERR(dma->chan_tx)) {
+@@ -424,7 +424,7 @@ static void i2c_imx_dma_request(struct imx_i2c_struct *=
+i2c_imx,
+ 	dev_info(dev, "using %s (tx) and %s (rx) for DMA transfers\n",
+ 		dma_chan_name(dma->chan_tx), dma_chan_name(dma->chan_rx));
+=20
+-	return;
++	return 0;
+=20
+ fail_rx:
+ 	dma_release_channel(dma->chan_rx);
+@@ -432,6 +432,8 @@ static void i2c_imx_dma_request(struct imx_i2c_struct *=
+i2c_imx,
+ 	dma_release_channel(dma->chan_tx);
+ fail_al:
+ 	devm_kfree(dev, dma);
++
++	return ret;
+ }
+=20
+ static void i2c_imx_dma_callback(void *arg)
+@@ -1605,10 +1607,14 @@ static int i2c_imx_probe(struct platform_device *pd=
+ev)
+ 	dev_info(&i2c_imx->adapter.dev, "IMX I2C adapter registered\n");
+=20
+ 	/* Init DMA config if supported */
+-	i2c_imx_dma_request(i2c_imx, phy_addr);
++	ret =3D i2c_imx_dma_request(i2c_imx, phy_addr);
++	if (ret =3D=3D -EPROBE_DEFER)
++		goto i2c_adapter_remove;
+=20
+ 	return 0;   /* Return OK */
+=20
++i2c_adapter_remove:
++	i2c_del_adapter(&i2c_imx->adapter);
+ clk_notifier_unregister:
+ 	clk_notifier_unregister(i2c_imx->clk, &i2c_imx->clk_change_nb);
+ rpm_disable:
+--=20
+2.9.5
 
-This objection is bogus, the ABI isn't broken, since this is basically a 
-tweak of the default security model, by pushing questionable MSR 
-modifications to a module or boot parameter. Those who know what they are 
-doing can still do it.
-
-The goal would be to make sure via a whitelist that end user distros 
-won't have to set this parameter to permissive again, of course.
-
-Thanks,
-
-	Ingo
