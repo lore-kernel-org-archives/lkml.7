@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFCAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0EDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A239B2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99F9216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889127;
-	bh=zc7BnLtXFd9KY/qRc2u8Z/fOI2FZydNyX+dEWOxr1s0=;
+	s=default; t=1574889132;
+	bh=dH0C3TLUdquRRSK09HP8uOlvs+JuimrpXUVJ+N3nNl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kBKHIdPvzmM4JoWSEJfJ6QTrUZ86GE4Yx/K6ctuFvHmpMwxooXg4wx+7xQb+PxEq2
-	 AV+RRQktW1Rxj+8K9v35f9K7GIDdPIQpao0bFLtAWS4oZXnMZNWP74iYK9MpUTgO9E
-	 pzRnOQC7oXug3m7KAkUwPF1I2om+8825OHOM1Zgw=
+	b=TlA1ZhnHNK8tzYPtocDJIiGc0ZxryRFsj4jDc3Gl/nAFP9J4N/NDB7p/W7DnkSa9O
+	 DeuGtikGFlkRgypdOlGDFC2uvaZvFsF6X2/ClIe63MTb9ESdo9STm5eyy/3k1ngA4N
+	 LGGpm79jxJBDs0s7hYtXK+XcgCbvF5WVDbwhCzUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbfK0VMF (ORCPT
+        id S1731967AbfK0VML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:12:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41914 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:12:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731131AbfK0VMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:12:03 -0500
+        id S1733257AbfK0VMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:12:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BB6521843;
-        Wed, 27 Nov 2019 21:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA7F521845;
+        Wed, 27 Nov 2019 21:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889122;
-        bh=zc7BnLtXFd9KY/qRc2u8Z/fOI2FZydNyX+dEWOxr1s0=;
+        s=default; t=1574889125;
+        bh=dH0C3TLUdquRRSK09HP8uOlvs+JuimrpXUVJ+N3nNl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VU6Ds5vyG7UXVJ1iPeLFM6725CsPwt/3itn13wRaHO2ZPjOYRa6lRup2vMmZZaW8l
-         eVbdqootpxhuwUOqJbTfusmq2XyroeG4715f5bQ05dKEH2QDZE1q9lMLzeQsjn09Rh
-         200bBIbL1KdRU8vbiavymkcRo6xFsro4pJEFCZ60=
+        b=M/LUqGmkY+WCAMGdv9hDyO/acWhh+0t4vJnkgnYHVHmk1orzTErSDMDiQhd2+V8XQ
+         hej8q1lQrG57oo26VxwdVeU3hRCvlhnXtpKrsVG3tPv4mEcpl3ORP3SCc+d8NCEZtX
+         WTznko4svI0qNQfAKsKYHEXR5eozegZHQqUj4F3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.3 49/95] nbd: prevent memory leak
-Date:   Wed, 27 Nov 2019 21:32:06 +0100
-Message-Id: <20191127202915.422287215@linuxfoundation.org>
+        stable@vger.kernel.org, Adi Suresh <adisuresh@google.com>,
+        Catherine Sullivan <csully@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 50/95] gve: fix dma sync bug where not all pages synced
+Date:   Wed, 27 Nov 2019 21:32:07 +0100
+Message-Id: <20191127202916.306351502@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,42 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Adi Suresh <adisuresh@google.com>
 
-commit 03bf73c315edca28f47451913177e14cd040a216 upstream.
+commit db96c2cb4870173ea9b08df130f1d1cc9b5dd53d upstream.
 
-In nbd_add_socket when krealloc succeeds, if nsock's allocation fail the
-reallocted memory is leak. The correct behaviour should be assigning the
-reallocted memory to config->socks right after success.
+The previous commit had a bug where the last page in the memory range
+could not be synced. This change fixes the behavior so that all the
+required pages are synced.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 9cfeeb576d49 ("gve: Fixes DMA synchronization")
+Signed-off-by: Adi Suresh <adisuresh@google.com>
+Reviewed-by: Catherine Sullivan <csully@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/nbd.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/google/gve/gve_tx.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -995,14 +995,15 @@ static int nbd_add_socket(struct nbd_dev
- 		sockfd_put(sock);
- 		return -ENOMEM;
- 	}
-+
-+	config->socks = socks;
-+
- 	nsock = kzalloc(sizeof(struct nbd_sock), GFP_KERNEL);
- 	if (!nsock) {
- 		sockfd_put(sock);
- 		return -ENOMEM;
- 	}
+--- a/drivers/net/ethernet/google/gve/gve_tx.c
++++ b/drivers/net/ethernet/google/gve/gve_tx.c
+@@ -393,12 +393,13 @@ static void gve_tx_fill_seg_desc(union g
+ static void gve_dma_sync_for_device(struct device *dev, dma_addr_t *page_buses,
+ 				    u64 iov_offset, u64 iov_len)
+ {
++	u64 last_page = (iov_offset + iov_len - 1) / PAGE_SIZE;
++	u64 first_page = iov_offset / PAGE_SIZE;
+ 	dma_addr_t dma;
+-	u64 addr;
++	u64 page;
  
--	config->socks = socks;
--
- 	nsock->fallback_index = -1;
- 	nsock->dead = false;
- 	mutex_init(&nsock->tx_lock);
+-	for (addr = iov_offset; addr < iov_offset + iov_len;
+-	     addr += PAGE_SIZE) {
+-		dma = page_buses[addr / PAGE_SIZE];
++	for (page = first_page; page <= last_page; page++) {
++		dma = page_buses[page];
+ 		dma_sync_single_for_device(dev, dma, PAGE_SIZE, DMA_TO_DEVICE);
+ 	}
+ }
 
 
