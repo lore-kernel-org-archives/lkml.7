@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1037C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99ECC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8914921882
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B97218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887954;
-	bh=7VSbeWTtKZdWXZ5+Vlias3TrAmv0K7QsNCkWvt2AegM=;
+	s=default; t=1574887957;
+	bh=hZs1P9plDIJ8W2ENJ7RonhFFJIGU5K6ekGDrHHqkUQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgbCcW8vtYUUIbkNZMMdO/82tA81q+LWHUNiOKJYqJjqZ6w8IUZW5gVGiiD7l7xTl
-	 9N9GbhXQ4QFQUhh5NyxUQOChi0cLDnm+9ZixEYW5z88X3Qjx+PWMJnNTkyTIMBgv51
-	 rIwER7jxKOn1m64X/B7O39VWBLRjYJqALYNWaAas=
+	b=hxcn/fs2sQvYv0KfxqA3RSqPKgycrcdAg9a2KoTGVmCrbuVtjIXoCIcCVJdNqR/7G
+	 FNmr7nzSSt+/T5tUONvis4h+UEkCCkUlO2N54S9GlahDT/HgMn4mVKbn7P76F9h3I3
+	 jBMmg1qQztKmtueYR+eEVKyPaqxk3Qbqs6I2Deyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730613AbfK0Uwa (ORCPT
+        id S1729960AbfK0Uwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:52:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39974 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:52:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730596AbfK0UwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:52:25 -0500
+        id S1729471AbfK0Uwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:52:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19A1821847;
-        Wed, 27 Nov 2019 20:52:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B61AB21847;
+        Wed, 27 Nov 2019 20:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887944;
-        bh=7VSbeWTtKZdWXZ5+Vlias3TrAmv0K7QsNCkWvt2AegM=;
+        s=default; t=1574887952;
+        bh=hZs1P9plDIJ8W2ENJ7RonhFFJIGU5K6ekGDrHHqkUQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPsq9KOvUAOMdji2DcWu9jbXGfdiF83tlIUPEHuMy+hCcmDoGRBbFWwrlZoZo6gwx
-         mnXJEEv7yPqcBNvuWGFEy1gJQaq4/0eDChZzJxZm/1sYkL7ObuMmerAkd3E/JbAITC
-         lEbCI4+KtMmHP2RIots0XZXEWdtJTXitwxybL4F4=
+        b=U+V7X/td3v90QbR1GRkpSG5oZLMyusQORKuKRbSEq5lUxNuyOKD7YNrP+5vToQ7D4
+         j+Us0cJ8VjnTaEza/yaJbG4T3KwEf/QOox1PpCplbyr3mYEF7lM0gjsf+pmBUmdjbs
+         0ws7jkCfizatSlE8n43RRvVVU6AaUhH6xs7DuwgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 138/211] rtlwifi: rtl8192de: Fix misleading REG_MCUFWDL information
-Date:   Wed, 27 Nov 2019 21:31:11 +0100
-Message-Id: <20191127203107.058528599@linuxfoundation.org>
+Subject: [PATCH 4.14 158/211] PCI: keystone: Use quirk to limit MRRS for K2G
+Date:   Wed, 27 Nov 2019 21:31:31 +0100
+Message-Id: <20191127203108.891006511@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,38 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 7d129adff3afbd3a449bc3593f2064ac546d58d3 ]
+[ Upstream commit 148e340c0696369fadbbddc8f4bef801ed247d71 ]
 
-RT_TRACE shows REG_MCUFWDL value as a decimal value with a '0x'
-prefix, which is somewhat misleading.
+PCI controller in K2G also has a limitation that memory read request
+size (MRRS) must not exceed 256 bytes. Use the quirk to limit MRRS
+(added for K2HK, K2L and K2E) for K2G as well.
 
-Fix it to print hexadecimal, as was intended.
-
-Cc: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/dwc/pci-keystone.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
-index f4129cf96e7cb..bad70a4206fb2 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
-@@ -173,7 +173,7 @@ static int _rtl92d_fw_init(struct ieee80211_hw *hw)
- 			 rtl_read_byte(rtlpriv, FW_MAC1_READY));
- 	}
- 	RT_TRACE(rtlpriv, COMP_FW, DBG_DMESG,
--		 "Polling FW ready fail!! REG_MCUFWDL:0x%08ul\n",
-+		 "Polling FW ready fail!! REG_MCUFWDL:0x%08x\n",
- 		 rtl_read_dword(rtlpriv, REG_MCUFWDL));
- 	return -1;
- }
+diff --git a/drivers/pci/dwc/pci-keystone.c b/drivers/pci/dwc/pci-keystone.c
+index 9bc52e4cf52a0..3ea8288c16053 100644
+--- a/drivers/pci/dwc/pci-keystone.c
++++ b/drivers/pci/dwc/pci-keystone.c
+@@ -39,6 +39,7 @@
+ #define PCIE_RC_K2HK		0xb008
+ #define PCIE_RC_K2E		0xb009
+ #define PCIE_RC_K2L		0xb00a
++#define PCIE_RC_K2G		0xb00b
+ 
+ #define to_keystone_pcie(x)	dev_get_drvdata((x)->dev)
+ 
+@@ -53,6 +54,8 @@ static void quirk_limit_mrrs(struct pci_dev *dev)
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2L),
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
++		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2G),
++		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ 0, },
+ 	};
+ 
 -- 
 2.20.1
 
