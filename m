@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B7FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837B4C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6957B217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571FD21771
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888582;
-	bh=lFZ2Su7NDncLo585KI/7HcUFWThnKbksZPXbbog348E=;
+	s=default; t=1574888585;
+	bh=d9nxKcst+qQU3OV1rFInKjs+FqAyZY6FfLLPYATbVhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BirhgKO6G6ikC8C3tSlxUPSpoRR5vfA9y0WbcEKSEU5F+jOiWqralh4IztX7e8DLF
-	 ZGo0kQ9VINukgRN6K/RVbep6wNGGC0VbAZJn4UkvNPOUYxWmKG05YgFZ9dOr3lm933
-	 cpzLvroohO5ziXkej7dxlUM593VHKSsx5nSgee9g=
+	b=Zx/3jE3+B6TW8eBV6DnDd9NwtnWyPBM5j6nW82KMyrAvXZ+JAz69q+MOU9FZbszF5
+	 DWc0ENGfJLzs1DLhanLQUZjk+tVukupeEUkyPdJQKXDyT1ZnpYT0c6xn2KujzQTUIG
+	 50tzGOnDy5alisJLkQZQZ8tNwd+cODSpNK2i/Ocw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731984AbfK0VDB (ORCPT
+        id S1731639AbfK0VDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:03:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55970 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:03:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731201AbfK0VC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:02:57 -0500
+        id S1731980AbfK0VDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:03:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8EB921789;
-        Wed, 27 Nov 2019 21:02:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C85B21775;
+        Wed, 27 Nov 2019 21:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888577;
-        bh=lFZ2Su7NDncLo585KI/7HcUFWThnKbksZPXbbog348E=;
+        s=default; t=1574888579;
+        bh=d9nxKcst+qQU3OV1rFInKjs+FqAyZY6FfLLPYATbVhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r3z6/sPFwFknQEWH27pSsMLNg6yXd6UJTTWRQAR2YV2IOMt07kdIQyYaiathuAg6E
-         jwE4oML8sz/IAK4QGBRjV1uukIFjC9q88lq+HSdLrzk0kEi068JQvSW6kq8d/tQkYi
-         FQ2qc5X29dUrcdV2S5NkshJrHF9nyq862tXFVh7k=
+        b=a74s0WzOIWMtz0JSy7yiQvp8GpBMVHAyQlvAPZdQ+gQLDJ5Js1RZLINKcV+NQB6XF
+         ipiTE/0Mlaoi/vHGsyng3XmfBMSP+IrEjIMEHstCF88H+CBZ1TYk8nKR9eI6ez4oSX
+         xrytKNmmGdaUnwAIYiSCP24NGintRpgQD4+ycmM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 186/306] net: hns3: bugfix for reporting unknown vector0 interrupt repeatly problem
-Date:   Wed, 27 Nov 2019 21:30:36 +0100
-Message-Id: <20191127203128.863824979@linuxfoundation.org>
+Subject: [PATCH 4.19 147/306] fs/ocfs2/dlm/dlmdebug.c: fix a sleep-in-atomic-context bug in dlm_print_one_mle()
+Date:   Wed, 27 Nov 2019 21:29:57 +0100
+Message-Id: <20191127203126.165957854@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,40 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 0d4411408a7fb9aad0645f23911d9bfdd2ce3177 ]
+[ Upstream commit 999865764f5f128896402572b439269acb471022 ]
 
-The current driver supports handling two vector0 interrupts, reset and
-mailbox. When the hardware reports an interrupt of another type of
-interrupt source, if the driver does not process the interrupt, but
-enables the interrupt, the hardware will repeatedly report the unknown
-interrupt.
+The kernel module may sleep with holding a spinlock.
 
-Therefore, the driver enables the vector0 interrupt after clearing the
-known type of interrupt source. Other conditions are not enabled.
+The function call paths (from bottom to top) in Linux-4.16 are:
 
-Fixes: cd8c5c269b1d ("net: hns3: Fix for hclge_reset running repeatly problem")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[FUNC] get_zeroed_page(GFP_NOFS)
+fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
+fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 255: __dlm_put_mle in dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 254: spin_lock in dlm_put_ml
+
+[FUNC] get_zeroed_page(GFP_NOFS)
+fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
+fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 222: __dlm_put_mle in dlm_put_mle_inuse
+fs/ocfs2/dlm/dlmmaster.c, 219: spin_lock in dlm_put_mle_inuse
+
+To fix this bug, GFP_NOFS is replaced with GFP_ATOMIC.
+
+This bug is found by my static analysis tool DSAC.
+
+Link: http://lkml.kernel.org/r/20180901112528.27025-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
+ fs/ocfs2/dlm/dlmdebug.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index b04df79f393f8..f8cc8d1f0b209 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2574,7 +2574,7 @@ static irqreturn_t hclge_misc_irq_handle(int irq, void *data)
- 	}
+diff --git a/fs/ocfs2/dlm/dlmdebug.c b/fs/ocfs2/dlm/dlmdebug.c
+index 9b984cae4c4e0..1d6dc8422899b 100644
+--- a/fs/ocfs2/dlm/dlmdebug.c
++++ b/fs/ocfs2/dlm/dlmdebug.c
+@@ -329,7 +329,7 @@ void dlm_print_one_mle(struct dlm_master_list_entry *mle)
+ {
+ 	char *buf;
  
- 	/* clear the source of interrupt if it is not cause by reset */
--	if (event_cause != HCLGE_VECTOR0_EVENT_RST) {
-+	if (event_cause == HCLGE_VECTOR0_EVENT_MBX) {
- 		hclge_clear_event_cause(hdev, event_cause, clearval);
- 		hclge_enable_vector(&hdev->misc_vector, true);
- 	}
+-	buf = (char *) get_zeroed_page(GFP_NOFS);
++	buf = (char *) get_zeroed_page(GFP_ATOMIC);
+ 	if (buf) {
+ 		dump_mle(mle, buf, PAGE_SIZE - 1);
+ 		free_page((unsigned long)buf);
 -- 
 2.20.1
 
