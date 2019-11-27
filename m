@@ -2,437 +2,206 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83915C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0B2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53FA420684
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442C720684
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:58:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SGGt0JVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfK0HxU (ORCPT
+        id S1726219AbfK0H6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 02:53:20 -0500
-Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:7790 "EHLO
-        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726112AbfK0HxU (ORCPT
+        Wed, 27 Nov 2019 02:58:02 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47528 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfK0H6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 02:53:20 -0500
-Received: from pps.filterd (m0098781.ppops.net [127.0.0.1])
-        by mx0a-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAR7q60U021625;
-        Wed, 27 Nov 2019 01:53:18 -0600
-Received: from ni.com (skprod2.natinst.com [130.164.80.23])
-        by mx0a-00010702.pphosted.com with ESMTP id 2whcyfhd28-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 01:53:18 -0600
-Received: from us-aus-exch1.ni.corp.natinst.com (us-aus-exch1.ni.corp.natinst.com [130.164.68.11])
-        by us-aus-skprod2.natinst.com (8.16.0.27/8.16.0.27) with ESMTPS id xAR7rHAF008118
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 01:53:17 -0600
-Received: from us-aus-exch4.ni.corp.natinst.com (130.164.68.14) by
- us-aus-exch1.ni.corp.natinst.com (130.164.68.11) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Wed, 27 Nov 2019 01:53:17 -0600
-Received: from us-aus-exhub2.ni.corp.natinst.com (130.164.68.32) by
- us-aus-exch4.ni.corp.natinst.com (130.164.68.14) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Wed, 27 Nov 2019 01:53:16 -0600
-Received: from my-pen-rd9.apac.corp.natinst.com (172.18.68.32) by
- us-aus-exhub2.ni.corp.natinst.com (130.164.68.32) with Microsoft SMTP Server
- id 15.0.1395.4 via Frontend Transport; Wed, 27 Nov 2019 01:53:15 -0600
-From:   Je Yen Tam <je.yen.tam@ni.com>
-To:     <gregkh@linuxfoundation.org>
-CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Je Yen Tam <je.yen.tam@ni.com>
-Subject: [PATCH v2] Revert "serial/8250: Add support for NI-Serial PXI/PXIe+485 devices"
-Date:   Wed, 27 Nov 2019 15:53:01 +0800
-Message-ID: <20191127075301.9866-1-je.yen.tam@ni.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 Nov 2019 02:58:01 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR7vuVG091841;
+        Wed, 27 Nov 2019 01:57:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574841476;
+        bh=3bIuU4EmToxCv+8P28NVRzUIR1OOwIaEEfjDpKuBizo=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=SGGt0JVzuQatdeI8MK56e5AdaBshv0+QC4HDzzziL1dqOgfK3sNzqLA5zlERb+CWx
+         y6A8EnBHTlxU6QH2hUQvdyOd4cIagyXa/AlYax1+BPH19Td9GwZkDR5+HeS+YrSwr5
+         vPik2m7D4HaphzDPoStmTVqsfYm3bSVRokH0ltZQ=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR7vu50022033;
+        Wed, 27 Nov 2019 01:57:56 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
+ Nov 2019 01:57:56 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 27 Nov 2019 01:57:56 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR7vsUp121642;
+        Wed, 27 Nov 2019 01:57:54 -0600
+Subject: Re: [PATCH] firmware: ti_sci: rm: Add support for tx_tdtype parameter
+ for tx channel
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Tero Kristo <t-kristo@ti.com>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     Vinod <vkoul@kernel.org>, <grygorii.strashko@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191025084715.25098-1-peter.ujfalusi@ti.com>
+ <b2231065-ae16-8870-03ac-a435f190ee9f@ti.com>
+ <31bce7ea-1769-c299-03a6-60c5b699fd7f@ti.com>
+Message-ID: <f957a696-e0ca-3cbc-63f3-09cda8986978@ti.com>
+Date:   Wed, 27 Nov 2019 09:57:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_02:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <31bce7ea-1769-c299-03a6-60c5b699fd7f@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit fdc2de87124f5183a98ea7eced1f76dbdba22951 ("serial/8250:
-Add support for NI-Serial PXI/PXIe+485 devices").
+Hi,
 
-The commit fdc2de87124f ("serial/8250: Add support for NI-Serial
-PXI/PXIe+485 devices") introduced a breakage on NI-Serial PXI(e)-RS485
-devices, RS-232 variants have no issue. The Linux system can enumerate the
-NI-Serial PXI(e)-RS485 devices, but it broke the R/W operation on the
-ports.
+On 13/11/2019 8.48, Peter Ujfalusi wrote:
+> Thanks Tero,
+> 
+> On 01/11/2019 10.23, Tero Kristo wrote:
+>> On 25/10/2019 11:47, Peter Ujfalusi wrote:
+>>> The system controller's resource manager have support for configuring the
+>>> TDTYPE of TCHAN_CFG register on j721e.
+>>> With this parameter the teardown completion can be controlled:
+>>> TDTYPE == 0: Return without waiting for peer to complete the teardown
+>>> TDTYPE == 1: Wait for peer to complete the teardown
+>>>
+>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>
+>> Reviewed-by: Tero Kristo <t-kristo@ti.com>
+> 
+> I'll take this patch as part of the upcoming v6 of the k3 DMA support
+> series to make sure it is buildable unless someone will pick this for
+> 5.5-rc1.
 
-However, the implementation is working on the NI internal Linux RT kernel
-but it does not work in the Linux main tree kernel. This is only affecting
-NI products, specifically the RS-485 variants. Reverting the upstream
-until a proper implementation that can apply to both NI internal Linux
-kernel and Linux mainline kernel is figured out.
+Will this patch going to be picked up for 5.5?
 
-Signed-off-by: Je Yen Tam <je.yen.tam@ni.com>
----
+If not, then I'll just split out the support for this in the upcoming
+DMA driver and let Vinod decide if he wants to apply firmware patch
+along with the DMA driver.
+Or just plan to get the support for this in 5.7.
 
-v2 - Rephrase the sentences in the description
+- Péter
 
- drivers/tty/serial/8250/8250_pci.c | 292 +----------------------------
- 1 file changed, 4 insertions(+), 288 deletions(-)
+> 
+> - Péter
+> 
+>>
+>>> ---
+>>> Hi,
+>>>
+>>> I know it is kind of getting late for 5.5, but can you consider this
+>>> small
+>>> addition so I can add the support for it in the initial DMA driver?
+>>>
+>>> Thanks and regards,
+>>> Peter
+>>>
+>>>   drivers/firmware/ti_sci.c              | 1 +
+>>>   drivers/firmware/ti_sci.h              | 7 +++++++
+>>>   include/linux/soc/ti/ti_sci_protocol.h | 2 ++
+>>>   3 files changed, 10 insertions(+)
+>>>
+>>> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+>>> index 4126be9e3216..f13e4a96f3b7 100644
+>>> --- a/drivers/firmware/ti_sci.c
+>>> +++ b/drivers/firmware/ti_sci.c
+>>> @@ -2412,6 +2412,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const
+>>> struct ti_sci_handle *handle,
+>>>       req->fdepth = params->fdepth;
+>>>       req->tx_sched_priority = params->tx_sched_priority;
+>>>       req->tx_burst_size = params->tx_burst_size;
+>>> +    req->tx_tdtype = params->tx_tdtype;
+>>>         ret = ti_sci_do_xfer(info, xfer);
+>>>       if (ret) {
+>>> diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
+>>> index f0d068c03944..255327171dae 100644
+>>> --- a/drivers/firmware/ti_sci.h
+>>> +++ b/drivers/firmware/ti_sci.h
+>>> @@ -910,6 +910,7 @@ struct rm_ti_sci_msg_udmap_rx_flow_opt_cfg {
+>>>    *   12 - Valid bit for @ref
+>>> ti_sci_msg_rm_udmap_tx_ch_cfg::tx_credit_count
+>>>    *   13 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::fdepth
+>>>    *   14 - Valid bit for @ref
+>>> ti_sci_msg_rm_udmap_tx_ch_cfg::tx_burst_size
+>>> + *   15 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_tdtype
+>>>    *
+>>>    * @nav_id: SoC device ID of Navigator Subsystem where tx channel is
+>>> located
+>>>    *
+>>> @@ -973,6 +974,11 @@ struct rm_ti_sci_msg_udmap_rx_flow_opt_cfg {
+>>>    *
+>>>    * @tx_burst_size: UDMAP transmit channel burst size configuration
+>>> to be
+>>>    * programmed into the tx_burst_size field of the TCHAN_TCFG register.
+>>> + *
+>>> + * @tx_tdtype: UDMAP transmit channel teardown type configuration to be
+>>> + * programmed into the tdtype field of the TCHAN_TCFG register:
+>>> + * 0 - Return immediately
+>>> + * 1 - Wait for completion message from remote peer
+>>>    */
+>>>   struct ti_sci_msg_rm_udmap_tx_ch_cfg_req {
+>>>       struct ti_sci_msg_hdr hdr;
+>>> @@ -994,6 +1000,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg_req {
+>>>       u16 fdepth;
+>>>       u8 tx_sched_priority;
+>>>       u8 tx_burst_size;
+>>> +    u8 tx_tdtype;
+>>>   } __packed;
+>>>     /**
+>>> diff --git a/include/linux/soc/ti/ti_sci_protocol.h
+>>> b/include/linux/soc/ti/ti_sci_protocol.h
+>>> index 9531ec823298..f3aed0b91564 100644
+>>> --- a/include/linux/soc/ti/ti_sci_protocol.h
+>>> +++ b/include/linux/soc/ti/ti_sci_protocol.h
+>>> @@ -342,6 +342,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg {
+>>>   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID        BIT(11)
+>>>   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_CREDIT_COUNT_VALID      BIT(12)
+>>>   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FDEPTH_VALID            BIT(13)
+>>> +#define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID            BIT(15)
+>>>       u16 nav_id;
+>>>       u16 index;
+>>>       u8 tx_pause_on_err;
+>>> @@ -359,6 +360,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg {
+>>>       u16 fdepth;
+>>>       u8 tx_sched_priority;
+>>>       u8 tx_burst_size;
+>>> +    u8 tx_tdtype;
+>>>   };
+>>>     /**
+>>>
+>>
+>> -- 
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-index 6adbadd6a56a..8a01d034f9d1 100644
---- a/drivers/tty/serial/8250/8250_pci.c
-+++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -745,16 +745,8 @@ static int pci_ni8430_init(struct pci_dev *dev)
- }
- 
- /* UART Port Control Register */
--#define NI16550_PCR_OFFSET	0x0f
--#define NI16550_PCR_RS422	0x00
--#define NI16550_PCR_ECHO_RS485	0x01
--#define NI16550_PCR_DTR_RS485	0x02
--#define NI16550_PCR_AUTO_RS485	0x03
--#define NI16550_PCR_WIRE_MODE_MASK	0x03
--#define NI16550_PCR_TXVR_ENABLE_BIT	BIT(3)
--#define NI16550_PCR_RS485_TERMINATION_BIT	BIT(6)
--#define NI16550_ACR_DTR_AUTO_DTR	(0x2 << 3)
--#define NI16550_ACR_DTR_MANUAL_DTR	(0x0 << 3)
-+#define NI8430_PORTCON	0x0f
-+#define NI8430_PORTCON_TXVR_ENABLE	(1 << 3)
- 
- static int
- pci_ni8430_setup(struct serial_private *priv,
-@@ -776,117 +768,14 @@ pci_ni8430_setup(struct serial_private *priv,
- 		return -ENOMEM;
- 
- 	/* enable the transceiver */
--	writeb(readb(p + offset + NI16550_PCR_OFFSET) | NI16550_PCR_TXVR_ENABLE_BIT,
--	       p + offset + NI16550_PCR_OFFSET);
-+	writeb(readb(p + offset + NI8430_PORTCON) | NI8430_PORTCON_TXVR_ENABLE,
-+	       p + offset + NI8430_PORTCON);
- 
- 	iounmap(p);
- 
- 	return setup_port(priv, port, bar, offset, board->reg_shift);
- }
- 
--static int pci_ni8431_config_rs485(struct uart_port *port,
--	struct serial_rs485 *rs485)
--{
--	u8 pcr, acr;
--	struct uart_8250_port *up;
--
--	up = container_of(port, struct uart_8250_port, port);
--	acr = up->acr;
--	pcr = port->serial_in(port, NI16550_PCR_OFFSET);
--	pcr &= ~NI16550_PCR_WIRE_MODE_MASK;
--
--	if (rs485->flags & SER_RS485_ENABLED) {
--		/* RS-485 */
--		if ((rs485->flags & SER_RS485_RX_DURING_TX) &&
--			(rs485->flags & SER_RS485_RTS_ON_SEND)) {
--			dev_dbg(port->dev, "Invalid 2-wire mode\n");
--			return -EINVAL;
--		}
--
--		if (rs485->flags & SER_RS485_RX_DURING_TX) {
--			/* Echo */
--			dev_vdbg(port->dev, "2-wire DTR with echo\n");
--			pcr |= NI16550_PCR_ECHO_RS485;
--			acr |= NI16550_ACR_DTR_MANUAL_DTR;
--		} else {
--			/* Auto or DTR */
--			if (rs485->flags & SER_RS485_RTS_ON_SEND) {
--				/* Auto */
--				dev_vdbg(port->dev, "2-wire Auto\n");
--				pcr |= NI16550_PCR_AUTO_RS485;
--				acr |= NI16550_ACR_DTR_AUTO_DTR;
--			} else {
--				/* DTR-controlled */
--				/* No Echo */
--				dev_vdbg(port->dev, "2-wire DTR no echo\n");
--				pcr |= NI16550_PCR_DTR_RS485;
--				acr |= NI16550_ACR_DTR_MANUAL_DTR;
--			}
--		}
--	} else {
--		/* RS-422 */
--		dev_vdbg(port->dev, "4-wire\n");
--		pcr |= NI16550_PCR_RS422;
--		acr |= NI16550_ACR_DTR_MANUAL_DTR;
--	}
--
--	dev_dbg(port->dev, "write pcr: 0x%08x\n", pcr);
--	port->serial_out(port, NI16550_PCR_OFFSET, pcr);
--
--	up->acr = acr;
--	port->serial_out(port, UART_SCR, UART_ACR);
--	port->serial_out(port, UART_ICR, up->acr);
--
--	/* Update the cache. */
--	port->rs485 = *rs485;
--
--	return 0;
--}
--
--static int pci_ni8431_setup(struct serial_private *priv,
--		 const struct pciserial_board *board,
--		 struct uart_8250_port *uart, int idx)
--{
--	u8 pcr, acr;
--	struct pci_dev *dev = priv->dev;
--	void __iomem *addr;
--	unsigned int bar, offset = board->first_offset;
--
--	if (idx >= board->num_ports)
--		return 1;
--
--	bar = FL_GET_BASE(board->flags);
--	offset += idx * board->uart_offset;
--
--	addr = pci_ioremap_bar(dev, bar);
--	if (!addr)
--		return -ENOMEM;
--
--	/* enable the transceiver */
--	writeb(readb(addr + NI16550_PCR_OFFSET) | NI16550_PCR_TXVR_ENABLE_BIT,
--		addr + NI16550_PCR_OFFSET);
--
--	pcr = readb(addr + NI16550_PCR_OFFSET);
--	pcr &= ~NI16550_PCR_WIRE_MODE_MASK;
--
--	/* set wire mode to default RS-422 */
--	pcr |= NI16550_PCR_RS422;
--	acr = NI16550_ACR_DTR_MANUAL_DTR;
--
--	/* write port configuration to register */
--	writeb(pcr, addr + NI16550_PCR_OFFSET);
--
--	/* access and write to UART acr register */
--	writeb(UART_ACR, addr + UART_SCR);
--	writeb(acr, addr + UART_ICR);
--
--	uart->port.rs485_config = &pci_ni8431_config_rs485;
--
--	iounmap(addr);
--
--	return setup_port(priv, uart, bar, offset, board->reg_shift);
--}
--
- static int pci_netmos_9900_setup(struct serial_private *priv,
- 				const struct pciserial_board *board,
- 				struct uart_8250_port *port, int idx)
-@@ -2023,15 +1912,6 @@ pci_moxa_setup(struct serial_private *priv,
- #define PCI_DEVICE_ID_ACCESIO_PCIE_COM_8SM	0x10E9
- #define PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM	0x11D8
- 
--#define PCIE_DEVICE_ID_NI_PXIE8430_2328	0x74C2
--#define PCIE_DEVICE_ID_NI_PXIE8430_23216	0x74C1
--#define PCI_DEVICE_ID_NI_PXI8431_4852	0x7081
--#define PCI_DEVICE_ID_NI_PXI8431_4854	0x70DE
--#define PCI_DEVICE_ID_NI_PXI8431_4858	0x70E3
--#define PCI_DEVICE_ID_NI_PXI8433_4852	0x70E9
--#define PCI_DEVICE_ID_NI_PXI8433_4854	0x70ED
--#define PCIE_DEVICE_ID_NI_PXIE8431_4858	0x74C4
--#define PCIE_DEVICE_ID_NI_PXIE8431_48516	0x74C3
- 
- #define	PCI_DEVICE_ID_MOXA_CP102E	0x1024
- #define	PCI_DEVICE_ID_MOXA_CP102EL	0x1025
-@@ -2269,87 +2149,6 @@ static struct pci_serial_quirk pci_serial_quirks[] __refdata = {
- 		.setup		= pci_ni8430_setup,
- 		.exit		= pci_ni8430_exit,
- 	},
--	{
--		.vendor		= PCI_VENDOR_ID_NI,
--		.device		= PCIE_DEVICE_ID_NI_PXIE8430_2328,
--		.subvendor	= PCI_ANY_ID,
--		.subdevice	= PCI_ANY_ID,
--		.init		= pci_ni8430_init,
--		.setup		= pci_ni8430_setup,
--		.exit		= pci_ni8430_exit,
--	},
--	{
--		.vendor		= PCI_VENDOR_ID_NI,
--		.device		= PCIE_DEVICE_ID_NI_PXIE8430_23216,
--		.subvendor	= PCI_ANY_ID,
--		.subdevice	= PCI_ANY_ID,
--		.init		= pci_ni8430_init,
--		.setup		= pci_ni8430_setup,
--		.exit		= pci_ni8430_exit,
--	},
--	{
--		.vendor		= PCI_VENDOR_ID_NI,
--		.device		= PCI_DEVICE_ID_NI_PXI8431_4852,
--		.subvendor	= PCI_ANY_ID,
--		.subdevice	= PCI_ANY_ID,
--		.init		= pci_ni8430_init,
--		.setup		= pci_ni8431_setup,
--		.exit		= pci_ni8430_exit,
--	},
--	{
--		.vendor		= PCI_VENDOR_ID_NI,
--		.device		= PCI_DEVICE_ID_NI_PXI8431_4854,
--		.subvendor	= PCI_ANY_ID,
--		.subdevice	= PCI_ANY_ID,
--		.init		= pci_ni8430_init,
--		.setup		= pci_ni8431_setup,
--		.exit		= pci_ni8430_exit,
--	},
--	{
--		.vendor		= PCI_VENDOR_ID_NI,
--		.device		= PCI_DEVICE_ID_NI_PXI8431_4858,
--		.subvendor	= PCI_ANY_ID,
--		.subdevice	= PCI_ANY_ID,
--		.init		= pci_ni8430_init,
--		.setup		= pci_ni8431_setup,
--		.exit		= pci_ni8430_exit,
--	},
--	{
--		.vendor		= PCI_VENDOR_ID_NI,
--		.device		= PCI_DEVICE_ID_NI_PXI8433_4852,
--		.subvendor	= PCI_ANY_ID,
--		.subdevice	= PCI_ANY_ID,
--		.init		= pci_ni8430_init,
--		.setup		= pci_ni8431_setup,
--		.exit		= pci_ni8430_exit,
--	},
--	{
--		.vendor		= PCI_VENDOR_ID_NI,
--		.device		= PCI_DEVICE_ID_NI_PXI8433_4854,
--		.subvendor	= PCI_ANY_ID,
--		.subdevice	= PCI_ANY_ID,
--		.init		= pci_ni8430_init,
--		.setup		= pci_ni8431_setup,
--		.exit		= pci_ni8430_exit,
--	},
--	{
--		.vendor		= PCI_VENDOR_ID_NI,
--		.device		= PCIE_DEVICE_ID_NI_PXIE8431_4858,
--		.subvendor	= PCI_ANY_ID,
--		.subdevice	= PCI_ANY_ID,
--		.init		= pci_ni8430_init,
--		.setup		= pci_ni8431_setup,
--		.exit		= pci_ni8430_exit,
--	},
--	{
--		.vendor		= PCI_VENDOR_ID_NI,
--		.device		= PCIE_DEVICE_ID_NI_PXIE8431_48516,
--		.subvendor	= PCI_ANY_ID,
--		.subdevice	= PCI_ANY_ID,
--		.init		= pci_ni8430_init,
--		.setup		= pci_ni8431_setup,
--		.exit		= pci_ni8430_exit,
--	},
- 	/* Quatech */
- 	{
- 		.vendor		= PCI_VENDOR_ID_QUATECH,
-@@ -3106,13 +2905,6 @@ enum pci_board_num_t {
- 	pbn_ni8430_4,
- 	pbn_ni8430_8,
- 	pbn_ni8430_16,
--	pbn_ni8430_pxie_8,
--	pbn_ni8430_pxie_16,
--	pbn_ni8431_2,
--	pbn_ni8431_4,
--	pbn_ni8431_8,
--	pbn_ni8431_pxie_8,
--	pbn_ni8431_pxie_16,
- 	pbn_ADDIDATA_PCIe_1_3906250,
- 	pbn_ADDIDATA_PCIe_2_3906250,
- 	pbn_ADDIDATA_PCIe_4_3906250,
-@@ -3765,55 +3557,6 @@ static struct pciserial_board pci_boards[] = {
- 		.uart_offset	= 0x10,
- 		.first_offset	= 0x800,
- 	},
--	[pbn_ni8430_pxie_16] = {
--		.flags		= FL_BASE0,
--		.num_ports	= 16,
--		.base_baud	= 3125000,
--		.uart_offset	= 0x10,
--		.first_offset	= 0x800,
--	},
--	[pbn_ni8430_pxie_8] = {
--		.flags		= FL_BASE0,
--		.num_ports	= 8,
--		.base_baud	= 3125000,
--		.uart_offset	= 0x10,
--		.first_offset	= 0x800,
--	},
--	[pbn_ni8431_8] = {
--		.flags		= FL_BASE0,
--		.num_ports	= 8,
--		.base_baud	= 3686400,
--		.uart_offset	= 0x10,
--		.first_offset	= 0x800,
--	},
--	[pbn_ni8431_4] = {
--		.flags		= FL_BASE0,
--		.num_ports	= 4,
--		.base_baud	= 3686400,
--		.uart_offset	= 0x10,
--		.first_offset	= 0x800,
--	},
--	[pbn_ni8431_2] = {
--		.flags		= FL_BASE0,
--		.num_ports	= 2,
--		.base_baud	= 3686400,
--		.uart_offset	= 0x10,
--		.first_offset	= 0x800,
--	},
--	[pbn_ni8431_pxie_16] = {
--		.flags		= FL_BASE0,
--		.num_ports	= 16,
--		.base_baud	= 3125000,
--		.uart_offset	= 0x10,
--		.first_offset	= 0x800,
--	},
--	[pbn_ni8431_pxie_8] = {
--		.flags		= FL_BASE0,
--		.num_ports	= 8,
--		.base_baud	= 3125000,
--		.uart_offset	= 0x10,
--		.first_offset	= 0x800,
--	},
- 	/*
- 	 * ADDI-DATA GmbH PCI-Express communication cards <info@addi-data.com>
- 	 */
-@@ -5567,33 +5310,6 @@ static const struct pci_device_id serial_pci_tbl[] = {
- 	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PCI8432_2324,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_ni8430_4 },
--	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8430_2328,
--		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_ni8430_pxie_8 },
--	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8430_23216,
--		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_ni8430_pxie_16 },
--	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4852,
--		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_ni8431_2 },
--	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4854,
--		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_ni8431_4 },
--	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4858,
--		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_ni8431_8 },
--	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8431_4858,
--		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_ni8431_pxie_8 },
--	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8431_48516,
--		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_ni8431_pxie_16 },
--	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8433_4852,
--		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_ni8431_2 },
--	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8433_4854,
--		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_ni8431_4 },
- 
- 	/*
- 	 * MOXA
--- 
-2.17.1
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
