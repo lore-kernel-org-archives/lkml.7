@@ -2,163 +2,215 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A32C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08583C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E5920661
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA4E121569
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfK0UIM (ORCPT
+        id S1727403AbfK0UQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:08:12 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:37469 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbfK0UIL (ORCPT
+        Wed, 27 Nov 2019 15:16:14 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10184 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727127AbfK0UQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:08:11 -0500
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mpkwn-1i27IC25qX-00q8gd for <linux-kernel@vger.kernel.org>; Wed, 27 Nov
- 2019 21:08:09 +0100
-Received: by mail-qk1-f169.google.com with SMTP id i3so20670209qkk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 12:08:09 -0800 (PST)
-X-Gm-Message-State: APjAAAV5B6IJBQK5RVR/7yJ8e9Dx/f7HM/rqyLW5pb3Sp4dBnv7M/Qp7
-        MvJDN5+MrGUMvcv1SI4QSKjo15XY7XlojMMABEo=
-X-Google-Smtp-Source: APXvYqzcNVu3fO7i91gjwNcaV9OF6/CKyEXKbuREUw8EBcDiWjAHIfMXmGLuY9AakmO3RmUhj9WPcvhX6uYtvNag4BQ=
-X-Received: by 2002:ae9:eb12:: with SMTP id b18mr6203027qkg.3.1574885288247;
- Wed, 27 Nov 2019 12:08:08 -0800 (PST)
+        Wed, 27 Nov 2019 15:16:14 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARKETLf050565;
+        Wed, 27 Nov 2019 15:16:06 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2whhyg0pu6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 15:16:06 -0500
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xARKEowR051905;
+        Wed, 27 Nov 2019 15:16:06 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2whhyg0ptk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 15:16:06 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xARKFC8u025883;
+        Wed, 27 Nov 2019 20:16:05 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04wdc.us.ibm.com with ESMTP id 2wevd7ftg0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 20:16:05 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARKG4r848300504
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Nov 2019 20:16:04 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 92E05AE05C;
+        Wed, 27 Nov 2019 20:16:04 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 750E5AE062;
+        Wed, 27 Nov 2019 20:16:03 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.137])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Nov 2019 20:16:03 +0000 (GMT)
+Message-ID: <103b290917221baa10194c27c8e35b9803f3cafa.camel@linux.ibm.com>
+Subject: Re: [PATCH] KVM: Add separate helper for putting borrowed reference
+ to kvm
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 27 Nov 2019 17:15:59 -0300
+In-Reply-To: <20191127194757.GI22227@linux.intel.com>
+References: <20191021225842.23941-1-sean.j.christopherson@intel.com>
+         <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
+         <20191126171416.GA22233@linux.intel.com>
+         <0009c6c1bb635098fa68cb6db6414634555039fe.camel@linux.ibm.com>
+         <e1a4218f-2a70-3de3-1403-dbebf8a8abdf@redhat.com>
+         <bfa563e6a584bd85d3abe953ca088281dc0e167b.camel@linux.ibm.com>
+         <6beeff56-7676-5dfd-a578-1732730f8963@redhat.com>
+         <adcfe1b4c5b36b3c398a5d456da9543e0390cba3.camel@linux.ibm.com>
+         <20191127194757.GI22227@linux.intel.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-xFrapZw7GF6R9331NkVz"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
-References: <18FA40DC4B7A9742B8E58FC4CDA67429AFC83C55@dggeml526-mbx.china.huawei.com>
- <201911271013.38BA7015C6@keescook>
-In-Reply-To: <201911271013.38BA7015C6@keescook>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 27 Nov 2019 21:07:51 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2ijLz0mtW5j9VamuQLdCOyLsr_wTVysi=X_XZyMGAOGw@mail.gmail.com>
-Message-ID: <CAK8P3a2ijLz0mtW5j9VamuQLdCOyLsr_wTVysi=X_XZyMGAOGw@mail.gmail.com>
-Subject: Re: Questions about "security functions" and "suppression of
- compilation alarms".
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Shiyunming (Seth, RTOS)" <shiyunming@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lizi (D)" <lizi4@huawei.com>, "Sunke (SK)" <sunke09@huawei.com>,
-        Jiangyangyang <jiangyangyang@huawei.com>,
-        Linzichang <linzichang@huawei.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:2Mr9STVhy77E1htWKy5pWHXKngXpsFEyHBejfLP9n/xdtPb6zLZ
- L7Uxr4uL15WCPs3mSU0tlZMDYGhfg9UfS02/7eeuvWilrC/qhNVwCDju9q13AMeexwBusOJ
- mFQRxA//ADoRYXC0C6L6+lEWCkVCin1Zp/QplRXMO67XrsQ48kv0CP4w1do1ntz28q5bGwh
- A0hXTYsxspzgaxuZ+Yw/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iJBkHJtNarE=:tTwk4p6+q8h6N3mSvcJyrO
- 11Z0WCSps+XuvpYL7n2VzGX83s3w72GeLoAZmuogYYFu/8qZLcPGpzsaAb9HEWebDN7R+/PTG
- CXu2W9mK9uIZ3o/Lt9ROykxoGE9krUu1Ti723oL2/8s1v5gkTKScUBojWcBEg/8n8LWoQBmOk
- iCSuraLbzEKMQGyxk5j/eS3iiPaTLBM2HQeKeMNsrMETFR7O96Gwngv+tzcEhu4es872NrHfv
- +kW3JHACuMkV/FNhFrZ/WalfDdcoswYErmErCjfagbsiAZgjUJ0tpaIe6gzyI0KsYiQ2XLVx/
- 9k0FcMwP2O5hgRF7GRzV+mJwIWi5hyCuShOFatDBJOF1wXqDm8jsllLgD7C+Jh65YtyHNF9T0
- Uq1P8V/wmzYjnoRV0Yz/TydImVYPp974Yv0yHNzZrdeDpuQYrtSIKeeSXvOOzB0v7MI3UDK7y
- 3d4euyd1xDpiEKgM3qBi8kKBQ8kzbNqzZAZ6G+rRXjHXyXf71U57lq2yaOIpXFhmvGEFGxv0m
- ZYRfTkl4TcnfCwhXhOysdAupONqWeb88gcQpiETEDbdnykMStAJg6pHzRf/YhKIV0THj92gWj
- duXrxgZvUj4hUorEYGIzqzZyyHxEfz+jcBMavPxZQJpZD4SQ67IeWCKROsGDyMJ/4jGXl8zXR
- bb2J0vRJNl005J/I7vGmdkZcN/S+zfWdtd4wVKx25hTbnYfAECURdNo8317LihJNlKsFYwfW3
- UpZqGNpZ/E95C/74yWpdysrRAmnJyYyWGFrZsxft4B/8cpQMTYEUdCYWa66POAZjrYKtxLVqM
- zUCRqXJzKD2wIIQ1Nfna5Fh/L1rlwj4Adx7tgRvQRPbXPtxF9+skZstDIs22d9TrcV3Bftb1Z
- bJypb5Rs44YShU04cgtg==
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=2
+ clxscore=1015 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ phishscore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911270162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 8:01 PM Kees Cook <keescook@chromium.org> wrote:
-> On Wed, Nov 27, 2019 at 01:11:50PM +0000, Shiyunming (Seth, RTOS) wrote:
-> Each of these needs to be handled on a case-by-case basis. Kernel builds
-> are expected to build without warnings, so before a new compiler flag
-> can be added to the global build, all the instances need to be
-> addressed. (Flags are regularly turned off because they are enabled by
-> default in newer compiler versions but this causes too many warnings.)
-> See the "W=1", "W=2", etc build options for enabling these:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/Makefile.extrawarn
->
-> Once all instances of a warning are eliminated, these warnings can be
-> moved to the top-level Makefile. Arnd Bergmann does a lot of this work
-> and might be able to speak more coherently about this. :) For example,
-> here is enabling of -Wmaybe-uninitialized back in the v4.10 kernel:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4324cb23f4569edcf76e637cdb3c1dfe8e8a85e4
 
-Incidentally, I've worked on changing the way we handle warnings over
-the past week, going through all ~700 warning options supported by
-either clang or gcc to figure out how many instances we get and if
-we are missing any important ones.
+--=-xFrapZw7GF6R9331NkVz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-https://pastebin.com/wqG9QgHj has a list of the warnings that exist,
-when they got added and how many I saw. I'll post this as proper
-patches when I have integrated this into the build system better.
+On Wed, 2019-11-27 at 11:47 -0800, Sean Christopherson wrote:
+> On Wed, Nov 27, 2019 at 04:25:55PM -0300, Leonardo Bras wrote:
+> > On Wed, 2019-11-27 at 19:32 +0100, Paolo Bonzini wrote:
+> > > On 27/11/19 19:24, Leonardo Bras wrote:
+> > > > By what I could undestand up to now, these functions that use borro=
+wed
+> > > > references can only be called while the reference (file descriptor)
+> > > > exists.=20
+> > > > So, suppose these threads, where:
+> > > > - T1 uses a borrowed reference, and=20
+> > > > - T2 is releasing the reference (close, release):
+> > >=20
+> > > Nit: T2 is releasing the *last* reference (as implied by your referen=
+ce
+> > > to close/release).
+> >=20
+> > Correct.
+> >=20
+> > > > T1				| T2
+> > > > kvm_get_kvm()			|
+> > > > ...				| kvm_put_kvm()
+> > > > kvm_put_kvm_no_destroy()	|
+> > > >=20
+> > > > The above would not trigger a use-after-free bug, but will cause a
+> > > > memory leak. Is my above understanding right?
+> > >=20
+> > > Yes, this is correct.
+> > >=20
+> >=20
+> > Then, what would not be a bug before (using kvm_put_kvm()) now is a
+> > memory leak (using kvm_put_kvm_no_destroy()).
+>=20
+> No, using kvm_put_kvm_no_destroy() changes how a bug would manifest, as
+> you note below.  Replacing kvm_put_kvm() with kvm_put_kvm_no_destroy()
+> when the refcount is _guaranteed_ to be >1 has no impact on correctness.
+>=20
 
-> Speaking specifically to your list:
->
-> -Wformat-security
->   This has tons of false positives, and likely requires fixing the
->   compiler.
+Humm, so what about the above example with T1 and T2?
 
-the only warning I see here is "warning: format not a string literal and
-no format arguments", this seems useful at the W=1 or W=2
-level, but I can't even think of how to change the compiler to
-turn this on by default.
 
-> -Wpointer-sign
->   Lots of things in the kernel pass pointers around in weird ways. This
->   is disabled to allow normal operation (which, combined with
->   -fwrapv-pointer and -fwrapv via -fno-strict-overflow) means signed
->   things and pointers behave without "undefined behavior". A lot of work
->   would be needed all over the kernel to enable this warning (and part
->   of that would be incrementally removing unexpected overflows of both
->   unsigned and signed arithmetic).
+> > And it's the price to avoid use-after-free on other cases, which is a
+> > worse bug. Ok, I get it.=20
+> >=20
+> > > Paolo
+> >=20
+> > On Tue, 2019-11-26 at 10:14 -0800, Sean Christopherson wrote:
+> > > If one these kvm_put_kvm() calls did unexpectedly free @kvm (due to=
+=20
+> > > a bug somewhere else), KVM would still hit a use-after-free scenario=
+=20
+> > > as the caller still thinks @kvm is valid.  Currently, this would=20
+> > > only happen on a subsequent ioctl() on the caller's file descriptor
+> > > (which holds a pointer to @kvm), as the callers of these functions
+> > > don't directly dereference @kvm after the functions return.  But,=20
+> > > not deferencing @kvm isn't deliberate or functionally required, it's
+> > > just how the code happens to be written.
+> >=20
+> > So, testing if the kvm reference is valid before running ioctl would be
+> > enough to avoid these bugs?
+>=20
+> No, the only way to avoid use-after-free bugs of this nature is to not
+> screw up the refcounting :-)  This funky "borrowed reference" pattern is
+> not very common.  It's necessary here because KVM needs to take an extra
+> reference to itself on behalf of the child device before installing the
+> child's file descriptor, because once the fd is installed it can be
+> closed by userspace and free the child's reference.  The error path,
+> which uses kvm_put_kvm_no_destroy(), is used if and only if installing
+> the fd fails, in which case the extra reference is deliberately thrown
+> away.
+>=20
+> kvm_put_kvm_no_destroy() is asserting "N > 0" as a way to detect a
+> refcounting bug that wouldn't be detected (until later) by the normal
+> refcounting behavior, which asserts "N >=3D 0".
+>=20
+> > Is it possible?=20
+>=20
+> No.  Similar to above, userspace gets a fd by doing open("/dev/kvm"), and
+> the semantics of KVM are such that each fd is a reference to KVM. From
+> userspace's perspective, having a valid fd *is* how it knows that it has
+> a valid KVM reference.
+>=20
+> > Humm, but if it frees kvm before running ->release(), would it mean the
+> > VM is destroyed incorrectly, and will probably crash?
+>=20
+> More than likely the host will crash due to corrupting memory.  The guest
+> will crash too, but that's a secondary concern.
 
-I have the suspicion that this would actually find some serious bugs,
-but I also share your view that this is near-impossible to fix
-throughout the kernel.
+Thanks for explaining, it's way more clear to me now how it works.
 
-My experiments show around 3000 files that cause this warning,
-though fixing the ones in shared header files would get us closer
-to enabling it at W=1. Most of the output from this seems to be from
-two header files.
+Best regards,
 
-> -Wframe-address
->   __builtin_frame_address() gets used in "safe" places on the
->   architectures where the limitations are understood, so adding this
->   warning doesn't gain anything because it's already rare and gets
->   some scrutiny.
+Leonardo Bras
 
-This one could be enabled by default and then disabled locally
-in functions that are known to be safe.
+--=-xFrapZw7GF6R9331NkVz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-> -Wmaybe-uninitialized
->   And linked above, this is enabled by default since v4.10.
->
-> -Wformat-overflow
->   See https://git.kernel.org/linus/bd664f6b3e376a8ef4990f87d08271cc2d01ba9a
->   for details. Eliminating these warnings (there were 1500) needs to
->   happen before they can be turned back on. Any help here is very
->   welcome!
+-----BEGIN PGP SIGNATURE-----
 
-In the current kernel, I see only around 100 files that produce this warning,
-so this one is definitely in reach.
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3e2X8ACgkQlQYWtz9S
+ttSG7g//VqqPgAPZk9jWggp9bgypwMSgoU431QmrRpqZZcoUotfNp05aDaR6r7EU
+8N0ZoMsWz1fgAqQO4zWZcO9cg6UQ+KRu1p7zL3C125DAWMUVHTC1nrpZDQkrWdg+
+LeYaplyQg9je7zXLRfGJEP7Mqn4PuhTTFdZL7kgyu6fsBmiQAUB2eSqusDjTrtNv
+AUaHoVPBXzodTdqnHyM9G3Szl4mIEC3UAP6M8a3BzE1/fsY/1LCiamd5iMSFXcHy
+v0K8TS3wUKUAtARhj/xvzpwMcEnhUWbl0AlnUROpcvhWtf3iGfhab/IM8+NUZHAR
+WVRSiirKi6rjY1Mmx1DMwSCbLS/skS1wbNeP9A4FdnbaNIusGhF4lm1sCbNMSm5P
+xn+sUmLcfumxavG2yFBIcbLqK3ZS8L7MDiyx5g05RG8hCsc1olpmGMvObLctqP8E
+QxgMCL1lbGvSSgANWrf872xR4Tzl95B2FmKn6rzKtENihvguJsrMH/3TXDnc5PYo
+shFMM/w3NF2LKOgF4TTMAov05FTyebYhryQD9CUMYhjwvFiqeesMdKVsdiNJIVDH
+uR+qklXfM18bDhDiEd1fNPl0lenuR4Ws7P+4iaKDWWqnJgJW93rCBt4U77cVZ9Xg
+BTqQTs8NsUcfuDPvxDctqWbHCM2yBt9y6r0Ld8nps+jzPbxCuc0=
+=zqVw
+-----END PGP SIGNATURE-----
 
-> Warnings seen from newly introduced code get fixed very quickly, yes.
-> Problems that were already existing and are surfaced by new warnings
-> tend to get less direct attention by maintainers since it creates a
-> large amount of work where it is hard to measure the benefit. However,
-> people contributing changes in these areas tend to be very well received.
-> For example, Gustavo A. R. Silva did a huge amount of work to enable
-> -Wimplicit-fallthrough: https://lwn.net/Articles/794944/
+--=-xFrapZw7GF6R9331NkVz--
 
-With the patch series I'm working on, we will be able to control the warning
-level (W=1, W=12 etc) per file and per subsystem, which I hope should make
-it easier to attack some of the hard problems by fixing a whole class
-of warnings one subsystem at a time.
-
-     Arnd
