@@ -2,266 +2,248 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1EEC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A98C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6E32084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A093D20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:40:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yHpRnVxI"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ojXJZo39"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfK0IgY (ORCPT
+        id S1726320AbfK0IkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:36:24 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44010 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfK0IgY (ORCPT
+        Wed, 27 Nov 2019 03:40:13 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11384 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfK0IkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:36:24 -0500
-Received: by mail-pf1-f195.google.com with SMTP id h14so436208pfe.10
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 00:36:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kEWlTxImZpdkwXhGS8325FceSNRBs8VLhunG13s9KAM=;
-        b=yHpRnVxIjSPnmIdbMbeu/tYzFBYDtKTTB287cO1KR1bARwSmREn/eQP74Bl7Af9/y8
-         a82ewmL2RBQDxl2XmBxTNBAL+KaxJmKAwlKSRl+2cOkk7//wvP6vjlBiIup/h7v2jo8V
-         hD3ZtLbo9ZCwivNiTAZq2pUpGLBvhYf0Fvj3PTlMiN0akT2u3kqKvVPIDeYgrbSC2Cb9
-         ERUMql/9D07dmErr5NA8VCMA753S+WHPa1jovOmvlhsanFxOuurKFWr5XnitU2n4yk0s
-         6g95m1QCflgnf2y6N/vMnCzgc3LucbF8wwRMWAlX49Y/dCTaJfA0G0K6Ehqx6Ay7WAr2
-         baJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kEWlTxImZpdkwXhGS8325FceSNRBs8VLhunG13s9KAM=;
-        b=p68p1vXZoIVaaZVPZYNd8TPidVWDmiSOnzN1AAs7iGDcG1jBnE9SSdK2zl/xZ56Xlk
-         8+Rv46yZpR1gIXU0qJgvnursy0UjA4TmnGwgMYCrqSruN5cSX/27Uw9e4psPBGVbjZxx
-         brGB763yTKD2LeusSujW7l9ZyAg4AmFwDhCP25Sy+9SK8y72lk1gidK/FBCusiFeQ+7L
-         fCZdUj1k1iJW8RrJ0v4UUXmmIlKQiROOODcYYqS3b2yPTI+jw7wmpTQaLysLlwjapcuU
-         3dSBavv7qU/CdsQa4fSvqjvsBlojYmXZCQ0yu+s3voyn3lh6eBmuizG7dOBJUFbSt260
-         IWMw==
-X-Gm-Message-State: APjAAAWbxB0t2R1R6TQUutDdf0j9CjBmFdMkr0YFLws2fnyAa308r1y/
-        +Jcz8biA5tMSVtVjtX0YNQVpvg==
-X-Google-Smtp-Source: APXvYqz6ciA/bE2sIdxV8IrR+vllOp4Mb3eFxMKadK3NK074FLo5rfjIe4sBJET8JrQj229M/EAXpQ==
-X-Received: by 2002:a63:1b1f:: with SMTP id b31mr3451053pgb.177.1574843782900;
-        Wed, 27 Nov 2019 00:36:22 -0800 (PST)
-Received: from localhost ([122.171.112.123])
-        by smtp.gmail.com with ESMTPSA id k24sm15884442pfk.63.2019.11.27.00.36.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Nov 2019 00:36:21 -0800 (PST)
-Date:   Wed, 27 Nov 2019 14:06:19 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, fan.chen@mediatek.com
-Subject: Re: [v5, PATCH 4/5] cpufreq: mediatek: add opp notification for SVS
- support
-Message-ID: <20191127083619.etocnhpyyut3hzwq@vireshk-i7>
-References: <1574769046-28449-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1574769046-28449-5-git-send-email-andrew-sh.cheng@mediatek.com>
+        Wed, 27 Nov 2019 03:40:13 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dde366e0000>; Wed, 27 Nov 2019 00:40:15 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 27 Nov 2019 00:40:11 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 27 Nov 2019 00:40:11 -0800
+Received: from [10.24.47.97] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Nov
+ 2019 08:40:07 +0000
+Subject: Re: [PATCH 1/4] PCI: dwc: Add new feature to skip core initialization
+To:     Kishon Vijay Abraham I <kishon@ti.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <20191113090851.26345-2-vidyas@nvidia.com>
+ <973f239f-fdb8-b119-5ca1-b0a6307efe21@ti.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <9151ba97-f27e-3ff4-1e4c-f0d29bab47e5@nvidia.com>
+Date:   Wed, 27 Nov 2019 14:10:04 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574769046-28449-5-git-send-email-andrew-sh.cheng@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <973f239f-fdb8-b119-5ca1-b0a6307efe21@ti.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574844015; bh=uSypx561o+6c8CArX4KPnl6WhoFJlWrZfN9J+4SD0E0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ojXJZo39AfcI+H0qNs1GkF+6bGOu3qJCvebiLnWswA0xHigUnp5qxHXhxG5b6CVVv
+         O6K9XLuFI33mCx0Tkug0+evp9d/nzhLN0e4BpQ2ROa+6sug3wqRNTUmLhIuGoQJCjF
+         YzbKdKvp9K68szJdGHncjrGJLuqeRqlAAJO2NxxVIE02k28ja/rIZvNJK9Lvlt6aOq
+         clH/sopk4W9UB/E19wLhDE5uBfTHzXlWz13r9ZwUWjeFXo0DBJrMpy0Yjda7fqeYXO
+         zFb2wJZ66SETNfxBN7cQA4SsGqS8tNE4XhpDH6uOhhOBLQ0aAgroEhbEV39ckCqEAG
+         d81c1IW3pfpew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-11-19, 19:50, Andrew-sh.Cheng wrote:
-> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-> index 4b0cc50dd93b..7c37ab31230a 100644
-> --- a/drivers/cpufreq/mediatek-cpufreq.c
-> +++ b/drivers/cpufreq/mediatek-cpufreq.c
-> @@ -42,6 +42,10 @@ struct mtk_cpu_dvfs_info {
->  	struct list_head list_head;
->  	int intermediate_voltage;
->  	bool need_voltage_tracking;
-> +	struct mutex lock; /* avoid notify and policy race condition */
+On 11/27/2019 1:44 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On 13/11/19 2:38 PM, Vidya Sagar wrote:
+>> Add a new feature 'skip_core_init' that can be set by platform drivers
+>> of devices that do not have their core registers available until reference
+>> clock from host is available (Ex:- Tegra194) to indicate DesignWare
+>> endpoint mode sub-system to not perform core registers initialization.
+>> Existing dw_pcie_ep_init() is refactored and all the code that touches
+>> registers is extracted to form a new API dw_pcie_ep_init_complete() that
+>> can be called later by platform drivers setting 'skip_core_init' to '1'.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   .../pci/controller/dwc/pcie-designware-ep.c   | 72 +++++++++++--------
+>>   drivers/pci/controller/dwc/pcie-designware.h  |  6 ++
+>>   include/linux/pci-epc.h                       |  1 +
+>>   3 files changed, 51 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> index 3dd2e2697294..06f4379be8a3 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> @@ -492,19 +492,53 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+>>   	return 0;
+>>   }
+>>   
+>> -int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>>   {
+>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> +	unsigned int offset;
+>> +	unsigned int nbars;
+>> +	u8 hdr_type;
+>> +	u32 reg;
+>>   	int i;
+>> +
+>> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+>> +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+>> +		dev_err(pci->dev,
+>> +			"PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+>> +			hdr_type);
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+>> +
+>> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+>> +
+>> +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+>> +	if (offset) {
+>> +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+>> +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+>> +			PCI_REBAR_CTRL_NBAR_SHIFT;
+>> +
+>> +		dw_pcie_dbi_ro_wr_en(pci);
+>> +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+>> +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+>> +		dw_pcie_dbi_ro_wr_dis(pci);
+>> +	}
+>> +
+>> +	dw_pcie_setup(pci);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>> +{
+>>   	int ret;
+>> -	u32 reg;
+>>   	void *addr;
+>> -	u8 hdr_type;
+>> -	unsigned int nbars;
+>> -	unsigned int offset;
+>>   	struct pci_epc *epc;
+>>   	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>>   	struct device *dev = pci->dev;
+>>   	struct device_node *np = dev->of_node;
+>> +	const struct pci_epc_features *epc_features;
+>>   
+>>   	if (!pci->dbi_base || !pci->dbi_base2) {
+>>   		dev_err(dev, "dbi_base/dbi_base2 is not populated\n");
+>> @@ -563,13 +597,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>   	if (ep->ops->ep_init)
+>>   		ep->ops->ep_init(ep);
+>>   
+>> -	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+>> -	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+>> -		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+>> -			hdr_type);
+>> -		return -EIO;
+>> -	}
+>> -
+>>   	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
+>>   	if (ret < 0)
+>>   		epc->max_functions = 1;
+>> @@ -587,23 +614,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>   		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>>   		return -ENOMEM;
+>>   	}
+>> -	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+>>   
+>> -	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+>> -
+>> -	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+>> -	if (offset) {
+>> -		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+>> -		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+>> -			PCI_REBAR_CTRL_NBAR_SHIFT;
+>> -
+>> -		dw_pcie_dbi_ro_wr_en(pci);
+>> -		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+>> -			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+>> -		dw_pcie_dbi_ro_wr_dis(pci);
+>> +	if (ep->ops->get_features) {
+>> +		epc_features = ep->ops->get_features(ep);
+>> +		if (epc_features->skip_core_init)
+>> +			return 0;
+>>   	}
+>>   
+>> -	dw_pcie_setup(pci);
+>> -
+>> -	return 0;
+>> +	return dw_pcie_ep_init_complete(ep);
+>>   }
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 5accdd6bc388..340783e9032e 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -399,6 +399,7 @@ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+>>   #ifdef CONFIG_PCIE_DW_EP
+>>   void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
+>>   int dw_pcie_ep_init(struct dw_pcie_ep *ep);
+>> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
+>>   void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
+>>   int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
+>>   int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>> @@ -416,6 +417,11 @@ static inline int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>   	return 0;
+>>   }
+>>   
+>> +static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>>   static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>>   {
+>>   }
+>> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+>> index 36644ccd32ac..241e6a6f39fb 100644
+>> --- a/include/linux/pci-epc.h
+>> +++ b/include/linux/pci-epc.h
+>> @@ -121,6 +121,7 @@ struct pci_epc_features {
+>>   	u8	bar_fixed_64bit;
+>>   	u64	bar_fixed_size[PCI_STD_NUM_BARS];
+>>   	size_t	align;
+>> +	bool	skip_core_init;
+> 
+> This looks more like a designware specific change. Why is it added to the core
+> pci_epc_features?
+Although the changes are done in DesignWare core (as Tegra194 uses DesignWare IP),
+core not being available for programming before REFCLK from host is available, seemed
+like a very generic case to me, so I added this as part of core features it self.
 
-Will a read-write lock be better suited here for performance reasons ?
+Thanks,
+Vidya Sagar
+> 
+> Thanks
+> Kishon
+> 
 
-> +	struct notifier_block opp_nb;
-> +	int opp_cpu;
-> +	unsigned long opp_freq;
->  };
->  
->  static LIST_HEAD(dvfs_info_list);
-> @@ -231,6 +235,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  	vproc = dev_pm_opp_get_voltage(opp);
->  	dev_pm_opp_put(opp);
->  
-> +	mutex_lock(&info->lock);
->  	/*
->  	 * If the new voltage or the intermediate voltage is higher than the
->  	 * current voltage, scale up voltage first.
-> @@ -242,6 +247,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  			pr_err("cpu%d: failed to scale up voltage!\n",
->  			       policy->cpu);
->  			mtk_cpufreq_set_voltage(info, old_vproc);
-> +			mutex_unlock(&info->lock);
->  			return ret;
->  		}
->  	}
-> @@ -253,6 +259,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  		       policy->cpu);
->  		mtk_cpufreq_set_voltage(info, old_vproc);
->  		WARN_ON(1);
-> +		mutex_unlock(&info->lock);
->  		return ret;
->  	}
->  
-> @@ -263,6 +270,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  		       policy->cpu);
->  		clk_set_parent(cpu_clk, armpll);
->  		mtk_cpufreq_set_voltage(info, old_vproc);
-> +		mutex_unlock(&info->lock);
->  		return ret;
->  	}
->  
-> @@ -273,6 +281,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  		       policy->cpu);
->  		mtk_cpufreq_set_voltage(info, inter_vproc);
->  		WARN_ON(1);
-> +		mutex_unlock(&info->lock);
->  		return ret;
->  	}
->  
-> @@ -288,15 +297,75 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  			clk_set_parent(cpu_clk, info->inter_clk);
->  			clk_set_rate(armpll, old_freq_hz);
->  			clk_set_parent(cpu_clk, armpll);
-> +			mutex_unlock(&info->lock);
->  			return ret;
->  		}
->  	}
->  
-> +	info->opp_freq = freq_hz;
-> +	mutex_unlock(&info->lock);
-> +
->  	return 0;
->  }
->  
->  #define DYNAMIC_POWER "dynamic-power-coefficient"
->  
-> +static int mtk_cpufreq_opp_notifier(struct notifier_block *nb,
-> +				    unsigned long event, void *data)
-> +{
-> +	struct dev_pm_opp *opp = data;
-> +	struct dev_pm_opp *opp_item;
-> +	struct mtk_cpu_dvfs_info *info =
-> +		container_of(nb, struct mtk_cpu_dvfs_info, opp_nb);
-
-Do the assignment after all definitions, instead of awkwardly breaking
-the line here.
-
-> +	unsigned long freq, volt;
-> +	struct cpufreq_policy *policy;
-> +	int ret = 0;
-> +
-> +	if (event == OPP_EVENT_ADJUST_VOLTAGE) {
-> +		freq = dev_pm_opp_get_freq(opp);
-> +
-> +		mutex_lock(&info->lock);
-> +		if (info->opp_freq == freq) {
-> +			volt = dev_pm_opp_get_voltage(opp);
-> +			ret = mtk_cpufreq_set_voltage(info, volt);
-> +			if (ret)
-> +				dev_err(info->cpu_dev, "failed to scale voltage: %d\n",
-> +					ret);
-> +		}
-> +		mutex_unlock(&info->lock);
-> +	} else if (event == OPP_EVENT_DISABLE) {
-> +		freq = info->opp_freq;
-> +		opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev, &freq);
-
-name it new_opp instead of opp_item.
-
-> +		if (!IS_ERR(opp_item))
-> +			dev_pm_opp_put(opp_item);
-> +		else
-> +			freq = 0;
-> +
-
-What is the purpose of the above code ?
-
-> +		/* case of current opp is disabled */
-> +		if (freq == 0 || freq != info->opp_freq) {
-> +			// find an enable opp item
-
-Use proper commenting style please.
-
-> +			freq = 1;
-> +			opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev,
-> +							     &freq);
-> +			if (!IS_ERR(opp_item)) {
-> +				dev_pm_opp_put(opp_item);
-> +				policy = cpufreq_cpu_get(info->opp_cpu);
-> +				if (policy) {
-> +					cpufreq_driver_target(policy,
-> +						freq / 1000,
-> +						CPUFREQ_RELATION_L);
-
-Why don't you simply call this instead of all the code in the else
-block ?
-
-> +					cpufreq_cpu_put(policy);
-> +				}
-> +			} else {
-> +				pr_err("%s: all opp items are disabled\n",
-> +				       __func__);
-> +			}
-> +		}
-> +	}
-> +
-> +	return notifier_from_errno(ret);
-> +}
-> +
->  static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->  {
->  	struct device *cpu_dev;
-> @@ -383,11 +452,21 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->  	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
->  	dev_pm_opp_put(opp);
->  
-> +	info->opp_cpu = cpu;
-> +	info->opp_nb.notifier_call = mtk_cpufreq_opp_notifier;
-> +	ret = dev_pm_opp_register_notifier(cpu_dev, &info->opp_nb);
-> +	if (ret) {
-> +		pr_warn("cannot register opp notification\n");
-> +		goto out_free_opp_table;
-> +	}
-> +
-> +	mutex_init(&info->lock);
->  	info->cpu_dev = cpu_dev;
->  	info->proc_reg = proc_reg;
->  	info->sram_reg = IS_ERR(sram_reg) ? NULL : sram_reg;
->  	info->cpu_clk = cpu_clk;
->  	info->inter_clk = inter_clk;
-> +	info->opp_freq = clk_get_rate(cpu_clk);
->  
->  	/*
->  	 * If SRAM regulator is present, software "voltage tracking" is needed
-> -- 
-> 2.12.5
-
--- 
-viresh
