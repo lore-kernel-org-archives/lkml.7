@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FA6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA264C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE862075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16D72075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890817;
-	bh=eGI2FMmDfPDYoCg1ZCjAMD3yPyrwIpkZXMOAqPWr9GM=;
+	s=default; t=1574890824;
+	bh=RfNt5H0u5JixeIom6TwwaUehdoBhx0+rcH2DGPQH2iY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjfUKu3QK16kQ8DQsKo3uLsDONyuGUkoXIhM43HlmxMm/8vvydiLqpF6jLXiYwInU
-	 gRsANyfeUXMKnCwr83YEVJD/eNvibMuEc8R7rGFJV0qyfTn+GfHdq4y6vag7B3/b26
-	 Q1NOkcWVbO6n2BGXoHptSAlE31bWrKEt3n8cD2bQ=
+	b=UtC+Cce4k+8QulcmSkq6ekSjkTIxJbBVEwRQCSNWqUfEts42U3zKKq9HEiWTnXPjJ
+	 fD1pxrwxK4xUl1yNJNaH6Dpj2jV4PV3xWHzh3LpZljUUaMpvnuHWkY3WE8/g9be9CN
+	 S5/W3FeQ4njz/DpjdGs2c/zzeKm+810Ig9aPX1Xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfK0VkQ (ORCPT
+        id S1729384AbfK0UnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:40:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:43:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729393AbfK0UnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:43:04 -0500
+        id S1727813AbfK0Umz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:42:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFFAC21780;
-        Wed, 27 Nov 2019 20:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 200E8215A5;
+        Wed, 27 Nov 2019 20:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887384;
-        bh=eGI2FMmDfPDYoCg1ZCjAMD3yPyrwIpkZXMOAqPWr9GM=;
+        s=default; t=1574887374;
+        bh=RfNt5H0u5JixeIom6TwwaUehdoBhx0+rcH2DGPQH2iY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PpJ8WfDHFhCskkCmPgTe/JLhUch6kDtW3FJn7pNty+KvYjIn1eXy82OrsR2puk5v/
-         y3EkiPqL7OrrWeuPVWNLE7DzLuEWWGVxBqYQhIKW6ifADElhQnadd3hG4KRFGwM4qw
-         fuD8QgNy2BrgIrF4sAibrT+8LRUI7Z5UjK8wqqXI=
+        b=1JXdlBDNawh7aMvKN6LxBSPl03sd3WCL6kjrqxj2NEIKNod1ml6oktjt/LTYoGcOX
+         ZSPFZG02KV+PAWMKaPOMolDRupXwi00W2bZlEumTAhEV5AAG+5CJOiiFaUm9lRMi0D
+         CXbYPmUWilVDrcMdj36/ncCwdZL7uuPkPmVo5XBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Larry Chen <lchen@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 090/151] wlcore: Fix the return value in case of error in wlcore_vendor_cmd_smart_config_start()
-Date:   Wed, 27 Nov 2019 21:31:13 +0100
-Message-Id: <20191127203037.138316584@linuxfoundation.org>
+Subject: [PATCH 4.9 086/151] ocfs2: fix clusters leak in ocfs2_defrag_extent()
+Date:   Wed, 27 Nov 2019 21:31:09 +0100
+Message-Id: <20191127203036.669191575@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -61,38 +66,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Larry Chen <lchen@suse.com>
 
-[ Upstream commit 3419348a97bcc256238101129d69b600ceb5cc70 ]
+[ Upstream commit 6194ae4242dec0c9d604bc05df83aa9260a899e4 ]
 
-We return 0 unconditionally at the end of
-'wlcore_vendor_cmd_smart_config_start()'.
-However, 'ret' is set to some error codes in several error handling paths
-and we already return some error codes at the beginning of the function.
+ocfs2_defrag_extent() might leak allocated clusters.  When the file
+system has insufficient space, the number of claimed clusters might be
+less than the caller wants.  If that happens, the original code might
+directly commit the transaction without returning clusters.
 
-Return 'ret' instead to propagate the error code.
+This patch is based on code in ocfs2_add_clusters_in_btree().
 
-Fixes: 80ff8063e87c ("wlcore: handle smart config vendor commands")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[akpm@linux-foundation.org: include localalloc.h, reduce scope of data_ac]
+Link: http://lkml.kernel.org/r/20180904041621.16874-3-lchen@suse.com
+Signed-off-by: Larry Chen <lchen@suse.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/vendor_cmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ocfs2/move_extents.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/net/wireless/ti/wlcore/vendor_cmd.c b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
-index fd4e9ba176c9b..332a3a5c1c900 100644
---- a/drivers/net/wireless/ti/wlcore/vendor_cmd.c
-+++ b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
-@@ -66,7 +66,7 @@ wlcore_vendor_cmd_smart_config_start(struct wiphy *wiphy,
- out:
- 	mutex_unlock(&wl->mutex);
+diff --git a/fs/ocfs2/move_extents.c b/fs/ocfs2/move_extents.c
+index c179afd0051a0..afaa044f5f6bd 100644
+--- a/fs/ocfs2/move_extents.c
++++ b/fs/ocfs2/move_extents.c
+@@ -25,6 +25,7 @@
+ #include "ocfs2_ioctl.h"
  
--	return 0;
-+	return ret;
- }
+ #include "alloc.h"
++#include "localalloc.h"
+ #include "aops.h"
+ #include "dlmglue.h"
+ #include "extent_map.h"
+@@ -222,6 +223,7 @@ static int ocfs2_defrag_extent(struct ocfs2_move_extents_context *context,
+ 	struct ocfs2_refcount_tree *ref_tree = NULL;
+ 	u32 new_phys_cpos, new_len;
+ 	u64 phys_blkno = ocfs2_clusters_to_blocks(inode->i_sb, phys_cpos);
++	int need_free = 0;
  
- static int
+ 	if ((ext_flags & OCFS2_EXT_REFCOUNTED) && *len) {
+ 
+@@ -315,6 +317,7 @@ static int ocfs2_defrag_extent(struct ocfs2_move_extents_context *context,
+ 		if (!partial) {
+ 			context->range->me_flags &= ~OCFS2_MOVE_EXT_FL_COMPLETE;
+ 			ret = -ENOSPC;
++			need_free = 1;
+ 			goto out_commit;
+ 		}
+ 	}
+@@ -339,6 +342,20 @@ static int ocfs2_defrag_extent(struct ocfs2_move_extents_context *context,
+ 		mlog_errno(ret);
+ 
+ out_commit:
++	if (need_free && context->data_ac) {
++		struct ocfs2_alloc_context *data_ac = context->data_ac;
++
++		if (context->data_ac->ac_which == OCFS2_AC_USE_LOCAL)
++			ocfs2_free_local_alloc_bits(osb, handle, data_ac,
++					new_phys_cpos, new_len);
++		else
++			ocfs2_free_clusters(handle,
++					data_ac->ac_inode,
++					data_ac->ac_bh,
++					ocfs2_clusters_to_blocks(osb->sb, new_phys_cpos),
++					new_len);
++	}
++
+ 	ocfs2_commit_trans(osb, handle);
+ 
+ out_unlock_mutex:
 -- 
 2.20.1
 
