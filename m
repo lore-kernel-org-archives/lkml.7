@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F104C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7280C21789
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9859217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888602;
-	bh=0ptIyz2rwTGU2srGHJGqVEpxkJkoXMIW8fkoSVCQ1YI=;
+	s=default; t=1574888605;
+	bh=mKp2s/blIgMGrwn5l+GuCYtectkjp5AVSv8RFFXlJYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BWtyue9RNb5DdBnXQRvpU8xtFOMzZBwpNPjSxNx54Qa5sdgU3Pi1yG3ddTMNsGjJt
-	 jjPM1YuOWSn/F3WuYAI2WA8+rwVt9CnVcDrLf7dNiOCFl9rxttifUOVk8j9f61bY8+
-	 XVqE95PcJNLWKB5P5N0rylzAgKuBBizQz/FMc/Fg=
+	b=u2brdnXjM1Mt4x1qbSlJ8LbqmcJNh5b6xupHfNvSAl58seFGGlDp/n31hlJO0Uh4m
+	 QKiR+CbmJR/Excc1fU/c+mU2hLeBQ6BT4wwOZQYgK5Hs+zoAOvUXBK0zZ8Md9tfPnF
+	 FqWO1bSU4ozsd99khbMJ2HnN3pomEQVDM3OW7/PM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732025AbfK0VDU (ORCPT
+        id S1732014AbfK0VDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:03:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56422 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:03:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730860AbfK0VDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:03:15 -0500
+        id S1732004AbfK0VDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:03:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF6722176D;
-        Wed, 27 Nov 2019 21:03:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC8B02086A;
+        Wed, 27 Nov 2019 21:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888595;
-        bh=0ptIyz2rwTGU2srGHJGqVEpxkJkoXMIW8fkoSVCQ1YI=;
+        s=default; t=1574888598;
+        bh=mKp2s/blIgMGrwn5l+GuCYtectkjp5AVSv8RFFXlJYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lGT/7KDiGupKPZgJtTobamnxAtmplylwvn681e8DMddj518Vv+nUCAu2DWblEa3KS
-         AY1XFZqj5Vf5ORhkWJJtZlZOFKFEDAUVXF+Q5TofT87/QiFBj8fGHeYr02ZDuYAibg
-         ChBxO0iSpaJF2GbpXzk3htS3MOSwjvTAcvIFWWbE=
+        b=WreGH7UllX2H0fPMs9WPzY5DDYT7cxnVguo91OljobDH3QP06iNJk8xs++tj2apzH
+         2aZ/0THM68L6ifFi+ZXNOc8d86X5hxV3ZbWuHz/R4ueKsDigud3gA0xTgF5wT5RURT
+         W9JmDx4PziQ3MeTrm3LizRIh6jntgD5KlwYTyHTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Changwei Ge <ge.changwei@h3c.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 188/306] net: hns3: bugfix for hclge_mdio_write and hclge_mdio_read
-Date:   Wed, 27 Nov 2019 21:30:38 +0100
-Message-Id: <20191127203128.992694144@linuxfoundation.org>
+Subject: [PATCH 4.19 197/306] ocfs2: dont use iocb when EIOCBQUEUED returns
+Date:   Wed, 27 Nov 2019 21:30:47 +0100
+Message-Id: <20191127203129.589297656@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,45 +65,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+From: Changwei Ge <ge.changwei@h3c.com>
 
-[ Upstream commit 1c12493809924deda6c0834cb2f2c5a6dc786390 ]
+[ Upstream commit 9e985787750db8aae87f02b67e908f28ac4d6b83 ]
 
-When there is a PHY, the driver needs to complete some operations through
-MDIO during reset reinitialization, so HCLGE_STATE_CMD_DISABLE is more
-suitable than HCLGE_STATE_RST_HANDLING to prevent the MDIO operation from
-being sent during the hardware reset.
+When -EIOCBQUEUED returns, it means that aio_complete() will be called
+from dio_complete(), which is an asynchronous progress against
+write_iter.  Generally, IO is a very slow progress than executing
+instruction, but we still can't take the risk to access a freed iocb.
 
-Fixes: b50ae26c57cb ("net: hns3: never send command queue message to IMP when reset)
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+And we do face a BUG crash issue.  Using the crash tool, iocb is
+obviously freed already.
+
+  crash> struct -x kiocb ffff881a350f5900
+  struct kiocb {
+    ki_filp = 0xffff881a350f5a80,
+    ki_pos = 0x0,
+    ki_complete = 0x0,
+    private = 0x0,
+    ki_flags = 0x0
+  }
+
+And the backtrace shows:
+  ocfs2_file_write_iter+0xcaa/0xd00 [ocfs2]
+  aio_run_iocb+0x229/0x2f0
+  do_io_submit+0x291/0x540
+  SyS_io_submit+0x10/0x20
+  system_call_fastpath+0x16/0x75
+
+Link: http://lkml.kernel.org/r/1523361653-14439-1-git-send-email-ge.changwei@h3c.com
+Signed-off-by: Changwei Ge <ge.changwei@h3c.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c | 4 ++--
+ fs/ocfs2/file.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
-index 398971a062f47..03491e8ebb730 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
-@@ -54,7 +54,7 @@ static int hclge_mdio_write(struct mii_bus *bus, int phyid, int regnum,
- 	struct hclge_desc desc;
- 	int ret;
+diff --git a/fs/ocfs2/file.c b/fs/ocfs2/file.c
+index a847fe52c56ee..a3e077fcfeb9b 100644
+--- a/fs/ocfs2/file.c
++++ b/fs/ocfs2/file.c
+@@ -2389,7 +2389,7 @@ static ssize_t ocfs2_file_write_iter(struct kiocb *iocb,
  
--	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
-+	if (test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state))
- 		return 0;
+ 	written = __generic_file_write_iter(iocb, from);
+ 	/* buffered aio wouldn't have proper lock coverage today */
+-	BUG_ON(written == -EIOCBQUEUED && !(iocb->ki_flags & IOCB_DIRECT));
++	BUG_ON(written == -EIOCBQUEUED && !direct_io);
  
- 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_MDIO_CONFIG, false);
-@@ -92,7 +92,7 @@ static int hclge_mdio_read(struct mii_bus *bus, int phyid, int regnum)
- 	struct hclge_desc desc;
- 	int ret;
+ 	/*
+ 	 * deep in g_f_a_w_n()->ocfs2_direct_IO we pass in a ocfs2_dio_end_io
+@@ -2509,7 +2509,7 @@ static ssize_t ocfs2_file_read_iter(struct kiocb *iocb,
+ 	trace_generic_file_read_iter_ret(ret);
  
--	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
-+	if (test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state))
- 		return 0;
+ 	/* buffered aio wouldn't have proper lock coverage today */
+-	BUG_ON(ret == -EIOCBQUEUED && !(iocb->ki_flags & IOCB_DIRECT));
++	BUG_ON(ret == -EIOCBQUEUED && !direct_io);
  
- 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_MDIO_CONFIG, true);
+ 	/* see ocfs2_file_write_iter */
+ 	if (ret == -EIOCBQUEUED || !ocfs2_iocb_is_rw_locked(iocb)) {
 -- 
 2.20.1
 
