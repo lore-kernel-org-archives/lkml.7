@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4A6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709E0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4788E2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471642080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890079;
-	bh=a+0kLyKi13XHKQWKFP5sMWjOl+MRNzFHvGBwZi2Kk5I=;
+	s=default; t=1574890086;
+	bh=1AEe6262HdcOwAQh2tB2daek/J3BYWc1JBiEqovCau0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mjy1qGgOyAdJU5NYE/4G6ZdBy7Xl8RYaEmdl6pZAbNcNAenIomdxY6zAkSKTeN8iX
-	 n5oXhs2a9z7m6AwjLcTQCkoyHlraxtG9+I8LRMvJddSKxOaoSjQ1jq5hoDlWMc7mle
-	 auu5Fr7UIOmap5bJ8SvI2ardKwIi7L+NoQgsxuOU=
+	b=YQ2CY/aCDE9Yln8KV7gB3jjmUFY+xbRgiApB9az3lErfVJgKXgAzRAM5srl2PumNK
+	 bnaBRIhG6jxCZJjwbSGAFWo4tup33gRfkrQbDlJfYl+rJ1cmKTJYjSFJTcqcvRcub8
+	 ozCQyEMFtnF2lTaQU/OJ8Pd0dHGFzxZi0yb3ookY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732017AbfK0V1w (ORCPT
+        id S1731347AbfK0U6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:27:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50540 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:58:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730248AbfK0U7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:59:06 -0500
+        id S1730443AbfK0U6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:58:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C531020678;
-        Wed, 27 Nov 2019 20:59:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20D592084D;
+        Wed, 27 Nov 2019 20:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888345;
-        bh=a+0kLyKi13XHKQWKFP5sMWjOl+MRNzFHvGBwZi2Kk5I=;
+        s=default; t=1574888321;
+        bh=1AEe6262HdcOwAQh2tB2daek/J3BYWc1JBiEqovCau0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVT1bXDpxqEcE4BVSDYvJSlZm9qc06JkAYtx4CRUygt1rD0g6jOhwwowdIwPDgueG
-         lkVinZzz6gxLt3NKflfExpZoCADY059pidGGJLqQ8uTeShIhs0Mc9ivic/p4Y0oqap
-         x/v1sLIrINTLJ4dgdaSo3hr+s/MjtEyl2gBMsJe4=
+        b=YlBxlUQYFoeOVhgIIQRBJja2Uo5MOT0PgU7xKMzyrl/cepdh9YMFxe434Ho5whCEM
+         WBMPRyH00WmtkYtf3FQH0wMbMqCTsfb/MllRsIE1fCr0VSdbOFKjHxRXjsv4DZzJpJ
+         sLeP6t0cZHt/wL1Yedaj+l8UnVOUmTfSZUWVTzl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 055/306] scsi: hisi_sas: Fix the race between IO completion and timeout for SMP/internal IO
-Date:   Wed, 27 Nov 2019 21:28:25 +0100
-Message-Id: <20191127203118.804894226@linuxfoundation.org>
+Subject: [PATCH 4.19 088/306] xfs: fix use-after-free race in xfs_buf_rele
+Date:   Wed, 27 Nov 2019 21:28:58 +0100
+Message-Id: <20191127203121.350680123@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,140 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit 584f53fe5f529d877968c711a095923c1ed12307 ]
+[ Upstream commit 37fd1678245f7a5898c1b05128bc481fb403c290 ]
 
-If SMP/internal IO times out, we will possibly free the task immediately.
+When looking at a 4.18 based KASAN use after free report, I noticed
+that racing xfs_buf_rele() may race on dropping the last reference
+to the buffer and taking the buffer lock. This was the symptom
+displayed by the KASAN report, but the actual issue that was
+reported had already been fixed in 4.19-rc1 by commit e339dd8d8b04
+("xfs: use sync buffer I/O for sync delwri queue submission").
 
-However if the IO actually completes at the same time, the IO completion
-may refer to task which has been freed.
+Despite this, I think there is still an issue with xfs_buf_rele()
+in this code:
 
-So to solve the issue, flush the tasklet to finish IO completion before
-free'ing slot/task.
+        release = atomic_dec_and_lock(&bp->b_hold, &pag->pag_buf_lock);
+        spin_lock(&bp->b_lock);
+        if (!release) {
+.....
 
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+If two threads race on the b_lock after both dropping a reference
+and one getting dropping the last reference so release = true, we
+end up with:
+
+CPU 0				CPU 1
+atomic_dec_and_lock()
+				atomic_dec_and_lock()
+				spin_lock(&bp->b_lock)
+spin_lock(&bp->b_lock)
+<spins>
+				<release = true bp->b_lru_ref = 0>
+				<remove from lists>
+				freebuf = true
+				spin_unlock(&bp->b_lock)
+				xfs_buf_free(bp)
+<gets lock, reading and writing freed memory>
+<accesses freed memory>
+spin_unlock(&bp->b_lock) <reads/writes freed memory>
+
+IOWs, we can't safely take bp->b_lock after dropping the hold
+reference because the buffer may go away at any time after we
+drop that reference. However, this can be fixed simply by taking the
+bp->b_lock before we drop the reference.
+
+It is safe to nest the pag_buf_lock inside bp->b_lock as the
+pag_buf_lock is only used to serialise against lookup in
+xfs_buf_find() and no other locks are held over or under the
+pag_buf_lock there. Make this clear by documenting the buffer lock
+orders at the top of the file.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com
+Signed-off-by: Dave Chinner <david@fromorbit.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 55 ++++++++++++++++++++++-----
- 1 file changed, 46 insertions(+), 9 deletions(-)
+ fs/xfs/xfs_buf.c | 38 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index e9747379384b2..d4a2625a44232 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -955,8 +955,7 @@ static int hisi_sas_control_phy(struct asd_sas_phy *sas_phy, enum phy_func func,
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index e839907e8492f..f4a89c94c931b 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -37,6 +37,32 @@ static kmem_zone_t *xfs_buf_zone;
+ #define xb_to_gfp(flags) \
+ 	((((flags) & XBF_READ_AHEAD) ? __GFP_NORETRY : GFP_NOFS) | __GFP_NOWARN)
  
- static void hisi_sas_task_done(struct sas_task *task)
- {
--	if (!del_timer(&task->slow_task->timer))
--		return;
-+	del_timer(&task->slow_task->timer);
- 	complete(&task->slow_task->completion);
- }
++/*
++ * Locking orders
++ *
++ * xfs_buf_ioacct_inc:
++ * xfs_buf_ioacct_dec:
++ *	b_sema (caller holds)
++ *	  b_lock
++ *
++ * xfs_buf_stale:
++ *	b_sema (caller holds)
++ *	  b_lock
++ *	    lru_lock
++ *
++ * xfs_buf_rele:
++ *	b_lock
++ *	  pag_buf_lock
++ *	    lru_lock
++ *
++ * xfs_buftarg_wait_rele
++ *	lru_lock
++ *	  b_lock (trylock due to inversion)
++ *
++ * xfs_buftarg_isolate
++ *	lru_lock
++ *	  b_lock (trylock due to inversion)
++ */
  
-@@ -965,13 +964,17 @@ static void hisi_sas_tmf_timedout(struct timer_list *t)
- 	struct sas_task_slow *slow = from_timer(slow, t, timer);
- 	struct sas_task *task = slow->task;
- 	unsigned long flags;
-+	bool is_completed = true;
+ static inline int
+ xfs_buf_is_vmapped(
+@@ -1006,8 +1032,18 @@ xfs_buf_rele(
  
- 	spin_lock_irqsave(&task->task_state_lock, flags);
--	if (!(task->task_state_flags & SAS_TASK_STATE_DONE))
-+	if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
- 		task->task_state_flags |= SAS_TASK_STATE_ABORTED;
-+		is_completed = false;
-+	}
- 	spin_unlock_irqrestore(&task->task_state_lock, flags);
+ 	ASSERT(atomic_read(&bp->b_hold) > 0);
  
--	complete(&task->slow_task->completion);
-+	if (!is_completed)
-+		complete(&task->slow_task->completion);
- }
- 
- #define TASK_TIMEOUT 20
-@@ -1022,10 +1025,18 @@ static int hisi_sas_exec_internal_tmf_task(struct domain_device *device,
- 		if ((task->task_state_flags & SAS_TASK_STATE_ABORTED)) {
- 			if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
- 				struct hisi_sas_slot *slot = task->lldd_task;
-+				struct hisi_sas_cq *cq =
-+					&hisi_hba->cq[slot->dlvry_queue];
- 
- 				dev_err(dev, "abort tmf: TMF task timeout and not done\n");
--				if (slot)
-+				if (slot) {
-+					/*
-+					 * flush tasklet to avoid free'ing task
-+					 * before using task in IO completion
-+					 */
-+					tasklet_kill(&cq->tasklet);
- 					slot->task = NULL;
-+				}
- 
- 				goto ex_err;
- 			} else
-@@ -1401,6 +1412,17 @@ static int hisi_sas_abort_task(struct sas_task *task)
- 
- 	spin_lock_irqsave(&task->task_state_lock, flags);
- 	if (task->task_state_flags & SAS_TASK_STATE_DONE) {
-+		struct hisi_sas_slot *slot = task->lldd_task;
-+		struct hisi_sas_cq *cq;
-+
-+		if (slot) {
-+			/*
-+			 * flush tasklet to avoid free'ing task
-+			 * before using task in IO completion
-+			 */
-+			cq = &hisi_hba->cq[slot->dlvry_queue];
-+			tasklet_kill(&cq->tasklet);
-+		}
- 		spin_unlock_irqrestore(&task->task_state_lock, flags);
- 		rc = TMF_RESP_FUNC_COMPLETE;
- 		goto out;
-@@ -1456,12 +1478,19 @@ static int hisi_sas_abort_task(struct sas_task *task)
- 		/* SMP */
- 		struct hisi_sas_slot *slot = task->lldd_task;
- 		u32 tag = slot->idx;
-+		struct hisi_sas_cq *cq = &hisi_hba->cq[slot->dlvry_queue];
- 
- 		rc = hisi_sas_internal_task_abort(hisi_hba, device,
- 			     HISI_SAS_INT_ABT_CMD, tag);
- 		if (((rc < 0) || (rc == TMF_RESP_FUNC_FAILED)) &&
--					task->lldd_task)
--			hisi_sas_do_release_task(hisi_hba, task, slot);
-+					task->lldd_task) {
-+			/*
-+			 * flush tasklet to avoid free'ing task
-+			 * before using task in IO completion
-+			 */
-+			tasklet_kill(&cq->tasklet);
-+			slot->task = NULL;
-+		}
- 	}
- 
- out:
-@@ -1827,9 +1856,17 @@ hisi_sas_internal_task_abort(struct hisi_hba *hisi_hba,
- 	if ((task->task_state_flags & SAS_TASK_STATE_ABORTED)) {
- 		if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
- 			struct hisi_sas_slot *slot = task->lldd_task;
--
--			if (slot)
-+			struct hisi_sas_cq *cq =
-+				&hisi_hba->cq[slot->dlvry_queue];
-+
-+			if (slot) {
-+				/*
-+				 * flush tasklet to avoid free'ing task
-+				 * before using task in IO completion
-+				 */
-+				tasklet_kill(&cq->tasklet);
- 				slot->task = NULL;
-+			}
- 			dev_err(dev, "internal task abort: timeout and not done.\n");
- 			res = -EIO;
- 			goto exit;
+-	release = atomic_dec_and_lock(&bp->b_hold, &pag->pag_buf_lock);
++	/*
++	 * We grab the b_lock here first to serialise racing xfs_buf_rele()
++	 * calls. The pag_buf_lock being taken on the last reference only
++	 * serialises against racing lookups in xfs_buf_find(). IOWs, the second
++	 * to last reference we drop here is not serialised against the last
++	 * reference until we take bp->b_lock. Hence if we don't grab b_lock
++	 * first, the last "release" reference can win the race to the lock and
++	 * free the buffer before the second-to-last reference is processed,
++	 * leading to a use-after-free scenario.
++	 */
+ 	spin_lock(&bp->b_lock);
++	release = atomic_dec_and_lock(&bp->b_hold, &pag->pag_buf_lock);
+ 	if (!release) {
+ 		/*
+ 		 * Drop the in-flight state if the buffer is already on the LRU
 -- 
 2.20.1
 
