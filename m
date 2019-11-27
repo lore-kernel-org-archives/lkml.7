@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B2DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC17C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5E02080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E172086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888648;
-	bh=dbwZ9WoF8rg/RelWJxEXUDmfrzz1lEIsxZkZhBEk6vI=;
+	s=default; t=1574888651;
+	bh=6wPDkIfi1wyG2iZYHJrsHGb6q/8iTHRmXiBbUyAP03g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lMCPKJOgnT9wrhl+wylWaL3MTRssSXtImMkcfdKPufF1Fu/vIg0B6L2/39FDNI3+S
-	 mCCNUV4UX7O87fbUP8LGFtWScg4gBXkO0PGx3sD1fDNH1c0u5MWmbBNgygUnCpimNB
-	 f6FYCl04py7L34sLvTB+cLE5G9wwuOYCupau3s8Y=
+	b=A0fE+sKlsNs3zqkaqn8XkSNwPO5OOvNMbQA285p4x94Umls6J2X5Z/k1JvSt0umus
+	 0tJ4WdUwbmZvPsah6NmUT47qO2RfSDIBBePP6YHUndDNj7g3M2IpG76JunIPncEOTJ
+	 gFYaItViKD3HmgoD0PSp81+4bXMQcDzx143pwqLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731805AbfK0VEH (ORCPT
+        id S1727446AbfK0VEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:04:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57406 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:04:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731779AbfK0VEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:04:02 -0500
+        id S1732111AbfK0VEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:04:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE4AF215E5;
-        Wed, 27 Nov 2019 21:04:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68D52086A;
+        Wed, 27 Nov 2019 21:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888642;
-        bh=dbwZ9WoF8rg/RelWJxEXUDmfrzz1lEIsxZkZhBEk6vI=;
+        s=default; t=1574888647;
+        bh=6wPDkIfi1wyG2iZYHJrsHGb6q/8iTHRmXiBbUyAP03g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pDR8bYGL+yWtvz+0VxB1vYN7kxRmR9ZgBVUdVNPdPyOj98aaZiIYzSrb0BEvWbF0r
-         jwbxkhKPpa1/aNgbz5AmyW5eRB80RZbk0WXq/3uIYtdxDcSzWjVCUTL8+nvGsBpfHB
-         2tYYxoFy3IaNsnUMSNZo00z87xlV8pNP+ef8bs10=
+        b=Fj6uDsmELEpG5mBoRNHMtxYUtuxWSytMY18pMjdHAGczLhhL6I80Y8Z8IJX/+iXiB
+         osxk4rtDIsZes71/mfsHAm8scbCE8QDREcj44rGtyzGwpWGGW3gJVunQt2QDOFG9S+
+         An1bW4wYn3iSn/AERU/5Pw6jzJrFHz+ixp8QcGFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Masri <amasri@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
+        stable@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 213/306] wil6210: fix debugfs memory access alignment
-Date:   Wed, 27 Nov 2019 21:31:03 +0100
-Message-Id: <20191127203130.670982441@linuxfoundation.org>
+Subject: [PATCH 4.19 215/306] wil6210: fix RGF_CAF_ICR address for Talyn-MB
+Date:   Wed, 27 Nov 2019 21:31:05 +0100
+Message-Id: <20191127203130.799684406@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,67 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Masri <amasri@codeaurora.org>
+From: Maya Erez <merez@codeaurora.org>
 
-[ Upstream commit 84ec040d0fb25197584d28a0dedc355503cd19b9 ]
+[ Upstream commit 7c69709f8ed27197b16aa1c3f9b0744402b2fa02 ]
 
-All wil6210 device memory access should be 4 bytes aligned. In io
-blob wil6210 did not force alignment for read function, this caused
-alignment fault on some platforms.
-Fixing that by accessing all 4 lower bytes and return to host the
-requested data.
+RGF_CAF_ICR register location has changed in Talyn-MB.
+Add RGF_CAF_ICR_TALYN_MB to support the new address.
 
-Signed-off-by: Ahmad Masri <amasri@codeaurora.org>
 Signed-off-by: Maya Erez <merez@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/debugfs.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/net/wireless/ath/wil6210/main.c    | 11 +++++++++--
+ drivers/net/wireless/ath/wil6210/wil6210.h |  1 +
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/debugfs.c b/drivers/net/wireless/ath/wil6210/debugfs.c
-index ceace95b1595c..44296c0159252 100644
---- a/drivers/net/wireless/ath/wil6210/debugfs.c
-+++ b/drivers/net/wireless/ath/wil6210/debugfs.c
-@@ -662,10 +662,10 @@ static ssize_t wil_read_file_ioblob(struct file *file, char __user *user_buf,
- 	enum { max_count = 4096 };
- 	struct wil_blob_wrapper *wil_blob = file->private_data;
- 	struct wil6210_priv *wil = wil_blob->wil;
--	loff_t pos = *ppos;
-+	loff_t aligned_pos, pos = *ppos;
- 	size_t available = wil_blob->blob.size;
- 	void *buf;
--	size_t ret;
-+	size_t unaligned_bytes, aligned_count, ret;
- 	int rc;
+diff --git a/drivers/net/wireless/ath/wil6210/main.c b/drivers/net/wireless/ath/wil6210/main.c
+index 920cb233f4db7..10673fa9388ec 100644
+--- a/drivers/net/wireless/ath/wil6210/main.c
++++ b/drivers/net/wireless/ath/wil6210/main.c
+@@ -1397,8 +1397,15 @@ static void wil_pre_fw_config(struct wil6210_priv *wil)
+ 	wil6210_clear_irq(wil);
+ 	/* CAF_ICR - clear and mask */
+ 	/* it is W1C, clear by writing back same value */
+-	wil_s(wil, RGF_CAF_ICR + offsetof(struct RGF_ICR, ICR), 0);
+-	wil_w(wil, RGF_CAF_ICR + offsetof(struct RGF_ICR, IMV), ~0);
++	if (wil->hw_version < HW_VER_TALYN_MB) {
++		wil_s(wil, RGF_CAF_ICR + offsetof(struct RGF_ICR, ICR), 0);
++		wil_w(wil, RGF_CAF_ICR + offsetof(struct RGF_ICR, IMV), ~0);
++	} else {
++		wil_s(wil,
++		      RGF_CAF_ICR_TALYN_MB + offsetof(struct RGF_ICR, ICR), 0);
++		wil_w(wil, RGF_CAF_ICR_TALYN_MB +
++		      offsetof(struct RGF_ICR, IMV), ~0);
++	}
+ 	/* clear PAL_UNIT_ICR (potential D0->D3 leftover)
+ 	 * In Talyn-MB host cannot access this register due to
+ 	 * access control, hence PAL_UNIT_ICR is cleared by the FW
+diff --git a/drivers/net/wireless/ath/wil6210/wil6210.h b/drivers/net/wireless/ath/wil6210/wil6210.h
+index 17c294b1ead13..75fe1a3b70466 100644
+--- a/drivers/net/wireless/ath/wil6210/wil6210.h
++++ b/drivers/net/wireless/ath/wil6210/wil6210.h
+@@ -319,6 +319,7 @@ struct RGF_ICR {
+ /* MAC timer, usec, for packet lifetime */
+ #define RGF_MAC_MTRL_COUNTER_0		(0x886aa8)
  
- 	if (test_bit(wil_status_suspending, wil_blob->wil->status) ||
-@@ -683,7 +683,12 @@ static ssize_t wil_read_file_ioblob(struct file *file, char __user *user_buf,
- 	if (count > max_count)
- 		count = max_count;
- 
--	buf = kmalloc(count, GFP_KERNEL);
-+	/* set pos to 4 bytes aligned */
-+	unaligned_bytes = pos % 4;
-+	aligned_pos = pos - unaligned_bytes;
-+	aligned_count = count + unaligned_bytes;
-+
-+	buf = kmalloc(aligned_count, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
- 
-@@ -694,9 +699,9 @@ static ssize_t wil_read_file_ioblob(struct file *file, char __user *user_buf,
- 	}
- 
- 	wil_memcpy_fromio_32(buf, (const void __iomem *)
--			     wil_blob->blob.data + pos, count);
-+			     wil_blob->blob.data + aligned_pos, aligned_count);
- 
--	ret = copy_to_user(user_buf, buf, count);
-+	ret = copy_to_user(user_buf, buf + unaligned_bytes, count);
- 
- 	wil_pm_runtime_put(wil);
- 
++#define RGF_CAF_ICR_TALYN_MB		(0x8893d4) /* struct RGF_ICR */
+ #define RGF_CAF_ICR			(0x88946c) /* struct RGF_ICR */
+ #define RGF_CAF_OSC_CONTROL		(0x88afa4)
+ 	#define BIT_CAF_OSC_XTAL_EN		BIT(0)
 -- 
 2.20.1
 
