@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FC2C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE7EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3E9206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D3B206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890182;
-	bh=0dbdYLGTq2BVs9/jCLHYxBB0RMEi4AQzMdhJs3x8hd0=;
+	s=default; t=1574890189;
+	bh=40KOctADMc2kGz5duai8pYEfu7RExPJwRBK9jHSlvf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h7wYW1aQt7dkoRYI/n/tIEL4IppSOL6qGReLs8sfSgaMc5IM2oPlY2w6f6aFM/Fls
-	 RXCZK9VLBcidk1JJDhIgKUN7kbM0VrbP0D41K6tPoVsKyvw2wHrtjlPHD4JzXa6pSd
-	 377CXae8EL9JuOCPJIVpTEEX93IU3Huql+ceTV7c=
+	b=PiLF0GQoZgSiT6rG5AdCqzVf2F4JbJht2Hc3hiq2GSOyI4d9pzt5eccfuRdRmKbg3
+	 LZ4uwLncfnCiOfao9nIhaIQGfgfKZ7Jn/7MksYAuJ0t8sjUL5MytnDpZvhqQ5DXsDu
+	 SChSB+bTxW8omER6B6sG6szCzREpKU07KlSu5SbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731310AbfK0V3l (ORCPT
+        id S1731093AbfK0U4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:29:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:56:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731118AbfK0U4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:56:55 -0500
+        id S1731067AbfK0U4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:56:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DED0F20862;
-        Wed, 27 Nov 2019 20:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 629F22068E;
+        Wed, 27 Nov 2019 20:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888214;
-        bh=0dbdYLGTq2BVs9/jCLHYxBB0RMEi4AQzMdhJs3x8hd0=;
+        s=default; t=1574888195;
+        bh=40KOctADMc2kGz5duai8pYEfu7RExPJwRBK9jHSlvf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AQl3RcrFVPq6isdsi8Q+3MQjyYePnX4u41LQX3oda3LoV93LJdXOK9xX66LWTeF6w
-         vat05VNhW06EdKHrrB6NXBi6NoaTHs7JOcQibPRIH+kcLdo3FY5l4JqMd/tCPiAUiw
-         42lp9MX8qyTuFolIbePnmBQsfxeLegrWRabsYomo=
+        b=GiPjF41Yiok0hGIgiDGpnHydX2mSh/NCZs5QdS1TMp567V4WWPohigVnF2nW61O9w
+         Wzxs8qbBCYgcoQS0T1UjnHXn6rHhbxiBUSbRmW35Q/eeEdjcxbNUQS1+PlRCoOR6Y/
+         zyZTsKRd68Or7Ut/oU9WUucQA50u9/p3jNzOU7Sg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/306] mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready fail
-Date:   Wed, 27 Nov 2019 21:28:16 +0100
-Message-Id: <20191127203118.178576070@linuxfoundation.org>
+Subject: [PATCH 4.19 040/306] ath10k: set probe request oui during driver start
+Date:   Wed, 27 Nov 2019 21:28:10 +0100
+Message-Id: <20191127203117.777116671@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,43 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaotian Jing <chaotian.jing@mediatek.com>
+From: Rakesh Pillai <pillair@codeaurora.org>
 
-[ Upstream commit f38a9774ddde9d79b3487dd888edd8b8623552af ]
+[ Upstream commit f1157695c527d4ee949ac83f743f80107751a70c ]
 
-when msdc_cmd_is_ready return fail, the req_timeout work has not been
-inited and cancel_delayed_work() will return false, then, the request
-return directly and never call mmc_request_done().
+Currently the wmi command for setting probe request
+oui, needed for mac randomization, is sent during
+the mac register. At this time, during the driver
+init the wmi has already been detached. This can
+cause unexpected behavior since the firmware is
+already down and the wmi has been detached.
 
-so need call mod_delayed_work() before msdc_cmd_is_ready()
+Send the wmi command for setting probe request
+oui during the driver start. This will make sure
+that the firmware is started and wmi is initialized
+before we send this command.
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Tested HW: WCN3990
+Tested FW: WLAN.HL.2.0-01188-QCAHLSWMTPLZ-1
+
+Fixes: 60e1d0fb290197fe505dff6e4e3b7e4d258dbf60
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mtk-sd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 621c914dc5c01..673f6a9616cd9 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -1056,6 +1056,7 @@ static void msdc_start_command(struct msdc_host *host,
- 	WARN_ON(host->cmd);
- 	host->cmd = cmd;
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index d3d33cc2adfde..613ca74f1b286 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -4686,6 +4686,14 @@ static int ath10k_start(struct ieee80211_hw *hw)
+ 		goto err_core_stop;
+ 	}
  
-+	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
- 	if (!msdc_cmd_is_ready(host, mrq, cmd))
- 		return;
++	if (test_bit(WMI_SERVICE_SPOOF_MAC_SUPPORT, ar->wmi.svc_map)) {
++		ret = ath10k_wmi_scan_prob_req_oui(ar, ar->mac_addr);
++		if (ret) {
++			ath10k_err(ar, "failed to set prob req oui: %i\n", ret);
++			goto err_core_stop;
++		}
++	}
++
+ 	if (test_bit(WMI_SERVICE_ADAPTIVE_OCS, ar->wmi.svc_map)) {
+ 		ret = ath10k_wmi_adaptive_qcs(ar, true);
+ 		if (ret) {
+@@ -8551,12 +8559,6 @@ int ath10k_mac_register(struct ath10k *ar)
+ 	}
  
-@@ -1067,7 +1068,6 @@ static void msdc_start_command(struct msdc_host *host,
- 
- 	cmd->error = 0;
- 	rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
--	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
- 
- 	sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
- 	writel(cmd->arg, host->base + SDC_ARG);
+ 	if (test_bit(WMI_SERVICE_SPOOF_MAC_SUPPORT, ar->wmi.svc_map)) {
+-		ret = ath10k_wmi_scan_prob_req_oui(ar, ar->mac_addr);
+-		if (ret) {
+-			ath10k_err(ar, "failed to set prob req oui: %i\n", ret);
+-			goto err_dfs_detector_exit;
+-		}
+-
+ 		ar->hw->wiphy->features |=
+ 			NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR;
+ 	}
 -- 
 2.20.1
 
