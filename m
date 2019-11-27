@@ -2,2688 +2,886 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC36C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3B7C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4E12084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807062084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:57:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TEvo3Ec2"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mXPHA5in"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfK0E5O (ORCPT
+        id S1727095AbfK0E5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 23:57:14 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43056 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfK0E5N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 23:57:13 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR4ufeu007522;
-        Tue, 26 Nov 2019 22:56:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574830601;
-        bh=gzmMpSrFfP0py6vCw2E3yp2IFCspezS//CYL7vf0Jwo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TEvo3Ec2Vpr0uZ3oLVV5tqpIvxQ21z8KyFj+8MapBkceih3ECAJfZcRbaICB4e6OU
-         2TGbDfVSg4eVqKa7B9h4t9BoGWo7gmMRuedDR/MgSiwIuQBDHZFu3Ao6oR7uRBZw25
-         WZOJHYqX2IrTVzjYrmUkVD9cwTx5kc/dRc/rAP70=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR4ufQH124363
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 Nov 2019 22:56:41 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 26
- Nov 2019 22:56:40 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 26 Nov 2019 22:56:40 -0600
-Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR4uTwC014746;
-        Tue, 26 Nov 2019 22:56:30 -0600
-Subject: Re: [PATCH 1/5] pci: pcie-rcar: preparation for adding endpoint
- support
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        <linux-pci@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191106193609.19645-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <de2f8844-f0ce-82aa-1596-8ea1b8fce4f0@ti.com>
-Date:   Wed, 27 Nov 2019 10:25:47 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 26 Nov 2019 23:57:25 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42861 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726576AbfK0E5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 23:57:25 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47N7mb1F4nz9sSp;
+        Wed, 27 Nov 2019 15:57:19 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574830639;
+        bh=GsEePh2XqcVqw/h6v17Ba4MlYNJfFt7Z5/WkNz+QnXA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mXPHA5inIeWbdhjXlmIcxjl+/BdXSbxuoAmcMGcypTbAg1fKQc/9aEF/Cz91/aFrH
+         OfxOi3YSQdXT0oqgmm8nz/2j53rfdIcW8pHKnk+FPRX1pew7f/Ohk9BPZwAosZccIE
+         Odt6qBiB2fbyQOrNDaw+Ifk06V9gvZsiO9loPikRF2bQmfpy0vqJnro2m/qkJEkoWR
+         XzjSuf43++8x2+hrrMH3+cyDPUuqBHfZdcA2W8Ri41DwQj2mopUYDchyjLFP/fyLi2
+         MdqiggGer1UTrAvo94dif9Et7LMf1HOT2smV1JDP+yoXuMx7MvzBjP1wKy+6QcGfMO
+         q7vlPrgT1Lcmw==
+Date:   Wed, 27 Nov 2019 15:57:17 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Nov 27
+Message-ID: <20191127155717.400a60de@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20191106193609.19645-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="Sig_/jO0=LGOnO/noy7pW=CQwTNx";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+--Sig_/jO0=LGOnO/noy7pW=CQwTNx
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 07/11/19 1:06 AM, Lad Prabhakar wrote:
-> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> this patch prepares for adding endpoint support to rcar controller,
-> there are no functional changes with this patch, a common file is
-> created so that it can be shared with endpoint driver.
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  arch/arm64/configs/defconfig            |    2 +-
->  arch/arm64/configs/renesas_defconfig    |    2 +-
->  drivers/pci/controller/Kconfig          |    4 +-
->  drivers/pci/controller/Makefile         |    2 +-
->  drivers/pci/controller/pcie-rcar-host.c | 1058 +++++++++++++++++++
->  drivers/pci/controller/pcie-rcar.c      | 1231 +----------------------
+Hi all,
 
-Can you create this patch using "git format-patch -M", so that only whatever
-changed appears here.
+Please do not add any material for v5.6 to your linux-next included
+trees until after v5.5-rc1 has been released.
 
-Thanks
-Kishon
+Changes since 20191126:
 
->  drivers/pci/controller/pcie-rcar.h      |  129 +++
->  7 files changed, 1245 insertions(+), 1183 deletions(-)
->  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
->  create mode 100644 drivers/pci/controller/pcie-rcar.h
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 7d16f10a9251..f67ce0ccea1d 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -186,7 +186,7 @@ CONFIG_HOTPLUG_PCI=y
->  CONFIG_HOTPLUG_PCI_ACPI=y
->  CONFIG_PCI_AARDVARK=y
->  CONFIG_PCI_TEGRA=y
-> -CONFIG_PCIE_RCAR=y
-> +CONFIG_PCIE_RCAR_HOST=y
->  CONFIG_PCI_HOST_GENERIC=y
->  CONFIG_PCI_XGENE=y
->  CONFIG_PCIE_ALTERA=y
-> diff --git a/arch/arm64/configs/renesas_defconfig b/arch/arm64/configs/renesas_defconfig
-> index f7411e8807d6..75fc418377c5 100644
-> --- a/arch/arm64/configs/renesas_defconfig
-> +++ b/arch/arm64/configs/renesas_defconfig
-> @@ -91,7 +91,7 @@ CONFIG_PCIEPORTBUS=y
->  CONFIG_HOTPLUG_PCI_PCIE=y
->  CONFIG_PCI_IOV=y
->  CONFIG_HOTPLUG_PCI=y
-> -CONFIG_PCIE_RCAR=y
-> +CONFIG_PCIE_RCAR_HOST=y
->  CONFIG_PCI_HOST_GENERIC=y
->  CONFIG_DEVTMPFS=y
->  CONFIG_DEVTMPFS_MOUNT=y
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 70e078238899..01c238e5ea1e 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -82,12 +82,12 @@ config PCI_RCAR_GEN2
->  	  There are 3 internal PCI controllers available with a single
->  	  built-in EHCI/OHCI host controller present on each one.
->  
-> -config PCIE_RCAR
-> +config PCIE_RCAR_HOST
->  	bool "Renesas R-Car PCIe controller"
->  	depends on ARCH_RENESAS || COMPILE_TEST
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	help
-> -	  Say Y here if you want PCIe controller support on R-Car SoCs.
-> +	  Say Y here if you want PCIe controller support on R-Car SoCs in host mode.
->  
->  config PCI_HOST_COMMON
->  	bool
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index a2a22c9d91af..3577902a0d40 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -9,7 +9,7 @@ obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
->  obj-$(CONFIG_PCI_AARDVARK) += pci-aardvark.o
->  obj-$(CONFIG_PCI_TEGRA) += pci-tegra.o
->  obj-$(CONFIG_PCI_RCAR_GEN2) += pci-rcar-gen2.o
-> -obj-$(CONFIG_PCIE_RCAR) += pcie-rcar.o
-> +obj-$(CONFIG_PCIE_RCAR_HOST) += pcie-rcar.o pcie-rcar-host.o
->  obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
->  obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
->  obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
-> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-> new file mode 100644
-> index 000000000000..645ef3e41e27
-> --- /dev/null
-> +++ b/drivers/pci/controller/pcie-rcar-host.c
-> @@ -0,0 +1,1058 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe driver for Renesas R-Car SoCs
-> + *  Copyright (C) 2014-2019 Renesas Electronics Europe Ltd
-> + *
-> + * Based on:
-> + *  arch/sh/drivers/pci/pcie-sh7786.c
-> + *  arch/sh/drivers/pci/ops-sh7786.c
-> + *  Copyright (C) 2009 - 2011  Paul Mundt
-> + *
-> + * Author: Phil Edworthy <phil.edworthy@renesas.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/msi.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pci.h>
-> +#include <linux/phy/phy.h>
-> +
-> +#include "pcie-rcar.h"
-> +
-> +struct rcar_msi {
-> +	DECLARE_BITMAP(used, INT_PCI_MSI_NR);
-> +	struct irq_domain *domain;
-> +	struct msi_controller chip;
-> +	unsigned long pages;
-> +	struct mutex lock; /* serializes msi */
-> +	int irq1;
-> +	int irq2;
-> +};
-> +
-> +static inline struct rcar_msi *to_rcar_msi(struct msi_controller *chip)
-> +{
-> +	return container_of(chip, struct rcar_msi, chip);
-> +}
-> +
-> +/* Structure representing the PCIe interface */
-> +struct rcar_pcie {
-> +	struct device		*dev;
-> +	struct phy		*phy;
-> +	void __iomem		*base;
-> +	struct list_head	resources;
-> +	int			root_bus_nr;
-> +	struct clk		*bus_clk;
-> +	struct			rcar_msi msi;
-> +};
-> +
-> +static u32 rcar_read_conf(struct rcar_pcie *pcie, int where)
-> +{
-> +	unsigned int shift = BITS_PER_BYTE * (where & 3);
-> +	u32 val = rcar_pci_read_reg(pcie->base, where & ~3);
-> +
-> +	return val >> shift;
-> +}
-> +
-> +/* Serialization is provided by 'pci_lock' in drivers/pci/access.c */
-> +static int
-> +rcar_pcie_config_access(struct rcar_pcie *pcie,
-> +			unsigned char access_type, struct pci_bus *bus,
-> +			unsigned int devfn, int where, u32 *data)
-> +{
-> +	unsigned int dev, func, reg, index;
-> +
-> +	dev = PCI_SLOT(devfn);
-> +	func = PCI_FUNC(devfn);
-> +	reg = where & ~3;
-> +	index = reg / 4;
-> +
-> +	/*
-> +	 * While each channel has its own memory-mapped extended config
-> +	 * space, it's generally only accessible when in endpoint mode.
-> +	 * When in root complex mode, the controller is unable to target
-> +	 * itself with either type 0 or type 1 accesses, and indeed, any
-> +	 * controller initiated target transfer to its own config space
-> +	 * result in a completer abort.
-> +	 *
-> +	 * Each channel effectively only supports a single device, but as
-> +	 * the same channel <-> device access works for any PCI_SLOT()
-> +	 * value, we cheat a bit here and bind the controller's config
-> +	 * space to devfn 0 in order to enable self-enumeration. In this
-> +	 * case the regular ECAR/ECDR path is sidelined and the mangled
-> +	 * config access itself is initiated as an internal bus transaction.
-> +	 */
-> +	if (pci_is_root_bus(bus)) {
-> +		if (dev != 0)
-> +			return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +		if (access_type == RCAR_PCI_ACCESS_READ) {
-> +			*data = rcar_pci_read_reg(pcie->base, PCICONF(index));
-> +		} else {
-> +			/* Keep an eye out for changes to the root bus number */
-> +			if (pci_is_root_bus(bus) && reg == PCI_PRIMARY_BUS)
-> +				pcie->root_bus_nr = *data & 0xff;
-> +
-> +			rcar_pci_write_reg(pcie->base, *data, PCICONF(index));
-> +		}
-> +
-> +		return PCIBIOS_SUCCESSFUL;
-> +	}
-> +
-> +	if (pcie->root_bus_nr < 0)
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +	/* Clear errors */
-> +	rcar_pci_write_reg(pcie->base, rcar_pci_read_reg(pcie->base, PCIEERRFR),
-> +			   PCIEERRFR);
-> +
-> +	/* Set the PIO address */
-> +	rcar_pci_write_reg(pcie->base, PCIE_CONF_BUS(bus->number) |
-> +		PCIE_CONF_DEV(dev) | PCIE_CONF_FUNC(func) | reg, PCIECAR);
-> +
-> +	/* Enable the configuration access */
-> +	if (bus->parent->number == pcie->root_bus_nr)
-> +		rcar_pci_write_reg(pcie->base,
-> +				   CONFIG_SEND_ENABLE | TYPE0, PCIECCTLR);
-> +	else
-> +		rcar_pci_write_reg(pcie->base,
-> +				   CONFIG_SEND_ENABLE | TYPE1, PCIECCTLR);
-> +
-> +	/* Check for errors */
-> +	if (rcar_pci_read_reg(pcie->base, PCIEERRFR) & UNSUPPORTED_REQUEST)
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +	/* Check for master and target aborts */
-> +	if (rcar_read_conf(pcie, RCONF(PCI_STATUS)) &
-> +		(PCI_STATUS_REC_MASTER_ABORT | PCI_STATUS_REC_TARGET_ABORT))
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +	if (access_type == RCAR_PCI_ACCESS_READ)
-> +		*data = rcar_pci_read_reg(pcie->base, PCIECDR);
-> +	else
-> +		rcar_pci_write_reg(pcie->base, *data, PCIECDR);
-> +
-> +	/* Disable the configuration access */
-> +	rcar_pci_write_reg(pcie->base, 0, PCIECCTLR);
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-> +static int rcar_pcie_read_conf(struct pci_bus *bus, unsigned int devfn,
-> +			       int where, int size, u32 *val)
-> +{
-> +	struct rcar_pcie *pcie = bus->sysdata;
-> +	int ret;
-> +
-> +	ret = rcar_pcie_config_access(pcie, RCAR_PCI_ACCESS_READ,
-> +				      bus, devfn, where, val);
-> +	if (ret != PCIBIOS_SUCCESSFUL) {
-> +		*val = 0xffffffff;
-> +		return ret;
-> +	}
-> +
-> +	if (size == 1)
-> +		*val = (*val >> (BITS_PER_BYTE * (where & 3))) & 0xff;
-> +	else if (size == 2)
-> +		*val = (*val >> (BITS_PER_BYTE * (where & 2))) & 0xffff;
-> +
-> +	dev_dbg(&bus->dev, "pcie-config-read: bus=%3d devfn=0x%04x where=0x%04x size=%d val=0x%08x\n",
-> +		bus->number, devfn, where, size, *val);
-> +
-> +	return ret;
-> +}
-> +
-> +/* Serialization is provided by 'pci_lock' in drivers/pci/access.c */
-> +static int rcar_pcie_write_conf(struct pci_bus *bus, unsigned int devfn,
-> +				int where, int size, u32 val)
-> +{
-> +	struct rcar_pcie *pcie = bus->sysdata;
-> +	unsigned int shift;
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = rcar_pcie_config_access(pcie, RCAR_PCI_ACCESS_READ,
-> +				      bus, devfn, where, &data);
-> +	if (ret != PCIBIOS_SUCCESSFUL)
-> +		return ret;
-> +
-> +	dev_dbg(&bus->dev, "pcie-config-write: bus=%3d devfn=0x%04x where=0x%04x size=%d val=0x%08x\n",
-> +		bus->number, devfn, where, size, val);
-> +
-> +	if (size == 1) {
-> +		shift = BITS_PER_BYTE * (where & 3);
-> +		data &= ~(0xff << shift);
-> +		data |= ((val & 0xff) << shift);
-> +	} else if (size == 2) {
-> +		shift = BITS_PER_BYTE * (where & 2);
-> +		data &= ~(0xffff << shift);
-> +		data |= ((val & 0xffff) << shift);
-> +	} else {
-> +		data = val;
-> +	}
-> +
-> +	ret = rcar_pcie_config_access(pcie, RCAR_PCI_ACCESS_WRITE,
-> +				      bus, devfn, where, &data);
-> +
-> +	return ret;
-> +}
-> +
-> +static struct pci_ops rcar_pcie_ops = {
-> +	.read	= rcar_pcie_read_conf,
-> +	.write	= rcar_pcie_write_conf,
-> +};
-> +
-> +static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
-> +{
-> +	struct resource_entry *win;
-> +	int i = 0;
-> +
-> +	/* Setup PCI resources */
-> +	resource_list_for_each_entry(win, &pci->resources) {
-> +		struct resource *res = win->res;
-> +
-> +		if (!res->flags)
-> +			continue;
-> +
-> +		switch (resource_type(res)) {
-> +		case IORESOURCE_IO:
-> +		case IORESOURCE_MEM:
-> +			rcar_pcie_set_outbound(i, pci->base, res, true);
-> +			i++;
-> +			break;
-> +		case IORESOURCE_BUS:
-> +			pci->root_bus_nr = res->start;
-> +			break;
-> +		default:
-> +			continue;
-> +		}
-> +
-> +		pci_add_resource(resource, res);
-> +	}
-> +
-> +	return 1;
-> +}
-> +
-> +static void rcar_pcie_force_speedup(struct rcar_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->dev;
-> +	unsigned int timeout = 1000;
-> +	u32 macsr;
-> +
-> +	if ((rcar_pci_read_reg(pcie->base, MACS2R) & LINK_SPEED) !=
-> +		LINK_SPEED_5_0GTS)
-> +		return;
-> +
-> +	if (rcar_pci_read_reg(pcie->base, MACCTLR) & SPEED_CHANGE) {
-> +		dev_err(dev, "Speed change already in progress\n");
-> +		return;
-> +	}
-> +
-> +	macsr = rcar_pci_read_reg(pcie->base, MACSR);
-> +	if ((macsr & LINK_SPEED) == LINK_SPEED_5_0GTS)
-> +		goto done;
-> +
-> +	/* Set target link speed to 5.0 GT/s */
-> +	rcar_rmw32(pcie->base, EXPCAP(12), PCI_EXP_LNKSTA_CLS,
-> +		   PCI_EXP_LNKSTA_CLS_5_0GB);
-> +
-> +	/* Set speed change reason as intentional factor */
-> +	rcar_rmw32(pcie->base, MACCGSPSETR, SPCNGRSN, 0);
-> +
-> +	/* Clear SPCHGFIN, SPCHGSUC, and SPCHGFAIL */
-> +	if (macsr & (SPCHGFIN | SPCHGSUC | SPCHGFAIL))
-> +		rcar_pci_write_reg(pcie->base, macsr, MACSR);
-> +
-> +	/* Start link speed change */
-> +	rcar_rmw32(pcie->base, MACCTLR, SPEED_CHANGE, SPEED_CHANGE);
-> +
-> +	while (timeout--) {
-> +		macsr = rcar_pci_read_reg(pcie->base, MACSR);
-> +		if (macsr & SPCHGFIN) {
-> +			/* Clear the interrupt bits */
-> +			rcar_pci_write_reg(pcie->base, macsr, MACSR);
-> +
-> +			if (macsr & SPCHGFAIL)
-> +				dev_err(dev, "Speed change failed\n");
-> +
-> +			goto done;
-> +		}
-> +
-> +		usleep_range(1000, 2000);
-> +	}
-> +
-> +	dev_err(dev, "Speed change timed out\n");
-> +
-> +done:
-> +	dev_info(dev, "Current link speed is %s GT/s\n",
-> +		 (macsr & LINK_SPEED) == LINK_SPEED_5_0GTS ? "5" : "2.5");
-> +}
-> +
-> +static int rcar_pcie_enable(struct rcar_pcie *pcie)
-> +{
-> +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> +	struct device *dev = pcie->dev;
-> +	struct pci_bus *bus, *child;
-> +	int ret;
-> +
-> +	/* Try setting 5 GT/s link speed */
-> +	rcar_pcie_force_speedup(pcie);
-> +
-> +	rcar_pcie_setup(&bridge->windows, pcie);
-> +
-> +	pci_add_flags(PCI_REASSIGN_ALL_BUS);
-> +
-> +	bridge->dev.parent = dev;
-> +	bridge->sysdata = pcie;
-> +	bridge->busnr = pcie->root_bus_nr;
-> +	bridge->ops = &rcar_pcie_ops;
-> +	bridge->map_irq = of_irq_parse_and_map_pci;
-> +	bridge->swizzle_irq = pci_common_swizzle;
-> +	if (IS_ENABLED(CONFIG_PCI_MSI))
-> +		bridge->msi = &pcie->msi.chip;
-> +
-> +	ret = pci_scan_root_bus_bridge(bridge);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	bus = bridge->bus;
-> +
-> +	pci_bus_size_bridges(bus);
-> +	pci_bus_assign_resources(bus);
-> +
-> +	list_for_each_entry(child, &bus->children, node)
-> +		pcie_bus_configure_settings(child);
-> +
-> +	pci_bus_add_devices(bus);
-> +
-> +	return 0;
-> +}
-> +
-> +static int phy_wait_for_ack(struct rcar_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->dev;
-> +	unsigned int timeout = 100;
-> +
-> +	while (timeout--) {
-> +		if (rcar_pci_read_reg(pcie->base, H1_PCIEPHYADRR) & PHY_ACK)
-> +			return 0;
-> +
-> +		usleep_range(90, 110);
-> +	}
-> +
-> +	dev_err(dev, "Access to PCIe phy timed out\n");
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +static void phy_write_reg(struct rcar_pcie *pcie,
-> +			  unsigned int rate, u32 addr,
-> +			  unsigned int lane, u32 data)
-> +{
-> +	u32 phyaddr;
-> +
-> +	phyaddr = WRITE_CMD |
-> +		((rate & 1) << RATE_POS) |
-> +		((lane & 0xf) << LANE_POS) |
-> +		((addr & 0xff) << ADR_POS);
-> +
-> +	/* Set write data */
-> +	rcar_pci_write_reg(pcie->base, data, H1_PCIEPHYDOUTR);
-> +	rcar_pci_write_reg(pcie->base, phyaddr, H1_PCIEPHYADRR);
-> +
-> +	/* Ignore errors as they will be dealt with if the data link is down */
-> +	phy_wait_for_ack(pcie);
-> +
-> +	/* Clear command */
-> +	rcar_pci_write_reg(pcie->base, 0, H1_PCIEPHYDOUTR);
-> +	rcar_pci_write_reg(pcie->base, 0, H1_PCIEPHYADRR);
-> +
-> +	/* Ignore errors as they will be dealt with if the data link is down */
-> +	phy_wait_for_ack(pcie);
-> +}
-> +
-> +static int rcar_pcie_hw_init(struct rcar_pcie *pcie)
-> +{
-> +	int err;
-> +
-> +	/* Begin initialization */
-> +	rcar_pci_write_reg(pcie->base, 0, PCIETCTLR);
-> +
-> +	/* Set mode */
-> +	rcar_pci_write_reg(pcie->base, 1, PCIEMSR);
-> +
-> +	err = rcar_pcie_wait_for_phyrdy(pcie->base);
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * Initial header for port config space is type 1, set the device
-> +	 * class to match. Hardware takes care of propagating the IDSETR
-> +	 * settings, so there is no need to bother with a quirk.
-> +	 */
-> +	rcar_pci_write_reg(pcie->base, PCI_CLASS_BRIDGE_PCI << 16, IDSETR1);
-> +
-> +	/*
-> +	 * Setup Secondary Bus Number & Subordinate Bus Number, even though
-> +	 * they aren't used, to avoid bridge being detected as broken.
-> +	 */
-> +	rcar_rmw32(pcie->base, RCONF(PCI_SECONDARY_BUS), 0xff, 1);
-> +	rcar_rmw32(pcie->base, RCONF(PCI_SUBORDINATE_BUS), 0xff, 1);
-> +
-> +	/* Initialize default capabilities. */
-> +	rcar_rmw32(pcie->base, REXPCAP(0), 0xff, PCI_CAP_ID_EXP);
-> +	rcar_rmw32(pcie->base, REXPCAP(PCI_EXP_FLAGS),
-> +		   PCI_EXP_FLAGS_TYPE, PCI_EXP_TYPE_ROOT_PORT << 4);
-> +	rcar_rmw32(pcie->base, RCONF(PCI_HEADER_TYPE), 0x7f,
-> +		   PCI_HEADER_TYPE_BRIDGE);
-> +
-> +	/* Enable data link layer active state reporting */
-> +	rcar_rmw32(pcie->base, REXPCAP(PCI_EXP_LNKCAP), PCI_EXP_LNKCAP_DLLLARC,
-> +		   PCI_EXP_LNKCAP_DLLLARC);
-> +
-> +	/* Write out the physical slot number = 0 */
-> +	rcar_rmw32(pcie->base, REXPCAP(PCI_EXP_SLTCAP), PCI_EXP_SLTCAP_PSN, 0);
-> +
-> +	/* Set the completion timer timeout to the maximum 50ms. */
-> +	rcar_rmw32(pcie->base, TLCTLR + 1, 0x3f, 50);
-> +
-> +	/* Terminate list of capabilities (Next Capability Offset=0) */
-> +	rcar_rmw32(pcie->base, RVCCAP(0), 0xfff00000, 0);
-> +
-> +	/* Enable MSI */
-> +	if (IS_ENABLED(CONFIG_PCI_MSI))
-> +		rcar_pci_write_reg(pcie->base, 0x801f0000, PCIEMSITXR);
-> +
-> +	rcar_rmw32(pcie->base, MACCTLR, MACCTLR_RESERVED, 0);
-> +
-> +	/* Finish initialization - establish a PCI Express link */
-> +	rcar_pci_write_reg(pcie->base, CFINIT, PCIETCTLR);
-> +
-> +	/* This will timeout if we don't have a link. */
-> +	err = rcar_pcie_wait_for_dl(pcie->base);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Enable INTx interrupts */
-> +	rcar_rmw32(pcie->base, PCIEINTXR, 0, 0xF << 8);
-> +
-> +	/* flush modifications */
-> +	wmb();
-> +
-> +	return 0;
-> +}
-> +
-> +static int rcar_pcie_phy_init_h1(struct rcar_pcie *pcie)
-> +{
-> +	/* Initialize the phy */
-> +	phy_write_reg(pcie, 0, 0x42, 0x1, 0x0EC34191);
-> +	phy_write_reg(pcie, 1, 0x42, 0x1, 0x0EC34180);
-> +	phy_write_reg(pcie, 0, 0x43, 0x1, 0x00210188);
-> +	phy_write_reg(pcie, 1, 0x43, 0x1, 0x00210188);
-> +	phy_write_reg(pcie, 0, 0x44, 0x1, 0x015C0014);
-> +	phy_write_reg(pcie, 1, 0x44, 0x1, 0x015C0014);
-> +	phy_write_reg(pcie, 1, 0x4C, 0x1, 0x786174A0);
-> +	phy_write_reg(pcie, 1, 0x4D, 0x1, 0x048000BB);
-> +	phy_write_reg(pcie, 0, 0x51, 0x1, 0x079EC062);
-> +	phy_write_reg(pcie, 0, 0x52, 0x1, 0x20000000);
-> +	phy_write_reg(pcie, 1, 0x52, 0x1, 0x20000000);
-> +	phy_write_reg(pcie, 1, 0x56, 0x1, 0x00003806);
-> +
-> +	phy_write_reg(pcie, 0, 0x60, 0x1, 0x004B03A5);
-> +	phy_write_reg(pcie, 0, 0x64, 0x1, 0x3F0F1F0F);
-> +	phy_write_reg(pcie, 0, 0x66, 0x1, 0x00008000);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rcar_pcie_phy_init_gen2(struct rcar_pcie *pcie)
-> +{
-> +	/*
-> +	 * These settings come from the R-Car Series, 2nd Generation User's
-> +	 * Manual, section 50.3.1 (2) Initialization of the physical layer.
-> +	 */
-> +	rcar_pci_write_reg(pcie->base, 0x000f0030, GEN2_PCIEPHYADDR);
-> +	rcar_pci_write_reg(pcie->base, 0x00381203, GEN2_PCIEPHYDATA);
-> +	rcar_pci_write_reg(pcie->base, 0x00000001, GEN2_PCIEPHYCTRL);
-> +	rcar_pci_write_reg(pcie->base, 0x00000006, GEN2_PCIEPHYCTRL);
-> +
-> +	rcar_pci_write_reg(pcie->base, 0x000f0054, GEN2_PCIEPHYADDR);
-> +	/* The following value is for DC connection, no termination resistor */
-> +	rcar_pci_write_reg(pcie->base, 0x13802007, GEN2_PCIEPHYDATA);
-> +	rcar_pci_write_reg(pcie->base, 0x00000001, GEN2_PCIEPHYCTRL);
-> +	rcar_pci_write_reg(pcie->base, 0x00000006, GEN2_PCIEPHYCTRL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rcar_pcie_phy_init_gen3(struct rcar_pcie *pcie)
-> +{
-> +	int err;
-> +
-> +	err = phy_init(pcie->phy);
-> +	if (err)
-> +		return err;
-> +
-> +	err = phy_power_on(pcie->phy);
-> +	if (err)
-> +		phy_exit(pcie->phy);
-> +
-> +	return err;
-> +}
-> +
-> +static int rcar_msi_alloc(struct rcar_msi *chip)
-> +{
-> +	int msi;
-> +
-> +	mutex_lock(&chip->lock);
-> +
-> +	msi = find_first_zero_bit(chip->used, INT_PCI_MSI_NR);
-> +	if (msi < INT_PCI_MSI_NR)
-> +		set_bit(msi, chip->used);
-> +	else
-> +		msi = -ENOSPC;
-> +
-> +	mutex_unlock(&chip->lock);
-> +
-> +	return msi;
-> +}
-> +
-> +static int rcar_msi_alloc_region(struct rcar_msi *chip, int no_irqs)
-> +{
-> +	int msi;
-> +
-> +	mutex_lock(&chip->lock);
-> +	msi = bitmap_find_free_region(chip->used, INT_PCI_MSI_NR,
-> +				      order_base_2(no_irqs));
-> +	mutex_unlock(&chip->lock);
-> +
-> +	return msi;
-> +}
-> +
-> +static void rcar_msi_free(struct rcar_msi *chip, unsigned long irq)
-> +{
-> +	mutex_lock(&chip->lock);
-> +	clear_bit(irq, chip->used);
-> +	mutex_unlock(&chip->lock);
-> +}
-> +
-> +static irqreturn_t rcar_pcie_msi_irq(int irq, void *data)
-> +{
-> +	struct rcar_pcie *pcie = data;
-> +	struct rcar_msi *msi = &pcie->msi;
-> +	struct device *dev = pcie->dev;
-> +	unsigned long reg;
-> +
-> +	reg = rcar_pci_read_reg(pcie->base, PCIEMSIFR);
-> +
-> +	/* MSI & INTx share an interrupt - we only handle MSI here */
-> +	if (!reg)
-> +		return IRQ_NONE;
-> +
-> +	while (reg) {
-> +		unsigned int index = find_first_bit(&reg, 32);
-> +		unsigned int msi_irq;
-> +
-> +		/* clear the interrupt */
-> +		rcar_pci_write_reg(pcie->base, 1 << index, PCIEMSIFR);
-> +
-> +		msi_irq = irq_find_mapping(msi->domain, index);
-> +		if (msi_irq) {
-> +			if (test_bit(index, msi->used))
-> +				generic_handle_irq(msi_irq);
-> +			else
-> +				dev_info(dev, "unhandled MSI\n");
-> +		} else {
-> +			/* Unknown MSI, just clear it */
-> +			dev_dbg(dev, "unexpected MSI\n");
-> +		}
-> +
-> +		/* see if there's any more pending in this vector */
-> +		reg = rcar_pci_read_reg(pcie->base, PCIEMSIFR);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int rcar_msi_setup_irq(struct msi_controller *chip, struct pci_dev *pdev,
-> +			      struct msi_desc *desc)
-> +{
-> +	struct rcar_msi *msi = to_rcar_msi(chip);
-> +	struct rcar_pcie *pcie = container_of(chip, struct rcar_pcie, msi.chip);
-> +	struct msi_msg msg;
-> +	unsigned int irq;
-> +	int hwirq;
-> +
-> +	hwirq = rcar_msi_alloc(msi);
-> +	if (hwirq < 0)
-> +		return hwirq;
-> +
-> +	irq = irq_find_mapping(msi->domain, hwirq);
-> +	if (!irq) {
-> +		rcar_msi_free(msi, hwirq);
-> +		return -EINVAL;
-> +	}
-> +
-> +	irq_set_msi_desc(irq, desc);
-> +
-> +	msg.address_lo = rcar_pci_read_reg(pcie->base, PCIEMSIALR) & ~MSIFE;
-> +	msg.address_hi = rcar_pci_read_reg(pcie->base, PCIEMSIAUR);
-> +	msg.data = hwirq;
-> +
-> +	pci_write_msi_msg(irq, &msg);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rcar_msi_setup_irqs(struct msi_controller *chip,
-> +			       struct pci_dev *pdev, int nvec, int type)
-> +{
-> +	struct rcar_pcie *pcie = container_of(chip, struct rcar_pcie, msi.chip);
-> +	struct rcar_msi *msi = to_rcar_msi(chip);
-> +	struct msi_desc *desc;
-> +	struct msi_msg msg;
-> +	unsigned int irq;
-> +	int hwirq;
-> +	int i;
-> +
-> +	/* MSI-X interrupts are not supported */
-> +	if (type == PCI_CAP_ID_MSIX)
-> +		return -EINVAL;
-> +
-> +	WARN_ON(!list_is_singular(&pdev->dev.msi_list));
-> +	desc = list_entry(pdev->dev.msi_list.next, struct msi_desc, list);
-> +
-> +	hwirq = rcar_msi_alloc_region(msi, nvec);
-> +	if (hwirq < 0)
-> +		return -ENOSPC;
-> +
-> +	irq = irq_find_mapping(msi->domain, hwirq);
-> +	if (!irq)
-> +		return -ENOSPC;
-> +
-> +	for (i = 0; i < nvec; i++) {
-> +		/*
-> +		 * irq_create_mapping() called from rcar_pcie_probe() pre-
-> +		 * allocates descs,  so there is no need to allocate descs here.
-> +		 * We can therefore assume that if irq_find_mapping() above
-> +		 * returns non-zero, then the descs are also successfully
-> +		 * allocated.
-> +		 */
-> +		if (irq_set_msi_desc_off(irq, i, desc)) {
-> +			/* TODO: clear */
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	desc->nvec_used = nvec;
-> +	desc->msi_attrib.multiple = order_base_2(nvec);
-> +
-> +	msg.address_lo = rcar_pci_read_reg(pcie->base, PCIEMSIALR) & ~MSIFE;
-> +	msg.address_hi = rcar_pci_read_reg(pcie->base, PCIEMSIAUR);
-> +	msg.data = hwirq;
-> +
-> +	pci_write_msi_msg(irq, &msg);
-> +
-> +	return 0;
-> +}
-> +
-> +static void rcar_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
-> +{
-> +	struct irq_data *d = irq_get_irq_data(irq);
-> +	struct rcar_msi *msi = to_rcar_msi(chip);
-> +
-> +	rcar_msi_free(msi, d->hwirq);
-> +}
-> +
-> +static struct irq_chip rcar_msi_irq_chip = {
-> +	.name = "R-Car PCIe MSI",
-> +	.irq_enable = pci_msi_unmask_irq,
-> +	.irq_disable = pci_msi_mask_irq,
-> +	.irq_mask = pci_msi_mask_irq,
-> +	.irq_unmask = pci_msi_unmask_irq,
-> +};
-> +
-> +static int rcar_msi_map(struct irq_domain *domain, unsigned int irq,
-> +			irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_and_handler(irq, &rcar_msi_irq_chip, handle_simple_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops msi_domain_ops = {
-> +	.map = rcar_msi_map,
-> +};
-> +
-> +static void rcar_pcie_unmap_msi(struct rcar_pcie *pcie)
-> +{
-> +	struct rcar_msi *msi = &pcie->msi;
-> +	int i, irq;
-> +
-> +	for (i = 0; i < INT_PCI_MSI_NR; i++) {
-> +		irq = irq_find_mapping(msi->domain, i);
-> +		if (irq > 0)
-> +			irq_dispose_mapping(irq);
-> +	}
-> +
-> +	irq_domain_remove(msi->domain);
-> +}
-> +
-> +static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
-> +{
-> +	struct rcar_msi *msi = &pcie->msi;
-> +	struct device *dev = pcie->dev;
-> +	phys_addr_t base;
-> +	int err, i;
-> +
-> +	mutex_init(&msi->lock);
-> +
-> +	msi->chip.dev = dev;
-> +	msi->chip.setup_irq = rcar_msi_setup_irq;
-> +	msi->chip.setup_irqs = rcar_msi_setup_irqs;
-> +	msi->chip.teardown_irq = rcar_msi_teardown_irq;
-> +
-> +	msi->domain = irq_domain_add_linear(dev->of_node, INT_PCI_MSI_NR,
-> +					    &msi_domain_ops, &msi->chip);
-> +	if (!msi->domain) {
-> +		dev_err(dev, "failed to create IRQ domain\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	for (i = 0; i < INT_PCI_MSI_NR; i++)
-> +		irq_create_mapping(msi->domain, i);
-> +
-> +	/* Two irqs are for MSI, but they are also used for non-MSI irqs */
-> +	err = devm_request_irq(dev, msi->irq1, rcar_pcie_msi_irq,
-> +			       IRQF_SHARED | IRQF_NO_THREAD,
-> +			       rcar_msi_irq_chip.name, pcie);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to request IRQ: %d\n", err);
-> +		goto err;
-> +	}
-> +
-> +	err = devm_request_irq(dev, msi->irq2, rcar_pcie_msi_irq,
-> +			       IRQF_SHARED | IRQF_NO_THREAD,
-> +			       rcar_msi_irq_chip.name, pcie);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to request IRQ: %d\n", err);
-> +		goto err;
-> +	}
-> +
-> +	/* setup MSI data target */
-> +	msi->pages = __get_free_pages(GFP_KERNEL, 0);
-> +	if (!msi->pages) {
-> +		err = -ENOMEM;
-> +		goto err;
-> +	}
-> +	base = virt_to_phys((void *)msi->pages);
-> +
-> +	rcar_pci_write_reg(pcie->base, lower_32_bits(base) | MSIFE, PCIEMSIALR);
-> +	rcar_pci_write_reg(pcie->base, upper_32_bits(base), PCIEMSIAUR);
-> +
-> +	/* enable all MSI interrupts */
-> +	rcar_pci_write_reg(pcie->base, 0xffffffff, PCIEMSIIER);
-> +
-> +	return 0;
-> +
-> +err:
-> +	rcar_pcie_unmap_msi(pcie);
-> +	return err;
-> +}
-> +
-> +static void rcar_pcie_teardown_msi(struct rcar_pcie *pcie)
-> +{
-> +	struct rcar_msi *msi = &pcie->msi;
-> +
-> +	/* Disable all MSI interrupts */
-> +	rcar_pci_write_reg(pcie->base, 0, PCIEMSIIER);
-> +
-> +	/* Disable address decoding of the MSI interrupt, MSIFE */
-> +	rcar_pci_write_reg(pcie->base, 0, PCIEMSIALR);
-> +
-> +	free_pages(msi->pages, 0);
-> +
-> +	rcar_pcie_unmap_msi(pcie);
-> +}
-> +
-> +static int rcar_pcie_get_resources(struct rcar_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->dev;
-> +	struct resource res;
-> +	int err, i;
-> +
-> +	pcie->phy = devm_phy_optional_get(dev, "pcie");
-> +	if (IS_ERR(pcie->phy))
-> +		return PTR_ERR(pcie->phy);
-> +
-> +	err = of_address_to_resource(dev->of_node, 0, &res);
-> +	if (err)
-> +		return err;
-> +
-> +	pcie->base = devm_ioremap_resource(dev, &res);
-> +	if (IS_ERR(pcie->base))
-> +		return PTR_ERR(pcie->base);
-> +
-> +	pcie->bus_clk = devm_clk_get(dev, "pcie_bus");
-> +	if (IS_ERR(pcie->bus_clk)) {
-> +		dev_err(dev, "cannot get pcie bus clock\n");
-> +		return PTR_ERR(pcie->bus_clk);
-> +	}
-> +
-> +	i = irq_of_parse_and_map(dev->of_node, 0);
-> +	if (!i) {
-> +		dev_err(dev, "cannot get platform resources for msi interrupt\n");
-> +		err = -ENOENT;
-> +		goto err_irq1;
-> +	}
-> +	pcie->msi.irq1 = i;
-> +
-> +	i = irq_of_parse_and_map(dev->of_node, 1);
-> +	if (!i) {
-> +		dev_err(dev, "cannot get platform resources for msi interrupt\n");
-> +		err = -ENOENT;
-> +		goto err_irq2;
-> +	}
-> +	pcie->msi.irq2 = i;
-> +
-> +	return 0;
-> +
-> +err_irq2:
-> +	irq_dispose_mapping(pcie->msi.irq1);
-> +err_irq1:
-> +	return err;
-> +}
-> +
-> +static int rcar_pcie_inbound_ranges(struct rcar_pcie *pcie,
-> +				    struct of_pci_range *range,
-> +				    int *index)
-> +{
-> +	u64 restype = range->flags;
-> +	u64 cpu_addr = range->cpu_addr;
-> +	u64 cpu_end = range->cpu_addr + range->size;
-> +	u64 pci_addr = range->pci_addr;
-> +	u32 flags = LAM_64BIT | LAR_ENABLE;
-> +	u64 mask;
-> +	u64 size;
-> +	int idx = *index;
-> +
-> +	if (restype & IORESOURCE_PREFETCH)
-> +		flags |= LAM_PREFETCH;
-> +
-> +	/*
-> +	 * If the size of the range is larger than the alignment of the start
-> +	 * address, we have to use multiple entries to perform the mapping.
-> +	 */
-> +	if (cpu_addr > 0) {
-> +		unsigned long nr_zeros = __ffs64(cpu_addr);
-> +		u64 alignment = 1ULL << nr_zeros;
-> +
-> +		size = min(range->size, alignment);
-> +	} else {
-> +		size = range->size;
-> +	}
-> +	/* Hardware supports max 4GiB inbound region */
-> +	size = min(size, 1ULL << 32);
-> +
-> +	mask = roundup_pow_of_two(size) - 1;
-> +	mask &= ~0xf;
-> +
-> +	while (cpu_addr < cpu_end) {
-> +		rcar_pcie_set_inbound(pcie->base, cpu_addr, pci_addr,
-> +				      mask | flags, idx, true);
-> +		pci_addr += size;
-> +		cpu_addr += size;
-> +		idx += 2;
-> +
-> +		if (idx > MAX_NR_INBOUND_MAPS) {
-> +			dev_err(pcie->dev, "Failed to map inbound regions!\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-> +	*index = idx;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie *pcie,
-> +					  struct device_node *np)
-> +{
-> +	struct of_pci_range_parser parser;
-> +	struct of_pci_range range;
-> +	int index = 0;
-> +	int err;
-> +
-> +	if (of_pci_dma_range_parser_init(&parser, np))
-> +		return -EINVAL;
-> +
-> +	/* Get the dma-ranges from DT */
-> +	for_each_of_pci_range(&parser, &range) {
-> +		u64 end = range.cpu_addr + range.size - 1;
-> +
-> +		dev_dbg(pcie->dev, "0x%08x 0x%016llx..0x%016llx -> 0x%016llx\n",
-> +			range.flags, range.cpu_addr, end, range.pci_addr);
-> +
-> +		err = rcar_pcie_inbound_ranges(pcie, &range, &index);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id rcar_pcie_of_match[] = {
-> +	{ .compatible = "renesas,pcie-r8a7779",
-> +	  .data = rcar_pcie_phy_init_h1 },
-> +	{ .compatible = "renesas,pcie-r8a7790",
-> +	  .data = rcar_pcie_phy_init_gen2 },
-> +	{ .compatible = "renesas,pcie-r8a7791",
-> +	  .data = rcar_pcie_phy_init_gen2 },
-> +	{ .compatible = "renesas,pcie-rcar-gen2",
-> +	  .data = rcar_pcie_phy_init_gen2 },
-> +	{ .compatible = "renesas,pcie-r8a7795",
-> +	  .data = rcar_pcie_phy_init_gen3 },
-> +	{ .compatible = "renesas,pcie-rcar-gen3",
-> +	  .data = rcar_pcie_phy_init_gen3 },
-> +	{},
-> +};
-> +
-> +static int rcar_pcie_probe(struct platform_device *pdev)
-> +{
-> +	int (*phy_init_fn)(struct rcar_pcie *pcie);
-> +	struct device *dev = &pdev->dev;
-> +	struct pci_host_bridge *bridge;
-> +	struct rcar_pcie *pcie;
-> +	u32 data;
-> +	int err;
-> +
-> +	bridge = pci_alloc_host_bridge(sizeof(*pcie));
-> +	if (!bridge)
-> +		return -ENOMEM;
-> +
-> +	pcie = pci_host_bridge_priv(bridge);
-> +
-> +	pcie->dev = dev;
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	err = pci_parse_request_of_pci_ranges(dev, &pcie->resources, NULL);
-> +	if (err)
-> +		goto err_free_bridge;
-> +
-> +	pm_runtime_enable(pcie->dev);
-> +	err = pm_runtime_get_sync(pcie->dev);
-> +	if (err < 0) {
-> +		dev_err(pcie->dev, "pm_runtime_get_sync failed\n");
-> +		goto err_pm_disable;
-> +	}
-> +
-> +	err = rcar_pcie_get_resources(pcie);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to request resources: %d\n", err);
-> +		goto err_pm_put;
-> +	}
-> +
-> +	err = clk_prepare_enable(pcie->bus_clk);
-> +	if (err) {
-> +		dev_err(dev, "failed to enable bus clock: %d\n", err);
-> +		goto err_unmap_msi_irqs;
-> +	}
-> +
-> +	err = rcar_pcie_parse_map_dma_ranges(pcie, dev->of_node);
-> +	if (err)
-> +		goto err_clk_disable;
-> +
-> +	phy_init_fn = of_device_get_match_data(dev);
-> +	err = phy_init_fn(pcie);
-> +	if (err) {
-> +		dev_err(dev, "failed to init PCIe PHY\n");
-> +		goto err_clk_disable;
-> +	}
-> +
-> +	/* Failure to get a link might just be that no cards are inserted */
-> +	if (rcar_pcie_hw_init(pcie)) {
-> +		dev_info(dev, "PCIe link down\n");
-> +		err = -ENODEV;
-> +		goto err_phy_shutdown;
-> +	}
-> +
-> +	data = rcar_pci_read_reg(pcie->base, MACSR);
-> +	dev_info(dev, "PCIe x%d: link up\n", (data >> 20) & 0x3f);
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		err = rcar_pcie_enable_msi(pcie);
-> +		if (err < 0) {
-> +			dev_err(dev,
-> +				"failed to enable MSI support: %d\n",
-> +				err);
-> +			goto err_phy_shutdown;
-> +		}
-> +	}
-> +
-> +	err = rcar_pcie_enable(pcie);
-> +	if (err)
-> +		goto err_msi_teardown;
-> +
-> +	return 0;
-> +
-> +err_msi_teardown:
-> +	if (IS_ENABLED(CONFIG_PCI_MSI))
-> +		rcar_pcie_teardown_msi(pcie);
-> +
-> +err_phy_shutdown:
-> +	if (pcie->phy) {
-> +		phy_power_off(pcie->phy);
-> +		phy_exit(pcie->phy);
-> +	}
-> +
-> +err_clk_disable:
-> +	clk_disable_unprepare(pcie->bus_clk);
-> +
-> +err_unmap_msi_irqs:
-> +	irq_dispose_mapping(pcie->msi.irq2);
-> +	irq_dispose_mapping(pcie->msi.irq1);
-> +
-> +err_pm_put:
-> +	pm_runtime_put(dev);
-> +
-> +err_pm_disable:
-> +	pm_runtime_disable(dev);
-> +	pci_free_resource_list(&pcie->resources);
-> +
-> +err_free_bridge:
-> +	pci_free_host_bridge(bridge);
-> +
-> +	return err;
-> +}
-> +
-> +static int rcar_pcie_resume_noirq(struct device *dev)
-> +{
-> +	struct rcar_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	if (rcar_pci_read_reg(pcie->base, PMSR) &&
-> +	    !(rcar_pci_read_reg(pcie->base, PCIETCTLR) & DL_DOWN))
-> +		return 0;
-> +
-> +	/* Re-establish the PCIe link */
-> +	rcar_rmw32(pcie->base, MACCTLR, MACCTLR_RESERVED, 0);
-> +	rcar_pci_write_reg(pcie->base, CFINIT, PCIETCTLR);
-> +	return rcar_pcie_wait_for_dl(pcie->base);
-> +}
-> +
-> +static const struct dev_pm_ops rcar_pcie_pm_ops = {
-> +	.resume_noirq = rcar_pcie_resume_noirq,
-> +};
-> +
-> +static struct platform_driver rcar_pcie_driver = {
-> +	.driver = {
-> +		.name = "rcar-pcie",
-> +		.of_match_table = rcar_pcie_of_match,
-> +		.pm = &rcar_pcie_pm_ops,
-> +		.suppress_bind_attrs = true,
-> +	},
-> +	.probe = rcar_pcie_probe,
-> +};
-> +builtin_platform_driver(rcar_pcie_driver);
-> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-> index e45bb2a7bfa5..1008ae6a896c 100644
-> --- a/drivers/pci/controller/pcie-rcar.c
-> +++ b/drivers/pci/controller/pcie-rcar.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
->   * PCIe driver for Renesas R-Car SoCs
-> - *  Copyright (C) 2014 Renesas Electronics Europe Ltd
-> + *  Copyright (C) 2014-2019 Renesas Electronics Europe Ltd
->   *
->   * Based on:
->   *  arch/sh/drivers/pci/pcie-sh7786.c
-> @@ -11,534 +11,80 @@
->   * Author: Phil Edworthy <phil.edworthy@renesas.com>
->   */
->  
-> -#include <linux/bitops.h>
-> -#include <linux/clk.h>
->  #include <linux/delay.h>
-> -#include <linux/interrupt.h>
-> -#include <linux/irq.h>
-> -#include <linux/irqdomain.h>
-> -#include <linux/kernel.h>
-> -#include <linux/init.h>
-> -#include <linux/msi.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_irq.h>
-> -#include <linux/of_pci.h>
-> -#include <linux/of_platform.h>
->  #include <linux/pci.h>
-> -#include <linux/phy/phy.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/pm_runtime.h>
-> -#include <linux/slab.h>
->  
-> -#define PCIECAR			0x000010
-> -#define PCIECCTLR		0x000018
-> -#define  CONFIG_SEND_ENABLE	BIT(31)
-> -#define  TYPE0			(0 << 8)
-> -#define  TYPE1			BIT(8)
-> -#define PCIECDR			0x000020
-> -#define PCIEMSR			0x000028
-> -#define PCIEINTXR		0x000400
-> -#define PCIEPHYSR		0x0007f0
-> -#define  PHYRDY			BIT(0)
-> -#define PCIEMSITXR		0x000840
-> +#include "pcie-rcar.h"
->  
-> -/* Transfer control */
-> -#define PCIETCTLR		0x02000
-> -#define  DL_DOWN		BIT(3)
-> -#define  CFINIT			BIT(0)
-> -#define PCIETSTR		0x02004
-> -#define  DATA_LINK_ACTIVE	BIT(0)
-> -#define PCIEERRFR		0x02020
-> -#define  UNSUPPORTED_REQUEST	BIT(4)
-> -#define PCIEMSIFR		0x02044
-> -#define PCIEMSIALR		0x02048
-> -#define  MSIFE			BIT(0)
-> -#define PCIEMSIAUR		0x0204c
-> -#define PCIEMSIIER		0x02050
-> -
-> -/* root port address */
-> -#define PCIEPRAR(x)		(0x02080 + ((x) * 0x4))
-> -
-> -/* local address reg & mask */
-> -#define PCIELAR(x)		(0x02200 + ((x) * 0x20))
-> -#define PCIELAMR(x)		(0x02208 + ((x) * 0x20))
-> -#define  LAM_PREFETCH		BIT(3)
-> -#define  LAM_64BIT		BIT(2)
-> -#define  LAR_ENABLE		BIT(1)
-> -
-> -/* PCIe address reg & mask */
-> -#define PCIEPALR(x)		(0x03400 + ((x) * 0x20))
-> -#define PCIEPAUR(x)		(0x03404 + ((x) * 0x20))
-> -#define PCIEPAMR(x)		(0x03408 + ((x) * 0x20))
-> -#define PCIEPTCTLR(x)		(0x0340c + ((x) * 0x20))
-> -#define  PAR_ENABLE		BIT(31)
-> -#define  IO_SPACE		BIT(8)
-> -
-> -/* Configuration */
-> -#define PCICONF(x)		(0x010000 + ((x) * 0x4))
-> -#define PMCAP(x)		(0x010040 + ((x) * 0x4))
-> -#define EXPCAP(x)		(0x010070 + ((x) * 0x4))
-> -#define VCCAP(x)		(0x010100 + ((x) * 0x4))
-> -
-> -/* link layer */
-> -#define IDSETR1			0x011004
-> -#define TLCTLR			0x011048
-> -#define MACSR			0x011054
-> -#define  SPCHGFIN		BIT(4)
-> -#define  SPCHGFAIL		BIT(6)
-> -#define  SPCHGSUC		BIT(7)
-> -#define  LINK_SPEED		(0xf << 16)
-> -#define  LINK_SPEED_2_5GTS	(1 << 16)
-> -#define  LINK_SPEED_5_0GTS	(2 << 16)
-> -#define MACCTLR			0x011058
-> -#define  MACCTLR_RESERVED	BIT(0)
-> -#define  SPEED_CHANGE		BIT(24)
-> -#define  SCRAMBLE_DISABLE	BIT(27)
-> -#define PMSR			0x01105c
-> -#define MACS2R			0x011078
-> -#define MACCGSPSETR		0x011084
-> -#define  SPCNGRSN		BIT(31)
-> -
-> -/* R-Car H1 PHY */
-> -#define H1_PCIEPHYADRR		0x04000c
-> -#define  WRITE_CMD		BIT(16)
-> -#define  PHY_ACK		BIT(24)
-> -#define  RATE_POS		12
-> -#define  LANE_POS		8
-> -#define  ADR_POS		0
-> -#define H1_PCIEPHYDOUTR		0x040014
-> -
-> -/* R-Car Gen2 PHY */
-> -#define GEN2_PCIEPHYADDR	0x780
-> -#define GEN2_PCIEPHYDATA	0x784
-> -#define GEN2_PCIEPHYCTRL	0x78c
-> -
-> -#define INT_PCI_MSI_NR		32
-> -
-> -#define RCONF(x)		(PCICONF(0) + (x))
-> -#define RPMCAP(x)		(PMCAP(0) + (x))
-> -#define REXPCAP(x)		(EXPCAP(0) + (x))
-> -#define RVCCAP(x)		(VCCAP(0) + (x))
-> -
-> -#define PCIE_CONF_BUS(b)	(((b) & 0xff) << 24)
-> -#define PCIE_CONF_DEV(d)	(((d) & 0x1f) << 19)
-> -#define PCIE_CONF_FUNC(f)	(((f) & 0x7) << 16)
-> -
-> -#define RCAR_PCI_MAX_RESOURCES	4
-> -#define MAX_NR_INBOUND_MAPS	6
-> -
-> -struct rcar_msi {
-> -	DECLARE_BITMAP(used, INT_PCI_MSI_NR);
-> -	struct irq_domain *domain;
-> -	struct msi_controller chip;
-> -	unsigned long pages;
-> -	struct mutex lock;
-> -	int irq1;
-> -	int irq2;
-> -};
-> -
-> -static inline struct rcar_msi *to_rcar_msi(struct msi_controller *chip)
-> -{
-> -	return container_of(chip, struct rcar_msi, chip);
-> -}
-> -
-> -/* Structure representing the PCIe interface */
-> -struct rcar_pcie {
-> -	struct device		*dev;
-> -	struct phy		*phy;
-> -	void __iomem		*base;
-> -	struct list_head	resources;
-> -	int			root_bus_nr;
-> -	struct clk		*bus_clk;
-> -	struct			rcar_msi msi;
-> -};
-> -
-> -static void rcar_pci_write_reg(struct rcar_pcie *pcie, u32 val,
-> -			       unsigned int reg)
-> +void rcar_pci_write_reg(void __iomem *base, u32 val, unsigned int reg)
->  {
-> -	writel(val, pcie->base + reg);
-> +	writel(val, base + reg);
->  }
->  
-> -static u32 rcar_pci_read_reg(struct rcar_pcie *pcie, unsigned int reg)
-> +u32 rcar_pci_read_reg(void __iomem *base, unsigned int reg)
->  {
-> -	return readl(pcie->base + reg);
-> +	return readl(base + reg);
->  }
->  
-> -enum {
-> -	RCAR_PCI_ACCESS_READ,
-> -	RCAR_PCI_ACCESS_WRITE,
-> -};
-> -
-> -static void rcar_rmw32(struct rcar_pcie *pcie, int where, u32 mask, u32 data)
-> +void rcar_rmw32(void __iomem *base, int where, u32 mask, u32 data)
->  {
->  	unsigned int shift = BITS_PER_BYTE * (where & 3);
-> -	u32 val = rcar_pci_read_reg(pcie, where & ~3);
-> +	u32 val = rcar_pci_read_reg(base, where & ~3);
->  
->  	val &= ~(mask << shift);
->  	val |= data << shift;
-> -	rcar_pci_write_reg(pcie, val, where & ~3);
-> -}
-> -
-> -static u32 rcar_read_conf(struct rcar_pcie *pcie, int where)
-> -{
-> -	unsigned int shift = BITS_PER_BYTE * (where & 3);
-> -	u32 val = rcar_pci_read_reg(pcie, where & ~3);
-> -
-> -	return val >> shift;
-> +	rcar_pci_write_reg(base, val, where & ~3);
->  }
->  
-> -/* Serialization is provided by 'pci_lock' in drivers/pci/access.c */
-> -static int rcar_pcie_config_access(struct rcar_pcie *pcie,
-> -		unsigned char access_type, struct pci_bus *bus,
-> -		unsigned int devfn, int where, u32 *data)
-> -{
-> -	unsigned int dev, func, reg, index;
-> -
-> -	dev = PCI_SLOT(devfn);
-> -	func = PCI_FUNC(devfn);
-> -	reg = where & ~3;
-> -	index = reg / 4;
-> -
-> -	/*
-> -	 * While each channel has its own memory-mapped extended config
-> -	 * space, it's generally only accessible when in endpoint mode.
-> -	 * When in root complex mode, the controller is unable to target
-> -	 * itself with either type 0 or type 1 accesses, and indeed, any
-> -	 * controller initiated target transfer to its own config space
-> -	 * result in a completer abort.
-> -	 *
-> -	 * Each channel effectively only supports a single device, but as
-> -	 * the same channel <-> device access works for any PCI_SLOT()
-> -	 * value, we cheat a bit here and bind the controller's config
-> -	 * space to devfn 0 in order to enable self-enumeration. In this
-> -	 * case the regular ECAR/ECDR path is sidelined and the mangled
-> -	 * config access itself is initiated as an internal bus transaction.
-> -	 */
-> -	if (pci_is_root_bus(bus)) {
-> -		if (dev != 0)
-> -			return PCIBIOS_DEVICE_NOT_FOUND;
-> -
-> -		if (access_type == RCAR_PCI_ACCESS_READ) {
-> -			*data = rcar_pci_read_reg(pcie, PCICONF(index));
-> -		} else {
-> -			/* Keep an eye out for changes to the root bus number */
-> -			if (pci_is_root_bus(bus) && (reg == PCI_PRIMARY_BUS))
-> -				pcie->root_bus_nr = *data & 0xff;
-> -
-> -			rcar_pci_write_reg(pcie, *data, PCICONF(index));
-> -		}
-> -
-> -		return PCIBIOS_SUCCESSFUL;
-> -	}
-> -
-> -	if (pcie->root_bus_nr < 0)
-> -		return PCIBIOS_DEVICE_NOT_FOUND;
-> -
-> -	/* Clear errors */
-> -	rcar_pci_write_reg(pcie, rcar_pci_read_reg(pcie, PCIEERRFR), PCIEERRFR);
-> -
-> -	/* Set the PIO address */
-> -	rcar_pci_write_reg(pcie, PCIE_CONF_BUS(bus->number) |
-> -		PCIE_CONF_DEV(dev) | PCIE_CONF_FUNC(func) | reg, PCIECAR);
-> -
-> -	/* Enable the configuration access */
-> -	if (bus->parent->number == pcie->root_bus_nr)
-> -		rcar_pci_write_reg(pcie, CONFIG_SEND_ENABLE | TYPE0, PCIECCTLR);
-> -	else
-> -		rcar_pci_write_reg(pcie, CONFIG_SEND_ENABLE | TYPE1, PCIECCTLR);
-> -
-> -	/* Check for errors */
-> -	if (rcar_pci_read_reg(pcie, PCIEERRFR) & UNSUPPORTED_REQUEST)
-> -		return PCIBIOS_DEVICE_NOT_FOUND;
-> -
-> -	/* Check for master and target aborts */
-> -	if (rcar_read_conf(pcie, RCONF(PCI_STATUS)) &
-> -		(PCI_STATUS_REC_MASTER_ABORT | PCI_STATUS_REC_TARGET_ABORT))
-> -		return PCIBIOS_DEVICE_NOT_FOUND;
-> -
-> -	if (access_type == RCAR_PCI_ACCESS_READ)
-> -		*data = rcar_pci_read_reg(pcie, PCIECDR);
-> -	else
-> -		rcar_pci_write_reg(pcie, *data, PCIECDR);
-> -
-> -	/* Disable the configuration access */
-> -	rcar_pci_write_reg(pcie, 0, PCIECCTLR);
-> -
-> -	return PCIBIOS_SUCCESSFUL;
-> -}
-> -
-> -static int rcar_pcie_read_conf(struct pci_bus *bus, unsigned int devfn,
-> -			       int where, int size, u32 *val)
-> -{
-> -	struct rcar_pcie *pcie = bus->sysdata;
-> -	int ret;
-> -
-> -	ret = rcar_pcie_config_access(pcie, RCAR_PCI_ACCESS_READ,
-> -				      bus, devfn, where, val);
-> -	if (ret != PCIBIOS_SUCCESSFUL) {
-> -		*val = 0xffffffff;
-> -		return ret;
-> -	}
-> -
-> -	if (size == 1)
-> -		*val = (*val >> (BITS_PER_BYTE * (where & 3))) & 0xff;
-> -	else if (size == 2)
-> -		*val = (*val >> (BITS_PER_BYTE * (where & 2))) & 0xffff;
-> -
-> -	dev_dbg(&bus->dev, "pcie-config-read: bus=%3d devfn=0x%04x where=0x%04x size=%d val=0x%08x\n",
-> -		bus->number, devfn, where, size, *val);
-> -
-> -	return ret;
-> -}
-> -
-> -/* Serialization is provided by 'pci_lock' in drivers/pci/access.c */
-> -static int rcar_pcie_write_conf(struct pci_bus *bus, unsigned int devfn,
-> -				int where, int size, u32 val)
-> -{
-> -	struct rcar_pcie *pcie = bus->sysdata;
-> -	unsigned int shift;
-> -	u32 data;
-> -	int ret;
-> -
-> -	ret = rcar_pcie_config_access(pcie, RCAR_PCI_ACCESS_READ,
-> -				      bus, devfn, where, &data);
-> -	if (ret != PCIBIOS_SUCCESSFUL)
-> -		return ret;
-> -
-> -	dev_dbg(&bus->dev, "pcie-config-write: bus=%3d devfn=0x%04x where=0x%04x size=%d val=0x%08x\n",
-> -		bus->number, devfn, where, size, val);
-> -
-> -	if (size == 1) {
-> -		shift = BITS_PER_BYTE * (where & 3);
-> -		data &= ~(0xff << shift);
-> -		data |= ((val & 0xff) << shift);
-> -	} else if (size == 2) {
-> -		shift = BITS_PER_BYTE * (where & 2);
-> -		data &= ~(0xffff << shift);
-> -		data |= ((val & 0xffff) << shift);
-> -	} else
-> -		data = val;
-> -
-> -	ret = rcar_pcie_config_access(pcie, RCAR_PCI_ACCESS_WRITE,
-> -				      bus, devfn, where, &data);
-> -
-> -	return ret;
-> -}
-> -
-> -static struct pci_ops rcar_pcie_ops = {
-> -	.read	= rcar_pcie_read_conf,
-> -	.write	= rcar_pcie_write_conf,
-> -};
-> -
-> -static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
-> -				   struct resource *res)
-> +void rcar_pcie_set_outbound(int win, void __iomem *base,
-> +			    struct resource *res, bool host)
->  {
->  	/* Setup PCIe address space mappings for each resource */
-> -	resource_size_t size;
-> -	resource_size_t res_start;
-> -	u32 mask;
-> -
-> -	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
-> +	resource_size_t size = 0;
-> +	resource_size_t res_start = 0;
-> +	u32 mask = 0x0;
->  
-> +	rcar_pci_write_reg(base, mask, PCIEPTCTLR(win));
->  	/*
->  	 * The PAMR mask is calculated in units of 128Bytes, which
->  	 * keeps things pretty simple.
->  	 */
->  	size = resource_size(res);
-> -	mask = (roundup_pow_of_two(size) / SZ_128) - 1;
-> -	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
-> +	if (size > 128)
-> +		mask = (roundup_pow_of_two(size) / SZ_128) - 1;
-> +	rcar_pci_write_reg(base, mask << 7, PCIEPAMR(win));
->  
-> -	if (res->flags & IORESOURCE_IO)
-> -		res_start = pci_pio_to_address(res->start);
-> -	else
-> +	if (!host) {
->  		res_start = res->start;
-> +	} else {
-> +		if (res->flags & IORESOURCE_IO)
-> +			res_start = pci_pio_to_address(res->start);
-> +		else
-> +			res_start = res->start;
-> +	}
->  
-> -	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPAUR(win));
-> -	rcar_pci_write_reg(pcie, lower_32_bits(res_start) & ~0x7F,
-> +	rcar_pci_write_reg(base, upper_32_bits(res_start), PCIEPAUR(win));
-> +	rcar_pci_write_reg(base, lower_32_bits(res_start) & ~0x7F,
->  			   PCIEPALR(win));
->  
-> -	/* First resource is for IO */
-> -	mask = PAR_ENABLE;
-> +	mask = 0x0;
-> +	if (res->start)
-> +		mask = PAR_ENABLE;
-> +
->  	if (res->flags & IORESOURCE_IO)
->  		mask |= IO_SPACE;
->  
-> -	rcar_pci_write_reg(pcie, mask, PCIEPTCTLR(win));
-> -}
-> -
-> -static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
-> -{
-> -	struct resource_entry *win;
-> -	int i = 0;
-> -
-> -	/* Setup PCI resources */
-> -	resource_list_for_each_entry(win, &pci->resources) {
-> -		struct resource *res = win->res;
-> -
-> -		if (!res->flags)
-> -			continue;
-> -
-> -		switch (resource_type(res)) {
-> -		case IORESOURCE_IO:
-> -		case IORESOURCE_MEM:
-> -			rcar_pcie_setup_window(i, pci, res);
-> -			i++;
-> -			break;
-> -		case IORESOURCE_BUS:
-> -			pci->root_bus_nr = res->start;
-> -			break;
-> -		default:
-> -			continue;
-> -		}
-> -
-> -		pci_add_resource(resource, res);
-> -	}
-> -
-> -	return 1;
-> -}
-> -
-> -static void rcar_pcie_force_speedup(struct rcar_pcie *pcie)
-> -{
-> -	struct device *dev = pcie->dev;
-> -	unsigned int timeout = 1000;
-> -	u32 macsr;
-> -
-> -	if ((rcar_pci_read_reg(pcie, MACS2R) & LINK_SPEED) != LINK_SPEED_5_0GTS)
-> -		return;
-> -
-> -	if (rcar_pci_read_reg(pcie, MACCTLR) & SPEED_CHANGE) {
-> -		dev_err(dev, "Speed change already in progress\n");
-> -		return;
-> -	}
-> -
-> -	macsr = rcar_pci_read_reg(pcie, MACSR);
-> -	if ((macsr & LINK_SPEED) == LINK_SPEED_5_0GTS)
-> -		goto done;
-> -
-> -	/* Set target link speed to 5.0 GT/s */
-> -	rcar_rmw32(pcie, EXPCAP(12), PCI_EXP_LNKSTA_CLS,
-> -		   PCI_EXP_LNKSTA_CLS_5_0GB);
-> -
-> -	/* Set speed change reason as intentional factor */
-> -	rcar_rmw32(pcie, MACCGSPSETR, SPCNGRSN, 0);
-> -
-> -	/* Clear SPCHGFIN, SPCHGSUC, and SPCHGFAIL */
-> -	if (macsr & (SPCHGFIN | SPCHGSUC | SPCHGFAIL))
-> -		rcar_pci_write_reg(pcie, macsr, MACSR);
-> -
-> -	/* Start link speed change */
-> -	rcar_rmw32(pcie, MACCTLR, SPEED_CHANGE, SPEED_CHANGE);
-> -
-> -	while (timeout--) {
-> -		macsr = rcar_pci_read_reg(pcie, MACSR);
-> -		if (macsr & SPCHGFIN) {
-> -			/* Clear the interrupt bits */
-> -			rcar_pci_write_reg(pcie, macsr, MACSR);
-> -
-> -			if (macsr & SPCHGFAIL)
-> -				dev_err(dev, "Speed change failed\n");
-> -
-> -			goto done;
-> -		}
-> -
-> -		msleep(1);
-> -	}
-> -
-> -	dev_err(dev, "Speed change timed out\n");
-> -
-> -done:
-> -	dev_info(dev, "Current link speed is %s GT/s\n",
-> -		 (macsr & LINK_SPEED) == LINK_SPEED_5_0GTS ? "5" : "2.5");
-> -}
-> -
-> -static int rcar_pcie_enable(struct rcar_pcie *pcie)
-> -{
-> -	struct device *dev = pcie->dev;
-> -	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> -	struct pci_bus *bus, *child;
-> -	int ret;
-> -
-> -	/* Try setting 5 GT/s link speed */
-> -	rcar_pcie_force_speedup(pcie);
-> -
-> -	rcar_pcie_setup(&bridge->windows, pcie);
-> -
-> -	pci_add_flags(PCI_REASSIGN_ALL_BUS);
-> -
-> -	bridge->dev.parent = dev;
-> -	bridge->sysdata = pcie;
-> -	bridge->busnr = pcie->root_bus_nr;
-> -	bridge->ops = &rcar_pcie_ops;
-> -	bridge->map_irq = of_irq_parse_and_map_pci;
-> -	bridge->swizzle_irq = pci_common_swizzle;
-> -	if (IS_ENABLED(CONFIG_PCI_MSI))
-> -		bridge->msi = &pcie->msi.chip;
-> -
-> -	ret = pci_scan_root_bus_bridge(bridge);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	bus = bridge->bus;
-> -
-> -	pci_bus_size_bridges(bus);
-> -	pci_bus_assign_resources(bus);
-> -
-> -	list_for_each_entry(child, &bus->children, node)
-> -		pcie_bus_configure_settings(child);
-> -
-> -	pci_bus_add_devices(bus);
-> -
-> -	return 0;
-> -}
-> -
-> -static int phy_wait_for_ack(struct rcar_pcie *pcie)
-> -{
-> -	struct device *dev = pcie->dev;
-> -	unsigned int timeout = 100;
-> -
-> -	while (timeout--) {
-> -		if (rcar_pci_read_reg(pcie, H1_PCIEPHYADRR) & PHY_ACK)
-> -			return 0;
-> -
-> -		udelay(100);
-> -	}
-> -
-> -	dev_err(dev, "Access to PCIe phy timed out\n");
-> -
-> -	return -ETIMEDOUT;
-> -}
-> -
-> -static void phy_write_reg(struct rcar_pcie *pcie,
-> -			  unsigned int rate, u32 addr,
-> -			  unsigned int lane, u32 data)
-> -{
-> -	u32 phyaddr;
-> -
-> -	phyaddr = WRITE_CMD |
-> -		((rate & 1) << RATE_POS) |
-> -		((lane & 0xf) << LANE_POS) |
-> -		((addr & 0xff) << ADR_POS);
-> -
-> -	/* Set write data */
-> -	rcar_pci_write_reg(pcie, data, H1_PCIEPHYDOUTR);
-> -	rcar_pci_write_reg(pcie, phyaddr, H1_PCIEPHYADRR);
-> -
-> -	/* Ignore errors as they will be dealt with if the data link is down */
-> -	phy_wait_for_ack(pcie);
-> -
-> -	/* Clear command */
-> -	rcar_pci_write_reg(pcie, 0, H1_PCIEPHYDOUTR);
-> -	rcar_pci_write_reg(pcie, 0, H1_PCIEPHYADRR);
-> -
-> -	/* Ignore errors as they will be dealt with if the data link is down */
-> -	phy_wait_for_ack(pcie);
-> +	rcar_pci_write_reg(base, mask, PCIEPTCTLR(win));
-> +	/* flush modifications */
-> +	wmb();
->  }
->  
-> -static int rcar_pcie_wait_for_phyrdy(struct rcar_pcie *pcie)
-> +int rcar_pcie_wait_for_phyrdy(void __iomem *base)
->  {
->  	unsigned int timeout = 10;
->  
->  	while (timeout--) {
-> -		if (rcar_pci_read_reg(pcie, PCIEPHYSR) & PHYRDY)
-> +		if (rcar_pci_read_reg(base, PCIEPHYSR) & PHYRDY)
->  			return 0;
->  
->  		msleep(5);
-> @@ -547,12 +93,12 @@ static int rcar_pcie_wait_for_phyrdy(struct rcar_pcie *pcie)
->  	return -ETIMEDOUT;
->  }
->  
-> -static int rcar_pcie_wait_for_dl(struct rcar_pcie *pcie)
-> +int rcar_pcie_wait_for_dl(void __iomem *base)
->  {
->  	unsigned int timeout = 10000;
->  
->  	while (timeout--) {
-> -		if ((rcar_pci_read_reg(pcie, PCIETSTR) & DATA_LINK_ACTIVE))
-> +		if ((rcar_pci_read_reg(base, PCIETSTR) & DATA_LINK_ACTIVE))
->  			return 0;
->  
->  		udelay(5);
-> @@ -562,698 +108,27 @@ static int rcar_pcie_wait_for_dl(struct rcar_pcie *pcie)
->  	return -ETIMEDOUT;
->  }
->  
-> -static int rcar_pcie_hw_init(struct rcar_pcie *pcie)
-> -{
-> -	int err;
-> -
-> -	/* Begin initialization */
-> -	rcar_pci_write_reg(pcie, 0, PCIETCTLR);
-> -
-> -	/* Set mode */
-> -	rcar_pci_write_reg(pcie, 1, PCIEMSR);
-> -
-> -	err = rcar_pcie_wait_for_phyrdy(pcie);
-> -	if (err)
-> -		return err;
-> -
-> -	/*
-> -	 * Initial header for port config space is type 1, set the device
-> -	 * class to match. Hardware takes care of propagating the IDSETR
-> -	 * settings, so there is no need to bother with a quirk.
-> -	 */
-> -	rcar_pci_write_reg(pcie, PCI_CLASS_BRIDGE_PCI << 16, IDSETR1);
-> -
-> -	/*
-> -	 * Setup Secondary Bus Number & Subordinate Bus Number, even though
-> -	 * they aren't used, to avoid bridge being detected as broken.
-> -	 */
-> -	rcar_rmw32(pcie, RCONF(PCI_SECONDARY_BUS), 0xff, 1);
-> -	rcar_rmw32(pcie, RCONF(PCI_SUBORDINATE_BUS), 0xff, 1);
-> -
-> -	/* Initialize default capabilities. */
-> -	rcar_rmw32(pcie, REXPCAP(0), 0xff, PCI_CAP_ID_EXP);
-> -	rcar_rmw32(pcie, REXPCAP(PCI_EXP_FLAGS),
-> -		PCI_EXP_FLAGS_TYPE, PCI_EXP_TYPE_ROOT_PORT << 4);
-> -	rcar_rmw32(pcie, RCONF(PCI_HEADER_TYPE), 0x7f,
-> -		PCI_HEADER_TYPE_BRIDGE);
-> -
-> -	/* Enable data link layer active state reporting */
-> -	rcar_rmw32(pcie, REXPCAP(PCI_EXP_LNKCAP), PCI_EXP_LNKCAP_DLLLARC,
-> -		PCI_EXP_LNKCAP_DLLLARC);
-> -
-> -	/* Write out the physical slot number = 0 */
-> -	rcar_rmw32(pcie, REXPCAP(PCI_EXP_SLTCAP), PCI_EXP_SLTCAP_PSN, 0);
-> -
-> -	/* Set the completion timer timeout to the maximum 50ms. */
-> -	rcar_rmw32(pcie, TLCTLR + 1, 0x3f, 50);
-> -
-> -	/* Terminate list of capabilities (Next Capability Offset=0) */
-> -	rcar_rmw32(pcie, RVCCAP(0), 0xfff00000, 0);
-> -
-> -	/* Enable MSI */
-> -	if (IS_ENABLED(CONFIG_PCI_MSI))
-> -		rcar_pci_write_reg(pcie, 0x801f0000, PCIEMSITXR);
-> -
-> -	rcar_rmw32(pcie, MACCTLR, MACCTLR_RESERVED, 0);
-> -
-> -	/* Finish initialization - establish a PCI Express link */
-> -	rcar_pci_write_reg(pcie, CFINIT, PCIETCTLR);
-> -
-> -	/* This will timeout if we don't have a link. */
-> -	err = rcar_pcie_wait_for_dl(pcie);
-> -	if (err)
-> -		return err;
-> -
-> -	/* Enable INTx interrupts */
-> -	rcar_rmw32(pcie, PCIEINTXR, 0, 0xF << 8);
-> -
-> -	wmb();
-> -
-> -	return 0;
-> -}
-> -
-> -static int rcar_pcie_phy_init_h1(struct rcar_pcie *pcie)
-> -{
-> -	/* Initialize the phy */
-> -	phy_write_reg(pcie, 0, 0x42, 0x1, 0x0EC34191);
-> -	phy_write_reg(pcie, 1, 0x42, 0x1, 0x0EC34180);
-> -	phy_write_reg(pcie, 0, 0x43, 0x1, 0x00210188);
-> -	phy_write_reg(pcie, 1, 0x43, 0x1, 0x00210188);
-> -	phy_write_reg(pcie, 0, 0x44, 0x1, 0x015C0014);
-> -	phy_write_reg(pcie, 1, 0x44, 0x1, 0x015C0014);
-> -	phy_write_reg(pcie, 1, 0x4C, 0x1, 0x786174A0);
-> -	phy_write_reg(pcie, 1, 0x4D, 0x1, 0x048000BB);
-> -	phy_write_reg(pcie, 0, 0x51, 0x1, 0x079EC062);
-> -	phy_write_reg(pcie, 0, 0x52, 0x1, 0x20000000);
-> -	phy_write_reg(pcie, 1, 0x52, 0x1, 0x20000000);
-> -	phy_write_reg(pcie, 1, 0x56, 0x1, 0x00003806);
-> -
-> -	phy_write_reg(pcie, 0, 0x60, 0x1, 0x004B03A5);
-> -	phy_write_reg(pcie, 0, 0x64, 0x1, 0x3F0F1F0F);
-> -	phy_write_reg(pcie, 0, 0x66, 0x1, 0x00008000);
-> -
-> -	return 0;
-> -}
-> -
-> -static int rcar_pcie_phy_init_gen2(struct rcar_pcie *pcie)
-> -{
-> -	/*
-> -	 * These settings come from the R-Car Series, 2nd Generation User's
-> -	 * Manual, section 50.3.1 (2) Initialization of the physical layer.
-> -	 */
-> -	rcar_pci_write_reg(pcie, 0x000f0030, GEN2_PCIEPHYADDR);
-> -	rcar_pci_write_reg(pcie, 0x00381203, GEN2_PCIEPHYDATA);
-> -	rcar_pci_write_reg(pcie, 0x00000001, GEN2_PCIEPHYCTRL);
-> -	rcar_pci_write_reg(pcie, 0x00000006, GEN2_PCIEPHYCTRL);
-> -
-> -	rcar_pci_write_reg(pcie, 0x000f0054, GEN2_PCIEPHYADDR);
-> -	/* The following value is for DC connection, no termination resistor */
-> -	rcar_pci_write_reg(pcie, 0x13802007, GEN2_PCIEPHYDATA);
-> -	rcar_pci_write_reg(pcie, 0x00000001, GEN2_PCIEPHYCTRL);
-> -	rcar_pci_write_reg(pcie, 0x00000006, GEN2_PCIEPHYCTRL);
-> -
-> -	return 0;
-> -}
-> -
-> -static int rcar_pcie_phy_init_gen3(struct rcar_pcie *pcie)
-> -{
-> -	int err;
-> -
-> -	err = phy_init(pcie->phy);
-> -	if (err)
-> -		return err;
-> -
-> -	err = phy_power_on(pcie->phy);
-> -	if (err)
-> -		phy_exit(pcie->phy);
-> -
-> -	return err;
-> -}
-> -
-> -static int rcar_msi_alloc(struct rcar_msi *chip)
-> -{
-> -	int msi;
-> -
-> -	mutex_lock(&chip->lock);
-> -
-> -	msi = find_first_zero_bit(chip->used, INT_PCI_MSI_NR);
-> -	if (msi < INT_PCI_MSI_NR)
-> -		set_bit(msi, chip->used);
-> -	else
-> -		msi = -ENOSPC;
-> -
-> -	mutex_unlock(&chip->lock);
-> -
-> -	return msi;
-> -}
-> -
-> -static int rcar_msi_alloc_region(struct rcar_msi *chip, int no_irqs)
-> -{
-> -	int msi;
-> -
-> -	mutex_lock(&chip->lock);
-> -	msi = bitmap_find_free_region(chip->used, INT_PCI_MSI_NR,
-> -				      order_base_2(no_irqs));
-> -	mutex_unlock(&chip->lock);
-> -
-> -	return msi;
-> -}
-> -
-> -static void rcar_msi_free(struct rcar_msi *chip, unsigned long irq)
-> -{
-> -	mutex_lock(&chip->lock);
-> -	clear_bit(irq, chip->used);
-> -	mutex_unlock(&chip->lock);
-> -}
-> -
-> -static irqreturn_t rcar_pcie_msi_irq(int irq, void *data)
-> -{
-> -	struct rcar_pcie *pcie = data;
-> -	struct rcar_msi *msi = &pcie->msi;
-> -	struct device *dev = pcie->dev;
-> -	unsigned long reg;
-> -
-> -	reg = rcar_pci_read_reg(pcie, PCIEMSIFR);
-> -
-> -	/* MSI & INTx share an interrupt - we only handle MSI here */
-> -	if (!reg)
-> -		return IRQ_NONE;
-> -
-> -	while (reg) {
-> -		unsigned int index = find_first_bit(&reg, 32);
-> -		unsigned int msi_irq;
-> -
-> -		/* clear the interrupt */
-> -		rcar_pci_write_reg(pcie, 1 << index, PCIEMSIFR);
-> -
-> -		msi_irq = irq_find_mapping(msi->domain, index);
-> -		if (msi_irq) {
-> -			if (test_bit(index, msi->used))
-> -				generic_handle_irq(msi_irq);
-> -			else
-> -				dev_info(dev, "unhandled MSI\n");
-> -		} else {
-> -			/* Unknown MSI, just clear it */
-> -			dev_dbg(dev, "unexpected MSI\n");
-> -		}
-> -
-> -		/* see if there's any more pending in this vector */
-> -		reg = rcar_pci_read_reg(pcie, PCIEMSIFR);
-> -	}
-> -
-> -	return IRQ_HANDLED;
-> -}
-> -
-> -static int rcar_msi_setup_irq(struct msi_controller *chip, struct pci_dev *pdev,
-> -			      struct msi_desc *desc)
-> -{
-> -	struct rcar_msi *msi = to_rcar_msi(chip);
-> -	struct rcar_pcie *pcie = container_of(chip, struct rcar_pcie, msi.chip);
-> -	struct msi_msg msg;
-> -	unsigned int irq;
-> -	int hwirq;
-> -
-> -	hwirq = rcar_msi_alloc(msi);
-> -	if (hwirq < 0)
-> -		return hwirq;
-> -
-> -	irq = irq_find_mapping(msi->domain, hwirq);
-> -	if (!irq) {
-> -		rcar_msi_free(msi, hwirq);
-> -		return -EINVAL;
-> -	}
-> -
-> -	irq_set_msi_desc(irq, desc);
-> -
-> -	msg.address_lo = rcar_pci_read_reg(pcie, PCIEMSIALR) & ~MSIFE;
-> -	msg.address_hi = rcar_pci_read_reg(pcie, PCIEMSIAUR);
-> -	msg.data = hwirq;
-> -
-> -	pci_write_msi_msg(irq, &msg);
-> -
-> -	return 0;
-> -}
-> -
-> -static int rcar_msi_setup_irqs(struct msi_controller *chip,
-> -			       struct pci_dev *pdev, int nvec, int type)
-> -{
-> -	struct rcar_pcie *pcie = container_of(chip, struct rcar_pcie, msi.chip);
-> -	struct rcar_msi *msi = to_rcar_msi(chip);
-> -	struct msi_desc *desc;
-> -	struct msi_msg msg;
-> -	unsigned int irq;
-> -	int hwirq;
-> -	int i;
-> -
-> -	/* MSI-X interrupts are not supported */
-> -	if (type == PCI_CAP_ID_MSIX)
-> -		return -EINVAL;
-> -
-> -	WARN_ON(!list_is_singular(&pdev->dev.msi_list));
-> -	desc = list_entry(pdev->dev.msi_list.next, struct msi_desc, list);
-> -
-> -	hwirq = rcar_msi_alloc_region(msi, nvec);
-> -	if (hwirq < 0)
-> -		return -ENOSPC;
-> -
-> -	irq = irq_find_mapping(msi->domain, hwirq);
-> -	if (!irq)
-> -		return -ENOSPC;
-> -
-> -	for (i = 0; i < nvec; i++) {
-> -		/*
-> -		 * irq_create_mapping() called from rcar_pcie_probe() pre-
-> -		 * allocates descs,  so there is no need to allocate descs here.
-> -		 * We can therefore assume that if irq_find_mapping() above
-> -		 * returns non-zero, then the descs are also successfully
-> -		 * allocated.
-> -		 */
-> -		if (irq_set_msi_desc_off(irq, i, desc)) {
-> -			/* TODO: clear */
-> -			return -EINVAL;
-> -		}
-> -	}
-> -
-> -	desc->nvec_used = nvec;
-> -	desc->msi_attrib.multiple = order_base_2(nvec);
-> -
-> -	msg.address_lo = rcar_pci_read_reg(pcie, PCIEMSIALR) & ~MSIFE;
-> -	msg.address_hi = rcar_pci_read_reg(pcie, PCIEMSIAUR);
-> -	msg.data = hwirq;
-> -
-> -	pci_write_msi_msg(irq, &msg);
-> -
-> -	return 0;
-> -}
-> -
-> -static void rcar_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
-> -{
-> -	struct rcar_msi *msi = to_rcar_msi(chip);
-> -	struct irq_data *d = irq_get_irq_data(irq);
-> -
-> -	rcar_msi_free(msi, d->hwirq);
-> -}
-> -
-> -static struct irq_chip rcar_msi_irq_chip = {
-> -	.name = "R-Car PCIe MSI",
-> -	.irq_enable = pci_msi_unmask_irq,
-> -	.irq_disable = pci_msi_mask_irq,
-> -	.irq_mask = pci_msi_mask_irq,
-> -	.irq_unmask = pci_msi_unmask_irq,
-> -};
-> -
-> -static int rcar_msi_map(struct irq_domain *domain, unsigned int irq,
-> -			irq_hw_number_t hwirq)
-> -{
-> -	irq_set_chip_and_handler(irq, &rcar_msi_irq_chip, handle_simple_irq);
-> -	irq_set_chip_data(irq, domain->host_data);
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct irq_domain_ops msi_domain_ops = {
-> -	.map = rcar_msi_map,
-> -};
-> -
-> -static void rcar_pcie_unmap_msi(struct rcar_pcie *pcie)
-> -{
-> -	struct rcar_msi *msi = &pcie->msi;
-> -	int i, irq;
-> -
-> -	for (i = 0; i < INT_PCI_MSI_NR; i++) {
-> -		irq = irq_find_mapping(msi->domain, i);
-> -		if (irq > 0)
-> -			irq_dispose_mapping(irq);
-> -	}
-> -
-> -	irq_domain_remove(msi->domain);
-> -}
-> -
-> -static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
-> -{
-> -	struct device *dev = pcie->dev;
-> -	struct rcar_msi *msi = &pcie->msi;
-> -	phys_addr_t base;
-> -	int err, i;
-> -
-> -	mutex_init(&msi->lock);
-> -
-> -	msi->chip.dev = dev;
-> -	msi->chip.setup_irq = rcar_msi_setup_irq;
-> -	msi->chip.setup_irqs = rcar_msi_setup_irqs;
-> -	msi->chip.teardown_irq = rcar_msi_teardown_irq;
-> -
-> -	msi->domain = irq_domain_add_linear(dev->of_node, INT_PCI_MSI_NR,
-> -					    &msi_domain_ops, &msi->chip);
-> -	if (!msi->domain) {
-> -		dev_err(dev, "failed to create IRQ domain\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	for (i = 0; i < INT_PCI_MSI_NR; i++)
-> -		irq_create_mapping(msi->domain, i);
-> -
-> -	/* Two irqs are for MSI, but they are also used for non-MSI irqs */
-> -	err = devm_request_irq(dev, msi->irq1, rcar_pcie_msi_irq,
-> -			       IRQF_SHARED | IRQF_NO_THREAD,
-> -			       rcar_msi_irq_chip.name, pcie);
-> -	if (err < 0) {
-> -		dev_err(dev, "failed to request IRQ: %d\n", err);
-> -		goto err;
-> -	}
-> -
-> -	err = devm_request_irq(dev, msi->irq2, rcar_pcie_msi_irq,
-> -			       IRQF_SHARED | IRQF_NO_THREAD,
-> -			       rcar_msi_irq_chip.name, pcie);
-> -	if (err < 0) {
-> -		dev_err(dev, "failed to request IRQ: %d\n", err);
-> -		goto err;
-> -	}
-> -
-> -	/* setup MSI data target */
-> -	msi->pages = __get_free_pages(GFP_KERNEL, 0);
-> -	if (!msi->pages) {
-> -		err = -ENOMEM;
-> -		goto err;
-> -	}
-> -	base = virt_to_phys((void *)msi->pages);
-> -
-> -	rcar_pci_write_reg(pcie, lower_32_bits(base) | MSIFE, PCIEMSIALR);
-> -	rcar_pci_write_reg(pcie, upper_32_bits(base), PCIEMSIAUR);
-> -
-> -	/* enable all MSI interrupts */
-> -	rcar_pci_write_reg(pcie, 0xffffffff, PCIEMSIIER);
-> -
-> -	return 0;
-> -
-> -err:
-> -	rcar_pcie_unmap_msi(pcie);
-> -	return err;
-> -}
-> -
-> -static void rcar_pcie_teardown_msi(struct rcar_pcie *pcie)
-> -{
-> -	struct rcar_msi *msi = &pcie->msi;
-> -
-> -	/* Disable all MSI interrupts */
-> -	rcar_pci_write_reg(pcie, 0, PCIEMSIIER);
-> -
-> -	/* Disable address decoding of the MSI interrupt, MSIFE */
-> -	rcar_pci_write_reg(pcie, 0, PCIEMSIALR);
-> -
-> -	free_pages(msi->pages, 0);
-> -
-> -	rcar_pcie_unmap_msi(pcie);
-> -}
-> -
-> -static int rcar_pcie_get_resources(struct rcar_pcie *pcie)
-> -{
-> -	struct device *dev = pcie->dev;
-> -	struct resource res;
-> -	int err, i;
-> -
-> -	pcie->phy = devm_phy_optional_get(dev, "pcie");
-> -	if (IS_ERR(pcie->phy))
-> -		return PTR_ERR(pcie->phy);
-> -
-> -	err = of_address_to_resource(dev->of_node, 0, &res);
-> -	if (err)
-> -		return err;
-> -
-> -	pcie->base = devm_ioremap_resource(dev, &res);
-> -	if (IS_ERR(pcie->base))
-> -		return PTR_ERR(pcie->base);
-> -
-> -	pcie->bus_clk = devm_clk_get(dev, "pcie_bus");
-> -	if (IS_ERR(pcie->bus_clk)) {
-> -		dev_err(dev, "cannot get pcie bus clock\n");
-> -		return PTR_ERR(pcie->bus_clk);
-> -	}
-> -
-> -	i = irq_of_parse_and_map(dev->of_node, 0);
-> -	if (!i) {
-> -		dev_err(dev, "cannot get platform resources for msi interrupt\n");
-> -		err = -ENOENT;
-> -		goto err_irq1;
-> -	}
-> -	pcie->msi.irq1 = i;
-> -
-> -	i = irq_of_parse_and_map(dev->of_node, 1);
-> -	if (!i) {
-> -		dev_err(dev, "cannot get platform resources for msi interrupt\n");
-> -		err = -ENOENT;
-> -		goto err_irq2;
-> -	}
-> -	pcie->msi.irq2 = i;
-> -
-> -	return 0;
-> -
-> -err_irq2:
-> -	irq_dispose_mapping(pcie->msi.irq1);
-> -err_irq1:
-> -	return err;
-> -}
-> -
-> -static int rcar_pcie_inbound_ranges(struct rcar_pcie *pcie,
-> -				    struct of_pci_range *range,
-> -				    int *index)
-> +void rcar_pcie_set_inbound(void __iomem *base,
-> +			   u64 cpu_addr, u64 pci_addr,
-> +			   u64 mask, int idx, bool host)
->  {
-> -	u64 restype = range->flags;
-> -	u64 cpu_addr = range->cpu_addr;
-> -	u64 cpu_end = range->cpu_addr + range->size;
-> -	u64 pci_addr = range->pci_addr;
-> -	u32 flags = LAM_64BIT | LAR_ENABLE;
-> -	u64 mask;
-> -	u64 size;
-> -	int idx = *index;
-> -
-> -	if (restype & IORESOURCE_PREFETCH)
-> -		flags |= LAM_PREFETCH;
-> -
->  	/*
-> -	 * If the size of the range is larger than the alignment of the start
-> -	 * address, we have to use multiple entries to perform the mapping.
-> -	 */
-> -	if (cpu_addr > 0) {
-> -		unsigned long nr_zeros = __ffs64(cpu_addr);
-> -		u64 alignment = 1ULL << nr_zeros;
-> -
-> -		size = min(range->size, alignment);
-> -	} else {
-> -		size = range->size;
-> -	}
-> -	/* Hardware supports max 4GiB inbound region */
-> -	size = min(size, 1ULL << 32);
-> -
-> -	mask = roundup_pow_of_two(size) - 1;
-> -	mask &= ~0xf;
-> -
-> -	while (cpu_addr < cpu_end) {
-> -		/*
-> -		 * Set up 64-bit inbound regions as the range parser doesn't
-> -		 * distinguish between 32 and 64-bit types.
-> -		 */
-> -		rcar_pci_write_reg(pcie, lower_32_bits(pci_addr),
-> +	* Set up 64-bit inbound regions as the range parser doesn't
-> +	* distinguish between 32 and 64-bit types.
-> +	*/
-> +	if (host) {
-> +		rcar_pci_write_reg(base, lower_32_bits(pci_addr),
->  				   PCIEPRAR(idx));
-> -		rcar_pci_write_reg(pcie, lower_32_bits(cpu_addr), PCIELAR(idx));
-> -		rcar_pci_write_reg(pcie, lower_32_bits(mask) | flags,
-> -				   PCIELAMR(idx));
-> -
-> -		rcar_pci_write_reg(pcie, upper_32_bits(pci_addr),
-> +		rcar_pci_write_reg(base, upper_32_bits(pci_addr),
->  				   PCIEPRAR(idx + 1));
-> -		rcar_pci_write_reg(pcie, upper_32_bits(cpu_addr),
-> -				   PCIELAR(idx + 1));
-> -		rcar_pci_write_reg(pcie, 0, PCIELAMR(idx + 1));
-> -
-> -		pci_addr += size;
-> -		cpu_addr += size;
-> -		idx += 2;
-> -
-> -		if (idx > MAX_NR_INBOUND_MAPS) {
-> -			dev_err(pcie->dev, "Failed to map inbound regions!\n");
-> -			return -EINVAL;
-> -		}
->  	}
-> -	*index = idx;
-> -
-> -	return 0;
-> -}
->  
-> -static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie *pcie,
-> -					  struct device_node *np)
-> -{
-> -	struct of_pci_range range;
-> -	struct of_pci_range_parser parser;
-> -	int index = 0;
-> -	int err;
-> -
-> -	if (of_pci_dma_range_parser_init(&parser, np))
-> -		return -EINVAL;
-> -
-> -	/* Get the dma-ranges from DT */
-> -	for_each_of_pci_range(&parser, &range) {
-> -		u64 end = range.cpu_addr + range.size - 1;
-> +	rcar_pci_write_reg(base, lower_32_bits(cpu_addr), PCIELAR(idx));
-> +	rcar_pci_write_reg(base, lower_32_bits(mask), PCIELAMR(idx));
->  
-> -		dev_dbg(pcie->dev, "0x%08x 0x%016llx..0x%016llx -> 0x%016llx\n",
-> -			range.flags, range.cpu_addr, end, range.pci_addr);
-> -
-> -		err = rcar_pcie_inbound_ranges(pcie, &range, &index);
-> -		if (err)
-> -			return err;
-> -	}
-> +	rcar_pci_write_reg(base, upper_32_bits(cpu_addr), PCIELAR(idx + 1));
-> +	rcar_pci_write_reg(base, 0, PCIELAMR(idx + 1));
->  
-> -	return 0;
-> -}
-> -
-> -static const struct of_device_id rcar_pcie_of_match[] = {
-> -	{ .compatible = "renesas,pcie-r8a7779",
-> -	  .data = rcar_pcie_phy_init_h1 },
-> -	{ .compatible = "renesas,pcie-r8a7790",
-> -	  .data = rcar_pcie_phy_init_gen2 },
-> -	{ .compatible = "renesas,pcie-r8a7791",
-> -	  .data = rcar_pcie_phy_init_gen2 },
-> -	{ .compatible = "renesas,pcie-rcar-gen2",
-> -	  .data = rcar_pcie_phy_init_gen2 },
-> -	{ .compatible = "renesas,pcie-r8a7795",
-> -	  .data = rcar_pcie_phy_init_gen3 },
-> -	{ .compatible = "renesas,pcie-rcar-gen3",
-> -	  .data = rcar_pcie_phy_init_gen3 },
-> -	{},
-> -};
-> -
-> -static int rcar_pcie_probe(struct platform_device *pdev)
-> -{
-> -	struct device *dev = &pdev->dev;
-> -	struct rcar_pcie *pcie;
-> -	u32 data;
-> -	int err;
-> -	int (*phy_init_fn)(struct rcar_pcie *);
-> -	struct pci_host_bridge *bridge;
-> -
-> -	bridge = pci_alloc_host_bridge(sizeof(*pcie));
-> -	if (!bridge)
-> -		return -ENOMEM;
-> -
-> -	pcie = pci_host_bridge_priv(bridge);
-> -
-> -	pcie->dev = dev;
-> -	platform_set_drvdata(pdev, pcie);
-> -
-> -	err = pci_parse_request_of_pci_ranges(dev, &pcie->resources, NULL);
-> -	if (err)
-> -		goto err_free_bridge;
-> -
-> -	pm_runtime_enable(pcie->dev);
-> -	err = pm_runtime_get_sync(pcie->dev);
-> -	if (err < 0) {
-> -		dev_err(pcie->dev, "pm_runtime_get_sync failed\n");
-> -		goto err_pm_disable;
-> -	}
-> -
-> -	err = rcar_pcie_get_resources(pcie);
-> -	if (err < 0) {
-> -		dev_err(dev, "failed to request resources: %d\n", err);
-> -		goto err_pm_put;
-> -	}
-> -
-> -	err = clk_prepare_enable(pcie->bus_clk);
-> -	if (err) {
-> -		dev_err(dev, "failed to enable bus clock: %d\n", err);
-> -		goto err_unmap_msi_irqs;
-> -	}
-> -
-> -	err = rcar_pcie_parse_map_dma_ranges(pcie, dev->of_node);
-> -	if (err)
-> -		goto err_clk_disable;
-> -
-> -	phy_init_fn = of_device_get_match_data(dev);
-> -	err = phy_init_fn(pcie);
-> -	if (err) {
-> -		dev_err(dev, "failed to init PCIe PHY\n");
-> -		goto err_clk_disable;
-> -	}
-> -
-> -	/* Failure to get a link might just be that no cards are inserted */
-> -	if (rcar_pcie_hw_init(pcie)) {
-> -		dev_info(dev, "PCIe link down\n");
-> -		err = -ENODEV;
-> -		goto err_phy_shutdown;
-> -	}
-> -
-> -	data = rcar_pci_read_reg(pcie, MACSR);
-> -	dev_info(dev, "PCIe x%d: link up\n", (data >> 20) & 0x3f);
-> -
-> -	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> -		err = rcar_pcie_enable_msi(pcie);
-> -		if (err < 0) {
-> -			dev_err(dev,
-> -				"failed to enable MSI support: %d\n",
-> -				err);
-> -			goto err_phy_shutdown;
-> -		}
-> -	}
-> -
-> -	err = rcar_pcie_enable(pcie);
-> -	if (err)
-> -		goto err_msi_teardown;
-> -
-> -	return 0;
-> -
-> -err_msi_teardown:
-> -	if (IS_ENABLED(CONFIG_PCI_MSI))
-> -		rcar_pcie_teardown_msi(pcie);
-> -
-> -err_phy_shutdown:
-> -	if (pcie->phy) {
-> -		phy_power_off(pcie->phy);
-> -		phy_exit(pcie->phy);
-> -	}
-> -
-> -err_clk_disable:
-> -	clk_disable_unprepare(pcie->bus_clk);
-> -
-> -err_unmap_msi_irqs:
-> -	irq_dispose_mapping(pcie->msi.irq2);
-> -	irq_dispose_mapping(pcie->msi.irq1);
-> -
-> -err_pm_put:
-> -	pm_runtime_put(dev);
-> -
-> -err_pm_disable:
-> -	pm_runtime_disable(dev);
-> -	pci_free_resource_list(&pcie->resources);
-> -
-> -err_free_bridge:
-> -	pci_free_host_bridge(bridge);
-> -
-> -	return err;
-> -}
-> -
-> -static int rcar_pcie_resume_noirq(struct device *dev)
-> -{
-> -	struct rcar_pcie *pcie = dev_get_drvdata(dev);
-> -
-> -	if (rcar_pci_read_reg(pcie, PMSR) &&
-> -	    !(rcar_pci_read_reg(pcie, PCIETCTLR) & DL_DOWN))
-> -		return 0;
-> -
-> -	/* Re-establish the PCIe link */
-> -	rcar_rmw32(pcie, MACCTLR, MACCTLR_RESERVED, 0);
-> -	rcar_pci_write_reg(pcie, CFINIT, PCIETCTLR);
-> -	return rcar_pcie_wait_for_dl(pcie);
-> +	/* flush modifications */
-> +	wmb();
->  }
-> -
-> -static const struct dev_pm_ops rcar_pcie_pm_ops = {
-> -	.resume_noirq = rcar_pcie_resume_noirq,
-> -};
-> -
-> -static struct platform_driver rcar_pcie_driver = {
-> -	.driver = {
-> -		.name = "rcar-pcie",
-> -		.of_match_table = rcar_pcie_of_match,
-> -		.pm = &rcar_pcie_pm_ops,
-> -		.suppress_bind_attrs = true,
-> -	},
-> -	.probe = rcar_pcie_probe,
-> -};
-> -builtin_platform_driver(rcar_pcie_driver);
-> diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
-> new file mode 100644
-> index 000000000000..502621d4e6ac
-> --- /dev/null
-> +++ b/drivers/pci/controller/pcie-rcar.h
-> @@ -0,0 +1,129 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * PCIe driver for Renesas R-Car SoCs
-> + *  Copyright (C) 2014-2019 Renesas Electronics Europe Ltd
-> + *
-> + * Author: Phil Edworthy <phil.edworthy@renesas.com>
-> + */
-> +#ifndef _PCIE_RCAR_H
-> +#define _PCIE_RCAR_H
-> +
-> +#define PCIECAR			0x000010
-> +#define PCIECCTLR		0x000018
-> +#define  CONFIG_SEND_ENABLE	BIT(31)
-> +#define  TYPE0			(0 << 8)
-> +#define  TYPE1			BIT(8)
-> +#define PCIECDR			0x000020
-> +#define PCIEMSR			0x000028
-> +#define PCIEINTXR		0x000400
-> +#define PCIEPHYSR		0x0007f0
-> +#define  PHYRDY			BIT(0)
-> +#define PCIEMSITXR		0x000840
-> +
-> +/* Transfer control */
-> +#define PCIETCTLR		0x02000
-> +#define  DL_DOWN		BIT(3)
-> +#define  CFINIT			BIT(0)
-> +#define PCIETSTR		0x02004
-> +#define  DATA_LINK_ACTIVE	BIT(0)
-> +#define PCIEERRFR		0x02020
-> +#define  UNSUPPORTED_REQUEST	BIT(4)
-> +#define PCIEMSIFR		0x02044
-> +#define PCIEMSIALR		0x02048
-> +#define  MSIFE			BIT(0)
-> +#define PCIEMSIAUR		0x0204c
-> +#define PCIEMSIIER		0x02050
-> +
-> +/* root port address */
-> +#define PCIEPRAR(x)		(0x02080 + ((x) * 0x4))
-> +
-> +/* local address reg & mask */
-> +#define PCIELAR(x)		(0x02200 + ((x) * 0x20))
-> +#define PCIELAMR(x)		(0x02208 + ((x) * 0x20))
-> +#define  LAM_PREFETCH		BIT(3)
-> +#define  LAM_64BIT		BIT(2)
-> +#define  LAR_ENABLE		BIT(1)
-> +
-> +/* PCIe address reg & mask */
-> +#define PCIEPALR(x)		(0x03400 + ((x) * 0x20))
-> +#define PCIEPAUR(x)		(0x03404 + ((x) * 0x20))
-> +#define PCIEPAMR(x)		(0x03408 + ((x) * 0x20))
-> +#define PCIEPTCTLR(x)		(0x0340c + ((x) * 0x20))
-> +#define  PAR_ENABLE		BIT(31)
-> +#define  IO_SPACE		BIT(8)
-> +
-> +/* Configuration */
-> +#define PCICONF(x)		(0x010000 + ((x) * 0x4))
-> +#define PMCAP(x)		(0x010040 + ((x) * 0x4))
-> +#define EXPCAP(x)		(0x010070 + ((x) * 0x4))
-> +#define VCCAP(x)		(0x010100 + ((x) * 0x4))
-> +
-> +/* link layer */
-> +#define IDSETR0			0x011000
-> +#define  DEVICE_ID_SHFIT	16
-> +#define IDSETR1			0x011004
-> +#define SUBIDSETR		0x011024
-> +#define TLCTLR			0x011048
-> +#define MACSR			0x011054
-> +#define  SPCHGFIN		BIT(4)
-> +#define  SPCHGFAIL		BIT(6)
-> +#define  SPCHGSUC		BIT(7)
-> +#define  LINK_SPEED		(0xf << 16)
-> +#define  LINK_SPEED_2_5GTS	BIT(16)
-> +#define  LINK_SPEED_5_0GTS	BIT(17)
-> +#define MACCTLR			0x011058
-> +#define  MACCTLR_RESERVED	BIT(0)
-> +#define  SPEED_CHANGE		BIT(24)
-> +#define  SCRAMBLE_DISABLE	BIT(27)
-> +#define PMSR			0x01105c
-> +#define MACS2R			0x011078
-> +#define MACCGSPSETR		0x011084
-> +#define  SPCNGRSN		BIT(31)
-> +
-> +/* R-Car H1 PHY */
-> +#define H1_PCIEPHYADRR		0x04000c
-> +#define  WRITE_CMD		BIT(16)
-> +#define  PHY_ACK		BIT(24)
-> +#define  RATE_POS		12
-> +#define  LANE_POS		8
-> +#define  ADR_POS		0
-> +#define H1_PCIEPHYDOUTR		0x040014
-> +
-> +/* R-Car Gen2 PHY */
-> +#define GEN2_PCIEPHYADDR	0x780
-> +#define GEN2_PCIEPHYDATA	0x784
-> +#define GEN2_PCIEPHYCTRL	0x78c
-> +
-> +#define INT_PCI_MSI_NR		32
-> +
-> +#define RCONF(x)		(PCICONF(0) + (x))
-> +#define RPMCAP(x)		(PMCAP(0) + (x))
-> +#define REXPCAP(x)		(EXPCAP(0) + (x))
-> +#define RVCCAP(x)		(VCCAP(0) + (x))
-> +
-> +#define INTDIS_SHIFT		BIT(10)
-> +#define ASTINTX_SHIFT		BIT(16)
-> +
-> +#define PCIE_CONF_BUS(b)	(((b) & 0xff) << 24)
-> +#define PCIE_CONF_DEV(d)	(((d) & 0x1f) << 19)
-> +#define PCIE_CONF_FUNC(f)	(((f) & 0x7) << 16)
-> +
-> +#define RCAR_PCI_MAX_RESOURCES	4
-> +#define MAX_NR_INBOUND_MAPS	6
-> +
-> +enum {
-> +	RCAR_PCI_ACCESS_READ,
-> +	RCAR_PCI_ACCESS_WRITE,
-> +};
-> +
-> +void rcar_pci_write_reg(void __iomem *base, u32 val, unsigned int reg);
-> +u32 rcar_pci_read_reg(void __iomem *base, unsigned int reg);
-> +void rcar_rmw32(void __iomem *base, int where, u32 mask, u32 data);
-> +int rcar_pcie_wait_for_phyrdy(void __iomem *base);
-> +int rcar_pcie_wait_for_dl(void __iomem *base);
-> +void rcar_pcie_set_outbound(int win, void __iomem *base,
-> +			    struct resource *res, bool host);
-> +void rcar_pcie_set_inbound(void __iomem *base, u64 cpu_addr, u64 pci_addr,
-> +			   u64 mask, int idx, bool host);
-> +
-> +#endif
-> 
+The tip tree gained a conflict against the drm tree.
+
+The y2038 tree gained a conflict against the tip tree.
+
+Non-merge commits (relative to Linus' tree): 9298
+ 7843 files changed, 348435 insertions(+), 176454 deletions(-)
+
+----------------------------------------------------------------------------
+
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
+
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf. After
+the final fixups (if any), I do an x86_64 modules_install followed by
+builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+and sparc64 defconfig. And finally, a simple boot test of the powerpc
+pseries_le_defconfig kernel in qemu (with and without kvm enabled).
+
+Below is a summary of the state of the merge.
+
+I am currently merging 313 trees (counting Linus' and 78 trees of bug
+fix patches pending for the current merge release).
+
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
+
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+$ git checkout master
+$ git reset --hard stable
+Merging origin/master (ab851d49f6bf Merge branch 'x86-iopl-for-linus' of gi=
+t://git.kernel.org/pub/scm/linux/kernel/git/tip/tip)
+Merging fixes/master (31f4f5b495a6 Linux 5.4-rc7)
+Merging kbuild-current/fixes (80591e61a0f7 kbuild: tell sparse about the $A=
+RCH)
+Merging arc-current/for-curr (5effc09c4907 ARC: perf: Accommodate big-endia=
+n CPU)
+Merging arm-current/fixes (39f4d4410484 Merge branch 'misc' into fixes)
+Merging arm-soc-fixes/arm/fixes (db6efda85437 Merge tag 'tee-fixes-for-v5.4=
+' of git://git.linaro.org/people/jens.wiklander/linux-tee into arm/fixes)
+Merging arm64-fixes/for-next/fixes (e50be648aaa3 arm64: uaccess: Remove uac=
+cess_*_not_uao asm macros)
+Merging m68k-current/for-linus (5ed0794cde59 m68k/atari: Convert Falcon IDE=
+ drivers to platform drivers)
+Merging powerpc-fixes/fixes (7d6475051fb3 powerpc/powernv: Fix CPU idle to =
+be called with IRQs disabled)
+Merging s390-fixes/fixes (a99d8080aaf3 Linux 5.4-rc6)
+Merging sparc/master (038029c03e21 sparc: remove unneeded uapi/asm/statfs.h)
+Merging fscrypt-current/for-stable (ae64f9bd1d36 Linux 4.15-rc2)
+Merging net/master (fd567ac20cb0 tipc: fix link name length check)
+Merging bpf/master (34e59836565e net/mlx4_en: fix mlx4 ethtool -N insertion)
+Merging ipsec/master (a56dcc6b4558 net: cdc_ncm: Signedness bug in cdc_ncm_=
+set_dgram_size())
+Merging netfilter/master (312434617cb1 sctp: cache netns in sctp_ep_common)
+Merging ipvs/master (c24b75e0f923 ipvs: move old_secure_tcp into struct net=
+ns_ipvs)
+Merging wireless-drivers/master (cb1a4badf592 iwlwifi: pcie: don't consider=
+ IV len in A-MSDU)
+Merging mac80211/master (e58c19124189 slip: Fix use-after-free Read in slip=
+_open)
+Merging rdma-fixes/for-rc (411c1e6774e2 RDMA/hns: Correct the value of srq_=
+desc_size)
+Merging sound-current/for-linus (8218df93b7c4 ALSA: hda/hdmi - enable autom=
+atic runtime pm for AMD HDMI codecs by default)
+Merging sound-asoc-fixes/for-linus (3701d2cb8767 Merge branch 'asoc-5.4' in=
+to asoc-linus)
+Merging regmap-fixes/for-linus (af42d3466bdc Linux 5.4-rc8)
+Merging regulator-fixes/for-linus (c642e8708684 Merge branch 'regulator-5.4=
+' into regulator-linus)
+Merging spi-fixes/for-linus (8f3ed6d0b0db Merge branch 'spi-5.4' into spi-l=
+inus)
+Merging pci-current/for-linus (54ecb8f7028c Linux 5.4-rc1)
+Merging driver-core.current/driver-core-linus (d6d5df1db6e9 Linux 5.4-rc5)
+Merging tty.current/tty-linus (d6d5df1db6e9 Linux 5.4-rc5)
+Merging usb.current/usb-linus (a99d8080aaf3 Linux 5.4-rc6)
+Merging usb-gadget-fixes/fixes (f3fb802efaef usb: cdns3: gadget: Don't mana=
+ge pullups)
+Merging usb-serial-fixes/usb-linus (a99d8080aaf3 Linux 5.4-rc6)
+Merging usb-chipidea-fixes/ci-for-usb-stable (16009db47c51 usb: chipidea: u=
+dc: workaround for endpoint conflict issue)
+Merging phy/fixes (54ecb8f7028c Linux 5.4-rc1)
+Merging staging.current/staging-linus (31f4f5b495a6 Linux 5.4-rc7)
+Merging char-misc.current/char-misc-linus (31f4f5b495a6 Linux 5.4-rc7)
+Merging soundwire-fixes/fixes (7b47ad3322d1 soundwire: slave: fix scanf for=
+mat)
+Merging thunderbolt-fixes/fixes (219d54332a09 Linux 5.4)
+Merging input-current/for-linus (976e3645923b Merge branch 'next' into for-=
+linus)
+Merging crypto-current/master (4ee812f6143d crypto: vmx - Avoid weird build=
+ failures)
+Merging ide/master (baf6722aa0cb ide: Use dev_get_drvdata where possible)
+Merging vfio-fixes/for-linus (95f89e090618 vfio/type1: Initialize resv_msi_=
+base)
+Merging kselftest-fixes/fixes (ed2d8fa734e7 selftests: sync: Fix cast warni=
+ngs on arm)
+Merging modules-fixes/modules-linus (57baec7b1b04 scripts/nsdeps: make sure=
+ to pass all module source files to spatch)
+Merging slave-dma-fixes/fixes (bacdcb6675e1 dmaengine: cppi41: Fix cppi41_d=
+ma_prep_slave_sg() when idle)
+Merging backlight-fixes/for-backlight-fixes (e93c9c99a629 Linux 5.1)
+Merging mtd-fixes/mtd/fixes (df8fed831cbc mtd: rawnand: au1550nd: Fix au_re=
+ad_buf16() prototype)
+Merging mfd-fixes/for-mfd-fixes (603d9299da32 mfd: mt6397: Fix probe after =
+changing mt6397-core)
+Merging v4l-dvb-fixes/fixes (3e84a18a259e media: meson/ao-cec: move cec_not=
+ifier_cec_adap_register after hw setup)
+Merging reset-fixes/reset/fixes (cc67d61e31ec reset: Do not register resour=
+ce data for missing resets)
+Merging mips-fixes/mips-fixes (3b1313eb32c4 mips: cacheinfo: report shared =
+CPU map)
+Merging at91-fixes/at91-fixes (54ecb8f7028c Linux 5.4-rc1)
+Merging omap-fixes/fixes (6aed5a0e0f56 Merge branch 'watchdog-fix' into fix=
+es)
+Merging kvm-fixes/master (9cb09e7c1c9a KVM: Add a comment describing the /d=
+ev/kvm no_compat handling)
+Merging kvms390-fixes/master (53936b5bf35e KVM: s390: Do not leak kernel st=
+ack data in the KVM_S390_INTERRUPT ioctl)
+Merging hwmon-fixes/hwmon (92b39ad44096 hwmon: (pmbus/ibm-cffps) Fix LED bl=
+ink behavior)
+Merging nvdimm-fixes/libnvdimm-fixes (6370740e5f8e fs/dax: Fix pmd vs pte c=
+onflict detection)
+Merging btrfs-fixes/next-fixes (bfbbf8cb43a7 Merge branch 'misc-5.4' into n=
+ext-fixes)
+Merging vfs-fixes/fixes (3e5aeec0e267 cramfs: fix usage on non-MTD device)
+Merging dma-mapping-fixes/for-linus (9c24eaf81cc4 iommu/vt-d: Return the co=
+rrect dma mask when we are bypassing the IOMMU)
+Merging i3c-fixes/master (6fbc7275c7a9 Linux 5.2-rc7)
+Merging drivers-x86-fixes/fixes (7d194c2100ad Linux 5.4-rc4)
+Merging samsung-krzk-fixes/fixes (54ecb8f7028c Linux 5.4-rc1)
+Merging pinctrl-samsung-fixes/pinctrl-fixes (5f9e832c1370 Linus 5.3-rc1)
+Merging devicetree-fixes/dt/linus (5dba51754b04 of: reserved_mem: add missi=
+ng of_node_put() for proper ref-counting)
+Merging scsi-fixes/fixes (9393c8de628c scsi: core: Handle drivers which set=
+ sg_tablesize to zero)
+Merging drm-fixes/drm-fixes (51658c04c338 Merge tag 'drm-intel-fixes-2019-1=
+1-21' of git://anongit.freedesktop.org/drm/drm-intel into drm-fixes)
+Merging amdgpu-fixes/drm-fixes (2c409ba81be2 drm/radeon: fix si_enable_smc_=
+cac() failed issue)
+Merging drm-intel-fixes/for-linux-next-fixes (71d122629c04 drm/i915/fbdev: =
+Restore physical addresses for fb_mmap())
+Merging mmc-fixes/fixes (fed23c5829ec mmc: sdhci-of-at91: fix quirk2 overwr=
+ite)
+Merging rtc-fixes/rtc-fixes (5f9e832c1370 Linus 5.3-rc1)
+Merging gnss-fixes/gnss-linus (54ecb8f7028c Linux 5.4-rc1)
+Merging hyperv-fixes/hyperv-fixes (af42d3466bdc Linux 5.4-rc8)
+Merging soc-fsl-fixes/fix (5674a92ca4b7 soc/fsl/qe: Fix an error code in qe=
+_pin_request())
+Merging risc-v-fixes/fixes (1d9b0b66c3ef MAINTAINERS: Change to my personal=
+ email address)
+Merging pidfd-fixes/fixes (9e77716a75bc fork: fix pidfd_poll()'s return typ=
+e)
+Merging fpga-fixes/fixes (dec43da46f63 fpga: altera-ps-spi: Fix getting of =
+optional confd gpio)
+Merging spdx/spdx-linus (bf49d9dd6fef export,module: add SPDX GPL-2.0 licen=
+se identifier to headers with no license)
+Merging gpio-intel-fixes/fixes (7d194c2100ad Linux 5.4-rc4)
+Merging pinctrl-intel-fixes/fixes (219d54332a09 Linux 5.4)
+Merging erofs-fixes/fixes (da0c9ea146cb Linux 5.4-rc2)
+Merging drm-misc-fixes/for-linux-next-fixes (6645d42d79d3 dma-buf: Fix memo=
+ry leak in sync_file_merge())
+Merging kspp-gustavo/for-next/kspp (da0c9ea146cb Linux 5.4-rc2)
+Merging kbuild/for-next (831362fc317a scripts/kallsyms: remove redundant in=
+itializers)
+CONFLICT (modify/delete): include/Kbuild deleted in kbuild/for-next and mod=
+ified in HEAD. Version HEAD of include/Kbuild left in tree.
+$ git rm -f include/Kbuild
+Merging compiler-attributes/compiler-attributes (54ecb8f7028c Linux 5.4-rc1)
+Merging leaks/leaks-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging dma-mapping/for-next (a7ba70f1787f dma-mapping: treat dev->bus_dma_=
+mask as a DMA limit)
+Merging asm-generic/master (9b87647c665d asm-generic: add unlikely to defau=
+lt BUG_ON(x))
+Merging arc/for-next (9fbea0b7e842 ARC: add kmemleak support)
+Merging arm/for-next (1a70cf0e7ee6 ARM: 8940/1: ftrace: remove mcount(),ftr=
+ace_caller_old() and ftrace_call_old())
+Merging arm64/for-next/core (d8e85e144bbe arm64: Kconfig: add a choice for =
+endianness)
+Merging arm-perf/for-next/perf (8703317ae576 drivers/perf: hisi: update the=
+ sccl_id/ccl_id for certain HiSilicon platform)
+Merging arm-soc/for-next (e1351090dd4a ARM: Document merges)
+CONFLICT (modify/delete): include/Kbuild deleted in HEAD and modified in ar=
+m-soc/for-next. Version arm-soc/for-next of include/Kbuild left in tree.
+$ git rm -f include/Kbuild
+Merging amlogic/for-next (580f93e92c5b Merge branch 'v5.5/fixes' into tmp/a=
+ml-rebuild)
+Merging aspeed/for-next (2aee80727dca Merge branch 'defconfig-for-v5.5' int=
+o for-next)
+Merging at91/at91-next (571c4b1fe42b Merge branches 'at91-drivers', 'at91-d=
+t' and 'at91-defconfig' into at91-next)
+Merging bcm2835/for-next (f14234184671 Merge branch 'bcm2835-maintainers-ne=
+xt' into for-next)
+Merging imx-mxs/for-next (71918b15d58f Merge branch 'imx/defconfig' into fo=
+r-next)
+Merging keystone/next (2af8e1f26c65 Merge branch 'for_5.5/driver-soc' into =
+next)
+Merging mediatek/for-next (4ae1ce88e9a0 Merge branch 'v5.3-next/soc' into f=
+or-next)
+Merging mvebu/for-next (3aa22be2d6b1 Merge branch 'mvebu/dt64' into mvebu/f=
+or-next)
+Merging omap/for-next (eab1cca2de62 Merge branch 'omap-for-v5.5/dt-v2' into=
+ for-next)
+Merging qcom/for-next (6a363f34a300 Merge remote-tracking branches 'origin/=
+arm64-defconfig-for-5.5', 'origin/arm64-for-5.5', 'origin/defconfig-for-5.5=
+', 'origin/drivers-for-5.5' and 'origin/dts-for-5.5' into for-next)
+CONFLICT (content): Merge conflict in arch/arm64/configs/defconfig
+Merging realtek/for-next (6a41c7019bca Merge branch 'v5.5/dt64' into next)
+Merging renesas/next (9c45f53abb97 Merge branches 'renesas-arm-defconfig-fo=
+r-v5.5', 'renesas-arm64-defconfig-for-v5.5', 'renesas-arm64-dt-for-v5.5', '=
+renesas-drivers-for-v5.5' and 'renesas-dt-bindings-for-v5.5' into renesas-n=
+ext)
+Merging reset/reset/next (b3f1d036f26d reset: npcm: add NPCM reset controll=
+er driver)
+Merging rockchip/for-next (f0d0e0810786 Merge branch 'v5.5-armsoc/dts64' in=
+to for-next)
+Merging samsung-krzk/for-next (6780daf48588 Merge branch 'next/dt' into for=
+-next)
+Merging scmi/for-linux-next (219d54332a09 Linux 5.4)
+Merging sunxi/sunxi/for-next (2ddd531f8c80 Merge branches 'sunxi/clk-for-5.=
+5' and 'sunxi/dt-for-5.5' into sunxi/for-next)
+Merging tegra/for-next (e0fd54137bf5 Merge branch for-5.5/cpufreq into for-=
+next)
+Merging clk/clk-next (abf1c698e5af Merge branch 'clk-aspeed' into clk-next)
+Merging clk-samsung/for-next (54ecb8f7028c Linux 5.4-rc1)
+Merging c6x/for-linux-next (8adcc59974b8 Merge branch 'work.misc' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/viro/vfs)
+Merging csky/linux-next (044cf5e15357 csky: Initial stack protector support)
+Merging h8300/h8300-next (a5de8865cb3e h8300: move definition of __kernel_s=
+ize_t etc. to posix_types.h)
+Merging ia64/next (0d3d343560ba genirq: remove the is_affinity_mask_valid h=
+ook)
+Merging m68k/for-next (5ed0794cde59 m68k/atari: Convert Falcon IDE drivers =
+to platform drivers)
+Merging m68knommu/for-next (3ad3cbe305b5 m68k/coldfire: Use CONFIG_PREEMPTI=
+ON)
+Merging microblaze/next (22648c989cb8 microblaze: Increase max dtb size to =
+64K from 32K)
+Merging mips/mips-next (a8d0f11ee50d MIPS: SGI-IP27: Enable ethernet phy on=
+ second Origin 200 module)
+Merging nds32/next (a7f96fce201c MAINTAINERS: add nds32 maintainer)
+Merging nios2/for-next (91d99a724e9c nios2: force the string buffer NULL-te=
+rminated)
+Merging openrisc/for-next (0ecdcaa6d5e7 openrisc: Fix Kconfig indentation)
+Merging parisc-hd/for-next (e9c837c6ab07 parisc: Avoid spurious inequivalen=
+t alias kernel error messages)
+Merging powerpc/next (8dcd71b45df3 powerpc/prom_init: Use -ffreestanding to=
+ avoid a reference to bcmp)
+Merging fsl/next (a76bea0287ce powerpc/kmcent2: add ranges to the pci bridg=
+es)
+Merging soc-fsl/next (3b8db0348c50 soc: fsl: add RCPM driver)
+Merging risc-v/for-next (070389ef0f4b Merge branch 'next/add-nonstable-guid=
+ance' into for-next)
+Merging sifive/for-next (467e050e9760 Merge branch 'i2c/for-current' of git=
+://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux)
+Merging s390/features (6a82e23f45fe s390/cpumf: Adjust registration of s390=
+ PMU device drivers)
+Merging sh/sh-next (baf58858e8b6 sh: prefer __section from compiler_attribu=
+tes.h)
+CONFLICT (modify/delete): arch/sh/include/uapi/asm/types.h deleted in sh/sh=
+-next and modified in HEAD. Version HEAD of arch/sh/include/uapi/asm/types.=
+h left in tree.
+CONFLICT (modify/delete): arch/sh/include/uapi/asm/setup.h deleted in sh/sh=
+-next and modified in HEAD. Version HEAD of arch/sh/include/uapi/asm/setup.=
+h left in tree.
+$ git rm -f arch/sh/include/uapi/asm/setup.h arch/sh/include/uapi/asm/types=
+.h
+Merging sparc-next/master (b71acb0e3721 Merge branch 'linus' of git://git.k=
+ernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6)
+Merging uml/linux-next (9807019a62dc um: Loadable BPF "Firmware" for vector=
+ drivers)
+Merging xtensa/xtensa-for-next (dc399f059900 Merge branch 'xtensa-5.5' into=
+ xtensa-for-next)
+CONFLICT (content): Merge conflict in arch/xtensa/kernel/vmlinux.lds.S
+Merging fscrypt/master (0eee17e33226 f2fs: add support for IV_INO_LBLK_64 e=
+ncryption policies)
+Merging afs/afs-next (297c6f6378a6 afs: Remove set but not used variable 'r=
+et')
+Merging btrfs/for-next (897636c94003 Merge branch 'misc-5.5' into for-next-=
+20191119)
+Merging ceph/master (196e2d6d0252 rbd: ask for a weaker incompat mask for r=
+ead-only mappings)
+Merging cifs/for-next (1656a07a89a8 cifs: update internal module version nu=
+mber)
+Merging configfs/for-next (e2f238f7d5a1 configfs: calculate the depth of pa=
+rent item)
+Merging ecryptfs/next (b4a81b87a4cf ecryptfs: fix a memory leak bug in ecry=
+ptfs_init_messaging())
+Merging erofs/dev (3dcb5fa23e16 erofs: remove unnecessary output in erofs_s=
+how_options())
+Merging ext3/for_next (15d8f21beaae Pull ext2 cleanup and quota stats fixes=
+.)
+Merging ext4/dev (dfdeeb41fb08 Merge branch 'tt/misc' into dev)
+Merging f2fs/dev (803e74be04b3 f2fs: stop GC when the victim becomes fully =
+valid)
+Merging fsverity/fsverity (73f0ec02d670 docs: fs-verity: mention statx() su=
+pport)
+Merging fuse/for-next (0fba83d2bb15 fuse: fix Kconfig indentation)
+Merging jfs/jfs-next (a5fdd713d256 jfs: fix bogus variable self-initializat=
+ion)
+Merging nfs/linux-next (e8d70b321ecc SUNRPC: Fix another issue with MIC buf=
+fer space)
+Merging nfs-anna/linux-next (79cc55422ce9 NFS: Fix an RCU lock leak in nfs4=
+_refresh_delegation_stateid())
+Merging nfsd/nfsd-next (8729aaba7462 SUNRPC: Fix backchannel latency metric=
+s)
+Merging orangefs/for-next (e6b998ab62be orangefs: remove redundant assignme=
+nt to err)
+Merging overlayfs/overlayfs-next (5c2e9f346b81 ovl: filter of trusted xattr=
+ results in audit)
+Merging ubifs/linux-next (f9c34bb52997 ubi: Fix producing anchor PEBs)
+Merging v9fs/9p-next (aafee43b7286 9p/vfs_super.c: Remove unused parameter =
+data in v9fs_fill_super)
+Merging xfs/for-next (2911edb653b9 xfs: remove the mappedbno argument to xf=
+s_da_get_buf)
+Merging iomap/iomap-for-next (419e9c38aa07 iomap: Fix pipe page leakage dur=
+ing splicing)
+Merging djw-vfs/vfs-for-next (3253d9d09337 splice: only read in as much inf=
+ormation as there is pipe buffer space)
+Merging file-locks/locks-next (b41dae061bbd Merge tag 'xfs-5.4-merge-7' of =
+git://git.kernel.org/pub/scm/fs/xfs/xfs-linux)
+Merging vfs/for-next (3e501af8dd7b Merge branches 'work.misc', 'work.mount3=
+', 'work.namei', 'work.dcache' and 'work.autofs' into for-next)
+Merging printk/for-next (7c88431552f3 Merge branch 'for-5.5' into for-next)
+Merging pci/next (822a43f97844 Merge branch 'pci/trivial')
+CONFLICT (content): Merge conflict in arch/powerpc/include/asm/Kbuild
+CONFLICT (content): Merge conflict in arch/arm64/boot/dts/amlogic/meson-sm1=
+.dtsi
+CONFLICT (content): Merge conflict in arch/arm64/boot/dts/amlogic/meson-g12=
+-common.dtsi
+Merging pstore/for-next/pstore (8d82cee2f8aa pstore: Make pstore_choose_com=
+pression() static)
+Merging hid/for-next (4b8c2dffbb85 Merge branch 'for-5.5/core' into for-nex=
+t)
+Merging i2c/i2c/for-next (dbbfd9a67f08 Merge branch 'i2c/for-5.5' into i2c/=
+for-next)
+Merging i3c/i3c/next (ae24f2b6f828 MAINTAINERS: add myself as maintainer of=
+ Cadence I3C master controller driver)
+Merging dmi/master (9a85ac3936ad firmware: dmi: Add dmi_memdev_handle)
+Merging hwmon-staging/hwmon-next (4a1288f1c1cf dell-smm-hwmon: Add document=
+ation)
+Merging jc_docs/docs-next (22abcd756961 Merge branch 'maintainer-profile' i=
+nto docs-next)
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/pensando/ionic.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/ixgbevf.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/ixgbe.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/igbvf.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/igb.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/ice.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/iavf.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/i40e.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/fm10k.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/e1000e.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/e1000.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/e100.rst
+CONFLICT (content): Merge conflict in Documentation/admin-guide/perf/imx-dd=
+r.rst
+Merging v4l-dvb/master (dca6b3733a4a media: Revert "media: mtk-vcodec: Remo=
+ve extra area allocation in an input buffer on encoding")
+Merging v4l-dvb-next/master (d45331b00ddb Linux 5.3-rc4)
+Merging fbdev/fbdev-for-next (732146a3f1dc video: fbdev: imxfb: fix a typo =
+in imxfb_probe())
+Merging pm/linux-next (16512c3e4523 Merge branches 'pm-cpuidle' and 'pm-doc=
+s' into linux-next)
+CONFLICT (content): Merge conflict in scripts/checkpatch.pl
+CONFLICT (content): Merge conflict in lib/test_printf.c
+CONFLICT (content): Merge conflict in Documentation/power/pci.rst
+Merging cpufreq-arm/cpufreq/arm/linux-next (c23734487fb4 cpufreq: sun50i: F=
+ix CPU speed bin detection)
+Merging cpupower/cpupower (4611a4fb0cce cpupower: ToDo: Update ToDo with id=
+eas for per_cpu_schedule handling)
+Merging opp/opp/linux-next (25cb20a212a1 PM / OPP: Support adjusting OPP vo=
+ltages at runtime)
+Merging thermal/thermal/linux-next (def0aa869050 thermal: Fix deadlock in t=
+hermal thermal_zone_device_check)
+Merging thermal-rzhang/next (54ecb8f7028c Linux 5.4-rc1)
+Merging thermal-soc/next (6c375eccded4 thermal: db8500: Rewrite to be a pur=
+e OF sensor)
+Merging ieee1394/for-next (7807759e4ad8 firewire: core: code cleanup after =
+vm_map_pages_zero introduction)
+Merging dlm/next (a48f9721e6db dlm: no need to check return value of debugf=
+s_create functions)
+Merging swiotlb/linux-next (4cdfb27ba80d xen/swiotlb: remember having calle=
+d xen_create_contiguous_region())
+Merging rdma/for-next (f295e4cece5c RDMA/hns: Delete unnecessary callback f=
+unctions for cq)
+CONFLICT (content): Merge conflict in drivers/infiniband/hw/mlx5/mr.c
+Merging net-next/master (be2eca94d144 Merge tag 'for-linus-5.5-1' of git://=
+github.com/cminyard/linux-ipmi)
+Merging bpf-next/master (be2eca94d144 Merge tag 'for-linus-5.5-1' of git://=
+github.com/cminyard/linux-ipmi)
+Merging ipsec-next/master (72c996099dc6 cxgb4: Fix an error code in cxgb4_m=
+qprio_alloc_hw_resources())
+Merging mlx5-next/mlx5-next (9c0015ef0928 IB/mlx5: Implement callbacks for =
+getting VFs GUID attributes)
+Merging netfilter-next/master (f3c9a666b285 net: sfp: soft status and contr=
+ol support)
+Merging nfc-next/master (1f008cfec5d5 NFC: fdp: Fix unused variable warning=
+s)
+CONFLICT (content): Merge conflict in drivers/nfc/st21nfca/se.c
+Merging ipvs-next/master (d54725cd11a5 netfilter: nf_tables: support for mu=
+ltiple devices per netdev hook)
+Merging wireless-drivers-next/master (05d6c8cfdbd6 mt76: fix fix ampdu lock=
+ing)
+Merging bluetooth/master (622dc5ad8052 Merge git://git.kernel.org/pub/scm/l=
+inux/kernel/git/bpf/bpf-next)
+Merging mac80211-next/master (7a89233ac504 mac80211: Use Airtime-based Queu=
+e Limits (AQL) on packet dequeue)
+Merging gfs2/for-next (ade48088937f gfs2: Don't write log headers after fil=
+e system withdraw)
+Merging mtd/mtd/next (589e1b6c47ce Merge tag 'nand/for-5.5' into mtd/next)
+Merging nand/nand/next (777260a5c992 mtd: rawnand: remove unecessary checki=
+ng if dmac is NULL)
+Merging spi-nor/spi-nor/next (83cba933a6db mtd: spi-nor: Set default Quad E=
+nable method for ISSI flashes)
+Merging crypto/master (4ee812f6143d crypto: vmx - Avoid weird build failure=
+s)
+Merging drm/drm-next (acc61b892936 Merge tag 'drm-next-5.5-2019-11-22' of g=
+it://people.freedesktop.org/~agd5f/linux into drm-next)
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/i915_scheduler.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/i915_drv.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/Kconfig.debug
+Applying: cec: fix up for "cec: add cec_adapter to cec_notifier_cec_adap_un=
+register()"
+Applying: drm/v3d: Fix double free in v3d_submit_cl_ioctl()
+Merging amdgpu/drm-next (20c663059765 drm/radeon: fix r1xx/r2xx register ch=
+ecker for POT textures)
+Merging drm-intel/for-linux-next (0725d9a31869 drm/i915/gt: Make intel_ring=
+_unpin() safe for concurrent pint)
+Merging drm-tegra/drm/tegra/for-next (84db889e6d82 drm/tegra: Unconditional=
+ly select IOMMU_IOVA)
+Merging drm-misc/for-linux-next (9786b65bc61a drm/ttm: fix mmap refcounting)
+Merging drm-msm/msm-next (e20c9284c8f2 drm/msm/adreno: Add support for Adre=
+no 510 GPU)
+Merging mali-dp/for-upstream/mali-dp (f634c6a80287 dt/bindings: display: Ad=
+d optional property node define for Mali DP500)
+Merging imx-drm/imx-drm/next (4d24376370fb gpu: ipu-v3: image-convert: only=
+ sample into the next tile if necessary)
+Merging etnaviv/etnaviv/next (22567d017c2c dt-bindings: etnaviv: Add #cooli=
+ng-cells)
+Merging regmap/for-next (0c4b6e03b8ad Merge branch 'regmap-5.5' into regmap=
+-next)
+Merging sound/for-next (8218df93b7c4 ALSA: hda/hdmi - enable automatic runt=
+ime pm for AMD HDMI codecs by default)
+Merging sound-asoc/for-next (8c4d2a0bfbd2 Merge branch 'asoc-5.5' into asoc=
+-next)
+Merging modules/modules-next (5d603311615f kernel/module.c: wakeup processe=
+s in module_wq on module unload)
+Merging input/next (1a26c920717a Input: snvs_pwrkey - send key events for i=
+.MX6 S, DL and Q)
+Merging block/for-next (e5bab666ffa7 Merge branch 'for-5.5/io_uring-post' i=
+nto for-next)
+Merging device-mapper/for-next (484e0d2b11e1 dm: add dm-clone to the docume=
+ntation index)
+Merging pcmcia/pcmcia-next (bd9d6e0371d1 pcmcia: remove unused dprintk defi=
+nition)
+Merging mmc/next (def7bd940f8c dt-bindings: mmc: Correct the type of the cl=
+k phase properties)
+Merging md/for-next (e820d55cb99d md: fix raid10 hang issue caused by barri=
+er)
+Merging mfd/for-mfd-next (de98a43eb76b mfd: ti_am335x_tscadc: Fix static ch=
+ecker warning)
+CONFLICT (content): Merge conflict in drivers/mfd/mt6397-core.c
+Merging backlight/for-backlight-next (9afa302473f3 backlight: gpio: Pull gp=
+io_backlight_initial_power_state() into probe)
+Merging battery/for-next (9480029fe5c2 power: supply: bd70528: Add MODULE_A=
+LIAS to allow module auto loading)
+Merging regulator/for-next (a21da94f617b Merge branch 'regulator-5.5' into =
+regulator-next)
+Merging security/next-testing (45893a0abee6 kexec: Fix file verification on=
+ S390)
+Merging apparmor/apparmor-next (341c1fda5e17 apparmor: make it so work buff=
+ers can be allocated from atomic context)
+Merging integrity/next-integrity (2a7f0e53daf2 ima: ima_api: Use struct_siz=
+e() in kzalloc())
+Merging keys/keys-next (48274e1e5d24 Merge branch 'notifications-core' into=
+ keys-next)
+Merging selinux/next (42345b68c2e3 selinux: default_range glblub implementa=
+tion)
+Merging smack/for-next (92604e825304 smack: use GFP_NOFS while holding inod=
+e_smack::smk_lock)
+Merging tomoyo/master (c39593ab0500 tomoyo: Don't use nifty names on socket=
+s.)
+Merging tpmdd/next (0b40dbcbba92 KEYS: trusted: Remove set but not used var=
+iable 'keyhndl')
+Merging watchdog/master (33c26ab4d6be watchdog: jz4740: Drop dependency on =
+MACH_JZ47xx)
+Merging iommu/next (9b3a713feef8 Merge branches 'iommu/fixes', 'arm/qcom', =
+'arm/renesas', 'arm/rockchip', 'arm/mediatek', 'arm/tegra', 'arm/smmu', 'x8=
+6/amd', 'x86/vt-d', 'virtio' and 'core' into next)
+Merging vfio/next (026948f01eac vfio/type1: remove hugepage checks in is_in=
+valid_reserved_pfn())
+Merging audit/next (c34c78dfc1fc audit: remove redundant condition check in=
+ kauditd_thread())
+Merging devicetree/for-next (a8de1304b7df libfdt: define INT32_MAX and UINT=
+32_MAX in libfdt_env.h)
+CONFLICT (content): Merge conflict in Documentation/devicetree/bindings/usb=
+/generic-ehci.yaml
+CONFLICT (content): Merge conflict in Documentation/devicetree/bindings/usb=
+/amlogic,dwc3.txt
+CONFLICT (content): Merge conflict in Documentation/devicetree/bindings/gpu=
+/arm,mali-midgard.yaml
+Merging mailbox/mailbox-for-next (556a0964e28c mailbox: qcom-apcs: fix max_=
+register value)
+Merging spi/for-next (e2ce328b282d Merge remote-tracking branch 'spi/topic/=
+ptp' into spi-next)
+Merging tip/auto-latest (e445033e5810 Merge branch 'WIP.x86/mm')
+CONFLICT (content): Merge conflict in include/trace/events/rpcrdma.h
+CONFLICT (content): Merge conflict in include/linux/security.h
+CONFLICT (content): Merge conflict in fs/jbd2/transaction.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/gem/i915_gem_shr=
+inker.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/Kconfig.debug
+CONFLICT (content): Merge conflict in arch/x86/kernel/head_32.S
+CONFLICT (content): Merge conflict in arch/x86/entry/entry_32.S
+Applying: drm/i915: update for mutex_release API change
+Merging clockevents/timers/drivers/next (6e001f6a4cc7 clocksource/drivers/a=
+sm9260: Add a check for of_clk_get)
+Merging edac/edac-for-next (5781823fd0d3 EDAC/altera: Use the Altera System=
+ Manager driver)
+Merging irqchip/irq/irqchip-next (585d1183ffee pinctrl/sdm845: Add PDC wake=
+up interrupt map for GPIOs)
+Merging ftrace/for-next (16c0f03f629a tracing: Enable syscall optimization =
+for MIPS)
+CONFLICT (content): Merge conflict in tools/testing/selftests/livepatch/Mak=
+efile
+CONFLICT (content): Merge conflict in kernel/trace/trace_export.c
+CONFLICT (content): Merge conflict in include/asm-generic/vmlinux.lds.h
+Merging rcu/rcu/next (e100e2f047de Merge commit '8dcdfb7096a304130ab36fbb0f=
+2961deaf863e5a' into for-mingo)
+Merging kvm/linux-next (96710247298d Merge tag 'kvm-ppc-next-5.5-2' of git:=
+//git.kernel.org/pub/scm/linux/kernel/git/paulus/powerpc into HEAD)
+Merging kvm-arm/next (cd7056ae34af Merge remote-tracking branch 'kvmarm/mis=
+c-5.5' into kvmarm/next)
+Merging kvm-ppc/kvm-ppc-next (30486e72093e KVM: PPC: Book3S HV: XIVE: Fix p=
+otential page leak on error path)
+Merging kvms390/next (c7b7de631246 KVM: s390: Do not yield when target is a=
+lready running)
+Merging xen-tip/linux-next (23c1cce9f317 xen: Fix Kconfig indentation)
+Merging percpu/for-next (fc6a00f8f3cf Merge branch 'for-5.5' into for-next)
+Merging workqueues/for-next (49e9d1a9faf2 workqueue: Add RCU annotation for=
+ pwq list walk)
+Merging drivers-x86/for-next (5406327d43ed platform/x86: intel_pmc_core: Ad=
+d Comet Lake (CML) platform support to intel_pmc_core driver)
+Merging chrome-platform/for-next (99bfcd3993d3 Revert "Input: cros_ec_keyb:=
+ mask out extra flags in event_type")
+Merging hsi/for-next (c1030cd45619 HSI: Remove dev_err() usage after platfo=
+rm_get_irq())
+Merging leds/for-next (5f820ed52371 leds: trigger: netdev: fix handling on =
+interface rename)
+Merging ipmi/for-next (8e6a5c833333 ipmi: fix ipmb_poll()'s return type)
+Merging driver-core/driver-core-next (0e4a459f56c3 tracing: Remove unnecess=
+ary DEBUG_FS dependency)
+CONFLICT (content): Merge conflict in Documentation/filesystems/debugfs.txt
+Merging usb/usb-next (91a9f2d3f976 usb: gadget: udc: gr_udc: create debugfs=
+ directory under usb root)
+Merging usb-gadget/next (726b4fba94be usb: dwc3: of-simple: add a shutdown)
+Merging usb-serial/usb-next (c1a1f273d082 USB: serial: ftdi_sio: add device=
+ IDs for U-Blox C099-F9P)
+Merging usb-chipidea-next/ci-for-usb-next (4d6141288c33 usb: chipidea: imx:=
+ pinctrl for HSIC is optional)
+Merging phy-next/next (4569e64ab6a5 phy: phy-rockchip-inno-usb2: add phy de=
+scription for px30)
+Merging tty/tty-next (b2b2dd71e085 tty: vt: keyboard: reject invalid keycod=
+es)
+Merging char-misc/char-misc-next (b78cda795ac8 Merge tag 'misc-habanalabs-n=
+ext-2019-11-21' of git://people.freedesktop.org/~gabbayo/linux into char-mi=
+sc-next)
+CONFLICT (content): Merge conflict in samples/Makefile
+CONFLICT (content): Merge conflict in samples/Kconfig
+Merging extcon/extcon-next (ddd1bbbae486 extcon: sm5502: remove redundant a=
+ssignment to variable cable_type)
+Merging soundwire/next (2e8c4ad1f044 soundwire: ignore uniqueID when irrele=
+vant)
+Merging thunderbolt/next (b001da2905e7 thunderbolt: Power cycle the router =
+if NVM authentication fails)
+Merging staging/staging-next (0f6f8749872e staging: vchiq: Have vchiq_dump_=
+* functions return an error code)
+CONFLICT (content): Merge conflict in drivers/staging/Makefile
+Merging mux/for-next (05fb8284a417 Merge branch 'i2c-mux/for-next' into for=
+-next)
+Merging icc/icc-next (a99d8080aaf3 Linux 5.4-rc6)
+Merging slave-dma/next (67805a4b3c92 dmaengine: Fix Kconfig indentation)
+Merging cgroup/for-next (899969b46c28 Merge branch 'for-5.5' into for-next)
+Merging scsi/for-next (4220129431ad Merge branch 'misc' into for-next)
+CONFLICT (content): Merge conflict in drivers/scsi/scsi_sysfs.c
+Merging scsi-mkp/for-next (65309ef6b258 scsi: bnx2fc: timeout calculation i=
+nvalid for bnx2fc_eh_abort())
+Merging vhost/linux-next (88d3c7697f25 vhost: last descriptor must have NEX=
+T clear)
+Merging rpmsg/for-next (070a8e805ff5 Merge branches 'hwspinlock-next', 'rpm=
+sg-next' and 'rproc-next' into for-next)
+CONFLICT (modify/delete): Documentation/devicetree/bindings/remoteproc/stm3=
+2-rproc.txt deleted in HEAD and modified in rpmsg/for-next. Version rpmsg/f=
+or-next of Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt lef=
+t in tree.
+$ git rm -f Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+Merging gpio/for-next (41c4616bb81f gpio: Add TODO item for regmap helper)
+Merging gpio-brgl/gpio/for-next (0f67f16a6e88 gpio: mmio: remove untrue lef=
+tover comment)
+Merging gpio-intel/for-next (41c4616bb81f gpio: Add TODO item for regmap he=
+lper)
+Merging pinctrl/for-next (f130d5fd1fa0 Merge branch 'devel' into for-next)
+Merging pinctrl-intel/for-next (8ae93b5ed9be pinctrl: cherryview: Missed ty=
+pe change to unsigned int)
+Merging pinctrl-samsung/for-next (a322b3377f4b pinctrl: samsung: Fix device=
+ node refcount leaks in init code)
+Merging pwm/for-next (9e1b4999a169 pwm: stm32: Pass breakinput instead of i=
+ts values)
+CONFLICT (modify/delete): Documentation/devicetree/bindings/pwm/pwm-stm32.t=
+xt deleted in HEAD and modified in pwm/for-next. Version pwm/for-next of Do=
+cumentation/devicetree/bindings/pwm/pwm-stm32.txt left in tree.
+$ git rm -f Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+Merging userns/for-next (61a47c1ad3a4 sysctl: Remove the sysctl system call)
+Merging ktest/for-next (9b5f852ae20d ktest: Make default build option oldco=
+nfig not randconfig)
+Merging random/dev (58be0106c530 random: fix soft lockup when trying to rea=
+d from an uninitialized blocking pool)
+Merging kselftest/next (54ecb8f7028c Linux 5.4-rc1)
+Merging y2038/y2038 (6d75353320b4 Merge tag 'y2038-cleanups-5.5' of git://g=
+it.kernel.org/pub/scm/linux/kernel/git/arnd/playground into y2038)
+CONFLICT (content): Merge conflict in kernel/time/time.c
+CONFLICT (content): Merge conflict in fs/compat_ioctl.c
+CONFLICT (content): Merge conflict in drivers/scsi/sg.c
+Applying: fix up for "compat: move FS_IOC_RESVSP_32 handling to fs/ioctl.c"
+Merging livepatching/for-next (7f436b3066e3 Merge branch 'for-5.5/core' int=
+o for-next)
+Merging coresight/next (9a5d847c0bda coresight: replicator: Fix missing spi=
+n_lock_init())
+Merging rtc/rtc-next (3bc46ac3a715 rtc: Fix Kconfig indentation)
+Merging nvdimm/libnvdimm-for-next (0dfbb932bb67 MAINTAINERS: Remove Keith f=
+rom NVDIMM maintainers)
+Merging at24/at24/for-next (285be87c79e1 eeprom: at24: Improve confusing lo=
+g message)
+Merging ntb/ntb-next (1ef512b16bc8 NTB: Fix an error in get link status)
+Merging kspp/for-next/kspp (ec2f877856e0 treewide: Use sizeof_member() macr=
+o)
+CONFLICT (content): Merge conflict in arch/x86/kernel/fpu/xstate.c
+Merging cisco/for-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging gnss/gnss-next (54ecb8f7028c Linux 5.4-rc1)
+Merging fsi/next (2c01397b71c5 fsi: aspeed: Fix OPB0 byte order register va=
+lues)
+Merging slimbus/for-next (54ecb8f7028c Linux 5.4-rc1)
+Merging nvmem/for-next (6bd17868c992 nvmem: add Rockchip OTP driver)
+Merging xarray/xarray (6b81141deb73 XArray: Improve documentation of search=
+ marks)
+Merging hyperv/hyperv-next (7a1323b5dfe4 Drivers: hv: vmbus: Fix crash hand=
+ler reset of Hyper-V synic)
+Merging auxdisplay/auxdisplay (54ecb8f7028c Linux 5.4-rc1)
+Merging kgdb/kgdb/for-next (c58ff643763c kdb: Tweak escape handling for vi =
+users)
+Merging pidfd/for-next (04882c321b26 Merge branch 'pidfd' into for-next)
+Merging devfreq/devfreq-next (518e99e2a22e PM / devfreq: Add dynamic scalin=
+g for imx8m ddr controller)
+Merging hmm/hmm (93f4e735b6d9 mm/hmm: remove hmm_range_dma_map and hmm_rang=
+e_dma_unmap)
+CONFLICT (content): Merge conflict in drivers/infiniband/hw/mlx5/odp.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c
+Merging fpga/for-next (fddc9fcbe69a fpga: dfl: fme: add power management su=
+pport)
+Merging kunit/test (ea2dd7c0875e lib/list-test: add a test for the 'list' d=
+oubly linked list)
+Merging cel/cel-next (a99d8080aaf3 Linux 5.4-rc6)
+Merging kasan-bitops/topic/kasan-bitops (5bece3d66153 powerpc: support KASA=
+N instrumentation of bitops)
+Merging generic-ioremap/for-next (eafee5944062 nds32: use generic ioremap)
+CONFLICT (content): Merge conflict in arch/riscv/mm/Makefile
+CONFLICT (content): Merge conflict in arch/riscv/include/asm/io.h
+Applying: fixup for moved code in riscv
+Merging akpm-current/current (a4cee976e966 ipc/msg.c: consolidate all xxxct=
+l_down() functions)
+CONFLICT (content): Merge conflict in lib/ubsan.c
+CONFLICT (content): Merge conflict in include/linux/syscalls.h
+$ git checkout -b akpm remotes/origin/akpm/master
+Applying: drivers/block/null_blk_main.c: fix layout
+Applying: drivers/block/null_blk_main.c: fix uninitialized var warnings
+Applying: pinctrl: fix pxa2xx.c build warnings
+Applying: lib/genalloc.c: export symbol addr_in_gen_pool
+Applying: lib/genalloc.c: rename addr_in_gen_pool to gen_pool_has_addr
+Applying: Documentation: rename addr_in_gen_pool to gen_pool_has_addr
+Applying: kernel-hacking: group sysrq/kgdb/ubsan into 'Generic Kernel Debug=
+ging Instruments'
+Applying: kernel-hacking: create submenu for arch special debugging options
+Applying: kernel-hacking: group kernel data structures debugging together
+Applying: kernel-hacking: move kernel testing and coverage options to same =
+submenu
+Applying: kernel-hacking: move Oops into 'Lockups and Hangs'
+Applying: kernel-hacking: move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
+Applying: kernel-hacking: create a submenu for scheduler debugging options
+Applying: kernel-hacking: move DEBUG_BUGVERBOSE to 'printk and dmesg option=
+s'
+Applying: kernel-hacking: move DEBUG_FS to 'Generic Kernel Debugging Instru=
+ments'
+Applying: bitops: introduce the for_each_set_clump8 macro
+Applying: linux/bitmap.h: fix potential sign-extension overflow
+Applying: bitops-introduce-the-for_each_set_clump8-macro-fix-fix
+Applying: linux/bitopts.h: Add for_each_set_clump8 documentation
+Applying: lib/test_bitmap.c: add for_each_set_clump8 test cases
+Applying: gpio: 104-dio-48e: utilize for_each_set_clump8 macro
+Applying: gpio: 104-idi-48: utilize for_each_set_clump8 macro
+Applying: gpio: gpio-mm: utilize for_each_set_clump8 macro
+Applying: gpio: ws16c48: utilize for_each_set_clump8 macro
+Applying: gpio: pci-idio-16: utilize for_each_set_clump8 macro
+Applying: gpio: pcie-idio-24: utilize for_each_set_clump8 macro
+Applying: gpio: uniphier: utilize for_each_set_clump8 macro
+Applying: gpio: 74x164: utilize the for_each_set_clump8 macro
+Applying: thermal: intel: intel_soc_dts_iosf: Utilize for_each_set_clump8 m=
+acro
+Applying: gpio: pisosr: utilize the for_each_set_clump8 macro
+Applying: gpio: max3191x: utilize the for_each_set_clump8 macro
+Applying: gpio: pca953x: utilize the for_each_set_clump8 macro
+Applying: lib/test_bitmap: force argument of bitmap_parselist_user() to pro=
+per address space
+Applying: lib/test_bitmap: undefine macros after use
+Applying: lib/test_bitmap: name EXP_BYTES properly
+Applying: lib/test_bitmap: rename exp to exp1 to avoid ambiguous name
+Applying: lib/test_bitmap: move exp1 and exp2 upper for others to use
+Applying: lib/test_bitmap: fix comment about this file
+Applying: lib/bitmap: introduce bitmap_replace() helper
+Applying: gpio: pca953x: remove redundant variable and check in IRQ handler
+Applying: gpio: pca953x: use input from regs structure in pca953x_irq_pendi=
+ng()
+Applying: gpio: pca953x: convert to use bitmap API
+Applying: gpio: pca953x: reduce stack usage in couple of functions
+Applying: gpio: pca953x: tighten up indentation
+Applying: mm: add generic p?d_leaf() macros
+Applying: arc: mm: add p?d_leaf() definitions
+Applying: arm: mm: add p?d_leaf() definitions
+Applying: arm64: mm: add p?d_leaf() definitions
+Applying: mips: mm: add p?d_leaf() definitions
+Applying: powerpc: mm: add p?d_leaf() definitions
+Applying: riscv: mm: add p?d_leaf() definitions
+Applying: s390: mm: add p?d_leaf() definitions
+Applying: sparc: mm: add p?d_leaf() definitions
+Applying: x86: mm: add p?d_leaf() definitions
+Applying: mm: pagewalk: add p4d_entry() and pgd_entry()
+Applying: mm: pagewalk: allow walking without vma
+Applying: mm-pagewalk-allow-walking-without-vma-v15
+Applying: mm-pagewalk-allow-walking-without-vma-fix
+Applying: mm: pagewalk: add test_p?d callbacks
+Applying: mm: pagewalk: add 'depth' parameter to pte_hole
+Applying: x86: mm: point to struct seq_file from struct pg_state
+Applying: x86: mm+efi: convert ptdump_walk_pgd_level() to take a mm_struct
+Applying: x86: mm: convert ptdump_walk_pgd_level_debugfs() to take an mm_st=
+ruct
+Applying: x86: mm: convert ptdump_walk_pgd_level_core() to take an mm_struct
+Applying: mm: add generic ptdump
+Applying: mm-add-generic-ptdump-v15
+Applying: mm/ptdump: fix a -Wold-style-declaration warning
+Applying: x86: mm: convert dump_pagetables to use walk_page_range
+Applying: arm64: mm: convert mm/dump.c to use walk_page_range()
+Applying: arm64: mm: display non-present entries in ptdump
+Applying: mm: ptdump: reduce level numbers by 1 in note_page()
+Applying: alpha: use pgtable-nopud instead of 4level-fixup
+Applying: arm: nommu: use pgtable-nopud instead of 4level-fixup
+Applying: c6x: use pgtable-nopud instead of 4level-fixup
+Applying: m68k: nommu: use pgtable-nopud instead of 4level-fixup
+Applying: m68k: mm: use pgtable-nopXd instead of 4level-fixup
+Applying: microblaze: use pgtable-nopmd instead of 4level-fixup
+Applying: nds32: use pgtable-nopmd instead of 4level-fixup
+Applying: parisc: use pgtable-nopXd instead of 4level-fixup
+Applying: parisc/hugetlb: use pgtable-nopXd instead of 4level-fixup
+Applying: sparc32: use pgtable-nopud instead of 4level-fixup
+Applying: um: remove unused pxx_offset_proc() and addr_pte() functions
+Applying: um: add support for folded p4d page tables
+Applying: mm: remove __ARCH_HAS_4LEVEL_HACK and include/asm-generic/4level-=
+fixup.h
+Applying: kernel.h: update comment about simple_strto<foo>() functions
+Applying: auxdisplay: charlcd: deduplicate simple_strtoul()
+Applying: drivers/tty/serial/sh-sci.c: suppress warning
+Applying: drivers/media/platform/sti/delta/delta-ipc.c: fix read buffer ove=
+rflow
+Merging akpm/master (33d952132d8c drivers/media/platform/sti/delta/delta-ip=
+c.c: fix read buffer overflow)
+
+--Sig_/jO0=LGOnO/noy7pW=CQwTNx
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3eAi0ACgkQAVBC80lX
+0GzG2wf9E0o3yeEbq6Z4oBb4q2No1Af5zDCA2tamdoiVTlph5OFh14e/QuXxlezr
+e4NndStEG5YJC6o00i6/NR/5ZN+ViGIVGkwaLd9RexRIOk9u1mY+Y1RFnSB37BBL
+EbjvsYGyCg7RRIotqqr7s9aWt1FEtkt6ZFyQ2/c5Mj3ijjQpP9+nSz4kf8ByB2r3
+0wybJNy4/rBqwD+/sIadkCymVMsKDEEHESjyqrt0NL5FuGV9T9iKFVlD3FRXblt6
+0mLT+evVS/bybtfutP1BVu91jZjnSYchCGkBEqJNA6sabUeRMwfSp9/cUdNVv19v
+3nfLIQPqzXVNgkckOWeZzvxvPS3eqA==
+=LThN
+-----END PGP SIGNATURE-----
+
+--Sig_/jO0=LGOnO/noy7pW=CQwTNx--
