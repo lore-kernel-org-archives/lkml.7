@@ -2,264 +2,173 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F85C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30B4C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCA42071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C18C2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:43:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="uExpzpnh"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="F40Do5fq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfK0NjB (ORCPT
+        id S1726980AbfK0NnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:39:01 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41862 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfK0NjA (ORCPT
+        Wed, 27 Nov 2019 08:43:02 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.2]:58082 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726320AbfK0NnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:39:00 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b18so26716895wrj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 05:38:58 -0800 (PST)
+        Wed, 27 Nov 2019 08:43:02 -0500
+Received: from [85.158.142.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-a.eu-central-1.aws.symcld.net id 19/FA-12040-26D7EDD5; Wed, 27 Nov 2019 13:42:58 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WTfUwbZRzHee6ux4GUHKWThwrGNUzA0fKWxUs
+  Wjc5JqwR07o/N6bId5eTq2qP2ZcKchnVu0I4FAqgBZUxScNKppBV5X7SD0TIYk8HGmCXAcBEI
+  zr2Bc2Ta9srU/z6/5/u5e77P5TkCFc3jEoIpMjJ6jtZI8XCMTY2kZPSHU7vTaj9OocZ+diHUJ
+  zNzOOW8UC6glsfKEOpS1xc4ZemqEFDexVyqdeUb8AKhbL1jxpUdXhtQdtZ5Q5WOFguuPLPUjC
+  u/+34cU95xPPl66C6BmssrLNorYOcPtwHdSHjR2VPn8RIwRFhBOAHIJhTWjg0J+OEcBtutjaH
+  84ATwwfH7uH/ASDcKuxo8gUFEforAU6ve4DADYIf9a8QKwgicpGC1exr3s5jcCcumLgUklDSj
+  8GZLE/AH0eRL8POKoygvbYUupzn4gArW21cDDkZugNPXOgOOkKThyO/twd08GHRUdQekMDIDd
+  rtXAhIg4+HdQ/YAo2QMnJxrCDSCJAltPSMoz+vg/PWHAt5noMc8Afj1FDh8ZS7IUniivi/I8X
+  C04ViQc+CZxl5kzT9/uie4TkHbsSOYFRA+ToAPXcU86uBC72beeBoecjlwnuNg6T0L6j8KJC8
+  KYLWtBqsEqXX/ac1zCjzZfRvneSNs/nIRrQt8iijoqZ3DTgKsBTybp1cXsEYtrdbI0tPSZOnp
+  mbJM2SY5fUBGyxmTTMVwRj3ty+T0+wa5oVir0uTLOcboAL77lv8eKugAh5eX5C4QSyDSdcLcV
+  6d2iyLzCvOLWdrA7tGbNIzBBeIIQgqFpg98WZSeKWCK3lFrfLd2LYZEhFQshAd9sdCgo7UGdQ
+  EfDYJMonK+vhElnPVNjagI4wo5RhIj7PCrpF9lTdyjF639AaMgXhItBCEhIaIIHaPXqo3/zxd
+  ADAGk0cIL/j4Ras74aL8FXxXEVwWpnfRXMdL/RpIS5KPsq5XKEMsPZ09bfuyyTh596zHTTu2K
+  WaHYp3CE731j9mAc/fjwvoG2TCRhy/CLr/3R+sSDRPfzpCfrltlmeqr2s8i/lKVLiVtW3u2uu
+  D9yO3Hz+I7k8q0DRFJWTZm9/0bsYr9bEZYkHlrfs7/PsynhXnK5tkpRk/Vt1f7jfxZfTHWunt
+  P9kt25HMsdyda9vbE36sSuccIoZtsxzuI90DP71ajkCpu5rZ2F3qtLqhtVv90dt1/f8Dd2udq
+  oezO5PmNbU/UrST9dy50p2TExKl7NiS3NEG0fSerT7JlFGvBbl3uE/RNVvw7efE7hkYhVOeb1
+  1khD28Bg84rEvX22snP65UYpZmDp9GdQvYH+B8BwW398BAAA
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-14.tower-229.messagelabs.com!1574862177!354434!1
+X-Originating-IP: [104.47.14.56]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 10056 invoked from network); 27 Nov 2019 13:42:57 -0000
+Received: from mail-vi1eur04lp2056.outbound.protection.outlook.com (HELO EUR04-VI1-obe.outbound.protection.outlook.com) (104.47.14.56)
+  by server-14.tower-229.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 27 Nov 2019 13:42:57 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q5B7e+G0BvojV8oIKXkaTIBDymNAFCXgVIBji/auQyjNL4cboLxlhhVT71qTHuB/DRPYtEs0t3CgH2LISmUan+bwTN6mHYW5fr6ZAClyOOwm+cfkApxQPRqDMLu9wmhDq8cLeWfV5V7X3bW4N+IjvsKWSxWBguOhLZwJq1vZjiOi4OBOKLWje0FEiuT8u9gfCa98Xmp6xMFRUDQge9RYPfXuMYbkE/pB9CKoElrjjJ5HMH836Zs6+QqEm6N5jG8KTx0rbXkkcavb+razUHY1A/gbzz4VmcwnrDLtW7ThXFuLrJ+Bf0IeB3io31DGOSgqXjyPd+7ddty/WGKEWFFF7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x6rDtcEaoDpt///VPfBv4pOx9i1nEyui7M4mKGxYgJo=;
+ b=Dj6Mn5saQPFGpZq/oHHVqhkyMG0q7LgAIaP8J8cm0IyERbYRIGlzddQAEtfYtGLKxAk++C+bCVm64VEp6A0xTkOpkj4Hew0Ac6HVtodURlUGsoZb4Gk15VnT6NNvDv5rAwiuO8yPgTsG9P4g8UDwqk+xs26WGd3T1kLpyhTE9nkrNLVTO9hFPKfbyV8kXQ+wK4Ls3sie+KR5X7kn1Xen2pV34lW4KcansHBS2ecttGZ+vYMDoNgfatzcmLYhvr4BARlO1Rz26Dxn0OcYEx/D/Ab/t9HZjVZb6tQoO4gXw3EuM584h5MqwNJkGnfIOWpGrOaeyZwLx5R8sGKJxCyFeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:openpgp:autocrypt:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eU4VlI4ArP56nCay48Vt2NhXZMRD3ggL2hIZnoXhceQ=;
-        b=uExpzpnhHZCBAFD3IcqrWJygCDHGgN5YWhG2Trp7uD2RnNs6F4LCOEOW9qsmZrbv/4
-         sfRRoqkGSLnwAdV9oII/3bot1TZshIrhasnvpBLybobh7GqHUB6JnAb4SAxzjOVi1tZR
-         JTd1i3oRhWTtX7fuTPRw7n7GK2h+yhK60eHj+lkdhBCpZWSmARvPwZL8Ef5BlkiNAqQ/
-         Cfnan/ODgHMKSSSgfc1AJtf4+Z4qQ2kMwDNFqEVZNUPx2nnEdWC40Vm8CuFWMYHuTT9N
-         ZUGPLpYWHGvUvEvQU7DX3vE2GfBJBaBMcxQd5CQIqKLwIxtd19Sd9uzcvetTFsdluW6I
-         OIXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:openpgp:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=eU4VlI4ArP56nCay48Vt2NhXZMRD3ggL2hIZnoXhceQ=;
-        b=f3v4FxiLEiOh4WQ9ydxFrOl43OjTJiL4nPD7u2lNMw+rSB6v+BKP7OihHy6JPu2SHZ
-         Z2H0mWdmjj4fKt8wrfc2zxVDGXz7x9Iog2SEKW7N40gYfsVN1GvbVzOEOKSSuPU5ndXc
-         jcAZ8Dgo+RnJD3sGl+j9sspBU609ypYMb19XY00dnlDpAO4RGgp4AZwfcNb+mKLVQdhK
-         4C0GQ/THI3goIjuRfc45Nv7dvo3+Gi8EazjYGXXReJCjeqqwn8z8FUBLfc3LN2PbCR6x
-         54yi60d8NsHts0pa2kssg1NyoXSZ2E+uPRals+S73SrM8fa08wXJ81fo0LSCoNk71AIS
-         llYQ==
-X-Gm-Message-State: APjAAAVHAfqd8H3oM8OpclDO/JF30pKHNZ9F3Vg0k8S3MgWEqBJNzVDA
-        XvW2awL39AvQeRTIC4Pph59Wbw==
-X-Google-Smtp-Source: APXvYqxDnsF+COHQgRZP9CCHmIMcuL6Ca4nzr7dMlubewqhDVfPTLc7AHyQE/m7fwJdSl2zbtQKWKw==
-X-Received: by 2002:adf:f5c2:: with SMTP id k2mr42144936wrp.118.1574861937643;
-        Wed, 27 Nov 2019 05:38:57 -0800 (PST)
-Received: from [172.20.1.104] ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id k20sm6430968wmj.10.2019.11.27.05.38.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Nov 2019 05:38:56 -0800 (PST)
-To:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-References: <20191127094837.4045-1-jolsa@kernel.org>
- <20191127094837.4045-4-jolsa@kernel.org>
-From:   Quentin Monnet <quentin.monnet@netronome.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
- 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
- RHhSHGnKaQ6MfrTge5Q0h5A=
-Subject: Re: [PATCH 3/3] bpftool: Allow to link libbpf dynamically
-Message-ID: <fd22660f-2f70-4ffa-b45f-bb417d006d0a@netronome.com>
-Date:   Wed, 27 Nov 2019 13:38:55 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x6rDtcEaoDpt///VPfBv4pOx9i1nEyui7M4mKGxYgJo=;
+ b=F40Do5fq974C2rHn+2YzG/kpWHK/Jtu6F/j4uebGkNgCFjS635/tWY9fveCrDwYhH1xeSNf5MJUeJjk+UfvsHM6jD0gKk1oQom+Ht1GsvOpnWSx3CpvRjflFUOtTF+5Rt+Xt7H/DHXClbwEGh3UZW2MirPjIwatIKjNHwIB2C+s=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1043.EURPRD10.PROD.OUTLOOK.COM (10.169.155.140) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.21; Wed, 27 Nov 2019 13:42:54 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
+ 13:42:54 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+CC:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@collabora.com" <kernel@collabora.com>
+Subject: RE: [PATCHv2 6/6] ASoC: da7213: Add default clock handling
+Thread-Topic: [PATCHv2 6/6] ASoC: da7213: Add default clock handling
+Thread-Index: AQHVn7aXMyQuMXvm70+jyJLut64noaeWIihwgAeSgICAAAQ4gIAACJ3wgAADHgCAARqUMIAAHxOAgAAPlwA=
+Date:   Wed, 27 Nov 2019 13:42:54 +0000
+Message-ID: <AM5PR1001MB0994D842A2D7051F81A7765B80440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
+ <20191120152406.2744-7-sebastian.reichel@collabora.com>
+ <AM5PR1001MB0994720A0D615339A978E35C804E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <AM5PR1001MB0994E628439F021F97B872D480450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191126170841.GC4205@sirena.org.uk>
+ <AM5PR1001MB09949D557742E8817545637F80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191126175040.GD4205@sirena.org.uk>
+ <AM5PR1001MB09940CF764711F1F13A6B37E80440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191127123317.GA4879@sirena.org.uk>
+In-Reply-To: <20191127123317.GA4879@sirena.org.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 49f1955e-5971-4785-4eff-08d7733fb494
+x-ms-traffictypediagnostic: AM5PR1001MB1043:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR1001MB10435572B3E6C806587BF9F5A7440@AM5PR1001MB1043.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 023495660C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(346002)(366004)(39860400002)(189003)(199004)(7736002)(7696005)(66066001)(86362001)(305945005)(76176011)(3846002)(53546011)(55236004)(74316002)(6116002)(6246003)(33656002)(6506007)(446003)(9686003)(2906002)(102836004)(186003)(71200400001)(26005)(14454004)(478600001)(71190400001)(66446008)(76116006)(256004)(81166006)(64756008)(110136005)(52536014)(66946007)(66556008)(6436002)(66476007)(99286004)(316002)(5660300002)(54906003)(11346002)(8936002)(8676002)(55016002)(229853002)(4326008)(81156014)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1043;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: x7HOGKFhcJMPYO3Bc/6DKOLqorDR4oRM5qsitsdf68ABUHkPKgECyxzzayLXmOmaJ2iekrrI1CEPhSQxMkFvumw2cuZEqpec6kBTXC9DxusBXl5kQzQXLJhreG5R5HiT0tEK5oSjiZo0oIa1PePLWXxO3C4cZmwfBSr5OaeKcqaGYw31ol1+7quJ9TWZxSMkwVDjC8Gy8AAhDnjVH/BLz4KbQdrUWQKRg2WUxhCzOzJXip/ruJn8eOtl7UhsFkAjJAU/V9F3BdPR4pwEjtVcSA1TxXd216o4igJSmuUL4xkfjBX0ZlJfoykQl+B8dTfVSfZwaXeZaabUv2QuWIPhrwz4UUSSbnplSfY+x32uYlHFtSP5eGAsEYBPlcND9qoXPcei398fg+42v0rrFKnS7X6XCdilGdiPnad9n9Hai1XahU4H2BdzHI9kae++sDTq
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20191127094837.4045-4-jolsa@kernel.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49f1955e-5971-4785-4eff-08d7733fb494
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2019 13:42:54.5137
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ln7wFHVTj2Jeq1016UrnhvUb25nLU9Xmpq/B+aj7Ov1Mj4R9cecT9B0LaL5utbJjJizig4n1YN1GOkn9xw9lHHs2tzXxvehj3lDpTFfinlY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-11-27 10:48 UTC+0100 ~ Jiri Olsa <jolsa@kernel.org>
-> Currently we support only static linking with kernel's libbpf
-> (tools/lib/bpf). This patch adds LIBBPF_DYNAMIC compile variable
-> that triggers libbpf detection and bpf dynamic linking:
-> 
->   $ make -C tools/bpf/bpftool make LIBBPF_DYNAMIC=1
-> 
-> If libbpf is not installed, build (with LIBBPF_DYNAMIC=1) stops with:
-> 
->   $ make -C tools/bpf/bpftool LIBBPF_DYNAMIC=1
->     Auto-detecting system features:
->     ...                        libbfd: [ on  ]
->     ...        disassembler-four-args: [ on  ]
->     ...                          zlib: [ on  ]
->     ...                        libbpf: [ OFF ]
-> 
->   Makefile:102: *** Error: libbpf-devel is missing, please install it.  Stop.
-> 
-> Adding specific bpftool's libbpf check for libbpf_netlink_open (LIBBPF_0.0.6)
-> which is the latest we need for bpftool at the moment.
-> 
-> Adding LIBBPF_DIR compile variable to allow linking with
-> libbpf installed into specific directory:
-> 
->   $ make -C tools/lib/bpf/ prefix=/tmp/libbpf/ install_lib install_headers
->   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/libbpf/
-> 
-> It might be needed to clean build tree first because features
-> framework does not detect the change properly:
-> 
->   $ make -C tools/build/feature clean
->   $ make -C tools/bpf/bpftool/ clean
-> 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/bpf/bpftool/Makefile        | 40 ++++++++++++++++++++++++++++++-
->  tools/build/feature/test-libbpf.c |  9 +++++++
->  2 files changed, 48 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-> index 39bc6f0f4f0b..2b6ed08cb31e 100644
-> --- a/tools/bpf/bpftool/Makefile
-> +++ b/tools/bpf/bpftool/Makefile
+On 27 November 2019 12:33, Mark Brown wrote:
 
-> @@ -55,7 +64,7 @@ ifneq ($(EXTRA_LDFLAGS),)
->  LDFLAGS += $(EXTRA_LDFLAGS)
->  endif
->  
-> -LIBS = $(LIBBPF) -lelf -lz
-> +LIBS = -lelf -lz
+> On Wed, Nov 27, 2019 at 11:32:54AM +0000, Adam Thomson wrote:
+>=20
+> > As I said it's a small thing and requires a specific use-case to occur,=
+ but
+> > having the PLL configured twice for the very first stream in that scena=
+rio
+> > seems messy. Regarding the SYSCLK approach you mention, I'm not clear h=
+ow
+> that
+> > would work so I'm obviously missing something. If we had some init stag=
+e
+> > indication though that auto PLL was required then we're golden.
+>=20
+> There's a bunch of other drivers using the SYSCLK thing, when you call
+> set_sysclk() they provide a different SYSCLK number if they want to use
+> manual mode.  If there's a concern about drivers doing stuff on init you
+> could always ask them to set the PLL during init, even if only briefly.
 
-Hi Jiri,
-
-This change seems to be breaking the build with the static library for
-me. I know you add back $(LIBBPF) later in the Makefile, see at the end
-of this email...
-
->  
->  INSTALL ?= install
->  RM ?= rm -f
-> @@ -64,6 +73,23 @@ FEATURE_USER = .bpftool
->  FEATURE_TESTS = libbfd disassembler-four-args reallocarray zlib
->  FEATURE_DISPLAY = libbfd disassembler-four-args zlib
->  
-> +ifdef LIBBPF_DYNAMIC
-> +  # Add libbpf check with the flags to ensure bpftool
-> +  # specific version is detected.
-
-Nit: We do not check for a specific bpftool version, we check for a
-recent enough libbpf version?
-
-> +  FEATURE_CHECK_CFLAGS-libbpf := -DBPFTOOL
-> +  FEATURE_TESTS   += libbpf
-> +  FEATURE_DISPLAY += libbpf
-> +
-> +  # for linking with debug library run:
-> +  # make LIBBPF_DYNAMIC=1 LIBBPF_DIR=/opt/libbpf
-> +  ifdef LIBBPF_DIR
-> +    LIBBPF_CFLAGS  := -I$(LIBBPF_DIR)/include
-> +    LIBBPF_LDFLAGS := -L$(LIBBPF_DIR)/$(libdir_relative)
-> +    FEATURE_CHECK_CFLAGS-libbpf  := $(LIBBPF_CFLAGS)
-> +    FEATURE_CHECK_LDFLAGS-libbpf := $(LIBBPF_LDFLAGS)
-> +  endif
-> +endif
-> +
->  check_feat := 1
->  NON_CHECK_FEAT_TARGETS := clean uninstall doc doc-clean doc-install doc-uninstall
->  ifdef MAKECMDGOALS
-> @@ -88,6 +114,18 @@ ifeq ($(feature-reallocarray), 0)
->  CFLAGS += -DCOMPAT_NEED_REALLOCARRAY
->  endif
->  
-> +ifdef LIBBPF_DYNAMIC
-> +  ifeq ($(feature-libbpf), 1)
-> +    LIBS    += -lbpf
-> +    CFLAGS  += $(LIBBPF_CFLAGS)
-> +    LDFLAGS += $(LIBBPF_LDFLAGS)
-> +  else
-> +    dummy := $(error Error: No libbpf devel library found, please install libbpf-devel)
-
-libbpf-devel sounds like a RH/Fedora package name, but other
-distributions might have different names (Debian/Ubuntu would go by
-libbpf-dev I suppose, although I don't believe such package exists at
-the moment). Maybe use a more generic message?
-
-> +  endif
-> +else
-> +  LIBS += $(LIBBPF)
-
-... I believe the order of the libraries is relevant, and it seems the
-static libbpf should be passed before the dynamic libs. Here I could fix
-the build with the static library on my setup by prepending the library
-path instead, like this:
-
-	LIBS := $(LIBBPF) $(LIBS)
-
-On the plus side, all build attempts from
-tools/testing/selftests/bpf/test_bpftool_build.sh pass successfully on
-my setup with dynamic linking from your branch.
-
-> +endif
-> +
->  include $(wildcard $(OUTPUT)*.d)
->  
->  all: $(OUTPUT)bpftool
-
-Thanks,
-Quentin
+Yeah OK I see what you mean; using the sysclk id. Still doesn't feel like t=
+he
+nicest solution here though. I guess we're stuck with people having to manu=
+ally
+configure the PLL for bypass when a non-generic machine driver inits, to av=
+oid
+the initial double config, as I don't see other options unless you have
+something to specify at init that it's auto or manual, and this doesn't fee=
+l
+like a DT device specific property thing as it's more software than hardwar=
+e.
+At least Sebastian's patch has a good comment block to highlight this.
