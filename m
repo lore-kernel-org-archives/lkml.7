@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C6FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B11D21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ADA0215B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888241;
-	bh=zvYRrz4rzu32n8VzU68nDZUGzYohu/DbbQ7Rr99+HhM=;
+	s=default; t=1574888244;
+	bh=2tfT+JNrdVWZ+oMRcmgZUtHbBrEltXM0CPEOcEo0S8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y740mGLD/hQL2ccaBfXfNDlU580poP9Ndp3GTPFTmeDAUDvh/1w1YA9VxY7i+rbtW
-	 LJ5S4XERJm7x9S/CSlXho6hGUv5Fqjfx+V6+A1dbey80V5zxNR6zteFLEDxVRoK2IZ
-	 l0+Dw1cAAcbeNfYWwG77D1o+paARmelQrB38X+YE=
+	b=ErmE5nl81jaQ9j3iQCUFnYjfbPukoXzS0mKqBrB2Kax2U5tbZgGete9xQhQB66D2B
+	 0pRpe0RNWZLri2FpuPMBUgYUGzJvZsIDpjMG/01GXhhLGb1VOTppmSEVypmOz1BFwF
+	 K7EPE0r4NsBoGL6xEUu8bVzWuIm3ZATSQhQ2AYCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731170AbfK0U5T (ORCPT
+        id S1731179AbfK0U5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:57:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48162 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:57:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731160AbfK0U5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:57:15 -0500
+        id S1731165AbfK0U5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:57:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9DED21582;
-        Wed, 27 Nov 2019 20:57:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 265102084D;
+        Wed, 27 Nov 2019 20:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888233;
-        bh=zvYRrz4rzu32n8VzU68nDZUGzYohu/DbbQ7Rr99+HhM=;
+        s=default; t=1574888235;
+        bh=2tfT+JNrdVWZ+oMRcmgZUtHbBrEltXM0CPEOcEo0S8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qe6e4CjUUY/vGm2IZf4NCw1OYWqM+5S4VQZIeZn26fm0yjHLl/DYjMpciCmeF/R0j
-         SEqSfN3w3aACrJPg0s5RjfszJ6wjFLseQU07h+b0o44NcPX78QC0MD9C9PTN4pmNiQ
-         MhxLxQ/QNEzp3kTF+2WY9+JbjBMLUv7+pMsON0u4=
+        b=LJgBCY77HGP9bXTN45g+s93V4pMECjuF0jogJF371dcLcHlv2TUL0EuHSww6uB6lO
+         UG9VX4EASi7pkixuUKPtDCBmFFbKCqMPBdYETWVqVO1Q26IL2xQZ3JiUC7gtIRSvjI
+         6cpT4IUS+sq71WN+yXzmpQld120XIpJlwQy09W2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.19 013/306] tools: gpio: Correctly add make dependencies for gpio_utils
-Date:   Wed, 27 Nov 2019 21:27:43 +0100
-Message-Id: <20191127203115.684001568@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Sun Ke <sunke32@huawei.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 014/306] nbd:fix memory leak in nbd_get_socket()
+Date:   Wed, 27 Nov 2019 21:27:44 +0100
+Message-Id: <20191127203115.750394671@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -59,74 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@redhat.com>
+From: Sun Ke <sunke32@huawei.com>
 
-commit 0161a94e2d1c713bd34d72bc0239d87c31747bf7 upstream.
+commit dff10bbea4be47bdb615b036c834a275b7c68133 upstream.
 
-gpio tools fail to build correctly with make parallelization:
+Before returning NULL, put the sock first.
 
-$ make -s -j24
-ld: gpio-utils.o: file not recognized: file truncated
-make[1]: *** [/home/labbott/linux_upstream/tools/build/Makefile.build:145: lsgpio-in.o] Error 1
-make: *** [Makefile:43: lsgpio-in.o] Error 2
-make: *** Waiting for unfinished jobs....
-
-This is because gpio-utils.o is used across multiple targets.
-Fix this by making gpio-utios.o a proper dependency.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: stable@vger.kernel.org
+Fixes: cf1b2326b734 ("nbd: verify socket is supported during setup")
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Sun Ke <sunke32@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/gpio/Build    |    1 +
- tools/gpio/Makefile |   10 +++++++---
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/block/nbd.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/tools/gpio/Build
-+++ b/tools/gpio/Build
-@@ -1,3 +1,4 @@
-+gpio-utils-y += gpio-utils.o
- lsgpio-y += lsgpio.o gpio-utils.o
- gpio-hammer-y += gpio-hammer.o gpio-utils.o
- gpio-event-mon-y += gpio-event-mon.o gpio-utils.o
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -35,11 +35,15 @@ $(OUTPUT)include/linux/gpio.h: ../../inc
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -945,6 +945,7 @@ static struct socket *nbd_get_socket(str
+ 	if (sock->ops->shutdown == sock_no_shutdown) {
+ 		dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown callout must be supported.\n");
+ 		*err = -EINVAL;
++		sockfd_put(sock);
+ 		return NULL;
+ 	}
  
- prepare: $(OUTPUT)include/linux/gpio.h
- 
-+GPIO_UTILS_IN := $(output)gpio-utils-in.o
-+$(GPIO_UTILS_IN): prepare FORCE
-+	$(Q)$(MAKE) $(build)=gpio-utils
-+
- #
- # lsgpio
- #
- LSGPIO_IN := $(OUTPUT)lsgpio-in.o
--$(LSGPIO_IN): prepare FORCE
-+$(LSGPIO_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- 	$(Q)$(MAKE) $(build)=lsgpio
- $(OUTPUT)lsgpio: $(LSGPIO_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-@@ -48,7 +52,7 @@ $(OUTPUT)lsgpio: $(LSGPIO_IN)
- # gpio-hammer
- #
- GPIO_HAMMER_IN := $(OUTPUT)gpio-hammer-in.o
--$(GPIO_HAMMER_IN): prepare FORCE
-+$(GPIO_HAMMER_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- 	$(Q)$(MAKE) $(build)=gpio-hammer
- $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-@@ -57,7 +61,7 @@ $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
- # gpio-event-mon
- #
- GPIO_EVENT_MON_IN := $(OUTPUT)gpio-event-mon-in.o
--$(GPIO_EVENT_MON_IN): prepare FORCE
-+$(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- 	$(Q)$(MAKE) $(build)=gpio-event-mon
- $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 
