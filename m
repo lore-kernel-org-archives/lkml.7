@@ -2,104 +2,211 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66772C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B875C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EAC2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696E92071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1fnJGn8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qndVf33Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfK0FoG (ORCPT
+        id S1726719AbfK0FpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 00:44:06 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:34645 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfK0FoF (ORCPT
+        Wed, 27 Nov 2019 00:45:24 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48138 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfK0FpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 00:44:05 -0500
-Received: by mail-pj1-f68.google.com with SMTP id bo14so9405988pjb.1;
-        Tue, 26 Nov 2019 21:44:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=FMYyAGSOjqa1kmojeILRKOUaJMyqkQLJBPPeC/R8Edo=;
-        b=b1fnJGn86jAG/ZPmG53NNoajx+cmxK3BUnbWlOW4Zi1CaI/OXkeHUlnlMlGhvGc5aN
-         pr/kIdNjbmKvLNuknW7LlOTP2p9mOhpmVMSgoR4jYGsNNqdR798mAirFTR2/hTGTDDuP
-         VaE3PUKVxHF3ph/HKDghAWMHjXcixW8k9auUFrjV95RmUf8mijG3dp6ePBs9tbTUuOYc
-         7x+NnM8aqm+fcy9KM+2NduZzqOW3AYHu2UrlFdrveyMnNRn28DhSBg+IjXrpJoN25Sk8
-         /wdQxFDtJGLj+vo289WrFF3AtTDqX4qAyqCKErPqdLGIsLo6NJVOOekfYuAo0kIjCU2Z
-         oQiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=FMYyAGSOjqa1kmojeILRKOUaJMyqkQLJBPPeC/R8Edo=;
-        b=TxUqVdZ5YnVp3skmYNiXe/q0SyR8jxCXo8lytyAbOFDjDDZiq4esVac277jyoBG6d5
-         05jivEEv/Zo5MstyJTYsf7Io3z4Y8i2SpjFIs2GJBjbbqAVe1oEHv7XLxehvfwA4f5R/
-         Md1fBAU84rhlNf+cW0ih4tqLkWn4q59l6JdLQyCXWdi1EaZfIA1oqUyBPSIz3Mu8tQxZ
-         Ou9zDcM98q9YWj4C2YTnH7sUGLqheb7+QX5qI2E3XIwsxVOBYkNstpAQWanEDPXoNPfO
-         AGbeFj8sevvJ74gLMUjuii0jUzLDW/0FwhCd34LlhISMG3v75hyc0wg3/zwhtSpZsgfl
-         Jn/g==
-X-Gm-Message-State: APjAAAXlrM983SCMVPVVcnbLaotQGcHo52mi0w9l4MlQ6kaW1qOVI/g+
-        BlytcxrkrOBRyYQQwIIB11g=
-X-Google-Smtp-Source: APXvYqxVT3gXIupAJuzGIwIijzKKKPfT5lpthnrI6M//XlmgwynelR+d0M3wjTDKZyeNZN0SyXUXpg==
-X-Received: by 2002:a17:90a:77c3:: with SMTP id e3mr3894028pjs.14.1574833444724;
-        Tue, 26 Nov 2019 21:44:04 -0800 (PST)
-Received: from LGEARND20B15 ([27.122.242.75])
-        by smtp.gmail.com with ESMTPSA id s18sm14883829pfs.20.2019.11.26.21.44.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Nov 2019 21:44:04 -0800 (PST)
-Date:   Wed, 27 Nov 2019 14:43:58 +0900
-From:   Austin Kim <austindh.kim@gmail.com>
-To:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
-        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
-        wright.feng@cypress.com, kvalo@codeaurora.org, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, austindh.kim@gmail.com
-Subject: [PATCH] brcmsmac: Remove always false 'channel < 0' statement
-Message-ID: <20191127054358.GA59549@LGEARND20B15>
+        Wed, 27 Nov 2019 00:45:24 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR5iw31020018;
+        Tue, 26 Nov 2019 23:44:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574833498;
+        bh=ghIhQuJ9aHS97LO4zAtdQCLPCJDJTY7NbKzwS6TyyAw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qndVf33YNLkQZU0nWotc7RdalzlFQ+JstoxF8ycG9eZBnDYfY/9carjo8SclfjI4X
+         j7o7vWluLgW7LnpKzrtc4uwH7N7pAKZHZl8RyJCZFurCkosFACCMWgNW7VwRkjky9H
+         7zU+CnLxcJxErGfyfY9QjF2lQdJhb6HJnbDh4Nis=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR5iwf4108619
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 26 Nov 2019 23:44:58 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 26
+ Nov 2019 23:44:58 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 26 Nov 2019 23:44:58 -0600
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR5iocX018864;
+        Tue, 26 Nov 2019 23:44:51 -0600
+Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree
+ bindings
+To:     Rob Herring <robh@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
+ <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
+ <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
+ <20191113040802.GA8269@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <3b218f7f-78a8-c158-80ac-67a3b9f5970c@ti.com>
+Date:   Wed, 27 Nov 2019 11:14:08 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191113040802.GA8269@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As 'channel' is declared as u16, the following statement is always false.
-   channel < 0
+Hi,
 
-So we can remove unnecessary 'always false' statement.
+On 13/11/19 9:38 AM, Rob Herring wrote:
+> On Thu, Nov 07, 2019 at 09:08:35PM +0100, Geert Uytterhoeven wrote:
+>> Hi Prabhakar,
+>>
+>> On Thu, Nov 7, 2019 at 10:26 AM Lad, Prabhakar
+>> <prabhakar.csengg@gmail.com> wrote:
+>>> On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>>> On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+>>>>> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>>>>>
+>>>>> This patch adds the bindings for the R-Car PCIe endpoint driver.
+>>>>>
+>>>>> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>>>>
+>>>> Thanks for your patch!
+>>>>
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+>>>>> @@ -0,0 +1,43 @@
+>>>>> +* Renesas R-Car PCIe Endpoint Controller DT description
+>>>>> +
+>>>>> +Required properties:
+>>>>> +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+>>>>> +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+>>>>> +                                    RZ/G2 compatible device.
+>>>>
+>>>> Unless I'm missing something, this is for the exact same hardware block as
+>>>> Documentation/devicetree/bindings/pci/rcar-pci.txt?
+>>>> So shouldn't you amend those bindings, instead of adding new compatible
+>>>> values?
+>>>> Please remember that DT describes hardware, not software policy.
+>>>> So IMHO choosing between host and endpoint is purely a configuration
+>>>> issue, and could be indicated by the presence or lack of some DT properties.
+>>>> E.g. host mode requires both "bus-range" and "device_type" properties,
+>>>> so their absence could indicate endpoint mode.
+>>>>
+>>> yes its the same hardware block as described in the rcar-pci.txt, I
+>>> did think about amending it
+>>> but  it might turn out to be bit messy,
+>>>
+>>> required properties host ======required properties Endpoint
+>>> ====================||==================
+>>> 1: reg                                || reg
+>>> 2:bus-range                      || reg names
+>>> 3: device_type                  || resets
+>>> 4: ranges                          || clocks
+>>> 5: dma-ranges                  || clock-names
+>>> 6: interrupts                      ||
+>>> 7: interrupt-cells               ||
+>>> 8: interrupt-map-mask     ||
+>>> 9: clocks                          ||
+>>> 10: clock-names             ||
+>>
+>> We have a similar situation with SPI, where a controller can operate in
+>> master or slave mode, based on the absence or presence of the
+>> "spi-slave" DT property.
+>>
+>>> and if I go ahead with the same compatible string that would mean to
+>>> add support for endpoint
+>>> mode in the host driver itself. I did follow the examples of
+>>
+>> You can still have two separate drivers, binding against the same
+>> compatible value.  Just let the .probe() function return -ENODEV if it
+>> discovers (by looking at DT properties) if the node is configured for
+>> the other mode.
+>> Which brings us to my next questions: is there any code that could be
+>> shared between the drivers for the two modes?
+>>
+>>> rockchip/cadence/designware where
+>>> its the same hardware block but has two different binding files one
+>>> for host mode and other for
+>>> endpoint mode.
+>>
+>> Having two separate DT binding documents sounds fine to me, if unifying
+>> them makes things too complex.
+>> However, I think they should use the same compatible value, because the
+>> hardware block is the same, but just used in a different mode.
+>>
+>> Rob/Mark: Any input from the DT maintainers?
+> 
+> Separate files makes sense because different modes will want to 
+> include different common schemas. We've generally been doing different 
+> compatibles too which makes validating the node has the right set of 
+> properties easier.
+>  
+>>>>> +- reg: Five register ranges as listed in the reg-names property
+>>>>> +- reg-names: Must include the following names
+>>>>> +       - "apb-base"
+>>>>> +       - "memory0"
+>>>>> +       - "memory1"
+>>>>> +       - "memory2"
+>>>>> +       - "memory3"
+>>>>
+>>>> What is the purpose of the last 4 regions?
+>>>> Can they be chosen by the driver, at runtime?
+>>>>
+>>> no the driver cannot choose them at runtime, as these are the only
+>>> PCIE memory(0/1/2/3) ranges
+>>> in the AXI address space where host memory can be mapped.
+>>
+>> Are they fixed by the PCIe hardware, i.e. could they be looked up by the
+>> driver based on the compatible value?
+> 
+> That would be strange for a memory range.
+> 
+> Sounds like like 'ranges' though I'm not sure if 'ranges' for an EP 
+> makes sense or what that should look like.
 
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+These are similar to "memory node" with multiple address, size pairs. I'm
+thinking if these should be added as a subnode within PCIe EP controller device
+tree node?
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
-index 3f09d89..7f2c15c 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
-@@ -5408,7 +5408,7 @@ int brcms_c_set_channel(struct brcms_c_info *wlc, u16 channel)
- {
- 	u16 chspec = ch20mhz_chspec(channel);
- 
--	if (channel < 0 || channel > MAXCHANNEL)
-+	if (channel > MAXCHANNEL)
- 		return -EINVAL;
- 
- 	if (!brcms_c_valid_chanspec_db(wlc->cmi, chspec))
--- 
-2.6.2
-
+Thanks
+Kishon
