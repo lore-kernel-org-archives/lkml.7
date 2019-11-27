@@ -7,34 +7,33 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C024C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71217C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A9B2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442D72071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 08:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfK0IUC (ORCPT
+        id S1727154AbfK0IUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:20:02 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43971 "EHLO
+        Wed, 27 Nov 2019 03:20:06 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43968 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbfK0ITi (ORCPT
+        with ESMTP id S1726125AbfK0ITh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 03:19:38 -0500
+        Wed, 27 Nov 2019 03:19:37 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iZsXq-0002Pl-D6; Wed, 27 Nov 2019 09:19:30 +0100
+        id 1iZsXp-0002Pa-Iz; Wed, 27 Nov 2019 09:19:29 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E00B81C1E70;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1F1811C004F;
         Wed, 27 Nov 2019 09:19:29 +0100 (CET)
-Date:   Wed, 27 Nov 2019 08:19:29 -0000
+Date:   Wed, 27 Nov 2019 08:19:28 -0000
 From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/doublefault/32: Rename doublefault.c to
- doublefault_32.c
+Subject: [tip: x86/urgent] x86/ptrace: Document FSBASE and GSBASE ABI oddities
 Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -42,7 +41,7 @@ Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157484276984.21853.4624114312884587222.tip-bot2@tip-bot2>
+Message-ID: <157484276896.21853.7610159468997605731.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,17 +57,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     e99b6f46ee5c127d39d2f3a2682fdeef10386316
-Gitweb:        https://git.kernel.org/tip/e99b6f46ee5c127d39d2f3a2682fdeef10386316
+Commit-ID:     56f2ab41b652251f336a0f471b1033afeaedd161
+Gitweb:        https://git.kernel.org/tip/56f2ab41b652251f336a0f471b1033afeaedd161
 Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Thu, 21 Nov 2019 09:42:30 -08:00
+AuthorDate:    Wed, 17 Jul 2019 06:44:16 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 26 Nov 2019 21:53:34 +01:00
+CommitterDate: Tue, 26 Nov 2019 22:00:12 +01:00
 
-x86/doublefault/32: Rename doublefault.c to doublefault_32.c
-
-doublefault.c now only contains 32-bit code.  Rename it to
-doublefault_32.c.
+x86/ptrace: Document FSBASE and GSBASE ABI oddities
 
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
@@ -77,183 +73,41 @@ Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/Makefile         |  4 +-
- arch/x86/kernel/doublefault.c    | 75 +-------------------------------
- arch/x86/kernel/doublefault_32.c | 71 +++++++++++++++++++++++++++++-
- 3 files changed, 74 insertions(+), 76 deletions(-)
- delete mode 100644 arch/x86/kernel/doublefault.c
- create mode 100644 arch/x86/kernel/doublefault_32.c
+ arch/x86/kernel/ptrace.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 32acb97..6175e37 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -100,7 +100,9 @@ obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
- obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
- obj-y				+= kprobes/
- obj-$(CONFIG_MODULES)		+= module.o
--obj-$(CONFIG_DOUBLEFAULT)	+= doublefault.o
-+ifeq ($(CONFIG_X86_32),y)
-+obj-$(CONFIG_DOUBLEFAULT)	+= doublefault_32.o
-+endif
- obj-$(CONFIG_KGDB)		+= kgdb.o
- obj-$(CONFIG_VM86)		+= vm86_32.o
- obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
-diff --git a/arch/x86/kernel/doublefault.c b/arch/x86/kernel/doublefault.c
-deleted file mode 100644
-index 0b3c616..0000000
---- a/arch/x86/kernel/doublefault.c
-+++ /dev/null
-@@ -1,75 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/mm.h>
--#include <linux/sched.h>
--#include <linux/sched/debug.h>
--#include <linux/init_task.h>
--#include <linux/fs.h>
--
--#include <linux/uaccess.h>
--#include <asm/pgtable.h>
--#include <asm/processor.h>
--#include <asm/desc.h>
--
--#ifdef CONFIG_X86_32
--
--#define DOUBLEFAULT_STACKSIZE (1024)
--static unsigned long doublefault_stack[DOUBLEFAULT_STACKSIZE];
--#define STACK_START (unsigned long)(doublefault_stack+DOUBLEFAULT_STACKSIZE)
--
--#define ptr_ok(x) ((x) > PAGE_OFFSET && (x) < PAGE_OFFSET + MAXMEM)
--
--static void doublefault_fn(void)
--{
--	struct desc_ptr gdt_desc = {0, 0};
--	unsigned long gdt, tss;
--
--	native_store_gdt(&gdt_desc);
--	gdt = gdt_desc.address;
--
--	printk(KERN_EMERG "PANIC: double fault, gdt at %08lx [%d bytes]\n", gdt, gdt_desc.size);
--
--	if (ptr_ok(gdt)) {
--		gdt += GDT_ENTRY_TSS << 3;
--		tss = get_desc_base((struct desc_struct *)gdt);
--		printk(KERN_EMERG "double fault, tss at %08lx\n", tss);
--
--		if (ptr_ok(tss)) {
--			struct x86_hw_tss *t = (struct x86_hw_tss *)tss;
--
--			printk(KERN_EMERG "eip = %08lx, esp = %08lx\n",
--			       t->ip, t->sp);
--
--			printk(KERN_EMERG "eax = %08lx, ebx = %08lx, ecx = %08lx, edx = %08lx\n",
--				t->ax, t->bx, t->cx, t->dx);
--			printk(KERN_EMERG "esi = %08lx, edi = %08lx\n",
--				t->si, t->di);
--		}
--	}
--
--	for (;;)
--		cpu_relax();
--}
--
--struct x86_hw_tss doublefault_tss __cacheline_aligned = {
--	.sp0		= STACK_START,
--	.ss0		= __KERNEL_DS,
--	.ldt		= 0,
--	.io_bitmap_base	= IO_BITMAP_OFFSET_INVALID,
--
--	.ip		= (unsigned long) doublefault_fn,
--	/* 0x2 bit is always set */
--	.flags		= X86_EFLAGS_SF | 0x2,
--	.sp		= STACK_START,
--	.es		= __USER_DS,
--	.cs		= __KERNEL_CS,
--	.ss		= __KERNEL_DS,
--	.ds		= __USER_DS,
--	.fs		= __KERNEL_PERCPU,
--#ifndef CONFIG_X86_32_LAZY_GS
--	.gs		= __KERNEL_STACK_CANARY,
--#endif
--
--	.__cr3		= __pa_nodebug(swapper_pg_dir),
--};
--
--#endif
-diff --git a/arch/x86/kernel/doublefault_32.c b/arch/x86/kernel/doublefault_32.c
-new file mode 100644
-index 0000000..61c707c
---- /dev/null
-+++ b/arch/x86/kernel/doublefault_32.c
-@@ -0,0 +1,71 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/mm.h>
-+#include <linux/sched.h>
-+#include <linux/sched/debug.h>
-+#include <linux/init_task.h>
-+#include <linux/fs.h>
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 3b3b169..f0e1ddb 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -281,6 +281,20 @@ static int set_segment_reg(struct task_struct *task,
+ 	if (invalid_selector(value))
+ 		return -EIO;
+ 
++	/*
++	 * This function has some ABI oddities.
++	 *
++	 * A 32-bit ptracer probably expects that writing FS or GS will change
++	 * FSBASE or GSBASE respectively.  In the absence of FSGSBASE support,
++	 * this code indeed has that effect.  When FSGSBASE is added, this
++	 * will require a special case.
++	 *
++	 * For existing 64-bit ptracers, writing FS or GS *also* currently
++	 * changes the base if the selector is nonzero the next time the task
++	 * is run.  This behavior may not be needed, and trying to preserve it
++	 * when FSGSBASE is added would be complicated at best.
++	 */
 +
-+#include <linux/uaccess.h>
-+#include <asm/pgtable.h>
-+#include <asm/processor.h>
-+#include <asm/desc.h>
-+
-+#define DOUBLEFAULT_STACKSIZE (1024)
-+static unsigned long doublefault_stack[DOUBLEFAULT_STACKSIZE];
-+#define STACK_START (unsigned long)(doublefault_stack+DOUBLEFAULT_STACKSIZE)
-+
-+#define ptr_ok(x) ((x) > PAGE_OFFSET && (x) < PAGE_OFFSET + MAXMEM)
-+
-+static void doublefault_fn(void)
-+{
-+	struct desc_ptr gdt_desc = {0, 0};
-+	unsigned long gdt, tss;
-+
-+	native_store_gdt(&gdt_desc);
-+	gdt = gdt_desc.address;
-+
-+	printk(KERN_EMERG "PANIC: double fault, gdt at %08lx [%d bytes]\n", gdt, gdt_desc.size);
-+
-+	if (ptr_ok(gdt)) {
-+		gdt += GDT_ENTRY_TSS << 3;
-+		tss = get_desc_base((struct desc_struct *)gdt);
-+		printk(KERN_EMERG "double fault, tss at %08lx\n", tss);
-+
-+		if (ptr_ok(tss)) {
-+			struct x86_hw_tss *t = (struct x86_hw_tss *)tss;
-+
-+			printk(KERN_EMERG "eip = %08lx, esp = %08lx\n",
-+			       t->ip, t->sp);
-+
-+			printk(KERN_EMERG "eax = %08lx, ebx = %08lx, ecx = %08lx, edx = %08lx\n",
-+				t->ax, t->bx, t->cx, t->dx);
-+			printk(KERN_EMERG "esi = %08lx, edi = %08lx\n",
-+				t->si, t->di);
-+		}
-+	}
-+
-+	for (;;)
-+		cpu_relax();
-+}
-+
-+struct x86_hw_tss doublefault_tss __cacheline_aligned = {
-+	.sp0		= STACK_START,
-+	.ss0		= __KERNEL_DS,
-+	.ldt		= 0,
-+	.io_bitmap_base	= IO_BITMAP_OFFSET_INVALID,
-+
-+	.ip		= (unsigned long) doublefault_fn,
-+	/* 0x2 bit is always set */
-+	.flags		= X86_EFLAGS_SF | 0x2,
-+	.sp		= STACK_START,
-+	.es		= __USER_DS,
-+	.cs		= __KERNEL_CS,
-+	.ss		= __KERNEL_DS,
-+	.ds		= __USER_DS,
-+	.fs		= __KERNEL_PERCPU,
-+#ifndef CONFIG_X86_32_LAZY_GS
-+	.gs		= __KERNEL_STACK_CANARY,
-+#endif
-+
-+	.__cr3		= __pa_nodebug(swapper_pg_dir),
-+};
+ 	switch (offset) {
+ 	case offsetof(struct user_regs_struct,fs):
+ 		task->thread.fsindex = value;
+@@ -370,6 +384,9 @@ static int putreg(struct task_struct *child,
+ 		 * When changing the FS base, use do_arch_prctl_64()
+ 		 * to set the index to zero and to set the base
+ 		 * as requested.
++		 *
++		 * NB: This behavior is nonsensical and likely needs to
++		 * change when FSGSBASE support is added.
+ 		 */
+ 		if (child->thread.fsbase != value)
+ 			return do_arch_prctl_64(child, ARCH_SET_FS, value);
