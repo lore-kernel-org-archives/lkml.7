@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26F3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40466C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C4F2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06370216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888678;
-	bh=PBdKjAcHh0/xYmzKeZZ8qeouI77njMrZJRvV4742/wA=;
+	s=default; t=1574888683;
+	bh=kqAp3QBxVhcqTGJGRtkpTNDA19iAjS9CSm45alVTbgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S9AL3+iCCj/TrtROmPFb9cETf4buWNv4FL2P9rVmfxi4TrZlH998sBGquXQRXCaZG
-	 dKKNRP/cXTuez/ds11Fip6qi7afDq3YnV9hrjgKcrDdccxRstNT22/Nk8fbIDeA/Gt
-	 PiF44eP70/zGSpSPzM2HeVzdtVZtQzfta//zL2Hc=
+	b=XxVV9hckhEvPvbpbGZqtSovV/mQrTiOJXLKqPZNE0Ntb6tCn+ZTNaKMC0//rtffCi
+	 Fsz/zyr5ki7BivJc3BnxGDeYoMRxF//4bZDT9VNDHAaDTT9SMgaFgrNkI9bl3+yaFQ
+	 I/ROJlM71wyhz+OpFCIPKStZzGlf4eTgRhLGxlbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbfK0VEh (ORCPT
+        id S1732178AbfK0VEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:04:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58108 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:04:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731875AbfK0VEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:04:33 -0500
+        id S1730714AbfK0VEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:04:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D60F20637;
-        Wed, 27 Nov 2019 21:04:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58E92215F1;
+        Wed, 27 Nov 2019 21:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888672;
-        bh=PBdKjAcHh0/xYmzKeZZ8qeouI77njMrZJRvV4742/wA=;
+        s=default; t=1574888677;
+        bh=kqAp3QBxVhcqTGJGRtkpTNDA19iAjS9CSm45alVTbgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t/CHeaBPsBZ2Q8yDQ3g5caate3bKtyVgHy/jzEUvGlioOWPy0oa5mJJkzhM27aSsA
-         bHdnaMeoUL5T+Vzna2nwzEyYcmLL4buB6rPJ2iStA/FmB/9EdbI3bMN05BqyaC/lp3
-         3yjxolt0rer4S/Y4xMaAfOlg+UAupfNzvGH/ne6s=
+        b=2cJupqUuzDAP8POlmmnB8GEN46i+pwiRBKlKkert/cvjrsIQvslv66mGnoDymFY/n
+         C1YFTV8gQ5LtRoyLH/SWVJzgcDzXslyevTGlABW1en2cYxCW1HGQLso9KI6v9PDF1k
+         U3twfU/f4p5W9hgOif5tKUHEdkLL7Kw1V6uyCziE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 224/306] scsi: mpt3sas: Fix Sync cache command failure during driver unload
-Date:   Wed, 27 Nov 2019 21:31:14 +0100
-Message-Id: <20191127203131.415433937@linuxfoundation.org>
+Subject: [PATCH 4.19 226/306] scsi: mpt3sas: Fix driver modifying persistent data in Manufacturing page11
+Date:   Wed, 27 Nov 2019 21:31:16 +0100
+Message-Id: <20191127203131.550624748@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -65,19 +65,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-[ Upstream commit 9029a72500b95578a35877a43473b82cb0386c53 ]
+[ Upstream commit 97f35194093362a63b33caba2485521ddabe2c95 ]
 
-This is to fix SYNC CACHE and START STOP command failures with
-DID_NO_CONNECT during driver unload.
+Currently driver is modifying both current & NVRAM/persistent data in
+Manufacturing page11. Driver should change only current copy of
+Manufacturing page11. It should not modify the persistent data.
 
-In driver's IO submission patch (i.e. in driver's .queuecommand()) driver
-won't allow any SCSI commands to the IOC when ioc->remove_host flag is set
-and hence SYNC CACHE commands which are issued to the target drives (where
-write cache is enabled) during driver unload time is failed with
-DID_NO_CONNECT status.
-
-Now modified the driver to allow SYNC CACHE and START STOP commands to IOC,
-even when remove_host flag is set.
+So removed the section of code where driver is modifying the persistent
+data of Manufacturing page11.
 
 Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
@@ -85,63 +80,24 @@ Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_scsih.c | 36 +++++++++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_config.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index 73d661a0ecbb9..d3c944d997039 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -3791,6 +3791,40 @@ _scsih_tm_tr_complete(struct MPT3SAS_ADAPTER *ioc, u16 smid, u8 msix_index,
- 	return _scsih_check_for_pending_tm(ioc, smid);
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_config.c b/drivers/scsi/mpt3sas/mpt3sas_config.c
+index d29a2dcc7d0ec..9b01c5a7aebd9 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_config.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_config.c
+@@ -692,10 +692,6 @@ mpt3sas_config_set_manufacturing_pg11(struct MPT3SAS_ADAPTER *ioc,
+ 	r = _config_request(ioc, &mpi_request, mpi_reply,
+ 	    MPT3_CONFIG_PAGE_DEFAULT_TIMEOUT, config_page,
+ 	    sizeof(*config_page));
+-	mpi_request.Action = MPI2_CONFIG_ACTION_PAGE_WRITE_NVRAM;
+-	r = _config_request(ioc, &mpi_request, mpi_reply,
+-	    MPT3_CONFIG_PAGE_DEFAULT_TIMEOUT, config_page,
+-	    sizeof(*config_page));
+  out:
+ 	return r;
  }
- 
-+/** _scsih_allow_scmd_to_device - check whether scmd needs to
-+ *				 issue to IOC or not.
-+ * @ioc: per adapter object
-+ * @scmd: pointer to scsi command object
-+ *
-+ * Returns true if scmd can be issued to IOC otherwise returns false.
-+ */
-+inline bool _scsih_allow_scmd_to_device(struct MPT3SAS_ADAPTER *ioc,
-+	struct scsi_cmnd *scmd)
-+{
-+
-+	if (ioc->pci_error_recovery)
-+		return false;
-+
-+	if (ioc->hba_mpi_version_belonged == MPI2_VERSION) {
-+		if (ioc->remove_host)
-+			return false;
-+
-+		return true;
-+	}
-+
-+	if (ioc->remove_host) {
-+
-+		switch (scmd->cmnd[0]) {
-+		case SYNCHRONIZE_CACHE:
-+		case START_STOP:
-+			return true;
-+		default:
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
- 
- /**
-  * _scsih_sas_control_complete - completion routine
-@@ -4623,7 +4657,7 @@ scsih_qcmd(struct Scsi_Host *shost, struct scsi_cmnd *scmd)
- 		return 0;
- 	}
- 
--	if (ioc->pci_error_recovery || ioc->remove_host) {
-+	if (!(_scsih_allow_scmd_to_device(ioc, scmd))) {
- 		scmd->result = DID_NO_CONNECT << 16;
- 		scmd->scsi_done(scmd);
- 		return 0;
 -- 
 2.20.1
 
