@@ -2,131 +2,112 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533CBC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24836C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3526021741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7B721556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:22:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574889773;
+	bh=TSfcfKMerSp3xOiFklG5ABCAq1n+d8pMG/0OHuwn+yU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gjQck48FZLiauuaqAd39Ob37ilI1BYPpMWzY7HLqCWqblA2VfJAWhakEdB2O5y0EI
+	 sX2zwLfosfEbXZvOUukDngizB2D/rF2r5UNgpBM7kfQuM8lj/xptEBPdSkWm6Z8ORC
+	 V9mj0veh/WWivJql5zI5QzghPzK++AehkC9Fipu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbfK0VWk (ORCPT
+        id S1732441AbfK0VWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:22:40 -0500
-Received: from www62.your-server.de ([213.133.104.62]:59214 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbfK0VWh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:22:37 -0500
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1ia4ld-00023l-3D; Wed, 27 Nov 2019 22:22:33 +0100
-Received: from [178.197.248.11] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1ia4lc-000N2Z-Gw; Wed, 27 Nov 2019 22:22:32 +0100
-Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-References: <20191127094837.4045-1-jolsa@kernel.org>
- <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
- <CAEf4BzaDxnF0Ppfo5r5ma3ht033bWjQ78oiBzB=F40_Np=AKhw@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <14accea8-a35f-5be3-607c-f5e1e7dff310@iogearbox.net>
-Date:   Wed, 27 Nov 2019 22:22:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 27 Nov 2019 16:22:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732274AbfK0VFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:05:22 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5AFD2166E;
+        Wed, 27 Nov 2019 21:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574888722;
+        bh=TSfcfKMerSp3xOiFklG5ABCAq1n+d8pMG/0OHuwn+yU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lDXfgidZJD8oIO/JnWTtZlaXRwYvWdHr9Ulvxz1e3yh/+Tg70GQsXwFL8z7M5SlTm
+         00gVqHUp9simhk8zuMq54M+I55PzVXAQXiMlDHFumU9h8+9xHdUerE7UMIRuvOmBbB
+         Aj4gBHor5nLkcYoup72j8xqyICzlfmdA7GOHeDhE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 245/306] pinctrl: bcm2835: Use define directive for BCM2835_PINCONF_PARAM_PULL
+Date:   Wed, 27 Nov 2019 21:31:35 +0100
+Message-Id: <20191127203132.838482192@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
+References: <20191127203114.766709977@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAEf4BzaDxnF0Ppfo5r5ma3ht033bWjQ78oiBzB=F40_Np=AKhw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25646/Wed Nov 27 11:06:44 2019)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/27/19 9:24 PM, Andrii Nakryiko wrote:
-> On Wed, Nov 27, 2019 at 8:38 AM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
->> On Wed, Nov 27, 2019 at 1:48 AM Jiri Olsa <jolsa@kernel.org> wrote:
->>>
->>> hi,
->>> adding support to link bpftool with libbpf dynamically,
->>> and config change for perf.
->>>
->>> It's now possible to use:
->>>    $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1
->>>
->>> which will detect libbpf devel package with needed version,
->>> and if found, link it with bpftool.
->>>
->>> It's possible to use arbitrary installed libbpf:
->>>    $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/libbpf/
->>>
->>> I based this change on top of Arnaldo's perf/core, because
->>> it contains libbpf feature detection code as dependency.
->>> It's now also synced with latest bpf-next, so Toke's change
->>> applies correctly.
->>
->> I don't like it.
->> Especially Toke's patch to expose netlink as public and stable libbpf api.
->> bpftools needs to stay tightly coupled with libbpf (and statically
->> linked for that reason).
->> Otherwise libbpf will grow a ton of public api that would have to be stable
->> and will quickly become a burden.
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-+1, and would also be out of scope from a BPF library point of view.
+[ Upstream commit b40ac08ff886302a6aa457fd72e94a969f50e245 ]
 
-> I second that. I'm currently working on adding few more APIs that I'd
-> like to keep unstable for a while, until we have enough real-world
-> usage (and feedback) accumulated, before we stabilize them. With
-> LIBBPF_API and a promise of stable API, we are going to over-stress
-> and over-design APIs, potentially making them either too generic and
-> bloated, or too limited (and thus become deprecated almost at
-> inception time). I'd like to take that pressure off for a super-new
-> and in flux APIs and not hamper the progress.
-> 
-> I'm thinking of splitting off those non-stable, sort-of-internal APIs
-> into separate libbpf-experimental.h (or whatever name makes sense),
-> and let those be used only by tools like bpftool, which are only ever
-> statically link against libbpf and are ok with occasional changes to
-> those APIs (which we'll obviously fix in bpftool as well). Pahole
-> seems like another candidate that fits this bill and we might expose
-> some stuff early on to it, if it provides tangible benefits (e.g., BTF
-> dedup speeds ups, etc).
-> 
-> Then as APIs mature, we might decide to move them into libbpf.h with
-> LIBBPF_API slapped onto them. Any objections?
+Clang warns when one enumerated type is implicitly converted to another:
 
-I don't think adding yet another libbpf_experimental.h makes sense, it feels
-too much of an invitation to add all sort of random stuff in there. We already
-do have libbpf.h and libbpf_internal.h, so everything that does not relate to
-the /stable and public/ API should be moved from libbpf.h into libbpf_internal.h
-such as the netlink helpers, as one example, and bpftool can use these since
-in-tree changes also cover the latter just fine. So overall, same page, just
-reuse/improve libbpf_internal.h instead of a new libbpf_experimental.h.
+drivers/pinctrl/bcm/pinctrl-bcm2835.c:707:40: warning: implicit
+conversion from enumeration type 'enum bcm2835_pinconf_param' to
+different enumeration type 'enum pin_config_param' [-Wenum-conversion]
+        configs[0] = pinconf_to_config_packed(BCM2835_PINCONF_PARAM_PULL, pull);
+                     ~~~~~~~~~~~~~~~~~~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
 
-Thanks,
-Daniel
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index 08925d24180b0..1bd3c10ce1893 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -72,10 +72,8 @@
+ #define GPIO_REG_OFFSET(p)	((p) / 32)
+ #define GPIO_REG_SHIFT(p)	((p) % 32)
+ 
+-enum bcm2835_pinconf_param {
+-	/* argument: bcm2835_pinconf_pull */
+-	BCM2835_PINCONF_PARAM_PULL = (PIN_CONFIG_END + 1),
+-};
++/* argument: bcm2835_pinconf_pull */
++#define BCM2835_PINCONF_PARAM_PULL	(PIN_CONFIG_END + 1)
+ 
+ struct bcm2835_pinctrl {
+ 	struct device *dev;
+-- 
+2.20.1
+
+
+
