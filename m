@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8036C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E035DC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B80D2154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A880C21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889703;
-	bh=nfS1Bvz/Gc6ID7OsOKV+BI/hrTRDWNcVHNNvsdEfMWI=;
+	s=default; t=1574889709;
+	bh=/owAWAfWpzYBTAYkM82lVwXJD9Kz4nA/JxzbBtagY9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ldv/lKh0qpybCh8wwfZKBKytk1/BckNOFehTGd8/BQnrpkcp8uRyC8sugtywxy1OC
-	 Rm3M0sodQ3SXCSvzaiiF5cT/jeJnYhb6yi1yCKf2L9kdvhBc6Rm/C9qSenKijlGc68
-	 bJQ/ulnafUX0CD/Lx0jBK22Gj8Mp2eMn78xv1v3Y=
+	b=pNtpXVTb8Ss5SIU3UaGqx4nJj/MEiXIk2E8D/Zb7Z6Fzbvu3omw2BW+18Z8YSIGAe
+	 qCj6DPsWCgOfZZoAzYzrpBPfI+/RqpYgnCESGdh+BqFkho0R6SHxg0H3uA1maiVBw0
+	 KQp1/zyNT1UDetV4X8gKOx3iYRECtM6LTWhDu5j8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730860AbfK0VVm (ORCPT
+        id S1732494AbfK0VGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:21:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32834 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:06:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731750AbfK0VGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:06:52 -0500
+        id S1732473AbfK0VGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:06:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD5462086A;
-        Wed, 27 Nov 2019 21:06:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 647B62080F;
+        Wed, 27 Nov 2019 21:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888812;
-        bh=nfS1Bvz/Gc6ID7OsOKV+BI/hrTRDWNcVHNNvsdEfMWI=;
+        s=default; t=1574888801;
+        bh=/owAWAfWpzYBTAYkM82lVwXJD9Kz4nA/JxzbBtagY9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xXWDDGOaVN6OqHSF3xjcsmZmpHp/I6syUppfUuAS05+mkoIcbJDeLKeoEsBzLPxEA
-         QFQ1a4+Z+UWUWvnzFEW7e0buhy5vnMNLJ73eOJj/DYj3igovFVokxE1jfVoJu13vlu
-         zdjjSrq9HLqpN4KKMH0I4RVjF+ubBq2096CVyn2E=
+        b=n5DZ015a4XIhWIyj6ynOx2JauxTOOu6/13S7R16G28MW3loOnSI+ue3NcIeebmGuT
+         gnwc2YfVOh/6lphokBZ7qUprcmwjebBhw3JnoxXyGGEk5ujERuDJcavfOOsVzLeoWp
+         QuCYMCAUMlUh5+XYSKDSfj47msjN/Uiyybp2cfww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 4.19 277/306] x86/entry/32: Fix FIXUP_ESPFIX_STACK with user CR3
-Date:   Wed, 27 Nov 2019 21:32:07 +0100
-Message-Id: <20191127203135.043436214@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org
+Subject: [PATCH 4.19 273/306] x86/cpu_entry_area: Add guard page for entry stack on 32bit
+Date:   Wed, 27 Nov 2019 21:32:03 +0100
+Message-Id: <20191127203134.762505647@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,68 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 4a13b0e3e10996b9aa0b45a764ecfe49f6fcd360 upstream.
+commit 880a98c339961eaa074393e3a2117cbe9125b8bb upstream.
 
-UNWIND_ESPFIX_STACK needs to read the GDT, and the GDT mapping that
-can be accessed via %fs is not mapped in the user pagetables.  Use
-SGDT to find the cpu_entry_area mapping and read the espfix offset
-from that instead.
+The entry stack in the cpu entry area is protected against overflow by the
+readonly GDT on 64-bit, but on 32-bit the GDT needs to be writeable and
+therefore does not trigger a fault on stack overflow.
 
-Reported-and-tested-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Add a guard page.
+
+Fixes: c482feefe1ae ("x86/entry/64: Make cpu_entry_area.tss read-only")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_32.S |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/cpu_entry_area.h |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -315,7 +315,8 @@
+--- a/arch/x86/include/asm/cpu_entry_area.h
++++ b/arch/x86/include/asm/cpu_entry_area.h
+@@ -20,8 +20,12 @@ struct cpu_entry_area {
  
- .macro CHECK_AND_APPLY_ESPFIX
- #ifdef CONFIG_X86_ESPFIX32
--#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + (GDT_ENTRY_ESPFIX_SS * 8)
-+#define GDT_ESPFIX_OFFSET (GDT_ENTRY_ESPFIX_SS * 8)
-+#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + GDT_ESPFIX_OFFSET
+ 	/*
+ 	 * The GDT is just below entry_stack and thus serves (on x86_64) as
+-	 * a a read-only guard page.
++	 * a read-only guard page. On 32-bit the GDT must be writeable, so
++	 * it needs an extra guard page.
+ 	 */
++#ifdef CONFIG_X86_32
++	char guard_entry_stack[PAGE_SIZE];
++#endif
+ 	struct entry_stack_page entry_stack_page;
  
- 	ALTERNATIVE	"jmp .Lend_\@", "", X86_BUG_ESPFIX
- 
-@@ -1056,12 +1057,26 @@ ENDPROC(entry_INT80_32)
-  * We can't call C functions using the ESPFIX stack. This code reads
-  * the high word of the segment base from the GDT and swiches to the
-  * normal stack and adjusts ESP with the matching offset.
-+ *
-+ * We might be on user CR3 here, so percpu data is not mapped and we can't
-+ * access the GDT through the percpu segment.  Instead, use SGDT to find
-+ * the cpu_entry_area alias of the GDT.
-  */
- #ifdef CONFIG_X86_ESPFIX32
- 	/* fixup the stack */
--	mov	GDT_ESPFIX_SS + 4, %al /* bits 16..23 */
--	mov	GDT_ESPFIX_SS + 7, %ah /* bits 24..31 */
-+	pushl	%ecx
-+	subl	$2*4, %esp
-+	sgdt	(%esp)
-+	movl	2(%esp), %ecx				/* GDT address */
-+	/*
-+	 * Careful: ECX is a linear pointer, so we need to force base
-+	 * zero.  %cs is the only known-linear segment we have right now.
-+	 */
-+	mov	%cs:GDT_ESPFIX_OFFSET + 4(%ecx), %al	/* bits 16..23 */
-+	mov	%cs:GDT_ESPFIX_OFFSET + 7(%ecx), %ah	/* bits 24..31 */
- 	shl	$16, %eax
-+	addl	$2*4, %esp
-+	popl	%ecx
- 	addl	%esp, %eax			/* the adjusted stack pointer */
- 	pushl	$__KERNEL_DS
- 	pushl	%eax
+ 	/*
 
 
