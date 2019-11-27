@@ -2,146 +2,89 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A90C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16EF20870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891248;
-	bh=EkA1v2/1S366xNgUBA8JF1UoqzxfzHPPRcLBNop72jg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=fq5BuueUQ6FnJfKUzfCBJIQpHwwquVBY/zFjA/MY1mxkuDxyAkd/I3RApiIsgEFk8
-	 nRUcvYnjJtH+9RS4uQn3CY3VU11YbP7FFPx+MsLSwC5E8XX2oMOvI6LU/MIv909sZo
-	 TcDj29PPfzJ/RqRfA2E14qNuPeSpIFrrp6PvFFaw=
+	by mail.kernel.org (Postfix) with ESMTP id 27EC720870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfK0Vr1 (ORCPT
+        id S1727667AbfK0VuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:47:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727491AbfK0Vr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:47:27 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D574420869;
-        Wed, 27 Nov 2019 21:47:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574891245;
-        bh=EkA1v2/1S366xNgUBA8JF1UoqzxfzHPPRcLBNop72jg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=L6yhIeX7vtUrVoZIffP/tyZL5DNmbG1YiL9mIQjZQzz/LICwd+ImdBHrT5GstwJLl
-         yb2BOXbZvt0vSsKxef1qXTSTE/p7tKpoG8+4GMmD7qT7/HQIy5RnwePNoL0vY1QH9H
-         qoLOfaP8YkPp96MCHRj1tspm87P4GP6w694oua/Y=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A6B2A352151A; Wed, 27 Nov 2019 13:47:25 -0800 (PST)
-Date:   Wed, 27 Nov 2019 13:47:25 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 12/14] torture: Replace cpu_up/down with
- device_online/offline
-Message-ID: <20191127214725.GG2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191125112754.25223-1-qais.yousef@arm.com>
- <20191125112754.25223-13-qais.yousef@arm.com>
+        Wed, 27 Nov 2019 16:50:00 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:49304 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727194AbfK0Vt7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:49:59 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 7D0BD22B48;
+        Wed, 27 Nov 2019 16:49:55 -0500 (EST)
+Date:   Thu, 28 Nov 2019 08:49:53 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>
+cc:     Andrea Vai <andrea.vai@unipv.it>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+In-Reply-To: <cb6e84781c4542229a3f31572cef19ab@SVR-IES-MBX-03.mgc.mentorg.com>
+Message-ID: <alpine.LNX.2.21.1.1911280830520.8@nippy.intranet>
+References: <20191109222828.GA30568@ming.t460p>         <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>         <20191123072726.GC25356@ming.t460p>         <a9ffcca93657cbbb56819fd883c474a702423b41.camel@unipv.it>         <20191125035437.GA3806@ming.t460p>
+         <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>         <20191125102928.GA20489@ming.t460p>         <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>         <20191125151535.GA8044@ming.t460p>        
+ <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>         <20191126023253.GA24501@ming.t460p> <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it> <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
+ <cb6e84781c4542229a3f31572cef19ab@SVR-IES-MBX-03.mgc.mentorg.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191125112754.25223-13-qais.yousef@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 11:27:52AM +0000, Qais Yousef wrote:
-> The core device API performs extra housekeeping bits that are missing
-> from directly calling cpu_up/down.
-> 
-> See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
-> serialization during LPM") for an example description of what might go
-> wrong.
-> 
-> This also prepares to make cpu_up/down a private interface for anything
-> but the cpu subsystem.
-> 
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> CC: Davidlohr Bueso <dave@stgolabs.net>
-> CC: "Paul E. McKenney" <paulmck@kernel.org>
-> CC: Josh Triplett <josh@joshtriplett.org>
-> CC: linux-kernel@vger.kernel.org
+On Wed, 27 Nov 2019, Schmid, Carsten wrote:
 
-Looks fine from an rcutorture viewpoint, but why not provide an API
-that pulled lock_device_hotplug() and unlock_device_hotplug() into the
-online/offline calls?
-
-							Thanx, Paul
-
-> ---
->  kernel/torture.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
+> > 
+> > The sheer volume of testing (probably some terabytes by now) would 
+> > exercise the wear leveling algorithm in the FTL.
+> > 
+> But with "old kernel" the copy operation still is "fast", as far as i 
+> understood. If FTL (e.g. wear leveling) would slow down, we would see 
+> that also in the old kernel, right?
 > 
-> diff --git a/kernel/torture.c b/kernel/torture.c
-> index 7c13f5558b71..12115024feb2 100644
-> --- a/kernel/torture.c
-> +++ b/kernel/torture.c
-> @@ -97,7 +97,9 @@ bool torture_offline(int cpu, long *n_offl_attempts, long *n_offl_successes,
->  			 torture_type, cpu);
->  	starttime = jiffies;
->  	(*n_offl_attempts)++;
-> -	ret = cpu_down(cpu);
-> +	lock_device_hotplug();
-> +	ret = device_offline(get_cpu_device(cpu));
-> +	unlock_device_hotplug();
->  	if (ret) {
->  		if (verbose)
->  			pr_alert("%s" TORTURE_FLAG
-> @@ -148,7 +150,9 @@ bool torture_online(int cpu, long *n_onl_attempts, long *n_onl_successes,
->  			 torture_type, cpu);
->  	starttime = jiffies;
->  	(*n_onl_attempts)++;
-> -	ret = cpu_up(cpu);
-> +	lock_device_hotplug();
-> +	ret = device_online(get_cpu_device(cpu));
-> +	unlock_device_hotplug();
->  	if (ret) {
->  		if (verbose)
->  			pr_alert("%s" TORTURE_FLAG
-> @@ -192,17 +196,20 @@ torture_onoff(void *arg)
->  	for_each_online_cpu(cpu)
->  		maxcpu = cpu;
->  	WARN_ON(maxcpu < 0);
-> -	if (!IS_MODULE(CONFIG_TORTURE_TEST))
-> +	if (!IS_MODULE(CONFIG_TORTURE_TEST)) {
-> +		lock_device_hotplug();
->  		for_each_possible_cpu(cpu) {
->  			if (cpu_online(cpu))
->  				continue;
-> -			ret = cpu_up(cpu);
-> +			ret = device_online(get_cpu_device(cpu));
->  			if (ret && verbose) {
->  				pr_alert("%s" TORTURE_FLAG
->  					 "%s: Initial online %d: errno %d\n",
->  					 __func__, torture_type, cpu, ret);
->  			}
->  		}
-> +		unlock_device_hotplug();
-> +	}
->  
->  	if (maxcpu == 0) {
->  		VERBOSE_TOROUT_STRING("Only one CPU, so CPU-hotplug testing is disabled");
-> -- 
-> 2.17.1
-> 
+> Andrea, can you confirm that the same device used with the old fast 
+> kernel is still fast today?
+
+You seem to be saying we should optimize the kernel for a pathological 
+use-case merely because it used to be fast before the blk-mq conversion. 
+That makes no sense to me. I suppose you have information that I don't.
+
+I assume that your employer (and the other corporations involved in this) 
+have plenty of regression test results from a variety of flash hardware to 
+show that the regression is real and the device is not pathological.
+
+I'm not privy to any of that information so I will shut up and leave you 
+guys to it.
+
+-- 
+
+> > This in itself seems unlikely to improve performance significantly. 
+> > But if the flash memory came from a bad batch, perhaps it would have 
+> > that effect.
+> > 
+> > To find out, someone may need to source another (genuine) Kingston 
+> > DataTraveller device.
+> > 
