@@ -2,51 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED100C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63B0C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B892620869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD3920869
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891147;
-	bh=5XTVctNyzk6Pgxq8rjqvXvZW0PO39MZ7Adbv+jjPc3k=;
+	s=default; t=1574891153;
+	bh=detVZUwgRyHVtddSUN/iavcWIqSHjmcqFrt8yqmE6bQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j3qJP5hSUzDQpGcxyNUG81yCFvvfhtcFZy+eEUNjpMXoWVZnWlnD9kiycneTEvQ6i
-	 wEvytESp/1XRWeVTgPkqTpzbifgAK3KH54uzy2d7jqXLjqM58US8XP/6g2F692xK8K
-	 4HDG1fKJZKK7HxXj50dC60t8IwpEW9BX1aw52Cn0=
+	b=0yihpML0/R3UtVs2f/hu1mUiAyC3uFwlfnULbvXjT5i6+pLDPfazS/iPEGINTR2cQ
+	 OMdo3qXBJ3XoSI5F7lcTqNulrDpgaBL91bJeZcypCOg1qyiLpYjUuLMJoK3l1p2ckE
+	 NIUFT+tTkkwnet2YX8R9Y7lobQr7Ak6AVwjEIMHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfK0Vpr (ORCPT
+        id S1729080AbfK0Vpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:45:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36220 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:45:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbfK0UfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:35:13 -0500
+        id S1727771AbfK0UfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:35:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D387920866;
-        Wed, 27 Nov 2019 20:35:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8266216C8;
+        Wed, 27 Nov 2019 20:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886913;
-        bh=5XTVctNyzk6Pgxq8rjqvXvZW0PO39MZ7Adbv+jjPc3k=;
+        s=default; t=1574886900;
+        bh=detVZUwgRyHVtddSUN/iavcWIqSHjmcqFrt8yqmE6bQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LRSLpa7RFoK3MJg2JlmOVtEQi5TQp3WqykReIPICRRtltmfPz/uiXxbEfZL4SBgIH
-         yOZVDmfbpCYFjhIty2jbqCZeLPx+b8fZ5jqbB+0YD8Tfxz3JOtsRhFAF/3NLRh/lTk
-         20h2hXoJDD21FkiefyMW1PwKKP5sB1dodH7lPrrM=
+        b=c2AWs4qmnUks1YM7QnH7ccn5A2rZYfUjlIOYgEn/eP0zWfRTWSrqNtHlhE9lv+f2o
+         x3RB3/XKX803BkQyYsHrWmg4+4GensqV57bS52eVKZghZqsd6LdVzMtd/AORdbYtxz
+         80a2jce17Ac5mFblQMQ4AEP8SqLOT+Gst/sH1nFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 024/132] synclink_gt(): fix compat_ioctl()
-Date:   Wed, 27 Nov 2019 21:30:15 +0100
-Message-Id: <20191127202920.953069607@linuxfoundation.org>
+Subject: [PATCH 4.4 037/132] scsi: isci: Change sci_controller_start_tasks return type to sci_status
+Date:   Wed, 27 Nov 2019 21:30:28 +0100
+Message-Id: <20191127202932.379168929@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -59,60 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 27230e51349fde075598c1b59d15e1ff802f3f6e ]
+[ Upstream commit 362b5da3dfceada6e74ecdd7af3991bbe42c0c0f ]
 
-compat_ptr() for pointer-taking ones...
+Clang warns when an enumerated type is implicitly converted to another.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+drivers/scsi/isci/request.c:3476:13: warning: implicit conversion from
+enumeration type 'enum sci_task_status' to different enumeration type
+'enum sci_status' [-Wenum-conversion]
+                        status = sci_controller_start_task(ihost,
+                               ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/isci/host.c:2744:10: warning: implicit conversion from
+enumeration type 'enum sci_status' to different enumeration type 'enum
+sci_task_status' [-Wenum-conversion]
+                return SCI_SUCCESS;
+                ~~~~~~ ^~~~~~~~~~~
+drivers/scsi/isci/host.c:2753:9: warning: implicit conversion from
+enumeration type 'enum sci_status' to different enumeration type 'enum
+sci_task_status' [-Wenum-conversion]
+        return status;
+        ~~~~~~ ^~~~~~
+
+Avoid all of these implicit conversion by just making
+sci_controller_start_task use sci_status. This silences
+Clang and has no functional change since sci_task_status
+has all of its values mapped to something in sci_status.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/153
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/synclink_gt.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ drivers/scsi/isci/host.c | 8 ++++----
+ drivers/scsi/isci/host.h | 2 +-
+ drivers/scsi/isci/task.c | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/tty/synclink_gt.c b/drivers/tty/synclink_gt.c
-index 6fc39fbfc2755..b5145e8bdf0a2 100644
---- a/drivers/tty/synclink_gt.c
-+++ b/drivers/tty/synclink_gt.c
-@@ -1192,14 +1192,13 @@ static long slgt_compat_ioctl(struct tty_struct *tty,
- 			 unsigned int cmd, unsigned long arg)
+diff --git a/drivers/scsi/isci/host.c b/drivers/scsi/isci/host.c
+index 609dafd661d14..da4583a2fa23e 100644
+--- a/drivers/scsi/isci/host.c
++++ b/drivers/scsi/isci/host.c
+@@ -2717,9 +2717,9 @@ enum sci_status sci_controller_continue_io(struct isci_request *ireq)
+  *    the task management request.
+  * @task_request: the handle to the task request object to start.
+  */
+-enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
+-					       struct isci_remote_device *idev,
+-					       struct isci_request *ireq)
++enum sci_status sci_controller_start_task(struct isci_host *ihost,
++					  struct isci_remote_device *idev,
++					  struct isci_request *ireq)
  {
- 	struct slgt_info *info = tty->driver_data;
--	int rc = -ENOIOCTLCMD;
-+	int rc;
+ 	enum sci_status status;
  
- 	if (sanity_check(info, tty->name, "compat_ioctl"))
- 		return -ENODEV;
- 	DBGINFO(("%s compat_ioctl() cmd=%08X\n", info->device_name, cmd));
- 
- 	switch (cmd) {
--
- 	case MGSL_IOCSPARAMS32:
- 		rc = set_params32(info, compat_ptr(arg));
- 		break;
-@@ -1219,18 +1218,11 @@ static long slgt_compat_ioctl(struct tty_struct *tty,
- 	case MGSL_IOCWAITGPIO:
- 	case MGSL_IOCGXSYNC:
- 	case MGSL_IOCGXCTRL:
--	case MGSL_IOCSTXIDLE:
--	case MGSL_IOCTXENABLE:
--	case MGSL_IOCRXENABLE:
--	case MGSL_IOCTXABORT:
--	case TIOCMIWAIT:
--	case MGSL_IOCSIF:
--	case MGSL_IOCSXSYNC:
--	case MGSL_IOCSXCTRL:
--		rc = ioctl(tty, cmd, arg);
-+		rc = ioctl(tty, cmd, (unsigned long)compat_ptr(arg));
- 		break;
-+	default:
-+		rc = ioctl(tty, cmd, arg);
+@@ -2728,7 +2728,7 @@ enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
+ 			 "%s: SCIC Controller starting task from invalid "
+ 			 "state\n",
+ 			 __func__);
+-		return SCI_TASK_FAILURE_INVALID_STATE;
++		return SCI_FAILURE_INVALID_STATE;
  	}
--
- 	DBGINFO(("%s compat_ioctl() cmd=%08X rc=%d\n", info->device_name, cmd, rc));
- 	return rc;
- }
+ 
+ 	status = sci_remote_device_start_task(ihost, idev, ireq);
+diff --git a/drivers/scsi/isci/host.h b/drivers/scsi/isci/host.h
+index 22a9bb1abae14..15dc6e0d8deb0 100644
+--- a/drivers/scsi/isci/host.h
++++ b/drivers/scsi/isci/host.h
+@@ -490,7 +490,7 @@ enum sci_status sci_controller_start_io(
+ 	struct isci_remote_device *idev,
+ 	struct isci_request *ireq);
+ 
+-enum sci_task_status sci_controller_start_task(
++enum sci_status sci_controller_start_task(
+ 	struct isci_host *ihost,
+ 	struct isci_remote_device *idev,
+ 	struct isci_request *ireq);
+diff --git a/drivers/scsi/isci/task.c b/drivers/scsi/isci/task.c
+index 6dcaed0c1fc8c..fb6eba331ac6e 100644
+--- a/drivers/scsi/isci/task.c
++++ b/drivers/scsi/isci/task.c
+@@ -258,7 +258,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
+ 				 struct isci_tmf *tmf, unsigned long timeout_ms)
+ {
+ 	DECLARE_COMPLETION_ONSTACK(completion);
+-	enum sci_task_status status = SCI_TASK_FAILURE;
++	enum sci_status status = SCI_FAILURE;
+ 	struct isci_request *ireq;
+ 	int ret = TMF_RESP_FUNC_FAILED;
+ 	unsigned long flags;
+@@ -301,7 +301,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
+ 	/* start the TMF io. */
+ 	status = sci_controller_start_task(ihost, idev, ireq);
+ 
+-	if (status != SCI_TASK_SUCCESS) {
++	if (status != SCI_SUCCESS) {
+ 		dev_dbg(&ihost->pdev->dev,
+ 			 "%s: start_io failed - status = 0x%x, request = %p\n",
+ 			 __func__,
 -- 
 2.20.1
 
