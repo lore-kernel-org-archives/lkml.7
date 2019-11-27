@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4D0C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDEAC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE06F21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F88C2178F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889641;
-	bh=bh4SqCjFKFTC4hPHeEUDcPS3MRbmu9WKzAozBWFuTJw=;
+	s=default; t=1574889646;
+	bh=m6oBoft1WRdCtW4miUa2IMCrd0dpZGEKfjJAi5p7wl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xD6UtxElIQA2YTZhGaCMoLqgjbU1kTVDZTeoXWi2Z6IzKPldmsjdzGeL8YbfwVyWm
-	 mhugfkatZApUmR1hVJmht2okllGEoGuqy7AkKyW0MpizoQS+kVGDN/CH1zsi9cxHn1
-	 w2VI9VAzCG/XsiSkWLg8Ds4EvQeCbMxc3pEuQr7c=
+	b=ScUlAu3/zfMam2v/tPLBzbB328sxbUvpMhpa+zmwtib3AFdTp7P0cpx768twSuC5y
+	 Uj/z1U9/KT5eZZnTaQJ0n8RDyz0jG2on69x1eP0ZPsaOL6FrxcBAChqoNtHPwB/xGz
+	 ceHjSzq4/FQz5PHyp5006ctPP3i2i5qGBC/jGCM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732771AbfK0VIh (ORCPT
+        id S1732121AbfK0VI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:08:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35032 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:08:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732372AbfK0VId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:08:33 -0500
+        id S1732728AbfK0VIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:08:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83349215F1;
-        Wed, 27 Nov 2019 21:08:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4480A2176D;
+        Wed, 27 Nov 2019 21:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888913;
-        bh=bh4SqCjFKFTC4hPHeEUDcPS3MRbmu9WKzAozBWFuTJw=;
+        s=default; t=1574888899;
+        bh=m6oBoft1WRdCtW4miUa2IMCrd0dpZGEKfjJAi5p7wl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bz8IDKxxHYMV72iz9YKt996O0yPekC0nYsheVeokRmqf40gpWksjBQrKrkaQ+8k3g
-         fL4kAFqxIPe/YvsbG64Y3wozEKabNEnuevgqGq8YtG3AsVi+yleMQfdXqz1bZqRqYy
-         2hXHyNn/VnuvFgDRoE8e+bUA7F8IQ6Hkt5sizxdE=
+        b=VVQSDU/93DJmf+LwDymC1x7c5QH+2tjwcYO8ejx22/BDTHvnQVMDL0Kv/05OHi9lE
+         iQQQjjE16CGLBGeIvkjqN+LlSCjo715TjvnuQSfF3fHGFd3sP3dFZNDBmwvN8lqc7p
+         li6faYMBEv58VnrMtebNOQoDHdC0Xz/dgvf680d4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 12/95] ipv6/route: return if there is no fib_nh_gw_family
-Date:   Wed, 27 Nov 2019 21:31:29 +0100
-Message-Id: <20191127202850.020132831@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c86454eb3af9e8a4da20@syzkaller.appspotmail.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 287/306] media: uvcvideo: Fix error path in control parsing failure
+Date:   Wed, 27 Nov 2019 21:32:17 +0100
+Message-Id: <20191127203135.748452220@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
-References: <20191127202845.651587549@linuxfoundation.org>
+In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
+References: <20191127203114.766709977@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,34 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 004b39427f945696db30abb2c4e1a3856ffff819 ]
+commit 8c279e9394cade640ed86ec6c6645a0e7df5e0b6 upstream.
 
-Previously we will return directly if (!rt || !rt->fib6_nh.fib_nh_gw_family)
-in function rt6_probe(), but after commit cc3a86c802f0
-("ipv6: Change rt6_probe to take a fib6_nh"), the logic changed to
-return if there is fib_nh_gw_family.
+When parsing the UVC control descriptors fails, the error path tries to
+cleanup a media device that hasn't been initialised, potentially
+resulting in a crash. Fix this by initialising the media device before
+the error handling path can be reached.
 
-Fixes: cc3a86c802f0 ("ipv6: Change rt6_probe to take a fib6_nh")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 5a254d751e52 ("[media] uvcvideo: Register a v4l2_device")
+Reported-by: syzbot+c86454eb3af9e8a4da20@syzkaller.appspotmail.com
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/route.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -634,7 +634,7 @@ static void rt6_probe(struct fib6_nh *fi
- 	 * Router Reachability Probe MUST be rate-limited
- 	 * to no more than one per minute.
- 	 */
--	if (fib6_nh->fib_nh_gw_family)
-+	if (!fib6_nh->fib_nh_gw_family)
- 		return;
+---
+ drivers/media/usb/uvc/uvc_driver.c |   28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
+
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -2124,6 +2124,20 @@ static int uvc_probe(struct usb_interfac
+ 			   sizeof(dev->name) - len);
+ 	}
  
- 	nh_gw = &fib6_nh->fib_nh_gw6;
++	/* Initialize the media device. */
++#ifdef CONFIG_MEDIA_CONTROLLER
++	dev->mdev.dev = &intf->dev;
++	strscpy(dev->mdev.model, dev->name, sizeof(dev->mdev.model));
++	if (udev->serial)
++		strscpy(dev->mdev.serial, udev->serial,
++			sizeof(dev->mdev.serial));
++	usb_make_path(udev, dev->mdev.bus_info, sizeof(dev->mdev.bus_info));
++	dev->mdev.hw_revision = le16_to_cpu(udev->descriptor.bcdDevice);
++	media_device_init(&dev->mdev);
++
++	dev->vdev.mdev = &dev->mdev;
++#endif
++
+ 	/* Parse the Video Class control descriptor. */
+ 	if (uvc_parse_control(dev) < 0) {
+ 		uvc_trace(UVC_TRACE_PROBE, "Unable to parse UVC "
+@@ -2144,19 +2158,7 @@ static int uvc_probe(struct usb_interfac
+ 			"linux-uvc-devel mailing list.\n");
+ 	}
+ 
+-	/* Initialize the media device and register the V4L2 device. */
+-#ifdef CONFIG_MEDIA_CONTROLLER
+-	dev->mdev.dev = &intf->dev;
+-	strlcpy(dev->mdev.model, dev->name, sizeof(dev->mdev.model));
+-	if (udev->serial)
+-		strlcpy(dev->mdev.serial, udev->serial,
+-			sizeof(dev->mdev.serial));
+-	strcpy(dev->mdev.bus_info, udev->devpath);
+-	dev->mdev.hw_revision = le16_to_cpu(udev->descriptor.bcdDevice);
+-	media_device_init(&dev->mdev);
+-
+-	dev->vdev.mdev = &dev->mdev;
+-#endif
++	/* Register the V4L2 device. */
+ 	if (v4l2_device_register(&intf->dev, &dev->vdev) < 0)
+ 		goto error;
+ 
 
 
