@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98EFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFF9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD1720869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A2921555
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891114;
-	bh=/UzbN4KAa0Te1SaklwVyPaEjx3xLax6KeNPcYLJw6HE=;
+	s=default; t=1574891120;
+	bh=G+bUnZIIGo0TF/ZYi61/DRntB0hbkjdnF5/2+ThSJ3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qi+kKaV5DusgsS3LjgGD3bXcabmZcRh685pfWKGeOeelqWkzmhj4qZcXsn79iX2+B
-	 u5m0XjKrG0z1/WOcqofq088TaL0s5RrrMQ/nk5C0zzXpZdsu5Ul4YkfSRgbjZU6SNo
-	 MRsGEq5/0JmFC6q7/ILBwWoQrFwNTqnyedw5SguQ=
+	b=rmaEMRsCHsyG4oWL3ROeIL8ZanC+5vd7UvnwoNbaybtmq9nwNR8s6/7RkRa5hKi25
+	 JamzA4s/6hMOa8sghZobdpkQSAZY4NnMQxoc3zcIYZiAuF81MATyl1zRKi7g8JVEqK
+	 L7G+XjYISa9DS6hExO+wpe1ZNngeM+trHcQbB3Zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbfK0VpN (ORCPT
+        id S1729121AbfK0VpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:45:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38102 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:45:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbfK0UgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:36:11 -0500
+        id S1728022AbfK0UgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:36:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E4C421569;
-        Wed, 27 Nov 2019 20:36:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C9D521582;
+        Wed, 27 Nov 2019 20:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886970;
-        bh=/UzbN4KAa0Te1SaklwVyPaEjx3xLax6KeNPcYLJw6HE=;
+        s=default; t=1574886960;
+        bh=G+bUnZIIGo0TF/ZYi61/DRntB0hbkjdnF5/2+ThSJ3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J9uVfi9Yy+9YwXr+c46zJadnJb88eN0Xd6burqrY2/KHu2AoUdML+zywhEYYoeKjs
-         1b92HEj0XHmtwZXfUNnF2O5++CbJoGvwYsJvRozEKf/583y8v14rtISdx6X56wLqcj
-         iehRITp/JWmDsfSszuBy+aK2PYpNCPn7dcTQ/gy0=
+        b=wJS1H+dB3acjZXJlbCiDUfgfLyQBfCum0KtkMzzFCGchU+EyEGbOe8PsucpCTX1p9
+         IqPTZXlfTI1/17myBx8wOSyVEdVxng/wALxtI6hclBJMH7nIE/15yYS4NizBAy/PWB
+         DgeWaYwwUd178tVvzkto1Anzl+yk35D6yXfcB7tM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        "Shuah Khan (Samsung OSG)" <shuah@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 026/132] powerpc/eeh: Fix use of EEH_PE_KEEP on wrong field
-Date:   Wed, 27 Nov 2019 21:30:17 +0100
-Message-Id: <20191127202923.610000771@linuxfoundation.org>
+Subject: [PATCH 4.4 058/132] selftests/ftrace: Fix to test kprobe $comm arg only if available
+Date:   Wed, 27 Nov 2019 21:30:49 +0100
+Message-Id: <20191127202957.777602143@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -60,42 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 473af09b56dc4be68e4af33220ceca6be67aa60d ]
+[ Upstream commit 2452c96e617a0ff6fb2692e55217a3fa57a7322c ]
 
-eeh_add_to_parent_pe() sometimes removes the EEH_PE_KEEP flag, but it
-incorrectly removes it from pe->type, instead of pe->state.
+Test $comm in kprobe-event argument syntax testcase
+only if it is supported on the kernel because
+$comm has been introduced 4.8 kernel.
+So on older stable kernel, it should be skipped.
 
-However, rather than clearing it from the correct field, remove it.
-Inspection of the code shows that it can't ever have had any effect
-(even if it had been cleared from the correct field), because the
-field is never tested after it is cleared by the statement in
-question.
-
-The clear statement was added by commit 807a827d4e74 ("powerpc/eeh:
-Keep PE during hotplug"), but it didn't explain why it was necessary.
-
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh_pe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc       | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/kernel/eeh_pe.c b/arch/powerpc/kernel/eeh_pe.c
-index 304f07cfa2622..4d4c32d0e6cee 100644
---- a/arch/powerpc/kernel/eeh_pe.c
-+++ b/arch/powerpc/kernel/eeh_pe.c
-@@ -367,7 +367,7 @@ int eeh_add_to_parent_pe(struct eeh_dev *edev)
- 		while (parent) {
- 			if (!(parent->type & EEH_PE_INVALID))
- 				break;
--			parent->type &= ~(EEH_PE_INVALID | EEH_PE_KEEP);
-+			parent->type &= ~EEH_PE_INVALID;
- 			parent = parent->parent;
- 		}
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+index 231bcd2c4eb59..1e7ac6f3362ff 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+@@ -71,8 +71,11 @@ test_badarg "\$stackp" "\$stack0+10" "\$stack1-10"
+ echo "r ${PROBEFUNC} \$retval" > kprobe_events
+ ! echo "p ${PROBEFUNC} \$retval" > kprobe_events
  
++# $comm was introduced in 4.8, older kernels reject it.
++if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
+ : "Comm access"
+ test_goodarg "\$comm"
++fi
+ 
+ : "Indirect memory access"
+ test_goodarg "+0(${GOODREG})" "-0(${GOODREG})" "+10(\$stack)" \
 -- 
 2.20.1
 
