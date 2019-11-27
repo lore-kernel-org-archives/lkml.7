@@ -2,54 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B977C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877DEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012AC2068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561F12154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888144;
-	bh=0YtwBp1f+Cgq7P3s/HVzv1YEHY2F4J8cu2TOkq3oFFM=;
+	s=default; t=1574888151;
+	bh=SWAWfJzmUKIYI5K513r05IPRQy5xw/PP18Nyx4gvL2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VIDzvvhoqBJLt9+eUUV1K75MQzM9NGcqPzX3jf24dL3dz6VIeKdr239oOIIGdmq14
-	 RE6VWe6d7SF8hpXU3noUHS8RGOMNprLKm9DQ8NAdT6WFPCiBFeLn4ytJ5McsQ1OZv8
-	 audRfnjBN8pXA1UV5jsNOX9ORkLvfWjheXn0t1M4=
+	b=vHB65RRHAK/P8z3pPVf/edmTAf9flI83O86NDIiy1KL1uvI3trbu3GsS7amcz0QuV
+	 twSi5pEt99KoVcmaivK/NoxExquK6gDxDSGQ0x1XSMCWiXfdSa3JXM64hG0OHmLs86
+	 rcEnKCLYbNMSECetCXauj+fiCo75qvVNsRMRhjiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbfK0Uzm (ORCPT
+        id S1731003AbfK0Uzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:55:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:55:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730024AbfK0Uzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:55:40 -0500
+        id S1730218AbfK0Uzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:55:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C46222154A;
-        Wed, 27 Nov 2019 20:55:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4B442154A;
+        Wed, 27 Nov 2019 20:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888139;
-        bh=0YtwBp1f+Cgq7P3s/HVzv1YEHY2F4J8cu2TOkq3oFFM=;
+        s=default; t=1574888147;
+        bh=SWAWfJzmUKIYI5K513r05IPRQy5xw/PP18Nyx4gvL2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zs01PbjGTKSzOmartOUqOsSEmIT9EyYbYF7E/Dr4ndbF5S4FsM+pbWhRJtWhMP/qC
-         5iHU+vdIRedCg5wKgrQs5eP4yB0F0hGYEoR2y864EdKISGv5nsfacTRQznGf/HBJIh
-         VPZZ/M47IxvocWRm9CeQEdy6ebHgF93A4H09CjHQ=
+        b=gdxutCGDrWol8MkXPyYtXmnAKMRUSCPSTnvBJQNjPlZ62Ywv3TBqkCfJN3h1rEFY7
+         QEGYf7H0XgawhIUxqcDg1tjIDEBKC63rpvnSXXkbymuEmOUVoAxgbsjpDrQnhKQSCI
+         OL4GZh9CfHGaMhxaEpszFeGfyUcAA2TKrsGTtv/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 4.19 020/306] drm/i915/userptr: Try to acquire the page lock around set_page_dirty()
-Date:   Wed, 27 Nov 2019 21:27:50 +0100
-Message-Id: <20191127203116.175503395@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Schupikov <michael@schupikov.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 023/306] crypto: testmgr - fix sizeof() on COMP_BUF_SIZE
+Date:   Wed, 27 Nov 2019 21:27:53 +0100
+Message-Id: <20191127203116.384045764@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,80 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Michael Schupikov <michael@schupikov.de>
 
-commit 2d691aeca4aecbb8d0414a777a46981a8e142b05 upstream.
+[ Upstream commit 22a8118d329334833cd30f2ceb36d28e8cae8a4f ]
 
-set_page_dirty says:
+After allocation, output and decomp_output both point to memory chunks of
+size COMP_BUF_SIZE. Then, only the first bytes are zeroed out using
+sizeof(COMP_BUF_SIZE) as parameter to memset(), because
+sizeof(COMP_BUF_SIZE) provides the size of the constant and not the size of
+allocated memory.
 
-	For pages with a mapping this should be done under the page lock
-	for the benefit of asynchronous memory errors who prefer a
-	consistent dirty state. This rule can be broken in some special
-	cases, but should be better not to.
+Instead, the whole allocated memory is meant to be zeroed out. Use
+COMP_BUF_SIZE as parameter to memset() directly in order to accomplish
+this.
 
-Under those rules, it is only safe for us to use the plain set_page_dirty
-calls for shmemfs/anonymous memory. Userptr may be used with real
-mappings and so needs to use the locked version (set_page_dirty_lock).
+Fixes: 336073840a872 ("crypto: testmgr - Allow different compression results")
 
-However, following a try_to_unmap() we may want to remove the userptr and
-so call put_pages(). However, try_to_unmap() acquires the page lock and
-so we must avoid recursively locking the pages ourselves -- which means
-that we cannot safely acquire the lock around set_page_dirty(). Since we
-can't be sure of the lock, we have to risk skip dirtying the page, or
-else risk calling set_page_dirty() without a lock and so risk fs
-corruption.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112012
-Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191111133205.11590-1-chris@chris-wilson.co.uk
-(cherry picked from commit 0d4bbe3d407f79438dc4f87943db21f7134cfc65)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-(cherry picked from commit cee7fb437edcdb2f9f8affa959e274997f5dca4d)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Michael Schupikov <michael@schupikov.de>
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_gem_userptr.c |   22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ crypto/testmgr.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_gem_userptr.c
-+++ b/drivers/gpu/drm/i915/i915_gem_userptr.c
-@@ -691,8 +691,28 @@ i915_gem_userptr_put_pages(struct drm_i9
- 	i915_gem_gtt_finish_pages(obj, pages);
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index 3664c26f4838e..13cb2ea99d6a5 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -1400,8 +1400,8 @@ static int test_comp(struct crypto_comp *tfm,
+ 		int ilen;
+ 		unsigned int dlen = COMP_BUF_SIZE;
  
- 	for_each_sgt_page(page, sgt_iter, pages) {
--		if (obj->mm.dirty)
-+		if (obj->mm.dirty && trylock_page(page)) {
-+			/*
-+			 * As this may not be anonymous memory (e.g. shmem)
-+			 * but exist on a real mapping, we have to lock
-+			 * the page in order to dirty it -- holding
-+			 * the page reference is not sufficient to
-+			 * prevent the inode from being truncated.
-+			 * Play safe and take the lock.
-+			 *
-+			 * However...!
-+			 *
-+			 * The mmu-notifier can be invalidated for a
-+			 * migrate_page, that is alreadying holding the lock
-+			 * on the page. Such a try_to_unmap() will result
-+			 * in us calling put_pages() and so recursively try
-+			 * to lock the page. We avoid that deadlock with
-+			 * a trylock_page() and in exchange we risk missing
-+			 * some page dirtying.
-+			 */
- 			set_page_dirty(page);
-+			unlock_page(page);
-+		}
+-		memset(output, 0, sizeof(COMP_BUF_SIZE));
+-		memset(decomp_output, 0, sizeof(COMP_BUF_SIZE));
++		memset(output, 0, COMP_BUF_SIZE);
++		memset(decomp_output, 0, COMP_BUF_SIZE);
  
- 		mark_page_accessed(page);
- 		put_page(page);
+ 		ilen = ctemplate[i].inlen;
+ 		ret = crypto_comp_compress(tfm, ctemplate[i].input,
+@@ -1445,7 +1445,7 @@ static int test_comp(struct crypto_comp *tfm,
+ 		int ilen;
+ 		unsigned int dlen = COMP_BUF_SIZE;
+ 
+-		memset(decomp_output, 0, sizeof(COMP_BUF_SIZE));
++		memset(decomp_output, 0, COMP_BUF_SIZE);
+ 
+ 		ilen = dtemplate[i].inlen;
+ 		ret = crypto_comp_decompress(tfm, dtemplate[i].input,
+-- 
+2.20.1
+
 
 
