@@ -5,56 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E67EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD6DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2377C215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC13215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887003;
-	bh=kFJth200sPmtszgT2RYC2hQ65ZwtwIBT34N2U7ZQ2VA=;
+	s=default; t=1574887005;
+	bh=K889wb9+LZ+sx4rJPH8B7o+s1jSttb+DbgaMv6XZACU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rxkGXupV76Nf7Zv8ZQ99MkeN08ZpYzDCrnNJje+YrXCCgIiF9kU/rUAocRhqYLNJC
-	 fgQytsHGxuqBtVhiO6dY1r8eickdTmaomP2yRdeYjd+oIMnJPUV4CYLz3YtFVPjK63
-	 iCK41btMOJJAXTLGpPLS68kw94vFZZq4NSs1RpXY=
+	b=vx8umpqZygBrs05oEHP2zxTXh6aPfLugUp4p2Y+e8l43QR2H2fnCGQD2ipblerxas
+	 WIUzToh8hZDZPelH4TnBN/SZJ30EzeXIM64ARITiJO5/HvFia876H0u4oV6Ds8RWYH
+	 2KGMbWFeRq98+DUeJiJHQ3pHQFGMfiSsk5qlr348=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfK0Ugl (ORCPT
+        id S1728421AbfK0Ugo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:36:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39066 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:36:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728287AbfK0Ugk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:36:40 -0500
+        id S1727443AbfK0Ugm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:36:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D64A6215A4;
-        Wed, 27 Nov 2019 20:36:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8506A2158A;
+        Wed, 27 Nov 2019 20:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886999;
-        bh=kFJth200sPmtszgT2RYC2hQ65ZwtwIBT34N2U7ZQ2VA=;
+        s=default; t=1574887002;
+        bh=K889wb9+LZ+sx4rJPH8B7o+s1jSttb+DbgaMv6XZACU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HK+quojNmzJ8mmfJ03VQEiGld1bUAns1ZmV1602nGytcMLnqzS7XCIIy+lMFyZ5dz
-         SCYTJJT6JPz8bMGwUeAP6tcSOR5ZOYW1NhUSYEmtbhDpCdd+pYo1cNnVLc8rnj4Nt7
-         Ur2TBWd+Hrwvp4Xrk4j1EgiSET3SVgHD134jQSjo=
+        b=ePz91oQRq27+bYbRroyaaH20sPIUOndEWOq4CiUkgkhrT+SW5Uw1T9CBUvxYG+OSa
+         t/UpGNMtRVgZJXSxopVVBuxeIcrvmcxXtRW+pXj1Wi8ZaQ/gjOtEZ1OLkmuEi4tcVU
+         smCuXwV7oq2N0wyVY9jdx2dHOirS53kAjwJ7NVlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>,
-        Vadim Bendebury <vbendeb@chromium.org>,
-        Stefan Reinauer <reinauer@chromium.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Aaron Durbin <adurbin@chromium.org>,
-        Justin TerAvest <teravest@chromium.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 031/132] gsmi: Fix bug in append_to_eventlog sysfs handler
-Date:   Wed, 27 Nov 2019 21:30:22 +0100
-Message-Id: <20191127202928.087227879@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 022/132] printk: fix integer overflow in setup_log_buf()
+Date:   Wed, 27 Nov 2019 21:30:13 +0100
+Message-Id: <20191127202919.224332710@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -67,76 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Duncan Laurie <dlaurie@chromium.org>
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-[ Upstream commit 655603de68469adaff16842ac17a5aec9c9ce89b ]
+[ Upstream commit d2130e82e9454304e9b91ba9da551b5989af8c27 ]
 
-The sysfs handler should return the number of bytes consumed, which in the
-case of a successful write is the entire buffer.  Also fix a bug where
-param.data_len was being set to (count - (2 * sizeof(u32))) instead of just
-(count - sizeof(u32)).  The latter is correct because we skip over the
-leading u32 which is our param.type, but we were also incorrectly
-subtracting sizeof(u32) on the line where we were actually setting
-param.data_len:
+The way we calculate logbuf free space percentage overflows signed
+integer:
 
-	param.data_len = count - sizeof(u32);
+	int free;
 
-This meant that for our example event.kernel_software_watchdog with total
-length 10 bytes, param.data_len was just 2 prior to this change.
+	free = __LOG_BUF_LEN - log_next_idx;
+	pr_info("early log buf free: %u(%u%%)\n",
+		free, (free * 100) / __LOG_BUF_LEN);
 
-To test, successfully append an event to the log with gsmi sysfs.
-This sample event is for a "Kernel Software Watchdog"
+We support LOG_BUF_LEN of up to 1<<25 bytes. Since setup_log_buf() is
+called during early init, logbuf is mostly empty, so
 
-> xxd -g 1 event.kernel_software_watchdog
-0000000: 01 00 00 00 ad de 06 00 00 00
+	__LOG_BUF_LEN - log_next_idx
 
-> cat event.kernel_software_watchdog > /sys/firmware/gsmi/append_to_eventlog
+is close to 1<<25. Thus when we multiply it by 100, we overflow signed
+integer value range: 100 is 2^6 + 2^5 + 2^2.
 
-> mosys eventlog list | tail -1
-14 | 2012-06-25 10:14:14 | Kernl Event | Software Watchdog
+Example, booting with LOG_BUF_LEN 1<<25 and log_buf_len=2G
+boot param:
 
-Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
-Reviewed-by: Vadim Bendebury <vbendeb@chromium.org>
-Reviewed-by: Stefan Reinauer <reinauer@chromium.org>
-Signed-off-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Furquan Shaikh <furquan@chromium.org>
-Reviewed-by: Aaron Durbin <adurbin@chromium.org>
-Reviewed-by: Justin TerAvest <teravest@chromium.org>
-[zwisler: updated changelog for 2nd bug fix and upstream]
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[    0.075317] log_buf_len: -2147483648 bytes
+[    0.075319] early log buf free: 33549896(-28%)
+
+Make "free" unsigned integer and use appropriate printk() specifier.
+
+Link: http://lkml.kernel.org/r/20181010113308.9337-1-sergey.senozhatsky@gmail.com
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/google/gsmi.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ kernel/printk/printk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
-index f1ab05ea56bbc..3c117559f102f 100644
---- a/drivers/firmware/google/gsmi.c
-+++ b/drivers/firmware/google/gsmi.c
-@@ -480,11 +480,10 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
- 	if (count < sizeof(u32))
- 		return -EINVAL;
- 	param.type = *(u32 *)buf;
--	count -= sizeof(u32);
- 	buf += sizeof(u32);
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 699c18c9d7633..e53a976ca28ea 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -937,7 +937,7 @@ void __init setup_log_buf(int early)
+ {
+ 	unsigned long flags;
+ 	char *new_log_buf;
+-	int free;
++	unsigned int free;
  
- 	/* The remaining buffer is the data payload */
--	if (count > gsmi_dev.data_buf->length)
-+	if ((count - sizeof(u32)) > gsmi_dev.data_buf->length)
- 		return -EINVAL;
- 	param.data_len = count - sizeof(u32);
- 
-@@ -504,7 +503,7 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
- 
- 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
- 
--	return rc;
-+	return (rc == 0) ? count : rc;
- 
- }
- 
+ 	if (log_buf != __log_buf)
+ 		return;
 -- 
 2.20.1
 
