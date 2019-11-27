@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAF5C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B62C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363492154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E192154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889548;
-	bh=MN0tCmCKVka8C/YOs5YuD7ZrvzIshG1JptrIBThzokk=;
+	s=default; t=1574889555;
+	bh=eaBjrtbhJ62pLWppLNZsKpx+Q5x1JcT00JxRyiiPxLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=km5ULcvvDovT2h0ZsabUxK20VyOI8ukLfFbA8J1/4bMUbxPTJN3fXinlWYySa0vi1
-	 CHkK4G/pHb6Xp0vnCMF+0nSscX5pEyRtqXdfLgjYgCB3gLj8Kwpb+py+Mi/hprQPfo
-	 UzTGjbPlQR0sW/A1a6RKw+Uq3JZge7yGzFMWlvNY=
+	b=tHWp0u+7PcK1YvcY8+nuJk0IKYY91hcuNgFVuNFa4KacqqLfYi2U5rARszoRER8l0
+	 2xUKyL6P04p2PorHAiqmapnkuG9Q2QNte1y4X93QkPWTpwHn/k2LhInvay+TAzrbiB
+	 AQU6Ii7tMR8lznTVEsRyPUlohTtPIngZUOBb1vHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387451AbfK0VTH (ORCPT
+        id S2387467AbfK0VTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:19:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38742 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:19:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733095AbfK0VK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:10:56 -0500
+        id S1733079AbfK0VKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:10:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10F74215F1;
-        Wed, 27 Nov 2019 21:10:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC95A2154A;
+        Wed, 27 Nov 2019 21:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889055;
-        bh=MN0tCmCKVka8C/YOs5YuD7ZrvzIshG1JptrIBThzokk=;
+        s=default; t=1574889045;
+        bh=eaBjrtbhJ62pLWppLNZsKpx+Q5x1JcT00JxRyiiPxLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jvgthp9TureT1vS+9sTwj5WbPZAocZksGcct3VgpI2GWtJlCM9VJpRxDjl91no7qp
-         mHP2YLkxpmMbf24y8QMyxdR3CBSet/KmynLSXtWWGx9+PLusiBipaKptrO3mteyxwr
-         v0m83A3JAU0fEBEEK/bkMp8yHEgLzb5aVpehJwxI=
+        b=ghkfq75TvaicnQZ/AQHY/ZwWjpSHCk1ud+dCohrxqxFF//pM/XoLQ//jISwUPo/D0
+         E1GVoQgNnMKcnH34eilvXtef/lalwKK9ggjC7ap2DkLsv3vvfhhAVPDgXjCodUpJAC
+         ylY4z5FNidjP8nF2IsmiOsZT20vR7YM21+V/Ohfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Tao <yang.tao172@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.3 66/95] futex: Prevent robust futex exit race
-Date:   Wed, 27 Nov 2019 21:32:23 +0100
-Message-Id: <20191127202930.763356893@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org
+Subject: [PATCH 5.3 62/95] selftests/x86/mov_ss_trap: Fix the SYSENTER test
+Date:   Wed, 27 Nov 2019 21:32:19 +0100
+Message-Id: <20191127202928.046038424@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -62,261 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Tao <yang.tao172@zte.com.cn>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit ca16d5bee59807bf04deaab0a8eccecd5061528c upstream.
+commit 8caa016bfc129f2c925d52da43022171d1d1de91 upstream.
 
-Robust futexes utilize the robust_list mechanism to allow the kernel to
-release futexes which are held when a task exits. The exit can be voluntary
-or caused by a signal or fault. This prevents that waiters block forever.
+For reasons that I haven't quite fully diagnosed, running
+mov_ss_trap_32 on a 32-bit kernel results in an infinite loop in
+userspace.  This appears to be because the hacky SYSENTER test
+doesn't segfault as desired; instead it corrupts the program state
+such that it infinite loops.
 
-The futex operations in user space store a pointer to the futex they are
-either locking or unlocking in the op_pending member of the per task robust
-list.
+Fix it by explicitly clearing EBP before doing SYSENTER.  This will
+give a more reliable segfault.
 
-After a lock operation has succeeded the futex is queued in the robust list
-linked list and the op_pending pointer is cleared.
-
-After an unlock operation has succeeded the futex is removed from the
-robust list linked list and the op_pending pointer is cleared.
-
-The robust list exit code checks for the pending operation and any futex
-which is queued in the linked list. It carefully checks whether the futex
-value is the TID of the exiting task. If so, it sets the OWNER_DIED bit and
-tries to wake up a potential waiter.
-
-This is race free for the lock operation but unlock has two race scenarios
-where waiters might not be woken up. These issues can be observed with
-regular robust pthread mutexes. PI aware pthread mutexes are not affected.
-
-(1) Unlocking task is killed after unlocking the futex value in user space
-    before being able to wake a waiter.
-
-        pthread_mutex_unlock()
-                |
-                V
-        atomic_exchange_rel (&mutex->__data.__lock, 0)
-                        <------------------------killed
-            lll_futex_wake ()                   |
-                                                |
-                                                |(__lock = 0)
-                                                |(enter kernel)
-                                                |
-                                                V
-                                            do_exit()
-                                            exit_mm()
-                                          mm_release()
-                                        exit_robust_list()
-                                        handle_futex_death()
-                                                |
-                                                |(__lock = 0)
-                                                |(uval = 0)
-                                                |
-                                                V
-        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
-                return 0;
-
-    The sanity check which ensures that the user space futex is owned by
-    the exiting task prevents the wakeup of waiters which in consequence
-    block infinitely.
-
-(2) Waiting task is killed after a wakeup and before it can acquire the
-    futex in user space.
-
-        OWNER                         WAITER
-				futex_wait()
-   pthread_mutex_unlock()               |
-                |                       |
-                |(__lock = 0)           |
-                |                       |
-                V                       |
-         futex_wake() ------------>  wakeup()
-                                        |
-                                        |(return to userspace)
-                                        |(__lock = 0)
-                                        |
-                                        V
-                        oldval = mutex->__data.__lock
-                                          <-----------------killed
-    atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,  |
-                        id | assume_other_futex_waiters, 0)      |
-                                                                 |
-                                                                 |
-                                                   (enter kernel)|
-                                                                 |
-                                                                 V
-                                                         do_exit()
-                                                        |
-                                                        |
-                                                        V
-                                        handle_futex_death()
-                                        |
-                                        |(__lock = 0)
-                                        |(uval = 0)
-                                        |
-                                        V
-        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
-                return 0;
-
-    The sanity check which ensures that the user space futex is owned
-    by the exiting task prevents the wakeup of waiters, which seems to
-    be correct as the exiting task does not own the futex value, but
-    the consequence is that other waiters wont be woken up and block
-    infinitely.
-
-In both scenarios the following conditions are true:
-
-   - task->robust_list->list_op_pending != NULL
-   - user space futex value == 0
-   - Regular futex (not PI)
-
-If these conditions are met then it is reasonably safe to wake up a
-potential waiter in order to prevent the above problems.
-
-As this might be a false positive it can cause spurious wakeups, but the
-waiter side has to handle other types of unrelated wakeups, e.g. signals
-gracefully anyway. So such a spurious wakeup will not affect the
-correctness of these operations.
-
-This workaround must not touch the user space futex value and cannot set
-the OWNER_DIED bit because the lock value is 0, i.e. uncontended. Setting
-OWNER_DIED in this case would result in inconsistent state and subsequently
-in malfunction of the owner died handling in user space.
-
-The rest of the user space state is still consistent as no other task can
-observe the list_op_pending entry in the exiting tasks robust list.
-
-The eventually woken up waiter will observe the uncontended lock value and
-take it over.
-
-[ tglx: Massaged changelog and comment. Made the return explicit and not
-  	depend on the subsequent check and added constants to hand into
-  	handle_futex_death() instead of plain numbers. Fixed a few coding
-	style issues. ]
-
-Fixes: 0771dfefc9e5 ("[PATCH] lightweight robust futexes: core")
-Signed-off-by: Yang Tao <yang.tao172@zte.com.cn>
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1573010582-35297-1-git-send-email-wang.yi59@zte.com.cn
-Link: https://lkml.kernel.org/r/20191106224555.943191378@linutronix.de
+Fixes: 59c2a7226fc5 ("x86/selftests: Add mov_to_ss test")
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/futex.c |   58 ++++++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 51 insertions(+), 7 deletions(-)
+ tools/testing/selftests/x86/mov_ss_trap.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -3454,11 +3454,16 @@ err_unlock:
- 	return ret;
- }
- 
-+/* Constants for the pending_op argument of handle_futex_death */
-+#define HANDLE_DEATH_PENDING	true
-+#define HANDLE_DEATH_LIST	false
-+
- /*
-  * Process a futex-list entry, check whether it's owned by the
-  * dying task, and do notification if so:
-  */
--static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
-+static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr,
-+			      bool pi, bool pending_op)
- {
- 	u32 uval, uninitialized_var(nval), mval;
- 	int err;
-@@ -3471,6 +3476,42 @@ retry:
- 	if (get_user(uval, uaddr))
- 		return -1;
- 
-+	/*
-+	 * Special case for regular (non PI) futexes. The unlock path in
-+	 * user space has two race scenarios:
-+	 *
-+	 * 1. The unlock path releases the user space futex value and
-+	 *    before it can execute the futex() syscall to wake up
-+	 *    waiters it is killed.
-+	 *
-+	 * 2. A woken up waiter is killed before it can acquire the
-+	 *    futex in user space.
-+	 *
-+	 * In both cases the TID validation below prevents a wakeup of
-+	 * potential waiters which can cause these waiters to block
-+	 * forever.
-+	 *
-+	 * In both cases the following conditions are met:
-+	 *
-+	 *	1) task->robust_list->list_op_pending != NULL
-+	 *	   @pending_op == true
-+	 *	2) User space futex value == 0
-+	 *	3) Regular futex: @pi == false
-+	 *
-+	 * If these conditions are met, it is safe to attempt waking up a
-+	 * potential waiter without touching the user space futex value and
-+	 * trying to set the OWNER_DIED bit. The user space futex value is
-+	 * uncontended and the rest of the user space mutex state is
-+	 * consistent, so a woken waiter will just take over the
-+	 * uncontended futex. Setting the OWNER_DIED bit would create
-+	 * inconsistent state and malfunction of the user space owner died
-+	 * handling.
-+	 */
-+	if (pending_op && !pi && !uval) {
-+		futex_wake(uaddr, 1, 1, FUTEX_BITSET_MATCH_ANY);
-+		return 0;
-+	}
-+
- 	if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
- 		return 0;
- 
-@@ -3590,10 +3631,11 @@ void exit_robust_list(struct task_struct
- 		 * A pending lock might already be on the list, so
- 		 * don't process it twice:
- 		 */
--		if (entry != pending)
-+		if (entry != pending) {
- 			if (handle_futex_death((void __user *)entry + futex_offset,
--						curr, pi))
-+						curr, pi, HANDLE_DEATH_LIST))
- 				return;
-+		}
- 		if (rc)
- 			return;
- 		entry = next_entry;
-@@ -3607,9 +3649,10 @@ void exit_robust_list(struct task_struct
- 		cond_resched();
- 	}
- 
--	if (pending)
-+	if (pending) {
- 		handle_futex_death((void __user *)pending + futex_offset,
--				   curr, pip);
-+				   curr, pip, HANDLE_DEATH_PENDING);
-+	}
- }
- 
- long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
-@@ -3786,7 +3829,8 @@ void compat_exit_robust_list(struct task
- 		if (entry != pending) {
- 			void __user *uaddr = futex_uaddr(entry, futex_offset);
- 
--			if (handle_futex_death(uaddr, curr, pi))
-+			if (handle_futex_death(uaddr, curr, pi,
-+					       HANDLE_DEATH_LIST))
- 				return;
- 		}
- 		if (rc)
-@@ -3805,7 +3849,7 @@ void compat_exit_robust_list(struct task
- 	if (pending) {
- 		void __user *uaddr = futex_uaddr(pending, futex_offset);
- 
--		handle_futex_death(uaddr, curr, pip);
-+		handle_futex_death(uaddr, curr, pip, HANDLE_DEATH_PENDING);
- 	}
- }
- 
+--- a/tools/testing/selftests/x86/mov_ss_trap.c
++++ b/tools/testing/selftests/x86/mov_ss_trap.c
+@@ -257,7 +257,8 @@ int main()
+ 			err(1, "sigaltstack");
+ 		sethandler(SIGSEGV, handle_and_longjmp, SA_RESETHAND | SA_ONSTACK);
+ 		nr = SYS_getpid;
+-		asm volatile ("mov %[ss], %%ss; SYSENTER" : "+a" (nr)
++		/* Clear EBP first to make sure we segfault cleanly. */
++		asm volatile ("xorl %%ebp, %%ebp; mov %[ss], %%ss; SYSENTER" : "+a" (nr)
+ 			      : [ss] "m" (ss) : "flags", "rcx"
+ #ifdef __x86_64__
+ 				, "r11"
 
 
