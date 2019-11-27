@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C97C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11234C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF6E2166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1302080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888717;
-	bh=2Luct6aeUchWiuAqbQk8IOpLZN3/QWd0Ogx29N2hSO4=;
+	s=default; t=1574888718;
+	bh=ec5cu6iX0BJxkuAKCLot3vx4SnlxHWGsD52ZwXxIf8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2cnB7mYbI9MveyDg1u0e+ByM9zowbYNywSIJmTgxgrpJp/r+Rkf35hqmJrjHUmeZP
-	 frWI4CXrXG1bsbeRMwJFDnXypeeSp8O2m587n6u+FcxQp+DQhxKsjLT9zl+/wQDa5Y
-	 Q6EYvacHwa8+plhFn+D/htshB6ocR2mofLKuyJds=
+	b=ZiNroZxfBJYRkSROFO6V6YGtTkrUw1Uwmk3n4zsid9tcFDm2zoR54wU8szUdwIvHU
+	 IaL1vku6lteJT7xJYbAzf0CwR0o5nauUykZ5NJLOvHw+3GJtx3eI7wHkj7d32F89UC
+	 6dMMmPLIcXXV2glg5rBWVfSkRm3xqrfotuY6mqFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732260AbfK0VFP (ORCPT
+        id S1732269AbfK0VFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:05:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58884 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:05:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731672AbfK0VFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:05:12 -0500
+        id S1732257AbfK0VFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:05:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AE6920637;
-        Wed, 27 Nov 2019 21:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAC9E2080F;
+        Wed, 27 Nov 2019 21:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888711;
-        bh=2Luct6aeUchWiuAqbQk8IOpLZN3/QWd0Ogx29N2hSO4=;
+        s=default; t=1574888714;
+        bh=ec5cu6iX0BJxkuAKCLot3vx4SnlxHWGsD52ZwXxIf8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eaet1UpaG4YLiimeUvXzBgUP9dnkbz2GTLMfl44OTmD5mtz06/qzexaL8upyp213E
-         P/ItXIyP4fL/jGWIHgKEH8qE7VKSlaGhRIteS02kfX7U6E1jBiH2Krc7zgS126wN3J
-         vYDnBryBzu1G10O9UG1+yiinntdM5DPLWC9TiTyQ=
+        b=UGgh9PcRGGRJDm0pxOW7+PL+L9oQ/lVGfLzSf8CGxBvMiyvjk3u+c4dUjDwB2IoXu
+         +l0iEU+aeJ6DVXTbZfTF2KbCp/htDaa6t6dWHExwLiSMDKhFWJUR+2731uAgF4Q5iy
+         c+xpCAf8PkI6uAnaAGibWvaUn5aunJmkeqsmmKQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
+        David Teigland <teigland@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 187/306] net: hns3: bugfix for is_valid_csq_clean_head()
-Date:   Wed, 27 Nov 2019 21:30:37 +0100
-Message-Id: <20191127203128.927710566@linuxfoundation.org>
+Subject: [PATCH 4.19 234/306] dlm: dont leak kernel pointer to userspace
+Date:   Wed, 27 Nov 2019 21:31:24 +0100
+Message-Id: <20191127203132.097435325@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,50 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+From: Tycho Andersen <tycho@tycho.ws>
 
-[ Upstream commit 6d71ec6cbf74ac9c2823ef751b1baa5b889bb3ac ]
+[ Upstream commit 9de30f3f7f4d31037cfbb7c787e1089c1944b3a7 ]
 
-The HEAD pointer of the hardware command queue maybe equal to the command
-queue's next_to_use in the driver, so that does not belong to the invalid
-HEAD pointer, since the hardware may not process the command in time,
-causing the HEAD pointer to be too late to update. The variables' name
-in this function is unreadable, so give them a more readable one.
+In copy_result_to_user(), we first create a struct dlm_lock_result, which
+contains a struct dlm_lksb, the last member of which is a pointer to the
+lvb. Unfortunately, we copy the entire struct dlm_lksb to the result
+struct, which is then copied to userspace at the end of the function,
+leaking the contents of sb_lvbptr, which is a valid kernel pointer in some
+cases (indeed, later in the same function the data it points to is copied
+to userspace).
 
-Fixes: 3ff504908f95 ("net: hns3: fix a dead loop in hclge_cmd_csq_clean")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It is an error to leak kernel pointers to userspace, as it undermines KASLR
+protections (see e.g. 65eea8edc31 ("floppy: Do not copy a kernel pointer to
+user memory in FDGETPRM ioctl") for another example of this).
+
+Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c   | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/dlm/user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index 68026a5ad7e77..690f62ed87dca 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -24,15 +24,15 @@ static int hclge_ring_space(struct hclge_cmq_ring *ring)
- 	return ring->desc_num - used - 1;
- }
+diff --git a/fs/dlm/user.c b/fs/dlm/user.c
+index 2a669390cd7f6..13f29409600bb 100644
+--- a/fs/dlm/user.c
++++ b/fs/dlm/user.c
+@@ -702,7 +702,7 @@ static int copy_result_to_user(struct dlm_user_args *ua, int compat,
+ 	result.version[0] = DLM_DEVICE_VERSION_MAJOR;
+ 	result.version[1] = DLM_DEVICE_VERSION_MINOR;
+ 	result.version[2] = DLM_DEVICE_VERSION_PATCH;
+-	memcpy(&result.lksb, &ua->lksb, sizeof(struct dlm_lksb));
++	memcpy(&result.lksb, &ua->lksb, offsetof(struct dlm_lksb, sb_lvbptr));
+ 	result.user_lksb = ua->user_lksb;
  
--static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int h)
-+static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int head)
- {
--	int u = ring->next_to_use;
--	int c = ring->next_to_clean;
-+	int ntu = ring->next_to_use;
-+	int ntc = ring->next_to_clean;
- 
--	if (unlikely(h >= ring->desc_num))
--		return 0;
-+	if (ntu > ntc)
-+		return head >= ntc && head <= ntu;
- 
--	return u > c ? (h > c && h <= u) : (h > c || h <= u);
-+	return head >= ntc || head <= ntu;
- }
- 
- static int hclge_alloc_cmd_desc(struct hclge_cmq_ring *ring)
+ 	/* FIXME: dlm1 provides for the user's bastparam/addr to not be updated
 -- 
 2.20.1
 
