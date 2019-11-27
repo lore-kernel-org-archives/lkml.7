@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E279FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2C0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA23C21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3572070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889836;
-	bh=+x+XccsgLC72FddcFcYE+icmwrl+wXBNOtor5imuc/E=;
+	s=default; t=1574889840;
+	bh=HUmds+9b5PGZVPdZ+yxdGP7APAcPSnss65fij7jLvqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J4nOUkhT9m4b39sSnXsE/W+noBe1yfEv5mZEZAzMC1GLTkgj/nxe2hibzfG5ZAR2D
-	 SpcKh0mO4YCvGdTQWFo4vkjIKhBjVWc+RX+lmnvqd1oFTE79nbBwrXXNxwPjAu21pr
-	 kOBM9NVmnqEAK/fFXTe8WWpW6D0X2oe0r+1LeqD4=
+	b=WvpbeD0rXAMHMdCrDc05vUXVEPbQfwQr8Ah5pg8PmXG8W/CyjBi2XE+2SHZ6D3udG
+	 6tN5dkxnGN3V0JRXjLpg0G51kpGZ5jM0O/jRQhcUgTP4eYMeeBUIw3dUNImzyHrx+u
+	 u04mtecLAlNdK0lwMGvZ1TgjkBfy9XXctEVgg4IE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732804AbfK0VXz (ORCPT
+        id S1732086AbfK0VDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:23:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57266 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:03:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732097AbfK0VD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:03:57 -0500
+        id S1732072AbfK0VDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:03:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB5602086A;
-        Wed, 27 Nov 2019 21:03:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B11B12086A;
+        Wed, 27 Nov 2019 21:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888636;
-        bh=+x+XccsgLC72FddcFcYE+icmwrl+wXBNOtor5imuc/E=;
+        s=default; t=1574888624;
+        bh=HUmds+9b5PGZVPdZ+yxdGP7APAcPSnss65fij7jLvqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ecsfsJghBuvtV2TD1FklRfqcD952aqs5rXZ2vmlKiBpzG303RgFeeLWrBEFOLdg+2
-         VIYd8nMuZFooz6uUIDRgWz4lS0zuiae4dGEGGfQiYZK5fR2SmUjtDjsVZPUXLNov/K
-         FzDlXc1I/eCtKB0jPnoyDZx/hlrFhzOU/C3Dreyg=
+        b=vxHctKIpUpuTYucZ0a4Otqg03XfcI6+lXXCAS23no8OK1iy4TApROUqN4gnzLcjhd
+         CkR4fdafo9vUC+ANgn22rRBqpMCWSFkHTPPLWZcDf61qiUxAA9kH5cxPFG5RTqtCI3
+         V+2AAE10nhfhrVz8HbSfwxGFQdyYAZXMfQ2P+AE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Gerd W. Haeussler" <gerd.haeussler@cesys-it.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 211/306] media: ov13858: Check for possible null pointer
-Date:   Wed, 27 Nov 2019 21:31:01 +0100
-Message-Id: <20191127203130.540872040@linuxfoundation.org>
+Subject: [PATCH 4.19 189/306] ntb_netdev: fix sleep time mismatch
+Date:   Wed, 27 Nov 2019 21:30:39 +0100
+Message-Id: <20191127203129.056658560@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,44 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+From: Jon Mason <jdmason@kudzu.us>
 
-[ Upstream commit 35629182eb8f931b0de6ed38c0efac58e922c801 ]
+[ Upstream commit a861594b1b7ffd630f335b351c4e9f938feadb8e ]
 
-Check for possible null pointer to avoid crash.
+The tx_time should be in usecs (according to the comment above the
+variable), but the setting of the timer during the rearming is done in
+msecs.  Change it to match the expected units.
 
-Signed-off-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: e74bfeedad08 ("NTB: Add flow control to the ntb_netdev")
+Suggested-by: Gerd W. Haeussler <gerd.haeussler@cesys-it.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Acked-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov13858.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ntb_netdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
-index 0e7a85c4996c7..afd66d243403b 100644
---- a/drivers/media/i2c/ov13858.c
-+++ b/drivers/media/i2c/ov13858.c
-@@ -1612,7 +1612,8 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
- 				OV13858_NUM_OF_LINK_FREQS - 1,
- 				0,
- 				link_freq_menu_items);
--	ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-+	if (ov13858->link_freq)
-+		ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+diff --git a/drivers/net/ntb_netdev.c b/drivers/net/ntb_netdev.c
+index b12023bc2cab5..df8d49ad48c38 100644
+--- a/drivers/net/ntb_netdev.c
++++ b/drivers/net/ntb_netdev.c
+@@ -236,7 +236,7 @@ static void ntb_netdev_tx_timer(struct timer_list *t)
+ 	struct net_device *ndev = dev->ndev;
  
- 	pixel_rate_max = link_freq_to_pixel_rate(link_freq_menu_items[0]);
- 	pixel_rate_min = link_freq_to_pixel_rate(link_freq_menu_items[1]);
-@@ -1635,7 +1636,8 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
- 	ov13858->hblank = v4l2_ctrl_new_std(
- 				ctrl_hdlr, &ov13858_ctrl_ops, V4L2_CID_HBLANK,
- 				hblank, hblank, 1, hblank);
--	ov13858->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-+	if (ov13858->hblank)
-+		ov13858->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
- 
- 	exposure_max = mode->vts_def - 8;
- 	ov13858->exposure = v4l2_ctrl_new_std(
+ 	if (ntb_transport_tx_free_entry(dev->qp) < tx_stop) {
+-		mod_timer(&dev->tx_timer, jiffies + msecs_to_jiffies(tx_time));
++		mod_timer(&dev->tx_timer, jiffies + usecs_to_jiffies(tx_time));
+ 	} else {
+ 		/* Make sure anybody stopping the queue after this sees the new
+ 		 * value of ntb_transport_tx_free_entry()
 -- 
 2.20.1
 
