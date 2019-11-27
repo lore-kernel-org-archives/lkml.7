@@ -2,152 +2,217 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A811DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6737C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7960020678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574837351;
-	bh=9ldrzBJmwO+Jph+4hUc2W8SiUAnvuynMDMoN792iorA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hJk1Xi7OpGCItQhtgTJN6chU60uCbOQRY5+CqWhxZxmZ4mtR7lcd9pnWZgfAj5bAq
-	 NvlbyIh0oxwtuPZsD4efMoI/4ikOfyYzcx1jmgbl8igR4qY9k4ShCaYxpGcvqj2/k/
-	 91G0jfCqFm2i9VTPUez1Ea8TAvw6nxeNS7YRmbec=
+	by mail.kernel.org (Postfix) with ESMTP id 9910C20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:54:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WDJzTUke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfK0GtK (ORCPT
+        id S1726181AbfK0Gyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 01:49:10 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42041 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfK0GtK (ORCPT
+        Wed, 27 Nov 2019 01:54:38 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:34309 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfK0Gyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 01:49:10 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a15so25288834wrf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 22:49:08 -0800 (PST)
+        Wed, 27 Nov 2019 01:54:38 -0500
+Received: by mail-qv1-f67.google.com with SMTP id o18so1183302qvf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 22:54:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=d3gsKpaM9qDs52kNb00tNlXX2VGKZqjcpLMpQMfPMiU=;
-        b=J4wCmVLPCrib5q3ZsmvcJakJnVZZJcQzpUAzK5n4v1D85yjW/7h8TXdffxDZ8Yx6sC
-         1oWKD4IstJ18xRk/+zwGO/c+WORRvFhk8rrPKPCV+75snx9MXQiI4upVi+4M2cNTbt4i
-         TL/7IBMqpU3uwkf6ppqN1gzDBY1pG/cwRjKC/WkSVZGekqFr9PahO6ulebUUGhfT+/bq
-         M6hcvJW63gb1zS6Z5dpGv+djHIPRGqWaiWYjCKTB/SpNeLIlJJLKYF6v0na3Qpr3aazM
-         SFtuBgtWlX6rrCRmLKl6Ouwndgogg1uD6tfytMsfB8hhdquzpNCBX+Q5G/LzW93HZhKJ
-         RoRA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=legbFrQ1e9U1Xfdcs/id6e/zbRlR7gKK0zBNbirxTnU=;
+        b=WDJzTUkeSgLgNEeP9e7raX/DT2pMfosE62r4lrhzZL8yZSNuJIp2rwC8O+8RhK2PFT
+         SZlrBthHgB3A62ZHAojQtGHvWiDF+8LtFzlmmCJcqesvWNnZxcNO+a8KHhJZR5UxAbTo
+         QW4fxPiDo/LZGo/OJ2wzH9/C6p0EVvPltdHbGbWApRspm80al9xLlEt7+GF+sVm+68zB
+         vB31gdGkRK80DwxvhUQDT9Sf40lwKAK5TJscpflHN9SVSqvt6kYFRWCdIlPMYaGPF2EH
+         o9EVym+rxe7SRFx6n1vXGOPS8rkygFdDUjBVNK/Jranaic3wiOAN9OzKzBjcSW+CBNzF
+         Ro4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d3gsKpaM9qDs52kNb00tNlXX2VGKZqjcpLMpQMfPMiU=;
-        b=bu32WsqFZ62A4WHHGT+xU1CjFReP22Gz1Zmwmnu2k4chOJMwKYxjNK44mvtZi3/lPf
-         s/BBcBTqLnAwYY7+7B7YnngnQyT2JH5qTkjOop60sC+7eG9ygOjJGtCzKaY3BD3fcVQO
-         L2B/867cSA3iVbNQ3Ch/qZNXrVetHXMdbLiNffbBsrux3cmL8QD6p2wouDY1oqYMN41O
-         +na6Bc8SCyeckvcGPR58DAinT8V/hSZI2KCOpWWJ/I1dtBhaR57zGTXMDnnU3lgcF9fG
-         UTwoRPH79bcEtWlhuOu4MoYnlKCz358L5XIC8IjP8qnTNxtfm9kS/FTG2jOoh5ejvaOw
-         9Reg==
-X-Gm-Message-State: APjAAAVyTuCnpVe0aeS4PHsmyvGXaVS5DAtbj3eeNfhp8lKr3htUnd/a
-        67OsFIpGM+hp94QZ8sVYwqwJVGUS
-X-Google-Smtp-Source: APXvYqwgj0Xq8r9RwssGXQnkUFArcDuV8iZyRnyN7cvp9qdyYbgNpvneEE0n3vVMdpROrT2q7Xe51Q==
-X-Received: by 2002:adf:f20f:: with SMTP id p15mr38233763wro.370.1574837346981;
-        Tue, 26 Nov 2019 22:49:06 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id t187sm5622588wma.16.2019.11.26.22.49.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 22:49:06 -0800 (PST)
-Date:   Wed, 27 Nov 2019 07:49:04 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, bristot@redhat.com,
-        jbaron@akamai.com, torvalds@linux-foundation.org,
-        tglx@linutronix.de, namit@vmware.com, hpa@zytor.com,
-        luto@kernel.org, ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        jeyu@kernel.org
-Subject: Re: [PATCH -tip 2/2] kprobes: Set unoptimized flag after
- unoptimizing code
-Message-ID: <20191127064904.GA52731@gmail.com>
-References: <157483420094.25881.9190014521050510942.stgit@devnote2>
- <157483422375.25881.13508326028469515760.stgit@devnote2>
- <20191127061910.nbfmzds4k5wxorwz@ast-mbp.dhcp.thefacebook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=legbFrQ1e9U1Xfdcs/id6e/zbRlR7gKK0zBNbirxTnU=;
+        b=MMZ+5TR6wAtzGGKqRg9m3o2a4QpYidimALxxcSSRlrhUXq2uyGoAjTySD4cYdFnKNd
+         lOfY+/f4BsPdeepSih5OQvgzY1TuT4J3SnCirYOfgClkESf+fCql7iYpO6nFHX5HwrKM
+         nzegad8HMd8Un9mnQz++yxg+DjYJAkqg3xOxANU1pnxqFiMmjAE0VYsnWDexDj7+5avS
+         gXm/1/l4xFkVpPzTBgSWU9OpifmEB/5Lj3BBZkkn5LyA4Bl6y67iKb16HgFfL5fmecEE
+         ajyqDeC5RzKW/SXCx1+zYeZC94+tIzaQhA0s8G9ZhVawYYi1yJPVydq72cWCJybHOuxk
+         ByBA==
+X-Gm-Message-State: APjAAAVVQQnpI3pOdsOPZKo12+gUeNqc0pZOIxQQMZkfMOWXG7axugY0
+        qhWg9PjrX3x/SmCCBP7FQ4wipLE8zqNZpWapqkTq0A==
+X-Google-Smtp-Source: APXvYqyqaLY2PQ25XRUtzLLpRMJQ0P2mn0LzvmT7oCESL+yurKhLCGR4sAyVFfoXoadWt2XqxwCll9QgqncLJvikhUs=
+X-Received: by 2002:a0c:c125:: with SMTP id f34mr3174396qvh.22.1574837676626;
+ Tue, 26 Nov 2019 22:54:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127061910.nbfmzds4k5wxorwz@ast-mbp.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191121181519.28637-1-keescook@chromium.org> <CACT4Y+b3JZM=TSvUPZRMiJEPNH69otidRCqq9gmKX53UHxYqLg@mail.gmail.com>
+ <201911262134.ED9E60965@keescook>
+In-Reply-To: <201911262134.ED9E60965@keescook>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 27 Nov 2019 07:54:25 +0100
+Message-ID: <CACT4Y+bsLJ-wFx_TaXqax3JByUOWB3uk787LsyMVcfW6JzzGvg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] ubsan: Split out bounds checker
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-hardening@lists.openwall.com,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 27, 2019 at 6:42 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Nov 22, 2019 at 10:07:29AM +0100, Dmitry Vyukov wrote:
+> > On Thu, Nov 21, 2019 at 7:15 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > v2:
+> > >     - clarify Kconfig help text (aryabinin)
+> > >     - add reviewed-by
+> > >     - aim series at akpm, which seems to be where ubsan goes through?
+> > > v1: https://lore.kernel.org/lkml/20191120010636.27368-1-keescook@chromium.org
+> > >
+> > > This splits out the bounds checker so it can be individually used. This
+> > > is expected to be enabled in Android and hopefully for syzbot. Includes
+> > > LKDTM tests for behavioral corner-cases (beyond just the bounds checker).
+> > >
+> > > -Kees
+> >
+> > +syzkaller mailing list
+> >
+> > This is great!
+>
+> BTW, can I consider this your Acked-by for these patches? :)
+>
+> > I wanted to enable UBSAN on syzbot for a long time. And it's
+> > _probably_ not lots of work. But it was stuck on somebody actually
+> > dedicating some time specifically for it.
+>
+> Do you have a general mechanism to test that syzkaller will actually
+> pick up the kernel log splat of a new check?
 
-* Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+Yes. That's one of the most important and critical parts of syzkaller :)
+The tests for different types of bugs are here:
+https://github.com/google/syzkaller/tree/master/pkg/report/testdata/linux/report
 
-> On Wed, Nov 27, 2019 at 02:57:04PM +0900, Masami Hiramatsu wrote:
-> > Fix to set unoptimized flag after confirming the code is completely
-> > unoptimized. Without this fix, when a kprobe hits the intermediate
-> > modified instruction (the first byte is replaced by int3, but
-> > latter bytes still be a jump address operand) while unoptimizing,
-> > it can return to the middle byte of the modified code. And it causes
-> > an invalid instruction exception in the kernel.
-> > 
-> > Usually, this is a rare case, but if we put a probe on the function
-> > called while text patching, it always causes a kernel panic as below.
-> > (text_poke() is used for patching the code in optprobe)
-> > 
-> >  # echo p text_poke+5 > kprobe_events
-> >  # echo 1 > events/kprobes/enable
-> >  # echo 0 > events/kprobes/enable
-> >  invalid opcode: 0000 [#1] PREEMPT SMP PTI
-> >  CPU: 7 PID: 137 Comm: kworker/7:1 Not tainted 5.4.0-rc8+ #29
-> >  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-> >  Workqueue: events kprobe_optimizer
-> >  RIP: 0010:text_poke+0x9/0x50
-> >  Code: 01 00 00 5b 5d 41 5c 41 5d c3 89 c0 0f b7 4c 02 fe 66 89 4c 05 fe e9 31 ff ff ff e8 71 ac 03 00 90 55 48 89 f5 53 cc 30 cb fd <1e> ec 08 8b 05 72 98 31 01 85 c0 75 11 48 83 c4 08 48 89 ee 48 89
-> >  RSP: 0018:ffffc90000343df0 EFLAGS: 00010686
-> >  RAX: 0000000000000000 RBX: ffffffff81025796 RCX: 0000000000000000
-> >  RDX: 0000000000000004 RSI: ffff88807c983148 RDI: ffffffff81025796
-> >  RBP: ffff88807c983148 R08: 0000000000000001 R09: 0000000000000000
-> >  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82284fe0
-> >  R13: ffff88807c983138 R14: ffffffff82284ff0 R15: 0ffff88807d9eee0
-> >  FS:  0000000000000000(0000) GS:ffff88807d9c0000(0000) knlGS:0000000000000000
-> >  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >  CR2: 000000000058158b CR3: 000000007b372000 CR4: 00000000000006a0
-> >  Call Trace:
-> >   arch_unoptimize_kprobe+0x22/0x28
-> >   arch_unoptimize_kprobes+0x39/0x87
-> >   kprobe_optimizer+0x6e/0x290
-> >   process_one_work+0x2a0/0x610
-> >   worker_thread+0x28/0x3d0
-> >   ? process_one_work+0x610/0x610
-> >   kthread+0x10d/0x130
-> >   ? kthread_park+0x80/0x80
-> >   ret_from_fork+0x3a/0x50
-> >  Modules linked in:
-> >  ---[ end trace 83b34b22a228711b ]---
-> > 
-> > This can happen even if we blacklist text_poke() and other functions,
-> > because there is a small time window which showing the intermediate
-> > code to other CPUs.
-> > 
-> > Fixes: 6274de4984a6 ("kprobes: Support delayed unoptimizing")
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> 
-> Awesome. It fixes the crash for me.
-> Tested-by: Alexei Starovoitov <ast@kernel.org>
+But have 3 for UBSAN, but they may be old and it would be useful to
+have 1 example crash per bug type:
 
-Thanks guys - I just pushed out a rebased tree, based on an upstream 
-version that has both the BPF tree and most x86 trees merged, into 
-tip:WIP.core/kprobes. This includes these two fixes as well.
+syzkaller$ grep UBSAN pkg/report/testdata/linux/report/*
+pkg/report/testdata/linux/report/40:TITLE: UBSAN: Undefined behaviour
+in drivers/usb/core/devio.c:LINE
+pkg/report/testdata/linux/report/40:[    4.556972] UBSAN: Undefined
+behaviour in drivers/usb/core/devio.c:1517:25
+pkg/report/testdata/linux/report/41:TITLE: UBSAN: Undefined behaviour
+in ./arch/x86/include/asm/atomic.h:LINE
+pkg/report/testdata/linux/report/41:[    3.805453] UBSAN: Undefined
+behaviour in ./arch/x86/include/asm/atomic.h:156:2
+pkg/report/testdata/linux/report/42:TITLE: UBSAN: Undefined behaviour
+in kernel/time/hrtimer.c:LINE
+pkg/report/testdata/linux/report/42:[   50.583499] UBSAN: Undefined
+behaviour in kernel/time/hrtimer.c:310:16
 
-Thanks,
+One of them is incomplete and is parsed as "corrupted kernel output"
+(won't be reported):
+https://github.com/google/syzkaller/blob/master/pkg/report/testdata/linux/report/42
 
-	Ingo
+Also I see that report parsing just takes the first line, which
+includes file name, which is suboptimal (too long, can't report 2 bugs
+in the same file). We seem to converge on "bug-type in function-name"
+format.
+The thing about bug titles is that it's harder to change them later.
+If syzbot already reported 100 bugs and we change titles, it will
+start re-reporting the old one after new names and the old ones will
+look stale, yet they still relevant, just detected under different
+name.
+So we also need to get this part right before enabling.
+
+
+> I noticed a few things
+> about the ubsan handlers: they don't use any of the common "warn"
+> infrastructure (neither does kasan from what I can see), and was missing
+> a check for panic_on_warn (kasan has this, but does it incorrectly).
+
+Yes, panic_on_warn we also need.
+
+I will look at the patches again for Acked-by.
+
+> I think kasan and ubsan should be reworked to use the common warn
+> infrastructure, and at the very least, ubsan needs this:
+>
+> diff --git a/lib/ubsan.c b/lib/ubsan.c
+> index e7d31735950d..a2535a62c9af 100644
+> --- a/lib/ubsan.c
+> +++ b/lib/ubsan.c
+> @@ -160,6 +160,17 @@ static void ubsan_epilogue(unsigned long *flags)
+>                 "========================================\n");
+>         spin_unlock_irqrestore(&report_lock, *flags);
+>         current->in_ubsan--;
+> +
+> +       if (panic_on_warn) {
+> +               /*
+> +                * This thread may hit another WARN() in the panic path.
+> +                * Resetting this prevents additional WARN() from panicking the
+> +                * system on this thread.  Other threads are blocked by the
+> +                * panic_mutex in panic().
+> +                */
+> +               panic_on_warn = 0;
+> +               panic("panic_on_warn set ...\n");
+> +       }
+>  }
+>
+>  static void handle_overflow(struct overflow_data *data, void *lhs,
+>
+> > Kees, or anybody else interested, could you provide relevant configs
+> > that (1) useful for kernel,
+>
+> As mentioned in the other email (but just to keep the note together with
+> the other thoughts here) after this series, you'd want:
+>
+> CONFIG_UBSAN=y
+> CONFIG_UBSAN_BOUNDS=y
+> # CONFIG_UBSAN_MISC is not set
+>
+> > (2) we want 100% cleanliness,
+>
+> What do you mean here by "cleanliness"? It seems different from (3)
+> about the test tripping a lot?
+>
+> > (3) don't
+> > fire all the time even without fuzzing?
+>
+> I ran with the bounds checker enabled (and the above patch) under
+> syzkaller for the weekend and saw 0 bounds checker reports.
+>
+> > Anything else required to
+> > enable UBSAN? I don't see anything. syzbot uses gcc 8.something, which
+> > I assume should be enough (but we can upgrade if necessary).
+>
+> As mentioned, gcc 8+ should be fine.
+>
+> --
+> Kees Cook
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller/201911262134.ED9E60965%40keescook.
