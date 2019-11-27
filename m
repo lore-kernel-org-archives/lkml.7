@@ -2,127 +2,108 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAF4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF641C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A88920684
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD5D20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfK0QUY (ORCPT
+        id S1727092AbfK0QU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:20:24 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2128 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726514AbfK0QUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:20:24 -0500
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id F114EA7B67EB051CEB9B;
-        Wed, 27 Nov 2019 16:20:21 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 27 Nov 2019 16:20:21 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 27 Nov
- 2019 16:20:21 +0000
-Subject: Re: [PATCH] iommu/arm-smmu: support SMMU module probing from the IORT
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-CC:     <will@kernel.org>, <bhelgaas@google.com>,
-        <gregkh@linuxfoundation.org>, <iommu@lists.linuxfoundation.org>,
-        <isaacm@codeaurora.org>, <jcrouse@codeaurora.org>,
-        <jean-philippe@linaro.org>, <joro@8bytes.org>,
-        <linux-kernel@vger.kernel.org>, <robin.murphy@arm.com>,
-        <saravanak@google.com>
-References: <20191121114918.2293-1-will@kernel.org>
- <20191122174125.21030-1-ardb@kernel.org>
- <20191125160445.GA24078@e121166-lin.cambridge.arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <bf5b8665-c599-511c-25d2-f9ebadb41870@huawei.com>
-Date:   Wed, 27 Nov 2019 16:20:20 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 27 Nov 2019 11:20:58 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726514AbfK0QU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 11:20:58 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARGEEC6069557;
+        Wed, 27 Nov 2019 11:20:43 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxqga9c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 11:20:42 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xARGG1Ve002859;
+        Wed, 27 Nov 2019 16:20:42 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma02dal.us.ibm.com with ESMTP id 2wevd6yn7n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 16:20:42 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARGKf5S40829398
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Nov 2019 16:20:41 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 50202AC075;
+        Wed, 27 Nov 2019 16:20:41 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F5F8AC06A;
+        Wed, 27 Nov 2019 16:20:40 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.137])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Nov 2019 16:20:40 +0000 (GMT)
+Message-ID: <411c748246960afffca0eb286ec938559a196852.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 0/2] Replace current->mm by kvm->mm on powerpc/kvm
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 27 Nov 2019 13:20:36 -0300
+In-Reply-To: <20191126223631.389779-1-leonardo@linux.ibm.com>
+References: <20191126223631.389779-1-leonardo@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-3OQMnFYPQ7WcaTZttaSk"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20191125160445.GA24078@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=821
+ malwarescore=0 impostorscore=0 clxscore=1015 adultscore=0 suspectscore=0
+ phishscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911270138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/11/2019 16:04, Lorenzo Pieralisi wrote:
-> On Fri, Nov 22, 2019 at 06:41:25PM +0100, Ard Biesheuvel wrote:
->> Add support for SMMU drivers built as modules to the ACPI/IORT device
->> probing path, by deferring the probe of the master if the SMMU driver is
->> known to exist but has not been loaded yet. Given that the IORT code
->> registers a platform device for each SMMU that it discovers, we can
->> easily trigger the udev based autoloading of the SMMU drivers by making
->> the platform device identifier part of the module alias.
->>
->> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->> ---
->>   drivers/acpi/arm64/iort.c   | 4 ++--
->>   drivers/iommu/arm-smmu-v3.c | 1 +
->>   drivers/iommu/arm-smmu.c    | 1 +
->>   3 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> I think it is best if Will picks this up and add it to the
-> series that modularize the SMMU drivers:
-> 
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-Tested-by: John Garry <john.garry@huawei.com> # only manual smmu ko loading
+--=-3OQMnFYPQ7WcaTZttaSk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> 
->> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
->> index 5a7551d060f2..a696457a9b11 100644
->> --- a/drivers/acpi/arm64/iort.c
->> +++ b/drivers/acpi/arm64/iort.c
->> @@ -850,9 +850,9 @@ static inline bool iort_iommu_driver_enabled(u8 type)
->>   {
->>   	switch (type) {
->>   	case ACPI_IORT_NODE_SMMU_V3:
->> -		return IS_BUILTIN(CONFIG_ARM_SMMU_V3);
->> +		return IS_ENABLED(CONFIG_ARM_SMMU_V3);
->>   	case ACPI_IORT_NODE_SMMU:
->> -		return IS_BUILTIN(CONFIG_ARM_SMMU);
->> +		return IS_ENABLED(CONFIG_ARM_SMMU);
->>   	default:
->>   		pr_warn("IORT node type %u does not describe an SMMU\n", type);
->>   		return false;
->> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
->> index 7669beafc493..bf6a1e8eb9b0 100644
->> --- a/drivers/iommu/arm-smmu-v3.c
->> +++ b/drivers/iommu/arm-smmu-v3.c
->> @@ -3733,4 +3733,5 @@ module_platform_driver(arm_smmu_driver);
->>   
->>   MODULE_DESCRIPTION("IOMMU API for ARM architected SMMUv3 implementations");
->>   MODULE_AUTHOR("Will Deacon <will@kernel.org>");
->> +MODULE_ALIAS("platform:arm-smmu-v3");
->>   MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->> index d55acc48aee3..db5106b0955b 100644
->> --- a/drivers/iommu/arm-smmu.c
->> +++ b/drivers/iommu/arm-smmu.c
->> @@ -2292,4 +2292,5 @@ module_platform_driver(arm_smmu_driver);
->>   
->>   MODULE_DESCRIPTION("IOMMU API for ARM architected SMMU implementations");
->>   MODULE_AUTHOR("Will Deacon <will@kernel.org>");
->> +MODULE_ALIAS("platform:arm-smmu");
->>   MODULE_LICENSE("GPL v2");
->> -- 
->> 2.20.1
->>
-> .
-> 
+Result of Travis-CI testing the change:
+https://travis-ci.org/LeoBras/linux-ppc/builds/617712012
+
+--=-3OQMnFYPQ7WcaTZttaSk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3eolQACgkQlQYWtz9S
+ttQ7VQ/+PYOk1QHYIqz2IyCZceHcgPOmksF23eax+OWuyrGmQZ/zr+Cm81pBxuGw
+QYdqIddtUZw9caS0mLayvf8luPFa5r4+4FLXCn+pHFLQG6GXKLYSXFNEujBaL+0o
+bZQ+N1wMnvZSlIX2AlIE/kMsPOLhWRMzod+DlYmDZsV8cJn1xBYa8P5C/VSXIdL8
+EmVQOrraDle33dNBxop28sf09sFdnNBUYMWP/rllJ6evVWrmATRjMbkco2HZpj6O
+36CYbnI1CV5ETpjXxWQKLOy0WBPg021LJdedlqci3uRdwqxyFDyfwdaO9PNgDdNq
+uypw+FLG7kAzcF4ePrCMUVknUmpTbiby8vw19gj2ekOskfNp6n5RRML7U4WIcFWE
+3WzNnYks13zrvxr8ucLsoHUGqPOwJ1XIwbPo9PjN8ic9DAmQ/lWkW8SSzS2+BMWq
+ekj1FEMA4Kn/35bh4m7lbKJkpamKVqMmeWCXb2Pe4DKwjyY1UCImnlQBQEO654qO
+ompS7yuCUAhZ387iFxZ+GAyHBeg6XOg1sE2nEjPnYuVFXVMnkVHatsekNxyQQdgk
+o1BlxhlBntj6LQBJ3lV5xSHRaVf4lDCe3p3AB7DJkXyHTpbXYnCPNOXNkCxWcqpj
+vjbP95uPFEnqDI0nKIyfdEGQ/+E2HXuH80ugOQe/cXa2C3jYdGM=
+=SLY2
+-----END PGP SIGNATURE-----
+
+--=-3OQMnFYPQ7WcaTZttaSk--
 
