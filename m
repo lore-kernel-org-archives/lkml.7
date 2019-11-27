@@ -2,53 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E142C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1037C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11BCA218A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8914921882
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887952;
-	bh=SKDZpY9gfO13SASawCeW4cUWQ4spZq5Ne+lfp2vOYwI=;
+	s=default; t=1574887954;
+	bh=7VSbeWTtKZdWXZ5+Vlias3TrAmv0K7QsNCkWvt2AegM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0EMGpVOiM3TdBmFPiytBEUjH2boMs4EVe76MiSWQIbQyfFKUEvJIQLjWckTC+Ecun
-	 2sUT1HtxX9hfkynGR8I7nduz8p0KsI+tgRopufp/YDt+LCa+lYwr+jB90YsByqK0/4
-	 2MCqXM+zJZUss3lyu00fz+Ah7dINELg0n7tpYDt4=
+	b=zgbCcW8vtYUUIbkNZMMdO/82tA81q+LWHUNiOKJYqJjqZ6w8IUZW5gVGiiD7l7xTl
+	 9N9GbhXQ4QFQUhh5NyxUQOChi0cLDnm+9ZixEYW5z88X3Qjx+PWMJnNTkyTIMBgv51
+	 rIwER7jxKOn1m64X/B7O39VWBLRjYJqALYNWaAas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730621AbfK0Uwb (ORCPT
+        id S1730613AbfK0Uwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:52:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40026 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:52:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730606AbfK0Uw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:52:28 -0500
+        id S1730596AbfK0UwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:52:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E69E21882;
-        Wed, 27 Nov 2019 20:52:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19A1821847;
+        Wed, 27 Nov 2019 20:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887947;
-        bh=SKDZpY9gfO13SASawCeW4cUWQ4spZq5Ne+lfp2vOYwI=;
+        s=default; t=1574887944;
+        bh=7VSbeWTtKZdWXZ5+Vlias3TrAmv0K7QsNCkWvt2AegM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HdAUXzPG6UUeBLtZjBuuDy3mhyi8bjmSHTCh9DAvCyLr72ZZBY8Pg00UL7nEmqZ+2
-         FwL6pjPA2vD/LrhGecOdHbtjC9h0WD77cIvTzs7A4azDzLlTR2hNHMdKPgTcTPhCZ0
-         f7v5BaVZHeelRZDiRutjXRKWt/2vYX7UZt9CVzI8=
+        b=kPsq9KOvUAOMdji2DcWu9jbXGfdiF83tlIUPEHuMy+hCcmDoGRBbFWwrlZoZo6gwx
+         mnXJEEv7yPqcBNvuWGFEy1gJQaq4/0eDChZzJxZm/1sYkL7ObuMmerAkd3E/JbAITC
+         lEbCI4+KtMmHP2RIots0XZXEWdtJTXitwxybL4F4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 156/211] pinctrl: lpc18xx: Use define directive for PIN_CONFIG_GPIO_PIN_INT
-Date:   Wed, 27 Nov 2019 21:31:29 +0100
-Message-Id: <20191127203108.723960643@linuxfoundation.org>
+Subject: [PATCH 4.14 138/211] rtlwifi: rtl8192de: Fix misleading REG_MCUFWDL information
+Date:   Wed, 27 Nov 2019 21:31:11 +0100
+Message-Id: <20191127203107.058528599@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,63 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-[ Upstream commit f24bfb39975c241374cadebbd037c17960cf1412 ]
+[ Upstream commit 7d129adff3afbd3a449bc3593f2064ac546d58d3 ]
 
-Clang warns when one enumerated type is implicitly converted to another:
+RT_TRACE shows REG_MCUFWDL value as a decimal value with a '0x'
+prefix, which is somewhat misleading.
 
-drivers/pinctrl/pinctrl-lpc18xx.c:643:29: warning: implicit conversion
-from enumeration type 'enum lpc18xx_pin_config_param' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
-        ~                          ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/pinctrl-lpc18xx.c:648:12: warning: implicit conversion
-from enumeration type 'enum lpc18xx_pin_config_param' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        PCONFDUMP(PIN_CONFIG_GPIO_PIN_INT, "gpio pin int", NULL, true),
-        ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
-macro 'PCONFDUMP'
-        .param = a, .display = b, .format = c, .has_arg = d     \
-                 ^
-2 warnings generated.
+Fix it to print hexadecimal, as was intended.
 
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/140
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ping-Ke Shih <pkshih@realtek.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-lpc18xx.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-lpc18xx.c b/drivers/pinctrl/pinctrl-lpc18xx.c
-index d090f37ca4a11..8b4e3582af6e0 100644
---- a/drivers/pinctrl/pinctrl-lpc18xx.c
-+++ b/drivers/pinctrl/pinctrl-lpc18xx.c
-@@ -630,14 +630,8 @@ static const struct pinctrl_pin_desc lpc18xx_pins[] = {
- 	LPC18XX_PIN(i2c0_sda, PIN_I2C0_SDA),
- };
- 
--/**
-- * enum lpc18xx_pin_config_param - possible pin configuration parameters
-- * @PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt
-- * 	controller.
-- */
--enum lpc18xx_pin_config_param {
--	PIN_CONFIG_GPIO_PIN_INT = PIN_CONFIG_END + 1,
--};
-+/* PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt controller */
-+#define PIN_CONFIG_GPIO_PIN_INT		(PIN_CONFIG_END + 1)
- 
- static const struct pinconf_generic_params lpc18xx_params[] = {
- 	{"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
+index f4129cf96e7cb..bad70a4206fb2 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
+@@ -173,7 +173,7 @@ static int _rtl92d_fw_init(struct ieee80211_hw *hw)
+ 			 rtl_read_byte(rtlpriv, FW_MAC1_READY));
+ 	}
+ 	RT_TRACE(rtlpriv, COMP_FW, DBG_DMESG,
+-		 "Polling FW ready fail!! REG_MCUFWDL:0x%08ul\n",
++		 "Polling FW ready fail!! REG_MCUFWDL:0x%08x\n",
+ 		 rtl_read_dword(rtlpriv, REG_MCUFWDL));
+ 	return -1;
+ }
 -- 
 2.20.1
 
