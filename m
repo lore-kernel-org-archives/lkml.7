@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8678DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F44C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD872154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32CE2154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888941;
-	bh=rA4zorsrRdrU4FaSsOYgFFy6i4kHe4/Cis9nR4rpsC4=;
+	s=default; t=1574888946;
+	bh=vma1+y/i0t67aijisSoim2RvjrLDgcUc1DDG8Q+KHnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cHrhIOL7FCR6gzoqt0ETDDonM+7M9nHS98IGQ0WC8/L8Dr3ZnwtOKO2at+0xsQquf
-	 Zy5taCXgVTl7duwxYJ0zoLq/ttlIC9C68Z80+/o/5EOnjsh1wjW/K/1w4wDReCU6zJ
-	 vUv9+QzeOEr6onKhIzuAA7Yid5DOv2oADKyjYm5A=
+	b=oklph+rZZWA2XpSKcACpg6nIZ9kYBCEu2WgBDNCvaCaD6raS0rUd34IhmbUnDqkUd
+	 mraq6J4UcGT4hDdTP+0M7IDj0nzis45BQNM4T6oPxFrU92Y1v4QOVw9tjoXZvtjckk
+	 l4j7ygSQbUEmxkm4Dok5RIZNi2r8cG8F2pDiXQrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732825AbfK0VJA (ORCPT
+        id S1732845AbfK0VJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:09:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35344 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:09:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732801AbfK0VIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:08:50 -0500
+        id S1732830AbfK0VJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:09:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 794FD2086A;
-        Wed, 27 Nov 2019 21:08:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D803A2086A;
+        Wed, 27 Nov 2019 21:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888928;
-        bh=rA4zorsrRdrU4FaSsOYgFFy6i4kHe4/Cis9nR4rpsC4=;
+        s=default; t=1574888941;
+        bh=vma1+y/i0t67aijisSoim2RvjrLDgcUc1DDG8Q+KHnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wu4ciIzmIH7sWlffebIN3tpNwf/s4oDLvhEFOTxZU7kM9FSMHgmoUsWUcJUl5mn8s
-         p3pWmTsj796EhP4vDHcB0vKbcT9GdZzIqoyzKM7jp0bMtxSoJyEhdtrBzoKpjkS2Pk
-         lMzu207FTIQeWQqGHewX3eUHz/qterLwEj5d1aAY=
+        b=00l+IL/YJKwfoteIfu0SLLHiNrxD3AdOMp2gQugZYZsZuEGc9poRRywfynGSViyWh
+         BhRue8+Ba06jRjBd0rxp6sF4LJEPe8e+9lrS4JsGvrtfdnBjoOr/4QO7LUVzFLg15M
+         Wqnev/OraOPNtHErH22dTc9aA+Rso+RUW8jT1D4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 18/95] vhost/vsock: split packets to send using multiple buffers
-Date:   Wed, 27 Nov 2019 21:31:35 +0100
-Message-Id: <20191127202850.348876354@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 5.3 22/95] fork: fix pidfd_poll()s return type
+Date:   Wed, 27 Nov 2019 21:31:39 +0100
+Message-Id: <20191127202850.552050279@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -61,158 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-commit 6dbd3e66e7785a2f055bf84d98de9b8fd31ff3f5 upstream.
+commit 9e77716a75bc6cf54965e5ec069ba7c02b32251c upstream.
 
-If the packets to sent to the guest are bigger than the buffer
-available, we can split them, using multiple buffers and fixing
-the length in the packet header.
-This is safe since virtio-vsock supports only stream sockets.
+pidfd_poll() is defined as returning 'unsigned int' but the
+.poll method is declared as returning '__poll_t', a bitwise type.
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this by using the proper return type and using the EPOLL
+constants instead of the POLL ones, as required for __poll_t.
+
+Fixes: b53b0b9d9a61 ("pidfd: add polling support")
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: stable@vger.kernel.org # 5.3
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+Link: https://lore.kernel.org/r/20191120003320.31138-1-luc.vanoostenryck@gmail.com
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vhost/vsock.c                   |   66 +++++++++++++++++++++++---------
- net/vmw_vsock/virtio_transport_common.c |   15 +++++--
- 2 files changed, 60 insertions(+), 21 deletions(-)
+ kernel/fork.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -102,7 +102,7 @@ vhost_transport_do_send_pkt(struct vhost
- 		struct iov_iter iov_iter;
- 		unsigned out, in;
- 		size_t nbytes;
--		size_t len;
-+		size_t iov_len, payload_len;
- 		int head;
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1713,11 +1713,11 @@ static void pidfd_show_fdinfo(struct seq
+ /*
+  * Poll support for process exit notification.
+  */
+-static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
++static __poll_t pidfd_poll(struct file *file, struct poll_table_struct *pts)
+ {
+ 	struct task_struct *task;
+ 	struct pid *pid = file->private_data;
+-	int poll_flags = 0;
++	__poll_t poll_flags = 0;
  
- 		spin_lock_bh(&vsock->send_pkt_list_lock);
-@@ -147,8 +147,24 @@ vhost_transport_do_send_pkt(struct vhost
- 			break;
- 		}
+ 	poll_wait(file, &pid->wait_pidfd, pts);
  
--		len = iov_length(&vq->iov[out], in);
--		iov_iter_init(&iov_iter, READ, &vq->iov[out], in, len);
-+		iov_len = iov_length(&vq->iov[out], in);
-+		if (iov_len < sizeof(pkt->hdr)) {
-+			virtio_transport_free_pkt(pkt);
-+			vq_err(vq, "Buffer len [%zu] too small\n", iov_len);
-+			break;
-+		}
-+
-+		iov_iter_init(&iov_iter, READ, &vq->iov[out], in, iov_len);
-+		payload_len = pkt->len - pkt->off;
-+
-+		/* If the packet is greater than the space available in the
-+		 * buffer, we split it using multiple buffers.
-+		 */
-+		if (payload_len > iov_len - sizeof(pkt->hdr))
-+			payload_len = iov_len - sizeof(pkt->hdr);
-+
-+		/* Set the correct length in the header */
-+		pkt->hdr.len = cpu_to_le32(payload_len);
+@@ -1729,7 +1729,7 @@ static unsigned int pidfd_poll(struct fi
+ 	 * group, then poll(2) should block, similar to the wait(2) family.
+ 	 */
+ 	if (!task || (task->exit_state && thread_group_empty(task)))
+-		poll_flags = POLLIN | POLLRDNORM;
++		poll_flags = EPOLLIN | EPOLLRDNORM;
+ 	rcu_read_unlock();
  
- 		nbytes = copy_to_iter(&pkt->hdr, sizeof(pkt->hdr), &iov_iter);
- 		if (nbytes != sizeof(pkt->hdr)) {
-@@ -157,33 +173,47 @@ vhost_transport_do_send_pkt(struct vhost
- 			break;
- 		}
- 
--		nbytes = copy_to_iter(pkt->buf, pkt->len, &iov_iter);
--		if (nbytes != pkt->len) {
-+		nbytes = copy_to_iter(pkt->buf + pkt->off, payload_len,
-+				      &iov_iter);
-+		if (nbytes != payload_len) {
- 			virtio_transport_free_pkt(pkt);
- 			vq_err(vq, "Faulted on copying pkt buf\n");
- 			break;
- 		}
- 
--		vhost_add_used(vq, head, sizeof(pkt->hdr) + pkt->len);
-+		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
- 		added = true;
- 
--		if (pkt->reply) {
--			int val;
--
--			val = atomic_dec_return(&vsock->queued_replies);
--
--			/* Do we have resources to resume tx processing? */
--			if (val + 1 == tx_vq->num)
--				restart_tx = true;
--		}
--
- 		/* Deliver to monitoring devices all correctly transmitted
- 		 * packets.
- 		 */
- 		virtio_transport_deliver_tap_pkt(pkt);
- 
--		total_len += pkt->len;
--		virtio_transport_free_pkt(pkt);
-+		pkt->off += payload_len;
-+		total_len += payload_len;
-+
-+		/* If we didn't send all the payload we can requeue the packet
-+		 * to send it with the next available buffer.
-+		 */
-+		if (pkt->off < pkt->len) {
-+			spin_lock_bh(&vsock->send_pkt_list_lock);
-+			list_add(&pkt->list, &vsock->send_pkt_list);
-+			spin_unlock_bh(&vsock->send_pkt_list_lock);
-+		} else {
-+			if (pkt->reply) {
-+				int val;
-+
-+				val = atomic_dec_return(&vsock->queued_replies);
-+
-+				/* Do we have resources to resume tx
-+				 * processing?
-+				 */
-+				if (val + 1 == tx_vq->num)
-+					restart_tx = true;
-+			}
-+
-+			virtio_transport_free_pkt(pkt);
-+		}
- 	} while(likely(!vhost_exceeds_weight(vq, ++pkts, total_len)));
- 	if (added)
- 		vhost_signal(&vsock->dev, vq);
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -91,8 +91,17 @@ static struct sk_buff *virtio_transport_
- 	struct virtio_vsock_pkt *pkt = opaque;
- 	struct af_vsockmon_hdr *hdr;
- 	struct sk_buff *skb;
-+	size_t payload_len;
-+	void *payload_buf;
- 
--	skb = alloc_skb(sizeof(*hdr) + sizeof(pkt->hdr) + pkt->len,
-+	/* A packet could be split to fit the RX buffer, so we can retrieve
-+	 * the payload length from the header and the buffer pointer taking
-+	 * care of the offset in the original packet.
-+	 */
-+	payload_len = le32_to_cpu(pkt->hdr.len);
-+	payload_buf = pkt->buf + pkt->off;
-+
-+	skb = alloc_skb(sizeof(*hdr) + sizeof(pkt->hdr) + payload_len,
- 			GFP_ATOMIC);
- 	if (!skb)
- 		return NULL;
-@@ -132,8 +141,8 @@ static struct sk_buff *virtio_transport_
- 
- 	skb_put_data(skb, &pkt->hdr, sizeof(pkt->hdr));
- 
--	if (pkt->len) {
--		skb_put_data(skb, pkt->buf, pkt->len);
-+	if (payload_len) {
-+		skb_put_data(skb, payload_buf, payload_len);
- 	}
- 
- 	return skb;
+ 	return poll_flags;
 
 
