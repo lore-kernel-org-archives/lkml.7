@@ -6,91 +6,96 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9839DC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073F4C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716BE2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE332075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574857952;
-	bh=w21h1fiAy5hgvbETtG11nXwOuMnOUInoM2ApwbubC/c=;
+	s=default; t=1574858001;
+	bh=LzYhxJZwT/5cPL9ppG3GIvLklUK/CrB3gpOUIIGf6vg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lr8M/+KwQWkY7/SKZOeeu/9PnlEx7TlDpGEClHpl0qJgDhGh48CrW/4wSZbRCyXwN
-	 y+Q3Xi6d+RAGrCBh1c/8+uqq9J3VUGqCB42TTePxL92Ea+nSFh6qYVPFeLYjrwDbCS
-	 dLZNJhmAMxIPJXziUcepu9OZ7DTkby81aww1UlpE=
+	b=NapFfDZ5oIqoC4AjKqTIU9JHspltjzWU0050TNj0rW3WbZcWRB9u2D20gCnvnLof4
+	 4Yfr1ksmQfUkmwBDqU+oqxQlSF3J3i1PCEU8GJBlx2FN5q1ke40RPMJ5+bCpsKgxPi
+	 wXaJTqCndQWmfnjo6zIQdtkaD1PUX5R10sS8vNMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfK0Mcb (ORCPT
+        id S1726947AbfK0MdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 07:32:31 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46129 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbfK0Mcb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 07:32:31 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so23038198wrl.13;
-        Wed, 27 Nov 2019 04:32:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=APAHGrPXLQYqK4XEoTpL2DzSySkqv8Fb1fkOTesm7KY=;
-        b=LwZR714aKNW53eU2PrzF8ld6L7vBnmV7u/N8kuk7ie4toOHHh+jtUVVd1J8W9xBpFP
-         +V+j+nJKAZcYvUylzzmynyzIK/N/OquiTEJDSAOvJLw/qREeLYe2aA+6EZJHrPN1dzGV
-         C/xmCHAekdf6oKxpN1+hS/AbZqbrd07SrbAmOXFo2OBQufmjQwWismEM9oYEMhG9vqCz
-         WVgcndjZ4FbHMHmVFRz/LELqaqzKwoDaSfVgnOKej8bZapxtSg13asl1xQ0l/xMBSRXi
-         CtqMhCqTJ3rI2rXAJonHhuNbFe6Qd8XY2T5pbPODcPiYJjwe6KoMgHY41OA9+NvjcwQD
-         ADAg==
-X-Gm-Message-State: APjAAAUM+QD/GcWc0Lmz++MrM6GisBItrbSL5mf/mNs7reJjHrfhcpHE
-        n2a9yBg/XbniVJQGiKNRyJ0=
-X-Google-Smtp-Source: APXvYqxfKgQ5PfmLC6R8aUvg0wAMhGCvN28Tabbxnu2utp0rEv/IP2wvtLrgZvqhCyzrvsU3FB+Yjw==
-X-Received: by 2002:adf:f3d0:: with SMTP id g16mr22568717wrp.2.1574857947424;
-        Wed, 27 Nov 2019 04:32:27 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id b14sm6614061wmj.18.2019.11.27.04.32.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 04:32:26 -0800 (PST)
-Date:   Wed, 27 Nov 2019 13:32:25 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
+        Wed, 27 Nov 2019 07:33:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:47118 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbfK0MdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 07:33:20 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3B9C30E;
+        Wed, 27 Nov 2019 04:33:19 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70AFC3F6C4;
+        Wed, 27 Nov 2019 04:33:19 -0800 (PST)
+Date:   Wed, 27 Nov 2019 12:33:17 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] mm: memcg/slab: wait for !root kmem_cache refcnt killing
- on root kmem_cache destruction
-Message-ID: <20191127123225.GR20912@dhcp22.suse.cz>
-References: <20191125185453.278468-1-guro@fb.com>
- <20191126092918.GB20912@dhcp22.suse.cz>
- <20191126184135.GA66034@localhost.localdomain>
+        "kernel@collabora.com" <kernel@collabora.com>
+Subject: Re: [PATCHv2 6/6] ASoC: da7213: Add default clock handling
+Message-ID: <20191127123317.GA4879@sirena.org.uk>
+References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
+ <20191120152406.2744-7-sebastian.reichel@collabora.com>
+ <AM5PR1001MB0994720A0D615339A978E35C804E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <AM5PR1001MB0994E628439F021F97B872D480450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191126170841.GC4205@sirena.org.uk>
+ <AM5PR1001MB09949D557742E8817545637F80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191126175040.GD4205@sirena.org.uk>
+ <AM5PR1001MB09940CF764711F1F13A6B37E80440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
 Content-Disposition: inline
-In-Reply-To: <20191126184135.GA66034@localhost.localdomain>
+In-Reply-To: <AM5PR1001MB09940CF764711F1F13A6B37E80440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+X-Cookie: In the war of wits, he's unarmed.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 26-11-19 18:41:41, Roman Gushchin wrote:
-> On Tue, Nov 26, 2019 at 10:29:18AM +0100, Michal Hocko wrote:
-> > On Mon 25-11-19 10:54:53, Roman Gushchin wrote:
-[...]
-> > > So in a rare case when not all children kmem_caches are destroyed
-> > > at the moment when the root kmem_cache is about to be gone, we need
-> > > to wait another rcu grace period before destroying the root
-> > > kmem_cache.
-> > 
-> > Could you explain how rare this really is please?
-> 
-> It seems that we don't destroy root kmem_caches with enabled memcg
-> accounting that often, but maybe I'm biased here.
 
-So this happens each time a root kmem_cache is destroyed? Which would
-imply that only dynamically created ones?
--- 
-Michal Hocko
-SUSE Labs
+--GvXjxJ+pjyke8COw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Nov 27, 2019 at 11:32:54AM +0000, Adam Thomson wrote:
+
+> As I said it's a small thing and requires a specific use-case to occur, but
+> having the PLL configured twice for the very first stream in that scenario
+> seems messy. Regarding the SYSCLK approach you mention, I'm not clear how that
+> would work so I'm obviously missing something. If we had some init stage
+> indication though that auto PLL was required then we're golden.
+
+There's a bunch of other drivers using the SYSCLK thing, when you call
+set_sysclk() they provide a different SYSCLK number if they want to use
+manual mode.  If there's a concern about drivers doing stuff on init you
+could always ask them to set the PLL during init, even if only briefly.
+
+--GvXjxJ+pjyke8COw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3ebQoACgkQJNaLcl1U
+h9BDaQf/ZAlgmS17icedamvRKebKOojZ+VtpiJMgMsOiLs1eMu10rJm/6XiCT5sh
+dvPRA9mGno4nal5L/s8UHj3CFPkHSYqPGI/uwY4Gf4Ek2B9cyMHiW3ht1MozjcDH
+I2QMxZxMhqHCf1p5a8fh+2jlyFfwC8lpluRg57rLT5PTdb27MBbrshYHlPuuxKtk
+p7U1irpsbnO6iW3CAp9N8kIc996SItJ7230JQCHXdLJ0X773ekOLQTSb5Ypn0Y/f
+kD+NRNoggRWJ70XZqm3DwMQRdGIW33IWR/nS+W0ncP93hfneMjYpp4byZ+BGWOwy
+CozlfXK15fWw/kq+9Gw1LGWv9CKSxw==
+=thrJ
+-----END PGP SIGNATURE-----
+
+--GvXjxJ+pjyke8COw--
