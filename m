@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 310FAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE24C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FF321775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F4821780
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887525;
-	bh=0GZ1QDRmv1Yd2SEj8LE3ig5owC1stBMxq0NMsin0smg=;
+	s=default; t=1574887528;
+	bh=k16vSFfB3VcnFtGPPlm6toStzxruCtOzTNuNmFq9ccA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2t3+siN6BBkvWLMdtsjvLZaF2KYhL+Lqwsk3JlqRscyjBk8yY1N1CTfX6DiyKEO2d
-	 /kvM7HDByPhFsmJuAEJhLfGPrzLPzgcWTlX6muUR+EiqduhQ/qiQOZI7komKVE5OUU
-	 ymSY87voTRPyNPAF4O3OSgQEpsHQHiGjGfyBwwV8=
+	b=qWzJMZ9dFmNo+IJpqZ+MlzLTae5HDSBacGBf/pR9HMGufV1/1FMspYgeePLbyA3Mo
+	 PHdVY7EwqLyvNNZC/BZXHGg8BwI+iAgOaL0wB11OKEknhSi8JIGex7BoecAm8pPW1I
+	 ODcBDZURgzB88TFwJUqhSn4FuXlrANE6ZuLYJj/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfK0UpY (ORCPT
+        id S1729734AbfK0Up0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:45:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:45:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728535AbfK0UpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:45:20 -0500
+        id S1727487AbfK0UpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:45:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 864B52166E;
-        Wed, 27 Nov 2019 20:45:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A3E821780;
+        Wed, 27 Nov 2019 20:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887520;
-        bh=0GZ1QDRmv1Yd2SEj8LE3ig5owC1stBMxq0NMsin0smg=;
+        s=default; t=1574887516;
+        bh=k16vSFfB3VcnFtGPPlm6toStzxruCtOzTNuNmFq9ccA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OECsIFU3oeIddi3FZHgf0tJsyfYQXdcGR91I+sULLn8HHpBI93PYHUys3ufgnPzq0
-         T4ZWmYWOrzs6dbB2i2jBKRzT09JSO1u1r5Q1JrWsrIiCPHzv3t2lwrL5OVRytn3rCt
-         vHXCm3zKTHS60ZnxX5xwXhQx2UGxm6WAo/hOuHmE=
+        b=SDQmre/qGg3Netny21fYegGrSkmGsDxeTwKCfO7Ednp1bC6WeXkWqp0JhaXYgVKC7
+         SaIiGVH2lHnxYI2b9dtBJ8UM24bBe/rN4LzOvqJMuHA+RCKDxFIOAP4qhWJoTlSXqh
+         q29ig4eXv+KbZQQESWvtZMQea1R4k+Azmb9Llv5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 142/151] appledisplay: fix error handling in the scheduled work
-Date:   Wed, 27 Nov 2019 21:32:05 +0100
-Message-Id: <20191127203047.166875788@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.de>
+Subject: [PATCH 4.9 141/151] USB: chaoskey: fix error case of a timeout
+Date:   Wed, 27 Nov 2019 21:32:04 +0100
+Message-Id: <20191127203047.107855223@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -61,49 +60,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit 91feb01596e5efc0cc922cc73f5583114dccf4d2 upstream.
+commit 92aa5986f4f7b5a8bf282ca0f50967f4326559f5 upstream.
 
-The work item can operate on
+In case of a timeout or if a signal aborts a read
+communication with the device needs to be ended
+lest we overwrite an active URB the next time we
+do IO to the device, as the URB may still be active.
 
-1. stale memory left over from the last transfer
-the actual length of the data transfered needs to be checked
-2. memory already freed
-the error handling in appledisplay_probe() needs
-to cancel the work in that case
-
-Reported-and-tested-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.de>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191106124902.7765-1-oneukum@suse.com
+Link: https://lore.kernel.org/r/20191107142856.16774-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/appledisplay.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/usb/misc/chaoskey.c |   24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/misc/appledisplay.c
-+++ b/drivers/usb/misc/appledisplay.c
-@@ -182,7 +182,12 @@ static int appledisplay_bl_get_brightnes
- 		0,
- 		pdata->msgdata, 2,
- 		ACD_USB_TIMEOUT);
--	brightness = pdata->msgdata[1];
-+	if (retval < 2) {
-+		if (retval >= 0)
-+			retval = -EMSGSIZE;
-+	} else {
-+		brightness = pdata->msgdata[1];
-+	}
- 	mutex_unlock(&pdata->sysfslock);
+--- a/drivers/usb/misc/chaoskey.c
++++ b/drivers/usb/misc/chaoskey.c
+@@ -412,13 +412,17 @@ static int _chaoskey_fill(struct chaoske
+ 		!dev->reading,
+ 		(started ? NAK_TIMEOUT : ALEA_FIRST_TIMEOUT) );
  
- 	if (retval < 0)
-@@ -324,6 +329,7 @@ error:
- 	if (pdata) {
- 		if (pdata->urb) {
- 			usb_kill_urb(pdata->urb);
-+			cancel_delayed_work_sync(&pdata->work);
- 			if (pdata->urbdata)
- 				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
- 					pdata->urbdata, pdata->urb->transfer_dma);
+-	if (result < 0)
++	if (result < 0) {
++		usb_kill_urb(dev->urb);
+ 		goto out;
++	}
+ 
+-	if (result == 0)
++	if (result == 0) {
+ 		result = -ETIMEDOUT;
+-	else
++		usb_kill_urb(dev->urb);
++	} else {
+ 		result = dev->valid;
++	}
+ out:
+ 	/* Let the device go back to sleep eventually */
+ 	usb_autopm_put_interface(dev->interface);
+@@ -554,7 +558,21 @@ static int chaoskey_suspend(struct usb_i
+ 
+ static int chaoskey_resume(struct usb_interface *interface)
+ {
++	struct chaoskey *dev;
++	struct usb_device *udev = interface_to_usbdev(interface);
++
+ 	usb_dbg(interface, "resume");
++	dev = usb_get_intfdata(interface);
++
++	/*
++	 * We may have lost power.
++	 * In that case the device that needs a long time
++	 * for the first requests needs an extended timeout
++	 * again
++	 */
++	if (le16_to_cpu(udev->descriptor.idVendor) == ALEA_VENDOR_ID)
++		dev->reads_started = false;
++
+ 	return 0;
+ }
+ #else
 
 
