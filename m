@@ -2,161 +2,139 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756D6C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BBCC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAFF20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0BE20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:39:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="VY7B9Chh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfK0Pji (ORCPT
+        id S1727072AbfK0Pjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:39:38 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38098 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726729AbfK0Pji (ORCPT
+        Wed, 27 Nov 2019 10:39:43 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:6216 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726729AbfK0Pjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:39:38 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARFbQx2005354
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:39:36 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxqxq1m-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:39:36 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 27 Nov 2019 15:39:34 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 27 Nov 2019 15:39:31 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARFdUPK47251804
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 15:39:30 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89BE411C04A;
-        Wed, 27 Nov 2019 15:39:30 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5564811C052;
-        Wed, 27 Nov 2019 15:39:29 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.138.180])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Nov 2019 15:39:29 +0000 (GMT)
-Subject: Re: One question about trusted key of keyring in Linux kernel.
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Date:   Wed, 27 Nov 2019 10:39:28 -0500
-In-Reply-To: <A888B25CD99C1141B7C254171A953E8E490961E5@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-         <1574796456.4793.248.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E490961E5@shsmsx102.ccr.corp.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19112715-0016-0000-0000-000002CD01AF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112715-0017-0000-0000-0000332EE252
-Message-Id: <1574869168.4793.282.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_03:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
- spamscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270137
+        Wed, 27 Nov 2019 10:39:42 -0500
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARFbHET015595;
+        Wed, 27 Nov 2019 09:39:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=qPhzR/tuKDv5EnvNIvPBDtlaic74fIMn+6iQRLHqAYY=;
+ b=VY7B9ChhE82YvCEAvKqNftJ6UFvFu34THkDGLnEc03lK01/x8hZxR+zX2l9lmvT4Yc3j
+ UoO0WXrAOfbX4Qs/09FPkv4zrIPoTLkwhKeaKADjHFWJ14zRmrOwbytvSSphKajFE9cb
+ eVZi4xRRtVKSsDj68GlxuEGI8xGtHeApEIIVxGGxmCQ3wgWlEo/uDkeBUD4Olhe3rr6R
+ ZkVCMTFYax7IWz3Loqzs2HEii3FSR5ZJkh+ZKy0iNwCoW5IVgfjjsmE4CFRIo9wTa+u3
+ nNdbLX66guqT79RJHOvblSu0ftnMBJZJm6dLqR47jvn7lR+QaWDHLINIzmnneLIs1hbr qA== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([5.172.152.52])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2whda3s7nv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 27 Nov 2019 09:39:38 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 27 Nov
+ 2019 15:40:30 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Wed, 27 Nov 2019 15:40:30 +0000
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id C47F52C8;
+        Wed, 27 Nov 2019 15:39:36 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <broonie@kernel.org>
+CC:     <gregory.clement@bootlin.com>, <linus.walleij@linaro.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] spi: dw: Correct handling of native chipselect
+Date:   Wed, 27 Nov 2019 15:39:36 +0000
+Message-ID: <20191127153936.29719-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
+ impostorscore=0 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911270136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shirley,
+This patch reverts commit 6e0a32d6f376 ("spi: dw: Fix default polarity
+of native chipselect").
 
-On Wed, 2019-11-27 at 02:46 +0000, Zhao, Shirley wrote:
-> Hi, Mimi, 
-> 
-> Answer your two questions:
-> 
-> 1. Yes, I have verified trusted key works well without PCR policy
-> protection as below: 
-> $ keyctl add trusted kmk "new 32 keyhandle=0x81000001" @u
-> 1055240928
-> $ keyctl list @u
-> 1 keys in keyring:
-> 1055240928: --alswrv     0     0 trusted: kmk
-> $ keyctl pipe 1055240928 > kmk.blob
-> $ cat kmk.blob
-> 007f0020ff808bd8b7239194e89aac6a95b4d210114742c20afa33493f002dffd068
-> 5d510010c12d7ad51eb83d6d93895de066bf3d39718cc503adb4802cb087b88b2fff
-> 4b040fe3a2be6a3f87c6749d087c9fb6e8734cb23f438d64087581a13bc83d5dc3b0
-> 26e77a894ece6620d0eb85df6449ff3c609fd77d5f0caf79b4535b002e0008000b00
-> 0000400000001000209a5b00b0d558fcf9e8c029522715e6b5906366eaec5f34367b
-> 8ab16c0fb9009a0073000000000020e3b0c44298fc1c149afbf4c8996fb92427ae41
-> e4649b934ca495991b7852b85501000b0022000bdcdb694e102e13a0fba5111081cb
-> 6cf616c118d404936cac3e84db24c71e47d50022000b04b5db1aa52635dfb242e76f
-> 6bde8e2176ae48fc682946c6c76d96f608079d1f0000002036b6fcca8206c7f722de
-> 85821d7ecb4785976fdd642bc7538505a2a818c8a23880214000000100202aedde45
-> 08f548d108193ec8fe166a7befde19113fe727ae2b29901bdece96e5
-> $ keyctl clear @u
-> $ keyctl list @u
-> keyring is empty
-> $ keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001"
-> @u
-> 1022963731
-> $ keyctl print 1022963731
-> 007f0020ff808bd8b7239194e89aac6a95b4d210114742c20afa33493f002dffd068
-> 5d510010c12d7ad51eb83d6d93895de066bf3d39718cc503adb4802cb087b88b2fff
-> 4b040fe3a2be6a3f87c6749d087c9fb6e8734cb23f438d64087581a13bc83d5dc3b0
-> 26e77a894ece6620d0eb85df6449ff3c609fd77d5f0caf79b4535b002e0008000b00
-> 0000400000001000209a5b00b0d558fcf9e8c029522715e6b5906366eaec5f34367b
-> 8ab16c0fb9009a0073000000000020e3b0c44298fc1c149afbf4c8996fb92427ae41
-> e4649b934ca495991b7852b85501000b0022000bdcdb694e102e13a0fba5111081cb
-> 6cf616c118d404936cac3e84db24c71e47d50022000b04b5db1aa52635dfb242e76f
-> 6bde8e2176ae48fc682946c6c76d96f608079d1f0000002036b6fcca8206c7f722de
-> 85821d7ecb4785976fdd642bc7538505a2a818c8a23880214000000100202aedde45
-> 08f548d108193ec8fe166a7befde19113fe727ae2b29901bdece96e5
-> 
-> 2. The following kernel file is related with this problem. 
-> /security/keys/keyctl.c
-> /security/keys/key.c
-> /security/keys/trusted-keys/trusted_tpm1.c
-> /security/keys/trusted-keys/trusted_tpm2.c
-> 
-> To load the PCR policy protection trusted key, the call stack is: 
-> SYSCALL_DEFINE5(add_key,...) --> key_create_or_update() -->
-> __key_instantiate_and_link() -->  trusted_instantiate() -->
-> tpm2_unseal_trusted() --> tpm2_unseal_cmd(). 
-> 
-> Check dmesg, there will be error: 
-> [73336.351596] trusted_key: key_unseal failed (-1)
+The SPI framework always called the set_cs callback with the logic
+level it desired on the chip select line, which is what the drivers
+original handling supported. commit f3186dd87669 ("spi: Optionally
+use GPIO descriptors for CS GPIOs") changed these symantics, but only
+in the case of drivers that also support GPIO chip selects, to true
+meaning apply slave select rather than logic high. This left things in
+an odd state where a driver that only supports hardware chip selects,
+the core would handle polarity but if the driver supported GPIOs as
+well the driver should handle polarity.  At this point the reverted
+change was applied to change the logic in the driver to match new
+system.
 
-Like the other kernel mailing lists, please bottom post.  When
-reporting a problem, please include the kernel version and other
-relevant details.  For example, the TPM version and type (eg. hardware
-vendor, software TPM, etc).  Please indicate if this is a new problem
-and which kernel release it first start happening?
+This was then broken by commit 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH
+setting when using native and GPIO CS") which reverted the core back
+to consistently calling set_cs with a logic level.
 
-I have no experience with the tpm2_ commands,  I suggest trying to
-extend a single measurement to a PCR and sealing to that value.
+This fix reverts the driver code back to its original state to match
+the current core code. This is probably a better fix as a) the set_cs
+callback is always called with consistent symantics and b) the
+inversion for SPI_CS_HIGH can be handled in the core and doesn't need
+to be coded in each driver supporting it.
 
-Mimi
+Fixes: 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH setting when using native and GPIO CS")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+
+This is only build tested on my end, and I really think it would
+benefit for someone actually testing it incase I have missed
+something.
+
+Also I have updated the commit message a little over the Cadence
+fix, to include some of the additional information from chatting
+to Linus. So let me know if you would rather I did a respin of the
+Cadence fix with an updated commit message as well.
+
+Thanks,
+Charles
+
+ drivers/spi/spi-dw.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index a92aa5cd4fbe8..76d6b94a7597f 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -129,10 +129,11 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
+ 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
+ 	struct chip_data *chip = spi_get_ctldata(spi);
+ 
++	/* Chip select logic is inverted from spi_set_cs() */
+ 	if (chip && chip->cs_control)
+-		chip->cs_control(enable);
++		chip->cs_control(!enable);
+ 
+-	if (enable)
++	if (!enable)
+ 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
+ 	else if (dws->cs_override)
+ 		dw_writel(dws, DW_SPI_SER, 0);
+-- 
+2.11.0
 
