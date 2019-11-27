@@ -2,119 +2,133 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFFDC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A696C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD8F8206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F9920678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:48:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qShOcQlp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfK0OrG (ORCPT
+        id S1727120AbfK0OsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:47:06 -0500
-Received: from mga14.intel.com ([192.55.52.115]:18703 "EHLO mga14.intel.com"
+        Wed, 27 Nov 2019 09:48:00 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:3892 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726537AbfK0OrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:47:05 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 06:47:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,249,1571727600"; 
-   d="scan'208";a="203094641"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga008.jf.intel.com with ESMTP; 27 Nov 2019 06:47:03 -0800
-Date:   Wed, 27 Nov 2019 06:47:03 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v2 00/12] treewide: break dependencies on x86's RM header
-Message-ID: <20191127144703.GA18530@linux.intel.com>
-References: <20191126165417.22423-1-sean.j.christopherson@intel.com>
- <20191127072057.GB94748@gmail.com>
+        id S1726591AbfK0Or7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 09:47:59 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47NNt42w4mz9v0w8;
+        Wed, 27 Nov 2019 15:47:56 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=qShOcQlp; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 8sFkpU0CXzhx; Wed, 27 Nov 2019 15:47:56 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47NNt41sghz9v0w7;
+        Wed, 27 Nov 2019 15:47:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1574866076; bh=1W4pkRYIjtnmMfpsH0+nUm20obpBPvjB7NQtbwdPbAk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=qShOcQlpbWQM5NtWwBZbdajuJz0eN5wq724KlbQz34m8lFL7s4RHqwM8jlaCWdJIL
+         QI2JlUtzjP1dhjX/CqWwIHMlfgttBdUGO0026MqcIXsMafnMvZGnQBT+S6IAIPIhWX
+         J5+OtTVJMQb+DY2Bo+5kGyf7ptCdtz2BHTd7UBIM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B38BE8B862;
+        Wed, 27 Nov 2019 15:47:57 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 5E_wXZJsK45e; Wed, 27 Nov 2019 15:47:57 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 16C128B85A;
+        Wed, 27 Nov 2019 15:47:57 +0100 (CET)
+Subject: Re: [PATCH v3 4/8] powerpc/vdso32: inline __get_datapage()
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <cover.1572342582.git.christophe.leroy@c-s.fr>
+ <9c9fe32df8633e6ba8e670274dc3eef82a1b5a65.1572342582.git.christophe.leroy@c-s.fr>
+ <874kywbrjv.fsf@mpe.ellerman.id.au> <871ru0beke.fsf@mpe.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <dd5e359b-5864-f8e3-876a-ec606b51eb65@c-s.fr>
+Date:   Wed, 27 Nov 2019 15:47:56 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127072057.GB94748@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <871ru0beke.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 08:20:57AM +0100, Ingo Molnar wrote:
-> 
-> * Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> 
-> > x86's asm/realmode.h, which defines low level structures, variables and
-> > helpers used to bring up APs during SMP boot, ends up getting included in
-> > practically every nook and cranny of the kernel because the address used
-> > by ACPI for resuming from S3 also happens to be stored in the real mode
-> > header, and ACPI bleeds the dependency into its widely included headers.
-> > 
-> > As a result, modifying realmode.h for even the most trivial change to the
-> > boot code triggers a full kernel rebuild, which is frustrating to say the
-> > least as it some of the most difficult code to get exactly right *and* is
-> > also some of the most functionally isolated code in the kernel.
-> > 
-> > To break the kernel's widespread dependency on realmode.h, add a wrapper
-> > in the aforementioned ACPI S3 code to access the real mode header instead
-> > of derefencing the header directly in asm/acpi.h and thereby exposing it
-> > to the world via linux/acpi.h.
-> > 
-> > v2:
-> >   - Rebased on tip/x86/cleanups, commit b74374fef924 ("x86/setup: Enhance
-> >     the comments").
-> >   - Use acpi_get_wakeup_address() as new function name. [Boris and Pavel]
-> >   - Capture acpi_get_wakeup_address() in a local address. [Pavel]
-> >   - Collect acks.  I didn't add Rafael's acks on patches 11 and 12 due to
-> >     the above changes.
-> >   - Explicitly call out the removal of <asm/realmode.h> from <asm/acpi.h>
-> >     in patch 12. [Ingo]
-> >   - Remove superfluous Fixes: tags. [Ard]
-> 
-> You didn't include every patch from v1 though, such us my fix to Quark:
-> 
->   [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h for virt_to_phys()
-> 
-> I've applied that one too and your updated patches, and it's now all 
-> pushed out into tip:WIP.core/headers.
+Hi Michael,
 
-Sorry, it wasn't clear to me whether or not to include that one.  Next
-time I'll ask.
+Le 22/11/2019 à 07:38, Michael Ellerman a écrit :
+> Michael Ellerman <mpe@ellerman.id.au> writes:
+>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>>> __get_datapage() is only a few instructions to retrieve the
+>>> address of the page where the kernel stores data to the VDSO.
+>>>
+>>> By inlining this function into its users, a bl/blr pair and
+>>> a mflr/mtlr pair is avoided, plus a few reg moves.
+>>>
+>>> The improvement is noticeable (about 55 nsec/call on an 8xx)
+>>>
+>>> vdsotest before the patch:
+>>> gettimeofday:    vdso: 731 nsec/call
+>>> clock-gettime-realtime-coarse:    vdso: 668 nsec/call
+>>> clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
+>>>
+>>> vdsotest after the patch:
+>>> gettimeofday:    vdso: 677 nsec/call
+>>> clock-gettime-realtime-coarse:    vdso: 613 nsec/call
+>>> clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
+>>>
+>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>
+>> This doesn't build with gcc 4.6.3:
+>>
+>>    /linux/arch/powerpc/kernel/vdso32/gettimeofday.S: Assembler messages:
+>>    /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:41: Error: unsupported relocation against __kernel_datapage_offset
+>>    /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:86: Error: unsupported relocation against __kernel_datapage_offset
+>>    /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:213: Error: unsupported relocation against __kernel_datapage_offset
+>>    /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:247: Error: unsupported relocation against __kernel_datapage_offset
+>>    make[4]: *** [arch/powerpc/kernel/vdso32/gettimeofday.o] Error 1
+> 
+> Actually I guess it's binutils, which is v2.22 in this case.
+> 
+> Needed this:
+> 
+> diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
+> index 12785f72f17d..0048db347ddf 100644
+> --- a/arch/powerpc/include/asm/vdso_datapage.h
+> +++ b/arch/powerpc/include/asm/vdso_datapage.h
+> @@ -117,7 +117,7 @@ extern struct vdso_data *vdso_data;
+>   .macro get_datapage ptr, tmp
+>   	bcl	20, 31, .+4
+>   	mflr	\ptr
+> -	addi	\ptr, \ptr, __kernel_datapage_offset - (.-4)
+> +	addi	\ptr, \ptr, (__kernel_datapage_offset - (.-4))@l
+>   	lwz	\tmp, 0(\ptr)
+>   	add	\ptr, \tmp, \ptr
+>   .endm
+> 
+
+Are you still planning to getting this series merged ? Do you need any 
+help / rebase / re-spin ?
+
+Christophe
