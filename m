@@ -2,105 +2,115 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326A5C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5690C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FD1206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817B7206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfK0QFI (ORCPT
+        id S1727158AbfK0QFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:05:08 -0500
-Received: from shelob.surriel.com ([96.67.55.147]:47274 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfK0QFH (ORCPT
+        Wed, 27 Nov 2019 11:05:36 -0500
+Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:55650 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726603AbfK0QFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:05:07 -0500
-X-Greylist: delayed 1090 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Nov 2019 11:05:07 EST
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1iZzWm-0000RJ-Dp; Wed, 27 Nov 2019 10:46:52 -0500
-Message-ID: <8aadfbebed6502f21ba91a823e118770b84e31d2.camel@surriel.com>
-Subject: Re: [PATCH] x86/fpu: Don't cache access to fpu_fpregs_owner_ctx
-From:   Rik van Riel <riel@surriel.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Barret Rhoden <brho@google.com>,
-        Josh Bleecher Snyder <josharian@gmail.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Date:   Wed, 27 Nov 2019 10:46:51 -0500
-In-Reply-To: <20191127124243.u74osvlkhcmsskng@linutronix.de>
-References: <c87e93c3-5f30-f242-74b7-6c7ccc91158a@google.com>
-         <20191126202026.csrmjre6vn2nxq7c@linutronix.de>
-         <e4d6406b-0d47-5cc5-f3a8-6d14bd90760b@google.com>
-         <20191127124243.u74osvlkhcmsskng@linutronix.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-6EoG3tuvdYQ7otJGjpXm"
-User-Agent: Evolution 3.34.0 (3.34.0-1.fc31) 
+        Wed, 27 Nov 2019 11:05:36 -0500
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us4.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id DC4ED140091;
+        Wed, 27 Nov 2019 16:05:33 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 27 Nov
+ 2019 16:05:22 +0000
+Subject: Re: [PATCH net] net: wireless: intel: iwlwifi: fix GRO_NORMAL packet
+ stalling
+To:     Alexander Lobakin <alobakin@dlink.ru>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     Jiri Pirko <jiri@mellanox.com>, Eric Dumazet <edumazet@google.com>,
+        "Ido Schimmel" <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        "Manish Chopra" <manishc@marvell.com>,
+        <GR-Linux-NIC-Dev@marvell.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "Kenneth R. Crudup" <kenny@panix.com>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191127094123.18161-1-alobakin@dlink.ru>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <20a018a6-827a-de47-a0e4-45ff8c02087b@solarflare.com>
+Date:   Wed, 27 Nov 2019 16:05:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20191127094123.18161-1-alobakin@dlink.ru>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-25068.003
+X-TM-AS-Result: No-2.916000-8.000000-10
+X-TMASE-MatchedRID: 1GZI+iG+MtfmLzc6AOD8DfHkpkyUphL9B7lMZ4YsZk/RLEyE6G4DRFDT
+        Kayi2ZF6QOaAfcvrs35HBaYvF0hxKFQcsas26nLQLyz9QvAyHjo0AJe3B5qfBgQsw9A3PIlLfeR
+        HqXTAYgbUqkiO26feqA2FRXLSS+vrmKa4M58UVVYBnSWdyp4eoXFa/hQHt1A1wubD3SFbWzv3h2
+        jybQkTkqdL8KI7XN648dZ5VcPdHTpyPzMTUSO1JP5/gVn+bUDMNV9S7O+u3KYZwGrh4y4izH1a0
+        2rGxHiJ31rPPTNFvISK2jE700vQHbp4BGlNqtR8LbjXqdzdtCXrixWWWJYrH01+zyfzlN7ygxsf
+        zkNRlfKx5amWK2anSPoLR4+zsDTt+GYUedkXNWqMK5Qm/U0G90/h8PPR9Wyqvd+6IqaLHYtW8qO
+        kPe265is7C65Y7GDJDGmw3Q+A1RzSS97R9sl6CenrP6nUgUSzU7PqY3kOZ2mHzGTHoCwyHhlNKS
+        p2rPkW5wiX7RWZGYs2CWDRVNNHuzflzkGcoK72
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--2.916000-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-25068.003
+X-MDID: 1574870734-9g_yLSIuo-Lh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-6EoG3tuvdYQ7otJGjpXm
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2019-11-27 at 13:42 +0100, Sebastian Andrzej Siewior wrote:
-
-> There is no Sign-off by here. Could this please be verified by the
-> reporter?
-
-Next time this is posted, feel free to add this :)
-
-Reviewed-by: Rik van Riel <riel@surriel.com>
-
-> diff --git a/arch/x86/include/asm/fpu/internal.h
-> b/arch/x86/include/asm/fpu/internal.h
-> index 4c95c365058aa..44c48e34d7994 100644
-> --- a/arch/x86/include/asm/fpu/internal.h
-> +++ b/arch/x86/include/asm/fpu/internal.h
-> @@ -509,7 +509,7 @@ static inline void
-> __fpu_invalidate_fpregs_state(struct fpu *fpu)
-> =20
->  static inline int fpregs_state_valid(struct fpu *fpu, unsigned int
-> cpu)
->  {
-> -	return fpu =3D=3D this_cpu_read_stable(fpu_fpregs_owner_ctx) && cpu
-> =3D=3D fpu->last_cpu;
-> +	return fpu =3D=3D this_cpu_read(fpu_fpregs_owner_ctx) && cpu =3D=3D
-> fpu->last_cpu;
->  }
-> =20
->  /*
---=20
-All Rights Reversed.
-
---=-6EoG3tuvdYQ7otJGjpXm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl3emmsACgkQznnekoTE
-3oPklAf6Aybc6hqvWSIYKd0KqrHtRhyW0ibGiSXziJSYChlUaFy+3zFLwjES0ONN
-H8t7f0OSEINpN7OQt1LeWwCp9UHDIKqG3rv3jKdq+j/xrp7/D+4U5+cXtFlW+KIR
-lauargI7DEM+eyq5ASbiE5+2565cXD8gMKK+AMNJzPiCO3vi7SPkjm2P4MqQwC9G
-VUU+enJcP0WfDDaKCs5Bh2OseBAich72rXNKdiYEwMS70dUl0ofHzrj/LN+kh4OX
-fWksJcOv4BZP5BksB6yw3JBtTp9y5EAfnjYAAhWAiMijKTPRJ9UVOw+o+Km2bS8O
-e+Ildvuz9phtOdegUEtV8djdCzMelg==
-=xB4N
------END PGP SIGNATURE-----
-
---=-6EoG3tuvdYQ7otJGjpXm--
-
+On 27/11/2019 09:41, Alexander Lobakin wrote:
+> Commit 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in
+> napi_gro_receive()") has applied batched GRO_NORMAL packets processing
+> to all napi_gro_receive() users, including mac80211-based drivers.
+>
+> However, this change has led to a regression in iwlwifi driver [1][2] as
+> it is required for NAPI users to call napi_complete_done() or
+> napi_complete() and the end of every polling iteration, whilst iwlwifi
+> doesn't use NAPI scheduling at all and just calls napi_gro_flush().
+> In that particular case, packets which have not been already flushed
+> from napi->rx_list stall in it until at least next Rx cycle.
+>
+> Fix this by adding a manual flushing of the list to iwlwifi driver right
+> before napi_gro_flush() call to mimic napi_complete() logics.
+>
+> I prefer to open-code gro_normal_list() rather than exporting it for 2
+> reasons:
+> * to prevent from using it and napi_gro_flush() in any new drivers,
+>   as it is the *really* bad way to use NAPI that should be avoided;
+> * to keep gro_normal_list() static and don't lose any CC optimizations.
+>
+> I also don't add the "Fixes:" tag as the mentioned commit was only a
+> trigger that only exposed an improper usage of NAPI in this particular
+> driver.
+>
+> [1] https://lore.kernel.org/netdev/PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+> [2] https://bugzilla.kernel.org/show_bug.cgi?id=205647
+>
+> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Reviewed-by: Edward Cree <ecree@solarflare.com>
