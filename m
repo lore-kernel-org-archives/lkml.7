@@ -2,56 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742C8C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9463C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CF92075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 871E82075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890855;
-	bh=4s8e4vFMSbvxkOqzZBgfRHrA0gBMSbB8WI/S0IuJjVM=;
+	s=default; t=1574890862;
+	bh=jPgVZdWq1uxqLuuFB4zn5NW/loTd09gJehXLV22OFX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUobVBXKK/WGjXGzAfZGLkOnevtyyTrlSfxvfXKMmWKOOwm3VnWmUQIHcaDFrwPBU
-	 fIDHCRtTEEaxSQCWgsIUfNjbuOsnPYaskb5/lGvETVFQ7F5eJVk22PzmkjtSvl4J2A
-	 neJwmN4Wmh4g3NPUbWAY0aPkO+CkAPNjTMf+sqRY=
+	b=OlhjwbsWnonwuaHV45ntcguQEGUJWRlYj4RkkVOgFBY0AbT2KJ7qYxRzRLJkk6efH
+	 y0nowc8lM1i+rNvPgdikVwT5W/YShkxggqM9wGITkqbKXJoeySYAA5AJYkysv/qV+H
+	 Mjb5AYT8o5c0v6iiI9Gz+t+Iic0KdHrXiMOty4MA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbfK0Vky (ORCPT
+        id S1730028AbfK0VlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:40:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48742 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:41:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729321AbfK0Um0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:42:26 -0500
+        id S1728777AbfK0UmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:42:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72B8021783;
-        Wed, 27 Nov 2019 20:42:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D67C21787;
+        Wed, 27 Nov 2019 20:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887345;
-        bh=4s8e4vFMSbvxkOqzZBgfRHrA0gBMSbB8WI/S0IuJjVM=;
+        s=default; t=1574887333;
+        bh=jPgVZdWq1uxqLuuFB4zn5NW/loTd09gJehXLV22OFX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OIPT6UX/MFxwNyHZ6AmHI3gnQdbLoG/ORtHg8zC8lUZ1U70AyVsjhzSBxfzSS8uQp
-         2jJKlMfvALiIcHc6xbpYDUqaiVZwdTqQ0DramrQrhcXxpLN8Q3w8qAOr4Qe7UmSvZt
-         RblS+ZE5BbqDWvh7eoME/MGOZm6B9nBB0eI6/bYU=
+        b=pZTdpZN86waNrmhU83ixguHqTSUPT4lgzkbgu/9P4QELczjRy3xVusXLCn8fr3xYb
+         UnZGY61PfMga/aLrdA0GQUg3rMPUZAfM68zAqbCKsdw1ixF4hPontosGMisNRA78t4
+         iGQfivRMLe6XPU1SnLFN4NMJ/Bk1rOqmwdNX7mos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "=?UTF-8?q?Ernesto=20A . =20Fern=C3=A1ndez?=" 
-        <ernesto.mnd.fernandez@gmail.com>,
-        Vyacheslav Dubeyko <slava@dubeyko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 076/151] hfs: fix return value of hfs_get_block()
-Date:   Wed, 27 Nov 2019 21:30:59 +0100
-Message-Id: <20191127203035.232383585@linuxfoundation.org>
+Subject: [PATCH 4.9 018/151] powerpc/eeh: Fix use of EEH_PE_KEEP on wrong field
+Date:   Wed, 27 Nov 2019 21:30:01 +0100
+Message-Id: <20191127203011.441618804@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -64,43 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit 1267a07be5ebbff2d2739290f3d043ae137c15b4 ]
+[ Upstream commit 473af09b56dc4be68e4af33220ceca6be67aa60d ]
 
-Direct writes to empty inodes fail with EIO.  The generic direct-io code
-is in part to blame (a patch has been submitted as "direct-io: allow
-direct writes to empty inodes"), but hfs is worse affected than the other
-filesystems because the fallback to buffered I/O doesn't happen.
+eeh_add_to_parent_pe() sometimes removes the EEH_PE_KEEP flag, but it
+incorrectly removes it from pe->type, instead of pe->state.
 
-The problem is the return value of hfs_get_block() when called with
-!create.  Change it to be more consistent with the other modules.
+However, rather than clearing it from the correct field, remove it.
+Inspection of the code shows that it can't ever have had any effect
+(even if it had been cleared from the correct field), because the
+field is never tested after it is cleared by the statement in
+question.
 
-Link: http://lkml.kernel.org/r/4538ab8c35ea37338490525f0f24cbc37227528c.1539195310.git.ernesto.mnd.fernandez@gmail.com
-Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The clear statement was added by commit 807a827d4e74 ("powerpc/eeh:
+Keep PE during hotplug"), but it didn't explain why it was necessary.
+
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfs/extent.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/eeh_pe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
-index 1bd1afefe2538..16819d2a978b4 100644
---- a/fs/hfs/extent.c
-+++ b/fs/hfs/extent.c
-@@ -345,7 +345,9 @@ int hfs_get_block(struct inode *inode, sector_t block,
- 	ablock = (u32)block / HFS_SB(sb)->fs_div;
+diff --git a/arch/powerpc/kernel/eeh_pe.c b/arch/powerpc/kernel/eeh_pe.c
+index 1abd8dd77ec13..eee2131a97e61 100644
+--- a/arch/powerpc/kernel/eeh_pe.c
++++ b/arch/powerpc/kernel/eeh_pe.c
+@@ -370,7 +370,7 @@ int eeh_add_to_parent_pe(struct eeh_dev *edev)
+ 		while (parent) {
+ 			if (!(parent->type & EEH_PE_INVALID))
+ 				break;
+-			parent->type &= ~(EEH_PE_INVALID | EEH_PE_KEEP);
++			parent->type &= ~EEH_PE_INVALID;
+ 			parent = parent->parent;
+ 		}
  
- 	if (block >= HFS_I(inode)->fs_blocks) {
--		if (block > HFS_I(inode)->fs_blocks || !create)
-+		if (!create)
-+			return 0;
-+		if (block > HFS_I(inode)->fs_blocks)
- 			return -EIO;
- 		if (ablock >= HFS_I(inode)->alloc_blocks) {
- 			res = hfs_extend_file(inode);
 -- 
 2.20.1
 
