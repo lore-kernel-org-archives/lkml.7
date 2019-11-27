@@ -2,134 +2,129 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5E8C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED77BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840AA2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09A72071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JCmQk2Z6";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="SDjJ1wxl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pjEVQil8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfK0EGv (ORCPT
+        id S1726698AbfK0EPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 23:06:51 -0500
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:57010
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726525AbfK0EGv (ORCPT
+        Tue, 26 Nov 2019 23:15:46 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46446 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfK0EPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 23:06:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574827610;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=5ARwXEreVexfeHJvosDOjQ5dg3IjsVVnM3f/Nqmw6W0=;
-        b=JCmQk2Z6dcatoaCXep4HC6AfnatpEIN49DnbxJHgxzw2GjQDkdHKdSm27WhVVOGV
-        gzmXDtZZyRs8DIiemflHgONuIiKw63So+zAxixOoMBtl7u1XXdnKL16zhZT/NqD1Bkt
-        VWaL93ZDp7BODCzUaAtNEqjv1l+WUjclvX44qYng=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574827609;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=5ARwXEreVexfeHJvosDOjQ5dg3IjsVVnM3f/Nqmw6W0=;
-        b=SDjJ1wxlm3fUlda1VoPEHzxNZTVBWKkrKLTYlqsZj5nbKYfXmitca2y1xFWTlnTV
-        TDLsAXNBEMtm9NXdDYweOOqnQpUJ6CaTkEkTynTPWBjbmZYB6GqXuRHjZ+6hsb4xLLm
-        MLXG2dzjp94r47aQooYygyvmywe9KtzaND7wOJ9A=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 57FA4C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v2 3/8] dt-bindings: clock: Add YAML schemas for the QCOM
- GPUCC clock bindings
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <1573812304-24074-1-git-send-email-tdas@codeaurora.org>
- <1573812304-24074-4-git-send-email-tdas@codeaurora.org>
- <CAOCk7NqfHe6jRPmw6o650fyd6EyVfFObHhJ9=21ipuAqJo6oGA@mail.gmail.com>
- <20191126181154.275EA20727@mail.kernel.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <0101016eab0a4e76-b8eb44c5-d076-46b9-a156-b80dc650ca31-000000@us-west-2.amazonses.com>
-Date:   Wed, 27 Nov 2019 04:06:49 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 26 Nov 2019 23:15:46 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR4FL1f026273;
+        Tue, 26 Nov 2019 22:15:21 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574828121;
+        bh=wT3uBStmO0zs8CxdsXEg1fyzmCCiuamwhYlq5icphfU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pjEVQil8AxS5Wu73HXta+uN5kXPDTns/4nN/OolK1peBL1nosjT0+L5MF4z3k1ZYp
+         1pO8N52mZWPI5DZF8pK3UbxIYK01LnKFCiwWeSMos2HFxEZ1Mo1/SoNRSrLfSFhgmJ
+         opCmtmRHviuHHmPAxMutSSxi0qo/MKCXGfy2FZDY=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR4FL93065540;
+        Tue, 26 Nov 2019 22:15:21 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 26
+ Nov 2019 22:15:20 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 26 Nov 2019 22:15:20 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR4FE36093524;
+        Tue, 26 Nov 2019 22:15:16 -0600
+Subject: Re: [PATCH RESEND 2/2] scsi: ufs: Update L4 attributes on manual
+ hibern8 exit in Cadence UFS.
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        "'Alim Akhtar'" <alim.akhtar@gmail.com>,
+        "'sheebab'" <sheebab@cadence.com>
+CC:     "'Avri Altman'" <avri.altman@wdc.com>,
+        "'Pedro Sousa'" <pedrom.sousa@synopsys.com>,
+        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        "'Stanley Chu'" <stanley.chu@mediatek.com>,
+        "'Bean Huo (beanhuo)'" <beanhuo@micron.com>,
+        <yuehaibing@huawei.com>, <linux-scsi@vger.kernel.org>,
+        "'open list'" <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <rafalc@cadence.com>,
+        <mparab@cadence.com>
+References: <1574147082-22725-1-git-send-email-sheebab@cadence.com>
+ <1574147082-22725-3-git-send-email-sheebab@cadence.com>
+ <CAGOxZ53Lotp6sBUryHsE2S1dbkQNZhPhWNMXidoi=BOmV074VA@mail.gmail.com>
+ <CGME20191121105613epcas4p1a83df10f9f8dcf9edaa583648cad449e@epcas4p1.samsung.com>
+ <cfc2c86f-f9ae-ac91-39ac-8bb48c41b243@ti.com>
+ <08c701d5a4d4$b20c7300$16255900$@samsung.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <69e16181-e01c-1120-2074-80b9c1eb19ce@ti.com>
+Date:   Wed, 27 Nov 2019 09:45:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191126181154.275EA20727@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <08c701d5a4d4$b20c7300$16255900$@samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SES-Outgoing: 2019.11.27-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alim,
 
-
-On 11/26/2019 11:41 PM, Stephen Boyd wrote:
-> Quoting Jeffrey Hugo (2019-11-15 07:11:01)
->> On Fri, Nov 15, 2019 at 3:07 AM Taniya Das <tdas@codeaurora.org> wrote:
->>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
->>> new file mode 100644
->>> index 0000000..c2d6243
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
->>> @@ -0,0 +1,69 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/bindings/clock/qcom,gpucc.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Qualcomm Graphics Clock & Reset Controller Binding
->>> +
->>> +maintainers:
->>> +  - Taniya Das <tdas@codeaurora.org>
->>> +
->>> +description: |
->>> +  Qualcomm grpahics clock control module which supports the clocks, resets and
->>> +  power domains.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - qcom,msm8998-gpucc
->>> +      - qcom,sdm845-gpucc
->>> +
->>> +  clocks:
->>> +    minItems: 1
->>> +    maxItems: 2
->>> +    items:
->>> +      - description: Board XO source
->>> +      - description: GPLL0 source from GCC
+On 27/11/19 9:12 AM, Alim Akhtar wrote:
+> 
+[...]
+>>>> Backup L4 attributes duirng manual hibern8 entry and restore the L4
+>>>> attributes on manual hibern8 exit as per JESD220C.
+>>>>
+>>> Can you point me to the relevant section on the spec?
+>>>
 >>
->> This is not an accurate conversion.  GPLL0 was not valid for 845, and
->> is required for 8998.
-> 
-> Thanks for checking Jeff.
-> 
-> It looks like on 845 there are two gpll0 clocks going to gpucc. From
-> gpu_cc_parent_map_0:
-> 
-> 	"gcc_gpu_gpll0_clk_src",
-> 	"gcc_gpu_gpll0_div_clk_src",
-> 
+>> Per JESD 220C 9.4 UniPro/UFS Control Interface (Control Plane):
+>>
+>> "NOTE After exit from Hibernate all UniPro Transport Layer attributes (including
+>> L4 T_PeerDeviceID,
+>>
+>> L4 T_PeerCPortID, L4 T_ConnectionState, etc.) will be reset to their reset values.
+>> All required attributes
+>>
+>> must be restored properly on both ends before communication can resume."
+>>
+>> But its not clear whether SW needs to restore these attributes or hardware
+>>
+> Thanks Vignesh for pointing out the spec section, yes it is not clear, one way to confirm this is just by read L4 attributes before 
+> And after hinern8 entry/exit.
 
-There are branches of GPLL0 which would be connected to most external 
-CCs. It is upto to the external CCs to either use them to source a 
-frequency or not.
+I know that on Cadence UFS controller L4 attributes are definitely lost
+on hibernation entry/exit and therefore needs to be restored. But not
+sure of other controllers. If this issue is seen on other controllers as
+well, then we should probably consider moving this code to core driver
+so that there is code reuse.
 
+> (at least in the current platform it is not being done)
+> AFA this patch is concerns, this looks ok to me.
+> @ Avri , any thought on this?
+> 
+>> Regards
+>> Vignesh
+>>
+
+[...]
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+Regards
+Vignesh
