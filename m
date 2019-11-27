@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02EEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FB4C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D81F2158A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1955A21847
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887792;
-	bh=3wMnnIJXfnWk142yJD3BMJNJy478q2HaJSDSh7be0mA=;
+	s=default; t=1574887797;
+	bh=AEKuXHxzOlWw1jjhUhJvnxQdyfazbBauDavrgiai+r0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WiVYftWjJsGjVH6luk7tYPXX0Rn/65CsuJViT6ZKeQmeKs8QMgKWCbEJ6AXdekc44
-	 k3/s7XXrjU7F8eEINitXyCOBKX9qPngkDrA3KcnSR8jTOCJLYCPC9xrZJkYDgGU0sw
-	 fJiWqQF30DlNVx05OuuxEzZZ4CLYK4fldarZRPFE=
+	b=AcOj3G7lXjPZKX8CFYoMBhL1ZkoXvLpX5m/TxXZ/gzjfSvVok3M0iKOSackhm1JJm
+	 Q6M/pJl4pixG4r9pDAED7rxF1Ju8xDGU3MBEfPtOGIDcI1Uwi3Alf+uwdovT9isGSX
+	 /h994OmXLrf88dtwwPxXpDHglUyHU6JJEQcWh6jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbfK0Utv (ORCPT
+        id S1729888AbfK0Ut4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:49:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35470 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:49:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730281AbfK0Utr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:49:47 -0500
+        id S1729873AbfK0Utw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:49:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B99C20678;
-        Wed, 27 Nov 2019 20:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF28920678;
+        Wed, 27 Nov 2019 20:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887786;
-        bh=3wMnnIJXfnWk142yJD3BMJNJy478q2HaJSDSh7be0mA=;
+        s=default; t=1574887792;
+        bh=AEKuXHxzOlWw1jjhUhJvnxQdyfazbBauDavrgiai+r0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ezJj1yxdMLr02c7ypHoBI9pBfzYHE6D+/57dDo0YNd67w+FeTidNygcin8mmI+a6a
-         ePKjESLJd4rjwv5w06gZ7tP3LacqnbageMvns8xu1sSqwEGFzi70pfSjKHBdf3xQdv
-         v5eKyanCM/ICQrPgjbn3ywOVVoqkAM4EMppxmgg8=
+        b=uXxdGU1Twqj7SE635aW6hpY5YNfSaVsrqZWvugwZDQH8OteVCrlq3IhsvmEbeJEuz
+         ZK6pmtZMAbHoeHPnouMN2Ck4WH4WbOlatBenyRnG2nG5kJd37S2qKdTcsrnleRPzLB
+         G/HqnWQXapicUDFU68RW1QbTppc7ii4hIalTntag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 051/211] clk: mmp2: fix the clock id for sdh2_clk and sdh3_clk
-Date:   Wed, 27 Nov 2019 21:29:44 +0100
-Message-Id: <20191127203058.794897063@linuxfoundation.org>
+Subject: [PATCH 4.14 053/211] ASoC: tegra_sgtl5000: fix device_node refcounting
+Date:   Wed, 27 Nov 2019 21:29:46 +0100
+Message-Id: <20191127203059.144739433@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,36 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-[ Upstream commit 4917fb90eec7c26dac1497ada3bd4a325f670fcc ]
+[ Upstream commit a85227da2dcc291b762c8482a505bc7d0d2d4b07 ]
 
-A typo that makes it impossible to get the correct clocks for
-MMP2_CLK_SDH2 and MMP2_CLK_SDH3.
+Similar to the following:
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Fixes: 1ec770d92a62 ("clk: mmp: add mmp2 DT support for clock driver")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+commit 4321723648b0 ("ASoC: tegra_alc5632: fix device_node refcounting")
+
+commit 7c5dfd549617 ("ASoC: tegra: fix device_node refcounting")
+
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mmp/clk-of-mmp2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/tegra/tegra_sgtl5000.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
-index 0fc75c3959570..d083b860f0833 100644
---- a/drivers/clk/mmp/clk-of-mmp2.c
-+++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -227,8 +227,8 @@ static struct mmp_param_gate_clk apmu_gate_clks[] = {
- 	/* The gate clocks has mux parent. */
- 	{MMP2_CLK_SDH0, "sdh0_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH0, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
- 	{MMP2_CLK_SDH1, "sdh1_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH1, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
--	{MMP2_CLK_SDH1, "sdh2_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH2, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
--	{MMP2_CLK_SDH1, "sdh3_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH3, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
-+	{MMP2_CLK_SDH2, "sdh2_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH2, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
-+	{MMP2_CLK_SDH3, "sdh3_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH3, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
- 	{MMP2_CLK_DISP0, "disp0_clk", "disp0_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x1b, 0x1b, 0x0, 0, &disp0_lock},
- 	{MMP2_CLK_DISP0_SPHY, "disp0_sphy_clk", "disp0_sphy_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x1024, 0x1024, 0x0, 0, &disp0_lock},
- 	{MMP2_CLK_DISP1, "disp1_clk", "disp1_div", CLK_SET_RATE_PARENT, APMU_DISP1, 0x1b, 0x1b, 0x0, 0, &disp1_lock},
+diff --git a/sound/soc/tegra/tegra_sgtl5000.c b/sound/soc/tegra/tegra_sgtl5000.c
+index 45a4aa9d2a479..901457da25ec3 100644
+--- a/sound/soc/tegra/tegra_sgtl5000.c
++++ b/sound/soc/tegra/tegra_sgtl5000.c
+@@ -149,14 +149,14 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,i2s-controller' missing/invalid\n");
+ 		ret = -EINVAL;
+-		goto err;
++		goto err_put_codec_of_node;
+ 	}
+ 
+ 	tegra_sgtl5000_dai.platform_of_node = tegra_sgtl5000_dai.cpu_of_node;
+ 
+ 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
+ 	if (ret)
+-		goto err;
++		goto err_put_cpu_of_node;
+ 
+ 	ret = snd_soc_register_card(card);
+ 	if (ret) {
+@@ -169,6 +169,13 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
+ 
+ err_fini_utils:
+ 	tegra_asoc_utils_fini(&machine->util_data);
++err_put_cpu_of_node:
++	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
++	tegra_sgtl5000_dai.cpu_of_node = NULL;
++	tegra_sgtl5000_dai.platform_of_node = NULL;
++err_put_codec_of_node:
++	of_node_put(tegra_sgtl5000_dai.codec_of_node);
++	tegra_sgtl5000_dai.codec_of_node = NULL;
+ err:
+ 	return ret;
+ }
+@@ -183,6 +190,12 @@ static int tegra_sgtl5000_driver_remove(struct platform_device *pdev)
+ 
+ 	tegra_asoc_utils_fini(&machine->util_data);
+ 
++	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
++	tegra_sgtl5000_dai.cpu_of_node = NULL;
++	tegra_sgtl5000_dai.platform_of_node = NULL;
++	of_node_put(tegra_sgtl5000_dai.codec_of_node);
++	tegra_sgtl5000_dai.codec_of_node = NULL;
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
