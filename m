@@ -2,90 +2,118 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA6CC33C9C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617E8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A44DB20674
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36EB320637
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:23:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uRMQFQup"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVsRjIUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfK0OXP (ORCPT
+        id S1727227AbfK0OXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:23:15 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:1717 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726673AbfK0OXP (ORCPT
+        Wed, 27 Nov 2019 09:23:50 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37221 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbfK0OXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:23:15 -0500
-X-UUID: dea260d0f5c7453a82d2c8ba4cb62079-20191127
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=cF2Om7X85XQimoGPg+VUY4Aqoy6qnXHiU7JTF0y3r6E=;
-        b=uRMQFQupvqFkrThMzspsv6IPiZ3M81H8L2EF9Xd9zrcWL2OgcFJOI0Rs5SUYEyO4u5mQmxYO/hbNqmcEBbFPuAZO1e8uRIBppL+vVHi6Ah0QxqwhdcxUO++yxn2PEYEKLMaUqcaI0xy16LJ/NGUv/7rPJOh5sjtu4GYhvt7BTXw=;
-X-UUID: dea260d0f5c7453a82d2c8ba4cb62079-20191127
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1900528197; Wed, 27 Nov 2019 22:23:10 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 27 Nov 2019 22:23:00 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 27 Nov 2019 22:23:03 +0800
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>,
-        Crystal Guo <Crystal.Guo@mediatek.com>,
-        <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
-Subject: [PATCH v5 2/3] dt-bindings: rng: add bindings for MediaTek ARMv8 SoCs
-Date:   Wed, 27 Nov 2019 22:22:57 +0800
-Message-ID: <1574864578-467-3-git-send-email-neal.liu@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 27 Nov 2019 09:23:50 -0500
+Received: by mail-lf1-f66.google.com with SMTP id b20so17323539lfp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 06:23:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=NQAc09iOSs+OUg5bzPj2H1rBE2GvXaGtHzNxY2vVFm8=;
+        b=NVsRjIUcwILPd1tnDv3S17qPH2Rc8pdEr06OlwognC5L1wYvuuWE2VmFAVum6Qb1sC
+         lmVgIpOLWlVMCndd202EatqCqX9bWwKuQpuknmnYAvNBZuRM0nfXZWN+zzgPxEDxXtNP
+         jo3HcmJ7bYOf3vgkcdZcmnDKCfYRUit71JHPUh0YjkuskgVPvkpJtC7gGesDIl5k/ASd
+         TnVlq3uYhRek3JP6dVNkz96AweylBNW4uXW04xnsmUiSETC69B8fHHkaoIdGKO35hm8Y
+         2kalCjn+HqYa1IEXmMSEhDzdLjntmK6J3oLzeaoyaS1e+VSazkpj5LuLvCDr9RKRbaqp
+         qWhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NQAc09iOSs+OUg5bzPj2H1rBE2GvXaGtHzNxY2vVFm8=;
+        b=qXh6BhVT/tKtT3ru67dV7ezgW+b2aOyZD5A1WjRb22WnXIl9hSEZ+64FEJb4EMYe0p
+         4fZG1vxya98L1bntcoRcFoEyZ13NRBWYo3yITVpCUWgaJo6NIvLk5GDa9Kmix64eLuPa
+         uXXWxZn8ooZ9QeENodt4bYX1PxK9qBobgN6vz0oGNKhQgdTZIzF5dE+sADewmzCA7eLi
+         CJm8JfuIbVmJ6BZ0aiAgDAsYNmH1swi9cEk12Z+7RCdVLF8RKmY8kM8NNw1tyVvDXNzc
+         A2RvMyWvjqtsm3861U84ZPqISdouKx2YDGvN3t4I3//K/HkCjwLRLxM5HGuu0r2/f+p+
+         7iSw==
+X-Gm-Message-State: APjAAAWmn6tkyQTEnBoBTrvBSYy3loSVQdQOL8Y84/J8+trgWjDr92O7
+        EyIkaGerOjHvO7llRxvh/6VH2vtk
+X-Google-Smtp-Source: APXvYqzhLx4HT6/iHXYY/lRbgzvswtQ8BpAwyny4yrxeVKhWIvSHhwsbr3b6fJNLMHfbnSj4C4QlJQ==
+X-Received: by 2002:ac2:4c82:: with SMTP id d2mr15617326lfl.62.1574864626598;
+        Wed, 27 Nov 2019 06:23:46 -0800 (PST)
+Received: from seldlx21914.corpusers.net ([37.139.156.40])
+        by smtp.gmail.com with ESMTPSA id t8sm6975946lfl.51.2019.11.27.06.23.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Nov 2019 06:23:46 -0800 (PST)
+Date:   Wed, 27 Nov 2019 15:23:45 +0100
+From:   Vitaly Wool <vitalywool@gmail.com>
+To:     <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 3/3] z3fold: protect handle reads
+Message-Id: <20191127152345.8059852f60947686674d726d@gmail.com>
+In-Reply-To: <20191127152012.17a4b35f9e7f6e50f9aaca9c@gmail.com>
+References: <20191127152012.17a4b35f9e7f6e50f9aaca9c@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; x86_64-unknown-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIGJpbmRpbmcgdXNlZCBieSB0aGUgTWVkaWFUZWsgQVJNdjggU29DcyByYW5k
-b20NCm51bWJlciBnZW5lcmF0b3Igd2l0aCBUcnVzdFpvbmUgZW5hYmxlZC4NCg0KU2lnbmVkLW9m
-Zi1ieTogTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9iaW5kaW5n
-cy9hcm0vZmlybXdhcmUvbWVkaWF0ZWssbXRrLXNlYy1ybmcudHh0IHwgICAxOCArKysrKysrKysr
-KysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2Zpcm13YXJlL21l
-ZGlhdGVrLG10ay1zZWMtcm5nLnR4dA0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2FybS9maXJtd2FyZS9tZWRpYXRlayxtdGstc2VjLXJuZy50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2Zpcm13YXJlL21lZGlhdGVrLG10
-ay1zZWMtcm5nLnR4dA0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAuLjc0MWZj
-ZGMNCi0tLSAvZGV2L251bGwNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9hcm0vZmlybXdhcmUvbWVkaWF0ZWssbXRrLXNlYy1ybmcudHh0DQpAQCAtMCwwICsxLDE4IEBA
-DQorTWVkaWFUZWsgcmFuZG9tIG51bWJlciBnZW5lcmF0b3Igd2l0aCBUcnVzdFpvbmUgZW5hYmxl
-ZA0KKw0KK1JlcXVpcmVkIHByb3BlcnRpZXM6DQorLSBjb21wYXRpYmxlICAgICAgIDogU2hvdWxk
-IGNvbnRhaW4gIm1lZGlhdGVrLG10ay1zZWMtcm5nIg0KKw0KKy0gbWV0aG9kICAgICAgICAgICA6
-IFRoZSBtZXRob2Qgb2YgY2FsbGluZyBBcm0gVHJ1c3RlZCBGaXJtd2FyZS4gUGVybWl0dGVkDQor
-CQkgICAgIHZhbHVlcyBhcmU6DQorDQorCQkgICAgICJzbWMiIDogU01DICMwLCB3aXRoIHRoZSBy
-ZWdpc3RlciBhc3NpZ25tZW50cyBzcGVjaWZpZWQNCisJCSAgICAgaW4gdGhpcyBiaW5kaW5nLg0K
-Kw0KK0V4YW1wbGU6DQorCWZpcm13YXJlIHsNCisJCWh3cm5nIHsNCisJCQljb21wYXRpYmxlID0g
-Im1lZGlhdGVrLG10ay1zZWMtcm5nIjsNCisJCQltZXRob2RzID0gInNtYyI7DQorCQl9Ow0KKwl9
-Ow0KLS0gDQoxLjcuOS41DQo=
+We need to make sure slots are protected on reading a handle. Since
+handles are modified by free_handle() which only takes slot rwlock,
+that lock should be used when handles are read.
 
+Signed-off-by: Vitaly Wool <vitaly.vul@sony.com>
+---
+ mm/z3fold.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index f2a75418e248..43754d8ebce8 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -486,8 +486,12 @@ static unsigned long encode_handle(struct z3fold_header *zhdr, enum buddy bud)
+ /* only for LAST bud, returns zero otherwise */
+ static unsigned short handle_to_chunks(unsigned long handle)
+ {
+-	unsigned long addr = *(unsigned long *)handle;
++	struct z3fold_buddy_slots *slots = handle_to_slots(handle);
++	unsigned long addr;
+ 
++	read_lock(&slots->lock);
++	addr = *(unsigned long *)handle;
++	read_unlock(&slots->lock);
+ 	return (addr & ~PAGE_MASK) >> BUDDY_SHIFT;
+ }
+ 
+@@ -499,10 +503,13 @@ static unsigned short handle_to_chunks(unsigned long handle)
+ static enum buddy handle_to_buddy(unsigned long handle)
+ {
+ 	struct z3fold_header *zhdr;
++	struct z3fold_buddy_slots *slots = handle_to_slots(handle);
+ 	unsigned long addr;
+ 
++	read_lock(&slots->lock);
+ 	WARN_ON(handle & (1 << PAGE_HEADLESS));
+ 	addr = *(unsigned long *)handle;
++	read_unlock(&slots->lock);
+ 	zhdr = (struct z3fold_header *)(addr & PAGE_MASK);
+ 	return (addr - zhdr->first_num) & BUDDY_MASK;
+ }
+-- 
+2.17.1
