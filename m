@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666E2C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12989C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFC620678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D705E2154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888418;
-	bh=b6JKrXfZ3sW46mtc8cUPJf+7pJXsH6mrbwPNqmM5xCY=;
+	s=default; t=1574888429;
+	bh=vmPorgr1AqtidpatjFnUpqU7k2gwi5CeAXMZW/HP/W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WJb7Gbw7K/Ejj1CCBNwYjGJz4QqjmJyASQ8Q2ZzkCYc7hJerWeT+lG/vodWNx5kk2
-	 57pL4ZDyR2IKPpPNy430T2UNjIvSihDUkGROfcCnlH8LAQFqqxLOGd3d7qKE9QGIhO
-	 bFKO1qqc+spjuwQSaAFgX7sID6CXAHhaCMAq0bBc=
+	b=qrNr7J9aj/R8ubFPTTkSJK4+fsn0CTj7z2BncJB6/0qmf6Zn/SvlCcDOUvwOLMu+k
+	 67GtA7xU4x2lbW7jLpaQy4Vt12okjMhcEtYChzfQcfcgW6j5F7X5QdYltpYfG0ubbm
+	 XpJbSM+J6AgzNuZlFoYdSy9Cbs0HYrdgczAKgMzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731536AbfK0VAQ (ORCPT
+        id S1730896AbfK0VA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:00:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51906 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:00:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731269AbfK0VAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:00:10 -0500
+        id S1731554AbfK0VA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:00:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65CE02084B;
-        Wed, 27 Nov 2019 21:00:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77B082084B;
+        Wed, 27 Nov 2019 21:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888409;
-        bh=b6JKrXfZ3sW46mtc8cUPJf+7pJXsH6mrbwPNqmM5xCY=;
+        s=default; t=1574888425;
+        bh=vmPorgr1AqtidpatjFnUpqU7k2gwi5CeAXMZW/HP/W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LGKuMGAAU/MJblrJ5TrBN2n4th4QSRqbYt+yNhxuVP5/wIUUxmqzjrlATLptNHPQR
-         xLbn525GaN2+sOvGREe/k6IoxN8/zBXFqbNGt11fLQLh/kNkWu33ywg9IGIt7anOQm
-         91cVLuUTy82u/BuSWZvQpwTygds5juZ39aheqsSs=
+        b=w/0Vy8wVmtDZlnfhw7cAhghtnc3ZgA05CWngZMWtPXAw4kC6WvNnH5EG27fMHfvI3
+         zMcJi3IrGUlc2kXu7qk1RmP5ykZGOiXA8BdDmfEr+ZL4l633bTuDAnKjYQTKdCkzKE
+         QjNclvkOBh/YLOJ1R4l0ibMII9rYvdS8zmFVcxhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 123/306] f2fs: spread f2fs_set_inode_flags()
-Date:   Wed, 27 Nov 2019 21:29:33 +0100
-Message-Id: <20191127203124.116784284@linuxfoundation.org>
+Subject: [PATCH 4.19 128/306] mfd: mc13xxx-core: Fix PMIC shutdown when reading ADC values
+Date:   Wed, 27 Nov 2019 21:29:38 +0100
+Message-Id: <20191127203124.455975953@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,75 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-[ Upstream commit 9149a5eb606152df158eb7d7da5a34e84b574189 ]
+[ Upstream commit 55143439b7b501882bea9d95a54adfe00ffc79a3 ]
 
-This patch changes codes as below:
-- use f2fs_set_inode_flags() to update i_flags atomically to avoid
-potential race.
-- synchronize F2FS_I(inode)->i_flags to inode->i_flags in
-f2fs_new_inode().
-- use f2fs_set_inode_flags() to simply codes in f2fs_quota_{on,off}.
+When trying to read any MC13892 ADC channel on a imx51-babbage board:
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+The MC13892 PMIC shutdowns completely.
+
+After debugging this issue and comparing the MC13892 and MC13783
+initializations done in the vendor kernel, it was noticed that the
+CHRGRAWDIV bit of the ADC0 register was not being set.
+
+This bit is set by default after power on, but the driver was
+clearing it.
+
+After setting this bit it is possible to read the ADC values correctly.
+
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+Tested-by: Chris Healy <cphealy@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h  | 2 +-
- fs/f2fs/namei.c | 2 ++
- fs/f2fs/super.c | 5 ++---
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/mfd/mc13xxx-core.c  | 3 ++-
+ include/linux/mfd/mc13xxx.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 2dc49a5419070..34e48bcf50874 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3388,7 +3388,7 @@ static inline void f2fs_set_encrypted_inode(struct inode *inode)
- {
- #ifdef CONFIG_F2FS_FS_ENCRYPTION
- 	file_set_encrypt(inode);
--	inode->i_flags |= S_ENCRYPTED;
-+	f2fs_set_inode_flags(inode);
- #endif
- }
+diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
+index 234febfe6398b..d0bf50e3568d7 100644
+--- a/drivers/mfd/mc13xxx-core.c
++++ b/drivers/mfd/mc13xxx-core.c
+@@ -278,7 +278,8 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
+ 	if (ret)
+ 		goto out;
  
-diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-index 1f67e389169f5..6b23dcbf52f45 100644
---- a/fs/f2fs/namei.c
-+++ b/fs/f2fs/namei.c
-@@ -124,6 +124,8 @@ static struct inode *f2fs_new_inode(struct inode *dir, umode_t mode)
- 	if (F2FS_I(inode)->i_flags & F2FS_PROJINHERIT_FL)
- 		set_inode_flag(inode, FI_PROJ_INHERIT);
+-	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2;
++	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2 |
++	       MC13XXX_ADC0_CHRGRAWDIV;
+ 	adc1 = MC13XXX_ADC1_ADEN | MC13XXX_ADC1_ADTRIGIGN | MC13XXX_ADC1_ASC;
  
-+	f2fs_set_inode_flags(inode);
-+
- 	trace_f2fs_new_inode(inode, 0);
- 	return inode;
+ 	/*
+diff --git a/include/linux/mfd/mc13xxx.h b/include/linux/mfd/mc13xxx.h
+index 54a3cd808f9e6..2ad9bdc0a5ec8 100644
+--- a/include/linux/mfd/mc13xxx.h
++++ b/include/linux/mfd/mc13xxx.h
+@@ -249,6 +249,7 @@ struct mc13xxx_platform_data {
+ #define MC13XXX_ADC0_TSMOD0		(1 << 12)
+ #define MC13XXX_ADC0_TSMOD1		(1 << 13)
+ #define MC13XXX_ADC0_TSMOD2		(1 << 14)
++#define MC13XXX_ADC0_CHRGRAWDIV		(1 << 15)
+ #define MC13XXX_ADC0_ADINC1		(1 << 16)
+ #define MC13XXX_ADC0_ADINC2		(1 << 17)
  
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 15779123d0895..7a9cc64f5ca37 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1837,8 +1837,7 @@ static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
- 
- 	inode_lock(inode);
- 	F2FS_I(inode)->i_flags |= F2FS_NOATIME_FL | F2FS_IMMUTABLE_FL;
--	inode_set_flags(inode, S_NOATIME | S_IMMUTABLE,
--					S_NOATIME | S_IMMUTABLE);
-+	f2fs_set_inode_flags(inode);
- 	inode_unlock(inode);
- 	f2fs_mark_inode_dirty_sync(inode, false);
- 
-@@ -1863,7 +1862,7 @@ static int f2fs_quota_off(struct super_block *sb, int type)
- 
- 	inode_lock(inode);
- 	F2FS_I(inode)->i_flags &= ~(F2FS_NOATIME_FL | F2FS_IMMUTABLE_FL);
--	inode_set_flags(inode, 0, S_NOATIME | S_IMMUTABLE);
-+	f2fs_set_inode_flags(inode);
- 	inode_unlock(inode);
- 	f2fs_mark_inode_dirty_sync(inode, false);
- out_put:
 -- 
 2.20.1
 
