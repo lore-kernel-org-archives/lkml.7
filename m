@@ -2,53 +2,55 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808EDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16832C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535AE217C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3EC217C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887741;
-	bh=4BQXjHM/0DWtFo2HhpXrBkKVLPTEKmgwg598UQ4Nidk=;
+	s=default; t=1574887746;
+	bh=Hs8kuq+LuqdHAW51q4eCyncbYgnnsO9Gp6+sHsLNfl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yCh/qE/RSQ7WsuPhMfrPwAi6TJlevpCRlJu+5qwdIMBkrZytSL1HcxDsB93FCIuTR
-	 QWm0fldgpg7mwBCxSonr1qPRCp7zrxyWE+Li4nuG1G3cR4wc9XL9hFr67lng8nvLWm
-	 WTmc56wTJmI77BrZ5604634ttCwU8NF8WB7U+zTs=
+	b=GdA99ffRTXIGi694RHYRCrtW/rk9R8cuTvAme4OusJJDcTOUe0NB4dP7VQp70nLzU
+	 VG6QkHscrvBJLz0FQKW//QwcA+5uOqyUWmzHlvrn3nMAWBKW7b8OVbxydc35lU9xZP
+	 Sgiotvt2GBnTMvzCi8WCTdnTPUHQ0qJ6znrVnm58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbfK0UtA (ORCPT
+        id S1728761AbfK0UtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:49:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34336 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:49:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730199AbfK0Us4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:48:56 -0500
+        id S1729258AbfK0UtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:49:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47C4621787;
-        Wed, 27 Nov 2019 20:48:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49F2B21787;
+        Wed, 27 Nov 2019 20:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887735;
-        bh=4BQXjHM/0DWtFo2HhpXrBkKVLPTEKmgwg598UQ4Nidk=;
+        s=default; t=1574887740;
+        bh=Hs8kuq+LuqdHAW51q4eCyncbYgnnsO9Gp6+sHsLNfl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0TFp+AGxhod+gJ1u8jzkWJIaruaU29mMmqG2byFbCVz9WP6eCWRUDOmsc1CI9kHJ3
-         1e1O7RYo2tBWGhJcrPUhCuNbt/nHdb9QmfSSpcRkV31cOVvrkjXxm+dINi/9CQDHO7
-         2pjlophn8n+RJIhzQPQfoeL8MXPqcH82Kk2nxR2A=
+        b=DEq+fCQOp832RzZ2da/+XPgF65pDSLrSmfF+LXpcqZjRMNP4wGY0IAJugeuAhQC0i
+         UJiH31g3k3Pc5Gi6rsqOwhweLOVP3luvUvA/RVWo7kvmqc6G72F2dJtr2GVqtWyELB
+         HKoeCR9PVouyAgZSu1xIZKN2JqswnYqkCM1Cn3uU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Aravinda Prasad <aravinda@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 074/211] powerpc/pseries: Export raw per-CPU VPA data via debugfs
-Date:   Wed, 27 Nov 2019 21:30:07 +0100
-Message-Id: <20191127203100.827988123@linuxfoundation.org>
+Subject: [PATCH 4.14 049/211] crypto: ccree - avoid implicit enum conversion
+Date:   Wed, 27 Nov 2019 21:29:42 +0100
+Message-Id: <20191127203058.669455776@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,95 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit c6c26fb55e8e4b3fc376be5611685990a17de27a ]
+[ Upstream commit 18e732b8035d175181aae2ded127994cb01694f7 ]
 
-This patch exports the raw per-CPU VPA data via debugfs.
-A per-CPU file is created which exports the VPA data of
-that CPU to help debug some of the VPA related issues or
-to analyze the per-CPU VPA related statistics.
+Clang warns when one enumerated type is implicitly converted to another
+and this happens in several locations in this driver, ultimately related
+to the set_cipher_{mode,config0} functions. set_cipher_mode expects a mode
+of type drv_cipher_mode and set_cipher_config0 expects a mode of type
+drv_crypto_direction.
 
-v3: Removed offline CPU check.
+drivers/crypto/ccree/cc_ivgen.c:58:35: warning: implicit conversion from
+enumeration type 'enum cc_desc_direction' to different enumeration type
+'enum drv_crypto_direction' [-Wenum-conversion]
+        set_cipher_config0(&iv_seq[idx], DESC_DIRECTION_ENCRYPT_ENCRYPT);
 
-v2: Included offline CPU check and other review comments.
+drivers/crypto/ccree/cc_hash.c:99:28: warning: implicit conversion from
+enumeration type 'enum cc_hash_conf_pad' to different enumeration type
+'enum drv_crypto_direction' [-Wenum-conversion]
+                set_cipher_config0(desc, HASH_DIGEST_RESULT_LITTLE_ENDIAN);
 
-Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+drivers/crypto/ccree/cc_aead.c:1643:30: warning: implicit conversion
+from enumeration type 'enum drv_hash_hw_mode' to different enumeration
+type 'enum drv_cipher_mode' [-Wenum-conversion]
+        set_cipher_mode(&desc[idx], DRV_HASH_HW_GHASH);
+
+Since this fundamentally isn't a problem because these values just
+represent simple integers for a shift operation, make it clear to Clang
+that this is okay by making the mode parameter in both functions an int.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/46
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/lpar.c | 54 +++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ drivers/staging/ccree/cc_hw_queue_defs.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
-index eb738ef577926..c0ae3847b8db5 100644
---- a/arch/powerpc/platforms/pseries/lpar.c
-+++ b/arch/powerpc/platforms/pseries/lpar.c
-@@ -48,6 +48,7 @@
- #include <asm/kexec.h>
- #include <asm/fadump.h>
- #include <asm/asm-prototypes.h>
-+#include <asm/debugfs.h>
- 
- #include "pseries.h"
- 
-@@ -1036,3 +1037,56 @@ static int __init reserve_vrma_context_id(void)
- 	return 0;
+diff --git a/drivers/staging/ccree/cc_hw_queue_defs.h b/drivers/staging/ccree/cc_hw_queue_defs.h
+index 2ae0f655e7a0e..b86f47712e303 100644
+--- a/drivers/staging/ccree/cc_hw_queue_defs.h
++++ b/drivers/staging/ccree/cc_hw_queue_defs.h
+@@ -467,8 +467,7 @@ static inline void set_flow_mode(struct cc_hw_desc *pdesc,
+  * @pdesc: pointer HW descriptor struct
+  * @mode:  Any one of the modes defined in [CC7x-DESC]
+  */
+-static inline void set_cipher_mode(struct cc_hw_desc *pdesc,
+-				   enum drv_cipher_mode mode)
++static inline void set_cipher_mode(struct cc_hw_desc *pdesc, int mode)
+ {
+ 	pdesc->word[4] |= FIELD_PREP(WORD4_CIPHER_MODE, mode);
  }
- machine_device_initcall(pseries, reserve_vrma_context_id);
-+
-+#ifdef CONFIG_DEBUG_FS
-+/* debugfs file interface for vpa data */
-+static ssize_t vpa_file_read(struct file *filp, char __user *buf, size_t len,
-+			      loff_t *pos)
-+{
-+	int cpu = (long)filp->private_data;
-+	struct lppaca *lppaca = &lppaca_of(cpu);
-+
-+	return simple_read_from_buffer(buf, len, pos, lppaca,
-+				sizeof(struct lppaca));
-+}
-+
-+static const struct file_operations vpa_fops = {
-+	.open		= simple_open,
-+	.read		= vpa_file_read,
-+	.llseek		= default_llseek,
-+};
-+
-+static int __init vpa_debugfs_init(void)
-+{
-+	char name[16];
-+	long i;
-+	static struct dentry *vpa_dir;
-+
-+	if (!firmware_has_feature(FW_FEATURE_SPLPAR))
-+		return 0;
-+
-+	vpa_dir = debugfs_create_dir("vpa", powerpc_debugfs_root);
-+	if (!vpa_dir) {
-+		pr_warn("%s: can't create vpa root dir\n", __func__);
-+		return -ENOMEM;
-+	}
-+
-+	/* set up the per-cpu vpa file*/
-+	for_each_possible_cpu(i) {
-+		struct dentry *d;
-+
-+		sprintf(name, "cpu-%ld", i);
-+
-+		d = debugfs_create_file(name, 0400, vpa_dir, (void *)i,
-+					&vpa_fops);
-+		if (!d) {
-+			pr_warn("%s: can't create per-cpu vpa file\n",
-+					__func__);
-+			return -ENOMEM;
-+		}
-+	}
-+
-+	return 0;
-+}
-+machine_arch_initcall(pseries, vpa_debugfs_init);
-+#endif /* CONFIG_DEBUG_FS */
+@@ -479,8 +478,7 @@ static inline void set_cipher_mode(struct cc_hw_desc *pdesc,
+  * @pdesc: pointer HW descriptor struct
+  * @mode: Any one of the modes defined in [CC7x-DESC]
+  */
+-static inline void set_cipher_config0(struct cc_hw_desc *pdesc,
+-				      enum drv_crypto_direction mode)
++static inline void set_cipher_config0(struct cc_hw_desc *pdesc, int mode)
+ {
+ 	pdesc->word[4] |= FIELD_PREP(WORD4_CIPHER_CONF0, mode);
+ }
 -- 
 2.20.1
 
