@@ -2,54 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601F0C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2AAC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E0321770
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C749921739
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888751;
-	bh=AiDrupa0ElEL9BkwztZdJMc2ifNPMRDNGjY+TvtGWtg=;
+	s=default; t=1574888756;
+	bh=ivAr2KdU9K4Tx7Ky4Bm6mhRcS09rwRLNa5AkPF/3bcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cP5RTRP1Yzg8XSb2Ns6aQ5tSYb4Zp9M2njLbG3INPNT0xy0/ahdJQhajkpAcsp2t0
-	 taKG1LA0E9ELXSZdDGB/Nlg7G1sPAbZBMJBXZVGrmzMUovyx0S8kxuH7deuRfe33Ps
-	 WPueCxmwairuIHrc/wf4aAMMYsT+tgydz/Qjcnjk=
+	b=XQIF9IFdbh1axD6goIcqgK1b6yxp9DYAa0hGkLmUSBg/dg5ris7E6FA27p4Va/Kdg
+	 CcvRGJxqUt9ERDOLzNU7ugpW4dTQrnkiTQltZZZEwKRaHKYNrDX9HAAT/TWluT3ueb
+	 zyq6d2hAN6VQvfX0Gg+Zu5U71KZCTUBWBzS7w2Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732337AbfK0VFu (ORCPT
+        id S1732362AbfK0VFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:05:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59590 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:05:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732324AbfK0VFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:05:46 -0500
+        id S1727440AbfK0VFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:05:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8302621770;
-        Wed, 27 Nov 2019 21:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D6CE217BA;
+        Wed, 27 Nov 2019 21:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888746;
-        bh=AiDrupa0ElEL9BkwztZdJMc2ifNPMRDNGjY+TvtGWtg=;
+        s=default; t=1574888754;
+        bh=ivAr2KdU9K4Tx7Ky4Bm6mhRcS09rwRLNa5AkPF/3bcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pQ1EJANJeNZKE8Z7M48pjWJ2JXm5k2DEqu8Z2BvHlr8ZLNO2PK5U7QKp7SgJRHTN3
-         dpKIKvn2mDTWSUdYVAdlH7W5mLqjEtnjG8GBUf5rQlcLc+1g19Yhyw84yFnoTeW8pp
-         TYsd9R7CKlcoiWcR8qHn9HAEbv9AOvPYy8hMzRa0=
+        b=XkRadY8Xs8moqMIT8+wAdV+FWdx24iu4BKXhxue+j0ORE/qAuvNP0YvD4XuaiHd7y
+         fMsRGPbsZHJU8yF1H7RJmbZ27hug4KLBjRcOjleN9KqyY6Tdtn6k8ifVOiZrlWSATP
+         dqdA/em8EqwoFwJGLEavIRGRTGvVdAkfmZsrAS2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Donald Sharp <sharpd@cumulusnetworks.com>,
-        Mike Manning <mmanning@vyatta.att-mail.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 253/306] ipv6: Fix handling of LLA with VRF and sockets bound to VRF
-Date:   Wed, 27 Nov 2019 21:31:43 +0100
-Message-Id: <20191127203133.368836476@linuxfoundation.org>
+        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
+        syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Alexander Potapenko <glider@google.com>
+Subject: [PATCH 4.19 256/306] Bluetooth: Fix invalid-free in bcsp_close()
+Date:   Wed, 27 Nov 2019 21:31:46 +0100
+Message-Id: <20191127203133.564483599@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,50 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Tomas Bortoli <tomasbortoli@gmail.com>
 
-[ Upstream commit c2027d1e17582903e368abf5d4838b22a98f2b7b ]
+commit cf94da6f502d8caecabd56b194541c873c8a7a3c upstream.
 
-A recent commit allows sockets bound to a VRF to receive ipv6 link local
-packets. However, it only works for UDP and worse TCP connection attempts
-to the LLA with the only listener bound to the VRF just hang where as
-before the client gets a reset and connection refused. Fix by adjusting
-ir_iif for LL addresses and packets received through a device enslaved
-to a VRF.
+Syzbot reported an invalid-free that I introduced fixing a memleak.
 
-Fixes: 6f12fa775530 ("vrf: mark skb for multicast or link-local as enslaved to VRF")
-Reported-by: Donald Sharp <sharpd@cumulusnetworks.com>
-Cc: Mike Manning <mmanning@vyatta.att-mail.com>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+bcsp_recv() also frees bcsp->rx_skb but never nullifies its value.
+Nullify bcsp->rx_skb every time it is freed.
+
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: Alexander Potapenko <glider@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/ipv6/tcp_ipv6.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/bluetooth/hci_bcsp.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index e7cdfa92c3820..9a117a79af659 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -734,6 +734,7 @@ static void tcp_v6_init_req(struct request_sock *req,
- 			    const struct sock *sk_listener,
- 			    struct sk_buff *skb)
- {
-+	bool l3_slave = ipv6_l3mdev_skb(TCP_SKB_CB(skb)->header.h6.flags);
- 	struct inet_request_sock *ireq = inet_rsk(req);
- 	const struct ipv6_pinfo *np = inet6_sk(sk_listener);
+--- a/drivers/bluetooth/hci_bcsp.c
++++ b/drivers/bluetooth/hci_bcsp.c
+@@ -606,6 +606,7 @@ static int bcsp_recv(struct hci_uart *hu
+ 			if (*ptr == 0xc0) {
+ 				BT_ERR("Short BCSP packet");
+ 				kfree_skb(bcsp->rx_skb);
++				bcsp->rx_skb = NULL;
+ 				bcsp->rx_state = BCSP_W4_PKT_START;
+ 				bcsp->rx_count = 0;
+ 			} else
+@@ -621,6 +622,7 @@ static int bcsp_recv(struct hci_uart *hu
+ 			    bcsp->rx_skb->data[2])) != bcsp->rx_skb->data[3]) {
+ 				BT_ERR("Error in BCSP hdr checksum");
+ 				kfree_skb(bcsp->rx_skb);
++				bcsp->rx_skb = NULL;
+ 				bcsp->rx_state = BCSP_W4_PKT_DELIMITER;
+ 				bcsp->rx_count = 0;
+ 				continue;
+@@ -645,6 +647,7 @@ static int bcsp_recv(struct hci_uart *hu
+ 				       bscp_get_crc(bcsp));
  
-@@ -741,7 +742,7 @@ static void tcp_v6_init_req(struct request_sock *req,
- 	ireq->ir_v6_loc_addr = ipv6_hdr(skb)->daddr;
- 
- 	/* So that link locals have meaning */
--	if (!sk_listener->sk_bound_dev_if &&
-+	if ((!sk_listener->sk_bound_dev_if || l3_slave) &&
- 	    ipv6_addr_type(&ireq->ir_v6_rmt_addr) & IPV6_ADDR_LINKLOCAL)
- 		ireq->ir_iif = tcp_v6_iif(skb);
- 
--- 
-2.20.1
-
+ 				kfree_skb(bcsp->rx_skb);
++				bcsp->rx_skb = NULL;
+ 				bcsp->rx_state = BCSP_W4_PKT_DELIMITER;
+ 				bcsp->rx_count = 0;
+ 				continue;
 
 
