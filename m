@@ -2,123 +2,118 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299B6C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E4EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE456207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E65207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:44:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJ+P4iz7"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="iY3WGmb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfK0SoH (ORCPT
+        id S1727175AbfK0So5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:44:07 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38004 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfK0SoH (ORCPT
+        Wed, 27 Nov 2019 13:44:57 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41294 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfK0So5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:44:07 -0500
-Received: by mail-qt1-f196.google.com with SMTP id 14so26384272qtf.5;
-        Wed, 27 Nov 2019 10:44:06 -0800 (PST)
+        Wed, 27 Nov 2019 13:44:57 -0500
+Received: by mail-qk1-f195.google.com with SMTP id m125so20429252qkd.8
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:44:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vLYRgEqQraqD/jRbKwCGJCTuqQIUu2eT37zrYdLloVI=;
-        b=nJ+P4iz7K1/DdSVU64e3WR10Y5BWSkScNTlF35QpsGFfzfe2LkwADm77GfF23oEAzX
-         ChXEdSxrkcPbEpZV0UtPYDPo17JK5jbcSgWwGOWN/Ql12Mfia2zKvweOig/ilUui4++G
-         I9liubb+CgMfS5/zYVGGOGcBfDXx0MH8gqMnHIFGf304dcSD1MfcKFJFhY0iHOOTuamM
-         6PNP8l6nvSddiDmN0DRTYgTsEoeJJuDMSng3qASLI+1pyxGc/f4LVssZgxIdMaOLFnMV
-         d9k1w+FifS7kDQJLf1IzBit0oURjWCMzV62pG93cMWI3g0TE+751jHOj/t9YeSrBtNMr
-         NY3w==
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F/n86b6Kh7/7bx65ohsSuhkfsrRS1fX/ghGHBMXhZiA=;
+        b=iY3WGmb47fenakYk1z1uQ4/43MV+16v1SYdlJk6JAl3euekC4kAR8C4/ECW6Rz4kVJ
+         cLsUVHWp7fiU24FpQ96I3EO48/XAQq9zOHMo6Z88+oUoYA2qxHZj0u0HXL9lEU30dY8Y
+         ep/6IBJL7UCp1cC77ME+6B+78g9QNgLonOnUPH9yYuQX/6yAiB2YXbytWuONSaskHBTl
+         LO+aA8Fj3N/cz2+KGHOx7EUjM4pzrKWWB8RcJjxbmMvaWHLPjAHHqiyL6s8xsKcjinzu
+         dxrpdBh9lEOmwBD1CeekX+TeZn/pMfMPeKE4YXl9vgLYYwvwh9btiumNMmwMJzXJJu62
+         L9bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vLYRgEqQraqD/jRbKwCGJCTuqQIUu2eT37zrYdLloVI=;
-        b=AAoim3ojxicW/WoXT2o+B8vJaryV3OUXY/dioj5ITru0Q+uup/W7EuEemE8UwntsiT
-         S/spAXZfCgoneqymmvoxHzHoVQ4V3zne7VhsxAM8nvJSKxwICXMonfoTxE+MZhHLg0Xp
-         zP94iur9J8URfBBox7NoSzTlBwEyvd6re68RpRuJL6ADZ29IgtPJN+jpLHrDfCje0Bhn
-         rh8N0xNWllNPsPfd7rGGDQxJZQKO2scPCF6po9LcatV0dM3js0LspHeaTv6mY18hwkJF
-         G4CWViiVZznNfjayOuj1/o3GnsSa2AgLeaMyBJYIzj0AqmdGXXHkvvjMoNEo7X1L5kiD
-         ifAg==
-X-Gm-Message-State: APjAAAXTNwn77uA3c3/ox2ifUHF9vxkZLXpWhfnrDdO1sE6+IkGiuu1A
-        1xlnHVDbEzomo3hxa470GDi7n2JitId3zA==
-X-Google-Smtp-Source: APXvYqza+dZLDafmoYQJI1Bsn0z4hENX6OJOQ4Ofq+mRxeXSofLRpVnd2slRTjKLtZLI2mYQQ66nAQ==
-X-Received: by 2002:ac8:2a65:: with SMTP id l34mr8257242qtl.105.1574880246225;
-        Wed, 27 Nov 2019 10:44:06 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id x1sm7924206qtf.81.2019.11.27.10.44.05
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F/n86b6Kh7/7bx65ohsSuhkfsrRS1fX/ghGHBMXhZiA=;
+        b=EjI7tGBUuxGsP73IYzNNLF4PmaG7151AipKo5dz5QJ1DfqL1iAXSGSF5YeMWAIUkpf
+         739puu9imNjcSkXxu/ER+McouUY32HPnsbAFV5tr19VgXgXred+1jQfvaeBfrpQnlqKx
+         0EyPtjetqWQWhqczGS1Sw9hA+kLyNc7Ihu+dA2gqO6j5qaCyBzDSBmKUkJJZ6pOjgk/c
+         ELp9y7LmUjTqc42eLaxWGdtrY9/cSEdSJaqHdBuUoVnjxcrcYqoKEVea1ZAPskDegSnI
+         ehbIv3rDibat05h99g304thXlx/DNXxZsrh7BHt+xQMGywF1JiWV2fhI1hGBdqK9FXg5
+         g6bg==
+X-Gm-Message-State: APjAAAX4OAyoiB7pQCA311tTbOhkzyVb6QER2wnkAhvpUu5O7n9x0j+S
+        8KCtlVNVk791fbVIFhvxX9uCww==
+X-Google-Smtp-Source: APXvYqytTMLn9EqxEu+OgYBIR0W3UcV5QcnBL8/xWD7wWi7CQazQ0liRoDUunsojwesXXqeQBJ7PVQ==
+X-Received: by 2002:a37:bd06:: with SMTP id n6mr5990382qkf.286.1574880295965;
+        Wed, 27 Nov 2019 10:44:55 -0800 (PST)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id o62sm2748024qte.76.2019.11.27.10.44.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 10:44:06 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EDCAC40D3E; Wed, 27 Nov 2019 15:44:00 -0300 (-03)
-Date:   Wed, 27 Nov 2019 15:44:00 -0300
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
-Message-ID: <20191127184400.GA4063@kernel.org>
-References: <20191127094837.4045-1-jolsa@kernel.org>
- <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
+        Wed, 27 Nov 2019 10:44:55 -0800 (PST)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, steve.capper@arm.com,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com, mark.rutland@arm.com,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
+        sstabellini@kernel.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, stefan@agner.ch, yamada.masahiro@socionext.com,
+        xen-devel@lists.xenproject.org, linux@armlinux.org.uk
+Subject: [PATCH 0/3] Use C inlines for uaccess
+Date:   Wed, 27 Nov 2019 13:44:50 -0500
+Message-Id: <20191127184453.229321-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Nov 27, 2019 at 08:37:59AM -0800, Alexei Starovoitov escreveu:
-> On Wed, Nov 27, 2019 at 1:48 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > adding support to link bpftool with libbpf dynamically,
-> > and config change for perf.
+Changelog
+v3:
+	- Added Acked-by from Stefano Stabellini
+	- Addressed comments from Mark Rutland
+v2:
+	- Addressed Russell King's concern by not adding
+	  uaccess_* to ARM.
+	- Removed the accidental change to xtensa
 
-> > It's now possible to use:
-> >   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1
+Convert the remaining uaccess_* calls from ASM macros to C inlines.
 
-> > which will detect libbpf devel package with needed version,
-> > and if found, link it with bpftool.
+These patches apply against linux-next. I boot tested ARM64, and
+compile tested ARM change
+Pavel Tatashin (3):
+  arm/arm64/xen: use C inlines for privcmd_call
+  arm64: remove uaccess_ttbr0 asm macros from cache functions
+  arm64: remove the rest of asm-uaccess.h
 
-> > It's possible to use arbitrary installed libbpf:
-> >   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/libbpf/
+ arch/arm/include/asm/assembler.h       |  2 +-
+ arch/arm/include/asm/xen/hypercall.h   | 10 +++++
+ arch/arm/xen/enlighten.c               |  2 +-
+ arch/arm/xen/hypercall.S               |  4 +-
+ arch/arm64/include/asm/asm-uaccess.h   | 61 --------------------------
+ arch/arm64/include/asm/cacheflush.h    | 39 ++++++++++++++--
+ arch/arm64/include/asm/xen/hypercall.h | 28 ++++++++++++
+ arch/arm64/kernel/entry.S              | 27 +++++++++++-
+ arch/arm64/lib/clear_user.S            |  2 +-
+ arch/arm64/lib/copy_from_user.S        |  2 +-
+ arch/arm64/lib/copy_in_user.S          |  2 +-
+ arch/arm64/lib/copy_to_user.S          |  2 +-
+ arch/arm64/mm/cache.S                  | 42 ++++++------------
+ arch/arm64/mm/flush.c                  |  2 +-
+ arch/arm64/xen/hypercall.S             | 19 +-------
+ include/xen/arm/hypercall.h            | 12 ++---
+ 16 files changed, 130 insertions(+), 126 deletions(-)
+ delete mode 100644 arch/arm64/include/asm/asm-uaccess.h
 
-> > I based this change on top of Arnaldo's perf/core, because
-> > it contains libbpf feature detection code as dependency.
-> > It's now also synced with latest bpf-next, so Toke's change
-> > applies correctly.
- 
-> I don't like it.
-> Especially Toke's patch to expose netlink as public and stable libbpf api.
-> bpftools needs to stay tightly coupled with libbpf (and statically
-> linked for that reason).
-> Otherwise libbpf will grow a ton of public api that would have to be stable
-> and will quickly become a burden.
+-- 
+2.24.0
 
-I can relate to that, tools/lib/perf/ is only now getting put in place
-because of these fears, hopefully the evsel/evlist/cpumap/etc
-abstractions there have been in use for a long time and will be not be a
-burden... :-)
-
-- Arnaldo
