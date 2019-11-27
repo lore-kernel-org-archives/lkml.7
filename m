@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C83C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB014C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD03C21569
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91FE421582
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574886966;
-	bh=mZXpx8+xFCXZk4H+qNwB395xe4afMbtzQq2VjSn5N+I=;
+	s=default; t=1574886969;
+	bh=ZZNklmPefQ3KLoghL8Ew6T8cRfOw/TBoReMABM988cc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKKDIdlc81BW5C72OpIoCtI1JSNQ0Mx5gZanG4RHhqdTDYYpptUFZnlncBeDMtVpL
-	 3zlYnfdWSZb+OOOk2jYRYqEpDqlhsXQQoalBFyuOSkBH6SZ/dLqyAkexd4BytF0iLm
-	 pL0x9lAYi0dMfYXjXIcskquZQqwMpVgRhjzw1jpo=
+	b=Y4Tq1haKPEXxZToN/PNfrjHzSMHZtWdr6zH7Av3+HUCYeKVwGyrDMAKzw6i0s8nRq
+	 oC9qKHE1e/FlL/AKC8Oi6KUatHMgjj4QsXm6B4FJ37Gk7iZ+EKSb942DFiG8hx2WPv
+	 w7eBJSJt6WRQM2cN3gDyIAkupXst5whuK5LwxwhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbfK0UgE (ORCPT
+        id S1728052AbfK0UgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:36:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:36:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728003AbfK0Uf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:35:56 -0500
+        id S1727969AbfK0Ufx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:35:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2932121569;
-        Wed, 27 Nov 2019 20:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A458E207DD;
+        Wed, 27 Nov 2019 20:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886955;
-        bh=mZXpx8+xFCXZk4H+qNwB395xe4afMbtzQq2VjSn5N+I=;
+        s=default; t=1574886953;
+        bh=ZZNklmPefQ3KLoghL8Ew6T8cRfOw/TBoReMABM988cc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dyJVTkEFyDU7CU2/LefrNS9NoKb5xNVL6yiqk2lV+cOJBG0hw7NBpocfddK+flyY2
-         SFp+FiIEHuJx7FZ1t4iT1O4EVlN7mtkB2Qu8aImDDVJnP5B2UGhsYuHpZTDnI4xe3L
-         00P3Xv6YVQGC5djPZ1+OVEyojQVVLAucix2MSAhY=
+        b=n0ke7hqf14NCEqJc9OO5tDBls6DHiTlq7wK+5lQ3pirxtc5snbERVnXj2ab1ow5mP
+         3zELh/7Pn+rU8aQOsycLfMdkGpfjIADAxJyEdMT/yGI2V9Nal33pHLdoDX4AryYWWF
+         /Vfcj6cs2AevadbnkEppmm84xUinNOZ4vg5XKUBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 056/132] mfd: mc13xxx-core: Fix PMIC shutdown when reading ADC values
-Date:   Wed, 27 Nov 2019 21:30:47 +0100
-Message-Id: <20191127202955.820527469@linuxfoundation.org>
+Subject: [PATCH 4.4 055/132] qlcnic: fix a return in qlcnic_dcb_get_capability()
+Date:   Wed, 27 Nov 2019 21:30:46 +0100
+Message-Id: <20191127202955.641786739@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,58 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 55143439b7b501882bea9d95a54adfe00ffc79a3 ]
+[ Upstream commit c94f026fb742b2d3199422751dbc4f6fc0e753d8 ]
 
-When trying to read any MC13892 ADC channel on a imx51-babbage board:
+These functions are supposed to return one on failure and zero on
+success.  Returning a zero here could cause uninitialized variable
+bugs in several of the callers.  For example:
 
-The MC13892 PMIC shutdowns completely.
+    drivers/scsi/cxgbi/cxgb4i/cxgb4i.c:1660 get_iscsi_dcb_priority()
+    error: uninitialized symbol 'caps'.
 
-After debugging this issue and comparing the MC13892 and MC13783
-initializations done in the vendor kernel, it was noticed that the
-CHRGRAWDIV bit of the ADC0 register was not being set.
-
-This bit is set by default after power on, but the driver was
-clearing it.
-
-After setting this bit it is possible to read the ADC values correctly.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
-Tested-by: Chris Healy <cphealy@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: 48365e485275 ("qlcnic: dcb: Add support for CEE Netlink interface.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mc13xxx-core.c  | 3 ++-
- include/linux/mfd/mc13xxx.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
-index 8d74806b83c12..1494e7cbd593b 100644
---- a/drivers/mfd/mc13xxx-core.c
-+++ b/drivers/mfd/mc13xxx-core.c
-@@ -278,7 +278,8 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
- 	if (ret)
- 		goto out;
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
+index a72bcddf160ac..178e7236eeb51 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
+@@ -883,7 +883,7 @@ static u8 qlcnic_dcb_get_capability(struct net_device *netdev, int capid,
+ 	struct qlcnic_adapter *adapter = netdev_priv(netdev);
  
--	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2;
-+	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2 |
-+	       MC13XXX_ADC0_CHRGRAWDIV;
- 	adc1 = MC13XXX_ADC1_ADEN | MC13XXX_ADC1_ADTRIGIGN | MC13XXX_ADC1_ASC;
+ 	if (!test_bit(QLCNIC_DCB_STATE, &adapter->dcb->state))
+-		return 0;
++		return 1;
  
- 	if (channel > 7)
-diff --git a/include/linux/mfd/mc13xxx.h b/include/linux/mfd/mc13xxx.h
-index 638222e43e489..93011c61aafd2 100644
---- a/include/linux/mfd/mc13xxx.h
-+++ b/include/linux/mfd/mc13xxx.h
-@@ -247,6 +247,7 @@ struct mc13xxx_platform_data {
- #define MC13XXX_ADC0_TSMOD0		(1 << 12)
- #define MC13XXX_ADC0_TSMOD1		(1 << 13)
- #define MC13XXX_ADC0_TSMOD2		(1 << 14)
-+#define MC13XXX_ADC0_CHRGRAWDIV		(1 << 15)
- #define MC13XXX_ADC0_ADINC1		(1 << 16)
- #define MC13XXX_ADC0_ADINC2		(1 << 17)
- 
+ 	switch (capid) {
+ 	case DCB_CAP_ATTR_PG:
 -- 
 2.20.1
 
