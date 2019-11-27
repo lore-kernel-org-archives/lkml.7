@@ -2,86 +2,110 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDEAC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6AFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE6920678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nnf/Dbqt"
+	by mail.kernel.org (Postfix) with ESMTP id B356C20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574848135;
+	bh=ClCXA8Vpm0xxQuJZfbxQ7kVMSuQKf74mRfmBlPUVQ3o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WsJD2ZziXTvwXdV1mGlTNshCM/no+TQmQr7A6EF0pknmw1UQHgqUo0E/G3LIo12fE
+	 ZeoBLNhFE5SlkkbHyLr5LH9YlDvceiEAUvElWuNcMLVyl7D+J9wQy8p4Cb2gQTzx0m
+	 4D/sZYBMhOMe5fHRdSjzGjYKLOff5zqxgv43JmbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfK0Jsu (ORCPT
+        id S1726887AbfK0Jsy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 04:48:50 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34088 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfK0Jsu (ORCPT
+        Wed, 27 Nov 2019 04:48:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35466 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726133AbfK0Jsx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 04:48:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=P/yUKvXVbQkE33SlewRoaK2e7mxmW3hqYImnmOVQTMY=; b=nnf/Dbqtyj/YKaXQc9zwfbcXT
-        fYQkrY7TWnYTbcYlq8kmwqWaBuLTFhEPhEVKOakSb87v9aO3PyyDQmfbauQ0PY+L8pl0UcltCkDSl
-        YrzIOXfxnl5MC9pofSy5LUch4BKNXlkOkaZDJ87irhNSqb5w0ZG2SQv/N56cF3o1jvDk6KGczNr4y
-        /yfAcby9eY7zR0Bndxb8sEROZ6jAOG3Z96f4LgZ7DZi7HhRhp1QIeCQC5ThuDbIX6e/lUj0NANUvQ
-        s8Dp6ePSDnTsxWF1Ycm5CPb/oayT6G0zgibpPd3+uTug98BOMc2VmttRSazO7k9vMtQGKo6n9vTjC
-        wGWqZ2VJg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iZtwC-0006qV-2H; Wed, 27 Nov 2019 09:48:44 +0000
-Date:   Wed, 27 Nov 2019 01:48:44 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
-        bhelgaas@google.com, kishon@ti.com, thierry.reding@gmail.com,
-        Jisheng.Zhang@synaptics.com, jonathanh@nvidia.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 1/4] PCI: dwc: Add new feature to skip core initialization
-Message-ID: <20191127094844.GA21122@infradead.org>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-2-vidyas@nvidia.com>
+        Wed, 27 Nov 2019 04:48:53 -0500
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-NFXHfLVYNiSAs2jPeVzGOA-1; Wed, 27 Nov 2019 04:48:49 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BD0380183D;
+        Wed, 27 Nov 2019 09:48:47 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B627E5D6C8;
+        Wed, 27 Nov 2019 09:48:38 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
+Date:   Wed, 27 Nov 2019 10:48:34 +0100
+Message-Id: <20191127094837.4045-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113090851.26345-2-vidyas@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: NFXHfLVYNiSAs2jPeVzGOA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 02:38:48PM +0530, Vidya Sagar wrote:
-> +	if (ep->ops->get_features) {
-> +		epc_features = ep->ops->get_features(ep);
-> +		if (epc_features->skip_core_init)
-> +			return 0;
->  	}
->  
-> +	return dw_pcie_ep_init_complete(ep);
+hi,
+adding support to link bpftool with libbpf dynamically,
+and config change for perf.
 
-This calling convention is strange.  Just split the early part of
-dw_pcie_ep_init into an dw_pcie_ep_early and either add a tiny
-wrapper like:
+It's now possible to use:
+  $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1
 
-int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-{
-	int error;
+which will detect libbpf devel package with needed version,
+and if found, link it with bpftool.
 
-	error = dw_pcie_ep_init_early(ep);
-	if (error)
-		return error;
-	return dw_pcie_ep_init_late(ep);
-}
+It's possible to use arbitrary installed libbpf:
+  $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/libbpf/
 
-or just open code that in the few callers.  That keeps the calling
-conventions much simpler and avoids relying on a callback and flag.
+I based this change on top of Arnaldo's perf/core, because
+it contains libbpf feature detection code as dependency.
+It's now also synced with latest bpf-next, so Toke's change
+applies correctly.
+
+Also available in:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  libbpf/dyn
+
+thanks,
+jirka
+
+
+---
+Jiri Olsa (2):
+      perf tools: Allow to specify libbpf install directory
+      bpftool: Allow to link libbpf dynamically
+
+Toke Høiland-Jørgensen (1):
+      libbpf: Export netlink functions used by bpftool
+
+ tools/bpf/bpftool/Makefile        | 40 +++++++++++++++++++++++++++++++++++++++-
+ tools/build/feature/test-libbpf.c |  9 +++++++++
+ tools/lib/bpf/libbpf.h            | 22 +++++++++++++---------
+ tools/lib/bpf/libbpf.map          |  7 +++++++
+ tools/lib/bpf/nlattr.h            | 15 ++++++++++-----
+ tools/perf/Makefile.config        | 27 ++++++++++++++++++++-------
+ 6 files changed, 98 insertions(+), 22 deletions(-)
+
