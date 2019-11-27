@@ -2,208 +2,109 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0701C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D7EC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22F720678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB38720678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:37:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="VI0nbScG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfK0Ngh (ORCPT
+        id S1727172AbfK0Nhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:36:37 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:60579 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfK0Ngg (ORCPT
+        Wed, 27 Nov 2019 08:37:31 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:41546 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726320AbfK0Nhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:36:36 -0500
-Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N8XDT-1hnqsd0HqL-014PO2; Wed, 27 Nov 2019 14:36:34 +0100
-Received: by mail-qv1-f44.google.com with SMTP id cg2so8859181qvb.10;
-        Wed, 27 Nov 2019 05:36:33 -0800 (PST)
-X-Gm-Message-State: APjAAAW+nia/AwvYd2Y/3Yssx52PQ2/KxgKQ/bM3TplD08S8x53pcxde
-        2q5RQIkLVwzGe9bC4+nZAkY4m1I9QD3ryS0jT5A=
-X-Google-Smtp-Source: APXvYqwUVmlbP6tTKdotoXt7sMSzYysgUm0qCCKzhXxwlbPreRA7jD6rjDUldB+HlyZ0ZqvnSdV20QuuMxN452E7DOw=
-X-Received: by 2002:ad4:404e:: with SMTP id r14mr4979402qvp.4.1574861792782;
- Wed, 27 Nov 2019 05:36:32 -0800 (PST)
+        Wed, 27 Nov 2019 08:37:31 -0500
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARDbQAm001704;
+        Wed, 27 Nov 2019 07:37:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=cQl2L3+ANIksdQfNDmVP/REWufb381l6RcUnTlIUXGk=;
+ b=VI0nbScGvyaULukK+AWlfWCqQV/BE4b8dsDLxNjW80bwNBDZ+BGwuLSlJXkubsEM4Lq+
+ sA6AlbQPcFPriqUn27X0uK/MaTbZYHWE22PxVys+YJiarG8UKkVYV+pf/nUuyjt3Ux7z
+ 8uhi8QGJgh7sGk2BBTorGzKX1v+dvHTVckuM452onwpi7t3RM8cuEch6eNp8n7kO4kpu
+ iRLM4nSmz05BlQuBCe9hyJkG+q1+JLC3pLq8/6qgoFQW1QceQp01booCeKjQu2VjeB52
+ 4HG4pouOvK5srthYq13MnCuInioJTeeaEZCv8tsWYeBJ0UVEJTHqrKY0qUFHDrqZBpSO uQ== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([5.172.152.52])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2whda3s1ps-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 27 Nov 2019 07:37:25 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 27 Nov
+ 2019 13:38:18 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Wed, 27 Nov 2019 13:38:18 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2D6552A1;
+        Wed, 27 Nov 2019 13:37:24 +0000 (UTC)
+Date:   Wed, 27 Nov 2019 13:37:24 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Gregory Clement <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] spi: cadence: Correct handling of native chipselect
+Message-ID: <20191127133724.GB10451@ediswmail.ad.cirrus.com>
+References: <20191126164140.6240-1-ckeepax@opensource.cirrus.com>
+ <CACRpkdYc=2vWte+gFp0m6RvWSu=+qT=WWUzag0N1FUBmbSCOOw@mail.gmail.com>
+ <20191127115419.GA10451@ediswmail.ad.cirrus.com>
+ <CACRpkdah5V7jDMUkDtdOb3RbR6mTsj5zs6g=Sb6KBZFRfme0rQ@mail.gmail.com>
 MIME-Version: 1.0
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 27 Nov 2019 14:36:16 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a38Q_yhiyODpFd6ZqLv=QyKRmCm8FOMuSr4RPvGtWNPYw@mail.gmail.com>
-Message-ID: <CAK8P3a38Q_yhiyODpFd6ZqLv=QyKRmCm8FOMuSr4RPvGtWNPYw@mail.gmail.com>
-Subject: [GIT PULL] y2038: syscall implementation cleanups
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:1EoycpF3BIGb1K1Q8yE4cXEzhnIC04e20nvo3C1fPSWBmsRm3P+
- KlH27boSv5M6FHPvs3wuBCU9CyO2PCdE47HyzS/4bmr2zLYACVRMLupB+iLR1V/tpBI4yJ3
- xYlGGthMHFu3naJbs+AKB1/Cjz+Gc3tbGGYUgiRqDGOElQSlrSDc9KnRGZGJbnvDG3vglGO
- HNYIWGNMQrznMSCkjE0TA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LBeFqs2Jj1M=:upFvDLmnxGY6rp4ooRLK/F
- ydztrS4PlncUTuPl4W5KKZT4RtpRjZO641EcxmXyglsiegEg8JQpWpPQoUHF301PM5Owt0Zgv
- yJ1zy/i87tmBU4UUySvq1GWFnTezEnOM+Hr6FwwrK+RNzebmTJkkmTF4typvwW6pSP3qp4Hr5
- eYMiqqUWLNOSCtBq0K6ahIwMh5rpO9UQ3BXCLbLf3phEpLFAeH3oBTiFQMqABGCNVvoDbwiTj
- W+BA34uamtEsNWmzsRy6vtgejLM399xiyZ3Jk+Wf4so7BoowleEjxOAQp8+oCPo/kxADNV5Q1
- mNajOkq+hy5gALKYCq8U3iG0RkMIgQH4fOJXsvVzczxTw0QjRplJ7XoiuqrVmW32vaqqsyH47
- idXAjHbP2sGmb9sli4B4cIMtphrN9/S32xG5btS+Y8Uq7TwnbPzsnchS67jTWhg1TwVYSHKGN
- nT/1sdbJLzTz3k3wFYBzKIZxP5z//kyWZMGaEeoL3ELF0C92ESn+AuxMPROVxD1FdnQLFCWmB
- liSx8RIUzP/g0kk8AFpc+mIQRhS2YXO4USrk1XsV7pjzI6Dta8YzHlaIC486qqov4dJf7+joq
- TKBXJz8Q5MU12XriXoJAp/fhreUpUVs8oTSOYx/BVJg3+mvxSmj1O7Wyp4ndA5ZrTJsv7nBeV
- IJsv3R0E1jxsNjKyNTUor7fx91+mVSd+3SUmAxBxzhpHXfcGUNDkC4D6tnGttJD1h5Pekrbb4
- HIF5gn/v2/9WTDuWaNjseb1+POZC0bpWmCdhMwmxC2uG5yG2cUBQJmI/QM/7tmriOLzJDmvec
- DPfYNCVYu5RbREJH9OfzfoOIGTNgbXb+ozny0T1yX1qGVqBnjV60y3JpWBLCgDnxN/SDEPHQp
- ONwmB40bvLwXbovW6tyw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdah5V7jDMUkDtdOb3RbR6mTsj5zs6g=Sb6KBZFRfme0rQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
+ impostorscore=0 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911270119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit a99d8080aaf358d5d23581244e5da23b35e340b9:
+On Wed, Nov 27, 2019 at 12:59:34PM +0100, Linus Walleij wrote:
+> On Wed, Nov 27, 2019 at 12:54 PM Charles Keepax
+> <ckeepax@opensource.cirrus.com> wrote:
+> > On Wed, Nov 27, 2019 at 11:42:47AM +0100, Linus Walleij wrote:
+> > > On Tue, Nov 26, 2019 at 5:41 PM Charles Keepax
+> > > <ckeepax@opensource.cirrus.com> wrote:
+> > > But we are lucky: there aren't many of them.
+> > > In addition to spi-cadence.c this seems to affect only spi-dw.c
+> > > and I suppose that is what Gregory was using? Or
+> > > something else?
+> > >
+> > I will go do some digging and see what I can find.
 
-  Linux 5.4-rc6 (2019-11-03 14:07:26 -0800)
+Yeah so looks to me like spi-dw is the only other part affected,
+and it probably wants a similar revert done to fix it. It is a
+little more complex as it has this additional cs_control
+callback, but there don't appear to be any in tree users for that
+(which I can find). So I am guessing any out of tree users
+probably broke when the logic was first changed so the revert
+probably helps them too, unless they have already changed there
+callbacks in which case it will break them again.
 
-are available in the Git repository at:
+Anyways I will send the revert and hopefully some people who use
+the driver can test it for us.
 
-  git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
-tags/y2038-cleanups-5.5
-
-for you to fetch changes up to b111df8447acdeb4b9220f99d5d4b28f83eb56ad:
-
-  y2038: alarm: fix half-second cut-off (2019-11-25 21:52:35 +0100)
-
-----------------------------------------------------------------
-y2038: syscall implementation cleanups
-
-This is a series of cleanups for the y2038 work, mostly intended
-for namespace cleaning: the kernel defines the traditional
-time_t, timeval and timespec types that often lead to y2038-unsafe
-code. Even though the unsafe usage is mostly gone from the kernel,
-having the types and associated functions around means that we
-can still grow new users, and that we may be missing conversions
-to safe types that actually matter.
-
-There are still a number of driver specific patches needed to
-get the last users of these types removed, those have been
-submitted to the respective maintainers.
-
-Link: https://lore.kernel.org/lkml/20191108210236.1296047-1-arnd@arndb.de/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-----------------------------------------------------------------
-Arnd Bergmann (26):
-      y2038: remove CONFIG_64BIT_TIME
-      y2038: add __kernel_old_timespec and __kernel_old_time_t
-      y2038: vdso: change timeval to __kernel_old_timeval
-      y2038: vdso: change timespec to __kernel_old_timespec
-      y2038: vdso: change time_t to __kernel_old_time_t
-      y2038: vdso: nds32: open-code timespec_add_ns()
-      y2038: vdso: powerpc: avoid timespec references
-      y2038: ipc: remove __kernel_time_t reference from headers
-      y2038: stat: avoid 'time_t' in 'struct stat'
-      y2038: uapi: change __kernel_time_t to __kernel_old_time_t
-      y2038: rusage: use __kernel_old_timeval
-      y2038: syscalls: change remaining timeval to __kernel_old_timeval
-      y2038: socket: remove timespec reference in timestamping
-      y2038: socket: use __kernel_old_timespec instead of timespec
-      y2038: make ns_to_compat_timeval use __kernel_old_timeval
-      y2038: elfcore: Use __kernel_old_timeval for process times
-      y2038: timerfd: Use timespec64 internally
-      y2038: time: avoid timespec usage in settimeofday()
-      y2038: itimer: compat handling to itimer.c
-      y2038: use compat_{get,set}_itimer on alpha
-      y2038: move itimer reset into itimer.c
-      y2038: itimer: change implementation to timespec64
-      y2038: allow disabling time32 system calls
-      y2038: fix typo in powerpc vdso "LOPART"
-      y2038: ipc: fix x32 ABI breakage
-      y2038: alarm: fix half-second cut-off
-
- arch/Kconfig                              |  11 +-
- arch/alpha/kernel/osf_sys.c               |  67 +----------
- arch/alpha/kernel/syscalls/syscall.tbl    |   4 +-
- arch/ia64/kernel/asm-offsets.c            |   2 +-
- arch/mips/include/uapi/asm/msgbuf.h       |   6 +-
- arch/mips/include/uapi/asm/sembuf.h       |   4 +-
- arch/mips/include/uapi/asm/shmbuf.h       |   6 +-
- arch/mips/include/uapi/asm/stat.h         |  16 +--
- arch/mips/kernel/binfmt_elfn32.c          |   4 +-
- arch/mips/kernel/binfmt_elfo32.c          |   4 +-
- arch/nds32/kernel/vdso/gettimeofday.c     |  61 +++++-----
- arch/parisc/include/uapi/asm/msgbuf.h     |   6 +-
- arch/parisc/include/uapi/asm/sembuf.h     |   4 +-
- arch/parisc/include/uapi/asm/shmbuf.h     |   6 +-
- arch/powerpc/include/asm/asm-prototypes.h |   3 +-
- arch/powerpc/include/asm/vdso_datapage.h  |   6 +-
- arch/powerpc/include/uapi/asm/msgbuf.h    |   6 +-
- arch/powerpc/include/uapi/asm/sembuf.h    |   4 +-
- arch/powerpc/include/uapi/asm/shmbuf.h    |   6 +-
- arch/powerpc/include/uapi/asm/stat.h      |   2 +-
- arch/powerpc/kernel/asm-offsets.c         |  18 ++-
- arch/powerpc/kernel/syscalls.c            |   4 +-
- arch/powerpc/kernel/time.c                |   5 +-
- arch/powerpc/kernel/vdso32/gettimeofday.S |   6 +-
- arch/powerpc/kernel/vdso64/gettimeofday.S |   8 +-
- arch/sparc/include/uapi/asm/msgbuf.h      |   6 +-
- arch/sparc/include/uapi/asm/sembuf.h      |   4 +-
- arch/sparc/include/uapi/asm/shmbuf.h      |   6 +-
- arch/sparc/include/uapi/asm/stat.h        |  24 ++--
- arch/sparc/vdso/vclock_gettime.c          |  36 +++---
- arch/x86/entry/vdso/vclock_gettime.c      |   6 +-
- arch/x86/entry/vsyscall/vsyscall_64.c     |   4 +-
- arch/x86/include/uapi/asm/msgbuf.h        |   6 +-
- arch/x86/include/uapi/asm/sembuf.h        |   4 +-
- arch/x86/include/uapi/asm/shmbuf.h        |   6 +-
- arch/x86/um/vdso/um_vdso.c                |  12 +-
- fs/aio.c                                  |   2 +-
- fs/binfmt_elf.c                           |  12 +-
- fs/binfmt_elf_fdpic.c                     |  12 +-
- fs/compat_binfmt_elf.c                    |   4 +-
- fs/select.c                               |  10 +-
- fs/timerfd.c                              |  14 +--
- fs/utimes.c                               |   8 +-
- include/linux/compat.h                    |  19 +--
- include/linux/skbuff.h                    |   7 +-
- include/linux/syscalls.h                  |  16 +--
- include/linux/time.h                      |   9 +-
- include/linux/time32.h                    |   2 +-
- include/linux/types.h                     |   2 +-
- include/trace/events/timer.h              |  16 +--
- include/uapi/asm-generic/msgbuf.h         |  12 +-
- include/uapi/asm-generic/posix_types.h    |   1 +
- include/uapi/asm-generic/sembuf.h         |   7 +-
- include/uapi/asm-generic/shmbuf.h         |  12 +-
- include/uapi/linux/cyclades.h             |   6 +-
- include/uapi/linux/elfcore.h              |   8 +-
- include/uapi/linux/errqueue.h             |   7 ++
- include/uapi/linux/msg.h                  |   6 +-
- include/uapi/linux/ppp_defs.h             |   4 +-
- include/uapi/linux/resource.h             |   4 +-
- include/uapi/linux/sem.h                  |   4 +-
- include/uapi/linux/shm.h                  |   6 +-
- include/uapi/linux/time.h                 |   6 +-
- include/uapi/linux/time_types.h           |   5 +
- include/uapi/linux/utime.h                |   4 +-
- ipc/syscall.c                             |   2 +-
- kernel/compat.c                           |  24 ----
- kernel/power/power.h                      |   2 +-
- kernel/sys.c                              |   4 +-
- kernel/sys_ni.c                           |  23 ++++
- kernel/time/hrtimer.c                     |   2 +-
- kernel/time/itimer.c                      | 189 +++++++++++++++++++++---------
- kernel/time/time.c                        |  32 +++--
- lib/vdso/gettimeofday.c                   |   4 +-
- net/compat.c                              |   2 +-
- net/core/scm.c                            |   6 +-
- net/ipv4/tcp.c                            |  28 +++--
- net/socket.c                              |   4 +-
- security/selinux/hooks.c                  |  10 +-
- 79 files changed, 472 insertions(+), 468 deletions(-)
+Thanks,
+Charles
