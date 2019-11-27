@@ -2,123 +2,112 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A853C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F3FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D033C2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A3420835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 04:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uov/dvVa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ku7K6WZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfK0EYp (ORCPT
+        id S1728270AbfK0Ecn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 23:24:45 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41562 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbfK0EYo (ORCPT
+        Tue, 26 Nov 2019 23:32:43 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41567 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbfK0Ecn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 23:24:44 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s18so1748077pfd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 20:24:44 -0800 (PST)
+        Tue, 26 Nov 2019 23:32:43 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m30so14112511lfp.8
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 20:32:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=cruZnOIQhNKwaUdTnpxXaRkPPQIJLlnQzi55bfc1FDk=;
-        b=Uov/dvVa+NFZre/Pxa63oFagioekbzhykEY9uC1NgQlWTmDe3MrzWWvy9Zt7KnD6nx
-         JcVzMDenZzT9Jy1ubkKHf4lG9QRkvegs3efFfrUdj94O6iXMUYwg7qGxuxwubrPMXHLh
-         rOgkOXAbP2OWyoEm0pSD8uHT3ho5NZhpHXOX8Hwqi5J+clekJ8dcIy/v6pAwSwpQeoeo
-         9O8DofPw1gzKIJN0IpXwOxovlThNUTHxlGD/qdUnnlsoGJhuzCVHEhzFgFdVt3ljBxfV
-         Fi4xdxIGx/VCFqVhmJLESMIFOZfA2bfnQmzo0CSx2RT5O7+HSjNXziEKEuP8qo4noLzf
-         45/w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2/+w5JosJ1scZlVFlMwGfpa9YngqJD9Yc3KXus09hIo=;
+        b=Ku7K6WZ4GJPBzmFqi3gQW5lBRTX79tvn4SiyT+jOfHpmhgAVSsirgSMX/i8rISdgmS
+         2wjex6vE6rLf2VgeQ2E1aCIzdeEsaPzfSevXC+TFy0pwxNVzhnlGItsJknLt7OlBAujH
+         ipFXIBxPeoAboNg7zEqPe+pBa3KM2Yb1gQccNZ0I5dGv5ntebEb+gagDf6kuYxH3Ucjl
+         Emalfl2SUjvLrH0Sosz/6XZfJXMBSRpMk38ZdoEru+mfO6mTMsrkoJ+1i667fG5n7i5i
+         sW5W3AcswJHruZEpOqx+K3Gb4LxkQxDq9EqCRRNQAIS22BOiQ0MEL8qjYjwPAyNQpq/t
+         KBCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=cruZnOIQhNKwaUdTnpxXaRkPPQIJLlnQzi55bfc1FDk=;
-        b=WkGcSkpAZo9rPV33tepkGO/kGVuIF557u1cUBZG43bYXKjSwgScxVlPnWlQR9HVdeg
-         37Ac2jL3/MCFxEv4KSauHbVDvHrOCPic4RYncSPWFYmNeGMiqpS+aapCUSDVQi4ZqbTg
-         CcLegOBkvxi5fVFFdB6LGu7LE078vxyiyAxlyIMW+ZgbQsgMh56JaUgaB885OnAHbVl7
-         xTp9limlrTA1b2T2AhoCe0zhrhFwXChJIbFz93GOJV/K3F84Tz5/8bPF65hkJTxYMrai
-         Zr3OQnvUVG9ZxdRWG9PvIuxD7K4+y2F3ZUoA6qfC3fsH8iMZ4OJTTlFLBiTHP5Z+kqkv
-         Zs6g==
-X-Gm-Message-State: APjAAAV8v+d7Ei8BXkBVvNsqBRMzhWSZ2OX9jqlu5/y891DoAinQu8Xb
-        P6lRgxBVEVEaHGBuMp/4tETKDQ==
-X-Google-Smtp-Source: APXvYqwHkLMzMxaDg4TQbnWaBd49ud789eb+LiQCmUKOjrQ+rDCkpU7IIi+KTGXAv9gUQiuoZeUrtw==
-X-Received: by 2002:a63:391:: with SMTP id 139mr2597363pgd.40.1574828682962;
-        Tue, 26 Nov 2019 20:24:42 -0800 (PST)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id e10sm4536872pfm.3.2019.11.26.20.24.42
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 26 Nov 2019 20:24:42 -0800 (PST)
-Date:   Tue, 26 Nov 2019 20:24:32 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     yu kuai <yukuai3@huawei.com>
-cc:     hughd@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        yi.zhang@huawei.com, zhengbin13@huawei.com
-Subject: Re: [PATCH] mm/shmem.c: don't set 'seals' to 'F_SEAL_SEAL' in
- shmem_get_inode
-In-Reply-To: <20191127040051.39169-1-yukuai3@huawei.com>
-Message-ID: <alpine.LSU.2.11.1911262008330.2204@eggly.anvils>
-References: <20191127040051.39169-1-yukuai3@huawei.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2/+w5JosJ1scZlVFlMwGfpa9YngqJD9Yc3KXus09hIo=;
+        b=ITJ+6X2pFZvgRS8dQ90Jik4BJNEi9vljsXrNIe35+e29fhj+y+20tt3sjIMFjEyITj
+         yibJ1NO2HAXBWco8TDuY+ewlJUajSyhMZPHE89EcOvjB8gMPY98UXvvA+j++NhGjEi3v
+         IDxXZV9FRlrJ4OaElZOiNZfp9amUDUPw7lqMZDij5S9cN2zMxoq33WTwmhgw7F4j+p4b
+         H9vvL5IsGvDBrSKtfLA6U+xALnKuvG6HL/lY75lwXnUNizqflHkpbE1WLj0f4haidtNa
+         cBJU9ds7Feo/wkzbaA3Hh+QLAd6jYsg7vlg6+EECkJETpv6m9JTpW0S4loBjjBpQPybH
+         bp4A==
+X-Gm-Message-State: APjAAAW1hjjMQmTvp3WdWW9KtBP41KEqXSnvT9+XZLM/OcL4uJozT6Oa
+        q9mdG55d4ad+xDDaCzxJlaHVUVfJfLf6J8mGIJE=
+X-Google-Smtp-Source: APXvYqw16HX9U8K2zmXneNLXJH8rHjOzEss/g+vbiBWtTArINds9S/AzCm1bIxDFqFaRN0c1bEN1373EJr43gH6N8vI=
+X-Received: by 2002:a19:6e06:: with SMTP id j6mr27462233lfc.6.1574829160974;
+ Tue, 26 Nov 2019 20:32:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20191111131252.921588318@infradead.org> <20191125125534.2aaaccf00c38a9a25dee623a@kernel.org>
+ <20191125123245.5ae9cb60@gandalf.local.home> <20191126091104.5e0cdc61e3b143fae4ed4cfd@kernel.org>
+ <20191126175812.c6e0cd1249422989007c91fe@kernel.org> <20191126185809.91574fb8eb02f3b2dd3af863@kernel.org>
+ <20191127084854.55ce1916e4f6d372f9731ed4@kernel.org> <CAADnVQK4twuXzFhD-qLHmCVK0n1h-GDENQLu+4PVV3Hp++R6kQ@mail.gmail.com>
+In-Reply-To: <CAADnVQK4twuXzFhD-qLHmCVK0n1h-GDENQLu+4PVV3Hp++R6kQ@mail.gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 26 Nov 2019 20:32:29 -0800
+Message-ID: <CAADnVQ+y9-JRA1u+UMD8uWjq1dt9AZrJKeOMe_zDNRL=wZ39TA@mail.gmail.com>
+Subject: Re: [PATCH -v5 00/17] Rewrite x86/ftrace to use text_poke (and more)
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        bristot <bristot@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        jbaron@akamai.com, Jessica Yu <jeyu@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Nov 2019, yu kuai wrote:
+On Tue, Nov 26, 2019 at 4:03 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+>
+>
+> On Tue, Nov 26, 2019 at 3:49 PM Masami Hiramatsu <mhiramat@kernel.org> wr=
+ote:
+>>
+>> On Tue, 26 Nov 2019 18:58:09 +0900
+>> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>> > I applied following patch, but it seems not enough. While disabling 25=
+6 kprobes,
+>> > system was frozen (no BUG message).
+>>
+>> Aah, this is another bug in optprobe. I'll send a series for fix these b=
+ugs.
+>
+>
+> Awesome! I=E2=80=99ve started looking at this crash as well.
+> Could you share a brief description of the bug and cc me on fixes?
+> I=E2=80=99d like to test them too.
+> Thanks
 
-> 'seals' is set to 'F_SEAL_SEAL' in shmem_get_inode, which means "prevent
-> further seals from being set", thus sealing API will be useless and many
-> code in shmem.c will never be reached. For example:
-
-The sealing API is not useless, and that code can be reached.
-
-> 
-> shmem_setattr
-> 	if ((newsize < oldsize && (info->seals & F_SEAL_SHRINK)) ||
-> 	    (newsize > oldsize && (info->seals & F_SEAL_GROW)))
-> 		return -EPERM;
-> 
-> So, initialize 'seals' to zero is more reasonable.
-> 
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-
-NAK.
-
-See memfd_create in mm/memfd.c (code which originated in mm/shmem.c,
-then was extended to support hugetlbfs also): sealing is for memfds,
-not for tmpfs or hugetlbfs files or SHM.  Without thinking about it too
-hard, I believe that to allow sealing on tmpfs files would introduce
-surprising new behaviors on them, which might well raise security issues;
-and also be incompatible with the guarantees intended by sealing.
-
-> ---
->  mm/shmem.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 165fa6332993..7b032b347bda 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -2256,7 +2256,6 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
->  		memset(info, 0, (char *)inode - (char *)info);
->  		spin_lock_init(&info->lock);
->  		atomic_set(&info->stop_eviction, 0);
-> -		info->seals = F_SEAL_SEAL;
->  		info->flags = flags & VM_NORESERVE;
->  		INIT_LIST_HEAD(&info->shrinklist);
->  		INIT_LIST_HEAD(&info->swaplist);
-> -- 
-> 2.17.2
+I noticed that your config doesn't have CONFIG_KPROBES_ON_FTRACE=3Dy
+and without it most test.d/kprobe/ tests fail, but in your log they are pas=
+sing.
+Also do you have KPROBE_EVENTS_ON_NOTRACE=3Dy ?
+Since without these two configs the crash wasn't reproducing for me.
+Anyhow waiting for your fixes.
