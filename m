@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682ABC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E279FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2C121556
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA23C21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889831;
-	bh=nOskZj0L/b7ymmq40aLThte2XvXczGSoKhi6G9WlnOo=;
+	s=default; t=1574889836;
+	bh=+x+XccsgLC72FddcFcYE+icmwrl+wXBNOtor5imuc/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aT655mj29BS+dMoyTuUHb08HGZVyxYPLNwlM1JjazByqwuHCioVW/WO4O/PiPJZCQ
-	 v4M1Cy1lPxsy9DyVLZ6Iwu6aWRredgLqqQW5jnPx5zQaeWBkPvLC5rBVTd0XNl48cI
-	 ApAeLJBB0OtNvJAsv9IrF4VgQpp9LZ/BAQzRuQJ4=
+	b=J4nOUkhT9m4b39sSnXsE/W+noBe1yfEv5mZEZAzMC1GLTkgj/nxe2hibzfG5ZAR2D
+	 SpcKh0mO4YCvGdTQWFo4vkjIKhBjVWc+RX+lmnvqd1oFTE79nbBwrXXNxwPjAu21pr
+	 kOBM9NVmnqEAK/fFXTe8WWpW6D0X2oe0r+1LeqD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732649AbfK0VXu (ORCPT
+        id S1732804AbfK0VXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:23:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57450 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:23:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727445AbfK0VEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:04:05 -0500
+        id S1732097AbfK0VD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:03:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29ADA2086A;
-        Wed, 27 Nov 2019 21:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB5602086A;
+        Wed, 27 Nov 2019 21:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888644;
-        bh=nOskZj0L/b7ymmq40aLThte2XvXczGSoKhi6G9WlnOo=;
+        s=default; t=1574888636;
+        bh=+x+XccsgLC72FddcFcYE+icmwrl+wXBNOtor5imuc/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EbhwJjfzxGk2lVbWTqM+lTL7tAdJcxewXbBjovbTzS8REpIrB0Mwbq03KQ+Uy54mM
-         7lZiVAOhIPg3Z26q5rW8nXYVfoyzplCHdNMMMIJmDTufbsHvJpC/dLV+GzqghKMJFG
-         eeAQS8pO2a2xoZamZu0O4su3rqctWrOGTKERcAjY=
+        b=ecsfsJghBuvtV2TD1FklRfqcD952aqs5rXZ2vmlKiBpzG303RgFeeLWrBEFOLdg+2
+         VIYd8nMuZFooz6uUIDRgWz4lS0zuiae4dGEGGfQiYZK5fR2SmUjtDjsVZPUXLNov/K
+         FzDlXc1I/eCtKB0jPnoyDZx/hlrFhzOU/C3Dreyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 214/306] wil6210: fix L2 RX status handling
-Date:   Wed, 27 Nov 2019 21:31:04 +0100
-Message-Id: <20191127203130.735558221@linuxfoundation.org>
+Subject: [PATCH 4.19 211/306] media: ov13858: Check for possible null pointer
+Date:   Wed, 27 Nov 2019 21:31:01 +0100
+Message-Id: <20191127203130.540872040@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,62 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maya Erez <merez@codeaurora.org>
+From: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
 
-[ Upstream commit 04de15010aa42a92add66b159e3ae44b4287390f ]
+[ Upstream commit 35629182eb8f931b0de6ed38c0efac58e922c801 ]
 
-L2 RX status errors should not be treated as a bitmap and the actual
-error values should be checked.
-Print L2 errors as wil_err_ratelimited for easier debugging
-when such errors occurs.
+Check for possible null pointer to avoid crash.
 
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/txrx_edma.c | 23 ++++++++++----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ drivers/media/i2c/ov13858.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/txrx_edma.c b/drivers/net/wireless/ath/wil6210/txrx_edma.c
-index 409a6fa8b6c8f..5fa8d6ad66482 100644
---- a/drivers/net/wireless/ath/wil6210/txrx_edma.c
-+++ b/drivers/net/wireless/ath/wil6210/txrx_edma.c
-@@ -808,23 +808,24 @@ static int wil_rx_error_check_edma(struct wil6210_priv *wil,
- 		wil_dbg_txrx(wil, "L2 RX error, l2_rx_status=0x%x\n",
- 			     l2_rx_status);
- 		/* Due to HW issue, KEY error will trigger a MIC error */
--		if (l2_rx_status & WIL_RX_EDMA_ERROR_MIC) {
--			wil_dbg_txrx(wil,
--				     "L2 MIC/KEY error, dropping packet\n");
-+		if (l2_rx_status == WIL_RX_EDMA_ERROR_MIC) {
-+			wil_err_ratelimited(wil,
-+					    "L2 MIC/KEY error, dropping packet\n");
- 			stats->rx_mic_error++;
- 		}
--		if (l2_rx_status & WIL_RX_EDMA_ERROR_KEY) {
--			wil_dbg_txrx(wil, "L2 KEY error, dropping packet\n");
-+		if (l2_rx_status == WIL_RX_EDMA_ERROR_KEY) {
-+			wil_err_ratelimited(wil,
-+					    "L2 KEY error, dropping packet\n");
- 			stats->rx_key_error++;
- 		}
--		if (l2_rx_status & WIL_RX_EDMA_ERROR_REPLAY) {
--			wil_dbg_txrx(wil,
--				     "L2 REPLAY error, dropping packet\n");
-+		if (l2_rx_status == WIL_RX_EDMA_ERROR_REPLAY) {
-+			wil_err_ratelimited(wil,
-+					    "L2 REPLAY error, dropping packet\n");
- 			stats->rx_replay++;
- 		}
--		if (l2_rx_status & WIL_RX_EDMA_ERROR_AMSDU) {
--			wil_dbg_txrx(wil,
--				     "L2 AMSDU error, dropping packet\n");
-+		if (l2_rx_status == WIL_RX_EDMA_ERROR_AMSDU) {
-+			wil_err_ratelimited(wil,
-+					    "L2 AMSDU error, dropping packet\n");
- 			stats->rx_amsdu_error++;
- 		}
- 		return -EFAULT;
+diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
+index 0e7a85c4996c7..afd66d243403b 100644
+--- a/drivers/media/i2c/ov13858.c
++++ b/drivers/media/i2c/ov13858.c
+@@ -1612,7 +1612,8 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
+ 				OV13858_NUM_OF_LINK_FREQS - 1,
+ 				0,
+ 				link_freq_menu_items);
+-	ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
++	if (ov13858->link_freq)
++		ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+ 
+ 	pixel_rate_max = link_freq_to_pixel_rate(link_freq_menu_items[0]);
+ 	pixel_rate_min = link_freq_to_pixel_rate(link_freq_menu_items[1]);
+@@ -1635,7 +1636,8 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
+ 	ov13858->hblank = v4l2_ctrl_new_std(
+ 				ctrl_hdlr, &ov13858_ctrl_ops, V4L2_CID_HBLANK,
+ 				hblank, hblank, 1, hblank);
+-	ov13858->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
++	if (ov13858->hblank)
++		ov13858->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+ 
+ 	exposure_max = mode->vts_def - 8;
+ 	ov13858->exposure = v4l2_ctrl_new_std(
 -- 
 2.20.1
 
