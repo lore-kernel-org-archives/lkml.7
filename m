@@ -2,170 +2,102 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14642C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9519C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61E02084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C232720835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:52:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHQm3Z4s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A+KbQX28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfK0TtA (ORCPT
+        id S1727138AbfK0Twr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 14:49:00 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34237 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfK0Ts7 (ORCPT
+        Wed, 27 Nov 2019 14:52:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58513 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726729AbfK0Twr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 14:48:59 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l136so5577367oig.1;
-        Wed, 27 Nov 2019 11:48:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hJQOsjHUQwGyDgldLtvmDQQC956sPZlhFuJn6q/Fye4=;
-        b=UHQm3Z4sQErDpbdcFsI5LZbvUBE5BhMXUdsIzb7O41xb6Fspwq2A1/BPVDQTjXSLdr
-         ikEI2AYLU+Ctu05Qf5u6bYWG5Lv63zshN411Mdsn1W+4fPFdDgMahME+EZCOJoU1CwJE
-         35v5Ycykph2Hq7xeEUKlTOBl/6E7kGL1nu5zSgrq7Xb8TN+sHbdlAw19oDeYA+AjLBgT
-         uqu17Y9ld56yXwu9aHlpdmiTJDgzKXhhd9fayPZmR2GSNicg68x2CeUBNU6BukSF4B2/
-         Uwsg1kCy2nPtULkc6eJeqq+y+2aHS3iyXlg2wQC2DR7fcJBxqjd2FJ5aYi/hj+VnLm4B
-         SzVQ==
+        Wed, 27 Nov 2019 14:52:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574884366;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HiZS6oFfOA80v64mJWiWGLuKXjLnUu1+qmjApNcY1+g=;
+        b=A+KbQX280HJaBRouFB5dZ/mJdzvdY//yTNxDjtxgzpaq3doPcstqXRqONocXU/ZjnyHyLQ
+        tAz6zEfmRGwPwNo3XbB8wOoLb/4Yo2B6OftGWXTX5wfTHhhS0M4GoTdUd32GsNlUwkSi8V
+        oMJeaBLK9QGxG2kPTpme2bD46SgZljY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-sNM1L5unPcmyRmOhb03aWA-1; Wed, 27 Nov 2019 14:52:42 -0500
+Received: by mail-wm1-f71.google.com with SMTP id o135so2972344wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 11:52:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hJQOsjHUQwGyDgldLtvmDQQC956sPZlhFuJn6q/Fye4=;
-        b=QaHD+RerXlEbPYM4n6A8VwJ9OZVVK/RhJt+DqGmML2sko89/4xWurfwlDEMT2oUFE3
-         xYc5fX8hGfsP4IVIShKsvHQuj6sE+2Ox8nAu1Ap8GW744nGnEv6nz6uANZYBy+0piLDU
-         +dDpy29jjPaSXHOFrAJ08PpRiggBdUpmHnhOOvqTu0aAiM/iasroqgL1memOTLt6h8fV
-         Kb1n6aMcR4d37sVe7ylkNSim1hOI9fRrZbquZGYKOYtLnpbzLI9+V0T0i9v45iwn4ETF
-         gdPdWtugEKZvtOT16dxlWrnfXXNTteIyY7y9xePEZLCVnGf9VKpIblOMZBmOnhwc78Cx
-         5K2Q==
-X-Gm-Message-State: APjAAAX+HR+/5qD/3xjvBwuQOSXccxsSz8xuDOAW2a6x5jXdd2WIR1qk
-        rXBlG6wDRkXH63z/o19SBtEe0aLVMrw3xOmluwg=
-X-Google-Smtp-Source: APXvYqyED1U8iGKLv5Q8myGQWskAymaEmPDOweek/ULUMOk2izeVMnMgtOcUrHFsfo71UXovu5AJlOMgACDpkBnTwd4=
-X-Received: by 2002:aca:5e03:: with SMTP id s3mr5733588oib.88.1574884137631;
- Wed, 27 Nov 2019 11:48:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127052935.1719897-1-anarsoul@gmail.com> <20191127052935.1719897-2-anarsoul@gmail.com>
- <20191127111419.z5hfu5soxceiivg6@core.my.home> <20191127173547.ch3pcv3lxgdcrfnu@gilmour.lan>
- <CAEExFWvG-Af4qtUrxQV4ssNQCVQAmpXfxB+92wX+6ZxUNfX-Jw@mail.gmail.com>
-In-Reply-To: <CAEExFWvG-Af4qtUrxQV4ssNQCVQAmpXfxB+92wX+6ZxUNfX-Jw@mail.gmail.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Wed, 27 Nov 2019 11:48:32 -0800
-Message-ID: <CA+E=qVcdwQO3Y8ismmBN-gRVNMs1Thx+TPLqstKM9fYf2_0qFQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/7] thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=+P1Iia7oLAHdhlzKG11woXJ5RZt0oWz8tr0zkXFxMMU=;
+        b=Ds5vpQm48wbcaWqYqcbv476kYY4o1v/gNqRhaPbD0YJf7dLVEjnjP6Icl1WK/l8pex
+         ANru2LS6B1gNjPiN4Sb3pIfKK204BKR0Kg9K+kOPEH8ajDbh7bfs65985ErmccThrKcu
+         FqVieF4NB1spROHWnLn1OMywvF4KGcTuUKUCSnPr6GN8L6v+qAuCe+4CcVA7/AeXLkQD
+         56pPfOfsYvPyHVAOhOhB9R8/e1xR3x8opabW98nAJWwjaI4NYZVCLS9fOcFuJzoMRRH+
+         7kdTV+3lqRvYrKU9sJ4p45iHlmeKtrXK3l91dLk68KYPjjhaDXpCABLPrsyK/9fEwmlE
+         Z51w==
+X-Gm-Message-State: APjAAAUjrSKxXIvs7wh2FJNT/RQwnuVsD+c19NSELq8JlzOW1ShVnnLL
+        4LezievlZwOxH3NFZ0jCf55eifffV2iRhX8T5av8BxL/3Xb1qZmtWT1GA5JJd7p7meKAJJzEYdY
+        yMRM49Rmzq6bPsiX5tTAQpImB
+X-Received: by 2002:adf:e301:: with SMTP id b1mr43578211wrj.280.1574884361880;
+        Wed, 27 Nov 2019 11:52:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwsv9XtEO7rpruY9ZcJkRC6TjBlCtMvfsdFKxhHQuULD11A6Ui5Ejf2GFuEyNIh84JMt72E/Q==
+X-Received: by 2002:adf:e301:: with SMTP id b1mr43578199wrj.280.1574884361733;
+        Wed, 27 Nov 2019 11:52:41 -0800 (PST)
+Received: from [192.168.3.122] (p5B0C6355.dip0.t-ipconnect.de. [91.12.99.85])
+        by smtp.gmail.com with ESMTPSA id l26sm7995576wmj.48.2019.11.27.11.52.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Nov 2019 11:52:41 -0800 (PST)
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v1] mm/memory_hotplug: don't check the nid in find_(smallest|biggest)_section_pfn
+Date:   Wed, 27 Nov 2019 20:52:40 +0100
+Message-Id: <7D8F1E5C-5A39-4C76-AD2F-4D0954DB57F5@redhat.com>
+References: <CE5C4BD6-FAA6-4439-B869-679D24C17298@lca.pw>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>
+In-Reply-To: <CE5C4BD6-FAA6-4439-B869-679D24C17298@lca.pw>
+To:     Qian Cai <cai@lca.pw>
+X-Mailer: iPhone Mail (17A878)
+X-MC-Unique: sNM1L5unPcmyRmOhb03aWA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 11:44 AM Frank Lee <tiny.windzz@gmail.com> wrote:
->
-> Hello Vasily,
->
-> Thank you very much for your work on this.
-> This looks good to me.
 
-Thanks!
 
-> By the way, I would like to ask comments about adding the following code.
+> Am 27.11.2019 um 20:37 schrieb Qian Cai <cai@lca.pw>:
+>=20
+> =EF=BB=BF
+>=20
+>> On Nov 27, 2019, at 2:06 PM, David Hildenbrand <david@redhat.com> wrote:
+>>=20
+>> The zone pointer is unique for every node. (in contrast to the zone inde=
+x).
+>=20
+> I am not sure if it is worth optimizing there. The existing nid check loo=
+ks quite straight-forward and cheap.
 
-Can we add it as follow up patch? I don't think that I have a device
-with working suspend to test it and I'm hesitant to add any code that
-I can't test.
+I understand but strongly dislike your attitude towards code changes ;)
 
->
-> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> index c0ed60782b11..579dde5e0701 100644
-> --- a/drivers/thermal/sun8i_thermal.c
-> +++ b/drivers/thermal/sun8i_thermal.c
-> @@ -629,11 +629,63 @@ static const struct of_device_id of_ths_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, of_ths_match);
->
-> +static int __maybe_unused sun8i_thermal_suspend(struct device *dev)
-> +{
-> + struct ths_device *tmdev; = dev_get_drvdata(dev);
-> +
-> + clk_disable(tmdev->mod_clk);
-> + clk_disable(tmdev->bus_clk);
-> +
-> + reset_control_assert(tmdev->reset);
-> +
-> + return 0;
-> +}
-> +
-> +static int __maybe_unused sun8i_thermal_resume(struct device *dev)
-> +{
-> + struct ths_device *tmdev; = dev_get_drvdata(dev);
-> + int error;
-> +
-> + error = reset_control_deassert(tmdev->reset);
-> + if (error)
-> + return error;
-> +
-> + error = clk_enable(tmdev->bus_clk);
-> + if (error)
-> + goto assert_reset;
-> +
-> + clk_set_rate(tmdev->mod_clk, 24000000);
-> + error = clk_enable(tmdev->mod_clk);
-> + if (error)
-> + goto bus_disable;
-> +
-> + sun8i_ths_calibrate(tmdev);
-> +
-> + ret = tmdev->chip->init(tmdev);
-> + if (ret)
-> + goto mod_disable;
-> +
-> + return 0;
-> +
-> +mod_disable:
-> + clk_disable(tmdev->mod_clk);
-> +bus_disable:
-> + clk_disable(tmdev->bus_clk);
-> +assert_reset:
-> + reset_control_assert(tmdev->reset);
-> +
-> + return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(sun8i_thermal_pm_ops,
-> + sun8i_thermal_suspend, sun8i_thermal_resume);
-> +
->  static struct platform_driver ths_driver = {
->   .probe = sun8i_ths_probe,
->   .remove = sun8i_ths_remove,
->   .driver = {
->   .name = "sun8i-thermal",
-> + .pm = &sun8i_thermal_pm_ops,
->   .of_match_table = of_ths_match,
->   },
->  };
->
-> Yangtao
+>=20
+
