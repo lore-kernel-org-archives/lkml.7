@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD6DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B734C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC13215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34248215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887005;
-	bh=K889wb9+LZ+sx4rJPH8B7o+s1jSttb+DbgaMv6XZACU=;
+	s=default; t=1574887011;
+	bh=faAfye4U9NiBAVX4GKVcclxbx9Ur0Cd7sQHtZGt+ov0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vx8umpqZygBrs05oEHP2zxTXh6aPfLugUp4p2Y+e8l43QR2H2fnCGQD2ipblerxas
-	 WIUzToh8hZDZPelH4TnBN/SZJ30EzeXIM64ARITiJO5/HvFia876H0u4oV6Ds8RWYH
-	 2KGMbWFeRq98+DUeJiJHQ3pHQFGMfiSsk5qlr348=
+	b=o68PEQuZRfe+HLvkNBbDFqGe47qjz3h9BfTSHrLKbKt4Nkz9VV0qaLc6T5U3LeA4/
+	 qyTntNyl9bwJC+IZYlfmrWqqr++LTGy6CS/cUi3I3YyMGVy3D69/XVo4vxh10kF5qu
+	 mlAVjB1Bo55rS1C2nOiGUwed78En+z0EHeW2JWrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbfK0Ugo (ORCPT
+        id S1728441AbfK0Ugu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:36:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39136 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:36:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727443AbfK0Ugm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:36:42 -0500
+        id S1728424AbfK0Ugs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:36:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8506A2158A;
-        Wed, 27 Nov 2019 20:36:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB35D215A4;
+        Wed, 27 Nov 2019 20:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887002;
-        bh=K889wb9+LZ+sx4rJPH8B7o+s1jSttb+DbgaMv6XZACU=;
+        s=default; t=1574887007;
+        bh=faAfye4U9NiBAVX4GKVcclxbx9Ur0Cd7sQHtZGt+ov0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ePz91oQRq27+bYbRroyaaH20sPIUOndEWOq4CiUkgkhrT+SW5Uw1T9CBUvxYG+OSa
-         t/UpGNMtRVgZJXSxopVVBuxeIcrvmcxXtRW+pXj1Wi8ZaQ/gjOtEZ1OLkmuEi4tcVU
-         smCuXwV7oq2N0wyVY9jdx2dHOirS53kAjwJ7NVlM=
+        b=csf7fbjItdM+Fun3pM6rB9Xpl0zREZSeWkhFobzo4jrQjK2O1Ytq1f1pW06tR+nTQ
+         iJUXBx3mnobpenpMYqp9+l4WyexkrTa/H3CFYQ9JhmelW8YLxQ/xQLk/VY30LVMAbq
+         hDl8TNouBq/S2OmyAZn7CWiiPTWygHU+1ZHfZE9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 022/132] printk: fix integer overflow in setup_log_buf()
-Date:   Wed, 27 Nov 2019 21:30:13 +0100
-Message-Id: <20191127202919.224332710@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 078/132] net: do not abort bulk send on BQL status
+Date:   Wed, 27 Nov 2019 21:31:09 +0100
+Message-Id: <20191127203010.278501503@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,59 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit d2130e82e9454304e9b91ba9da551b5989af8c27 ]
+[ Upstream commit fe60faa5063822f2d555f4f326c7dd72a60929bf ]
 
-The way we calculate logbuf free space percentage overflows signed
-integer:
+Before calling dev_hard_start_xmit(), upper layers tried
+to cook optimal skb list based on BQL budget.
 
-	int free;
+Problem is that GSO packets can end up comsuming more than
+the BQL budget.
 
-	free = __LOG_BUF_LEN - log_next_idx;
-	pr_info("early log buf free: %u(%u%%)\n",
-		free, (free * 100) / __LOG_BUF_LEN);
+Breaking the loop is not useful, since requeued packets
+are ahead of any packets still in the qdisc.
 
-We support LOG_BUF_LEN of up to 1<<25 bytes. Since setup_log_buf() is
-called during early init, logbuf is mostly empty, so
+It is also more expensive, since next TX completion will
+push these packets later, while skbs are not in cpu caches.
 
-	__LOG_BUF_LEN - log_next_idx
+It is also a behavior difference with TSO packets, that can
+break the BQL limit by a large amount.
 
-is close to 1<<25. Thus when we multiply it by 100, we overflow signed
-integer value range: 100 is 2^6 + 2^5 + 2^2.
+Note that drivers should use __netdev_tx_sent_queue()
+in order to have optimal xmit_more support, and avoid
+useless atomic operations as shown in the following patch.
 
-Example, booting with LOG_BUF_LEN 1<<25 and log_buf_len=2G
-boot param:
-
-[    0.075317] log_buf_len: -2147483648 bytes
-[    0.075319] early log buf free: 33549896(-28%)
-
-Make "free" unsigned integer and use appropriate printk() specifier.
-
-Link: http://lkml.kernel.org/r/20181010113308.9337-1-sergey.senozhatsky@gmail.com
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 2 +-
+ net/core/dev.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 699c18c9d7633..e53a976ca28ea 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -937,7 +937,7 @@ void __init setup_log_buf(int early)
- {
- 	unsigned long flags;
- 	char *new_log_buf;
--	int free;
-+	unsigned int free;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 18a5154e2f254..903c6242b4499 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -2801,7 +2801,7 @@ struct sk_buff *dev_hard_start_xmit(struct sk_buff *first, struct net_device *de
+ 		}
  
- 	if (log_buf != __log_buf)
- 		return;
+ 		skb = next;
+-		if (netif_xmit_stopped(txq) && skb) {
++		if (netif_tx_queue_stopped(txq) && skb) {
+ 			rc = NETDEV_TX_BUSY;
+ 			break;
+ 		}
 -- 
 2.20.1
 
