@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F53BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35220C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B12F2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 011B22176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889203;
-	bh=m+9gLKLJPVKmbMVfTrjUnkZTGNhO4OvqC2oDE5gvC5o=;
+	s=default; t=1574889207;
+	bh=nZdoRaeE0FxWGCecbzOvB2AAJ+KHGsxC/QthJB7BhRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lBIRYkzgkIGLbpo/iXmaueC3qkKItT9XlFXK3J7xS1LTedBUekV78Hm5aEIODxg0O
-	 nzOa3/B2kW8fJBqmy2dIScAY8/reMIIhfmmui4f0cTsxzJclgHQetNg36rr47lDHHm
-	 7kPUgaJ31+mwDY8fdPu3ZX1GPqnUx6JE0tSB0iz4=
+	b=OfCPPKUfUezwGLBeV53zpu56HI1cHtZsCb8lUXU3xheHaZ9VFVLeRojc8wlqNtfNj
+	 nDbeLfMh+sBhdNFrzaZf0ZESMowliMWMCrQI1JMr666EHjuIH9ZhXeIqxXUTcJqauZ
+	 3LRS4tbE8TEoPQzQ+4i7qf5vx9X0krZUK3XN7f9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732920AbfK0VNW (ORCPT
+        id S2387456AbfK0VNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:13:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45414 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:13:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732929AbfK0VNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:13:18 -0500
+        id S1732551AbfK0VNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:13:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDAC12154A;
-        Wed, 27 Nov 2019 21:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FD9C2086A;
+        Wed, 27 Nov 2019 21:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889197;
-        bh=m+9gLKLJPVKmbMVfTrjUnkZTGNhO4OvqC2oDE5gvC5o=;
+        s=default; t=1574889194;
+        bh=nZdoRaeE0FxWGCecbzOvB2AAJ+KHGsxC/QthJB7BhRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lKtRZVRPTplDnoujuYT0+Oph/LsRl5SEs0QdLQ/r05Llo6zTJnwMqSf7cken7wCMg
-         ukBBgVPdVBk8xWWfx00jST4HMQarfue7gVW7KBvVgWU0b/gLeq5WN16NjkBZfMEOC1
-         kxUBfBUZY0axLyyGZqIh9GwW7eLDjC2zgBO1W15Q=
+        b=ijSWf5nRhau7Yu6QHODRl6ffS5AFWBzyZZAGA1Y2/Mkj8IbDw+TcOodUNb3jAX4/b
+         FVWAQvwiN6CXLD51GoXjJYO4gazFTF3yLqwOySr2MwVt3AubOf61Cixq1ZRrrd7iPj
+         sY5+SWyEVbiyBTr4rHF6mfNraQOrDT7egM4oOZ50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Pittman <jpittman@redhat.com>,
-        David Jeffery <djeffery@redhat.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.4 08/66] md/raid10: prevent access of uninitialized resync_pages offset
-Date:   Wed, 27 Nov 2019 21:32:03 +0100
-Message-Id: <20191127202644.311484265@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org
+Subject: [PATCH 5.4 25/66] selftests/x86/sigreturn/32: Invalidate DS and ES when abusing the kernel
+Date:   Wed, 27 Nov 2019 21:32:20 +0100
+Message-Id: <20191127202658.177178907@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -61,40 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Pittman <jpittman@redhat.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 45422b704db392a6d79d07ee3e3670b11048bd53 upstream.
+commit 4d2fa82d98d2d296043a04eb517d7dbade5b13b8 upstream.
 
-Due to unneeded multiplication in the out_free_pages portion of
-r10buf_pool_alloc(), when using a 3-copy raid10 layout, it is
-possible to access a resync_pages offset that has not been
-initialized.  This access translates into a crash of the system
-within resync_free_pages() while passing a bad pointer to
-put_page().  Remove the multiplication, preventing access to the
-uninitialized area.
+If the kernel accidentally uses DS or ES while the user values are
+loaded, it will work fine for sane userspace.  In the interest of
+simulating maximally insane userspace, make sigreturn_32 zero out DS
+and ES for the nasty parts so that inadvertent use of these segments
+will crash.
 
-Fixes: f0250618361db ("md: raid10: don't use bio's vec table to manage resync pages")
-Cc: stable@vger.kernel.org # 4.12+
-Signed-off-by: John Pittman <jpittman@redhat.com>
-Suggested-by: David Jeffery <djeffery@redhat.com>
-Reviewed-by: Laurence Oberman <loberman@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid10.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/x86/sigreturn.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -191,7 +191,7 @@ static void * r10buf_pool_alloc(gfp_t gf
+--- a/tools/testing/selftests/x86/sigreturn.c
++++ b/tools/testing/selftests/x86/sigreturn.c
+@@ -451,6 +451,19 @@ static void sigusr1(int sig, siginfo_t *
+ 	ctx->uc_mcontext.gregs[REG_SP] = (unsigned long)0x8badf00d5aadc0deULL;
+ 	ctx->uc_mcontext.gregs[REG_CX] = 0;
  
- out_free_pages:
- 	while (--j >= 0)
--		resync_free_pages(&rps[j * 2]);
-+		resync_free_pages(&rps[j]);
++#ifdef __i386__
++	/*
++	 * Make sure the kernel doesn't inadvertently use DS or ES-relative
++	 * accesses in a region where user DS or ES is loaded.
++	 *
++	 * Skip this for 64-bit builds because long mode doesn't care about
++	 * DS and ES and skipping it increases test coverage a little bit,
++	 * since 64-bit kernels can still run the 32-bit build.
++	 */
++	ctx->uc_mcontext.gregs[REG_DS] = 0;
++	ctx->uc_mcontext.gregs[REG_ES] = 0;
++#endif
++
+ 	memcpy(&requested_regs, &ctx->uc_mcontext.gregs, sizeof(gregset_t));
+ 	requested_regs[REG_CX] = *ssptr(ctx);	/* The asm code does this. */
  
- 	j = 0;
- out_free_bio:
 
 
