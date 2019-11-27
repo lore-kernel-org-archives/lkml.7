@@ -2,119 +2,144 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EFDC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA858C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762A4204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D142070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:27:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ns2KqnvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfK0JZm (ORCPT
+        id S1726747AbfK0J1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 04:25:42 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33757 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfK0JZl (ORCPT
+        Wed, 27 Nov 2019 04:27:02 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:36346 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfK0J1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 04:25:41 -0500
-Received: by mail-oi1-f193.google.com with SMTP id x21so12381877oic.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 01:25:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e3SI+PalkAVg/EhpKyNHwp1BQJsL2GZX4PjkGsyUXnU=;
-        b=OniQZNKCDhOfzvscsApmcl6SEEZHalhTZ1PAEz/gkuQzGTVXlUEt7s8uUOdYsdceDm
-         v2EQzBEdkc7vJY7DjEkMzsakhHlndEp2prNd1Kt+PUuRKF43weLkKE7V0z4KpP7CX9ZF
-         4R3uBPus1HwVeN5oB7qd1+MUz8vsXFYik4s7/nse3d+xXlNemWNSI6BhVjcq+5VoZsNh
-         SB73r82UNNuVAwb3CHM0b7Y5dKrA6lKFrj1Kh34ZNMY41/zSEtQsdN6uAXNLZlBM60vC
-         JH8+q41n2Z0WxAe1IGnqxGZm8APqOevKZKgq5NQ+X89WGJiPN1NuI1l5PwUilD+agbHx
-         KJMQ==
-X-Gm-Message-State: APjAAAUzCvXKlESh5k+DphW35MHENOLHN6efePXbhBMpb0I9AC/wN9jO
-        pm+U3DIlqnGBmJL+910GjKGg7/kCibAm1psk3Fs=
-X-Google-Smtp-Source: APXvYqwlfP556yI7xTcMB0OAC7IxK3vUcovtm5hRT1uToSaoYNd1PAbNuHxWBQNo01mxjK1zerzjxZim95QPOkPhtSc=
-X-Received: by 2002:aca:3a86:: with SMTP id h128mr3049038oia.131.1574846740792;
- Wed, 27 Nov 2019 01:25:40 -0800 (PST)
+        Wed, 27 Nov 2019 04:27:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WL2xugN3zLl6MEv/64tLFVBoLomlA97rbI+DD/ncxaE=; b=ns2KqnvIsWsHiQh5zycTk52WD
+        n+xo83KAzcTMiK7L8THjSsqDPcrAjzesXxjI1wykLdLpEHcmjdwyaDchfPBXYkzehbNR55Rr+BqQ/
+        wHWH4emtAAvAveeUUmTPMztlGQEn3druLqyS5f1gVQzoKbSPq69ZP8yGWB3LGEzEgSIRCIo132PUh
+        0Xxei0N9FSWMW+1AB97sNVIj/XFpVm3y5G5CLMY2MCY+nDH/S4ldWk1DCEWej8sPtdA0V21/GxxW0
+        b3zMdFpIgIEFmoS1Jp04VfvtqiVjUlZ6SeNMOSIbyvp6Wf3wGHgdFxAXLGuBT6FyETA2bwFOMPjY8
+        JB9gNtS0g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45254)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iZtak-0002TV-55; Wed, 27 Nov 2019 09:26:34 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iZtaR-0000A2-QR; Wed, 27 Nov 2019 09:26:15 +0000
+Date:   Wed, 27 Nov 2019 09:26:15 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "stefan@agner.ch" <stefan@agner.ch>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "natechancellor@gmail.com" <natechancellor@gmail.com>,
+        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: ARM expections for location of kernel, ramdisk and dtb
+Message-ID: <20191127092615.GC25745@shell.armlinux.org.uk>
+References: <e1f7cca54843abcef0c2703a5f7071c045b99baa.camel@alliedtelesis.co.nz>
 MIME-Version: 1.0
-References: <20191115150202.15208-1-erosca@de.adit-jv.com> <05ba4e29fb78885cf9abf7bfc87e0a7bcda099fe.camel@perches.com>
- <20191115154627.GA2187@lxhi-065.adit-jv.com> <20191115092943.7c79f81e@lwn.net>
- <20191115172141.GA3085@lxhi-065.adit-jv.com>
-In-Reply-To: <20191115172141.GA3085@lxhi-065.adit-jv.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 Nov 2019 10:25:29 +0100
-Message-ID: <CAMuHMdUhPV2B4dpgpPogpFQPprX-VOCC5RuwLLv3MiHzp-pq3Q@mail.gmail.com>
-Subject: Re: [PATCH] checkpatch: whitelist Originally-by: signature
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e1f7cca54843abcef0c2703a5f7071c045b99baa.camel@alliedtelesis.co.nz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugeniu,
+On Wed, Nov 27, 2019 at 08:20:12AM +0000, Chris Packham wrote:
+> Hi All,
+> 
+> We're updating our systems to use the latest kernel. For many of them
+> this is a fairly large leap. One problem we've hit is that durng boot
+> the dtb is clobbered by the uncompressed kernel.
+> 
+> Here's a snippet of output from u-boot
+> 
+> ## Loading kernel from FIT Image at 62000000 ...
+>    Using 'XS916MXS@2' configuration
+>    Trying 'kernel@1' kernel subimage
+>      Description:  linux
+>      Created:      2019-11-27   6:53:48 UTC
+>      Type:         Kernel Image
+>      Compression:  uncompressed
+>      Data Start:   0x62000174
+>      Data Size:    3495432 Bytes = 3.3 MiB
+>      Architecture: ARM
+>      OS:           Linux
+>      Load Address: 0x00800000
+>      Entry Point:  0x60800000
+>    ...
+>    Booting using the fdt blob at 0x63b90f6c
+>    Loading Kernel Image ... OK
+>    Loading Ramdisk to 6e7c6000, end 70000000 ... OK
+>    Loading Device Tree to 607fb000, end 607fffd8 ... OK
+> 
+> Starting kernel ...
+> 
+> Uncompressing Linux... done, booting the kernel.
+> 
+> Error: invalid dtb and unrecognized/unsupported machine ID
+>   r1=0x0000206e, r2=0x00000000
+> 
+> Between old and new the location of the devicetree hasn't actually
+> changed. But what has changed is the size of the kernel the self
+> extracting kernel unpacks to 0x60008000 and with our current
+> configuration extends into where the dtb is located.
+> 
+> Documentation/arm/booting.rst says that "The dtb must be placed in a
+> region of memory where the kernel decompressor will not overwrite it". 
+> 
+> This suggests that the problem is with our u-boot configuration, but
+> how is u-boot supposed to know where the self-extracting kernel is
+> going to place things? As far as I can tell u-boot is doing a
+> reasonable job of finding a place to put the dtb which it thinks is
+> unused. I'm not sure why it's picked 0x607fb000 instead of putting it
+> just under the ramdisk but regardless with the information u-boot has
+> that address is up for grabs.
+> 
+> Has this come up before? The self-extraction code is fairly careful not
+> to overwrite itself but doesn't seem to pay any attention to the dtb
+> which surprised me. So I wonder if I'm missing something?
 
-On Fri, Nov 15, 2019 at 6:24 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> On Fri, Nov 15, 2019 at 09:29:43AM -0700, Jonathan Corbet wrote:
-> > On Fri, 15 Nov 2019 16:46:27 +0100
-> > Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> > > On Fri, Nov 15, 2019 at 07:09:17AM -0800, Joe Perches wrote:
-> > > > On Fri, 2019-11-15 at 16:02 +0100, Eugeniu Rosca wrote:
-> > > > > Oftentimes [1], the contributor would like to honor or give credits [2]
-> > > > > to somebody's original ideas in the submission/reviewing process. While
-> > > > > "Co-developed-by:" and "Suggested-by:" (currently whitelisted) could be
-> > > > > employed for this purpose, they are not ideal.
-> > > >
-> > > > You need to get the use of this accepted into Documentation/process
-> > > > before adding it to checkpatch
-> > >
-> > > If the change [*] makes sense to you, I can submit an update to
-> > > Documentation/process/submitting-patches.rst
-> >
-> > So there appear to be 89 patches with Originally-by in the entire Git
-> > history, which isn't a a lot; there are 3x as many Co-developed-by tags,
-> > which still isn't a huge number.  I do wonder if it's worth recognizing
-> > yet another tag with a subtly different shade of meaning here?  My own
-> > opinion doesn't matter a lot, but I'd like to have a sense that there is
-> > wider acceptance of this tag before adding it to the docs.
->
-> I will give a real-life example. Say, I have some patches in my
-> local tree and they've been developed by somebody who is no longer
-> interested/paid to upstream those.
->
-> I first submit those patches with the original authorship, plus my SoB.
-> Then, the reviewers post their findings. I put my time into fixing those
-> and re-testing the patch or the entire series. The final patch/series
-> may look totally different compared to the original one.
->
-> Which way would you suggest to give credits to the original author?
-> I personally think that "Co-developed-by:" conveys the idea/feeling of
-> "teaming up" with somebody, which doesn't happen in my example.
+The self-extraction hasn't changed much over the years, and basically
+follows the same method which has worked for the vast majority of
+platforms.
 
-What I typically do is this:
-  1. If the changes due to review are minor, I just add my SoB below the
-     original SoB,
-  2. If the changes are not insignificant, I also add a line "[geert: Did foo]"
-     in between the original SoB and mine,
-  3. If the patch needed a complete rewrite, I assume ownership, and add
-     "Based on/inspired by ..." to the patch description to give credit.
+Where things fall down is where things are placed too close, and yes,
+as the kernel grows, what was reasonable years ago becomes too close
+with modern kernels.
 
-Hope this helps (and is acceptable for other people ;-)
+The problem has been compounded by the various different compression
+algorithms that can now be used for the compressed kernel.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+kexec also ran into this problem, and there is now enough information
+in a modern kernel to calculate how much space the decompressor is
+going to require.  Have a look at the current kexec sources for how
+it is done.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
