@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8590C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63576C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7EA2154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C96921556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889494;
-	bh=LfA1WHC3J8XPfL/CFiTC6sNIBPjDAA/6b3KwEk0Dals=;
+	s=default; t=1574889500;
+	bh=in531OI/aSvSHnK/VUVcGLFwWJ/vlmpNhxmEMvrlhx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ov1zqeBtsKQpNa/79utbBYseoQaMYBydUW1LekTkY+GbOGYikriBs8fSnRMfyihSg
-	 5MnMPcG1KBQtTT9R3CINopNIwleTlE1+KFshWsOIEBmuowS3nvU1wBAVEh6APcS9UE
-	 mhuMzyXmF1wq1kRYerbp+OFPTMIPdvj4SsLaXNFg=
+	b=LE1oJ0V81zwjDiGrsvOEi1RJKsUuLhbi5sYt5q9LWGd4DJ7q1+zu2uCd9tld3IEfU
+	 ZtCBhhYy7wT/zExzBySpHAueuWI8rzagy+OFYtqqu/7j+HUgtpv5a40hGFG9+mEWR1
+	 E44kHcMBrdEsgrCgKWYibNaIaNzB//sfAffRl/oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733231AbfK0VLx (ORCPT
+        id S1733213AbfK0VLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:11:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41080 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:11:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733221AbfK0VLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:11:49 -0500
+        id S1733208AbfK0VLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFF0A21555;
-        Wed, 27 Nov 2019 21:11:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC4D21555;
+        Wed, 27 Nov 2019 21:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889109;
-        bh=LfA1WHC3J8XPfL/CFiTC6sNIBPjDAA/6b3KwEk0Dals=;
+        s=default; t=1574889102;
+        bh=in531OI/aSvSHnK/VUVcGLFwWJ/vlmpNhxmEMvrlhx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrQoHrrpwcTJXNE0Z4067HF/veqUB6DN7nn/V/vhhadGUfywPnOLZkjJZfBaHBouB
-         Dto9b588Ht1Ys2gsTv2HNOq5/JnQvSVfCMuAZimv5n7RP0nFAOixOObGl1e5xErFgO
-         Liuc8xUJZTn3Yp4HcEJwFjUntsnb93WNrZz3uTiE=
+        b=giOzjXztk7ATahFiFb23C0CIN8RXNy1TCQ/U3G28rtY5XxgEqBPG+cOshZRC0zM3J
+         nZm2w795ooyXD42j1/4FDmYAmkPTaU2wfqlaTvrEIK+s7U2/KBI8kIfpSObj2TUABk
+         smQMvvQ9mzHM8Tc7l68X+me5nW0vdfn5NX7YRiHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.de>
-Subject: [PATCH 5.3 85/95] USB: chaoskey: fix error case of a timeout
-Date:   Wed, 27 Nov 2019 21:32:42 +0100
-Message-Id: <20191127202953.570882475@linuxfoundation.org>
+        stable@vger.kernel.org, Hewenliang <hewenliang4@huawei.com>
+Subject: [PATCH 5.3 82/95] usbip: tools: fix fd leakage in the function of read_attr_usbip_status
+Date:   Wed, 27 Nov 2019 21:32:39 +0100
+Message-Id: <20191127202950.051880520@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -58,68 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Hewenliang <hewenliang4@huawei.com>
 
-commit 92aa5986f4f7b5a8bf282ca0f50967f4326559f5 upstream.
+commit 26a4d4c00f85cb844dd11dd35e848b079c2f5e8f upstream.
 
-In case of a timeout or if a signal aborts a read
-communication with the device needs to be ended
-lest we overwrite an active URB the next time we
-do IO to the device, as the URB may still be active.
+We should close the fd before the return of read_attr_usbip_status.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.de>
+Fixes: 3391ba0e2792 ("usbip: tools: Extract generic code to be shared with vudc backend")
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191107142856.16774-1-oneukum@suse.com
+Link: https://lore.kernel.org/r/20191025043515.20053-1-hewenliang4@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/chaoskey.c |   24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ tools/usb/usbip/libsrc/usbip_host_common.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/chaoskey.c
-+++ b/drivers/usb/misc/chaoskey.c
-@@ -384,13 +384,17 @@ static int _chaoskey_fill(struct chaoske
- 		!dev->reading,
- 		(started ? NAK_TIMEOUT : ALEA_FIRST_TIMEOUT) );
+--- a/tools/usb/usbip/libsrc/usbip_host_common.c
++++ b/tools/usb/usbip/libsrc/usbip_host_common.c
+@@ -57,7 +57,7 @@ static int32_t read_attr_usbip_status(st
+ 	}
  
--	if (result < 0)
-+	if (result < 0) {
-+		usb_kill_urb(dev->urb);
- 		goto out;
-+	}
- 
--	if (result == 0)
-+	if (result == 0) {
- 		result = -ETIMEDOUT;
--	else
-+		usb_kill_urb(dev->urb);
-+	} else {
- 		result = dev->valid;
-+	}
- out:
- 	/* Let the device go back to sleep eventually */
- 	usb_autopm_put_interface(dev->interface);
-@@ -526,7 +530,21 @@ static int chaoskey_suspend(struct usb_i
- 
- static int chaoskey_resume(struct usb_interface *interface)
- {
-+	struct chaoskey *dev;
-+	struct usb_device *udev = interface_to_usbdev(interface);
-+
- 	usb_dbg(interface, "resume");
-+	dev = usb_get_intfdata(interface);
-+
-+	/*
-+	 * We may have lost power.
-+	 * In that case the device that needs a long time
-+	 * for the first requests needs an extended timeout
-+	 * again
-+	 */
-+	if (le16_to_cpu(udev->descriptor.idVendor) == ALEA_VENDOR_ID)
-+		dev->reads_started = false;
-+
- 	return 0;
+ 	value = atoi(status);
+-
++	close(fd);
+ 	return value;
  }
- #else
+ 
 
 
