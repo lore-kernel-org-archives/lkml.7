@@ -2,54 +2,58 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FBCC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FCDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECDC920870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E605820870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891167;
-	bh=+jTHa6RfLG3FB+eqyQHja/Mz7Yn6YwCwk6IA2kcztlI=;
+	s=default; t=1574891171;
+	bh=tFlNYrOC3KCwkdNeWPxNBnmiaoq8RUFA4FkuPLjYP9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PMI2SEdL51lRF5fmgGo3j2qzFJJsv1GIi6pQRfIujzhRlL24GZL8TvKPR6wj59cwr
-	 l/k0+WpBsNpYjGs9hkRqocQ8ZKa6dAbLNC/LISw6EQ90J8IuDFdr+qnGiK4x8kYr66
-	 2p+e5D7JYErvTOdqqavrfGnQ1h+EX61UNXiV3F3U=
+	b=wLWYCuzA1bRqsMRAJJIKcP4Lx26sPCJ9PuF8OnFaAHEGv0FmSk9R9CVA2rosNvPwF
+	 C4xr7j4mScoFXgOYJmsNXSZMpCbmPgRUlgY9tLMbr9SAOYlgRuc9hF3qKZcfj7w7v8
+	 gERCX7QQ8ufsMVu3CIZ9vFqPtxukKMyTSmK3ARq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfK0Uej (ORCPT
+        id S1727640AbfK0Uee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:34:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35086 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:34:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727645AbfK0Ueg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:34:36 -0500
+        id S1727615AbfK0Uea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:34:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7336E20866;
-        Wed, 27 Nov 2019 20:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E714521556;
+        Wed, 27 Nov 2019 20:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886875;
-        bh=+jTHa6RfLG3FB+eqyQHja/Mz7Yn6YwCwk6IA2kcztlI=;
+        s=default; t=1574886869;
+        bh=tFlNYrOC3KCwkdNeWPxNBnmiaoq8RUFA4FkuPLjYP9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJK/27QSC2JmwcI6iUA2Ea9dCOi4AkXj2Bf30r/NFb2czrkdILmjlOvHkIhdrtNcs
-         DlZpBGDJMsXeNrrHpSDg5jzZQo3q+e4Be7c5o6ZGoHm4x+VkWtyh0vWbafjgR9Uh9+
-         DR/K4uUgOCpRaAt64BLAxKfds0fJGFaRf8EJcCOc=
+        b=sEs+GtmcJsMREQgCWbq4O6saPMHIAIjXotEHe2QLAarfORqH3ww9xjAqQZ2ZzP8DB
+         n1MUEyaI4hoKnA2Xsj6NwRuilDbaCTyH/dB2ZzTxsCdqxvVCaU4C7tyJXN2JDB4KCp
+         KpHU+Ozti1SzjZdFeDgvbkVcDyRXx+e24Bu3WX68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 007/132] asus-wmi: Create quirk for airplane_mode LED
-Date:   Wed, 27 Nov 2019 21:29:58 +0100
-Message-Id: <20191127202904.567920052@linuxfoundation.org>
+        stable@vger.kernel.org, Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Thomas Voegtle <tv@lio96.de>, Changwei Ge <gechangwei@live.cn>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 005/132] Revert "fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()"
+Date:   Wed, 27 Nov 2019 21:29:56 +0100
+Message-Id: <20191127202902.263557775@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -62,115 +66,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: João Paulo Rechi Vita <jprvita@gmail.com>
+From: Joseph Qi <joseph.qi@linux.alibaba.com>
 
-[ Upstream commit a977e59c0c67c9d492bb16677ce66d67cae0ebd8 ]
+commit 94b07b6f9e2e996afff7395de6b35f34f4cb10bf upstream.
 
-Some Asus laptops that have an airplane-mode indicator LED, also have
-the WMI WLAN user bit set, and the following bits in their DSDT:
+This reverts commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d.
 
-Scope (_SB)
-{
-  (...)
-  Device (ATKD)
-  {
-    (...)
-    Method (WMNB, 3, Serialized)
-    {
-      (...)
-      If (LEqual (IIA0, 0x00010002))
-      {
-        OWGD (IIA1)
-        Return (One)
-      }
-    }
-  }
-}
+Commit 56e94ea132bb ("fs: ocfs2: fix possible null-pointer dereferences
+in ocfs2_xa_prepare_entry()") introduces a regression that fail to
+create directory with mount option user_xattr and acl.  Actually the
+reported NULL pointer dereference case can be correctly handled by
+loc->xl_ops->xlo_add_entry(), so revert it.
 
-So when asus-wmi uses ASUS_WMI_DEVID_WLAN_LED (0x00010002) to store the
-wlan state, it drives the airplane-mode indicator LED (through the call
-to OWGD) in an inverted fashion: the LED is ON when airplane mode is OFF
-(since wlan is ON), and vice-versa.
+Link: http://lkml.kernel.org/r/1573624916-83825-1-git-send-email-joseph.qi@linux.alibaba.com
+Fixes: 56e94ea132bb ("fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()")
+Signed-off-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reported-by: Thomas Voegtle <tv@lio96.de>
+Acked-by: Changwei Ge <gechangwei@live.cn>
+Cc: Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This commit creates a quirk to not register a RFKill switch at all for
-these laptops, to allow the asus-wireless driver to drive the airplane
-mode LED correctly through the ASHS ACPI device. It also adds a match to
-that quirk for the Asus X555UB, which is affected by this problem.
-
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
-Reviewed-by: Corentin Chary <corentin.chary@gmail.com>
-Signed-off-by: Darren Hart <dvhart@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
- drivers/platform/x86/asus-wmi.c    |  8 +++++---
- drivers/platform/x86/asus-wmi.h    |  1 +
- 3 files changed, 19 insertions(+), 3 deletions(-)
+ fs/ocfs2/xattr.c |   56 ++++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 33 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index a284a2b42bcd5..5390846fa1e64 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -78,6 +78,10 @@ static struct quirk_entry quirk_asus_x200ca = {
- 	.wapf = 2,
- };
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -1475,6 +1475,18 @@ static int ocfs2_xa_check_space(struct o
+ 	return loc->xl_ops->xlo_check_space(loc, xi);
+ }
  
-+static struct quirk_entry quirk_no_rfkill = {
-+	.no_rfkill = true,
-+};
++static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
++{
++	loc->xl_ops->xlo_add_entry(loc, name_hash);
++	loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
++	/*
++	 * We can't leave the new entry's xe_name_offset at zero or
++	 * add_namevalue() will go nuts.  We set it to the size of our
++	 * storage so that it can never be less than any other entry.
++	 */
++	loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
++}
 +
- static int dmi_matched(const struct dmi_system_id *dmi)
+ static void ocfs2_xa_add_namevalue(struct ocfs2_xa_loc *loc,
+ 				   struct ocfs2_xattr_info *xi)
  {
- 	quirks = dmi->driver_data;
-@@ -315,6 +319,15 @@ static const struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_asus_x200ca,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. X555UB",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X555UB"),
-+		},
-+		.driver_data = &quirk_no_rfkill,
-+	},
- 	{},
- };
+@@ -2106,31 +2118,29 @@ static int ocfs2_xa_prepare_entry(struct
+ 	if (rc)
+ 		goto out;
  
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 7c1defaef3f58..823f85b1b4dc6 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2067,9 +2067,11 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_leds;
+-	if (!loc->xl_entry) {
+-		rc = -EINVAL;
+-		goto out;
+-	}
+-
+-	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
+-		orig_value_size = loc->xl_entry->xe_value_size;
+-		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
+-		if (rc)
+-			goto out;
+-		goto alloc_value;
+-	}
++	if (loc->xl_entry) {
++		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
++			orig_value_size = loc->xl_entry->xe_value_size;
++			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
++			if (rc)
++				goto out;
++			goto alloc_value;
++		}
  
--	err = asus_wmi_rfkill_init(asus);
--	if (err)
--		goto fail_rfkill;
-+	if (!asus->driver->quirks->no_rfkill) {
-+		err = asus_wmi_rfkill_init(asus);
-+		if (err)
-+			goto fail_rfkill;
-+	}
+-	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
+-		orig_clusters = ocfs2_xa_value_clusters(loc);
+-		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
+-		if (rc) {
+-			mlog_errno(rc);
+-			ocfs2_xa_cleanup_value_truncate(loc,
+-							"overwriting",
+-							orig_clusters);
+-			goto out;
++		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
++			orig_clusters = ocfs2_xa_value_clusters(loc);
++			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
++			if (rc) {
++				mlog_errno(rc);
++				ocfs2_xa_cleanup_value_truncate(loc,
++								"overwriting",
++								orig_clusters);
++				goto out;
++			}
+ 		}
+-	}
+-	ocfs2_xa_wipe_namevalue(loc);
++		ocfs2_xa_wipe_namevalue(loc);
++	} else
++		ocfs2_xa_add_entry(loc, name_hash);
  
- 	/* Some Asus desktop boards export an acpi-video backlight interface,
- 	   stop this from showing up */
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 4da4c8bafe70e..5de1df510ebd8 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -38,6 +38,7 @@ struct key_entry;
- struct asus_wmi;
- 
- struct quirk_entry {
-+	bool no_rfkill;
- 	bool hotplug_wireless;
- 	bool scalar_panel_brightness;
- 	bool store_backlight_power;
--- 
-2.20.1
-
+ 	/*
+ 	 * If we get here, we have a blank entry.  Fill it.  We grow our
 
 
