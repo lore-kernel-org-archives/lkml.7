@@ -2,52 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E342AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFC3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC06321823
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6AD21823
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887636;
-	bh=cI00S5SAfJJxJwKC2KRPKowU5ynXC6YjOEbMSMAB+Yw=;
+	s=default; t=1574887639;
+	bh=wk9K6+R12aMkBHHoJ+8wPEfa30a10Re55114L6oEtzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DrBCyViRsTFYKDKSEQ3SLssPo6NFSxvUe38675RSOXgJR3WaokLRWFLcEm/9PMqqz
-	 F2Eap71Yp3taIzu8ahCDUK9vtOTDDlopaXAnQaCheQNdTFZrX6xkGZ7N3igUjVwcoy
-	 lzh62zgQ+XngueAR/VV0SH4+SPcVaWgTJogZy+6s=
+	b=JrN2MC3Sqs386DhfF+OBNGHcPG7WMdh5AuV7rP2R1IorWWdISjXZpwhp//olkCySc
+	 ZfmgdSAZ7OJOUtNeuU7Y3hdmlqX+oaQvz4BQGBrXeZ1e69/NSoUrVCZEwCmJT3wYfn
+	 FbN8+24CwyYTbOAhhBu4gYJXv5urasiNYqgUCfR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbfK0UrQ (ORCPT
+        id S1729984AbfK0UrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:47:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59724 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:47:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729955AbfK0UrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:47:07 -0500
+        id S1729962AbfK0UrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:47:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C13BC21826;
-        Wed, 27 Nov 2019 20:47:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C64E21823;
+        Wed, 27 Nov 2019 20:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887627;
-        bh=cI00S5SAfJJxJwKC2KRPKowU5ynXC6YjOEbMSMAB+Yw=;
+        s=default; t=1574887629;
+        bh=wk9K6+R12aMkBHHoJ+8wPEfa30a10Re55114L6oEtzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xQ4li9Yw32Z4KyCXdAvM/pXOOMXicyBsluR5n+am5nP60nRb56/+Em0wOZdmjSckE
-         qlGrygfl86GkBwNgBzhwzuvtQpnzPITOVutltMVCRLpQKY/znW4lA9Geo5G3TaWY8n
-         pBdkNjNqaV39R8Zg6iYIBEXVkQRkpQvVKE0MFMFY=
+        b=ZFj6Z/ntpRxcbVO168zQcXC6xHZHn4x9c/v9KIXcyv4pvSc9x3Bc8By7GLHgXmFSF
+         09GiQVTQrrD4KWBJLv2+/CAkre2xLlfH5apPWQALO3GXwLpBILzcY/BWPrjjP529jm
+         CeqNpR+XtmkzoNsHCTGYxS0qxqFONWd0LOpECKuU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.14 005/211] net/mlxfw: Verify FSM error code translation doesnt exceed array size
-Date:   Wed, 27 Nov 2019 21:28:58 +0100
-Message-Id: <20191127203049.969320055@linuxfoundation.org>
+        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 032/211] mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready fail
+Date:   Wed, 27 Nov 2019 21:29:25 +0100
+Message-Id: <20191127203054.894383566@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,34 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eran Ben Elisha <eranbe@mellanox.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
 
-[ Upstream commit 30e9e0550bf693c94bc15827781fe42dd60be634 ]
+[ Upstream commit f38a9774ddde9d79b3487dd888edd8b8623552af ]
 
-Array mlxfw_fsm_state_err_str contains value to string translation, when
-values are provided by mlxfw_dev. If value is larger than
-MLXFW_FSM_STATE_ERR_MAX, return "unknown error" as expected instead of
-reading an address than exceed array size.
+when msdc_cmd_is_ready return fail, the req_timeout work has not been
+inited and cancel_delayed_work() will return false, then, the request
+return directly and never call mmc_request_done().
 
-Fixes: 410ed13cae39 ("Add the mlxfw module for Mellanox firmware flash process")
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+so need call mod_delayed_work() before msdc_cmd_is_ready()
+
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxfw/mlxfw_fsm.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/host/mtk-sd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_fsm.c
-+++ b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_fsm.c
-@@ -86,6 +86,8 @@ retry:
- 		return err;
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 267f7ab08420e..a2ac9938d9459 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -885,6 +885,7 @@ static void msdc_start_command(struct msdc_host *host,
+ 	WARN_ON(host->cmd);
+ 	host->cmd = cmd;
  
- 	if (fsm_state_err != MLXFW_FSM_STATE_ERR_OK) {
-+		fsm_state_err = min_t(enum mlxfw_fsm_state_err,
-+				      fsm_state_err, MLXFW_FSM_STATE_ERR_MAX);
- 		pr_err("Firmware flash failed: %s\n",
- 		       mlxfw_fsm_state_err_str[fsm_state_err]);
- 		return -EINVAL;
++	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+ 	if (!msdc_cmd_is_ready(host, mrq, cmd))
+ 		return;
+ 
+@@ -896,7 +897,6 @@ static void msdc_start_command(struct msdc_host *host,
+ 
+ 	cmd->error = 0;
+ 	rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
+-	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+ 
+ 	sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
+ 	writel(cmd->arg, host->base + SDC_ARG);
+-- 
+2.20.1
+
 
 
