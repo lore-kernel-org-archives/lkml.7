@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A60AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09A8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62BC2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82EB2158C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888247;
-	bh=XP4W78k7tWdh+OxHKfg/hOgoXSYlnsAKcT0blXHT8RY=;
+	s=default; t=1574888249;
+	bh=AFXHZLOietu/5Qoi+Zd8KLI2EG/uE9+32R3/Z1FPs5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W97iHx45vy8qZSUnVXwHGXTV6G/xQ5PAOKh9NePr/k7ojjGE31v7+GN3Rr7cIISLX
-	 b0/kVZeJW5iP5bM2ujP1W+LksGvvZAvkBOpA/mPLeLcKvX44H0+IqAKiQS9cb5bAji
-	 Wo7hr3CPoV7Dny4TT2geAKaX0IJciaHvUKQdoAQA=
+	b=rsV7plj4CliUpsum09ybdbW1M5UgQcRs4U56o0sizXdeZ9jVhfJSkWFLcKeKiSLKL
+	 PH76X6kARFN5C6nDuIY6M3vo4UJONPmZ1GzK3ABQImoCDe2yNZNPj+JarqGQRxE2MJ
+	 QGEsyYgvFqp/rw/ypWzhYl+b9AXqNzc8Rew2BpcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbfK0U50 (ORCPT
+        id S1731199AbfK0U52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:57:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48356 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:57:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731160AbfK0U5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:57:21 -0500
+        id S1731180AbfK0U5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:57:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16206217AB;
-        Wed, 27 Nov 2019 20:57:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 824C92084D;
+        Wed, 27 Nov 2019 20:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888240;
-        bh=XP4W78k7tWdh+OxHKfg/hOgoXSYlnsAKcT0blXHT8RY=;
+        s=default; t=1574888243;
+        bh=AFXHZLOietu/5Qoi+Zd8KLI2EG/uE9+32R3/Z1FPs5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lIy09gT0Kd/hpmtGq7LOBHwevkIa0O0itfClQur5v4GBj76BtaOkt0erWoU5tVyek
-         lCUpANb6P7Sz1iNIaESxLKb5Zf3ks+Hd10xsPUIiZ0+zO1zW9BLUe2WL6JC++15U+f
-         jEikFba+0nmWFbXljUmN+pVGZITyR/n/KhwfDhus=
+        b=CDEs2lkV9vkj5c89ZybgG8xseDMuBvCNTMLZLGC2EsrijOoa2ZuNVveAHMfS6M7zV
+         NcyxGRPkVDrqn1EIxodFG4Lsti92xpONzjsKHqDJUoTKFimq7x/+MNdEiRrOv6MZkS
+         4XDvjqekYWJVpZITWD2JZRGxrIof1Myp2nuhhiyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 051/306] misc: mic: fix a DMA pool free failure
-Date:   Wed, 27 Nov 2019 21:28:21 +0100
-Message-Id: <20191127203118.514644607@linuxfoundation.org>
+Subject: [PATCH 4.19 060/306] pinctrl: sunxi: Fix a memory leak in sunxi_pinctrl_build_state()
+Date:   Wed, 27 Nov 2019 21:28:30 +0100
+Message-Id: <20191127203119.143994143@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -59,52 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 6b995f4eec34745f6cb20d66d5277611f0b3c3fa ]
+[ Upstream commit a93a676b079144009f55fff2ab0e34c3b7258c8a ]
 
-In _scif_prog_signal(), the boolean variable 'x100' is used to indicate
-whether the MIC Coprocessor is X100. If 'x100' is true, the status
-descriptor will be used to write the value to the destination. Otherwise, a
-DMA pool will be allocated for this purpose. Specifically, if the DMA pool
-is allocated successfully, two memory addresses will be returned. One is
-for the CPU and the other is for the device to access the DMA pool. The
-former is stored to the variable 'status' and the latter is stored to the
-variable 'src'. After the allocation, the address in 'src' is saved to
-'status->src_dma_addr', which is actually in the DMA pool, and 'src' is
-then modified.
+If 'krealloc()' fails, 'pctl->functions' is set to NULL.
+We should instead use a temp variable in order to be able to free the
+previously allocated memeory, in case of OOM.
 
-Later on, if an error occurs, the execution flow will transfer to the label
-'dma_fail', which will check 'x100' and free up the allocated DMA pool if
-'x100' is false. The point here is that 'status->src_dma_addr' is used for
-freeing up the DMA pool. As mentioned before, 'status->src_dma_addr' is in
-the DMA pool. And thus, the device is able to modify this data. This can
-potentially cause failures when freeing up the DMA pool because of the
-modified device address.
-
-This patch avoids the above issue by using the variable 'src' (with
-necessary calculation) to free up the DMA pool.
-
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/mic/scif/scif_fence.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/mic/scif/scif_fence.c b/drivers/misc/mic/scif/scif_fence.c
-index cac3bcc308a7e..7bb929f05d852 100644
---- a/drivers/misc/mic/scif/scif_fence.c
-+++ b/drivers/misc/mic/scif/scif_fence.c
-@@ -272,7 +272,7 @@ static int _scif_prog_signal(scif_epd_t epd, dma_addr_t dst, u64 val)
- dma_fail:
- 	if (!x100)
- 		dma_pool_free(ep->remote_dev->signal_pool, status,
--			      status->src_dma_addr);
-+			      src - offsetof(struct scif_status, val));
- alloc_fail:
- 	return err;
- }
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 26ebedc1f6d31..61aaaf58c5993 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -1042,6 +1042,7 @@ static int sunxi_pinctrl_add_function(struct sunxi_pinctrl *pctl,
+ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ {
+ 	struct sunxi_pinctrl *pctl = platform_get_drvdata(pdev);
++	void *ptr;
+ 	int i;
+ 
+ 	/*
+@@ -1108,13 +1109,15 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ 	}
+ 
+ 	/* And now allocated and fill the array for real */
+-	pctl->functions = krealloc(pctl->functions,
+-				   pctl->nfunctions * sizeof(*pctl->functions),
+-				   GFP_KERNEL);
+-	if (!pctl->functions) {
++	ptr = krealloc(pctl->functions,
++		       pctl->nfunctions * sizeof(*pctl->functions),
++		       GFP_KERNEL);
++	if (!ptr) {
+ 		kfree(pctl->functions);
++		pctl->functions = NULL;
+ 		return -ENOMEM;
+ 	}
++	pctl->functions = ptr;
+ 
+ 	for (i = 0; i < pctl->desc->npins; i++) {
+ 		const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
 -- 
 2.20.1
 
