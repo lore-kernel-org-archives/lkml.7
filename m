@@ -2,131 +2,78 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8392C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0E4C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789262053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1792070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TT/9FzXS"
+	dkim=pass (1024-bit key) header.d=jv-coder.de header.i=@jv-coder.de header.b="CatkMYWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbfK0Hex (ORCPT
+        id S1726537AbfK0HfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 02:34:53 -0500
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:41210 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfK0Hex (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 02:34:53 -0500
-Received: by mail-vk1-f201.google.com with SMTP id a17so10107604vko.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 23:34:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=OlY6fp4GnRqHjQOCRT6PaMt8F1GqmDxHR8fe14B/Pso=;
-        b=TT/9FzXSX64x0gmnOl3hXh0yWEFaBv377D8QkRQEzjyhdv4lyr+KrF6HqUi0h1Y2wO
-         jQzum9n7mdKKFjadRkU9g8aaw0IY7LGfk+AY8ZXBa6YSkCP082TswGkyWi6FHL5yJIVX
-         twQWsCfPlbDdt8UZVUdwOJD2SM4fXMeYKYagW46fNqYS76uRJmQDZZT9UmWY0gz7vrAE
-         +m+PYnqqG0lu+YgxG1UXTDnD/3RCziULr2KrgfOKxfh70fwGKThDANs2Mo4zqYHS0bIF
-         A4bFQelZ0fdHVdScI2tZxQwVxQsQSXNMXiG+D8zulL2M/HLpBhDHw493VcUwhXChXO7c
-         RiVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=OlY6fp4GnRqHjQOCRT6PaMt8F1GqmDxHR8fe14B/Pso=;
-        b=GIZFuC1kqX+bzNGaPG+rC7stvrpcxy6IKpWaFGCN3PHrUQGxyf6C99RFvyDjNMiRpH
-         36ysJ2Yzl10jnDM18ZzjLarrmMQLP3J2VLYEuK2xKHQNXZLWDW8OuaiREFkpkXjVIx5D
-         6AQ+MGVqKAEh76vCexE9GYC/CeqH36qCXIucMfOatHvQ2MCYDedtPyKRf+mrdrzlGGru
-         bijkLQs6iIdtroCXYVagAPTN3p4dNGwgMhcrjRttwwY+ztPFN4jRZSa0aVqDjSw4XkbC
-         y9dvtv+IjXdzcTbLbhEQmS0RhmDiK9/xNmYtUJpWm9uIieMlo5TZ16tUEBZVo6gWaZPp
-         Xahw==
-X-Gm-Message-State: APjAAAV32Ij0r3vxtGP+xCooatJUK5idI+UOWkq9RuyX8ROmvNdRJPkP
-        nm3FmWaE/vnAo2aY+lAwl8CoDi+URxp8
-X-Google-Smtp-Source: APXvYqzVZEb/Qe9M/V3TOzWXU5w6CdEWsYEqpjI5F1x4OIceM8E6OuGN3Cqeg7sgNYFHUljPT/CGubJ61+C2
-X-Received: by 2002:a1f:1897:: with SMTP id 145mr1780599vky.47.1574840091762;
- Tue, 26 Nov 2019 23:34:51 -0800 (PST)
-Date:   Tue, 26 Nov 2019 23:34:42 -0800
-Message-Id: <20191127073442.174202-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH] perf c2c: fix '-e list'
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 27 Nov 2019 02:35:04 -0500
+Received: from mail.jv-coder.de ([5.9.79.73]:40818 "EHLO mail.jv-coder.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726092AbfK0HfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 02:35:03 -0500
+Received: from [10.61.40.7] (unknown [37.156.92.209])
+        by mail.jv-coder.de (Postfix) with ESMTPSA id AB6619F73F;
+        Wed, 27 Nov 2019 07:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jv-coder.de; s=dkim;
+        t=1574840101; bh=21uHLITcKotKZHWu+5wn+8F7nkw3137394TzTbzd/zY=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version;
+        b=CatkMYWChImV2Ha5IoUJETDkacT7BbaLjlKVqR7iOd5gZ8aSJoz46GMdeNgDY1yp/
+         Y9ryjEIifOBcripPocr1NLOu+nPqgoVYsWNMMgcAQ/ZDFYH9qeq5f3epPu7J9Eg/ar
+         kHLy/a+9Q3KHjQdX9J+mIiwBqbrurKh6dUj6CzqM=
+Subject: Re: [PATCH RT v3] net/xfrm/input: Protect queue with lock
+To:     Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        bigeasy@linutronix.de
+Cc:     Joerg Vehlow <joerg.vehlow@aox-tech.de>
+References: <20191126071335.34661-1-lkml@jv-coder.de>
+ <46d5e7ea-011b-a384-ac7a-9ba63bbe9ea5@redhat.com>
+From:   Joerg Vehlow <lkml@jv-coder.de>
+Message-ID: <30b9da41-437a-3b00-8306-82c7c44d1a91@jv-coder.de>
+Date:   Wed, 27 Nov 2019 08:35:01 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <46d5e7ea-011b-a384-ac7a-9ba63bbe9ea5@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the event is passed as list, the default events should be listed as
-per 'perf mem record -e list'. Previous behavior is:
+Hi Tom,
 
-$ perf c2c record -e list
-failed: event 'list' not found, use '-e list' to get list of available events
+I didn't remove it, I just posted my patch again.
+I think it is up to the maintainers to decide if
+it is required or not. Most people using the rt
+patches will probably have PREEMPT_RT_FULL enabled anyway.
+It will never be integrated into mainline kernel, because
+the bug is already fixed in 5.0.19.
 
- Usage: perf c2c record [<options>] [<command>]
-    or: perf c2c record [<options>] -- <command> [<options>]
+Jörg
 
-    -e, --event <event>   event selector. Use 'perf mem record -e list' to list available events
 
-New behavior:
-
-$ perf c2c record -e list
-ldlat-loads  : available
-ldlat-stores : available
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-c2c.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index e69f44941aad..dd69cd218e4c 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2872,10 +2872,26 @@ static int perf_c2c__report(int argc, const char **argv)
- static int parse_record_events(const struct option *opt,
- 			       const char *str, int unset __maybe_unused)
- {
-+	int j;
- 	bool *event_set = (bool *) opt->value;
- 
--	*event_set = true;
--	return perf_mem_events__parse(str);
-+	if (strcmp(str, "list")) {
-+		*event_set = true;
-+		if (!perf_mem_events__parse(str))
-+			return 0;
-+
-+		exit(-1);
-+	}
-+	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-+		struct perf_mem_event *e = &perf_mem_events[j];
-+
-+		fprintf(stderr, "%-13s%-*s%s\n",
-+			e->tag,
-+			verbose > 0 ? 25 : 0,
-+			verbose > 0 ? perf_mem_events__name(j) : "",
-+			e->supported ? ": available" : "");
-+	}
-+	exit(0);
- }
- 
- 
--- 
-2.24.0.393.g34dc348eaf-goog
+Am 26.11.2019 um 16:31 schrieb Tom Rix:
+> Why remove the #ifdef CONFIG_PREEMPT.. ?
+>
+>
+>> +	spin_lock_irqsave(&trans->queue.lock, flags);
+>>   	skb_queue_splice_init(&trans->queue, &queue);
+>> +	spin_unlock_irqrestore(&trans->queue.lock, flags);
+>>   
+> Fine otherwise.
+>
+> Tom
+>
+>
 
