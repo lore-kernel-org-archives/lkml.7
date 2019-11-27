@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E96FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D0BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 725B12154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451F42154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889472;
-	bh=KamOJ0k99dLB3F5Z9KJH8d9epqyB7CNyLPOeg5wb4vQ=;
+	s=default; t=1574889477;
+	bh=iKMlagfNcq3TPOMQAulL64ysv1hwp8Mdv1gDrrm9eTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XF7gV6L5VI5nN3AE5Z/U8p0Xc5nhlIrQDiHiRU6rR0VDzyUafE5bW5J/+MKN5UoO+
-	 4lgk7kWkcshW2VaEHFG3G9D6Y6jlzLdKeD+miNuJmdBhYBfroiVRr03hK4llH8Nyrj
-	 q1s0rrVftsu3559vDeYYFpvXy0YwkY8ryzgNuHZo=
+	b=eN5HrKlbRkn7/SWwlLltt7WaThXxI61Bf23vgh6j8xcsb5Qu7BjV6vsf5mdzC/q8J
+	 KNAKOZyFr5Pxqv8sECj+/oGV8Y0uDr0ZZ4lP/EuU9dL2tAuZyWY6b3WU7NWprEgjIS
+	 p5896Ql4T+9DJxship7cl3SEHmFOXN4B7gvd/+5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732384AbfK0VRu (ORCPT
+        id S1732938AbfK0VR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:17:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42942 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:17:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732615AbfK0VMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:12:24 -0500
+        id S1728397AbfK0VMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:12:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7BEF21850;
-        Wed, 27 Nov 2019 21:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A821121775;
+        Wed, 27 Nov 2019 21:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889143;
-        bh=KamOJ0k99dLB3F5Z9KJH8d9epqyB7CNyLPOeg5wb4vQ=;
+        s=default; t=1574889130;
+        bh=iKMlagfNcq3TPOMQAulL64ysv1hwp8Mdv1gDrrm9eTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7ygRyqSIFA/ejKRU37VzNNwNcoM+U1fyuo93f2kqr1k2DRPvaeRxFx5VxivJ2yKr
-         lzaUYFtbvOMOPe/TlojhwBApAQk+MwGcPndEGaQ5CTxL/u7YrpbKvv+c5PGrJGXKyM
-         gqU3+vWIgjWJR2qXIeO+/M0rMUrREDJHC6Fn3u10=
+        b=bYIgAYTTfeRKppWBzBSoNVKQ1M8NE3XRLN2Sq2O+sa0C04i0vvEb78cQWmNWa9EOW
+         zQIxAT7mShbFK0c/STqaXYMn0emT697OQp+srpOv/4GX1R08HjSSI7PyV8ZCRAfxXV
+         t3mGnk9TQQw/Upji/JweZxT0zsodWhd1pcsKWdQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        "Christopher M. Riedl" <cmr@informatik.wtf>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Daniel Axtens <dja@axtens.net>
-Subject: [PATCH 5.3 93/95] powerpc/64s: support nospectre_v2 cmdline option
-Date:   Wed, 27 Nov 2019 21:32:50 +0100
-Message-Id: <20191127203001.996994315@linuxfoundation.org>
+        stable@vger.kernel.org, Vito Caputo <vcaputo@pengaru.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.3 42/95] Revert "dm crypt: use WQ_HIGHPRI for the IO and crypt workqueues"
+Date:   Wed, 27 Nov 2019 21:31:59 +0100
+Message-Id: <20191127202908.311593368@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -61,73 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Christopher M. Riedl" <cmr@informatik.wtf>
+From: Mike Snitzer <snitzer@redhat.com>
 
-commit d8f0e0b073e1ec52a05f0c2a56318b47387d2f10 upstream.
+commit f612b2132db529feac4f965f28a1b9258ea7c22b upstream.
 
-Add support for disabling the kernel implemented spectre v2 mitigation
-(count cache flush on context switch) via the nospectre_v2 and
-mitigations=off cmdline options.
+This reverts commit a1b89132dc4f61071bdeaab92ea958e0953380a1.
 
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Christopher M. Riedl <cmr@informatik.wtf>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190524024647.381-1-cmr@informatik.wtf
-Signed-off-by: Daniel Axtens <dja@axtens.net>
+Revert required hand-patching due to subsequent changes that were
+applied since commit a1b89132dc4f61071bdeaab92ea958e0953380a1.
+
+Requires: ed0302e83098d ("dm crypt: make workqueue names device-specific")
+Cc: stable@vger.kernel.org
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=199857
+Reported-by: Vito Caputo <vcaputo@pengaru.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/kernel/security.c |   19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -28,7 +28,7 @@ static enum count_cache_flush_type count
- bool barrier_nospec_enabled;
- static bool no_nospec;
- static bool btb_flush_enabled;
--#ifdef CONFIG_PPC_FSL_BOOK3E
-+#if defined(CONFIG_PPC_FSL_BOOK3E) || defined(CONFIG_PPC_BOOK3S_64)
- static bool no_spectrev2;
- #endif
+---
+ drivers/md/dm-crypt.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -2911,21 +2911,18 @@ static int crypt_ctr(struct dm_target *t
+ 	}
  
-@@ -114,7 +114,7 @@ static __init int security_feature_debug
- device_initcall(security_feature_debugfs_init);
- #endif /* CONFIG_DEBUG_FS */
+ 	ret = -ENOMEM;
+-	cc->io_queue = alloc_workqueue("kcryptd_io/%s",
+-				       WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
+-				       1, devname);
++	cc->io_queue = alloc_workqueue("kcryptd_io/%s", WQ_MEM_RECLAIM, 1, devname);
+ 	if (!cc->io_queue) {
+ 		ti->error = "Couldn't create kcryptd io queue";
+ 		goto bad;
+ 	}
  
--#ifdef CONFIG_PPC_FSL_BOOK3E
-+#if defined(CONFIG_PPC_FSL_BOOK3E) || defined(CONFIG_PPC_BOOK3S_64)
- static int __init handle_nospectre_v2(char *p)
- {
- 	no_spectrev2 = true;
-@@ -122,6 +122,9 @@ static int __init handle_nospectre_v2(ch
- 	return 0;
- }
- early_param("nospectre_v2", handle_nospectre_v2);
-+#endif /* CONFIG_PPC_FSL_BOOK3E || CONFIG_PPC_BOOK3S_64 */
-+
-+#ifdef CONFIG_PPC_FSL_BOOK3E
- void setup_spectre_v2(void)
- {
- 	if (no_spectrev2 || cpu_mitigations_off())
-@@ -399,7 +402,17 @@ static void toggle_count_cache_flush(boo
- 
- void setup_count_cache_flush(void)
- {
--	toggle_count_cache_flush(true);
-+	bool enable = true;
-+
-+	if (no_spectrev2 || cpu_mitigations_off()) {
-+		if (security_ftr_enabled(SEC_FTR_BCCTRL_SERIALISED) ||
-+		    security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED))
-+			pr_warn("Spectre v2 mitigations not under software control, can't disable\n");
-+
-+		enable = false;
-+	}
-+
-+	toggle_count_cache_flush(enable);
- }
- 
- #ifdef CONFIG_DEBUG_FS
+ 	if (test_bit(DM_CRYPT_SAME_CPU, &cc->flags))
+-		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
+-						  WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
++		cc->crypt_queue = alloc_workqueue("kcryptd/%s", WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
+ 						  1, devname);
+ 	else
+ 		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
+-						  WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
++						  WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
+ 						  num_online_cpus(), devname);
+ 	if (!cc->crypt_queue) {
+ 		ti->error = "Couldn't create kcryptd queue";
 
 
