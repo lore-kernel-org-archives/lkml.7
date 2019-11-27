@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846F1C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588DF20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35D4215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887298;
-	bh=yMANsvQR7BaNAKga85VnyLz+nzo9WorfhVnnC6PD6AA=;
+	s=default; t=1574887303;
+	bh=QGsz8Ks1Tojt059lcycjgRGYNsiZ059yMmZcprWBtGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qAaSxtgQngXsI7fmKTTd95C8QPGwwJYaxR+726WLO1eLfhKV00FPdWwn4GNcmDr9c
-	 gZ+yh4vn1nCQXh1ikh+IX91xi1m0BgelncSH2BhRf8sUKo4mGEAdb55C1ooAZsz/Na
-	 5h5rsPCI633bXmyXC6h/PvqhlWe6fUbtTJCDqBoo=
+	b=UgKHe7PjWJV8yRh2aRhx8BBNWo/m1kM3U9ZZ0gxyKJc43pqHrtHBkOl3o5Iy9qTQc
+	 d/3ZJdl+WpooTbSmqcD8grgsrc+0qsRh9+Xin937D9zjW3hugGIrN58B1T4llQl9jG
+	 J9jeIrATuH2Vrt7YxeQ2/mzCj/DR7iiUaHG6PJQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbfK0Ulh (ORCPT
+        id S1729231AbfK0Ull (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:41:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46842 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:41:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729203AbfK0Uld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:41:33 -0500
+        id S1729222AbfK0Uli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:41:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD6E920863;
-        Wed, 27 Nov 2019 20:41:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F03C215A4;
+        Wed, 27 Nov 2019 20:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887292;
-        bh=yMANsvQR7BaNAKga85VnyLz+nzo9WorfhVnnC6PD6AA=;
+        s=default; t=1574887297;
+        bh=QGsz8Ks1Tojt059lcycjgRGYNsiZ059yMmZcprWBtGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lje0lajaQHYVHSyK1WngnrFkCYAqno/+vsWsET2Jmnw3CTifTRXRMJkJAsKwRfZjp
-         qdBf10wTJESa5XsNshR+sk7BZGDLxUJZLdfclpTJ3+TvtoDmXL1g1spruwsl71DyKm
-         /xCRBcVrC9geLaOtr9cc3558hvr0XkAZEA3t6RMQ=
+        b=Wrv1PnsSlTUCu5Tpe+wYRdAtaEPma5uj26gRQrAY6Sjd+X5yYYg68DWtrZIwE+WkU
+         JaOxubazZ2zl1VkAgI4jjDEgKqdPDzH/p01Fny+7/708KdGDBJNMuNN3btBY/FdPms
+         GEoCQhO3tqBUBQdtqsJKPygrX5Y5M7dfwlKHqUws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Weichao Guo <guoweichao@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 053/151] f2fs: fix to spread clear_cold_data()
-Date:   Wed, 27 Nov 2019 21:30:36 +0100
-Message-Id: <20191127203031.650078812@linuxfoundation.org>
+Subject: [PATCH 4.9 055/151] qlcnic: fix a return in qlcnic_dcb_get_capability()
+Date:   Wed, 27 Nov 2019 21:30:38 +0100
+Message-Id: <20191127203032.168106626@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -60,92 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 2baf07818549c8bb8d7b3437e889b86eab56d38e ]
+[ Upstream commit c94f026fb742b2d3199422751dbc4f6fc0e753d8 ]
 
-We need to drop PG_checked flag on page as well when we clear PG_uptodate
-flag, in order to avoid treating the page as GCing one later.
+These functions are supposed to return one on failure and zero on
+success.  Returning a zero here could cause uninitialized variable
+bugs in several of the callers.  For example:
 
-Signed-off-by: Weichao Guo <guoweichao@huawei.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+    drivers/scsi/cxgbi/cxgb4i/cxgb4i.c:1660 get_iscsi_dcb_priority()
+    error: uninitialized symbol 'caps'.
+
+Fixes: 48365e485275 ("qlcnic: dcb: Add support for CEE Netlink interface.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c    | 8 +++++++-
- fs/f2fs/dir.c     | 1 +
- fs/f2fs/segment.c | 4 +++-
- 3 files changed, 11 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 9041805096e0c..0206c8c20784c 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1201,6 +1201,7 @@ int do_write_data_page(struct f2fs_io_info *fio)
- 	/* This page is already truncated */
- 	if (fio->old_blkaddr == NULL_ADDR) {
- 		ClearPageUptodate(page);
-+		clear_cold_data(page);
- 		goto out_writepage;
- 	}
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
+index 4b76c69fe86d2..834208e55f7b8 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
+@@ -883,7 +883,7 @@ static u8 qlcnic_dcb_get_capability(struct net_device *netdev, int capid,
+ 	struct qlcnic_adapter *adapter = netdev_priv(netdev);
  
-@@ -1337,8 +1338,10 @@ static int f2fs_write_data_page(struct page *page,
- 	clear_cold_data(page);
- out:
- 	inode_dec_dirty_pages(inode);
--	if (err)
-+	if (err) {
- 		ClearPageUptodate(page);
-+		clear_cold_data(page);
-+	}
+ 	if (!test_bit(QLCNIC_DCB_STATE, &adapter->dcb->state))
+-		return 0;
++		return 1;
  
- 	if (wbc->for_reclaim) {
- 		f2fs_submit_merged_bio_cond(sbi, NULL, page, 0, DATA, WRITE);
-@@ -1821,6 +1824,8 @@ void f2fs_invalidate_page(struct page *page, unsigned int offset,
- 			inode_dec_dirty_pages(inode);
- 	}
- 
-+	clear_cold_data(page);
-+
- 	/* This is atomic written page, keep Private */
- 	if (IS_ATOMIC_WRITTEN_PAGE(page))
- 		return;
-@@ -1839,6 +1844,7 @@ int f2fs_release_page(struct page *page, gfp_t wait)
- 	if (IS_ATOMIC_WRITTEN_PAGE(page))
- 		return 0;
- 
-+	clear_cold_data(page);
- 	set_page_private(page, 0);
- 	ClearPagePrivate(page);
- 	return 1;
-diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-index af719d93507e8..b414892be08b7 100644
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -772,6 +772,7 @@ void f2fs_delete_entry(struct f2fs_dir_entry *dentry, struct page *page,
- 		clear_page_dirty_for_io(page);
- 		ClearPagePrivate(page);
- 		ClearPageUptodate(page);
-+		clear_cold_data(page);
- 		inode_dec_dirty_pages(dir);
- 	}
- 	f2fs_put_page(page, 1);
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 1d5a352138109..c4c84af1ec17a 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -227,8 +227,10 @@ static int __revoke_inmem_pages(struct inode *inode,
- 		}
- next:
- 		/* we don't need to invalidate this in the sccessful status */
--		if (drop || recover)
-+		if (drop || recover) {
- 			ClearPageUptodate(page);
-+			clear_cold_data(page);
-+		}
- 		set_page_private(page, 0);
- 		ClearPagePrivate(page);
- 		f2fs_put_page(page, 1);
+ 	switch (capid) {
+ 	case DCB_CAP_ATTR_PG:
 -- 
 2.20.1
 
