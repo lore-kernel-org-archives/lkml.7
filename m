@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C5AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA512C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0A0215B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0762190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888058;
-	bh=nOASPME7oBHDUaltT3oebX6cvhcGZFVv/TX6DPCoUc8=;
+	s=default; t=1574888063;
+	bh=/owAWAfWpzYBTAYkM82lVwXJD9Kz4nA/JxzbBtagY9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzmrgpcC5MHtYj4zUs3uraJaKLbpMh7h4YmhOFCuqlj4enKYKyrVcdrnV9Hje8U/D
-	 f2lw9wEcis2feDieaGIzpYkND7jR/dDs2BThD8r35RL6eB9iIWkWpYZx81ls+/doDF
-	 a+VSGXke0BbTWjiR0rFUu1pci9pjLUdwvOhGitxU=
+	b=ofprEDBoNaqWj0d7++K5swiafoW2SyKhs4R29D1dU5iW91ydyvrH2oID0G+tZ2GeE
+	 +L8RIB9Lsgvu7ju1cnBoybgLeuDrKUw5V0U4GiYcnDfjydSgCJiKkiZ27Tu7NjdLYj
+	 I7q3M/YCKS2mHBRyqqSJOHwCMo9gEQJQJLqavbJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbfK0UyQ (ORCPT
+        id S1730214AbfK0UyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:54:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43950 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:54:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730805AbfK0UyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:54:13 -0500
+        id S1730814AbfK0UyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:54:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CA1E2154A;
-        Wed, 27 Nov 2019 20:54:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 051B62086A;
+        Wed, 27 Nov 2019 20:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888052;
-        bh=nOASPME7oBHDUaltT3oebX6cvhcGZFVv/TX6DPCoUc8=;
+        s=default; t=1574888057;
+        bh=/owAWAfWpzYBTAYkM82lVwXJD9Kz4nA/JxzbBtagY9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mP6luWYD8GvtcF67o6fZs/WPwMV2aFs8mwlLTydfau+j5d8KI2KnZDWxWo5OUwDFl
-         TN6BLoEuHI9KSIl5EVGlQBcmeYEG4sESnGRFsJ9StJN/smzE8PmJCkcPMeOYGG9aBC
-         jqAnKCt/jiouLCWhtByA8o3XxLRUWk9GwGixSVF4=
+        b=yqcTOVvjDeEDuqRNvBMphExFLh1HJnNlCol/EuVSucQWTguhmBaU1H1xAYvLwuGlc
+         dgKg/CaAhviPFgQbCZwbOsvjro8MvvgxXy8r6SUmwwD8d2miSZWgS4bIeOm3AmgNkx
+         Hx0FCZEe3gXE2XTklVvfx/c5PF70Yw64hHsdfLWw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Suwan Kim <suwan.kim027@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 4.14 198/211] usbip: Fix uninitialized symbol nents in stub_recv_cmd_submit()
-Date:   Wed, 27 Nov 2019 21:32:11 +0100
-Message-Id: <20191127203112.327804232@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org
+Subject: [PATCH 4.14 182/211] x86/cpu_entry_area: Add guard page for entry stack on 32bit
+Date:   Wed, 27 Nov 2019 21:31:55 +0100
+Message-Id: <20191127203110.976968442@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,115 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suwan Kim <suwan.kim027@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 2a9125317b247f2cf35c196f968906dcf062ae2d upstream.
+commit 880a98c339961eaa074393e3a2117cbe9125b8bb upstream.
 
-Smatch reported that nents is not initialized and used in
-stub_recv_cmd_submit(). nents is currently initialized by sgl_alloc()
-and used to allocate multiple URBs when host controller doesn't
-support scatter-gather DMA. The use of uninitialized nents means that
-buf_len is zero and use_sg is true. But buffer length should not be
-zero when an URB uses scatter-gather DMA.
+The entry stack in the cpu entry area is protected against overflow by the
+readonly GDT on 64-bit, but on 32-bit the GDT needs to be writeable and
+therefore does not trigger a fault on stack overflow.
 
-To prevent this situation, add the conditional that checks buf_len
-and use_sg. And move the use of nents right after the sgl_alloc() to
-avoid the use of uninitialized nents.
+Add a guard page.
 
-If the error occurs, it adds SDEV_EVENT_ERROR_MALLOC and stub_priv
-will be released by stub event handler and connection will be shut
-down.
-
-Fixes: ea44d190764b ("usbip: Implement SG support to vhci-hcd and stub driver")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191111141035.27788-1-suwan.kim027@gmail.com
+Fixes: c482feefe1ae ("x86/entry/64: Make cpu_entry_area.tss read-only")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/usbip/stub_rx.c |   50 ++++++++++++++++++++++++++++----------------
- 1 file changed, 32 insertions(+), 18 deletions(-)
+ arch/x86/include/asm/cpu_entry_area.h |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/usbip/stub_rx.c
-+++ b/drivers/usb/usbip/stub_rx.c
-@@ -487,18 +487,50 @@ static void stub_recv_cmd_submit(struct
- 	if (pipe == -1)
- 		return;
+--- a/arch/x86/include/asm/cpu_entry_area.h
++++ b/arch/x86/include/asm/cpu_entry_area.h
+@@ -20,8 +20,12 @@ struct cpu_entry_area {
  
-+	/*
-+	 * Smatch reported the error case where use_sg is true and buf_len is 0.
-+	 * In this case, It adds SDEV_EVENT_ERROR_MALLOC and stub_priv will be
-+	 * released by stub event handler and connection will be shut down.
-+	 */
- 	priv = stub_priv_alloc(sdev, pdu);
- 	if (!priv)
- 		return;
+ 	/*
+ 	 * The GDT is just below entry_stack and thus serves (on x86_64) as
+-	 * a a read-only guard page.
++	 * a read-only guard page. On 32-bit the GDT must be writeable, so
++	 * it needs an extra guard page.
+ 	 */
++#ifdef CONFIG_X86_32
++	char guard_entry_stack[PAGE_SIZE];
++#endif
+ 	struct entry_stack_page entry_stack_page;
  
- 	buf_len = (unsigned long long)pdu->u.cmd_submit.transfer_buffer_length;
- 
-+	if (use_sg && !buf_len) {
-+		dev_err(&udev->dev, "sg buffer with zero length\n");
-+		goto err_malloc;
-+	}
-+
- 	/* allocate urb transfer buffer, if needed */
- 	if (buf_len) {
- 		if (use_sg) {
- 			sgl = sgl_alloc(buf_len, GFP_KERNEL, &nents);
- 			if (!sgl)
- 				goto err_malloc;
-+
-+			/* Check if the server's HCD supports SG */
-+			if (!udev->bus->sg_tablesize) {
-+				/*
-+				 * If the server's HCD doesn't support SG, break
-+				 * a single SG request into several URBs and map
-+				 * each SG list entry to corresponding URB
-+				 * buffer. The previously allocated SG list is
-+				 * stored in priv->sgl (If the server's HCD
-+				 * support SG, SG list is stored only in
-+				 * urb->sg) and it is used as an indicator that
-+				 * the server split single SG request into
-+				 * several URBs. Later, priv->sgl is used by
-+				 * stub_complete() and stub_send_ret_submit() to
-+				 * reassemble the divied URBs.
-+				 */
-+				support_sg = 0;
-+				num_urbs = nents;
-+				priv->completed_urbs = 0;
-+				pdu->u.cmd_submit.transfer_flags &=
-+								~URB_DMA_MAP_SG;
-+			}
- 		} else {
- 			buffer = kzalloc(buf_len, GFP_KERNEL);
- 			if (!buffer)
-@@ -506,24 +538,6 @@ static void stub_recv_cmd_submit(struct
- 		}
- 	}
- 
--	/* Check if the server's HCD supports SG */
--	if (use_sg && !udev->bus->sg_tablesize) {
--		/*
--		 * If the server's HCD doesn't support SG, break a single SG
--		 * request into several URBs and map each SG list entry to
--		 * corresponding URB buffer. The previously allocated SG
--		 * list is stored in priv->sgl (If the server's HCD support SG,
--		 * SG list is stored only in urb->sg) and it is used as an
--		 * indicator that the server split single SG request into
--		 * several URBs. Later, priv->sgl is used by stub_complete() and
--		 * stub_send_ret_submit() to reassemble the divied URBs.
--		 */
--		support_sg = 0;
--		num_urbs = nents;
--		priv->completed_urbs = 0;
--		pdu->u.cmd_submit.transfer_flags &= ~URB_DMA_MAP_SG;
--	}
--
- 	/* allocate urb array */
- 	priv->num_urbs = num_urbs;
- 	priv->urbs = kmalloc_array(num_urbs, sizeof(*priv->urbs), GFP_KERNEL);
+ 	/*
 
 
