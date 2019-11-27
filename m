@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3180C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9FBC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A689521775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A6CA215F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888909;
-	bh=CtSLhzyb06Smd4jXF1wFX4VZf1mgeLast+tdXdmpxPA=;
+	s=default; t=1574888914;
+	bh=n8P5tU057ULOpoOLrAX5fjEOR7sStSW0nfW1GEXLHSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahIAfGvPBXhqnyNUR0X/YKFdzj1SelD/GRxfJmXCfy/MkmqcKjz1CvrIPxPD31FC1
-	 vvuJLTUx9DF8EMoL922pP97wMy0iZl3H0u/H3kzutBjJYAMZbE3WasXF8cJnFvdYj7
-	 pjxPlDlMNLJbqetX8xuohdiQ3pO4UNpkXFDCIqVI=
+	b=Yj6VYY0VyFbmx9o09sRb2KhXIGfBMLtFeo+mvPXDWhwZHjHb7R87uKlQE30/Z3Abs
+	 FMqKIhEhpei0mi7i9P3okxc7/ZQXhz2TadVW5n55wFr0eQ28w66q3FzbzFtoSJ54bX
+	 UJniRaYxUy8AuZ1AzeOnRLO7kSWlt/+P22YhN7mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732752AbfK0VI2 (ORCPT
+        id S1732087AbfK0VIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:08:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34902 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:08:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732745AbfK0VI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:08:26 -0500
+        id S1732753AbfK0VI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:08:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D62A121775;
-        Wed, 27 Nov 2019 21:08:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51546215F1;
+        Wed, 27 Nov 2019 21:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888905;
-        bh=CtSLhzyb06Smd4jXF1wFX4VZf1mgeLast+tdXdmpxPA=;
+        s=default; t=1574888907;
+        bh=n8P5tU057ULOpoOLrAX5fjEOR7sStSW0nfW1GEXLHSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lVJfSbbxjLye4Lel78cngdYn8Y08XkW/VJzqkYm6BLLMR5jlCZz2CR7t+mNlrN4VV
-         8siR9taU2tFUFw1RN8xjkMpVRd5GwpRI/gXZs7s6eXFtH3uZK8DRSwz4PwmtDJ0fcX
-         UeFFonEZfbhQqLiMnBELlatVYbKfvP2ajMiGFqys=
+        b=aGe2oopVIr26tt6nq5dF3o41ABM7Nl3H2iqHnt7WRXrDrgDfQYQ2Y1NKQl5sz8A3d
+         GwiQ8trA8pYKiQX+gKdaQljR1qk8p2PINH5ReTf1koivQw2j3MY3detDD4bp034hgK
+         4NuLXhdpVUO5/c+r6+QuGLMWyT6SQiP1Kf8kt09U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 01/95] mlxsw: spectrum_router: Fix determining underlay for a GRE tunnel
-Date:   Wed, 27 Nov 2019 21:31:18 +0100
-Message-Id: <20191127202847.038070792@linuxfoundation.org>
+        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.3 10/95] net/mlx5: Fix auto group size calculation
+Date:   Wed, 27 Nov 2019 21:31:27 +0100
+Message-Id: <20191127202849.915435700@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,70 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Maor Gottlieb <maorg@mellanox.com>
 
-[ Upstream commit 1fc1657775dc1b19e9ac1d46b4054ed8ae5d99ab ]
+[ Upstream commit 97fd8da281f80e7e69e0114bc906575734d4dfaf ]
 
-The helper mlxsw_sp_ipip_dev_ul_tb_id() determines the underlay VRF of a
-GRE tunnel. For a tunnel without a bound device, it uses the same VRF that
-the tunnel is in. However in Linux, a GRE tunnel without a bound device
-uses the main VRF as the underlay. Fix the function accordingly.
+Once all the large flow groups (defined by the user when the flow table
+is created - max_num_groups) were created, then all the following new
+flow groups will have only one flow table entry, even though the flow table
+has place to larger groups.
+Fix the condition to prefer large flow group.
 
-mlxsw further assumed that moving a tunnel to a different VRF could cause
-conflict in local tunnel endpoint address, which cannot be offloaded.
-However, the only way that an underlay could be changed by moving the
-tunnel device itself is if the tunnel device does not have a bound device.
-But in that case the underlay is always the main VRF, so there is no
-opportunity to introduce a conflict by moving such device. Thus this check
-constitutes a dead code, and can be removed, which do.
-
-Fixes: 6ddb7426a7d4 ("mlxsw: spectrum_router: Introduce loopback RIFs")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f0d22d187473 ("net/mlx5_core: Introduce flow steering autogrouped flow table")
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c |   19 ------------------
- 1 file changed, 1 insertion(+), 18 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |   10 ++++++----
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.h |    1 +
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-@@ -994,7 +994,7 @@ u32 mlxsw_sp_ipip_dev_ul_tb_id(const str
- 	if (d)
- 		return l3mdev_fib_table(d) ? : RT_TABLE_MAIN;
- 	else
--		return l3mdev_fib_table(ol_dev) ? : RT_TABLE_MAIN;
-+		return RT_TABLE_MAIN;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+@@ -549,7 +549,7 @@ static void del_sw_flow_group(struct fs_
+ 
+ 	rhashtable_destroy(&fg->ftes_hash);
+ 	ida_destroy(&fg->fte_allocator);
+-	if (ft->autogroup.active)
++	if (ft->autogroup.active && fg->max_ftes == ft->autogroup.group_size)
+ 		ft->autogroup.num_groups--;
+ 	err = rhltable_remove(&ft->fgs_hash,
+ 			      &fg->hash,
+@@ -1095,6 +1095,8 @@ mlx5_create_auto_grouped_flow_table(stru
+ 
+ 	ft->autogroup.active = true;
+ 	ft->autogroup.required_groups = max_num_groups;
++	/* We save place for flow groups in addition to max types */
++	ft->autogroup.group_size = ft->max_fte / (max_num_groups + 1);
+ 
+ 	return ft;
  }
+@@ -1297,8 +1299,7 @@ static struct mlx5_flow_group *alloc_aut
+ 		return ERR_PTR(-ENOENT);
  
- static struct mlxsw_sp_rif *
-@@ -1598,27 +1598,10 @@ static int mlxsw_sp_netdevice_ipip_ol_vr
- {
- 	struct mlxsw_sp_ipip_entry *ipip_entry =
- 		mlxsw_sp_ipip_entry_find_by_ol_dev(mlxsw_sp, ol_dev);
--	enum mlxsw_sp_l3proto ul_proto;
--	union mlxsw_sp_l3addr saddr;
--	u32 ul_tb_id;
+ 	if (ft->autogroup.num_groups < ft->autogroup.required_groups)
+-		/* We save place for flow groups in addition to max types */
+-		group_size = ft->max_fte / (ft->autogroup.required_groups + 1);
++		group_size = ft->autogroup.group_size;
  
- 	if (!ipip_entry)
- 		return 0;
+ 	/*  ft->max_fte == ft->autogroup.max_types */
+ 	if (group_size == 0)
+@@ -1325,7 +1326,8 @@ static struct mlx5_flow_group *alloc_aut
+ 	if (IS_ERR(fg))
+ 		goto out;
  
--	/* For flat configuration cases, moving overlay to a different VRF might
--	 * cause local address conflict, and the conflicting tunnels need to be
--	 * demoted.
--	 */
--	ul_tb_id = mlxsw_sp_ipip_dev_ul_tb_id(ol_dev);
--	ul_proto = mlxsw_sp->router->ipip_ops_arr[ipip_entry->ipipt]->ul_proto;
--	saddr = mlxsw_sp_ipip_netdev_saddr(ul_proto, ol_dev);
--	if (mlxsw_sp_ipip_demote_tunnel_by_saddr(mlxsw_sp, ul_proto,
--						 saddr, ul_tb_id,
--						 ipip_entry)) {
--		mlxsw_sp_ipip_entry_demote_tunnel(mlxsw_sp, ipip_entry);
--		return 0;
--	}
--
- 	return __mlxsw_sp_ipip_entry_update_tunnel(mlxsw_sp, ipip_entry,
- 						   true, false, false, extack);
- }
+-	ft->autogroup.num_groups++;
++	if (group_size == ft->autogroup.group_size)
++		ft->autogroup.num_groups++;
+ 
+ out:
+ 	return fg;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.h
+@@ -137,6 +137,7 @@ struct mlx5_flow_table {
+ 	struct {
+ 		bool			active;
+ 		unsigned int		required_groups;
++		unsigned int		group_size;
+ 		unsigned int		num_groups;
+ 	} autogroup;
+ 	/* Protect fwd_rules */
 
 
