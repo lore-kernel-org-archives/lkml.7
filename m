@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7945AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2D3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A87C2154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D262154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891136;
-	bh=tGyuerj4tgHb0qQhYD5ienk8WW7ZV2NkS0UB4aqLey4=;
+	s=default; t=1574891144;
+	bh=H6bctPRfq8XqJuzYNECQWMiThWRjYOGOSX2ux+jZzI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DwypLqdZ7T4XkGeMTdePdGPYB4ceX8JoBiNptEZloKcBNTRYL1Sh1gTUS8ogOGony
-	 iOAcoeDKDCFLrvSZnSkbDgzAUMEz3Qg8F+fVHBU+p7iVkx4D174K5BYkTWQl4VzxR9
-	 Qu/DaLyCUjEK3N4MOJId40cpYpAjgTLiCVT/UJxA=
+	b=AKMEF+6fUSaMmbt69EHsMHbEdLOxhUokVubnzxBQ3BdnhTqYmBy4DEqEyGEfcRhRC
+	 htioT/QD2uPoNzKM4RC0cp+3/ccUKvFEV4chLHFRYuN+qJNXRadRj7hWBnFxGP6AjK
+	 IGs4f+iE2u6DDAR6xTBzfOpq5G6eweZ2lFu43Tbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbfK0Uf2 (ORCPT
+        id S1728207AbfK0Vpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:35:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36562 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:45:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbfK0UfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:35:24 -0500
+        id S1727829AbfK0UfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:35:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7849E20866;
-        Wed, 27 Nov 2019 20:35:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A5E72154A;
+        Wed, 27 Nov 2019 20:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886923;
-        bh=tGyuerj4tgHb0qQhYD5ienk8WW7ZV2NkS0UB4aqLey4=;
+        s=default; t=1574886916;
+        bh=H6bctPRfq8XqJuzYNECQWMiThWRjYOGOSX2ux+jZzI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SfZSWbH+0E1TxCwI9ys5sPsFJhPYG5kAGaM5HXhS4ilNq4pLoafG9z0W4GH/mix/k
-         aSCzkqQfentPBr8oRyBysM70pMtbMEvXIC/HfK909OvaVuAeTaEqlWayQImpRUpq6u
-         epv73lbc8SIOCCMmAp4SU0fjBDRuZH2fPuwqD7sw=
+        b=OY2U8Rd0Plq9Pl8zWWOaiNR+tfjOcTvXsgsaXBh70VNiFnA4vPHTEW+ovEs5u87Id
+         WESrRGGhystIPcIQVu92FHzPI3QE5N1gORcXJo2icM3BpugPe8yZHtZ8L9OgES+2CW
+         HiJdCOEN+u03aSvITmGLWlKP5y0Z029Des/5tcNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Kyeongdon Kim <kyeongdon.kim@lge.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 045/132] macintosh/windfarm_smu_sat: Fix debug output
-Date:   Wed, 27 Nov 2019 21:30:36 +0100
-Message-Id: <20191127202942.155515778@linuxfoundation.org>
+Subject: [PATCH 4.4 042/132] net: fix warning in af_unix
+Date:   Wed, 27 Nov 2019 21:30:33 +0100
+Message-Id: <20191127202937.623909833@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,77 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Kyeongdon Kim <kyeongdon.kim@lge.com>
 
-[ Upstream commit fc0c8b36d379a046525eacb9c3323ca635283757 ]
+[ Upstream commit 33c4368ee2589c165aebd8d388cbd91e9adb9688 ]
 
-There's some antiquated debug output that's trying
-to do a hand-made hexdump and turning into horrible
-1-byte-per-line output these days.
+This fixes the "'hash' may be used uninitialized in this function"
 
-Use print_hex_dump() instead
+net/unix/af_unix.c:1041:20: warning: 'hash' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  addr->hash = hash ^ sk->sk_type;
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Kyeongdon Kim <kyeongdon.kim@lge.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/macintosh/windfarm_smu_sat.c | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
+ net/unix/af_unix.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/macintosh/windfarm_smu_sat.c b/drivers/macintosh/windfarm_smu_sat.c
-index ad6223e883404..3d310dd60a0be 100644
---- a/drivers/macintosh/windfarm_smu_sat.c
-+++ b/drivers/macintosh/windfarm_smu_sat.c
-@@ -22,14 +22,6 @@
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index b1a72615fdc30..b5e2ef242efe7 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -224,6 +224,8 @@ static inline void unix_release_addr(struct unix_address *addr)
  
- #define VERSION "1.0"
- 
--#define DEBUG
--
--#ifdef DEBUG
--#define DBG(args...)	printk(args)
--#else
--#define DBG(args...)	do { } while(0)
--#endif
--
- /* If the cache is older than 800ms we'll refetch it */
- #define MAX_AGE		msecs_to_jiffies(800)
- 
-@@ -106,13 +98,10 @@ struct smu_sdbp_header *smu_sat_get_sdb_partition(unsigned int sat_id, int id,
- 		buf[i+2] = data[3];
- 		buf[i+3] = data[2];
- 	}
--#ifdef DEBUG
--	DBG(KERN_DEBUG "sat %d partition %x:", sat_id, id);
--	for (i = 0; i < len; ++i)
--		DBG(" %x", buf[i]);
--	DBG("\n");
--#endif
- 
-+	printk(KERN_DEBUG "sat %d partition %x:", sat_id, id);
-+	print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
-+		       16, 1, buf, len, false);
- 	if (size)
- 		*size = len;
- 	return (struct smu_sdbp_header *) buf;
-@@ -132,13 +121,13 @@ static int wf_sat_read_cache(struct wf_sat *sat)
- 	if (err < 0)
- 		return err;
- 	sat->last_read = jiffies;
+ static int unix_mkname(struct sockaddr_un *sunaddr, int len, unsigned int *hashp)
+ {
++	*hashp = 0;
 +
- #ifdef LOTSA_DEBUG
- 	{
- 		int i;
--		DBG(KERN_DEBUG "wf_sat_get: data is");
--		for (i = 0; i < 16; ++i)
--			DBG(" %.2x", sat->cache[i]);
--		DBG("\n");
-+		printk(KERN_DEBUG "wf_sat_get: data is");
-+		print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
-+			       16, 1, sat->cache, 16, false);
- 	}
- #endif
- 	return 0;
+ 	if (len <= sizeof(short) || len > sizeof(*sunaddr))
+ 		return -EINVAL;
+ 	if (!sunaddr || sunaddr->sun_family != AF_UNIX)
 -- 
 2.20.1
 
