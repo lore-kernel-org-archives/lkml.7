@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC48C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D5AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383F82184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D077021882
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887930;
-	bh=H0+p4fK298kw1jSTheIrFbd+g0vAAzU0oZwSoqofGG0=;
+	s=default; t=1574887933;
+	bh=Ip6hU7yXg9AcHOr9vr8JdMkTGx+/SfF3tqPyui4JfNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RmFujm4REtRZjnMz4ArprApAIFWeW1X/aFdrSlFDpybZx0cVSwp3Gd0N1a2gL0pXS
-	 qOo4mofWAZU3Qjm4slbyiQ2fpOb33QqghSCTUO9ssJI0zv0tqCtfztWjTztNJEqQRp
-	 ODtPpjS5KGkOGAB0VYAz8biFyA1dfZ2L38y3mjT4=
+	b=S0VV3cs5c0sfFwvb958rT1jxNI7MhGBlTAYq3s9TsZm51AzVyGd93Xr77AvVLVtoG
+	 ZX3FWzG2ErOiylFyo6JWaHiISIyhWc3XUeO6V9KKA+kVO4jW+CdkEehDHYIQmn4ALQ
+	 DyazBXKQ6en3BK6v2evMRM6FE/ZGCWj6L7Dqzbpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbfK0UwJ (ORCPT
+        id S1728267AbfK0UwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:52:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39234 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:52:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729714AbfK0UwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:52:01 -0500
+        id S1729887AbfK0UwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:52:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04A0821871;
-        Wed, 27 Nov 2019 20:52:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88BB121774;
+        Wed, 27 Nov 2019 20:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887921;
-        bh=H0+p4fK298kw1jSTheIrFbd+g0vAAzU0oZwSoqofGG0=;
+        s=default; t=1574887919;
+        bh=Ip6hU7yXg9AcHOr9vr8JdMkTGx+/SfF3tqPyui4JfNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hnLEhcXpcPww4kzIzFHwfW6jB0BVlfZR5vTUNrCZVfN1YuD+9kZbrF4dBAw1JIpl2
-         hMS8wMeIeDXgTfQ5m5tKhZkWOgXl3ifCp7fuXrOymSp5DILYAXdFgrR7hdlpvWNuzm
-         A+e7HTZL2gjtHQxMTmiCBU5ySpYdHsrW8qarek4Y=
+        b=W00pJEVproSXbytRSm5bPbDzYqniyiGnhJZp/CdIwbw5p73GhZpWGpkgg9elgLl3z
+         IPjvrGkmLUYVdIvc4yyO+EY/JXFe4mNfd8Echa++tgxLLF8vHG1Kku8StBwfrne4ZE
+         WoyWZ9xbF42VBQT71CGx4d1HM6dfzb8LAZxUrSzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
-        David Teigland <teigland@redhat.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 147/211] dlm: fix invalid free
-Date:   Wed, 27 Nov 2019 21:31:20 +0100
-Message-Id: <20191127203107.914032200@linuxfoundation.org>
+Subject: [PATCH 4.14 146/211] scsi: lpfc: Correct loss of fc4 type on remote port address change
+Date:   Wed, 27 Nov 2019 21:31:19 +0100
+Message-Id: <20191127203107.814390844@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,44 +62,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tycho Andersen <tycho@tycho.ws>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit d968b4e240cfe39d39d80483bac8bca8716fd93c ]
+[ Upstream commit d83ca3ea833d7a66d49225e4191c4e37cab8f079 ]
 
-dlm_config_nodes() does not allocate nodes on failure, so we should not
-free() nodes when it fails.
+An address change for a remote port cause PRLI for the wrong protocol
+to be sent.  The node copy done in the discovery code skipped copying
+the fc4 protocols supported as well.
 
-Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-Signed-off-by: David Teigland <teigland@redhat.com>
+Fix the copy logic for the address change.  Beefed up log messages in
+this area as well.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/member.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc_els.c       | 26 +++++++++++++++++++++++---
+ drivers/scsi/lpfc/lpfc_nportdisc.c |  5 +++--
+ 2 files changed, 26 insertions(+), 5 deletions(-)
 
-diff --git a/fs/dlm/member.c b/fs/dlm/member.c
-index 3fda3832cf6a6..cad6d85911a80 100644
---- a/fs/dlm/member.c
-+++ b/fs/dlm/member.c
-@@ -680,7 +680,7 @@ int dlm_ls_start(struct dlm_ls *ls)
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 95449f97101d3..e5db20e8979d5 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -1550,8 +1550,10 @@ lpfc_plogi_confirm_nport(struct lpfc_hba *phba, uint32_t *prsp,
+ 	 */
+ 	new_ndlp = lpfc_findnode_wwpn(vport, &sp->portName);
  
- 	error = dlm_config_nodes(ls->ls_name, &nodes, &count);
- 	if (error < 0)
--		goto fail;
-+		goto fail_rv;
++	/* return immediately if the WWPN matches ndlp */
+ 	if (new_ndlp == ndlp && NLP_CHK_NODE_ACT(new_ndlp))
+ 		return ndlp;
++
+ 	if (phba->sli_rev == LPFC_SLI_REV4) {
+ 		active_rrqs_xri_bitmap = mempool_alloc(phba->active_rrq_pool,
+ 						       GFP_KERNEL);
+@@ -1560,9 +1562,13 @@ lpfc_plogi_confirm_nport(struct lpfc_hba *phba, uint32_t *prsp,
+ 			       phba->cfg_rrq_xri_bitmap_sz);
+ 	}
  
- 	spin_lock(&ls->ls_recover_lock);
+-	lpfc_printf_vlog(vport, KERN_INFO, LOG_ELS,
+-		 "3178 PLOGI confirm: ndlp %p x%x: new_ndlp %p\n",
+-		 ndlp, ndlp->nlp_DID, new_ndlp);
++	lpfc_printf_vlog(vport, KERN_INFO, LOG_ELS | LOG_NODE,
++			 "3178 PLOGI confirm: ndlp x%x x%x x%x: "
++			 "new_ndlp x%x x%x x%x\n",
++			 ndlp->nlp_DID, ndlp->nlp_flag,  ndlp->nlp_fc4_type,
++			 (new_ndlp ? new_ndlp->nlp_DID : 0),
++			 (new_ndlp ? new_ndlp->nlp_flag : 0),
++			 (new_ndlp ? new_ndlp->nlp_fc4_type : 0));
  
-@@ -712,8 +712,9 @@ int dlm_ls_start(struct dlm_ls *ls)
- 	return 0;
+ 	if (!new_ndlp) {
+ 		rc = memcmp(&ndlp->nlp_portname, name,
+@@ -1611,6 +1617,14 @@ lpfc_plogi_confirm_nport(struct lpfc_hba *phba, uint32_t *prsp,
+ 			       phba->cfg_rrq_xri_bitmap_sz);
+ 	}
  
-  fail:
--	kfree(rv);
- 	kfree(nodes);
-+ fail_rv:
-+	kfree(rv);
- 	return error;
++	/* At this point in this routine, we know new_ndlp will be
++	 * returned. however, any previous GID_FTs that were done
++	 * would have updated nlp_fc4_type in ndlp, so we must ensure
++	 * new_ndlp has the right value.
++	 */
++	if (vport->fc_flag & FC_FABRIC)
++		new_ndlp->nlp_fc4_type = ndlp->nlp_fc4_type;
++
+ 	lpfc_unreg_rpi(vport, new_ndlp);
+ 	new_ndlp->nlp_DID = ndlp->nlp_DID;
+ 	new_ndlp->nlp_prev_state = ndlp->nlp_prev_state;
+@@ -1732,6 +1746,12 @@ lpfc_plogi_confirm_nport(struct lpfc_hba *phba, uint32_t *prsp,
+ 	    active_rrqs_xri_bitmap)
+ 		mempool_free(active_rrqs_xri_bitmap,
+ 			     phba->active_rrq_pool);
++
++	lpfc_printf_vlog(vport, KERN_INFO, LOG_ELS | LOG_NODE,
++			 "3173 PLOGI confirm exit: new_ndlp x%x x%x x%x\n",
++			 new_ndlp->nlp_DID, new_ndlp->nlp_flag,
++			 new_ndlp->nlp_fc4_type);
++
+ 	return new_ndlp;
  }
  
+diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+index a0658d1582287..043bca6449cd0 100644
+--- a/drivers/scsi/lpfc/lpfc_nportdisc.c
++++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+@@ -2829,8 +2829,9 @@ lpfc_disc_state_machine(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
+ 	/* DSM in event <evt> on NPort <nlp_DID> in state <cur_state> */
+ 	lpfc_printf_vlog(vport, KERN_INFO, LOG_DISCOVERY,
+ 			 "0211 DSM in event x%x on NPort x%x in "
+-			 "state %d Data: x%x\n",
+-			 evt, ndlp->nlp_DID, cur_state, ndlp->nlp_flag);
++			 "state %d Data: x%x x%x\n",
++			 evt, ndlp->nlp_DID, cur_state,
++			 ndlp->nlp_flag, ndlp->nlp_fc4_type);
+ 
+ 	lpfc_debugfs_disc_trc(vport, LPFC_DISC_TRC_DSM,
+ 		 "DSM in:          evt:%d ste:%d did:x%x",
 -- 
 2.20.1
 
