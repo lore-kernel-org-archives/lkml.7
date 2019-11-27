@@ -2,165 +2,185 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B65C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CF4C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90B220678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56C42070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfK0Keb (ORCPT
+        id S1726478AbfK0KjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:34:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:45812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfK0Keb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:34:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A6DC30E;
-        Wed, 27 Nov 2019 02:34:30 -0800 (PST)
-Received: from dell3630.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 890C23F6C4;
-        Wed, 27 Nov 2019 02:34:28 -0800 (PST)
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-To:     Atish Patra <atish.patra@wdc.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Ondrej Jirman <megous@megous.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org
-Subject: [PATCH v2] arm: Fix topology setup in case of CPU hotplug for CONFIG_SCHED_MC
-Date:   Wed, 27 Nov 2019 11:33:53 +0100
-Message-Id: <20191127103353.12417-1-dietmar.eggemann@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 Nov 2019 05:39:21 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54422 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726194AbfK0KjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:39:21 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 32307B24A;
+        Wed, 27 Nov 2019 10:39:18 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Breno Leitao <leitao@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Romero <gromero@linux.ibm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 rebase 00/34] exception cleanup, syscall in C and !COMPAT
+Date:   Wed, 27 Nov 2019 11:38:36 +0100
+Message-Id: <cover.1574803684.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit ca74b316df96 ("arm: Use common cpu_topology structure and
-functions.") changed cpu_coregroup_mask() from the ARM32 specific
-implementation in arch/arm/include/asm/topology.h to the one shared
-with ARM64 and RISCV in drivers/base/arch_topology.c.
+Hello,
 
-Currently on ARM32 (TC2 w/ CONFIG_SCHED_MC) the task scheduler setup
-code (w/ CONFIG_SCHED_DEBUG) shows this during CPU hotplug:
+This is merge of https://patchwork.ozlabs.org/cover/1162376/ (except two
+last experimental patches) and
+https://patchwork.ozlabs.org/patch/1162079/ rebased on top of master.
 
-  ERROR: groups don't span domain->span
+There was minor conflict in Makefile in the latter series.
 
-It happens to CPUs of the cluster of the CPU which gets hot-plugged
-out on scheduler domain MC.
+Refreshed the patchset to fix build error on ppc32 and ppc64e.
 
-Turns out that the shared cpu_coregroup_mask() requires that the
-hot-plugged CPU is removed from the core_sibling mask via
-remove_cpu_topology(). Otherwise the 'is core_sibling subset of
-cpumask_of_node()' doesn't work. In this case the task scheduler has to
-deal with cpumask_of_node instead of core_sibling which is wrong on
-scheduler domain MC.
+Rebased on top of powerpc/merge.
 
-e.g. CPU3 hot-plugged out on TC2 [cluster0: 0,3-4 cluster1: 1-2]:
+Thanks
 
-  cpu_coregroup_mask(): CPU3 cpumask_of_node=0-2,4 core_sibling=0,3-4
-                                                                  ^
-should be:
+Michal
 
-  cpu_coregroup_mask(): CPU3 cpumask_of_node=0-2,4 core_sibling=0,4
+Michal Suchanek (9):
+  powerpc/64: system call: Fix sparse warning about missing declaration
+  powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
+  powerpc: move common register copy functions from signal_32.c to
+    signal.c
+  powerpc/perf: consolidate read_user_stack_32
+  powerpc/perf: consolidate valid_user_sp
+  powerpc/64: make buildable without CONFIG_COMPAT
+  powerpc/64: Make COMPAT user-selectable disabled on littleendian by
+    default.
+  powerpc/perf: split callchain.c by bitness
+  MAINTAINERS: perf: Add pattern that matches ppc perf to the perf
+    entry.
 
-Add remove_cpu_topology() to __cpu_disable() to remove the CPU from the
-topology masks in case of a CPU hotplug out operation.
+Nicholas Piggin (25):
+  powerpc/64s/exception: Introduce INT_DEFINE parameter block for code
+    generation
+  powerpc/64s/exception: Add GEN_COMMON macro that uses INT_DEFINE
+    parameters
+  powerpc/64s/exception: Add GEN_KVM macro that uses INT_DEFINE
+    parameters
+  powerpc/64s/exception: Expand EXC_COMMON and EXC_COMMON_ASYNC macros
+  powerpc/64s/exception: Move all interrupt handlers to new style code
+    gen macros
+  powerpc/64s/exception: Remove old INT_ENTRY macro
+  powerpc/64s/exception: Remove old INT_COMMON macro
+  powerpc/64s/exception: Remove old INT_KVM_HANDLER
+  powerpc/64s/exception: Add ISIDE option
+  powerpc/64s/exception: move real->virt switch into the common handler
+  powerpc/64s/exception: move soft-mask test to common code
+  powerpc/64s/exception: move KVM test to common code
+  powerpc/64s/exception: remove confusing IEARLY option
+  powerpc/64s/exception: remove the SPR saving patch code macros
+  powerpc/64s/exception: trim unused arguments from KVMTEST macro
+  powerpc/64s/exception: hdecrementer avoid touching the stack
+  powerpc/64s/exception: re-inline some handlers
+  powerpc/64s/exception: Clean up SRR specifiers
+  powerpc/64s/exception: add more comments for interrupt handlers
+  powerpc/64s/exception: only test KVM in SRR interrupts when PR KVM is
+    supported
+  powerpc/64s/exception: soft nmi interrupt should not use
+    ret_from_except
+  powerpc/64: system call remove non-volatile GPR save optimisation
+  powerpc/64: system call implement the bulk of the logic in C
+  powerpc/64s: interrupt return in C
+  powerpc/64s/exception: remove lite interrupt return
 
-At the same time tweak store_cpu_topology() slightly so it will call
-update_siblings_masks() in case of CPU hotplug in operation via
-secondary_start_kernel()->smp_store_cpu_info().
+ MAINTAINERS                                   |    2 +
+ arch/powerpc/Kconfig                          |    5 +-
+ arch/powerpc/include/asm/asm-prototypes.h     |   17 +-
+ .../powerpc/include/asm/book3s/64/kup-radix.h |   24 +-
+ arch/powerpc/include/asm/cputime.h            |   24 +
+ arch/powerpc/include/asm/exception-64s.h      |    4 -
+ arch/powerpc/include/asm/hw_irq.h             |    4 +
+ arch/powerpc/include/asm/ptrace.h             |    3 +
+ arch/powerpc/include/asm/signal.h             |    3 +
+ arch/powerpc/include/asm/switch_to.h          |   11 +
+ arch/powerpc/include/asm/thread_info.h        |    4 +-
+ arch/powerpc/include/asm/time.h               |    4 +-
+ arch/powerpc/include/asm/unistd.h             |    1 +
+ arch/powerpc/kernel/Makefile                  |    9 +-
+ arch/powerpc/kernel/entry_64.S                |  880 ++------
+ arch/powerpc/kernel/exceptions-64e.S          |  255 ++-
+ arch/powerpc/kernel/exceptions-64s.S          | 1937 ++++++++++++-----
+ arch/powerpc/kernel/process.c                 |   89 +-
+ arch/powerpc/kernel/signal.c                  |  144 +-
+ arch/powerpc/kernel/signal.h                  |    2 -
+ arch/powerpc/kernel/signal_32.c               |  140 --
+ arch/powerpc/kernel/syscall_64.c              |  349 +++
+ arch/powerpc/kernel/syscalls/syscall.tbl      |   22 +-
+ arch/powerpc/kernel/systbl.S                  |    9 +-
+ arch/powerpc/kernel/time.c                    |    9 -
+ arch/powerpc/kernel/vdso.c                    |    3 +-
+ arch/powerpc/kernel/vector.S                  |    2 +-
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S       |   11 -
+ arch/powerpc/kvm/book3s_segment.S             |    7 -
+ arch/powerpc/perf/Makefile                    |    5 +-
+ arch/powerpc/perf/callchain.c                 |  370 +---
+ arch/powerpc/perf/callchain.h                 |   20 +
+ arch/powerpc/perf/callchain_32.c              |  197 ++
+ arch/powerpc/perf/callchain_64.c              |  178 ++
+ fs/read_write.c                               |    3 +-
+ 35 files changed, 2798 insertions(+), 1949 deletions(-)
+ create mode 100644 arch/powerpc/kernel/syscall_64.c
+ create mode 100644 arch/powerpc/perf/callchain.h
+ create mode 100644 arch/powerpc/perf/callchain_32.c
+ create mode 100644 arch/powerpc/perf/callchain_64.c
 
-This aligns the ARM32 implementation with the ARM64 one.
-
-Guarding remove_cpu_topology() with CONFIG_GENERIC_ARCH_TOPOLOGY is
-necessary since some Arm32 defconfigs (aspeed_g5_defconfig,
-milbeaut_m10v_defconfig, spear13xx_defconfig) specify an explicit
-
- # CONFIG_ARM_CPU_TOPOLOGY is not set
-
-w/ ./arch/arm/Kconfig: select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
-
-Fixes: ca74b316df96 ("arm: Use common cpu_topology structure and functions")
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-Tested-by: Lukasz Luba <lukasz.luba@arm.com>
-Tested-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
----
-
-Changes in v2:
-
-- Removed cosmetic cleanup in pr_info() of store_cpu_topology()
-- Guarded remove_cpu_topology() with CONFIG_GENERIC_ARCH_TOPOLOGY
-
-I opted for an #ifdef in __cpu_disable rather than a stub definition of
-remove_cpu_topology() in include/linux/arch_topology.h to keep this
-change small.
-
- arch/arm/kernel/smp.c      |  4 ++++
- arch/arm/kernel/topology.c | 10 +++++-----
- 2 files changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 4b0bab2607e4..46e1be9e57a8 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -240,6 +240,10 @@ int __cpu_disable(void)
- 	if (ret)
- 		return ret;
- 
-+#ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
-+	remove_cpu_topology(cpu);
-+#endif
-+
- 	/*
- 	 * Take this CPU offline.  Once we clear this, we can't return,
- 	 * and we must not schedule until we're ready to give up the cpu.
-diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-index 5b9faba03afb..8d2e61d9e7a6 100644
---- a/arch/arm/kernel/topology.c
-+++ b/arch/arm/kernel/topology.c
-@@ -196,9 +196,8 @@ void store_cpu_topology(unsigned int cpuid)
- 	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
- 	unsigned int mpidr;
- 
--	/* If the cpu topology has been already set, just return */
--	if (cpuid_topo->core_id != -1)
--		return;
-+	if (cpuid_topo->package_id != -1)
-+		goto topology_populated;
- 
- 	mpidr = read_cpuid_mpidr();
- 
-@@ -231,14 +230,15 @@ void store_cpu_topology(unsigned int cpuid)
- 		cpuid_topo->package_id = -1;
- 	}
- 
--	update_siblings_masks(cpuid);
--
- 	update_cpu_capacity(cpuid);
- 
- 	pr_info("CPU%u: thread %d, cpu %d, socket %d, mpidr %x\n",
- 		cpuid, cpu_topology[cpuid].thread_id,
- 		cpu_topology[cpuid].core_id,
- 		cpu_topology[cpuid].package_id, mpidr);
-+
-+topology_populated:
-+	update_siblings_masks(cpuid);
- }
- 
- static inline int cpu_corepower_flags(void)
 -- 
-2.17.1
+2.23.0
 
