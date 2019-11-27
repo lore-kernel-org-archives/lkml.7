@@ -2,121 +2,173 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D87C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7077BC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03412075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5CB2073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="is2hCZ6d"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="pqGpWIEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbfK0Qb3 (ORCPT
+        id S1727050AbfK0QdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:31:29 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:43016 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbfK0Qb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:31:29 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 906C71B21254; Wed, 27 Nov 2019 19:31:25 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 906C71B21254
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1574872285; bh=D0U/yoZIFmLHwjF+Ayn7vsDRMvJ2hdz+rD6jAk4olMc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=is2hCZ6d7g97DxekjT754vqL7o2BoJRRA51ExITKCw3Ec8ZS42WJPee6O/x7R9hme
-         H648HBJxdeER+b85BgYjiQJKA+CK2c2hJ5tbAeQ9oSTWfsjow2umhlnavKaU4+cSfX
-         4HeTICyus0f/DPKpKllbwup9OUPRvTyr/Vsv6X7c=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id BB8D91B2029D;
-        Wed, 27 Nov 2019 19:31:08 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru BB8D91B2029D
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 3F34A1B20AE9;
-        Wed, 27 Nov 2019 19:31:08 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Wed, 27 Nov 2019 19:31:08 +0300 (MSK)
+        Wed, 27 Nov 2019 11:33:21 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.70]:42413 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbfK0QdU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 11:33:20 -0500
+Received: from [46.226.52.194] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-6.bemta.az-b.eu-west-1.aws.symcld.net id BC/98-19153-C45AEDD5; Wed, 27 Nov 2019 16:33:16 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCJsWRWlGSWpSXmKPExsWSoc9hruu99F6
+  sQfsvU4srFw8xWUx9+ITNYvO5HlaLb1c6mCwu75rDZtG5q5/V4u5rP4sN39cyOnB4bPjcxOax
+  4+4SRo+ds+6ye2xa1cnmse/tMjaP9Vuusnh83iQXwB7FmpmXlF+RwJqxeNtk9oL5XBXfjq5lb
+  2BcydHFyMXBKLCUWWLRjKvMEM4xFomWq8egnM2MEr97f7J1MXJysAicACrbYwOSEBKYxiTxZU
+  oLI4TzkFHi16X7zCBVbAIWEpNPPADrEBGIkOi4d5kNpIhZoIlZ4v2qpYwgCWEBZ4nZ/W3MEEU
+  uEoc2N0E15Euc3PaAFWKdqsS/rSvAangFEiU2/tzCDLHtGKvEhkW/mUASnAJGErM2zGMBsRkF
+  ZCW+NK4Ga2AWEJe49WQ+WI2EgIDEkj3nmSFsUYmXj/+xQtSnSpxsusEIEdeROHv9CZStJDFv7
+  hEoW1bi0vxuKNtXYvr3+6ww9RunfoGaaSGxpLsV6AYOIFtF4t+hSohwgcSyZ7dYIGw1ie3Xzk
+  OdIyPR/rUT7BcJgQusEhdOnGaZwKg/C8nZELaOxILdn9ggbG2JZQtfM88Ch4WgxMmZT1gWMLK
+  sYrRIKspMzyjJTczM0TU0MNA1NDTSNbS00DUyMtBLrNJN0kst1S1PLS7RNdRLLC/WK67MTc5J
+  0ctLLdnECExwKQXH7uxgbPvwVu8QoyQHk5Ior5/XvVghvqT8lMqMxOKM+KLSnNTiQ4wyHBxKE
+  ryaS4BygkWp6akVaZk5wGQLk5bg4FES4V28GCjNW1yQmFucmQ6ROsWoyzHh5dxFzEIsefl5qV
+  LivAcXARUJgBRllObBjYAl/kuMslLCvIwMDAxCPAWpRbmZJajyrxjFORiVhHnPgKziycwrgdv
+  0CugIJqAj9vWBHVGSiJCSamA6Gncou8snarXldj23iRZ8bxzvTi/J8H4/ca0YI8v9kuB9UdNu
+  6n7de2BT/vdfG5lrTcSkH67WfCekl/Q5XutnkjqrUHlHX4PtRf35S654+LL8lzgWlMEy/8fcM
+  lcG9lLlBPbPafpFU2JSJAxPpVSXe9d9W3NbQTLb89/nLbZsuYKiS/ZMYD7hzPvzAkey9bxv4f
+  6Gt5oPiR6K2/CBOer2mtIypuclxZ772KT5Xc486PnOoeF1PSJK4fnPTXZXF12Zx/HAaXZlxKx
+  PAeLZswROLzR73t1Ruu18Q7+71rXA4t02jRJLihK89Hdv5V8/1YBR63aYkYrEkSm2En8ilE3s
+  TI7kRv45uq4m/G3NPyWW4oxEQy3mouJEAKPR+Bx3BAAA
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-21.tower-282.messagelabs.com!1574872395!506323!1
+X-Originating-IP: [104.47.8.55]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 10650 invoked from network); 27 Nov 2019 16:33:15 -0000
+Received: from mail-am5eur03lp2055.outbound.protection.outlook.com (HELO EUR03-AM5-obe.outbound.protection.outlook.com) (104.47.8.55)
+  by server-21.tower-282.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 27 Nov 2019 16:33:15 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CDs4E/X6pJSVj/rD4GIMBg+fBJCMuo56bjUt9gvW7xm1PvFE4HnlZVGCExUjfO7Qk2CdzjIiSS5DbrztOWHy4J60KMaXpnMmuLFUBgqKUz49yVJb9ckW/s7tHrc3NZg6ttq6x1vrHvpJ+thXXvfCHOPL7YYIkydAtuujay6fL7EHlnaD0PcN3a0kXY/B0ciX25m+HWolht6G2nnjyxu5t3tF6EQD1U5eEgjvtQcNic34VIkMKZCpayE/kLVAzpg7+d3unAUoK2YAKQ576bWQqvD3LQ+45Xnt+YF1JFFx6O5wAmFknNG411hTqe+ylAsKh8vinx303Ju4xvaZQvTk8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XC6hUQu18x9cqFusYWJz3/n+9iEyYfJnNdxUlzp2JE4=;
+ b=EHIRSuempAGE/zvdPolzoXI8PfCTz/VVTwhn+54/pIUVmid1EhjEprh0t9MiVJUWHvdHWa6Yb+Q/tyyNFOOmjy4rK9RF8KYWrJiCEVcHRAXQl9du8DxFgfTU8TmhSvggcTHN0QrWTN6qxkNyp5R0n2N0LyfptuUrR4I1SJPt9R2c/snvc//T5s62aC2V3FUL5lEAomTF+BQMUiMjdyVT8K1/Z1jb2aje+/UaTD/2ztusNrXyPu2iUIxb9z+lyPzRUg9/klQFmPlvRnVEPpaa7epugVoa5O/2B+mLDut0+CvuWOQvtXsnuj5D8K0pKwRQTrYUmAlTjKp3KQUL8BpyIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XC6hUQu18x9cqFusYWJz3/n+9iEyYfJnNdxUlzp2JE4=;
+ b=pqGpWIELuERh8EorwCUyR0tqXX0PEvpB03rcOeWbBCKzL80sGi3z898PfkeFmk/V33x+IXHqIPaGMxbxCfRGY+U1upA/E9wJrQGWXQfc2w67UcUWr1QtP+6i7PTqhn7QGOVCjEKPs2q68mCA8hsLKs08CO4oSuy7+XhqfU0akQk=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB0979.EURPRD10.PROD.OUTLOOK.COM (10.169.155.143) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18; Wed, 27 Nov 2019 16:33:13 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
+ 16:33:12 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+CC:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@collabora.com" <kernel@collabora.com>
+Subject: RE: [PATCHv2 6/6] ASoC: da7213: Add default clock handling
+Thread-Topic: [PATCHv2 6/6] ASoC: da7213: Add default clock handling
+Thread-Index: AQHVn7aXMyQuMXvm70+jyJLut64noaeWIihwgAeSgICAAAQ4gIAACJ3wgAADHgCAARqUMIAAHxOAgAAPlwCAACS4AIAADJyg
+Date:   Wed, 27 Nov 2019 16:33:12 +0000
+Message-ID: <AM5PR1001MB099467ACADA4F7B6DDA5087480440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
+ <20191120152406.2744-7-sebastian.reichel@collabora.com>
+ <AM5PR1001MB0994720A0D615339A978E35C804E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <AM5PR1001MB0994E628439F021F97B872D480450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191126170841.GC4205@sirena.org.uk>
+ <AM5PR1001MB09949D557742E8817545637F80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191126175040.GD4205@sirena.org.uk>
+ <AM5PR1001MB09940CF764711F1F13A6B37E80440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191127123317.GA4879@sirena.org.uk>
+ <AM5PR1001MB0994D842A2D7051F81A7765B80440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191127154030.GD4879@sirena.org.uk>
+In-Reply-To: <20191127154030.GD4879@sirena.org.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4dc811cf-76c5-4f23-ea8a-08d773577f2f
+x-ms-traffictypediagnostic: AM5PR1001MB0979:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR1001MB09792B1A936E5D771A757619A7440@AM5PR1001MB0979.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 023495660C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(346002)(366004)(396003)(136003)(189003)(199004)(446003)(11346002)(66946007)(66476007)(76116006)(66446008)(6246003)(66556008)(64756008)(5660300002)(52536014)(2906002)(66066001)(33656002)(25786009)(14454004)(55016002)(9686003)(6436002)(54906003)(110136005)(99286004)(316002)(3846002)(6116002)(478600001)(229853002)(71190400001)(71200400001)(256004)(81156014)(81166006)(8936002)(8676002)(305945005)(74316002)(7736002)(6506007)(55236004)(102836004)(26005)(76176011)(7696005)(53546011)(186003)(86362001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB0979;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7Udr+5b0wPR/GEj4BADfFayG96vCnZaDbZr0kYwBmCLkNLujw/Ij0qhvwFJs69FXKIY/dtQBaBQDVY1q76ZFHHDq7zzMNKMn5PUjt7gxG6m6GX5NGYM1etwHNTddJwVg/tYNCaigEHhl7T8j4/1qSOqNrsAtgkMorp6dm4SbLAdObaHzOtzselTsh/8hihLtJQ0LFvoP6yEmlY/3xtTJB3wvm9b2lvie/Pwnc4UIo7stcxb4zrQgTRlmrWv4p09eF99k6xYhIXgfsx2hE33MeRSmY+KBqXdrxu30l9VRgBQ1NWqtq11FmwlbRh6SCJQu1v2Ng3iUCZOxXHpP5o9MWtYjh9Hp+zuIMswA1yBDcqUzIhr2NGkZEOBlAxQrvzUxF0SHlT6DbEF4dn39j5t+9xnqQRSVQQEi5zZVadU+dAqmFmU14y+bwOOlt4bVewDI
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 27 Nov 2019 19:31:08 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Edward Cree <ecree@solarflare.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        "Kenneth R. Crudup" <kenny@panix.com>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: wireless: intel: iwlwifi: fix GRO_NORMAL packet
- stalling
-In-Reply-To: <20a018a6-827a-de47-a0e4-45ff8c02087b@solarflare.com>
-References: <20191127094123.18161-1-alobakin@dlink.ru>
- <20a018a6-827a-de47-a0e4-45ff8c02087b@solarflare.com>
-User-Agent: Roundcube Webmail/1.4.0
-Message-ID: <c9dfc89a893ef412d4fcf9c79d28766a@dlink.ru>
-X-Sender: alobakin@dlink.ru
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dc811cf-76c5-4f23-ea8a-08d773577f2f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2019 16:33:12.7800
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rStooYcqh+zMnODB5AeulISbXGOri4ODkFw0TuYcD9wOkb37ie32M+rtt8Vk9nc5ga0C0wyCH65XwLcJ0RYUMF/d3krjIGY3V47EpmTd5UU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB0979
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Edward Cree wrote 27.11.2019 19:05:
-> On 27/11/2019 09:41, Alexander Lobakin wrote:
->> Commit 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in
->> napi_gro_receive()") has applied batched GRO_NORMAL packets processing
->> to all napi_gro_receive() users, including mac80211-based drivers.
->> 
->> However, this change has led to a regression in iwlwifi driver [1][2] 
->> as
->> it is required for NAPI users to call napi_complete_done() or
->> napi_complete() and the end of every polling iteration, whilst iwlwifi
->> doesn't use NAPI scheduling at all and just calls napi_gro_flush().
->> In that particular case, packets which have not been already flushed
->> from napi->rx_list stall in it until at least next Rx cycle.
->> 
->> Fix this by adding a manual flushing of the list to iwlwifi driver 
->> right
->> before napi_gro_flush() call to mimic napi_complete() logics.
->> 
->> I prefer to open-code gro_normal_list() rather than exporting it for 2
->> reasons:
->> * to prevent from using it and napi_gro_flush() in any new drivers,
->>   as it is the *really* bad way to use NAPI that should be avoided;
->> * to keep gro_normal_list() static and don't lose any CC 
->> optimizations.
->> 
->> I also don't add the "Fixes:" tag as the mentioned commit was only a
->> trigger that only exposed an improper usage of NAPI in this particular
->> driver.
->> 
->> [1] 
->> https://lore.kernel.org/netdev/PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
->> [2] https://bugzilla.kernel.org/show_bug.cgi?id=205647
->> 
->> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-> Reviewed-by: Edward Cree <ecree@solarflare.com>
+On 27 November 2019 15:41, Mark Brown wrote:
 
-Thanks! And you were the first who's found the root of the issue.
+> On Wed, Nov 27, 2019 at 01:42:54PM +0000, Adam Thomson wrote:
+>=20
+> > nicest solution here though. I guess we're stuck with people having to =
+manually
+> > configure the PLL for bypass when a non-generic machine driver inits, t=
+o avoid
+> > the initial double config, as I don't see other options unless you have
+> > something to specify at init that it's auto or manual, and this doesn't=
+ feel
+> > like a DT device specific property thing as it's more software than har=
+dware.
+> > At least Sebastian's patch has a good comment block to highlight this.
+>=20
+> Not sure I follow here - if we're configuring the PLL explicitly then
+> I'd expect the PLL to be configured first, then the SYSCLK, so I'd
+> expect that the automatic PLL configuration wouldn't kick in.
 
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+The PLL in the codec relies on MCLK. The MCLK rate can be specified/configu=
+red
+by a machine driver using the relevant codec sysclk function, as is done in=
+ a
+number of drivers. Surely that has to happen first before we configure the =
+PLL
+as the PLL functions needs to know what rate is coming in so the correct
+dividers can be applied for the required internal clocking to match up with=
+ the
+desired sample rates. I guess I'm still missing something regarding your
+discussion around SYSCLK?
