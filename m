@@ -2,52 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A98C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEADC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227C021774
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139202176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888840;
-	bh=47xrggTDc31v9aM/kKfdw7K7UZsoaHm8dxCXJkJa4LU=;
+	s=default; t=1574888844;
+	bh=3zZtjhCk8Ii8Ma3TZ07AaIFsbKaaFjikQMnZkSiNm8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=plcxJ9W6aS9lNrcxORnYSr1KFIs15/XyZcPda3zDohE5iOBy23SquVeB6/tZ0Kiee
-	 x5d7WLLUh+MJyaRFRV7Z+XwPoc+CcgDUHLhWWCG7ZBfrjQ9puraFbAYa3E+fBnUdt2
-	 luzhq/Z7YkKDlxj56gUGgE9y6Y6ulYvpPIkl1yZg=
+	b=JhlTH/PMKCfwva5fAj4k+vqrqosppRR0alsWRxHbfkgrLckXIUHJ0CzynXuiSr9K8
+	 l77kFxo0/ZfsuoZ2wnHZ5bhRTTjKJYYcz+gGpH97EYRs3jyXXWM4055ATCeSBd8ivT
+	 0Zvz38oY8PfZiU2nS2/mEnJ8WGJZOOl8rugr25Zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732585AbfK0VHT (ORCPT
+        id S1732600AbfK0VHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:07:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33346 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:07:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbfK0VHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:07:15 -0500
+        id S1731987AbfK0VHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:07:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 823A621774;
-        Wed, 27 Nov 2019 21:07:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1855B2176D;
+        Wed, 27 Nov 2019 21:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888835;
-        bh=47xrggTDc31v9aM/kKfdw7K7UZsoaHm8dxCXJkJa4LU=;
+        s=default; t=1574888840;
+        bh=3zZtjhCk8Ii8Ma3TZ07AaIFsbKaaFjikQMnZkSiNm8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dzq8eaHVv99gfgT/eiAwvcFUNudPxoTnHn1ZqAV43RWC6VQGOaQ5LkaBI0pY/BwlG
-         qO3TtGTBaNQx3xaszXaa2E72E/WSEcRGuiXSmcymOD+HBIieJt0bPA1IPJywcsCpxG
-         8RL4QjsLC2WScueTT4GjAJGfbUfeCCk4bQwjJiIc=
+        b=VTwUfNtv3BZn+R7yNGuI0myKu+1UWs1zssJB1zWFByfEP4SggBoLI+2DlbMcBROoB
+         45MmaNdWFP3Rhkk3k/6iDViAsmVQGDNEr6nYqwJ1x8UMiP3GTHDqO0WOIQcbCJw0kj
+         1gGZLMgjPYsyF3tDo9UxxxqzoE+Yz4CE2CsOXyfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vito Caputo <vcaputo@pengaru.com>,
-        syzbot <syzkaller@googlegroups.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 289/306] media: cxusb: detect cxusb_ctrl_msg error in query
-Date:   Wed, 27 Nov 2019 21:32:19 +0100
-Message-Id: <20191127203135.881662548@linuxfoundation.org>
+        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 291/306] virtio_ring: fix return code on DMA mapping fails
+Date:   Wed, 27 Nov 2019 21:32:21 +0100
+Message-Id: <20191127203136.015950334@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,78 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vito Caputo <vcaputo@pengaru.com>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-commit ca8f245f284eeffa56f3b7a5eb6fc503159ee028 upstream.
+[ Upstream commit f7728002c1c7bfa787b276a31c3ef458739b8e7c ]
 
-Don't use uninitialized ircode[] in cxusb_rc_query() when
-cxusb_ctrl_msg() fails to populate its contents.
+Commit 780bc7903a32 ("virtio_ring: Support DMA APIs")  makes
+virtqueue_add() return -EIO when we fail to map our I/O buffers. This is
+a very realistic scenario for guests with encrypted memory, as swiotlb
+may run out of space, depending on it's size and the I/O load.
 
-syzbot reported:
+The virtio-blk driver interprets -EIO form virtqueue_add() as an IO
+error, despite the fact that swiotlb full is in absence of bugs a
+recoverable condition.
 
-dvb-usb: bulk message failed: -22 (1/-30591)
-=====================================================
-BUG: KMSAN: uninit-value in ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
-BUG: KMSAN: uninit-value in rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
-BUG: KMSAN: uninit-value in rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
-CPU: 1 PID: 11436 Comm: kworker/1:2 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events dvb_usb_read_remote_control
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x191/0x1f0 lib/dump_stack.c:113
- kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
- __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
- bsearch+0x1dd/0x250 lib/bsearch.c:41
- ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
- rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
- rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
- cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
- dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
- process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
- worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
- kthread+0x4b5/0x4f0 kernel/kthread.c:256
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+Let us change the return code to -ENOMEM, and make the block layer
+recover form these failures when virtio-blk encounters the condition
+described above.
 
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
- kmsan_internal_chain_origin+0xd2/0x170 mm/kmsan/kmsan.c:314
- __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:184
- rc_g_keycode_from_table drivers/media/rc/rc-main.c:583 [inline]
- rc_keydown+0x2c4/0x6f0 drivers/media/rc/rc-main.c:816
- cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
- dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
- process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
- worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
- kthread+0x4b5/0x4f0 kernel/kthread.c:256
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Local variable description: ----ircode@cxusb_rc_query
-Variable was created at:
- cxusb_rc_query+0x4d/0x360 drivers/media/usb/dvb-usb/cxusb.c:543
- dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
-
-Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: stable@vger.kernel.org
+Fixes: 780bc7903a32 ("virtio_ring: Support DMA APIs")
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Tested-by: Michael Mueller <mimu@linux.ibm.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/cxusb.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/virtio/virtio_ring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/dvb-usb/cxusb.c
-+++ b/drivers/media/usb/dvb-usb/cxusb.c
-@@ -457,7 +457,8 @@ static int cxusb_rc_query(struct dvb_usb
- {
- 	u8 ircode[4];
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 9529e28e18222..6228b48d1e127 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -431,7 +431,7 @@ unmap_release:
+ 		kfree(desc);
  
--	cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4);
-+	if (cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4) < 0)
-+		return 0;
+ 	END_USE(vq);
+-	return -EIO;
++	return -ENOMEM;
+ }
  
- 	if (ircode[2] || ircode[3])
- 		rc_keydown(d->rc_dev, RC_PROTO_NEC,
+ /**
+-- 
+2.20.1
+
 
 
