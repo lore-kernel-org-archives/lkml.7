@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C363AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1450BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6BC21736
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77082086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889230;
-	bh=JIsUz9vlmfY/6ZXR6VzpR0e6jx9ksj38fQGrlFkR4eQ=;
+	s=default; t=1574889234;
+	bh=/oiVwlw5huv5nj+44vr4xJH+qcP4zMZhOulht6WwE50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q2CZpOg6SOMu0TfZNlv2+xOkLTvytsf5TGwrlIlEQXPaoQWdcySm2ys1OM37/i2M6
-	 FfTn97JWwwCjS9g1FBMaLH9QgV7TRO35MoRUQ25uGecBUzZV1yqO3h7+jtymTCsCqJ
-	 SmockZvurZmmGW+Qr1MV9uaLXG97EnPkSpjjPOKs=
+	b=FYkNmdJZv4c7SsngXrfPybBJGJmKndzbOlaH/ipXmHsC9igTHkWjyoRvKlMM8W3hD
+	 brQMvEt5tTMpcp3pUNLb/tnXHNBwNQeuaHEmFUm2svSEvkAAproWSwEh/6GM53+liU
+	 3bjEnmNfDAFRkgXZClHxSZYppP6PT0wQ3qgrlO3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731460AbfK0VNt (ORCPT
+        id S1732800AbfK0VNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:13:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:13:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733005AbfK0VNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:13:46 -0500
+        id S1733026AbfK0VNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:13:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 357C5216F4;
-        Wed, 27 Nov 2019 21:13:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABE0B21556;
+        Wed, 27 Nov 2019 21:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889225;
-        bh=JIsUz9vlmfY/6ZXR6VzpR0e6jx9ksj38fQGrlFkR4eQ=;
+        s=default; t=1574889228;
+        bh=/oiVwlw5huv5nj+44vr4xJH+qcP4zMZhOulht6WwE50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUbWY83pPUMWfk/U2u0dusEMNmoC41qygPUudvVI9/HiCeC8kdije/6BaW191cCai
-         knkSjsopwZR2PfzzJqSQVHS4H2/9M6UjQm/VGKeVOB6As3q5HLkjkE2dQ+pnQFENOP
-         1oxGGuB6cEqwBexwqSRWmFx3Py5of73u32Sgg/ME=
+        b=XhqZyTX5+3zLvJhDSBWn2jDrUVIJUJsFowqSf2yXAAlE+NQtucraU2HZtln4c5TQM
+         PIK6lzYexEOnv07bMUQeFCX1wt4yPCsDdDQ9pleZr7JCXJgILCf4ZdsbxVXFvh89ID
+         Aa7Ywm7Btjz3f25QHC5VWF8l4JtgTmFwSA2VrUMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 5.4 09/66] x86/insn: Fix awk regexp warnings
-Date:   Wed, 27 Nov 2019 21:32:04 +0100
-Message-Id: <20191127202645.904126805@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 5.4 36/66] futex: Move futex exit handling into futex code
+Date:   Wed, 27 Nov 2019 21:32:31 +0100
+Message-Id: <20191127202715.746860857@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -67,88 +60,217 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 700c1018b86d0d4b3f1f2d459708c0cdf42b521d upstream.
+commit ba31c1a48538992316cc71ce94fa9cd3e7b427c0 upstream.
 
-gawk 5.0.1 generates the following regexp warnings:
+The futex exit handling is #ifdeffed into mm_release() which is not pretty
+to begin with. But upcoming changes to address futex exit races need to add
+more functionality to this exit code.
 
-  GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
-  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
-  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is  not a known regexp operator
+Split it out into a function, move it into futex code and make the various
+futex exit functions static.
 
-Ealier versions of gawk are not known to generate these warnings. The
-gawk manual referenced below does not list characters ':' and '&' as
-needing escaping, so 'unescape' them. See
+Preparatory only and no functional change.
 
-  https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html
+Folded build fix from Borislav.
 
-for more info.
-
-Running diff on the output generated by the script before and after
-applying the patch reported no differences.
-
- [ bp: Massage commit message. ]
-
-[ Caught the respective tools header discrepancy. ]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190924044659.3785-1-alexander.kapshuk@gmail.com
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20191106224556.049705556@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/tools/gen-insn-attr-x86.awk       |    4 ++--
- tools/arch/x86/tools/gen-insn-attr-x86.awk |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ include/linux/compat.h |    2 --
+ include/linux/futex.h  |   29 ++++++++++++++++-------------
+ kernel/fork.c          |   25 +++----------------------
+ kernel/futex.c         |   33 +++++++++++++++++++++++++++++----
+ 4 files changed, 48 insertions(+), 41 deletions(-)
 
---- a/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
+--- a/include/linux/compat.h
++++ b/include/linux/compat.h
+@@ -410,8 +410,6 @@ struct compat_kexec_segment;
+ struct compat_mq_attr;
+ struct compat_msgbuf;
  
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
+-extern void compat_exit_robust_list(struct task_struct *curr);
+-
+ #define BITS_PER_COMPAT_LONG    (8*sizeof(compat_long_t))
  
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,
- 	return add_flags(imm, mod)
+ #define BITS_TO_COMPAT_LONGS(bits) DIV_ROUND_UP(bits, BITS_PER_COMPAT_LONG)
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -2,7 +2,9 @@
+ #ifndef _LINUX_FUTEX_H
+ #define _LINUX_FUTEX_H
+ 
++#include <linux/sched.h>
+ #include <linux/ktime.h>
++
+ #include <uapi/linux/futex.h>
+ 
+ struct inode;
+@@ -48,15 +50,24 @@ union futex_key {
+ #define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = NULL } }
+ 
+ #ifdef CONFIG_FUTEX
+-extern void exit_robust_list(struct task_struct *curr);
+ 
+-long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+-	      u32 __user *uaddr2, u32 val2, u32 val3);
+-#else
+-static inline void exit_robust_list(struct task_struct *curr)
++static inline void futex_init_task(struct task_struct *tsk)
+ {
++	tsk->robust_list = NULL;
++#ifdef CONFIG_COMPAT
++	tsk->compat_robust_list = NULL;
++#endif
++	INIT_LIST_HEAD(&tsk->pi_state_list);
++	tsk->pi_state_cache = NULL;
  }
  
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
---- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
++void futex_mm_release(struct task_struct *tsk);
++
++long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
++	      u32 __user *uaddr2, u32 val2, u32 val3);
++#else
++static inline void futex_init_task(struct task_struct *tsk) { }
++static inline void futex_mm_release(struct task_struct *tsk) { }
+ static inline long do_futex(u32 __user *uaddr, int op, u32 val,
+ 			    ktime_t *timeout, u32 __user *uaddr2,
+ 			    u32 val2, u32 val3)
+@@ -65,12 +76,4 @@ static inline long do_futex(u32 __user *
+ }
+ #endif
  
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
+-#ifdef CONFIG_FUTEX_PI
+-extern void exit_pi_state_list(struct task_struct *curr);
+-#else
+-static inline void exit_pi_state_list(struct task_struct *curr)
+-{
+-}
+-#endif
+-
+ #endif
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1286,20 +1286,7 @@ static int wait_for_vfork_done(struct ta
+ void mm_release(struct task_struct *tsk, struct mm_struct *mm)
+ {
+ 	/* Get rid of any futexes when releasing the mm */
+-#ifdef CONFIG_FUTEX
+-	if (unlikely(tsk->robust_list)) {
+-		exit_robust_list(tsk);
+-		tsk->robust_list = NULL;
+-	}
+-#ifdef CONFIG_COMPAT
+-	if (unlikely(tsk->compat_robust_list)) {
+-		compat_exit_robust_list(tsk);
+-		tsk->compat_robust_list = NULL;
+-	}
+-#endif
+-	if (unlikely(!list_empty(&tsk->pi_state_list)))
+-		exit_pi_state_list(tsk);
+-#endif
++	futex_mm_release(tsk);
  
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,
- 	return add_flags(imm, mod)
+ 	uprobe_free_utask(tsk);
+ 
+@@ -2062,14 +2049,8 @@ static __latent_entropy struct task_stru
+ #ifdef CONFIG_BLOCK
+ 	p->plug = NULL;
+ #endif
+-#ifdef CONFIG_FUTEX
+-	p->robust_list = NULL;
+-#ifdef CONFIG_COMPAT
+-	p->compat_robust_list = NULL;
+-#endif
+-	INIT_LIST_HEAD(&p->pi_state_list);
+-	p->pi_state_cache = NULL;
+-#endif
++	futex_init_task(p);
++
+ 	/*
+ 	 * sigaltstack should be cleared when sharing the same VM
+ 	 */
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -325,6 +325,12 @@ static inline bool should_fail_futex(boo
+ }
+ #endif /* CONFIG_FAIL_FUTEX */
+ 
++#ifdef CONFIG_COMPAT
++static void compat_exit_robust_list(struct task_struct *curr);
++#else
++static inline void compat_exit_robust_list(struct task_struct *curr) { }
++#endif
++
+ static inline void futex_get_mm(union futex_key *key)
+ {
+ 	mmgrab(key->private.mm);
+@@ -890,7 +896,7 @@ static void put_pi_state(struct futex_pi
+  * Kernel cleans up PI-state, but userspace is likely hosed.
+  * (Robust-futex cleanup is separate and might save the day for userspace.)
+  */
+-void exit_pi_state_list(struct task_struct *curr)
++static void exit_pi_state_list(struct task_struct *curr)
+ {
+ 	struct list_head *next, *head = &curr->pi_state_list;
+ 	struct futex_pi_state *pi_state;
+@@ -960,7 +966,8 @@ void exit_pi_state_list(struct task_stru
+ 	}
+ 	raw_spin_unlock_irq(&curr->pi_lock);
+ }
+-
++#else
++static inline void exit_pi_state_list(struct task_struct *curr) { }
+ #endif
+ 
+ /*
+@@ -3588,7 +3595,7 @@ static inline int fetch_robust_entry(str
+  *
+  * We silently return on any sign of list-walking problem.
+  */
+-void exit_robust_list(struct task_struct *curr)
++static void exit_robust_list(struct task_struct *curr)
+ {
+ 	struct robust_list_head __user *head = curr->robust_list;
+ 	struct robust_list __user *entry, *next_entry, *pending;
+@@ -3653,6 +3660,24 @@ void exit_robust_list(struct task_struct
+ 	}
  }
  
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
++void futex_mm_release(struct task_struct *tsk)
++{
++	if (unlikely(tsk->robust_list)) {
++		exit_robust_list(tsk);
++		tsk->robust_list = NULL;
++	}
++
++#ifdef CONFIG_COMPAT
++	if (unlikely(tsk->compat_robust_list)) {
++		compat_exit_robust_list(tsk);
++		tsk->compat_robust_list = NULL;
++	}
++#endif
++
++	if (unlikely(!list_empty(&tsk->pi_state_list)))
++		exit_pi_state_list(tsk);
++}
++
+ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+ 		u32 __user *uaddr2, u32 val2, u32 val3)
+ {
+@@ -3780,7 +3805,7 @@ static void __user *futex_uaddr(struct r
+  *
+  * We silently return on any sign of list-walking problem.
+  */
+-void compat_exit_robust_list(struct task_struct *curr)
++static void compat_exit_robust_list(struct task_struct *curr)
+ {
+ 	struct compat_robust_list_head __user *head = curr->compat_robust_list;
+ 	struct robust_list __user *entry, *next_entry, *pending;
 
 
