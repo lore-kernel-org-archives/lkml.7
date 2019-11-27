@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A270C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0A9C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8EBD2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E52F215B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888303;
-	bh=gUbBaBqeNzDCPkiKzKsFnWC4UNaWjQUjPjfR/d+HDI8=;
+	s=default; t=1574888308;
+	bh=AEKuXHxzOlWw1jjhUhJvnxQdyfazbBauDavrgiai+r0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DmrrIhr3QUSdFMrDOJ9og1ocAJb2D7PRScdNSD5l+SbP7U2yFbX/nxmez9lAmZPbc
-	 zy+aDu1kmEbMtVYlb6zOkXXawkJqnRiBO+cucHPQR+X0o9C3WK9uCKeHBJBdrs+XOu
-	 naAKKs2b9VSVR3IGa9PSRtBktQC3co9KHQPFPayU=
+	b=UiYxmxu+N0cFxWDxtLWUVaFPV9797+znAKxCzkrdV2FJA/reEMekiRLCVIdE8GO48
+	 gFEdHHyh3HY6AuwsE/Jz0Bkz5265uUNZvwLAdSWhW0KcFBb3tSNkT4JNrbYOY1u1BX
+	 W/KYtYVjujKaQ0t7gAIqd1QEs9farRnZMBq+/d9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbfK0U6W (ORCPT
+        id S1731320AbfK0U60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:58:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49578 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:58:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731298AbfK0U6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:58:19 -0500
+        id S1731310AbfK0U6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:58:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C421F2084D;
-        Wed, 27 Nov 2019 20:58:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B77E12084D;
+        Wed, 27 Nov 2019 20:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888298;
-        bh=gUbBaBqeNzDCPkiKzKsFnWC4UNaWjQUjPjfR/d+HDI8=;
+        s=default; t=1574888303;
+        bh=AEKuXHxzOlWw1jjhUhJvnxQdyfazbBauDavrgiai+r0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kf/1Gfn8sjALd5pwd3RRm/1NO0PoMqtm6o99U+in0W9NlazmfckPLqwQ/Tq72H/Om
-         HMrOhPM7aALk0gYqNsoa/ZnjjNn4M0AKqITvo80VAwscyUHbG7eN5M6IsiMxepN6mv
-         wMtHEQbqcwaeg/xk5792afULoJcAwQ4asuXF7zBE=
+        b=Pj/2m3l0QxBTysdWH7xVbtq0tPF6lIDjUlkRnyYZF8E/qLgYgWExMum9uVHNNwL3r
+         MU5A3/RqiwbLq6BI1DJwiHPo3J/z3+J/YvtW5UrzXnzUYSoYsLnyx3AvshGnD40nPi
+         yUK+iaSCbmY5keX7hrkBX7Ul08f7h6cElBfbnmDA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Angelo Dureghello <angelo@sysam.it>,
-        Greg Ungerer <gerg@linux-m68k.org>,
+        stable@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/306] m68k: fix command-line parsing when passed from u-boot
-Date:   Wed, 27 Nov 2019 21:28:23 +0100
-Message-Id: <20191127203118.650749917@linuxfoundation.org>
+Subject: [PATCH 4.19 081/306] ASoC: tegra_sgtl5000: fix device_node refcounting
+Date:   Wed, 27 Nov 2019 21:28:51 +0100
+Message-Id: <20191127203120.831691695@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,31 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Dureghello <angelo@sysam.it>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-[ Upstream commit 381fdd62c38344a771aed06adaf14aae65c47454 ]
+[ Upstream commit a85227da2dcc291b762c8482a505bc7d0d2d4b07 ]
 
-This patch fixes command_line array zero-terminated
-one byte over the end of the array, causing boot to hang.
+Similar to the following:
 
-Signed-off-by: Angelo Dureghello <angelo@sysam.it>
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+commit 4321723648b0 ("ASoC: tegra_alc5632: fix device_node refcounting")
+
+commit 7c5dfd549617 ("ASoC: tegra: fix device_node refcounting")
+
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/kernel/uboot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/tegra/tegra_sgtl5000.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/arch/m68k/kernel/uboot.c b/arch/m68k/kernel/uboot.c
-index b29c3b241e1bb..1070828770645 100644
---- a/arch/m68k/kernel/uboot.c
-+++ b/arch/m68k/kernel/uboot.c
-@@ -102,5 +102,5 @@ __init void process_uboot_commandline(char *commandp, int size)
+diff --git a/sound/soc/tegra/tegra_sgtl5000.c b/sound/soc/tegra/tegra_sgtl5000.c
+index 45a4aa9d2a479..901457da25ec3 100644
+--- a/sound/soc/tegra/tegra_sgtl5000.c
++++ b/sound/soc/tegra/tegra_sgtl5000.c
+@@ -149,14 +149,14 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,i2s-controller' missing/invalid\n");
+ 		ret = -EINVAL;
+-		goto err;
++		goto err_put_codec_of_node;
  	}
  
- 	parse_uboot_commandline(commandp, len);
--	commandp[size - 1] = 0;
-+	commandp[len - 1] = 0;
+ 	tegra_sgtl5000_dai.platform_of_node = tegra_sgtl5000_dai.cpu_of_node;
+ 
+ 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
+ 	if (ret)
+-		goto err;
++		goto err_put_cpu_of_node;
+ 
+ 	ret = snd_soc_register_card(card);
+ 	if (ret) {
+@@ -169,6 +169,13 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
+ 
+ err_fini_utils:
+ 	tegra_asoc_utils_fini(&machine->util_data);
++err_put_cpu_of_node:
++	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
++	tegra_sgtl5000_dai.cpu_of_node = NULL;
++	tegra_sgtl5000_dai.platform_of_node = NULL;
++err_put_codec_of_node:
++	of_node_put(tegra_sgtl5000_dai.codec_of_node);
++	tegra_sgtl5000_dai.codec_of_node = NULL;
+ err:
+ 	return ret;
  }
+@@ -183,6 +190,12 @@ static int tegra_sgtl5000_driver_remove(struct platform_device *pdev)
+ 
+ 	tegra_asoc_utils_fini(&machine->util_data);
+ 
++	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
++	tegra_sgtl5000_dai.cpu_of_node = NULL;
++	tegra_sgtl5000_dai.platform_of_node = NULL;
++	of_node_put(tegra_sgtl5000_dai.codec_of_node);
++	tegra_sgtl5000_dai.codec_of_node = NULL;
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
