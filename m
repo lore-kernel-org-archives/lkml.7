@@ -2,60 +2,55 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42258C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5C7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18636218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B1F218A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888015;
-	bh=85fGGUmNc6aJLbEGpfmynlbgA0s6PvO/ENe7anqmj50=;
+	s=default; t=1574888018;
+	bh=zwqFsR5FTsY0QpvqPh8rX5XlnQ914OsYn3y5BaG5MiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NYGOE5qIbWFZbyJ2vBnSU1O998YpfAUT1YVI+6+UXHyLV4hq3q0DkDB4GmbqvRa3t
-	 gp3Ia8NUoqr5z0NrIRRF8DaSLSRSfO7ZZ2GKel8qGWih5CqaocUvlo3P/3/K8pA21p
-	 wHvBmet2eiDJhuF001fzCASRy/RzcciivQVzGkmk=
+	b=r5Bjmq4q4SauExw3z/PqgGLvWdRIy7fEZYUy5wfbsNVoY480V8Fni/akL9nniX0r8
+	 Ln9s3LZgnLyQ/dAugHuPt1qRQhWlDEnNc+CbMyBRVHPfQG8lV9AfKdBXX/Z+uAgqmH
+	 Y82RvLNj4VBW+Qkx1ZH0oUgcQYkrTfcfVYhICSfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbfK0Uxe (ORCPT
+        id S1730359AbfK0Uxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:53:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:53:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728292AbfK0Uxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:31 -0500
+        id S1728292AbfK0Uxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EDDF21903;
-        Wed, 27 Nov 2019 20:53:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AC7221929;
+        Wed, 27 Nov 2019 20:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888011;
-        bh=85fGGUmNc6aJLbEGpfmynlbgA0s6PvO/ENe7anqmj50=;
+        s=default; t=1574888013;
+        bh=zwqFsR5FTsY0QpvqPh8rX5XlnQ914OsYn3y5BaG5MiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UVnO6zLTICJ81hrs2Sivib1lFrnZrP+xoW4th38rD2fWwhv0k7B1c4x3jwqQEQ08e
-         JGyVoC6btCIWPmQm5szn1F21mG4UBU0UbQYow3JYaatiusA6RBQSMNALdK7REO8OmU
-         KoGrMib3vp5K+FsH0t3wuw1KiluR3dNZRfTyYE2I=
+        b=iOvli7FHbh73pfXH/LPV0eON1si7WAWTxd9eikkKq9KNLuiGsYIeVCoN6oOrrt0AP
+         MatKlgoE+oeV0NRTd21gh8ZT7O8yY6uScMec6FG9v3a5k7VLHNcZXj9ZclXuCYV7M4
+         r8Gqj2cEYJi+3HlUDuR3qgmSwUljmmaBtL1ywMvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Waiman Long <longman@redhat.com>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Tyler Hicks <tyhicks@canonical.com>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.14 179/211] x86/speculation: Fix redundant MDS mitigation message
-Date:   Wed, 27 Nov 2019 21:31:52 +0100
-Message-Id: <20191127203110.723987467@linuxfoundation.org>
+        Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 141/211] scsi: mpt3sas: Dont modify EEDPTagMode field setting on SAS3.5 HBA devices
+Date:   Wed, 27 Nov 2019 21:31:14 +0100
+Message-Id: <20191127203107.327671467@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -68,81 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-commit cd5a2aa89e847bdda7b62029d94e95488d73f6b2 upstream.
+[ Upstream commit 6cd1bc7b9b5075d395ba0120923903873fc7ea0e ]
 
-Since MDS and TAA mitigations are inter-related for processors that are
-affected by both vulnerabilities, the followiing confusing messages can
-be printed in the kernel log:
+If EEDPTagMode field in manufacturing page11 is set then unset it. This is
+needed to fix a hardware bug only in SAS3/SAS2 cards. So, skipping
+EEDPTagMode changes in Manufacturing page11 for SAS 3.5 controllers.
 
-  MDS: Vulnerable
-  MDS: Mitigation: Clear CPU buffers
-
-To avoid the first incorrect message, defer the printing of MDS
-mitigation after the TAA mitigation selection has been done. However,
-that has the side effect of printing TAA mitigation first before MDS
-mitigation.
-
- [ bp: Check box is affected/mitigations are disabled first before
-   printing and massage. ]
-
-Suggested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Mark Gross <mgross@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Tyler Hicks <tyhicks@canonical.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191115161445.30809-3-longman@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/bugs.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/scsi/mpt3sas/mpt3sas_base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -39,6 +39,7 @@ static void __init spectre_v2_select_mit
- static void __init ssb_select_mitigation(void);
- static void __init l1tf_select_mitigation(void);
- static void __init mds_select_mitigation(void);
-+static void __init mds_print_mitigation(void);
- static void __init taa_select_mitigation(void);
- 
- /* The base value of the SPEC_CTRL MSR that always has to be preserved. */
-@@ -108,6 +109,12 @@ void __init check_bugs(void)
- 	mds_select_mitigation();
- 	taa_select_mitigation();
- 
-+	/*
-+	 * As MDS and TAA mitigations are inter-related, print MDS
-+	 * mitigation until after TAA mitigation selection is done.
-+	 */
-+	mds_print_mitigation();
-+
- 	arch_smt_update();
- 
- #ifdef CONFIG_X86_32
-@@ -245,6 +252,12 @@ static void __init mds_select_mitigation
- 		    (mds_nosmt || cpu_mitigations_auto_nosmt()))
- 			cpu_smt_disable(false);
- 	}
-+}
-+
-+static void __init mds_print_mitigation(void)
-+{
-+	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off())
-+		return;
- 
- 	pr_info("%s\n", mds_strings[mds_mitigation]);
- }
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index 7bfe53f48d1d4..817a7963a038b 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -3140,7 +3140,7 @@ _base_static_config_pages(struct MPT3SAS_ADAPTER *ioc)
+ 	 * flag unset in NVDATA.
+ 	 */
+ 	mpt3sas_config_get_manufacturing_pg11(ioc, &mpi_reply, &ioc->manu_pg11);
+-	if (ioc->manu_pg11.EEDPTagMode == 0) {
++	if (!ioc->is_gen35_ioc && ioc->manu_pg11.EEDPTagMode == 0) {
+ 		pr_err("%s: overriding NVDATA EEDPTagMode setting\n",
+ 		    ioc->name);
+ 		ioc->manu_pg11.EEDPTagMode &= ~0x3;
+-- 
+2.20.1
+
 
 
