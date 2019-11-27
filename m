@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1219C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6646C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7B9215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E3D215B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574886927;
-	bh=pz831w1FYuAKytC2tJGnO7bVucvEVuEDHUgUhpkzv/Y=;
+	s=default; t=1574886931;
+	bh=GQdssR5vvChor4Ev4t2/5349FPN4oSbrjLFcBctu+Y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e4CF8evulAUEPzWeKIxdQsfYbuCcwZlNWC7Bx93vN7v64z4Mhga44qa9a9WtwgDQQ
-	 mNne3z1WhkRUJVX+BRgo+QJzTrwtv6PQrQv8xz9CEOxVnvIGIFHkOlHvuNwBqpKkKr
-	 aYRiOR+f4cBA1msLPIHmmzvd8rbIMZLWwohMvZgw=
+	b=CO8FAqZ3aj4hdSpZUGmZaJkwRZg1QtT4X55l8rXnD4R3vncYKAh6j34fiS4hcM85N
+	 B9nCchnoDz/xCm2tiJAlp7xYwViR+KfO2ROUrwtVe0RvQ2j8fDh8T6x29WMmdAsUGP
+	 cV8KEt9gu0xbmUwUApncmaP4hbgeIYnzLUsdXYi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfK0Uf0 (ORCPT
+        id S1727891AbfK0Ufa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:35:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36452 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:35:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727848AbfK0UfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:35:22 -0500
+        id S1727848AbfK0Uf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:35:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00B0A20866;
-        Wed, 27 Nov 2019 20:35:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8CC02154A;
+        Wed, 27 Nov 2019 20:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886921;
-        bh=pz831w1FYuAKytC2tJGnO7bVucvEVuEDHUgUhpkzv/Y=;
+        s=default; t=1574886926;
+        bh=GQdssR5vvChor4Ev4t2/5349FPN4oSbrjLFcBctu+Y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oqdDqzq5ReCtQGGE7fmxegKDM4srWsTXszISUhptd8sRo1jYa1TASk0oaoOxdOgYy
-         ETXMYL6Ckp0T8iudkm8EWLFus9sguPkc2F4XJj/hjKseTJwIRu1vYOhMjrtwHOVhB2
-         /XZgdU3LFMS9PBsMTWm4KScPvH2RXqeO0JJRjqhA=
+        b=NIOJToz7rGmbbp5VMWQpGixnUp6+em0zROVAqfQDNAjYx8qIVpB4E0it5+1BevXRH
+         Ww+PFTOVc/aDQ7y8oZo38C0X2DLGCTOPkwmRrmdfmjwZhmGcbpFDkcUJsPdbpVgwEC
+         iW2NAxcJWer/fEn5medo9dd/Stb3oNhJWir7gnjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Klocke <philipp97kl@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 044/132] ALSA: i2c/cs8427: Fix int to char conversion
-Date:   Wed, 27 Nov 2019 21:30:35 +0100
-Message-Id: <20191127202939.896994447@linuxfoundation.org>
+        stable@vger.kernel.org, Mattias Jacobsson <2pi@mok.nu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 046/132] USB: misc: appledisplay: fix backlight update_status return code
+Date:   Wed, 27 Nov 2019 21:30:37 +0100
+Message-Id: <20191127202942.227536708@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -59,43 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Klocke <philipp97kl@gmail.com>
+From: Mattias Jacobsson <2pi@mok.nu>
 
-[ Upstream commit eb7ebfa3c1989aa8e59d5e68ab3cddd7df1bfb27 ]
+[ Upstream commit 090158555ff8d194a98616034100b16697dd80d0 ]
 
-Compiling with clang yields the following warning:
+Upon success the update_status handler returns a positive number
+corresponding to the number of bytes transferred by usb_control_msg.
+However the return code of the update_status handler should indicate if
+an error occurred(negative) or how many bytes of the user's input to sysfs
+that was consumed. Return code zero indicates all bytes were consumed.
 
-sound/i2c/cs8427.c:140:31: warning: implicit conversion from 'int'
-to 'char' changes value from 160 to -96 [-Wconstant-conversion]
-    data[0] = CS8427_REG_AUTOINC | CS8427_REG_CORU_DATABUF;
-            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+The bug can for example result in the update_status handler being called
+twice, the second time with only the "unconsumed" part of the user's input
+to sysfs. Effectively setting an incorrect brightness.
 
-Because CS8427_REG_AUTOINC is defined as 128, it is too big for a
-char field.
-So change data from char to unsigned char, that it can hold the value.
+Change the update_status handler to return zero for all successful
+transactions and forward usb_control_msg's error code upon failure.
 
-This patch does not change the generated code.
-
-Signed-off-by: Philipp Klocke <philipp97kl@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/i2c/cs8427.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/misc/appledisplay.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/sound/i2c/cs8427.c b/sound/i2c/cs8427.c
-index 7e21621e492a4..7fd1b40008838 100644
---- a/sound/i2c/cs8427.c
-+++ b/sound/i2c/cs8427.c
-@@ -118,7 +118,7 @@ static int snd_cs8427_send_corudata(struct snd_i2c_device *device,
- 	struct cs8427 *chip = device->private_data;
- 	char *hw_data = udata ?
- 		chip->playback.hw_udata : chip->playback.hw_status;
--	char data[32];
-+	unsigned char data[32];
- 	int err, idx;
+diff --git a/drivers/usb/misc/appledisplay.c b/drivers/usb/misc/appledisplay.c
+index 993f4da065c3a..dabd1077d03c4 100644
+--- a/drivers/usb/misc/appledisplay.c
++++ b/drivers/usb/misc/appledisplay.c
+@@ -161,8 +161,11 @@ static int appledisplay_bl_update_status(struct backlight_device *bd)
+ 		pdata->msgdata, 2,
+ 		ACD_USB_TIMEOUT);
+ 	mutex_unlock(&pdata->sysfslock);
+-	
+-	return retval;
++
++	if (retval < 0)
++		return retval;
++	else
++		return 0;
+ }
  
- 	if (!memcmp(hw_data, ndata, count))
+ static int appledisplay_bl_get_brightness(struct backlight_device *bd)
 -- 
 2.20.1
 
