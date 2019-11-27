@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35894C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF9AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF30215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605BB215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889985;
-	bh=lVm6YqHpo7guvAgq3Pxt5xirqFmtv4mPKPJex/8STw8=;
+	s=default; t=1574889987;
+	bh=mUCR23AAMHP7FiMfk5lBhT3X/eTAIhQFLugWPOV1dys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LhJVrmYUSaSDlVCaeDm7mKknT/gWzj3tucQ+9zNY3SZOvtmFhpaENZdjKZi68rpj+
-	 lZFWryxKmHOdkE/OLVBmlqxBGotqM11Jj8i9aLR/Jvw14GkjpKYJ3VEtEAXD0FhtPt
-	 L3bax1GGV9OfrHdTrCj2PKnswAFwIQk4+NG7y1S8=
+	b=d+ZAZTM9d8SmeMptQ04pVTW3BQaPDUpMGo4C7Zow2Zma3o3oNtgqlBnCkbjFwdRbE
+	 hBrSQKSivUEPFU7dTsms5p6rLIoGBJ6b/tXyYBOp6AH5i5iXydKl7j+TQ5dKyn0mq0
+	 CoPx7CNNK7YH5YBBmfYFDTpw3puP7j/nMUGX+kUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731606AbfK0VAr (ORCPT
+        id S1731594AbfK0VAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:00:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52718 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:00:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731073AbfK0VAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:00:44 -0500
+        id S1729117AbfK0VAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:00:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 408092158C;
-        Wed, 27 Nov 2019 21:00:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 474E82158A;
+        Wed, 27 Nov 2019 21:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888443;
-        bh=lVm6YqHpo7guvAgq3Pxt5xirqFmtv4mPKPJex/8STw8=;
+        s=default; t=1574888440;
+        bh=mUCR23AAMHP7FiMfk5lBhT3X/eTAIhQFLugWPOV1dys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iJrFp8z7zb/nUYWqFcqTexJt32gRexzMi5KRZLRKBqLVc1hf4BKtmPnp9nBjpFn9/
-         5o1eLXzRrhC0kkEBoOGJjfmTu2p83kM7tIgMO/nB2Fi4BPyXBjADabNOnyTK5d1TEG
-         hS5oz6gIawT5m16D09KKSb12I8MI2t3WohmoTWtU=
+        b=0Ch633NNAyYgvijYkeEB+b1kNo5Xlmw8d/i/o0yxeXyYckEyVrut+6s+QCtBGH+JO
+         SNhykguY+Wtv3AXdbqQMetV2TDYtWdUNKzI8LKsCs21pKgEuHAfmckCLU7LW89vRie
+         4pbs/o5Z1c2MgzCaZQCEtfF1vEV+8vvdf9tp/Ws0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
         "Shuah Khan (Samsung OSG)" <shuah@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 135/306] selftests: watchdog: fix message when /dev/watchdog open fails
-Date:   Wed, 27 Nov 2019 21:29:45 +0100
-Message-Id: <20191127203124.920633069@linuxfoundation.org>
+Subject: [PATCH 4.19 134/306] selftests/ftrace: Fix to test kprobe $comm arg only if available
+Date:   Wed, 27 Nov 2019 21:29:44 +0100
+Message-Id: <20191127203124.854258005@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan (Samsung OSG) <shuah@kernel.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 9a244229a4b850b11952a0df79607c69b18fd8df ]
+[ Upstream commit 2452c96e617a0ff6fb2692e55217a3fa57a7322c ]
 
-When /dev/watchdog open fails, watchdog exits with "watchdog not enabled"
-message. This is incorrect when open fails due to insufficient privilege.
+Test $comm in kprobe-event argument syntax testcase
+only if it is supported on the kernel because
+$comm has been introduced 4.8 kernel.
+So on older stable kernel, it should be skipped.
 
-Fix message to clearly state the reason when open fails with EACCESS when
-a non-root user runs it.
-
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/watchdog/watchdog-test.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc       | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-index 6e290874b70e2..e029e2017280f 100644
---- a/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -89,7 +89,13 @@ int main(int argc, char *argv[])
- 	fd = open("/dev/watchdog", O_WRONLY);
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+index d026ff4e562f3..92ffb3bd33d82 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+@@ -78,8 +78,11 @@ test_badarg "\$stackp" "\$stack0+10" "\$stack1-10"
+ echo "r ${PROBEFUNC} \$retval" > kprobe_events
+ ! echo "p ${PROBEFUNC} \$retval" > kprobe_events
  
- 	if (fd == -1) {
--		printf("Watchdog device not enabled.\n");
-+		if (errno == ENOENT)
-+			printf("Watchdog device not enabled.\n");
-+		else if (errno == EACCES)
-+			printf("Run watchdog as root.\n");
-+		else
-+			printf("Watchdog device open failed %s\n",
-+				strerror(errno));
- 		exit(-1);
- 	}
++# $comm was introduced in 4.8, older kernels reject it.
++if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
+ : "Comm access"
+ test_goodarg "\$comm"
++fi
  
+ : "Indirect memory access"
+ test_goodarg "+0(${GOODREG})" "-0(${GOODREG})" "+10(\$stack)" \
 -- 
 2.20.1
 
