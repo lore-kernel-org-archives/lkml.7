@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346C5C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3D9C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35D4215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBAF215A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887303;
-	bh=QGsz8Ks1Tojt059lcycjgRGYNsiZ059yMmZcprWBtGc=;
+	s=default; t=1574887306;
+	bh=20y6msOi7lmlQ6mQ3DWuL9/PRbBq+fbqGSZPVLo2ebQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UgKHe7PjWJV8yRh2aRhx8BBNWo/m1kM3U9ZZ0gxyKJc43pqHrtHBkOl3o5Iy9qTQc
-	 d/3ZJdl+WpooTbSmqcD8grgsrc+0qsRh9+Xin937D9zjW3hugGIrN58B1T4llQl9jG
-	 J9jeIrATuH2Vrt7YxeQ2/mzCj/DR7iiUaHG6PJQ8=
+	b=l8B6THmDqoQf0MeeQgPJDdh3KSBRPctUHOMbIlvEinsD5Byonbdm46yeY7bGHcMn+
+	 MPbeOXNkimiwJLHWIZ1dzW0faCLhhvwyFVGDxFRZvALuIA8ntZAtc4JYLKuYA+T3xj
+	 KPTDlwr7zGkU9/K6u6hBR35w4smD+8ZcEllL8iJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbfK0Ull (ORCPT
+        id S1729242AbfK0Ulp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:41:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47028 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:41:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729222AbfK0Uli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:41:38 -0500
+        id S1729228AbfK0Ull (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:41:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F03C215A4;
-        Wed, 27 Nov 2019 20:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E184320863;
+        Wed, 27 Nov 2019 20:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887297;
-        bh=QGsz8Ks1Tojt059lcycjgRGYNsiZ059yMmZcprWBtGc=;
+        s=default; t=1574887300;
+        bh=20y6msOi7lmlQ6mQ3DWuL9/PRbBq+fbqGSZPVLo2ebQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wrv1PnsSlTUCu5Tpe+wYRdAtaEPma5uj26gRQrAY6Sjd+X5yYYg68DWtrZIwE+WkU
-         JaOxubazZ2zl1VkAgI4jjDEgKqdPDzH/p01Fny+7/708KdGDBJNMuNN3btBY/FdPms
-         GEoCQhO3tqBUBQdtqsJKPygrX5Y5M7dfwlKHqUws=
+        b=GTWTM47ok0STCqMTejmw68W8cQ1in7xYPjPN7rZF980FN60RuGdipptVRXM0AJArn
+         9AmZKNRtsC7jF+XFe8ycPIKhGMyutyKSpnoDK6sW9/DqEsRkRqCx1guxvRvV1JyHmM
+         qrHVKCt6QxQJT3tZqQReQoQXaiu/VZL+hiYoUfio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 055/151] qlcnic: fix a return in qlcnic_dcb_get_capability()
-Date:   Wed, 27 Nov 2019 21:30:38 +0100
-Message-Id: <20191127203032.168106626@linuxfoundation.org>
+Subject: [PATCH 4.9 056/151] net: ethernet: ti: cpsw: unsync mcast entries while switch promisc mode
+Date:   Wed, 27 Nov 2019 21:30:39 +0100
+Message-Id: <20191127203032.340864685@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -60,38 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 
-[ Upstream commit c94f026fb742b2d3199422751dbc4f6fc0e753d8 ]
+[ Upstream commit 9737cc99dd14b5b8b9d267618a6061feade8ea68 ]
 
-These functions are supposed to return one on failure and zero on
-success.  Returning a zero here could cause uninitialized variable
-bugs in several of the callers.  For example:
+After flushing all mcast entries from the table, the ones contained in
+mc list of ndev are not restored when promisc mode is toggled off,
+because they are considered as synched with ALE, thus, in order to
+restore them after promisc mode - reset syncing info. This fix
+touches only switch mode devices, including single port boards
+like Beagle Bone.
 
-    drivers/scsi/cxgbi/cxgb4i/cxgb4i.c:1660 get_iscsi_dcb_priority()
-    error: uninitialized symbol 'caps'.
+Fixes: commit 5da1948969bc
+("net: ethernet: ti: cpsw: fix lost of mcast packets while rx_mode update")
 
-Fixes: 48365e485275 ("qlcnic: dcb: Add support for CEE Netlink interface.")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/ti/cpsw.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
-index 4b76c69fe86d2..834208e55f7b8 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
-@@ -883,7 +883,7 @@ static u8 qlcnic_dcb_get_capability(struct net_device *netdev, int capid,
- 	struct qlcnic_adapter *adapter = netdev_priv(netdev);
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index d7cb205fe7e26..892b06852e150 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -590,6 +590,7 @@ static void cpsw_set_promiscious(struct net_device *ndev, bool enable)
  
- 	if (!test_bit(QLCNIC_DCB_STATE, &adapter->dcb->state))
--		return 0;
-+		return 1;
+ 			/* Clear all mcast from ALE */
+ 			cpsw_ale_flush_multicast(ale, ALE_ALL_PORTS, -1);
++			__dev_mc_unsync(ndev, NULL);
  
- 	switch (capid) {
- 	case DCB_CAP_ATTR_PG:
+ 			/* Flood All Unicast Packets to Host port */
+ 			cpsw_ale_control_set(ale, 0, ALE_P0_UNI_FLOOD, 1);
 -- 
 2.20.1
 
