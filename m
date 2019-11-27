@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD82C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCD3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC37C2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900192086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888638;
-	bh=xdFKgEX7Pl/f6BxecuW2mYaqqpQDVVagDCzXcf2Qhhw=;
+	s=default; t=1574888641;
+	bh=2Wlb3YZLDLsri+AOZgu2/8+1BzXQy5enQQEq+o4T+ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aa4Hp7yO4oMp4aMGJZ2WB4Q63qYI63gjzfCJLN198quv1mOtyY4v4D/jTLDjZVDLg
-	 N1XcVadfxGvds4I7wTXyGKlxBl99maG6ZQxW1WT6Rv6qo3SDUVnYWAGWqUXtLgGbSH
-	 P+5ETI2OoHYlhV097hYkC4kKof+a/Yqd/e/qBHeU=
+	b=ZFi7cZ1lyXkK+u3SoypJuAbHzZFVUzWXqOSR860PTiHo2lxBp61noNRUoqCe3Uwa+
+	 vIwOaXoJBPFeuc/ii8uLaph0kY5VAR3Jm85LvMiuXUjYHL92CdQmNKxxtZMxGTeOZj
+	 sRLKvM328sjjvyl4NbGkWqfat3L5s9tP8qq+HIYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732100AbfK0VD5 (ORCPT
+        id S1730679AbfK0VEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:03:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57216 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:04:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731766AbfK0VDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:03:54 -0500
+        id S1731772AbfK0VDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:03:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DF3B2086A;
-        Wed, 27 Nov 2019 21:03:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 133FC215F1;
+        Wed, 27 Nov 2019 21:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888634;
-        bh=xdFKgEX7Pl/f6BxecuW2mYaqqpQDVVagDCzXcf2Qhhw=;
+        s=default; t=1574888631;
+        bh=2Wlb3YZLDLsri+AOZgu2/8+1BzXQy5enQQEq+o4T+ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZuMosX03f82FCfzURRLVVZcIyg80LJ/40bGcyb4rr8wBoJP65Tqs52/SVu0UF3y1
-         CzA9HLkPvtekQVZeiWAximJmIi8DI+ozsofus6Ak9fFI0OiNaFYAkP3s5n6Rkvj6pj
-         k9JelaDizUbUtrQhsg30RlYwK8nL4CIvBE2qGaTU=
+        b=xd8uVWP3Q3UFtlBoaSA9YXpWCacpDjQ7B4shVD6+JXbVN1uA7AKksD3JcacnZutju
+         +c3Gch0qDln1YMZbyM5XXzCbnq7tLWfA92UVoVLyfXCpc9KuZo8HitM4wIpICjiElC
+         oReoZ8vGRwl+qj1dmQkTfPpVij1O4+rpfR30x2gA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nickhu <nickhu@andestech.com>,
-        Greentime Hu <greentime@andestech.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 210/306] nds32: Fix bug in bitfield.h
-Date:   Wed, 27 Nov 2019 21:31:00 +0100
-Message-Id: <20191127203130.474147252@linuxfoundation.org>
+Subject: [PATCH 4.19 209/306] net: bpfilter: fix iptables failure if bpfilter_umh is disabled
+Date:   Wed, 27 Nov 2019 21:30:59 +0100
+Message-Id: <20191127203130.406914065@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,41 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nickhu <nickhu@andestech.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 9aaafac8cffa1c1edb66e19a63841b7c86be07ca ]
+[ Upstream commit 97adaddaa6db7a8af81b9b11e30cbe3628cd6700 ]
 
-There two bitfield bug for perfomance counter
-in bitfield.h:
+When iptables command is executed, ip_{set/get}sockopt() try to upload
+bpfilter.ko if bpfilter is enabled. if it couldn't find bpfilter.ko,
+command is failed.
+bpfilter.ko is generated if CONFIG_BPFILTER_UMH is enabled.
+ip_{set/get}sockopt() only checks CONFIG_BPFILTER.
+So that if CONFIG_BPFILTER is enabled and CONFIG_BPFILTER_UMH is disabled,
+iptables command is always failed.
 
-	PFM_CTL_offSEL1		21 --> 16
-	PFM_CTL_offSEL2		27 --> 22
+test config:
+   CONFIG_BPFILTER=y
+   # CONFIG_BPFILTER_UMH is not set
 
-This commit fix it.
+test command:
+   %iptables -L
+   iptables: No chain/target/match by that name.
 
-Signed-off-by: Nickhu <nickhu@andestech.com>
-Acked-by: Greentime Hu <greentime@andestech.com>
-Signed-off-by: Greentime Hu <greentime@andestech.com>
+Fixes: d2ba09c17a06 ("net: add skeleton of bpfilter kernel module")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/nds32/include/asm/bitfield.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/ip_sockglue.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/nds32/include/asm/bitfield.h b/arch/nds32/include/asm/bitfield.h
-index 8e84fc385b946..19b2841219adf 100644
---- a/arch/nds32/include/asm/bitfield.h
-+++ b/arch/nds32/include/asm/bitfield.h
-@@ -692,8 +692,8 @@
- #define PFM_CTL_offKU1		13	/* Enable user mode event counting for PFMC1 */
- #define PFM_CTL_offKU2		14	/* Enable user mode event counting for PFMC2 */
- #define PFM_CTL_offSEL0		15	/* The event selection for PFMC0 */
--#define PFM_CTL_offSEL1		21	/* The event selection for PFMC1 */
--#define PFM_CTL_offSEL2		27	/* The event selection for PFMC2 */
-+#define PFM_CTL_offSEL1		16	/* The event selection for PFMC1 */
-+#define PFM_CTL_offSEL2		22	/* The event selection for PFMC2 */
- /* bit 28:31 reserved */
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index b7a26120d5521..82f341e84faec 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -1244,7 +1244,7 @@ int ip_setsockopt(struct sock *sk, int level,
+ 		return -ENOPROTOOPT;
  
- #define PFM_CTL_mskEN0		( 0x01  << PFM_CTL_offEN0 )
+ 	err = do_ip_setsockopt(sk, level, optname, optval, optlen);
+-#ifdef CONFIG_BPFILTER
++#if IS_ENABLED(CONFIG_BPFILTER_UMH)
+ 	if (optname >= BPFILTER_IPT_SO_SET_REPLACE &&
+ 	    optname < BPFILTER_IPT_SET_MAX)
+ 		err = bpfilter_ip_set_sockopt(sk, optname, optval, optlen);
+@@ -1557,7 +1557,7 @@ int ip_getsockopt(struct sock *sk, int level,
+ 	int err;
+ 
+ 	err = do_ip_getsockopt(sk, level, optname, optval, optlen, 0);
+-#ifdef CONFIG_BPFILTER
++#if IS_ENABLED(CONFIG_BPFILTER_UMH)
+ 	if (optname >= BPFILTER_IPT_SO_GET_INFO &&
+ 	    optname < BPFILTER_IPT_GET_MAX)
+ 		err = bpfilter_ip_get_sockopt(sk, optname, optval, optlen);
+@@ -1594,7 +1594,7 @@ int compat_ip_getsockopt(struct sock *sk, int level, int optname,
+ 	err = do_ip_getsockopt(sk, level, optname, optval, optlen,
+ 		MSG_CMSG_COMPAT);
+ 
+-#ifdef CONFIG_BPFILTER
++#if IS_ENABLED(CONFIG_BPFILTER_UMH)
+ 	if (optname >= BPFILTER_IPT_SO_GET_INFO &&
+ 	    optname < BPFILTER_IPT_GET_MAX)
+ 		err = bpfilter_ip_get_sockopt(sk, optname, optval, optlen);
 -- 
 2.20.1
 
