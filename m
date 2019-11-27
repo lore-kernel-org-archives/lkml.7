@@ -2,125 +2,182 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90657C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7E8C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 575F320870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F80020870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:24:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQP5pXqw"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="SZtJFJb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfK0WVt (ORCPT
+        id S1727454AbfK0WYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 17:21:49 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46422 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfK0WVt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 17:21:49 -0500
-Received: by mail-qt1-f193.google.com with SMTP id r20so26951621qtp.13;
-        Wed, 27 Nov 2019 14:21:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=otxiMd0l6riNdSE7OSItmdvrSBc8N+W+v/4nkIlyazQ=;
-        b=RQP5pXqwzoUtskHrYAlwr97uAnCC7oisEf/vhz6/+mD8Anotr29Jmbcp1OsIe69Tuw
-         0A07pM9BToSi1HQ9CxaWvtHPrghDyMPuemOfZhM2321xX9KmeiVxgiSnjUQIBsLeRS4o
-         R9zvEDph33VWXPQAgQ4LGvSjFr4epgCXz2F2PJuCxiJnRYBb10J8fD2mPSzpKza4punW
-         KbLTS5b3XmLY2fhyyoBCxBSo0g3mhVqKolxzp1FUvnnCSMNNR99KoyiIv14Y9OINZM7S
-         89OBRM3zJh807xtlqHssY5KwD+AZu1k/hOks+ORgzTRPddjl7piKvJVo9wVFBsy2e3FC
-         pKHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=otxiMd0l6riNdSE7OSItmdvrSBc8N+W+v/4nkIlyazQ=;
-        b=VjQ/9UrivBSw+tUuaHjexuzNHGhWbAip6WKw5wuh7Q6hSLpFvoyIdPj7yOq1xbz9A7
-         bD+C/WdoxTD8hV2WmSeX+mlkc/HPQrSow9dgKnHmpFvOxu8MnNcL8JdY4bjPP2eI5sZD
-         srmXDsJ1DWAF2FEKqLwsFm3tatjf9mscsRO+RhW1ZHfoPzFYPT0GFt3V2HwP5OXQ4vKE
-         99g/6BhrvD+V6uSnANS86dSIjvcCFggM0ZP6jCsWTH9oLZVIkDFQXut0QIVwaKOE8WUz
-         FP0vT7GF9xDgJD0/UJZCVZ/Rb085AsX7tCxi+NH4/dpzmQVrLW1rJz40GZ3EKKB7M0MT
-         GjeQ==
-X-Gm-Message-State: APjAAAUrcWZdQhIgRkOLK1z6qDuc2wNVSetAo2fB9LfZ6wsvMeriP+wo
-        +OrYGY4AoJc/hxPuvbIAedNaZC39o0YOCXEHKsk=
-X-Google-Smtp-Source: APXvYqy0F9gnB7YBK+zsp8V0IkP9CmjbBRcRUX0suieWlH88wWb+/2l2kHHjCnezybi9Y5JCjvlUe8cugNRtcIy1mP0=
-X-Received: by 2002:ac8:2b86:: with SMTP id m6mr10619893qtm.190.1574893307208;
- Wed, 27 Nov 2019 14:21:47 -0800 (PST)
+        Wed, 27 Nov 2019 17:24:30 -0500
+Received: from vps.xff.cz ([195.181.215.36]:33888 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726947AbfK0WYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 17:24:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1574893467; bh=03v6MvLb4Npw9AjFHB6zyIbUbdm8FNg3ot9ZMiWCnvw=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=SZtJFJb99qPrcwh17WvZ7KCnSMzXBjnAnvHpu7Gn3xSDHVbhUiaRVRhlTirhzYsKX
+         FZGf0WqtJx2bGpPWY8QtMbI6X9uvKcrlp5LJzPW9WjyQa/bG20uXYeqqn0Y+6Xqoz1
+         BjXvrmC8WC92tmr7mgjROc7CyUWoyPncd+CpV7BY=
+Date:   Wed, 27 Nov 2019 23:24:27 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Frank Lee <tiny.windzz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 1/7] thermal: sun8i: add thermal driver for
+ H6/H5/H3/A64/A83T/R40
+Message-ID: <20191127222427.coyeggbxs5miioxn@core.my.home>
+Mail-Followup-To: Vasily Khoruzhick <anarsoul@gmail.com>,
+        Frank Lee <tiny.windzz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20191127052935.1719897-1-anarsoul@gmail.com>
+ <20191127052935.1719897-2-anarsoul@gmail.com>
+ <20191127111419.z5hfu5soxceiivg6@core.my.home>
+ <20191127173547.ch3pcv3lxgdcrfnu@gilmour.lan>
+ <CAEExFWvG-Af4qtUrxQV4ssNQCVQAmpXfxB+92wX+6ZxUNfX-Jw@mail.gmail.com>
+ <CA+E=qVcdwQO3Y8ismmBN-gRVNMs1Thx+TPLqstKM9fYf2_0qFQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191127054358.GA59549@LGEARND20B15> <46dfe877-4f32-b763-429f-7af3a83828f0@cogentembedded.com>
- <CADLLry4jOr1S7YhdN5saRCXSnjTt_J=TB+sm=CjbcW9NJ4V7Pg@mail.gmail.com> <0101016ead12c253-18d4624e-98eb-4252-ba3a-fabf74d831f2-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016ead12c253-18d4624e-98eb-4252-ba3a-fabf74d831f2-000000@us-west-2.amazonses.com>
-From:   Austin Kim <austindh.kim@gmail.com>
-Date:   Thu, 28 Nov 2019 07:21:40 +0900
-Message-ID: <CADLLry7Dcdz9bcfK2BQY3UcYVEL7z+cYqMjab916B8fkfDqHFA@mail.gmail.com>
-Subject: Re: [PATCH] brcmsmac: Remove always false 'channel < 0' statement
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
-        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
-        wright.feng@cypress.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVcdwQO3Y8ismmBN-gRVNMs1Thx+TPLqstKM9fYf2_0qFQ@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=EB=85=84 11=EC=9B=94 27=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 10:35,=
- Kalle Valo <kvalo@codeaurora.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> Austin Kim <austindh.kim@gmail.com> writes:
->
-> > 2019=EB=85=84 11=EC=9B=94 27=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 7:=
-48, Sergei Shtylyov
-> > <sergei.shtylyov@cogentembedded.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
-> >>
-> >> On 27.11.2019 8:43, Austin Kim wrote:
-> >>
-> >> > As 'channel' is declared as u16, the following statement is always f=
-alse.
-> >> >     channel < 0
-> >> >
-> >> > So we can remove unnecessary 'always false' statement.
-> >>
-> >>     It's an expression, not a statement.
-> >>
+On Wed, Nov 27, 2019 at 11:48:32AM -0800, Vasily Khoruzhick wrote:
+> On Wed, Nov 27, 2019 at 11:44 AM Frank Lee <tiny.windzz@gmail.com> wrote:
 > >
-> > According to below link, it is okay to use 'statement' in above case.
-> > https://en.wikipedia.org/wiki/Statement_(computer_science)
->
-> I don't have time to start arguing about this, and I'm no C language
-> lawyer either, but all I say is that I agree with Sergei here.
+> > Hello Vasily,
+> >
+> > Thank you very much for your work on this.
+> > This looks good to me.
+> 
+> Thanks!
+> 
+> > By the way, I would like to ask comments about adding the following code.
+> 
+> Can we add it as follow up patch? I don't think that I have a device
+> with working suspend to test it and I'm hesitant to add any code that
+> I can't test.
 
-Thanks for your opinion.
-I will use 'expression' rather than 'statement' when I upstream
-similar patch later.
+I have, but it doesn't use any of the clocks and resets, so it wouldn't
+test this fully, and basicaly doesn't need re-calibration at all, probably.
 
->
-> > Why don't you show your opition about patch rather than commit message?
->
-> But this comment is not ok. Patch review (including commit logs) is the
-> core principle of upstream development so you need to have an open mind
-> for all comments, even the ones you don't like.
+So that may be one feedback. On a83t, I'd made these callbacks a no-op.
 
-Oh! I Agreed.
-If I were you, I would leave similar comment.
+regards,
+	o.
 
-Thanks,
-Austin Kim
-
->
-> --
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpa=
-tches
+> >
+> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> > index c0ed60782b11..579dde5e0701 100644
+> > --- a/drivers/thermal/sun8i_thermal.c
+> > +++ b/drivers/thermal/sun8i_thermal.c
+> > @@ -629,11 +629,63 @@ static const struct of_device_id of_ths_match[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(of, of_ths_match);
+> >
+> > +static int __maybe_unused sun8i_thermal_suspend(struct device *dev)
+> > +{
+> > + struct ths_device *tmdev; = dev_get_drvdata(dev);
+> > +
+> > + clk_disable(tmdev->mod_clk);
+> > + clk_disable(tmdev->bus_clk);
+> > +
+> > + reset_control_assert(tmdev->reset);
+> > +
+> > + return 0;
+> > +}
+> > +
+> > +static int __maybe_unused sun8i_thermal_resume(struct device *dev)
+> > +{
+> > + struct ths_device *tmdev; = dev_get_drvdata(dev);
+> > + int error;
+> > +
+> > + error = reset_control_deassert(tmdev->reset);
+> > + if (error)
+> > + return error;
+> > +
+> > + error = clk_enable(tmdev->bus_clk);
+> > + if (error)
+> > + goto assert_reset;
+> > +
+> > + clk_set_rate(tmdev->mod_clk, 24000000);
+> > + error = clk_enable(tmdev->mod_clk);
+> > + if (error)
+> > + goto bus_disable;
+> > +
+> > + sun8i_ths_calibrate(tmdev);
+> > +
+> > + ret = tmdev->chip->init(tmdev);
+> > + if (ret)
+> > + goto mod_disable;
+> > +
+> > + return 0;
+> > +
+> > +mod_disable:
+> > + clk_disable(tmdev->mod_clk);
+> > +bus_disable:
+> > + clk_disable(tmdev->bus_clk);
+> > +assert_reset:
+> > + reset_control_assert(tmdev->reset);
+> > +
+> > + return 0;
+> > +}
+> > +
+> > +static SIMPLE_DEV_PM_OPS(sun8i_thermal_pm_ops,
+> > + sun8i_thermal_suspend, sun8i_thermal_resume);
+> > +
+> >  static struct platform_driver ths_driver = {
+> >   .probe = sun8i_ths_probe,
+> >   .remove = sun8i_ths_remove,
+> >   .driver = {
+> >   .name = "sun8i-thermal",
+> > + .pm = &sun8i_thermal_pm_ops,
+> >   .of_match_table = of_ths_match,
+> >   },
+> >  };
+> >
+> > Yangtao
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
