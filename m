@@ -2,83 +2,188 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC8DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1906DC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69302070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34522070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qsj7fvhI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mw1uKelo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfK0Xpb (ORCPT
+        id S1727415AbfK0Xtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 18:45:31 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49910 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfK0Xpb (ORCPT
+        Wed, 27 Nov 2019 18:49:45 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33558 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbfK0Xto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 18:45:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6Ae0SH75w1m9aU+nYBuK6tJIXgbYW1zryuD5lKGbbEg=; b=Qsj7fvhIVgbdW2la4fC0lhgvY
-        Wo/EmrP1yYHewA72zmi/WVzozZvWb8lBeLvyml2xaT9VBDnOxnAGHjtQOGxdzIlOC5qV2ZrqnS+NM
-        XAUoLDYXcXJgriGImAKwHgBDiYZzXyac48+ufX83dxkhAlzZxijJteCqXkLhGN32LNCOsKAnFutZW
-        J6JDmuuZKrNUvGvKITm+V6dJTbkooW0ztS1A42D/+26BEzcL9QXK0lYrleCHS+aLYRzwi2BIt8XEN
-        TWKWq16+LWH7khXTfkKIY5EjuREmJ6NUW9bRgnSySIuUNyUiP4inGBQf9tYZGqKGbxGKhq0jltmVN
-        kr5sgfsBQ==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ia6zy-0003tM-SR; Wed, 27 Nov 2019 23:45:30 +0000
-Subject: Re: linux-next: Tree for Nov 19 (bpf/btf)
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20191119194658.39af50d0@canb.auug.org.au>
- <ac0b86e4-611b-81d1-ba09-e819218efe3f@infradead.org>
-Message-ID: <8fa2ace8-c3a5-7d7d-b867-9f1c70981541@infradead.org>
-Date:   Wed, 27 Nov 2019 15:45:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 27 Nov 2019 18:49:44 -0500
+Received: by mail-io1-f65.google.com with SMTP id j13so26952451ioe.0;
+        Wed, 27 Nov 2019 15:49:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=gSj2pWdZX1PdXEy1vq4ly43WymfbEpVIP+x3vEhoi3c=;
+        b=Mw1uKeloCBfJYGuEaZeon622BcZkt9xCzt5+HNrdOlgekuf2MCHxl6axxMTaPfZ3ni
+         3SEsgCqx9kjqypACw3CNBsF5JB50tsV2Y8/nInyKxozI80sZFbBPMR8eQN7K6B2Pr68J
+         Q1Hmv3JnGyx+PqWIIFTpNTUUlvnf9ImukhtnYTR63YX8k+xGi9mQ/gdj5BllaQO5/7x3
+         XLmtlWmuDrodlBrBmWCPeN61jkOk92PemxB3QZLFohgmJITVLyZ/KGM8OuQYDNFM62X/
+         lckHjqzgw/bSE2sokC9KpJ1Lbz+XRpX/k1ArWUvA0v8r1nmny0BZoTmINWflSl32SIMw
+         K14g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=gSj2pWdZX1PdXEy1vq4ly43WymfbEpVIP+x3vEhoi3c=;
+        b=ax4HWunZWlW6+p2HR5KgcWFKjIUyW5p+HutkEKPYki7RH1uESnznjZghk/t7uxQqss
+         oBIrlJF1t3LBBOZC7aGrM404lWqYNzxZpD1i40A/D5FTfezodC7T48Zo9BniezWh8cY7
+         EuHpgQl3vCNLaybZoDpscG7mq2aHmEhN+ai2pAWDbQw2cos8IepfuuY1DAyWjtPYJcL8
+         qzQDHen6Mzm6BEZ3+uGUt5jKrXhrpEsDKhllW9uJI6BZKMdKr5C97Ryx3oMVdCvoe9nF
+         Yfo/5SOYy752W9OoNGHgX8R+Ung4EqFfpF2P7FEWIX6quwv6txobDaBqvbFuermNghdI
+         0W/w==
+X-Gm-Message-State: APjAAAVnPkcSCOYGvL2F7EYZ/PeEbXq2c2hPNR56KRRDWhddioNuk9+v
+        MA5V3r8zYBTkkJj96XakmWz0zjX6TiiomakqVGByEU2O
+X-Google-Smtp-Source: APXvYqzqIEUCnQNmhAeENYKBRjkNwhAc2pztWO5oL7JoyJq4EKdOgBnNlcJkCUoc9O/kvCg5QnmcMVtCU0QxrTYoVo8=
+X-Received: by 2002:a5d:848c:: with SMTP id t12mr36778001iom.5.1574898583117;
+ Wed, 27 Nov 2019 15:49:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <ac0b86e4-611b-81d1-ba09-e819218efe3f@infradead.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 27 Nov 2019 17:49:32 -0600
+Message-ID: <CAH2r5mtDpwY=MrQ=yN29JeWUqf+ozgYvgnzbnb91VoK8Vg4Zmw@mail.gmail.com>
+Subject: [GIT PULL] CIFS/SMB3 Fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 7:13 AM, Randy Dunlap wrote:
-> On 11/19/19 12:46 AM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20191118:
->>
-> 
-> on i386 or x86_64:
-> 
-> ../kernel/bpf/btf.c:3466:1: error: empty enum is invalid
->  };
->  ^
-> 
-> when CONFIG_NET is not set/enabled.
-> 
-> 
+Please pull the following changes since commit
+219d54332a09e8d8741c1e1982f5eae56099de85:
 
-Still seeing this on linux-next of 20191127.
+  Linux 5.4 (2019-11-24 16:32:01 -0800)
+
+are available in the Git repository at:
+
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.5-rc-smb3-fixes
+
+for you to fetch changes up to 68464b88cc0a735eaacd2c69beffb85d36f25292:
+
+  CIFS: fix a white space issue in cifs_get_inode_info() (2019-11-27
+11:31:49 -0600)
+
+----------------------------------------------------------------
+Various smb3 fixes (including 12 for stable) and also features
+(addition of multichannel support).  This includes the first set of
+CIFS/SMB3 changes for 5.5.
+
+Buildbot automated regression testing results (passed):
+http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/286
+
+There are additional fixes for DFS (global name space) support and
+some multichannel enhancements and POSIX fixes that are still being
+tested and are not included in
+this pull request.
+----------------------------------------------------------------
+Aurelien Aptel (8):
+      cifs: sort interface list by speed
+      cifs: add multichannel mount options and data structs
+      cifs: add server param
+      cifs: switch servers depending on binding state
+      CIFS: refactor cifs_get_inode_info()
+      cifs: try opening channels after mounting
+      cifs: try harder to open new channels
+      cifs: dump channel info in DebugData
+
+Dan Carpenter (1):
+      cifs: rename a variable in SendReceive()
+
+Dan Carpenter via samba-technical (1):
+      CIFS: fix a white space issue in cifs_get_inode_info()
+
+Long Li (7):
+      cifs: Don't display RDMA transport on reconnect
+      cifs: smbd: Invalidate and deregister memory registration on
+re-send for direct I/O
+      cifs: smbd: Return -EINVAL when the number of iovs exceeds
+SMBDIRECT_MAX_SGE
+      cifs: smbd: Add messages on RDMA session destroy and reconnection
+      cifs: smbd: Return -ECONNABORTED when trasnport is not in connected state
+      cifs: smbd: Only queue work for error recovery on memory registration
+      cifs: smbd: Return -EAGAIN when transport is reconnecting
+
+Markus Elfring (3):
+      CIFS: Use memdup_user() rather than duplicating its implementation
+      CIFS: Use common error handling code in smb2_ioctl_query_info()
+      CIFS: Return directly after a failed build_path_from_dentry() in
+cifs_do_create()
+
+Paulo Alcantara (SUSE) (5):
+      cifs: Fix use-after-free bug in cifs_reconnect()
+      cifs: Fix lookup of root ses in DFS referral cache
+      cifs: Fix potential softlockups while refreshing DFS cache
+      cifs: Fix retrieval of DFS referrals in cifs_mount()
+      cifs: Always update signing key of first channel
+
+Pavel Shilovsky (6):
+      CIFS: Respect O_SYNC and O_DIRECT flags during reconnect
+      CIFS: Close open handle after interrupted close
+      CIFS: Fix NULL pointer dereference in mid callback
+      CIFS: Do not miss cancelled OPEN responses
+      CIFS: Fix SMB2 oplock break processing
+      CIFS: Properly process SMB3 lease breaks
+
+Ronnie Sahlberg (4):
+      cifs: close the shared root handle on tree disconnect
+      smb3: add debug messages for closing unmatched open
+      cifs: don't use 'pre:' for MODULE_SOFTDEP
+      cifs: move cifsFileInfo_put logic into a work-queue
+
+Steve French (4):
+      cifs: add support for flock
+      smb3: remove confusing dmesg when mounting with encryption ("seal")
+      smb3: dump in_send and num_waiters stats counters by default
+      cifs: update internal module version number
+
+YueHaibing (2):
+      cifs: remove unused variable 'sid_user'
+      CIFS: remove set but not used variables 'cinode' and 'netfid'
+
+ fs/cifs/cifs_debug.c    |  43 +++++++++-
+ fs/cifs/cifs_spnego.c   |   2 +-
+ fs/cifs/cifsacl.c       |   2 -
+ fs/cifs/cifsfs.c        |  44 ++++++++---
+ fs/cifs/cifsfs.h        |   3 +-
+ fs/cifs/cifsglob.h      |  90 +++++++++++++++------
+ fs/cifs/cifsproto.h     |   8 ++
+ fs/cifs/connect.c       | 191 +++++++++++++++++++++++++++++++++-----------
+ fs/cifs/dfs_cache.c     |   3 +-
+ fs/cifs/dir.c           |   6 +-
+ fs/cifs/file.c          | 159 +++++++++++++++++++++++++++++--------
+ fs/cifs/inode.c         | 333
+++++++++++++++++++++++++++++++++++++++++++++++-------------------------------
+ fs/cifs/misc.c          |  17 +---
+ fs/cifs/sess.c          | 230
+++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ fs/cifs/smb1ops.c       |   8 +-
+ fs/cifs/smb2misc.c      | 175 ++++++++++++++++++++++++----------------
+ fs/cifs/smb2ops.c       | 141 +++++++++++++++++++--------------
+ fs/cifs/smb2pdu.c       | 168 ++++++++++++++++++++++++++-------------
+ fs/cifs/smb2pdu.h       |   2 +-
+ fs/cifs/smb2proto.h     |   6 +-
+ fs/cifs/smb2transport.c | 165 +++++++++++++++++++++++++++++---------
+ fs/cifs/smbdirect.c     |  36 +++++----
+ fs/cifs/transport.c     |  37 +++++++--
+ 23 files changed, 1340 insertions(+), 529 deletions(-)
 
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Thanks,
+
+Steve
