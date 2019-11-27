@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCEAC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABCAC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB2D0215A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2931720637
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888621;
-	bh=KG7jFFleSrAXnKXJdxb/7eBupZkKjYHi6r78Y7FcSD0=;
+	s=default; t=1574888629;
+	bh=MAt0eWtiPJD9sNaSAtGSvl94lDluSFw3dMc0uqRUmEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jZ3yWAZzBMgYfLYah7N2n126Y7xQK4llGoNTEyDsuKozNksTIpWbxIXc0cA8RuGlq
-	 CRdimo0RCWINbyTqgepHv3CeLW21vEWgdB8P4UXUGyHYuzkxUVfWYkwxygAADhPppq
-	 29xQnAXnXrKV54u0A53gINElv2owjje0BqJRcdzo=
+	b=mszfhOfgNW/cJ25wVsfsWJF6jdPCs9MwZHUsJK2chaNo9E5lp+JB6oXviYtChRCM2
+	 Ve5TKtNBGd9fbtD3WGgzdAuMbUI4wS+4rNeMoT6jhg/Ty8FOtJy7aBGhkCWizLznmB
+	 RHurlfAhIZ2UW+tvvrV9lJKc7/HS+9nWCoEnAQQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbfK0VDl (ORCPT
+        id S1732081AbfK0VDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:03:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:03:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732049AbfK0VDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:03:33 -0500
+        id S1731599AbfK0VDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:03:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FCBA2176D;
-        Wed, 27 Nov 2019 21:03:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F57521771;
+        Wed, 27 Nov 2019 21:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888612;
-        bh=KG7jFFleSrAXnKXJdxb/7eBupZkKjYHi6r78Y7FcSD0=;
+        s=default; t=1574888618;
+        bh=MAt0eWtiPJD9sNaSAtGSvl94lDluSFw3dMc0uqRUmEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LAFR1FyI24ayXK2G5VsI4a0qXsJtgK7AwkO/KBZtu7YgL2l407m2lZRkzsz+w4lT8
-         Gz2m0G5Ae8i+9U6K+rfP3/hPJ6hr3Y2OSlukT5FVfaL+eDTYpuB5iwRPqWsUHOuPrI
-         i7kDy1DQjJG6KBSjZlQPbVI6yJVsUATVrU2gRWdQ=
+        b=TsKRX/I2NgVYFcXiVGmW5c3RuhBIToXU9XkpoHUI3p1ii4q0wMRSjHF2aNrvjx0Tb
+         cOFCUirMZlYf3AN1SyuFzhMTntasqE4QWXUyMMpIiqqlQfeKYWORu0U4VqQKPYCMC1
+         LVQJItCddHdMLjIyZkWdjO5xG0B6qpJu5chs6cqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 203/306] openvswitch: fix linking without CONFIG_NF_CONNTRACK_LABELS
-Date:   Wed, 27 Nov 2019 21:30:53 +0100
-Message-Id: <20191127203129.984214265@linuxfoundation.org>
+Subject: [PATCH 4.19 205/306] clk: sunxi-ng: enable so-said LDOs for A64 SoCs pll-mipi clock
+Date:   Wed, 27 Nov 2019 21:30:55 +0100
+Message-Id: <20191127203130.120409599@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,41 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-[ Upstream commit a277d516de5f498c91d91189717ef7e01102ad27 ]
+[ Upstream commit 859783d1390035e29ba850963bded2b4ffdf43b5 ]
 
-When CONFIG_CC_OPTIMIZE_FOR_DEBUGGING is enabled, the compiler
-fails to optimize out a dead code path, which leads to a link failure:
+In the user manual of A64 SoC, the bit 22 and 23 of pll-mipi control
+register is called "LDO{1,2}_EN", and according to the BSP source code
+from Allwinner , the LDOs are enabled during the clock's enabling
+process.
 
-net/openvswitch/conntrack.o: In function `ovs_ct_set_labels':
-conntrack.c:(.text+0x2e60): undefined reference to `nf_connlabels_replace'
+The clock failed to generate output if the two LDOs are not enabled.
 
-In this configuration, we can take a shortcut, and completely
-remove the contrack label code. This may also help the regular
-optimization.
+Add the two bits to the clock's gate bits, so that the LDOs are enabled
+when the PLL is enabled.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: c6a0637460c2 ("clk: sunxi-ng: Add A64 clocks")
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/openvswitch/conntrack.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/net/openvswitch/conntrack.c b/net/openvswitch/conntrack.c
-index 35ae64cbef33f..46aa1aa51db41 100644
---- a/net/openvswitch/conntrack.c
-+++ b/net/openvswitch/conntrack.c
-@@ -1199,7 +1199,8 @@ static int ovs_ct_commit(struct net *net, struct sw_flow_key *key,
- 					 &info->labels.mask);
- 		if (err)
- 			return err;
--	} else if (labels_nonzero(&info->labels.mask)) {
-+	} else if (IS_ENABLED(CONFIG_NF_CONNTRACK_LABELS) &&
-+		   labels_nonzero(&info->labels.mask)) {
- 		err = ovs_ct_set_labels(ct, key, &info->labels.value,
- 					&info->labels.mask);
- 		if (err)
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+index ee9c12cf3f08c..2a60981799216 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+@@ -158,7 +158,12 @@ static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_gpu_clk, "pll-gpu",
+ #define SUN50I_A64_PLL_MIPI_REG		0x040
+ 
+ static struct ccu_nkm pll_mipi_clk = {
+-	.enable		= BIT(31),
++	/*
++	 * The bit 23 and 22 are called "LDO{1,2}_EN" on the SoC's
++	 * user manual, and by experiments the PLL doesn't work without
++	 * these bits toggled.
++	 */
++	.enable		= BIT(31) | BIT(23) | BIT(22),
+ 	.lock		= BIT(28),
+ 	.n		= _SUNXI_CCU_MULT(8, 4),
+ 	.k		= _SUNXI_CCU_MULT_MIN(4, 2, 2),
 -- 
 2.20.1
 
