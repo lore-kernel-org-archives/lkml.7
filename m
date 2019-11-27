@@ -2,122 +2,158 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279FAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCDDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE222070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7384B206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tWDwn0Xm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jLjkmwL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfK0NDB (ORCPT
+        id S1726719AbfK0NJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:03:01 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39576 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfK0NDA (ORCPT
+        Wed, 27 Nov 2019 08:09:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33049 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726520AbfK0NJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:03:00 -0500
-Received: by mail-qt1-f193.google.com with SMTP id g1so15869301qtj.6;
-        Wed, 27 Nov 2019 05:02:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1984T7r6pANtFAuP4BoKNpZAvUp4hUdF7V9m7It1Qd8=;
-        b=tWDwn0Xmuoj1nThJAJWbNrdNuSfB63SihYvpYH2nLaGeoKTeLoXKjQp9x9odtZ4biM
-         /PQTZ2yhQpUth5SN2YhmmQEhZ/XYy/TLtozMtimbijQFecmVnhoYZGK1D5YNXnhZP/Qu
-         GM1Og2kJAgnNPMSY+lkb4DrQ3v5up3UIue2qjOZMAzyezcIv6OnJGJdxBld9XfSne8p+
-         ZL6MV/iBATOjajqHNM2RpRA/T6ZAWyWRU2kOidk7gfvC6Q9JPaFSq2xJ6ud0IT92A5FE
-         u+XUmNBQbAzDyVTPpbdOBozmKU4Di+H1ddUirJO66RXJsyhI0KrrKgv6fYUIf/VqH/bm
-         g1Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1984T7r6pANtFAuP4BoKNpZAvUp4hUdF7V9m7It1Qd8=;
-        b=UuzbeoaTFRSCOmOg3oAQm5wo+ZLq+p6CpiUD+ISgRb/smTW7Q17CZYUZ/HIQwqi6hR
-         SB3QbG6dBsVuBhThWYsq5K4Eo2I/07D9hSdcSY90C5UIOc9qeoekAV9NUDkm4BrmnkLq
-         vdiLFJdQvNgZnyVbqi8GHDpRoNBrdbGS9CUYEbRFY3Spj9l1tqx/V8lgZGzWtSZV0HB7
-         8B3sbP3zzLXbTHMvpjXocyRQEnhybB2LSgjOhSD+QYalHhirsAyeTe7ZUJIjD3+FhdD0
-         aSZkofIgOXydprp+UlB8wt7TWISChAAWy6q7Vz2NkVadEvy71Z3UAENzNV1VIHLYc9aE
-         d9sw==
-X-Gm-Message-State: APjAAAWbWIRFPbjBa7Ebt31xkAcxzfH0x2VfGWYnw1XIEBGCoGMjzPFZ
-        1M2XBysaAvMUob1HGrEEBaA8P7/eaKF5KTCdK/o=
-X-Google-Smtp-Source: APXvYqwQvuvKMWrK5N5Jn+YzXQ/5ZnAZRptOXQTosdAgRrCmLaMtjetuntgaTqUCtzQXvWy8ulKRp5jZIs6k8Zajin0=
-X-Received: by 2002:ac8:2b86:: with SMTP id m6mr7890232qtm.190.1574859778014;
- Wed, 27 Nov 2019 05:02:58 -0800 (PST)
+        Wed, 27 Nov 2019 08:09:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574860155;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=M6+DDtUgzApiQu4YHE35MwvUiV8KTCoPHcuxsyEvH7Q=;
+        b=jLjkmwL7tWJjaR54VnbOkWCyZCZRj/8uZubIlvfOg3yN+xZJKATBFIe6OkfjMs5/ru9VMK
+        IlrsL2EfqcbyIRvQIg7fWdVOzbJsspHYW/Nyyq5VeSZbJX/5VszLRB7GBH5Z6qIvJbkxe2
+        OHReTMHq9qcCOa6pa4RXia7wZlWVM2c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-ijxwCcqoNMurXxKPrFl-Jw-1; Wed, 27 Nov 2019 08:09:13 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB275DB6B;
+        Wed, 27 Nov 2019 13:09:10 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-19.pek2.redhat.com [10.72.8.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AB1BB608B9;
+        Wed, 27 Nov 2019 13:09:00 +0000 (UTC)
+Date:   Wed, 27 Nov 2019 21:08:54 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191127130854.GA12140@ming.t460p>
+References: <20191125102928.GA20489@ming.t460p>
+ <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
+ <20191125151535.GA8044@ming.t460p>
+ <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>
+ <20191126023253.GA24501@ming.t460p>
+ <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
+ <20191126091533.GB32135@ming.t460p>
+ <e852331e72532dbfdc7981d958b1cd05ded41317.camel@unipv.it>
+ <20191127020533.GA7190@ming.t460p>
+ <3af3666920e7d46f8f0c6d88612f143ffabc743c.camel@unipv.it>
 MIME-Version: 1.0
-References: <20191127054358.GA59549@LGEARND20B15> <46dfe877-4f32-b763-429f-7af3a83828f0@cogentembedded.com>
-In-Reply-To: <46dfe877-4f32-b763-429f-7af3a83828f0@cogentembedded.com>
-From:   Austin Kim <austindh.kim@gmail.com>
-Date:   Wed, 27 Nov 2019 22:02:49 +0900
-Message-ID: <CADLLry4jOr1S7YhdN5saRCXSnjTt_J=TB+sm=CjbcW9NJ4V7Pg@mail.gmail.com>
-Subject: Re: [PATCH] brcmsmac: Remove always false 'channel < 0' statement
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
-        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
-        wright.feng@cypress.com, Kalle Valo <kvalo@codeaurora.org>,
-        davem@davemloft.net, linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3af3666920e7d46f8f0c6d88612f143ffabc743c.camel@unipv.it>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: ijxwCcqoNMurXxKPrFl-Jw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=EB=85=84 11=EC=9B=94 27=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 7:48, =
-Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 27.11.2019 8:43, Austin Kim wrote:
->
-> > As 'channel' is declared as u16, the following statement is always fals=
-e.
-> >     channel < 0
-> >
-> > So we can remove unnecessary 'always false' statement.
->
->     It's an expression, not a statement.
->
+On Wed, Nov 27, 2019 at 10:39:40AM +0100, Andrea Vai wrote:
+> Il giorno mer, 27/11/2019 alle 10.05 +0800, Ming Lei ha scritto:
+> >=20
+> >=20
+> > It can be workaround via the following change:
+> >=20
+> > /lib/modules/5.4.0+/build/include/generated/autoconf.h:
+> >=20
+> > //#define CONFIG_CC_HAS_ASM_INLINE 1
+>=20
+> Thanks, it worked, trace attached. Produced by: start the trace script
+> (with the pendrive already plugged), wait some seconds, run the test
+> (1 trial, 1 GB), wait for the test to finish, stop the trace.
+>=20
+> The copy took 2659 seconds, roughly as already seen before.
 
-According to below link, it is okay to use 'statement' in above case.
-https://en.wikipedia.org/wiki/Statement_(computer_science)
+Thanks for collecting the log.
 
-Why don't you show your opition about patch rather than commit message?
+From the log, some of write IOs are out-of-order, such as, the 1st one
+is 378880.
+
+16.41240 2   266     266     kworker/2:1H    block_rq_issue   b'W' 370656 2=
+40
+16.41961 3   485     485     kworker/3:1H    block_rq_issue   b'W' 378880 2=
+40
+16.73729 2   266     266     kworker/2:1H    block_rq_issue   b'W' 370896 2=
+40
+17.71161 2   266     266     kworker/2:1H    block_rq_issue   b'W' 379120 2=
+40
+18.02344 2   266     266     kworker/2:1H    block_rq_issue   b'W' 371136 2=
+40
+18.94314 3   485     485     kworker/3:1H    block_rq_issue   b'W' 379360 2=
+40
+19.25624 2   266     266     kworker/2:1H    block_rq_issue   b'W' 371376 2=
+40
+
+IO latency is increased a lot since the 1st out-of-order request(usb
+storage HBA is single queue depth, one request can be issued only if=20
+the previous issued request is completed).
+
+The reason is that there are two kind of tasks which inserts rq to device.
+One is the 'cp' process, the other is kworker/u8:*.  The out-of-order
+happens during the two task's interleaving.
+
+Under such situation, I believe that the old legacy IO path may not
+guarantee the order too. In blk_queue_bio(), after get_request()
+allocates one request, the queue lock is released.  And request is
+actually inserted & issued from blk_flush_plug_list() under the
+branch of 'if (plug)'. If requests are from two tasks, then request
+is inserted/issued from two plug list, and no order can be guaranteed.
+
+In my test, except for several requests from the beginning, all other
+requests are inserted via the kworker thread(guess it is writeback wq),
+that is why I can't observe the issue in my test.
+
+As Schmid suggested, you may run the same test on old kernel with
+legacy io path, and see if the performance is still good.
+
+Also, could you share the following info about your machine? So that
+I can build my VM guest in this setting for reproducing your situation
+(requests are inserted from two types of threads).
+
+- lscpu
+- free -h
+- lsblk -d $USB_DISK
+- exact commands for mount the disk, and running the copy operation
 
 Thanks,
-Austin Kim
+Ming
 
-> > Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> > ---
-> >   drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c b/=
-drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
-> > index 3f09d89..7f2c15c 100644
-> > --- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
-> > +++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
-> > @@ -5408,7 +5408,7 @@ int brcms_c_set_channel(struct brcms_c_info *wlc,=
- u16 channel)
-> >   {
-> >       u16 chspec =3D ch20mhz_chspec(channel);
-> >
-> > -     if (channel < 0 || channel > MAXCHANNEL)
-> > +     if (channel > MAXCHANNEL)
-> >               return -EINVAL;
-> >
-> >       if (!brcms_c_valid_chanspec_db(wlc->cmi, chspec))
->
-> MBR, Sergei
->
