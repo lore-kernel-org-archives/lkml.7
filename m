@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9608EC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A63C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFE621582
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEEA1215B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888044;
-	bh=2XLDk3oFP55arHYzwo879IpYDhq26C9Jkur5rc2Fqyc=;
+	s=default; t=1574888046;
+	bh=aJqLwpf/G8NqfB0sL2MWBrc35kuUJFRONfEAYaqxE9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dsyhw0BRXGGjMzWaPTC68OoxrtZ/vy4qWXQlCcCCoAElGzmVo1dTq60Gz/c03ZEuK
-	 QHg/eyvxGfyh1h0n+uqJSHLExlSUybQyW8VD0dHBP5B0G1smlzIpNdOZFSnw1an2eM
-	 G09z5rs28oIIcBOY3gRT6znr71VVPHbdDGWPI2M8=
+	b=Ow89aaPP+aqxhjihrz/RxCTJCUf7zXt+mKSy35D+pB9mbyVC8oYWbm5Q1FTMuU8RS
+	 peAtsU+mvnwpabrst5H7dPn1oR1L0TBPavrYwI+jkCmgHbh0u+FrbQqN7zc2SE5WSL
+	 WdNM9pl4CdC7JinTqJCe7iTNkqiSRgT7Q8Mw7Xus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730785AbfK0UyD (ORCPT
+        id S1730792AbfK0UyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:54:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43376 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:54:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730769AbfK0Ux5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:57 -0500
+        id S1730291AbfK0Ux7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 111A52086A;
-        Wed, 27 Nov 2019 20:53:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B8CE2070B;
+        Wed, 27 Nov 2019 20:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888036;
-        bh=2XLDk3oFP55arHYzwo879IpYDhq26C9Jkur5rc2Fqyc=;
+        s=default; t=1574888039;
+        bh=aJqLwpf/G8NqfB0sL2MWBrc35kuUJFRONfEAYaqxE9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xqeAYOuqqalkRjZvzEYgsrlEj4kxNKIFeLj1F0Bo62gSm1V4/bMsS5fqtZSWGJ3Id
-         s+tOK+T42hC2PeIQT8Y4x0iKsehswjPejSPTwLBLOONC5trDg1rKHpLS3l+N79iHuY
-         9Hf+QPkLPrbERsujzP7zS/jYaE38KMPwAST5+4rU=
+        b=JEwWWEY/8zPpmFu59aSL0+dDsnxXepeukj0ytUQhX/YPaJtNotadn2U0EdJg8h249
+         eAEn7etlaEnpRLu2jvgANmK40PDh3jJ3d3kdtSgWm3yCfDYxKohJnLftNToXZe8kmF
+         ztsX4tllPJ5ytdaAEWO+SGlGAdmVlfiIkAAgGo+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+c86454eb3af9e8a4da20@syzkaller.appspotmail.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 192/211] media: uvcvideo: Fix error path in control parsing failure
-Date:   Wed, 27 Nov 2019 21:32:05 +0100
-Message-Id: <20191127203111.818712853@linuxfoundation.org>
+        syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.14 193/211] media: b2c2-flexcop-usb: add sanity checking
+Date:   Wed, 27 Nov 2019 21:32:06 +0100
+Message-Id: <20191127203111.901416984@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,68 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 8c279e9394cade640ed86ec6c6645a0e7df5e0b6 upstream.
+commit 1b976fc6d684e3282914cdbe7a8d68fdce19095c upstream.
 
-When parsing the UVC control descriptors fails, the error path tries to
-cleanup a media device that hasn't been initialised, potentially
-resulting in a crash. Fix this by initialising the media device before
-the error handling path can be reached.
+The driver needs an isochronous endpoint to be present. It will
+oops in its absence. Add checking for it.
 
-Fixes: 5a254d751e52 ("[media] uvcvideo: Register a v4l2_device")
-Reported-by: syzbot+c86454eb3af9e8a4da20@syzkaller.appspotmail.com
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_driver.c |   28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ drivers/media/usb/b2c2/flexcop-usb.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -2059,6 +2059,20 @@ static int uvc_probe(struct usb_interfac
- 			   sizeof(dev->name) - len);
- 	}
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -537,6 +537,9 @@ static int flexcop_usb_probe(struct usb_
+ 	struct flexcop_device *fc = NULL;
+ 	int ret;
  
-+	/* Initialize the media device. */
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	dev->mdev.dev = &intf->dev;
-+	strscpy(dev->mdev.model, dev->name, sizeof(dev->mdev.model));
-+	if (udev->serial)
-+		strscpy(dev->mdev.serial, udev->serial,
-+			sizeof(dev->mdev.serial));
-+	usb_make_path(udev, dev->mdev.bus_info, sizeof(dev->mdev.bus_info));
-+	dev->mdev.hw_revision = le16_to_cpu(udev->descriptor.bcdDevice);
-+	media_device_init(&dev->mdev);
++	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
++		return -ENODEV;
 +
-+	dev->vdev.mdev = &dev->mdev;
-+#endif
-+
- 	/* Parse the Video Class control descriptor. */
- 	if (uvc_parse_control(dev) < 0) {
- 		uvc_trace(UVC_TRACE_PROBE, "Unable to parse UVC "
-@@ -2079,19 +2093,7 @@ static int uvc_probe(struct usb_interfac
- 			"linux-uvc-devel mailing list.\n");
- 	}
- 
--	/* Initialize the media device and register the V4L2 device. */
--#ifdef CONFIG_MEDIA_CONTROLLER
--	dev->mdev.dev = &intf->dev;
--	strlcpy(dev->mdev.model, dev->name, sizeof(dev->mdev.model));
--	if (udev->serial)
--		strlcpy(dev->mdev.serial, udev->serial,
--			sizeof(dev->mdev.serial));
--	strcpy(dev->mdev.bus_info, udev->devpath);
--	dev->mdev.hw_revision = le16_to_cpu(udev->descriptor.bcdDevice);
--	media_device_init(&dev->mdev);
--
--	dev->vdev.mdev = &dev->mdev;
--#endif
-+	/* Register the V4L2 device. */
- 	if (v4l2_device_register(&intf->dev, &dev->vdev) < 0)
- 		goto error;
- 
+ 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
+ 		err("out of memory\n");
+ 		return -ENOMEM;
 
 
