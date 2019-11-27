@@ -2,181 +2,150 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E135EC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D4CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E3620835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BAA8204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nnj6zwNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfK0TQk (ORCPT
+        id S1727107AbfK0TTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 14:16:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34596 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726593AbfK0TQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 14:16:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C825BACEF;
-        Wed, 27 Nov 2019 19:16:36 +0000 (UTC)
-Message-ID: <c3885c2ed8bec892290c3d957c8c5012039b6759.camel@suse.de>
-Subject: Re: [PATCH v3 1/7] linux/log2.h: Add roundup/rounddown_pow_two64()
- family of functions
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Leon Romanovsky <leon@kernel.org>
-Cc:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Date:   Wed, 27 Nov 2019 20:16:27 +0100
-In-Reply-To: <c08863a7-49c6-962e-e968-92adb8ee2cc9@arm.com>
-References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
-         <20191126091946.7970-2-nsaenzjulienne@suse.de>
-         <20191126125137.GA10331@unreal>
-         <6e0b9079-9efd-2884-26d1-3db2d622079d@arm.com>
-         <b30002d48c9d010a1ee81c16cd29beee914c3b1d.camel@suse.de>
-         <c08863a7-49c6-962e-e968-92adb8ee2cc9@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-O+wgk4AZ6l++1CDkyqmb"
-User-Agent: Evolution 3.34.1 
+        Wed, 27 Nov 2019 14:19:23 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44165 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfK0TTW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 14:19:22 -0500
+Received: by mail-pl1-f195.google.com with SMTP id az9so10213379plb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 11:19:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=oBrPJ9sYwDSW4uj7Uc4h3NOiqrxzVdYSDRLTKeRx8Eg=;
+        b=Nnj6zwNiP1jBcxqwMJNmRsPBkVa7voDaE/gzEtXMxDXNX2dbQd2U4+VRuT4aeLAPn/
+         lz29M7KcV2j2wutA8IbIa94L2myqXeIsTfYgOyT55FzSf/IR+QJVw2Oip8M/b9hkhjJJ
+         zkp8xRrPJ+bQhYflquHOjRJsWZMiF/nKorceQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=oBrPJ9sYwDSW4uj7Uc4h3NOiqrxzVdYSDRLTKeRx8Eg=;
+        b=D7Uo6j3yT8YentsfXL+s/zfCUfTSAc+YfOVg+0BzRmyLmitEQnaJo1mlXrDV2mwa6/
+         NwQmiQO5phB7e9N4+Q0Ldf1E2F8Go+HSVZejwuJL1b3Gw2SRX4+9IBh0HRNO+3j65Wjv
+         bvCUywNXxn5aD0Vm6AvldsY2R1pwN6mQ3mjwlHX4tPjpW/t32s/P2DJDB0szZGPVFggF
+         xCboVez+KdRYvMHdl6kVLSan0UllZvblL48kyuhjbMHqVtfaGMmLrrSZmFg2Glr+XESy
+         KG96rnnLpoi7q3j9OEvCcU/PJOHolOGROmOyjH/iR5cr3gzx2bCFE/C86akPa0iOHiUP
+         KE2g==
+X-Gm-Message-State: APjAAAWFTDWJl7q18n+KMVsWuwlSHU9psaHw6IAJq9KgjwjxwkvfVgpt
+        7FEK/FNEHMYeJhEGIDGGSyh6uZDE/54=
+X-Google-Smtp-Source: APXvYqwItIpvymu0/9xYl4B3yrMFiB2Z89KzRlsNhr+wCp19VWp41y6UEcZo1jxqWtESf/D+duG3Ow==
+X-Received: by 2002:a17:90b:46cf:: with SMTP id jx15mr8092360pjb.19.1574882362151;
+        Wed, 27 Nov 2019 11:19:22 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w5sm17977385pfd.31.2019.11.27.11.19.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 11:19:21 -0800 (PST)
+Date:   Wed, 27 Nov 2019 11:19:20 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] lkdtm/bugs: Avoid ifdefs for DOUBLE_FAULT
+Message-ID: <201911271118.FCC2D04F@keescook>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+LKDTM test visibility shouldn't change, so remove the ifdefs on
+DOUBLE_FAULT and make sure test failure doesn't crash the system.
 
---=-O+wgk4AZ6l++1CDkyqmb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Link: https://lore.kernel.org/lkml/20191127184837.GA35982@gmail.com
+Fixes: b09511c253e5 ("lkdtm: Add a DOUBLE_FAULT crash type on x86")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+applies on top of tip/x86/urgent
+---
+ drivers/misc/lkdtm/bugs.c  | 8 +++++---
+ drivers/misc/lkdtm/core.c  | 4 +---
+ drivers/misc/lkdtm/lkdtm.h | 2 --
+ 3 files changed, 6 insertions(+), 8 deletions(-)
 
-On Wed, 2019-11-27 at 19:06 +0000, Robin Murphy wrote:
-> On 27/11/2019 6:24 pm, Nicolas Saenz Julienne wrote:
-> > On Wed, 2019-11-27 at 18:06 +0000, Robin Murphy wrote:
-> > > On 26/11/2019 12:51 pm, Leon Romanovsky wrote:
-> > > > On Tue, Nov 26, 2019 at 10:19:39AM +0100, Nicolas Saenz Julienne wr=
-ote:
-> > > > > Some users need to make sure their rounding function accepts and
-> > > > > returns
-> > > > > 64bit long variables regardless of the architecture. Sadly
-> > > > > roundup/rounddown_pow_two() takes and returns unsigned longs. Cre=
-ate a
-> > > > > new generic 64bit variant of the function and cleanup rougue cust=
-om
-> > > > > implementations.
-> > > >=20
-> > > > Is it possible to create general roundup/rounddown_pow_two() which =
-will
-> > > > work correctly for any type of variables, instead of creating speci=
-al
-> > > > variant for every type?
-> > >=20
-> > > In fact, that is sort of the case already - roundup_pow_of_two() itse=
-lf
-> > > wraps ilog2() such that the constant case *is* type-independent. And
-> > > since ilog2() handles non-constant values anyway, might it be reasona=
-ble
-> > > to just take the strongly-typed __roundup_pow_of_two() helper out of =
-the
-> > > loop as below?
-> > >=20
-> > > Robin
-> > >=20
-> >=20
-> > That looks way better that's for sure. Some questions.
-> >=20
-> > > ----->8-----
-> > > diff --git a/include/linux/log2.h b/include/linux/log2.h
-> > > index 83a4a3ca3e8a..e825f8a6e8b5 100644
-> > > --- a/include/linux/log2.h
-> > > +++ b/include/linux/log2.h
-> > > @@ -172,11 +172,8 @@ unsigned long __rounddown_pow_of_two(unsigned lo=
-ng n)
-> > >     */
-> > >    #define roundup_pow_of_two(n)			\
-> > >    (						\
-> > > -	__builtin_constant_p(n) ? (		\
-> > > -		(n =3D=3D 1) ? 1 :			\
-> > > -		(1UL << (ilog2((n) - 1) + 1))	\
-> > > -				   ) :		\
-> > > -	__roundup_pow_of_two(n)			\
-> > > +	(__builtin_constant_p(n) && (n =3D=3D 1)) ?	\
-> > > +	1 : (1UL << (ilog2((n) - 1) + 1))	\
-> >=20
-> > Then here you'd have to use ULL instead of UL, right? I want my 64bit v=
-alue
-> > everywhere regardless of the CPU arch. The downside is that would affec=
-t
-> > performance to some extent (i.e. returning a 64bit value where you used=
- to
-> > have
-> > a 32bit one)?
->=20
-> True, although it's possible that 1ULL might result in the same codegen=
-=20
-> if the compiler can see that the result is immediately truncated back to=
-=20
-> long anyway. Or at worst, I suppose "(typeof(n))1" could suffice,=20
-> however ugly. Either way, this diff was only an illustration rather than=
-=20
-> a concrete proposal, but it might be an interesting diversion to=20
-> investigate.
->=20
-> On that note, though, you should probably be using ULL in your current=
-=20
-> patch too.
-
-I actually meant to, the fix got lost. Thanks for pointing it out.
-
-As I see Leon also likes this, I'll try out this implementation and come ba=
-ck
-with some results.
-
-Regards,
-Nicolas
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index a4fdad04809a..22f5293414cc 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -342,9 +342,9 @@ void lkdtm_UNSET_SMEP(void)
+ #endif
+ }
+ 
+-#ifdef CONFIG_X86_32
+ void lkdtm_DOUBLE_FAULT(void)
+ {
++#ifdef CONFIG_X86_32
+ 	/*
+ 	 * Trigger #DF by setting the stack limit to zero.  This clobbers
+ 	 * a GDT TLS slot, which is okay because the current task will die
+@@ -373,6 +373,8 @@ void lkdtm_DOUBLE_FAULT(void)
+ 	asm volatile ("movw %0, %%ss; addl $0, (%%esp)" ::
+ 		      "r" ((unsigned short)(GDT_ENTRY_TLS_MIN << 3)));
+ 
+-	panic("tried to double fault but didn't die\n");
+-}
++	pr_err("FAIL: tried to double fault but didn't die!\n");
++#else
++	pr_err("FAIL: this test is only available on 32-bit x86.\n");
+ #endif
++}
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index ee0d6e721441..7082ef8a2b99 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -116,6 +116,7 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
+ 	CRASHTYPE(STACK_GUARD_PAGE_TRAILING),
+ 	CRASHTYPE(UNSET_SMEP),
++	CRASHTYPE(DOUBLE_FAULT),
+ 	CRASHTYPE(UNALIGNED_LOAD_STORE_WRITE),
+ 	CRASHTYPE(OVERWRITE_ALLOCATION),
+ 	CRASHTYPE(WRITE_AFTER_FREE),
+@@ -171,9 +172,6 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(USERCOPY_KERNEL_DS),
+ 	CRASHTYPE(STACKLEAK_ERASING),
+ 	CRASHTYPE(CFI_FORWARD_PROTO),
+-#ifdef CONFIG_X86_32
+-	CRASHTYPE(DOUBLE_FAULT),
+-#endif
+ };
+ 
+ 
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index c56d23e37643..f4952efd6785 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -28,9 +28,7 @@ void lkdtm_CORRUPT_USER_DS(void);
+ void lkdtm_STACK_GUARD_PAGE_LEADING(void);
+ void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
+ void lkdtm_UNSET_SMEP(void);
+-#ifdef CONFIG_X86_32
+ void lkdtm_DOUBLE_FAULT(void);
+-#endif
+ 
+ /* lkdtm_heap.c */
+ void __init lkdtm_heap_init(void);
+-- 
+2.17.1
 
 
---=-O+wgk4AZ6l++1CDkyqmb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3ey4sACgkQlfZmHno8
-x/4qGggAi4+Q7jM0+bmigNE35y3GihyLXM3ahA2qmQ9ftiZshh+Z8XQUYcRi7852
-LsPNmYpHjwV3LyoaBXdnHaIVR5I1rE6RXSAZEK4xRF872qqm9rKDeMGF1GXxrw3u
-BJl/LR2xhGkhYepUUAiZ+vGy3FyTfl8ADH/V9AHtFtvXuFTpStBZS3/xYgaO9mRa
-E0hCB01yKy14h+FAXRiEB0E6onkyAqWjLHPmAXCGmk4ZsJwAjdVr3QyVq6AUBBKt
-CaBQ7gUU8NOTg8ZE9WDRdTfIlQ+1Gpiu2xk1jML8Y1eCGxB3wtXy0t5GdjOaiwzi
-fzp73AN5N4UigGnR/sl3LgJQXPe3yA==
-=ixwn
------END PGP SIGNATURE-----
-
---=-O+wgk4AZ6l++1CDkyqmb--
-
+-- 
+Kees Cook
