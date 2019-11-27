@@ -2,52 +2,58 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C550DC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E05AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C17D20869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C1D20869
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890666;
-	bh=YqUcwOq8I3LA1ZX50LegnrMryAU6YaLufek0Ui9iE+4=;
+	s=default; t=1574890673;
+	bh=g6tQzpPav/HyLLUIHmdIMx0pZsXaRsRBu3POfBuvuyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4zWlj00cXCqAUJ8AZVdJpYArqKYr7/A3UqAg4tGp6AEzOXJAKittdXvK6kOKNsIn
-	 CQ2L97PGBwswEtwH3TJwnhKM09ZeCKoMueH8HYYKQPE7ve5A2J7nr8mImxbfFgCrok
-	 mh3GkhQS7mJ8i+v/3OhYEsxHpX2tw8tZ8MxQVxe0=
+	b=xhufV5KUXRnc2TyoH++8d6uvPHoHYX+lKUrLrAn6cfYk1Pm4rJVJukBZchg0qxybs
+	 ssSctah+3QBcxfyRxgVW39mP345SgcQMaepZJGL4e6ksZC+t5kjJ+/Q3ywtMfoVMba
+	 YMfWvJP7M73LnLrs/icdOfmtawoI9aleMkrCQdLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbfK0Uqa (ORCPT
+        id S1729151AbfK0UqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:46:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58372 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:46:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbfK0Uq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:46:27 -0500
+        id S1729291AbfK0UqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:46:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 516D4217AB;
-        Wed, 27 Nov 2019 20:46:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D316821775;
+        Wed, 27 Nov 2019 20:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887585;
-        bh=YqUcwOq8I3LA1ZX50LegnrMryAU6YaLufek0Ui9iE+4=;
+        s=default; t=1574887573;
+        bh=g6tQzpPav/HyLLUIHmdIMx0pZsXaRsRBu3POfBuvuyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uq7HxPXyBzAMINaBWJbHMD6hiTej7uEYa+FXicX7pzVD82n6VIwuu774KyNGZfTOG
-         3BYIJ6n2j2+xAXW6noGTHY4poK/vsm+VABr/hsl+2A1QAW5zpDtBP9mS5xqeK/w9tv
-         6dsaIsTYZsbj7eQKoCw7ji/l+tg3JY+6V1LOIICU=
+        b=GGJctMCBNZiDzYGa0Y/3+XlpzFUp05O9WjHjpDppsG9/tJc4OXdFM1OQ82xYgfrpl
+         5dfw6/32e29+8i7FJlQz2K4wwslq9zZEcLgFAiTbeWfXKfB3Qr9k2TFxvRal70VW4v
+         v9G88O1vc6FSusylzVzyDjwNR1omCoeoFi0WFnac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Bunk <bunk@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 017/211] mwifiex: Fix NL80211_TX_POWER_LIMITED
-Date:   Wed, 27 Nov 2019 21:29:10 +0100
-Message-Id: <20191127203052.496121197@linuxfoundation.org>
+        stable@vger.kernel.org, Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Thomas Voegtle <tv@lio96.de>, Changwei Ge <gechangwei@live.cn>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 012/211] Revert "fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()"
+Date:   Wed, 27 Nov 2019 21:29:05 +0100
+Message-Id: <20191127203051.329138588@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,117 +66,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Bunk <bunk@kernel.org>
+From: Joseph Qi <joseph.qi@linux.alibaba.com>
 
-[ Upstream commit 65a576e27309120e0621f54d5c81eb9128bd56be ]
+commit 94b07b6f9e2e996afff7395de6b35f34f4cb10bf upstream.
 
-NL80211_TX_POWER_LIMITED was treated as NL80211_TX_POWER_AUTOMATIC,
-which is the opposite of what should happen and can cause nasty
-regulatory problems.
+This reverts commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d.
 
-if/else converted to a switch without default to make gcc warn
-on unhandled enum values.
+Commit 56e94ea132bb ("fs: ocfs2: fix possible null-pointer dereferences
+in ocfs2_xa_prepare_entry()") introduces a regression that fail to
+create directory with mount option user_xattr and acl.  Actually the
+reported NULL pointer dereference case can be correctly handled by
+loc->xl_ops->xlo_add_entry(), so revert it.
 
-Signed-off-by: Adrian Bunk <bunk@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: http://lkml.kernel.org/r/1573624916-83825-1-git-send-email-joseph.qi@linux.alibaba.com
+Fixes: 56e94ea132bb ("fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()")
+Signed-off-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reported-by: Thomas Voegtle <tv@lio96.de>
+Acked-by: Changwei Ge <gechangwei@live.cn>
+Cc: Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/marvell/mwifiex/cfg80211.c  | 13 +++++++++++--
- drivers/net/wireless/marvell/mwifiex/ioctl.h     |  1 +
- drivers/net/wireless/marvell/mwifiex/sta_ioctl.c | 11 +++++++----
- 3 files changed, 19 insertions(+), 6 deletions(-)
+ fs/ocfs2/xattr.c |   56 ++++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 33 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index dde47c5488184..5e8e34a08b2d6 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -362,11 +362,20 @@ mwifiex_cfg80211_set_tx_power(struct wiphy *wiphy,
- 	struct mwifiex_power_cfg power_cfg;
- 	int dbm = MBM_TO_DBM(mbm);
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -1497,6 +1497,18 @@ static int ocfs2_xa_check_space(struct o
+ 	return loc->xl_ops->xlo_check_space(loc, xi);
+ }
  
--	if (type == NL80211_TX_POWER_FIXED) {
-+	switch (type) {
-+	case NL80211_TX_POWER_FIXED:
- 		power_cfg.is_power_auto = 0;
-+		power_cfg.is_power_fixed = 1;
- 		power_cfg.power_level = dbm;
--	} else {
-+		break;
-+	case NL80211_TX_POWER_LIMITED:
-+		power_cfg.is_power_auto = 0;
-+		power_cfg.is_power_fixed = 0;
-+		power_cfg.power_level = dbm;
-+		break;
-+	case NL80211_TX_POWER_AUTOMATIC:
- 		power_cfg.is_power_auto = 1;
-+		break;
- 	}
- 
- 	priv = mwifiex_get_priv(adapter, MWIFIEX_BSS_ROLE_ANY);
-diff --git a/drivers/net/wireless/marvell/mwifiex/ioctl.h b/drivers/net/wireless/marvell/mwifiex/ioctl.h
-index 48e154e1865df..0dd592ea6e833 100644
---- a/drivers/net/wireless/marvell/mwifiex/ioctl.h
-+++ b/drivers/net/wireless/marvell/mwifiex/ioctl.h
-@@ -267,6 +267,7 @@ struct mwifiex_ds_encrypt_key {
- 
- struct mwifiex_power_cfg {
- 	u32 is_power_auto;
-+	u32 is_power_fixed;
- 	u32 power_level;
- };
- 
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-index 82828a2079638..a8043d76152a4 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-@@ -728,6 +728,9 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
- 	txp_cfg = (struct host_cmd_ds_txpwr_cfg *) buf;
- 	txp_cfg->action = cpu_to_le16(HostCmd_ACT_GEN_SET);
- 	if (!power_cfg->is_power_auto) {
-+		u16 dbm_min = power_cfg->is_power_fixed ?
-+			      dbm : priv->min_tx_power_level;
++static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
++{
++	loc->xl_ops->xlo_add_entry(loc, name_hash);
++	loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
++	/*
++	 * We can't leave the new entry's xe_name_offset at zero or
++	 * add_namevalue() will go nuts.  We set it to the size of our
++	 * storage so that it can never be less than any other entry.
++	 */
++	loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
++}
 +
- 		txp_cfg->mode = cpu_to_le32(1);
- 		pg_tlv = (struct mwifiex_types_power_group *)
- 			 (buf + sizeof(struct host_cmd_ds_txpwr_cfg));
-@@ -742,7 +745,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
- 		pg->last_rate_code = 0x03;
- 		pg->modulation_class = MOD_CLASS_HR_DSSS;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg++;
- 		/* Power group for modulation class OFDM */
-@@ -750,7 +753,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
- 		pg->last_rate_code = 0x07;
- 		pg->modulation_class = MOD_CLASS_OFDM;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg++;
- 		/* Power group for modulation class HTBW20 */
-@@ -758,7 +761,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
- 		pg->last_rate_code = 0x20;
- 		pg->modulation_class = MOD_CLASS_HT;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg->ht_bandwidth = HT_BW_20;
- 		pg++;
-@@ -767,7 +770,7 @@ int mwifiex_set_tx_power(struct mwifiex_private *priv,
- 		pg->last_rate_code = 0x20;
- 		pg->modulation_class = MOD_CLASS_HT;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg->ht_bandwidth = HT_BW_40;
- 	}
--- 
-2.20.1
-
+ static void ocfs2_xa_add_namevalue(struct ocfs2_xa_loc *loc,
+ 				   struct ocfs2_xattr_info *xi)
+ {
+@@ -2128,31 +2140,29 @@ static int ocfs2_xa_prepare_entry(struct
+ 	if (rc)
+ 		goto out;
+ 
+-	if (!loc->xl_entry) {
+-		rc = -EINVAL;
+-		goto out;
+-	}
+-
+-	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
+-		orig_value_size = loc->xl_entry->xe_value_size;
+-		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
+-		if (rc)
+-			goto out;
+-		goto alloc_value;
+-	}
++	if (loc->xl_entry) {
++		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
++			orig_value_size = loc->xl_entry->xe_value_size;
++			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
++			if (rc)
++				goto out;
++			goto alloc_value;
++		}
+ 
+-	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
+-		orig_clusters = ocfs2_xa_value_clusters(loc);
+-		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
+-		if (rc) {
+-			mlog_errno(rc);
+-			ocfs2_xa_cleanup_value_truncate(loc,
+-							"overwriting",
+-							orig_clusters);
+-			goto out;
++		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
++			orig_clusters = ocfs2_xa_value_clusters(loc);
++			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
++			if (rc) {
++				mlog_errno(rc);
++				ocfs2_xa_cleanup_value_truncate(loc,
++								"overwriting",
++								orig_clusters);
++				goto out;
++			}
+ 		}
+-	}
+-	ocfs2_xa_wipe_namevalue(loc);
++		ocfs2_xa_wipe_namevalue(loc);
++	} else
++		ocfs2_xa_add_entry(loc, name_hash);
+ 
+ 	/*
+ 	 * If we get here, we have a blank entry.  Fill it.  We grow our
 
 
