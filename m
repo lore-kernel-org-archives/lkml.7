@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325BAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9608EC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A0D21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFE621582
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888042;
-	bh=TJK7wwduTNpV7U4RlAnrTK6SDI4g++CbzCrtYmcfz40=;
+	s=default; t=1574888044;
+	bh=2XLDk3oFP55arHYzwo879IpYDhq26C9Jkur5rc2Fqyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Foi4oA4sgfqIuEOd4Rn1RZjBV9p+DfAF9uDEDa/BI/f+BNGDa/DERENToRVbLG5QB
-	 jWl6PAnrQyqgz80spL92j/oINKcDjNT2O5bf1ekc4O1cHMqCQdo1IjADeOEakbERch
-	 B0EhO42q0ESg86zusEu3MrRvA/Rg9FS3N9pQae64=
+	b=dsyhw0BRXGGjMzWaPTC68OoxrtZ/vy4qWXQlCcCCoAElGzmVo1dTq60Gz/c03ZEuK
+	 QHg/eyvxGfyh1h0n+uqJSHLExlSUybQyW8VD0dHBP5B0G1smlzIpNdOZFSnw1an2eM
+	 G09z5rs28oIIcBOY3gRT6znr71VVPHbdDGWPI2M8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbfK0UyA (ORCPT
+        id S1730785AbfK0UyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:54:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43184 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:54:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730776AbfK0Uxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:52 -0500
+        id S1730769AbfK0Ux5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E662120862;
-        Wed, 27 Nov 2019 20:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 111A52086A;
+        Wed, 27 Nov 2019 20:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888031;
-        bh=TJK7wwduTNpV7U4RlAnrTK6SDI4g++CbzCrtYmcfz40=;
+        s=default; t=1574888036;
+        bh=2XLDk3oFP55arHYzwo879IpYDhq26C9Jkur5rc2Fqyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p9mJE4ItDo4C6laucxsKFXivwcewDBL/7z0cVpHgdbIn0lpvmpUPa9tX8zK6M5x40
-         W4MGgyAUvZRjrWkyTKhyTMWxUdtqxxywzeOAdNOACmwYrj9Dmpxx1aLKCQsKJJSaKU
-         t3tti6/VxfzIbdsxu0ZTwY82olFSbw0lfS5oRgY0=
+        b=xqeAYOuqqalkRjZvzEYgsrlEj4kxNKIFeLj1F0Bo62gSm1V4/bMsS5fqtZSWGJ3Id
+         s+tOK+T42hC2PeIQT8Y4x0iKsehswjPejSPTwLBLOONC5trDg1rKHpLS3l+N79iHuY
+         9Hf+QPkLPrbERsujzP7zS/jYaE38KMPwAST5+4rU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        stable@vger.kernel.org,
+        syzbot+c86454eb3af9e8a4da20@syzkaller.appspotmail.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 190/211] media: usbvision: Fix races among open, close, and disconnect
-Date:   Wed, 27 Nov 2019 21:32:03 +0100
-Message-Id: <20191127203111.644123253@linuxfoundation.org>
+Subject: [PATCH 4.14 192/211] media: uvcvideo: Fix error path in control parsing failure
+Date:   Wed, 27 Nov 2019 21:32:05 +0100
+Message-Id: <20191127203111.818712853@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,131 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-commit 9e08117c9d4efc1e1bc6fce83dab856d9fd284b6 upstream.
+commit 8c279e9394cade640ed86ec6c6645a0e7df5e0b6 upstream.
 
-Visual inspection of the usbvision driver shows that it suffers from
-three races between its open, close, and disconnect handlers.  In
-particular, the driver is careful to update its usbvision->user and
-usbvision->remove_pending flags while holding the private mutex, but:
+When parsing the UVC control descriptors fails, the error path tries to
+cleanup a media device that hasn't been initialised, potentially
+resulting in a crash. Fix this by initialising the media device before
+the error handling path can be reached.
 
-	usbvision_v4l2_close() and usbvision_radio_close() don't hold
-	the mutex while they check the value of
-	usbvision->remove_pending;
-
-	usbvision_disconnect() doesn't hold the mutex while checking
-	the value of usbvision->user; and
-
-	also, usbvision_v4l2_open() and usbvision_radio_open() don't
-	check whether the device has been unplugged before allowing
-	the user to open the device files.
-
-Each of these can potentially lead to usbvision_release() being called
-twice and use-after-free errors.
-
-This patch fixes the races by reading the flags while the mutex is
-still held and checking for pending removes before allowing an open to
-succeed.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: 5a254d751e52 ("[media] uvcvideo: Register a v4l2_device")
+Reported-by: syzbot+c86454eb3af9e8a4da20@syzkaller.appspotmail.com
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/usbvision/usbvision-video.c |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/media/usb/uvc/uvc_driver.c |   28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
---- a/drivers/media/usb/usbvision/usbvision-video.c
-+++ b/drivers/media/usb/usbvision/usbvision-video.c
-@@ -328,6 +328,10 @@ static int usbvision_v4l2_open(struct fi
- 	if (mutex_lock_interruptible(&usbvision->v4l2_lock))
- 		return -ERESTARTSYS;
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -2059,6 +2059,20 @@ static int uvc_probe(struct usb_interfac
+ 			   sizeof(dev->name) - len);
+ 	}
  
-+	if (usbvision->remove_pending) {
-+		err_code = -ENODEV;
-+		goto unlock;
-+	}
- 	if (usbvision->user) {
- 		err_code = -EBUSY;
- 	} else {
-@@ -391,6 +395,7 @@ unlock:
- static int usbvision_v4l2_close(struct file *file)
- {
- 	struct usb_usbvision *usbvision = video_drvdata(file);
-+	int r;
- 
- 	PDEBUG(DBG_IO, "close");
- 
-@@ -405,9 +410,10 @@ static int usbvision_v4l2_close(struct f
- 	usbvision_scratch_free(usbvision);
- 
- 	usbvision->user--;
-+	r = usbvision->remove_pending;
- 	mutex_unlock(&usbvision->v4l2_lock);
- 
--	if (usbvision->remove_pending) {
-+	if (r) {
- 		printk(KERN_INFO "%s: Final disconnect\n", __func__);
- 		usbvision_release(usbvision);
- 		return 0;
-@@ -1091,6 +1097,11 @@ static int usbvision_radio_open(struct f
- 
- 	if (mutex_lock_interruptible(&usbvision->v4l2_lock))
- 		return -ERESTARTSYS;
++	/* Initialize the media device. */
++#ifdef CONFIG_MEDIA_CONTROLLER
++	dev->mdev.dev = &intf->dev;
++	strscpy(dev->mdev.model, dev->name, sizeof(dev->mdev.model));
++	if (udev->serial)
++		strscpy(dev->mdev.serial, udev->serial,
++			sizeof(dev->mdev.serial));
++	usb_make_path(udev, dev->mdev.bus_info, sizeof(dev->mdev.bus_info));
++	dev->mdev.hw_revision = le16_to_cpu(udev->descriptor.bcdDevice);
++	media_device_init(&dev->mdev);
 +
-+	if (usbvision->remove_pending) {
-+		err_code = -ENODEV;
-+		goto out;
-+	}
- 	err_code = v4l2_fh_open(file);
- 	if (err_code)
- 		goto out;
-@@ -1123,6 +1134,7 @@ out:
- static int usbvision_radio_close(struct file *file)
- {
- 	struct usb_usbvision *usbvision = video_drvdata(file);
-+	int r;
++	dev->vdev.mdev = &dev->mdev;
++#endif
++
+ 	/* Parse the Video Class control descriptor. */
+ 	if (uvc_parse_control(dev) < 0) {
+ 		uvc_trace(UVC_TRACE_PROBE, "Unable to parse UVC "
+@@ -2079,19 +2093,7 @@ static int uvc_probe(struct usb_interfac
+ 			"linux-uvc-devel mailing list.\n");
+ 	}
  
- 	PDEBUG(DBG_IO, "");
+-	/* Initialize the media device and register the V4L2 device. */
+-#ifdef CONFIG_MEDIA_CONTROLLER
+-	dev->mdev.dev = &intf->dev;
+-	strlcpy(dev->mdev.model, dev->name, sizeof(dev->mdev.model));
+-	if (udev->serial)
+-		strlcpy(dev->mdev.serial, udev->serial,
+-			sizeof(dev->mdev.serial));
+-	strcpy(dev->mdev.bus_info, udev->devpath);
+-	dev->mdev.hw_revision = le16_to_cpu(udev->descriptor.bcdDevice);
+-	media_device_init(&dev->mdev);
+-
+-	dev->vdev.mdev = &dev->mdev;
+-#endif
++	/* Register the V4L2 device. */
+ 	if (v4l2_device_register(&intf->dev, &dev->vdev) < 0)
+ 		goto error;
  
-@@ -1135,9 +1147,10 @@ static int usbvision_radio_close(struct
- 	usbvision_audio_off(usbvision);
- 	usbvision->radio = 0;
- 	usbvision->user--;
-+	r = usbvision->remove_pending;
- 	mutex_unlock(&usbvision->v4l2_lock);
- 
--	if (usbvision->remove_pending) {
-+	if (r) {
- 		printk(KERN_INFO "%s: Final disconnect\n", __func__);
- 		v4l2_fh_release(file);
- 		usbvision_release(usbvision);
-@@ -1562,6 +1575,7 @@ err_usb:
- static void usbvision_disconnect(struct usb_interface *intf)
- {
- 	struct usb_usbvision *usbvision = to_usbvision(usb_get_intfdata(intf));
-+	int u;
- 
- 	PDEBUG(DBG_PROBE, "");
- 
-@@ -1578,13 +1592,14 @@ static void usbvision_disconnect(struct
- 	v4l2_device_disconnect(&usbvision->v4l2_dev);
- 	usbvision_i2c_unregister(usbvision);
- 	usbvision->remove_pending = 1;	/* Now all ISO data will be ignored */
-+	u = usbvision->user;
- 
- 	usb_put_dev(usbvision->dev);
- 	usbvision->dev = NULL;	/* USB device is no more */
- 
- 	mutex_unlock(&usbvision->v4l2_lock);
- 
--	if (usbvision->user) {
-+	if (u) {
- 		printk(KERN_INFO "%s: In use, disconnect pending\n",
- 		       __func__);
- 		wake_up_interruptible(&usbvision->wait_frame);
 
 
