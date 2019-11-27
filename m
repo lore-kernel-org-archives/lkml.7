@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4ECC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7856CC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4954F2178F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DDF2178F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889650;
-	bh=rwVidz6XXXoz+KHdhTWgIVkEZXInT2cKkzZxqvWz0KQ=;
+	s=default; t=1574889657;
+	bh=bHDf1tUIQibMKmL2A/8ywKjSfjEElAGZ1UT0EPzYFHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xEofggWw5D6QdhX/0Kobs16FEobHhdfOkAW6LMprtm/xEdIfXdWM+yWwwi1Jc7/C6
-	 NI0Y0P6v1Dg8zIHNW/dpO7NJ1dAIXwLgZGJzl2cKZtqStZ6yFNLU9SX+UI6XRU4HVw
-	 xfZm1/CIZPFTi+qp5cqzA3D6yaF6X8+mphgk/PwQ=
+	b=TIflTwjnDPvQdik3s5dx1hzkiwnAnwOzCzn27um0PB+QMwKpjtfnc7HbS9ls8oAaP
+	 3pd6PCaJHETHuEBxjZs9oRLgR1f1d3MOFjGjoB19wFyzVw8J9kD83oMc7JHqnJVznD
+	 Hun7MBq0aewVwdbRC3gDUDz+v5rFOMdL1ig3Slcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733036AbfK0VUt (ORCPT
+        id S1733128AbfK0VU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:20:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34844 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:20:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732739AbfK0VIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:08:23 -0500
+        id S1728381AbfK0VIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:08:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F9F215F1;
-        Wed, 27 Nov 2019 21:08:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FEDE216F4;
+        Wed, 27 Nov 2019 21:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888902;
-        bh=rwVidz6XXXoz+KHdhTWgIVkEZXInT2cKkzZxqvWz0KQ=;
+        s=default; t=1574888889;
+        bh=bHDf1tUIQibMKmL2A/8ywKjSfjEElAGZ1UT0EPzYFHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1t1eqb9wzn1ZkbzGu+lwGZP55abw0RZIacVJXflICJqKZRtHkT9NFSA4BO27q71f
-         NYM3sXpf2JZbBkLR+RBz0uzQERV9mcvcx3ECMWAyvi0PVjNeqdXGfLV2IZhoHTui3t
-         9+0qc3lQpFv8B6naCSXcch7C1+y74nPlJNpMb6rE=
+        b=JUx8Cq7E0OJ9ioK8kqFTyHtpCGKIluS218V9df6GA1szycBmPYcLWIGAO+Y03f0/B
+         JavTvXMqw2Vw45PnavkMAk5XhPiyJC7Cd71hA4rROBPOJpCZaIij/VoojNjzlNMQCo
+         pVzPawVrrAuZRGjg66Uecx5mtXrBUQ4D8S2UMOtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.19 278/306] y2038: futex: Move compat implementation into futex.c
-Date:   Wed, 27 Nov 2019 21:32:08 +0100
-Message-Id: <20191127203135.110246790@linuxfoundation.org>
+        stable@vger.kernel.org, Vandana BN <bnvandana@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 283/306] media: vivid: Set vid_cap_streaming and vid_out_streaming to true
+Date:   Wed, 27 Nov 2019 21:32:13 +0100
+Message-Id: <20191127203135.453138297@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -58,501 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Vandana BN <bnvandana@gmail.com>
 
-commit 04e7712f4460585e5eed5b853fd8b82a9943958f upstream.
+commit b4add02d2236fd5f568db141cfd8eb4290972eb3 upstream.
 
-We are going to share the compat_sys_futex() handler between 64-bit
-architectures and 32-bit architectures that need to deal with both 32-bit
-and 64-bit time_t, and this is easier if both entry points are in the
-same file.
+When vbi stream is started, followed by video streaming,
+the vid_cap_streaming and vid_out_streaming were not being set to true,
+which would cause the video stream to stop when vbi stream is stopped.
+This patch allows to set vid_cap_streaming and vid_out_streaming to true.
+According to Hans Verkuil it appears that these 'if (dev->kthread_vid_cap)'
+checks are a left-over from the original vivid development and should never
+have been there.
 
-In fact, most other system call handlers do the same thing these days, so
-let's follow the trend here and merge all of futex_compat.c into futex.c.
-
-In the process, a few minor changes have to be done to make sure everything
-still makes sense: handle_futex_death() and futex_cmpxchg_enabled() become
-local symbol, and the compat version of the fetch_robust_entry() function
-gets renamed to compat_fetch_robust_entry() to avoid a symbol clash.
-
-This is intended as a purely cosmetic patch, no behavior should
-change.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
+Cc: <stable@vger.kernel.org>      # for v3.18 and up
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/futex.h |    8 -
- kernel/Makefile       |    3 
- kernel/futex.c        |  195 +++++++++++++++++++++++++++++++++++++++++++++++-
- kernel/futex_compat.c |  202 --------------------------------------------------
- 4 files changed, 192 insertions(+), 216 deletions(-)
+ drivers/media/platform/vivid/vivid-vid-cap.c |    3 ---
+ drivers/media/platform/vivid/vivid-vid-out.c |    3 ---
+ 2 files changed, 6 deletions(-)
 
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -9,9 +9,6 @@ struct inode;
- struct mm_struct;
- struct task_struct;
+--- a/drivers/media/platform/vivid/vivid-vid-cap.c
++++ b/drivers/media/platform/vivid/vivid-vid-cap.c
+@@ -222,9 +222,6 @@ static int vid_cap_start_streaming(struc
+ 	if (vb2_is_streaming(&dev->vb_vid_out_q))
+ 		dev->can_loop_video = vivid_vid_can_loop(dev);
  
--extern int
--handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi);
+-	if (dev->kthread_vid_cap)
+-		return 0;
 -
- /*
-  * Futexes are matched on equal values of this key.
-  * The key type depends on whether it's a shared or private mapping.
-@@ -55,11 +52,6 @@ extern void exit_robust_list(struct task
+ 	dev->vid_cap_seq_count = 0;
+ 	dprintk(dev, 1, "%s\n", __func__);
+ 	for (i = 0; i < VIDEO_MAX_FRAME; i++)
+--- a/drivers/media/platform/vivid/vivid-vid-out.c
++++ b/drivers/media/platform/vivid/vivid-vid-out.c
+@@ -146,9 +146,6 @@ static int vid_out_start_streaming(struc
+ 	if (vb2_is_streaming(&dev->vb_vid_cap_q))
+ 		dev->can_loop_video = vivid_vid_can_loop(dev);
  
- long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
- 	      u32 __user *uaddr2, u32 val2, u32 val3);
--#ifdef CONFIG_HAVE_FUTEX_CMPXCHG
--#define futex_cmpxchg_enabled 1
--#else
--extern int futex_cmpxchg_enabled;
--#endif
- #else
- static inline void exit_robust_list(struct task_struct *curr)
- {
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -50,9 +50,6 @@ obj-$(CONFIG_PROFILING) += profile.o
- obj-$(CONFIG_STACKTRACE) += stacktrace.o
- obj-y += time/
- obj-$(CONFIG_FUTEX) += futex.o
--ifeq ($(CONFIG_COMPAT),y)
--obj-$(CONFIG_FUTEX) += futex_compat.o
--endif
- obj-$(CONFIG_GENERIC_ISA_DMA) += dma.o
- obj-$(CONFIG_SMP) += smp.o
- ifneq ($(CONFIG_SMP),y)
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -44,6 +44,7 @@
-  *  along with this program; if not, write to the Free Software
-  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-  */
-+#include <linux/compat.h>
- #include <linux/slab.h>
- #include <linux/poll.h>
- #include <linux/fs.h>
-@@ -173,8 +174,10 @@
-  * double_lock_hb() and double_unlock_hb(), respectively.
-  */
- 
--#ifndef CONFIG_HAVE_FUTEX_CMPXCHG
--int __read_mostly futex_cmpxchg_enabled;
-+#ifdef CONFIG_HAVE_FUTEX_CMPXCHG
-+#define futex_cmpxchg_enabled 1
-+#else
-+static int  __read_mostly futex_cmpxchg_enabled;
- #endif
- 
- /*
-@@ -3458,7 +3461,7 @@ err_unlock:
-  * Process a futex-list entry, check whether it's owned by the
-  * dying task, and do notification if so:
-  */
--int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
-+static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
- {
- 	u32 uval, uninitialized_var(nval), mval;
- 	int err;
-@@ -3707,6 +3710,192 @@ SYSCALL_DEFINE6(futex, u32 __user *, uad
- 	return do_futex(uaddr, op, val, tp, uaddr2, val2, val3);
- }
- 
-+#ifdef CONFIG_COMPAT
-+/*
-+ * Fetch a robust-list pointer. Bit 0 signals PI futexes:
-+ */
-+static inline int
-+compat_fetch_robust_entry(compat_uptr_t *uentry, struct robust_list __user **entry,
-+		   compat_uptr_t __user *head, unsigned int *pi)
-+{
-+	if (get_user(*uentry, head))
-+		return -EFAULT;
-+
-+	*entry = compat_ptr((*uentry) & ~1);
-+	*pi = (unsigned int)(*uentry) & 1;
-+
-+	return 0;
-+}
-+
-+static void __user *futex_uaddr(struct robust_list __user *entry,
-+				compat_long_t futex_offset)
-+{
-+	compat_uptr_t base = ptr_to_compat(entry);
-+	void __user *uaddr = compat_ptr(base + futex_offset);
-+
-+	return uaddr;
-+}
-+
-+/*
-+ * Walk curr->robust_list (very carefully, it's a userspace list!)
-+ * and mark any locks found there dead, and notify any waiters.
-+ *
-+ * We silently return on any sign of list-walking problem.
-+ */
-+void compat_exit_robust_list(struct task_struct *curr)
-+{
-+	struct compat_robust_list_head __user *head = curr->compat_robust_list;
-+	struct robust_list __user *entry, *next_entry, *pending;
-+	unsigned int limit = ROBUST_LIST_LIMIT, pi, pip;
-+	unsigned int uninitialized_var(next_pi);
-+	compat_uptr_t uentry, next_uentry, upending;
-+	compat_long_t futex_offset;
-+	int rc;
-+
-+	if (!futex_cmpxchg_enabled)
-+		return;
-+
-+	/*
-+	 * Fetch the list head (which was registered earlier, via
-+	 * sys_set_robust_list()):
-+	 */
-+	if (compat_fetch_robust_entry(&uentry, &entry, &head->list.next, &pi))
-+		return;
-+	/*
-+	 * Fetch the relative futex offset:
-+	 */
-+	if (get_user(futex_offset, &head->futex_offset))
-+		return;
-+	/*
-+	 * Fetch any possibly pending lock-add first, and handle it
-+	 * if it exists:
-+	 */
-+	if (compat_fetch_robust_entry(&upending, &pending,
-+			       &head->list_op_pending, &pip))
-+		return;
-+
-+	next_entry = NULL;	/* avoid warning with gcc */
-+	while (entry != (struct robust_list __user *) &head->list) {
-+		/*
-+		 * Fetch the next entry in the list before calling
-+		 * handle_futex_death:
-+		 */
-+		rc = compat_fetch_robust_entry(&next_uentry, &next_entry,
-+			(compat_uptr_t __user *)&entry->next, &next_pi);
-+		/*
-+		 * A pending lock might already be on the list, so
-+		 * dont process it twice:
-+		 */
-+		if (entry != pending) {
-+			void __user *uaddr = futex_uaddr(entry, futex_offset);
-+
-+			if (handle_futex_death(uaddr, curr, pi))
-+				return;
-+		}
-+		if (rc)
-+			return;
-+		uentry = next_uentry;
-+		entry = next_entry;
-+		pi = next_pi;
-+		/*
-+		 * Avoid excessively long or circular lists:
-+		 */
-+		if (!--limit)
-+			break;
-+
-+		cond_resched();
-+	}
-+	if (pending) {
-+		void __user *uaddr = futex_uaddr(pending, futex_offset);
-+
-+		handle_futex_death(uaddr, curr, pip);
-+	}
-+}
-+
-+COMPAT_SYSCALL_DEFINE2(set_robust_list,
-+		struct compat_robust_list_head __user *, head,
-+		compat_size_t, len)
-+{
-+	if (!futex_cmpxchg_enabled)
-+		return -ENOSYS;
-+
-+	if (unlikely(len != sizeof(*head)))
-+		return -EINVAL;
-+
-+	current->compat_robust_list = head;
-+
-+	return 0;
-+}
-+
-+COMPAT_SYSCALL_DEFINE3(get_robust_list, int, pid,
-+			compat_uptr_t __user *, head_ptr,
-+			compat_size_t __user *, len_ptr)
-+{
-+	struct compat_robust_list_head __user *head;
-+	unsigned long ret;
-+	struct task_struct *p;
-+
-+	if (!futex_cmpxchg_enabled)
-+		return -ENOSYS;
-+
-+	rcu_read_lock();
-+
-+	ret = -ESRCH;
-+	if (!pid)
-+		p = current;
-+	else {
-+		p = find_task_by_vpid(pid);
-+		if (!p)
-+			goto err_unlock;
-+	}
-+
-+	ret = -EPERM;
-+	if (!ptrace_may_access(p, PTRACE_MODE_READ_REALCREDS))
-+		goto err_unlock;
-+
-+	head = p->compat_robust_list;
-+	rcu_read_unlock();
-+
-+	if (put_user(sizeof(*head), len_ptr))
-+		return -EFAULT;
-+	return put_user(ptr_to_compat(head), head_ptr);
-+
-+err_unlock:
-+	rcu_read_unlock();
-+
-+	return ret;
-+}
-+
-+COMPAT_SYSCALL_DEFINE6(futex, u32 __user *, uaddr, int, op, u32, val,
-+		struct old_timespec32 __user *, utime, u32 __user *, uaddr2,
-+		u32, val3)
-+{
-+	struct timespec ts;
-+	ktime_t t, *tp = NULL;
-+	int val2 = 0;
-+	int cmd = op & FUTEX_CMD_MASK;
-+
-+	if (utime && (cmd == FUTEX_WAIT || cmd == FUTEX_LOCK_PI ||
-+		      cmd == FUTEX_WAIT_BITSET ||
-+		      cmd == FUTEX_WAIT_REQUEUE_PI)) {
-+		if (compat_get_timespec(&ts, utime))
-+			return -EFAULT;
-+		if (!timespec_valid(&ts))
-+			return -EINVAL;
-+
-+		t = timespec_to_ktime(ts);
-+		if (cmd == FUTEX_WAIT)
-+			t = ktime_add_safe(ktime_get(), t);
-+		tp = &t;
-+	}
-+	if (cmd == FUTEX_REQUEUE || cmd == FUTEX_CMP_REQUEUE ||
-+	    cmd == FUTEX_CMP_REQUEUE_PI || cmd == FUTEX_WAKE_OP)
-+		val2 = (int) (unsigned long) utime;
-+
-+	return do_futex(uaddr, op, val, tp, uaddr2, val2, val3);
-+}
-+#endif /* CONFIG_COMPAT */
-+
- static void __init futex_detect_cmpxchg(void)
- {
- #ifndef CONFIG_HAVE_FUTEX_CMPXCHG
---- a/kernel/futex_compat.c
-+++ /dev/null
-@@ -1,202 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * linux/kernel/futex_compat.c
-- *
-- * Futex compatibililty routines.
-- *
-- * Copyright 2006, Red Hat, Inc., Ingo Molnar
-- */
+-	if (dev->kthread_vid_out)
+-		return 0;
 -
--#include <linux/linkage.h>
--#include <linux/compat.h>
--#include <linux/nsproxy.h>
--#include <linux/futex.h>
--#include <linux/ptrace.h>
--#include <linux/syscalls.h>
--
--#include <linux/uaccess.h>
--
--
--/*
-- * Fetch a robust-list pointer. Bit 0 signals PI futexes:
-- */
--static inline int
--fetch_robust_entry(compat_uptr_t *uentry, struct robust_list __user **entry,
--		   compat_uptr_t __user *head, unsigned int *pi)
--{
--	if (get_user(*uentry, head))
--		return -EFAULT;
--
--	*entry = compat_ptr((*uentry) & ~1);
--	*pi = (unsigned int)(*uentry) & 1;
--
--	return 0;
--}
--
--static void __user *futex_uaddr(struct robust_list __user *entry,
--				compat_long_t futex_offset)
--{
--	compat_uptr_t base = ptr_to_compat(entry);
--	void __user *uaddr = compat_ptr(base + futex_offset);
--
--	return uaddr;
--}
--
--/*
-- * Walk curr->robust_list (very carefully, it's a userspace list!)
-- * and mark any locks found there dead, and notify any waiters.
-- *
-- * We silently return on any sign of list-walking problem.
-- */
--void compat_exit_robust_list(struct task_struct *curr)
--{
--	struct compat_robust_list_head __user *head = curr->compat_robust_list;
--	struct robust_list __user *entry, *next_entry, *pending;
--	unsigned int limit = ROBUST_LIST_LIMIT, pi, pip;
--	unsigned int uninitialized_var(next_pi);
--	compat_uptr_t uentry, next_uentry, upending;
--	compat_long_t futex_offset;
--	int rc;
--
--	if (!futex_cmpxchg_enabled)
--		return;
--
--	/*
--	 * Fetch the list head (which was registered earlier, via
--	 * sys_set_robust_list()):
--	 */
--	if (fetch_robust_entry(&uentry, &entry, &head->list.next, &pi))
--		return;
--	/*
--	 * Fetch the relative futex offset:
--	 */
--	if (get_user(futex_offset, &head->futex_offset))
--		return;
--	/*
--	 * Fetch any possibly pending lock-add first, and handle it
--	 * if it exists:
--	 */
--	if (fetch_robust_entry(&upending, &pending,
--			       &head->list_op_pending, &pip))
--		return;
--
--	next_entry = NULL;	/* avoid warning with gcc */
--	while (entry != (struct robust_list __user *) &head->list) {
--		/*
--		 * Fetch the next entry in the list before calling
--		 * handle_futex_death:
--		 */
--		rc = fetch_robust_entry(&next_uentry, &next_entry,
--			(compat_uptr_t __user *)&entry->next, &next_pi);
--		/*
--		 * A pending lock might already be on the list, so
--		 * dont process it twice:
--		 */
--		if (entry != pending) {
--			void __user *uaddr = futex_uaddr(entry, futex_offset);
--
--			if (handle_futex_death(uaddr, curr, pi))
--				return;
--		}
--		if (rc)
--			return;
--		uentry = next_uentry;
--		entry = next_entry;
--		pi = next_pi;
--		/*
--		 * Avoid excessively long or circular lists:
--		 */
--		if (!--limit)
--			break;
--
--		cond_resched();
--	}
--	if (pending) {
--		void __user *uaddr = futex_uaddr(pending, futex_offset);
--
--		handle_futex_death(uaddr, curr, pip);
--	}
--}
--
--COMPAT_SYSCALL_DEFINE2(set_robust_list,
--		struct compat_robust_list_head __user *, head,
--		compat_size_t, len)
--{
--	if (!futex_cmpxchg_enabled)
--		return -ENOSYS;
--
--	if (unlikely(len != sizeof(*head)))
--		return -EINVAL;
--
--	current->compat_robust_list = head;
--
--	return 0;
--}
--
--COMPAT_SYSCALL_DEFINE3(get_robust_list, int, pid,
--			compat_uptr_t __user *, head_ptr,
--			compat_size_t __user *, len_ptr)
--{
--	struct compat_robust_list_head __user *head;
--	unsigned long ret;
--	struct task_struct *p;
--
--	if (!futex_cmpxchg_enabled)
--		return -ENOSYS;
--
--	rcu_read_lock();
--
--	ret = -ESRCH;
--	if (!pid)
--		p = current;
--	else {
--		p = find_task_by_vpid(pid);
--		if (!p)
--			goto err_unlock;
--	}
--
--	ret = -EPERM;
--	if (!ptrace_may_access(p, PTRACE_MODE_READ_REALCREDS))
--		goto err_unlock;
--
--	head = p->compat_robust_list;
--	rcu_read_unlock();
--
--	if (put_user(sizeof(*head), len_ptr))
--		return -EFAULT;
--	return put_user(ptr_to_compat(head), head_ptr);
--
--err_unlock:
--	rcu_read_unlock();
--
--	return ret;
--}
--
--COMPAT_SYSCALL_DEFINE6(futex, u32 __user *, uaddr, int, op, u32, val,
--		struct compat_timespec __user *, utime, u32 __user *, uaddr2,
--		u32, val3)
--{
--	struct timespec ts;
--	ktime_t t, *tp = NULL;
--	int val2 = 0;
--	int cmd = op & FUTEX_CMD_MASK;
--
--	if (utime && (cmd == FUTEX_WAIT || cmd == FUTEX_LOCK_PI ||
--		      cmd == FUTEX_WAIT_BITSET ||
--		      cmd == FUTEX_WAIT_REQUEUE_PI)) {
--		if (compat_get_timespec(&ts, utime))
--			return -EFAULT;
--		if (!timespec_valid(&ts))
--			return -EINVAL;
--
--		t = timespec_to_ktime(ts);
--		if (cmd == FUTEX_WAIT)
--			t = ktime_add_safe(ktime_get(), t);
--		tp = &t;
--	}
--	if (cmd == FUTEX_REQUEUE || cmd == FUTEX_CMP_REQUEUE ||
--	    cmd == FUTEX_CMP_REQUEUE_PI || cmd == FUTEX_WAKE_OP)
--		val2 = (int) (unsigned long) utime;
--
--	return do_futex(uaddr, op, val, tp, uaddr2, val2, val3);
--}
+ 	dev->vid_out_seq_count = 0;
+ 	dprintk(dev, 1, "%s\n", __func__);
+ 	if (dev->start_streaming_error) {
 
 
