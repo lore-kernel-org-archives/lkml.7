@@ -2,53 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB557C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15868C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F8A21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC18621741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889712;
-	bh=Obg1p7S3J0MkR3yuSxhUyoV5Ni3xlnofF+hMIyYxgDk=;
+	s=default; t=1574889713;
+	bh=vRmXBO5Gu0mvfOSr13Grf3KH9xKlAfzS1tCHm0VwrJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZXm65ocoRf7RVCMkanLwu4vmJth/zDqNAsfi2KHXaYRFlI7pnLGGOBVLcuCo8xPBJ
-	 FGu64kVQkleLryRe6ma6KoYTo/k/FATtKYfnExTq9bEXd3SSQBMvhX+RI4M/jnSf+q
-	 76p6QIm1B9OGNRqME1kvrcynDfC2C8vgZ5KjVGgI=
+	b=DTMTVT21Whex9f/+dgU3kUBziUP13J0iygx0aW/AfN9rKA1Tkn+j8KMBEwW+PMHVr
+	 l8r2YhY+fJcnaGTFfKhPLawTNeOhL/sTpgHYUJx+OSeJuv4PKMC/lerzuj1Z2IDKUf
+	 veBKqezHX7melK4rBOFkc0/htEM8dhVGCofcTkRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732486AbfK0VGq (ORCPT
+        id S1727444AbfK0VGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:06:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60852 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:06:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731881AbfK0VGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:06:39 -0500
+        id S1732454AbfK0VGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:06:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6FC62080F;
-        Wed, 27 Nov 2019 21:06:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74909215F2;
+        Wed, 27 Nov 2019 21:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888799;
-        bh=Obg1p7S3J0MkR3yuSxhUyoV5Ni3xlnofF+hMIyYxgDk=;
+        s=default; t=1574888796;
+        bh=vRmXBO5Gu0mvfOSr13Grf3KH9xKlAfzS1tCHm0VwrJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nrdy3TXHcVFuPMYQypPvzJ9WmQAuE7LnGFglYSAyoKCrtHJ21Y3NV4azmqqA3VRdP
-         FwQrBDja9h8Sfro7Bord9CgDkgqCRukw6BF/fZdh7PE6C1NZyjDSl6AKGAzVOQUpi6
-         HIXgwhF3DEZvGVAnAVBjtKICkFYv9my4GMC51MdE=
+        b=FxMY0843iS+Dk4cnIhyt1IE9o8aZJ+foiCkGfCx/RlsrXhZDtIuqhLmRtdfqZ5S2V
+         7Gb9TEwcocNpTWhap7ClE71e1JA8Muj8axaFpSCr+YffZcNs386LZG7AtBMAUMIPic
+         s2TNfcRzhAfQ5HPxU9IFUHqdZuWcRr5Zb3Q8fX0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 237/306] ACPICA: Use %d for signed int print formatting instead of %u
-Date:   Wed, 27 Nov 2019 21:31:27 +0100
-Message-Id: <20191127203132.312741545@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>, stable@kernel.org
+Subject: [PATCH 4.19 272/306] x86/pti/32: Size initial_page_table correctly
+Date:   Wed, 27 Nov 2019 21:32:02 +0100
+Message-Id: <20191127203134.692336961@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,36 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit f8ddf49b420112e28bdd23d7ad52d7991a0ccbe3 ]
+commit f490e07c53d66045d9d739e134145ec9b38653d3 upstream.
 
-Fix warnings found using static analysis with cppcheck, use %d printf
-format specifier for signed ints rather than %u
+Commit 945fd17ab6ba ("x86/cpu_entry_area: Sync cpu_entry_area to
+initial_page_table") introduced the sync for the initial page table for
+32bit.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+sync_initial_page_table() uses clone_pgd_range() which does the update for
+the kernel page table. If PTI is enabled it also updates the user space
+page table counterpart, which is assumed to be in the next page after the
+target PGD.
+
+At this point in time 32-bit did not have PTI support, so the user space
+page table update was not taking place.
+
+The support for PTI on 32-bit which was introduced later on, did not take
+that into account and missed to add the user space counter part for the
+initial page table.
+
+As a consequence sync_initial_page_table() overwrites any data which is
+located in the page behing initial_page_table causing random failures,
+e.g. by corrupting doublefault_tss and wreckaging the doublefault handler
+on 32bit.
+
+Fix it by adding a "user" page table right after initial_page_table.
+
+Fixes: 7757d607c6b3 ("x86/pti: Allow CONFIG_PAGE_TABLE_ISOLATION for x86_32")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Joerg Roedel <jroedel@suse.de>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/power/acpi/tools/acpidump/apmain.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/head_32.S |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/power/acpi/tools/acpidump/apmain.c b/tools/power/acpi/tools/acpidump/apmain.c
-index db213171f8d99..2d9b94b631cb9 100644
---- a/tools/power/acpi/tools/acpidump/apmain.c
-+++ b/tools/power/acpi/tools/acpidump/apmain.c
-@@ -106,7 +106,7 @@ static int ap_insert_action(char *argument, u32 to_be_done)
+--- a/arch/x86/kernel/head_32.S
++++ b/arch/x86/kernel/head_32.S
+@@ -571,6 +571,16 @@ ENTRY(initial_page_table)
+ #  error "Kernel PMDs should be 1, 2 or 3"
+ # endif
+ 	.align PAGE_SIZE		/* needs to be page-sized too */
++
++#ifdef CONFIG_PAGE_TABLE_ISOLATION
++	/*
++	 * PTI needs another page so sync_initial_pagetable() works correctly
++	 * and does not scribble over the data which is placed behind the
++	 * actual initial_page_table. See clone_pgd_range().
++	 */
++	.fill 1024, 4, 0
++#endif
++
+ #endif
  
- 	current_action++;
- 	if (current_action > AP_MAX_ACTIONS) {
--		fprintf(stderr, "Too many table options (max %u)\n",
-+		fprintf(stderr, "Too many table options (max %d)\n",
- 			AP_MAX_ACTIONS);
- 		return (-1);
- 	}
--- 
-2.20.1
-
+ .data
 
 
