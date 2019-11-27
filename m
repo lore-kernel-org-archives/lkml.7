@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CD7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF68EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4232E21772
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E4B21772
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887088;
-	bh=8I63cHGEo6Hyc38/WiEx2WOGdfG7LCz56iii/e2WbxI=;
+	s=default; t=1574887090;
+	bh=HK2xquq36bYBWwcTDwpjNXQgQBGzBWVirfylhRvR+ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qmyYbnG2a+uTrc+UWRAmWqEW8OM5D9x+WNkcvqWazxZg64zwHAVLSYcxvRJ0F8QN+
-	 9IhWj+Y77buwzCbvktABB0rW6fW78pb5jOoMwmQR+v35mLWrH7wfmCb6mc55EWtI+u
-	 6hvzupMJBdCkbYXOsUxwJ4UWCEtRHypsLSAVuD4I=
+	b=rqWml5XHjKBo00mabyprOdxOPj9pFjhlHS2SGZ7x9hCDdxg7JbQZB4gYBEnIagQAU
+	 YQpUCOYMADqocvMHkv9AAP2QbN0Hl4znufmsqZ2kV4W4kWlCvrn8jFYD9txPiDQPGe
+	 Zb3UNHyUK09O6eooHazL7si/EnzVYB6hr4Zt2XSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbfK0UiH (ORCPT
+        id S1728681AbfK0UiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:38:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:38:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727756AbfK0UiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:38:03 -0500
+        id S1728665AbfK0UiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:38:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DCCE215A5;
-        Wed, 27 Nov 2019 20:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE4DF215E5;
+        Wed, 27 Nov 2019 20:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887082;
-        bh=8I63cHGEo6Hyc38/WiEx2WOGdfG7LCz56iii/e2WbxI=;
+        s=default; t=1574887080;
+        bh=HK2xquq36bYBWwcTDwpjNXQgQBGzBWVirfylhRvR+ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aOi6S5X+f1+DBH8qbYYxaML1dNhrutf0jFtOp5//XH8wwJXPSP0D+AAwN6cSfpfYm
-         gm8yZEXKAJizr7vIEdUeMpgZjwTSDObU4flneUwreI6klBr9kB+G3vLSc8iQDq9+lM
-         /N/w9/amWuBiwYGTqkHCw8B0s8+98EIFcsT7vrww=
+        b=Jw7nvZ0v9DyM0GSbX2taR5dFDmJ45mupHpfmhczo2rmyaUQlT3LwcT9Zfxy6RHU2/
+         PkQfhnDbqbCU5aXx5In+7dsDts44d7h4R4hwfFdSB7A11+dcNxkTwDiyl1Bn+CS8OR
+         qZzrEW3wcQp+I9q/BNLsI5OCBmwtqe2p+y6ERlhs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Gang He <ghe@suse.com>,
+        Joseph Qi <jiangqi903@gmail.com>, Eric Ren <zren@suse.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.4 105/132] mmc: block: Fix tag condition with packed writes
-Date:   Wed, 27 Nov 2019 21:31:36 +0100
-Message-Id: <20191127203025.855011718@linuxfoundation.org>
+Subject: [PATCH 4.4 104/132] ocfs2: remove ocfs2_is_o2cb_active()
+Date:   Wed, 27 Nov 2019 21:31:35 +0100
+Message-Id: <20191127203025.567094543@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,34 +66,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Gang He <ghe@suse.com>
 
-commit d806b46e5f496a6335ebd7f8432d2533507ce9a2 upstream.
+commit a634644751c46238df58bbfe992e30c1668388db upstream.
 
-Apparently a cut-and-paste error, 'do_data_tag' is using 'brq' for data
-size even though 'brq' has not been set up. Instead use blk_rq_sectors().
+Remove ocfs2_is_o2cb_active().  We have similar functions to identify
+which cluster stack is being used via osb->osb_cluster_stack.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Secondly, the current implementation of ocfs2_is_o2cb_active() is not
+totally safe.  Based on the design of stackglue, we need to get
+ocfs2_stack_lock before using ocfs2_stack related data structures, and
+that active_stack pointer can be NULL in the case of mount failure.
+
+Link: http://lkml.kernel.org/r/1495441079-11708-1-git-send-email-ghe@suse.com
+Signed-off-by: Gang He <ghe@suse.com>
+Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
+Reviewed-by: Eric Ren <zren@suse.com>
+Acked-by: Changwei Ge <ge.changwei@h3c.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/mmc/card/block.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/ocfs2/dlmglue.c   |    2 +-
+ fs/ocfs2/stackglue.c |    6 ------
+ fs/ocfs2/stackglue.h |    3 ---
+ 3 files changed, 1 insertion(+), 10 deletions(-)
 
---- a/drivers/mmc/card/block.c
-+++ b/drivers/mmc/card/block.c
-@@ -1772,8 +1772,7 @@ static void mmc_blk_packed_hdr_wrq_prep(
- 		do_data_tag = (card->ext_csd.data_tag_unit_size) &&
- 			(prq->cmd_flags & REQ_META) &&
- 			(rq_data_dir(prq) == WRITE) &&
--			((brq->data.blocks * brq->data.blksz) >=
--			 card->ext_csd.data_tag_unit_size);
-+			blk_rq_bytes(prq) >= card->ext_csd.data_tag_unit_size;
- 		/* Argument of CMD23 */
- 		packed_cmd_hdr[(i * 2)] = cpu_to_le32(
- 			(do_rel_wr ? MMC_CMD23_ARG_REL_WR : 0) |
+--- a/fs/ocfs2/dlmglue.c
++++ b/fs/ocfs2/dlmglue.c
+@@ -3426,7 +3426,7 @@ static int ocfs2_downconvert_lock(struct
+ 	 * we can recover correctly from node failure. Otherwise, we may get
+ 	 * invalid LVB in LKB, but without DLM_SBF_VALNOTVALID being set.
+ 	 */
+-	if (!ocfs2_is_o2cb_active() &&
++	if (ocfs2_userspace_stack(osb) &&
+ 	    lockres->l_ops->flags & LOCK_TYPE_USES_LVB)
+ 		lvb = 1;
+ 
+--- a/fs/ocfs2/stackglue.c
++++ b/fs/ocfs2/stackglue.c
+@@ -48,12 +48,6 @@ static char ocfs2_hb_ctl_path[OCFS2_MAX_
+  */
+ static struct ocfs2_stack_plugin *active_stack;
+ 
+-inline int ocfs2_is_o2cb_active(void)
+-{
+-	return !strcmp(active_stack->sp_name, OCFS2_STACK_PLUGIN_O2CB);
+-}
+-EXPORT_SYMBOL_GPL(ocfs2_is_o2cb_active);
+-
+ static struct ocfs2_stack_plugin *ocfs2_stack_lookup(const char *name)
+ {
+ 	struct ocfs2_stack_plugin *p;
+--- a/fs/ocfs2/stackglue.h
++++ b/fs/ocfs2/stackglue.h
+@@ -298,7 +298,4 @@ void ocfs2_stack_glue_set_max_proto_vers
+ int ocfs2_stack_glue_register(struct ocfs2_stack_plugin *plugin);
+ void ocfs2_stack_glue_unregister(struct ocfs2_stack_plugin *plugin);
+ 
+-/* In ocfs2_downconvert_lock(), we need to know which stack we are using */
+-int ocfs2_is_o2cb_active(void);
+-
+ #endif  /* STACKGLUE_H */
 
 
