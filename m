@@ -2,141 +2,184 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85E8C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E557BC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD371206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB5C20722
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 15:18:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWdxRA3c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTwMRqNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfK0PSM (ORCPT
+        id S1727193AbfK0PSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:18:12 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:43758 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfK0PSM (ORCPT
+        Wed, 27 Nov 2019 10:18:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43564 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726673AbfK0PSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:18:12 -0500
-Received: by mail-qv1-f68.google.com with SMTP id cg2so9019123qvb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 07:18:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vNfHT06AlidhzMdeMZBKrDSV+OxXpZG1zDvb/7idp3o=;
-        b=jWdxRA3cRUpaMwYfLAYsFxVHsT3d0ArqIknF+qIyFO78fbo2Ol6MFp3I52ne5IJvkE
-         ZvPfYbsAHvj1hq7XwJQN1l/zPS4UQ2ncRT/bUPiSv4FR/HtPSE+o1XQr14SSgBF0B0v8
-         LPvja7Zq7VFF6GkXg1gmC7JTY2QnSC3dp5bJyXeMHDYuD1jLv2d8bJ0iVOmLC/bl9/zP
-         ZyObttTdLUlEdiQ3zcYG+FgXTPkdsrsyeQBjzALuFr3mQwJerqMeTTO8QoT9QjhsnsRI
-         hO4pJAdFfsEa4fSTTq1axiQ9drbuB2qNoW8ib4HqThqkoO10vJ2dZAJJQHkbVFTcu/aO
-         RuGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vNfHT06AlidhzMdeMZBKrDSV+OxXpZG1zDvb/7idp3o=;
-        b=F0c9gR/jKbvkySL+8lpqIKfJBZmLYuKSsO3lXrw+0dvG7VVeaMCEIA5HVaP6mU2NB2
-         uJUCJ5JVrj5A+NYdq21FcRRqYnHJcziRaCBJFmAS/C8ByxJn1b6UfCq0CG93gU84+40o
-         fCg85uqIbxLKzFjTZH3bzeusxM5kY5CkV6bZJ5iiWVnqsJxizTfQ9nCENuGCFn/g+MKR
-         I8i95DyIYq9Xe2dwYlEVCIVOLwRbkfwKuxSG9i9TpMopa+lkmJcK9MMNafHRRMJ7HNAE
-         kNpSjjBM8dGLTn//47Qn9VeegDajypC2KYEbDX4us1G15DHCOJd/rJpxMlKGKxBUg39l
-         AyBw==
-X-Gm-Message-State: APjAAAWAeA9+rhfdDk8Rmt6CUqOjv7VIK7B3rnsq68eJj7ad3TgmU+Sm
-        YaIEJ836jm7vldUNrgopf1/ngpCANxE=
-X-Google-Smtp-Source: APXvYqxTF9JLxJOdh8W+1UnD7xOMgHQtNmgZrbcJwwMla8YUWOMI7pyF4bzPQfzvXXwW5LhM2kG3ew==
-X-Received: by 2002:a0c:ee91:: with SMTP id u17mr3982227qvr.245.1574867890891;
-        Wed, 27 Nov 2019 07:18:10 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id n19sm6972872qkn.52.2019.11.27.07.18.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 07:18:10 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DA25940D3E; Wed, 27 Nov 2019 12:18:07 -0300 (-03)
-Date:   Wed, 27 Nov 2019 12:18:07 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 1/2] perf script: Fix brstackinsn for AUXTRACE
-Message-ID: <20191127151807.GF22719@kernel.org>
-References: <20191127095322.15417-1-adrian.hunter@intel.com>
+        Wed, 27 Nov 2019 10:18:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574867910;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=MKRMqYZcMSPOI1ZGGK/kSwrsQZTCaWDdryNtYrwk8A4=;
+        b=MTwMRqNu+MeR4QaIT5ScdTi3FY3q4TIbuScZCw7D1Q/tdgkXeTHJIgVCon5MbH5HY3Smfk
+        kwpurQunGpQ/srUNR5GqysQLb5Cd1g5u2UjmQ4/O/Ads1THgydWuoyLyKy2gV5YnApSEIr
+        nAjbrGSucYE0aWx0G5+mXCDgafrGAco=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-147-GM3JGt2IPoeXL76p6qeU6w-1; Wed, 27 Nov 2019 10:18:26 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA8C11007271;
+        Wed, 27 Nov 2019 15:18:22 +0000 (UTC)
+Received: from max.com (ovpn-204-21.brq.redhat.com [10.40.204.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 477BF1001DE1;
+        Wed, 27 Nov 2019 15:18:14 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org
+Subject: [PATCH] fs: Fix page_mkwrite off-by-one errors
+Date:   Wed, 27 Nov 2019 16:18:11 +0100
+Message-Id: <20191127151811.9229-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127095322.15417-1-adrian.hunter@intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: GM3JGt2IPoeXL76p6qeU6w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Nov 27, 2019 at 11:53:21AM +0200, Adrian Hunter escreveu:
-> brstackinsn must be allowed to be set by the user when AUX area data has
-> been captured because, in that case, the branch stack might be
-> synthesized on the fly. This fixes the following error:
-> 
-> Before:
-> 
->   $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
->   [ perf record: Woken up 19 times to write data ]
->   [ perf record: Captured and wrote 2.274 MB perf.data ]
->   $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
->   Display of branch stack assembler requested, but non all-branch filter set
->   Hint: run 'perf record -b ...'
-> 
-> After:
-> 
->   $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
->   [ perf record: Woken up 19 times to write data ]
->   [ perf record: Captured and wrote 2.274 MB perf.data ]
->   $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
->             grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
->         bmexec+2485:
->         00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
->         00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
->         00005641d5806bd6                        add %rdi, %rax
->         00005641d5806bd9                        movzxb  -0x1(%rax), %edx
->         00005641d5806bdd                        cmp %rax, %r14
->         00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
->         mismatch of LBR data and executable
->         00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
+Fix a check in block_page_mkwrite meant to determine whether an offset
+is within the inode size.  This error has spread to several filesystems
+and to iomap_page_mkwrite, so fix those instances as well.
 
-Thanks, applied.
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 
-- Arnaldo
- 
-> Reported-by: Andi Kleen <ak@linux.intel.com>
-> Fixes: 48d02a1d5c13 ("perf script: Add 'brstackinsn' for branch stacks")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/builtin-script.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 7b2f0922050c..e8db26b9b29e 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -448,7 +448,7 @@ static int perf_evsel__check_attr(struct evsel *evsel,
->  		       "selected. Hence, no address to lookup the source line number.\n");
->  		return -EINVAL;
->  	}
-> -	if (PRINT_FIELD(BRSTACKINSN) &&
-> +	if (PRINT_FIELD(BRSTACKINSN) && !allow_user_set &&
->  	    !(perf_evlist__combined_branch_type(session->evlist) &
->  	      PERF_SAMPLE_BRANCH_ANY)) {
->  		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
-> -- 
-> 2.17.1
+---
 
--- 
+This patch has a trivial conflict with commit "iomap: Fix overflow in
+iomap_page_mkwrite" in Darrick's iomap pull request for 5.5:
 
-- Arnaldo
+  https://lore.kernel.org/lkml/20191125190907.GN6219@magnolia/
+---
+ fs/buffer.c            | 2 +-
+ fs/ceph/addr.c         | 2 +-
+ fs/ext4/inode.c        | 2 +-
+ fs/f2fs/file.c         | 2 +-
+ fs/iomap/buffered-io.c | 2 +-
+ fs/ubifs/file.c        | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 86a38b979323..152d391858d4 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -2465,7 +2465,7 @@ int block_page_mkwrite(struct vm_area_struct *vma, st=
+ruct vm_fault *vmf,
+ =09lock_page(page);
+ =09size =3D i_size_read(inode);
+ =09if ((page->mapping !=3D inode->i_mapping) ||
+-=09    (page_offset(page) > size)) {
++=09    (page_offset(page) >=3D size)) {
+ =09=09/* We overload EFAULT to mean page got truncated */
+ =09=09ret =3D -EFAULT;
+ =09=09goto out_unlock;
+diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+index 7ab616601141..9fa0729ece41 100644
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -1575,7 +1575,7 @@ static vm_fault_t ceph_page_mkwrite(struct vm_fault *=
+vmf)
+ =09do {
+ =09=09lock_page(page);
+=20
+-=09=09if ((off > size) || (page->mapping !=3D inode->i_mapping)) {
++=09=09if ((off >=3D size) || (page->mapping !=3D inode->i_mapping)) {
+ =09=09=09unlock_page(page);
+ =09=09=09ret =3D VM_FAULT_NOPAGE;
+ =09=09=09break;
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 516faa280ced..6dd4efe2fb63 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -6224,7 +6224,7 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+ =09lock_page(page);
+ =09size =3D i_size_read(inode);
+ =09/* Page got truncated from under us? */
+-=09if (page->mapping !=3D mapping || page_offset(page) > size) {
++=09if (page->mapping !=3D mapping || page_offset(page) >=3D size) {
+ =09=09unlock_page(page);
+ =09=09ret =3D VM_FAULT_NOPAGE;
+ =09=09goto out;
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 29bc0a542759..3436be01af45 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -71,7 +71,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *v=
+mf)
+ =09down_read(&F2FS_I(inode)->i_mmap_sem);
+ =09lock_page(page);
+ =09if (unlikely(page->mapping !=3D inode->i_mapping ||
+-=09=09=09page_offset(page) > i_size_read(inode) ||
++=09=09=09page_offset(page) >=3D i_size_read(inode) ||
+ =09=09=09!PageUptodate(page))) {
+ =09=09unlock_page(page);
+ =09=09err =3D -EFAULT;
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index e25901ae3ff4..d454dbab5133 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1041,7 +1041,7 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, c=
+onst struct iomap_ops *ops)
+ =09lock_page(page);
+ =09size =3D i_size_read(inode);
+ =09if ((page->mapping !=3D inode->i_mapping) ||
+-=09    (page_offset(page) > size)) {
++=09    (page_offset(page) >=3D size)) {
+ =09=09/* We overload EFAULT to mean page got truncated */
+ =09=09ret =3D -EFAULT;
+ =09=09goto out_unlock;
+diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+index cd52585c8f4f..ca0148ec77e6 100644
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -1564,7 +1564,7 @@ static vm_fault_t ubifs_vm_page_mkwrite(struct vm_fau=
+lt *vmf)
+=20
+ =09lock_page(page);
+ =09if (unlikely(page->mapping !=3D inode->i_mapping ||
+-=09=09     page_offset(page) > i_size_read(inode))) {
++=09=09     page_offset(page) >=3D i_size_read(inode))) {
+ =09=09/* Page got truncated out from underneath us */
+ =09=09goto sigbus;
+ =09}
+--=20
+2.20.1
+
