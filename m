@@ -2,138 +2,108 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A46C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29AEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D232154A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Rh/Py5iA"
+	by mail.kernel.org (Postfix) with ESMTP id C81F62154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574889340;
+	bh=6V7r6TB9qW/1X5KnQjTT2gyh0o0FqU2iM3qP87EZEXI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FUSANQwgBuC+2IBPYouH63nMoZFo5PW5tTbn8iLnChcBNePk73Mt8cqbT5cIEOJkC
+	 ezJlY/vtekUv89+E6vsRi2ElFOGSnNx2vJZjfQ6LbGqt8wFtrX1DNhtDVNQHNahMgR
+	 LwHMMKv5JnXu2uXjUlaPHBCPR5UFp5ri+sIvoPtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733260AbfK0VPg (ORCPT
+        id S2387712AbfK0VPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:15:36 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:44071 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732826AbfK0VPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:15:32 -0500
-Received: by mail-qv1-f66.google.com with SMTP id t11so713254qvz.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 13:15:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F99XMPQ3TAH+uV2c/3H52TWBXa+PYGt7dcNa6t/ODb8=;
-        b=Rh/Py5iAqTgPLbvtB+41QKoCIj+6ktjR+xDaZrX02/6GEvukEwIP3xD4GWKrP3JKDk
-         PPwCUuGOLvKom9XlvMl2aRlAxZcPJh+uOz2LC+iatHYW3hZTCLsLHsPog/4yI/DL6xmR
-         /Pi1xqBkEw2DqHAqh30+MSTyc6kwugXvPSlJs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F99XMPQ3TAH+uV2c/3H52TWBXa+PYGt7dcNa6t/ODb8=;
-        b=s9CXiEIalOa/7mNwzaoEoGMK+iClXhy6fLjWqiuVAOLOdnRPjRJHHMhCOaqVu4a2mO
-         NnwcXpcahqRqDoAIVC7fNssAUr+gjYu06K2Z/J2ppH6O9ROud1REzg0Svhf68CjxvYrU
-         ZyGGILA4hDY9MURCq4ygrfWFw71cYmMNgo0/hyDffLNF3Hk0H8J+CyyX/WI2Ktu0vvp6
-         zPXYlMNIy7vXKx0EVN884I37en6BlaO8HN0C7MQjdumYi6meb7k9twKEVBUJvQdiB9ac
-         uwclP1s5NrzTJlqVkSVCN4dwRmyKFuprBL2hCBwFopOZGY74GmhFtT5RqNOEQbEOoYxD
-         PWrA==
-X-Gm-Message-State: APjAAAWTQNdWZWTpKeXvoHq1ciZquCBLug1rnZw4HZFV86AW3ROLMh6N
-        Y8hCZJRsTegzoqhydCO8Qz4aD42khF/NKN7+cmVg7DTUK2k=
-X-Google-Smtp-Source: APXvYqx3fiQd2+CRzMpG4FjGt93LDYfrqxQEJovdF6Qh0gxMa602SiiBAJcRm/wKBl5Igo79dHDU0/X2S/hqockFg2o=
-X-Received: by 2002:a0c:e408:: with SMTP id o8mr7391529qvl.236.1574889331134;
- Wed, 27 Nov 2019 13:15:31 -0800 (PST)
+        Wed, 27 Nov 2019 16:15:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387670AbfK0VPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:15:18 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E425621789;
+        Wed, 27 Nov 2019 21:15:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574889318;
+        bh=6V7r6TB9qW/1X5KnQjTT2gyh0o0FqU2iM3qP87EZEXI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pyRMavpY/hgKzJv4KZrQghOQU0Da7auW6CULRCl1++YTokY1LiEtYj96krJzqyxMk
+         iu9XMgdXaPOdGpHZHcDUVYBAnjIej/RJzNFXtpfv3zF9rXc9khlkD/P79GpUT+NQMC
+         597rT200t0I5hL+XaZzkKMJ+gHUHBzIF9xs/knFI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 58/66] appledisplay: fix error handling in the scheduled work
+Date:   Wed, 27 Nov 2019 21:32:53 +0100
+Message-Id: <20191127202739.120131623@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
+References: <20191127202632.536277063@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CABWYdi2jvPUq128XDv_VbY=vFknFyJHbUR=0_K9WuA0mFTkPvg@mail.gmail.com>
-In-Reply-To: <CABWYdi2jvPUq128XDv_VbY=vFknFyJHbUR=0_K9WuA0mFTkPvg@mail.gmail.com>
-From:   Ivan Babrou <ivan@cloudflare.com>
-Date:   Wed, 27 Nov 2019 13:15:20 -0800
-Message-ID: <CABWYdi3k9QvFOEd_hFG16LVE=BiokO4hWp50nZcxYwbWfxeE3g@mail.gmail.com>
-Subject: Re: perf is unable to read dward from go programs
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There were no response in linux-perf-users@, so I think it's fair to
-ask maintainers.
+From: Oliver Neukum <oneukum@suse.com>
 
-On Fri, Nov 8, 2019 at 3:53 PM Ivan Babrou <ivan@cloudflare.com> wrote:
->
-> I have a simple piece of code that burns CPU for 1s:
->
-> * https://gist.github.com/bobrik/cf022ff6950d09032fa13a984e2272ed
->
-> I can build it just fine: go build -o /tmp/burn burn.go
->
-> And I can see correct stacks if I record with fp:
->
-> perf record -e cpu-clock -g -F 99 /tmp/burn
->
-> But if I record with gwarf:
->
-> perf record -e cpu-clock -g -F 99 --call-graph dwarf /tmp/burn
->
-> Then stacks are lost with the following complaints during "perf script":
->
-> BFD: Dwarf Error: found dwarf version '376', this reader only handles
-> version 2, 3 and 4 information.
-> BFD: Dwarf Error: found dwarf version '31863', this reader only
-> handles version 2, 3 and 4 information.
-> BFD: Dwarf Error: found dwarf version '65271', this reader only
-> handles version 2, 3 and 4 information.
-> BFD: Dwarf Error: found dwarf version '289', this reader only handles
-> version 2, 3 and 4 information.
-> ...
->
-> That's on Linux 5.4-rc5 with binutils 2.28. On Linux 4.19.80 with
-> binutils 2.31.1 I don't see the error, but the stacks are not any
-> better:
->
-> burn   788  3994.230871:   10101010 cpu-clock:
->           479955 crypto/sha512.blockAVX2+0x965 (/tmp/burn)
->
-> burn   786  3994.241393:   10101010 cpu-clock:
->           40b2a7 runtime.mallocgc+0x697 (/tmp/burn)
->
-> burn   782  3994.248061:   10101010 cpu-clock:
->           4746f1 crypto/sha512.(*digest).Write+0x21 (/tmp/burn)
->
-> Compare to an fp version:
->
-> burn   762  3892.587246:   10101010 cpu-clock:
->           479b19 crypto/sha512.blockAVX2+0xb29 (/tmp/burn)
-> d186b8c721c0c207 [unknown] ([unknown])
->
-> burn   760  3892.597158:   10101010 cpu-clock:
->           474783 crypto/sha512.(*digest).Write+0xb3 (/tmp/burn)
->           474e52 crypto/sha512.(*digest).checkSum+0xd2 (/tmp/burn)
->           4749e3 crypto/sha512.(*digest).Sum+0xa3 (/tmp/burn)
->           4840d3 main.burn+0xe3 (/tmp/burn)
->           483fda main.main+0x2a (/tmp/burn)
->           4298ee runtime.main+0x21e (/tmp/burn)
->       c000016060 [unknown] ([unknown])
-> 89481eebc0313474 [unknown] ([unknown])
->
-> I can understand AVX being off, but other stacks should be in order.
->
-> Interestingly, in production I can see that some binaries are not
-> affected by this issue.
->
-> Is this an expected outcome?
+commit 91feb01596e5efc0cc922cc73f5583114dccf4d2 upstream.
+
+The work item can operate on
+
+1. stale memory left over from the last transfer
+the actual length of the data transfered needs to be checked
+2. memory already freed
+the error handling in appledisplay_probe() needs
+to cancel the work in that case
+
+Reported-and-tested-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191106124902.7765-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/misc/appledisplay.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+--- a/drivers/usb/misc/appledisplay.c
++++ b/drivers/usb/misc/appledisplay.c
+@@ -164,7 +164,12 @@ static int appledisplay_bl_get_brightnes
+ 		0,
+ 		pdata->msgdata, 2,
+ 		ACD_USB_TIMEOUT);
+-	brightness = pdata->msgdata[1];
++	if (retval < 2) {
++		if (retval >= 0)
++			retval = -EMSGSIZE;
++	} else {
++		brightness = pdata->msgdata[1];
++	}
+ 	mutex_unlock(&pdata->sysfslock);
+ 
+ 	if (retval < 0)
+@@ -299,6 +304,7 @@ error:
+ 	if (pdata) {
+ 		if (pdata->urb) {
+ 			usb_kill_urb(pdata->urb);
++			cancel_delayed_work_sync(&pdata->work);
+ 			if (pdata->urbdata)
+ 				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
+ 					pdata->urbdata, pdata->urb->transfer_dma);
+
+
