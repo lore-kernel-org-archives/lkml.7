@@ -2,107 +2,111 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD902C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7C4C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C074E206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E6B2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:35:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574876151;
+	bh=8HRYzVgPcetDDCF2bvKH47TzErjz8apkOIgcOvQ1Q6Y=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=oTYeAXYk2EHA+wL+kbNCF484tMlX5c8hYp8uOKtb/f5jMpe83vxQ8n9HKg0JkRusW
+	 xcSsWTmR07W6IoDl19F/M6CZjc0GskYpnvsRg7/9ajTx0shs1IUFETbi7rzbkNfahJ
+	 Ws+Q2/JWhSHcmVJbmXTjMhr03ScEe2MHQX/middU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfK0RaO (ORCPT
+        id S1727050AbfK0Rfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:30:14 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55706 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726593AbfK0RaH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:30:07 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-47-A5DwBc6ONnWiCrmrs4twXQ-1; Wed, 27 Nov 2019 17:30:01 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 27 Nov 2019 17:30:00 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 27 Nov 2019 17:30:00 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Paolo Abeni' <pabeni@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-CC:     'Marek Majkowski' <marek@cloudflare.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Subject: RE: epoll_wait() performance
-Thread-Topic: epoll_wait() performance
-Thread-Index: AdWgk3jgEIFNwcnRS6+4A+/jFPxTuQEdLCCAAAAn2qAADa2dEAAA53Bg
-Date:   Wed, 27 Nov 2019 17:30:00 +0000
-Message-ID: <2f1635d9300a4bec8a0422e9e9518751@AcuMS.aculab.com>
-References: <bc84e68c0980466096b0d2f6aec95747@AcuMS.aculab.com>
-         <CAJPywTJYDxGQtDWLferh8ObjGp3JsvOn1om1dCiTOtY6S3qyVg@mail.gmail.com>
-         <5f4028c48a1a4673bd3b38728e8ade07@AcuMS.aculab.com>
-         <20191127164821.1c41deff@carbon>
- <0b8d7447e129539aec559fa797c07047f5a6a1b2.camel@redhat.com>
-In-Reply-To: <0b8d7447e129539aec559fa797c07047f5a6a1b2.camel@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 27 Nov 2019 12:35:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726673AbfK0Rfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 12:35:50 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40B672073F;
+        Wed, 27 Nov 2019 17:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574876149;
+        bh=8HRYzVgPcetDDCF2bvKH47TzErjz8apkOIgcOvQ1Q6Y=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=BM8a+qfDycXQPaQbw7hsiDRV8bKLEb8FpywEpFh3vOEHMmQ1oySZpXGMCd0pvVHrH
+         1iY9UZH1hZ6FYLZDgibJ5emEWQ4yU+lrVgNbPqySBe+7iNNKmCUHMOesopKoDFva/Z
+         AAOADAj9iZp6SlGt3ST9nR57pV3T2Rj3+kVJ7jBI=
+Date:   Wed, 27 Nov 2019 18:35:47 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/7] thermal: sun8i: add thermal driver for
+ H6/H5/H3/A64/A83T/R40
+Message-ID: <20191127173547.ch3pcv3lxgdcrfnu@gilmour.lan>
+References: <20191127052935.1719897-1-anarsoul@gmail.com>
+ <20191127052935.1719897-2-anarsoul@gmail.com>
+ <20191127111419.z5hfu5soxceiivg6@core.my.home>
 MIME-Version: 1.0
-X-MC-Unique: A5DwBc6ONnWiCrmrs4twXQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rwcawhqsgm2ldrw5"
+Content-Disposition: inline
+In-Reply-To: <20191127111419.z5hfu5soxceiivg6@core.my.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUGFvbG8gQWJlbmkNCj4gU2VudDogMjcgTm92ZW1iZXIgMjAxOSAxNjoyNw0KLi4uDQo+
-IEBEYXZpZDogSWYgSSByZWFkIHlvdXIgbWVzc2FnZSBjb3JyZWN0bHksIHRoZSBwa3QgcmF0ZSB5
-b3UgYXJlIGRlYWxpbmcNCj4gd2l0aCBpcyBxdWl0ZSBsb3cuLi4gYXJlIHdlIHRhbGtpbmcgYWJv
-dXQgdHB1dCBvciBsYXRlbmN5PyBJIGd1ZXNzDQo+IGxhdGVuY3kgY291bGQgYmUgbWVhc3VyYWJs
-eSBoaWdoZXIgd2l0aCByZWN2bW1zZygpIGluIHJlc3BlY3QgdG8gb3RoZXINCj4gc3lzY2FsbC4g
-SG93IGRvIHlvdSBtZWFzdXJlIHRoZSByZWxlYXRpdmUgcGVyZm9ybWFuY2VzIG9mIHJlY3ZtbXNn
-KCkNCj4gYW5kIHJlY3YoKSA/IHdpdGggbWljcm8tYmVuY2htYXJrL3JkdHNjKCk/IEFtIEkgcmln
-aHQgdGhhdCB5b3UgYXJlDQo+IHVzdWFsbHkgZ2V0dGluZyBhIHNpbmdsZSBwYWNrZXQgcGVyIHJl
-Y3ZtbXNnKCkgY2FsbD8NCg0KVGhlIHBhY2tldCByYXRlIHBlciBzb2NrZXQgaXMgbG93LCB0eXBp
-Y2FsbHkgb25lIHBhY2tldCBldmVyeSAyMG1zLg0KVGhpcyBpcyBSVFAsIHNvIHRlbGVwaG9ueSBh
-dWRpby4NCkhvd2V2ZXIgd2UgaGF2ZSBhIGxvdCBvZiBhdWRpbyBjaGFubmVscyBhbmQgaGVuY2Ug
-YSBsb3Qgb2Ygc29ja2V0cy4NClNvIHRoZXJlIGFyZSBjYW4gYmUgMTAwMHMgb2Ygc29ja2V0cyB3
-ZSBuZWVkIHRvIHJlY2VpdmUgdGhlIGRhdGEgZnJvbS4NClRoZSB0ZXN0IHN5c3RlbSBJJ20gdXNp
-bmcgaGFzIDE2IEUxIFRETSBsaW5rcyBlYWNoIG9mIHdoaWNoIGNhbiBoYW5kbGUNCjMxIGF1ZGlv
-IGNoYW5uZWxzLg0KRm9yd2FyZGluZyBhbGwgdGhlc2UgdG8vZnJvbSBSVFAgKG9uZSBvZiB0aGUg
-dGhpbmdzIGl0IG1pZ2h0IGRvKSBpcyA0OTYNCmF1ZGlvIGNoYW5uZWxzIC0gc28gNDk2IFJUUCBz
-b2NrZXRzIGFuZCA0OTYgUlRDUCBvbmVzLg0KQWx0aG91Z2ggdGhlIHRlc3QgSSdtIGRvaW5nIGlz
-IHB1cmUgUlRQIGFuZCBkb2Vzbid0IHVzZSBURE0uDQoNCldoYXQgSSdtIG1lYXN1cmluZyBpcyB0
-aGUgdG90YWwgdGltZSB0YWtlbiB0byByZWNlaXZlIGFsbCB0aGUgcGFja2V0cw0KKG9uIGFsbCB0
-aGUgc29ja2V0cykgdGhhdCBhcmUgYXZhaWxhYmxlIHRvIGJlIHJlYWQgZXZlcnkgMTBtcy4NClNv
-IHBvbGwgKyByZWN2ICsgYWRkX3RvX3F1ZXVlLg0KKFRoZSBkYXRhIHByb2Nlc3NpbmcgaXMgZG9u
-ZSBieSBvdGhlciB0aHJlYWRzLikNCkkgdXNlIHRoZSB0aW1lIGRpZmZlcmVuY2UgKGFjdHVhbGx5
-IENMT0NLX01PTk9UT05JQyAtIGZyb20gcmR0c2MpDQp0byBnZW5lcmF0ZSBhIDY0IGVudHJ5IChz
-ZWxmIHNjYWxpbmcpIGhpc3RvZ3JhbSBvZiB0aGUgZWxhcHNlZCB0aW1lcy4NClRoZW4gbG9vayBm
-b3IgdGhlIGhpc3RvZ3JhbXMgcGVhayB2YWx1ZS4NCihJIG5lZWQgdG8gd29yayBvbiB0aGUgbWF4
-IHZhbHVlLCBidXQgdGhhdCBpcyBhIGRpZmZlcmVudCAobW9yZSBpbXBvcnRhbnQhKSBwcm9ibGVt
-LikNCkRlcGVuZGluZyBvbiB0aGUgcG9sbC9yZWN2IG1ldGhvZCB1c2VkIHRoaXMgdGFrZXMgMS41
-IHRvIDJtcw0KaW4gZWFjaCAxMG1zIHBlcmlvZC4NCihJdCBpcyBmYXN0ZXIgaWYgSSBydW4gdGhl
-IGNwdSBhdCBmdWxsIHNwZWVkLCBidXQgaXQgdXN1YWxseSBpZGxlcyBhbG9uZw0KYXQgODAwTUh6
-LikNCg0KSWYgSSB1c2UgcmVjdm1tc2coKSBJIG9ubHkgZXhwZWN0IHRvIHNlZSBvbmUgcGFja2V0
-IGJlY2F1c2UgdGhlcmUNCmlzIChhbG1vc3QgYWx3YXlzKSBvbmx5IG9uZSBwYWNrZXQgb24gZWFj
-aCBzb2NrZXQgZXZlcnkgMjBtcy4NCkhvd2V2ZXIgdGhlcmUgbWlnaHQgYmUgbW9yZSB0aGFuIG9u
-ZSwgYW5kIGlmIHRoZXJlIGlzIHRoZXkNCmFsbCBuZWVkIHRvIGJlIHJlYWQgKHdlbGwgYXQgbGVh
-c3QgMiBvZiB0aGVtKSBpbiB0aGF0IGJsb2NrIG9mIHJlY2VpdmVzLg0KDQpUaGUgb3V0Ym91bmQg
-dHJhZmZpYyBnb2VzIG91dCB0aHJvdWdoIGEgc21hbGwgbnVtYmVyIG9mIHJhdyBzb2NrZXRzLg0K
-QW5ub3lpbmdseSB3ZSBoYXZlIHRvIHdvcmsgb3V0IHRoZSBsb2NhbCBJUHY0IGFkZHJlc3MgdGhh
-dCB3aWxsIGJlIHVzZWQNCmZvciBlYWNoIGRlc3RpbmF0aW9uIGluIG9yZGVyIHRvIGNhbGN1bGF0
-ZSB0aGUgVURQIGNoZWNrc3VtLg0KKEkndmUgYSBwZW5kaW5nIHBhdGNoIHRvIHNwZWVkIHVwIHRo
-ZSB4ODYgY2hlY2tzdW0gY29kZSBvbiBhIGxvdCBvZg0KY3B1cy4pDQoNCglEYXZpZA0KDQotDQpS
-ZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWls
-dG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMp
-DQo=
 
+--rwcawhqsgm2ldrw5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Nov 27, 2019 at 12:14:19PM +0100, Ond=C5=99ej Jirman wrote:
+> > +	/*
+> > +	 * Avoid entering the interrupt handler, the thermal device is not
+> > +	 * registered yet, we deffer the registration of the interrupt to
+> > +	 * the end.
+> > +	 */
+> > +	ret =3D devm_request_threaded_irq(dev, irq, NULL,
+> > +					sun8i_irq_thread,
+> > +					IRQF_ONESHOT, "ths", tmdev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return ret;
+>
+> I guess just return devm_request_threaded_irq(... ^
+
+This is harder to extend though, so I'd keep the current construct
+(with a return 0 though).
+
+Thanks!
+Maxime
+
+--rwcawhqsgm2ldrw5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXd6z6AAKCRDj7w1vZxhR
+xcDrAQCIanJbpjnMpsEnvSREQtxK7fDMF2yUA4PEFXxT7Jc4XQD8DwS/ddoljPwC
+LOq4CK3fzDEGVY2Hq1jih6ifX6QOQAw=
+=BHNs
+-----END PGP SIGNATURE-----
+
+--rwcawhqsgm2ldrw5--
