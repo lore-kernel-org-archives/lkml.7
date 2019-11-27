@@ -2,52 +2,53 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F1FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35F2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0432080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 799172075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890589;
-	bh=ZbZQWLNVEAwI0OA//as0xFt12U2YZ+kzigbVogJ9SX0=;
+	s=default; t=1574890596;
+	bh=GZD3uAk6DI5PWc10Rt+WpS7JYxwVfGIWzFPTCmpQz4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tp/ll9fVOFvodyMSkZskqTzOk4eG1fsob2VYjrXohPufhgm78dgIrlx8jirrkNw7j
-	 Vk9QtlnmXGvHvDjFk5LRCjjnVUgZ7VBtvSOcLmz4Dr2znzv9sxYC1zQSP48+OtjnfM
-	 DjxlEN8ZNzHMcH2SNPpAVL4AOFI/M67/T+QlsqRI=
+	b=mKe9eG5Ax/j1lzhpS5TebVJl5q6EitDoSpt/9fqxkgisolDOLoZdhxNBu7ImdWkgK
+	 Vn22IGorH8nE2T2aZRqmx1bQ2lr2byOUCeP29jJTjiWqTGhASNG2uaHd219sjYgdbo
+	 0x4Z19SBKmkSN8KKmWfD/8dvkrwpAOylOJ/DGyoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730115AbfK0UsU (ORCPT
+        id S1730099AbfK0UsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:48:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:48:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730104AbfK0UsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:48:12 -0500
+        id S1730082AbfK0UsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:48:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74FEA217C3;
-        Wed, 27 Nov 2019 20:48:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BC1D217C3;
+        Wed, 27 Nov 2019 20:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887692;
-        bh=ZbZQWLNVEAwI0OA//as0xFt12U2YZ+kzigbVogJ9SX0=;
+        s=default; t=1574887683;
+        bh=GZD3uAk6DI5PWc10Rt+WpS7JYxwVfGIWzFPTCmpQz4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KzS0/Jh2kM/c38z+JBYz5ded9a+I8q0H3yQuVYDi2AfzxKH7Nns/RqLxpLIARN147
-         jBHyWL6OPO5wZLyiwQ4nHX6t9bG0oy6Ikausu62oUjAStOnfg+ZY6FtVqXYi1x/ggs
-         kS5pA21L4hCutcEdGkVcIcrwxp5ItnXGvWuwqfks=
+        b=njutYqgVZBaqRW0LPC16W1rY6jTfYi3Jo7iPOe9i1Qea0uFPjJqBjeHKWbYXdX1EF
+         0wmTSIXPPlufmR+PiR2pm9gqWtHHcoEeNnlA8km9wjWoxP12RUwNIPvatMt4i7WRev
+         KPxjzaUVO6LFFL7iwj9ikCQHh8PPg59O2WR+7IeM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Netanel Belgazal <netanel@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 058/211] net: ena: Fix Kconfig dependency on X86
-Date:   Wed, 27 Nov 2019 21:29:51 +0100
-Message-Id: <20191127203059.565077941@linuxfoundation.org>
+Subject: [PATCH 4.14 047/211] scsi: isci: Change sci_controller_start_tasks return type to sci_status
+Date:   Wed, 27 Nov 2019 21:29:40 +0100
+Message-Id: <20191127203058.542130368@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,35 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Netanel Belgazal <netanel@amazon.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 8c590f9776386b8f697fd0b7ed6142ae6e3de79e ]
+[ Upstream commit 362b5da3dfceada6e74ecdd7af3991bbe42c0c0f ]
 
-The Kconfig limitation of X86 is to too wide.
-The ENA driver only requires a little endian dependency.
+Clang warns when an enumerated type is implicitly converted to another.
 
-Change the dependency to be on little endian CPU.
+drivers/scsi/isci/request.c:3476:13: warning: implicit conversion from
+enumeration type 'enum sci_task_status' to different enumeration type
+'enum sci_status' [-Wenum-conversion]
+                        status = sci_controller_start_task(ihost,
+                               ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/isci/host.c:2744:10: warning: implicit conversion from
+enumeration type 'enum sci_status' to different enumeration type 'enum
+sci_task_status' [-Wenum-conversion]
+                return SCI_SUCCESS;
+                ~~~~~~ ^~~~~~~~~~~
+drivers/scsi/isci/host.c:2753:9: warning: implicit conversion from
+enumeration type 'enum sci_status' to different enumeration type 'enum
+sci_task_status' [-Wenum-conversion]
+        return status;
+        ~~~~~~ ^~~~~~
 
-Signed-off-by: Netanel Belgazal <netanel@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Avoid all of these implicit conversion by just making
+sci_controller_start_task use sci_status. This silences
+Clang and has no functional change since sci_task_status
+has all of its values mapped to something in sci_status.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/153
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/isci/host.c | 8 ++++----
+ drivers/scsi/isci/host.h | 2 +-
+ drivers/scsi/isci/task.c | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/Kconfig b/drivers/net/ethernet/amazon/Kconfig
-index 99b30353541ab..9e87d7b8360f5 100644
---- a/drivers/net/ethernet/amazon/Kconfig
-+++ b/drivers/net/ethernet/amazon/Kconfig
-@@ -17,7 +17,7 @@ if NET_VENDOR_AMAZON
+diff --git a/drivers/scsi/isci/host.c b/drivers/scsi/isci/host.c
+index 609dafd661d14..da4583a2fa23e 100644
+--- a/drivers/scsi/isci/host.c
++++ b/drivers/scsi/isci/host.c
+@@ -2717,9 +2717,9 @@ enum sci_status sci_controller_continue_io(struct isci_request *ireq)
+  *    the task management request.
+  * @task_request: the handle to the task request object to start.
+  */
+-enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
+-					       struct isci_remote_device *idev,
+-					       struct isci_request *ireq)
++enum sci_status sci_controller_start_task(struct isci_host *ihost,
++					  struct isci_remote_device *idev,
++					  struct isci_request *ireq)
+ {
+ 	enum sci_status status;
  
- config ENA_ETHERNET
- 	tristate "Elastic Network Adapter (ENA) support"
--	depends on (PCI_MSI && X86)
-+	depends on PCI_MSI && !CPU_BIG_ENDIAN
- 	---help---
- 	  This driver supports Elastic Network Adapter (ENA)"
+@@ -2728,7 +2728,7 @@ enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
+ 			 "%s: SCIC Controller starting task from invalid "
+ 			 "state\n",
+ 			 __func__);
+-		return SCI_TASK_FAILURE_INVALID_STATE;
++		return SCI_FAILURE_INVALID_STATE;
+ 	}
  
+ 	status = sci_remote_device_start_task(ihost, idev, ireq);
+diff --git a/drivers/scsi/isci/host.h b/drivers/scsi/isci/host.h
+index b3539928073c6..6bc3f022630a2 100644
+--- a/drivers/scsi/isci/host.h
++++ b/drivers/scsi/isci/host.h
+@@ -489,7 +489,7 @@ enum sci_status sci_controller_start_io(
+ 	struct isci_remote_device *idev,
+ 	struct isci_request *ireq);
+ 
+-enum sci_task_status sci_controller_start_task(
++enum sci_status sci_controller_start_task(
+ 	struct isci_host *ihost,
+ 	struct isci_remote_device *idev,
+ 	struct isci_request *ireq);
+diff --git a/drivers/scsi/isci/task.c b/drivers/scsi/isci/task.c
+index 6dcaed0c1fc8c..fb6eba331ac6e 100644
+--- a/drivers/scsi/isci/task.c
++++ b/drivers/scsi/isci/task.c
+@@ -258,7 +258,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
+ 				 struct isci_tmf *tmf, unsigned long timeout_ms)
+ {
+ 	DECLARE_COMPLETION_ONSTACK(completion);
+-	enum sci_task_status status = SCI_TASK_FAILURE;
++	enum sci_status status = SCI_FAILURE;
+ 	struct isci_request *ireq;
+ 	int ret = TMF_RESP_FUNC_FAILED;
+ 	unsigned long flags;
+@@ -301,7 +301,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
+ 	/* start the TMF io. */
+ 	status = sci_controller_start_task(ihost, idev, ireq);
+ 
+-	if (status != SCI_TASK_SUCCESS) {
++	if (status != SCI_SUCCESS) {
+ 		dev_dbg(&ihost->pdev->dev,
+ 			 "%s: start_io failed - status = 0x%x, request = %p\n",
+ 			 __func__,
 -- 
 2.20.1
 
