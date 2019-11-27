@@ -2,119 +2,136 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC49C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D22C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F4920722
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7058D20722
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 14:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bMOqtrlM"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XiKZqm3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfK0OkS (ORCPT
+        id S1726975AbfK0Omj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:40:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38202 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfK0OkQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:40:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=CZV3OYfpH1AK9pBqBZAdN+dUDGtEBZRBkTDFRY9k6uk=; b=bMOqtrlMh4aH68BYjeNt4pp+XA
-        uaxEoWQVzB0IswnzUl4OdLcTF8zSAtQZIPqUPnFIKqnlCXzfbr4hhR1VjqvQ8SeEbl7pCnDQp0h/g
-        c5Oh6rcdZLfOLhh7o3dkErRf3xwf4h+SeVcEQ8KC7JMkIbE9Vcg4PW8D4pwUCERnhvepg3FSaqmdN
-        4MoDQ83K6tE924fszzWssocdbGxClsNtfvkFhs0L4CxqN1vmN4C0XYyCbvLSQZWw0CbeUy6qXdi57
-        Wn9hcGtv4OIYJaMEISnUkoUguzqlQHn8sAP9GecvQ989DOmCIXEMr8DEDxopv8Eic/tQYVF+/0hEZ
-        vmxIJwDg==;
-Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iZyUC-0006gj-Sk; Wed, 27 Nov 2019 14:40:09 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Thomas Hellstrom <thellstrom@vmware.com>
-Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dma-mapping: move dma_addressing_limited out of line
-Date:   Wed, 27 Nov 2019 15:40:05 +0100
-Message-Id: <20191127144006.25998-2-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191127144006.25998-1-hch@lst.de>
-References: <20191127144006.25998-1-hch@lst.de>
+        Wed, 27 Nov 2019 09:42:39 -0500
+Received: from mail-eopbgr50060.outbound.protection.outlook.com ([40.107.5.60]:25152
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726694AbfK0Omj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 09:42:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bv3s4kKOCrogkF1Ke6oj3/5ilKqWnRnmjHsNPI1YSXhCEhYJTJK/K3fCsZioDrB+md37X/yy74bvfF3+q39bLDdL6Adzfr4zZBDhsunlLVkhiiIoXfcJ0k47xzlWBwDmVoiktiIsI2+049RXPuuGTYnTKoT3kw7or5TfRB3FwbVRu3XeT03Gr2hz9aLoT3/9F2li5lzMCc5sz2t50I5EUAs6Xauitl1bMS/HXLdPxu02xGQOWM1LtIFaIyR8KVutIZzu+iBtbCvtK2gbjSK/ILp9sNjSaZAulfepaGNlRb0TcjAViW1wCsgGfKBvmfjVph+pEklNuPI8XCyo6CVGUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KayS4GUJwO5YomZ8rA/bBaMzf0gTphpNMclyxGs/2oI=;
+ b=A7SrBEroxaH0DCsXcKcFkBu2SG9V3Ouf7nu2OetymGNTGNdDGVw6pEHiAff9ZmrbVOUh8OZZ8cagIFHswb3LtRU983kFkt1dg1xOXGWGpEh/m1YxqwwnuJbchsxTp27sMtFN5DHa4BRoWyalyUcPji0NU8ghogbS4kCVmKx59D7FOsIUhTjBYsGS7neldrEvyExyCP+VtdLX36FFJT+JDISYKihk4JbK0Hr54w9BAzo1AOX0CAVIo7dAkCPtz9eqqXm53bMp0HuxQX6U7OinWoBUmJCb1wo3aiuvexaJQVXGgUPycL15WP2fJS3BRzqIXJBzhd6AvuA7TZnkvV3WTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KayS4GUJwO5YomZ8rA/bBaMzf0gTphpNMclyxGs/2oI=;
+ b=XiKZqm3D517IUiteWT0ztHdlXiLUjFzEWuhlTedIaeN/WhIvyUDSfGN3pZWusI9ap2ymXNACpCV0k580LO9tv4I4rdGWWfMnHa1eXCc9n3G9rb8/OKBPaeZ6JkMktDwKc9aHMEDEizHy8ONTG2Gr5OiCt451uz887TaJSv6+sQQ=
+Received: from VI1PR04MB6237.eurprd04.prod.outlook.com (20.179.24.74) by
+ VI1PR04MB4414.eurprd04.prod.outlook.com (20.177.54.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18; Wed, 27 Nov 2019 14:42:35 +0000
+Received: from VI1PR04MB6237.eurprd04.prod.outlook.com
+ ([fe80::9056:3486:95b8:4eff]) by VI1PR04MB6237.eurprd04.prod.outlook.com
+ ([fe80::9056:3486:95b8:4eff%4]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
+ 14:42:35 +0000
+From:   Laurentiu Palcu <laurentiu.palcu@nxp.com>
+To:     Uma Shankar <uma.shankar@intel.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>
+Subject: [PATCH] drm: fix HDR static metadata type field numbering
+Thread-Topic: [PATCH] drm: fix HDR static metadata type field numbering
+Thread-Index: AQHVpTDonNbf5j/+IEiOiFgD+u80BQ==
+Date:   Wed, 27 Nov 2019 14:42:35 +0000
+Message-ID: <1574865719-24490-1-git-send-email-laurentiu.palcu@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6PR08CA0003.eurprd08.prod.outlook.com
+ (2603:10a6:20b:b2::15) To VI1PR04MB6237.eurprd04.prod.outlook.com
+ (2603:10a6:803:f1::10)
+x-mailer: git-send-email 2.7.4
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.palcu@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3621371c-4f2c-4726-f908-08d773480adb
+x-ms-traffictypediagnostic: VI1PR04MB4414:|VI1PR04MB4414:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB4414E070C18A38B2DBCD1C96FF440@VI1PR04MB4414.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 023495660C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(199004)(189003)(99286004)(36756003)(2501003)(8936002)(6486002)(25786009)(186003)(5660300002)(52116002)(86362001)(54906003)(110136005)(66446008)(7736002)(478600001)(14444005)(316002)(6512007)(8676002)(26005)(66066001)(81166006)(81156014)(14454004)(305945005)(4744005)(102836004)(386003)(2616005)(6506007)(6116002)(44832011)(71200400001)(64756008)(2906002)(66946007)(256004)(50226002)(66556008)(66476007)(6436002)(4326008)(3846002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4414;H:VI1PR04MB6237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jXv6CvWGLahZQa3vCJ18RC7JHpVgybB0K2KsvbIPaxr0rvB35rytR5XAVkSqtlMlwKPXRNhoYcjSnYbXXga/cr5BAmQCdeP/X7G1sb3II/nIDUbUOEpXFbprFKmXLIRqO73vanNM16RDmyBLgdjQj7nL01GOTe9ahyXnM67femG8nIp9j6nGvYtmFtOLTBka0VnP3RNWkQjGde6ZjipHw/fYCgPmt0NMaR+eswv8lhozsD03aTjEgOsweJXo5ci4MK84pBi2DWhOhjHUVfHhzN94nluwX7DjKGTY3shHKlMXOXyPy35ovDdK/akcLF6NIM8rQ+oeJULPW65bOUpZSAbSLtHLrOBaKvQ5reurvIpz2OIdy3yXvxmo4yu71YVCtiU3qVf6wU/JJGz7Nczm0MbWdEX1qzknqMT8/nqX6qwXgUKFs/UAaPqdJLeh2eYd
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <938583A994C1FF498CFC1EC195F855A9@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3621371c-4f2c-4726-f908-08d773480adb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2019 14:42:35.5051
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3nLZqaSl3dLVlq2KhaGvfnXe+/quLwceyL3giABdPDhBUTNlD+FTmhP1cdefa1CBTSqx4Dpq4XleI7w8MPk5hA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4414
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function isn't used in the fast path, and moving it out of line
-will reduce include clutter with the next change.
+According to CTA-861 specification, HDR static metadata data block allows a
+sink to indicate which HDR metadata types it supports by setting the SM_0 t=
+o
+SM_7 bits. Currently, only Static Metadata Type 1 is supported and this is
+indicated by setting the SM_0 bit to 1.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+However, the connector->hdr_sink_metadata.hdmi_type1.metadata_type is alway=
+s
+0, because hdr_metadata_type() in drm_edid.c checks the wrong bit.
+
+This patch corrects the HDMI_STATIC_METADATA_TYPE1 bit position.
+
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
 ---
- include/linux/dma-mapping.h | 14 +-------------
- kernel/dma/mapping.c        | 15 +++++++++++++++
- 2 files changed, 16 insertions(+), 13 deletions(-)
+ include/linux/hdmi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index c4d8741264bd..94ef74ecd18a 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -687,19 +687,7 @@ static inline int dma_coerce_mask_and_coherent(struct device *dev, u64 mask)
- 	return dma_set_mask_and_coherent(dev, mask);
- }
- 
--/**
-- * dma_addressing_limited - return if the device is addressing limited
-- * @dev:	device to check
-- *
-- * Return %true if the devices DMA mask is too small to address all memory in
-- * the system, else %false.  Lack of addressing bits is the prime reason for
-- * bounce buffering, but might not be the only one.
-- */
--static inline bool dma_addressing_limited(struct device *dev)
--{
--	return min_not_zero(dma_get_mask(dev), dev->bus_dma_limit) <
--			    dma_get_required_mask(dev);
--}
-+bool dma_addressing_limited(struct device *dev);
- 
- #ifdef CONFIG_ARCH_HAS_SETUP_DMA_OPS
- void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 12ff766ec1fa..1dbe6d725962 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -405,3 +405,18 @@ unsigned long dma_get_merge_boundary(struct device *dev)
- 	return ops->get_merge_boundary(dev);
- }
- EXPORT_SYMBOL_GPL(dma_get_merge_boundary);
-+
-+/**
-+ * dma_addressing_limited - return if the device is addressing limited
-+ * @dev:	device to check
-+ *
-+ * Return %true if the devices DMA mask is too small to address all memory in
-+ * the system, else %false.  Lack of addressing bits is the prime reason for
-+ * bounce buffering, but might not be the only one.
-+ */
-+bool dma_addressing_limited(struct device *dev)
-+{
-+	return min_not_zero(dma_get_mask(dev), dev->bus_dma_limit) <
-+			    dma_get_required_mask(dev);
-+}
-+EXPORT_SYMBOL_GPL(dma_addressing_limited);
--- 
-2.20.1
+diff --git a/include/linux/hdmi.h b/include/linux/hdmi.h
+index 9918a6c..216e25e 100644
+--- a/include/linux/hdmi.h
++++ b/include/linux/hdmi.h
+@@ -155,7 +155,7 @@ enum hdmi_content_type {
+ };
+=20
+ enum hdmi_metadata_type {
+-	HDMI_STATIC_METADATA_TYPE1 =3D 1,
++	HDMI_STATIC_METADATA_TYPE1 =3D 0,
+ };
+=20
+ enum hdmi_eotf {
+--=20
+2.7.4
 
