@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6414DC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C371BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBFF2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C802086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890676;
-	bh=YZYsr2hwbyZiAUpsBrpZ9jak9+BSvF9xRBuWHDifUMA=;
+	s=default; t=1574890683;
+	bh=XXB/goFev0IL2d9mUMYUsNOviHIV9Dho+s3GV8lNCjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SsUkOPGCBIcjNic5Gy5tz9t9nngNJMMCiJHln58hGzsneipyqbTGovPmaa4Fm+Kcc
-	 +4rivQ2ZJ8cEwR38yrWZln4PVncxaSdudBqKXBhHE0jw60Il3ZW+DfjLpC8BoBAqAQ
-	 Xopx2Tg1/2Y6lRoz+SF2Sg9EVYwxJOYUsbHIfz0g=
+	b=Ju5gNjgVC47B87n8vseM2AyGIK6AHp3h5+r7KWYCZS7gj2HOXxH6OGvNLH5NOOxSD
+	 Wbnagv3VCzlZZhcF1+IqcU8rBT0j+7ME1EPEbtPbF2br+dPDh+kk+nMW3YNIWgp/43
+	 9FXq0nmjKSkU3CKHQ5m7U4CS3ogwjF81/rxvX1Lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbfK0Vhz (ORCPT
+        id S1729824AbfK0UqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:37:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58130 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:46:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbfK0UqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:46:19 -0500
+        id S1729815AbfK0Up7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:45:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2F13217D6;
-        Wed, 27 Nov 2019 20:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56DE721823;
+        Wed, 27 Nov 2019 20:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887578;
-        bh=YZYsr2hwbyZiAUpsBrpZ9jak9+BSvF9xRBuWHDifUMA=;
+        s=default; t=1574887558;
+        bh=XXB/goFev0IL2d9mUMYUsNOviHIV9Dho+s3GV8lNCjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aggL7dHGDq6sYrEANcXK+nUtVwOX1NM5LskVDhdMGeQGy9isFd6PLDSJgZy7CbEiS
-         nx93mZdoU7eG97BP4Y9axVSuXwMjkyP6JhD4Ku7ywyZ7HegLXcsrONCsWTYZ+tJPMW
-         dKm57ms5cQPLn1KvEwBB5USflGJIzqsf2ZAWgVzM=
+        b=gD+ReG7AUQI396O8gWb/pLqhI9y85z+FJTHRBzSrNnS7MVzoXcE8dZ7ef8rVJNppu
+         TQab/0BA7Svfb2i4mzl9vCWD1/Um3gQcB5b7XHI91yipT+GosjJvsrfvPiSqf/Brr3
+         teGOT5I0t51gj/7NWljVn+lXXDCm51rmUJsSIQu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 4.14 014/211] drm/i915/userptr: Try to acquire the page lock around set_page_dirty()
-Date:   Wed, 27 Nov 2019 21:29:07 +0100
-Message-Id: <20191127203051.824199232@linuxfoundation.org>
+        stable@vger.kernel.org, Chester Lin <clin@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.9 117/151] ARM: 8904/1: skip nomap memblocks while finding the lowmem/highmem boundary
+Date:   Wed, 27 Nov 2019 21:31:40 +0100
+Message-Id: <20191127203044.252568481@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
-References: <20191127203049.431810767@linuxfoundation.org>
+In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
+References: <20191127203000.773542911@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,80 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Chester Lin <clin@suse.com>
 
-commit 2d691aeca4aecbb8d0414a777a46981a8e142b05 upstream.
+commit 1d31999cf04c21709f72ceb17e65b54a401330da upstream.
 
-set_page_dirty says:
+adjust_lowmem_bounds() checks every memblocks in order to find the boundary
+between lowmem and highmem. However some memblocks could be marked as NOMAP
+so they are not used by kernel, which should be skipped while calculating
+the boundary.
 
-	For pages with a mapping this should be done under the page lock
-	for the benefit of asynchronous memory errors who prefer a
-	consistent dirty state. This rule can be broken in some special
-	cases, but should be better not to.
-
-Under those rules, it is only safe for us to use the plain set_page_dirty
-calls for shmemfs/anonymous memory. Userptr may be used with real
-mappings and so needs to use the locked version (set_page_dirty_lock).
-
-However, following a try_to_unmap() we may want to remove the userptr and
-so call put_pages(). However, try_to_unmap() acquires the page lock and
-so we must avoid recursively locking the pages ourselves -- which means
-that we cannot safely acquire the lock around set_page_dirty(). Since we
-can't be sure of the lock, we have to risk skip dirtying the page, or
-else risk calling set_page_dirty() without a lock and so risk fs
-corruption.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112012
-Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191111133205.11590-1-chris@chris-wilson.co.uk
-(cherry picked from commit 0d4bbe3d407f79438dc4f87943db21f7134cfc65)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-(cherry picked from commit cee7fb437edcdb2f9f8affa959e274997f5dca4d)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Chester Lin <clin@suse.com>
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_gem_userptr.c |   22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ arch/arm/mm/mmu.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/gpu/drm/i915/i915_gem_userptr.c
-+++ b/drivers/gpu/drm/i915/i915_gem_userptr.c
-@@ -690,8 +690,28 @@ i915_gem_userptr_put_pages(struct drm_i9
- 	i915_gem_gtt_finish_pages(obj, pages);
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -1188,6 +1188,9 @@ void __init adjust_lowmem_bounds(void)
+ 		phys_addr_t block_start = reg->base;
+ 		phys_addr_t block_end = reg->base + reg->size;
  
- 	for_each_sgt_page(page, sgt_iter, pages) {
--		if (obj->mm.dirty)
-+		if (obj->mm.dirty && trylock_page(page)) {
-+			/*
-+			 * As this may not be anonymous memory (e.g. shmem)
-+			 * but exist on a real mapping, we have to lock
-+			 * the page in order to dirty it -- holding
-+			 * the page reference is not sufficient to
-+			 * prevent the inode from being truncated.
-+			 * Play safe and take the lock.
-+			 *
-+			 * However...!
-+			 *
-+			 * The mmu-notifier can be invalidated for a
-+			 * migrate_page, that is alreadying holding the lock
-+			 * on the page. Such a try_to_unmap() will result
-+			 * in us calling put_pages() and so recursively try
-+			 * to lock the page. We avoid that deadlock with
-+			 * a trylock_page() and in exchange we risk missing
-+			 * some page dirtying.
-+			 */
- 			set_page_dirty(page);
-+			unlock_page(page);
-+		}
- 
- 		mark_page_accessed(page);
- 		put_page(page);
++		if (memblock_is_nomap(reg))
++			continue;
++
+ 		if (reg->base < vmalloc_limit) {
+ 			if (block_end > lowmem_limit)
+ 				/*
 
 
