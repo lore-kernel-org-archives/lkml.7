@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DE7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5E9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C863C217C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C1921823
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887645;
-	bh=tWAdVYLHMTE3vCjickhx0yIbPKCzlQ9aZb9fEW8zGJA=;
+	s=default; t=1574887650;
+	bh=lk+Xh0MaiD1FoRGNeq29i40Di3Mj0VgeUVYmCBBoJno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MV7CdFosFCggjbrchlIcIvGxIg1SWKS/zysH2ctcw7v8Tsk1ganOvkKpIk98J3aO+
-	 odb4FdJAAsiyWhqRsh5SZjiv9U1bdv0oh6VDZocfvw3Oyw2Zy+V/eDrMirXqUpM5Vq
-	 V2av2dYQUPXyGj/N4uidDKRSz+5zB1gG14ffREl8=
+	b=zu3Fot1t5ghfhK5hx8xLsKeuhpWyu3coG5m89gvQFasAaMlrEk+mBLT6+dEgEG3R/
+	 CcblJ76MPfO0wkQgzUPcQ1kPY+fauA08575At3soWICaD/6kJc5PDIpRxmiAEcn4Z4
+	 kv3Ju3dZt11EXfKpeZt20zUcEAzqkbsrmYo2gh9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbfK0UrY (ORCPT
+        id S1730004AbfK0Ur2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:47:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60068 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:47:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729991AbfK0UrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:47:21 -0500
+        id S1729361AbfK0UrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:47:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71FF921843;
-        Wed, 27 Nov 2019 20:47:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5844121844;
+        Wed, 27 Nov 2019 20:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887639;
-        bh=tWAdVYLHMTE3vCjickhx0yIbPKCzlQ9aZb9fEW8zGJA=;
+        s=default; t=1574887644;
+        bh=lk+Xh0MaiD1FoRGNeq29i40Di3Mj0VgeUVYmCBBoJno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Db+5jsQFDuy5flOkWZQXpy8I29rVZW27vFhHHrwZnqJFW2jAF3dtO7FJ95miSi6Ot
-         O9awg67uWupBpPzgWsP12rlKeV5CWqGjueQuCfdbWFXUXx5FUtYY7837isSwYiFRU1
-         2fOfUbwiGex2np/Zds50+45DquzxAHLH3/wEBlm0=
+        b=uvQBAJSlpgLRfrMvSxwxf780O9h1NeZ9QP1pyN+qs2J0yn3JBsr1YbPvU/2d6ldjS
+         CGuUTyPmwoINRkR/TaTM8KQ9FDN6IrHAH3bG0Kjy1fsySS/GuG/zCl+x1ymElLvsVb
+         h9UkXupJUN1ZLhn5wMWlxTxnHUoG4EA8S/sw+eaU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Folly <julien.folly@gmail.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
+        stable@vger.kernel.org, Devesh Sharma <devesh.sharma@broadcom.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 036/211] w1: IAD Register is yet readable trough iad sys file. Fix snprintf (%u for unsigned, count for max size).
-Date:   Wed, 27 Nov 2019 21:29:29 +0100
-Message-Id: <20191127203055.364271538@linuxfoundation.org>
+Subject: [PATCH 4.14 038/211] RDMA/bnxt_re: Fix qp async event reporting
+Date:   Wed, 27 Nov 2019 21:29:31 +0100
+Message-Id: <20191127203055.742074665@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,173 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Folly <julien.folly@gmail.com>
+From: Devesh Sharma <devesh.sharma@broadcom.com>
 
-[ Upstream commit 6eaafbb6998e999467cf78a76e155ee00e372b14 ]
+[ Upstream commit 4c01f2e3a906a0d2d798be5751c331cf501bc129 ]
 
-IAD Register is yet readable trough the "iad" sys file.
+Reports affiliated async event on the qp-async event channel instead of
+global event channel.
 
-A write to the "iad" sys file enables or disables the current
-measurement, but it was not possible to get the measured value by
-reading it.
-Fix: %u in snprintf for unsigned values (vdd and vad)
-Fix: Avoid possibles overflows (Usage of the 'count' variables)
-
-Signed-off-by: Julien Folly <julien.folly@gmail.com>
-Acked-by: Evgeniy Polyakov <zbr@ioremap.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Devesh Sharma <devesh.sharma@broadcom.com>
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/w1/slaves/w1_ds2438.c | 66 +++++++++++++++++++++++++++--------
- 1 file changed, 52 insertions(+), 14 deletions(-)
+ drivers/infiniband/hw/bnxt_re/main.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/w1/slaves/w1_ds2438.c b/drivers/w1/slaves/w1_ds2438.c
-index bf641a191d077..7c4e33dbee4d5 100644
---- a/drivers/w1/slaves/w1_ds2438.c
-+++ b/drivers/w1/slaves/w1_ds2438.c
-@@ -186,8 +186,8 @@ static int w1_ds2438_change_config_bit(struct w1_slave *sl, u8 mask, u8 value)
- 	return -1;
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index bf811b23bc953..7d00b6a53ed8c 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -782,12 +782,17 @@ static void bnxt_re_dispatch_event(struct ib_device *ibdev, struct ib_qp *qp,
+ 	struct ib_event ib_event;
+ 
+ 	ib_event.device = ibdev;
+-	if (qp)
++	if (qp) {
+ 		ib_event.element.qp = qp;
+-	else
++		ib_event.event = event;
++		if (qp->event_handler)
++			qp->event_handler(&ib_event, qp->qp_context);
++
++	} else {
+ 		ib_event.element.port_num = port_num;
+-	ib_event.event = event;
+-	ib_dispatch_event(&ib_event);
++		ib_event.event = event;
++		ib_dispatch_event(&ib_event);
++	}
  }
  
--static uint16_t w1_ds2438_get_voltage(struct w1_slave *sl,
--				      int adc_input, uint16_t *voltage)
-+static int w1_ds2438_get_voltage(struct w1_slave *sl,
-+				 int adc_input, uint16_t *voltage)
- {
- 	unsigned int retries = W1_DS2438_RETRIES;
- 	u8 w1_buf[DS2438_PAGE_SIZE + 1 /*for CRC*/];
-@@ -235,6 +235,25 @@ static uint16_t w1_ds2438_get_voltage(struct w1_slave *sl,
- 	return ret;
- }
- 
-+static int w1_ds2438_get_current(struct w1_slave *sl, int16_t *voltage)
-+{
-+	u8 w1_buf[DS2438_PAGE_SIZE + 1 /*for CRC*/];
-+	int ret;
-+
-+	mutex_lock(&sl->master->bus_mutex);
-+
-+	if (w1_ds2438_get_page(sl, 0, w1_buf) == 0) {
-+		/* The voltage measured across current sense resistor RSENS. */
-+		*voltage = (((int16_t) w1_buf[DS2438_CURRENT_MSB]) << 8) | ((int16_t) w1_buf[DS2438_CURRENT_LSB]);
-+		ret = 0;
-+	} else
-+		ret = -1;
-+
-+	mutex_unlock(&sl->master->bus_mutex);
-+
-+	return ret;
-+}
-+
- static ssize_t iad_write(struct file *filp, struct kobject *kobj,
- 			 struct bin_attribute *bin_attr, char *buf,
- 			 loff_t off, size_t count)
-@@ -257,6 +276,27 @@ static ssize_t iad_write(struct file *filp, struct kobject *kobj,
- 	return ret;
- }
- 
-+static ssize_t iad_read(struct file *filp, struct kobject *kobj,
-+			struct bin_attribute *bin_attr, char *buf,
-+			loff_t off, size_t count)
-+{
-+	struct w1_slave *sl = kobj_to_w1_slave(kobj);
-+	int ret;
-+	int16_t voltage;
-+
-+	if (off != 0)
-+		return 0;
-+	if (!buf)
-+		return -EINVAL;
-+
-+	if (w1_ds2438_get_current(sl, &voltage) == 0) {
-+		ret = snprintf(buf, count, "%i\n", voltage);
-+	} else
-+		ret = -EIO;
-+
-+	return ret;
-+}
-+
- static ssize_t page0_read(struct file *filp, struct kobject *kobj,
- 			  struct bin_attribute *bin_attr, char *buf,
- 			  loff_t off, size_t count)
-@@ -272,9 +312,13 @@ static ssize_t page0_read(struct file *filp, struct kobject *kobj,
- 
- 	mutex_lock(&sl->master->bus_mutex);
- 
-+	/* Read no more than page0 size */
-+	if (count > DS2438_PAGE_SIZE)
-+		count = DS2438_PAGE_SIZE;
-+
- 	if (w1_ds2438_get_page(sl, 0, w1_buf) == 0) {
--		memcpy(buf, &w1_buf, DS2438_PAGE_SIZE);
--		ret = DS2438_PAGE_SIZE;
-+		memcpy(buf, &w1_buf, count);
-+		ret = count;
- 	} else
- 		ret = -EIO;
- 
-@@ -289,7 +333,6 @@ static ssize_t temperature_read(struct file *filp, struct kobject *kobj,
- {
- 	struct w1_slave *sl = kobj_to_w1_slave(kobj);
- 	int ret;
--	ssize_t c = PAGE_SIZE;
- 	int16_t temp;
- 
- 	if (off != 0)
-@@ -298,8 +341,7 @@ static ssize_t temperature_read(struct file *filp, struct kobject *kobj,
- 		return -EINVAL;
- 
- 	if (w1_ds2438_get_temperature(sl, &temp) == 0) {
--		c -= snprintf(buf + PAGE_SIZE - c, c, "%d\n", temp);
--		ret = PAGE_SIZE - c;
-+		ret = snprintf(buf, count, "%i\n", temp);
- 	} else
- 		ret = -EIO;
- 
-@@ -312,7 +354,6 @@ static ssize_t vad_read(struct file *filp, struct kobject *kobj,
- {
- 	struct w1_slave *sl = kobj_to_w1_slave(kobj);
- 	int ret;
--	ssize_t c = PAGE_SIZE;
- 	uint16_t voltage;
- 
- 	if (off != 0)
-@@ -321,8 +362,7 @@ static ssize_t vad_read(struct file *filp, struct kobject *kobj,
- 		return -EINVAL;
- 
- 	if (w1_ds2438_get_voltage(sl, DS2438_ADC_INPUT_VAD, &voltage) == 0) {
--		c -= snprintf(buf + PAGE_SIZE - c, c, "%d\n", voltage);
--		ret = PAGE_SIZE - c;
-+		ret = snprintf(buf, count, "%u\n", voltage);
- 	} else
- 		ret = -EIO;
- 
-@@ -335,7 +375,6 @@ static ssize_t vdd_read(struct file *filp, struct kobject *kobj,
- {
- 	struct w1_slave *sl = kobj_to_w1_slave(kobj);
- 	int ret;
--	ssize_t c = PAGE_SIZE;
- 	uint16_t voltage;
- 
- 	if (off != 0)
-@@ -344,15 +383,14 @@ static ssize_t vdd_read(struct file *filp, struct kobject *kobj,
- 		return -EINVAL;
- 
- 	if (w1_ds2438_get_voltage(sl, DS2438_ADC_INPUT_VDD, &voltage) == 0) {
--		c -= snprintf(buf + PAGE_SIZE - c, c, "%d\n", voltage);
--		ret = PAGE_SIZE - c;
-+		ret = snprintf(buf, count, "%u\n", voltage);
- 	} else
- 		ret = -EIO;
- 
- 	return ret;
- }
- 
--static BIN_ATTR(iad, S_IRUGO | S_IWUSR | S_IWGRP, NULL, iad_write, 1);
-+static BIN_ATTR(iad, S_IRUGO | S_IWUSR | S_IWGRP, iad_read, iad_write, 0);
- static BIN_ATTR_RO(page0, DS2438_PAGE_SIZE);
- static BIN_ATTR_RO(temperature, 0/* real length varies */);
- static BIN_ATTR_RO(vad, 0/* real length varies */);
+ #define HWRM_QUEUE_PRI2COS_QCFG_INPUT_FLAGS_IVLAN      0x02
 -- 
 2.20.1
 
