@@ -2,161 +2,147 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1D4C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97150C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB86820862
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BFC020863
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="oAJpEw83"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYHJze5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfK0Sb7 (ORCPT
+        id S1727146AbfK0Scj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:31:59 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:38711 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfK0Sb6 (ORCPT
+        Wed, 27 Nov 2019 13:32:39 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54884 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726514AbfK0Scj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:31:58 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: To6RpGLb/CIBhVybQX3Ldd7xATHcKL8VUSAk1l3EbS8NIKJRSWW+H46On0eQjxEZiygUWGllGb
- 3nIkGeuEM1O7cEEywoZkpqu9bcCG0CtUWwOB1D9eyqHRNlsxDtCmtMszeZ4lo5d609YAQjGvc5
- 4Nwwrxvn6E1345hCfYVojmBgQjhHz//AfwQAS7xrTayjp5Sl210Li6334HdsttFSJJZU+l1F7j
- RgHXu0XeAVJv4UmHC1ZvUz0y4jb3v0ooMddox9KYsitrrpAjhhKyW4gZ/c0WnzO/xqf+VLWRcV
- DXI=
-X-IronPort-AV: E=Sophos;i="5.69,250,1571727600"; 
-   d="scan'208";a="57086443"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Nov 2019 11:31:58 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 27 Nov 2019 11:31:57 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 27 Nov 2019 11:31:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M3jdPzndjiXvkGz90mz0AeIf3n/77CejMRdgblkAZegdAhlBt8gr3vA7hEqcDJJrJakOBno7qgnKpjNCVkpdZOC7zqtROZnjft3yNbht3S+Vi2FD1oYWXE8WI5/N9Hce/StMM+YliPP1inzZGpPsXqCl53md7Qdv/2RQ7mYCfSggDBMQyJlcXhpBWPMF6NQxbI7EF02Xf5+yjHuTjLZe7NGBtWEb+38zl1ETY/Pwkd5JjSmfjMRRw8VJcwBgGDMu1cpT4JpCtXHyXbBizc9FaCGhLoBbFpTnZ8CDxqWm2z3/N1i1VvLw1WGtEa2Nr8SJvRSVn08CHoGx4YQViWQ4Ow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w17MRqhRbdOeqVeduXVBd2LnN6kXWKpGqRP7PuX0rXE=;
- b=UvVRnIM1j9dR9YyvS94cmzKgCScdiZtbNsa2BonMcyq53b4l+J1osAaHALwZX+nRqlyU/CjwEkCx/5AccFCYLFSMBcCLOUiGru1k40A1hd63BgiymjUyBojqqtrWqUQ5vFQ/bHoFpwr5jmfllCNY99VCdKJUgavRcq4SI+Uy28kSg4R76G8QoPP8uJHtXvzeKLznyZMwC27EIuDSXcA9ruhZgcV45Ntf728cqRtjy0uHQEhUW7TB0p1O4aLGHJPOqJfmsYOiYASHxHlbwaM1rGMmdEnyGutCYJ39P+SkWJ8vhNp8fmQwTjxBWQe+QEszFQSVsqQpPAQKua9wUL5c7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w17MRqhRbdOeqVeduXVBd2LnN6kXWKpGqRP7PuX0rXE=;
- b=oAJpEw83m5NT3kbwTs9wM8QUHXT4xePCKtGzRMbwQtebhPO2AbXMxCEVg6NBoKkJgb9XUZ5qcAcokgENRglMEELmRefRRxDnQ8K8r84sHHWMClnCQ8I8yXceTDURojkkNVefVNFS/zztx0s9GTYkbFqOKhafgpeSBoOWxJf9knU=
-Received: from SN6PR11MB2830.namprd11.prod.outlook.com (52.135.93.21) by
- SN6PR11MB3024.namprd11.prod.outlook.com (52.135.125.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.18; Wed, 27 Nov 2019 18:31:54 +0000
-Received: from SN6PR11MB2830.namprd11.prod.outlook.com
- ([fe80::74c7:7e0e:5565:a0e5]) by SN6PR11MB2830.namprd11.prod.outlook.com
- ([fe80::74c7:7e0e:5565:a0e5%7]) with mapi id 15.20.2474.022; Wed, 27 Nov 2019
- 18:31:54 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <andrew@lunn.ch>, <mparab@cadence.com>
-CC:     <antoine.tenart@bootlin.com>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <dkangude@cadence.com>, <pthombar@cadence.com>,
-        <rmk+kernel@arm.linux.org.uk>
-Subject: Re: [PATCH 2/3] net: macb: add support for C45 MDIO read/write
-Thread-Topic: [PATCH 2/3] net: macb: add support for C45 MDIO read/write
-Thread-Index: AQHVpVDxAflWsMDSIE2xhPpOe+lx7Q==
-Date:   Wed, 27 Nov 2019 18:31:54 +0000
-Message-ID: <19694e5a-17df-608f-5db7-5da288e5e7cd@microchip.com>
-References: <1574759354-102696-1-git-send-email-mparab@cadence.com>
- <1574759389-103118-1-git-send-email-mparab@cadence.com>
- <20191126143717.GP6602@lunn.ch>
-In-Reply-To: <20191126143717.GP6602@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0158.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1b::26) To SN6PR11MB2830.namprd11.prod.outlook.com
- (2603:10b6:805:5b::21)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2a01:cb1c:a97:7600:4101:ade1:25ee:c9ca]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9e21f681-a5f2-4e86-7263-08d773681393
-x-ms-traffictypediagnostic: SN6PR11MB3024:
-x-microsoft-antispam-prvs: <SN6PR11MB30241E70680D93AC82E9C769E0440@SN6PR11MB3024.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 023495660C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(39860400002)(366004)(396003)(346002)(199004)(189003)(7416002)(2906002)(81156014)(5660300002)(14444005)(64756008)(66556008)(66476007)(66446008)(186003)(4744005)(99286004)(81166006)(46003)(8676002)(229853002)(102836004)(14454004)(8936002)(6486002)(54906003)(66946007)(256004)(76176011)(6512007)(110136005)(53546011)(52116002)(316002)(386003)(6506007)(86362001)(71190400001)(4326008)(31686004)(6246003)(36756003)(2616005)(11346002)(6116002)(446003)(7736002)(25786009)(478600001)(71200400001)(31696002)(6436002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB3024;H:SN6PR11MB2830.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8dImwJnts1zrpeqTXxpVCUvztSJxjR2CEgiOWz5KBpLwOcGMgOV+E0Sshs5AoZOuplEiz9MGMbptVXe+FVoK2ZoHjBKfz9il8uTIRIP6Lzve/xfqMjg4+heeUWJse2Mpuft2RllpLaFkPI1dhESbhol03FK0wzath03F3EWsEbuUXpXXIrsVfWBOtUB1PEoCikvMrb2h2hR1KZbtAA+HgSe1zrkmSQpVA2GoFoifPhDqQ2CxvN3DxXy3cGN7VqzS5VYFpTdmNctssFrZ3OrOXVSBo7og/akLpRSuw0sgL4jaJPpxzYP1+TwkS/+rUOf8AcGkTJiFKKvY+Y48tag7MYQ0ZulXzc1nkli4jokJej/Xkh8r8Sqbimv0tI92yMqgX5ZnW+f2b943z1K76FsAtF6M19h7Pkj/oGqJhOX3KS704AqB8XbhaXXJLBoI9/Tc
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <EC2B433C43DE0D4082513FE2CE2F667F@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 27 Nov 2019 13:32:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574879557;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=29WF8SRJu7k6XWM0r8jhKtWhn/ROnuR/yAPRr+2SCjM=;
+        b=FYHJze5yacMgtus3V0trqsn33pfDEQM2AZkq4NstFxoZWMsptVhLzkxff8Y7E/sHW4Srzw
+        bRpy5yBbzN+ogAETn3Feysg1V2wIjff6q9hlWeLQkHAmb2DIc1aG6YCBfQbUyzn6hYjUcW
+        kyAVLJcRm3uro+T43xTUS09AOkae2MM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-263-lqGYbTyoMVauNlUik-RkFw-1; Wed, 27 Nov 2019 13:32:36 -0500
+X-MC-Unique: lqGYbTyoMVauNlUik-RkFw-1
+Received: by mail-wr1-f70.google.com with SMTP id 92so12587345wro.14
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 10:32:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to;
+        bh=YxaL1ZT1aGySKkKsMe8gcQSf/mlZomA5ztZxEiMxVxw=;
+        b=F99XwGt3a5CTmRiS8v1BR/Vk8v2vHhMzfefwWrgEDO0gnj4Mn2c2lMLtjtB/BcZ4Ca
+         tkU/1/USxX03EX9hNMW0vuxTrDDD4vf+IgZCuAZGO8lpzrrdI+iLLLUsKBXCxZXOFi6i
+         o0jfRmkX0qqwrDBhA0IliDVwop2ey+4+QbXLq86D7RrbmanCuUA2abo6ED8jyG6AtgAx
+         m4yjdTalLWm6MKhYD53TnoZDFfkZXPh3j8zY7CkKYDtrQvo1KjE11OHfGkjsoTbAqS5E
+         j6an8kPZ4Z0n+YJ+pjIne9oG6vMS51R7solYdbX+nXkop23ZhK61P6YRyh/tJG30H/YQ
+         EEyw==
+X-Gm-Message-State: APjAAAUQUrTjEOP7pIQ5nKz/pq7sjU0gs5tl52OIYE8a/37Drmg2DYXL
+        PaaR4AReAl8KE72Y4gvSZ9Co0uPTBAKxsG8wo/MxolDad0VCbqHwK2uV7IPUuA/zHh/kNlkqMrY
+        2JSZ1wHMiFo6chx9zSrHWpzcI
+X-Received: by 2002:adf:ffc5:: with SMTP id x5mr3907198wrs.92.1574879554650;
+        Wed, 27 Nov 2019 10:32:34 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx8ika2gcHJ74dgNr0WfljAWH/C85tD9jVcLcwqgkOP5zVcGmWunqYNXZFhQ43XFqfbSu8vdA==
+X-Received: by 2002:adf:ffc5:: with SMTP id x5mr3907176wrs.92.1574879554355;
+        Wed, 27 Nov 2019 10:32:34 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:459f:99a9:39f1:65ba? ([2001:b07:6468:f312:459f:99a9:39f1:65ba])
+        by smtp.gmail.com with ESMTPSA id o133sm8067506wmb.4.2019.11.27.10.32.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Nov 2019 10:32:33 -0800 (PST)
+Subject: Re: [PATCH] KVM: Add separate helper for putting borrowed reference
+ to kvm
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191021225842.23941-1-sean.j.christopherson@intel.com>
+ <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
+ <20191126171416.GA22233@linux.intel.com>
+ <0009c6c1bb635098fa68cb6db6414634555039fe.camel@linux.ibm.com>
+ <e1a4218f-2a70-3de3-1403-dbebf8a8abdf@redhat.com>
+ <bfa563e6a584bd85d3abe953ca088281dc0e167b.camel@linux.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <6beeff56-7676-5dfd-a578-1732730f8963@redhat.com>
+Date:   Wed, 27 Nov 2019 19:32:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e21f681-a5f2-4e86-7263-08d773681393
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2019 18:31:54.1825
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: emNRPWA8Xz9s3BV/otf569r9QdM2z9YAaZID2L74s48DLJ9KzYZz3rxpsq5ZLu55jwWXol2GPFSclTlprhhXHXp4fe4/JXZ19dRj6/Le39M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3024
+In-Reply-To: <bfa563e6a584bd85d3abe953ca088281dc0e167b.camel@linux.ibm.com>
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="ffsTa9Xe2Ee0ZdRuXdoWLUmRFeQM2p1Zu"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/11/2019 at 15:37, Andrew Lunn wrote:
-> On Tue, Nov 26, 2019 at 09:09:49AM +0000, Milind Parab wrote:
->> This patch modify MDIO read/write functions to support
->> communication with C45 PHY.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--ffsTa9Xe2Ee0ZdRuXdoWLUmRFeQM2p1Zu
+Content-Type: multipart/mixed; boundary="aqZUHOq3nlK4WoWx9AL9jxCe3XQdlu06R"
+
+--aqZUHOq3nlK4WoWx9AL9jxCe3XQdlu06R
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 27/11/19 19:24, Leonardo Bras wrote:
+> By what I could undestand up to now, these functions that use borrowed
+> references can only be called while the reference (file descriptor)
+> exists.=20
+> So, suppose these threads, where:
+> - T1 uses a borrowed reference, and=20
+> - T2 is releasing the reference (close, release):
+
+Nit: T2 is releasing the *last* reference (as implied by your reference
+to close/release).
+
 >=20
-> I think i've asked this before, at least once, but you have not added
-> it to the commit messages. Do all generations of the macb support C45?
+> T1=09=09=09=09| T2
+> kvm_get_kvm()=09=09=09|
+> ...=09=09=09=09| kvm_put_kvm()
+> kvm_put_kvm_no_destroy()=09|
+>=20
+> The above would not trigger a use-after-free bug, but will cause a
+> memory leak. Is my above understanding right?
 
-For what I can tell from the different IP revisions that we implemented=20
-throughout the years in Atmel then Microchip products (back to=20
-at91rm9200 and at91sam9263), it seems yes.
+Yes, this is correct.
 
-The "PHY Maintenance Register" "MACB_MAN_*" was always present with the=20
-same bits 32-28 layout (with somehow different names).
+Paolo
 
-But definitively we would need to hear that from Cadence itself which=20
-would be far better.
 
-[..]
+--aqZUHOq3nlK4WoWx9AL9jxCe3XQdlu06R--
 
-Best regards,
---=20
-Nicolas Ferre
+--ffsTa9Xe2Ee0ZdRuXdoWLUmRFeQM2p1Zu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEE8TM4V0tmI4mGbHaCv/vSX3jHroMFAl3ewUAACgkQv/vSX3jH
+roNHAwf/V5jw3UuEAUr+qwFRt1WbZT7kDY6RcpqwfR7drS3cV9JoPkLaa/vuvUnj
+TvZG7Q2ZVR0m2JALj914WOuC5pmAYy8HVawrFbooQ4T5mtc2akQzVD0eshLankPo
+RZjfY2ijPzfY+tajHzQJ09U9Rzc33YvOZGmao/zV8/QXtFQokF1549ZJQyZPTVM0
+cgiRO5mVfl0/IbchPvczCrgXIT0P4Ca9w+BN7xn1+HFGO8rvUtwaG5ZxVhUfk58B
+LArJb8NkIGNDdoh3DF27nHNXak0C95hD1ENiPKVK6RrEkr/wJc6ffOS8eAdUu5yl
+WmgTspYVIA7RjqLbTwLXHOQwKrvG7A==
+=Shjy
+-----END PGP SIGNATURE-----
+
+--ffsTa9Xe2Ee0ZdRuXdoWLUmRFeQM2p1Zu--
+
