@@ -2,110 +2,125 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F19C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EEAC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7119B206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3390C2068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:07:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TFiRlUNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfK0MB6 (ORCPT
+        id S1726664AbfK0MHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 07:01:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38526 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726983AbfK0MBw (ORCPT
+        Wed, 27 Nov 2019 07:07:50 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42085 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbfK0MHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 07:01:52 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARBqPhD146012;
-        Wed, 27 Nov 2019 07:01:40 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxqpktg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 07:01:40 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xARC1IaN022718;
-        Wed, 27 Nov 2019 12:01:39 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 2wevd6wfey-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 12:01:39 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARC1cSo51446128
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 12:01:38 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3BED9B2070;
-        Wed, 27 Nov 2019 12:01:38 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F0EC0B2067;
-        Wed, 27 Nov 2019 12:01:37 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.35.209])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Nov 2019 12:01:37 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 6164F2E2F5A; Wed, 27 Nov 2019 17:31:35 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH 0/3] pseries: Track and expose idle PURR and SPURR ticks
-Date:   Wed, 27 Nov 2019 17:31:09 +0530
-Message-Id: <1574856072-30972-1-git-send-email-ego@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_02:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 impostorscore=0
- mlxscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270104
+        Wed, 27 Nov 2019 07:07:49 -0500
+Received: by mail-pg1-f196.google.com with SMTP id i5so2446113pgj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 04:07:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K2kUt+3Utv0U/lxz9Sn3u3UBpoDUITVmuY7QcGVxNzk=;
+        b=TFiRlUNuKgtzuenkN7FjwVpZDCmhS3ME+j1NHP+zQLLgsZSTQI7Y+H1jzhCjaVATdj
+         ACslhGynFMAoB0PCZYTJkn7wDFXmf5JpoF/NX+saZwsMAVpESmzLGkqTGoZICjaj8QZF
+         NsOeLxvY2SQLU8jihNN9ZutsKem3btGs/pUtlzYfAqE/AF1wEMv8eZO5WJyKBbs4GXX4
+         oSEjaSptzKuqD0eXtcwvwJaIBgTci4YNIAzELApikP9ajvAMkzEVjbf9oYpNdcQzXqpG
+         Ckv6oNSCP9c9oWzIjO6pNDQ8lQCYfbfYWFB1zov5oH1o84nj+MCCBuTSgvxFOuuTOAUB
+         jp+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K2kUt+3Utv0U/lxz9Sn3u3UBpoDUITVmuY7QcGVxNzk=;
+        b=I0IufzhvwGrq6gRnL/AwLNBAtoXXUWtv5/387sBygWuDsJmIO6LTVZkEdibhXeaeBO
+         Hh/L2iGoxMMqMqrB0uqgtNsAtmj8RR/pOYapf7KWDWutGvxEbfR2dgqeYzt9uWCOizSY
+         FBKAL6fWGWLbPUQC1ynr1lAPxiRlJjFl9/EFyLywCoZMpO4d6lNtZAH6G9yNmUneFXQF
+         4r7IITBqG4TtrR+vDRj8ubZfw8W1fsQerShP4pBj1t+STJ06lOulIBiAG+6zkVaaSNQ9
+         m9Xl0ZKjM7d3JPtiX9uyIpNY5UTz+1rE5Vl31VwFYkoPKORrbD5ocvzSPOA47ZS55Xlp
+         nJDA==
+X-Gm-Message-State: APjAAAUMXAbGAIJ5RgkApJPA79gQPCK01c66BP2GlbClGDvEMTdh4+wZ
+        K7sEUEDFoQFYiPqWuAbhB2GK/A==
+X-Google-Smtp-Source: APXvYqzFJ3B2yRMuuWQYTrYHx8R6FxyuQQYlBZvpMqZgQZbJIZXWuMoIq2kRJTwIF2oUjuAhccJ11Q==
+X-Received: by 2002:a63:1402:: with SMTP id u2mr4604261pgl.224.1574856467322;
+        Wed, 27 Nov 2019 04:07:47 -0800 (PST)
+Received: from localhost ([122.171.112.123])
+        by smtp.gmail.com with ESMTPSA id s7sm1273794pfe.22.2019.11.27.04.07.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Nov 2019 04:07:46 -0800 (PST)
+Date:   Wed, 27 Nov 2019 17:37:44 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: vexpress-spc: Fix wrong alternation of
+ policy->related_cpus during CPU hp
+Message-ID: <20191127120744.iivgw25nixovfj7i@vireshk-i7>
+References: <20191127114801.23837-1-dietmar.eggemann@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127114801.23837-1-dietmar.eggemann@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On 27-11-19, 12:48, Dietmar Eggemann wrote:
+> Since commit ca74b316df96 ("arm: Use common cpu_topology structure and
+> functions.") the core cpumask has to be modified during cpu hotplug
+> operations.
+> 
+> ("arm: Fix topology setup in case of CPU hotplug for CONFIG_SCHED_MC")
+> [1] fixed that but revealed another issue on TC2, i.e in its cpufreq
+> driver.
+> 
+> During CPU hp stress operations on multiple CPUs, policy->related_cpus
+> can be altered. This is wrong since this cpumask should contain the
+> online and offline CPUs.
+> 
+> The WARN_ON(!cpumask_test_cpu(cpu, policy->related_cpus)) in
+> cpufreq_online() triggers in this case.
+> 
+> The core cpumask can't be used to set the policy->cpus in
+> ve_spc_cpufreq_init() anymore in case it is called via
+> cpuhp_cpufreq_online()->cpufreq_online()->cpufreq_driver->init().
+> 
+> An empty online() callback can be used to avoid that the init()
+> driver function is called during CPU hotplug in so that
+> policy->related_cpus will not be changed.
+> 
+> Implementing an online() also requires an offline() callback.
+> 
+> Tested on TC2 with CPU hp stress test (CPU hp from multiple CPUs at
+> the same time).
+> 
+> [1]
+> https://lore.kernel.org/r/20191127103353.12417-1-dietmar.eggemann@arm.com
+> 
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 
-On PSeries LPARs, the data centers planners desire a more accurate
-view of system utilization per resource such as CPU to plan the system
-capacity requirements better. Such accuracy can be obtained by reading
-PURR/SPURR registers for CPU resource utilization.
+Wanna provide any fixes tag ?
 
-Tools such as lparstat which are used to compute the utilization need
-to know [S]PURR ticks when the cpu was busy or idle. The [S]PURR
-counters are already exposed through sysfs.  We already account for
-PURR ticks when we go to idle so that we can update the VPA area. This
-patchset extends support to account for SPURR ticks when idle, and
-expose both via per-cpu sysfs files.
+> ---
+>  drivers/cpufreq/vexpress-spc-cpufreq.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 
-These patches are required for enhancement to the lparstat utility
-that compute the CPU utilization based on PURR and SPURR which can be
-found here :
-https://groups.google.com/forum/#!topic/powerpc-utils-devel/fYRo69xO9r4
-
-Gautham R. Shenoy (3):
-  powerpc/pseries: Account for SPURR ticks on idle CPUs
-  powerpc/sysfs: Show idle_purr and idle_spurr for every CPU
-  Documentation: Document sysfs interfaces purr, spurr, idle_purr,
-    idle_spurr
-
- Documentation/ABI/testing/sysfs-devices-system-cpu | 39 ++++++++++++++++++++++
- arch/powerpc/kernel/idle.c                         |  2 ++
- arch/powerpc/kernel/sysfs.c                        | 32 ++++++++++++++++++
- drivers/cpuidle/cpuidle-pseries.c                  | 28 ++++++++++------
- 4 files changed, 90 insertions(+), 11 deletions(-)
+This is 5.5 material or 5.6 ?
 
 -- 
-1.9.4
-
+viresh
