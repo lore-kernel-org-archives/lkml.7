@@ -2,27 +2,27 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C012C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77831C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547332070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557FC2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfK0Kjo (ORCPT
+        id S1727193AbfK0Kjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:39:44 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55572 "EHLO mx1.suse.de"
+        Wed, 27 Nov 2019 05:39:48 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55420 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726204AbfK0Kjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:39:42 -0500
+        id S1727125AbfK0Kjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:39:44 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C854AB467;
-        Wed, 27 Nov 2019 10:39:39 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id DD472B46D;
+        Wed, 27 Nov 2019 10:39:42 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 rebase 14/34] powerpc/64s/exception: remove the SPR saving patch code macros
-Date:   Wed, 27 Nov 2019 11:38:50 +0100
-Message-Id: <e65812ea1e55490c9719435e562d452afc7ced42.1574803685.git.msuchanek@suse.de>
+Subject: [PATCH v2 rebase 16/34] powerpc/64s/exception: hdecrementer avoid touching the stack
+Date:   Wed, 27 Nov 2019 11:38:52 +0100
+Message-Id: <f7cee9fed0cb7a81c75bea283b031b13fb66c592.1574803685.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574803684.git.msuchanek@suse.de>
 References: <cover.1574803684.git.msuchanek@suse.de>
@@ -81,170 +81,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
-These are used infrequently enough they don't provide much help, so
-inline them.
+The hdec interrupt handler is reported to sometimes fire in Linux if
+KVM leaves it pending after a guest exists. This is harmless, so there
+is a no-op handler for it.
+
+The interrupt handler currently uses the regular kernel stack. Change
+this to avoid touching the stack entirely.
+
+This should be the last place where the regular Linux stack can be
+accessed with asynchronous interrupts (including PMI) soft-masked.
+It might be possible to take advantage of this invariant, e.g., to
+context switch the kernel stack SLB entry without clearing MSR[EE].
 
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 82 ++++++++++------------------
- 1 file changed, 28 insertions(+), 54 deletions(-)
+ arch/powerpc/include/asm/time.h      |  1 -
+ arch/powerpc/kernel/exceptions-64s.S | 25 ++++++++++++++++++++-----
+ arch/powerpc/kernel/time.c           |  9 ---------
+ 3 files changed, 20 insertions(+), 15 deletions(-)
 
+diff --git a/arch/powerpc/include/asm/time.h b/arch/powerpc/include/asm/time.h
+index 08dbe3e6831c..e0107495c4de 100644
+--- a/arch/powerpc/include/asm/time.h
++++ b/arch/powerpc/include/asm/time.h
+@@ -24,7 +24,6 @@ extern struct clock_event_device decrementer_clockevent;
+ 
+ 
+ extern void generic_calibrate_decr(void);
+-extern void hdec_interrupt(struct pt_regs *regs);
+ 
+ /* Some sane defaults: 125 MHz timebase, 1GHz processor */
+ extern unsigned long ppc_proc_freq;
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 716a95ba814f..abf26db36427 100644
+index 9fa71d51ecf4..7a234e6d7bf5 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -110,46 +110,6 @@ name:
- #define EXC_HV		1
- #define EXC_STD		0
+@@ -1491,6 +1491,8 @@ EXC_COMMON_BEGIN(decrementer_common)
+ INT_DEFINE_BEGIN(hdecrementer)
+ 	IVEC=0x980
+ 	IHSRR=EXC_HV
++	ISTACK=0
++	IRECONCILE=0
+ 	IKVM_REAL=1
+ 	IKVM_VIRT=1
+ INT_DEFINE_END(hdecrementer)
+@@ -1502,11 +1504,24 @@ EXC_VIRT_BEGIN(hdecrementer, 0x4980, 0x80)
+ 	GEN_INT_ENTRY hdecrementer, virt=1
+ EXC_VIRT_END(hdecrementer, 0x4980, 0x80)
+ EXC_COMMON_BEGIN(hdecrementer_common)
+-	GEN_COMMON hdecrementer
+-	bl	save_nvgprs
+-	addi	r3,r1,STACK_FRAME_OVERHEAD
+-	bl	hdec_interrupt
+-	b	ret_from_except
++	__GEN_COMMON_ENTRY hdecrementer
++	/*
++	 * Hypervisor decrementer interrupts not caught by the KVM test
++	 * shouldn't occur but are sometimes left pending on exit from a KVM
++	 * guest.  We don't need to do anything to clear them, as they are
++	 * edge-triggered.
++	 *
++	 * Be careful to avoid touching the kernel stack.
++	 */
++	ld	r10,PACA_EXGEN+EX_CTR(r13)
++	mtctr	r10
++	mtcrf	0x80,r9
++	ld	r9,PACA_EXGEN+EX_R9(r13)
++	ld	r10,PACA_EXGEN+EX_R10(r13)
++	ld	r11,PACA_EXGEN+EX_R11(r13)
++	ld	r12,PACA_EXGEN+EX_R12(r13)
++	ld	r13,PACA_EXGEN+EX_R13(r13)
++	HRFI_TO_KERNEL
+ 
+ 	GEN_KVM hdecrementer
+ 
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 968ae97382b4..e4572d67cc76 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -663,15 +663,6 @@ void timer_broadcast_interrupt(void)
+ }
+ #endif
  
 -/*
-- * PPR save/restore macros used in exceptions-64s.S
-- * Used for P7 or later processors
+- * Hypervisor decrementer interrupts shouldn't occur but are sometimes
+- * left pending on exit from a KVM guest.  We don't need to do anything
+- * to clear them, as they are edge-triggered.
 - */
--#define SAVE_PPR(area, ra)						\
--BEGIN_FTR_SECTION_NESTED(940)						\
--	ld	ra,area+EX_PPR(r13);	/* Read PPR from paca */	\
--	std	ra,_PPR(r1);						\
--END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,940)
+-void hdec_interrupt(struct pt_regs *regs)
+-{
+-}
 -
--#define RESTORE_PPR_PACA(area, ra)					\
--BEGIN_FTR_SECTION_NESTED(941)						\
--	ld	ra,area+EX_PPR(r13);					\
--	mtspr	SPRN_PPR,ra;						\
--END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,941)
--
--/*
-- * Get an SPR into a register if the CPU has the given feature
-- */
--#define OPT_GET_SPR(ra, spr, ftr)					\
--BEGIN_FTR_SECTION_NESTED(943)						\
--	mfspr	ra,spr;							\
--END_FTR_SECTION_NESTED(ftr,ftr,943)
--
--/*
-- * Set an SPR from a register if the CPU has the given feature
-- */
--#define OPT_SET_SPR(ra, spr, ftr)					\
--BEGIN_FTR_SECTION_NESTED(943)						\
--	mtspr	spr,ra;							\
--END_FTR_SECTION_NESTED(ftr,ftr,943)
--
--/*
-- * Save a register to the PACA if the CPU has the given feature
-- */
--#define OPT_SAVE_REG_TO_PACA(offset, ra, ftr)				\
--BEGIN_FTR_SECTION_NESTED(943)						\
--	std	ra,offset(r13);						\
--END_FTR_SECTION_NESTED(ftr,ftr,943)
--
- /*
-  * Branch to label using its 0xC000 address. This results in instruction
-  * address suitable for MSR[IR]=0 or 1, which allows relocation to be turned
-@@ -278,18 +238,18 @@ do_define_int n
- 	cmpwi	r10,KVM_GUEST_MODE_SKIP
- 	beq	89f
- 	.else
--BEGIN_FTR_SECTION_NESTED(947)
-+BEGIN_FTR_SECTION
- 	ld	r10,IAREA+EX_CFAR(r13)
- 	std	r10,HSTATE_CFAR(r13)
--END_FTR_SECTION_NESTED(CPU_FTR_CFAR,CPU_FTR_CFAR,947)
-+END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	.endif
- 
- 	ld	r10,PACA_EXGEN+EX_CTR(r13)
- 	mtctr	r10
--BEGIN_FTR_SECTION_NESTED(948)
-+BEGIN_FTR_SECTION
- 	ld	r10,IAREA+EX_PPR(r13)
- 	std	r10,HSTATE_PPR(r13)
--END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
-+END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 	ld	r11,IAREA+EX_R11(r13)
- 	ld	r12,IAREA+EX_R12(r13)
- 	std	r12,HSTATE_SCRATCH0(r13)
-@@ -386,10 +346,14 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	SET_SCRATCH0(r13)			/* save r13 */
- 	GET_PACA(r13)
- 	std	r9,IAREA+EX_R9(r13)		/* save r9 */
--	OPT_GET_SPR(r9, SPRN_PPR, CPU_FTR_HAS_PPR)
-+BEGIN_FTR_SECTION
-+	mfspr	r9,SPRN_PPR
-+END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 	HMT_MEDIUM
- 	std	r10,IAREA+EX_R10(r13)		/* save r10 - r12 */
--	OPT_GET_SPR(r10, SPRN_CFAR, CPU_FTR_CFAR)
-+BEGIN_FTR_SECTION
-+	mfspr	r10,SPRN_CFAR
-+END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	.if \ool
- 	.if !\virt
- 	b	tramp_real_\name
-@@ -402,8 +366,12 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	.endif
- 	.endif
- 
--	OPT_SAVE_REG_TO_PACA(IAREA+EX_PPR, r9, CPU_FTR_HAS_PPR)
--	OPT_SAVE_REG_TO_PACA(IAREA+EX_CFAR, r10, CPU_FTR_CFAR)
-+BEGIN_FTR_SECTION
-+	std	r9,IAREA+EX_PPR(r13)
-+END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
-+BEGIN_FTR_SECTION
-+	std	r10,IAREA+EX_CFAR(r13)
-+END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	INTERRUPT_TO_KERNEL
- 	mfctr	r10
- 	std	r10,IAREA+EX_CTR(r13)
-@@ -558,7 +526,10 @@ DEFINE_FIXED_SYMBOL(\name\()_common_virt)
- 	.endif
- 	beq	101f			/* if from kernel mode		*/
- 	ACCOUNT_CPU_USER_ENTRY(r13, r9, r10)
--	SAVE_PPR(IAREA, r9)
-+BEGIN_FTR_SECTION
-+	ld	r9,IAREA+EX_PPR(r13)	/* Read PPR from paca		*/
-+	std	r9,_PPR(r1)
-+END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 101:
- 	.else
- 	.if IKUAP
-@@ -598,10 +569,10 @@ DEFINE_FIXED_SYMBOL(\name\()_common_virt)
- 	std	r10,_DSISR(r1)
- 	.endif
- 
--BEGIN_FTR_SECTION_NESTED(66)
-+BEGIN_FTR_SECTION
- 	ld	r10,IAREA+EX_CFAR(r13)
- 	std	r10,ORIG_GPR3(r1)
--END_FTR_SECTION_NESTED(CPU_FTR_CFAR, CPU_FTR_CFAR, 66)
-+END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	ld	r10,IAREA+EX_CTR(r13)
- 	std	r10,_CTR(r1)
- 	std	r2,GPR2(r1)		/* save r2 in stackframe	*/
-@@ -1696,10 +1667,10 @@ TRAMP_REAL_BEGIN(system_call_kvm)
- 	  * HMT_MEDIUM. That allows the KVM code to save that value into the
- 	  * guest state (it is the guest's PPR value).
- 	  */
--BEGIN_FTR_SECTION_NESTED(948)
-+BEGIN_FTR_SECTION
- 	mfspr	r10,SPRN_PPR
- 	std	r10,HSTATE_PPR(r13)
--END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
-+END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 	HMT_MEDIUM
- 	mfctr	r10
- 	SET_SCRATCH0(r10)
-@@ -2254,7 +2225,10 @@ denorm_done:
- 	mtspr	SPRN_HSRR0,r11
- 	mtcrf	0x80,r9
- 	ld	r9,PACA_EXGEN+EX_R9(r13)
--	RESTORE_PPR_PACA(PACA_EXGEN, r10)
-+BEGIN_FTR_SECTION
-+	ld	r10,PACA_EXGEN+EX_PPR(r13)
-+	mtspr	SPRN_PPR,r10
-+END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- BEGIN_FTR_SECTION
- 	ld	r10,PACA_EXGEN+EX_CFAR(r13)
- 	mtspr	SPRN_CFAR,r10
+ #ifdef CONFIG_SUSPEND
+ static void generic_suspend_disable_irqs(void)
+ {
 -- 
 2.23.0
 
