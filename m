@@ -2,182 +2,199 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7E8C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F80020870
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:24:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="SZtJFJb9"
+	by mail.kernel.org (Postfix) with ESMTP id 02A5520870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfK0WYa (ORCPT
+        id S1727483AbfK0W1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 17:24:30 -0500
-Received: from vps.xff.cz ([195.181.215.36]:33888 "EHLO vps.xff.cz"
+        Wed, 27 Nov 2019 17:27:31 -0500
+Received: from mail.phunq.net ([66.183.183.73]:33890 "EHLO phunq.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbfK0WYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 17:24:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1574893467; bh=03v6MvLb4Npw9AjFHB6zyIbUbdm8FNg3ot9ZMiWCnvw=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=SZtJFJb99qPrcwh17WvZ7KCnSMzXBjnAnvHpu7Gn3xSDHVbhUiaRVRhlTirhzYsKX
-         FZGf0WqtJx2bGpPWY8QtMbI6X9uvKcrlp5LJzPW9WjyQa/bG20uXYeqqn0Y+6Xqoz1
-         BjXvrmC8WC92tmr7mgjROc7CyUWoyPncd+CpV7BY=
-Date:   Wed, 27 Nov 2019 23:24:27 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Frank Lee <tiny.windzz@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v6 1/7] thermal: sun8i: add thermal driver for
- H6/H5/H3/A64/A83T/R40
-Message-ID: <20191127222427.coyeggbxs5miioxn@core.my.home>
-Mail-Followup-To: Vasily Khoruzhick <anarsoul@gmail.com>,
-        Frank Lee <tiny.windzz@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20191127052935.1719897-1-anarsoul@gmail.com>
- <20191127052935.1719897-2-anarsoul@gmail.com>
- <20191127111419.z5hfu5soxceiivg6@core.my.home>
- <20191127173547.ch3pcv3lxgdcrfnu@gilmour.lan>
- <CAEExFWvG-Af4qtUrxQV4ssNQCVQAmpXfxB+92wX+6ZxUNfX-Jw@mail.gmail.com>
- <CA+E=qVcdwQO3Y8ismmBN-gRVNMs1Thx+TPLqstKM9fYf2_0qFQ@mail.gmail.com>
+        id S1726947AbfK0W1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 17:27:30 -0500
+Received: from [172.16.1.14]
+        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+        (Exim 4.92.3)
+        (envelope-from <daniel@phunq.net>)
+        id 1ia5mS-00083g-5q; Wed, 27 Nov 2019 14:27:28 -0800
+Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+ <20191127142508.GB5143@mit.edu>
+From:   Daniel Phillips <daniel@phunq.net>
+Message-ID: <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
+Date:   Wed, 27 Nov 2019 14:27:27 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVcdwQO3Y8ismmBN-gRVNMs1Thx+TPLqstKM9fYf2_0qFQ@mail.gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20191127142508.GB5143@mit.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 11:48:32AM -0800, Vasily Khoruzhick wrote:
-> On Wed, Nov 27, 2019 at 11:44 AM Frank Lee <tiny.windzz@gmail.com> wrote:
-> >
-> > Hello Vasily,
-> >
-> > Thank you very much for your work on this.
-> > This looks good to me.
-> 
-> Thanks!
-> 
-> > By the way, I would like to ask comments about adding the following code.
-> 
-> Can we add it as follow up patch? I don't think that I have a device
-> with working suspend to test it and I'm hesitant to add any code that
-> I can't test.
+Hi Ted,
 
-I have, but it doesn't use any of the clocks and resets, so it wouldn't
-test this fully, and basicaly doesn't need re-calibration at all, probably.
+I trust you will find your initial points satisfactorily addressed below.
 
-So that may be one feedback. On a83t, I'd made these callbacks a no-op.
-
-regards,
-	o.
-
-> >
-> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> > index c0ed60782b11..579dde5e0701 100644
-> > --- a/drivers/thermal/sun8i_thermal.c
-> > +++ b/drivers/thermal/sun8i_thermal.c
-> > @@ -629,11 +629,63 @@ static const struct of_device_id of_ths_match[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(of, of_ths_match);
-> >
-> > +static int __maybe_unused sun8i_thermal_suspend(struct device *dev)
-> > +{
-> > + struct ths_device *tmdev; = dev_get_drvdata(dev);
-> > +
-> > + clk_disable(tmdev->mod_clk);
-> > + clk_disable(tmdev->bus_clk);
-> > +
-> > + reset_control_assert(tmdev->reset);
-> > +
-> > + return 0;
-> > +}
-> > +
-> > +static int __maybe_unused sun8i_thermal_resume(struct device *dev)
-> > +{
-> > + struct ths_device *tmdev; = dev_get_drvdata(dev);
-> > + int error;
-> > +
-> > + error = reset_control_deassert(tmdev->reset);
-> > + if (error)
-> > + return error;
-> > +
-> > + error = clk_enable(tmdev->bus_clk);
-> > + if (error)
-> > + goto assert_reset;
-> > +
-> > + clk_set_rate(tmdev->mod_clk, 24000000);
-> > + error = clk_enable(tmdev->mod_clk);
-> > + if (error)
-> > + goto bus_disable;
-> > +
-> > + sun8i_ths_calibrate(tmdev);
-> > +
-> > + ret = tmdev->chip->init(tmdev);
-> > + if (ret)
-> > + goto mod_disable;
-> > +
-> > + return 0;
-> > +
-> > +mod_disable:
-> > + clk_disable(tmdev->mod_clk);
-> > +bus_disable:
-> > + clk_disable(tmdev->bus_clk);
-> > +assert_reset:
-> > + reset_control_assert(tmdev->reset);
-> > +
-> > + return 0;
-> > +}
-> > +
-> > +static SIMPLE_DEV_PM_OPS(sun8i_thermal_pm_ops,
-> > + sun8i_thermal_suspend, sun8i_thermal_resume);
-> > +
-> >  static struct platform_driver ths_driver = {
-> >   .probe = sun8i_ths_probe,
-> >   .remove = sun8i_ths_remove,
-> >   .driver = {
-> >   .name = "sun8i-thermal",
-> > + .pm = &sun8i_thermal_pm_ops,
-> >   .of_match_table = of_ths_match,
-> >   },
-> >  };
-> >
-> > Yangtao
+On 2019-11-27 6:25 a.m., Theodore Y. Ts'o wrote:
+> A couple of quick observations about Shardmap.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> (1) It's licensed[1] under the GPLv3, so it's not compatible with the
+> kernel license.  That doesn't matter much for ext4, because...
+> 
+> [1] https://github.com/danielbot/Shardmap/blob/master/LICENSE
+
+The kernel port of Shardmap will (necessarily) be licensed under GPLv2.
+
+> (2) It's implemented as userspace code (e.g., it uses open(2),
+> mmap(2), et. al) and using C++, so it would need to be reimplemented
+> from scratch for use in the kernel.
+
+Right. Some of these details, like open, are obviously trivial, others
+less so. Reimplementing from scratch is an overstatement because the
+actual intrusions of user space code are just a small portion of the code
+and nearly all abstracted behind APIs that can be implemented as needed
+for userspace or kernel in out of line helpers, so that the main source
+is strictly unaware of the difference. That said, we can just fork off a
+kernel version and not worry about keeping compatiblity with user space
+if you wish, though putting in the extra effort to make it dual mode
+would probably be helpful for e2fsck.
+
+Also, most of this work is already being done for Tux3, so the only
+Ext4-specific work needing doing may well be the differences in atomic
+commit required to accommodate Ext4's ordered journaling, versus Tux3's
+(more precise) delta commit. To that end, we could discuss the atomic
+commit strategy that we use for the persistent memory implementation of
+Shardmap, which may turn out to be largely applicable to Ext4's journal
+transaction model.
+
+> (3) It's not particularly well documented, making the above more
+> challenging, but it appears to be a variation of an extensible hashing
+> scheme, which was used by dbx and Berkley DB.
+
+Sorry about that. There is this post from a few years back:
+
+   https://lkml.org/lkml/2013/6/18/869
+
+And there is a paper in the works. I can also follow up here with a post
+on Shardmap internals, a number of which are interesting and unique.
+
+Shardmap (introduced above as an "an O(1) extensible hash table") is indeed
+an extensible hashing scheme. Fixed size hash tables are impractical for
+databases and file system directories because small data sets waste too
+much table space and large data sets have too many collisions. Therefore
+every such design must incorporate some form of extensibility. Shardmap's
+extension scheme is unique, and worthy of note in its own right as a
+contribution to hash table technology. We did benchmark against Berkeley
+DB and found Shardmap to be markedly faster. I will hunt around for those
+numbers.
+
+Very briefly, the Shardmap index has two distinct forms, one optimized
+for media and the other for cache. These are bijective, each being
+constructable from the other. The media form (the backing store) only
+has a single purpose: to reconstruct the cache form on demand, one shard
+at a time.
+
+The cache form is the main source of Shardmap's efficiency. This is a
+two level hash table with each entry in the top level table being a
+pointer to a self contained hash table object. In contrast to other
+extensible hashing schemes, these cache shard are not themselves
+extensible. Rather, we simply rewrite entire shards into subshards
+as needed.
+
+The top level hash table is where the extensibility happens. At some
+threshold, the top level table is expanded by duplicating the pointers
+to the hash objects so that multiple buckets may reference the same
+hash object. When any of those objects passes a threshold number of
+entries, it is split into multiple, smaller hash objects, each with a
+unique pointer from the top level table. Traversing this two level
+table for lookup or existence tests takes just a few nanoseconds.
+
+Extending the hash in cache is mirrored by extending the media form,
+by serializing the cache shard into multiple linear regions on media.
+Now here is the key idea: even taking the cost of this media rewrite
+into account, insert performance remains O(1), just with a slightly
+higher constant factor. Shardmap exploits this subtle mathematical
+fact to get the best of both worlds: O(1) performance like a hash and
+extensibility like a BTree.
+
+In fact, if you wish to avoid that constant media rewrite factor
+entirely, Shardmap lets you do it, by allowing you to specify the
+number and size of shards at directory creation time. I have not
+benchmarked this, but it could improve average create performance by 20%
+or so. However, even with the "extra" media copy, Shardmap still has
+impressively high insert performance, in fact it is significantly
+faster than any of the high performance key value stores we have tried
+so far.
+
+> (4) Because of (2), we won't be able to do any actual benchmarks for a
+> while.
+
+(2) is not an issue, the copyright is entirely mine and the license can
+be retuned as convenient. Just indicate where the GPLv2 version should
+be posted and I will make it so. Perhaps a new Github repo, or Gitlab?
+
+> I just checked the latest version of Tux3[2], and it appears
+> to be be still using a linear search scheme for its directory ---
+> e.g., an O(n) lookup ala ext2.  So I'm guessing Shardmap may have been
+> *designed* for Tux3, but it has not yet been *implemented* for Tux3?
+> 
+> [2] https://github.com/OGAWAHirofumi/linux-tux3/blob/hirofumi/fs/tux3/dir.c#L283
+
+Correct, not yet ported to Tux3, however this work is in progress. There
+are some sticky little points to work out such as how to implement the
+largish cache shard objects without using virtual memory. The PAGEMAP
+compilation option in the current source breaks those objects up into
+pages, essentially doing virtual memory by hand, which will add some
+small amount of additional overhead to the kernel version versus the
+user space version, nothing to worry about. However it does make me wish
+that we had better kernel support for virtual memory.
+
+There are various other kernel porting details that are maybe a bit too
+fine grained for this post. Example: Shardmap is a memory mapped db but
+we don't have mmap in kernel, so must do this by hand also.
+
+> (5) The claim is made that readdir() accesses files sequentially; but
+> there is also mention in Shardmap of compressing shards (e.g.,
+> rewriting them) to squeeze out deleted and tombstone entries.  This
+> pretty much guarantees that it will not be possible to satisfy POSIX
+> requirements of telldir(2)/seekdir(3) (using a 32-bit or 64-bitt
+> cookie), NFS (which also requires use of a 32-bit or 64-bit cookie
+> while doing readdir scan), or readdir() semantics in the face of
+> directory entries getting inserted or removed from the directory.
+
+No problem, the data blocks are completely separate from the index so
+readdir just walks through them in linear order a la classic UFS/Ext2.
+What could possibly be simpler, faster or more POSIX compliant?
+
+> (To be specific, POSIX requires readdir returns each entry in a
+> directory once and only once, and in the case of a directory entry
+> which is removed or inserted, that directory entry must be returned
+> exactly zero or one times.  This is true even if telldir(2) ort
+> seekdir(2) is used to memoize a particular location in the directory,
+> which means you have a 32-bit or 64-bit cookie to define a particular
+> location in the readdir(2) stream.  If the file system wants to be
+> exportable via NFS, it must meet similar requirements ---- except the
+> 32-bit or 64-bit cookie MUST survive a reboot.)
+
+So we finally get to fix this nagging HTree defect after all these
+years. Thank you once again for that sweet hack, but with luck we
+will be able to obsolete it by this time next year.
+
+Regards,
+
+Daniel
