@@ -2,126 +2,131 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0687EC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B19C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CADD4207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:40:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="UaXmDkhO"
+	by mail.kernel.org (Postfix) with ESMTP id 110D62068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 12:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfK0Mkx (ORCPT
+        id S1727007AbfK0Mmw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 07:40:53 -0500
-Received: from mail-eopbgr680078.outbound.protection.outlook.com ([40.107.68.78]:53639
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727120AbfK0Mkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 07:40:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dW/3zbuVFJyiuqWEk26IuaJsQjw5ohJmxcJYz8+3ctNtibMQKtwFyN7RpR23ALC/a33K0X5visSn7NF2ZR/yF6yB8S1DjCz3jAQ2qPOXrWhmjpR3GXHM58sz8ZfIHZPjBgtKu3spOduHmAZRbFtk026FmafM4NMCk2BamC6gs3uFwkMcny8fgU8Rb3J0ZApn5T+WeBGnAYxc23EadfQB9K2gmqFcQ/i9XXP1uUKMuIopGq2SGdalDEAraszBAL/8fCpHGFCQ5/sFSMANDw+ixlcy2rxNDH6kdC3KNCccH4MPBtG4BGEUKAv0rbdq429wM8XOtR68lLH4/LQILITT8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uV4o4EHow+GItamQdsej2Qu4g5bf3/qLJQbezVZgQ7E=;
- b=ENG+qmMR+Q4gNujaZiPBu49SFGpB22ai4EJm5ix86tJViZMau1DWkhqVC8EbzsJgLXqud4KjOht1p292xQi5jG2uOwDaiHdsnr2iQ0g0lQoPOeUqUrBJNrBoc07palglSGDA6bD0Vkl0TR+E8AO2x9N34JKjCvKgbRtHJnwps+kbWbIUPWXvvT4zQE7SH6bY/KtlFlp9ZTGXcfWIKyo6+LJpYr4CYg0EfJdzVzJStLEEzBZvA6qkHIGjrVnUEGtlOxUZIYE4kjWE0T4ppl38Wfu0PSgKtm/VuCW/e9QiL1JM6hfjRdXfVfe9L7hM+wrjEfI55PMA6klrYwEbaE/rjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uV4o4EHow+GItamQdsej2Qu4g5bf3/qLJQbezVZgQ7E=;
- b=UaXmDkhO2KeY6GScxRD79LmfwBRwEeBTeOm/b0gGCA6UmuIq0z6PXJwqmgc/4720H+OJ+sVHgfwLN+F2bMqDhKA171zZtvBYH7o3HOyoFGZ1gbnz9jR1KfHVENH4rrMh1jyB9g7mGIi4ndEhVUQWpQhzqohyLnPzA2ul3Wu9PKw=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
- BN7PR08MB4129.namprd08.prod.outlook.com (52.132.221.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18; Wed, 27 Nov 2019 12:40:50 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::a91a:c2f5:c557:4285]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::a91a:c2f5:c557:4285%6]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
- 12:40:50 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     Avri Altman <Avri.Altman@wdc.com>, Can Guo <cang@qti.qualcomm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] RE: [PATCH v3 2/4] scsi: ufs: Update VCCQ2 and VCCQ min/max
- voltage hard codes
-Thread-Topic: [EXT] RE: [PATCH v3 2/4] scsi: ufs: Update VCCQ2 and VCCQ
- min/max voltage hard codes
-Thread-Index: AQHVpCkFex00fwvZZUiA8Fjkxe5rFaee9g6w
-Date:   Wed, 27 Nov 2019 12:40:50 +0000
-Message-ID: <BN7PR08MB5684DDB115B1F27D7D98A978DB440@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <1574751214-8321-1-git-send-email-cang@qti.qualcomm.com>
- <1574751214-8321-3-git-send-email-cang@qti.qualcomm.com>
- <MN2PR04MB6991F3919641BB0F60BAA03CFC450@MN2PR04MB6991.namprd04.prod.outlook.com>
-In-Reply-To: <MN2PR04MB6991F3919641BB0F60BAA03CFC450@MN2PR04MB6991.namprd04.prod.outlook.com>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTIyYjVkY2NkLTExMTMtMTFlYS04Yjg1LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFwyMmI1ZGNjZS0xMTEzLTExZWEtOGI4NS1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjUzOCIgdD0iMTMyMTkzMzIwNDgzNDEwNTc4IiBoPSI0RlowYUxDcVo4ZWlDWnpsUE1GbllIaTg4SXM9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=beanhuo@micron.com; 
-x-originating-ip: [165.225.86.145]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e9f1d14b-738b-41cf-d8a5-08d7733708cf
-x-ms-traffictypediagnostic: BN7PR08MB4129:|BN7PR08MB4129:|BN7PR08MB4129:
-x-microsoft-antispam-prvs: <BN7PR08MB4129389E18A4CA830545AB0CDB440@BN7PR08MB4129.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:1186;
-x-forefront-prvs: 023495660C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(366004)(136003)(396003)(39860400002)(189003)(199004)(66066001)(110136005)(9686003)(54906003)(66446008)(7696005)(66556008)(76116006)(66476007)(76176011)(66946007)(186003)(316002)(11346002)(14444005)(256004)(26005)(64756008)(99286004)(2201001)(2501003)(446003)(5660300002)(71190400001)(71200400001)(6506007)(102836004)(52536014)(55236004)(229853002)(74316002)(15650500001)(6436002)(7736002)(305945005)(6246003)(7416002)(4326008)(14454004)(6116002)(81166006)(81156014)(86362001)(3846002)(33656002)(4744005)(478600001)(55016002)(8676002)(2906002)(8936002)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4129;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dbcgUFJSyNTnJsTsGuTFd1RmOP3WVcxMWFV55pI63totB5PRbanuruVrb2NubGdExc/0vI919BCith/cJ25BfB53QqD3YtzfMQeLzkBcUYLn6iz+IX46rAYnf3aZvUDQvxaj/AO8q9OnEtMUq7rq3enr71pud6/+/5nlJ+BlxVFwcZYYf9dVHnTQy0PY/BMJ+6Q+b3nPYqBev2JIvfKv5EjYV+PhhpasJ8SX5ItCUWtBLQmkLRxSjUwO/GclIJk8koOiQzBX1GCk34bpsu66v5dh3cJ/R2YRUPE3Z2lYvDlTIcMrozu0ocGqmQGXiuWHhjYlwB0+eliLvjF9Ad06LtYTMuDHjIy9uGtPJocsyUxx5LHBqOzekgb8sx2wMZOil4OLXxcM+5wCpN0Lo80GuWav3X1hxSCaMqkqYqdlhUkn+kout9gxKA3abZkhMgb5
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 27 Nov 2019 07:42:52 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44615 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbfK0Mmw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 07:42:52 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iZweZ-0006Ro-Qo; Wed, 27 Nov 2019 13:42:43 +0100
+Date:   Wed, 27 Nov 2019 13:42:43 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Barret Rhoden <brho@google.com>,
+        Josh Bleecher Snyder <josharian@gmail.com>
+Cc:     "Rik van Riel\"" <riel@surriel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: [PATCH] x86/fpu: Don't cache access to fpu_fpregs_owner_ctx
+Message-ID: <20191127124243.u74osvlkhcmsskng@linutronix.de>
+References: <c87e93c3-5f30-f242-74b7-6c7ccc91158a@google.com>
+ <20191126202026.csrmjre6vn2nxq7c@linutronix.de>
+ <e4d6406b-0d47-5cc5-f3a8-6d14bd90760b@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9f1d14b-738b-41cf-d8a5-08d7733708cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2019 12:40:50.2770
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /04W1knaiwLlW2R75ZlbHrb2nzXIaHp8IMx7uyjGuVa+xgNJnKLzTjxA8O1uGRtXR151wvuBNxEboENGPZ871Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4129
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <e4d6406b-0d47-5cc5-f3a8-6d14bd90760b@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > voltage range is 1.14v ~ 1.26v. Update their hard codes accordingly to
-> > make sure they work in a safe range compliant for ver
-> > 1.0/1.1/2.0/2.1/3.0 UFS devices.
-> >
-> > Signed-off-by: Can Guo <cang@codeaurora.org>
-> Reviewed-by Avri Altman <avri.altman@wdc.com>
-Hi, Avri
-Your review tag string missed a colon, which results in cannot mark R in pa=
-tchwork.
+The state/owner of FPU is saved fpu_fpregs_owner_ctx by pointing to the
+context that is currently loaded. It never changed during the life time
+of a task and remained stable/constant.
 
+Since we deferred loading the FPU registers on return to userland, the
+content of fpu_fpregs_owner_ctx may change during preemption and must
+not be cached.
+This went unnoticed for some time and was now noticed, in particular
+gcc-9 is able to cache that load in copy_fpstate_to_sigframe() and reuse
+it in the retry loop:
 
-Reviewed-by: Bean Huo <beanhuo@micron.com>
+  copy_fpstate_to_sigframe()
+    load fpu_fpregs_owner_ctx and save on stack
+    fpregs_lock()
+    copy_fpregs_to_sigframe() /* failed */
+    fpregs_unlock()
+         *** PREEMPTION, another uses FPU, changes fpu_fpregs_owner_ctx ***
+
+    fault_in_pages_writeable() /* succeed, retry */
+
+    fpregs_lock()
+	__fpregs_load_activate()
+	  fpregs_state_valid() /* uses fpu_fpregs_owner_ctx from stack */
+    copy_fpregs_to_sigframe() /* succeeds, random FPU content */
+
+This is a comparison of the assembly of gcc-9, without vs with this
+patch:
+
+| # arch/x86/kernel/fpu/signal.c:173:      if (!access_ok(buf, size))
+|        cmpq    %rdx, %rax      # tmp183, _4
+|        jb      .L190   #,
+|-# arch/x86/include/asm/fpu/internal.h:512:       return fpu == this_cpu_read_stable(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
+|-#APP
+|-# 512 "arch/x86/include/asm/fpu/internal.h" 1
+|-       movq %gs:fpu_fpregs_owner_ctx,%rax      #, pfo_ret__
+|-# 0 "" 2
+|-#NO_APP
+|-       movq    %rax, -88(%rbp) # pfo_ret__, %sfp
+…
+|-# arch/x86/include/asm/fpu/internal.h:512:       return fpu == this_cpu_read_stable(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
+|-       movq    -88(%rbp), %rcx # %sfp, pfo_ret__
+|-       cmpq    %rcx, -64(%rbp) # pfo_ret__, %sfp
+|+# arch/x86/include/asm/fpu/internal.h:512:       return fpu == this_cpu_read(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
+|+#APP
+|+# 512 "arch/x86/include/asm/fpu/internal.h" 1
+|+       movq %gs:fpu_fpregs_owner_ctx(%rip),%rax        # fpu_fpregs_owner_ctx, pfo_ret__
+|+# 0 "" 2
+|+# arch/x86/include/asm/fpu/internal.h:512:       return fpu == this_cpu_read(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
+|+#NO_APP
+|+       cmpq    %rax, -64(%rbp) # pfo_ret__, %sfp
+
+Use this_cpu_read() instead this_cpu_read_stable() to avoid caching of
+fpu_fpregs_owner_ctx during preemption points.
+
+Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
+---
+
+There is no Sign-off by here. Could this please be verified by the
+reporter?
+
+Also I would like to add
+	Debugged-by: Ian Lance Taylor
+
+but I lack the complete address also I'm not sure if he wants to.
+Also please send a Reported-by line since I'm not sure who started this.
+
+ arch/x86/include/asm/fpu/internal.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index 4c95c365058aa..44c48e34d7994 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -509,7 +509,7 @@ static inline void __fpu_invalidate_fpregs_state(struct fpu *fpu)
+ 
+ static inline int fpregs_state_valid(struct fpu *fpu, unsigned int cpu)
+ {
+-	return fpu == this_cpu_read_stable(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
++	return fpu == this_cpu_read(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
+ }
+ 
+ /*
+-- 
+2.24.0
+
