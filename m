@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9502C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3180C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3F62176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A689521775
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888903;
-	bh=pB+3gUPuAltXfAtFIuNBs7ZGOUpl7sh6mg06gRg+cOc=;
+	s=default; t=1574888909;
+	bh=CtSLhzyb06Smd4jXF1wFX4VZf1mgeLast+tdXdmpxPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ddKrnnyYJDuG++JHcjL0QpjXlTEDkgdk5w4VdsMvUI3m19FRUXQEU2kCT120AQLId
-	 JLYJSdlIQVHzMpkXu1hAD3SaW4mNLkeK7MT2NWL8lec/1LCjDTJpazne51NcUxHowj
-	 Nt0XllG8x/M92qONN4Xutw1U/KJdeXmtbOywzZAc=
+	b=ahIAfGvPBXhqnyNUR0X/YKFdzj1SelD/GRxfJmXCfy/MkmqcKjz1CvrIPxPD31FC1
+	 vvuJLTUx9DF8EMoL922pP97wMy0iZl3H0u/H3kzutBjJYAMZbE3WasXF8cJnFvdYj7
+	 pjxPlDlMNLJbqetX8xuohdiQ3pO4UNpkXFDCIqVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732738AbfK0VIW (ORCPT
+        id S1732752AbfK0VI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:08:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:08:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732109AbfK0VIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:08:18 -0500
+        id S1732745AbfK0VI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:08:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B166021775;
-        Wed, 27 Nov 2019 21:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D62A121775;
+        Wed, 27 Nov 2019 21:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888897;
-        bh=pB+3gUPuAltXfAtFIuNBs7ZGOUpl7sh6mg06gRg+cOc=;
+        s=default; t=1574888905;
+        bh=CtSLhzyb06Smd4jXF1wFX4VZf1mgeLast+tdXdmpxPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJEMbu1f4dpoi6PuU7EwBionYffUxLMKzaUpCd+/SqlFW23bnPatkNsVTzOhh3f4I
-         xCScgmkRu1FC0/tw4tiDqN4BV+3EaprmOQSCA/LvuNud37d6JT3IFqDMkXTMjmHbuk
-         fItOt08ZMGo7vBKGlOTLE/SAq6wWV4s0bEhaY+Oo=
+        b=lVJfSbbxjLye4Lel78cngdYn8Y08XkW/VJzqkYm6BLLMR5jlCZz2CR7t+mNlrN4VV
+         8siR9taU2tFUFw1RN8xjkMpVRd5GwpRI/gXZs7s6eXFtH3uZK8DRSwz4PwmtDJ0fcX
+         UeFFonEZfbhQqLiMnBELlatVYbKfvP2ajMiGFqys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai Shen <shenkai8@huawei.com>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 286/306] cpufreq: Add NULL checks to show() and store() methods of cpufreq
-Date:   Wed, 27 Nov 2019 21:32:16 +0100
-Message-Id: <20191127203135.678264000@linuxfoundation.org>
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 01/95] mlxsw: spectrum_router: Fix determining underlay for a GRE tunnel
+Date:   Wed, 27 Nov 2019 21:31:18 +0100
+Message-Id: <20191127202847.038070792@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
-References: <20191127203114.766709977@linuxfoundation.org>
+In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
+References: <20191127202845.651587549@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,56 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Shen <shenkai8@huawei.com>
+From: Petr Machata <petrm@mellanox.com>
 
-commit e6e8df07268c1f75dd9215536e2ce4587b70f977 upstream.
+[ Upstream commit 1fc1657775dc1b19e9ac1d46b4054ed8ae5d99ab ]
 
-Add NULL checks to show() and store() in cpufreq.c to avoid attempts
-to invoke a NULL callback.
+The helper mlxsw_sp_ipip_dev_ul_tb_id() determines the underlay VRF of a
+GRE tunnel. For a tunnel without a bound device, it uses the same VRF that
+the tunnel is in. However in Linux, a GRE tunnel without a bound device
+uses the main VRF as the underlay. Fix the function accordingly.
 
-Though some interfaces of cpufreq are set as read-only, users can
-still get write permission using chmod which can lead to a kernel
-crash, as follows:
+mlxsw further assumed that moving a tunnel to a different VRF could cause
+conflict in local tunnel endpoint address, which cannot be offloaded.
+However, the only way that an underlay could be changed by moving the
+tunnel device itself is if the tunnel device does not have a bound device.
+But in that case the underlay is always the main VRF, so there is no
+opportunity to introduce a conflict by moving such device. Thus this check
+constitutes a dead code, and can be removed, which do.
 
-chmod +w /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
-echo 1 >  /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
-
-This bug was found in linux 4.19.
-
-Signed-off-by: Kai Shen <shenkai8@huawei.com>
-Reported-by: Feilong Lin <linfeilong@huawei.com>
-Reviewed-by: Feilong Lin <linfeilong@huawei.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-[ rjw: Subject & changelog ]
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 6ddb7426a7d4 ("mlxsw: spectrum_router: Introduce loopback RIFs")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/cpufreq/cpufreq.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c |   19 ------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -909,6 +909,9 @@ static ssize_t show(struct kobject *kobj
- 	struct freq_attr *fattr = to_attr(attr);
- 	ssize_t ret;
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+@@ -994,7 +994,7 @@ u32 mlxsw_sp_ipip_dev_ul_tb_id(const str
+ 	if (d)
+ 		return l3mdev_fib_table(d) ? : RT_TABLE_MAIN;
+ 	else
+-		return l3mdev_fib_table(ol_dev) ? : RT_TABLE_MAIN;
++		return RT_TABLE_MAIN;
+ }
  
-+	if (!fattr->show)
-+		return -EIO;
-+
- 	down_read(&policy->rwsem);
- 	ret = fattr->show(policy, buf);
- 	up_read(&policy->rwsem);
-@@ -923,6 +926,9 @@ static ssize_t store(struct kobject *kob
- 	struct freq_attr *fattr = to_attr(attr);
- 	ssize_t ret = -EINVAL;
+ static struct mlxsw_sp_rif *
+@@ -1598,27 +1598,10 @@ static int mlxsw_sp_netdevice_ipip_ol_vr
+ {
+ 	struct mlxsw_sp_ipip_entry *ipip_entry =
+ 		mlxsw_sp_ipip_entry_find_by_ol_dev(mlxsw_sp, ol_dev);
+-	enum mlxsw_sp_l3proto ul_proto;
+-	union mlxsw_sp_l3addr saddr;
+-	u32 ul_tb_id;
  
-+	if (!fattr->store)
-+		return -EIO;
-+
- 	/*
- 	 * cpus_read_trylock() is used here to work around a circular lock
- 	 * dependency problem with respect to the cpufreq_register_driver().
+ 	if (!ipip_entry)
+ 		return 0;
+ 
+-	/* For flat configuration cases, moving overlay to a different VRF might
+-	 * cause local address conflict, and the conflicting tunnels need to be
+-	 * demoted.
+-	 */
+-	ul_tb_id = mlxsw_sp_ipip_dev_ul_tb_id(ol_dev);
+-	ul_proto = mlxsw_sp->router->ipip_ops_arr[ipip_entry->ipipt]->ul_proto;
+-	saddr = mlxsw_sp_ipip_netdev_saddr(ul_proto, ol_dev);
+-	if (mlxsw_sp_ipip_demote_tunnel_by_saddr(mlxsw_sp, ul_proto,
+-						 saddr, ul_tb_id,
+-						 ipip_entry)) {
+-		mlxsw_sp_ipip_entry_demote_tunnel(mlxsw_sp, ipip_entry);
+-		return 0;
+-	}
+-
+ 	return __mlxsw_sp_ipip_entry_update_tunnel(mlxsw_sp, ipip_entry,
+ 						   true, false, false, extack);
+ }
 
 
