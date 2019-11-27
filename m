@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E210C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264DEC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058E721775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC04B21775
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887537;
-	bh=hy5EQTqdIO32KN9Xs+iYv16VQJmB7JjIp8RDms98nas=;
+	s=default; t=1574887540;
+	bh=qt2ZaBJBkqKDo6O0kCiyXnG1cMLezHLkJkx66ql/bfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WbX3gcIY+wTeKMbcfrkRsfOvHeyfrWIHmTiZe4FfrrOC6HB/TNGik7zo8BPgLV/Q/
-	 CpW+q/sFvb0mUoeZXex4qZju2fBktfpEUoBm/MR6I+5xkFz925BZlShV2PYH+53sLx
-	 uNPTee9PMoRuCRYRZtwrqEpl7XlwpmwIYBm7V0Ns=
+	b=h/LRIHnCKvmNKTc+XAA5BNtXLOCyNT1VB92YUxUCTtiPvshh625GoDvudD3lywWXe
+	 eCpvFTmP/xrQR8q5dnRkVLNWlKUcLjdB5fpbX2KKW97j1VPHBB2YW210ifEPmCgeq2
+	 i1XI+MFTJt5waFlog8xjydlVBMA9F4G1blXnNrUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729759AbfK0Upf (ORCPT
+        id S1729768AbfK0Upi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:45:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56416 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:45:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729744AbfK0Upb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:45:31 -0500
+        id S1729760AbfK0Upg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:45:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 731C721741;
-        Wed, 27 Nov 2019 20:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 696D721741;
+        Wed, 27 Nov 2019 20:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887530;
-        bh=hy5EQTqdIO32KN9Xs+iYv16VQJmB7JjIp8RDms98nas=;
+        s=default; t=1574887535;
+        bh=qt2ZaBJBkqKDo6O0kCiyXnG1cMLezHLkJkx66ql/bfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mh4/Vg+9/2Nh+UPyQiVGHYJFGuPUDP0GpWoW8og98xzMFGMBwvHy6BKG9a1P+/Zdk
-         5WL+JlHfMgVDaYpR4iwpEouFYmTkaNgu3GBQKskaY7cMrdY94BW2xWBrFPHbSIPHu2
-         V1pXgFvrEeMu61t+hB7dZOfdR3HlwQkrDx1IOjXs=
+        b=ge01y1Q+6ZkgB+AfVwvuwJXuHC7Mhy7GPqJL+o2J94niNCOwij27DtVc6Wag7auYZ
+         c8RpIo287r2d/rUzkHPkPfiKCGkLwLXTNHNb9R/K3ZDkjXgAs9f1yqT3YxagLUgbTO
+         OHlFJLplPd1nsPXx9Gl1mcMblH8+ZX2GCYBm907o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 146/151] USB: serial: option: add support for DW5821e with eSIM support
-Date:   Wed, 27 Nov 2019 21:32:09 +0100
-Message-Id: <20191127203047.443093890@linuxfoundation.org>
+        Rajkumar Manoharan <rmanohar@qca.qualcomm.com>,
+        "John W. Linville" <linville@tuxdriver.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Denis Efremov <efremov@linux.com>
+Subject: [PATCH 4.9 112/151] ath9k_hw: fix uninitialized variable data
+Date:   Wed, 27 Nov 2019 21:31:35 +0100
+Message-Id: <20191127203043.201695755@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -60,66 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksander Morgado <aleksander@aleksander.es>
+From: Denis Efremov <efremov@linux.com>
 
-commit 957c31ea082e3fe5196f46d5b04018b10de47400 upstream.
+commit 80e84f36412e0c5172447b6947068dca0d04ee82 upstream.
 
-The device exposes AT, NMEA and DIAG ports in both USB configurations.
-Exactly same layout as the default DW5821e module, just a different
-vid/pid.
+Currently, data variable in ar9003_hw_thermo_cal_apply() could be
+uninitialized if ar9300_otp_read_word() will fail to read the value.
+Initialize data variable with 0 to prevent an undefined behavior. This
+will be enough to handle error case when ar9300_otp_read_word() fails.
 
-P:  Vendor=413c ProdID=81e0 Rev=03.18
-S:  Manufacturer=Dell Inc.
-S:  Product=DW5821e-eSIM Snapdragon X20 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-
-P:  Vendor=413c ProdID=81e0 Rev=03.18
-S:  Manufacturer=Dell Inc.
-S:  Product=DW5821e-eSIM Snapdragon X20 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 7 Cfg#= 2 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
-I:  If#=0x1 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x6 Alt= 0 #EPs= 1 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-
-Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 80fe43f2bbd5 ("ath9k_hw: Read and configure thermocal for AR9462")
+Cc: Rajkumar Manoharan <rmanohar@qca.qualcomm.com>
+Cc: John W. Linville <linville@tuxdriver.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/ath/ath9k/ar9003_eeprom.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -200,6 +200,7 @@ static void option_instat_callback(struc
- #define DELL_PRODUCT_5804_MINICARD_ATT		0x819b  /* Novatel E371 */
+--- a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
++++ b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
+@@ -4115,7 +4115,7 @@ static void ar9003_hw_thermometer_apply(
  
- #define DELL_PRODUCT_5821E			0x81d7
-+#define DELL_PRODUCT_5821E_ESIM			0x81e0
+ static void ar9003_hw_thermo_cal_apply(struct ath_hw *ah)
+ {
+-	u32 data, ko, kg;
++	u32 data = 0, ko, kg;
  
- #define KYOCERA_VENDOR_ID			0x0c88
- #define KYOCERA_PRODUCT_KPC650			0x17da
-@@ -1043,6 +1044,8 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(DELL_VENDOR_ID, DELL_PRODUCT_5804_MINICARD_ATT, 0xff, 0xff, 0xff) },
- 	{ USB_DEVICE(DELL_VENDOR_ID, DELL_PRODUCT_5821E),
- 	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
-+	{ USB_DEVICE(DELL_VENDOR_ID, DELL_PRODUCT_5821E_ESIM),
-+	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
- 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_E100A) },	/* ADU-E100, ADU-310 */
- 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_500A) },
- 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_620UW) },
+ 	if (!AR_SREV_9462_20_OR_LATER(ah))
+ 		return;
 
 
