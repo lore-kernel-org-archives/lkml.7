@@ -2,109 +2,107 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D7EC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74242C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB38720678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4763B20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 13:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="VI0nbScG"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GvXHQ3T3";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Zqvmbscz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfK0Nhb (ORCPT
+        id S1727109AbfK0NiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:37:31 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:41546 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726320AbfK0Nhb (ORCPT
+        Wed, 27 Nov 2019 08:38:18 -0500
+Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:44674
+        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726603AbfK0NiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:37:31 -0500
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARDbQAm001704;
-        Wed, 27 Nov 2019 07:37:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=cQl2L3+ANIksdQfNDmVP/REWufb381l6RcUnTlIUXGk=;
- b=VI0nbScGvyaULukK+AWlfWCqQV/BE4b8dsDLxNjW80bwNBDZ+BGwuLSlJXkubsEM4Lq+
- sA6AlbQPcFPriqUn27X0uK/MaTbZYHWE22PxVys+YJiarG8UKkVYV+pf/nUuyjt3Ux7z
- 8uhi8QGJgh7sGk2BBTorGzKX1v+dvHTVckuM452onwpi7t3RM8cuEch6eNp8n7kO4kpu
- iRLM4nSmz05BlQuBCe9hyJkG+q1+JLC3pLq8/6qgoFQW1QceQp01booCeKjQu2VjeB52
- 4HG4pouOvK5srthYq13MnCuInioJTeeaEZCv8tsWYeBJ0UVEJTHqrKY0qUFHDrqZBpSO uQ== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([5.172.152.52])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2whda3s1ps-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 27 Nov 2019 07:37:25 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 27 Nov
- 2019 13:38:18 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Wed, 27 Nov 2019 13:38:18 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2D6552A1;
-        Wed, 27 Nov 2019 13:37:24 +0000 (UTC)
-Date:   Wed, 27 Nov 2019 13:37:24 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Gregory Clement <gregory.clement@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] spi: cadence: Correct handling of native chipselect
-Message-ID: <20191127133724.GB10451@ediswmail.ad.cirrus.com>
-References: <20191126164140.6240-1-ckeepax@opensource.cirrus.com>
- <CACRpkdYc=2vWte+gFp0m6RvWSu=+qT=WWUzag0N1FUBmbSCOOw@mail.gmail.com>
- <20191127115419.GA10451@ediswmail.ad.cirrus.com>
- <CACRpkdah5V7jDMUkDtdOb3RbR6mTsj5zs6g=Sb6KBZFRfme0rQ@mail.gmail.com>
+        Wed, 27 Nov 2019 08:38:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574861896;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
+        bh=mgZ3qLyqFDIHRZs3m2gwVQuR1D8c5mwT+hdMMXCxQnM=;
+        b=GvXHQ3T3o9ZJWmGp42rf/EdehLEz0A8BaW0cVXXQ/FG2+3OrYvK5r8+QX4kQBA1B
+        35ETq0PEWu3ngMF/kUsC1qYujz0bOMAV7GxQKAot0IQfYakPWcdg5Zzb9xJpyZKj9qw
+        5rTcRU4Xx1RwtVQqEO2XvGtopYayKzZTqSb5xLlY=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574861896;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
+        bh=mgZ3qLyqFDIHRZs3m2gwVQuR1D8c5mwT+hdMMXCxQnM=;
+        b=Zqvmbscz5R552+gm0tLz2qBL+cPF8W5rvxn1LwrPATYke0asvYWcdaAPAvosnplQ
+        ta3ck1IRsEnTNIPxB1TcFA3HPsU5zrzpsyrVZyTObaVKWRiJkRcfrk3njb3tHIO0kSr
+        rQKUBzn2X7DSWXo4tB4lWEdyoUVMlDPiTQkIDs5g=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 419B7C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Alexander Lobakin <alobakin@dlink.ru>,
+        Luciano Coelho <luciano.coelho@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Edward Cree <ecree@solarflare.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Manish Chopra <manishc@marvell.com>,
+        "GR-Linux-NIC-Dev\@marvell.com" <GR-Linux-NIC-Dev@marvell.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] net: wireless: intel: iwlwifi: fix GRO_NORMAL packet stalling
+References: <20191127094123.18161-1-alobakin@dlink.ru>
+        <7a9332bf645fbb8c9fff634a3640c092fb9b4b79.camel@intel.com>
+        <c571a88c15c4a70a61cde6ca270af033@dlink.ru>
+        <PSXP216MB0438B2F163C635F8B8B4AD8AA4440@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <a638ab877999dbc4ded87bfaebe784f5@dlink.ru>
+        <PSXP216MB04382F0BA8CE3754439EA2CC80440@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Date:   Wed, 27 Nov 2019 13:38:16 +0000
+In-Reply-To: <PSXP216MB04382F0BA8CE3754439EA2CC80440@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        (Nicholas Johnson's message of "Wed, 27 Nov 2019 11:16:21 +0000")
+Message-ID: <0101016ead157ba1-af7ef42c-fb93-4a85-97bd-576072a699fc-000000@us-west-2.amazonses.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdah5V7jDMUkDtdOb3RbR6mTsj5zs6g=Sb6KBZFRfme0rQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
- impostorscore=0 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270119
+Content-Type: text/plain
+X-SES-Outgoing: 2019.11.27-54.240.27.188
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 12:59:34PM +0100, Linus Walleij wrote:
-> On Wed, Nov 27, 2019 at 12:54 PM Charles Keepax
-> <ckeepax@opensource.cirrus.com> wrote:
-> > On Wed, Nov 27, 2019 at 11:42:47AM +0100, Linus Walleij wrote:
-> > > On Tue, Nov 26, 2019 at 5:41 PM Charles Keepax
-> > > <ckeepax@opensource.cirrus.com> wrote:
-> > > But we are lucky: there aren't many of them.
-> > > In addition to spi-cadence.c this seems to affect only spi-dw.c
-> > > and I suppose that is what Gregory was using? Or
-> > > something else?
-> > >
-> > I will go do some digging and see what I can find.
+Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au> writes:
 
-Yeah so looks to me like spi-dw is the only other part affected,
-and it probably wants a similar revert done to fix it. It is a
-little more complex as it has this additional cs_control
-callback, but there don't appear to be any in tree users for that
-(which I can find). So I am guessing any out of tree users
-probably broke when the logic was first changed so the revert
-probably helps them too, unless they have already changed there
-callbacks in which case it will break them again.
+> On Wed, Nov 27, 2019 at 01:29:03PM +0300, Alexander Lobakin wrote:
+>> Nicholas Johnson wrote 27.11.2019 13:23:
+>> > Hi,
+>> 
+>> Hi Nicholas,
+>> 
+>> >  Sorry for top down reply, stuck with my phone. If it replies HTML
+>> > then I am so done with Outlook client.
+>
+> I am very sorry to everybody for the improper reply. It looks like it 
+> was HTML as vger.kernel.org told me I was spam. If anybody knows a good 
+> email client for kernel development for Android then I am all ears.
 
-Anyways I will send the revert and hopefully some people who use
-the driver can test it for us.
+I use K-9 Mail because Greg K-H used it :) TBH I use it mostly only for
+reading but seems to work quite well:
 
-Thanks,
-Charles
+https://k9mail.github.io
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
