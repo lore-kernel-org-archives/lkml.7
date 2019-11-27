@@ -2,57 +2,51 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1547FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D0EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FB4217AB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068B3215E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889099;
-	bh=x0r3Mfd+VwYR6oqV1ER4Hs/zpIxUEsd0Q/jnlt4hZsI=;
+	s=default; t=1574889104;
+	bh=/cg2bAmI7uI2SxnxtxpG8PwGvgizfuvw/FEYoaE4u1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g1Jnheinrg2IFLqt9ey6y6CU3ZSbrc3vTypn4skyUPEiNC+sNc2EGE0NJbULiZL2d
-	 qfEJnM/oZMCqqHpxwjOFuXAsPZDQ7lKiAEW2xaV/x1V73FMW5izuLQoVO555FF7Ack
-	 4eELUASsB4N8YFLhcj+SStEWgdUDC8ayfXsOENB4=
+	b=PhcqzXmOupZaTTqX5BIBnL4e6YRRT3IER8XaMoM7eCE/kx8NvgpG5igCDzcmGqUg6
+	 IGuIDVGfPrhITxaO75hw1ciW+xAECZIUDh6v9s/N5BQildx1HQs3kV3a13TzKp/41f
+	 AtDL8hqPYX1/jBvKqMReMHoy+GAUnSlZHX21ufzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbfK0VLi (ORCPT
+        id S1733211AbfK0VLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:11:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40290 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:11:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfK0VLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:11:35 -0500
+        id S1732758AbfK0VLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE1D6217AB;
-        Wed, 27 Nov 2019 21:11:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4933A2154A;
+        Wed, 27 Nov 2019 21:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889094;
-        bh=x0r3Mfd+VwYR6oqV1ER4Hs/zpIxUEsd0Q/jnlt4hZsI=;
+        s=default; t=1574889096;
+        bh=/cg2bAmI7uI2SxnxtxpG8PwGvgizfuvw/FEYoaE4u1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0GiTXa24RqaHyfbJp/3hNHTzjD3Kzw2CIDlUGUY9vAxvDeNVbFMPA9x063ac9qcnK
-         AjiqPgZ4WLIKvz/gD9pkefAW/0Kmjb9yGC3IUsa/XXS4HhuIcn/TlRqEKMqSqydEoY
-         bGrgtlXxaVdntk0wylCwYKxqKYuto2cC8Qhfzh+M=
+        b=FTIwgsNluVFfnc6EPJajKUQw3+e84f2Zau3aaSCn0Kds/V0iKbEnMy95B8O7HZEob
+         Fu0jR8baPODM/O0xKyj3puEPW8qtfcJ10RDA5Ftyf8ualr1jPS7KrBU7C/ZUMu1rDK
+         UrdWcnh//m/hW6OqFaHPzNih8P5a+rVDtuB6Y0KE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
-        Thibaut Sautereau <thibaut@sautereau.fr>,
-        Kees Cook <keescook@chromium.org>,
-        Christoph Lameter <cl@linux.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 80/95] mm/slub.c: init_on_free=1 should wipe freelist ptr for bulk allocations
-Date:   Wed, 27 Nov 2019 21:32:37 +0100
-Message-Id: <20191127202949.148851697@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 5.3 81/95] USBIP: add config dependency for SGL_ALLOC
+Date:   Wed, 27 Nov 2019 21:32:38 +0100
+Message-Id: <20191127202949.441007397@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -65,88 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Potapenko <glider@google.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 0f181f9fbea8bc7ea2f7e13ae7f8c256b39e254c ]
+commit 1ec13abac58b6f24e32f0d3081ef4e7456e62ed8 upstream.
 
-slab_alloc_node() already zeroed out the freelist pointer if
-init_on_free was on.  Thibaut Sautereau noticed that the same needs to
-be done for kmem_cache_alloc_bulk(), which performs the allocations
-separately.
+USBIP uses lib/scatterlist.h
+Hence it needs to set CONFIG_SGL_ALLOC
 
-kmem_cache_alloc_bulk() is currently used in two places in the kernel,
-so this change is unlikely to have a major performance impact.
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20191112154939.21217-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-SLAB doesn't require a similar change, as auto-initialization makes the
-allocator store the freelist pointers off-slab.
-
-Link: http://lkml.kernel.org/r/20191007091605.30530-1-glider@google.com
-Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Reported-by: Thibaut Sautereau <thibaut@sautereau.fr>
-Reported-by: Kees Cook <keescook@chromium.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/usb/usbip/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index d2445dd1c7eda..f24ea152cdbb3 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2648,6 +2648,17 @@ static void *__slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
- 	return p;
- }
- 
-+/*
-+ * If the object has been wiped upon free, make sure it's fully initialized by
-+ * zeroing out freelist pointer.
-+ */
-+static __always_inline void maybe_wipe_obj_freeptr(struct kmem_cache *s,
-+						   void *obj)
-+{
-+	if (unlikely(slab_want_init_on_free(s)) && obj)
-+		memset((void *)((char *)obj + s->offset), 0, sizeof(void *));
-+}
-+
- /*
-  * Inlined fastpath so that allocation functions (kmalloc, kmem_cache_alloc)
-  * have the fastpath folded into their functions. So no function call
-@@ -2736,12 +2747,8 @@ redo:
- 		prefetch_freepointer(s, next_object);
- 		stat(s, ALLOC_FASTPATH);
- 	}
--	/*
--	 * If the object has been wiped upon free, make sure it's fully
--	 * initialized by zeroing out freelist pointer.
--	 */
--	if (unlikely(slab_want_init_on_free(s)) && object)
--		memset(object + s->offset, 0, sizeof(void *));
-+
-+	maybe_wipe_obj_freeptr(s, object);
- 
- 	if (unlikely(slab_want_init_on_alloc(gfpflags, s)) && object)
- 		memset(object, 0, s->object_size);
-@@ -3155,10 +3162,13 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
- 				goto error;
- 
- 			c = this_cpu_ptr(s->cpu_slab);
-+			maybe_wipe_obj_freeptr(s, p[i]);
-+
- 			continue; /* goto for-loop */
- 		}
- 		c->freelist = get_freepointer(s, object);
- 		p[i] = object;
-+		maybe_wipe_obj_freeptr(s, p[i]);
- 	}
- 	c->tid = next_tid(c->tid);
- 	local_irq_enable();
--- 
-2.20.1
-
+--- a/drivers/usb/usbip/Kconfig
++++ b/drivers/usb/usbip/Kconfig
+@@ -4,6 +4,7 @@ config USBIP_CORE
+ 	tristate "USB/IP support"
+ 	depends on NET
+ 	select USB_COMMON
++	select SGL_ALLOC
+ 	---help---
+ 	  This enables pushing USB packets over IP to allow remote
+ 	  machines direct access to USB devices. It provides the
 
 
