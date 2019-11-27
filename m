@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CCCC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E112AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7292158C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AF820678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888409;
-	bh=TA8Ib/PAXrfuG0ERBmHA7nW7Qdqb2UTASotXuegXicU=;
+	s=default; t=1574888412;
+	bh=LlG2uit9KDyM3hzOHqNGksF+oDB68gKaKas/WQtvjRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dC6USR2E/DnUyXW6v/FaMxzw9JK4YbiU8IMdhQkd1FVlxk3TPYgA1pTNcv1NbHeHh
-	 3vgDhSn3+e33KwyIUya3Qf5p7Mwvmjyh68itjp+fN59XOvw65eChXN0hVQyvq9UlNc
-	 4w0iLM1Ey3eaJtcTDhJhbH/OZh47TCSWWEk3L6GU=
+	b=OrPtRe2rp2Y0Z29z4n46DUeNOFBnNXoszomttWscFp9nCg9CQRCXgf19vCzManm6p
+	 Im0m7Cjqp83d13bBz5D5btDqQVz5PVGpN7YQs+xguxXMRcr7bw44hRz1dOW5m80NXy
+	 wb8yXGFh9QbB+0zOlTlbphI0xrKW7vhAO91Nh6i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731527AbfK0VAI (ORCPT
+        id S1727198AbfK0VAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:00:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51808 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:00:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731517AbfK0VAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:00:05 -0500
+        id S1731525AbfK0VAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:00:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6060921582;
-        Wed, 27 Nov 2019 21:00:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4DB820678;
+        Wed, 27 Nov 2019 21:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888404;
-        bh=TA8Ib/PAXrfuG0ERBmHA7nW7Qdqb2UTASotXuegXicU=;
+        s=default; t=1574888407;
+        bh=LlG2uit9KDyM3hzOHqNGksF+oDB68gKaKas/WQtvjRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OIXVxAte9CumNMV+A5tLhWZ4rSmkdyildFNTn19JPkfK/q1OG21itBV8iGik8IekJ
-         AcAJXDTxeGpNQ1FCk2MPzgcw/GheQOJKMQKpo+hh60tpgWPbS4Ib/byar1ZyDh70HA
-         gV41ZSfayXMAgpA3d60RY+kFqhH+eHdNrP2QmfjU=
+        b=LGTu2/58GEvrMYYUINhbIgs6XCZFI9vwkYeYuIhZpJGj14hA/zvuThREO0/GOCgrn
+         6/7LepP83fzoMscAwbiCaqxwpjJruOhp7RtOCyqFhXThdOOkt2KUMcFyeFwGjOo+qF
+         7eEyjhpSCNnrEEpjb+LY98W8UNtos08qsb09Btaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
+        stable@vger.kernel.org, Weichao Guo <guoweichao@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 121/306] thermal: armada: fix a test in probe()
-Date:   Wed, 27 Nov 2019 21:29:31 +0100
-Message-Id: <20191127203123.980490599@linuxfoundation.org>
+Subject: [PATCH 4.19 122/306] f2fs: fix to spread clear_cold_data()
+Date:   Wed, 27 Nov 2019 21:29:32 +0100
+Message-Id: <20191127203124.048149314@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,37 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit d1d2c290b3c04b65fa6132eeebe50a070746d8f6 ]
+[ Upstream commit 2baf07818549c8bb8d7b3437e889b86eab56d38e ]
 
-The platform_get_resource() function doesn't return error pointers, it
-returns NULL on error.
+We need to drop PG_checked flag on page as well when we clear PG_uptodate
+flag, in order to avoid treating the page as GCing one later.
 
-Fixes: 3d4e51844a4e ("thermal: armada: convert driver to syscon register accesses")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+Signed-off-by: Weichao Guo <guoweichao@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/armada_thermal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/data.c    | 8 +++++++-
+ fs/f2fs/dir.c     | 1 +
+ fs/f2fs/segment.c | 4 +++-
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-index e16b3cb1808c5..1c9830b2c84da 100644
---- a/drivers/thermal/armada_thermal.c
-+++ b/drivers/thermal/armada_thermal.c
-@@ -526,8 +526,8 @@ static int armada_thermal_probe_legacy(struct platform_device *pdev,
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 3a2fd66769660..a7436ad194585 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1782,6 +1782,7 @@ int f2fs_do_write_data_page(struct f2fs_io_info *fio)
+ 	/* This page is already truncated */
+ 	if (fio->old_blkaddr == NULL_ADDR) {
+ 		ClearPageUptodate(page);
++		clear_cold_data(page);
+ 		goto out_writepage;
+ 	}
+ got_it:
+@@ -1957,8 +1958,10 @@ static int __write_data_page(struct page *page, bool *submitted,
  
- 	/* First memory region points towards the status register */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (IS_ERR(res))
--		return PTR_ERR(res);
-+	if (!res)
-+		return -EIO;
+ out:
+ 	inode_dec_dirty_pages(inode);
+-	if (err)
++	if (err) {
+ 		ClearPageUptodate(page);
++		clear_cold_data(page);
++	}
  
- 	/*
- 	 * Edit the resource start address and length to map over all the
+ 	if (wbc->for_reclaim) {
+ 		f2fs_submit_merged_write_cond(sbi, inode, 0, page->index, DATA);
+@@ -2573,6 +2576,8 @@ void f2fs_invalidate_page(struct page *page, unsigned int offset,
+ 		}
+ 	}
+ 
++	clear_cold_data(page);
++
+ 	/* This is atomic written page, keep Private */
+ 	if (IS_ATOMIC_WRITTEN_PAGE(page))
+ 		return f2fs_drop_inmem_page(inode, page);
+@@ -2591,6 +2596,7 @@ int f2fs_release_page(struct page *page, gfp_t wait)
+ 	if (IS_ATOMIC_WRITTEN_PAGE(page))
+ 		return 0;
+ 
++	clear_cold_data(page);
+ 	set_page_private(page, 0);
+ 	ClearPagePrivate(page);
+ 	return 1;
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index ecc3a4e2be96d..cd611a57d04d7 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -733,6 +733,7 @@ void f2fs_delete_entry(struct f2fs_dir_entry *dentry, struct page *page,
+ 		clear_page_dirty_for_io(page);
+ 		ClearPagePrivate(page);
+ 		ClearPageUptodate(page);
++		clear_cold_data(page);
+ 		inode_dec_dirty_pages(dir);
+ 		f2fs_remove_dirty_inode(dir);
+ 	}
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index d78009694f3fd..43a07514c3574 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -277,8 +277,10 @@ static int __revoke_inmem_pages(struct inode *inode,
+ 		}
+ next:
+ 		/* we don't need to invalidate this in the sccessful status */
+-		if (drop || recover)
++		if (drop || recover) {
+ 			ClearPageUptodate(page);
++			clear_cold_data(page);
++		}
+ 		set_page_private(page, 0);
+ 		ClearPagePrivate(page);
+ 		f2fs_put_page(page, 1);
 -- 
 2.20.1
 
