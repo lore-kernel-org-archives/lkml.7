@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAB0C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F2CC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF992158A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9512158A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574886997;
-	bh=cPliugyUoPKqEYajZaa+5EhjP4iV/yZw1O40DFpuI2A=;
+	s=default; t=1574886998;
+	bh=28UcTghOrsaTsVNgqi4hwzYOQG18W8MsP+t0Js06z9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2uFwFj0UYiFqwdETIEiIPUYQImE+7tRjmKaishv2htR3k0aMrNhSbwl8GnsbY/Nsy
-	 5IDBNLqmJ6dAZi30/0hU8TMVadonHqLXob+o2UfhfHxlR2rOBxZnqr/eTn6FMHO0XX
-	 BPjwseRMKt/TpWQ0tjKWtbv9dcFS6HZO5wRZsnSU=
+	b=N5FTJMPokW6K6SfRQYNr+rBhG551wHSyDZT/2oIaa5Nl8xaCbIKzEuaPuKfK5pccd
+	 EuGe/YBhTrC5NYtYa+300UMLR/LjkPu6DeMSzrUc+wQKN+JcMw4FWXPYKkbp/eI5VP
+	 zJThaBOaFaR+IDu+eAqVusLA0vDbNMtIrM7ycwHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbfK0Ugg (ORCPT
+        id S1728349AbfK0Ugi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:36:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38878 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:36:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbfK0Uge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:36:34 -0500
+        id S1728287AbfK0Ugg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:36:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 747F52158A;
-        Wed, 27 Nov 2019 20:36:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E63EB2158C;
+        Wed, 27 Nov 2019 20:36:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886993;
-        bh=cPliugyUoPKqEYajZaa+5EhjP4iV/yZw1O40DFpuI2A=;
+        s=default; t=1574886996;
+        bh=28UcTghOrsaTsVNgqi4hwzYOQG18W8MsP+t0Js06z9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xe5aLNYYNo+7YBgWO3S0Q2Nd/Q687N3EIGqZOkFm+uvfrKcOMCBGMjnm5yML5K1vf
-         XkW+TF/Ahi5QZdhsLBjLVo9SIwsMHqByS+f9oj+Lr/re3kxx0ddtTzAovKOTynapLp
-         YtIpsLQZ9RC2HTQdJbHhChh6/xJjfidFWxo2glxw=
+        b=SDcw5D/16kmpgSeP2aqr8EouM+oweTJDeNeZrTcelxkLjMkRSgFSu64HtJZMpAcmz
+         G1GKtfchWNdYAirgNaiGCgXMR3NnXx/FcT6jKHgJxQZB2uhV4KvGyGXK5QgOvRnDnk
+         Nk1YnVYNQ+quuzThWxwF5AwCqZBLr1HS7TK0bvbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Lu Fengqi <lufq.fnst@cn.fujitsu.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 029/132] mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready fail
-Date:   Wed, 27 Nov 2019 21:30:20 +0100
-Message-Id: <20191127202927.244155202@linuxfoundation.org>
+Subject: [PATCH 4.4 030/132] btrfs: handle error of get_old_root
+Date:   Wed, 27 Nov 2019 21:30:21 +0100
+Message-Id: <20191127202927.521838423@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -60,43 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaotian Jing <chaotian.jing@mediatek.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit f38a9774ddde9d79b3487dd888edd8b8623552af ]
+[ Upstream commit 315bed43fea532650933e7bba316a7601d439edf ]
 
-when msdc_cmd_is_ready return fail, the req_timeout work has not been
-inited and cancel_delayed_work() will return false, then, the request
-return directly and never call mmc_request_done().
+In btrfs_search_old_slot get_old_root is always used with the assumption
+it cannot fail. However, this is not true in rare circumstance it can
+fail and return null. This will lead to null point dereference when the
+header is read. Fix this by checking the return value and properly
+handling NULL by setting ret to -EIO and returning gracefully.
 
-so need call mod_delayed_work() before msdc_cmd_is_ready()
-
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Coverity-id: 1087503
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mtk-sd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/ctree.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 0bf0d0e9dbdba..5ef25463494f4 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -846,6 +846,7 @@ static void msdc_start_command(struct msdc_host *host,
- 	WARN_ON(host->cmd);
- 	host->cmd = cmd;
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index 51a0409e1b84a..a980b33097701 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -2966,6 +2966,10 @@ int btrfs_search_old_slot(struct btrfs_root *root, struct btrfs_key *key,
  
-+	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
- 	if (!msdc_cmd_is_ready(host, mrq, cmd))
- 		return;
+ again:
+ 	b = get_old_root(root, time_seq);
++	if (!b) {
++		ret = -EIO;
++		goto done;
++	}
+ 	level = btrfs_header_level(b);
+ 	p->locks[level] = BTRFS_READ_LOCK;
  
-@@ -857,7 +858,6 @@ static void msdc_start_command(struct msdc_host *host,
- 
- 	cmd->error = 0;
- 	rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
--	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
- 
- 	sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
- 	writel(cmd->arg, host->base + SDC_ARG);
 -- 
 2.20.1
 
