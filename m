@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0EDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76C8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99F9216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1182176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889132;
-	bh=dH0C3TLUdquRRSK09HP8uOlvs+JuimrpXUVJ+N3nNl0=;
+	s=default; t=1574889138;
+	bh=KfsP4joNPBfwg4VCvP6d5wvjsTN78CTCpN96dghvUiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TlA1ZhnHNK8tzYPtocDJIiGc0ZxryRFsj4jDc3Gl/nAFP9J4N/NDB7p/W7DnkSa9O
-	 DeuGtikGFlkRgypdOlGDFC2uvaZvFsF6X2/ClIe63MTb9ESdo9STm5eyy/3k1ngA4N
-	 LGGpm79jxJBDs0s7hYtXK+XcgCbvF5WVDbwhCzUU=
+	b=nEWruUgEJCjB1NH7JuSyoTKM31TqfA9LrGrdjDBOdZFc+JxtxReDmghqiQ0CO3GVm
+	 sD/zihMoOPEmdhlfUoFse6STI9ZDIxwIJh2pw6d5VNfPvDuanmR7z68Y9WGFU+J/h9
+	 qG7vFWAkd9UJyLHKm8IJ4L/nqKPSrpyfjFrRs9Zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731967AbfK0VML (ORCPT
+        id S1732932AbfK0VMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:12:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42078 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:12:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733257AbfK0VMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:12:05 -0500
+        id S1730218AbfK0VMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:12:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA7F521845;
-        Wed, 27 Nov 2019 21:12:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40701216F4;
+        Wed, 27 Nov 2019 21:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889125;
-        bh=dH0C3TLUdquRRSK09HP8uOlvs+JuimrpXUVJ+N3nNl0=;
+        s=default; t=1574889132;
+        bh=KfsP4joNPBfwg4VCvP6d5wvjsTN78CTCpN96dghvUiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M/LUqGmkY+WCAMGdv9hDyO/acWhh+0t4vJnkgnYHVHmk1orzTErSDMDiQhd2+V8XQ
-         hej8q1lQrG57oo26VxwdVeU3hRCvlhnXtpKrsVG3tPv4mEcpl3ORP3SCc+d8NCEZtX
-         WTznko4svI0qNQfAKsKYHEXR5eozegZHQqUj4F3g=
+        b=zD0qLob30nl+6MhW8ojZR+UMKLnRicMXkze01t7I5KDj9NoW/q2+Aek2F7ON7C708
+         U/FAr49xZwAI8NEwsiGkfpdBhwtzpBIbZyDDvHacYG74OAyKfvdVeSTGKt2N4TXdkD
+         uZesrvujOtwg3KFA63OU+zk2IizWhFeSupjsQIso=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adi Suresh <adisuresh@google.com>,
-        Catherine Sullivan <csully@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 50/95] gve: fix dma sync bug where not all pages synced
-Date:   Wed, 27 Nov 2019 21:32:07 +0100
-Message-Id: <20191127202916.306351502@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 89/95] USB: serial: mos7840: fix remote wakeup
+Date:   Wed, 27 Nov 2019 21:32:46 +0100
+Message-Id: <20191127202957.941951862@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,43 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adi Suresh <adisuresh@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit db96c2cb4870173ea9b08df130f1d1cc9b5dd53d upstream.
+commit 92fe35fb9c70a00d8fbbf5bd6172c921dd9c7815 upstream.
 
-The previous commit had a bug where the last page in the memory range
-could not be synced. This change fixes the behavior so that all the
-required pages are synced.
+The driver was setting the device remote-wakeup feature during probe in
+violation of the USB specification (which says it should only be set
+just prior to suspending the device). This could potentially waste
+power during suspend as well as lead to spurious wakeups.
 
-Fixes: 9cfeeb576d49 ("gve: Fixes DMA synchronization")
-Signed-off-by: Adi Suresh <adisuresh@google.com>
-Reviewed-by: Catherine Sullivan <csully@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Note that USB core would clear the remote-wakeup feature at first
+resume.
+
+Fixes: 3f5429746d91 ("USB: Moschip 7840 USB-Serial Driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.19
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/google/gve/gve_tx.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/usb/serial/mos7840.c |    5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/drivers/net/ethernet/google/gve/gve_tx.c
-+++ b/drivers/net/ethernet/google/gve/gve_tx.c
-@@ -393,12 +393,13 @@ static void gve_tx_fill_seg_desc(union g
- static void gve_dma_sync_for_device(struct device *dev, dma_addr_t *page_buses,
- 				    u64 iov_offset, u64 iov_len)
- {
-+	u64 last_page = (iov_offset + iov_len - 1) / PAGE_SIZE;
-+	u64 first_page = iov_offset / PAGE_SIZE;
- 	dma_addr_t dma;
--	u64 addr;
-+	u64 page;
- 
--	for (addr = iov_offset; addr < iov_offset + iov_len;
--	     addr += PAGE_SIZE) {
--		dma = page_buses[addr / PAGE_SIZE];
-+	for (page = first_page; page <= last_page; page++) {
-+		dma = page_buses[page];
- 		dma_sync_single_for_device(dev, dma, PAGE_SIZE, DMA_TO_DEVICE);
+--- a/drivers/usb/serial/mos7840.c
++++ b/drivers/usb/serial/mos7840.c
+@@ -2290,11 +2290,6 @@ out:
+ 			goto error;
+ 		} else
+ 			dev_dbg(&port->dev, "ZLP_REG5 Writing success status%d\n", status);
+-
+-		/* setting configuration feature to one */
+-		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+-				0x03, 0x00, 0x01, 0x00, NULL, 0x00,
+-				MOS_WDR_TIMEOUT);
  	}
- }
+ 	return 0;
+ error:
 
 
