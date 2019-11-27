@@ -2,108 +2,87 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E182C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A21C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A6C206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574871846;
-	bh=VlHFPAgt/0WbocE6gcofEs0ZlUbvLUxBAz1rxxQ5jN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KPMHcdrogLYcQVnhZluyxLrH5PiSLxfbaIDv0GQgM7OdSuz45lefA4t7Vwx4/ZRdA
-	 tRCouNX/+fIgCukk29oX80HJJZCU/jtMZd9PDpj+G5NxHGbxd6yTjMYefil5iXkxGE
-	 Je+1613kL1qAQvPr5xKVdsPPGRYWth5OaDAtV0zA=
+	by mail.kernel.org (Postfix) with ESMTP id E1B6F206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:25:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="bKc5LPzv";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="iSMawMmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfK0QYF (ORCPT
+        id S1727080AbfK0QZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:24:05 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54196 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfK0QYF (ORCPT
+        Wed, 27 Nov 2019 11:25:00 -0500
+Received: from pb-smtp21.pobox.com ([173.228.157.53]:54153 "EHLO
+        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfK0QY7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:24:05 -0500
-Received: by mail-wm1-f65.google.com with SMTP id u18so7730971wmc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 08:24:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vnpQ1IWgNHmtlkWcvo5sOfYKcJiRkrf1DJyC0wdyg/A=;
-        b=RcwyNTIgz9nBqmxExLTkMLYyM15f8K5uTuf90wuXjcN5Pg+znUTGf3viUxLA2bTHG+
-         87XHZ0HLBY8ghRog+j+4MUhs9ivmuU/4aBJl3TNp7v862gIMhkJ8H3pD2fpSKIZ34jUb
-         cCUtX8tX9RhZPUgLOcLSXdBnmJ2lbe3Yd2Qtej7L8ZEBIKwD5zhBEfc1oDXuCc8xaM25
-         COKQ6NN8JurLAv0YahAxI5C5mSkfZJOU/wwPHbT6zXUenoQayTj0e3h5GKwnwOnRn3mR
-         k51nPTSWvEHP8CtEpcUD5kQkG9JbZ1gYMEWv6gGadCUHrABMbwVH3RniD7GMe443aTRH
-         68sg==
-X-Gm-Message-State: APjAAAWKV9KIrOJR/r/n1Hd6toyYMcaGD6sIqyaFdcSuhbZA1rB6rx2+
-        H4DXLF525F1P5ALVehmgsc5vlmL0
-X-Google-Smtp-Source: APXvYqw6koBVsu5yFcWL1pdK7n5WvXeFkttdBC8iFePiyXMzO4FE1ke8OMzRk3dC4MmzI/7Nbxm8HA==
-X-Received: by 2002:a7b:c44c:: with SMTP id l12mr4938300wmi.71.1574871842910;
-        Wed, 27 Nov 2019 08:24:02 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id a24sm5209426wmb.29.2019.11.27.08.24.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 08:24:01 -0800 (PST)
-Date:   Wed, 27 Nov 2019 17:24:00 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Christopher Lameter <cl@linux.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
-Message-ID: <20191127162400.GT20912@dhcp22.suse.cz>
-References: <20191126121901.GE20912@dhcp22.suse.cz>
- <alpine.DEB.2.21.1911261632030.9857@www.lameter.com>
- <20191126165420.GL20912@dhcp22.suse.cz>
- <alpine.DEB.2.21.1911271535560.16935@www.lameter.com>
+        Wed, 27 Nov 2019 11:24:59 -0500
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id C530A98165;
+        Wed, 27 Nov 2019 11:24:57 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=4zSRlyWhp/C5o6pJju34HY+cPHo=; b=bKc5LP
+        zvukMQhg3/raOO1OJxVdFV/DE8r3ZZF7Rk5Y/0owsxT1AbqE2HyjzLzD/ROcOnwJ
+        arj1DI6Tf3+ciQvPiYRRI7MaG01ngBuF6E9YOSYlublte9iN7Z1m/D1MHRFT/5uD
+        5comw8y61uJ1ghAZQznjyIo6V4bsr9sUR/Mys=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id BC00998164;
+        Wed, 27 Nov 2019 11:24:57 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=mJenc5JHD2H16CxWbZM+1z2KFSadwBr9IYAovHDG1Yo=; b=iSMawMmODlsK3C0EchDKRilULS9ACSWQBCPfOnXz4iic99XFR6A8WPU8UqM6xrJeLRohCq9FB+MWu0Xfc27E+kJWslvbiUeaEPgDCM0K6rpzLwR8InCt3ZEg/+79DRPALN82VGQpz11Etup7DCHlOeRGs+qp/yMTP/ctkBtfjkA=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 9063B98163;
+        Wed, 27 Nov 2019 11:24:54 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id AF9982DA01B2;
+        Wed, 27 Nov 2019 11:24:52 -0500 (EST)
+Date:   Wed, 27 Nov 2019 11:24:52 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Greg KH <gregkh@linuxfoundation.org>
+cc:     Jiri Slaby <jslaby@suse.com>,
+        Or Cohen <orcohen@paloaltonetworks.com>, textshell@uchuujin.de,
+        Daniel Vetter <daniel.vetter@ffwll.ch>, sam@ravnborg.org,
+        mpatocka@redhat.com, ghalat@redhat.com,
+        linux-kernel@vger.kernel.org, jwilk@jwilk.net,
+        Nadav Markus <nmarkus@paloaltonetworks.com>,
+        syzkaller@googlegroups.com
+Subject: Re: Bug report - slab-out-of-bounds in vcs_scr_readw
+In-Reply-To: <20191127064507.GC1711684@kroah.com>
+Message-ID: <nycvar.YSQ.7.76.1911271121200.8537@knanqh.ubzr>
+References: <CAM6JnLeEnvjjQPyLeh+8dt5wGNud_vks5k_eXJZy2T1H7ao=hQ@mail.gmail.com> <20191104152428.GA2252441@kroah.com> <nycvar.YSQ.7.76.1911041648280.30289@knanqh.ubzr> <CAM6JnLdrzCPOYyfTdmriFo7cRaGM4p2OEPd_0MHa3_WemamffA@mail.gmail.com>
+ <nycvar.YSQ.7.76.1911041928030.30289@knanqh.ubzr> <c30fc539-68a8-65d7-226c-6f8e6fd8bdfb@suse.com> <CAM6JnLe88xf8hO0F=_Ni+irNt40+987tHmz9ZjppgxhnMnLxpw@mail.gmail.com> <a0550a96-a7db-60d7-c4ac-86be8c8dd275@suse.com> <nycvar.YSQ.7.76.1911051030580.30289@knanqh.ubzr>
+ <nycvar.YSQ.7.76.1911261652290.8537@knanqh.ubzr> <20191127064507.GC1711684@kroah.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1911271535560.16935@www.lameter.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 71F3D270-1132-11EA-9305-8D86F504CC47-78420484!pb-smtp21.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 27-11-19 15:40:19, Cristopher Lameter wrote:
-> On Tue, 26 Nov 2019, Michal Hocko wrote:
-> 
-> > > I have no idea about what this is.
-> >
-> > It seems to be there since the initial merge. I suspect this is just
-> > following a generic sysfs rule that each file has to provide those
-> > events?
-> 
-> I have never heard of anyone using this.
-> 
-> > > There have been many people who
-> > > reworked the sysfs support and this has been the cause for a lot of
-> > > breakage over the years.
-> >
-> > Remember any specifics?
-> 
-> The sequencing of setup / teardown of sysfs entries has frequently been
-> a problem and that caused numerous issues with slab initialization as well
-> as kmem cache creation. Initially kmalloc DMA caches were created on
-> demand which caused some issues. Then there was the back and forth with
-> cache aliasing during kmem_cache_create() that caused another set of
-> instabilities.
-> 
-> > I am mostly interested in potential users. In other words I am thinking
-> > to suppress those events. There is already ke knob to control existence
-> > of memcg caches but I do not see anything like this for root caches.
-> >
-> 
-> I am not aware of any users but the deployments of Linux are so diverse
-> these days that I am not sure that there are no users.
+On Wed, 27 Nov 2019, Greg KH wrote:
 
-Would you mind a patch that would add a kernel command line parameter
-that would work like memcg_sysfs_enabled? The default for the config
-would be on. Or it would be preferrable to simply drop only events?
--- 
-Michal Hocko
-SUSE Labs
+> On Tue, Nov 26, 2019 at 04:55:32PM -0500, Nicolas Pitre wrote:
+> > Greg, could you apply this please?
+> 
+> Yes, I will, but I don't seem to have it in my email archives anywhere,
+> was it burried in that long thread?
+
+I've seen much longer threads than this one, but yes it was at its tail.
+Hence the direct ping.
+
+
+Nicolas
