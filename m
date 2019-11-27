@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0647CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6694CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C169A21736
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F9721736
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889604;
-	bh=IKdccxMPNFCHWURegItuiQel6JPzSusxwke9CMW8mUM=;
+	s=default; t=1574889613;
+	bh=5yemM2jPWun0Szk6nsZE3AnqlsD35Qi3e+oCLqnavF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=te5tBztM0r7dkPJIDdUMQvBwoyQGiHh4F6CFQOW9ZIZRZM6uEEI02inEnk3qCgyhl
-	 7aXDnHsNXBEbzSoEWuUHpIbMP4QISIIGX0sWS20doeet3hrP/FIdxFvWShj839TOIK
-	 tmwRMCuzFxqrlxqk6qYKt/RshHFfmKsT7emO+DS4=
+	b=DqzwBcojTsbzY5JY75/g7Tlm02Gb2B557WIvC7j7p/p6qcAodYh8NnGHaHZ+8UuWh
+	 w6Sn/e0Qu+TSvHkmjY2NBi/H5f3BJ2eNRi+JdGnUyYXd9joBb02ywwGCc+TcPk4E6N
+	 Bodwp9xoWhh6re1ebzkJ49b9atIVQViI0y3KhEi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732931AbfK0VUD (ORCPT
+        id S1733113AbfK0VUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:20:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36484 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:20:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732914AbfK0VJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:09:41 -0500
+        id S1728997AbfK0VJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:09:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F59D216F4;
-        Wed, 27 Nov 2019 21:09:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE7CE21555;
+        Wed, 27 Nov 2019 21:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888981;
-        bh=IKdccxMPNFCHWURegItuiQel6JPzSusxwke9CMW8mUM=;
+        s=default; t=1574888965;
+        bh=5yemM2jPWun0Szk6nsZE3AnqlsD35Qi3e+oCLqnavF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sGLCfT6zvBRpNQ9/8ZUPNp4QPcaWcpjDuobeq6EWpupDJR+4529k9gpIfW17vEq+7
-         5OEAFp0Zs1hwS78284R5bcV+ctaKy8pUqjqXB2XGsj7tl0pEmD9mlp352evt6P1Y+s
-         +dgHdktvA4NAM2Q5IUtXeRZSmorOigY/gV/r4Z2U=
+        b=AdcbYrHF9BpZxeEjw3IGL65OsB67E89KM7vLnEG7eNcCxGMP6o1visEEOqSOYSOPy
+         0JBVLCDMkZmKwN39igWe/tBIxwP7kjz0Q3NZmV4JLlnxzixPuMaRp/dp7sbOZ0CFNJ
+         r2jO0UVS2uQGu6PuMEtibFNJzwPs6GZB6e80wiP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
-        syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Alexander Potapenko <glider@google.com>
-Subject: [PATCH 5.3 36/95] Bluetooth: Fix invalid-free in bcsp_close()
-Date:   Wed, 27 Nov 2019 21:31:53 +0100
-Message-Id: <20191127202900.816842845@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.3 30/95] drm/amdgpu: disable gfxoff when using register read interface
+Date:   Wed, 27 Nov 2019 21:31:47 +0100
+Message-Id: <20191127202856.736039714@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -61,50 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Bortoli <tomasbortoli@gmail.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit cf94da6f502d8caecabd56b194541c873c8a7a3c upstream.
+commit c57040d333c6729ce99c2cb95061045ff84c89ea upstream.
 
-Syzbot reported an invalid-free that I introduced fixing a memleak.
+When gfxoff is enabled, accessing gfx registers via MMIO
+can lead to a hang.
 
-bcsp_recv() also frees bcsp->rx_skb but never nullifies its value.
-Nullify bcsp->rx_skb every time it is freed.
-
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Cc: Alexander Potapenko <glider@google.com>
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=205497
+Acked-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/hci_bcsp.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/bluetooth/hci_bcsp.c
-+++ b/drivers/bluetooth/hci_bcsp.c
-@@ -591,6 +591,7 @@ static int bcsp_recv(struct hci_uart *hu
- 			if (*ptr == 0xc0) {
- 				BT_ERR("Short BCSP packet");
- 				kfree_skb(bcsp->rx_skb);
-+				bcsp->rx_skb = NULL;
- 				bcsp->rx_state = BCSP_W4_PKT_START;
- 				bcsp->rx_count = 0;
- 			} else
-@@ -606,6 +607,7 @@ static int bcsp_recv(struct hci_uart *hu
- 			    bcsp->rx_skb->data[2])) != bcsp->rx_skb->data[3]) {
- 				BT_ERR("Error in BCSP hdr checksum");
- 				kfree_skb(bcsp->rx_skb);
-+				bcsp->rx_skb = NULL;
- 				bcsp->rx_state = BCSP_W4_PKT_DELIMITER;
- 				bcsp->rx_count = 0;
- 				continue;
-@@ -630,6 +632,7 @@ static int bcsp_recv(struct hci_uart *hu
- 				       bscp_get_crc(bcsp));
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -635,15 +635,19 @@ static int amdgpu_info_ioctl(struct drm_
+ 			return -ENOMEM;
+ 		alloc_size = info->read_mmr_reg.count * sizeof(*regs);
  
- 				kfree_skb(bcsp->rx_skb);
-+				bcsp->rx_skb = NULL;
- 				bcsp->rx_state = BCSP_W4_PKT_DELIMITER;
- 				bcsp->rx_count = 0;
- 				continue;
+-		for (i = 0; i < info->read_mmr_reg.count; i++)
++		amdgpu_gfx_off_ctrl(adev, false);
++		for (i = 0; i < info->read_mmr_reg.count; i++) {
+ 			if (amdgpu_asic_read_register(adev, se_num, sh_num,
+ 						      info->read_mmr_reg.dword_offset + i,
+ 						      &regs[i])) {
+ 				DRM_DEBUG_KMS("unallowed offset %#x\n",
+ 					      info->read_mmr_reg.dword_offset + i);
+ 				kfree(regs);
++				amdgpu_gfx_off_ctrl(adev, true);
+ 				return -EFAULT;
+ 			}
++		}
++		amdgpu_gfx_off_ctrl(adev, true);
+ 		n = copy_to_user(out, regs, min(size, alloc_size));
+ 		kfree(regs);
+ 		return n ? -EFAULT : 0;
 
 
