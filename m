@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C371BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64F3C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C802086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD5E2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890683;
-	bh=XXB/goFev0IL2d9mUMYUsNOviHIV9Dho+s3GV8lNCjI=;
+	s=default; t=1574890690;
+	bh=E7bp0BOM3t1qTKZFsIcbtokzuEIIenJD4UwrpLkgBBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ju5gNjgVC47B87n8vseM2AyGIK6AHp3h5+r7KWYCZS7gj2HOXxH6OGvNLH5NOOxSD
-	 Wbnagv3VCzlZZhcF1+IqcU8rBT0j+7ME1EPEbtPbF2br+dPDh+kk+nMW3YNIWgp/43
-	 9FXq0nmjKSkU3CKHQ5m7U4CS3ogwjF81/rxvX1Lk=
+	b=b4Y1GPmusaDY11dPGjwvlYb8mwe346HWEKQqwB8JD8WHjCsUqUnGFarnnNb3AoDwu
+	 5jiChBJaaa9DlmC9VJ3LFZKzLXwK2g7AXOzv4IzgASu97Sh193O1osRJZFzNYWZgAi
+	 An8r4l0+E38GAlVJpQRnt6abImj/vYiZgy8inCS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbfK0UqD (ORCPT
+        id S1729331AbfK0Upw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:46:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57416 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:45:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729815AbfK0Up7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:45:59 -0500
+        id S1728185AbfK0Upt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:45:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56DE721823;
-        Wed, 27 Nov 2019 20:45:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C9B22178F;
+        Wed, 27 Nov 2019 20:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887558;
-        bh=XXB/goFev0IL2d9mUMYUsNOviHIV9Dho+s3GV8lNCjI=;
+        s=default; t=1574887549;
+        bh=E7bp0BOM3t1qTKZFsIcbtokzuEIIenJD4UwrpLkgBBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gD+ReG7AUQI396O8gWb/pLqhI9y85z+FJTHRBzSrNnS7MVzoXcE8dZ7ef8rVJNppu
-         TQab/0BA7Svfb2i4mzl9vCWD1/Um3gQcB5b7XHI91yipT+GosjJvsrfvPiSqf/Brr3
-         teGOT5I0t51gj/7NWljVn+lXXDCm51rmUJsSIQu8=
+        b=LSi5PPV6g/7TT52jlO+XxvYZ9tt5xvNBPpFQFBN3BACLHqkTQp0+q+91RGXdqyrNv
+         NZmnQJ5kLElLjQnlxnyAQeuCl5FVVKO62ugPAYncVv8vgP0kOuH2Qjmgk/wVwncBck
+         cPBdgLbM1SwOE1AL85Jce4pHidva/s1Gw30WpAHU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chester Lin <clin@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org,
+        Bart Van Assche <bart.vanassche@sandisk.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 117/151] ARM: 8904/1: skip nomap memblocks while finding the lowmem/highmem boundary
-Date:   Wed, 27 Nov 2019 21:31:40 +0100
-Message-Id: <20191127203044.252568481@linuxfoundation.org>
+Subject: [PATCH 4.9 113/151] dm: use blk_set_queue_dying() in __dm_destroy()
+Date:   Wed, 27 Nov 2019 21:31:36 +0100
+Message-Id: <20191127203043.434613352@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -61,36 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chester Lin <clin@suse.com>
+From: Bart Van Assche <bart.vanassche@sandisk.com>
 
-commit 1d31999cf04c21709f72ceb17e65b54a401330da upstream.
+commit 2e91c3694181dc500faffec16c5aaa0ac5e15449 upstream.
 
-adjust_lowmem_bounds() checks every memblocks in order to find the boundary
-between lowmem and highmem. However some memblocks could be marked as NOMAP
-so they are not used by kernel, which should be skipped while calculating
-the boundary.
+After QUEUE_FLAG_DYING has been set any code that is waiting in
+get_request() should be woken up.  But to get this behaviour
+blk_set_queue_dying() must be used instead of only setting
+QUEUE_FLAG_DYING.
 
-Signed-off-by: Chester Lin <clin@suse.com>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Bart Van Assche <bart.vanassche@sandisk.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mm/mmu.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/md/dm.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -1188,6 +1188,9 @@ void __init adjust_lowmem_bounds(void)
- 		phys_addr_t block_start = reg->base;
- 		phys_addr_t block_end = reg->base + reg->size;
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1946,9 +1946,7 @@ static void __dm_destroy(struct mapped_d
+ 	set_bit(DMF_FREEING, &md->flags);
+ 	spin_unlock(&_minor_lock);
  
-+		if (memblock_is_nomap(reg))
-+			continue;
-+
- 		if (reg->base < vmalloc_limit) {
- 			if (block_end > lowmem_limit)
- 				/*
+-	spin_lock_irq(q->queue_lock);
+-	queue_flag_set(QUEUE_FLAG_DYING, q);
+-	spin_unlock_irq(q->queue_lock);
++	blk_set_queue_dying(q);
+ 
+ 	if (dm_request_based(md) && md->kworker_task)
+ 		kthread_flush_worker(&md->kworker);
 
 
