@@ -7,54 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E60C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506F7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DF521741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289F3216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887093;
-	bh=CeRThS9HKrxmScjaCrZFhLlWJfYbNfFzVbSAcI3ZP1U=;
+	s=default; t=1574887099;
+	bh=EO6OL04z+eVNB+ycq/2Q0uPJQWhDp8owxls2bHKsHNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ag4WW3gAcIF6C0rv2zP5xG/wND7dZSPq+WTN/dvwvyuhN0Q/YpcFSyvmlc3UkNIB6
-	 ueMMDIiQobKFMz0TCwaw3DsLd3Dz5NQkIBPWhKnJvJNaW0F/Dwf8lMYO/bAd4XKFAs
-	 qcrlvXgB8Esgw5nRbQBcRI9EN+TqVq1Xmo6ozLuI=
+	b=Ku5GeNQScLBVIQdo6bW2LvWC8dA5W7cdhAdpCkuFmbb5PFv27zFdviBVB7MCkSSQp
+	 n0UVwLq394ihtrtELbOpUmgNzVg0Mc2wzOAtcLGPTN4+P/xXNe6x++5COAeu4ezHHT
+	 J4FfKEYip4l8yv7IMLOfnqDT3iD+pDG+wsyhUTz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbfK0UiM (ORCPT
+        id S1728725AbfK0UiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:38:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41472 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:38:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727792AbfK0UiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:38:09 -0500
+        id S1728707AbfK0UiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:38:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1A67216F4;
-        Wed, 27 Nov 2019 20:38:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0F3221736;
+        Wed, 27 Nov 2019 20:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887088;
-        bh=CeRThS9HKrxmScjaCrZFhLlWJfYbNfFzVbSAcI3ZP1U=;
+        s=default; t=1574887095;
+        bh=EO6OL04z+eVNB+ycq/2Q0uPJQWhDp8owxls2bHKsHNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iRsngQjf1oNvoCH7SdKSreiSRKos+S3624noKjHy5okYaHHGs6zjkL/w8b++/EE/q
-         Q0xxYtLflCfyjIcnVRsr00+LKkZXTyoQzKYs2/3m4zPJdZXpRV+lRtQ7qoy/xulWzq
-         mdBljYuxAJiLXWoJxZWauniVMUYmG/VvtEBo6404=
+        b=cXZhMyZ7MwPRfdvJ5bEaBS+ABuBI1HOjT4kLJNTUMu6m9RidK7BKnLROWq0kN3I9p
+         Uyk7YWiQdL4B092hnvYRUWjcSdMBkoIy4IEVVVuALuHQ64xEk6fLbbt/oKQ4X5v4uS
+         P6aDiMl70T5/5/nYi6eyFZxRJPN1Sk2KHj72P29U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        stable@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Waiman Long <longman@redhat.com>, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.4 107/132] x86/insn: Fix awk regexp warnings
-Date:   Wed, 27 Nov 2019 21:31:38 +0100
-Message-Id: <20191127203027.050537016@linuxfoundation.org>
+        Mark Gross <mgross@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Tyler Hicks <tyhicks@canonical.com>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.4 109/132] x86/speculation: Fix redundant MDS mitigation message
+Date:   Wed, 27 Nov 2019 21:31:40 +0100
+Message-Id: <20191127203028.096451138@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -67,88 +68,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+From: Waiman Long <longman@redhat.com>
 
-commit 700c1018b86d0d4b3f1f2d459708c0cdf42b521d upstream.
+commit cd5a2aa89e847bdda7b62029d94e95488d73f6b2 upstream.
 
-gawk 5.0.1 generates the following regexp warnings:
+Since MDS and TAA mitigations are inter-related for processors that are
+affected by both vulnerabilities, the followiing confusing messages can
+be printed in the kernel log:
 
-  GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
-  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
-  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is  not a known regexp operator
+  MDS: Vulnerable
+  MDS: Mitigation: Clear CPU buffers
 
-Ealier versions of gawk are not known to generate these warnings. The
-gawk manual referenced below does not list characters ':' and '&' as
-needing escaping, so 'unescape' them. See
+To avoid the first incorrect message, defer the printing of MDS
+mitigation after the TAA mitigation selection has been done. However,
+that has the side effect of printing TAA mitigation first before MDS
+mitigation.
 
-  https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html
+ [ bp: Check box is affected/mitigations are disabled first before
+   printing and massage. ]
 
-for more info.
-
-Running diff on the output generated by the script before and after
-applying the patch reported no differences.
-
- [ bp: Massage commit message. ]
-
-[ Caught the respective tools header discrepancy. ]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Suggested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Mark Gross <mgross@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Tyler Hicks <tyhicks@canonical.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190924044659.3785-1-alexander.kapshuk@gmail.com
+Link: https://lkml.kernel.org/r/20191115161445.30809-3-longman@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/tools/gen-insn-attr-x86.awk                   |    4 ++--
- tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -68,7 +68,7 @@ BEGIN {
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -37,6 +37,7 @@ static void __init spectre_v2_select_mit
+ static void __init ssb_select_mitigation(void);
+ static void __init l1tf_select_mitigation(void);
+ static void __init mds_select_mitigation(void);
++static void __init mds_print_mitigation(void);
+ static void __init taa_select_mitigation(void);
  
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
+ /* The base value of the SPEC_CTRL MSR that always has to be preserved. */
+@@ -99,6 +100,12 @@ void __init check_bugs(void)
+ 	mds_select_mitigation();
+ 	taa_select_mitigation();
  
-@@ -253,7 +253,7 @@ function convert_operands(count,opnd,
- 	return add_flags(imm, mod)
- }
++	/*
++	 * As MDS and TAA mitigations are inter-related, print MDS
++	 * mitigation until after TAA mitigation selection is done.
++	 */
++	mds_print_mitigation();
++
+ 	arch_smt_update();
  
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
---- a/tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
-+++ b/tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
-@@ -68,7 +68,7 @@ BEGIN {
+ #ifdef CONFIG_X86_32
+@@ -224,6 +231,12 @@ static void __init mds_select_mitigation
+ 		mds_mitigation = MDS_MITIGATION_OFF;
+ 		return;
+ 	}
++}
++
++static void __init mds_print_mitigation(void)
++{
++	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off())
++		return;
  
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
- 
-@@ -253,7 +253,7 @@ function convert_operands(count,opnd,
- 	return add_flags(imm, mod)
- }
- 
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
+ 	if (mds_mitigation == MDS_MITIGATION_FULL) {
+ 		if (!boot_cpu_has(X86_FEATURE_MD_CLEAR))
 
 
