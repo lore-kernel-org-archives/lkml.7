@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4983CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC2CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D58C21736
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CDF21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889617;
-	bh=BOiowEuy+RlWqcjqjvrERK6atbQLQnXcNLNSpSWSa24=;
+	s=default; t=1574889623;
+	bh=IleI4WBlvw0MbTkV3loKafslw9g3LQhrhlmA3V+horw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1QuqqdOzsVVGeCdZN7NlUBGG+C8DrqNQJMRVKMIreRt7si42469AhmAZspGdYNmn1
-	 54GNg+e7cl4SDvxBdcEj5HMLG8b81+erd1gsDNSigEH9QkJSVGCStPsnnYAfdtfw2T
-	 tx97HIIOXbt2KkN4zB/Y5nYaY04MH1kX3iaJ2+nM=
+	b=bcRYweDfRZSssLCBRkxg65pZN9+xN31zg2wstaMFcnk6tXpR3MxikNWppdNVsvdUb
+	 WC0eV93a++rLOz3u9b15x/6f9V1XKUolGh9+QiiEUIgk+OuoPNc31guBPLAphGV/54
+	 hZtViikXOmnginssy1n0s7lh7ZCGSxUZr2YYgAyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732880AbfK0VJW (ORCPT
+        id S1732834AbfK0VJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:09:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35874 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:09:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732863AbfK0VJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:09:15 -0500
+        id S1732422AbfK0VI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:08:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C09121556;
-        Wed, 27 Nov 2019 21:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E107C2154A;
+        Wed, 27 Nov 2019 21:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888954;
-        bh=BOiowEuy+RlWqcjqjvrERK6atbQLQnXcNLNSpSWSa24=;
+        s=default; t=1574888936;
+        bh=IleI4WBlvw0MbTkV3loKafslw9g3LQhrhlmA3V+horw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AlSjnA+pUMyOlCAZvh6cRzwdcXnWl0ByQz1kWM9aEjVcBTWwHF8gOzFTmqlZnnMg5
-         2/JchH64rLT5ac3oo/m7/jYIVKoTov+RMz7emhNY+oespa4ka+q0yzEdMzOlilKKYA
-         xkMddpfG7HbUlDEqpcTH24OlF2GNjs8BGZq4T5Bo=
+        b=RDcd4bDXrwyfnJwqpWL+7wc+UN+o7ikMYMdJcD95Gw0xIOKuNyDXf2C4qRde2k+0H
+         nWGg9NlyVr9A9NPm+bV4tmgTNXdKr/EXxY9Dg0IWTrii8TSOb1El3Xyapj1RW1rJx8
+         Q93XmuHPsvNHXhuSbCT75iNnOsn6XPoPzz/bO/Ks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Thomas Voegtle <tv@lio96.de>, Changwei Ge <gechangwei@live.cn>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 27/95] Revert "fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()"
-Date:   Wed, 27 Nov 2019 21:31:44 +0100
-Message-Id: <20191127202854.186425693@linuxfoundation.org>
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 5.3 20/95] gpio: bd70528: Use correct unit for debounce times
+Date:   Wed, 27 Nov 2019 21:31:37 +0100
+Message-Id: <20191127202850.450458548@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -66,111 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joseph Qi <joseph.qi@linux.alibaba.com>
+From: Thierry Reding <treding@nvidia.com>
 
-commit 94b07b6f9e2e996afff7395de6b35f34f4cb10bf upstream.
+commit f88c117b6d6d7e96557b6ee143b26b550fc51076 upstream.
 
-This reverts commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d.
+The debounce time passed to gpiod_set_debounce() is specified in
+microseconds, so make sure to use the correct unit when computing the
+register values, which denote delays in milliseconds.
 
-Commit 56e94ea132bb ("fs: ocfs2: fix possible null-pointer dereferences
-in ocfs2_xa_prepare_entry()") introduces a regression that fail to
-create directory with mount option user_xattr and acl.  Actually the
-reported NULL pointer dereference case can be correctly handled by
-loc->xl_ops->xlo_add_entry(), so revert it.
-
-Link: http://lkml.kernel.org/r/1573624916-83825-1-git-send-email-joseph.qi@linux.alibaba.com
-Fixes: 56e94ea132bb ("fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()")
-Signed-off-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Reported-by: Thomas Voegtle <tv@lio96.de>
-Acked-by: Changwei Ge <gechangwei@live.cn>
-Cc: Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 18bc64b3aebf ("gpio: Initial support for ROHM bd70528 GPIO block")
+[Bartosz: fixed a typo in commit message]
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/xattr.c |   56 ++++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 33 insertions(+), 23 deletions(-)
+ drivers/gpio/gpio-bd70528.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/ocfs2/xattr.c
-+++ b/fs/ocfs2/xattr.c
-@@ -1490,6 +1490,18 @@ static int ocfs2_xa_check_space(struct o
- 	return loc->xl_ops->xlo_check_space(loc, xi);
- }
- 
-+static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
-+{
-+	loc->xl_ops->xlo_add_entry(loc, name_hash);
-+	loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
-+	/*
-+	 * We can't leave the new entry's xe_name_offset at zero or
-+	 * add_namevalue() will go nuts.  We set it to the size of our
-+	 * storage so that it can never be less than any other entry.
-+	 */
-+	loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
-+}
-+
- static void ocfs2_xa_add_namevalue(struct ocfs2_xa_loc *loc,
- 				   struct ocfs2_xattr_info *xi)
- {
-@@ -2121,31 +2133,29 @@ static int ocfs2_xa_prepare_entry(struct
- 	if (rc)
- 		goto out;
- 
--	if (!loc->xl_entry) {
--		rc = -EINVAL;
--		goto out;
--	}
--
--	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
--		orig_value_size = loc->xl_entry->xe_value_size;
--		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
--		if (rc)
--			goto out;
--		goto alloc_value;
--	}
-+	if (loc->xl_entry) {
-+		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
-+			orig_value_size = loc->xl_entry->xe_value_size;
-+			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
-+			if (rc)
-+				goto out;
-+			goto alloc_value;
-+		}
- 
--	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
--		orig_clusters = ocfs2_xa_value_clusters(loc);
--		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
--		if (rc) {
--			mlog_errno(rc);
--			ocfs2_xa_cleanup_value_truncate(loc,
--							"overwriting",
--							orig_clusters);
--			goto out;
-+		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
-+			orig_clusters = ocfs2_xa_value_clusters(loc);
-+			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
-+			if (rc) {
-+				mlog_errno(rc);
-+				ocfs2_xa_cleanup_value_truncate(loc,
-+								"overwriting",
-+								orig_clusters);
-+				goto out;
-+			}
- 		}
--	}
--	ocfs2_xa_wipe_namevalue(loc);
-+		ocfs2_xa_wipe_namevalue(loc);
-+	} else
-+		ocfs2_xa_add_entry(loc, name_hash);
- 
- 	/*
- 	 * If we get here, we have a blank entry.  Fill it.  We grow our
+--- a/drivers/gpio/gpio-bd70528.c
++++ b/drivers/gpio/gpio-bd70528.c
+@@ -25,13 +25,13 @@ static int bd70528_set_debounce(struct b
+ 	case 0:
+ 		val = BD70528_DEBOUNCE_DISABLE;
+ 		break;
+-	case 1 ... 15:
++	case 1 ... 15000:
+ 		val = BD70528_DEBOUNCE_15MS;
+ 		break;
+-	case 16 ... 30:
++	case 15001 ... 30000:
+ 		val = BD70528_DEBOUNCE_30MS;
+ 		break;
+-	case 31 ... 50:
++	case 30001 ... 50000:
+ 		val = BD70528_DEBOUNCE_50MS;
+ 		break;
+ 	default:
 
 
