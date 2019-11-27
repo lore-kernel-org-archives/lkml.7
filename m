@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302DEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CADC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0586C2158C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB6320678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888399;
-	bh=Y18yuxI31zdXm3BrZcwrM5f7T94WmOvlXVgoXwJyH2U=;
+	s=default; t=1574888403;
+	bh=9jTiWjD3dsUPaP+cMWDmZ87NWsOHV8AQalAaCPDJXAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qOmgAEI15DjsMp0RfG+dK3ogRKCaUsZoX3UhmCsWJhAeifQdQ4+HGi5PNZ174O6tl
-	 tgP2P9/9HRlu3VoLKbsbgd0Ww/sWXPfWb9q0v412aBbqJUXOIiMT4hjs+QusrLaH0y
-	 HORlJMQTK6Rumn8VcIHmpV7tUUGD7md6lmXRzam8=
+	b=P4p2pFLra/jFBqfi1XWknpJpDg5CPbrWq3A/OLuykRymGTYjVZYOu//Z6rGIh+B3H
+	 KJoXfiTxjt7JDpYULP1jpWdHlS56Ks5UezVLkXo74tp6QkjDcIG7nC/wCD4AxzHiXZ
+	 ynhjiw7phykC13ZcI89ha9b5tZ+Q2IbdREBBj3CQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbfK0U75 (ORCPT
+        id S1731504AbfK0VAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:59:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51522 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:00:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731463AbfK0U7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:59:52 -0500
+        id S1731493AbfK0U75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:59:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F6C120678;
-        Wed, 27 Nov 2019 20:59:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D69920862;
+        Wed, 27 Nov 2019 20:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888391;
-        bh=Y18yuxI31zdXm3BrZcwrM5f7T94WmOvlXVgoXwJyH2U=;
+        s=default; t=1574888396;
+        bh=9jTiWjD3dsUPaP+cMWDmZ87NWsOHV8AQalAaCPDJXAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jTSaPZlCvsAnBRM8s4RwmiFNU7fHEVQwOeiLXE1hfC0xHT/jlT3pJlKquDSYLbrTf
-         5PH/LehrmvEeyGRAlFV7LaJ2mAHdj414TSt9HlcSdyJ5Ty/vM0czCwAv/ZMGrusLjN
-         7lzTS+yCcwyXe4WfJElCMx77keeNVf6gvcFmEEwE=
+        b=rCT5LsrWqr4b4jp406paMYiGwztE7ob66cPfgUHJUSksXMF+L26cErtynG7kZWuf7
+         lsu30tib5t8Nv5vGxLzIjTX7XjHE0MYLFZym+ZdD7dmwobsrVmqpgPXemxFI1qliE3
+         +xr+jZUH3gHvDwzmhkBq3aPD/G4wDYze3xRd8G80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 116/306] tools: bpftool: fix completion for "bpftool map update"
-Date:   Wed, 27 Nov 2019 21:29:26 +0100
-Message-Id: <20191127203123.650790329@linuxfoundation.org>
+Subject: [PATCH 4.19 118/306] ceph: only allow punch hole mode in fallocate
+Date:   Wed, 27 Nov 2019 21:29:28 +0100
+Message-Id: <20191127203123.779382363@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,38 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Monnet <quentin.monnet@netronome.com>
+From: Luis Henriques <lhenriques@suse.com>
 
-[ Upstream commit fe8ecccc10b3adc071de05ca7af728ca1a4ac9aa ]
+[ Upstream commit bddff633ab7bc60a18a86ac8b322695b6f8594d0 ]
 
-When trying to complete "bpftool map update" commands, the call to
-printf would print an error message that would show on the command line
-if no map is found to complete the command line.
+Current implementation of cephfs fallocate isn't correct as it doesn't
+really reserve the space in the cluster, which means that a subsequent
+call to a write may actually fail due to lack of space.  In fact, it is
+currently possible to fallocate an amount space that is larger than the
+free space in the cluster.  It has behaved this way since the initial
+commit ad7a60de882a ("ceph: punch hole support").
 
-Fix it by making sure we have map ids to complete the line with, before
-we try to print something.
+Since there's no easy solution to fix this at the moment, this patch
+simply removes support for all fallocate operations but
+FALLOC_FL_PUNCH_HOLE (which implies FALLOC_FL_KEEP_SIZE).
 
-Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://tracker.ceph.com/issues/36317
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/bash-completion/bpftool | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/file.c | 45 +++++++++------------------------------------
+ 1 file changed, 9 insertions(+), 36 deletions(-)
 
-diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftool/bash-completion/bpftool
-index 598066c401912..c2b6b2176f3b7 100644
---- a/tools/bpf/bpftool/bash-completion/bpftool
-+++ b/tools/bpf/bpftool/bash-completion/bpftool
-@@ -143,7 +143,7 @@ _bpftool_map_update_map_type()
-     local type
-     type=$(bpftool -jp map show $keyword $ref | \
-         command sed -n 's/.*"type": "\(.*\)",$/\1/p')
--    printf $type
-+    [[ -n $type ]] && printf $type
- }
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index 92ab204336829..91a7ad259bcf2 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -1735,7 +1735,6 @@ static long ceph_fallocate(struct file *file, int mode,
+ 	struct ceph_file_info *fi = file->private_data;
+ 	struct inode *inode = file_inode(file);
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+-	struct ceph_fs_client *fsc = ceph_inode_to_client(inode);
+ 	struct ceph_cap_flush *prealloc_cf;
+ 	int want, got = 0;
+ 	int dirty;
+@@ -1743,10 +1742,7 @@ static long ceph_fallocate(struct file *file, int mode,
+ 	loff_t endoff = 0;
+ 	loff_t size;
  
- _bpftool_map_update_get_id()
+-	if ((offset + length) > max(i_size_read(inode), fsc->max_file_size))
+-		return -EFBIG;
+-
+-	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE))
++	if (mode != (FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE))
+ 		return -EOPNOTSUPP;
+ 
+ 	if (!S_ISREG(inode->i_mode))
+@@ -1763,18 +1759,6 @@ static long ceph_fallocate(struct file *file, int mode,
+ 		goto unlock;
+ 	}
+ 
+-	if (!(mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE)) &&
+-	    ceph_quota_is_max_bytes_exceeded(inode, offset + length)) {
+-		ret = -EDQUOT;
+-		goto unlock;
+-	}
+-
+-	if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL) &&
+-	    !(mode & FALLOC_FL_PUNCH_HOLE)) {
+-		ret = -ENOSPC;
+-		goto unlock;
+-	}
+-
+ 	if (ci->i_inline_version != CEPH_INLINE_NONE) {
+ 		ret = ceph_uninline_data(file, NULL);
+ 		if (ret < 0)
+@@ -1782,12 +1766,12 @@ static long ceph_fallocate(struct file *file, int mode,
+ 	}
+ 
+ 	size = i_size_read(inode);
+-	if (!(mode & FALLOC_FL_KEEP_SIZE)) {
+-		endoff = offset + length;
+-		ret = inode_newsize_ok(inode, endoff);
+-		if (ret)
+-			goto unlock;
+-	}
++
++	/* Are we punching a hole beyond EOF? */
++	if (offset >= size)
++		goto unlock;
++	if ((offset + length) > size)
++		length = size - offset;
+ 
+ 	if (fi->fmode & CEPH_FILE_MODE_LAZY)
+ 		want = CEPH_CAP_FILE_BUFFER | CEPH_CAP_FILE_LAZYIO;
+@@ -1798,16 +1782,8 @@ static long ceph_fallocate(struct file *file, int mode,
+ 	if (ret < 0)
+ 		goto unlock;
+ 
+-	if (mode & FALLOC_FL_PUNCH_HOLE) {
+-		if (offset < size)
+-			ceph_zero_pagecache_range(inode, offset, length);
+-		ret = ceph_zero_objects(inode, offset, length);
+-	} else if (endoff > size) {
+-		truncate_pagecache_range(inode, size, -1);
+-		if (ceph_inode_set_size(inode, endoff))
+-			ceph_check_caps(ceph_inode(inode),
+-				CHECK_CAPS_AUTHONLY, NULL);
+-	}
++	ceph_zero_pagecache_range(inode, offset, length);
++	ret = ceph_zero_objects(inode, offset, length);
+ 
+ 	if (!ret) {
+ 		spin_lock(&ci->i_ceph_lock);
+@@ -1817,9 +1793,6 @@ static long ceph_fallocate(struct file *file, int mode,
+ 		spin_unlock(&ci->i_ceph_lock);
+ 		if (dirty)
+ 			__mark_inode_dirty(inode, dirty);
+-		if ((endoff > size) &&
+-		    ceph_quota_is_max_bytes_approaching(inode, endoff))
+-			ceph_check_caps(ci, CHECK_CAPS_NODELAY, NULL);
+ 	}
+ 
+ 	ceph_put_cap_refs(ci, got);
 -- 
 2.20.1
 
