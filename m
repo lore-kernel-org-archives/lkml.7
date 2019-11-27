@@ -2,135 +2,131 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0C9C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8392C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D52D204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789262053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 07:34:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="q22+IpVA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TT/9FzXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfK0Hcm (ORCPT
+        id S1726292AbfK0Hex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 02:32:42 -0500
-Received: from cmta20.telus.net ([209.171.16.93]:37329 "EHLO cmta20.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfK0Hcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 02:32:42 -0500
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id ZroRi5vCYN5I9ZroSiik5X; Wed, 27 Nov 2019 00:32:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1574839960; bh=0ORBH/ZadSHCKZQiUWjIShwLMG7CSdG3H9xgVcazVJU=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=q22+IpVAASH+U2XC4w8g/WP4DylYoKoUrCa+ZrfCCIARaAiRcPxqRq5d7UtnIyMVO
-         Q9mBDyc4XKS3AadM6fJrbbtxzxXuUqDT3I9xJ11leHzRC6dVlmgcMZ3VT74LiR8vtm
-         ApAzKp1ldrxZZILhypUdEu+azketPmv7dvFwFrP0rl73zqnqya4SV96XoyP3Cpq8np
-         hSCjobndT7a8tluUQUip/CTOZXJoGTLlu+wbFGfhmTRAvK+Huvh77qJ+YMsBcUZx0V
-         pqvcrgGLjEcSSxg+efyHL4z1aQvmWB5L+ex2b6vX18++k+ReKYaCskAq/729E85RLh
-         hCBMaUTP1ooRg==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=IkcTkHD0fZMA:10 a=dAj8EvzD0n44Yc48VYEA:9 a=QEXdDO2ut3YA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
-Cc:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "'Mel Gorman'" <mgorman@techsingularity.net>,
-        "'Matt Fleming'" <matt@codeblueprint.co.uk>,
-        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
-        "'Juri Lelli'" <juri.lelli@redhat.com>,
-        "'Paul Turner'" <pjt@google.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
-        "'Quentin Perret'" <qperret@qperret.net>,
-        "'Dietmar Eggemann'" <dietmar.eggemann@arm.com>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'Ingo Molnar'" <mingo@redhat.com>,
-        "'Borislav Petkov'" <bp@suse.de>, "'Len Brown'" <lenb@kernel.org>,
-        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
-References: <20191113124654.18122-1-ggherdovich@suse.cz>                 <20191113124654.18122-2-ggherdovich@suse.cz>                 <000001d5a29b$c944fd70$5bcef850$@net> <1574697961.16378.5.camel@suse.cz>         <000801d5a41e$a7fce2c0$f7f6a840$@net> <1574781600.7677.2.camel@suse.cz>
-In-Reply-To: <1574781600.7677.2.camel@suse.cz>
-Subject: RE: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
-Date:   Tue, 26 Nov 2019 23:32:34 -0800
-Message-ID: <001d01d5a4f4$d96b21b0$8c416510$@net>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Thread-Index: AdWkbC8LB/SpP9sCRCWbwO3FO+l3UwAhVS2w
-Content-Language: en-ca
-X-CMAE-Envelope: MS4wfNRXJHBbT8vjMdPapanEaph3gv4V2+AANKO8BH+eYmR1Nso692Mw0NJl1Q6Yq/wGlZoYcEBt0dX5lbjPw89ZHFUy+HTJlBcHXQs65J2CzkiO2FtVCMHQ
- 8qdbInoD2VETmXgk4ekKkZonQQKdAO46hQD9usndH/mEOiD0AH7jjUh7JqiqZuLO3penEF0LiInl2sPX95+rCsZbsCyzdzn4ZFcWkzaFrXbaRjPbyKGQAsTH
- N19Ik0dOoYG4CV/PH65GATgDjKC5uHH5IQWK4QEZS1eBZ4JEhWTr8tW3DD5bs0UMaMespVt3UlZggS8pRgc7K90vD5i+J/LhbdfXk3ljr61n8mTSRRp0ZEqm
- Tb6tV6H4qONGNCJI2OiLs9JxHdxwoUdSg5bZPYun40VAHGxe8P+AQ5GYJ0MKcbEcQ+ZFQ4gzn6br3dhbMmCiLn0AOPvsNqLcsi/uKtR+1IElAhRLS0GvuqXx
- 5DMVk9rakujonmx9aSZmCtHPeJeZ+AuMYbLghbOhLS7RR5G8FeIdHz2NZVHuYDTji9jGvakZCto8DpelczMhJ2aPNeP20pnxSkA1NobSiaYApscVe3S8Gb+D
- 9lsnwqa8827j5yNeFKxpC4sIG3mJiLLrsgwQdxFzw8BT8zZ/7s27U5h+o3+XZ0bgM9aTs29VlUbpE6QIUwJnlQvH16gf7jhe1pQWdhrfLrjvrqV/DMRk4zoq
- htB7xbjfM51qlUWP9vtjH3lT75ZBEMM4XKUpJQUJAoQoPDSdu3fBag==
+        Wed, 27 Nov 2019 02:34:53 -0500
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:41210 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfK0Hex (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 02:34:53 -0500
+Received: by mail-vk1-f201.google.com with SMTP id a17so10107604vko.8
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 23:34:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=OlY6fp4GnRqHjQOCRT6PaMt8F1GqmDxHR8fe14B/Pso=;
+        b=TT/9FzXSX64x0gmnOl3hXh0yWEFaBv377D8QkRQEzjyhdv4lyr+KrF6HqUi0h1Y2wO
+         jQzum9n7mdKKFjadRkU9g8aaw0IY7LGfk+AY8ZXBa6YSkCP082TswGkyWi6FHL5yJIVX
+         twQWsCfPlbDdt8UZVUdwOJD2SM4fXMeYKYagW46fNqYS76uRJmQDZZT9UmWY0gz7vrAE
+         +m+PYnqqG0lu+YgxG1UXTDnD/3RCziULr2KrgfOKxfh70fwGKThDANs2Mo4zqYHS0bIF
+         A4bFQelZ0fdHVdScI2tZxQwVxQsQSXNMXiG+D8zulL2M/HLpBhDHw493VcUwhXChXO7c
+         RiVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=OlY6fp4GnRqHjQOCRT6PaMt8F1GqmDxHR8fe14B/Pso=;
+        b=GIZFuC1kqX+bzNGaPG+rC7stvrpcxy6IKpWaFGCN3PHrUQGxyf6C99RFvyDjNMiRpH
+         36ysJ2Yzl10jnDM18ZzjLarrmMQLP3J2VLYEuK2xKHQNXZLWDW8OuaiREFkpkXjVIx5D
+         6AQ+MGVqKAEh76vCexE9GYC/CeqH36qCXIucMfOatHvQ2MCYDedtPyKRf+mrdrzlGGru
+         bijkLQs6iIdtroCXYVagAPTN3p4dNGwgMhcrjRttwwY+ztPFN4jRZSa0aVqDjSw4XkbC
+         y9dvtv+IjXdzcTbLbhEQmS0RhmDiK9/xNmYtUJpWm9uIieMlo5TZ16tUEBZVo6gWaZPp
+         Xahw==
+X-Gm-Message-State: APjAAAV32Ij0r3vxtGP+xCooatJUK5idI+UOWkq9RuyX8ROmvNdRJPkP
+        nm3FmWaE/vnAo2aY+lAwl8CoDi+URxp8
+X-Google-Smtp-Source: APXvYqzVZEb/Qe9M/V3TOzWXU5w6CdEWsYEqpjI5F1x4OIceM8E6OuGN3Cqeg7sgNYFHUljPT/CGubJ61+C2
+X-Received: by 2002:a1f:1897:: with SMTP id 145mr1780599vky.47.1574840091762;
+ Tue, 26 Nov 2019 23:34:51 -0800 (PST)
+Date:   Tue, 26 Nov 2019 23:34:42 -0800
+Message-Id: <20191127073442.174202-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+Subject: [PATCH] perf c2c: fix '-e list'
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.11.26 07:20 Giovanni Gherdovich wrote:
-> On Mon, 2019-11-25 at 21:59 -0800, Doug Smythies wrote:
->> [...]
->> The issue with the schedutil governor not working properly in the 5.4 RC series
->> appears to be hardware dependant.
->> 
->> My test computer is Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz., Sandy Bridge.
->> On a temporary basis, I acquired a computer with an
->> Intel(R) Core(TM) i5-4460 CPU @ 3.20GHz, Haswell,
->> and schedutil governor behaviour with the exact same kernels is fine:
->> 
->> That "gitsource" test, "make test" 6 times, first run thrown out:
->> 
->> Kernel 5.4 intel_cpufreq/schedutil: 3411.8 seconds
->> Kernel 5.4 + gg 6 intel_cpufreq/schedutil: 1696.7 seconds
->> Ratio: 0.49
->> Recall you got a ratio of 0.49 with 5th generation, Broadwell.
->
-> It's good to hear that we're getting the same performance numbers for this
-> patchset on all hardware that is not a Sandy Bridge. Thanks for double
-> checking, independent verification is always valuable.
-> 
-> Now, regarding the 5.4 regression for schedutil you see on Sandy Bridge: can
-> we move this to the kernel bugzilla? Would you care to open a bug there and CC
-> me to it?
+When the event is passed as list, the default events should be listed as
+per 'perf mem record -e list'. Previous behavior is:
 
-O.K., I'll need another day or two to isolate further, then I'll open a bug.
-I now understand considerably more, and why my bisection ended up
-at a strange spot.
+$ perf c2c record -e list
+failed: event 'list' not found, use '-e list' to get list of available events
 
-> If it's reproducible we should assess it and see what can be done.
+ Usage: perf c2c record [<options>] [<command>]
+    or: perf c2c record [<options>] -- <command> [<options>]
 
-On my Sandy Bridge system if the kernel configuration contains:
+    -e, --event <event>   event selector. Use 'perf mem record -e list' to list available events
 
-CONFIG_UCLAMP_TASK_GROUP=y
+New behavior:
 
-Then the intel_cpufreq/schedutil will respond much like the performance
-governor.
+$ perf c2c record -e list
+ldlat-loads  : available
+ldlat-stores : available
 
-If the kernel configuration contains:
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-c2c.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-# CONFIG_UCLAMP_TASK_GROUP is not set
-
-Then the intel_cpufreq/schedutil will respond much like it used to.
-
-On the Haswell computer, it doesn't seem to matter, and your tests
-seem to confirm this.
-
-Note: I steal my kernel configuration from the Ubuntu mainline builds,
-and they changed this parameter during the 5.4-rc series.
-
-... Doug
-
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index e69f44941aad..dd69cd218e4c 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2872,10 +2872,26 @@ static int perf_c2c__report(int argc, const char **argv)
+ static int parse_record_events(const struct option *opt,
+ 			       const char *str, int unset __maybe_unused)
+ {
++	int j;
+ 	bool *event_set = (bool *) opt->value;
+ 
+-	*event_set = true;
+-	return perf_mem_events__parse(str);
++	if (strcmp(str, "list")) {
++		*event_set = true;
++		if (!perf_mem_events__parse(str))
++			return 0;
++
++		exit(-1);
++	}
++	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
++		struct perf_mem_event *e = &perf_mem_events[j];
++
++		fprintf(stderr, "%-13s%-*s%s\n",
++			e->tag,
++			verbose > 0 ? 25 : 0,
++			verbose > 0 ? perf_mem_events__name(j) : "",
++			e->supported ? ": available" : "");
++	}
++	exit(0);
+ }
+ 
+ 
+-- 
+2.24.0.393.g34dc348eaf-goog
 
