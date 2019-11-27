@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C710DC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83692C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFC7215E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C18B215E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889142;
-	bh=dUyKsA+l1Lk1Fs5j/YCVO3J9HOukfmlgbeZAaLG3wQE=;
+	s=default; t=1574889144;
+	bh=k6AYE9IRxjT7DXWWP/QLm26U5fRTVcN27W+J5Ij7gIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bPVzGXNIFw1pd0rHfsQ38abA80n1TlNvztB05FOq8Set4fDH9DtRy2GKK/i0ZbBmi
-	 qb/LNJ9BjilSx/nt4+qDK6i5jk7a6g/W/evq3UGEGeK2z5MGNIwDhNsPU5B9vVOYrC
-	 uH4fpgk3d539WzmgQBSiWTIx5WMrqPSDPLOXLRIw=
+	b=uOPdXHCrAr4W8bQfkJOhG7Lwa9lBmLvXhB4JzT4wRRuXCdTMARU+S8zDPcn5pjz33
+	 i3q47bzR91smmKUBeJsXQ6DftI8EIDQ3gjcVgXsdDjiKbyMaips6JRBKWEF2u6SX29
+	 1i2waTpeA8E6V5iH7Sek9RXbN2t8skRhTC0UOQ78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733273AbfK0VMU (ORCPT
+        id S1728041AbfK0VMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:12:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42622 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:12:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbfK0VMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:12:16 -0500
+        id S1733264AbfK0VMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:12:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 346E9216F4;
-        Wed, 27 Nov 2019 21:12:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CC48217BC;
+        Wed, 27 Nov 2019 21:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889135;
-        bh=dUyKsA+l1Lk1Fs5j/YCVO3J9HOukfmlgbeZAaLG3wQE=;
+        s=default; t=1574889127;
+        bh=k6AYE9IRxjT7DXWWP/QLm26U5fRTVcN27W+J5Ij7gIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EybOSceSc6S8ynu94diFVBhoeN3FQbQcgz6lzNMXPML9bnmNPNmDVaMWfhG+vesgQ
-         pICT2SzAIv/8Gf+f9SXmPi2KDKIGwd0geivlQP+AnMePbi1YuRUqhjzzu16n446Hxm
-         kH3lgHlnXQyC5JRyzGspO85uGgZmxHeAKD4PsIlQ=
+        b=wivpTDMSayhN4xSYshWk4s0eU2lcYqE30EWe2cppOqvlUOD982orFsEDyrpjfqIwK
+         RvHj5orVh/klxY0gen4LawC03Db2jmhJ+M0d+dWju7iLQ2iOk4KQuOxRZ8gq7O8UjE
+         zrx/8wNeiZ8RFMFosSi+DEk/sQf3rec+hi7pbkUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 90/95] USB: serial: option: add support for DW5821e with eSIM support
-Date:   Wed, 27 Nov 2019 21:32:47 +0100
-Message-Id: <20191127202958.981677951@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.3 51/95] x86/stackframe/32: Repair 32-bit Xen PV
+Date:   Wed, 27 Nov 2019 21:32:08 +0100
+Message-Id: <20191127202918.214267481@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,66 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksander Morgado <aleksander@aleksander.es>
+From: Jan Beulich <jbeulich@suse.com>
 
-commit 957c31ea082e3fe5196f46d5b04018b10de47400 upstream.
+commit 81ff2c37f9e5d77593928df0536d86443195fd64 upstream.
 
-The device exposes AT, NMEA and DIAG ports in both USB configurations.
-Exactly same layout as the default DW5821e module, just a different
-vid/pid.
+Once again RPL checks have been introduced which don't account for a 32-bit
+kernel living in ring 1 when running in a PV Xen domain. The case in
+FIXUP_FRAME has been preventing boot.
 
-P:  Vendor=413c ProdID=81e0 Rev=03.18
-S:  Manufacturer=Dell Inc.
-S:  Product=DW5821e-eSIM Snapdragon X20 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+Adjust BUG_IF_WRONG_CR3 as well to guard against future uses of the macro
+on a code path reachable when running in PV mode under Xen; I have to admit
+that I stopped at a certain point trying to figure out whether there are
+present ones.
 
-P:  Vendor=413c ProdID=81e0 Rev=03.18
-S:  Manufacturer=Dell Inc.
-S:  Product=DW5821e-eSIM Snapdragon X20 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 7 Cfg#= 2 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
-I:  If#=0x1 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x6 Alt= 0 #EPs= 1 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-
-Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 3c88c692c287 ("x86/stackframe/32: Provide consistent pt_regs")
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Stable Team <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/0fad341f-b7f5-f859-d55d-f0084ee7087e@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/entry/entry_32.S      |    4 ++--
+ arch/x86/include/asm/segment.h |   12 ++++++++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -197,6 +197,7 @@ static void option_instat_callback(struc
- #define DELL_PRODUCT_5804_MINICARD_ATT		0x819b  /* Novatel E371 */
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -172,7 +172,7 @@
+ 	ALTERNATIVE "jmp .Lend_\@", "", X86_FEATURE_PTI
+ 	.if \no_user_check == 0
+ 	/* coming from usermode? */
+-	testl	$SEGMENT_RPL_MASK, PT_CS(%esp)
++	testl	$USER_SEGMENT_RPL_MASK, PT_CS(%esp)
+ 	jz	.Lend_\@
+ 	.endif
+ 	/* On user-cr3? */
+@@ -217,7 +217,7 @@
+ 	testl	$X86_EFLAGS_VM, 4*4(%esp)
+ 	jnz	.Lfrom_usermode_no_fixup_\@
+ #endif
+-	testl	$SEGMENT_RPL_MASK, 3*4(%esp)
++	testl	$USER_SEGMENT_RPL_MASK, 3*4(%esp)
+ 	jnz	.Lfrom_usermode_no_fixup_\@
  
- #define DELL_PRODUCT_5821E			0x81d7
-+#define DELL_PRODUCT_5821E_ESIM			0x81e0
+ 	orl	$CS_FROM_KERNEL, 3*4(%esp)
+--- a/arch/x86/include/asm/segment.h
++++ b/arch/x86/include/asm/segment.h
+@@ -31,6 +31,18 @@
+  */
+ #define SEGMENT_RPL_MASK	0x3
  
- #define KYOCERA_VENDOR_ID			0x0c88
- #define KYOCERA_PRODUCT_KPC650			0x17da
-@@ -1044,6 +1045,8 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(DELL_VENDOR_ID, DELL_PRODUCT_5804_MINICARD_ATT, 0xff, 0xff, 0xff) },
- 	{ USB_DEVICE(DELL_VENDOR_ID, DELL_PRODUCT_5821E),
- 	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
-+	{ USB_DEVICE(DELL_VENDOR_ID, DELL_PRODUCT_5821E_ESIM),
-+	  .driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
- 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_E100A) },	/* ADU-E100, ADU-310 */
- 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_500A) },
- 	{ USB_DEVICE(ANYDATA_VENDOR_ID, ANYDATA_PRODUCT_ADU_620UW) },
++/*
++ * When running on Xen PV, the actual privilege level of the kernel is 1,
++ * not 0. Testing the Requested Privilege Level in a segment selector to
++ * determine whether the context is user mode or kernel mode with
++ * SEGMENT_RPL_MASK is wrong because the PV kernel's privilege level
++ * matches the 0x3 mask.
++ *
++ * Testing with USER_SEGMENT_RPL_MASK is valid for both native and Xen PV
++ * kernels because privilege level 2 is never used.
++ */
++#define USER_SEGMENT_RPL_MASK	0x2
++
+ /* User mode is privilege level 3: */
+ #define USER_RPL		0x3
+ 
 
 
