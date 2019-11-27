@@ -2,126 +2,161 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8776C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 792062070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3672070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfK0SHO (ORCPT
+        id S1727158AbfK0SH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:07:14 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:38490 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726729AbfK0SHO (ORCPT
+        Wed, 27 Nov 2019 13:07:29 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36914 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726655AbfK0SH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:07:14 -0500
-Received: (qmail 2901 invoked by uid 2102); 27 Nov 2019 13:07:13 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 27 Nov 2019 13:07:13 -0500
-Date:   Wed, 27 Nov 2019 13:07:13 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <hverkuil@xs4all.nl>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <mchehab@kernel.org>,
-        <oneukum@suse.com>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
-In-Reply-To: <0000000000001dec4905985682c9@google.com>
-Message-ID: <Pine.LNX.4.44L0.1911271304410.1319-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Wed, 27 Nov 2019 13:07:28 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARI4woc038018;
+        Wed, 27 Nov 2019 13:06:23 -0500
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxr3xhh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 13:06:23 -0500
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xARI50D0028595;
+        Wed, 27 Nov 2019 18:06:22 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma01dal.us.ibm.com with ESMTP id 2wevd70s2c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 18:06:21 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARI6K8628442992
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Nov 2019 18:06:20 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 758F6136055;
+        Wed, 27 Nov 2019 18:06:20 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5EC3813604F;
+        Wed, 27 Nov 2019 18:06:18 +0000 (GMT)
+Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.134.245])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Nov 2019 18:06:18 +0000 (GMT)
+Message-ID: <1574877977.3551.5.camel@linux.ibm.com>
+Subject: Re: One question about trusted key of keyring in Linux kernel.
+From:   James Bottomley <jejb@linux.ibm.com>
+To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Date:   Wed, 27 Nov 2019 10:06:17 -0800
+In-Reply-To: <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1011
+ impostorscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
+ spamscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911270147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Nov 2019, syzbot wrote:
-
-> Hello,
+On Tue, 2019-11-26 at 07:32 +0000, Zhao, Shirley wrote:
+> Thanks for your feedback, Mimi. 
+> But the document of dracut can't solve my problem. 
 > 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> INFO: rcu detected stall in dummy_timer
+> I did more test these days and try to descript my question in more
+> detail. 
 > 
-> radio-si470x 5-1:0.0: non-zero urb status (-71)
-> radio-si470x 3-1:0.0: non-zero urb status (-71)
-> rcu: INFO: rcu_sched self-detected stall on CPU
-> rcu: 	1-....: (8213 ticks this GP) idle=4f6/1/0x4000000000000004  
+> In my scenario, the trusted key will be sealed into TPM with PCR
+> policy. 
+> And there are some related options in manual like 
+>        hash=         hash algorithm name as a string. For TPM 1.x the
+> only
+>                      allowed value is sha1. For TPM 2.x the allowed
+> values
+>                      are sha1, sha256, sha384, sha512 and sm3-256.
+>        policydigest= digest for the authorization policy. must be
+> calculated
+>                      with the same hash algorithm as specified by the
+> 'hash='
+>                      option.
+>        policyhandle= handle to an authorization policy session that
+> defines the
+>                      same policy and with the same hash algorithm as
+> was used to
+>                      seal the key. 
+> 
+> Here is my test step. 
+> Firstly, the pcr policy is generated as below: 
+> $ tpm2_createpolicy --policy-pcr --pcr-list sha256:7 --policy
+> pcr7_bin.policy > pcr7.policy
+> 
+> Pcr7.policy is the ascii hex of policy:
+> $ cat pcr7.policy
+> 321fbd28b60fcc23017d501b133bd5dbf2889814588e8a23510fe10105cb2cc9
+> 
+> Then generate the trusted key and configure policydigest and get the
+> key ID: 
+> $ keyctl add trusted kmk "new 32 keyhandle=0x81000001 hash=sha256
+> policydigest=`cat pcr7.policy`" @u
+> 874117045
+> 
+> Save the trusted key. 
+> $ keyctl pipe 874117045 > kmk.blob
+> 
+> Reboot and load the key. 
+> Start a auth session to generate the policy:
+> $ tpm2_startauthsession -S session.ctx
+> session-handle: 0x3000000
+> $ tpm2_pcrlist -L sha256:7 -o pcr7.sha256
+> $ tpm2_policypcr -S session.ctx -L sha256:7 -F pcr7.sha256 -f
+> pcr7.policy
+> policy-digest:
+> 0x321FBD28B60FCC23017D501B133BD5DBF2889814588E8A23510FE10105CB2CC9
+> 
+> Input the policy handle to load trusted key:
+> $ keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001
+> policyhandle=0x3000000" @u
+> add_key: Operation not permitted
+> 
+> The error should be policy check failed, because I use TPM command to
+> unseal directly with error of policy check failed. 
+> $ tpm2_unseal -c 0x81000001 -L sha256:7
+> ERROR on line: "81" in file: "./lib/log.h": Tss2_Sys_Unseal(0x99D) -
+> tpm:session(1):a policy check failed
+> ERROR on line: "213" in file: "tools/tpm2_unseal.c": Unseal failed!
+> ERROR on line: "166" in file: "tools/tpm2_tool.c": Unable to run
+> tpm2_unseal
 
-Almost the same as Oliver's patch, but this one stops when the 
-interrupt-IN URB gets an unrecognized error status.
+I think there's a miscommunication here: you're complaining about the
+error returned from a trusted key unseal operation that *should* fail,
+correct?  You think it should return a TPM error but instead it returns
+-EPERM.  That's completely correct: we translate all TPM errors into
+linux ones as we pass them up to userspace, so the best we can do is
+operation not permitted.
 
-Alan Stern
-
-#syz test: https://github.com/google/kasan.git 22be26f7
-
-Index: usb-devel/drivers/media/radio/si470x/radio-si470x-usb.c
-===================================================================
---- usb-devel.orig/drivers/media/radio/si470x/radio-si470x-usb.c
-+++ usb-devel/drivers/media/radio/si470x/radio-si470x-usb.c
-@@ -370,15 +370,14 @@ static void si470x_int_in_callback(struc
- 	unsigned char tmpbuf[3];
- 
- 	if (urb->status) {
--		if (urb->status == -ENOENT ||
-+		if (!(urb->status == -ENOENT ||
- 				urb->status == -ECONNRESET ||
--				urb->status == -ESHUTDOWN) {
--			return;
--		} else {
-+				urb->status == -ESHUTDOWN))
- 			dev_warn(&radio->intf->dev,
--			 "non-zero urb status (%d)\n", urb->status);
--			goto resubmit; /* Maybe we can recover. */
--		}
-+					"unrecognized urb status (%d)\n",
-+					urb->status);
-+		radio->int_in_running = 0;
-+		return;
- 	}
- 
- 	/* Sometimes the device returns len 0 packets */
-@@ -542,6 +541,8 @@ static int si470x_start_usb(struct si470
- 		radio->int_in_running = 0;
- 	}
- 	radio->status_rssi_auto_update = radio->int_in_running;
-+	if (retval < 0)
-+		return retval;
- 
- 	/* start radio */
- 	retval = si470x_start(radio);
-@@ -734,7 +735,8 @@ static int si470x_usb_driver_probe(struc
- 	/* start radio */
- 	retval = si470x_start_usb(radio);
- 	if (retval < 0)
--		goto err_buf;
-+		/* the urb may be running even after an error */
-+		goto err_all;
- 
- 	/* set initial frequency */
- 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
-@@ -749,7 +751,7 @@ static int si470x_usb_driver_probe(struc
- 
- 	return 0;
- err_all:
--	usb_kill_urb(radio->int_in_urb);
-+	usb_poison_urb(radio->int_in_urb);
- err_buf:
- 	kfree(radio->buffer);
- err_ctrl:
-@@ -824,7 +826,7 @@ static void si470x_usb_driver_disconnect
- 	mutex_lock(&radio->lock);
- 	v4l2_device_disconnect(&radio->v4l2_dev);
- 	video_unregister_device(&radio->videodev);
--	usb_kill_urb(radio->int_in_urb);
-+	usb_poison_urb(radio->int_in_urb);
- 	usb_set_intfdata(intf, NULL);
- 	mutex_unlock(&radio->lock);
- 	v4l2_device_put(&radio->v4l2_dev);
+James
 
