@@ -2,128 +2,142 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 654D6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACD0C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E0C206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:56:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574837794;
-	bh=kyXfm7AOEZ8Syg1jiA3cZuR2h8U5E3zuVBPHsT7+B1s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sox7Sm3J0BEW/OxtjpctXCgpI8txL9c548b3JVlf/ZcLHm3lJCtJf16w7aIJsEDZJ
-	 bHmRiTIgE3kxsM8AZEYuY+2/E30i+PQIfbLslhgupN2XpW6id1i/wUqLR7pTfXZOEK
-	 LQtMyW9Snv0KfogK6eGYOeEnx6Xy+AayjQVOb4Ok=
+	by mail.kernel.org (Postfix) with ESMTP id EF2AC207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:56:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbfK0G4d (ORCPT
+        id S1726537AbfK0G4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 01:56:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbfK0G4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 01:56:32 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 109E120665;
-        Wed, 27 Nov 2019 06:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574837791;
-        bh=kyXfm7AOEZ8Syg1jiA3cZuR2h8U5E3zuVBPHsT7+B1s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Lfnfzy4NPW0+4d6PcBHZS+myWitxFIrLLcDf67hUfyCKxlOrRdxZR28q2AOk41INa
-         oObBqgvBH4swW6AijumXLgcGMCqdZ6lG1ubPEnglbXMNldJdFpiUjHRqlNKXNDapUe
-         66V3dPiL6PFbqbeJXOUpQNbAT8gfQp7zVOy6h8+U=
-Date:   Wed, 27 Nov 2019 15:56:26 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, bristot@redhat.com,
-        jbaron@akamai.com, torvalds@linux-foundation.org,
-        tglx@linutronix.de, namit@vmware.com, hpa@zytor.com,
-        luto@kernel.org, ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        jeyu@kernel.org
-Subject: Re: [PATCH -tip 2/2] kprobes: Set unoptimized flag after
- unoptimizing code
-Message-Id: <20191127155626.5386bc3a25195cfd0fa82a08@kernel.org>
-In-Reply-To: <20191127061910.nbfmzds4k5wxorwz@ast-mbp.dhcp.thefacebook.com>
-References: <157483420094.25881.9190014521050510942.stgit@devnote2>
-        <157483422375.25881.13508326028469515760.stgit@devnote2>
-        <20191127061910.nbfmzds4k5wxorwz@ast-mbp.dhcp.thefacebook.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 27 Nov 2019 01:56:38 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42256 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726478AbfK0G4h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 01:56:37 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAR6plrJ138264
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 01:56:36 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxq4ecf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 01:56:36 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 27 Nov 2019 06:56:34 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 27 Nov 2019 06:56:29 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAR6uSmL44302394
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Nov 2019 06:56:28 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2F16711C054;
+        Wed, 27 Nov 2019 06:56:28 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 07AD911C04A;
+        Wed, 27 Nov 2019 06:56:27 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.8.105])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 27 Nov 2019 06:56:26 +0000 (GMT)
+Date:   Wed, 27 Nov 2019 08:56:25 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arch@vger.kernel.org, darren@stevens-zone.net,
+        mad skateman <madskateman@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        paulus@samba.org, rtd2@xtra.co.nz,
+        "contact@a-eon.com" <contact@a-eon.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        nsaenzjulienne@suse.de
+Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board
+ installed, unless RAM size limited to 3500M
+References: <20191121072943.GA24024@lst.de>
+ <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
+ <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de>
+ <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com>
+ <b3217742-2c0b-8447-c9ac-608b93265363@xenosoft.de>
+ <20191121180226.GA3852@lst.de>
+ <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
+ <20191125073923.GA30168@lst.de>
+ <4681f5fe-c095-15f5-9221-4b55e940bafc@xenosoft.de>
+ <20191126164026.GA8026@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126164026.GA8026@lst.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19112706-0012-0000-0000-0000036CCE06
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112706-0013-0000-0000-000021A875C1
+Message-Id: <20191127065624.GB16913@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-27_01:2019-11-26,2019-11-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0
+ impostorscore=0 phishscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911270055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019 22:19:11 -0800
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-
-> On Wed, Nov 27, 2019 at 02:57:04PM +0900, Masami Hiramatsu wrote:
-> > Fix to set unoptimized flag after confirming the code is completely
-> > unoptimized. Without this fix, when a kprobe hits the intermediate
-> > modified instruction (the first byte is replaced by int3, but
-> > latter bytes still be a jump address operand) while unoptimizing,
-> > it can return to the middle byte of the modified code. And it causes
-> > an invalid instruction exception in the kernel.
-> > 
-> > Usually, this is a rare case, but if we put a probe on the function
-> > called while text patching, it always causes a kernel panic as below.
-> > (text_poke() is used for patching the code in optprobe)
-> > 
-> >  # echo p text_poke+5 > kprobe_events
-> >  # echo 1 > events/kprobes/enable
-> >  # echo 0 > events/kprobes/enable
-> >  invalid opcode: 0000 [#1] PREEMPT SMP PTI
-> >  CPU: 7 PID: 137 Comm: kworker/7:1 Not tainted 5.4.0-rc8+ #29
-> >  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-> >  Workqueue: events kprobe_optimizer
-> >  RIP: 0010:text_poke+0x9/0x50
-> >  Code: 01 00 00 5b 5d 41 5c 41 5d c3 89 c0 0f b7 4c 02 fe 66 89 4c 05 fe e9 31 ff ff ff e8 71 ac 03 00 90 55 48 89 f5 53 cc 30 cb fd <1e> ec 08 8b 05 72 98 31 01 85 c0 75 11 48 83 c4 08 48 89 ee 48 89
-> >  RSP: 0018:ffffc90000343df0 EFLAGS: 00010686
-> >  RAX: 0000000000000000 RBX: ffffffff81025796 RCX: 0000000000000000
-> >  RDX: 0000000000000004 RSI: ffff88807c983148 RDI: ffffffff81025796
-> >  RBP: ffff88807c983148 R08: 0000000000000001 R09: 0000000000000000
-> >  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82284fe0
-> >  R13: ffff88807c983138 R14: ffffffff82284ff0 R15: 0ffff88807d9eee0
-> >  FS:  0000000000000000(0000) GS:ffff88807d9c0000(0000) knlGS:0000000000000000
-> >  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >  CR2: 000000000058158b CR3: 000000007b372000 CR4: 00000000000006a0
-> >  Call Trace:
-> >   arch_unoptimize_kprobe+0x22/0x28
-> >   arch_unoptimize_kprobes+0x39/0x87
-> >   kprobe_optimizer+0x6e/0x290
-> >   process_one_work+0x2a0/0x610
-> >   worker_thread+0x28/0x3d0
-> >   ? process_one_work+0x610/0x610
-> >   kthread+0x10d/0x130
-> >   ? kthread_park+0x80/0x80
-> >   ret_from_fork+0x3a/0x50
-> >  Modules linked in:
-> >  ---[ end trace 83b34b22a228711b ]---
-> > 
-> > This can happen even if we blacklist text_poke() and other functions,
-> > because there is a small time window which showing the intermediate
-> > code to other CPUs.
-> > 
-> > Fixes: 6274de4984a6 ("kprobes: Support delayed unoptimizing")
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+On Tue, Nov 26, 2019 at 05:40:26PM +0100, Christoph Hellwig wrote:
+> On Tue, Nov 26, 2019 at 12:26:38PM +0100, Christian Zigotzky wrote:
+> > Hello Christoph,
+> >
+> > The PCI TV card works with your patch! I was able to patch your Git kernel 
+> > with the patch above.
+> >
+> > I haven't found any error messages in the dmesg yet.
 > 
-> Awesome. It fixes the crash for me.
-> Tested-by: Alexei Starovoitov <ast@kernel.org>
+> Thanks.  Unfortunately this is a bit of a hack as we need to set
+> the mask based on runtime information like the magic FSL PCIe window.
+> Let me try to draft something better up, and thanks already for testing
+> this one!
 
-That's a good news :)
+Maybe we'll simply force bottom up allocation before calling
+swiotlb_init()? Anyway, it's the last memblock allocation.
 
-Thank you for testing!
+
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 62f74b1b33bd..771e6cf7e2b9 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -286,14 +286,15 @@ void __init mem_init(void)
+ 	/*
+ 	 * book3s is limited to 16 page sizes due to encoding this in
+ 	 * a 4-bit field for slices.
+ 	 */
+ 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
+ 
+ #ifdef CONFIG_SWIOTLB
++	memblock_set_bottom_up(true);
+ 	swiotlb_init(0);
+ #endif
+ 
+ 	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
+ 	set_max_mapnr(max_pfn);
+ 	memblock_free_all();
+ 
+ 
+
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Sincerely yours,
+Mike.
+
