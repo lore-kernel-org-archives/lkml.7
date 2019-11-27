@@ -2,152 +2,119 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE5BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EB6C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C390120678
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dYFuObAv"
+	by mail.kernel.org (Postfix) with ESMTP id 8AC3321774
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574887769;
+	bh=vm84ASlpradK3YRp36649IF0WvfGXEHeTtm8gY3B1AY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qeMxiypcN2jI81JPy8moRMPInIrVpKPuPKX/kEfpmueZoRdY95cuoMUNcrpNWOt3F
+	 5+Dcfc/ruCkfj89avFpmYxR8OL4J6FyTX3R6BluP85Gl4ceY+5ORf2Nw4joqwfQLPp
+	 Hq/NLHLSZZDHT4PMV/yuL/67Ktk2iwFJKNVsO1Ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbfK0UtY (ORCPT
+        id S1728243AbfK0Ut1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:49:24 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30491 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730224AbfK0UtU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:49:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730226AbfK0UtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 15:49:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574887759;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=lbtqSpEoKeUzhaseKNsML5ukqseola/LmF5zc1Zv4Dw=;
-        b=dYFuObAv6EroP5HgCLC8LzLLNvM50XABzXS3K4WLwdc7DXpb2Qofj4ticLvPunzJSaAWCO
-        Jipg+MNM2fi7F2uQD+4Ccsv5F7mCdlOuK8yhhraQmhVa1QvlfD1vW+Y3f1FOX7D5bXIQq2
-        l9JzzRdDFrrZqa1zTYFBflBzD8F6mes=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-190-1_vn4diuMaGIu8iL36k85w-1; Wed, 27 Nov 2019 15:49:15 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B75461800D52;
-        Wed, 27 Nov 2019 20:49:13 +0000 (UTC)
-Received: from [10.36.116.94] (ovpn-116-94.ams2.redhat.com [10.36.116.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2102560BE2;
-        Wed, 27 Nov 2019 20:49:11 +0000 (UTC)
-Subject: Re: [PATCH v1] mm/memory_hotplug: don't check the nid in
- find_(smallest|biggest)_section_pfn
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>
-References: <CE5C4BD6-FAA6-4439-B869-679D24C17298@lca.pw>
- <7D8F1E5C-5A39-4C76-AD2F-4D0954DB57F5@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <f2d5c2ed-b315-ee70-7d1e-b91d6d72a076@redhat.com>
-Date:   Wed, 27 Nov 2019 21:49:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        by mail.kernel.org (Postfix) with ESMTPSA id B875220678;
+        Wed, 27 Nov 2019 20:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574887759;
+        bh=vm84ASlpradK3YRp36649IF0WvfGXEHeTtm8gY3B1AY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eaRVgaB4NqfpZOUEwBYRqMZhT+6R0xXFmfJeFF4WtBoXcZf7sjfjWNeXtoh7xFLQ1
+         Birfn+i2JIAOvP1qpcVls8uNLYQa1L2UDpMZZ8hvAcjk6VPiTkRtk/kv0jl+b5/T0U
+         RjT4xPdPM5/8vOBpbSWV/2v64Eq0Pn+AhfLJk+CQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 082/211] mfd: mc13xxx-core: Fix PMIC shutdown when reading ADC values
+Date:   Wed, 27 Nov 2019 21:30:15 +0100
+Message-Id: <20191127203101.531647847@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
+References: <20191127203049.431810767@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <7D8F1E5C-5A39-4C76-AD2F-4D0954DB57F5@redhat.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 1_vn4diuMaGIu8iL36k85w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.11.19 20:52, David Hildenbrand wrote:
->=20
->=20
->> Am 27.11.2019 um 20:37 schrieb Qian Cai <cai@lca.pw>:
->>
->> =EF=BB=BF
->>
->>> On Nov 27, 2019, at 2:06 PM, David Hildenbrand <david@redhat.com> wrote=
-:
->>>
->>> The zone pointer is unique for every node. (in contrast to the zone ind=
-ex).
->>
->> I am not sure if it is worth optimizing there. The existing nid check lo=
-oks quite straight-forward and cheap.
->=20
-> I understand but strongly dislike your attitude towards code changes ;)
->=20
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-I think that came out wrong, let me rephrase:
+[ Upstream commit 55143439b7b501882bea9d95a54adfe00ffc79a3 ]
 
-This is not a performance optimization but a cleanup. Once you
-understood how zone pointers work, you immediately see why the nid
-checks are only here for legacy reasons (see "mm/memory_hotplug: we
-always have a zone in find_(smallest|biggest)_section_pfn" in linux-next).
+When trying to read any MC13892 ADC channel on a imx51-babbage board:
 
-(I am a friend of cleaning up and refactoring code to make it easier to
-understand, maintain and extend. I was assuming your mentality is to
-rather keeping code changes minimal if there is a chance to break things
-- I'm sorry if that assumption was wrong.)
+The MC13892 PMIC shutdowns completely.
 
---=20
-Thanks,
+After debugging this issue and comparing the MC13892 and MC13783
+initializations done in the vendor kernel, it was noticed that the
+CHRGRAWDIV bit of the ADC0 register was not being set.
 
-David / dhildenb
+This bit is set by default after power on, but the driver was
+clearing it.
+
+After setting this bit it is possible to read the ADC values correctly.
+
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+Tested-by: Chris Healy <cphealy@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mfd/mc13xxx-core.c  | 3 ++-
+ include/linux/mfd/mc13xxx.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
+index 6c16f170529f5..75d52034f89da 100644
+--- a/drivers/mfd/mc13xxx-core.c
++++ b/drivers/mfd/mc13xxx-core.c
+@@ -278,7 +278,8 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
+ 	if (ret)
+ 		goto out;
+ 
+-	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2;
++	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2 |
++	       MC13XXX_ADC0_CHRGRAWDIV;
+ 	adc1 = MC13XXX_ADC1_ADEN | MC13XXX_ADC1_ADTRIGIGN | MC13XXX_ADC1_ASC;
+ 
+ 	if (channel > 7)
+diff --git a/include/linux/mfd/mc13xxx.h b/include/linux/mfd/mc13xxx.h
+index 638222e43e489..93011c61aafd2 100644
+--- a/include/linux/mfd/mc13xxx.h
++++ b/include/linux/mfd/mc13xxx.h
+@@ -247,6 +247,7 @@ struct mc13xxx_platform_data {
+ #define MC13XXX_ADC0_TSMOD0		(1 << 12)
+ #define MC13XXX_ADC0_TSMOD1		(1 << 13)
+ #define MC13XXX_ADC0_TSMOD2		(1 << 14)
++#define MC13XXX_ADC0_CHRGRAWDIV		(1 << 15)
+ #define MC13XXX_ADC0_ADINC1		(1 << 16)
+ #define MC13XXX_ADC0_ADINC2		(1 << 17)
+ 
+-- 
+2.20.1
+
+
 
