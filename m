@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3ACC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AA3C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138692166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBAC21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574886890;
-	bh=0TzNGBE4evBN9ZgC26JWg/JkCXYW4d8ehuItIepx2+8=;
+	s=default; t=1574886896;
+	bh=g8qwpXtgl8IM5Jzu0ga/wmRPoMvRpo/KhSdJYLHxgnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rdzK8K/syEATnF4GMOgWPRJN9jqynHF1TTlw1viSmnivyrFEjORpGoPChVyjc8RFn
-	 FGsfms2xVO7I5ow4cGkDCBPlEaAUGdMe/t+WDtMOaeFPlyo/oc9m/xeBrr7Mo0udhL
-	 qu2yGNm6qFjaC05cH6PmQt0XmLOap4G2/NzcPpWs=
+	b=u3a0+XyybD/ORv1aRNtjinYiC6TGiWuPgL4uZMMU8T9cGkLW2AOnNSdE0YFR6fTwV
+	 7cgi0ks6xjT2LoIpUG36iy306Bn7DinPC+o+O2vIn2YaYdHOHCYFclbIddAT8Yc9Zh
+	 PrCYCnCyuGTEyJVMFfMvFfQjby3YNiGfAsTJCUx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfK0Ues (ORCPT
+        id S1727744AbfK0Uez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:34:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35294 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:34:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727701AbfK0Uep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:34:45 -0500
+        id S1727717AbfK0Ues (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:34:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53F3121569;
-        Wed, 27 Nov 2019 20:34:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0A6420866;
+        Wed, 27 Nov 2019 20:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574886884;
-        bh=0TzNGBE4evBN9ZgC26JWg/JkCXYW4d8ehuItIepx2+8=;
+        s=default; t=1574886887;
+        bh=g8qwpXtgl8IM5Jzu0ga/wmRPoMvRpo/KhSdJYLHxgnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DjDoK6brgLSg79EnDUatGzo2+niQea0fUD9LlhoIN+Scu/7qpMDfYOG/R8ABwFyPa
-         I2jtyqsM/5/6XEGBUqHVlBOa5B9Y2UDxCpmrbEV4ooWd1vDjlSc2JWhHdkOlLj+Nh4
-         5VLI7Yf6Zulv+TR2fIe9AyyQPKfWNSNMJqRlEV+A=
+        b=0Za0jY7HLBUdDYq2eNYrKsZs+tdZKFWPUH+9CbVKeO4lrh5J7tXsxavH3/STJJ8fm
+         vIW4wyMw86LzC5rRU+74AQYEoF9+m9PJ9j1TiWOM/YAKvnKu7xfIDUlpx2iNMa0mNU
+         e787MxDcDnXz/PAX211p5W9OUeRSSDQNoFfO3T1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 023/132] gfs2: Fix marking bitmaps non-full
-Date:   Wed, 27 Nov 2019 21:30:14 +0100
-Message-Id: <20191127202920.080045665@linuxfoundation.org>
+Subject: [PATCH 4.4 032/132] misc: mic: fix a DMA pool free failure
+Date:   Wed, 27 Nov 2019 21:30:23 +0100
+Message-Id: <20191127202928.454271515@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,54 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Wenwen Wang <wang6495@umn.edu>
 
-[ Upstream commit ec23df2b0cf3e1620f5db77972b7fb735f267eff ]
+[ Upstream commit 6b995f4eec34745f6cb20d66d5277611f0b3c3fa ]
 
-Reservations in gfs can span multiple gfs2_bitmaps (but they won't span
-multiple resource groups).  When removing a reservation, we want to
-clear the GBF_FULL flags of all involved gfs2_bitmaps, not just that of
-the first bitmap.
+In _scif_prog_signal(), the boolean variable 'x100' is used to indicate
+whether the MIC Coprocessor is X100. If 'x100' is true, the status
+descriptor will be used to write the value to the destination. Otherwise, a
+DMA pool will be allocated for this purpose. Specifically, if the DMA pool
+is allocated successfully, two memory addresses will be returned. One is
+for the CPU and the other is for the device to access the DMA pool. The
+former is stored to the variable 'status' and the latter is stored to the
+variable 'src'. After the allocation, the address in 'src' is saved to
+'status->src_dma_addr', which is actually in the DMA pool, and 'src' is
+then modified.
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Steven Whitehouse <swhiteho@redhat.com>
+Later on, if an error occurs, the execution flow will transfer to the label
+'dma_fail', which will check 'x100' and free up the allocated DMA pool if
+'x100' is false. The point here is that 'status->src_dma_addr' is used for
+freeing up the DMA pool. As mentioned before, 'status->src_dma_addr' is in
+the DMA pool. And thus, the device is able to modify this data. This can
+potentially cause failures when freeing up the DMA pool because of the
+modified device address.
+
+This patch avoids the above issue by using the variable 'src' (with
+necessary calculation) to free up the DMA pool.
+
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/rgrp.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/misc/mic/scif/scif_fence.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
-index e632006a52df6..2736e9cfc2ee9 100644
---- a/fs/gfs2/rgrp.c
-+++ b/fs/gfs2/rgrp.c
-@@ -645,7 +645,10 @@ static void __rs_deltree(struct gfs2_blkreserv *rs)
- 	RB_CLEAR_NODE(&rs->rs_node);
- 
- 	if (rs->rs_free) {
--		struct gfs2_bitmap *bi = rbm_bi(&rs->rs_rbm);
-+		u64 last_block = gfs2_rbm_to_block(&rs->rs_rbm) +
-+				 rs->rs_free - 1;
-+		struct gfs2_rbm last_rbm = { .rgd = rs->rs_rbm.rgd, };
-+		struct gfs2_bitmap *start, *last;
- 
- 		/* return reserved blocks to the rgrp */
- 		BUG_ON(rs->rs_rbm.rgd->rd_reserved < rs->rs_free);
-@@ -656,7 +659,13 @@ static void __rs_deltree(struct gfs2_blkreserv *rs)
- 		   it will force the number to be recalculated later. */
- 		rgd->rd_extfail_pt += rs->rs_free;
- 		rs->rs_free = 0;
--		clear_bit(GBF_FULL, &bi->bi_flags);
-+		if (gfs2_rbm_from_block(&last_rbm, last_block))
-+			return;
-+		start = rbm_bi(&rs->rs_rbm);
-+		last = rbm_bi(&last_rbm);
-+		do
-+			clear_bit(GBF_FULL, &start->bi_flags);
-+		while (start++ != last);
- 	}
+diff --git a/drivers/misc/mic/scif/scif_fence.c b/drivers/misc/mic/scif/scif_fence.c
+index 7f2c96f570667..6821d9d415854 100644
+--- a/drivers/misc/mic/scif/scif_fence.c
++++ b/drivers/misc/mic/scif/scif_fence.c
+@@ -271,7 +271,7 @@ static int _scif_prog_signal(scif_epd_t epd, dma_addr_t dst, u64 val)
+ dma_fail:
+ 	if (!x100)
+ 		dma_pool_free(ep->remote_dev->signal_pool, status,
+-			      status->src_dma_addr);
++			      src - offsetof(struct scif_status, val));
+ alloc_fail:
+ 	return err;
  }
- 
 -- 
 2.20.1
 
