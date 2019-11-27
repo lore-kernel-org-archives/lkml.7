@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE470C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B977C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A3521582
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012AC2068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888140;
-	bh=MTXxrypDEJvyoxSioOfbN3iV+2WTuL9ZZHwwufuetbs=;
+	s=default; t=1574888144;
+	bh=0YtwBp1f+Cgq7P3s/HVzv1YEHY2F4J8cu2TOkq3oFFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MEPlOmEdWqmeim2YTAAGzq9AQLtP98k2FZ/yG/ZCfzF/5zQ/y2Deoaj7HVAHyr0nM
-	 VSVueJd65dP34r1AbGffthSeoC85oyGJtvsWWt9PzUfvkom2Lopq4bMjupFQ+QgN5d
-	 GXnzgYJuqOaQssXmhuGQ2/nFZnfEiqkdeDdPV17M=
+	b=VIDzvvhoqBJLt9+eUUV1K75MQzM9NGcqPzX3jf24dL3dz6VIeKdr239oOIIGdmq14
+	 RE6VWe6d7SF8hpXU3noUHS8RGOMNprLKm9DQ8NAdT6WFPCiBFeLn4ytJ5McsQ1OZv8
+	 audRfnjBN8pXA1UV5jsNOX9ORkLvfWjheXn0t1M4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730977AbfK0Uzj (ORCPT
+        id S1730678AbfK0Uzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:55:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46058 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:55:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730965AbfK0Uzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:55:32 -0500
+        id S1730024AbfK0Uzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:55:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5167E21582;
-        Wed, 27 Nov 2019 20:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C46222154A;
+        Wed, 27 Nov 2019 20:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888131;
-        bh=MTXxrypDEJvyoxSioOfbN3iV+2WTuL9ZZHwwufuetbs=;
+        s=default; t=1574888139;
+        bh=0YtwBp1f+Cgq7P3s/HVzv1YEHY2F4J8cu2TOkq3oFFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LIN3u2tpU3UrqZN01O5YzV0vie1tf0x9UFcaYzIi3Y7mNx4ndeJM0f74cJVLN2tmB
-         CXY0Pf0u/dgzqhyapkgsogkcR+gpAnVx0HVH4WlTZHky9Ol2rgLILKfr8piWVIx9aU
-         AexofUUC9lVLcF5cGpmrnwNYWmr4f1v3Rkg0SvCc=
+        b=zs01PbjGTKSzOmartOUqOsSEmIT9EyYbYF7E/Dr4ndbF5S4FsM+pbWhRJtWhMP/qC
+         5iHU+vdIRedCg5wKgrQs5eP4yB0F0hGYEoR2y864EdKISGv5nsfacTRQznGf/HBJIh
+         VPZZ/M47IxvocWRm9CeQEdy6ebHgF93A4H09CjHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 017/306] mm/ksm.c: dont WARN if page is still mapped in remove_stable_node()
-Date:   Wed, 27 Nov 2019 21:27:47 +0100
-Message-Id: <20191127203115.954898981@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 4.19 020/306] drm/i915/userptr: Try to acquire the page lock around set_page_dirty()
+Date:   Wed, 27 Nov 2019 21:27:50 +0100
+Message-Id: <20191127203116.175503395@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,63 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Ryabinin <aryabinin@virtuozzo.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 9a63236f1ad82d71a98aa80320b6cb618fb32f44 upstream.
+commit 2d691aeca4aecbb8d0414a777a46981a8e142b05 upstream.
 
-It's possible to hit the WARN_ON_ONCE(page_mapped(page)) in
-remove_stable_node() when it races with __mmput() and squeezes in
-between ksm_exit() and exit_mmap().
+set_page_dirty says:
 
-  WARNING: CPU: 0 PID: 3295 at mm/ksm.c:888 remove_stable_node+0x10c/0x150
+	For pages with a mapping this should be done under the page lock
+	for the benefit of asynchronous memory errors who prefer a
+	consistent dirty state. This rule can be broken in some special
+	cases, but should be better not to.
 
-  Call Trace:
-   remove_all_stable_nodes+0x12b/0x330
-   run_store+0x4ef/0x7b0
-   kernfs_fop_write+0x200/0x420
-   vfs_write+0x154/0x450
-   ksys_write+0xf9/0x1d0
-   do_syscall_64+0x99/0x510
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Under those rules, it is only safe for us to use the plain set_page_dirty
+calls for shmemfs/anonymous memory. Userptr may be used with real
+mappings and so needs to use the locked version (set_page_dirty_lock).
 
-Remove the warning as there is nothing scary going on.
+However, following a try_to_unmap() we may want to remove the userptr and
+so call put_pages(). However, try_to_unmap() acquires the page lock and
+so we must avoid recursively locking the pages ourselves -- which means
+that we cannot safely acquire the lock around set_page_dirty(). Since we
+can't be sure of the lock, we have to risk skip dirtying the page, or
+else risk calling set_page_dirty() without a lock and so risk fs
+corruption.
 
-Link: http://lkml.kernel.org/r/20191119131850.5675-1-aryabinin@virtuozzo.com
-Fixes: cbf86cfe04a6 ("ksm: remove old stable nodes more thoroughly")
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Acked-by: Hugh Dickins <hughd@google.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112012
+Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191111133205.11590-1-chris@chris-wilson.co.uk
+(cherry picked from commit 0d4bbe3d407f79438dc4f87943db21f7134cfc65)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+(cherry picked from commit cee7fb437edcdb2f9f8affa959e274997f5dca4d)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/ksm.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/i915/i915_gem_userptr.c |   22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -870,13 +870,13 @@ static int remove_stable_node(struct sta
- 		return 0;
- 	}
+--- a/drivers/gpu/drm/i915/i915_gem_userptr.c
++++ b/drivers/gpu/drm/i915/i915_gem_userptr.c
+@@ -691,8 +691,28 @@ i915_gem_userptr_put_pages(struct drm_i9
+ 	i915_gem_gtt_finish_pages(obj, pages);
  
--	if (WARN_ON_ONCE(page_mapped(page))) {
--		/*
--		 * This should not happen: but if it does, just refuse to let
--		 * merge_across_nodes be switched - there is no need to panic.
--		 */
--		err = -EBUSY;
--	} else {
-+	/*
-+	 * Page could be still mapped if this races with __mmput() running in
-+	 * between ksm_exit() and exit_mmap(). Just refuse to let
-+	 * merge_across_nodes/max_page_sharing be switched.
-+	 */
-+	err = -EBUSY;
-+	if (!page_mapped(page)) {
- 		/*
- 		 * The stable node did not yet appear stale to get_ksm_page(),
- 		 * since that allows for an unmapped ksm page to be recognized
+ 	for_each_sgt_page(page, sgt_iter, pages) {
+-		if (obj->mm.dirty)
++		if (obj->mm.dirty && trylock_page(page)) {
++			/*
++			 * As this may not be anonymous memory (e.g. shmem)
++			 * but exist on a real mapping, we have to lock
++			 * the page in order to dirty it -- holding
++			 * the page reference is not sufficient to
++			 * prevent the inode from being truncated.
++			 * Play safe and take the lock.
++			 *
++			 * However...!
++			 *
++			 * The mmu-notifier can be invalidated for a
++			 * migrate_page, that is alreadying holding the lock
++			 * on the page. Such a try_to_unmap() will result
++			 * in us calling put_pages() and so recursively try
++			 * to lock the page. We avoid that deadlock with
++			 * a trylock_page() and in exchange we risk missing
++			 * some page dirtying.
++			 */
+ 			set_page_dirty(page);
++			unlock_page(page);
++		}
+ 
+ 		mark_page_accessed(page);
+ 		put_page(page);
 
 
