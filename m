@@ -2,486 +2,665 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7D1C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42560C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E6020684
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E93B220684
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 05:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="TOMvLyVW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lRvPsUrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbfK0FLs (ORCPT
+        id S1726281AbfK0FPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 00:11:48 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45403 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfK0FLs (ORCPT
+        Wed, 27 Nov 2019 00:15:49 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54426 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfK0FPt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 00:11:48 -0500
-Received: by mail-pl1-f194.google.com with SMTP id w7so9182043plz.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 21:11:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=3WUZxNq/iUK4LqDCwROiTaUO/Kf6cWdZbuCr5MlpkgY=;
-        b=TOMvLyVWWpSppZapKy91zhWlqSeGklWcw5WyFHKA9sh5SXIhBwvsCLx48XeEG8Zj71
-         pdO2Axp4rnZCvUDLT6eLzrm6nZM0UHzDqYqoOgMgXy6KClk9Xfr8ljoH7WnW2k3dIfUU
-         Ujq+xA4F2V5mD64JYyZv7/zunRj8fEx6tvO+r++7M+Cd0+S57tSygw+4QEK23CjZ1Sbh
-         PTdLqGV/fHOUtDr6p4LOO90hYQ7+Zx/PUzEbYSG96VpBs529byKt6a8uupjEfbgDSUXb
-         coIA4H6QzxhXRb2BjHtV/cM6CWWbJDMQAKGA7+Nqo0p1tRhL82J7Eb0FNIOYuLwZ0Lgl
-         DeMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=3WUZxNq/iUK4LqDCwROiTaUO/Kf6cWdZbuCr5MlpkgY=;
-        b=WlPJjxb/3gLkxvn2j4diAGGsQaT3LRfdjgu1SrG879qF8+XQAzXldEVaRKW4BX46ek
-         4oc1rB2XMXqRG1NSabpJ20xRiytOXJNuemErOdX+uyqPkegTxRzsLjrzecw+YqAsF1Lx
-         /FVrFX1v7V//aC7r8uV62PUJLl9S1634lwM9/ALRPe1kTen7ewgWAS70COszYtec9D2Q
-         r1r3ejWQxIO1+Tvqfr/niMG0rO7wwogiaYDCgk32HnZog+bJhj0JfSqKC8YLk//Ay1Wm
-         pAsYrglxhftTWTOjC4ZYmmS6DLvLkxYD5nidwsRPmXpoCmWqabM8k50nG37lSBMBrixa
-         kePg==
-X-Gm-Message-State: APjAAAW9gZPxT0/pfFVHuFFCi7g/X3T0IFM7wet/VyFVOO39tvNbJGrW
-        DIdZbtvIHn1vmqUgTTQJ7XdLwg==
-X-Google-Smtp-Source: APXvYqx6h2w/JtfYH+geZm4TGKlsTuoAsKQ6Jt/TjbNJCmPIJr/k3aSXPBht25xi7Qv5yjMPUsh34Q==
-X-Received: by 2002:a17:902:24b:: with SMTP id 69mr2080192plc.203.1574831504966;
-        Tue, 26 Nov 2019 21:11:44 -0800 (PST)
-Received: from ?IPv6:2600:380:491b:510:a048:61f:d592:c4b4? ([2600:380:491b:510:a048:61f:d592:c4b4])
-        by smtp.gmail.com with ESMTPSA id e7sm14044590pfi.29.2019.11.26.21.11.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Nov 2019 21:11:43 -0800 (PST)
-To:     io-uring <io-uring@vger.kernel.org>
-Cc:     Jann Horn <jannh@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH RFC] signalfd: add support for SFD_TASK
-Message-ID: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
-Date:   Tue, 26 Nov 2019 22:11:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 27 Nov 2019 00:15:49 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAR5F798043309;
+        Tue, 26 Nov 2019 23:15:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574831707;
+        bh=5mw5IZBQ9/u6YSKJZl5UBpozZsePr7gukMNlthKJiR4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=lRvPsUrp6rfNIes3P1N4YgCT6IW4qcaQG/YxLkUWXYeKlJxO/yripY4hXUCCKTzEe
+         hZzEv8elIlxxl0yXuIoNxXRTtGTTOOdBCIjCKsB+VUjsG9849gElb7iQgLu4G0L66K
+         nNXvLvAAUno3q4ejyXZwui8abZhgMSZ1NnUQ6opQ=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAR5F7gX064172
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 26 Nov 2019 23:15:07 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 26
+ Nov 2019 23:15:07 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 26 Nov 2019 23:15:06 -0600
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAR5EsK4100868;
+        Tue, 26 Nov 2019 23:14:55 -0600
+Subject: Re: [PATCH 2/5] pci: endpoint: add support to handle multiple base
+ for mapping outbound memory
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        <linux-pci@vger.kernel.org>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <linux-rockchip@lists.infradead.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <8564ee76-1da6-9b7c-01f2-7cda0cd3b3dc@ti.com>
+Date:   Wed, 27 Nov 2019 10:44:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------87DB3E5ABFD4EB218E95005E"
+In-Reply-To: <20191106193609.19645-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------87DB3E5ABFD4EB218E95005E
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi Prabhakar,
 
-I posted this a few weeks back, took another look at it and refined it a
-bit. I'd like some input on the viability of this approach.
+On 07/11/19 1:06 AM, Lad Prabhakar wrote:
+> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> rcar pcie controller has support to map multiple memory regions
+> for mapping the outbound memory in local system, this feature
+> inspires to add support for handling multiple memory bases in
+> endpoint framework. In case of multiple memory regions only chunk
+> or complete region can be mapped and this window needs to be
+> passed to the controller driver.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Cc: <linux-rockchip@lists.infradead.org>
+> Cc: Shawn Lin <shawn.lin@rock-chips.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Tom Joseph <tjoseph@cadence.com>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  30 ++-
+>  drivers/pci/controller/pcie-cadence-ep.c      |  11 +-
+>  drivers/pci/controller/pcie-rockchip-ep.c     |  13 +-
+>  drivers/pci/endpoint/functions/pci-epf-test.c |  29 +--
+>  drivers/pci/endpoint/pci-epc-core.c           |   7 +-
+>  drivers/pci/endpoint/pci-epc-mem.c            | 189 ++++++++++++++----
+>  include/linux/pci-epc.h                       |  43 ++--
+>  7 files changed, 234 insertions(+), 88 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 3dd2e2697294..8d23c20b9afd 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -195,7 +195,7 @@ static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, u8 func_no,
+>  }
+>  
+>  static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no,
+> -			       phys_addr_t addr,
+> +			       phys_addr_t addr, int window,
+>  			       u64 pci_addr, size_t size)
+>  {
+>  	int ret;
+> @@ -367,6 +367,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	unsigned int aligned_offset;
+>  	u16 msg_ctrl, msg_data;
+>  	u32 msg_addr_lower, msg_addr_upper, reg;
+> +	int window = PCI_EPC_DEFAULT_WINDOW;
+>  	u64 msg_addr;
+>  	bool has_upper;
+>  	int ret;
+> @@ -390,11 +391,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  		reg = ep->msi_cap + PCI_MSI_DATA_32;
+>  		msg_data = dw_pcie_readw_dbi(pci, reg);
+>  	}
+> -	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
+> +	aligned_offset = msg_addr_lower & (epc->mem[window]->page_size - 1);
+>  	msg_addr = ((u64)msg_addr_upper) << 32 |
+>  			(msg_addr_lower & ~aligned_offset);
+> -	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+> -				  epc->mem->page_size);
+> +	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, window,
+> +				  msg_addr, epc->mem[window]->page_size);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -416,6 +417,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	u32 reg, msg_data, vec_ctrl;
+>  	u64 tbl_addr, msg_addr, reg_u64;
+>  	void __iomem *msix_tbl;
+> +	int window = PCI_EPC_DEFAULT_WINDOW;
+>  	int ret;
+>  
+>  	reg = ep->msix_cap + PCI_MSIX_TABLE;
+> @@ -452,8 +454,8 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  		return -EPERM;
+>  	}
+>  
+> -	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+> -				  epc->mem->page_size);
+> +	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, window,
+> +				  msg_addr, epc->mem[window]->page_size);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -466,10 +468,11 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  
+>  void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>  {
+> +	int window = PCI_EPC_DEFAULT_WINDOW;
+>  	struct pci_epc *epc = ep->epc;
+>  
+>  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+> -			      epc->mem->page_size);
+> +			      epc->mem[window]->page_size);
+>  
+>  	pci_epc_mem_exit(epc);
+>  }
+> @@ -499,9 +502,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	u32 reg;
+>  	void *addr;
+>  	u8 hdr_type;
+> +	int window;
+>  	unsigned int nbars;
+>  	unsigned int offset;
+>  	struct pci_epc *epc;
+> +	size_t msi_page_size;
+> +	struct pci_epc_mem_window mem_window;
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	struct device *dev = pci->dev;
+>  	struct device_node *np = dev->of_node;
+> @@ -574,15 +580,17 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	if (ret < 0)
+>  		epc->max_functions = 1;
+>  
+> -	ret = __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
+> -				 ep->page_size);
+> +	mem_window.phys_base = ep->phys_base;
+> +	mem_window.size = ep->addr_size;
+> +	ret = __pci_epc_mem_init(epc, &mem_window, 1, ep->page_size);
+>  	if (ret < 0) {
+>  		dev_err(dev, "Failed to initialize address space\n");
+>  		return ret;
+>  	}
+>  
+> -	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
+> -					     epc->mem->page_size);
+> +	msi_page_size = epc->mem[PCI_EPC_DEFAULT_WINDOW]->page_size;
+> +	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys, &window,
+> +					     msi_page_size);
+>  	if (!ep->msi_mem) {
+>  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>  		return -ENOMEM;
+> diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+> index def7820cb824..7991b38a5350 100644
+> --- a/drivers/pci/controller/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/pcie-cadence-ep.c
+> @@ -172,7 +172,7 @@ static void cdns_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+>  }
+>  
+>  static int cdns_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, phys_addr_t addr,
+> -				 u64 pci_addr, size_t size)
+> +				 int window, u64 pci_addr, size_t size)
+>  {
+>  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct cdns_pcie *pcie = &ep->pcie;
+> @@ -434,12 +434,14 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct device_node *np = dev->of_node;
+> +	struct pci_epc_mem_window mem_window;
+>  	struct cdns_pcie_ep *ep;
+>  	struct cdns_pcie *pcie;
+>  	struct pci_epc *epc;
+>  	struct resource *res;
+>  	int ret;
+>  	int phy_count;
+> +	int window;
+>  
+>  	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+>  	if (!ep)
+> @@ -502,15 +504,16 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+>  	if (of_property_read_u8(np, "max-functions", &epc->max_functions) < 0)
+>  		epc->max_functions = 1;
+>  
+> -	ret = pci_epc_mem_init(epc, pcie->mem_res->start,
+> -			       resource_size(pcie->mem_res));
+> +	mem_window.phys_base = pcie->mem_res->start;
+> +	mem_window.size = resource_size(pcie->mem_res);
+> +	ret = pci_epc_mem_init(epc, &mem_window, 1);
+>  	if (ret < 0) {
+>  		dev_err(dev, "failed to initialize the memory space\n");
+>  		goto err_init;
+>  	}
+>  
+>  	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+> -						  SZ_128K);
+> +						  &window, SZ_128K);
+>  	if (!ep->irq_cpu_addr) {
+>  		dev_err(dev, "failed to reserve memory space for MSI\n");
+>  		ret = -ENOMEM;
+> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> index d743b0a48988..d59e85c8d319 100644
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -256,8 +256,8 @@ static void rockchip_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+>  }
+>  
+>  static int rockchip_pcie_ep_map_addr(struct pci_epc *epc, u8 fn,
+> -				     phys_addr_t addr, u64 pci_addr,
+> -				     size_t size)
+> +				     phys_addr_t addr, int window,
+> +				     u64 pci_addr, size_t size)
+>  {
+>  	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct rockchip_pcie *pcie = &ep->rockchip;
+> @@ -562,11 +562,13 @@ static const struct of_device_id rockchip_pcie_ep_of_match[] = {
+>  
+>  static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+>  {
+> +	struct pci_epc_mem_window mem_window;
+>  	struct device *dev = &pdev->dev;
+>  	struct rockchip_pcie_ep *ep;
+>  	struct rockchip_pcie *rockchip;
+>  	struct pci_epc *epc;
+>  	size_t max_regions;
+> +	int window;
+>  	int err;
+>  
+>  	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+> @@ -614,15 +616,16 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+>  	/* Only enable function 0 by default */
+>  	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
+>  
+> -	err = pci_epc_mem_init(epc, rockchip->mem_res->start,
+> -			       resource_size(rockchip->mem_res));
+> +	mem_window.phys_base = rockchip->mem_res->start;
+> +	mem_window.size = resource_size(rockchip->mem_res);
+> +	err = pci_epc_mem_init(epc, &mem_window, 1);
+>  	if (err < 0) {
+>  		dev_err(dev, "failed to initialize the memory space\n");
+>  		goto err_uninit_port;
+>  	}
+>  
+>  	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+> -						  SZ_128K);
+> +						  &window, SZ_128K);
+>  	if (!ep->irq_cpu_addr) {
+>  		dev_err(dev, "failed to reserve memory space for MSI\n");
+>  		err = -ENOMEM;
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 5d74f81ddfe4..475228011703 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -84,8 +84,10 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>  	struct pci_epc *epc = epf->epc;
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>  	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> +	int window;
+>  
+> -	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
+> +	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr,
+> +					  &window, reg->size);
+>  	if (!src_addr) {
+>  		dev_err(dev, "Failed to allocate source address\n");
+>  		reg->status = STATUS_SRC_ADDR_INVALID;
+> @@ -93,15 +95,16 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>  		goto err;
+>  	}
+>  
+> -	ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, reg->src_addr,
+> -			       reg->size);
+> +	ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, window,
+> +			       reg->src_addr, reg->size);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to map source address\n");
+>  		reg->status = STATUS_SRC_ADDR_INVALID;
+>  		goto err_src_addr;
+>  	}
+>  
+> -	dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr, reg->size);
+> +	dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr,
+> +					  &window, reg->size);
+>  	if (!dst_addr) {
+>  		dev_err(dev, "Failed to allocate destination address\n");
+>  		reg->status = STATUS_DST_ADDR_INVALID;
+> @@ -109,8 +112,8 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>  		goto err_src_map_addr;
+>  	}
+>  
+> -	ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, reg->dst_addr,
+> -			       reg->size);
+> +	ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, window,
+> +			       reg->dst_addr, reg->size);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to map destination address\n");
+>  		reg->status = STATUS_DST_ADDR_INVALID;
+> @@ -146,8 +149,9 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>  	struct pci_epc *epc = epf->epc;
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>  	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> +	int window;
+>  
+> -	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+> +	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, &window, reg->size);
+>  	if (!src_addr) {
+>  		dev_err(dev, "Failed to allocate address\n");
+>  		reg->status = STATUS_SRC_ADDR_INVALID;
+> @@ -155,8 +159,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>  		goto err;
+>  	}
+>  
+> -	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->src_addr,
+> -			       reg->size);
+> +	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, window,
+> +			       reg->src_addr, reg->size);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to map address\n");
+>  		reg->status = STATUS_SRC_ADDR_INVALID;
+> @@ -193,13 +197,14 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>  	void __iomem *dst_addr;
+>  	void *buf;
+>  	phys_addr_t phys_addr;
+> +	int window;
+>  	struct pci_epf *epf = epf_test->epf;
+>  	struct device *dev = &epf->dev;
+>  	struct pci_epc *epc = epf->epc;
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>  	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+>  
+> -	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+> +	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, &window, reg->size);
+>  	if (!dst_addr) {
+>  		dev_err(dev, "Failed to allocate address\n");
+>  		reg->status = STATUS_DST_ADDR_INVALID;
+> @@ -207,8 +212,8 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>  		goto err;
+>  	}
+>  
+> -	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->dst_addr,
+> -			       reg->size);
+> +	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, window,
+> +			       reg->dst_addr, reg->size);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to map address\n");
+>  		reg->status = STATUS_DST_ADDR_INVALID;
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index 2091508c1620..289c266c2d90 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -358,13 +358,15 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
+>   * @epc: the EPC device on which address is allocated
+>   * @func_no: the endpoint function number in the EPC device
+>   * @phys_addr: physical address of the local system
+> + * @window: index to the window region where PCI address will be mapped
+>   * @pci_addr: PCI address to which the physical address should be mapped
+>   * @size: the size of the allocation
+>   *
+>   * Invoke to map CPU address with PCI address.
+>   */
+>  int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+> -		     phys_addr_t phys_addr, u64 pci_addr, size_t size)
+> +		     phys_addr_t phys_addr, int window,
+> +		     u64 pci_addr, size_t size)
+>  {
+>  	int ret;
+>  	unsigned long flags;
+> @@ -376,7 +378,8 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+>  		return 0;
+>  
+>  	spin_lock_irqsave(&epc->lock, flags);
+> -	ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr, size);
+> +	ret = epc->ops->map_addr(epc, func_no, phys_addr,
+> +				 window, pci_addr, size);
+>  	spin_unlock_irqrestore(&epc->lock, flags);
+>  
+>  	return ret;
+> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> index d2b174ce15de..c955f2c97944 100644
+> --- a/drivers/pci/endpoint/pci-epc-mem.c
+> +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> @@ -39,56 +39,77 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+>   * __pci_epc_mem_init() - initialize the pci_epc_mem structure
+>   * @epc: the EPC device that invoked pci_epc_mem_init
+>   * @phys_base: the physical address of the base
+> - * @size: the size of the address space
+> + * @num_windows: number of windows device supports
 
-A new signalfd setup flag is added, SFD_TASK. This is only valid if used
-with SFD_CLOEXEC. If set, the task setting up the signalfd descriptor is
-remembered in the signalfd context, and will be the one we use for
-checking signals in the poll/read handlers in signalfd.
+struct pci_epc_mem_window is missing here.
+>   * @page_size: size of each page
+>   *
+>   * Invoke to initialize the pci_epc_mem structure used by the
+>   * endpoint functions to allocate mapped PCI address.
+>   */
+> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
+> -		       size_t page_size)
+> +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *windows,
+> +		       int num_windows, size_t page_size)
+>  {
+> -	int ret;
+> -	struct pci_epc_mem *mem;
+> -	unsigned long *bitmap;
+> +	struct pci_epc_mem *mem = NULL;
+> +	unsigned long *bitmap = NULL;
+>  	unsigned int page_shift;
+> -	int pages;
+>  	int bitmap_size;
+> +	int pages;
+> +	int ret;
+> +	int i;
+> +
+> +	epc->mem_windows = 0;
+> +
+> +	if (!windows)
+> +		return -EINVAL;
+> +
+> +	if (num_windows <= 0)
+> +		return -EINVAL;
+>  
+>  	if (page_size < PAGE_SIZE)
+>  		page_size = PAGE_SIZE;
+>  
+>  	page_shift = ilog2(page_size);
+> -	pages = size >> page_shift;
+> -	bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+>  
+> -	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> -	if (!mem) {
+> -		ret = -ENOMEM;
+> -		goto err;
+> -	}
+> +	epc->mem = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
+> +	if (!epc->mem)
+> +		return -EINVAL;
+>  
+> -	bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> -	if (!bitmap) {
+> -		ret = -ENOMEM;
+> -		goto err_mem;
+> -	}
+> +	for (i = 0; i < num_windows; i++) {
+> +		pages = windows[i].phys_base >> page_shift;
+> +		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+>  
+> -	mem->bitmap = bitmap;
+> -	mem->phys_base = phys_base;
+> -	mem->page_size = page_size;
+> -	mem->pages = pages;
+> -	mem->size = size;
+> +		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> +		if (!mem) {
+> +			ret = -ENOMEM;
+> +			goto err_mem;
+> +		}
+>  
+> -	epc->mem = mem;
+> +		bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> +		if (!bitmap) {
+> +			ret = -ENOMEM;
+> +			goto err_mem;
+> +		}
+> +
+> +		mem->bitmap = bitmap;
+> +		mem->window.phys_base = windows[i].phys_base;
+> +		mem->page_size = page_size;
+> +		mem->pages = pages;
+> +		mem->window.size = windows[i].size;
+> +		mem->window.map_size = 0;
+> +
+> +		epc->mem[i] = mem;
+> +	}
+> +	epc->mem_windows = num_windows;
+>  
+>  	return 0;
+>  
+>  err_mem:
+> -	kfree(mem);
+> +	for (; i >= 0; i--) {
+> +		kfree(mem->bitmap);
+> +		kfree(epc->mem[i]);
+> +	}
+> +	kfree(epc->mem);
+>  
+> -err:
+> -return ret;
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+>  
+> @@ -101,48 +122,126 @@ EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+>   */
+>  void pci_epc_mem_exit(struct pci_epc *epc)
+>  {
+> -	struct pci_epc_mem *mem = epc->mem;
+> +	struct pci_epc_mem *mem;
+> +	int i;
+> +
+> +	if (!epc->mem_windows)
+> +		return;
+> +
+> +	for (i = 0; i <= epc->mem_windows; i--) {
+> +		mem = epc->mem[i];
+> +		kfree(mem->bitmap);
+> +		kfree(epc->mem[i]);
+> +	}
+> +	kfree(epc->mem);
+>  
+>  	epc->mem = NULL;
+> -	kfree(mem->bitmap);
+> -	kfree(mem);
+> +	epc->mem_windows = 0;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+>  
+> +static int pci_epc_find_best_fit_window(struct pci_epc *epc, size_t size)
+> +{
+> +	size_t window_least_size = 0;
+> +	int best_fit_window = -1;
+> +	struct pci_epc_mem *mem;
+> +	size_t actual_size;
+> +	int i;
+> +
+> +	for (i = 0; i < epc->mem_windows; i++) {
+> +		mem = epc->mem[i];
+> +
+> +		/* if chunk from this region is already used skip it */
+> +		if (mem->window.map_size)
+> +			continue;
+> +
+> +		actual_size = ALIGN(size, mem->page_size);
+> +
+> +		if (best_fit_window == -1) {
+> +			best_fit_window = i;
+> +			window_least_size = mem->window.size;
+> +		} else {
+> +			if (actual_size <= mem->window.size &&
+> +			    mem->window.size < window_least_size) {
+> +				best_fit_window = i;
+> +				window_least_size = mem->window.size;
+> +			}
+> +		}
+> +	}
+> +
+> +	return best_fit_window;
+> +}
+> +
+>  /**
+>   * pci_epc_mem_alloc_addr() - allocate memory address from EPC addr space
+>   * @epc: the EPC device on which memory has to be allocated
+>   * @phys_addr: populate the allocated physical address here
+> + * @window: populate the window here which will be used to map PCI address
+>   * @size: the size of the address space that has to be allocated
+>   *
+>   * Invoke to allocate memory address from the EPC address space. This
+>   * is usually done to map the remote RC address into the local system.
+>   */
+>  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+> -				     phys_addr_t *phys_addr, size_t size)
+> +				     phys_addr_t *phys_addr,
+> +				     int *window, size_t size)
+>  {
+> +	int best_fit = PCI_EPC_DEFAULT_WINDOW;
+> +	void __iomem *virt_addr = NULL;
+> +	struct pci_epc_mem *mem;
+> +	unsigned int page_shift;
+>  	int pageno;
+> -	void __iomem *virt_addr;
+> -	struct pci_epc_mem *mem = epc->mem;
+> -	unsigned int page_shift = ilog2(mem->page_size);
+>  	int order;
+>  
+> +	if (epc->mem_windows <= 0)
+> +		return NULL;
+> +
+> +	if (epc->mem_windows > 1) {
+> +		best_fit = pci_epc_find_best_fit_window(epc, size);
+> +		if (best_fit < 0)
+> +			return NULL;
+> +	}
+> +
+> +	mem = epc->mem[best_fit];
+>  	size = ALIGN(size, mem->page_size);
+> +	if (size > (mem->window.size - mem->window.map_size))
+> +		return NULL;
 
-This is needed to make signalfd useful with io_uring and aio, of which
-the former in particular has my interest.
+Assume I have two mem regions, first region is of size 128MB and the second
+region is of size 4GB. If there is a allocation request for 4GB, will the
+allocation succeed?
 
-I _think_ this is sane. To prevent the case of a task clearing O_CLOEXEC
-on the signalfd descriptor, forking, and then exiting, we grab a
-reference to the task when we assign it. If that original task exits, we
-catch it in signalfd_flush() and ensure waiters are woken up. The
-waiters also hold a task reference, so we don't have to wait for them to
-go away.
-
-Need to double check we can't race between original task exiting and new
-task grabbing a reference. I don't think this is solid in the version
-below. Probably need to add a refcount for ctx->task (the pointer, not
-the task) for that.
-
-Comments? Attaching two test programs using io_uring, one using poll and
-the other read. Remove SFD_TASK from either of them, and they will fail
-ala:
-
-./signalfd-read
-Timed out waiting for cqe
-
-and with SFD_TASK set, both will exit silent with a value of 0. You need
-liburing installed, then compile them with:
-
-gcc -Wall -O2 -o signalfd-read signalfd-read.c -luring
-
----
-
-diff --git a/fs/signalfd.c b/fs/signalfd.c
-index 44b6845b071c..4bbdab9438c1 100644
---- a/fs/signalfd.c
-+++ b/fs/signalfd.c
-@@ -50,28 +50,62 @@ void signalfd_cleanup(struct sighand_struct *sighand)
-  
-  struct signalfd_ctx {
-  	sigset_t sigmask;
-+	struct task_struct *task;
-  };
-  
-+static int signalfd_flush(struct file *file, void *data)
-+{
-+	struct signalfd_ctx *ctx = file->private_data;
-+	struct task_struct *tsk = ctx->task;
-+
-+	if (tsk == current) {
-+		ctx->task = NULL;
-+		wake_up(&tsk->sighand->signalfd_wqh);
-+		put_task_struct(tsk);
-+	}
-+
-+	return 0;
-+}
-+
-  static int signalfd_release(struct inode *inode, struct file *file)
-  {
--	kfree(file->private_data);
-+	struct signalfd_ctx *ctx = file->private_data;
-+
-+	if (ctx->task)
-+		put_task_struct(ctx->task);
-+	kfree(ctx);
-  	return 0;
-  }
-  
-+static void signalfd_put_task(struct task_struct *tsk)
-+{
-+	put_task_struct(tsk);
-+}
-+
-+static struct task_struct *signalfd_get_task(struct signalfd_ctx *ctx)
-+{
-+	struct task_struct *tsk = ctx->task ?: current;
-+
-+	get_task_struct(tsk);
-+	return tsk;
-+}
-+
-  static __poll_t signalfd_poll(struct file *file, poll_table *wait)
-  {
-  	struct signalfd_ctx *ctx = file->private_data;
-+	struct task_struct *tsk = signalfd_get_task(ctx);
-  	__poll_t events = 0;
-  
--	poll_wait(file, &current->sighand->signalfd_wqh, wait);
-+	poll_wait(file, &tsk->sighand->signalfd_wqh, wait);
-  
--	spin_lock_irq(&current->sighand->siglock);
--	if (next_signal(&current->pending, &ctx->sigmask) ||
--	    next_signal(&current->signal->shared_pending,
-+	spin_lock_irq(&tsk->sighand->siglock);
-+	if (next_signal(&tsk->pending, &ctx->sigmask) ||
-+	    next_signal(&tsk->signal->shared_pending,
-  			&ctx->sigmask))
-  		events |= EPOLLIN;
--	spin_unlock_irq(&current->sighand->siglock);
-+	spin_unlock_irq(&tsk->sighand->siglock);
-  
-+	signalfd_put_task(tsk);
-  	return events;
-  }
-  
-@@ -167,10 +201,11 @@ static ssize_t signalfd_dequeue(struct signalfd_ctx *ctx, kernel_siginfo_t *info
-  				int nonblock)
-  {
-  	ssize_t ret;
-+	struct task_struct *tsk = signalfd_get_task(ctx);
-  	DECLARE_WAITQUEUE(wait, current);
-  
--	spin_lock_irq(&current->sighand->siglock);
--	ret = dequeue_signal(current, &ctx->sigmask, info);
-+	spin_lock_irq(&tsk->sighand->siglock);
-+	ret = dequeue_signal(tsk, &ctx->sigmask, info);
-  	switch (ret) {
-  	case 0:
-  		if (!nonblock)
-@@ -178,29 +213,35 @@ static ssize_t signalfd_dequeue(struct signalfd_ctx *ctx, kernel_siginfo_t *info
-  		ret = -EAGAIN;
-  		/* fall through */
-  	default:
--		spin_unlock_irq(&current->sighand->siglock);
-+		spin_unlock_irq(&tsk->sighand->siglock);
-+		signalfd_put_task(tsk);
-  		return ret;
-  	}
-  
--	add_wait_queue(&current->sighand->signalfd_wqh, &wait);
-+	add_wait_queue(&tsk->sighand->signalfd_wqh, &wait);
-  	for (;;) {
-  		set_current_state(TASK_INTERRUPTIBLE);
--		ret = dequeue_signal(current, &ctx->sigmask, info);
-+		ret = dequeue_signal(tsk, &ctx->sigmask, info);
-  		if (ret != 0)
-  			break;
-  		if (signal_pending(current)) {
-  			ret = -ERESTARTSYS;
-  			break;
-  		}
--		spin_unlock_irq(&current->sighand->siglock);
-+		spin_unlock_irq(&tsk->sighand->siglock);
-  		schedule();
--		spin_lock_irq(&current->sighand->siglock);
-+		spin_lock_irq(&tsk->sighand->siglock);
-+		if (tsk != current && !ctx->task) {
-+			ret = -ESRCH;
-+			break;
-+		}
-  	}
--	spin_unlock_irq(&current->sighand->siglock);
-+	spin_unlock_irq(&tsk->sighand->siglock);
-  
--	remove_wait_queue(&current->sighand->signalfd_wqh, &wait);
-+	remove_wait_queue(&tsk->sighand->signalfd_wqh, &wait);
-  	__set_current_state(TASK_RUNNING);
-  
-+	signalfd_put_task(tsk);
-  	return ret;
-  }
-  
-@@ -254,6 +295,7 @@ static const struct file_operations signalfd_fops = {
-  #ifdef CONFIG_PROC_FS
-  	.show_fdinfo	= signalfd_show_fdinfo,
-  #endif
-+	.flush		= signalfd_flush,
-  	.release	= signalfd_release,
-  	.poll		= signalfd_poll,
-  	.read		= signalfd_read,
-@@ -267,19 +309,26 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
-  	/* Check the SFD_* constants for consistency.  */
-  	BUILD_BUG_ON(SFD_CLOEXEC != O_CLOEXEC);
-  	BUILD_BUG_ON(SFD_NONBLOCK != O_NONBLOCK);
-+	BUILD_BUG_ON(SFD_TASK & (SFD_CLOEXEC | SFD_NONBLOCK));
-  
--	if (flags & ~(SFD_CLOEXEC | SFD_NONBLOCK))
-+	if (flags & ~(SFD_CLOEXEC | SFD_NONBLOCK | SFD_TASK))
-+		return -EINVAL;
-+	if ((flags & (SFD_CLOEXEC | SFD_TASK)) == SFD_TASK)
-  		return -EINVAL;
-  
-  	sigdelsetmask(mask, sigmask(SIGKILL) | sigmask(SIGSTOP));
-  	signotset(mask);
-  
-  	if (ufd == -1) {
--		ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
-+		ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-  		if (!ctx)
-  			return -ENOMEM;
-  
-  		ctx->sigmask = *mask;
-+		if (flags & SFD_TASK) {
-+			ctx->task = current;
-+			get_task_struct(ctx->task);
-+		}
-  
-  		/*
-  		 * When we call this, the initialization must be complete, since
-@@ -290,6 +339,7 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
-  		if (ufd < 0)
-  			kfree(ctx);
-  	} else {
-+		struct task_struct *tsk;
-  		struct fd f = fdget(ufd);
-  		if (!f.file)
-  			return -EBADF;
-@@ -298,11 +348,13 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
-  			fdput(f);
-  			return -EINVAL;
-  		}
--		spin_lock_irq(&current->sighand->siglock);
-+		tsk = signalfd_get_task(ctx);
-+		spin_lock_irq(&tsk->sighand->siglock);
-  		ctx->sigmask = *mask;
--		spin_unlock_irq(&current->sighand->siglock);
-+		spin_unlock_irq(&tsk->sighand->siglock);
-  
--		wake_up(&current->sighand->signalfd_wqh);
-+		wake_up(&tsk->sighand->signalfd_wqh);
-+		signalfd_put_task(tsk);
-  		fdput(f);
-  	}
-  
-diff --git a/include/uapi/linux/signalfd.h b/include/uapi/linux/signalfd.h
-index 83429a05b698..064c5dc3eb99 100644
---- a/include/uapi/linux/signalfd.h
-+++ b/include/uapi/linux/signalfd.h
-@@ -16,6 +16,7 @@
-  /* Flags for signalfd4.  */
-  #define SFD_CLOEXEC O_CLOEXEC
-  #define SFD_NONBLOCK O_NONBLOCK
-+#define SFD_TASK 00000001
-  
-  struct signalfd_siginfo {
-  	__u32 ssi_signo;
-
--- 
-Jens Axboe
-
-
---------------87DB3E5ABFD4EB218E95005E
-Content-Type: text/x-csrc; charset=UTF-8;
- name="signalfd-poll.c"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="signalfd-poll.c"
-
-#include <unistd.h>
-#include <sys/signalfd.h>
-#include <sys/poll.h>
-#include <sys/time.h>
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
-
-#include <liburing.h>
-
-#define SFD_TASK	00000001
-
-int main(int argc, char *argv[])
-{
-	struct __kernel_timespec ts;
-	struct io_uring_sqe *sqe;
-	struct io_uring_cqe *cqe;
-	struct io_uring ring;
-	struct itimerval itv;
-	sigset_t mask;
-	int sfd, ret;
-
-	sigemptyset(&mask);
-	sigaddset(&mask, SIGALRM);
-	sigprocmask(SIG_BLOCK, &mask, NULL);
-
-	sfd = signalfd(-1, &mask, SFD_CLOEXEC | SFD_TASK);
-	if (sfd < 0) {
-		if (errno == EINVAL) {
-			printf("Not supported\n");
-			return 0;
-		}
-		perror("signalfd");
-		return 1;
-	}
-
-	memset(&itv, 0, sizeof(itv));
-	itv.it_value.tv_sec = 0;
-	itv.it_value.tv_usec = 100000;
-	setitimer(ITIMER_REAL, &itv, NULL);
-
-	io_uring_queue_init(32, &ring, 0);
-	sqe = io_uring_get_sqe(&ring);
-	io_uring_prep_poll_add(sqe, sfd, POLLIN);
-	io_uring_submit(&ring);
-
-	ts.tv_sec = 1;
-	ts.tv_nsec = 0;
-	ret = io_uring_wait_cqe_timeout(&ring, &cqe, &ts);
-	if (ret < 0) {
-		fprintf(stderr, "Timed out waiting for cqe\n");
-		ret = 1;
-	} else {
-		if (cqe->res < 0) {
-			fprintf(stderr, "cqe failed with %d\n", cqe->res);
-			ret = 1;
-		} else if (!(cqe->res & POLLIN)) {
-			fprintf(stderr, "POLLIN not set in result mask?\n");
-			ret = 1;
-		} else {
-			ret = 0;
-		}
-	}
-	io_uring_cqe_seen(&ring, cqe);
-
-	io_uring_queue_exit(&ring);
-	close(sfd);
-	return ret;
-}
-
---------------87DB3E5ABFD4EB218E95005E
-Content-Type: text/x-csrc; charset=UTF-8;
- name="signalfd-read.c"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="signalfd-read.c"
-
-#include <unistd.h>
-#include <sys/signalfd.h>
-#include <sys/poll.h>
-#include <sys/time.h>
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
-
-#include <liburing.h>
-
-#define SFD_TASK	00000001
-
-int main(int argc, char *argv[])
-{
-	struct __kernel_timespec ts;
-	struct signalfd_siginfo si;
-	struct iovec iov = {
-		.iov_base = &si,
-		.iov_len = sizeof(si),
-	};
-	struct io_uring_sqe *sqe;
-	struct io_uring_cqe *cqe;
-	struct io_uring ring;
-	struct itimerval itv;
-	sigset_t mask;
-	int sfd, ret;
-
-	sigemptyset(&mask);
-	sigaddset(&mask, SIGALRM);
-	sigprocmask(SIG_BLOCK, &mask, NULL);
-
-	sfd = signalfd(-1, &mask, SFD_CLOEXEC | SFD_TASK);
-	if (sfd < 0) {
-		if (errno == EINVAL) {
-			printf("Not supported\n");
-			return 0;
-		}
-		perror("signalfd");
-		return 1;
-	}
-
-	memset(&itv, 0, sizeof(itv));
-	itv.it_value.tv_sec = 0;
-	itv.it_value.tv_usec = 100000;
-	setitimer(ITIMER_REAL, &itv, NULL);
-
-	io_uring_queue_init(32, &ring, 0);
-	sqe = io_uring_get_sqe(&ring);
-	io_uring_prep_readv(sqe, sfd, &iov, 1, 0);
-	io_uring_submit(&ring);
-
-	ts.tv_sec = 1;
-	ts.tv_nsec = 0;
-	ret = io_uring_wait_cqe_timeout(&ring, &cqe, &ts);
-	if (ret < 0) {
-		fprintf(stderr, "Timed out waiting for cqe\n");
-		ret = 1;
-	} else {
-		ret = 0;
-		if (cqe->res < 0) {
-			fprintf(stderr, "cqe failed with %d\n", cqe->res);
-			ret = 1;
-		} else if (cqe->res != sizeof(si)) {
-			fprintf(stderr, "Read %d, wanted %d\n", cqe->res, (int)sizeof(si));
-			ret = 1;
-		}
-	}
-	io_uring_cqe_seen(&ring, cqe);
-
-	io_uring_queue_exit(&ring);
-	close(sfd);
-	return ret;
-}
-
---------------87DB3E5ABFD4EB218E95005E--
+Thanks
+Kishon
