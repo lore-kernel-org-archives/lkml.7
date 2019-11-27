@@ -2,143 +2,465 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F52C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA77C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872FD215F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36847215F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="oloirGvb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I7f0LadN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfK0WQB (ORCPT
+        id S1727414AbfK0WQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 17:16:01 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:54652 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfK0WQB (ORCPT
+        Wed, 27 Nov 2019 17:16:43 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40689 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727051AbfK0WQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 17:16:01 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6F881886BF
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 11:15:58 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1574892958;
-        bh=86ybmKdYyEAkqXJW6P1i+HtVhRLKuKTGrNJP3O0OTt0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=oloirGvbZeDI3GCNcCzHjc9f4YDAIskYhn4+yxdPlh87uR5k/lxFHo5zWD0wnK+9m
-         fLSVlMxwX+cEbdhJenCTLNTHfPHhOt0mP6w57OCFX2SaVePYTAd/5Ew31u/p5hj+Yk
-         Omg/slvybJ2YhtQOou4WN5bGdtpuxwx0UoE9Q8kGKOjE0PcOGRMdHfitV2ji1m+NrC
-         V+HkIzThlEnj8ApuDUL9/y8OjfBtU0L6mMJHyh+eMhsjfjA2Dz5kiDlZUdyK269/i7
-         cVtCjpJ+D+Q/a9FdztlW1z6cLw/t4xiqZZo6nEe3xyzA5msxvML75klbzkVIwsVTgQ
-         xeEg+JJWopfhw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ddef59d0001>; Thu, 28 Nov 2019 11:15:57 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Thu, 28 Nov 2019 11:15:58 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Thu, 28 Nov 2019 11:15:58 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "natechancellor@gmail.com" <natechancellor@gmail.com>,
-        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: ARM expections for location of kernel, ramdisk and dtb
-Thread-Topic: ARM expections for location of kernel, ramdisk and dtb
-Thread-Index: AQHVpPt9nOgyqufu70+hpQyr7hZevaed5YmAgADXDYA=
-Date:   Wed, 27 Nov 2019 22:15:57 +0000
-Message-ID: <c108d58e3ee511040bb99edb28c893b27b238bdb.camel@alliedtelesis.co.nz>
-References: <e1f7cca54843abcef0c2703a5f7071c045b99baa.camel@alliedtelesis.co.nz>
-         <20191127092615.GC25745@shell.armlinux.org.uk>
-In-Reply-To: <20191127092615.GC25745@shell.armlinux.org.uk>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:f928:a51e:370a:f684]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A49DAC3587DCC445BBE48480D9222B57@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 27 Nov 2019 17:16:42 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d22so21528168oic.7
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 14:16:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lem1U5AcwxE30cM5ZAuxFykgfvrtAmfGta1E6+S/wG0=;
+        b=I7f0LadNRduIYDKwLDjGidmPjeOttDnp4vhEN4R5CYb1tn6OsACjo5cxxQNlfs16rr
+         Te+EOLFEZWgTOChGVZq3s9fwPr2fnkKazlQC2jfe6HY1M/9d+6mMdrlds1uEaqim8JI4
+         5EYRkv48/JpLucyhZxvWwxCRKbCoarzzyl/xA3Yve4oviQnjvxb6mJaaRJzrxkJiK6do
+         Y2V7rhNCbPIB7ohYl7o8d25xN2Q/O6fQuu51F2UO90aLHT8HRHrZ3qsKXEAn3cmsSw2K
+         LVf23gpuBPFhB7if1M6LhuakPZKHq6vnixMaCWJfV08FGB8eYrduIhpMHNk9olU4dr05
+         +n+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lem1U5AcwxE30cM5ZAuxFykgfvrtAmfGta1E6+S/wG0=;
+        b=VUpvwzapqF2A7ZdjeMJxSZfzv0Ihz81V5E3KXpra3a6zl4cgEauZ58RlZ4DsdAYiwg
+         3Cscrg8AyDupQqKwEH19/LmdBrHvPbSEFLUMEec1DsGTkDaK0TN/g9S+Jy226l5rULW8
+         /SSR/6oqL4kGcRZGOIqyac5/TAqR5SYGLaz6TqRjsMQWmJ/K0ILDjgKC+mRB+nWOkkJB
+         TgD8gF6Kl34Jj+jgdmSdWZvCPOv/6/D1p4rKpaX47RExpKNTvWVAbYvLVJCr1C7DzPvN
+         oI/WF6ANERTM/LYMfPNHwW+ZC2ICPa7SYTqmjFWgDWY63S5NdTL8p4sVEUumhKJWIadZ
+         k8kQ==
+X-Gm-Message-State: APjAAAXDgzMQxtCpllSC1mCftnvOeI+ocV1P4B+cDRpcT1qHyJv41gFP
+        wMgRXskmA7DPiCPqPGIErBN1f9ve3bV3lDIXjpaGpuPm
+X-Google-Smtp-Source: APXvYqz4icelaTmq2ZmsTJHULyUKcAvZwX3GlaXDrAQqHXycz+MDGhdMnOKRwkR1FpKU2VVYD4sv9ByAJvbVVXC4vG4=
+X-Received: by 2002:aca:fc8d:: with SMTP id a135mr6283811oii.142.1574893000275;
+ Wed, 27 Nov 2019 14:16:40 -0800 (PST)
 MIME-Version: 1.0
+References: <20191107205334.158354-1-hannes@cmpxchg.org> <20191107205334.158354-4-hannes@cmpxchg.org>
+ <CALvZod4EX4xJkQpmB4UJZqA+bWOoK_5B4Eq-kQECTfzQG2cJJQ@mail.gmail.com>
+In-Reply-To: <CALvZod4EX4xJkQpmB4UJZqA+bWOoK_5B4Eq-kQECTfzQG2cJJQ@mail.gmail.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 27 Nov 2019 14:16:29 -0800
+Message-ID: <CALvZod4pYjeDc97R=8C0UVOxi-hOcXznxy5OrX2e-ESm411DUg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] mm: vmscan: enforce inactive:active ratio at the
+ reclaim root
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUnVzc2VsbCwNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjI2ICswMDAwLCBSdXNzZWxs
-IEtpbmcgLSBBUk0gTGludXggYWRtaW4NCndyb3RlOg0KPiBPbiBXZWQsIE5vdiAyNywgMjAxOSBh
-dCAwODoyMDoxMkFNICswMDAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPiA+IEhpIEFsbCwNCj4g
-PiANCj4gPiBXZSdyZSB1cGRhdGluZyBvdXIgc3lzdGVtcyB0byB1c2UgdGhlIGxhdGVzdCBrZXJu
-ZWwuIEZvciBtYW55IG9mIHRoZW0NCj4gPiB0aGlzIGlzIGEgZmFpcmx5IGxhcmdlIGxlYXAuIE9u
-ZSBwcm9ibGVtIHdlJ3ZlIGhpdCBpcyB0aGF0IGR1cm5nIGJvb3QNCj4gPiB0aGUgZHRiIGlzIGNs
-b2JiZXJlZCBieSB0aGUgdW5jb21wcmVzc2VkIGtlcm5lbC4NCj4gPiANCj4gPiBIZXJlJ3MgYSBz
-bmlwcGV0IG9mIG91dHB1dCBmcm9tIHUtYm9vdA0KPiA+IA0KPiA+ICMjIExvYWRpbmcga2VybmVs
-IGZyb20gRklUIEltYWdlIGF0IDYyMDAwMDAwIC4uLg0KPiA+ICAgIFVzaW5nICdYUzkxNk1YU0Ay
-JyBjb25maWd1cmF0aW9uDQo+ID4gICAgVHJ5aW5nICdrZXJuZWxAMScga2VybmVsIHN1YmltYWdl
-DQo+ID4gICAgICBEZXNjcmlwdGlvbjogIGxpbnV4DQo+ID4gICAgICBDcmVhdGVkOiAgICAgIDIw
-MTktMTEtMjcgICA2OjUzOjQ4IFVUQw0KPiA+ICAgICAgVHlwZTogICAgICAgICBLZXJuZWwgSW1h
-Z2UNCj4gPiAgICAgIENvbXByZXNzaW9uOiAgdW5jb21wcmVzc2VkDQo+ID4gICAgICBEYXRhIFN0
-YXJ0OiAgIDB4NjIwMDAxNzQNCj4gPiAgICAgIERhdGEgU2l6ZTogICAgMzQ5NTQzMiBCeXRlcyA9
-IDMuMyBNaUINCj4gPiAgICAgIEFyY2hpdGVjdHVyZTogQVJNDQo+ID4gICAgICBPUzogICAgICAg
-ICAgIExpbnV4DQo+ID4gICAgICBMb2FkIEFkZHJlc3M6IDB4MDA4MDAwMDANCj4gPiAgICAgIEVu
-dHJ5IFBvaW50OiAgMHg2MDgwMDAwMA0KPiA+ICAgIC4uLg0KPiA+ICAgIEJvb3RpbmcgdXNpbmcg
-dGhlIGZkdCBibG9iIGF0IDB4NjNiOTBmNmMNCj4gPiAgICBMb2FkaW5nIEtlcm5lbCBJbWFnZSAu
-Li4gT0sNCj4gPiAgICBMb2FkaW5nIFJhbWRpc2sgdG8gNmU3YzYwMDAsIGVuZCA3MDAwMDAwMCAu
-Li4gT0sNCj4gPiAgICBMb2FkaW5nIERldmljZSBUcmVlIHRvIDYwN2ZiMDAwLCBlbmQgNjA3ZmZm
-ZDggLi4uIE9LDQo+ID4gDQo+ID4gU3RhcnRpbmcga2VybmVsIC4uLg0KPiA+IA0KPiA+IFVuY29t
-cHJlc3NpbmcgTGludXguLi4gZG9uZSwgYm9vdGluZyB0aGUga2VybmVsLg0KPiA+IA0KPiA+IEVy
-cm9yOiBpbnZhbGlkIGR0YiBhbmQgdW5yZWNvZ25pemVkL3Vuc3VwcG9ydGVkIG1hY2hpbmUgSUQN
-Cj4gPiAgIHIxPTB4MDAwMDIwNmUsIHIyPTB4MDAwMDAwMDANCj4gPiANCj4gPiBCZXR3ZWVuIG9s
-ZCBhbmQgbmV3IHRoZSBsb2NhdGlvbiBvZiB0aGUgZGV2aWNldHJlZSBoYXNuJ3QgYWN0dWFsbHkN
-Cj4gPiBjaGFuZ2VkLiBCdXQgd2hhdCBoYXMgY2hhbmdlZCBpcyB0aGUgc2l6ZSBvZiB0aGUga2Vy
-bmVsIHRoZSBzZWxmDQo+ID4gZXh0cmFjdGluZyBrZXJuZWwgdW5wYWNrcyB0byAweDYwMDA4MDAw
-IGFuZCB3aXRoIG91ciBjdXJyZW50DQo+ID4gY29uZmlndXJhdGlvbiBleHRlbmRzIGludG8gd2hl
-cmUgdGhlIGR0YiBpcyBsb2NhdGVkLg0KPiA+IA0KPiA+IERvY3VtZW50YXRpb24vYXJtL2Jvb3Rp
-bmcucnN0IHNheXMgdGhhdCAiVGhlIGR0YiBtdXN0IGJlIHBsYWNlZCBpbiBhDQo+ID4gcmVnaW9u
-IG9mIG1lbW9yeSB3aGVyZSB0aGUga2VybmVsIGRlY29tcHJlc3NvciB3aWxsIG5vdCBvdmVyd3Jp
-dGUgaXQiLiANCj4gPiANCj4gPiBUaGlzIHN1Z2dlc3RzIHRoYXQgdGhlIHByb2JsZW0gaXMgd2l0
-aCBvdXIgdS1ib290IGNvbmZpZ3VyYXRpb24sIGJ1dA0KPiA+IGhvdyBpcyB1LWJvb3Qgc3VwcG9z
-ZWQgdG8ga25vdyB3aGVyZSB0aGUgc2VsZi1leHRyYWN0aW5nIGtlcm5lbCBpcw0KPiA+IGdvaW5n
-IHRvIHBsYWNlIHRoaW5ncz8gQXMgZmFyIGFzIEkgY2FuIHRlbGwgdS1ib290IGlzIGRvaW5nIGEN
-Cj4gPiByZWFzb25hYmxlIGpvYiBvZiBmaW5kaW5nIGEgcGxhY2UgdG8gcHV0IHRoZSBkdGIgd2hp
-Y2ggaXQgdGhpbmtzIGlzDQo+ID4gdW51c2VkLiBJJ20gbm90IHN1cmUgd2h5IGl0J3MgcGlja2Vk
-IDB4NjA3ZmIwMDAgaW5zdGVhZCBvZiBwdXR0aW5nIGl0DQo+ID4ganVzdCB1bmRlciB0aGUgcmFt
-ZGlzayBidXQgcmVnYXJkbGVzcyB3aXRoIHRoZSBpbmZvcm1hdGlvbiB1LWJvb3QgaGFzDQo+ID4g
-dGhhdCBhZGRyZXNzIGlzIHVwIGZvciBncmFicy4NCj4gPiANCj4gPiBIYXMgdGhpcyBjb21lIHVw
-IGJlZm9yZT8gVGhlIHNlbGYtZXh0cmFjdGlvbiBjb2RlIGlzIGZhaXJseSBjYXJlZnVsIG5vdA0K
-PiA+IHRvIG92ZXJ3cml0ZSBpdHNlbGYgYnV0IGRvZXNuJ3Qgc2VlbSB0byBwYXkgYW55IGF0dGVu
-dGlvbiB0byB0aGUgZHRiDQo+ID4gd2hpY2ggc3VycHJpc2VkIG1lLiBTbyBJIHdvbmRlciBpZiBJ
-J20gbWlzc2luZyBzb21ldGhpbmc/DQo+IA0KPiBUaGUgc2VsZi1leHRyYWN0aW9uIGhhc24ndCBj
-aGFuZ2VkIG11Y2ggb3ZlciB0aGUgeWVhcnMsIGFuZCBiYXNpY2FsbHkNCj4gZm9sbG93cyB0aGUg
-c2FtZSBtZXRob2Qgd2hpY2ggaGFzIHdvcmtlZCBmb3IgdGhlIHZhc3QgbWFqb3JpdHkgb2YNCj4g
-cGxhdGZvcm1zLg0KPiANCj4gV2hlcmUgdGhpbmdzIGZhbGwgZG93biBpcyB3aGVyZSB0aGluZ3Mg
-YXJlIHBsYWNlZCB0b28gY2xvc2UsIGFuZCB5ZXMsDQo+IGFzIHRoZSBrZXJuZWwgZ3Jvd3MsIHdo
-YXQgd2FzIHJlYXNvbmFibGUgeWVhcnMgYWdvIGJlY29tZXMgdG9vIGNsb3NlDQo+IHdpdGggbW9k
-ZXJuIGtlcm5lbHMuDQo+IA0KPiBUaGUgcHJvYmxlbSBoYXMgYmVlbiBjb21wb3VuZGVkIGJ5IHRo
-ZSB2YXJpb3VzIGRpZmZlcmVudCBjb21wcmVzc2lvbg0KPiBhbGdvcml0aG1zIHRoYXQgY2FuIG5v
-dyBiZSB1c2VkIGZvciB0aGUgY29tcHJlc3NlZCBrZXJuZWwuDQo+IA0KDQpJIGRvbid0IHRoaW5r
-IGl0J3MgdGhhdCB3ZSBkb24ndCBrbm93IGhvdyBiaWcgdGhlIGV4dHJhY3RlZCBrZXJuZWwgd2ls
-bA0KYmUuIEl0J3MganVzdCB0aGF0IHdlIGFyZW4ndCBkb2luZyBhbnl0aGluZyB3aXRoIHRoYXQg
-aW5mb3JtYXRpb24gdy5yLnQNCnRoZSBkdGIuDQoNCj4ga2V4ZWMgYWxzbyByYW4gaW50byB0aGlz
-IHByb2JsZW0sIGFuZCB0aGVyZSBpcyBub3cgZW5vdWdoIGluZm9ybWF0aW9uDQo+IGluIGEgbW9k
-ZXJuIGtlcm5lbCB0byBjYWxjdWxhdGUgaG93IG11Y2ggc3BhY2UgdGhlIGRlY29tcHJlc3NvciBp
-cw0KPiBnb2luZyB0byByZXF1aXJlLiAgSGF2ZSBhIGxvb2sgYXQgdGhlIGN1cnJlbnQga2V4ZWMg
-c291cmNlcyBmb3IgaG93DQo+IGl0IGlzIGRvbmUuDQo+IA0KDQpUaGFua3Mgd2lsbCBkby4gSWYg
-d2UgZ2V0IHNvbWV0aGluZyBzdWl0YWJsZSB3ZSdsbCBwb3N0IGEgcGF0Y2guDQoNCg==
+On Thu, Nov 14, 2019 at 4:29 PM Shakeel Butt <shakeelb@google.com> wrote:
+>
+> On Thu, Nov 7, 2019 at 12:53 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > We split the LRU lists into inactive and an active parts to maximize
+> > workingset protection while allowing just enough inactive cache space
+> > to faciltate readahead and writeback for one-off file accesses (e.g. a
+> > linear scan through a file, or logging); or just enough inactive anon
+> > to maintain recent reference information when reclaim needs to swap.
+> >
+> > With cgroups and their nested LRU lists, we currently don't do this
+> > correctly. While recursive cgroup reclaim establishes a relative LRU
+> > order among the pages of all involved cgroups, inactive:active size
+> > decisions are done on a per-cgroup level. As a result, we'll reclaim a
+> > cgroup's workingset when it doesn't have cold pages, even when one of
+> > its siblings has plenty of it that should be reclaimed first.
+> >
+> > For example: workload A has 50M worth of hot cache but doesn't do any
+> > one-off file accesses; meanwhile, parallel workload B scans files and
+> > rarely accesses the same page twice.
+> >
+> > If these workloads were to run in an uncgrouped system, A would be
+> > protected from the high rate of cache faults from B. But if they were
+> > put in parallel cgroups for memory accounting purposes, B's fast cache
+> > fault rate would push out the hot cache pages of A. This is unexpected
+> > and undesirable - the "scan resistance" of the page cache is broken.
+> >
+> > This patch moves inactive:active size balancing decisions to the root
+> > of reclaim - the same level where the LRU order is established.
+> >
+> > It does this by looking at the recursize size of the inactive and the
+> > active file sets of the cgroup subtree at the beginning of the reclaim
+> > cycle, and then making a decision - scan or skip active pages - that
+> > applies throughout the entire run and to every cgroup involved.
+>
+> Oh ok, this answer my question on previous patch. The reclaim root
+> looks at the full tree inactive and active count to make decisions and
+> thus active list of some descendant cgroup will be protected from the
+> inactive list of its sibling.
+>
+> >
+> > With that in place, in the test above, the VM will recognize that
+> > there are plenty of inactive pages in the combined cache set of
+> > workloads A and B and prefer the one-off cache in B over the hot pages
+> > in A. The scan resistance of the cache is restored.
+> >
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+
+Forgot to add:
+
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+
+>
+> BTW no love for the anon memory? The whole "workingset" mechanism only
+> works for file pages. Are there any plans to extend it for anon as
+> well?
+>
+> > ---
+> >  include/linux/mmzone.h |   4 +-
+> >  mm/vmscan.c            | 185 ++++++++++++++++++++++++++---------------
+> >  2 files changed, 118 insertions(+), 71 deletions(-)
+> >
+> > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> > index 7a09087e8c77..454a230ad417 100644
+> > --- a/include/linux/mmzone.h
+> > +++ b/include/linux/mmzone.h
+> > @@ -229,12 +229,12 @@ enum lru_list {
+> >
+> >  #define for_each_evictable_lru(lru) for (lru = 0; lru <= LRU_ACTIVE_FILE; lru++)
+> >
+> > -static inline int is_file_lru(enum lru_list lru)
+> > +static inline bool is_file_lru(enum lru_list lru)
+> >  {
+> >         return (lru == LRU_INACTIVE_FILE || lru == LRU_ACTIVE_FILE);
+> >  }
+> >
+> > -static inline int is_active_lru(enum lru_list lru)
+> > +static inline bool is_active_lru(enum lru_list lru)
+> >  {
+> >         return (lru == LRU_ACTIVE_ANON || lru == LRU_ACTIVE_FILE);
+> >  }
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index 527617ee9b73..df859b1d583c 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -79,6 +79,13 @@ struct scan_control {
+> >          */
+> >         struct mem_cgroup *target_mem_cgroup;
+> >
+> > +       /* Can active pages be deactivated as part of reclaim? */
+> > +#define DEACTIVATE_ANON 1
+> > +#define DEACTIVATE_FILE 2
+> > +       unsigned int may_deactivate:2;
+> > +       unsigned int force_deactivate:1;
+> > +       unsigned int skipped_deactivate:1;
+> > +
+> >         /* Writepage batching in laptop mode; RECLAIM_WRITE */
+> >         unsigned int may_writepage:1;
+> >
+> > @@ -101,6 +108,9 @@ struct scan_control {
+> >         /* One of the zones is ready for compaction */
+> >         unsigned int compaction_ready:1;
+> >
+> > +       /* There is easily reclaimable cold cache in the current node */
+> > +       unsigned int cache_trim_mode:1;
+> > +
+> >         /* The file pages on the current node are dangerously low */
+> >         unsigned int file_is_tiny:1;
+> >
+> > @@ -2154,6 +2164,20 @@ unsigned long reclaim_pages(struct list_head *page_list)
+> >         return nr_reclaimed;
+> >  }
+> >
+> > +static unsigned long shrink_list(enum lru_list lru, unsigned long nr_to_scan,
+> > +                                struct lruvec *lruvec, struct scan_control *sc)
+> > +{
+> > +       if (is_active_lru(lru)) {
+> > +               if (sc->may_deactivate & (1 << is_file_lru(lru)))
+> > +                       shrink_active_list(nr_to_scan, lruvec, sc, lru);
+> > +               else
+> > +                       sc->skipped_deactivate = 1;
+> > +               return 0;
+> > +       }
+> > +
+> > +       return shrink_inactive_list(nr_to_scan, lruvec, sc, lru);
+> > +}
+> > +
+> >  /*
+> >   * The inactive anon list should be small enough that the VM never has
+> >   * to do too much work.
+> > @@ -2182,59 +2206,25 @@ unsigned long reclaim_pages(struct list_head *page_list)
+> >   *    1TB     101        10GB
+> >   *   10TB     320        32GB
+> >   */
+> > -static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
+> > -                                struct scan_control *sc, bool trace)
+> > +static bool inactive_is_low(struct lruvec *lruvec, enum lru_list inactive_lru)
+> >  {
+> > -       enum lru_list active_lru = file * LRU_FILE + LRU_ACTIVE;
+> > -       struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+> > -       enum lru_list inactive_lru = file * LRU_FILE;
+> > +       enum lru_list active_lru = inactive_lru + LRU_ACTIVE;
+> >         unsigned long inactive, active;
+> >         unsigned long inactive_ratio;
+> > -       struct lruvec *target_lruvec;
+> > -       unsigned long refaults;
+> >         unsigned long gb;
+> >
+> > -       inactive = lruvec_lru_size(lruvec, inactive_lru, sc->reclaim_idx);
+> > -       active = lruvec_lru_size(lruvec, active_lru, sc->reclaim_idx);
+> > +       inactive = lruvec_page_state(lruvec, inactive_lru);
+> > +       active = lruvec_page_state(lruvec, active_lru);
+> >
+> > -       /*
+> > -        * When refaults are being observed, it means a new workingset
+> > -        * is being established. Disable active list protection to get
+> > -        * rid of the stale workingset quickly.
+> > -        */
+> > -       target_lruvec = mem_cgroup_lruvec(sc->target_mem_cgroup, pgdat);
+> > -       refaults = lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE);
+> > -       if (file && target_lruvec->refaults != refaults) {
+> > -               inactive_ratio = 0;
+> > -       } else {
+> > -               gb = (inactive + active) >> (30 - PAGE_SHIFT);
+> > -               if (gb)
+> > -                       inactive_ratio = int_sqrt(10 * gb);
+> > -               else
+> > -                       inactive_ratio = 1;
+> > -       }
+> > -
+> > -       if (trace)
+> > -               trace_mm_vmscan_inactive_list_is_low(pgdat->node_id, sc->reclaim_idx,
+> > -                       lruvec_lru_size(lruvec, inactive_lru, MAX_NR_ZONES), inactive,
+> > -                       lruvec_lru_size(lruvec, active_lru, MAX_NR_ZONES), active,
+> > -                       inactive_ratio, file);
+> > +       gb = (inactive + active) >> (30 - PAGE_SHIFT);
+> > +       if (gb)
+> > +               inactive_ratio = int_sqrt(10 * gb);
+> > +       else
+> > +               inactive_ratio = 1;
+> >
+> >         return inactive * inactive_ratio < active;
+> >  }
+> >
+> > -static unsigned long shrink_list(enum lru_list lru, unsigned long nr_to_scan,
+> > -                                struct lruvec *lruvec, struct scan_control *sc)
+> > -{
+> > -       if (is_active_lru(lru)) {
+> > -               if (inactive_list_is_low(lruvec, is_file_lru(lru), sc, true))
+> > -                       shrink_active_list(nr_to_scan, lruvec, sc, lru);
+> > -               return 0;
+> > -       }
+> > -
+> > -       return shrink_inactive_list(nr_to_scan, lruvec, sc, lru);
+> > -}
+> > -
+> >  enum scan_balance {
+> >         SCAN_EQUAL,
+> >         SCAN_FRACT,
+> > @@ -2296,28 +2286,17 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+> >
+> >         /*
+> >          * If the system is almost out of file pages, force-scan anon.
+> > -        * But only if there are enough inactive anonymous pages on
+> > -        * the LRU. Otherwise, the small LRU gets thrashed.
+> >          */
+> > -       if (sc->file_is_tiny &&
+> > -           !inactive_list_is_low(lruvec, false, sc, false) &&
+> > -           lruvec_lru_size(lruvec, LRU_INACTIVE_ANON,
+> > -                           sc->reclaim_idx) >> sc->priority) {
+> > +       if (sc->file_is_tiny) {
+> >                 scan_balance = SCAN_ANON;
+> >                 goto out;
+> >         }
+> >
+> >         /*
+> > -        * If there is enough inactive page cache, i.e. if the size of the
+> > -        * inactive list is greater than that of the active list *and* the
+> > -        * inactive list actually has some pages to scan on this priority, we
+> > -        * do not reclaim anything from the anonymous working set right now.
+> > -        * Without the second condition we could end up never scanning an
+> > -        * lruvec even if it has plenty of old anonymous pages unless the
+> > -        * system is under heavy pressure.
+> > +        * If there is enough inactive page cache, we do not reclaim
+> > +        * anything from the anonymous working right now.
+> >          */
+> > -       if (!inactive_list_is_low(lruvec, true, sc, false) &&
+> > -           lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, sc->reclaim_idx) >> sc->priority) {
+> > +       if (sc->cache_trim_mode) {
+> >                 scan_balance = SCAN_FILE;
+> >                 goto out;
+> >         }
+> > @@ -2582,7 +2561,7 @@ static void shrink_lruvec(struct lruvec *lruvec, struct scan_control *sc)
+> >          * Even if we did not try to evict anon pages at all, we want to
+> >          * rebalance the anon lru active/inactive ratio.
+> >          */
+> > -       if (total_swap_pages && inactive_list_is_low(lruvec, false, sc, true))
+> > +       if (total_swap_pages && inactive_is_low(lruvec, LRU_INACTIVE_ANON))
+> >                 shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
+> >                                    sc, LRU_ACTIVE_ANON);
+> >  }
+> > @@ -2722,6 +2701,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> >         unsigned long nr_reclaimed, nr_scanned;
+> >         struct lruvec *target_lruvec;
+> >         bool reclaimable = false;
+> > +       unsigned long file;
+> >
+> >         target_lruvec = mem_cgroup_lruvec(sc->target_mem_cgroup, pgdat);
+> >
+> > @@ -2731,6 +2711,44 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> >         nr_reclaimed = sc->nr_reclaimed;
+> >         nr_scanned = sc->nr_scanned;
+> >
+> > +       /*
+> > +        * Target desirable inactive:active list ratios for the anon
+> > +        * and file LRU lists.
+> > +        */
+> > +       if (!sc->force_deactivate) {
+> > +               unsigned long refaults;
+> > +
+> > +               if (inactive_is_low(target_lruvec, LRU_INACTIVE_ANON))
+> > +                       sc->may_deactivate |= DEACTIVATE_ANON;
+> > +               else
+> > +                       sc->may_deactivate &= ~DEACTIVATE_ANON;
+> > +
+> > +               /*
+> > +                * When refaults are being observed, it means a new
+> > +                * workingset is being established. Deactivate to get
+> > +                * rid of any stale active pages quickly.
+> > +                */
+> > +               refaults = lruvec_page_state(target_lruvec,
+> > +                                            WORKINGSET_ACTIVATE);
+> > +               if (refaults != target_lruvec->refaults ||
+> > +                   inactive_is_low(target_lruvec, LRU_INACTIVE_FILE))
+> > +                       sc->may_deactivate |= DEACTIVATE_FILE;
+> > +               else
+> > +                       sc->may_deactivate &= ~DEACTIVATE_FILE;
+> > +       } else
+> > +               sc->may_deactivate = DEACTIVATE_ANON | DEACTIVATE_FILE;
+> > +
+> > +       /*
+> > +        * If we have plenty of inactive file pages that aren't
+> > +        * thrashing, try to reclaim those first before touching
+> > +        * anonymous pages.
+> > +        */
+> > +       file = lruvec_page_state(target_lruvec, LRU_INACTIVE_FILE);
+> > +       if (file >> sc->priority && !(sc->may_deactivate & DEACTIVATE_FILE))
+> > +               sc->cache_trim_mode = 1;
+> > +       else
+> > +               sc->cache_trim_mode = 0;
+> > +
+> >         /*
+> >          * Prevent the reclaimer from falling into the cache trap: as
+> >          * cache pages start out inactive, every cache fault will tip
+> > @@ -2741,10 +2759,9 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> >          * anon pages.  Try to detect this based on file LRU size.
+> >          */
+> >         if (!cgroup_reclaim(sc)) {
+> > -               unsigned long file;
+> > -               unsigned long free;
+> > -               int z;
+> >                 unsigned long total_high_wmark = 0;
+> > +               unsigned long free, anon;
+> > +               int z;
+> >
+> >                 free = sum_zone_node_page_state(pgdat->node_id, NR_FREE_PAGES);
+> >                 file = node_page_state(pgdat, NR_ACTIVE_FILE) +
+> > @@ -2758,7 +2775,17 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> >                         total_high_wmark += high_wmark_pages(zone);
+> >                 }
+> >
+> > -               sc->file_is_tiny = file + free <= total_high_wmark;
+> > +               /*
+> > +                * Consider anon: if that's low too, this isn't a
+> > +                * runaway file reclaim problem, but rather just
+> > +                * extreme pressure. Reclaim as per usual then.
+> > +                */
+> > +               anon = node_page_state(pgdat, NR_INACTIVE_ANON);
+> > +
+> > +               sc->file_is_tiny =
+> > +                       file + free <= total_high_wmark &&
+> > +                       !(sc->may_deactivate & DEACTIVATE_ANON) &&
+> > +                       anon >> sc->priority;
+> >         }
+> >
+> >         shrink_node_memcgs(pgdat, sc);
+> > @@ -3062,9 +3089,27 @@ static unsigned long do_try_to_free_pages(struct zonelist *zonelist,
+> >         if (sc->compaction_ready)
+> >                 return 1;
+> >
+> > +       /*
+> > +        * We make inactive:active ratio decisions based on the node's
+> > +        * composition of memory, but a restrictive reclaim_idx or a
+> > +        * memory.low cgroup setting can exempt large amounts of
+> > +        * memory from reclaim. Neither of which are very common, so
+> > +        * instead of doing costly eligibility calculations of the
+> > +        * entire cgroup subtree up front, we assume the estimates are
+> > +        * good, and retry with forcible deactivation if that fails.
+> > +        */
+> > +       if (sc->skipped_deactivate) {
+> > +               sc->priority = initial_priority;
+> > +               sc->force_deactivate = 1;
+> > +               sc->skipped_deactivate = 0;
+> > +               goto retry;
+> > +       }
+> > +
+>
+> Not really an objection but in the worst case this will double the
+> cost of direct reclaim.
+>
+> >         /* Untapped cgroup reserves?  Don't OOM, retry. */
+> >         if (sc->memcg_low_skipped) {
+> >                 sc->priority = initial_priority;
+> > +               sc->force_deactivate = 0;
+> > +               sc->skipped_deactivate = 0;
+> >                 sc->memcg_low_reclaim = 1;
+> >                 sc->memcg_low_skipped = 0;
+> >                 goto retry;
+> > @@ -3347,18 +3392,20 @@ static void age_active_anon(struct pglist_data *pgdat,
+> >                                 struct scan_control *sc)
+> >  {
+> >         struct mem_cgroup *memcg;
+> > +       struct lruvec *lruvec;
+> >
+> >         if (!total_swap_pages)
+> >                 return;
+> >
+> > +       lruvec = mem_cgroup_lruvec(NULL, pgdat);
+> > +       if (!inactive_is_low(lruvec, LRU_INACTIVE_ANON))
+> > +               return;
+> > +
+> >         memcg = mem_cgroup_iter(NULL, NULL, NULL);
+> >         do {
+> > -               struct lruvec *lruvec = mem_cgroup_lruvec(memcg, pgdat);
+> > -
+> > -               if (inactive_list_is_low(lruvec, false, sc, true))
+> > -                       shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
+> > -                                          sc, LRU_ACTIVE_ANON);
+> > -
+> > +               lruvec = mem_cgroup_lruvec(memcg, pgdat);
+> > +               shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
+> > +                                  sc, LRU_ACTIVE_ANON);
+> >                 memcg = mem_cgroup_iter(NULL, memcg, NULL);
+> >         } while (memcg);
+> >  }
+> > --
+> > 2.24.0
+> >
