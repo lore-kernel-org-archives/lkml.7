@@ -2,78 +2,137 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6927BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2464BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F112071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96922071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:41:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AhV+hmq5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfK0Riv (ORCPT
+        id S1727026AbfK0Rlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:38:51 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:57182 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbfK0Riv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:38:51 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ia1H3-0003xR-Id; Wed, 27 Nov 2019 10:38:46 -0700
-To:     James Sewart <jamessewart@arista.com>, linux-pci@vger.kernel.org
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20191120193228.GA103670@google.com>
- <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
- <20191126173833.GA16069@infradead.org>
- <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
-Date:   Wed, 27 Nov 2019 10:38:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 27 Nov 2019 12:41:37 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43175 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726510AbfK0Rlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 12:41:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574876495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=2/Wb54gH2JUj0cmiRfmHDfbzDR8shI5UiNeN+uIiqhI=;
+        b=AhV+hmq5WzsNtQVnw7NmukMrTrggIgUzyvjWMOhUdl2KR4daR2qAYqv6feAR29xv/a5A/q
+        WIBz4setZTnLxwfJGDtN5rN4tuo2vXCnsx3MuKpk9Gyg1Z6pyCN7Pu+7TOy3DZfVSSN18h
+        V+Oz9cQ3UjLAxXsiuwUWCwlQ1ZJbRds=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-7c7Vbk0_Nh-8Ul1mLCDsng-1; Wed, 27 Nov 2019 12:41:34 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83B64DB60;
+        Wed, 27 Nov 2019 17:41:32 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-116-69.ams2.redhat.com [10.36.116.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E4175D9D6;
+        Wed, 27 Nov 2019 17:41:27 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v1] drivers/base/node.c: get rid of get_nid_for_pfn()
+Date:   Wed, 27 Nov 2019 18:41:26 +0100
+Message-Id: <20191127174126.28064-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: helgaas@kernel.org, alex.williamson@redhat.com, dima@arista.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, 0x7f454c46@gmail.com, hch@infradead.org, linux-pci@vger.kernel.org, jamessewart@arista.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v3 1/2] PCI: Add parameter nr_devfns to pci_add_dma_alias
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: 7c7Vbk0_Nh-8Ul1mLCDsng-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since commit d84f2f5a7552 ("drivers/base/node.c: simplify
+unregister_memory_block_under_nodes()") we only have a single user of
+get_nid_for_pfn(). Let's just inline that code and get rid of
+get_nid_for_pfn().
 
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ drivers/base/node.c | 23 +++++++----------------
+ 1 file changed, 7 insertions(+), 16 deletions(-)
 
-On 2019-11-27 6:27 a.m., James Sewart wrote:
->   * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
->   * which is used to program permissible bus-devfn source addresses for DMA
-> @@ -5873,8 +5874,12 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->   * cannot be left as a userspace activity).  DMA aliases should therefore
->   * be configured via quirks, such as the PCI fixup header quirk.
->   */
-> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
-> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, int nr_devfns)
->  {
-> +	int devfn_to = devfn_from + nr_devfns - 1;
-> +
-> +	BUG_ON(nr_devfns < 1);
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 98a31bafc8a2..735073fd2926 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -744,17 +744,6 @@ int unregister_cpu_under_node(unsigned int cpu, unsign=
+ed int nid)
+ }
+=20
+ #ifdef CONFIG_MEMORY_HOTPLUG_SPARSE
+-static int __ref get_nid_for_pfn(unsigned long pfn)
+-{
+-=09if (!pfn_valid_within(pfn))
+-=09=09return -1;
+-#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+-=09if (system_state < SYSTEM_RUNNING)
+-=09=09return early_pfn_to_nid(pfn);
+-#endif
+-=09return pfn_to_nid(pfn);
+-}
+-
+ /* register memory section under specified node if it spans that node */
+ static int register_mem_sect_under_node(struct memory_block *mem_blk,
+ =09=09=09=09=09 void *arg)
+@@ -766,8 +755,6 @@ static int register_mem_sect_under_node(struct memory_b=
+lock *mem_blk,
+ =09unsigned long pfn;
+=20
+ =09for (pfn =3D start_pfn; pfn <=3D end_pfn; pfn++) {
+-=09=09int page_nid;
+-
+ =09=09/*
+ =09=09 * memory block could have several absent sections from start.
+ =09=09 * skip pfn range from absent section
+@@ -784,11 +771,15 @@ static int register_mem_sect_under_node(struct memory=
+_block *mem_blk,
+ =09=09 * block belong to the same node.
+ =09=09 */
+ =09=09if (system_state =3D=3D SYSTEM_BOOTING) {
+-=09=09=09page_nid =3D get_nid_for_pfn(pfn);
+-=09=09=09if (page_nid < 0)
++=09=09=09if (!pfn_valid_within(pfn))
+ =09=09=09=09continue;
+-=09=09=09if (page_nid !=3D nid)
++#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
++=09=09=09if (early_pfn_to_nid(pfn) !=3D nid)
+ =09=09=09=09continue;
++#else
++=09=09=09if (pfn_to_nid(pfn) !=3D nid)
++=09=09=09=09continue;
++#endif
+ =09=09}
+=20
+ =09=09/*
+--=20
+2.21.0
 
-Why not just make nr_devfns unsigned and do nothing if it's zero? It
-might also be worth checking that nr_devfns + devfn_from is less than
-U8_MAX... But I'd probably avoid the BUG_ON and just truncate it.
-
-Logan
