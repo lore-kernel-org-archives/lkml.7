@@ -2,306 +2,92 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C106EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F8BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811D621844
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FdkcHHVv"
+	by mail.kernel.org (Postfix) with ESMTP id 4E61721826
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574887722;
+	bh=3mBeHU26KDoJnerDrK7TIAfbbYuBh2vF/7RxufJMUZM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VKccVZnWZIzDFSVH04vknlPTboKYSkiMORvuXXE6skXD/R9u8r6xDoyBLTnnU4q7j
+	 nWmhAFKjl7tMgn/zOA5WbZCdDMrmsWRbqbdPSUW9MIzGWJycfK5gt8qgYKM6/RlhfJ
+	 xC/u3UFU6TDOzSdu+sOqhPY1j/cgP4L08G0IaMbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbfK0Ush (ORCPT
+        id S1729688AbfK0Usl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:48:37 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46505 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730141AbfK0Usd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:48:33 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 193so11712451pfc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 12:48:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Y6LYqA1009w6/0ukN0Ib/bql9rL9dUoPmyEoPz0e4AE=;
-        b=FdkcHHVvIY3IEFp0+wECGStXgSWXF4l63Es+grBYcdduCC7OlLsRIWiHcAceeoSO0c
-         KE0p4VBA6wuzuhj5W0xVaHoLemUCW42tcOtTP+cZ+h2pgIpk+E/D3wCOKVQUIM+vbQeD
-         r227ZE4R8e355lnIjtEEyv7foBGflEwCdB+rrMnT3BGtEawzPn0rS2mjsjtJQxaES0ma
-         eJ/eamuR4soalOyEHTTDv8WPVrjK73knNLLbRQvV61uDf2IZW9VCQ8huhMtc5lyBy5Vv
-         6I9el17XC6e3uHm27KZt//D+ZWGQ5xffzzug2d10YB5s8pc6U+zTQfApYxQWmT3KvFdF
-         Cteg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Y6LYqA1009w6/0ukN0Ib/bql9rL9dUoPmyEoPz0e4AE=;
-        b=HF6b/l186t2K6ij31p3xt7wcMzgiUSBz+cguPhDzlUntqiy3vWhD21o5HJ14QwRE4L
-         4glpD8LCFtewSFd9/sMXMUlmUxPpr0rCMrJgM+T7MZM9ienk8BvfydHRpI7+6fOPCp2t
-         BQEbu8wQ42slQQaswANKOnOWDtdfPb/xFOR32BDNx0bvAU84V05C/PezQVqD/q2pkkn/
-         pI4EsU445gLP5ldAi0d4bRkBDPFEE12sRs3PQy9WFVWcMNHrZA4ervqoiBr4TsfkDzyL
-         D8m0Oe1WwdTJj7WNjeQ4LvSPGHsHLfg5qUYH+jlj/UMSfJXvdBEzacwHWOn/n/Jo38G1
-         m+Ew==
-X-Gm-Message-State: APjAAAUkqXHqjVcGKJ9/Rftg8rCXeyV/JDDTzImLuhHl3OjJpL2bkFoN
-        Jn3PnIPZ914pnldhJyt0YQ3THw==
-X-Google-Smtp-Source: APXvYqxQ65bEvXdycLMXbBtX1P9RFv4BXVKPMqYZ/aYjR1KmPzyt6bVrEPZZCdlnLzb3SEwPi+GajQ==
-X-Received: by 2002:a63:4b52:: with SMTP id k18mr7079804pgl.394.1574887712054;
-        Wed, 27 Nov 2019 12:48:32 -0800 (PST)
-Received: from ?IPv6:2605:e000:100e:8c61:814b:c5b0:7860:90ce? ([2605:e000:100e:8c61:814b:c5b0:7860:90ce])
-        by smtp.gmail.com with ESMTPSA id l7sm3479413pfl.11.2019.11.27.12.48.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2019 12:48:31 -0800 (PST)
-Subject: Re: [PATCH RFC] signalfd: add support for SFD_TASK
-To:     Jann Horn <jannh@google.com>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
- <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <1d3a458a-fa79-5e33-b5ce-b473122f6d1a@kernel.dk>
-Date:   Wed, 27 Nov 2019 12:48:29 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 27 Nov 2019 15:48:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729682AbfK0Usi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:48:38 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 580AD217C3;
+        Wed, 27 Nov 2019 20:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574887717;
+        bh=3mBeHU26KDoJnerDrK7TIAfbbYuBh2vF/7RxufJMUZM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qncvGCimdKXda/LaYRTYYu997lybQkBV6IinT1Htt6JOnDUqT1uwV5OovbgXkcn6A
+         c9c1Gf5dxWqUW8Pww3wL9vA23/9nNl5xuhXbZva43BIqscg90bu+O+m6TfEEjfhBYs
+         Ked5yn6b0zkMwoX2DG+E3wGXddlR8DpweBLQeSE0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Heinz Mauelshagen <heinzm@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 067/211] dm raid: avoid bitmap with raid4/5/6 journal device
+Date:   Wed, 27 Nov 2019 21:30:00 +0100
+Message-Id: <20191127203100.242392723@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
+References: <20191127203049.431810767@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/27/19 12:23 PM, Jann Horn wrote:
-> On Wed, Nov 27, 2019 at 6:11 AM Jens Axboe <axboe@kernel.dk> wrote:
->> I posted this a few weeks back, took another look at it and refined it a
->> bit. I'd like some input on the viability of this approach.
->>
->> A new signalfd setup flag is added, SFD_TASK. This is only valid if used
->> with SFD_CLOEXEC. If set, the task setting up the signalfd descriptor is
->> remembered in the signalfd context, and will be the one we use for
->> checking signals in the poll/read handlers in signalfd.
->>
->> This is needed to make signalfd useful with io_uring and aio, of which
->> the former in particular has my interest.
->>
->> I _think_ this is sane. To prevent the case of a task clearing O_CLOEXEC
->> on the signalfd descriptor, forking, and then exiting, we grab a
->> reference to the task when we assign it. If that original task exits, we
->> catch it in signalfd_flush() and ensure waiters are woken up.
-> 
-> Mh... that's not really reliable, because you only get ->flush() from
-> the last exiting thread (or more precisely, the last exiting task that
-> shares the files_struct).
-> 
-> What is your goal here? To have a reference to a task without keeping
-> the entire task_struct around in memory if someone leaks the signalfd
-> to another process - basically like a weak pointer? If so, you could
-> store a refcounted reference to "struct pid" instead of a refcounted
-> reference to the task_struct, and then do the lookup of the
-> task_struct on ->poll and ->read (similar to what procfs does).
+From: Heinz Mauelshagen <heinzm@redhat.com>
 
-Yeah, I think that works out much better (and cleaner). How about this,
-then? Follows your advice and turns it into a struct pid instead. I
-don't particularly like the -ESRCH in dequeue and setup, what do you
-think? For poll, POLLERR seems like a prudent choice.
+[ Upstream commit d857ad75edf3c0066fcd920746f9dc75382b3324 ]
 
-Tested with the test cases I sent out yesterday, works for me.
+With raid4/5/6, journal device and write intent bitmap are mutually exclusive.
 
-diff --git a/fs/signalfd.c b/fs/signalfd.c
-index 44b6845b071c..ccb1173b20aa 100644
---- a/fs/signalfd.c
-+++ b/fs/signalfd.c
-@@ -50,6 +50,7 @@ void signalfd_cleanup(struct sighand_struct *sighand)
-  
-  struct signalfd_ctx {
-  	sigset_t sigmask;
-+	struct pid *task_pid;
-  };
-  
-  static int signalfd_release(struct inode *inode, struct file *file)
-@@ -58,20 +59,41 @@ static int signalfd_release(struct inode *inode, struct file *file)
-  	return 0;
-  }
-  
-+static void signalfd_put_task(struct signalfd_ctx *ctx, struct task_struct *tsk)
-+{
-+	if (ctx->task_pid)
-+		put_task_struct(tsk);
-+}
-+
-+static struct task_struct *signalfd_get_task(struct signalfd_ctx *ctx)
-+{
-+	if (ctx->task_pid)
-+		return get_pid_task(ctx->task_pid, PIDTYPE_PID);
-+
-+	return current;
-+}
-+
-  static __poll_t signalfd_poll(struct file *file, poll_table *wait)
-  {
-  	struct signalfd_ctx *ctx = file->private_data;
-+	struct task_struct *tsk;
-  	__poll_t events = 0;
-  
--	poll_wait(file, &current->sighand->signalfd_wqh, wait);
-+	tsk = signalfd_get_task(ctx);
-+	if (tsk) {
-+		poll_wait(file, &tsk->sighand->signalfd_wqh, wait);
-  
--	spin_lock_irq(&current->sighand->siglock);
--	if (next_signal(&current->pending, &ctx->sigmask) ||
--	    next_signal(&current->signal->shared_pending,
--			&ctx->sigmask))
--		events |= EPOLLIN;
--	spin_unlock_irq(&current->sighand->siglock);
-+		spin_lock_irq(&tsk->sighand->siglock);
-+		if (next_signal(&tsk->pending, &ctx->sigmask) ||
-+		    next_signal(&tsk->signal->shared_pending,
-+				&ctx->sigmask))
-+			events |= EPOLLIN;
-+		spin_unlock_irq(&tsk->sighand->siglock);
-  
-+		signalfd_put_task(ctx, tsk);
-+	} else {
-+		events |= EPOLLERR;
-+	}
-  	return events;
-  }
-  
-@@ -167,10 +189,15 @@ static ssize_t signalfd_dequeue(struct signalfd_ctx *ctx, kernel_siginfo_t *info
-  				int nonblock)
-  {
-  	ssize_t ret;
-+	struct task_struct *tsk;
-  	DECLARE_WAITQUEUE(wait, current);
-  
--	spin_lock_irq(&current->sighand->siglock);
--	ret = dequeue_signal(current, &ctx->sigmask, info);
-+	tsk = signalfd_get_task(ctx);
-+	if (!tsk)
-+		return -ESRCH;
-+
-+	spin_lock_irq(&tsk->sighand->siglock);
-+	ret = dequeue_signal(tsk, &ctx->sigmask, info);
-  	switch (ret) {
-  	case 0:
-  		if (!nonblock)
-@@ -178,29 +205,31 @@ static ssize_t signalfd_dequeue(struct signalfd_ctx *ctx, kernel_siginfo_t *info
-  		ret = -EAGAIN;
-  		/* fall through */
-  	default:
--		spin_unlock_irq(&current->sighand->siglock);
-+		spin_unlock_irq(&tsk->sighand->siglock);
-+		signalfd_put_task(ctx, tsk);
-  		return ret;
-  	}
-  
--	add_wait_queue(&current->sighand->signalfd_wqh, &wait);
-+	add_wait_queue(&tsk->sighand->signalfd_wqh, &wait);
-  	for (;;) {
-  		set_current_state(TASK_INTERRUPTIBLE);
--		ret = dequeue_signal(current, &ctx->sigmask, info);
-+		ret = dequeue_signal(tsk, &ctx->sigmask, info);
-  		if (ret != 0)
-  			break;
-  		if (signal_pending(current)) {
-  			ret = -ERESTARTSYS;
-  			break;
-  		}
--		spin_unlock_irq(&current->sighand->siglock);
-+		spin_unlock_irq(&tsk->sighand->siglock);
-  		schedule();
--		spin_lock_irq(&current->sighand->siglock);
-+		spin_lock_irq(&tsk->sighand->siglock);
-  	}
--	spin_unlock_irq(&current->sighand->siglock);
-+	spin_unlock_irq(&tsk->sighand->siglock);
-  
--	remove_wait_queue(&current->sighand->signalfd_wqh, &wait);
-+	remove_wait_queue(&tsk->sighand->signalfd_wqh, &wait);
-  	__set_current_state(TASK_RUNNING);
-  
-+	signalfd_put_task(ctx, tsk);
-  	return ret;
-  }
-  
-@@ -267,19 +296,24 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
-  	/* Check the SFD_* constants for consistency.  */
-  	BUILD_BUG_ON(SFD_CLOEXEC != O_CLOEXEC);
-  	BUILD_BUG_ON(SFD_NONBLOCK != O_NONBLOCK);
-+	BUILD_BUG_ON(SFD_TASK & (SFD_CLOEXEC | SFD_NONBLOCK));
-  
--	if (flags & ~(SFD_CLOEXEC | SFD_NONBLOCK))
-+	if (flags & ~(SFD_CLOEXEC | SFD_NONBLOCK | SFD_TASK))
-+		return -EINVAL;
-+	if ((flags & (SFD_CLOEXEC | SFD_TASK)) == SFD_TASK)
-  		return -EINVAL;
-  
-  	sigdelsetmask(mask, sigmask(SIGKILL) | sigmask(SIGSTOP));
-  	signotset(mask);
-  
-  	if (ufd == -1) {
--		ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
-+		ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-  		if (!ctx)
-  			return -ENOMEM;
-  
-  		ctx->sigmask = *mask;
-+		if (flags & SFD_TASK)
-+			ctx->task_pid = get_task_pid(current, PIDTYPE_PID);
-  
-  		/*
-  		 * When we call this, the initialization must be complete, since
-@@ -290,6 +324,7 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
-  		if (ufd < 0)
-  			kfree(ctx);
-  	} else {
-+		struct task_struct *tsk;
-  		struct fd f = fdget(ufd);
-  		if (!f.file)
-  			return -EBADF;
-@@ -298,11 +333,17 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
-  			fdput(f);
-  			return -EINVAL;
-  		}
--		spin_lock_irq(&current->sighand->siglock);
-+		tsk = signalfd_get_task(ctx);
-+		if (!tsk) {
-+			fdput(f);
-+			return -ESRCH;
-+		}
-+		spin_lock_irq(&tsk->sighand->siglock);
-  		ctx->sigmask = *mask;
--		spin_unlock_irq(&current->sighand->siglock);
-+		spin_unlock_irq(&tsk->sighand->siglock);
-  
--		wake_up(&current->sighand->signalfd_wqh);
-+		wake_up(&tsk->sighand->signalfd_wqh);
-+		signalfd_put_task(ctx, tsk);
-  		fdput(f);
-  	}
-  
-diff --git a/include/uapi/linux/signalfd.h b/include/uapi/linux/signalfd.h
-index 83429a05b698..064c5dc3eb99 100644
---- a/include/uapi/linux/signalfd.h
-+++ b/include/uapi/linux/signalfd.h
-@@ -16,6 +16,7 @@
-  /* Flags for signalfd4.  */
-  #define SFD_CLOEXEC O_CLOEXEC
-  #define SFD_NONBLOCK O_NONBLOCK
-+#define SFD_TASK 00000001
-  
-  struct signalfd_siginfo {
-  	__u32 ssi_signo;
+Signed-off-by: Heinz Mauelshagen <heinzm@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/dm-raid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index 151211b4cb1ba..2c5912e755148 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -2441,7 +2441,7 @@ static int super_validate(struct raid_set *rs, struct md_rdev *rdev)
+ 	}
+ 
+ 	/* Enable bitmap creation for RAID levels != 0 */
+-	mddev->bitmap_info.offset = rt_is_raid0(rs->raid_type) ? 0 : to_sector(4096);
++	mddev->bitmap_info.offset = (rt_is_raid0(rs->raid_type) || rs->journal_dev.dev) ? 0 : to_sector(4096);
+ 	mddev->bitmap_info.default_offset = mddev->bitmap_info.offset;
+ 
+ 	if (!test_and_clear_bit(FirstUse, &rdev->flags)) {
 -- 
-Jens Axboe
+2.20.1
+
+
 
