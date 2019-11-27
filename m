@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7666C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB873C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D952070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0212070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:40:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfK0Kk0 (ORCPT
+        id S1727454AbfK0Kkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:40:26 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56706 "EHLO mx1.suse.de"
+        Wed, 27 Nov 2019 05:40:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56510 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727345AbfK0KkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:40:09 -0500
+        id S1727287AbfK0KkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:40:00 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6787CB2FB;
-        Wed, 27 Nov 2019 10:40:08 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 34605B47B;
+        Wed, 27 Nov 2019 10:39:58 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -66,9 +66,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 rebase 32/34] powerpc/64: Make COMPAT user-selectable disabled on littleendian by default.
-Date:   Wed, 27 Nov 2019 11:39:08 +0100
-Message-Id: <760dd63d2035d3707a9ba85c4b667dc79ff46caf.1574803685.git.msuchanek@suse.de>
+Subject: [PATCH v2 rebase 26/34] powerpc/64: system call: Fix sparse warning about missing declaration
+Date:   Wed, 27 Nov 2019 11:39:02 +0100
+Message-Id: <f45bdb3ccb7c6a0c7ee5ff0612a80bce2f44dc0b.1574803685.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574803684.git.msuchanek@suse.de>
 References: <cover.1574803684.git.msuchanek@suse.de>
@@ -79,31 +79,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On bigendian ppc64 it is common to have 32bit legacy binaries but much
-less so on littleendian.
+Sparse warns about missing declarations for these functions:
+
++arch/powerpc/kernel/syscall_64.c:108:23: warning: symbol 'syscall_exit_prepare' was not declared. Should it be static?
++arch/powerpc/kernel/syscall_64.c:18:6: warning: symbol 'system_call_exception' was not declared. Should it be static?
++arch/powerpc/kernel/syscall_64.c:200:23: warning: symbol 'interrupt_exit_user_prepare' was not declared. Should it be static?
++arch/powerpc/kernel/syscall_64.c:288:23: warning: symbol 'interrupt_exit_kernel_prepare' was not declared. Should it be static?
+
+Add declaration for them.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/asm-prototypes.h | 6 ++++++
+ arch/powerpc/kernel/syscall_64.c          | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index e446bb5b3f8d..fabae186eea7 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -267,8 +267,9 @@ config PANIC_TIMEOUT
- 	default 180
+diff --git a/arch/powerpc/include/asm/asm-prototypes.h b/arch/powerpc/include/asm/asm-prototypes.h
+index 399ca63196e4..841746357833 100644
+--- a/arch/powerpc/include/asm/asm-prototypes.h
++++ b/arch/powerpc/include/asm/asm-prototypes.h
+@@ -96,6 +96,12 @@ ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp, s
+ unsigned long __init early_init(unsigned long dt_ptr);
+ void __init machine_init(u64 dt_ptr);
+ #endif
++#ifdef CONFIG_PPC64
++long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8, unsigned long r0, struct pt_regs *regs);
++notrace unsigned long syscall_exit_prepare(unsigned long r3, struct pt_regs *regs);
++notrace unsigned long interrupt_exit_user_prepare(struct pt_regs *regs, unsigned long msr);
++notrace unsigned long interrupt_exit_kernel_prepare(struct pt_regs *regs, unsigned long msr);
++#endif
  
- config COMPAT
--	bool
--	default y if PPC64
-+	bool "Enable support for 32bit binaries"
-+	depends on PPC64
-+	default y if !CPU_LITTLE_ENDIAN
- 	select COMPAT_BINFMT_ELF
- 	select ARCH_WANT_OLD_COMPAT_IPC
- 	select COMPAT_OLD_SIGACTION
+ long ppc_fadvise64_64(int fd, int advice, u32 offset_high, u32 offset_low,
+ 		      u32 len_high, u32 len_low);
+diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall_64.c
+index d00cfc4a39a9..62f44c3072f3 100644
+--- a/arch/powerpc/kernel/syscall_64.c
++++ b/arch/powerpc/kernel/syscall_64.c
+@@ -1,4 +1,5 @@
+ #include <linux/err.h>
++#include <asm/asm-prototypes.h>
+ #include <asm/book3s/64/kup-radix.h>
+ #include <asm/cputime.h>
+ #include <asm/hw_irq.h>
 -- 
 2.23.0
 
