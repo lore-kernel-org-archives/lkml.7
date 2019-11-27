@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5443FC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C67C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D4D21775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D997A20637
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888662;
-	bh=YRIoyCqFbllyk9Rbao0HAflYjxyFvS7VSLfoVAW4XKI=;
+	s=default; t=1574888664;
+	bh=tbrUviMnNBQSpfe313dBOETUABwOxt7qbL94XpnV9Dc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTTJPioNgGuMkxu3+hMIshX9TXR639P/H9kADcTHvG3GVIEm0tlYrKxSwV1wvF158
-	 W363ovtsLdA5/V2TvYPvl8+LlbgmJUcP8Yxd4+8NnlZIZP2NuGooMLb6wc7yg/0m9f
-	 2OH8GtzIm5bvLr6mIeK55MKYb7+XmjfS40DQFdZY=
+	b=plbtNgSBXXSKqC4Ta3TIQ+QqnJDXgrq7k1ukWooT2dvS+sgCPL3PTTm5fLXMy++z6
+	 zJJZPtPE9XxKADSF/MuhkYoAVvnSsB+FB9+CPjqiF5EDYyp+MrxVUZSSEmuIMyeBjz
+	 kPOobZnKMDVHPy/0Gc7dCSRX04E6fSDvHABm+HEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732137AbfK0VEU (ORCPT
+        id S1732138AbfK0VEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:04:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57678 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:04:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731521AbfK0VEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:04:15 -0500
+        id S1732135AbfK0VEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:04:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27D432086A;
-        Wed, 27 Nov 2019 21:04:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61C17215F1;
+        Wed, 27 Nov 2019 21:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888654;
-        bh=YRIoyCqFbllyk9Rbao0HAflYjxyFvS7VSLfoVAW4XKI=;
+        s=default; t=1574888659;
+        bh=tbrUviMnNBQSpfe313dBOETUABwOxt7qbL94XpnV9Dc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=in82cZC+c+V6j4Nql8YgnMPj6PLNN3YN7khKUc2nL9QyAbZyKzuaThpSKfQA9PhEk
-         ansdj/t3xCE9wiGDsECfUT+5IgbagamE06w/avgwomZN52HDmcrlOEw/nTeTKCdZnz
-         KQA1nLTs8VZrW6d6RdpSqpPkg650Yc/B9SMdqBJs=
+        b=1/BOcSYZ9+gyxhH4gjbtE4+QHNHeeC+IHGS+Cnb0ui7MQRRQfwnj+SX75Tt2N8LGy
+         62XtEOqhiQfKxlz+OjqDC3diDGv4Kfb0YxLB6RDMgAbHwymqP79qWwGAzi+jGVFglf
+         Sy9YCfQZ2CnMwW0dxwKwvPH6luQ7RW10Rff0tZsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 217/306] ath10k: snoc: fix unbalanced clock error handling
-Date:   Wed, 27 Nov 2019 21:31:07 +0100
-Message-Id: <20191127203130.930122869@linuxfoundation.org>
+Subject: [PATCH 4.19 219/306] rtl8xxxu: Fix missing break in switch
+Date:   Wed, 27 Nov 2019 21:31:09 +0100
+Message-Id: <20191127203131.058848545@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -61,37 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-[ Upstream commit 82e60d920e8ad70cd9a280ab156566755f1fe4aa ]
+[ Upstream commit 307b00c5e695857ca92fc6a4b8ab6c48f988a1b1 ]
 
-Similar to regulator error handling, we should only start tearing down
-the 'i - 1' clock when clock 'i' fails to enable. Otherwise, we might
-end up with an unbalanced clock, where we never successfully enabled the
-clock, but we try to disable it anyway.
+Add missing break statement in order to prevent the code from falling
+through to the default case.
 
-Fixes: a6a793f98786 ("ath10k: vote for hardware resources for WCN3990")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/snoc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-index fa1843a7e0fda..e2d78f77edb70 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -1190,7 +1190,7 @@ static int ath10k_wcn3990_clk_init(struct ath10k *ar)
- 	return 0;
- 
- err_clock_config:
--	for (; i >= 0; i--) {
-+	for (i = i - 1; i >= 0; i--) {
- 		clk_info = &ar_snoc->clk[i];
- 
- 		if (!clk_info->handle)
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 505ab1b055ff4..2b4fcdf4ec5bb 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -5691,6 +5691,7 @@ static int rtl8xxxu_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
+ 		break;
+ 	case WLAN_CIPHER_SUITE_TKIP:
+ 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_MMIC;
++		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
 -- 
 2.20.1
 
