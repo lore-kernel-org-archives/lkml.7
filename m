@@ -2,51 +2,51 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA57C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41282C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E360720869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1290520870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890981;
-	bh=aTktFn2E1LN+MdrxtOciFAoU5IS9FuN6Se/pNHHv8d8=;
+	s=default; t=1574890987;
+	bh=KiNTpBqQjZufNQVSxZpZkenyg2xSVpIVaX9A/Vr/FdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FqJ+UkyjRJQQEcUSelXu5EGfa3MMD1Xrg1coQ9ZmyD1/SjxnRORp8B6c2U/2Gzl/O
-	 ippnGPEdtKYCCk7MG2Po9T5ZKXlVyV9dmY7fpQKooG+y9w0pAYnl83+ALbij8ogc0n
-	 6gi87p2dG3oqmq1cUwxnjY69fpS2aKFhMkfEEB2s=
+	b=ZF0A28/+lVHOCUGuykuG8I0pcr5qyRvB7woD2fMqBC/kZLIgSlRP/CKjE4K74j3AF
+	 mU+fE5tOZVBQgIvP7l/LGYZOnqwySh7jRMNYPjskTFTGWl2F3Cnz3IRGkTVj3kFCTm
+	 HjORnKDe0hGa+y73WfTwzz+fJI3SctbyY9xeKDZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbfK0Uj1 (ORCPT
+        id S1728900AbfK0UjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:39:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43504 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:39:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728914AbfK0UjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:39:23 -0500
+        id S1728043AbfK0UjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:39:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CE4C21770;
-        Wed, 27 Nov 2019 20:39:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B215321781;
+        Wed, 27 Nov 2019 20:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887162;
-        bh=aTktFn2E1LN+MdrxtOciFAoU5IS9FuN6Se/pNHHv8d8=;
+        s=default; t=1574887147;
+        bh=KiNTpBqQjZufNQVSxZpZkenyg2xSVpIVaX9A/Vr/FdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lR9MuEYyHhWH/RemJuR6YR0VWs/0VgMocb3rnLJHA0Ge+QEF2YahsSvSB4EYdhoF+
-         Mn9Zguew2M3CJLXUW+fBZVJZTCH5dJKBH1dwJqP0ePynCx/Jtvp3wlm7UPC6bGxlhd
-         W3qABmgPqTPzHRhQm2yUxyCt73qtLcdbP/4pbs9c=
+        b=NmPtAM1dC89GLpxHDJCTC7GwVpLVDnv9fe/1kbVNy5o1dC69x8rh+HCaCI17+22zR
+         bJC0GIRx6spQuhwBB0fLjEA0t9FzIeSVabK9tQb0/e8sj9fDHJ7/eTWRE+sQ54P4+S
+         m/gXsq6FTfFXwzmogWOoBtIgE0YOsEQAKw4OTfR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 121/132] virtio_console: move removal code
-Date:   Wed, 27 Nov 2019 21:31:52 +0100
-Message-Id: <20191127203032.748883183@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>
+Subject: [PATCH 4.4 132/132] KVM: PPC: Book3S HV: Flush link stack on guest exit to host kernel
+Date:   Wed, 27 Nov 2019 21:32:03 +0100
+Message-Id: <20191127203034.541297082@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -59,111 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit aa44ec867030a72e8aa127977e37dec551d8df19 ]
+commit af2e8c68b9c5403f77096969c516f742f5bb29e0 upstream.
 
-Will make it reusable for error handling.
+On some systems that are vulnerable to Spectre v2, it is up to
+software to flush the link stack (return address stack), in order to
+protect against Spectre-RSB.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+When exiting from a guest we do some house keeping and then
+potentially exit to C code which is several stack frames deep in the
+host kernel. We will then execute a series of returns without
+preceeding calls, opening up the possiblity that the guest could have
+poisoned the link stack, and direct speculative execution of the host
+to a gadget of some sort.
+
+To prevent this we add a flush of the link stack on exit from a guest.
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+[dja: backport to v4.4, drop P9 support]
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/char/virtio_console.c | 72 +++++++++++++++++------------------
- 1 file changed, 36 insertions(+), 36 deletions(-)
+ arch/powerpc/include/asm/asm-prototypes.h |    2 ++
+ arch/powerpc/kernel/security.c            |    9 +++++++++
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S   |   20 ++++++++++++++++++++
+ 3 files changed, 31 insertions(+)
 
-diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-index bc4a804048205..5e0e29ee31d1a 100644
---- a/drivers/char/virtio_console.c
-+++ b/drivers/char/virtio_console.c
-@@ -1987,6 +1987,42 @@ static void remove_vqs(struct ports_device *portdev)
- 	kfree(portdev->out_vqs);
- }
+--- a/arch/powerpc/include/asm/asm-prototypes.h
++++ b/arch/powerpc/include/asm/asm-prototypes.h
+@@ -16,7 +16,9 @@
+ extern s32 patch__call_flush_count_cache;
+ extern s32 patch__flush_count_cache_return;
+ extern s32 patch__flush_link_stack_return;
++extern s32 patch__call_kvm_flush_link_stack;
  
-+static void virtcons_remove(struct virtio_device *vdev)
-+{
-+	struct ports_device *portdev;
-+	struct port *port, *port2;
+ extern long flush_count_cache;
++extern long kvm_flush_link_stack;
+ 
+ #endif /* _ASM_POWERPC_ASM_PROTOTYPES_H */
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -391,6 +391,9 @@ static void toggle_count_cache_flush(boo
+ 
+ 	if (!enable) {
+ 		patch_instruction_site(&patch__call_flush_count_cache, PPC_INST_NOP);
++#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
++		patch_instruction_site(&patch__call_kvm_flush_link_stack, PPC_INST_NOP);
++#endif
+ 		pr_info("link-stack-flush: software flush disabled.\n");
+ 		link_stack_flush_enabled = false;
+ 		no_count_cache_flush();
+@@ -401,6 +404,12 @@ static void toggle_count_cache_flush(boo
+ 	patch_branch_site(&patch__call_flush_count_cache,
+ 			  (u64)&flush_count_cache, BRANCH_SET_LINK);
+ 
++#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
++	// This enables the branch from guest_exit_cont to kvm_flush_link_stack
++	patch_branch_site(&patch__call_kvm_flush_link_stack,
++			  (u64)&kvm_flush_link_stack, BRANCH_SET_LINK);
++#endif
 +
-+	portdev = vdev->priv;
+ 	pr_info("link-stack-flush: software flush enabled.\n");
+ 	link_stack_flush_enabled = true;
+ 
+--- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
++++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
+@@ -18,6 +18,7 @@
+  */
+ 
+ #include <asm/ppc_asm.h>
++#include <asm/code-patching-asm.h>
+ #include <asm/kvm_asm.h>
+ #include <asm/reg.h>
+ #include <asm/mmu.h>
+@@ -1169,6 +1170,10 @@ mc_cont:
+ 	bl	kvmhv_accumulate_time
+ #endif
+ 
++	/* Possibly flush the link stack here. */
++1:	nop
++	patch_site 1b patch__call_kvm_flush_link_stack
 +
-+	spin_lock_irq(&pdrvdata_lock);
-+	list_del(&portdev->list);
-+	spin_unlock_irq(&pdrvdata_lock);
+ 	mr 	r3, r12
+ 	/* Increment exit count, poke other threads to exit */
+ 	bl	kvmhv_commence_exit
+@@ -1564,6 +1569,21 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
+ 	mtlr	r0
+ 	blr
+ 
++.balign 32
++.global kvm_flush_link_stack
++kvm_flush_link_stack:
++	/* Save LR into r0 */
++	mflr	r0
 +
-+	/* Disable interrupts for vqs */
-+	vdev->config->reset(vdev);
-+	/* Finish up work that's lined up */
-+	if (use_multiport(portdev))
-+		cancel_work_sync(&portdev->control_work);
-+	else
-+		cancel_work_sync(&portdev->config_work);
++	/* Flush the link stack. On Power8 it's up to 32 entries in size. */
++	.rept 32
++	bl	.+4
++	.endr
 +
-+	list_for_each_entry_safe(port, port2, &portdev->ports, list)
-+		unplug_port(port);
-+
-+	unregister_chrdev(portdev->chr_major, "virtio-portsdev");
-+
-+	/*
-+	 * When yanking out a device, we immediately lose the
-+	 * (device-side) queues.  So there's no point in keeping the
-+	 * guest side around till we drop our final reference.  This
-+	 * also means that any ports which are in an open state will
-+	 * have to just stop using the port, as the vqs are going
-+	 * away.
-+	 */
-+	remove_vqs(portdev);
-+	kfree(portdev);
-+}
++	/* Restore LR */
++	mtlr	r0
++	blr
 +
  /*
-  * Once we're further in boot, we get probed like any other virtio
-  * device.
-@@ -2115,42 +2151,6 @@ fail:
- 	return err;
- }
- 
--static void virtcons_remove(struct virtio_device *vdev)
--{
--	struct ports_device *portdev;
--	struct port *port, *port2;
--
--	portdev = vdev->priv;
--
--	spin_lock_irq(&pdrvdata_lock);
--	list_del(&portdev->list);
--	spin_unlock_irq(&pdrvdata_lock);
--
--	/* Disable interrupts for vqs */
--	vdev->config->reset(vdev);
--	/* Finish up work that's lined up */
--	if (use_multiport(portdev))
--		cancel_work_sync(&portdev->control_work);
--	else
--		cancel_work_sync(&portdev->config_work);
--
--	list_for_each_entry_safe(port, port2, &portdev->ports, list)
--		unplug_port(port);
--
--	unregister_chrdev(portdev->chr_major, "virtio-portsdev");
--
--	/*
--	 * When yanking out a device, we immediately lose the
--	 * (device-side) queues.  So there's no point in keeping the
--	 * guest side around till we drop our final reference.  This
--	 * also means that any ports which are in an open state will
--	 * have to just stop using the port, as the vqs are going
--	 * away.
--	 */
--	remove_vqs(portdev);
--	kfree(portdev);
--}
--
- static struct virtio_device_id id_table[] = {
- 	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
- 	{ 0 },
--- 
-2.20.1
-
+  * Check whether an HDSI is an HPTE not found fault or something else.
+  * If it is an HPTE not found fault that is due to the guest accessing
 
 
