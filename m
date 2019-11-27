@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C90C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0FAC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBB721770
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8805A21741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887172;
-	bh=kZg4vs002sTcmRB9DV51OzIupzLPccJ6bw1vGnr/U+w=;
+	s=default; t=1574887179;
+	bh=DAjtfsZlNLaNHrIyH1KYYh8DO8Rh66dcIIvAzpcYzEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qLlB8j+fzmHNa1kLF30T9msVAkuAUmeHKxbeFn5cJK6FWXs/1gyOFevi2+LgIs2Hd
-	 QjWqu28qGm9Mq2v6rmHytrYKseCwhSz22d1DypGkaozcD+7e2m1I7bqHI2A7X+b6AI
-	 NKYrfKjo//zYhn8sPmWnSUy2rShTj8077bx1HkJg=
+	b=zS25sglLZqQDlv8XPRputEp5KAtycqxNf61pm/vlVsTPW4HlgaDD9jYOin2QPi85o
+	 EDfUq3OY3GN1RcEdpysAM53f154SUajm3/ff8Jt9RNiCy0Hpt6Jk++aGbgqWXbCMKz
+	 /VNS0kMvpADLkW+vf+8fPndsVm+tgleiC82EZ8uE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfK0Ujb (ORCPT
+        id S1727907AbfK0Uji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:39:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43624 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:39:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbfK0Uj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:39:28 -0500
+        id S1728939AbfK0Ujd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:39:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21EA621569;
-        Wed, 27 Nov 2019 20:39:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D74121771;
+        Wed, 27 Nov 2019 20:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887167;
-        bh=kZg4vs002sTcmRB9DV51OzIupzLPccJ6bw1vGnr/U+w=;
+        s=default; t=1574887173;
+        bh=DAjtfsZlNLaNHrIyH1KYYh8DO8Rh66dcIIvAzpcYzEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y20OQt66Xp5+6V8gdd5b45JGtCm9R7WKeIrs8IuhbS4AFkbv/3jSrfmM/f0t7S2Gp
-         qtDqTB4QrctoUFXLZCVNanlD1qXsnwA2irvKPFEJ7MKCvXBFspRyZZfpgRGwNQJ82L
-         +5Cf/1DJ3hUcSfmELB5I++mR7Mxvi1svaqrTWlPU=
+        b=LFh1wwNBz0CSjBnKO7DSENyhykR2R8yE82nIwxWysYUgIOSm0vj/shZUrzcRUhb25
+         IFAzxAaPTdai4I82y6rwqdovbBwJjNaKyuU1s/4uBxSuTPldO+0T2GrZC6IxUGXb3L
+         DKpqH2zkoUlrKDx/b0l0FtY/irjjUvaFkmIZx6kA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 123/132] appledisplay: fix error handling in the scheduled work
-Date:   Wed, 27 Nov 2019 21:31:54 +0100
-Message-Id: <20191127203033.002013248@linuxfoundation.org>
+        stable@vger.kernel.org, Luigi Rizzo <lrizzo@google.com>,
+        Tariq Toukan <tariqt@mellanox.com>
+Subject: [PATCH 4.9 001/151] net/mlx4_en: fix mlx4 ethtool -N insertion
+Date:   Wed, 27 Nov 2019 21:29:44 +0100
+Message-Id: <20191127203001.720968405@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
-References: <20191127202857.270233486@linuxfoundation.org>
+In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
+References: <20191127203000.773542911@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,51 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Luigi Rizzo <lrizzo@google.com>
 
-commit 91feb01596e5efc0cc922cc73f5583114dccf4d2 upstream.
+[ Upstream commit 34e59836565e36fade1464e054a3551c1a0364be ]
 
-The work item can operate on
+ethtool expects ETHTOOL_GRXCLSRLALL to set ethtool_rxnfc->data with the
+total number of entries in the rx classifier table.  Surprisingly, mlx4
+is missing this part (in principle ethtool could still move forward and
+try the insert).
 
-1. stale memory left over from the last transfer
-the actual length of the data transfered needs to be checked
-2. memory already freed
-the error handling in appledisplay_probe() needs
-to cancel the work in that case
+Tested: compiled and run command:
+	phh13:~# ethtool -N eth1 flow-type udp4  queue 4
+	Added rule with ID 255
 
-Reported-and-tested-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191106124902.7765-1-oneukum@suse.com
+Signed-off-by: Luigi Rizzo <lrizzo@google.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/misc/appledisplay.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx4/en_ethtool.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/misc/appledisplay.c
-+++ b/drivers/usb/misc/appledisplay.c
-@@ -183,7 +183,12 @@ static int appledisplay_bl_get_brightnes
- 		0,
- 		pdata->msgdata, 2,
- 		ACD_USB_TIMEOUT);
--	brightness = pdata->msgdata[1];
-+	if (retval < 2) {
-+		if (retval >= 0)
-+			retval = -EMSGSIZE;
-+	} else {
-+		brightness = pdata->msgdata[1];
-+	}
- 	mutex_unlock(&pdata->sysfslock);
- 
- 	if (retval < 0)
-@@ -329,6 +334,7 @@ error:
- 	if (pdata) {
- 		if (pdata->urb) {
- 			usb_kill_urb(pdata->urb);
-+			cancel_delayed_work_sync(&pdata->work);
- 			if (pdata->urbdata)
- 				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
- 					pdata->urbdata, pdata->urb->transfer_dma);
+--- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
+@@ -1679,6 +1679,7 @@ static int mlx4_en_get_rxnfc(struct net_
+ 		err = mlx4_en_get_flow(dev, cmd, cmd->fs.location);
+ 		break;
+ 	case ETHTOOL_GRXCLSRLALL:
++		cmd->data = MAX_NUM_OF_FS_RULES;
+ 		while ((!err || err == -ENOENT) && priority < cmd->rule_cnt) {
+ 			err = mlx4_en_get_flow(dev, cmd, i);
+ 			if (!err)
 
 
