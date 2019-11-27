@@ -2,108 +2,90 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C1DC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FBFC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4681020684
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6052073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574875657;
+	bh=ByMqMjORvr1UlWAYYDkMyxfvBy+o3EuQgE3OMZXqSEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yWIX3COtCU8wmzolssZVQdHMcz7aYRJVmdYb0XS28AxdUEIVk2bD5/WGiJ+wUaphz
+	 1zu3j0ZrFZUzL/akh+lG8T8Q/QfJ7I3aPUU14U/45cv8fwZzZyqCJixEHbiPaW7f5r
+	 l55M2qv61RFpx7G3KT9p1gSDrjpmSbLf5j4jq1mI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfK0RZ7 convert rfc822-to-8bit (ORCPT
+        id S1727050AbfK0R1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:25:59 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:37376 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfK0RZ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:25:59 -0500
-Received: by mail-yw1-f65.google.com with SMTP id 4so8239113ywx.4;
-        Wed, 27 Nov 2019 09:25:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JRvuKyuIOQvF9AQSNTrj3uSPTaDg8FtRv0pACDML4ic=;
-        b=Ue553OTEDOmSKdKj13BlQ3Z69lqQ2WBe8thKchHE/+AwSLE3G+5Yz55kzDOX4tZ+dm
-         fKOOBIeCAuBX88pZXzmIfX0++hc/8qyAxkpZISKb65SpxEeDr7bO4MgNherMmlRooIoB
-         +95Die/3SWUGyaPPAs1wEboSw6k4ahBBuHx6JXCDD/D84l/2d8AT3oOvsxv2e15M/rGy
-         9C+CtpsD8VuSkQHFAmYbVDePS+AuofnV907BvJrdfOel0pAFC2QGGpUvWfs7HklYfxIM
-         2DNcS8JVbsspnA4Fq6+LGVGtyy2UpxbIwN2bwU02zQ3MgaTk1TjpzMCCkXb+nhwPpYDR
-         SMrw==
-X-Gm-Message-State: APjAAAV0CNh2TpBdxSSUdkucz/U2EQHl9pHFP3/SgjUpXhdSMTz+gPGS
-        w4ws/eCuk5U+nCMhsSP+o1GtgjgdvA4883tRISrbff72
-X-Google-Smtp-Source: APXvYqwmBHGxI5HEzDr+oN8T1Z4DLvRjLlJfDPqNUvL4LMPBhAs+G2Kng5SnQHBaBpEa8Ye8EpeV+KjxhxoJE1ANwZc=
-X-Received: by 2002:a81:c609:: with SMTP id l9mr3661232ywi.37.1574875558029;
- Wed, 27 Nov 2019 09:25:58 -0800 (PST)
+        Wed, 27 Nov 2019 12:27:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbfK0R1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 12:27:36 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0690E20684;
+        Wed, 27 Nov 2019 17:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574875655;
+        bh=ByMqMjORvr1UlWAYYDkMyxfvBy+o3EuQgE3OMZXqSEQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2AIH2IH/uPxLpJz3SDjwC/o0aCYNhuQfHG5cvFiEgalqTLyWXggWEwYIgLXxB+9BM
+         A2TIRW1oN8Rag6Xq/2OVFN4vMk/Vuq6zj3BU94NY+NccQpJWbVrb1oza+Q3zTSb7p7
+         vgOfKS83SpKTZ10fMN6mdV2l5TZjWsOZL2etF+3Q=
+Date:   Wed, 27 Nov 2019 18:27:31 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/7] thermal: sun8i: add thermal driver for
+ H6/H5/H3/A64/A83T/R40
+Message-ID: <20191127172731.mwmo3zctn7pi6mmp@gilmour.lan>
+References: <20191127052935.1719897-1-anarsoul@gmail.com>
+ <20191127052935.1719897-2-anarsoul@gmail.com>
 MIME-Version: 1.0
-References: <20191127152612.21945-1-linux@roeck-us.net>
-In-Reply-To: <20191127152612.21945-1-linux@roeck-us.net>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Wed, 27 Nov 2019 18:25:47 +0100
-Message-ID: <CAAdtpL7UVqY6LSbCBeB9FXGDt499xUV072ndXxZuiahTN6UU+A@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: Fix boot on Fuloong2 systems
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127052935.1719897-2-anarsoul@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 4:28 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> Commit 268a2d60013049 ("MIPS: Loongson64: Rename CPU TYPES") changed
-> Kconfig symbols as follows:
->         CPU_LOONGSON2 to CPU_LOONGSON2EF
->         CPU_LOONGSON3 to CPU_LOONGSON64
->         SYS_HAS_CPU_LOONGSON3 to SYS_HAS_CPU_LOONGSON64
->
-> It did not touch SYS_HAS_CPU_LOONGSON2E or SYS_HAS_CPU_LOONGSON2F.
-> However, the patch changed a conditional from
->
->  #if defined(CONFIG_SYS_HAS_CPU_LOONGSON2E) || \
->      defined(CONFIG_SYS_HAS_CPU_LOONGSON2F)
->
-> to
->
->  #if defined(CONFIG_SYS_HAS_CPU_LOONGSON2EF)
->
-> SYS_HAS_CPU_LOONGSON2EF does not exist, resulting in boot failures
-> with the qemu fulong2e emulation. Revert to the original code.
+Hi,
 
-Thanks Guenter for running your test suite and catching this!
+Thanks for sending a new version of this!
 
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+On Tue, Nov 26, 2019 at 09:29:29PM -0800, Vasily Khoruzhick wrote:
+> From: Yangtao Li <tiny.windzz@gmail.com>
+>
+> This patch adds the support for allwinner thermal sensor, within
+> allwinner SoC. It will register sensors for thermal framework
+> and use device tree to bind cooling device.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 
-> Fixes: 268a2d60013049 ("MIPS: Loongson64: Rename CPU TYPES")
-> Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  arch/mips/include/asm/cpu-type.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/mips/include/asm/cpu-type.h b/arch/mips/include/asm/cpu-type.h
-> index c46c59b0f1b4..49f0061a6051 100644
-> --- a/arch/mips/include/asm/cpu-type.h
-> +++ b/arch/mips/include/asm/cpu-type.h
-> @@ -15,7 +15,8 @@
->  static inline int __pure __get_cpu_type(const int cpu_type)
->  {
->         switch (cpu_type) {
-> -#if defined(CONFIG_SYS_HAS_CPU_LOONGSON2EF)
-> +#if defined(CONFIG_SYS_HAS_CPU_LOONGSON2E) || \
-> +    defined(CONFIG_SYS_HAS_CPU_LOONGSON2F)
->         case CPU_LOONGSON2EF:
->  #endif
->
-> --
-> 2.17.1
->
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+Thanks!
+Maxime
