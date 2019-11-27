@@ -2,54 +2,54 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E808FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E851C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5952178F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7358E2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888775;
-	bh=UdTQy0sebNhzvQQBQPvL4tB24mTeh/mRDWo6wJ5MdCI=;
+	s=default; t=1574888779;
+	bh=uCtfQYjOEF+Ola4zzI7wHRjLy+CCdvWIVjXr1R9YjH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IbvHB252j0x8+OhZwDkXkiLitxHE5lHGvjh9GFXaeO5E4qV2+G9qAE5awlYVwbTfY
-	 +IUU0suPwZ3izq4K7aBH5qQy9R5rQqOpvXYMR+rgJom4UesbtRaqmDR7dTJ9YMbXAh
-	 hdWgp3iG2KA/XWB6Vtm0xgVsd3kq0rt/C4Gh1JUg=
+	b=D0IFetgd7wPuGQGfWlyhLRbr3HIXizo6pa5+55ZW8BLW9IgFhG6NuNfKjuULuiwv0
+	 zw0FgTm1Rx614nWm8epQmWxi+L63Cl9EwBl15/S+AfAqF58mijVr+gL3ZlQJSpXHaj
+	 Q9gfwZ5zU9FHKSF1NJegcxiMMDpE6lGCn/+QxEEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732388AbfK0VGO (ORCPT
+        id S1732393AbfK0VGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:06:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60170 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:06:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727247AbfK0VGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:06:10 -0500
+        id S1731815AbfK0VGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:06:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F58621770;
-        Wed, 27 Nov 2019 21:06:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A4B821770;
+        Wed, 27 Nov 2019 21:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888769;
-        bh=UdTQy0sebNhzvQQBQPvL4tB24mTeh/mRDWo6wJ5MdCI=;
+        s=default; t=1574888772;
+        bh=uCtfQYjOEF+Ola4zzI7wHRjLy+CCdvWIVjXr1R9YjH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHeyFRKOVc545hTi6kBE4HS/XHa3yS++XSU8PxHin683BQvI2PrGj3x4lpRc6rNcY
-         MjMRdx7Ud5XAqTtT2IMoxoQfNt3MNkIg+8dW6Tb9ylySa4xk9LC0Dh0EK++JHd7LRG
-         c0LeBMzOlsrKVSiOS5VmUhv9laAyj9qw5bQKIZsw=
+        b=AICqFzXOr2AowKUYBliO+Mg8TMBBv/p+xIkZx36JZUJ35ZdPLr4hi97ah0b80IxN5
+         B7L4wv5PIuDvZCQeSsSfxAV8BPKcIrascDXRASC+ryBHrQUjPJJSBhv/eHwcfWy0W2
+         Rhzl/Yn64BOttejghyKNexFrejkXilZkFK/T+ifY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Uvarov <muvarov@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Adrian Bunk <bunk@kernel.org>
-Subject: [PATCH 4.19 262/306] net: phy: dp83867: fix speed 10 in sgmii mode
-Date:   Wed, 27 Nov 2019 21:31:52 +0100
-Message-Id: <20191127203133.982768147@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 236/306] clk: tegra20: Turn EMC clock gate into divider
+Date:   Wed, 27 Nov 2019 21:31:26 +0100
+Message-Id: <20191127203132.244773773@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -62,60 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Uvarov <muvarov@gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit 333061b924539c0de081339643f45514f5f1c1e6 upstream.
+[ Upstream commit 514fddba845ed3a1b17e01e99cb3a2a52256a88a ]
 
-For supporting 10Mps speed in SGMII mode DP83867_10M_SGMII_RATE_ADAPT bit
-of DP83867_10M_SGMII_CFG register has to be cleared by software.
-That does not affect speeds 100 and 1000 so can be done on init.
+Kernel should never gate the EMC clock as it causes immediate lockup, so
+removing clk-gate functionality doesn't affect anything. Turning EMC clk
+gate into divider allows to implement glitch-less EMC scaling, avoiding
+reparenting to a backup clock.
 
-Signed-off-by: Max Uvarov <muvarov@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[ adapted for kernels without phy_modify_mmd ]
-Signed-off-by: Adrian Bunk <bunk@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83867.c |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/clk/tegra/clk-tegra20.c | 36 ++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 10 deletions(-)
 
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -37,6 +37,8 @@
- #define DP83867_STRAP_STS1	0x006E
- #define DP83867_RGMIIDCTL	0x0086
- #define DP83867_IO_MUX_CFG	0x0170
-+#define DP83867_10M_SGMII_CFG   0x016F
-+#define DP83867_10M_SGMII_RATE_ADAPT_MASK BIT(7)
+diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+index cc857d4d4a86e..68551effb5ca2 100644
+--- a/drivers/clk/tegra/clk-tegra20.c
++++ b/drivers/clk/tegra/clk-tegra20.c
+@@ -578,7 +578,6 @@ static struct tegra_clk tegra20_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_afi] = { .dt_id = TEGRA20_CLK_AFI, .present = true },
+ 	[tegra_clk_fuse] = { .dt_id = TEGRA20_CLK_FUSE, .present = true },
+ 	[tegra_clk_kfuse] = { .dt_id = TEGRA20_CLK_KFUSE, .present = true },
+-	[tegra_clk_emc] = { .dt_id = TEGRA20_CLK_EMC, .present = true },
+ };
  
- #define DP83867_SW_RESET	BIT(15)
- #define DP83867_SW_RESTART	BIT(14)
-@@ -294,6 +296,23 @@ static int dp83867_config_init(struct ph
- 		}
- 	}
+ static unsigned long tegra20_clk_measure_input_freq(void)
+@@ -799,6 +798,31 @@ static struct tegra_periph_init_data tegra_periph_nodiv_clk_list[] = {
+ 	TEGRA_INIT_DATA_NODIV("disp2",	mux_pllpdc_clkm, CLK_SOURCE_DISP2, 30, 2, 26,  0, TEGRA20_CLK_DISP2),
+ };
  
-+	if (phydev->interface == PHY_INTERFACE_MODE_SGMII) {
-+		/* For support SPEED_10 in SGMII mode
-+		 * DP83867_10M_SGMII_RATE_ADAPT bit
-+		 * has to be cleared by software. That
-+		 * does not affect SPEED_100 and
-+		 * SPEED_1000.
-+		 */
-+		val = phy_read_mmd(phydev, DP83867_DEVADDR,
-+				   DP83867_10M_SGMII_CFG);
-+		val &= ~DP83867_10M_SGMII_RATE_ADAPT_MASK;
-+		ret = phy_write_mmd(phydev, DP83867_DEVADDR,
-+				    DP83867_10M_SGMII_CFG, val);
++static void __init tegra20_emc_clk_init(void)
++{
++	struct clk *clk;
 +
-+		if (ret)
-+			return ret;
-+	}
++	clk = clk_register_mux(NULL, "emc_mux", mux_pllmcp_clkm,
++			       ARRAY_SIZE(mux_pllmcp_clkm),
++			       CLK_SET_RATE_NO_REPARENT,
++			       clk_base + CLK_SOURCE_EMC,
++			       30, 2, 0, &emc_lock);
 +
- 	/* Enable Interrupt output INT_OE in CFG3 register */
- 	if (phy_interrupt_is_valid(phydev)) {
- 		val = phy_read(phydev, DP83867_CFG3);
++	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
++				    &emc_lock);
++	clks[TEGRA20_CLK_MC] = clk;
++
++	/*
++	 * Note that 'emc_mux' source and 'emc' rate shouldn't be changed at
++	 * the same time due to a HW bug, this won't happen because we're
++	 * defining 'emc_mux' and 'emc' as distinct clocks.
++	 */
++	clk = tegra_clk_register_divider("emc", "emc_mux",
++				clk_base + CLK_SOURCE_EMC, CLK_IS_CRITICAL,
++				TEGRA_DIVIDER_INT, 0, 8, 1, &emc_lock);
++	clks[TEGRA20_CLK_EMC] = clk;
++}
++
+ static void __init tegra20_periph_clk_init(void)
+ {
+ 	struct tegra_periph_init_data *data;
+@@ -812,15 +836,7 @@ static void __init tegra20_periph_clk_init(void)
+ 	clks[TEGRA20_CLK_AC97] = clk;
+ 
+ 	/* emc */
+-	clk = clk_register_mux(NULL, "emc_mux", mux_pllmcp_clkm,
+-			       ARRAY_SIZE(mux_pllmcp_clkm),
+-			       CLK_SET_RATE_NO_REPARENT,
+-			       clk_base + CLK_SOURCE_EMC,
+-			       30, 2, 0, &emc_lock);
+-
+-	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
+-				    &emc_lock);
+-	clks[TEGRA20_CLK_MC] = clk;
++	tegra20_emc_clk_init();
+ 
+ 	/* dsi */
+ 	clk = tegra_clk_register_periph_gate("dsi", "pll_d", 0, clk_base, 0,
+-- 
+2.20.1
+
 
 
