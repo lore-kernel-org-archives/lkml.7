@@ -5,49 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46586C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C36FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E7121844
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483ED21843
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887803;
-	bh=+MSac9lGQ3g4tukeHIJJKFOOP18cM1X5Kz249xwJKOY=;
+	s=default; t=1574887808;
+	bh=d9nxKcst+qQU3OV1rFInKjs+FqAyZY6FfLLPYATbVhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=szpkE6emW7GYreJIqvjs0wBGV/K70EyV+uc7fV0fK3kqDwxg0jIPUlg1zaurXqFWc
-	 TbFu0CpAmA8+eX6qaBMIuRPYRyNaXuNsKdL9oYqEy4licYW7RW53KmAmaHrWOsbu5q
-	 mLmLUn9T8ZnwHvV8BWe17pu5LMfG3N8vOg/U+quE=
+	b=iRBmMbWBY1jfHM1I/Fmdry+Lz8XGNXXBzi+Pgl0iDefMnIy+dZz8ha11d+ART54UV
+	 3w2P8w0O+Wi+zKJAvqZI4wlU45DFryOGosVNOr03V5lSFZ+dO+Mts5R6GnLQcvyn7q
+	 S3Y3bKW9KrzNBxqJ9LmlyZrogcZ4m4VRqVYTioi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbfK0UuC (ORCPT
+        id S1730313AbfK0UuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:50:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35682 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:50:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730293AbfK0Ut5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:49:57 -0500
+        id S1730293AbfK0UuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:50:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B686221787;
-        Wed, 27 Nov 2019 20:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C716A20678;
+        Wed, 27 Nov 2019 20:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887797;
-        bh=+MSac9lGQ3g4tukeHIJJKFOOP18cM1X5Kz249xwJKOY=;
+        s=default; t=1574887802;
+        bh=d9nxKcst+qQU3OV1rFInKjs+FqAyZY6FfLLPYATbVhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qK9AxabDDpCNh8FABottI0bul3evCScLUB0TvJSOoiZtXgVopxqxNmuU/2md46k7m
-         0ksl6yEI3WRCqTHEVcPdUG+1c2iMEqFECbT6AdYIdIuBn1V2JObpz71TdaJxFSYMw7
-         p1rtLM1CqsBH03JQzQ4RDPVhXJ26Hyg7hhEl4WMU=
+        b=KuUl9/n58k737+Jgg3MVoO93DwHOV9JUhV3ggVonOXZ1jeW8ihYHorHKVhMUN3Sf7
+         FIIUtDIP7lGjTa9zjHL9UWbCHB8LTjFIUmO37rPs2+BXQVIhfLbIYxrOlMg6q334Xx
+         gQDzcID4uIwji+jdw15W6usEXG60RrUXtEllv85A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 055/211] scsi: dc395x: fix DMA API usage in sg_update_list
-Date:   Wed, 27 Nov 2019 21:29:48 +0100
-Message-Id: <20191127203059.335114220@linuxfoundation.org>
+Subject: [PATCH 4.14 093/211] fs/ocfs2/dlm/dlmdebug.c: fix a sleep-in-atomic-context bug in dlm_print_one_mle()
+Date:   Wed, 27 Nov 2019 21:30:26 +0100
+Message-Id: <20191127203102.517588992@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,36 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 6c404a68bf83b4135a8a9aa1c388ebdf98e8ba7f ]
+[ Upstream commit 999865764f5f128896402572b439269acb471022 ]
 
-We need to transfer device ownership to the CPU before we can manipulate
-the mapped data.
+The kernel module may sleep with holding a spinlock.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+The function call paths (from bottom to top) in Linux-4.16 are:
+
+[FUNC] get_zeroed_page(GFP_NOFS)
+fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
+fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 255: __dlm_put_mle in dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 254: spin_lock in dlm_put_ml
+
+[FUNC] get_zeroed_page(GFP_NOFS)
+fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
+fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 222: __dlm_put_mle in dlm_put_mle_inuse
+fs/ocfs2/dlm/dlmmaster.c, 219: spin_lock in dlm_put_mle_inuse
+
+To fix this bug, GFP_NOFS is replaced with GFP_ATOMIC.
+
+This bug is found by my static analysis tool DSAC.
+
+Link: http://lkml.kernel.org/r/20180901112528.27025-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/dc395x.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/ocfs2/dlm/dlmdebug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/dc395x.c b/drivers/scsi/dc395x.c
-index 9da0ac360848f..830b2d2dcf206 100644
---- a/drivers/scsi/dc395x.c
-+++ b/drivers/scsi/dc395x.c
-@@ -1972,6 +1972,11 @@ static void sg_update_list(struct ScsiReqBlk *srb, u32 left)
- 			xferred -= psge->length;
- 		} else {
- 			/* Partial SG entry done */
-+			pci_dma_sync_single_for_cpu(srb->dcb->
-+					    acb->dev,
-+					    srb->sg_bus_addr,
-+					    SEGMENTX_LEN,
-+					    PCI_DMA_TODEVICE);
- 			psge->length -= xferred;
- 			psge->address += xferred;
- 			srb->sg_index = idx;
+diff --git a/fs/ocfs2/dlm/dlmdebug.c b/fs/ocfs2/dlm/dlmdebug.c
+index 9b984cae4c4e0..1d6dc8422899b 100644
+--- a/fs/ocfs2/dlm/dlmdebug.c
++++ b/fs/ocfs2/dlm/dlmdebug.c
+@@ -329,7 +329,7 @@ void dlm_print_one_mle(struct dlm_master_list_entry *mle)
+ {
+ 	char *buf;
+ 
+-	buf = (char *) get_zeroed_page(GFP_NOFS);
++	buf = (char *) get_zeroed_page(GFP_ATOMIC);
+ 	if (buf) {
+ 		dump_mle(mle, buf, PAGE_SIZE - 1);
+ 		free_page((unsigned long)buf);
 -- 
 2.20.1
 
