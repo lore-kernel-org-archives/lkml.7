@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D64C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65237C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B96120869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFA920870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574891078;
-	bh=Ya4z3h/D1ptB65uMeIAiGYXdMxZBBFenfL6jQ59dGu8=;
+	s=default; t=1574891080;
+	bh=tOajLgzf+6n6vOATerHhVPn4sqkI079tnrqMck6Rxzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SXj7dW3H4ZfPxq1Ovyvt5aHpQZEDnwuiQQxHlwNl1/RU4GOjQF4z4DSt6SVVTo6Pu
-	 kzurB7WC3qd18JViRR/axV7Vco3VxFJ123TXYF1kdQseMxzzVAAo9iQ6Haz7XHuqhy
-	 iQYfu28BM7YaoGl9ilZkFw9U7zvtl4gPmdzEbPO8=
+	b=M2Yy8PzToKlFGSFCYVUN/UQnTlF/GIEpJreitTiMG2qYQsG2r3MS/E1Id5sKDa78W
+	 MxzWq/7rGB5AjuKUGHCfjwVQYQv8VLANAJEwwM/mVI2g2uewXgU8SBWOdbCL6cm5V7
+	 Mrrj3jH3eLIRK4mLoX7txxTJt5I9x8QQA1DModqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfK0UhM (ORCPT
+        id S1728503AbfK0UhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:37:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:37:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727587AbfK0UhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:37:09 -0500
+        id S1728492AbfK0UhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:37:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50560215A4;
-        Wed, 27 Nov 2019 20:37:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC6921569;
+        Wed, 27 Nov 2019 20:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887028;
-        bh=Ya4z3h/D1ptB65uMeIAiGYXdMxZBBFenfL6jQ59dGu8=;
+        s=default; t=1574887023;
+        bh=tOajLgzf+6n6vOATerHhVPn4sqkI079tnrqMck6Rxzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oajseSHE/F6v3/qEIZ/vbr/zJLDY1+3e9uLnzhqIHocZ+eSLr7fCWmBCExSNiQuuQ
-         yq4CryskYrJLmANAj/NhsY8DPI9dCcBa1I0hXAzvjNJjNA1GewEomEw7UdkOVJM6fD
-         dU+ANoWLt7+AL9alPVuA82EGi34pQiLEf7gtgAX8=
+        b=UTzSsJYsfe7p8lfKO0xuIxgngMxWI/DiOrEZJGnV13vaKuLffARyyi2CT1oJBa2TD
+         BAIbqUZVV/IizUZqftYN8uNRpZVvvCLhQZsejg7j6reOacR9i2I43arXFJTJhAC0Pr
+         7X85UdyWxwhw63lS12RRXKhi50qkWoAQiaaTFW8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 086/132] scsi: mpt3sas: Fix Sync cache command failure during driver unload
-Date:   Wed, 27 Nov 2019 21:31:17 +0100
-Message-Id: <20191127203016.033453063@linuxfoundation.org>
+Subject: [PATCH 4.4 084/132] wireless: airo: potential buffer overflow in sprintf()
+Date:   Wed, 27 Nov 2019 21:31:15 +0100
+Message-Id: <20191127203014.057638468@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -63,85 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 9029a72500b95578a35877a43473b82cb0386c53 ]
+[ Upstream commit 3d39e1bb1c88f32820c5f9271f2c8c2fb9a52bac ]
 
-This is to fix SYNC CACHE and START STOP command failures with
-DID_NO_CONNECT during driver unload.
+It looks like we wanted to print a maximum of BSSList_rid.ssidLen bytes
+of the ssid, but we accidentally use "%*s" (width) instead of "%.*s"
+(precision) so if the ssid doesn't have a NUL terminator this could lead
+to an overflow.
 
-In driver's IO submission patch (i.e. in driver's .queuecommand()) driver
-won't allow any SCSI commands to the IOC when ioc->remove_host flag is set
-and hence SYNC CACHE commands which are issued to the target drives (where
-write cache is enabled) during driver unload time is failed with
-DID_NO_CONNECT status.
+Static analysis.  Not tested.
 
-Now modified the driver to allow SYNC CACHE and START STOP commands to IOC,
-even when remove_host flag is set.
-
-Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: e174961ca1a0 ("net: convert print_mac to %pM")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_scsih.c | 36 +++++++++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
+ drivers/net/wireless/airo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index 7d67a68bcc624..8735e4257028a 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -3254,6 +3254,40 @@ _scsih_tm_tr_complete(struct MPT3SAS_ADAPTER *ioc, u16 smid, u8 msix_index,
- 	return _scsih_check_for_pending_tm(ioc, smid);
- }
- 
-+/** _scsih_allow_scmd_to_device - check whether scmd needs to
-+ *				 issue to IOC or not.
-+ * @ioc: per adapter object
-+ * @scmd: pointer to scsi command object
-+ *
-+ * Returns true if scmd can be issued to IOC otherwise returns false.
-+ */
-+inline bool _scsih_allow_scmd_to_device(struct MPT3SAS_ADAPTER *ioc,
-+	struct scsi_cmnd *scmd)
-+{
-+
-+	if (ioc->pci_error_recovery)
-+		return false;
-+
-+	if (ioc->hba_mpi_version_belonged == MPI2_VERSION) {
-+		if (ioc->remove_host)
-+			return false;
-+
-+		return true;
-+	}
-+
-+	if (ioc->remove_host) {
-+
-+		switch (scmd->cmnd[0]) {
-+		case SYNCHRONIZE_CACHE:
-+		case START_STOP:
-+			return true;
-+		default:
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
- 
- /**
-  * _scsih_sas_control_complete - completion routine
-@@ -3880,7 +3914,7 @@ scsih_qcmd(struct Scsi_Host *shost, struct scsi_cmnd *scmd)
- 		return 0;
- 	}
- 
--	if (ioc->pci_error_recovery || ioc->remove_host) {
-+	if (!(_scsih_allow_scmd_to_device(ioc, scmd))) {
- 		scmd->result = DID_NO_CONNECT << 16;
- 		scmd->scsi_done(scmd);
- 		return 0;
+diff --git a/drivers/net/wireless/airo.c b/drivers/net/wireless/airo.c
+index 17c40f06f13e5..82d24f2b9c190 100644
+--- a/drivers/net/wireless/airo.c
++++ b/drivers/net/wireless/airo.c
+@@ -5484,7 +5484,7 @@ static int proc_BSSList_open( struct inode *inode, struct file *file ) {
+            we have to add a spin lock... */
+ 	rc = readBSSListRid(ai, doLoseSync, &BSSList_rid);
+ 	while(rc == 0 && BSSList_rid.index != cpu_to_le16(0xffff)) {
+-		ptr += sprintf(ptr, "%pM %*s rssi = %d",
++		ptr += sprintf(ptr, "%pM %.*s rssi = %d",
+ 			       BSSList_rid.bssid,
+ 				(int)BSSList_rid.ssidLen,
+ 				BSSList_rid.ssid,
 -- 
 2.20.1
 
