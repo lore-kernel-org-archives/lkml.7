@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D212C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBC8C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11E0D20869
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8815520665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890315;
-	bh=LL6gkrqfhN8sLlBPTINFJOnCMYpzs6YIUh0jZHbtL3c=;
+	s=default; t=1574890326;
+	bh=kN3WIv/LyoTwwkl5EnavKlDXb+7KafpH6vrOsCLhcoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwQcX7Wal050B8zaU6ZT+LiiHJUMSxLHfkkM3/aESriAP42OMrsx2CwTxq8F9gO9b
-	 Mtesgn+cMDmLEcalJRwWhuY+7h4OAZ1tNQ4HxyDS+T9DVNJ7nJnlHezXxcdj8UmUGT
-	 /kwr2rhxcANSlVJXzDEboxcpWvIi2FXM9otKBCDE=
+	b=BWYl+vr4NwL0IZGKm8OwLMcGVuJn7riJSnE+CoxlIa6EXPcq9xcO7XdrCaXQx5UOP
+	 bXDlmvOpJaqr1y14s4pa/zvgQNCJ8v9cQd4zYiMRY3rr9ZFTe6pOwARutG8GhCIpon
+	 f4bbYzoAQTYaoQUMJ3dD1/K5y0vj5UTiqzCS/FyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbfK0UyI (ORCPT
+        id S1730567AbfK0VcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:54:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43530 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:32:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729164AbfK0UyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:54:02 -0500
+        id S1727146AbfK0Uxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0A382154A;
-        Wed, 27 Nov 2019 20:54:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BA252070B;
+        Wed, 27 Nov 2019 20:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888041;
-        bh=LL6gkrqfhN8sLlBPTINFJOnCMYpzs6YIUh0jZHbtL3c=;
+        s=default; t=1574888034;
+        bh=kN3WIv/LyoTwwkl5EnavKlDXb+7KafpH6vrOsCLhcoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DD/IGb0zwP7OvzmkhR6SqFgred8Me82rz7LvhjzaqGwF4n4DchMb70iUCkYi8ORy6
-         ttHW0LkoT51LUVW/JL8N9UID+xx/SYFc8sNFI0sAEz15EHzKZHCnHTGBMugneWcYEy
-         vwJY3IVnlp2pQkfynpp68yaG2pl4aSwj1HHZrcU8=
+        b=JREx76pmw4sZOG07G1Vbp7wvSg1cTLmFZzPojkkEECMs1BDtRD7yQshzMXtFSyuc0
+         +iKCXYIt8YFkWE7l0ROExa44/6TDVGF5mUQv3Q0i+YfFh5/ZWgOO8LKijS5Z9IdVGF
+         zPdHJoAS8/FIOUayNV6el72FZbikSizPYDX9Pnxk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vito Caputo <vcaputo@pengaru.com>,
-        syzbot <syzkaller@googlegroups.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 194/211] media: cxusb: detect cxusb_ctrl_msg error in query
-Date:   Wed, 27 Nov 2019 21:32:07 +0100
-Message-Id: <20191127203111.984625067@linuxfoundation.org>
+        stable@vger.kernel.org, Kai Shen <shenkai8@huawei.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 191/211] cpufreq: Add NULL checks to show() and store() methods of cpufreq
+Date:   Wed, 27 Nov 2019 21:32:04 +0100
+Message-Id: <20191127203111.731778105@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -60,78 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vito Caputo <vcaputo@pengaru.com>
+From: Kai Shen <shenkai8@huawei.com>
 
-commit ca8f245f284eeffa56f3b7a5eb6fc503159ee028 upstream.
+commit e6e8df07268c1f75dd9215536e2ce4587b70f977 upstream.
 
-Don't use uninitialized ircode[] in cxusb_rc_query() when
-cxusb_ctrl_msg() fails to populate its contents.
+Add NULL checks to show() and store() in cpufreq.c to avoid attempts
+to invoke a NULL callback.
 
-syzbot reported:
+Though some interfaces of cpufreq are set as read-only, users can
+still get write permission using chmod which can lead to a kernel
+crash, as follows:
 
-dvb-usb: bulk message failed: -22 (1/-30591)
-=====================================================
-BUG: KMSAN: uninit-value in ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
-BUG: KMSAN: uninit-value in rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
-BUG: KMSAN: uninit-value in rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
-CPU: 1 PID: 11436 Comm: kworker/1:2 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events dvb_usb_read_remote_control
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x191/0x1f0 lib/dump_stack.c:113
- kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
- __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
- bsearch+0x1dd/0x250 lib/bsearch.c:41
- ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
- rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
- rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
- cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
- dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
- process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
- worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
- kthread+0x4b5/0x4f0 kernel/kthread.c:256
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+chmod +w /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+echo 1 >  /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
 
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
- kmsan_internal_chain_origin+0xd2/0x170 mm/kmsan/kmsan.c:314
- __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:184
- rc_g_keycode_from_table drivers/media/rc/rc-main.c:583 [inline]
- rc_keydown+0x2c4/0x6f0 drivers/media/rc/rc-main.c:816
- cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
- dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
- process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
- worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
- kthread+0x4b5/0x4f0 kernel/kthread.c:256
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+This bug was found in linux 4.19.
 
-Local variable description: ----ircode@cxusb_rc_query
-Variable was created at:
- cxusb_rc_query+0x4d/0x360 drivers/media/usb/dvb-usb/cxusb.c:543
- dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
-
-Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Kai Shen <shenkai8@huawei.com>
+Reported-by: Feilong Lin <linfeilong@huawei.com>
+Reviewed-by: Feilong Lin <linfeilong@huawei.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+[ rjw: Subject & changelog ]
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/dvb-usb/cxusb.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/cpufreq/cpufreq.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/media/usb/dvb-usb/cxusb.c
-+++ b/drivers/media/usb/dvb-usb/cxusb.c
-@@ -455,7 +455,8 @@ static int cxusb_rc_query(struct dvb_usb
- {
- 	u8 ircode[4];
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -911,6 +911,9 @@ static ssize_t show(struct kobject *kobj
+ 	struct freq_attr *fattr = to_attr(attr);
+ 	ssize_t ret;
  
--	cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4);
-+	if (cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4) < 0)
-+		return 0;
++	if (!fattr->show)
++		return -EIO;
++
+ 	down_read(&policy->rwsem);
+ 	ret = fattr->show(policy, buf);
+ 	up_read(&policy->rwsem);
+@@ -925,6 +928,9 @@ static ssize_t store(struct kobject *kob
+ 	struct freq_attr *fattr = to_attr(attr);
+ 	ssize_t ret = -EINVAL;
  
- 	if (ircode[2] || ircode[3])
- 		rc_keydown(d->rc_dev, RC_PROTO_NEC,
++	if (!fattr->store)
++		return -EIO;
++
+ 	cpus_read_lock();
+ 
+ 	if (cpu_online(policy->cpu)) {
 
 
