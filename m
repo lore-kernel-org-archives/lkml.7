@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DBAC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C01C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E60F217BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A84D21741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889319;
-	bh=keyMyZOrwHJ8/Mma4YkJTZvdUatq7dXMHRjU0gDH6+k=;
+	s=default; t=1574889322;
+	bh=LfA1WHC3J8XPfL/CFiTC6sNIBPjDAA/6b3KwEk0Dals=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AlPZe7pH/9iQM3GUVrnOS5LE7Ic64eWjOtY7pkV63tpBZxsUjBIpUTDnwMyM9qOna
-	 V3hHTK5vQPUNQmXrf1Yd7I9A8PQZXdgagwSKKqRjKX3abu1rk6P+Qra4wNvLb3taIM
-	 dCury2XzQS9iFpr95DXJYs25GhNaM+LpIteWp8VM=
+	b=fhhkOtDsL2bPvWuYEM+XSUX5KQLs05oVPVru9GsBQ9g4tOBuINAXZ3ymmXAW3MlEi
+	 tQjFG18tGHUKfyWQSrWD4BSSvBX7blMfpMj7yJDa9vJ+4L88vCBWDloyrHNFq4nRgx
+	 EhufylRLV3eDw9WhRtHnAjRM+zIyRaLZPybusd7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387681AbfK0VPR (ORCPT
+        id S2387691AbfK0VPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:15:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50430 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:15:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387670AbfK0VPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:15:13 -0500
+        id S2387671AbfK0VPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:15:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F8BF21771;
-        Wed, 27 Nov 2019 21:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D70D321771;
+        Wed, 27 Nov 2019 21:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889312;
-        bh=keyMyZOrwHJ8/Mma4YkJTZvdUatq7dXMHRjU0gDH6+k=;
+        s=default; t=1574889315;
+        bh=LfA1WHC3J8XPfL/CFiTC6sNIBPjDAA/6b3KwEk0Dals=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sT20lPOyuG8EZEd3ujvoqS1cnxGnTLjWBikA6RqGAcpGziTWV6QxhqNsgR62yxHwa
-         E2PyLRkxxzZ8GPhW5wWnQcAgFCWGef4bDaXHZUIWJJS9gfZEimvxv64dbe5eK/emoI
-         hpSPbfssKUQSY32HFKD2+SZVnJiprAuLFnff39es=
+        b=tPsgc/8/qezZhfddAF9pVJZpx6ornM0OVSAH+H9tkLIxQOWz8//wEiXzDUo/pSrKW
+         OJ5y5tp3QxaukvR/HQtNj2qFtb2RFRcRlHp8v71D97CFMbQmU6Lz23Eb6ynWdQhTrm
+         bdDLJQJJ9wQ+vFpjeHZVlqHupKRNrCKAg64Zzx80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Joel Jennings <joel.jennings@makeitlabs.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 56/66] usb-serial: cp201x: support Mark-10 digital force gauge
-Date:   Wed, 27 Nov 2019 21:32:51 +0100
-Message-Id: <20191127202736.157804366@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.de>
+Subject: [PATCH 5.4 57/66] USB: chaoskey: fix error case of a timeout
+Date:   Wed, 27 Nov 2019 21:32:52 +0100
+Message-Id: <20191127202737.998134943@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -60,34 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 347bc8cb26388791c5881a3775cb14a3f765a674 upstream.
+commit 92aa5986f4f7b5a8bf282ca0f50967f4326559f5 upstream.
 
-Add support for the Mark-10 digital force gauge device to the cp201x
-driver.
+In case of a timeout or if a signal aborts a read
+communication with the device needs to be ended
+lest we overwrite an active URB the next time we
+do IO to the device, as the URB may still be active.
 
-Based on a report and a larger patch from Joel Jennings
-
-Reported-by: Joel Jennings <joel.jennings@makeitlabs.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.de>
 Cc: stable <stable@vger.kernel.org>
-Acked-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191118092119.GA153852@kroah.com
+Link: https://lore.kernel.org/r/20191107142856.16774-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/cp210x.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/misc/chaoskey.c |   24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -125,6 +125,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(0x10C4, 0x8341) }, /* Siemens MC35PU GPRS Modem */
- 	{ USB_DEVICE(0x10C4, 0x8382) }, /* Cygnal Integrated Products, Inc. */
- 	{ USB_DEVICE(0x10C4, 0x83A8) }, /* Amber Wireless AMB2560 */
-+	{ USB_DEVICE(0x10C4, 0x83AA) }, /* Mark-10 Digital Force Gauge */
- 	{ USB_DEVICE(0x10C4, 0x83D8) }, /* DekTec DTA Plus VHF/UHF Booster/Attenuator */
- 	{ USB_DEVICE(0x10C4, 0x8411) }, /* Kyocera GPS Module */
- 	{ USB_DEVICE(0x10C4, 0x8418) }, /* IRZ Automation Teleport SG-10 GSM/GPRS Modem */
+--- a/drivers/usb/misc/chaoskey.c
++++ b/drivers/usb/misc/chaoskey.c
+@@ -384,13 +384,17 @@ static int _chaoskey_fill(struct chaoske
+ 		!dev->reading,
+ 		(started ? NAK_TIMEOUT : ALEA_FIRST_TIMEOUT) );
+ 
+-	if (result < 0)
++	if (result < 0) {
++		usb_kill_urb(dev->urb);
+ 		goto out;
++	}
+ 
+-	if (result == 0)
++	if (result == 0) {
+ 		result = -ETIMEDOUT;
+-	else
++		usb_kill_urb(dev->urb);
++	} else {
+ 		result = dev->valid;
++	}
+ out:
+ 	/* Let the device go back to sleep eventually */
+ 	usb_autopm_put_interface(dev->interface);
+@@ -526,7 +530,21 @@ static int chaoskey_suspend(struct usb_i
+ 
+ static int chaoskey_resume(struct usb_interface *interface)
+ {
++	struct chaoskey *dev;
++	struct usb_device *udev = interface_to_usbdev(interface);
++
+ 	usb_dbg(interface, "resume");
++	dev = usb_get_intfdata(interface);
++
++	/*
++	 * We may have lost power.
++	 * In that case the device that needs a long time
++	 * for the first requests needs an extended timeout
++	 * again
++	 */
++	if (le16_to_cpu(udev->descriptor.idVendor) == ALEA_VENDOR_ID)
++		dev->reads_started = false;
++
+ 	return 0;
+ }
+ #else
 
 
