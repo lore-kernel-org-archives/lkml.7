@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DB8C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C63C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C436C20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D78920665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890512;
-	bh=oMoPkCwY6kDzGS2Li0xLQGa17DHyFG0V1ZNnzIwiQfU=;
+	s=default; t=1574890516;
+	bh=MdXxU8oNnNxUNykFVPJPxOfa36YJHrJlrvzu5GMEQSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ggTEBt5PEbVXmgF6rjUbD58jk2nN9BuwSCflWAZWqnySGeeHQ57RitZZukqZs5hZZ
-	 vFhQID3dskOdgZuI2UyZwCQRpxxHGCuGj8EXkReiHwgfVaxgFQuZetBhbUyNwkeOIo
-	 sR+/2OsY+VkwT5JhUUA1DP5XjD8ov8Jq/thyBmuI=
+	b=LfUobpL6jKKFf/PkKyEQsqBJYKuM5REJjAOoZs+Vo9g22MF53Ph7f3QCealnL4ab7
+	 K+INdUATA99xyNg7fSbkZMQheWsz0Mqucq+nY/hOQ7vIZ38R6lQRFCdLoY0eyI3kCt
+	 JSnTkNnyHFdVVue/JuRYuaT3e4ovC3SCOB2JzDK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbfK0VfL (ORCPT
+        id S1729559AbfK0Utp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:35:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:49:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729557AbfK0Utt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:49:49 -0500
+        id S1729044AbfK0Utm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:49:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7CFE2158A;
-        Wed, 27 Nov 2019 20:49:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78CDD20678;
+        Wed, 27 Nov 2019 20:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887789;
-        bh=oMoPkCwY6kDzGS2Li0xLQGa17DHyFG0V1ZNnzIwiQfU=;
+        s=default; t=1574887781;
+        bh=MdXxU8oNnNxUNykFVPJPxOfa36YJHrJlrvzu5GMEQSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1IVXbK4WslTwk3YrHfDz/0TV0oWgGGvMiwut7oyKF4WhPDuJAF0vFDvuhe4QddkS
-         ByIexcHdFTRd0SE4JQxu9FQNbyIbBpPZIKhVhKlieV2urTtPwkkv69ADlrJ101k/YL
-         EKHpyMYc0hlABv5ukq82DvU66ZdoJ7NHzKfy43e4=
+        b=OQxc6t1xowKwkynLpQQfZQbfNT2EDLFKGmLd/2mvgSVyDK1+1sW+gekbco5LcdIov
+         svmuunugUN+rDCK8ybGTnN3I0/TpCNTt5BIW50xAXaD3JF4RvI6ZvIpSbdNmQh9UsP
+         AbOQ+bXDchdOLroBDHLjGVDNP7j8128AnP4KAWj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        Felipe Rechia <felipe.rechia@datacom.com.br>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 052/211] clk: at91: audio-pll: fix audio pmc type
-Date:   Wed, 27 Nov 2019 21:29:45 +0100
-Message-Id: <20191127203058.982189454@linuxfoundation.org>
+Subject: [PATCH 4.14 090/211] powerpc/process: Fix flush_all_to_thread for SPE
+Date:   Wed, 27 Nov 2019 21:30:23 +0100
+Message-Id: <20191127203102.251927666@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,35 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Felipe Rechia <felipe.rechia@datacom.com.br>
 
-[ Upstream commit 7fa75007b7d7421aea59ff2b12ab1bd65a5abfa6 ]
+[ Upstream commit e901378578c62202594cba0f6c076f3df365ec91 ]
 
-The allocation for the audio pmc is using the size of struct clk_audio_pad
-instead of struct clk_audio_pmc. This works fine because the former is
-larger than the latter but it is safer to be correct.
+Fix a bug introduced by the creation of flush_all_to_thread() for
+processors that have SPE (Signal Processing Engine) and use it to
+compute floating-point operations.
 
-Fixes: ("0865805d82d4 clk: at91: add audio pll clock drivers")
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+>From userspace perspective, the problem was seen in attempts of
+computing floating-point operations which should generate exceptions.
+For example:
+
+  fork();
+  float x = 0.0 / 0.0;
+  isnan(x);           // forked process returns False (should be True)
+
+The operation above also should always cause the SPEFSCR FINV bit to
+be set. However, the SPE floating-point exceptions were turned off
+after a fork().
+
+Kernel versions prior to the bug used flush_spe_to_thread(), which
+first saves SPEFSCR register values in tsk->thread and then calls
+giveup_spe(tsk).
+
+After commit 579e633e764e, the save_all() function was called first
+to giveup_spe(), and then the SPEFSCR register values were saved in
+tsk->thread. This would save the SPEFSCR register values after
+disabling SPE for that thread, causing the bug described above.
+
+Fixes 579e633e764e ("powerpc: create flush_all_to_thread()")
+Signed-off-by: Felipe Rechia <felipe.rechia@datacom.com.br>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/at91/clk-audio-pll.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/process.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/clk/at91/clk-audio-pll.c b/drivers/clk/at91/clk-audio-pll.c
-index da7bafcfbe706..b3eaf654fac98 100644
---- a/drivers/clk/at91/clk-audio-pll.c
-+++ b/drivers/clk/at91/clk-audio-pll.c
-@@ -509,7 +509,7 @@ static void __init of_sama5d2_clk_audio_pll_pad_setup(struct device_node *np)
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 5e5da2073fdff..ba0d4f9a99bac 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -567,12 +567,11 @@ void flush_all_to_thread(struct task_struct *tsk)
+ 	if (tsk->thread.regs) {
+ 		preempt_disable();
+ 		BUG_ON(tsk != current);
+-		save_all(tsk);
+-
+ #ifdef CONFIG_SPE
+ 		if (tsk->thread.regs->msr & MSR_SPE)
+ 			tsk->thread.spefscr = mfspr(SPRN_SPEFSCR);
+ #endif
++		save_all(tsk);
  
- static void __init of_sama5d2_clk_audio_pll_pmc_setup(struct device_node *np)
- {
--	struct clk_audio_pad *apmc_ck;
-+	struct clk_audio_pmc *apmc_ck;
- 	struct clk_init_data init = {};
- 
- 	apmc_ck = kzalloc(sizeof(*apmc_ck), GFP_KERNEL);
+ 		preempt_enable();
+ 	}
 -- 
 2.20.1
 
