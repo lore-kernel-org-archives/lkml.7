@@ -2,101 +2,167 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 092CEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BA4C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1EEE215F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:45:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MGcWFCb0"
+	by mail.kernel.org (Postfix) with ESMTP id 90192215F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 22:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfK0WpQ (ORCPT
+        id S1727524AbfK0WqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 17:45:16 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42642 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbfK0WpP (ORCPT
+        Wed, 27 Nov 2019 17:46:18 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:44684 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfK0WqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 17:45:15 -0500
-Received: by mail-pl1-f194.google.com with SMTP id j12so10543514plt.9
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 14:45:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=63jmzggHofWJgr5L+GFqxa+EPIblRXoAkXungwth2fI=;
-        b=MGcWFCb0G0DykTImRQeb3TawUcMhqC9QSHIXhHlJYWD5JI749HJpVBWgXqg7daoiGA
-         T7es9mluxMthSbpztiGoHaZthnsvDRErI7+DezwQi2RYIRCd9s2MHGxiEPnJ6zw1uwkb
-         EndGbT1feeUF49ynd1MIXRupi0HFXWNJ3BgJ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=63jmzggHofWJgr5L+GFqxa+EPIblRXoAkXungwth2fI=;
-        b=VnPxZBgpHnPnf1/uwH0ovlc38uxD+BF7V2aCRZnOzvHsDv/lVL0vFoUhwrLBjnCn3m
-         O+YjLx39Bj0QL/Gvgjx3lEB3Q4oPsLC2PNlwmNlzOjv5brNqBYloruTmuRQSVkAE+IUO
-         9/p1nYaTiQHV7/xM1tSxgeL1H2a76qFfWBgwdZdGK6szaMCfMqMAP1FgihVzZffsaj2q
-         Nh5kdONZw1P8LVk14VOsZ8oD7Vo0Wb8Mjyb7MA6C3Rs92GJdjQCF9PN9aiwJNB4ooNsU
-         MFezIn7Re+FsFVR5cw4vuBfsPsHAImDDnm6QDdy+X1HW0otRT1i9UmcHf+Uc+6ixCnZ1
-         PUEQ==
-X-Gm-Message-State: APjAAAXpEPupnM0YH6KeoN/j5Vc5PyzToTzPBw9bapSdVIYDx2Q6W8qC
-        wRcqWC2r9vzW5PML0J7o9ht+qA==
-X-Google-Smtp-Source: APXvYqxkiaNpRSKYO8TFXuDbKEa4C6rhv9HChTpAPsUa4ZwUsN9Kt+fIhYQ8z4o9sPgZF5ZN+rFnRQ==
-X-Received: by 2002:a17:90a:b38c:: with SMTP id e12mr8827391pjr.89.1574894713609;
-        Wed, 27 Nov 2019 14:45:13 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id g18sm17756714pfr.165.2019.11.27.14.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 14:45:13 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     linux-bluetooth@vger.kernel.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Johan Hedberg <johan.hedberg@intel.com>,
-        Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mohammad Rasim <mohammad.rasim96@gmail.com>
-Subject: [PATCH] dt-bindings: net: bluetooth: Minor fix in broadcom-bluetooth
-Date:   Wed, 27 Nov 2019 14:45:09 -0800
-Message-Id: <20191127224509.3341-1-abhishekpandit@chromium.org>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+        Wed, 27 Nov 2019 17:46:18 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 1232D1C229A; Wed, 27 Nov 2019 23:46:15 +0100 (CET)
+Date:   Wed, 27 Nov 2019 23:46:14 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org
+Subject: [GIT PULL] LEDs changes for v5.5-rc1
+Message-ID: <20191127224614.GA24850@amd>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The example for brcm,bt-pcm-int-params should be a bytestring and all
-values need to be two hex characters.
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
+--k1lZvvs/B4yU6o8G
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+LED updates for 5.5-rc1
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index b02a53275c98..b5eadee4a9a7 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -47,6 +47,6 @@ Example:
-        bluetooth {
-                compatible = "brcm,bcm43438-bt";
-                max-speed = <921600>;
--               brcm,bt-pcm-int-params = [1 2 0 1 1];
-+               brcm,bt-pcm-int-params = [01 02 00 01 01];
-        };
- };
--- 
-2.24.0.432.g9d3f5f5b63-goog
+This contains usual small updates to drivers, and removal of PAGE_SIZE
+limits on /sys/class/leds/<led>/trigger.
 
+We should not be really having that many triggers; but with cpu
+activity triggers we do, and we'll eventually need to fix it,
+but... remove the limit for now.
+
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/ tags/=
+leds-5.5-rc1
+
+for you to fetch changes up to 5f820ed52371b4f5d8c43c93f03408d0dbc01e5b:
+
+  leds: trigger: netdev: fix handling on interface rename (2019-11-03 18:10=
+:12 +0100)
+
+----------------------------------------------------------------
+Akinobu Mita (1):
+      leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
+
+Chuhong Yuan (1):
+      leds: an30259a: add a check for devm_regmap_init_i2c
+
+Dan Murphy (8):
+      leds: Kconfig: Be consistent with the usage of "LED"
+      leds: flash: Convert non extended registration to inline
+      leds: flash: Remove extern from the header file
+      leds: flash: Add devm_* functions to the flash class
+      leds: lm3601x: Convert class registration to device managed
+      leds: core: Remove extern from header
+      leds: core: Fix devm_classdev_match to reference correct structure
+      leds: core: Fix leds.h structure documentation
+
+Daniel Mack (1):
+      drivers: leds: tlc591xx: check error during device init
+
+Guido G=FCnther (5):
+      leds: lm3692x: Print error value on dev_err
+      leds: lm3692x: Don't overwrite return value in error path
+      leds: lm3692x: Handle failure to probe the regulator
+      leds: lm3692x: Use flags from LM3692X_BOOST_CTRL
+      leds: lm3692x: Use flags from LM3692X_BRT_CTRL
+
+Jean-Jacques Hiblot (3):
+      leds: tlc591xx: simplify driver by using the managed led API
+      leds: tlc591xx: use devm_led_classdev_register_ext()
+      leds: tlc591xx: update the maximum brightness
+
+Markus Elfring (2):
+      leds: bcm6328: Use devm_platform_ioremap_resource() in bcm6328_leds_p=
+robe()
+      leds: bcm6358: Use devm_platform_ioremap_resource() in bcm6358_leds_p=
+robe()
+
+Martin Schiller (1):
+      leds: trigger: netdev: fix handling on interface rename
+
+Oleh Kravchenko (3):
+      dt-bindings: Add docs for EL15203000
+      leds: add LED driver for EL15203000 board
+      leds: mlxreg: Fix possible buffer overflow
+
+Stephen Boyd (1):
+      leds: pca953x: Use of_device_get_match_data()
+
+ .../ABI/testing/sysfs-class-led-driver-el15203000  | 139 ++++++++
+ .../devicetree/bindings/leds/leds-el15203000.txt   |  69 ++++
+ drivers/leds/Kconfig                               |  17 +-
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/led-class-flash.c                     |  50 +++
+ drivers/leds/led-class.c                           |  10 +-
+ drivers/leds/led-triggers.c                        |  90 ++++--
+ drivers/leds/leds-an30259a.c                       |   7 +
+ drivers/leds/leds-bcm6328.c                        |   7 +-
+ drivers/leds/leds-bcm6358.c                        |   7 +-
+ drivers/leds/leds-el15203000.c                     | 357 +++++++++++++++++=
+++++
+ drivers/leds/leds-lm3601x.c                        |   4 +-
+ drivers/leds/leds-lm3692x.c                        |  47 ++-
+ drivers/leds/leds-mlxreg.c                         |   4 +-
+ drivers/leds/leds-pca9532.c                        |  14 +-
+ drivers/leds/leds-tlc591xx.c                       |  90 ++----
+ drivers/leds/leds.h                                |   6 +
+ drivers/leds/trigger/ledtrig-netdev.c              |   5 +-
+ include/linux/led-class-flash.h                    |  41 ++-
+ include/linux/leds.h                               | 105 +++---
+ 20 files changed, 860 insertions(+), 210 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-el1520=
+3000
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-el15203000.=
+txt
+ create mode 100644 drivers/leds/leds-el15203000.c
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--k1lZvvs/B4yU6o8G
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl3e/LYACgkQMOfwapXb+vKivACfQJFuvzDQ0u2gfnENhghhVLJx
+fCsAoKAD6mEiT7fsNlKqMfC/UeJa2NJM
+=vYvs
+-----END PGP SIGNATURE-----
+
+--k1lZvvs/B4yU6o8G--
