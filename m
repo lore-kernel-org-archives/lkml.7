@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C8DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB0FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9112176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB360216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889221;
-	bh=jgZhuF8duSwxHtm8Ldfjn86FE4kAix6Su0REliUcJSk=;
+	s=default; t=1574889223;
+	bh=sDzY29B+fqQFh7q2y2OrABZsUQVM1JjkS1wKHq8bNn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oDEd2aG984Bjp7iZH8qH7vV2DKjbQCD0372aMpl56LbCO/pVr6aDn0MCs7aEO+zq1
-	 m9HvaInk8qWtcmLUzypTGJO4WRPWpwsDMsWJ8iO3oVFGtjm3mRQwAVnOed0h+/mmrT
-	 lGZsOvE9lMVws6uPNSqIG1EY9P8bMWlE4jg6XjEw=
+	b=Q5JHPx5LQ/V9RgqE1sUXKXBDodPPsMcbzzpAuLiOGf8+ocB6MTU/9wtFt0zJkDkqs
+	 RVtwmb4dyORm2quIrkFloHTc7HbPdG2jNOLkfUaz5gtqFeWCegNeS6DRrjJZmWgs6/
+	 59vXroMdAitw0O0y9HP7v73lKMg9FRrpbyMicAHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387489AbfK0VNk (ORCPT
+        id S1732973AbfK0VNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:13:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45936 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:13:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387479AbfK0VNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:13:36 -0500
+        id S2387464AbfK0VN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:13:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C947B2086A;
-        Wed, 27 Nov 2019 21:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E180217F9;
+        Wed, 27 Nov 2019 21:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889215;
-        bh=jgZhuF8duSwxHtm8Ldfjn86FE4kAix6Su0REliUcJSk=;
+        s=default; t=1574889207;
+        bh=sDzY29B+fqQFh7q2y2OrABZsUQVM1JjkS1wKHq8bNn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JAzkvdvPYEh7mHru6zyBDaeJ9KAsJaa363F3ss8dK+JT3HJorc1rYq/hYHUR0Ah/S
-         Uh9w7uk8aun5YPVyGYcuLnYgMcnOayW8MhaXw2vytrQugpQ3CtcxGi1suQUTWk2HOh
-         ugxJ/I/mZ0yvQI9i2ex2TYs7QwQPCLqgw1OyGXVg=
+        b=UKvfx44figNk8HrWm9QJ72p86nFnuhF5d2N2bwlf19vf5MpL1LJ6i8zepNm6MFpL+
+         umesWmuGdCSIsGMO7h8Zz/6+Vpu5ZX0v5H1kXYwP5JsQFvodSHYKgrz9HEKw8Cdm3t
+         z8uxpXVI0PjReSYiBPpIvdbJ1XEIeWyUtacvhXw0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Popov <alex.popov@linux.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 5.4 32/66] media: vivid: Fix wrong locking that causes race conditions on streaming stop
-Date:   Wed, 27 Nov 2019 21:32:27 +0100
-Message-Id: <20191127202708.288070864@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 29/66] ALSA: usb-audio: Fix NULL dereference at parsing BADD
+Date:   Wed, 27 Nov 2019 21:32:24 +0100
+Message-Id: <20191127202701.883158414@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
 References: <20191127202632.536277063@linuxfoundation.org>
@@ -61,122 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Popov <alex.popov@linux.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 6dcd5d7a7a29c1e4b8016a06aed78cd650cd8c27 upstream.
+commit 9435f2bb66874a0c4dd25e7c978957a7ca2c93b1 upstream.
 
-There is the same incorrect approach to locking implemented in
-vivid_stop_generating_vid_cap(), vivid_stop_generating_vid_out() and
-sdr_cap_stop_streaming().
+snd_usb_mixer_controls_badd() that parses UAC3 BADD profiles misses a
+NULL check for the given interfaces.  When a malformed USB descriptor
+is passed, this may lead to an Oops, as spotted by syzkaller.
+Skip the iteration if the interface doesn't exist for avoiding the
+crash.
 
-These functions are called during streaming stopping with vivid_dev.mutex
-locked. And they all do the same mistake while stopping their kthreads,
-which need to lock this mutex as well. See the example from
-vivid_stop_generating_vid_cap():
-  /* shutdown control thread */
-  vivid_grab_controls(dev, false);
-  mutex_unlock(&dev->mutex);
-  kthread_stop(dev->kthread_vid_cap);
-  dev->kthread_vid_cap = NULL;
-  mutex_lock(&dev->mutex);
-
-But when this mutex is unlocked, another vb2_fop_read() can lock it
-instead of vivid_thread_vid_cap() and manipulate the buffer queue.
-That causes a use-after-free access later.
-
-To fix those issues let's:
-  1. avoid unlocking the mutex in vivid_stop_generating_vid_cap(),
-vivid_stop_generating_vid_out() and sdr_cap_stop_streaming();
-  2. use mutex_trylock() with schedule_timeout_uninterruptible() in
-the loops of the vivid kthread handlers.
-
-Signed-off-by: Alexander Popov <alex.popov@linux.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: <stable@vger.kernel.org>      # for v3.18 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: 17156f23e93c ("ALSA: usb: add UAC3 BADD profiles support")
+Reported-by: syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191122112840.24797-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/vivid/vivid-kthread-cap.c |    8 +++++---
- drivers/media/platform/vivid/vivid-kthread-out.c |    8 +++++---
- drivers/media/platform/vivid/vivid-sdr-cap.c     |    8 +++++---
- 3 files changed, 15 insertions(+), 9 deletions(-)
+ sound/usb/mixer.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/media/platform/vivid/vivid-kthread-cap.c
-+++ b/drivers/media/platform/vivid/vivid-kthread-cap.c
-@@ -796,7 +796,11 @@ static int vivid_thread_vid_cap(void *da
- 		if (kthread_should_stop())
- 			break;
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2930,6 +2930,9 @@ static int snd_usb_mixer_controls_badd(s
+ 			continue;
  
--		mutex_lock(&dev->mutex);
-+		if (!mutex_trylock(&dev->mutex)) {
-+			schedule_timeout_uninterruptible(1);
+ 		iface = usb_ifnum_to_if(dev, intf);
++		if (!iface)
 +			continue;
-+		}
 +
- 		cur_jiffies = jiffies;
- 		if (dev->cap_seq_resync) {
- 			dev->jiffies_vid_cap = cur_jiffies;
-@@ -956,8 +960,6 @@ void vivid_stop_generating_vid_cap(struc
+ 		num = iface->num_altsetting;
  
- 	/* shutdown control thread */
- 	vivid_grab_controls(dev, false);
--	mutex_unlock(&dev->mutex);
- 	kthread_stop(dev->kthread_vid_cap);
- 	dev->kthread_vid_cap = NULL;
--	mutex_lock(&dev->mutex);
- }
---- a/drivers/media/platform/vivid/vivid-kthread-out.c
-+++ b/drivers/media/platform/vivid/vivid-kthread-out.c
-@@ -143,7 +143,11 @@ static int vivid_thread_vid_out(void *da
- 		if (kthread_should_stop())
- 			break;
- 
--		mutex_lock(&dev->mutex);
-+		if (!mutex_trylock(&dev->mutex)) {
-+			schedule_timeout_uninterruptible(1);
-+			continue;
-+		}
-+
- 		cur_jiffies = jiffies;
- 		if (dev->out_seq_resync) {
- 			dev->jiffies_vid_out = cur_jiffies;
-@@ -301,8 +305,6 @@ void vivid_stop_generating_vid_out(struc
- 
- 	/* shutdown control thread */
- 	vivid_grab_controls(dev, false);
--	mutex_unlock(&dev->mutex);
- 	kthread_stop(dev->kthread_vid_out);
- 	dev->kthread_vid_out = NULL;
--	mutex_lock(&dev->mutex);
- }
---- a/drivers/media/platform/vivid/vivid-sdr-cap.c
-+++ b/drivers/media/platform/vivid/vivid-sdr-cap.c
-@@ -141,7 +141,11 @@ static int vivid_thread_sdr_cap(void *da
- 		if (kthread_should_stop())
- 			break;
- 
--		mutex_lock(&dev->mutex);
-+		if (!mutex_trylock(&dev->mutex)) {
-+			schedule_timeout_uninterruptible(1);
-+			continue;
-+		}
-+
- 		cur_jiffies = jiffies;
- 		if (dev->sdr_cap_seq_resync) {
- 			dev->jiffies_sdr_cap = cur_jiffies;
-@@ -303,10 +307,8 @@ static void sdr_cap_stop_streaming(struc
- 	}
- 
- 	/* shutdown control thread */
--	mutex_unlock(&dev->mutex);
- 	kthread_stop(dev->kthread_sdr_cap);
- 	dev->kthread_sdr_cap = NULL;
--	mutex_lock(&dev->mutex);
- }
- 
- static void sdr_cap_buf_request_complete(struct vb2_buffer *vb)
+ 		if (num < 2)
 
 
