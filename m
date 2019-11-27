@@ -2,78 +2,183 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191B2C33C9B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F7FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38592089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801A42070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:10:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="B2cF+7m7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfK0SHu (ORCPT
+        id S1727109AbfK0SKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:07:50 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:42974 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfK0SHs (ORCPT
+        Wed, 27 Nov 2019 13:10:10 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.7]:45313 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726593AbfK0SKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:07:48 -0500
-Received: by mail-pj1-f65.google.com with SMTP id y21so10365048pjn.9;
-        Wed, 27 Nov 2019 10:07:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XaNcptt5JOTBwtSroj+ydYGlh1N5E9Y6StuuTHLWEXM=;
-        b=VTEiRg2St4Tt+V2M3hSqFcn0IYiqpCvoN9uD/5GYp6uejPJKf4EPB6PJ+unmz/Q12Q
-         1uHL+vfok43QhrONu/OuG5A+lme2iNOgisRt96yvK12FLHxXKnw+gSaepoD4bG8jL/VI
-         j7im10/Wt8R0OcPrQ/v3oEiXEpL/OmSxjEkrNLHS+KuII0MEHGYGWRZHDsJvHr/orzoT
-         siEOl/bn6d8DaZOO0BqNAd/tjKKh9EwZVqPOoZ8hAja/k0/940I5P4QGTurKBkUklTbG
-         ErA1nwb6gIOODCHzdXLiYnrF9RJX58y9QklfbfBsj4/N2ma0zdaUM3FAJGlfnv5cQeMs
-         2sKQ==
-X-Gm-Message-State: APjAAAWPlK7pxOQ5vbejFDL/E6k1427+h7NOwo6sNJqz3fCtGUP0us7Y
-        N+yBlKepCBQZhinJL1mUbGQ=
-X-Google-Smtp-Source: APXvYqzmi1sTtfjlu4oRd+L662PQX3u2Rr0PhWY+LYbbmu8INk3EProl4I+1RiiEHFx3UH+l9R81dw==
-X-Received: by 2002:a17:902:7485:: with SMTP id h5mr5458293pll.265.1574878068012;
-        Wed, 27 Nov 2019 10:07:48 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id z6sm7990456pjd.9.2019.11.27.10.07.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2019 10:07:46 -0800 (PST)
-Subject: Re: [PATCH] Add prctl support for controlling mem reclaim V4
-To:     Mike Christie <mchristi@redhat.com>, linux-api@vger.kernel.org,
-        idryomov@gmail.com, mhocko@kernel.org, david@fromorbit.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, martin@urbackup.org,
-        Damien.LeMoal@wdc.com
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>
-References: <20191112001900.9206-1-mchristi@redhat.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <24073284-ee53-d22d-dcef-277231283d75@acm.org>
-Date:   Wed, 27 Nov 2019 10:07:45 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191112001900.9206-1-mchristi@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+        Wed, 27 Nov 2019 13:10:10 -0500
+Received: from [46.226.52.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-7.bemta.az-a.eu-west-1.aws.symcld.net id 78/A3-22091-EFBBEDD5; Wed, 27 Nov 2019 18:10:06 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMJsWRWlGSWpSXmKPExsWSoc9mpvt3971
+  Yg+9LbSyuXDzEZDH14RM2i83nelgtvl3pYLK4vGsOm0Xnrn5Wi7uv/Sw2fF/L6MDhseFzE5vH
+  jrtLGD12zrrL7rFpVSebx763y9g81m+5yuLxeZNcAHsUa2ZeUn5FAmvG5EeHmApaeCuWHzrF3
+  MB4jKuLkYuDUWAps8SaC0dYIJxjLBKXjtxnhXA2M0r87v3JBuKwCJxglri0/idYRkhgGpPE4Z
+  1/2CCch4wSx5d/Yexi5ORgE7CQmHziARuILSIQIdFx7zJYEbNAE7PE+1VLwYqEBZwlZve3MUM
+  UuUgc2twEVMQBZNdL7N5fARJmEVCVOLZnPwuIzSuQKNF44ww7xLJLrBIvD68Gm8MpYCTx/OQ1
+  dhCbUUBW4kvjarCZzALiEreezGcCsSUEBCSW7DnPDGGLSrx8/I8Voj5V4mTTDUaIuI7E2etPo
+  GwliXlzj0DZshKX5ndD2b4Scx5dZgS5E6R+5i8hiLCFxJLuVhaIsIrEv0OVEOECiesz/0FdoC
+  Zx400H1AUyEu1fO5lBXpEQmM0q8br1OMsERv1ZSK6GsHUkFuz+xAZha0ssW/iaeRY4KAQlTs5
+  8wrKAkWUVo0VSUWZ6RkluYmaOrqGBga6hoZGuoaUxEFvoJVbpJuqlluqWpxaX6BrqJZYX6xVX
+  5ibnpOjlpZZsYgSmt5SCg8d2MB75+lbvEKMkB5OSKK+f171YIb6k/JTKjMTijPii0pzU4kOMM
+  hwcShK813YB5QSLUtNTK9Iyc4CpFiYtwcGjJMJ7CSTNW1yQmFucmQ6ROsWoyzHh5dxFzEIsef
+  l5qVLivM0gRQIgRRmleXAjYGn/EqOslDAvIwMDgxBPQWpRbmYJqvwrRnEORiVh3gsgU3gy80r
+  gNr0COoIJ6Ih9fWBHlCQipKQamG6Ivbw4b2Uf39UY5XdvVte0NWg23To7QXr1oampVYvLXt9m
+  P7f4l97+6jtX/hl+8dF/zOCxP+T2jTXZC2LKLI3eVi1nM9JmPHv+xr9LC35O35EuJrt9z/Uor
+  a1ZZxzPzFxudPXUJqFp/w+qqHLdj/8Qvv5r3cLyn65cr6xfFCUXWwTV3uLIY4pN/7ut/ltg4q
+  9KS+OJS5oLc456S27kOZe8aavN0rxnhc/lFglZxpo5HNv2Y1qQzFvpn+Z5XB1PNoQqXfi5qMR
+  Wu8H8xp27kpLfA4y/SW3807xjil5QqVfrifglL6PLRQryv4oKBLHHLz6R8kCPv+2Jy3+35tC/
+  JZNiMu+Z9DTO/mD0Ud5lz38lluKMREMt5qLiRACZpScXdgQAAA==
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-3.tower-268.messagelabs.com!1574878204!470562!1
+X-Originating-IP: [104.47.6.54]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 27357 invoked from network); 27 Nov 2019 18:10:05 -0000
+Received: from mail-ve1eur02lp2054.outbound.protection.outlook.com (HELO EUR02-VE1-obe.outbound.protection.outlook.com) (104.47.6.54)
+  by server-3.tower-268.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 27 Nov 2019 18:10:05 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U8GVQY2FwQ6yQJn6W3Wx/6G76inXGOVYGnfT37dUNskDuhMC7l1mVbb28eAnKuj5iz4Uf4a26ylMQyBDZ6tlj5XKdSYqDa/IgH2NSx5H+y/X7csuaNFNee6jhiUSDTa5R7cYww9gCdDNO9sZ5JCMrD/+yDfsuDcvF7UsVyZhfF0PPHyBwrs6hm1Pce6pdjce19CJSoesaD4Esb7e38Sz5gKoE/Q1XSL4DFh3TFg9DOsApQPMmHbQFscj85/BXItiIkcDNvLrDyxNOAaBplPONkF9tqAXBy+9lhcyqPZUeLN3qaNwt5tIPtRxNPcB7dpqUUZxc6VXir9/oXdZUAJz5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m7p0SgyfOLFzbjLoO+Je/+jBuqL4X/3r28rlEoKLSP0=;
+ b=Bx/U+Ixh2psMGdFQPqF3xRUlOeSmKGYEDK7sRB5IV0dXawL0bbgNZw6MljcMeomCuYMcbq8Fye9wJJ7AUPz3gVdanDn32D9+NnpIOG+lVq6e6IuzuSJ2JGnH2c1vjdQoU/F5asPDivrfD/d12CEqmdMBrYq3QNb9AMNqf4Gupm8/AYWWNksLSX6+V0W2TZ4IAAdx8fURP5Xdgn9zb/2RbRmcZTb8V65lhg5u7HL47LxL0CU2IFh1SSEDB46vFs9+aeib/t0hvoJgwuT7ZrZRuHiUCdHDeTIvZhfALQJFmj8uVI80oE1vjC/iHftP25iys0ZRegF7hQSGlnUTN9WnIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m7p0SgyfOLFzbjLoO+Je/+jBuqL4X/3r28rlEoKLSP0=;
+ b=B2cF+7m7mVnGtTDHQQq1GL3Y8FFPUWM/UCSg/G6uY0JkatExrD5rn2WwZ2GFE9TGrm+firqNPAXxb1TljlCMhSMDTgoaQnLmSzN7GUdMgOcPeHibEbF+nwHAuK2LkBpLcup6mgzL9PR2WrmnGNJALCBsJio9rvYtyVhM0QJIHoI=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1042.EURPRD10.PROD.OUTLOOK.COM (10.169.154.141) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.19; Wed, 27 Nov 2019 18:10:00 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
+ 18:10:00 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+CC:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@collabora.com" <kernel@collabora.com>
+Subject: RE: [PATCHv2 6/6] ASoC: da7213: Add default clock handling
+Thread-Topic: [PATCHv2 6/6] ASoC: da7213: Add default clock handling
+Thread-Index: AQHVn7aXMyQuMXvm70+jyJLut64noaeWIihwgAeSgICAAAQ4gIAACJ3wgAADHgCAARqUMIAAHxOAgAAPlwCAACS4AIAADJyggAAEXwCAAA2x8A==
+Date:   Wed, 27 Nov 2019 18:10:00 +0000
+Message-ID: <AM5PR1001MB099446A50351CC49478893D780440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <AM5PR1001MB0994720A0D615339A978E35C804E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <AM5PR1001MB0994E628439F021F97B872D480450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191126170841.GC4205@sirena.org.uk>
+ <AM5PR1001MB09949D557742E8817545637F80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191126175040.GD4205@sirena.org.uk>
+ <AM5PR1001MB09940CF764711F1F13A6B37E80440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191127123317.GA4879@sirena.org.uk>
+ <AM5PR1001MB0994D842A2D7051F81A7765B80440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191127154030.GD4879@sirena.org.uk>
+ <AM5PR1001MB099467ACADA4F7B6DDA5087480440@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191127164116.GE4879@sirena.org.uk>
+In-Reply-To: <20191127164116.GE4879@sirena.org.uk>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ed15d1f2-f80c-4182-b934-08d7736504e3
+x-ms-traffictypediagnostic: AM5PR1001MB1042:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR1001MB1042D500A75AFB174A4EB57EA7440@AM5PR1001MB1042.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 023495660C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(189003)(199004)(66066001)(8936002)(76176011)(7696005)(64756008)(66476007)(53546011)(102836004)(66556008)(7736002)(14454004)(256004)(446003)(11346002)(86362001)(66446008)(305945005)(55016002)(66946007)(4326008)(99286004)(9686003)(81166006)(71200400001)(71190400001)(52536014)(76116006)(6506007)(2906002)(33656002)(74316002)(55236004)(498600001)(110136005)(6116002)(26005)(25786009)(6246003)(5660300002)(81156014)(3846002)(186003)(6436002)(54906003)(229853002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1042;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6SkZ1LSBhSQEsjInjN/6v3hO15KD3xx3q57eOz2aYJ5bM24KpaCajtK4Uv9QWZ5IjIZNgqXNVkDudbvZ+sNMOh+X5q+AOTR19wOdISiwqek/RfB9CLOk3+GBWTjZWdsmMMEXHYKBZTtMv1LwoqKMUXA6skpvTPbHgj0SsNgd5YQChx58gT8Z24whs9FBBO1tSqolOTI1xfjvKl2rRTq8II0kf0o+42RUNhW+wBeArJ3t93TE9HsfLgVeqBgpnDLh0L+P+qXeropgm882hgtOLn+sMHOF6aR5awW+5LnHkVwVnM5lDF0k/veYDHj5tSosBx0+AzaN2mNOk4xRdmTmWdZ61Ardw5HmwfLWFyYhsSwCq2PvaxkoTpjthKo0hDFunmuv/asMNULdxh8HKfTWkBupLY0j8WuSreGNQapMvTuanRVwaYqPRpmRN07P91M6
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed15d1f2-f80c-4182-b934-08d7736504e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2019 18:10:00.5999
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EU7oW8aFw1LGyvj0ky3j5mYC4x6P1NIjsN+57gCa9h9yYOsYxXeoyRdxfuJJdr4o7q4/MP8K0+PzxPR15mTYY2aXLxXbNghfiJTVW7WwJeY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/19 4:19 PM, Mike Christie wrote:
-> There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
-> amd nbd that have userspace components that can run in the IO path. For
-> example, iscsi and nbd's userspace deamons may need to recreate a socket
-> and/or send IO on it, and dm-multipath's daemon multipathd may need to
-> send SG IO or read/write IO to figure out the state of paths and re-set
-> them up.
+On 27 November 2019 16:41, Mark Brown wrote:
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+> > The PLL in the codec relies on MCLK. The MCLK rate can be specified/con=
+figured
+> > by a machine driver using the relevant codec sysclk function, as is don=
+e in a
+> > number of drivers. Surely that has to happen first before we configure =
+the PLL
+> > as the PLL functions needs to know what rate is coming in so the correc=
+t
+> > dividers can be applied for the required internal clocking to match up =
+with the
+> > desired sample rates. I guess I'm still missing something regarding you=
+r
+> > discussion around SYSCLK?
+>
+> The PLL configuration specifies both input and output clock rates (as
+> well as an input clock source) so if it's got to configure the MCLK I'd
+> expect the driver to figure that out without needing the caller to
+> separately set the MCLK rate.
+
+Yes it does but the name of the function implies it's setting the codec's P=
+LL,
+not the system clock, whereas the other function implies setting the system
+clock and not the PLL. Also generally you're only setting the sysclk once
+whereas you may want to configure and enable/disable the PLL more dynamical=
+ly,
+at least for devices which do have a built-in PLL. Of course that could sti=
+ll be
+handled through the single PLL function call.
+
+Just as an informational, what's the future for these two functions if
+essentially one is only really required and the other deemed redundant? I w=
+ould
+just like to be clear so I'm not falling over things like this in the futur=
+e,
+and wasting your time as well. Seems that the PLL call isn't part of simple
+generic card code so would the be deemed surplus to requirements some point=
+ down
+the line?
