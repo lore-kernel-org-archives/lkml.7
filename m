@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29246C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9A2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01BA921736
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3E82154A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889454;
-	bh=L+jYQkLDbz7jdGIFvd7QPd5vlf8ZtyBtC/ptRMlOHZQ=;
+	s=default; t=1574889461;
+	bh=ezbFv245e3UXk+bOz7/RRYSyfswY6TcgjUeambJ20VA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r7tZHpr1F70kWRV9CtOei61f6q7asJqSlUmf7P1eaCaEzsP2Mn4wf6t7VY8lDegZY
-	 ws4JtwzS3HbgA3YgzuVQazWDviWbwV/R5pmWUkMRKS6fVe7v5rdFKEqbhcMfjZnqE7
-	 JseFfHG24pfLp3K4vTNj/KoMTVO2ttQZHZpdqEKg=
+	b=k2qdAT4N05WVWrjNn6XtTO0uIhBKE1Zo6A+7bAf5PUxAZg5DpXOBg3RlE/zSfmjL5
+	 wbb6gB1m3+QwbyTsL92VF9iAG8k7OAblGmjl0IPI/ZxQX4DNcUPr5db0hqq0nT0TJR
+	 RjoVFJ3C4WS07xOAIVPCYTo0Lb4ylY50E+uSGzdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfK0VMp (ORCPT
+        id S1732841AbfK0VRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:12:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43754 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:17:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728319AbfK0VMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:12:41 -0500
+        id S1733284AbfK0VM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:12:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A98FA215F1;
-        Wed, 27 Nov 2019 21:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFDD5215E5;
+        Wed, 27 Nov 2019 21:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889161;
-        bh=L+jYQkLDbz7jdGIFvd7QPd5vlf8ZtyBtC/ptRMlOHZQ=;
+        s=default; t=1574889148;
+        bh=ezbFv245e3UXk+bOz7/RRYSyfswY6TcgjUeambJ20VA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GkrFJh2QiaWwzzbTUmYLMYrp0x96ww1HPScLs6nqJSIgMoTYIMW9GRDwKupnK4A0K
-         o20GVVDimUXZLzTJGwaA8+uaIpgq2mWBK/lBr5tL2r7iTgnDctrIKqd6Z90gWoHUYQ
-         ohIwWgig6VYVn1OSrGt3gs6PUo4uF0QjK5+6ziX0=
+        b=IS0yCXEayJS/FuS2Ly/YHyj+EK5wWsIGdhy46u4RcXClC1cKkfywBLODY2IMO1JAd
+         8oTOgfuGZU/OGxaic0UlSP8hKHWJPKw2qUNrV2E0awIz0NwmeC6fMKna+k8XOxsZnu
+         G8KN7GjaHFGWggq4oqm2aZbW5wtCB9BdpMD3NlcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 04/66] ath10k: Fix HOST capability QMI incompatibility
-Date:   Wed, 27 Nov 2019 21:31:59 +0100
-Message-Id: <20191127202640.922771514@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.3 95/95] KVM: PPC: Book3S HV: Flush link stack on guest exit to host kernel
+Date:   Wed, 27 Nov 2019 21:32:52 +0100
+Message-Id: <20191127203003.310860131@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
-References: <20191127202632.536277063@linuxfoundation.org>
+In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
+References: <20191127202845.651587549@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,168 +58,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 7165ef890a4c44cf16db66b82fd78448f4bde6ba upstream.
+commit af2e8c68b9c5403f77096969c516f742f5bb29e0 upstream.
 
-The introduction of 768ec4c012ac ("ath10k: update HOST capability QMI
-message") served the purpose of supporting the new and extended HOST
-capability QMI message.
+On some systems that are vulnerable to Spectre v2, it is up to
+software to flush the link stack (return address stack), in order to
+protect against Spectre-RSB.
 
-But while the new message adds a slew of optional members it changes the
-data type of the "daemon_support" member, which means that older
-versions of the firmware will fail to decode the incoming request
-message.
+When exiting from a guest we do some house keeping and then
+potentially exit to C code which is several stack frames deep in the
+host kernel. We will then execute a series of returns without
+preceeding calls, opening up the possiblity that the guest could have
+poisoned the link stack, and direct speculative execution of the host
+to a gadget of some sort.
 
-There is no way to detect this breakage from Linux and there's no way to
-recover from sending the wrong message (i.e. we can't just try one
-format and then fallback to the other), so a quirk is introduced in
-DeviceTree to indicate to the driver that the firmware requires the 8bit
-version of this message.
+To prevent this we add a flush of the link stack on exit from a guest.
 
-Cc: stable@vger.kernel.org
-Fixes: 768ec4c012ac ("ath10k: update HOST capability qmi message")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt |    6 ++
- drivers/net/wireless/ath/ath10k/qmi.c                          |   13 ++++-
- drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c                 |   22 ++++++++++
- drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h                 |    1 
- drivers/net/wireless/ath/ath10k/snoc.c                         |   11 +++++
- drivers/net/wireless/ath/ath10k/snoc.h                         |    1 
- 6 files changed, 51 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/asm-prototypes.h |    2 ++
+ arch/powerpc/kernel/security.c            |    9 +++++++++
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S   |   30 ++++++++++++++++++++++++++++++
+ 3 files changed, 41 insertions(+)
 
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -81,6 +81,12 @@ Optional properties:
- 	Definition: Name of external front end module used. Some valid FEM names
- 		    for example: "microsemi-lx5586", "sky85703-11"
- 		    and "sky85803" etc.
-+- qcom,snoc-host-cap-8bit-quirk:
-+	Usage: Optional
-+	Value type: <empty>
-+	Definition: Quirk specifying that the firmware expects the 8bit version
-+		    of the host capability QMI request
+--- a/arch/powerpc/include/asm/asm-prototypes.h
++++ b/arch/powerpc/include/asm/asm-prototypes.h
+@@ -141,9 +141,11 @@ void _kvmppc_save_tm_pr(struct kvm_vcpu
+ extern s32 patch__call_flush_count_cache;
+ extern s32 patch__flush_count_cache_return;
+ extern s32 patch__flush_link_stack_return;
++extern s32 patch__call_kvm_flush_link_stack;
+ extern s32 patch__memset_nocache, patch__memcpy_nocache;
+ 
+ extern long flush_count_cache;
++extern long kvm_flush_link_stack;
+ 
+ #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
+ void kvmppc_save_tm_hv(struct kvm_vcpu *vcpu, u64 msr, bool preserve_nv);
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -400,6 +400,9 @@ static void toggle_count_cache_flush(boo
+ 
+ 	if (!enable) {
+ 		patch_instruction_site(&patch__call_flush_count_cache, PPC_INST_NOP);
++#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
++		patch_instruction_site(&patch__call_kvm_flush_link_stack, PPC_INST_NOP);
++#endif
+ 		pr_info("link-stack-flush: software flush disabled.\n");
+ 		link_stack_flush_enabled = false;
+ 		no_count_cache_flush();
+@@ -410,6 +413,12 @@ static void toggle_count_cache_flush(boo
+ 	patch_branch_site(&patch__call_flush_count_cache,
+ 			  (u64)&flush_count_cache, BRANCH_SET_LINK);
+ 
++#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
++	// This enables the branch from guest_exit_cont to kvm_flush_link_stack
++	patch_branch_site(&patch__call_kvm_flush_link_stack,
++			  (u64)&kvm_flush_link_stack, BRANCH_SET_LINK);
++#endif
 +
+ 	pr_info("link-stack-flush: software flush enabled.\n");
+ 	link_stack_flush_enabled = true;
  
- Example (to supply PCI based wifi block details):
+--- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
++++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
+@@ -11,6 +11,7 @@
+  */
  
---- a/drivers/net/wireless/ath/ath10k/qmi.c
-+++ b/drivers/net/wireless/ath/ath10k/qmi.c
-@@ -581,22 +581,29 @@ static int ath10k_qmi_host_cap_send_sync
- {
- 	struct wlfw_host_cap_resp_msg_v01 resp = {};
- 	struct wlfw_host_cap_req_msg_v01 req = {};
-+	struct qmi_elem_info *req_ei;
- 	struct ath10k *ar = qmi->ar;
-+	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
- 	struct qmi_txn txn;
- 	int ret;
+ #include <asm/ppc_asm.h>
++#include <asm/code-patching-asm.h>
+ #include <asm/kvm_asm.h>
+ #include <asm/reg.h>
+ #include <asm/mmu.h>
+@@ -1458,6 +1459,13 @@ guest_exit_cont:		/* r9 = vcpu, r12 = tr
+ 1:
+ #endif /* CONFIG_KVM_XICS */
  
- 	req.daemon_support_valid = 1;
- 	req.daemon_support = 0;
- 
--	ret = qmi_txn_init(&qmi->qmi_hdl, &txn,
--			   wlfw_host_cap_resp_msg_v01_ei, &resp);
-+	ret = qmi_txn_init(&qmi->qmi_hdl, &txn, wlfw_host_cap_resp_msg_v01_ei,
-+			   &resp);
- 	if (ret < 0)
- 		goto out;
- 
-+	if (test_bit(ATH10K_SNOC_FLAG_8BIT_HOST_CAP_QUIRK, &ar_snoc->flags))
-+		req_ei = wlfw_host_cap_8bit_req_msg_v01_ei;
-+	else
-+		req_ei = wlfw_host_cap_req_msg_v01_ei;
++	/*
++	 * Possibly flush the link stack here, before we do a blr in
++	 * guest_exit_short_path.
++	 */
++1:	nop
++	patch_site 1b patch__call_kvm_flush_link_stack
 +
- 	ret = qmi_send_request(&qmi->qmi_hdl, NULL, &txn,
- 			       QMI_WLFW_HOST_CAP_REQ_V01,
- 			       WLFW_HOST_CAP_REQ_MSG_V01_MAX_MSG_LEN,
--			       wlfw_host_cap_req_msg_v01_ei, &req);
-+			       req_ei, &req);
- 	if (ret < 0) {
- 		qmi_txn_cancel(&txn);
- 		ath10k_err(ar, "failed to send host capability request: %d\n", ret);
---- a/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c
-+++ b/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c
-@@ -1988,6 +1988,28 @@ struct qmi_elem_info wlfw_host_cap_req_m
- 	{}
- };
+ 	/* If we came in through the P9 short path, go back out to C now */
+ 	lwz	r0, STACK_SLOT_SHORT_PATH(r1)
+ 	cmpwi	r0, 0
+@@ -1933,6 +1941,28 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
+ 	mtlr	r0
+ 	blr
  
-+struct qmi_elem_info wlfw_host_cap_8bit_req_msg_v01_ei[] = {
-+	{
-+		.data_type      = QMI_OPT_FLAG,
-+		.elem_len       = 1,
-+		.elem_size      = sizeof(u8),
-+		.array_type     = NO_ARRAY,
-+		.tlv_type       = 0x10,
-+		.offset         = offsetof(struct wlfw_host_cap_req_msg_v01,
-+					   daemon_support_valid),
-+	},
-+	{
-+		.data_type      = QMI_UNSIGNED_1_BYTE,
-+		.elem_len       = 1,
-+		.elem_size      = sizeof(u8),
-+		.array_type     = NO_ARRAY,
-+		.tlv_type       = 0x10,
-+		.offset         = offsetof(struct wlfw_host_cap_req_msg_v01,
-+					   daemon_support),
-+	},
-+	{}
-+};
++.balign 32
++.global kvm_flush_link_stack
++kvm_flush_link_stack:
++	/* Save LR into r0 */
++	mflr	r0
 +
- struct qmi_elem_info wlfw_host_cap_resp_msg_v01_ei[] = {
- 	{
- 		.data_type      = QMI_STRUCT,
---- a/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h
-+++ b/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h
-@@ -575,6 +575,7 @@ struct wlfw_host_cap_req_msg_v01 {
- 
- #define WLFW_HOST_CAP_REQ_MSG_V01_MAX_MSG_LEN 189
- extern struct qmi_elem_info wlfw_host_cap_req_msg_v01_ei[];
-+extern struct qmi_elem_info wlfw_host_cap_8bit_req_msg_v01_ei[];
- 
- struct wlfw_host_cap_resp_msg_v01 {
- 	struct qmi_response_type_v01 resp;
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -1261,6 +1261,15 @@ out:
- 	return ret;
- }
- 
-+static void ath10k_snoc_quirks_init(struct ath10k *ar)
-+{
-+	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
-+	struct device *dev = &ar_snoc->dev->dev;
++	/* Flush the link stack. On Power8 it's up to 32 entries in size. */
++	.rept 32
++	bl	.+4
++	.endr
 +
-+	if (of_property_read_bool(dev->of_node, "qcom,snoc-host-cap-8bit-quirk"))
-+		set_bit(ATH10K_SNOC_FLAG_8BIT_HOST_CAP_QUIRK, &ar_snoc->flags);
-+}
++	/* And on Power9 it's up to 64. */
++BEGIN_FTR_SECTION
++	.rept 32
++	bl	.+4
++	.endr
++END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
 +
- int ath10k_snoc_fw_indication(struct ath10k *ar, u64 type)
- {
- 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
-@@ -1678,6 +1687,8 @@ static int ath10k_snoc_probe(struct plat
- 	ar->ce_priv = &ar_snoc->ce;
- 	msa_size = drv_data->msa_size;
- 
-+	ath10k_snoc_quirks_init(ar);
++	/* Restore LR */
++	mtlr	r0
++	blr
 +
- 	ret = ath10k_snoc_resource_init(ar);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to initialize resource: %d\n", ret);
---- a/drivers/net/wireless/ath/ath10k/snoc.h
-+++ b/drivers/net/wireless/ath/ath10k/snoc.h
-@@ -63,6 +63,7 @@ enum ath10k_snoc_flags {
- 	ATH10K_SNOC_FLAG_REGISTERED,
- 	ATH10K_SNOC_FLAG_UNREGISTERING,
- 	ATH10K_SNOC_FLAG_RECOVERY,
-+	ATH10K_SNOC_FLAG_8BIT_HOST_CAP_QUIRK,
- };
- 
- struct ath10k_snoc {
+ kvmppc_guest_external:
+ 	/* External interrupt, first check for host_ipi. If this is
+ 	 * set, we know the host wants us out so let's do it now
 
 
