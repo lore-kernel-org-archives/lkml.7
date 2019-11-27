@@ -2,53 +2,52 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862FBC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980AAC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5990520863
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A1820863
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887235;
-	bh=detVZUwgRyHVtddSUN/iavcWIqSHjmcqFrt8yqmE6bQ=;
+	s=default; t=1574887240;
+	bh=X93YxrL4e1zQIw8m5y0o6WIOY4hS2G+mT0DqMqffEj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2gbRFFVkxT9ZArmoLwEO3ejhX5qjvYInqHK6o9opG2ap8OXIEvNk8evpOCm2XfQE
-	 QaQVcxghk0CAd905WbRre3XJi3b8W5+rwtvvcvRtKVdU60g7tS/BbRcT4GvxyYus//
-	 aDlN1mJu8dGROPE7C30BIv8cKZtZ17lhY7bjZZfA=
+	b=mhIObyWLLAohVDqg03hMXuC3PxjIb/VaDdi413OJHYqQEmGjqeDgLQ2HXt9IzjrVu
+	 V4kM226Zpa5Sg0UuhhS2yC6zq95oqHbq6i7JiTIKDDTUX6gKQ3auw2IIMOg9eCGmms
+	 Wm30KaDnaZgGnJa3It5+bn4dNaDzAHZGNgsNiJqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfK0Uke (ORCPT
+        id S1729059AbfK0Ukj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:40:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45120 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:40:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729042AbfK0Ukb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:40:31 -0500
+        id S1727107AbfK0Ukg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:40:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E031C20863;
-        Wed, 27 Nov 2019 20:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C71D20863;
+        Wed, 27 Nov 2019 20:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887230;
-        bh=detVZUwgRyHVtddSUN/iavcWIqSHjmcqFrt8yqmE6bQ=;
+        s=default; t=1574887236;
+        bh=X93YxrL4e1zQIw8m5y0o6WIOY4hS2G+mT0DqMqffEj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f51ojN7xDpUPdiWAzt6UdAR/ywSdvCyZ/siBU1+dUDfaMy3P+VUMBCuGruiITVByp
-         O5OnEG/Dq7EkBF/1zy1VgqXJGmhVf8EQnnCTJwg4WYsQLfkpFJQyVX3Xn0WHoPDEwp
-         FRj4NnM1JZtGmw82TUv8Z7LkQlB1zvOSkao1T/eY=
+        b=gKH0AncnWW5ix0/vVvfKDgrhflscdQQVXHI7MCAWpX850Q32VWYHgXJXY+DR/jBmv
+         min7+6EL0/l9RTcbEkZEKHhWOM2u2S4dwtNRxFL9HGTRe10DWVRKNPQIRab4yKTjJ0
+         ozdnyywFhCkCLn6UEThnhF8qNA0J9NyNInNE8sZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 031/151] scsi: isci: Change sci_controller_start_tasks return type to sci_status
-Date:   Wed, 27 Nov 2019 21:30:14 +0100
-Message-Id: <20191127203019.935095356@linuxfoundation.org>
+Subject: [PATCH 4.9 033/151] clk: mmp2: fix the clock id for sdh2_clk and sdh3_clk
+Date:   Wed, 27 Nov 2019 21:30:16 +0100
+Message-Id: <20191127203020.869830028@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -61,104 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit 362b5da3dfceada6e74ecdd7af3991bbe42c0c0f ]
+[ Upstream commit 4917fb90eec7c26dac1497ada3bd4a325f670fcc ]
 
-Clang warns when an enumerated type is implicitly converted to another.
+A typo that makes it impossible to get the correct clocks for
+MMP2_CLK_SDH2 and MMP2_CLK_SDH3.
 
-drivers/scsi/isci/request.c:3476:13: warning: implicit conversion from
-enumeration type 'enum sci_task_status' to different enumeration type
-'enum sci_status' [-Wenum-conversion]
-                        status = sci_controller_start_task(ihost,
-                               ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/isci/host.c:2744:10: warning: implicit conversion from
-enumeration type 'enum sci_status' to different enumeration type 'enum
-sci_task_status' [-Wenum-conversion]
-                return SCI_SUCCESS;
-                ~~~~~~ ^~~~~~~~~~~
-drivers/scsi/isci/host.c:2753:9: warning: implicit conversion from
-enumeration type 'enum sci_status' to different enumeration type 'enum
-sci_task_status' [-Wenum-conversion]
-        return status;
-        ~~~~~~ ^~~~~~
-
-Avoid all of these implicit conversion by just making
-sci_controller_start_task use sci_status. This silences
-Clang and has no functional change since sci_task_status
-has all of its values mapped to something in sci_status.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/153
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Fixes: 1ec770d92a62 ("clk: mmp: add mmp2 DT support for clock driver")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/isci/host.c | 8 ++++----
- drivers/scsi/isci/host.h | 2 +-
- drivers/scsi/isci/task.c | 4 ++--
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/clk/mmp/clk-of-mmp2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/isci/host.c b/drivers/scsi/isci/host.c
-index 609dafd661d14..da4583a2fa23e 100644
---- a/drivers/scsi/isci/host.c
-+++ b/drivers/scsi/isci/host.c
-@@ -2717,9 +2717,9 @@ enum sci_status sci_controller_continue_io(struct isci_request *ireq)
-  *    the task management request.
-  * @task_request: the handle to the task request object to start.
-  */
--enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
--					       struct isci_remote_device *idev,
--					       struct isci_request *ireq)
-+enum sci_status sci_controller_start_task(struct isci_host *ihost,
-+					  struct isci_remote_device *idev,
-+					  struct isci_request *ireq)
- {
- 	enum sci_status status;
- 
-@@ -2728,7 +2728,7 @@ enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
- 			 "%s: SCIC Controller starting task from invalid "
- 			 "state\n",
- 			 __func__);
--		return SCI_TASK_FAILURE_INVALID_STATE;
-+		return SCI_FAILURE_INVALID_STATE;
- 	}
- 
- 	status = sci_remote_device_start_task(ihost, idev, ireq);
-diff --git a/drivers/scsi/isci/host.h b/drivers/scsi/isci/host.h
-index 22a9bb1abae14..15dc6e0d8deb0 100644
---- a/drivers/scsi/isci/host.h
-+++ b/drivers/scsi/isci/host.h
-@@ -490,7 +490,7 @@ enum sci_status sci_controller_start_io(
- 	struct isci_remote_device *idev,
- 	struct isci_request *ireq);
- 
--enum sci_task_status sci_controller_start_task(
-+enum sci_status sci_controller_start_task(
- 	struct isci_host *ihost,
- 	struct isci_remote_device *idev,
- 	struct isci_request *ireq);
-diff --git a/drivers/scsi/isci/task.c b/drivers/scsi/isci/task.c
-index 6dcaed0c1fc8c..fb6eba331ac6e 100644
---- a/drivers/scsi/isci/task.c
-+++ b/drivers/scsi/isci/task.c
-@@ -258,7 +258,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
- 				 struct isci_tmf *tmf, unsigned long timeout_ms)
- {
- 	DECLARE_COMPLETION_ONSTACK(completion);
--	enum sci_task_status status = SCI_TASK_FAILURE;
-+	enum sci_status status = SCI_FAILURE;
- 	struct isci_request *ireq;
- 	int ret = TMF_RESP_FUNC_FAILED;
- 	unsigned long flags;
-@@ -301,7 +301,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
- 	/* start the TMF io. */
- 	status = sci_controller_start_task(ihost, idev, ireq);
- 
--	if (status != SCI_TASK_SUCCESS) {
-+	if (status != SCI_SUCCESS) {
- 		dev_dbg(&ihost->pdev->dev,
- 			 "%s: start_io failed - status = 0x%x, request = %p\n",
- 			 __func__,
+diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
+index 9adaf48aea231..061a9f10218b3 100644
+--- a/drivers/clk/mmp/clk-of-mmp2.c
++++ b/drivers/clk/mmp/clk-of-mmp2.c
+@@ -227,8 +227,8 @@ static struct mmp_param_gate_clk apmu_gate_clks[] = {
+ 	/* The gate clocks has mux parent. */
+ 	{MMP2_CLK_SDH0, "sdh0_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH0, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
+ 	{MMP2_CLK_SDH1, "sdh1_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH1, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
+-	{MMP2_CLK_SDH1, "sdh2_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH2, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
+-	{MMP2_CLK_SDH1, "sdh3_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH3, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
++	{MMP2_CLK_SDH2, "sdh2_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH2, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
++	{MMP2_CLK_SDH3, "sdh3_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH3, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
+ 	{MMP2_CLK_DISP0, "disp0_clk", "disp0_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x1b, 0x1b, 0x0, 0, &disp0_lock},
+ 	{MMP2_CLK_DISP0_SPHY, "disp0_sphy_clk", "disp0_sphy_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x1024, 0x1024, 0x0, 0, &disp0_lock},
+ 	{MMP2_CLK_DISP1, "disp1_clk", "disp1_div", CLK_SET_RATE_PARENT, APMU_DISP1, 0x1b, 0x1b, 0x0, 0, &disp1_lock},
 -- 
 2.20.1
 
