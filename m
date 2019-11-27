@@ -2,81 +2,140 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28256C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8D9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2EC12070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29D320678
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 09:43:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cdJmMbKM"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="r5KR6a7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfK0JnU (ORCPT
+        id S1726673AbfK0JnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 04:43:20 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33964 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfK0JnT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 04:43:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=V23rkTkin1c7zTfEuGjtB9skoVvrhOmzur8foUlLMFA=; b=cdJmMbKMq+6OdoqhmMoN9Vvcq
-        kQ9AMkd7iYn8pFO2djNXBBs6E6PiLzipr69oVywUwjc8eHxIMDnkJBCTdTrzxS3WiTg/IeLWwCdhL
-        2iA32ZYWu5f20LwrTjl7BXUr5We6FkMLc3XnnlY8muMK1pj0E6GHbRcUmDdmHSLZJhhg8NQOUOkPx
-        zx3bQXfYiFB3cAsgxF0EIb6em3vVzUgo9IJUnx9wOnpMjE7BqAJMn8v4g0/vp9iOg+rau62A/5If1
-        e4mD88IU2d/RVD4IMHIeOuw14j9yFc3W2xSB5TqtyuQPCCCtnz3MF0f0C7828fH14uvJXcs9Egsff
-        s0t0YXSRA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iZtqr-0005QK-S8; Wed, 27 Nov 2019 09:43:13 +0000
-Date:   Wed, 27 Nov 2019 01:43:13 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Wang ShaoBo <bobo.shaobowang@huawei.com>
-Cc:     cj.chengjian@huawei.com, mark.rutland@arm.com,
-        huawei.libin@huawei.com, guohanjun@huawei.com, xiexiuqi@huawei.com,
-        wcohen@redhat.com, linux-kernel@vger.kernel.org,
-        mtk.manpages@gmail.com, wezhang@redhat.com
-Subject: Re: [PATCH] sys_personality: Streamline code in sys_personality()
-Message-ID: <20191127094313.GA11668@infradead.org>
-References: <20191126094045.134654-1-bobo.shaobowang@huawei.com>
+        Wed, 27 Nov 2019 04:43:22 -0500
+Received: from fd.dlink.ru ([178.170.168.18]:44698 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726281AbfK0JnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 04:43:21 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 1C6AF1B2130C; Wed, 27 Nov 2019 12:43:18 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 1C6AF1B2130C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1574847799; bh=f9ywakjd6DOZRN8wGbpkHEur4i2IZ2IEiXwypzRgpnc=;
+        h=From:To:Cc:Subject:Date;
+        b=r5KR6a7KIsKaZV74ppiKTWqepDXWKqopiyWIK+GruJsZB+zpTGG4t8sc+iTdRa8zd
+         oMkzFBIWdeXkUz9ZLNNNFxikmktzAVH5GQvy4UaRm3ReWCWbMUhl0H01x7rSl2X580
+         npAASEG+sIUXrXAnRbmPwLHUVU9/xQdXHM1eKiYM=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id 418B71B2128B;
+        Wed, 27 Nov 2019 12:43:07 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 418B71B2128B
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id B93291B22678;
+        Wed, 27 Nov 2019 12:43:05 +0300 (MSK)
+Received: from localhost.localdomain (unknown [196.196.203.126])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Wed, 27 Nov 2019 12:43:05 +0300 (MSK)
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Edward Cree <ecree@solarflare.com>, Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Alexander Lobakin <alobakin@dlink.ru>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net] net: wireless: intel: iwlwifi: fix GRO_NORMAL packet stalling
+Date:   Wed, 27 Nov 2019 12:41:23 +0300
+Message-Id: <20191127094123.18161-1-alobakin@dlink.ru>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126094045.134654-1-bobo.shaobowang@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 05:40:45PM +0800, Wang ShaoBo wrote:
-> SYSCALL_DEFINE1 in kernel/exec_domain.c looks like verbose,
-> ksys_personality() can make it more concise.
+Commit 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in
+napi_gro_receive()") has applied batched GRO_NORMAL packets processing
+to all napi_gro_receive() users, including mac80211-based drivers.
 
-What do you try to say with this sentence?  I can't really parse it.
+However, this change has led to a regression in iwlwifi driver [1][2] as
+it is required for NAPI users to call napi_complete_done() or
+napi_complete() and the end of every polling iteration, whilst iwlwifi
+doesn't use NAPI scheduling at all and just calls napi_gro_flush().
+In that particular case, packets which have not been already flushed
+from napi->rx_list stall in it until at least next Rx cycle.
 
-> --- a/kernel/exec_domain.c
-> +++ b/kernel/exec_domain.c
-> @@ -37,10 +37,5 @@ module_init(proc_execdomains_init);
->  
->  SYSCALL_DEFINE1(personality, unsigned int, personality)
->  {
-> -	unsigned int old = current->personality;
-> -
-> -	if (personality != 0xffffffff)
-> -		set_personality(personality);
-> -
-> -	return old;
-> +	return ksys_personality(personality);
+Fix this by adding a manual flushing of the list to iwlwifi driver right
+before napi_gro_flush() call to mimic napi_complete() logics.
 
-This looks ok, but I'd much rather just kill ksys_personality and add
-an optional arch hook to reject personality settings for the arm64
-special case.
+I prefer to open-code gro_normal_list() rather than exporting it for 2
+reasons:
+* to prevent from using it and napi_gro_flush() in any new drivers,
+  as it is the *really* bad way to use NAPI that should be avoided;
+* to keep gro_normal_list() static and don't lose any CC optimizations.
+
+I also don't add the "Fixes:" tag as the mentioned commit was only a
+trigger that only exposed an improper usage of NAPI in this particular
+driver.
+
+[1] https://lore.kernel.org/netdev/PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=205647
+
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index a4d325fcf94a..452da44a21e0 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1421,6 +1421,7 @@ static struct iwl_rx_mem_buffer *iwl_pcie_get_rxb(struct iwl_trans *trans,
+ static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
+ {
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
++	struct napi_struct *napi;
+ 	struct iwl_rxq *rxq;
+ 	u32 r, i, count = 0;
+ 	bool emergency = false;
+@@ -1526,8 +1527,16 @@ static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
+ 	if (unlikely(emergency && count))
+ 		iwl_pcie_rxq_alloc_rbs(trans, GFP_ATOMIC, rxq);
+ 
+-	if (rxq->napi.poll)
+-		napi_gro_flush(&rxq->napi, false);
++	napi = &rxq->napi;
++	if (napi->poll) {
++		if (napi->rx_count) {
++			netif_receive_skb_list(&napi->rx_list);
++			INIT_LIST_HEAD(&napi->rx_list);
++			napi->rx_count = 0;
++		}
++
++		napi_gro_flush(napi, false);
++	}
+ 
+ 	iwl_pcie_rxq_restock(trans, rxq);
+ }
+-- 
+2.24.0
+
