@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB04C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1024BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D11D20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58A420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890543;
-	bh=lMd0ULnEjuLF1xXeEfYBsc42wu6keCNdLjOP6QIpqZ8=;
+	s=default; t=1574890549;
+	bh=Cyz/ltkVZ79YYSWUegWFEuN6IGPYYvpiwX20k9pvej8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LhCHx+HYpl3ZufZXN9yWNrqog28NFJfbuThKZwhST31VvC+YL0WaM/nNL3bVBI7hR
-	 exbFq9huWOZQ4mRx/S31ZVqOYL00K8GXIZiTUNh3aUXzPlBdgp8KEywbN635qQVQ8/
-	 I35XpuFSV4tDcX4yBaCs7nRET9AmniA8SDP/IRPM=
+	b=V5jNeFFZsx8rSNtF/ot3dfZSSAwqKzYyy05Sk+lhduyX3KHPsrj5TUZgmMEMIxzMy
+	 2fdsHZBDBCtcnDpf4qHq4eDQfNMxVZBgf3Kmt+rFcV3DyMACuJ9UWZlcXOmMaY1luC
+	 /IiHn9JNdlqJ+EmVbxf+8a7dNucLXszAixn6Dr8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbfK0Vfm (ORCPT
+        id S1730788AbfK0Vfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:35:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34716 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:35:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730212AbfK0UtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:49:14 -0500
+        id S1729264AbfK0UtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:49:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F662217C3;
-        Wed, 27 Nov 2019 20:49:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4058021787;
+        Wed, 27 Nov 2019 20:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887753;
-        bh=lMd0ULnEjuLF1xXeEfYBsc42wu6keCNdLjOP6QIpqZ8=;
+        s=default; t=1574887745;
+        bh=Cyz/ltkVZ79YYSWUegWFEuN6IGPYYvpiwX20k9pvej8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H6KuFrB9TRNE2kkz4OYYV4K5HyOD+jXf1VztO/anFY4IKTk8JG2R2yj7QSJrC1h7g
-         h+IRzJ35GKSXibzVmnnUi3DouNir7ZyxrG4z2mwld1s0GzGDCD/8WiZfw1up8xMDgk
-         8n+kOmHMw8DkmhfEK0Jumh/trRHlZcZsAY0QL9rk=
+        b=yZGbsIb734e2TRZw5+sL1oWFkWd3fVqHcWGzeVv9PrIIBWrO0+5wNfo5R4vOP4uxb
+         w0o4JF/uvDWF/0gPCLxeklFSiaZrOS32V7uzh+rFKnDCuWYGbFGJ6pmVIHllw1iPDs
+         nQz/QIUXQ5sHqDJwv1/kOxoUr+klFN5QemBwfGE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Weichao Guo <guoweichao@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 080/211] net: ethernet: ti: cpsw: unsync mcast entries while switch promisc mode
-Date:   Wed, 27 Nov 2019 21:30:13 +0100
-Message-Id: <20191127203101.351058354@linuxfoundation.org>
+Subject: [PATCH 4.14 077/211] f2fs: fix to spread clear_cold_data()
+Date:   Wed, 27 Nov 2019 21:30:10 +0100
+Message-Id: <20191127203101.096985706@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -62,40 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 9737cc99dd14b5b8b9d267618a6061feade8ea68 ]
+[ Upstream commit 2baf07818549c8bb8d7b3437e889b86eab56d38e ]
 
-After flushing all mcast entries from the table, the ones contained in
-mc list of ndev are not restored when promisc mode is toggled off,
-because they are considered as synched with ALE, thus, in order to
-restore them after promisc mode - reset syncing info. This fix
-touches only switch mode devices, including single port boards
-like Beagle Bone.
+We need to drop PG_checked flag on page as well when we clear PG_uptodate
+flag, in order to avoid treating the page as GCing one later.
 
-Fixes: commit 5da1948969bc
-("net: ethernet: ti: cpsw: fix lost of mcast packets while rx_mode update")
-
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Weichao Guo <guoweichao@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/data.c    | 8 +++++++-
+ fs/f2fs/dir.c     | 1 +
+ fs/f2fs/segment.c | 4 +++-
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 8cb44eabc2835..a44838aac97de 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -601,6 +601,7 @@ static void cpsw_set_promiscious(struct net_device *ndev, bool enable)
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index cc57294451940..ac3fa4bbed2d9 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1445,6 +1445,7 @@ int do_write_data_page(struct f2fs_io_info *fio)
+ 	/* This page is already truncated */
+ 	if (fio->old_blkaddr == NULL_ADDR) {
+ 		ClearPageUptodate(page);
++		clear_cold_data(page);
+ 		goto out_writepage;
+ 	}
+ got_it:
+@@ -1597,8 +1598,10 @@ static int __write_data_page(struct page *page, bool *submitted,
  
- 			/* Clear all mcast from ALE */
- 			cpsw_ale_flush_multicast(ale, ALE_ALL_PORTS, -1);
-+			__dev_mc_unsync(ndev, NULL);
+ out:
+ 	inode_dec_dirty_pages(inode);
+-	if (err)
++	if (err) {
+ 		ClearPageUptodate(page);
++		clear_cold_data(page);
++	}
  
- 			/* Flood All Unicast Packets to Host port */
- 			cpsw_ale_control_set(ale, 0, ALE_P0_UNI_FLOOD, 1);
+ 	if (wbc->for_reclaim) {
+ 		f2fs_submit_merged_write_cond(sbi, inode, 0, page->index, DATA);
+@@ -2158,6 +2161,8 @@ void f2fs_invalidate_page(struct page *page, unsigned int offset,
+ 		}
+ 	}
+ 
++	clear_cold_data(page);
++
+ 	/* This is atomic written page, keep Private */
+ 	if (IS_ATOMIC_WRITTEN_PAGE(page))
+ 		return drop_inmem_page(inode, page);
+@@ -2176,6 +2181,7 @@ int f2fs_release_page(struct page *page, gfp_t wait)
+ 	if (IS_ATOMIC_WRITTEN_PAGE(page))
+ 		return 0;
+ 
++	clear_cold_data(page);
+ 	set_page_private(page, 0);
+ 	ClearPagePrivate(page);
+ 	return 1;
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index c0c933ad43c8d..4abefd841b6c7 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -745,6 +745,7 @@ void f2fs_delete_entry(struct f2fs_dir_entry *dentry, struct page *page,
+ 		clear_page_dirty_for_io(page);
+ 		ClearPagePrivate(page);
+ 		ClearPageUptodate(page);
++		clear_cold_data(page);
+ 		inode_dec_dirty_pages(dir);
+ 		remove_dirty_inode(dir);
+ 	}
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 9e5fca35e47d0..2cd0d126ef8fa 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -251,8 +251,10 @@ static int __revoke_inmem_pages(struct inode *inode,
+ 		}
+ next:
+ 		/* we don't need to invalidate this in the sccessful status */
+-		if (drop || recover)
++		if (drop || recover) {
+ 			ClearPageUptodate(page);
++			clear_cold_data(page);
++		}
+ 		set_page_private(page, 0);
+ 		ClearPagePrivate(page);
+ 		f2fs_put_page(page, 1);
 -- 
 2.20.1
 
