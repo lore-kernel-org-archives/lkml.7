@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D3CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A30C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4039621775
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA0E21775
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574889110;
-	bh=keyMyZOrwHJ8/Mma4YkJTZvdUatq7dXMHRjU0gDH6+k=;
+	s=default; t=1574889117;
+	bh=6V7r6TB9qW/1X5KnQjTT2gyh0o0FqU2iM3qP87EZEXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GRTghdePq7FGeivGdIHW0ZDyHJ+YZlw+NGyWwYR2gOSvVQS//jskiLGqbuUD3Zzdy
-	 mlk00FO8n78fBYmFRS9mWClhCH8iQEz81Y1LzB+r2QAm+kDjqCxBWMjYn2BcSN3WzH
-	 SOQZd8B1C3YcyNlPIEf5RgaA3rVaek1ghz7Km0Dg=
+	b=hABOG5c6FGKXmWbHW5pd8vpFkLEbtYwlSsDawo2U0gE9fCwGMzspV+6snkUBEAEGz
+	 2VhWQ7VjnWkS3nKWIGEvW29/PkVBWYSGiqe2KgZaIG92jpGg8x5af2hylgKtbigXY2
+	 MD8NVtWqrVfIEH+Ggz/BcwaCMZLCzfL3YkQ2ootI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733227AbfK0VLt (ORCPT
+        id S1733240AbfK0VLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:11:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:11:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733221AbfK0VLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:11:47 -0500
+        id S1732782AbfK0VLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:11:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8415521555;
-        Wed, 27 Nov 2019 21:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B15EE21555;
+        Wed, 27 Nov 2019 21:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574889107;
-        bh=keyMyZOrwHJ8/Mma4YkJTZvdUatq7dXMHRjU0gDH6+k=;
+        s=default; t=1574889112;
+        bh=6V7r6TB9qW/1X5KnQjTT2gyh0o0FqU2iM3qP87EZEXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WePrDqoZEGrf9W0ORQURsli9V9mjdwSLOAuhAJhiM+7E/+6FIyKq8F0BLknY2rbMO
-         L8JZjj+BiMsdL2f76KaacLEesz+MdZ3X1qMpnIpl7IwWqLxN5u6GMoeQbKlop49wtZ
-         2/wtlMCdz/nXzdZwfnUtl7gD+wBbryqOww9l2jPY=
+        b=SCzapFZJp0rPqJHzKM93O1+CL8FVDdSKlS+20jr0ooIEkr4FnbP3TGdLIMlqdjyMd
+         84a1XRV9wYXQYPWj0Gxrm3zZrf+p7pS95v5oNFrOJb+7kuAU7cByQHLbor+AfMmEOp
+         EOC+D+2SHUtEEKrH3sVZrX52TyP8anNZB62W3fe4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Joel Jennings <joel.jennings@makeitlabs.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 84/95] usb-serial: cp201x: support Mark-10 digital force gauge
-Date:   Wed, 27 Nov 2019 21:32:41 +0100
-Message-Id: <20191127202952.557834989@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
+Subject: [PATCH 5.3 86/95] appledisplay: fix error handling in the scheduled work
+Date:   Wed, 27 Nov 2019 21:32:43 +0100
+Message-Id: <20191127202955.638390156@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
 References: <20191127202845.651587549@linuxfoundation.org>
@@ -60,34 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 347bc8cb26388791c5881a3775cb14a3f765a674 upstream.
+commit 91feb01596e5efc0cc922cc73f5583114dccf4d2 upstream.
 
-Add support for the Mark-10 digital force gauge device to the cp201x
-driver.
+The work item can operate on
 
-Based on a report and a larger patch from Joel Jennings
+1. stale memory left over from the last transfer
+the actual length of the data transfered needs to be checked
+2. memory already freed
+the error handling in appledisplay_probe() needs
+to cancel the work in that case
 
-Reported-by: Joel Jennings <joel.jennings@makeitlabs.com>
+Reported-and-tested-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Cc: stable <stable@vger.kernel.org>
-Acked-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191118092119.GA153852@kroah.com
+Link: https://lore.kernel.org/r/20191106124902.7765-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/cp210x.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/misc/appledisplay.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -125,6 +125,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(0x10C4, 0x8341) }, /* Siemens MC35PU GPRS Modem */
- 	{ USB_DEVICE(0x10C4, 0x8382) }, /* Cygnal Integrated Products, Inc. */
- 	{ USB_DEVICE(0x10C4, 0x83A8) }, /* Amber Wireless AMB2560 */
-+	{ USB_DEVICE(0x10C4, 0x83AA) }, /* Mark-10 Digital Force Gauge */
- 	{ USB_DEVICE(0x10C4, 0x83D8) }, /* DekTec DTA Plus VHF/UHF Booster/Attenuator */
- 	{ USB_DEVICE(0x10C4, 0x8411) }, /* Kyocera GPS Module */
- 	{ USB_DEVICE(0x10C4, 0x8418) }, /* IRZ Automation Teleport SG-10 GSM/GPRS Modem */
+--- a/drivers/usb/misc/appledisplay.c
++++ b/drivers/usb/misc/appledisplay.c
+@@ -164,7 +164,12 @@ static int appledisplay_bl_get_brightnes
+ 		0,
+ 		pdata->msgdata, 2,
+ 		ACD_USB_TIMEOUT);
+-	brightness = pdata->msgdata[1];
++	if (retval < 2) {
++		if (retval >= 0)
++			retval = -EMSGSIZE;
++	} else {
++		brightness = pdata->msgdata[1];
++	}
+ 	mutex_unlock(&pdata->sysfslock);
+ 
+ 	if (retval < 0)
+@@ -299,6 +304,7 @@ error:
+ 	if (pdata) {
+ 		if (pdata->urb) {
+ 			usb_kill_urb(pdata->urb);
++			cancel_delayed_work_sync(&pdata->work);
+ 			if (pdata->urbdata)
+ 				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
+ 					pdata->urbdata, pdata->urb->transfer_dma);
 
 
