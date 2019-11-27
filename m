@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0B8C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50355C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C242071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FF82070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 10:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfK0Kjq (ORCPT
+        id S1727513AbfK0Kk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:39:46 -0500
+        Wed, 27 Nov 2019 05:40:57 -0500
 Received: from mx2.suse.de ([195.135.220.15]:54738 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727110AbfK0Kjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:39:43 -0500
+        id S1727156AbfK0Kjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:39:45 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5EC68B463;
-        Wed, 27 Nov 2019 10:39:41 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 7838BB472;
+        Wed, 27 Nov 2019 10:39:44 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 rebase 15/34] powerpc/64s/exception: trim unused arguments from KVMTEST macro
-Date:   Wed, 27 Nov 2019 11:38:51 +0100
-Message-Id: <9459f86200a79e7cf79b4e9772bb99cbf39e602d.1574803685.git.msuchanek@suse.de>
+Subject: [PATCH v2 rebase 17/34] powerpc/64s/exception: re-inline some handlers
+Date:   Wed, 27 Nov 2019 11:38:53 +0100
+Message-Id: <802ec854061733a761dbbe45c28b3fc621df779c.1574803685.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574803684.git.msuchanek@suse.de>
 References: <cover.1574803684.git.msuchanek@suse.de>
@@ -81,60 +81,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
+The reduction in interrupt entry size allows some handlers to be
+re-inlined.
+
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index abf26db36427..9fa71d51ecf4 100644
+index 7a234e6d7bf5..9494403b9586 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -224,7 +224,7 @@ do_define_int n
- #define kvmppc_interrupt kvmppc_interrupt_pr
- #endif
+@@ -1186,7 +1186,7 @@ INT_DEFINE_BEGIN(data_access)
+ INT_DEFINE_END(data_access)
  
--.macro KVMTEST name, hsrr, n
-+.macro KVMTEST name
- 	lbz	r10,HSTATE_IN_GUEST(r13)
- 	cmpwi	r10,0
- 	bne	\name\()_kvm
-@@ -293,7 +293,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- .endm
+ EXC_REAL_BEGIN(data_access, 0x300, 0x80)
+-	GEN_INT_ENTRY data_access, virt=0, ool=1
++	GEN_INT_ENTRY data_access, virt=0
+ EXC_REAL_END(data_access, 0x300, 0x80)
+ EXC_VIRT_BEGIN(data_access, 0x4300, 0x80)
+ 	GEN_INT_ENTRY data_access, virt=1
+@@ -1216,7 +1216,7 @@ INT_DEFINE_BEGIN(data_access_slb)
+ INT_DEFINE_END(data_access_slb)
  
- #else
--.macro KVMTEST name, hsrr, n
-+.macro KVMTEST name
- .endm
- .macro GEN_KVM name
- .endm
-@@ -437,7 +437,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- DEFINE_FIXED_SYMBOL(\name\()_common_real)
- \name\()_common_real:
- 	.if IKVM_REAL
--		KVMTEST \name IHSRR IVEC
-+		KVMTEST \name
- 	.endif
+ EXC_REAL_BEGIN(data_access_slb, 0x380, 0x80)
+-	GEN_INT_ENTRY data_access_slb, virt=0, ool=1
++	GEN_INT_ENTRY data_access_slb, virt=0
+ EXC_REAL_END(data_access_slb, 0x380, 0x80)
+ EXC_VIRT_BEGIN(data_access_slb, 0x4380, 0x80)
+ 	GEN_INT_ENTRY data_access_slb, virt=1
+@@ -1472,7 +1472,7 @@ INT_DEFINE_BEGIN(decrementer)
+ INT_DEFINE_END(decrementer)
  
- 	ld	r10,PACAKMSR(r13)	/* get MSR value for kernel */
-@@ -460,7 +460,7 @@ DEFINE_FIXED_SYMBOL(\name\()_common_real)
- DEFINE_FIXED_SYMBOL(\name\()_common_virt)
- \name\()_common_virt:
- 	.if IKVM_VIRT
--		KVMTEST \name IHSRR IVEC
-+		KVMTEST \name
- 1:
- 	.endif
- 	.endif /* IVIRT */
-@@ -1595,7 +1595,7 @@ INT_DEFINE_END(system_call)
- 	GET_PACA(r13)
- 	std	r10,PACA_EXGEN+EX_R10(r13)
- 	INTERRUPT_TO_KERNEL
--	KVMTEST system_call EXC_STD 0xc00 /* uses r10, branch to system_call_kvm */
-+	KVMTEST system_call /* uses r10, branch to system_call_kvm */
- 	mfctr	r9
- #else
- 	mr	r9,r13
+ EXC_REAL_BEGIN(decrementer, 0x900, 0x80)
+-	GEN_INT_ENTRY decrementer, virt=0, ool=1
++	GEN_INT_ENTRY decrementer, virt=0
+ EXC_REAL_END(decrementer, 0x900, 0x80)
+ EXC_VIRT_BEGIN(decrementer, 0x4900, 0x80)
+ 	GEN_INT_ENTRY decrementer, virt=1
 -- 
 2.23.0
 
