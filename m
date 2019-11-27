@@ -2,161 +2,235 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F96C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B01C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1402070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:12:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="wt8W7Idf"
+	by mail.kernel.org (Postfix) with ESMTP id 7F3E32070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 18:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574878692;
+	bh=i/se3RcsIPtxeow2Cfr1VyNjTABmBaPuWZQ0WCVcX7k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PGtYjWiFijAz/BuW/++N68ig6KS8KCMjuMpr9W6xXAYj95qCEdHrVAuFC8rfWFPXf
+	 4vIOnTsdjEX2X4hjm3mJK/rn7PLiDYjApMibxTAS+lmewtoJbhX4POhlkLQ0DmCBCm
+	 ePrH0GpVY8kMMqXTJn1XHhlBZXkDTwn0BFsUbxR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfK0SMA (ORCPT
+        id S1727092AbfK0SSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:12:00 -0500
-Received: from mail-eopbgr800077.outbound.protection.outlook.com ([40.107.80.77]:10633
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726576AbfK0SMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:12:00 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QVA03c1CQ8Pg9QsCofsePiNcrTkkb2wjWIVGz7HQraLsfg4J6ifiFs3GASejVvp7fTuKY3B9HEft4k9cXGFqUYXEpbnO7Kk9S+rkHpvafqm/A9Y6BC0LtgBKywaBblhbPB5pnf2Umoa1YbMAkL+7bAjAnmml8wvH7JoqD+Pqi0Q6YEDNpGk3WBaogPns3C2DH/Ftm4jOQXVQCi59Ev3NKBR99SMODA5/fGdcOAcS8cPzcRYVCRDI77c6e0mWMX1T4Wpinj6JQhaqxMvZS6+pMzC0WX/tSOrippBPDfcO86qoVlZXzwzQ1a0IYd9PldFaIqJC04yhnsSa/DpNr/Ll7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JvFbPB7U32hKj02gTPM8D9eeOuLK2sRIs5lkF/5PlDE=;
- b=PlYZE0sHlrAn9I5AEtcVzRgRhVAjB0zSV3ZfOk8ZdH3x27Dfr0udKVuFSLELU/IMK7a6bGPo0tkVADQBAtsaIBAUmpl2wPyd+zBkaKMqNT37+lgKqtYugSwuzfhJ1NAWlNzr/oTfuupT46Q7Ah70cCtm+n9uxRYAH4ByGg+HjqzeVV6qtc4pxhdn1Xeg/ryTKS+CRANZfeQ0eDUr1rJjFmwy9h6ELXkyr4TUh0BRMP5SndNvzxpjiucTCzJUpRn45UBWmD6wnXrEJii+X3qQw9VDzcyDff7aKo+WdGqSJ6KpqAuu1DT9it/R6pZWN2ro3GN4wYd/VuCaAZ/c+8GQAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JvFbPB7U32hKj02gTPM8D9eeOuLK2sRIs5lkF/5PlDE=;
- b=wt8W7IdfcP0y3mICS5gzLiem0heYarz4chqSm0llGP3EGoH4UFWclX6d6Mhm5TjmkS6FT8kJmYKdYtNo5oJ2Bvl8+IL+m9ctWN7C/LafIYIMQAkfbXEwCNYz0X7/pcKJHvvgiCkixVjmpN8XwqQUfyyPSRTu/09ke+y52iydhWM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
- DM6PR12MB4042.namprd12.prod.outlook.com (10.141.185.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.21; Wed, 27 Nov 2019 18:11:57 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::dd0c:8e53:4913:8ef4]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::dd0c:8e53:4913:8ef4%5]) with mapi id 15.20.2474.023; Wed, 27 Nov 2019
- 18:11:56 +0000
-Subject: Re: [PATCH v2] KVM: SVM: Fix "error" isn't initialized
-To:     Haiwei Li <lihaiwei.kernel@gmail.com>,
-        "x86@kernel.org" <x86@kernel.org>, kvm@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-crypto@vger.kernel.org
-Cc:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        gary.hook@amd.com, herbert@gondor.apana.org.au, davem@davemloft.net
-References: <2967bd12-21bf-3223-e90b-96b4eaa8c4c2@gmail.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <1b0b053a-66cd-c712-4bba-732084075e97@amd.com>
-Date:   Wed, 27 Nov 2019 12:11:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-In-Reply-To: <2967bd12-21bf-3223-e90b-96b4eaa8c4c2@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0501CA0083.namprd05.prod.outlook.com
- (2603:10b6:803:22::21) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:15e::26)
+        Wed, 27 Nov 2019 13:18:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726990AbfK0SSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 13:18:11 -0500
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F92F207DD;
+        Wed, 27 Nov 2019 18:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574878689;
+        bh=i/se3RcsIPtxeow2Cfr1VyNjTABmBaPuWZQ0WCVcX7k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xRw2qL+FEZ3XWaQeCI4z4moDQmgMA5ZP8RI1XqHP6Hk8Wb4Rzhsc67EIACtWC5cKb
+         RRlUbshXjgJD2y2U1aoJMkIwxHuPepARGx8rEIf+ZX4UVzqnuQ6EKlhm9o3/gVbTxk
+         Qp+VqMW25truA+f5h8nVxdIRQW7CaOoT7gBUxceM=
+Date:   Wed, 27 Nov 2019 10:18:09 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Bart Van Assche <bvanassche@acm.org>, stable@vger.kernel.org
+Subject: Re: [f2fs-dev] [PATCH v3] loop: avoid EAGAIN, if offset or
+ block_size are changed
+Message-ID: <20191127181809.GA42245@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190518004751.18962-1-jaegeuk@kernel.org>
+ <20190518005304.GA19446@jaegeuk-macbookpro.roam.corp.google.com>
 MIME-Version: 1.0
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 60459dc9-1cd4-48d9-22dd-08d7736549dc
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4042:|DM6PR12MB4042:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4042EB4C91B0557D3D47A631EC440@DM6PR12MB4042.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:79;
-X-Forefront-PRVS: 023495660C
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(39860400002)(346002)(136003)(199004)(189003)(5660300002)(52116002)(6486002)(8676002)(3846002)(2486003)(14454004)(31696002)(47776003)(36756003)(2501003)(81166006)(66066001)(229853002)(86362001)(66556008)(6116002)(23676004)(14444005)(66946007)(66476007)(76176011)(50466002)(316002)(446003)(81156014)(99286004)(478600001)(53546011)(305945005)(6506007)(26005)(7736002)(4326008)(58126008)(110136005)(6512007)(54906003)(186003)(7416002)(65956001)(65806001)(6436002)(25786009)(11346002)(31686004)(386003)(2616005)(2870700001)(2906002)(8936002)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4042;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: h0GD3HYz9wKvvaFWqEBWTW/tlGOnab5l1tCUke4AgrvuZ/Gq4K7JQtp2vlHUkiM3R53IAaOJoqMgQ20nrxCAlfIQ/MFQtoCcjzDRfiIEFZqUYY+9ohqU4aJ6VKv8ZUWIo7TQwP0JuCRdk/qU86ZNSrJR64tM03EUl4SqJHgZlt7tRlm4G2VHQh778Q147oJtuJoElGcEURKCSmGwjIMPKUCdxOLiTYajuPoPC2O2VFwo7a9/JSZavX+md6Myv8q/BkvDwFUOaB8tq0lj5U3+QKao9Vi7EL/udRA+jTMZJn8sSRe5peHsgRPqCeWc4tJdu/1tKc4chrtRFV/Ww1jI0/Mrad6T6miZeDGLr77oOgYh4NsN+jRVKDgvoAJCXhGS5GvCmJAT0YVtCjfPm1bF2RyC6mPF0pjB81PXFpkx51j9H8JlnKeUf+P1o7VF8YJh
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60459dc9-1cd4-48d9-22dd-08d7736549dc
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2019 18:11:56.8396
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zMR62l+GPt85zJTvXi052M49C6uvwX3VTOHNtMIV8phQ05CLngu61LsAV6HVVxOGu6eWeihMR5+AVjsUOqi6ow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4042
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190518005304.GA19446@jaegeuk-macbookpro.roam.corp.google.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/27/19 1:23 AM, Haiwei Li wrote:
->  From e7f9c786e43ef4f890b8a01f15f8f00786f4b14a Mon Sep 17 00:00:00 2001
-> From: Haiwei Li <lihaiwei@tencent.com>
-> Date: Wed, 27 Nov 2019 15:00:49 +0800
-> Subject: [PATCH v2] fix: 'error' is not initialized
-> 
-> There are a bunch of error paths were "error" isn't initialized.
+Previously, there was a bug where user could see stale buffer cache (e.g, 512B)
+attached in the 4KB-sized pager cache, when the block size was changed from
+512B to 4KB. That was fixed by:
+commit 5db470e229e2 ("loop: drop caches if offset or block_size are changed")
 
-Please provide a better patch commit message and just fix the actual
-problem, which is error is uninitialized in sev_flush_asids(). Please
-just initialize error to zero.
+But, there were some regression reports saying the fix returns EAGAIN easily.
+So, this patch removes previously added EAGAIN condition, nrpages != 0.
 
-Thanks,
-Tom
+Instead, it changes the flow like this:
+- sync_blockdev()
+- blk_mq_freeze_queue()
+ : change the loop configuration
+- blk_mq_unfreeze_queue()
+- sync_blockdev()
+- invalidate_bdev()
 
-> 
-> Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->   arch/x86/kvm/svm.c           | 3 ++-
->   drivers/crypto/ccp/psp-dev.c | 2 ++
->   2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 362e874..9eef6fc 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -6308,7 +6308,8 @@ static int sev_flush_asids(void)
->       up_write(&sev_deactivate_lock);
-> 
->       if (ret)
-> -        pr_err("SEV: DF_FLUSH failed, ret=%d, error=%#x\n", ret, error);
-> +        pr_err("SEV: DF_FLUSH failed, ret=%d. PSP returned error=%#x\n",
-> +               ret, error);
-> 
->       return ret;
->   }
-> diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
-> index 39fdd06..c486c24 100644
-> --- a/drivers/crypto/ccp/psp-dev.c
-> +++ b/drivers/crypto/ccp/psp-dev.c
-> @@ -155,6 +155,8 @@ static int __sev_do_cmd_locked(int cmd, void *data, 
-> int *psp_ret)
->       unsigned int phys_lsb, phys_msb;
->       unsigned int reg, ret = 0;
-> 
-> +    *psp_ret = -1;
-> +
->       if (!psp)
->           return -ENODEV;
-> 
-> -- 
-> 1.8.3.1
+After invalidating the buffer cache, we must see the full valid 4KB page.
+
+Additional concern came from Bart in which we can lose some data when
+changing the lo_offset. In that case, this patch adds:
+- sync_blockdev()
+- blk_set_queue_dying
+- blk_mq_freeze_queue()
+ : change the loop configuration
+- blk_mq_unfreeze_queue()
+- blk_queue_flag_clear(QUEUE_FLAG_DYING);
+- sync_blockdev()
+- invalidate_bdev()
+
+Report: https://bugs.chromium.org/p/chromium/issues/detail?id=938958#c38
+
+Cc: <stable@vger.kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org
+Cc: Bart Van Assche <bvanassche@acm.org>
+Fixes: 5db470e229e2 ("loop: drop caches if offset or block_size are changed")
+Reported-by: Gwendal Grignou <gwendal@chromium.org>
+Reported-by: grygorii tertychnyi <gtertych@cisco.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ drivers/block/loop.c | 65 ++++++++++++++++++++++----------------------
+ 1 file changed, 33 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index f6f77eaa7217..b583050d513a 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1232,6 +1232,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 	kuid_t uid = current_uid();
+ 	struct block_device *bdev;
+ 	bool partscan = false;
++	bool drop_request = false;
++	bool drop_cache = false;
+ 
+ 	err = mutex_lock_killable(&loop_ctl_mutex);
+ 	if (err)
+@@ -1251,14 +1253,21 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 		goto out_unlock;
+ 	}
+ 
++	if (lo->lo_offset != info->lo_offset)
++		drop_request = true;
+ 	if (lo->lo_offset != info->lo_offset ||
+-	    lo->lo_sizelimit != info->lo_sizelimit) {
+-		sync_blockdev(lo->lo_device);
+-		kill_bdev(lo->lo_device);
+-	}
++	    lo->lo_sizelimit != info->lo_sizelimit)
++		drop_cache = true;
+ 
+-	/* I/O need to be drained during transfer transition */
+-	blk_mq_freeze_queue(lo->lo_queue);
++	sync_blockdev(lo->lo_device);
++
++	if (drop_request) {
++		blk_set_queue_dying(lo->lo_queue);
++		blk_mq_freeze_queue_wait(lo->lo_queue);
++	} else {
++		/* I/O need to be drained during transfer transition */
++		blk_mq_freeze_queue(lo->lo_queue);
++	}
+ 
+ 	err = loop_release_xfer(lo);
+ 	if (err)
+@@ -1285,14 +1294,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 
+ 	if (lo->lo_offset != info->lo_offset ||
+ 	    lo->lo_sizelimit != info->lo_sizelimit) {
+-		/* kill_bdev should have truncated all the pages */
+-		if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+-			err = -EAGAIN;
+-			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+-				__func__, lo->lo_number, lo->lo_file_name,
+-				lo->lo_device->bd_inode->i_mapping->nrpages);
+-			goto out_unfreeze;
+-		}
+ 		if (figure_loop_size(lo, info->lo_offset, info->lo_sizelimit)) {
+ 			err = -EFBIG;
+ 			goto out_unfreeze;
+@@ -1329,6 +1330,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 
+ out_unfreeze:
+ 	blk_mq_unfreeze_queue(lo->lo_queue);
++	if (drop_request)
++		blk_queue_flag_clear(QUEUE_FLAG_DYING, lo->lo_queue);
+ 
+ 	if (!err && (info->lo_flags & LO_FLAGS_PARTSCAN) &&
+ 	     !(lo->lo_flags & LO_FLAGS_PARTSCAN)) {
+@@ -1337,6 +1340,12 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 		bdev = lo->lo_device;
+ 		partscan = true;
+ 	}
++
++	/* truncate stale pages cached by previous operations */
++	if (!err && drop_cache) {
++		sync_blockdev(lo->lo_device);
++		invalidate_bdev(lo->lo_device);
++	}
+ out_unlock:
+ 	mutex_unlock(&loop_ctl_mutex);
+ 	if (partscan)
+@@ -1518,7 +1527,7 @@ static int loop_set_dio(struct loop_device *lo, unsigned long arg)
+ 
+ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+ {
+-	int err = 0;
++	bool drop_cache = false;
+ 
+ 	if (lo->lo_state != Lo_bound)
+ 		return -ENXIO;
+@@ -1526,31 +1535,23 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+ 	if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
+ 		return -EINVAL;
+ 
+-	if (lo->lo_queue->limits.logical_block_size != arg) {
+-		sync_blockdev(lo->lo_device);
+-		kill_bdev(lo->lo_device);
+-	}
++	if (lo->lo_queue->limits.logical_block_size != arg)
++		drop_cache = true;
+ 
++	sync_blockdev(lo->lo_device);
+ 	blk_mq_freeze_queue(lo->lo_queue);
+-
+-	/* kill_bdev should have truncated all the pages */
+-	if (lo->lo_queue->limits.logical_block_size != arg &&
+-			lo->lo_device->bd_inode->i_mapping->nrpages) {
+-		err = -EAGAIN;
+-		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+-			__func__, lo->lo_number, lo->lo_file_name,
+-			lo->lo_device->bd_inode->i_mapping->nrpages);
+-		goto out_unfreeze;
+-	}
+-
+ 	blk_queue_logical_block_size(lo->lo_queue, arg);
+ 	blk_queue_physical_block_size(lo->lo_queue, arg);
+ 	blk_queue_io_min(lo->lo_queue, arg);
+ 	loop_update_dio(lo);
+-out_unfreeze:
+ 	blk_mq_unfreeze_queue(lo->lo_queue);
+ 
+-	return err;
++	/* truncate stale pages cached by previous operations */
++	if (drop_cache) {
++		sync_blockdev(lo->lo_device);
++		invalidate_bdev(lo->lo_device);
++	}
++	return 0;
+ }
+ 
+ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
+-- 
+2.19.0.605.g01d371f741-goog
+
