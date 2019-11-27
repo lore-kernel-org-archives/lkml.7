@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F67C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B381C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B882C2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112532080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574890029;
-	bh=Dj2rTLwWDO1pOTVTST4jx2q+awzIqfqNPlMUZC3OWqM=;
+	s=default; t=1574890038;
+	bh=xSTAfSAwQlR+mw6DZnVx2dvVH4DuAFNoVR9OKpY6MwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V0M6YcifgSZvGWQ/nawodc2k8WvpxHPbG4l63Crb9cWJHLZk3pmi4vDfAMDfTv5Gr
-	 lF/vYOnSJ8/tq3Ir9WWN1/PWaSA2WQjK/3NzIdY/WzdXbZ9oxzsI/4IF2uP4mnMcoN
-	 Csz7lOiNvqHJp9e/oq1O15c72OgvoaI4XlTFu+0c=
+	b=gAmCKRP20OlabbPM2X/LVALWoSfQ2KcGsIXdWQsXw6Pyctxvx6Fc3jkNsWBu9nZxm
+	 g4JIoHZkqY/Mrwl1II9H2bFs5kc410vohfE3Wpzb/1Hh7yVCd0gOTKeXbAO+W2tS0n
+	 wOkFDcSdW3ICrkj7E3bCOCaMvziKHAjw7ZVppmBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730363AbfK0U7z (ORCPT
+        id S1728145AbfK0V1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:59:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51462 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:27:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731472AbfK0U7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:59:51 -0500
+        id S1731454AbfK0U7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:59:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F23D620678;
-        Wed, 27 Nov 2019 20:59:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2B0920678;
+        Wed, 27 Nov 2019 20:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888389;
-        bh=Dj2rTLwWDO1pOTVTST4jx2q+awzIqfqNPlMUZC3OWqM=;
+        s=default; t=1574888381;
+        bh=xSTAfSAwQlR+mw6DZnVx2dvVH4DuAFNoVR9OKpY6MwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fsznlbmbr25NJNYex7DI6GjxOVfLlugucqdLSRlzS1cqbvcztppSFlRlryd6B0G6m
-         k0Kj+xAUQbuPg/nu97AwZOYfnSkJ6X1WvICLULGi+YPc0Mb7GAAAYd/J17UlHD0yon
-         z+zmY5qidxyPAlLYLHDYesYpNU6CV4oOiC0qGmkE=
+        b=P9d+fncSRKmJU2Tlq16ekulf2lOtR/Fe7xlI8cwP9OGaPyxqkSAvMub9xj4E1ZOw1
+         5mZGYV4bxFvR2PoMIQn8YmqkYKI42Vo/Ra2+dM+YEUj7tV+QBja7F9rPH2EvOUYwFD
+         sSbcehlKRSE4E0bskbjxWwgkL6RZ91Yqepv/+jSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 098/306] sctp: use sk_wmem_queued to check for writable space
-Date:   Wed, 27 Nov 2019 21:29:08 +0100
-Message-Id: <20191127203122.043655005@linuxfoundation.org>
+Subject: [PATCH 4.19 113/306] powerpc/mm/radix: Fix small page at boundary when splitting
+Date:   Wed, 27 Nov 2019 21:29:23 +0100
+Message-Id: <20191127203123.465081644@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,120 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit cd305c74b0f8b49748a79a8f67fc8e5e3e0c4794 ]
+[ Upstream commit 81d1b54dec95209ab5e5be2cf37182885f998753 ]
 
-sk->sk_wmem_queued is used to count the size of chunks in out queue
-while sk->sk_wmem_alloc is for counting the size of chunks has been
-sent. sctp is increasing both of them before enqueuing the chunks,
-and using sk->sk_wmem_alloc to check for writable space.
+When we have CONFIG_STRICT_KERNEL_RWX enabled, we want to split the
+linear mapping at the text/data boundary so we can map the kernel
+text read only.
 
-However, sk_wmem_alloc is also increased by 1 for the skb allocked
-for sending in sctp_packet_transmit() but it will not wake up the
-waiters when sk_wmem_alloc is decreased in this skb's destructor.
+Currently we always use a small page at the text/data boundary, even
+when that's not necessary:
 
-If msg size is equal to sk_sndbuf and sendmsg is waiting for sndbuf,
-the check 'msg_len <= sctp_wspace(asoc)' in sctp_wait_for_sndbuf()
-will keep waiting if there's a skb allocked in sctp_packet_transmit,
-and later even if this skb got freed, the waiting thread will never
-get waked up.
+  Mapped 0x0000000000000000-0x0000000000e00000 with 2.00 MiB pages
+  Mapped 0x0000000000e00000-0x0000000001000000 with 64.0 KiB pages
+  Mapped 0x0000000001000000-0x0000000040000000 with 2.00 MiB pages
 
-This issue has been there since very beginning, so we change to use
-sk->sk_wmem_queued to check for writable space as sk_wmem_queued is
-not increased for the skb allocked for sending, also as TCP does.
+This is because the check that the mapping crosses the __init_begin
+boundary is too strict, it also returns true when we map exactly up to
+the boundary.
 
-SOCK_SNDBUF_LOCK check is also removed here as it's for tx buf auto
-tuning which I will add in another patch.
+So fix it to check that the mapping would actually map past
+__init_begin, and with that we see:
 
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  Mapped 0x0000000000000000-0x0000000040000000 with 2.00 MiB pages
+  Mapped 0x0000000040000000-0x0000000100000000 with 1.00 GiB pages
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/socket.c | 38 +++++++++-----------------------------
- 1 file changed, 9 insertions(+), 29 deletions(-)
+ arch/powerpc/mm/pgtable-radix.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index c766315527226..e7a11cd7633f5 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -83,7 +83,7 @@
- #include <net/sctp/stream_sched.h>
+diff --git a/arch/powerpc/mm/pgtable-radix.c b/arch/powerpc/mm/pgtable-radix.c
+index b387c7b917b7e..69caeb5bccb21 100644
+--- a/arch/powerpc/mm/pgtable-radix.c
++++ b/arch/powerpc/mm/pgtable-radix.c
+@@ -295,14 +295,14 @@ static int __meminit create_physical_mapping(unsigned long start,
  
- /* Forward declarations for internal helper functions. */
--static int sctp_writeable(struct sock *sk);
-+static bool sctp_writeable(struct sock *sk);
- static void sctp_wfree(struct sk_buff *skb);
- static int sctp_wait_for_sndbuf(struct sctp_association *asoc, long *timeo_p,
- 				size_t msg_len);
-@@ -119,25 +119,10 @@ static void sctp_enter_memory_pressure(struct sock *sk)
- /* Get the sndbuf space available at the time on the association.  */
- static inline int sctp_wspace(struct sctp_association *asoc)
- {
--	int amt;
-+	struct sock *sk = asoc->base.sk;
+ 		if (split_text_mapping && (mapping_size == PUD_SIZE) &&
+ 			(addr < __pa_symbol(__init_begin)) &&
+-			(addr + mapping_size) >= __pa_symbol(__init_begin)) {
++			(addr + mapping_size) > __pa_symbol(__init_begin)) {
+ 			max_mapping_size = PMD_SIZE;
+ 			goto retry;
+ 		}
  
--	if (asoc->ep->sndbuf_policy)
--		amt = asoc->sndbuf_used;
--	else
--		amt = sk_wmem_alloc_get(asoc->base.sk);
--
--	if (amt >= asoc->base.sk->sk_sndbuf) {
--		if (asoc->base.sk->sk_userlocks & SOCK_SNDBUF_LOCK)
--			amt = 0;
--		else {
--			amt = sk_stream_wspace(asoc->base.sk);
--			if (amt < 0)
--				amt = 0;
--		}
--	} else {
--		amt = asoc->base.sk->sk_sndbuf - amt;
--	}
--	return amt;
-+	return asoc->ep->sndbuf_policy ? sk->sk_sndbuf - asoc->sndbuf_used
-+				       : sk_stream_wspace(sk);
- }
- 
- /* Increment the used sndbuf space count of the corresponding association by
-@@ -1928,10 +1913,10 @@ static int sctp_sendmsg_to_asoc(struct sctp_association *asoc,
- 		asoc->pmtu_pending = 0;
- 	}
- 
--	if (sctp_wspace(asoc) < msg_len)
-+	if (sctp_wspace(asoc) < (int)msg_len)
- 		sctp_prsctp_prune(asoc, sinfo, msg_len - sctp_wspace(asoc));
- 
--	if (!sctp_wspace(asoc)) {
-+	if (sctp_wspace(asoc) <= 0) {
- 		timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
- 		err = sctp_wait_for_sndbuf(asoc, &timeo, msg_len);
- 		if (err)
-@@ -8516,7 +8501,7 @@ static int sctp_wait_for_sndbuf(struct sctp_association *asoc, long *timeo_p,
- 			goto do_error;
- 		if (signal_pending(current))
- 			goto do_interrupted;
--		if (msg_len <= sctp_wspace(asoc))
-+		if ((int)msg_len <= sctp_wspace(asoc))
- 			break;
- 
- 		/* Let another process have a go.  Since we are going
-@@ -8591,14 +8576,9 @@ void sctp_write_space(struct sock *sk)
-  * UDP-style sockets or TCP-style sockets, this code should work.
-  *  - Daisy
-  */
--static int sctp_writeable(struct sock *sk)
-+static bool sctp_writeable(struct sock *sk)
- {
--	int amt = 0;
--
--	amt = sk->sk_sndbuf - sk_wmem_alloc_get(sk);
--	if (amt < 0)
--		amt = 0;
--	return amt;
-+	return sk->sk_sndbuf > sk->sk_wmem_queued;
- }
- 
- /* Wait for an association to go into ESTABLISHED state. If timeout is 0,
+ 		if (split_text_mapping && (mapping_size == PMD_SIZE) &&
+ 		    (addr < __pa_symbol(__init_begin)) &&
+-		    (addr + mapping_size) >= __pa_symbol(__init_begin)) {
++		    (addr + mapping_size) > __pa_symbol(__init_begin)) {
+ 			mapping_size = PAGE_SIZE;
+ 			psize = mmu_virtual_psize;
+ 		}
 -- 
 2.20.1
 
