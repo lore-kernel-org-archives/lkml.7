@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A581C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FEAC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61673218A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57F2218A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888020;
-	bh=uDcN+zJQIqDGXr9Kza332+ObxD3mF/nXCieJBCiZ5Ww=;
+	s=default; t=1574888023;
+	bh=8b+zj0+DXJml/xNJPstz9a1AxF/molanvs40WN1AvBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fk9XqyiX7nAS7FDqU4r07BkDPIfR3nW/vBqUbtup0qNtxL6Y4Fz/dK9/NdM842d5C
-	 1bxkEvQ3d2XS9YkZ0hzQZPbWzBC7yd/m84HyrWHhLN+xRTcuQbZ+wieqwzvSnb3y9o
-	 GkiRWX2GEgtj4nIyCZoVzZa2295OdE+wACKiGSGI=
+	b=vTJG48G7scj0VdpeiG/kRtbHydQPmFQCA8hW1UBGrEH8L/fJqdKz7Z7/CwENBkgL/
+	 cMLMuR6v+rHmAx1TAFl7Ri2/+B5T7YSaSIfYOsvKQVoCaI4NhiaG8Bn0/ic8gEdqrd
+	 FGBJyIKTiaqfd2f1WdNJS04hYCP/gZ8Qi9yElnkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbfK0Uxj (ORCPT
+        id S1730761AbfK0Uxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:53:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42618 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:53:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730751AbfK0Uxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:53:36 -0500
+        id S1730755AbfK0Uxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:53:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 930FD2192D;
-        Wed, 27 Nov 2019 20:53:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1931D21850;
+        Wed, 27 Nov 2019 20:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888016;
-        bh=uDcN+zJQIqDGXr9Kza332+ObxD3mF/nXCieJBCiZ5Ww=;
+        s=default; t=1574888018;
+        bh=8b+zj0+DXJml/xNJPstz9a1AxF/molanvs40WN1AvBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DI2hpBb8TR7OATh97w2qtmxAjL3lLos2B1Z37MNvMsMbqz36ynkq8ePpoxNdN+rG7
-         jmzwA3rrTs8hyod0wJ15WuI22DKpPwrxUtffB6eTL9+G0TtcgmBrq4UT0xjamYUhXT
-         xBMFfR4iRj8YvWZqyGbBxYn8GyykmxIWHdLOZEgg=
+        b=LTEd1vlnLfEwOGGd6H6ojGDmnlLIEOwzeaSk+YrScc2BJv/ZPjV5FM1ZXMeO36FfV
+         VfUadTwp2ZK0hr1lNXp9t80HvPc5rGC+aS3fwHKpsFKAl4awBRDsqFrYLv2XK5/e8n
+         +9xMKNDZQqwp9+BsVkBGmuthK6tHhY9F6sJJHA9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 142/211] scsi: mpt3sas: Fix driver modifying persistent data in Manufacturing page11
-Date:   Wed, 27 Nov 2019 21:31:15 +0100
-Message-Id: <20191127203107.417664772@linuxfoundation.org>
+Subject: [PATCH 4.14 143/211] scsi: megaraid_sas: Fix msleep granularity
+Date:   Wed, 27 Nov 2019 21:31:16 +0100
+Message-Id: <20191127203107.514426507@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -63,41 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 
-[ Upstream commit 97f35194093362a63b33caba2485521ddabe2c95 ]
+[ Upstream commit 9155cf30a3c4ef97e225d6daddf9bd4b173267e8 ]
 
-Currently driver is modifying both current & NVRAM/persistent data in
-Manufacturing page11. Driver should change only current copy of
-Manufacturing page11. It should not modify the persistent data.
+In megasas_transition_to_ready() driver waits 180seconds for controller to
+change FW state. Here we are calling msleep(1) in a loop for this.  As
+explained in timers-howto.txt, msleep(1) will actually sleep longer than
+1ms. If a faulty controller is connected, we will end up waiting for much
+more than 180 seconds causing unnecessary delays during load.
 
-So removed the section of code where driver is modifying the persistent
-data of Manufacturing page11.
+Change the granularity of msleep() call from 1ms to 1000ms.
 
-Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_config.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_config.c b/drivers/scsi/mpt3sas/mpt3sas_config.c
-index dd62701256142..58acbff40abc8 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_config.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_config.c
-@@ -674,10 +674,6 @@ mpt3sas_config_set_manufacturing_pg11(struct MPT3SAS_ADAPTER *ioc,
- 	r = _config_request(ioc, &mpi_request, mpi_reply,
- 	    MPT3_CONFIG_PAGE_DEFAULT_TIMEOUT, config_page,
- 	    sizeof(*config_page));
--	mpi_request.Action = MPI2_CONFIG_ACTION_PAGE_WRITE_NVRAM;
--	r = _config_request(ioc, &mpi_request, mpi_reply,
--	    MPT3_CONFIG_PAGE_DEFAULT_TIMEOUT, config_page,
--	    sizeof(*config_page));
-  out:
- 	return r;
- }
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 8595d83229b77..23a9f0777fa62 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -3823,12 +3823,12 @@ megasas_transition_to_ready(struct megasas_instance *instance, int ocr)
+ 		/*
+ 		 * The cur_state should not last for more than max_wait secs
+ 		 */
+-		for (i = 0; i < (max_wait * 1000); i++) {
++		for (i = 0; i < max_wait; i++) {
+ 			curr_abs_state = instance->instancet->
+ 				read_fw_status_reg(instance->reg_set);
+ 
+ 			if (abs_state == curr_abs_state) {
+-				msleep(1);
++				msleep(1000);
+ 			} else
+ 				break;
+ 		}
 -- 
 2.20.1
 
