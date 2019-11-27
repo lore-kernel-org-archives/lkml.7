@@ -2,211 +2,149 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51943C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14BA2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2792120835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 17:46:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y3gBej2p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vHKgmJUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfK0RpC (ORCPT
+        id S1727171AbfK0Rqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:45:02 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:32856 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfK0RpC (ORCPT
+        Wed, 27 Nov 2019 12:46:49 -0500
+Received: from mail-pg1-f176.google.com ([209.85.215.176]:39406 "EHLO
+        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbfK0Rqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:45:02 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so6698114pgk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 09:45:02 -0800 (PST)
+        Wed, 27 Nov 2019 12:46:48 -0500
+Received: by mail-pg1-f176.google.com with SMTP id b137so8926970pga.6;
+        Wed, 27 Nov 2019 09:46:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vTwVNHGfaslmzIOZLky3qVmqZLhSuuddPt+3vhSrt20=;
-        b=Y3gBej2pMAYaD135FmDz7wFd7CKGnPhq2UTsznJ4G4NRkUC/4EcBYtTw8E5IPxcoER
-         K0KlpmIxhtAv3XIL/PWz6hESe7un5DV/xFeK2XtzMnuCAo/kLSROivitXUZUVk0k2VYK
-         i+8WNUaBz6md3cdIzzmfWsssffOF/uxi7Zrsw=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tKHZyDg6udiRlYpCVqWn+WRhsu18FyQUMCFzqJkHa30=;
+        b=vHKgmJUcmJy5fxsEr/kQHZjWqDay4ZSL97Z5ibV+B00e4bqFkYQM/6pbrgxFhxJUMQ
+         S0XzcUjWlOD47ppweFgcF9CdtnlKifpqid82Y+A8TIv2krbvBVsYuwJfVGrroUMknBBS
+         Wg0I5mXBt484k5lsgTq2QYT7Vhza/UACIKs/xufeNZyZr3wjgF4N/3KNgf7XZjBc+u0o
+         nSXHon8qNrvyu9tCgsj7zwdajLB+X3E3sVcRvckqVLSLeZUdktN9KckYtHgP9JguToZB
+         cKgRv+wSsVrH7vt4tT2Z9c1xc0Hbc6dqBGZbLV3AjMEwX4b5OmRg7dBA2tg5YTgrKGQN
+         iAjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vTwVNHGfaslmzIOZLky3qVmqZLhSuuddPt+3vhSrt20=;
-        b=Af0VGqS0Cw5R9OTEj0/oDebRunML6BqkfaVbpww622w/5tYdZ4e8VDxiaWF2nQvoPT
-         5hHmdsTf4jgFTCB/NX2zIxbAane6+4ppKWmPdyphuVvqCQmwxJZUn3NqDJAegDDBEFYO
-         hWaeAT2y6omBjKh9O9JoZt5pFDBInqz7HwEtE82nwlxUZmRjwgOOjbUULPXcPKUEVPHC
-         gpSz9MqS01dBqYrflIjNRvrHmxSrSvtnYeRwZO5t3PyqxvLMgB25hx8xZYcwORFOtVjs
-         9uFpFssZAcBlQaVgoGOrVsYEKAcMIEn7PSoXZ3d9ZP6onZOfQzmrKZs2HgUZBdEFoeEF
-         JpMQ==
-X-Gm-Message-State: APjAAAWoFgpD08ifMfCkNrtgGGkQQS32hL5kelDLa3BPORi48HZDv8FE
-        UouB8ec89RQj87VubEOXN9CVow==
-X-Google-Smtp-Source: APXvYqzbGSwKUJ4Noau1bQM4eNgbwqA6hn7o9JrHTNxVF5DVVi7DHYmfOkLXN+C7ZQwdjV/oYCLKSQ==
-X-Received: by 2002:a63:da13:: with SMTP id c19mr6164709pgh.435.1574876701803;
-        Wed, 27 Nov 2019 09:45:01 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f26sm16293199pgf.22.2019.11.27.09.45.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 09:45:00 -0800 (PST)
-Date:   Wed, 27 Nov 2019 09:44:59 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [tip: x86/urgent] lkdtm: Add a DOUBLE_FAULT crash type on x86
-Message-ID: <201911270942.0F120BF82@keescook>
-References: <157484277010.21853.17013724751521586684.tip-bot2@tip-bot2>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tKHZyDg6udiRlYpCVqWn+WRhsu18FyQUMCFzqJkHa30=;
+        b=jXQlDNn2hGpBBPUaUTqF5W1wAGT11it1fMWiErVip1XybbppzammbHgRvtIrH8knDw
+         jT2DRink/ajZboVuU0VZ2MuKHWPmvp1QOAigRWSiSq7dGq3YDzCJMLyuJMBtaITtrcQ8
+         2r7mhbCmSuj5IkfFI4BL+FE2Sl4T2SzVEMSpHi/wJzwazf/Cl70lUTvG+4GRAQxQL3yc
+         DRe1Yi1eOH6gWWDyPA0keA5R48qhQ8jfqs/c8SzA1I6bL1svBaNpqlsYXusvymlTdZ4e
+         m3wh7DcCMCpxNhLeTNxhDn7I9fXLjeN7IAmUSoRENZ6QZ5IG0lJrHF1U9rCnhPOJIe4t
+         eN/w==
+X-Gm-Message-State: APjAAAVs6CAToj03DPqWsexM/AALIyooVXgpsbQqpqmzkDsl4AJYO+La
+        1ZXfUfHhiOloXslbSEuyyxY=
+X-Google-Smtp-Source: APXvYqyAG8AREyU8c7G4EqYf3ewYnpRomBHtVKqscW9BcvyKglot1cXCFoPDPOsTqMh0cIQYQPNP/g==
+X-Received: by 2002:a63:cb:: with SMTP id 194mr6519340pga.163.1574876808078;
+        Wed, 27 Nov 2019 09:46:48 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id f132sm3551647pgc.50.2019.11.27.09.46.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Nov 2019 09:46:47 -0800 (PST)
+Subject: Re: epoll_wait() performance
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Paolo Abeni' <pabeni@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     'Marek Majkowski' <marek@cloudflare.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+References: <bc84e68c0980466096b0d2f6aec95747@AcuMS.aculab.com>
+ <CAJPywTJYDxGQtDWLferh8ObjGp3JsvOn1om1dCiTOtY6S3qyVg@mail.gmail.com>
+ <5f4028c48a1a4673bd3b38728e8ade07@AcuMS.aculab.com>
+ <20191127164821.1c41deff@carbon>
+ <0b8d7447e129539aec559fa797c07047f5a6a1b2.camel@redhat.com>
+ <2f1635d9300a4bec8a0422e9e9518751@AcuMS.aculab.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <313204cf-69fd-ec28-a22c-61526f1dea8b@gmail.com>
+Date:   Wed, 27 Nov 2019 09:46:45 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157484277010.21853.17013724751521586684.tip-bot2@tip-bot2>
+In-Reply-To: <2f1635d9300a4bec8a0422e9e9518751@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 08:19:30AM -0000, tip-bot2 for Andy Lutomirski wrote:
-> The following commit has been merged into the x86/urgent branch of tip:
+
+
+On 11/27/19 9:30 AM, David Laight wrote:
+> From: Paolo Abeni
+>> Sent: 27 November 2019 16:27
+> ...
+>> @David: If I read your message correctly, the pkt rate you are dealing
+>> with is quite low... are we talking about tput or latency? I guess
+>> latency could be measurably higher with recvmmsg() in respect to other
+>> syscall. How do you measure the releative performances of recvmmsg()
+>> and recv() ? with micro-benchmark/rdtsc()? Am I right that you are
+>> usually getting a single packet per recvmmsg() call?
 > 
-> Commit-ID:     b09511c253e5c739a60952b97c071a93e92b2e88
-> Gitweb:        https://git.kernel.org/tip/b09511c253e5c739a60952b97c071a93e92b2e88
-> Author:        Andy Lutomirski <luto@kernel.org>
-> AuthorDate:    Sun, 24 Nov 2019 21:18:04 -08:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Tue, 26 Nov 2019 21:53:34 +01:00
+> The packet rate per socket is low, typically one packet every 20ms.
+> This is RTP, so telephony audio.
+> However we have a lot of audio channels and hence a lot of sockets.
+> So there are can be 1000s of sockets we need to receive the data from.
+> The test system I'm using has 16 E1 TDM links each of which can handle
+> 31 audio channels.
+> Forwarding all these to/from RTP (one of the things it might do) is 496
+> audio channels - so 496 RTP sockets and 496 RTCP ones.
+> Although the test I'm doing is pure RTP and doesn't use TDM.
 > 
-> lkdtm: Add a DOUBLE_FAULT crash type on x86
+> What I'm measuring is the total time taken to receive all the packets
+> (on all the sockets) that are available to be read every 10ms.
+> So poll + recv + add_to_queue.
+> (The data processing is done by other threads.)
+> I use the time difference (actually CLOCK_MONOTONIC - from rdtsc)
+> to generate a 64 entry (self scaling) histogram of the elapsed times.
+> Then look for the histograms peak value.
+> (I need to work on the max value, but that is a different (more important!) problem.)
+> Depending on the poll/recv method used this takes 1.5 to 2ms
+> in each 10ms period.
+> (It is faster if I run the cpu at full speed, but it usually idles along
+> at 800MHz.)
 > 
-> The DOUBLE_FAULT crash does INT $8, which is a decent approximation
-> of a double fault.  This is useful for testing the double fault
-> handling.  Use it like:
+> If I use recvmmsg() I only expect to see one packet because there
+> is (almost always) only one packet on each socket every 20ms.
+> However there might be more than one, and if there is they
+> all need to be read (well at least 2 of them) in that block of receives.
 > 
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> ---
->  drivers/misc/lkdtm/bugs.c  | 39 +++++++++++++++++++++++++++++++++++++-
->  drivers/misc/lkdtm/core.c  |  3 +++-
->  drivers/misc/lkdtm/lkdtm.h |  3 +++-
->  3 files changed, 45 insertions(+)
+> The outbound traffic goes out through a small number of raw sockets.
+> Annoyingly we have to work out the local IPv4 address that will be used
+> for each destination in order to calculate the UDP checksum.
+> (I've a pending patch to speed up the x86 checksum code on a lot of
+> cpus.)
 > 
-> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-> index 7284a22..a4fdad0 100644
-> --- a/drivers/misc/lkdtm/bugs.c
-> +++ b/drivers/misc/lkdtm/bugs.c
-> @@ -12,6 +12,10 @@
->  #include <linux/sched/task_stack.h>
->  #include <linux/uaccess.h>
->  
-> +#ifdef CONFIG_X86_32
-> +#include <asm/desc.h>
-> +#endif
-> +
->  struct lkdtm_list {
->  	struct list_head node;
->  };
-> @@ -337,3 +341,38 @@ void lkdtm_UNSET_SMEP(void)
->  	pr_err("FAIL: this test is x86_64-only\n");
->  #endif
->  }
-> +
-> +#ifdef CONFIG_X86_32
-> +void lkdtm_DOUBLE_FAULT(void)
-> +{
-> +	/*
-> +	 * Trigger #DF by setting the stack limit to zero.  This clobbers
-> +	 * a GDT TLS slot, which is okay because the current task will die
-> +	 * anyway due to the double fault.
-> +	 */
-> +	struct desc_struct d = {
-> +		.type = 3,	/* expand-up, writable, accessed data */
-> +		.p = 1,		/* present */
-> +		.d = 1,		/* 32-bit */
-> +		.g = 0,		/* limit in bytes */
-> +		.s = 1,		/* not system */
-> +	};
-> +
-> +	local_irq_disable();
-> +	write_gdt_entry(get_cpu_gdt_rw(smp_processor_id()),
-> +			GDT_ENTRY_TLS_MIN, &d, DESCTYPE_S);
-> +
-> +	/*
-> +	 * Put our zero-limit segment in SS and then trigger a fault.  The
-> +	 * 4-byte access to (%esp) will fault with #SS, and the attempt to
-> +	 * deliver the fault will recursively cause #SS and result in #DF.
-> +	 * This whole process happens while NMIs and MCEs are blocked by the
-> +	 * MOV SS window.  This is nice because an NMI with an invalid SS
-> +	 * would also double-fault, resulting in the NMI or MCE being lost.
-> +	 */
-> +	asm volatile ("movw %0, %%ss; addl $0, (%%esp)" ::
-> +		      "r" ((unsigned short)(GDT_ENTRY_TLS_MIN << 3)));
-> +
-> +	panic("tried to double fault but didn't die\n");
+> 	David
 
-I'll modify this in some later patches, but I prefer the #ifdef inside
-the function so that all tests are visible on all
-architectures/configurations. And it should not panic on a test failure,
-it should continue (see the others) with something like:
+A QUIC server handles hundred of thousands of ' UDP flows' all using only one UDP socket
+per cpu.
 
-	pr_err("FAIL: did not double fault!\n");
+This is really the only way to scale, and does not need kernel changes to efficiently
+organize millions of UDP sockets (huge memory footprint even if we get right how
+we manage them)
 
-E.g. an external system monitor would see the double-fault and the panic as
-both causing a system reboot, but only the double-fault should do that.
+Given that UDP has no state, there is really no point trying to have one UDP
+socket per flow, and having to deal with epoll()/poll() overhead.
 
-> +}
-> +#endif
-> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-> index cbc4c90..ee0d6e7 100644
-> --- a/drivers/misc/lkdtm/core.c
-> +++ b/drivers/misc/lkdtm/core.c
-> @@ -171,6 +171,9 @@ static const struct crashtype crashtypes[] = {
->  	CRASHTYPE(USERCOPY_KERNEL_DS),
->  	CRASHTYPE(STACKLEAK_ERASING),
->  	CRASHTYPE(CFI_FORWARD_PROTO),
-> +#ifdef CONFIG_X86_32
-> +	CRASHTYPE(DOUBLE_FAULT),
-> +#endif
 
-And then ifdefs aren't needed here either.
 
->  };
->  
->  
-> diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-> index ab446e0..c56d23e 100644
-> --- a/drivers/misc/lkdtm/lkdtm.h
-> +++ b/drivers/misc/lkdtm/lkdtm.h
-> @@ -28,6 +28,9 @@ void lkdtm_CORRUPT_USER_DS(void);
->  void lkdtm_STACK_GUARD_PAGE_LEADING(void);
->  void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
->  void lkdtm_UNSET_SMEP(void);
-> +#ifdef CONFIG_X86_32
-> +void lkdtm_DOUBLE_FAULT(void);
-> +#endif
 
-Same.
-
->  
->  /* lkdtm_heap.c */
->  void __init lkdtm_heap_init(void);
-
--- 
-Kees Cook
