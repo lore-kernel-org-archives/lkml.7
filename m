@@ -2,95 +2,121 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2C1C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13627C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1059206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF4142073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 16:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REPG81Qt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+kP32Nc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfK0Qjn (ORCPT
+        id S1727127AbfK0Qkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 11:39:43 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33556 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfK0Qjm (ORCPT
+        Wed, 27 Nov 2019 11:40:46 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:42530 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbfK0Qkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 11:39:42 -0500
-Received: by mail-lf1-f67.google.com with SMTP id d6so17720592lfc.0;
-        Wed, 27 Nov 2019 08:39:41 -0800 (PST)
+        Wed, 27 Nov 2019 11:40:45 -0500
+Received: by mail-pj1-f66.google.com with SMTP id y21so10252862pjn.9;
+        Wed, 27 Nov 2019 08:40:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vmkegaf4vZvX2ziqVB5RPleLu7JAiT7hE0cpq3SxoSQ=;
-        b=REPG81Qtq3lNOAL+04c29Gqfhs6hoxI9x9Bmws8ZTR3V99PKkY+OF1st8X4uBP4+EC
-         i24A2tCrAPpdRJ+2h2zsAB18U2WiSgrWA67/0Mx5A+4Qr2CYxIKKq0l5eALsYfy16w2d
-         hOJPxdff+EgcnL/vbeY1eGmbZNZjso+4Zz8MPUjrHrKA5Luwa+z9bh/FnOr7RsaNOCLW
-         O6W2Ec9mjDdyuW/LS9UKPdipoMwDZoYqrjOU20jx/n96jpZNQO7ow5jyxT1Hab1mLH4M
-         hBFZVxl40aCaqofV7YX/x9hJoisKCt52V6aN5SjuehrqOAewrinJBS9DIxH95sN0E3iY
-         V51Q==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XxnZyGcP9Rmlyi/FludPQAATJUUTPMQYYmErZMfJYoQ=;
+        b=e+kP32NcUaqG5wx8/nGkohEXD3ItQ8/aha7ve3XqxfVhMblGDvxeUUyCNi48rX4WAX
+         G2RH/hCsTv8YroV9j5FaPEN4in8mhio2C4a6/8xvcdfkxy+4sPu+JgE0eZX7HUuqCimG
+         eMy/u5PPC3X3Eee3qtbxFY92aAGsGyLaWdW5Pj56veJNVw4uPbn6T4odwbKXc36gJnCE
+         V1IZ5CUqiLZ7f32a4/4vsWG2mZM8X6Y3h/e1lTBU5P9Pf66sd2HzC2py/NWzkZetZOYZ
+         YGRF4/bj2J9Z2DtLX3cRou4KkuT5D7LvQVS5uyAeS7K2uX24K9BzRozkqmt9S6vQ0qM8
+         ftcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vmkegaf4vZvX2ziqVB5RPleLu7JAiT7hE0cpq3SxoSQ=;
-        b=s1fW+od24QD78tgxKCWhkme8i30SAC1DF30HyP9/RC+LToOGKqSbkQ51+4qMEmSkLU
-         DjFOxm1uc72Ax4+Y6qqs3/4eCjsShpf7tziJS9PnYjpdcokQBU2J6rbU1eLcNwVqAdAq
-         U9KgPohLL76xebY6icOzWIfYeYfWonNlrFAaR3QbtYBYMzFi0fGw5KmCqv033nf0OO8u
-         wPQ96rYlLGpTxCT5ljdQkDJ/nxBQ+xTT2ZrdusoIXaDKmvmIUp+0P32kLCcNeHaonc6w
-         gBzEMpBa4zTmNczf9YKvpkAYHEOJShhuBXbj6cDc72W0cF3FydycO+U+MBPQPB4ofryv
-         eZFg==
-X-Gm-Message-State: APjAAAUBw+OzFNdfCbFN69CXumnmK5SfKCtNjBQnYPQ+6awj6EWyDbak
-        fizYkKQTZTM+0OUA3/kCaohhxpdnq5G7HP37LeY=
-X-Google-Smtp-Source: APXvYqzq8UPRrJfJ0wmsZswTCjUyrB8oZvG2T0FT+puktIIEMekl/zT+YUHyiboaJFuSOcFVFmY7pDdhRQkmBDOdfQE=
-X-Received: by 2002:ac2:5462:: with SMTP id e2mr19856735lfn.181.1574872780262;
- Wed, 27 Nov 2019 08:39:40 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XxnZyGcP9Rmlyi/FludPQAATJUUTPMQYYmErZMfJYoQ=;
+        b=qmWShlcl+g/x+2BwagOCR/Zo7Rl8BcMd/dZ4EyppxXioM7CUKGcKptt8l3Ow9u55Pe
+         VzzuW3VYLPr2ztddEyUKpdy6lW9NXm0yjCnOHn9RIXF1nFX+5IY80D4JdV64SDKFSOfg
+         fOh+er3EAKBlAfMo2hXfETt4mrEi1UOAAt4bTQOlVe5/uUZVQ58IW5EABdvD0Q8B/YGS
+         h5+MOfe1W6mCy91m2nnmp/iEcf4s0kDRgFktEI0o0Sot64C63QNaC1TaX4vdVZ1bPwaO
+         6gY/mvF8Aa/DG6w6Wm/hCvUekaXHMrH86HbON+DRLsytJLYkihMm6gv+oR95Ix9DvZ9y
+         +nwg==
+X-Gm-Message-State: APjAAAVYEgx7xxmAeRUYQ+EwAUjUpC+qf/sHs2WQDNwMBtBQ/xWNasxs
+        k34QGKMMo0fLWn3p/geLYgk=
+X-Google-Smtp-Source: APXvYqyOTdv5RtT17pzoqksEp4sCN6AzyskRPbgNbPryeVBL24MqJrBpusefhvfglg/U4YVOO8vpYw==
+X-Received: by 2002:a17:902:7586:: with SMTP id j6mr5091675pll.43.1574872844265;
+        Wed, 27 Nov 2019 08:40:44 -0800 (PST)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id y17sm17002645pfl.92.2019.11.27.08.40.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Nov 2019 08:40:43 -0800 (PST)
+Date:   Wed, 27 Nov 2019 22:10:33 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/5] pinctrl: actions: Use the correct style for SPDX License
+ Identifier
+Message-ID: <5b588fc885efca6efdc73869aa4b1eeeb3d6f6c5.1574871463.git.nishadkamdar@gmail.com>
+References: <cover.1574871463.git.nishadkamdar@gmail.com>
 MIME-Version: 1.0
-References: <20191126183451.GC29071@kernel.org> <87d0dexyij.fsf@toke.dk>
- <20191126190450.GD29071@kernel.org> <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
- <20191126221018.GA22719@kernel.org> <20191126221733.GB22719@kernel.org>
- <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
- <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net> <20191126155228.0e6ed54c@cakuba.netronome.com>
- <20191127013901.GE29071@kernel.org> <20191127134553.GC22719@kernel.org>
-In-Reply-To: <20191127134553.GC22719@kernel.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 27 Nov 2019 08:39:28 -0800
-Message-ID: <CAADnVQKkEqhdTOxytVbcm1QnBcf4MQ+q4KYaHzsuqkq3r=X-VA@mail.gmail.com>
-Subject: Re: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on
- 32-bit arches
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1574871463.git.nishadkamdar@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 5:45 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Another fix I'm carrying in my perf/core branch,
+This patch corrects the SPDX License Identifier style in
+header file related Actions Semi OWL pinctrl driver.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-Why in perf/core?
-I very much prefer all libbpf patches to go via normal route via bpf/net trees.
-We had enough conflicts in this merge window. Let's avoid them.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
+
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/pinctrl/actions/pinctrl-owl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/actions/pinctrl-owl.h b/drivers/pinctrl/actions/pinctrl-owl.h
+index dae2e8363fd5..feee7ad7e27e 100644
+--- a/drivers/pinctrl/actions/pinctrl-owl.h
++++ b/drivers/pinctrl/actions/pinctrl-owl.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * OWL SoC's Pinctrl definitions
+  *
+-- 
+2.17.1
+
