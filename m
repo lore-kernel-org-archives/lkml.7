@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C27C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A270C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7336C21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EBD2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888300;
-	bh=3wMnnIJXfnWk142yJD3BMJNJy478q2HaJSDSh7be0mA=;
+	s=default; t=1574888303;
+	bh=gUbBaBqeNzDCPkiKzKsFnWC4UNaWjQUjPjfR/d+HDI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F0nopj3UshIj4utg4q2N6liNJKSwtzGA+DZ/JQd6o0teU+d1fEsceZsnNyYgC70oK
-	 Hlxh4TL7byLS917fQ5HRe2Xbn5LWt9UizI5D7oDUwaB6LPT5zOxiYUghP+zcwhpk9r
-	 JEBAcE2JTkKpD7QF6gJ6GP8P9kAcAWsBqg0NlfJo=
+	b=DmrrIhr3QUSdFMrDOJ9og1ocAJb2D7PRScdNSD5l+SbP7U2yFbX/nxmez9lAmZPbc
+	 zy+aDu1kmEbMtVYlb6zOkXXawkJqnRiBO+cucHPQR+X0o9C3WK9uCKeHBJBdrs+XOu
+	 naAKKs2b9VSVR3IGa9PSRtBktQC3co9KHQPFPayU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731301AbfK0U6T (ORCPT
+        id S1730390AbfK0U6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:58:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49500 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:58:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728354AbfK0U6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:58:16 -0500
+        id S1731298AbfK0U6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:58:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54F4721556;
-        Wed, 27 Nov 2019 20:58:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C421F2084D;
+        Wed, 27 Nov 2019 20:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888295;
-        bh=3wMnnIJXfnWk142yJD3BMJNJy478q2HaJSDSh7be0mA=;
+        s=default; t=1574888298;
+        bh=gUbBaBqeNzDCPkiKzKsFnWC4UNaWjQUjPjfR/d+HDI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBtxkUscT89nqmcQ7yS+gW1JkrRzCdEM7OgSSY+dJRg5k4bFEiw1wQfLb23YuMShF
-         RJ1h7rzdmfwWm/i//rPYEU3fG2/0esu1dfpi0Wl/KFcuY2vy3u0QRRIZBsy4apzRjz
-         OFrdlWmSJLz8PTkp/swcuiX+XjOm7X5Ao3++s46o=
+        b=Kf/1Gfn8sjALd5pwd3RRm/1NO0PoMqtm6o99U+in0W9NlazmfckPLqwQ/Tq72H/Om
+         HMrOhPM7aALk0gYqNsoa/ZnjjNn4M0AKqITvo80VAwscyUHbG7eN5M6IsiMxepN6mv
+         wMtHEQbqcwaeg/xk5792afULoJcAwQ4asuXF7zBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Angelo Dureghello <angelo@sysam.it>,
+        Greg Ungerer <gerg@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 079/306] clk: mmp2: fix the clock id for sdh2_clk and sdh3_clk
-Date:   Wed, 27 Nov 2019 21:28:49 +0100
-Message-Id: <20191127203120.669998133@linuxfoundation.org>
+Subject: [PATCH 4.19 053/306] m68k: fix command-line parsing when passed from u-boot
+Date:   Wed, 27 Nov 2019 21:28:23 +0100
+Message-Id: <20191127203118.650749917@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,36 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Angelo Dureghello <angelo@sysam.it>
 
-[ Upstream commit 4917fb90eec7c26dac1497ada3bd4a325f670fcc ]
+[ Upstream commit 381fdd62c38344a771aed06adaf14aae65c47454 ]
 
-A typo that makes it impossible to get the correct clocks for
-MMP2_CLK_SDH2 and MMP2_CLK_SDH3.
+This patch fixes command_line array zero-terminated
+one byte over the end of the array, causing boot to hang.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Fixes: 1ec770d92a62 ("clk: mmp: add mmp2 DT support for clock driver")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Angelo Dureghello <angelo@sysam.it>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mmp/clk-of-mmp2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/m68k/kernel/uboot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
-index 0fc75c3959570..d083b860f0833 100644
---- a/drivers/clk/mmp/clk-of-mmp2.c
-+++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -227,8 +227,8 @@ static struct mmp_param_gate_clk apmu_gate_clks[] = {
- 	/* The gate clocks has mux parent. */
- 	{MMP2_CLK_SDH0, "sdh0_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH0, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
- 	{MMP2_CLK_SDH1, "sdh1_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH1, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
--	{MMP2_CLK_SDH1, "sdh2_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH2, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
--	{MMP2_CLK_SDH1, "sdh3_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH3, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
-+	{MMP2_CLK_SDH2, "sdh2_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH2, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
-+	{MMP2_CLK_SDH3, "sdh3_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH3, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
- 	{MMP2_CLK_DISP0, "disp0_clk", "disp0_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x1b, 0x1b, 0x0, 0, &disp0_lock},
- 	{MMP2_CLK_DISP0_SPHY, "disp0_sphy_clk", "disp0_sphy_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x1024, 0x1024, 0x0, 0, &disp0_lock},
- 	{MMP2_CLK_DISP1, "disp1_clk", "disp1_div", CLK_SET_RATE_PARENT, APMU_DISP1, 0x1b, 0x1b, 0x0, 0, &disp1_lock},
+diff --git a/arch/m68k/kernel/uboot.c b/arch/m68k/kernel/uboot.c
+index b29c3b241e1bb..1070828770645 100644
+--- a/arch/m68k/kernel/uboot.c
++++ b/arch/m68k/kernel/uboot.c
+@@ -102,5 +102,5 @@ __init void process_uboot_commandline(char *commandp, int size)
+ 	}
+ 
+ 	parse_uboot_commandline(commandp, len);
+-	commandp[size - 1] = 0;
++	commandp[len - 1] = 0;
+ }
 -- 
 2.20.1
 
