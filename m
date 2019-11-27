@@ -2,73 +2,131 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BD6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B01C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA3412080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA4A2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:25:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574889941;
+	bh=by66fafWIkFfkatStvHYRKlIhFEru2T56686wGJEHj4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=L6aDmNxLd7O4CdERoizKcmvVgglD310Q6u0ppko4SfbUaFnhR55DU3vkts5IXGq1n
+	 kRmGVkyoGm7B/AVSMz0FdwqWDUAp99916hS+C+FNQkoZglhJ6AFxk8XX8JQIBRlq2W
+	 dbQuMhd6H7HbeoeliYkGDMkSpYlDrWGcbpmQV1OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732516AbfK0VZb (ORCPT
+        id S1731755AbfK0VBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:25:31 -0500
-Received: from mga03.intel.com ([134.134.136.65]:61936 "EHLO mga03.intel.com"
+        Wed, 27 Nov 2019 16:01:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731771AbfK0VBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:01:43 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 13:01:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,250,1571727600"; 
-   d="scan'208";a="383617645"
-Received: from gtau-mobl.ger.corp.intel.com (HELO localhost) ([10.251.83.243])
-  by orsmga005.jf.intel.com with ESMTP; 27 Nov 2019 13:01:35 -0800
-Date:   Wed, 27 Nov 2019 23:01:33 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        Patrick Uiterwijk <puiterwijk@redhat.com>
-Subject: Re: [PATCH v23 00/24] Intel SGX foundations
-Message-ID: <20191127210133.GC14290@linux.intel.com>
-References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
- <CAOASepNazHxKNrZVP7=oQcCyMNxDH153qfpua95G5dsq9++1aw@mail.gmail.com>
+        id S1731741AbfK0VBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:01:32 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0215E2086A;
+        Wed, 27 Nov 2019 21:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574888491;
+        bh=by66fafWIkFfkatStvHYRKlIhFEru2T56686wGJEHj4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sYgAxl0Io5qISfuhwSbxXlIDwF0tOnz1ZMuQ6xFX5YAiUBJA/51dCWngDsIRn7LRI
+         M8OpiJ8un+pgljsOUUXVcaDe+F4txJNitqwMf2MJvT774cPrEcXWHKw9+93h4CmVnc
+         lQQetkVPjTGrKD7XpbSY9b112B6BooJA2K78nH2g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 156/306] i2c: uniphier-f: fix race condition when IRQ is cleared
+Date:   Wed, 27 Nov 2019 21:30:06 +0100
+Message-Id: <20191127203126.999886239@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
+References: <20191127203114.766709977@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOASepNazHxKNrZVP7=oQcCyMNxDH153qfpua95G5dsq9++1aw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 10:08:24AM -0500, Nathaniel McCallum wrote:
-> The Enarx (https://enarx.io) project is eager to see these patches
-> merged. We have tested them on the hardware we have available to us
-> and haven't noticed any problems.
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-There was one regression in reclaimer code in v23. I'm also making a
-small API change to v24 i.e. have @count for number of bytes processed
-in ADD_PAGES ioctl.
+[ Upstream commit eaba68785c2d24ebf1f0d46c24e11b79cc2f94c7 ]
 
-Is it possible to test this in v24 once it is available and potentially
-give tested-by to the driver patch if it works for you?
+The current IRQ handler clears all the IRQ status bits when it bails
+out. This is dangerous because it might clear away the status bits
+that have just been set while processing the current handler. If this
+happens, the IRQ event for the latest transfer is lost forever.
 
-/Jarkko
+The IRQ status bits must be cleared *before* the next transfer is
+kicked.
+
+Fixes: 6a62974b667f ("i2c: uniphier_f: add UniPhier FIFO-builtin I2C driver")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/busses/i2c-uniphier-f.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
+index bbd5b137aa216..928ea9930d17e 100644
+--- a/drivers/i2c/busses/i2c-uniphier-f.c
++++ b/drivers/i2c/busses/i2c-uniphier-f.c
+@@ -143,9 +143,10 @@ static void uniphier_fi2c_set_irqs(struct uniphier_fi2c_priv *priv)
+ 	writel(priv->enabled_irqs, priv->membase + UNIPHIER_FI2C_IE);
+ }
+ 
+-static void uniphier_fi2c_clear_irqs(struct uniphier_fi2c_priv *priv)
++static void uniphier_fi2c_clear_irqs(struct uniphier_fi2c_priv *priv,
++				     u32 mask)
+ {
+-	writel(-1, priv->membase + UNIPHIER_FI2C_IC);
++	writel(mask, priv->membase + UNIPHIER_FI2C_IC);
+ }
+ 
+ static void uniphier_fi2c_stop(struct uniphier_fi2c_priv *priv)
+@@ -172,6 +173,8 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
+ 		"interrupt: enabled_irqs=%04x, irq_status=%04x\n",
+ 		priv->enabled_irqs, irq_status);
+ 
++	uniphier_fi2c_clear_irqs(priv, irq_status);
++
+ 	if (irq_status & UNIPHIER_FI2C_INT_STOP)
+ 		goto complete;
+ 
+@@ -250,8 +253,6 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
+ 	}
+ 
+ handled:
+-	uniphier_fi2c_clear_irqs(priv);
+-
+ 	spin_unlock(&priv->lock);
+ 
+ 	return IRQ_HANDLED;
+@@ -340,7 +341,7 @@ static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
+ 		priv->flags |= UNIPHIER_FI2C_STOP;
+ 
+ 	reinit_completion(&priv->comp);
+-	uniphier_fi2c_clear_irqs(priv);
++	uniphier_fi2c_clear_irqs(priv, U32_MAX);
+ 	writel(UNIPHIER_FI2C_RST_TBRST | UNIPHIER_FI2C_RST_RBRST,
+ 	       priv->membase + UNIPHIER_FI2C_RST);	/* reset TX/RX FIFO */
+ 
+-- 
+2.20.1
+
+
+
