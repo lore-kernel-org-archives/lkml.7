@@ -2,70 +2,207 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E51A7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3DFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB8452080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574883023;
-	bh=3z9e/U6BxCHs1Pg7uyhbKiSmKB8607nf7+oyfCMaKWQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=J2c+Ot47P9eNX7pMdj7n8KlKeInrYE2EFvjKNvH/MYHXb+c9iPsEJeP/j/v6IPai3
-	 bRmbMhkWSJvhoUnFyX1t+eWqL8KK72CkE7+qHnicoY3g3m3uRRfSsYQJ/rSYLGdagV
-	 ssJpEGvp0Np4soUugA0Ti2JUqoOlLUho59mL37as=
+	by mail.kernel.org (Postfix) with ESMTP id 038AB2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfK0TaV (ORCPT
+        id S1727817AbfK0TdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 14:30:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727621AbfK0TaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 14:30:19 -0500
-Subject: Re: [GIT PULL] Driver core patches for 5.5-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574883018;
-        bh=3z9e/U6BxCHs1Pg7uyhbKiSmKB8607nf7+oyfCMaKWQ=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=EqteDc/lZmPo9xqzOaqMiVaKxpDXIKyzeQbi3dIeXqjV9o9Brm2DCZu96plr+lmPg
-         4SdENSk0tskurKC5aJlXIzmkogLqcxWQDky4ctyo+0hbOatNV+pUYTZX27rY/D/CJJ
-         GIXz9hyI4YUiWC9G+fHcTuiJ25A6NhRyaGKInnOg=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191127164138.GA3088162@kroah.com>
-References: <20191127164138.GA3088162@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191127164138.GA3088162@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
- tags/driver-core-5.5-rc1
-X-PR-Tracked-Commit-Id: 0e4a459f56c32d3e52ae69a4b447db2f48a65f44
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9a3d7fd275be4559277667228902824165153c80
-Message-Id: <157488301859.32229.4242642539660598068.pr-tracker-bot@kernel.org>
-Date:   Wed, 27 Nov 2019 19:30:18 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
+        Wed, 27 Nov 2019 14:33:05 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54600 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727389AbfK0TdE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 14:33:04 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARJWslF037495
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 14:33:02 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxqpgfg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 14:33:02 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 27 Nov 2019 19:33:00 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 27 Nov 2019 19:32:57 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARJWuS458196162
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Nov 2019 19:32:56 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A3B011C052;
+        Wed, 27 Nov 2019 19:32:56 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 74A1711C050;
+        Wed, 27 Nov 2019 19:32:55 +0000 (GMT)
+Received: from dhcp-9-31-103-87.watson.ibm.com (unknown [9.31.103.87])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Nov 2019 19:32:55 +0000 (GMT)
+Subject: Re: [PATCH v9 6/6] IMA: Read keyrings= option from the IMA policy
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Date:   Wed, 27 Nov 2019 14:32:54 -0500
+In-Reply-To: <20191127015654.3744-7-nramas@linux.microsoft.com>
+References: <20191127015654.3744-1-nramas@linux.microsoft.com>
+         <20191127015654.3744-7-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19112719-0008-0000-0000-000003391467
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112719-0009-0000-0000-00004A581E18
+Message-Id: <1574883174.4793.318.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 clxscore=1015 adultscore=0 suspectscore=3
+ phishscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911270158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 27 Nov 2019 17:41:38 +0100:
+On Tue, 2019-11-26 at 17:56 -0800, Lakshmi Ramasubramanian wrote:
+> Read "keyrings=" option, if specified in the IMA policy, and store in
+> the list of IMA rules when the configured IMA policy is read.
+> 
+> This patch defines a new policy token enum namely Opt_keyrings
+> and an option flag IMA_KEYRINGS for reading "keyrings=" option
+> from the IMA policy.
+> 
+> Updated ima_parse_rule() to parse "keyrings=" option in the policy.
+> Updated ima_policy_show() to display "keyrings=" option.
+> 
+> The following example illustrates how key measurement can be verified.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/driver-core-5.5-rc1
+The example is really too colloquial/verbose.  Please truncate it,
+leaving just a sample "key" policy rule, with directions for verifying
+the template data against the digest included in the measurement list.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9a3d7fd275be4559277667228902824165153c80
+> 
+> Sample IMA Policy entry to measure keys
+> (Added in the file /etc/ima/ima-policy):
 
-Thank you!
+Remove the above.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Sample "key" measurement rule:
+
+> measure func=KEY_CHECK keyrings=.ima|.evm template=ima-buf
+> 
+> Build the kernel with this patch set applied and reboot to that kernel.
+> 
+> Ensure the IMA policy is applied:
+> 
+> root@nramas:/home/nramas# cat /sys/kernel/security/ima/policy
+> measure func=KEY_CHECK keyrings=.ima|.evm template=ima-buf
+> 
+> View the initial IMA measurement log:
+> 
+> root@nramas:/home/nramas
+> # cat /sys/kernel/security/ima/ascii_runtime_measurements
+> 10 67ec... ima-ng sha1:b5466c508583f0e633df83aa58fc7c5b67ccf667 boot_aggregate
+> 
+> Now, add a certificate (for example, x509_ima.der) to the .ima keyring
+> using evmctl (IMA-EVM Utility)
+> 
+> root@nramas:/home/nramas# keyctl show %:.ima
+> Keyring
+>  547515640 ---lswrv      0     0  keyring: .ima
+> 
+> root@nramas:/home/nramas# evmctl import x509_ima.der 547515640
+> 
+> root@nramas:/home/nramas# keyctl show %:.ima
+> Keyring
+>  547515640 ---lswrv      0     0  keyring: .ima
+>  809678766 --als--v      0     0   \_ asymmetric: hostname: whoami signing key: 052dd247dc3c36...
+> 
+> View the updated IMA measurement log:
+> 
+> root@nramas:/home/nramas#
+
+Remove everything up to here and simply say something like:
+
+Display "key" measurement in the IMA measurement list:
+
+> # cat /sys/kernel/security/ima/ascii_runtime_measurements
+
+> 10 3adf... ima-buf
+> sha256:27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3
+> b7b .ima 308202863082...4aee
+
+
+> root@nramas:/home/nramas#
+
+Remove this string from all the commands.
+> 
+> For this sample, SHA256 should be selected as the hash algorithm
+> used by IMA.
+> 
+> The following command verifies if the SHA256 hash generated from
+> the payload in the IMA log entry (listed above) for the .ima key
+> matches the SHA256 hash in the IMA log entry. The output of this
+> command should match the SHA256 hash given in the IMA log entry
+> (In this case, it should be
+> 27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b)
+
+Previously you didn't use the hash value, but ".ima" to locate the
+"key" measurement in the measurement list.  In each of the commands
+above, it might be clearer.
+
+> 
+> root@nramas:/home/nramas
+
+ditto
+
+> # cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements
+> | grep
+> 27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b | 
+
+> cut -d' ' -f 6 | xxd -r -p |tee ima-cert.der | sha256sum | cut -d' '
+> -f 1
+> 
+> The above command also creates a binary file namely ima-cert.der
+> using the payload in the IMA log entry. This file should be a valid
+> x509 certificate which can be verified using openssl as given below:
+> 
+> root@nramas:/home/nramas
+
+ditto
+
+
+> # openssl x509 -in ima-cert.der -inform DER -text
+> 
+> The above command should display the contents of the file ima-cert.der
+> as an x509 certificate.
+
+Either the comments should be above or below the commands, not both.
+
+> 
+> The IMA policy used here allows measurement of keys added to
+> ".ima" and ".evm" keyrings only. Add a key to any other keyring and
+> verify that the key is not measured.
+
+This comment would be included, if desired, when defining the policy
+rule, not here.
+
+Mimi
+
