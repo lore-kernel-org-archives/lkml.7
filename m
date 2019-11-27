@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1846C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27556C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2C52158A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0EDD20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887433;
-	bh=pm4J433S+H+C6Sxgui/dBAeNPiQ5Rk3ZCpsfCJCntLg=;
+	s=default; t=1574887437;
+	bh=X6ttkquxGdzmq27hYfoMMXPCacDoaTT04oI9WcFh5Pc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F27NlDs/tSTRlEb78Zs3Zc4hikH6aZktOghP3siCPnkBqVAhMqO/28+AsxI2H8qT4
-	 BzMHX4JI+rDDy9Bph5cbkqo3wF5w8vjLat0ch8y+runk63MDTCouHGhB8K0TsEUy9n
-	 i5Q5x8mzHxY7K809w0Mr5mRj0ynTLQeKFpbCCbYY=
+	b=DT6jOZYifyufQkn053sXstHOHQUYrqIsQMGBLgUG6k30eccxrcq4VazQT9w6vLKXC
+	 5Px1kZEjoo/ERk0eEFBPmwvv6aEK8x8RezczwknW6ECiJL90GL19HVbA8rE0pRZDER
+	 xgnnF14BWQ/ZXSliWR/hafWBk+zNWRm8t+YRKk8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbfK0Unt (ORCPT
+        id S1729514AbfK0Unz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:43:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51916 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:43:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729475AbfK0Unl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:43:41 -0500
+        id S1729498AbfK0Unw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:43:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DCEE217AB;
-        Wed, 27 Nov 2019 20:43:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B082080F;
+        Wed, 27 Nov 2019 20:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887420;
-        bh=pm4J433S+H+C6Sxgui/dBAeNPiQ5Rk3ZCpsfCJCntLg=;
+        s=default; t=1574887431;
+        bh=X6ttkquxGdzmq27hYfoMMXPCacDoaTT04oI9WcFh5Pc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lGmnd4wfBjhVGIH/IE5KYWGEVJn4R7Jbj+Bb/dqUN1zXU0AI8TCtS9zJY3XWybmEw
-         to403cfgTVlFKmdJ1BoMn9mu+rOgu5rm5wtucwP89TJ4XFG4IxVh53cR1Wy5EDqh0G
-         HC7DjiG3OTeBtqcKmkzSywMd6tU+LFeGJbde/cWQ=
+        b=jjxqogca/VsWPMcOFXr36pg2fpdJ2z3B2dMV9HLbqSWQg7j1q5/5eZcY7WMoaFbmw
+         +r6+hLNdFGJHyR2CQ2/aGpmvgi3fM+G8vNn0O0PxyvNxhWP4CMLZhZ183mSGPoDqoY
+         0ZrhK+GrF6qQ19GgBVyKCE6Dj6kuy9fV4nLPSe3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radu Rendec <radu.rendec@gmail.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 067/151] macsec: let the administrator set UP state even if lowerdev is down
-Date:   Wed, 27 Nov 2019 21:30:50 +0100
-Message-Id: <20191127203034.133854267@linuxfoundation.org>
+Subject: [PATCH 4.9 106/151] pinctrl: zynq: Use define directive for PIN_CONFIG_IO_STANDARD
+Date:   Wed, 27 Nov 2019 21:31:29 +0100
+Message-Id: <20191127203041.219369016@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
 References: <20191127203000.773542911@linuxfoundation.org>
@@ -61,41 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 07bddef9839378bd6f95b393cf24c420529b4ef1 ]
+[ Upstream commit cd8a145a066a1a3beb0ae615c7cb2ee4217418d7 ]
 
-Currently, the kernel doesn't let the administrator set a macsec device
-up unless its lower device is currently up. This is inconsistent, as a
-macsec device that is up won't automatically go down when its lower
-device goes down.
+Clang warns when one enumerated type is implicitly converted to another:
 
-Now that linkstate propagation works, there's really no reason for this
-limitation, so let's remove it.
+drivers/pinctrl/pinctrl-zynq.c:985:18: warning: implicit conversion from
+enumeration type 'enum zynq_pin_config_param' to different enumeration
+type 'enum pin_config_param' [-Wenum-conversion]
+        {"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
+        ~               ^~~~~~~~~~~~~~~~~~~~~
+drivers/pinctrl/pinctrl-zynq.c:990:16: warning: implicit conversion from
+enumeration type 'enum zynq_pin_config_param' to different enumeration
+type 'enum pin_config_param' [-Wenum-conversion]
+        = { PCONFDUMP(PIN_CONFIG_IOSTANDARD, "IO-standard", NULL, true),
+            ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
+macro 'PCONFDUMP'
+        .param = a, .display = b, .format = c, .has_arg = d     \
+                 ^
+2 warnings generated.
 
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Reported-by: Radu Rendec <radu.rendec@gmail.com>
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/pinctrl/pinctrl-zynq.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index d2a3825376be5..a48ed0873cc72 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -2798,9 +2798,6 @@ static int macsec_dev_open(struct net_device *dev)
- 	struct net_device *real_dev = macsec->real_dev;
- 	int err;
+diff --git a/drivers/pinctrl/pinctrl-zynq.c b/drivers/pinctrl/pinctrl-zynq.c
+index e0ecffcbe11f6..f8b54cfc90c7d 100644
+--- a/drivers/pinctrl/pinctrl-zynq.c
++++ b/drivers/pinctrl/pinctrl-zynq.c
+@@ -967,15 +967,12 @@ enum zynq_io_standards {
+ 	zynq_iostd_max
+ };
  
--	if (!(real_dev->flags & IFF_UP))
--		return -ENETDOWN;
--
- 	err = dev_uc_add(real_dev, dev->dev_addr);
- 	if (err < 0)
- 		return err;
+-/**
+- * enum zynq_pin_config_param - possible pin configuration parameters
+- * @PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
++/*
++ * PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
+  *	this parameter (on a custom format) tells the driver which alternative
+  *	IO standard to use.
+  */
+-enum zynq_pin_config_param {
+-	PIN_CONFIG_IOSTANDARD = PIN_CONFIG_END + 1,
+-};
++#define PIN_CONFIG_IOSTANDARD		(PIN_CONFIG_END + 1)
+ 
+ static const struct pinconf_generic_params zynq_dt_params[] = {
+ 	{"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
 -- 
 2.20.1
 
