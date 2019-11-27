@@ -2,96 +2,86 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE23AC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0262C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA1520835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:19:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574835587;
-	bh=J3d4dyh/vmhHMv1z2Fxba6OHbvFsy8II4ba8oQdw1ds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TgQT9mBnvFpnKYv4JcEGMyWXzmHUKjyKPVqKqujeTuY6g8NmUYD2b3GOjWvsfcab4
-	 pevnk9wjyC0M/xHcnUi1jfA5hAFiEk8+nIVK2PAKwXucgy8RB76MJIotwa3hsq3oy+
-	 KvV7mR6l81FUgXlMi75CjgjM5jcr+kYdhaeWhXec=
+	by mail.kernel.org (Postfix) with ESMTP id A2FC02071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 06:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbfK0GTh (ORCPT
+        id S1726514AbfK0GWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 01:19:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbfK0GTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 01:19:37 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD3C9206F0;
-        Wed, 27 Nov 2019 06:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574835576;
-        bh=J3d4dyh/vmhHMv1z2Fxba6OHbvFsy8II4ba8oQdw1ds=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=012LBpBnwXDLUs/AxQ9KCJ+ro+73bPuGidZmwL51Y1G1wFUz82jMDsEC3AZPZNlLp
-         zKMl9X7c8VwwoX8SGtD6cwvtM6JbFyoYnkP1VpAoXxtoVDcKQV72G4r6wX7CFrefXh
-         mdfn5Scpjb8BspQSEsVwTRvLFGL59DbMU7AOMuwI=
-Date:   Tue, 26 Nov 2019 22:19:34 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+7810ed2e0cb359580c17@syzkaller.appspotmail.com>
-Cc:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        horms@verge.net.au, ja@ssi.bg, kadlec@blackhole.kfki.hu,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lvs-devel@vger.kernel.org, mmarek@suse.com, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        wensong@linux-vs.org, yamada.masahiro@socionext.com
-Subject: Re: INFO: task hung in do_ip_vs_set_ctl (2)
-Message-ID: <20191127061934.GC227319@sol.localdomain>
-References: <94eb2c059ce0bca273056940d77d@google.com>
- <0000000000007a85c4059841ca66@google.com>
+        Wed, 27 Nov 2019 01:22:08 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58670 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726092AbfK0GWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 01:22:08 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E07D67B1CFB1DC994B8D;
+        Wed, 27 Nov 2019 14:22:04 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 27 Nov 2019 14:21:54 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "Vignesh Raghavendra" <vigneshr@ti.com>
+CC:     YueHaibing <yuehaibing@huawei.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] mtd: ubi: wl: remove set but not used variable 'prev_e'
+Date:   Wed, 27 Nov 2019 06:20:02 +0000
+Message-ID: <20191127062002.23746-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000007a85c4059841ca66@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 07:47:00AM -0800, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit 6f7da290413ba713f0cdd9ff1a2a9bb129ef4f6c
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Sun Jul 2 23:07:02 2017 +0000
-> 
->     Linux 4.12
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11a2b78ce00000
-> start commit:   17dec0a9 Merge branch 'userns-linus' of git://git.kernel.o..
-> git tree:       net-next
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=da08d02b86752ade
-> dashboard link: https://syzkaller.appspot.com/bug?extid=7810ed2e0cb359580c17
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=130abb47800000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=150a15bb800000
-> 
-> Reported-by: syzbot+7810ed2e0cb359580c17@syzkaller.appspotmail.com
-> Fixes: 6f7da290413b ("Linux 4.12")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-This bisection is obviously bogus, though oddly enough the bisection log shows
-that v4.12 crashed 10/10 times, while v4.12~1 crashed 0/10 times...
+drivers/mtd/ubi/wl.c: In function 'find_wl_entry':
+drivers/mtd/ubi/wl.c:322:27: warning:
+ variable 'prev_e' set but not used [-Wunused-but-set-variable]
 
-Anyway, this bug looks extremely stale, as it only occurred for a 2-week period
-in 2018.  Commit 5c64576a77 ("ipvs: fix rtnl_lock lockups caused by
-start_sync_thread") might have been the fix, but I'm just invalidating this:
+It's not used any more now, so remove it.
 
-#syz invalid
+Fixes: f9c34bb52997 ("ubi: Fix producing anchor PEBs")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/mtd/ubi/wl.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-- Eric
+diff --git a/drivers/mtd/ubi/wl.c b/drivers/mtd/ubi/wl.c
+index 5d77a38dba54..837d690a8c60 100644
+--- a/drivers/mtd/ubi/wl.c
++++ b/drivers/mtd/ubi/wl.c
+@@ -319,7 +319,7 @@ static struct ubi_wl_entry *find_wl_entry(struct ubi_device *ubi,
+ 					  struct rb_root *root, int diff)
+ {
+ 	struct rb_node *p;
+-	struct ubi_wl_entry *e, *prev_e = NULL;
++	struct ubi_wl_entry *e;
+ 	int max;
+ 
+ 	e = rb_entry(rb_first(root), struct ubi_wl_entry, u.rb);
+@@ -334,7 +334,6 @@ static struct ubi_wl_entry *find_wl_entry(struct ubi_device *ubi,
+ 			p = p->rb_left;
+ 		else {
+ 			p = p->rb_right;
+-			prev_e = e;
+ 			e = e1;
+ 		}
+ 	}
+
+
+
