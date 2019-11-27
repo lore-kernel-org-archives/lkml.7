@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA512C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE93C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0762190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F0820862
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888063;
-	bh=/owAWAfWpzYBTAYkM82lVwXJD9Kz4nA/JxzbBtagY9I=;
+	s=default; t=1574888072;
+	bh=ko3HWEy/TZ9rGK9fbIkAGtJvW2gFlpppAAw0vmTRqus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ofprEDBoNaqWj0d7++K5swiafoW2SyKhs4R29D1dU5iW91ydyvrH2oID0G+tZ2GeE
-	 +L8RIB9Lsgvu7ju1cnBoybgLeuDrKUw5V0U4GiYcnDfjydSgCJiKkiZ27Tu7NjdLYj
-	 I7q3M/YCKS2mHBRyqqSJOHwCMo9gEQJQJLqavbJM=
+	b=S6b66dYW5UmuzZzzxQUd4Nz6V5DiKAw4B4fEjAOl+hFLVzbTJD0Iq0BqYle9/g/Na
+	 VOK7mpIbYJkLjQSDtkbdBYfMMl25hlc5OEJIdEKObh7mSPgc6W1OIwXjzHkQFoW4ko
+	 HhGcBfV1qdgQO6JhQ7QXwrvagRPq6kswT17uJ3tA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbfK0UyV (ORCPT
+        id S1730845AbfK0Uyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:54:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44130 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:54:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730814AbfK0UyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:54:18 -0500
+        id S1730217AbfK0Uy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:54:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 051B62086A;
-        Wed, 27 Nov 2019 20:54:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B82882068E;
+        Wed, 27 Nov 2019 20:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888057;
-        bh=/owAWAfWpzYBTAYkM82lVwXJD9Kz4nA/JxzbBtagY9I=;
+        s=default; t=1574888067;
+        bh=ko3HWEy/TZ9rGK9fbIkAGtJvW2gFlpppAAw0vmTRqus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yqcTOVvjDeEDuqRNvBMphExFLh1HJnNlCol/EuVSucQWTguhmBaU1H1xAYvLwuGlc
-         dgKg/CaAhviPFgQbCZwbOsvjro8MvvgxXy8r6SUmwwD8d2miSZWgS4bIeOm3AmgNkx
-         Hx0FCZEe3gXE2XTklVvfx/c5PF70Yw64hHsdfLWw=
+        b=Qu46h76+I8n1PsD6/NBPQNfoH3c7GnHwIjt7rPVwZ7U5a+BqHE5NLwvTtlr16+CF4
+         xGT7PGd329ITZHO0YqYXTMjyWT0PivWM0GRgH5VVO0iwtJUWXQAOa4tHrgk/2P6AcP
+         0NHkc5et8CMU3+Oo//TgP/mdSXb8X9qeq4y2cVSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org
-Subject: [PATCH 4.14 182/211] x86/cpu_entry_area: Add guard page for entry stack on 32bit
-Date:   Wed, 27 Nov 2019 21:31:55 +0100
-Message-Id: <20191127203110.976968442@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 203/211] USB: serial: mos7720: fix remote wakeup
+Date:   Wed, 27 Nov 2019 21:32:16 +0100
+Message-Id: <20191127203112.737674756@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -59,41 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit 880a98c339961eaa074393e3a2117cbe9125b8bb upstream.
+commit ea422312a462696093b5db59d294439796cba4ad upstream.
 
-The entry stack in the cpu entry area is protected against overflow by the
-readonly GDT on 64-bit, but on 32-bit the GDT needs to be writeable and
-therefore does not trigger a fault on stack overflow.
+The driver was setting the device remote-wakeup feature during probe in
+violation of the USB specification (which says it should only be set
+just prior to suspending the device). This could potentially waste
+power during suspend as well as lead to spurious wakeups.
 
-Add a guard page.
+Note that USB core would clear the remote-wakeup feature at first
+resume.
 
-Fixes: c482feefe1ae ("x86/entry/64: Make cpu_entry_area.tss read-only")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@kernel.org
+Fixes: 0f64478cbc7a ("USB: add USB serial mos7720 driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.19
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/cpu_entry_area.h |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/usb/serial/mos7720.c |    4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/arch/x86/include/asm/cpu_entry_area.h
-+++ b/arch/x86/include/asm/cpu_entry_area.h
-@@ -20,8 +20,12 @@ struct cpu_entry_area {
+--- a/drivers/usb/serial/mos7720.c
++++ b/drivers/usb/serial/mos7720.c
+@@ -1905,10 +1905,6 @@ static int mos7720_startup(struct usb_se
+ 	product = le16_to_cpu(serial->dev->descriptor.idProduct);
+ 	dev = serial->dev;
  
- 	/*
- 	 * The GDT is just below entry_stack and thus serves (on x86_64) as
--	 * a a read-only guard page.
-+	 * a read-only guard page. On 32-bit the GDT must be writeable, so
-+	 * it needs an extra guard page.
- 	 */
-+#ifdef CONFIG_X86_32
-+	char guard_entry_stack[PAGE_SIZE];
-+#endif
- 	struct entry_stack_page entry_stack_page;
+-	/* setting configuration feature to one */
+-	usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+-			(__u8)0x03, 0x00, 0x01, 0x00, NULL, 0x00, 5000);
+-
+ 	if (product == MOSCHIP_DEVICE_ID_7715) {
+ 		struct urb *urb = serial->port[0]->interrupt_in_urb;
  
- 	/*
 
 
