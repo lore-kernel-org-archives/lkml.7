@@ -2,207 +2,142 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3DFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA77C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 038AB2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46A22080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 19:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vIGB6nuy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfK0TdF (ORCPT
+        id S1727843AbfK0TdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 14:33:05 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54600 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727389AbfK0TdE (ORCPT
+        Wed, 27 Nov 2019 14:33:15 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43184 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbfK0TdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 14:33:04 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARJWslF037495
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 14:33:02 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxqpgfg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 14:33:02 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 27 Nov 2019 19:33:00 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 27 Nov 2019 19:32:57 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARJWuS458196162
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 19:32:56 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8A3B011C052;
-        Wed, 27 Nov 2019 19:32:56 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 74A1711C050;
-        Wed, 27 Nov 2019 19:32:55 +0000 (GMT)
-Received: from dhcp-9-31-103-87.watson.ibm.com (unknown [9.31.103.87])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Nov 2019 19:32:55 +0000 (GMT)
-Subject: Re: [PATCH v9 6/6] IMA: Read keyrings= option from the IMA policy
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Wed, 27 Nov 2019 14:32:54 -0500
-In-Reply-To: <20191127015654.3744-7-nramas@linux.microsoft.com>
-References: <20191127015654.3744-1-nramas@linux.microsoft.com>
-         <20191127015654.3744-7-nramas@linux.microsoft.com>
+        Wed, 27 Nov 2019 14:33:14 -0500
+Received: by mail-lf1-f67.google.com with SMTP id l14so18090616lfh.10;
+        Wed, 27 Nov 2019 11:33:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RSx7OTjw0zpOYqU/X0SJ0HyqOXCDIW8v0m9WjClqi/s=;
+        b=vIGB6nuya7dBARFwL6uh1DiYOzq9Jys1GzivJONLdY04SYXv4UC7ZOPhw6WqAfC23n
+         LPrzYDsE++IHWb7q3NQQIcJtb6xVjkXFvTfth888vv+nGy7XUk9U6qqNDztXIP3064re
+         JCJQmGmKlGV3vYma9bj19BRsJarwG16feKZZm1gh+bhg8BqI79uYYLZPy9CtybMu/la+
+         qHry2xprY9N581HzFYnT/E1QdgTBgANf+KFi8bhSVhTrNGnaYIhGqzuEbfGLWdFut48J
+         q1C6unGkgI3hjK2QsgjQeJ9MqH8gzcNTN2IkjcFfTp3gdaMGBCX6ShmxnOAYooUbCz8s
+         9QAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RSx7OTjw0zpOYqU/X0SJ0HyqOXCDIW8v0m9WjClqi/s=;
+        b=J6z7czPM1xNMWvOuzgXnUfHcdK06Ia/RgUk6455NR729eLoFJSmxy6fObSzBtgPfi3
+         m0C/HqijyRPK6IpFhmva3S+3x0vztC8JNJnPiY+KPRovPtMgm8Y2xZAk+wkzdtY/yCbB
+         krrp9kMzZcqaNssctInAz7tDPzVDOUz0shxKlKeYFqYv3Ma/CUsicpH3aV01Py96Ixru
+         0NQ5F4jcHX50h1iXmRqndTkAyDu42BFKh6lp8uSQVyztXElh9J5u6RWwJ1mt5qBfjGTm
+         sSu5tx4nyoAaF0X/6jvh04V1Wxq2Dvx3Z+AIweQvD/P0XL/P6KUoop1g9OhgVZ0XyOEu
+         UlKw==
+X-Gm-Message-State: APjAAAW5jP0hA6mtklvwFUJhxVq8rXZazWISR/WoYf3n3fBRKrfbEg1z
+        9ZYwVuosS0dzphILHWLrkH+O47kQm/drXPQBRTOvEg==
+X-Google-Smtp-Source: APXvYqy7HPCiJyTFwTniD3JzD0iem2k+Ybd0glPQhP2ykdIub0GuS7FZOgktbwp0EhMv0fROSauC/ZqH+aDJTAlO9GE=
+X-Received: by 2002:a19:888:: with SMTP id 130mr20156546lfi.167.1574883191745;
+ Wed, 27 Nov 2019 11:33:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20191126183451.GC29071@kernel.org> <87d0dexyij.fsf@toke.dk>
+ <20191126190450.GD29071@kernel.org> <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
+ <20191126221018.GA22719@kernel.org> <20191126221733.GB22719@kernel.org>
+ <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+ <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net> <20191126155228.0e6ed54c@cakuba.netronome.com>
+ <20191127013901.GE29071@kernel.org> <20191127134553.GC22719@kernel.org>
+In-Reply-To: <20191127134553.GC22719@kernel.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 27 Nov 2019 11:33:00 -0800
+Message-ID: <CAADnVQ+Hgqg0Pi0GRrRw-fwySbMiYVNwdgvTqOtRTRJPAnEhcQ@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on
+ 32-bit arches
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19112719-0008-0000-0000-000003391467
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112719-0009-0000-0000-00004A581E18
-Message-Id: <1574883174.4793.318.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 clxscore=1015 adultscore=0 suspectscore=3
- phishscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-26 at 17:56 -0800, Lakshmi Ramasubramanian wrote:
-> Read "keyrings=" option, if specified in the IMA policy, and store in
-> the list of IMA rules when the configured IMA policy is read.
-> 
-> This patch defines a new policy token enum namely Opt_keyrings
-> and an option flag IMA_KEYRINGS for reading "keyrings=" option
-> from the IMA policy.
-> 
-> Updated ima_parse_rule() to parse "keyrings=" option in the policy.
-> Updated ima_policy_show() to display "keyrings=" option.
-> 
-> The following example illustrates how key measurement can be verified.
+On Wed, Nov 27, 2019 at 5:45 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Another fix I'm carrying in my perf/core branch,
+>
+> Regards,
+>
+> - Arnaldo
+>
+> commit 98bb09f90a0ae33125fabc8f41529345382f1498
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Wed Nov 27 09:26:54 2019 -0300
+>
+>     libbpf: Use PRIu64 for sym->st_value to fix build on 32-bit arches
+>
+>     The st_value field is a 64-bit value, so use PRIu64 to fix this error on
+>     32-bit arches:
+>
+>       In file included from libbpf.c:52:
+>       libbpf.c: In function 'bpf_program__record_reloc':
+>       libbpf_internal.h:59:22: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'Elf64_Addr' {aka 'const long long unsigned int'} [-Werror=format=]
+>         libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+>                             ^~~~~~~~~~
+>       libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+>        #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+>                                  ^~~~
+>       libbpf.c:1822:4: note: in expansion of macro 'pr_warn'
+>           pr_warn("bad call relo offset: %lu\n", sym->st_value);
+>           ^~~~~~~
+>       libbpf.c:1822:37: note: format string is defined here
+>           pr_warn("bad call relo offset: %lu\n", sym->st_value);
+>                                          ~~^
+>                                          %llu
+>
+>     Fixes: 1f8e2bcb2cd5 ("libbpf: Refactor relocation handling")
+>     Cc: Alexei Starovoitov <ast@kernel.org>
+>     Cc: Andrii Nakryiko <andriin@fb.com>
+>     Link: https://lkml.kernel.org/n/tip-iabs1wq19c357bkk84p7blif@git.kernel.org
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index b20f82e58989..6b0eae5c8a94 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -1819,7 +1819,7 @@ static int bpf_program__record_reloc(struct bpf_program *prog,
+>                         return -LIBBPF_ERRNO__RELOC;
+>                 }
+>                 if (sym->st_value % 8) {
+> -                       pr_warn("bad call relo offset: %lu\n", sym->st_value);
+> +                       pr_warn("bad call relo offset: %" PRIu64 "\n", sym->st_value);
 
-The example is really too colloquial/verbose.  Please truncate it,
-leaving just a sample "key" policy rule, with directions for verifying
-the template data against the digest included in the measurement list.
-
-> 
-> Sample IMA Policy entry to measure keys
-> (Added in the file /etc/ima/ima-policy):
-
-Remove the above.
-
-Sample "key" measurement rule:
-
-> measure func=KEY_CHECK keyrings=.ima|.evm template=ima-buf
-> 
-> Build the kernel with this patch set applied and reboot to that kernel.
-> 
-> Ensure the IMA policy is applied:
-> 
-> root@nramas:/home/nramas# cat /sys/kernel/security/ima/policy
-> measure func=KEY_CHECK keyrings=.ima|.evm template=ima-buf
-> 
-> View the initial IMA measurement log:
-> 
-> root@nramas:/home/nramas
-> # cat /sys/kernel/security/ima/ascii_runtime_measurements
-> 10 67ec... ima-ng sha1:b5466c508583f0e633df83aa58fc7c5b67ccf667 boot_aggregate
-> 
-> Now, add a certificate (for example, x509_ima.der) to the .ima keyring
-> using evmctl (IMA-EVM Utility)
-> 
-> root@nramas:/home/nramas# keyctl show %:.ima
-> Keyring
->  547515640 ---lswrv      0     0  keyring: .ima
-> 
-> root@nramas:/home/nramas# evmctl import x509_ima.der 547515640
-> 
-> root@nramas:/home/nramas# keyctl show %:.ima
-> Keyring
->  547515640 ---lswrv      0     0  keyring: .ima
->  809678766 --als--v      0     0   \_ asymmetric: hostname: whoami signing key: 052dd247dc3c36...
-> 
-> View the updated IMA measurement log:
-> 
-> root@nramas:/home/nramas#
-
-Remove everything up to here and simply say something like:
-
-Display "key" measurement in the IMA measurement list:
-
-> # cat /sys/kernel/security/ima/ascii_runtime_measurements
-
-> 10 3adf... ima-buf
-> sha256:27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3
-> b7b .ima 308202863082...4aee
-
-
-> root@nramas:/home/nramas#
-
-Remove this string from all the commands.
-> 
-> For this sample, SHA256 should be selected as the hash algorithm
-> used by IMA.
-> 
-> The following command verifies if the SHA256 hash generated from
-> the payload in the IMA log entry (listed above) for the .ima key
-> matches the SHA256 hash in the IMA log entry. The output of this
-> command should match the SHA256 hash given in the IMA log entry
-> (In this case, it should be
-> 27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b)
-
-Previously you didn't use the hash value, but ".ima" to locate the
-"key" measurement in the measurement list.  In each of the commands
-above, it might be clearer.
-
-> 
-> root@nramas:/home/nramas
-
-ditto
-
-> # cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements
-> | grep
-> 27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b | 
-
-> cut -d' ' -f 6 | xxd -r -p |tee ima-cert.der | sha256sum | cut -d' '
-> -f 1
-> 
-> The above command also creates a binary file namely ima-cert.der
-> using the payload in the IMA log entry. This file should be a valid
-> x509 certificate which can be verified using openssl as given below:
-> 
-> root@nramas:/home/nramas
-
-ditto
-
-
-> # openssl x509 -in ima-cert.der -inform DER -text
-> 
-> The above command should display the contents of the file ima-cert.der
-> as an x509 certificate.
-
-Either the comments should be above or below the commands, not both.
-
-> 
-> The IMA policy used here allows measurement of keys added to
-> ".ima" and ".evm" keyrings only. Add a key to any other keyring and
-> verify that the key is not measured.
-
-This comment would be included, if desired, when defining the policy
-rule, not here.
-
-Mimi
-
+Looking at this more... I never liked this PRI stuff. It makes for
+such unreadable code.
+How about just typecasting st_value to (long) ?
