@@ -2,133 +2,143 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011F7C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A9FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF972086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8721C2051A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 23:40:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YSSbTi4E"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lMUaEIEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfK0XjI (ORCPT
+        id S1727430AbfK0XkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 18:39:08 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50031 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfK0XjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 18:39:07 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Ncft6Qqwz9sS3;
-        Thu, 28 Nov 2019 10:39:02 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574897942;
-        bh=w1LH2k7ptcCnsILry43RjKE7GrL+RUe5GvbJ+pVWI90=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YSSbTi4EBv6SnIAsOHKbWnAauiXvBEnhcXECQzBW7mvN0snKeIsNidprQXb4hnuIr
-         7CP/gK2shdcjEojCvQeSOMs/CjoAOXmmLT01ne8hyIAs6dc2RXRX+ad53FmA6Uj21r
-         yMLW/CzjGsl5AIrUjnwu4fWiIsMXLlnyhxjZLLLdo7tEA9i52LxR2wLWMw6dvXlekh
-         SxKH4AW72rJkjJfENca4Q7OGsXGk/THSXmq2g5Fs/1l2fNXoWLN/P9/lsXbJKjv1n4
-         e9pPHflYBUja1KWL+azipkL30xXCSbS0qyXKloGf3VM/12XUpSsUwjJqFg8D34m1UE
-         DzyRR92B4UeCA==
-Date:   Thu, 28 Nov 2019 10:39:02 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>, Qian Cai <cai@lca.pw>,
-        Linus <torvalds@linux-foundation.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20191128103902.658e2a14@canb.auug.org.au>
-In-Reply-To: <20191106135340.3fa45898@canb.auug.org.au>
-References: <20191010131448.482da2b2@canb.auug.org.au>
-        <20191106135340.3fa45898@canb.auug.org.au>
+        Wed, 27 Nov 2019 18:40:02 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:47003 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbfK0XkC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 18:40:02 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 193so12006417pfc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 15:40:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=raddepcS3XU/VKmJZp7vh07W9acc4obuzJakh7dtDEc=;
+        b=lMUaEIEF/K8o7ISuIzD701KA5iJfJ5QQN3kOxf7daHFO90oqdvjU4qDL035s5iaUAD
+         HJIO+RQjstGi9TvP3WvYABOU07+/BCQR89mGYmIH7ddA/VTBp/T8VKn2xcp5EdsMrJqg
+         HmJmg9meuWINbhZq9L8OXg6SYEMQuUOiDZjlQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=raddepcS3XU/VKmJZp7vh07W9acc4obuzJakh7dtDEc=;
+        b=UkTMyC3OB+eIZQDEs6nW/CqRSCIA8eD5ytqMCOG68HVFAGT6MiX+OhDkX76MB1XBo1
+         xZQSmRgW02TU+0BGu501PlrXdA9gM9g4mV2HfqdkQ9YzUcWGIQIoJk9xii91mdJvUKWQ
+         RBoQ1VP14nfWcfI3YQEvibTsMP7kDHCTEWs6EQYxen1AbqDyFw03Q/yogX4ag3F/fk6T
+         eYz+0iZK39I8HDb6UQbbSbQPRugiHNJCLwo/UlfSrFfOSwT+/YEYrRUe+oSzBGGE5rdF
+         HkY0MdFLRer89UT1Ta+PLgQu0uhh+s2uIo0JizIgUSOd/X2HqTyPTKnvDYRrjPzv1zpk
+         dqoQ==
+X-Gm-Message-State: APjAAAXDBNE9qXBKRxwkRdcEb8WzeQmKiXRCfGhbPBOvr20ALoszVAg3
+        mB29WOllKMKBUyxMOfbTYei/2g==
+X-Google-Smtp-Source: APXvYqypr/l+jjqzsq81qEK0oqfxAiDdCm613PhZMl4MTaSlBPa6Q24tTOmN+mvg8FpR1scT/s6jDQ==
+X-Received: by 2002:aa7:9465:: with SMTP id t5mr6471353pfq.18.1574898001530;
+        Wed, 27 Nov 2019 15:40:01 -0800 (PST)
+Received: from google.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id k13sm17737283pgl.69.2019.11.27.15.40.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 15:40:00 -0800 (PST)
+Date:   Wed, 27 Nov 2019 15:39:58 -0800
+From:   Brian Norris <briannorris@chromium.org>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH] wireless: Use offsetof instead of custom macro.
+Message-ID: <20191127233957.GA217817@google.com>
+References: <20190418075016.252988-1-pihsun@chromium.org>
+ <CANMq1KCwcVawg6L1hTKXBgBi66EKdHQrvxr_chR9Kv1ifFREnA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SRXdzPhxahcd.RHlGpCCP=T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANMq1KCwcVawg6L1hTKXBgBi66EKdHQrvxr_chR9Kv1ifFREnA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SRXdzPhxahcd.RHlGpCCP=T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
++ linux-wireless
 
-Hi all,
+[Top-posting because the important stuff is up here, and the rest is
+missing from linux-wireless]
 
-On Wed, 6 Nov 2019 13:53:40 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Hi all,
->=20
-> On Thu, 10 Oct 2019 13:14:48 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
+Hey Pi-Hsun, Nicolas: you failed to copy linux-wireless, so no one's
+going to pick this patch up. Please re-send if you care.
+
+Regards,
+Brian
+
+On Thu, May 02, 2019 at 03:56:33PM +0800, Nicolas Boichat wrote:
+> On Thu, Apr 18, 2019 at 3:50 PM Pi-Hsun Shih <pihsun@chromium.org> wrote:
 > >
-> > I added the following merge fix patch for today:
-> >  =20
->=20
-> This patch is now just:
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Thu, 10 Oct 2019 13:08:43 +1100
-> Subject: [PATCH] drm/i915: update for mutex_release API change
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/gpu/drm/i915/i915_active.c    | 2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/i915/i915_active.c b/drivers/gpu/drm/i915/i9=
-15_active.c
-> index aa37c07004b9..a47387174434 100644
-> --- a/drivers/gpu/drm/i915/i915_active.c
-> +++ b/drivers/gpu/drm/i915/i915_active.c
-> @@ -385,7 +385,7 @@ void i915_active_set_exclusive(struct i915_active *re=
-f, struct dma_fence *f)
->  	mutex_acquire(&ref->mutex.dep_map, 0, 0, _THIS_IP_);
->  	if (!__i915_active_fence_set(&ref->excl, f))
->  		atomic_inc(&ref->count);
-> -	mutex_release(&ref->mutex.dep_map, 0, _THIS_IP_);
-> +	mutex_release(&ref->mutex.dep_map, _THIS_IP_);
->  }
-> =20
->  bool i915_active_acquire_if_busy(struct i915_active *ref)
-> --=20
-> 2.23.0
-
-This merge fix patch is now needed for the merge between the drm tree
-and Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/SRXdzPhxahcd.RHlGpCCP=T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3fCRYACgkQAVBC80lX
-0Gybgwf+O6nFUE7lTsaL1+COw7BFmjwftB8S6FHMm61I6xICZcYb60/ByuZqIdjc
-Koi3o90c7FiZ6HAUwMEiv+uoFtpf2X3SToTR64IGMNZ3YhYLuckt4Gd81dwuRu3y
-1AJPxfvswRRihJCyVrtHtOiDaHSoX56WQ8u+0pj6JNz2SC5n6tc7vym4vQ1IicQ6
-/HyUA9C9Cf412RreJBu8Iosn/ec2lySsVLplmwqEXKZAgbAZUjwL5FmJrcsWPOy7
-+Y6uQqNtj9Vxgion2a+yzAFOavqL2HzeyOVgXBKkIVwIRhavmKwwml9TI2jSssXI
-k3T0CiDT2B6BF2IJP6XqFyngeIEyyg==
-=GNgk
------END PGP SIGNATURE-----
-
---Sig_/SRXdzPhxahcd.RHlGpCCP=T--
+> > Use offsetof to calculate offset of a field to take advantage of
+> > compiler built-in version when possible, and avoid UBSAN warning when
+> > compiling with Clang:
+> >
+> > ==================================================================
+> > UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
+> > member access within null pointer of type 'struct iw_point'
+> > CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
+> > Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
+> > Call trace:
+> >  dump_backtrace+0x0/0x194
+> >  show_stack+0x20/0x2c
+> >  __dump_stack+0x20/0x28
+> >  dump_stack+0x70/0x94
+> >  ubsan_epilogue+0x14/0x44
+> >  ubsan_type_mismatch_common+0xf4/0xfc
+> >  __ubsan_handle_type_mismatch_v1+0x34/0x54
+> >  wireless_send_event+0x3cc/0x470
+> >  ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
+> >  __cfg80211_scan_done+0x28/0x34 [cfg80211]
+> >  process_one_work+0x170/0x35c
+> >  worker_thread+0x254/0x380
+> >  kthread+0x13c/0x158
+> >  ret_from_fork+0x10/0x18
+> > ===================================================================
+> >
+> > Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> 
+> The warning from clang is spurious, but in another case, we felt that
+> the cleanup was worth it, nevertheless
+> (https://lore.kernel.org/patchwork/patch/1050040/).
+> 
+> Reviewed-By: Nicolas Boichat <drinkcat@chromium.org>
+> 
+> > ---
+> >  include/uapi/linux/wireless.h | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/include/uapi/linux/wireless.h b/include/uapi/linux/wireless.h
+> > index 86eca3208b6b..f259cca5cc2b 100644
+> > --- a/include/uapi/linux/wireless.h
+> > +++ b/include/uapi/linux/wireless.h
+> > @@ -1090,8 +1090,7 @@ struct iw_event {
+> >  /* iw_point events are special. First, the payload (extra data) come at
+> >   * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
+> >   * we omit the pointer, so start at an offset. */
+> > -#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
+> > -                         (char *) NULL)
+> > +#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
+> >  #define IW_EV_POINT_LEN        (IW_EV_LCP_LEN + sizeof(struct iw_point) - \
+> >                          IW_EV_POINT_OFF)
+> >
+> > --
+> > 2.21.0.392.gf8f6787159e-goog
+> >
