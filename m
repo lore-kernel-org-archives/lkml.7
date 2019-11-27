@@ -2,71 +2,118 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDBBC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A14FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEEB92075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF232075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:40:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574890844;
+	bh=uOQtTCLHEwtW2ut6Q0nPb0g093HpDJgAfOS0CS1GpVI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Fj80TUVPN5mY5eItRMNrkCC/ZSL/YUNs3nCXObsm5Ma/eCj46WMe694qwl6btPcXs
+	 Z1F5DlVla4IOppl4WOq8RyPtKJ7/3kYUaPeqlFxdpMAU/qSYDWnqsxOtuUNX53mM73
+	 FM4ANTBP3/sAVxWHoSOGQXtonRtwO4N+aCpyWwl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbfK0Vkg (ORCPT
+        id S1729741AbfK0Vkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:40:36 -0500
-Received: from smtprelay0087.hostedemail.com ([216.40.44.87]:35187 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729348AbfK0Umm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:42:42 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 1F9C6837F24D;
-        Wed, 27 Nov 2019 20:42:40 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: screw31_34379b223a41f
-X-Filterd-Recvd-Size: 1759
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 27 Nov 2019 16:40:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729345AbfK0Umk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:42:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4C3E21787;
         Wed, 27 Nov 2019 20:42:38 +0000 (UTC)
-Message-ID: <80168e5bebedeb64e999ed11d8479846270bd3d7.camel@perches.com>
-Subject: Re: [PATCH 04/16] dyndbg: rename __verbose section to __dyndbg
-From:   Joe Perches <joe@perches.com>
-To:     Jim Cromie <jim.cromie@gmail.com>, jbaron@akamai.com,
-        linux-kernel@vger.kernel.org
-Cc:     linux@rasmusvillemoes.dk, greg@kroah.com,
-        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
-        linux-arch@vger.kernel.org
-Date:   Wed, 27 Nov 2019 12:42:12 -0800
-In-Reply-To: <20191127175051.1351346-1-jim.cromie@gmail.com>
-References: <20191127175051.1351346-1-jim.cromie@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574887359;
+        bh=uOQtTCLHEwtW2ut6Q0nPb0g093HpDJgAfOS0CS1GpVI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xF7guyWLGVGrTPmCxHpslmFtoXAUeRdkc82UQOrOmF7o/nkDMIEn2qi7iVcQAvvaF
+         kCZ7u5Ihzd1c3g8VbjHp/2ByVtaaVJ0hyrjdXH67oOw1Qlpko72uwyzCvpucjuklFm
+         ENQVn3jsf1nFxQDM2LGUQ8W87n9TLmy9jYhO+icw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 081/151] igb: shorten maximum PHC timecounter update interval
+Date:   Wed, 27 Nov 2019 21:31:04 +0100
+Message-Id: <20191127203035.945658108@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
+References: <20191127203000.773542911@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-27 at 10:50 -0700, Jim Cromie wrote:
-> dyndbg populates its callsite info into __verbose section, change that
-> to a more specific and descriptive name, __dyndbg.
-[]
-> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-[]
-> @@ -1040,7 +1040,7 @@ static int __init dynamic_debug_init(void)
->  	ddebug_init_success = 1;
->  	vpr_info("%d modules, %d entries and %d bytes in ddebug tables, %d bytes in (readonly) verbose section\n",
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-This format should also change verbose to dyndbg
-Maybe the ddebug word too
+[ Upstream commit 094bf4d0e9657f6ea1ee3d7e07ce3970796949ce ]
 
->  		 modct, entries, (int)(modct * sizeof(struct ddebug_table)),
-> -		 verbose_bytes + (int)(__stop___verbose - __start___verbose));
-> +		 verbose_bytes + (int)(__stop___dyndbg - __start___dyndbg));
->  
->  	/* apply ddebug_query boot param, dont unload tables on err */
->  	if (ddebug_setup_string[0] != '\0') {
+The timecounter needs to be updated at least once per ~550 seconds in
+order to avoid a 40-bit SYSTIM timestamp to be misinterpreted as an old
+timestamp.
+
+Since commit 500462a9d ("timers: Switch to a non-cascading wheel"),
+scheduling of delayed work seems to be less accurate and a requested
+delay of 540 seconds may actually be longer than 550 seconds. Shorten
+the delay to 480 seconds to be sure the timecounter is updated in time.
+
+This fixes an issue with HW timestamps on 82580/I350/I354 being off by
+~1100 seconds for few seconds every ~9 minutes.
+
+Cc: Jacob Keller <jacob.e.keller@intel.com>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/intel/igb/igb_ptp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/intel/igb/igb_ptp.c b/drivers/net/ethernet/intel/igb/igb_ptp.c
+index 9eb9b68f8935e..ae1f963b60923 100644
+--- a/drivers/net/ethernet/intel/igb/igb_ptp.c
++++ b/drivers/net/ethernet/intel/igb/igb_ptp.c
+@@ -65,9 +65,15 @@
+  *
+  * The 40 bit 82580 SYSTIM overflows every
+  *   2^40 * 10^-9 /  60  = 18.3 minutes.
++ *
++ * SYSTIM is converted to real time using a timecounter. As
++ * timecounter_cyc2time() allows old timestamps, the timecounter
++ * needs to be updated at least once per half of the SYSTIM interval.
++ * Scheduling of delayed work is not very accurate, so we aim for 8
++ * minutes to be sure the actual interval is shorter than 9.16 minutes.
+  */
+ 
+-#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
++#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 8)
+ #define IGB_PTP_TX_TIMEOUT		(HZ * 15)
+ #define INCPERIOD_82576			BIT(E1000_TIMINCA_16NS_SHIFT)
+ #define INCVALUE_82576_MASK		GENMASK(E1000_TIMINCA_16NS_SHIFT - 1, 0)
+-- 
+2.20.1
+
+
 
