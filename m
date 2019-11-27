@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92A3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD07C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7715A2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C33A216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887079;
-	bh=hWh3MJgtSF6MPAlyllax6M1ln9gZGf9IbFTKoRAXIJc=;
+	s=default; t=1574887084;
+	bh=lq0PX3Vu7TeZOispeOZS+KeWZBBffeqQ/ZHaoCr8Tbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zewKjoHvErRT9pR/Gv+SJxyDGQ8YkXVH8I+scjb2mLWxlj83MVYZXIlfMfl8XWLVb
-	 DkNt+OZ47LtVF8N5tXCdKslaauRieUQAbQTBJFXmsUjz3cXuZ1CQFu75z30zRh2DM4
-	 /CYHQUAyOStuXc/GMluM3wqUGebgNB7J7MONGw+M=
+	b=v0FeEY3YGov7rD3XUkVmnxfcEQcNQzrRpFrkkGKndiWvUQLdOarTmUIgwUIKZY6ls
+	 ST3/PqJyJhJ4JZZBFjJSUvohmQBrVxBPuknLK0P32tAbtj1BeirqPb5mUI6QObo/K1
+	 EjQLoYXNm6FcriZGg30030j443yQs8FFaYasqe6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfK0Uh5 (ORCPT
+        id S1727783AbfK0UiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:37:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41098 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:38:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728644AbfK0Uhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:37:53 -0500
+        id S1728644AbfK0Uh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:37:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52C6A215A5;
-        Wed, 27 Nov 2019 20:37:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B3BD217AB;
+        Wed, 27 Nov 2019 20:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887072;
-        bh=hWh3MJgtSF6MPAlyllax6M1ln9gZGf9IbFTKoRAXIJc=;
+        s=default; t=1574887077;
+        bh=lq0PX3Vu7TeZOispeOZS+KeWZBBffeqQ/ZHaoCr8Tbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1CJF0W2nNustdHEnzUf3URtiFtBzbAkrIsdEzm7Cq3RyMDmdKmT1qVwnoTcYB0GNH
-         3+xa3z1KL/os5gV+EtMsVJJWi3itfAmL9b/xc1xAjK/fcE3/lGtt7IR27KvwGllKxb
-         2DC/Fej77w4knqi3EwCNuxLg3TwD+30o+nKdVBIY=
+        b=lGdEfx6Q7o1AFzUXjcUDbmTq6FrHxW2n9AiqeUW1MPgF5PLoDpVP5QCzJq4BZ6KrL
+         Ubc6uWyxt35p+IUFv20C/zJ6BHY4gx5scqTxKGYdoowOb5phYeU4hKYpBF//3eiwGR
+         4zRU6tkGXmJWehkfDeskvrd2P1tM70p4+0vmIjNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bart Van Assche <bart.vanassche@sandisk.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Bo Yan <byan@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.4 101/132] dm: use blk_set_queue_dying() in __dm_destroy()
-Date:   Wed, 27 Nov 2019 21:31:32 +0100
-Message-Id: <20191127203024.070462973@linuxfoundation.org>
+Subject: [PATCH 4.4 103/132] cpufreq: Skip cpufreq resume if its not suspended
+Date:   Wed, 27 Nov 2019 21:31:34 +0100
+Message-Id: <20191127203025.194756012@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 References: <20191127202857.270233486@linuxfoundation.org>
@@ -61,36 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bart.vanassche@sandisk.com>
+From: Bo Yan <byan@nvidia.com>
 
-commit 2e91c3694181dc500faffec16c5aaa0ac5e15449 upstream.
+commit 703cbaa601ff3fb554d1246c336ba727cc083ea0 upstream.
 
-After QUEUE_FLAG_DYING has been set any code that is waiting in
-get_request() should be woken up.  But to get this behaviour
-blk_set_queue_dying() must be used instead of only setting
-QUEUE_FLAG_DYING.
+cpufreq_resume can be called even without preceding cpufreq_suspend.
+This can happen in following scenario:
 
-Signed-off-by: Bart Van Assche <bart.vanassche@sandisk.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+    suspend_devices_and_enter
+       --> dpm_suspend_start
+          --> dpm_prepare
+              --> device_prepare : this function errors out
+          --> dpm_suspend: this is skipped due to dpm_prepare failure
+                           this means cpufreq_suspend is skipped over
+       --> goto Recover_platform, due to previous error
+       --> goto Resume_devices
+       --> dpm_resume_end
+           --> dpm_resume
+               --> cpufreq_resume
+
+In case schedutil is used as frequency governor, cpufreq_resume will
+eventually call sugov_start, which does following:
+
+    memset(sg_cpu, 0, sizeof(*sg_cpu));
+    ....
+
+This effectively erases function pointer for frequency update, causing
+crash later on. The function pointer would have been set correctly if
+subsequent cpufreq_add_update_util_hook runs successfully, but that
+function returns earlier because cpufreq_suspend was not called:
+
+    if (WARN_ON(per_cpu(cpufreq_update_util_data, cpu)))
+		return;
+
+The fix is to check cpufreq_suspended first, if it's false, that means
+cpufreq_suspend was not called in the first place, so do not resume
+cpufreq.
+
+Signed-off-by: Bo Yan <byan@nvidia.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+[ rjw: Dropped printing a message ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/cpufreq/cpufreq.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -2939,9 +2939,7 @@ static void __dm_destroy(struct mapped_d
- 	set_bit(DMF_FREEING, &md->flags);
- 	spin_unlock(&_minor_lock);
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1627,6 +1627,9 @@ void cpufreq_resume(void)
+ 	if (!cpufreq_driver)
+ 		return;
  
--	spin_lock_irq(q->queue_lock);
--	queue_flag_set(QUEUE_FLAG_DYING, q);
--	spin_unlock_irq(q->queue_lock);
-+	blk_set_queue_dying(q);
++	if (unlikely(!cpufreq_suspended))
++		return;
++
+ 	cpufreq_suspended = false;
  
- 	if (dm_request_based(md) && md->kworker_task)
- 		flush_kthread_worker(&md->kworker);
+ 	if (!has_target())
 
 
