@@ -2,311 +2,140 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ECAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A11C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E41E2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5891D2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 11:51:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZFSHVlOV";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="B+jawMYK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iFRDAi7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfK0LuH (ORCPT
+        id S1727017AbfK0Lv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 06:50:07 -0500
-Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:39426
-        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726514AbfK0LuH (ORCPT
+        Wed, 27 Nov 2019 06:51:58 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52734 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726556AbfK0Lv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 06:50:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574855406;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=WlDrsgCVCWDXLmGPBhA+0beAWE9MAihheycKfW6qYJs=;
-        b=ZFSHVlOVJuuRKRGvtkPkII4NRtJv6Rg9FcYTL8aI43e0/H8gKBBJHu/I/0W4/huG
-        ENQBp7bBsFjQvouZDzjud2FzOQF7XvTFuPGeY/fJL+VrNhx3d19l/zln+ncjYSqPijk
-        x6kZFzOb3eoSxBToLzV56cPykinzoWqMA+R4W4Cg=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574855406;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=WlDrsgCVCWDXLmGPBhA+0beAWE9MAihheycKfW6qYJs=;
-        b=B+jawMYKTTMs8++BSnHDGEgV4hoWZf51MCZSbXmrcPSrN/Pkh92CVotkuCxWWzki
-        ykEVY1uhC42NtcUyGY7+BQrPYnM1JcP8vRUWypgEMjPAF465ngblyAYEd+Kzsg0dENs
-        B8wijC8gOg/bVX7wxSl4JRc1+h+ahaqg+WbAaRrA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 08AD3C447B1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH V1 2/2] arm64: dts: qcom: sc7180: Add nodes for eMMC and SD card
-Date:   Wed, 27 Nov 2019 11:50:06 +0000
-Message-ID: <0101016eacb27366-31803877-9137-4c0e-922b-6a71a0e63ab3-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1574855381-15193-1-git-send-email-vbadigan@codeaurora.org>
-References: <1574855381-15193-1-git-send-email-vbadigan@codeaurora.org>
-X-SES-Outgoing: 2019.11.27-54.240.27.55
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Wed, 27 Nov 2019 06:51:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574855517;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/XhIGMtsi7KjLuMFks8eIn7a7OR+crqiPZAFOU/Qxss=;
+        b=iFRDAi7XhSv2bcOJ+Ffw0LowCrf4yFK4HhrIA73B7bKD8SE1LqZVID+ilrKeX0QLAu0BdY
+        RbvvGZmX4WAEXIG4nXqlq4SFOJDImwK65lEAQrMkOPecvTKLqCXfYT6h3y2i6+QKOUAWf/
+        GunixtYqp8VOss5xH1bWyY/hOGHle48=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-lyJ-O4l_OLaQEc0p2RyDOg-1; Wed, 27 Nov 2019 06:51:54 -0500
+Received: by mail-qt1-f198.google.com with SMTP id x21so14644838qtp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 03:51:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zfYAUmGvWJZJSRiVsjUka5mWwDiEaeMITYpQOX7mwXY=;
+        b=MDcsB/K7LsorhhpG6DHZI04rQra7jCcbXwLZr6kSQ4tPheMsbTDBq3TpHp3yNg6bm+
+         gsAvSHSxPzZUdWgshB6nFR/5V3NN5+GP4Dr0fGsjjlBY3eCysdXhfen+RPCZ5nw9hvl/
+         TsDxWYPi0YjPl2DD4hwWJIqEaZygrju4u74bZhSqqIrwBQ7o/V+gZAIywtM3v4mAW/hZ
+         SKsBec64F445BIDpkrqb92XlEbeMPLtQERe7F2DGAJMr9muBFKdfmgTkqi+oRbJ6sfD8
+         6MaisNMG1c+ZjhwLmAp5q4zEBWurk7X0C9qBeFCBponWbbZ7qxxJGpVHrguIoPmqU5wk
+         VlPg==
+X-Gm-Message-State: APjAAAU9AssXAVML6Px0Z28AiCvu12gzAHgwcYkiiUaATHtPYQtawrr/
+        U0YIZZYtCYHt7NVSaASPNoGjPAAoQuWHM+uN4D4aIfNMsBwiXwl/oCT7GUvJ7TF9tFr8SOlyCZN
+        nHSDOfafX0biwoHzlD5C0t11X0KLwwHMHjsEEdW0X
+X-Received: by 2002:a37:9083:: with SMTP id s125mr3828282qkd.192.1574855513971;
+        Wed, 27 Nov 2019 03:51:53 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxZYMA+GCGq805VHWy/zJ5Esuj29dPvonXDjlfISqurrPh5cY/HxAxHE6xgDQ+gYrWiq10cFGm+kgXM2WTFJbE=
+X-Received: by 2002:a37:9083:: with SMTP id s125mr3828257qkd.192.1574855513663;
+ Wed, 27 Nov 2019 03:51:53 -0800 (PST)
+MIME-Version: 1.0
+References: <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
+ <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
+ <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
+ <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
+ <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
+ <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
+ <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
+ <e0eeddf4214f54dfac08e428dfb30cbd39f20680.camel@redhat.com> <20191127114856.GZ11621@lahna.fi.intel.com>
+In-Reply-To: <20191127114856.GZ11621@lahna.fi.intel.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Wed, 27 Nov 2019 12:51:42 +0100
+Message-ID: <CACO55tt5SAf24vk0XrKguhh2J=WuKirDsdY7T+u7PsGFCpnFxg@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Mika Westerberg <mika.westerberg@intel.com>
+Cc:     Lyude Paul <lyude@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+X-MC-Unique: lyJ-O4l_OLaQEc0p2RyDOg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add sdhc instances for supporting eMMC and SD-card on sc7180.
-The regulators should be in HPM state for proper functionality of
-eMMC and SD-card. Updating corresponding regulators accordingly.
+On Wed, Nov 27, 2019 at 12:49 PM Mika Westerberg
+<mika.westerberg@intel.com> wrote:
+>
+> On Tue, Nov 26, 2019 at 06:10:36PM -0500, Lyude Paul wrote:
+> > Hey-this is almost certainly not the right place in this thread to resp=
+ond,
+> > but this thread has gotten so deep evolution can't push the subject fur=
+ther to
+> > the right, heh. So I'll just respond here.
+>
+> :)
+>
+> > I've been following this and helping out Karol with testing here and th=
+ere.
+> > They had me test Bjorn's PCI branch on the X1 Extreme 2nd generation, w=
+hich
+> > has a turing GPU and 8086:1901 PCI bridge.
+> >
+> > I was about to say "the patch fixed things, hooray!" but it seems that =
+after
+> > trying runtime suspend/resume a couple times things fall apart again:
+>
+> You mean $subject patch, no?
+>
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
----
+no, I told Lyude to test the pci/pm branch as the runpm errors we saw
+on that machine looked different. Some BAR error the GPU reported
+after it got resumed, so I was wondering if the delays were helping
+with that. But after some cycles it still caused the same issue, that
+the GPU disappeared. Later testing also showed that my patch also
+didn't seem to help with this error sadly :/
 
-This depends on the patch series (dt support for sc7180):
-https://lkml.org/lkml/2019/11/8/149
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  32 +++++++-
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 136 ++++++++++++++++++++++++++++++++
- 2 files changed, 164 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 189254f..583c42c 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -11,6 +11,7 @@
- #include "sc7180.dtsi"
- #include "pm6150.dtsi"
- #include "pm6150l.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Qualcomm Technologies, Inc. SC7180 IDP";
-@@ -103,7 +104,7 @@
- 		vreg_l12a_1p8: ldo12 {
- 			regulator-min-microvolt = <1696000>;
- 			regulator-max-microvolt = <1952000>;
--			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 
- 		vreg_l13a_1p8: ldo13 {
-@@ -145,7 +146,7 @@
- 		vreg_l19a_2p9: ldo19 {
- 			regulator-min-microvolt = <2696000>;
- 			regulator-max-microvolt = <3304000>;
--			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 	};
- 
-@@ -191,7 +192,7 @@
- 		vreg_l6c_2p9: ldo6 {
- 			regulator-min-microvolt = <2696000>;
- 			regulator-max-microvolt = <3304000>;
--			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 
- 		vreg_l7c_3p0: ldo7 {
-@@ -209,7 +210,7 @@
- 		vreg_l9c_2p9: ldo9 {
- 			regulator-min-microvolt = <2952000>;
- 			regulator-max-microvolt = <3304000>;
--			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 
- 		vreg_l10c_3p3: ldo10 {
-@@ -400,3 +401,26 @@
- 			bias-pull-up;
- 		};
- };
-+
-+&sdhc_1 {
-+	status = "ok";
-+
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&sdc1_on>;
-+	pinctrl-1 = <&sdc1_off>;
-+	vmmc-supply = <&vreg_l19a_2p9>;
-+	vqmmc-supply = <&vreg_l12a_1p8>;
-+
-+};
-+
-+&sdhc_2 {
-+	status = "ok";
-+
-+	pinctrl-names = "default","sleep";
-+	pinctrl-0 = <&sdc2_on>;
-+	pinctrl-1 = <&sdc2_off>;
-+	vmmc-supply  = <&vreg_l9c_2p9>;
-+	vqmmc-supply = <&vreg_l6c_2p9>;
-+
-+	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 666e9b9..207d44f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -897,6 +897,100 @@
- 					function = "qup15";
- 				};
- 			};
-+
-+			sdc1_on: sdc1-on {
-+				clk {
-+					pins = "sdc1_clk";
-+					bias-disable;
-+					drive-strength = <16>;
-+				};
-+
-+				cmd {
-+					pins = "sdc1_cmd";
-+					bias-pull-up;
-+					drive-strength = <10>;
-+				};
-+
-+				data {
-+					pins = "sdc1_data";
-+					bias-pull-up;
-+					drive-strength = <10>;
-+				};
-+
-+				rclk {
-+					pins = "sdc1_rclk";
-+					bias-pull-down;
-+				};
-+			};
-+
-+			sdc1_off: sdc1-off {
-+				clk {
-+					pins = "sdc1_clk";
-+					bias-disable;
-+					drive-strength = <2>;
-+				};
-+
-+				cmd {
-+					pins = "sdc1_cmd";
-+					bias-pull-up;
-+					drive-strength = <2>;
-+				};
-+
-+				data {
-+					pins = "sdc1_data";
-+					bias-pull-up;
-+					drive-strength = <2>;
-+				};
-+
-+				rclk {
-+					pins = "sdc1_rclk";
-+					bias-pull-down;
-+				};
-+			};
-+
-+			sdc2_on: sdc2_on {
-+				clk {
-+					pins = "sdc2_clk";
-+					bias-disable;
-+					drive-strength = <16>;
-+				};
-+				cmd {
-+					pins = "sdc2_cmd";
-+					bias-pull-up;
-+					drive-strength = <10>;
-+				};
-+				data {
-+					pins = "sdc2_data";
-+					bias-pull-up;
-+					drive-strength = <10>;
-+				};
-+				sd-cd {
-+					pins = "gpio69";
-+					bias-pull-down;
-+				};
-+			};
-+
-+			sdc2_off: sdc2_off {
-+				clk {
-+					pins = "sdc2_clk";
-+					bias-disable;
-+					drive-strength = <2>;
-+				};
-+				cmd {
-+					pins = "sdc2_cmd";
-+					bias-pull-up;
-+					drive-strength = <2>;
-+				};
-+				data {
-+					pins = "sdc2_data";
-+					bias-pull-up;
-+					drive-strength = <2>;
-+				};
-+				sd-cd {
-+					pins = "gpio69";
-+					bias-pull-down;
-+				};
-+			};
- 		};
- 
- 		qspi: spi@88dc000 {
-@@ -911,6 +1005,48 @@
- 			status = "disabled";
- 		};
- 
-+		sdhc_1: sdhci@7c4000 {
-+			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-+			reg = <0 0x7c4000 0 0x1000>;
-+			reg-names = "hc_mem";
-+
-+			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+
-+			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
-+					<&gcc GCC_SDCC1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+
-+			bus-width = <8>;
-+			non-removable;
-+
-+			mmc-ddr-1_8v;
-+			mmc-hs200-1_8v;
-+			mmc-hs400-1_8v;
-+			mmc-hs400-enhanced-strobe;
-+
-+			status = "disabled";
-+		};
-+
-+		sdhc_2: sdhci@8804000 {
-+			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-+			reg = <0 0x08804000 0 0x1000>;
-+			reg-names = "hc_mem";
-+
-+			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+
-+			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
-+					<&gcc GCC_SDCC2_AHB_CLK>;
-+			clock-names = "core","iface";
-+
-+			bus-width = <4>;
-+
-+			status = "disabled";
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0 0x0c440000 0 0x1100>,
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+> > [  686.883247] nouveau 0000:01:00.0: DRM: suspending object tree...
+> > [  752.866484] ACPI Error: Aborting method \_SB.PCI0.PEG0.PEGP.NVPO due=
+ to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
+> > [  752.866508] ACPI Error: Aborting method \_SB.PCI0.PGON due to previo=
+us error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
+> > [  752.866521] ACPI Error: Aborting method \_SB.PCI0.PEG0.PG00._ON due =
+to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
+>
+> This is probably the culprit. The same AML code fails to properly turn
+> on the device.
+>
+> Is acpidump from this system available somewhere?
+>
 
