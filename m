@@ -2,53 +2,54 @@ Return-Path: <SRS0=G/Om=ZT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF77EC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B18C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871542184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7CF2184C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 20:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574887810;
-	bh=RUmIk2AyAHnF+oOB0qFKnfPjkDLo8tbmg3+ir3tzxSg=;
+	s=default; t=1574887813;
+	bh=QnaxnzstfPmSHF7Mv7k/QGomLz291pM/Xc9KcCmOD6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IvF5yR84NaxzhE97C5hNgCVlLzGUIJcsnBPi2+Z0L4maSblEGUQffhDDtv5tqPl5D
-	 E63p2KPY5GWcTnFJZHJChFw3ZUUcjKwct70sa7PgJvIalZcJGegB0w00gmQ0OF0vdC
-	 QhNY5o2IKqPT7/tewKUsvCQO46/Izt+/XDTJUDPM=
+	b=1sFvddf42N1N6eC6jy1hGk0LFKzTSW5mFJ9MJ72DTTqwI6lT2RiNbOpOZ8PSsoAf1
+	 eHABE3GN3C9sFNt9ajA0AJsVxCr6Anx9tgNKkFvklzMjZ0iSW5F1fNHaghZd6QpAz9
+	 v0bEQZY3d138DSkK+GQrAAIozrzOXuIZv6SLUtlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbfK0UuI (ORCPT
+        id S1730327AbfK0UuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 15:50:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35724 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 15:50:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730299AbfK0UuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 15:50:00 -0500
+        id S1729592AbfK0UuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 15:50:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60B2421844;
-        Wed, 27 Nov 2019 20:49:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 651C021844;
+        Wed, 27 Nov 2019 20:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574887799;
-        bh=RUmIk2AyAHnF+oOB0qFKnfPjkDLo8tbmg3+ir3tzxSg=;
+        s=default; t=1574887804;
+        bh=QnaxnzstfPmSHF7Mv7k/QGomLz291pM/Xc9KcCmOD6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lh7znX247SmLnmRHiXTr2y/23UrZKDVO4ct2am0WvCwo++5msr7xrQrW48dDZlGz+
-         3QJoYRmQm2jtQqUqK1llk7NvVvxaJsJMmpFMOFCZjziWp8as1IwuIMiqN8kGVo+n26
-         ZoPl1b57zfoTWIbvdyd5PsNkkmLddFtb1kxKiEgU=
+        b=UaKCYUwoyTpg2YjNSjy4FoS1fnOsJIs0SxOsAaJBYEtkCoi8HLej1rqlxZBUYRJxF
+         AQgRkH625jWpGsW9jz7AQRAg1WKCZf6DJTJFc+KdWhZm8OCJRtbeVq5PYla+OiQBdM
+         le7P/IOxcpEnY6bLrfYesTWeeCH8PKEy5ZiwAj/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <david@fromorbit.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 046/211] scsi: isci: Use proper enumerated type in atapi_d2h_reg_frame_handler
-Date:   Wed, 27 Nov 2019 21:29:39 +0100
-Message-Id: <20191127203058.447572480@linuxfoundation.org>
+Subject: [PATCH 4.14 102/211] vfs: avoid problematic remapping requests into partial EOF block
+Date:   Wed, 27 Nov 2019 21:30:35 +0100
+Message-Id: <20191127203103.352347432@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
 References: <20191127203049.431810767@linuxfoundation.org>
@@ -61,53 +62,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit e9e9a103528c7e199ead6e5374c9c52cf16b5802 ]
+[ Upstream commit 07d19dc9fbe9128378b9e226abe886fd8fd473df ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+A deduplication data corruption is exposed in XFS and btrfs. It is
+caused by extending the block match range to include the partial EOF
+block, but then allowing unknown data beyond EOF to be considered a
+"match" to data in the destination file because the comparison is only
+made to the end of the source file. This corrupts the destination file
+when the source extent is shared with it.
 
-drivers/scsi/isci/request.c:1629:13: warning: implicit conversion from
-enumeration type 'enum sci_io_status' to different enumeration type
-'enum sci_status' [-Wenum-conversion]
-                        status = SCI_IO_FAILURE_RESPONSE_VALID;
-                               ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/isci/request.c:1631:12: warning: implicit conversion from
-enumeration type 'enum sci_io_status' to different enumeration type
-'enum sci_status' [-Wenum-conversion]
-                status = SCI_IO_FAILURE_RESPONSE_VALID;
-                       ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The VFS remapping prep functions  only support whole block dedupe, but
+we still need to appear to support whole file dedupe correctly.  Hence
+if the dedupe request includes the last block of the souce file, don't
+include it in the actual dedupe operation. If the rest of the range
+dedupes successfully, then reject the entire request.  A subsequent
+patch will enable us to shorten dedupe requests correctly.
 
-status is of type sci_status but SCI_IO_FAILURE_RESPONSE_VALID is of
-type sci_io_status. Use SCI_FAILURE_IO_RESPONSE_VALID, which is from
-sci_status and has SCI_IO_FAILURE_RESPONSE_VALID's exact value since
-that is what SCI_IO_FAILURE_RESPONSE_VALID is mapped to in the isci.h
-file.
+When reflinking sub-file ranges, a data corruption can occur when the
+source file range includes a partial EOF block. This shares the unknown
+data beyond EOF into the second file at a position inside EOF, exposing
+stale data in the second file.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/153
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+If the reflink request includes the last block of the souce file, only
+proceed with the reflink operation if it lands at or past the
+destination file's current EOF. If it lands within the destination file
+EOF, reject the entire request with -EINVAL and make the caller go the
+hard way.  A subsequent patch will enable us to shorten reflink requests
+correctly.
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Dave Chinner <david@fromorbit.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/isci/request.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/read_write.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/drivers/scsi/isci/request.c b/drivers/scsi/isci/request.c
-index ed197bc8e801a..2f151708b59ae 100644
---- a/drivers/scsi/isci/request.c
-+++ b/drivers/scsi/isci/request.c
-@@ -1626,9 +1626,9 @@ static enum sci_status atapi_d2h_reg_frame_handler(struct isci_request *ireq,
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 38a8bcccf0dd0..e8136a72c13f3 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -1709,6 +1709,34 @@ static int clone_verify_area(struct file *file, loff_t pos, u64 len, bool write)
  
- 	if (status == SCI_SUCCESS) {
- 		if (ireq->stp.rsp.status & ATA_ERR)
--			status = SCI_IO_FAILURE_RESPONSE_VALID;
-+			status = SCI_FAILURE_IO_RESPONSE_VALID;
- 	} else {
--		status = SCI_IO_FAILURE_RESPONSE_VALID;
-+		status = SCI_FAILURE_IO_RESPONSE_VALID;
+ 	return security_file_permission(file, write ? MAY_WRITE : MAY_READ);
+ }
++/*
++ * Ensure that we don't remap a partial EOF block in the middle of something
++ * else.  Assume that the offsets have already been checked for block
++ * alignment.
++ *
++ * For deduplication we always scale down to the previous block because we
++ * can't meaningfully compare post-EOF contents.
++ *
++ * For clone we only link a partial EOF block above the destination file's EOF.
++ */
++static int generic_remap_check_len(struct inode *inode_in,
++				   struct inode *inode_out,
++				   loff_t pos_out,
++				   u64 *len,
++				   bool is_dedupe)
++{
++	u64 blkmask = i_blocksize(inode_in) - 1;
++
++	if ((*len & blkmask) == 0)
++		return 0;
++
++	if (is_dedupe)
++		*len &= ~blkmask;
++	else if (pos_out + *len < i_size_read(inode_out))
++		return -EINVAL;
++
++	return 0;
++}
+ 
+ /*
+  * Check that the two inodes are eligible for cloning, the ranges make
+@@ -1815,6 +1843,11 @@ int vfs_clone_file_prep_inodes(struct inode *inode_in, loff_t pos_in,
+ 			return -EBADE;
  	}
  
- 	if (status != SCI_SUCCESS) {
++	ret = generic_remap_check_len(inode_in, inode_out, pos_out, len,
++			is_dedupe);
++	if (ret)
++		return ret;
++
+ 	return 1;
+ }
+ EXPORT_SYMBOL(vfs_clone_file_prep_inodes);
 -- 
 2.20.1
 
