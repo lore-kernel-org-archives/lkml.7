@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D88C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FE3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E7921847
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB1B216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Nov 2019 21:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574888891;
-	bh=S8kGG9p6HSMDgtKASDhnwxvtfT614CVOtoxaHvrPciw=;
+	s=default; t=1574888894;
+	bh=qV0WTWfRpMVnCr3u5uMAmCSY3+zE+d0NXXZ2q9BfVUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zkdBTGnKwjlMPdyhB02dtEqUz9dwAVf+4KLGcIKgT5j/PuSZl6lN0E34cFk9Q0C10
-	 JIhX0pjDl7YKzkEmXC/fYk8pqT5A0Vf6un8GWxqpspPHscE7L+QTuk71im5ta9SUVN
-	 N5gL61e2JD8JK1xz5mTKpZEeZ8jZUgWd+L7hz/VQ=
+	b=UmQn+Ji0GLloTvoSURKDbsrjrTHN00Er0LrBkkh0NYgah/+Oy41D99rfG/lQTNRuV
+	 GoKfLONzM7v2grCpq9sgZVCOtO+ahfzqY0+m0a+zO7JapXlTam/Oc7X7a+sAr4Oz4P
+	 XIZIxGrJUTEOhdBbu8IeNyk+tjj+4UAEZqto0B9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732716AbfK0VIK (ORCPT
+        id S1732705AbfK0VIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 16:08:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34416 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 16:08:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732695AbfK0VIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:08:04 -0500
+        id S1730931AbfK0VII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 16:08:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E169D20637;
-        Wed, 27 Nov 2019 21:08:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA4B12176D;
+        Wed, 27 Nov 2019 21:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574888884;
-        bh=S8kGG9p6HSMDgtKASDhnwxvtfT614CVOtoxaHvrPciw=;
+        s=default; t=1574888887;
+        bh=qV0WTWfRpMVnCr3u5uMAmCSY3+zE+d0NXXZ2q9BfVUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nx1J9nCIQ4cSVwZADfWa0Mb86oW97YZ3iBSj9l1cyytEafjv9QWZBvxUYhmGbJKWF
-         +ZwzsLOfsddKrxRM3LpTqRXdeMi6v68fyNZBNFx77Hm1rWphr1jjsNGhabTPWH/U1a
-         OwOuRQDwHJMM6T2Cd1KzlDuR/6KuhYldPKzMsC4o=
+        b=COrgOezJMiwdKp/HeAu2/fmrHYaNhvCkWBv67m7+5ABAsa0xxaxeHKcwUdH2E8fNC
+         DjmE9Bx8MH1B5Dp4BDpzD0bMqLXvaEeOkLovBtAtDR4dN6nzF2HoSvcV4Jn20Z0ypv
+         XB9r/HBHX3Q7yqH0CPfW0RFsokiUlDwFlxZsHp+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+711468aa5c3a1eabf863@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 281/306] nfc: port100: handle command failure cleanly
-Date:   Wed, 27 Nov 2019 21:32:11 +0100
-Message-Id: <20191127203135.311115248@linuxfoundation.org>
+        stable@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>
+Subject: [PATCH 4.19 282/306] net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
+Date:   Wed, 27 Nov 2019 21:32:12 +0100
+Message-Id: <20191127203135.382666831@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
 References: <20191127203114.766709977@linuxfoundation.org>
@@ -60,34 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-commit 5f9f0b11f0816b35867f2cf71e54d95f53f03902 upstream.
+commit b8eb718348b8fb30b5a7d0a8fce26fb3f4ac741b upstream.
 
-If starting the transfer of a command suceeds but the transfer for the reply
-fails, it is not enough to initiate killing the transfer for the
-command may still be running. You need to wait for the killing to finish
-before you can reuse URB and buffer.
+kobject_init_and_add takes reference even when it fails. This has
+to be given up by the caller in error handling. Otherwise memory
+allocated by kobject_init_and_add is never freed. Originally found
+by Syzkaller:
 
-Reported-and-tested-by: syzbot+711468aa5c3a1eabf863@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+BUG: memory leak
+unreferenced object 0xffff8880679f8b08 (size 8):
+  comm "netdev_register", pid 269, jiffies 4294693094 (age 12.132s)
+  hex dump (first 8 bytes):
+    72 78 2d 30 00 36 20 d4                          rx-0.6 .
+  backtrace:
+    [<000000008c93818e>] __kmalloc_track_caller+0x16e/0x290
+    [<000000001f2e4e49>] kvasprintf+0xb1/0x140
+    [<000000007f313394>] kvasprintf_const+0x56/0x160
+    [<00000000aeca11c8>] kobject_set_name_vargs+0x5b/0x140
+    [<0000000073a0367c>] kobject_init_and_add+0xd8/0x170
+    [<0000000088838e4b>] net_rx_queue_update_kobjects+0x152/0x560
+    [<000000006be5f104>] netdev_register_kobject+0x210/0x380
+    [<00000000e31dab9d>] register_netdevice+0xa1b/0xf00
+    [<00000000f68b2465>] __tun_chr_ioctl+0x20d5/0x3dd0
+    [<000000004c50599f>] tun_chr_ioctl+0x2f/0x40
+    [<00000000bbd4c317>] do_vfs_ioctl+0x1c7/0x1510
+    [<00000000d4c59e8f>] ksys_ioctl+0x99/0xb0
+    [<00000000946aea81>] __x64_sys_ioctl+0x78/0xb0
+    [<0000000038d946e5>] do_syscall_64+0x16f/0x580
+    [<00000000e0aa5d8f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<00000000285b3d1a>] 0xffffffffffffffff
+
+Cc: David Miller <davem@davemloft.net>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nfc/port100.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/net-sysfs.c |   24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
---- a/drivers/nfc/port100.c
-+++ b/drivers/nfc/port100.c
-@@ -792,7 +792,7 @@ static int port100_send_frame_async(stru
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -932,21 +932,23 @@ static int rx_queue_add_kobject(struct n
+ 	error = kobject_init_and_add(kobj, &rx_queue_ktype, NULL,
+ 				     "rx-%u", index);
+ 	if (error)
+-		return error;
++		goto err;
  
- 	rc = port100_submit_urb_for_ack(dev, GFP_KERNEL);
- 	if (rc)
--		usb_unlink_urb(dev->out_urb);
-+		usb_kill_urb(dev->out_urb);
+ 	dev_hold(queue->dev);
  
- exit:
- 	mutex_unlock(&dev->out_urb_lock);
+ 	if (dev->sysfs_rx_queue_group) {
+ 		error = sysfs_create_group(kobj, dev->sysfs_rx_queue_group);
+-		if (error) {
+-			kobject_put(kobj);
+-			return error;
+-		}
++		if (error)
++			goto err;
+ 	}
+ 
+ 	kobject_uevent(kobj, KOBJ_ADD);
+ 
+ 	return error;
++
++err:
++	kobject_put(kobj);
++	return error;
+ }
+ #endif /* CONFIG_SYSFS */
+ 
+@@ -1471,21 +1473,21 @@ static int netdev_queue_add_kobject(stru
+ 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
+ 				     "tx-%u", index);
+ 	if (error)
+-		return error;
++		goto err;
+ 
+ 	dev_hold(queue->dev);
+ 
+ #ifdef CONFIG_BQL
+ 	error = sysfs_create_group(kobj, &dql_group);
+-	if (error) {
+-		kobject_put(kobj);
+-		return error;
+-	}
++	if (error)
++		goto err;
+ #endif
+ 
+ 	kobject_uevent(kobj, KOBJ_ADD);
+ 
+-	return 0;
++err:
++	kobject_put(kobj);
++	return error;
+ }
+ #endif /* CONFIG_SYSFS */
+ 
 
 
