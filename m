@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52A7C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5BCC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98876217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625EA21739
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jq5l6POX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LWoQEcDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfK1Quq (ORCPT
+        id S1727267AbfK1Quw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 11:50:46 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43406 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbfK1QuR (ORCPT
+        Thu, 28 Nov 2019 11:50:52 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43403 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbfK1QuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:50:17 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b1so13124619pgq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 08:50:15 -0800 (PST)
+        Thu, 28 Nov 2019 11:50:13 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b1so13124559pgq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 08:50:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nEtPBscm61+nPEVWvbJjdtfKlHF1+Tw29QLFNNlqSXc=;
-        b=Jq5l6POXhKBLihg38Usaui6t0nqV5sQvbWbI6rSgNIYk6n8WGDMMVkP1LG1/2x4qCG
-         UCyeQoB/AbodwEeK9haGNGeVGO8BzgnQuR/VI/1+k7mg0XhxfCHBQ2Jew9pOj0wEvAwy
-         2WnWtwe73c5FU0NnojZiurA8804vygmxVRyse2+b5ZsZ7WpuLU2PEcTZyZGnx12XnU6r
-         Cmmwe5RWxdl12kf8dT8BkmTrdBhlYSRqHUThpLcxcOwXlRELSCzdl/hd9EzIozpCZQzy
-         eRYJ+rCcOw9gzunEYkOpG2M7cv3cPrz3S8v7jfLhGslUmsAe6+SS9DEnP4dTHmNwFXTb
-         sW7Q==
+        bh=as0Dyqn9IW+Ib7FMH96nGeZ/5dUyDxEzw1IqFd6RcLM=;
+        b=LWoQEcDUQHLetfKW6rW+t+LDD68rLNVYtb+J/5JvQjwdW2aCkD/yjcH+jbfyVtvH1P
+         B+MXWFYRYwnd2grVFtyCK+NLuTWUPp1CmRnK1PxI/7J2Wet8vuP/tJwaPXyOeZfxp7Ji
+         ZGgpo5WHMLI1xBw4tmsfd68A6ZnNXU/qJWUVCMaZFYsDsJlKGlnEjQzSGBjQFJac7zMB
+         OFMCPKhQ3B6QDBzyULAvAf0RMWkl1CqZZo+beISxzWF4HTJLMQw8m+3FOr8RT6Ho7QIJ
+         hu2J9gKiVLmU5Pj2CQO7JTKe/GIPgLr/gGT4FzH6qh6IzCdis72ohSNzRZTtpnVdQOJD
+         lTfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=nEtPBscm61+nPEVWvbJjdtfKlHF1+Tw29QLFNNlqSXc=;
-        b=RbGhWBgKmEUgXoKt/edxCcCWXfr6ziSA566P4SauCjqEPvT+SzJtNqxvm/wFNxZdHZ
-         j76KCpjKHtHdck9KaI6zRdjBGU1cK3lQ3vB+pZWPxTnTP59/xH6dOtC55kopjlISQlq3
-         CZiuauSk1XPqVQJU1ctAqQaMnasF8qdqUef9KjZXVL+gB5720mls5Q1BCZqnq+IvRXeI
-         qdoeZgeucycQpcV+0LBrqSt6jKSJD2cW0zAcDUEwnffNj0+I1FqKsdxvTuMkyy7RY4mC
-         bQVMMiYEJmVIjywYsj8g9t4M9OiGvzfY5bcKGNBymPA+KgI4juUwH4gCF7gVLIWAlgwP
-         LeLg==
-X-Gm-Message-State: APjAAAUtZxNiOpm4XPAGI+HxAna+zfC1iTT2sts5d3ESOJsj2WtuBrE9
-        lI+wXTr1aFOoZhhPss/NrldEVw==
-X-Google-Smtp-Source: APXvYqwNdeqTwkb0h/ndd1EIs2BFrMN77BDNUueQ03UK/DdSGN5qX3NDPdyxhT5N5ic6H78Oc/vxeQ==
-X-Received: by 2002:a63:5017:: with SMTP id e23mr12224287pgb.32.1574959815274;
-        Thu, 28 Nov 2019 08:50:15 -0800 (PST)
+        bh=as0Dyqn9IW+Ib7FMH96nGeZ/5dUyDxEzw1IqFd6RcLM=;
+        b=iCUlTpH78BB/u96yqs79GNs0LBgTMlfvkS6pPzkS3D658b6RUdh/ejqlJRCw4ShXu+
+         4z6NOslGnUv6awa0YZ9k0dlOVLnv2q7JMU/piELufAlYBVoab9zBzuUOclKKOkozeLaE
+         UOMen76+khra9CVcnDSc76+rH8arFoixGQqriOsGBlO9yo2ueqXzHOYYrNA33NJypyul
+         ierZTDI9QxnFBZJ5QLriV5NtGeNTL6ejrtfZdh8mLAPM1/jvOjaZcFS6HItC4Va6l4Ms
+         y6LeZ2h9RF0GfN5s5JX64MI8kRRjiGuN91n5RbrQZHvvBc69jzizO0AwJom6y4581wjd
+         /hfw==
+X-Gm-Message-State: APjAAAXqXf9oforEfbwKZpA3IurG4wwBkv0AEUox+CO+sYDRc19dWQXq
+        7b+6ZKvpnW0kXn8hqhc8udRrPw==
+X-Google-Smtp-Source: APXvYqwOnLS/7vwFXdBkF6U47M0v/d+v//XHzDBLADouTpgt0wZSZX1ch2wKxZSEtHp3izvH+R2zKw==
+X-Received: by 2002:a63:cc05:: with SMTP id x5mr12334748pgf.141.1574959810877;
+        Thu, 28 Nov 2019 08:50:10 -0800 (PST)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id a15sm2450343pfh.169.2019.11.28.08.50.14
+        by smtp.gmail.com with ESMTPSA id a15sm2450343pfh.169.2019.11.28.08.50.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 08:50:14 -0800 (PST)
+        Thu, 28 Nov 2019 08:50:10 -0800 (PST)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [stable 4.19][PATCH 12/17] pinctrl: stm32: fix memory leak issue
-Date:   Thu, 28 Nov 2019 09:49:57 -0700
-Message-Id: <20191128165002.6234-13-mathieu.poirier@linaro.org>
+Subject: [stable 4.19][PATCH 07/17] clk: stm32mp1: fix HSI divider flag
+Date:   Thu, 28 Nov 2019 09:49:52 -0700
+Message-Id: <20191128165002.6234-8-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191128165002.6234-1-mathieu.poirier@linaro.org>
 References: <20191128165002.6234-1-mathieu.poirier@linaro.org>
@@ -69,104 +69,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Torgue <alexandre.torgue@st.com>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-commit cd8c9b5a49576bf28990237715bc2cb2210ac80a upstream
+commit d3f2e33c875de5052e032a9eefa64c897a930ed1 upstream
 
-configs is allocated by pinconf_generic_parse_dt_config(),
-pinctrl_utils_add_map_configs() duplicates configs so it can and has to
-be freed to prevent memory leaks.
+The divider of HSI (clk-hsi-div) is power of two divider.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 9bee94e7b7da ("clk: stm32mp1: Introduce STM32MP1 clock driver")
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Cc: stable <stable@vger.kernel.org> # 4.19
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/pinctrl/stm32/pinctrl-stm32.c | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ drivers/clk/clk-stm32mp1.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index a9bec6e6fdd1..14dfbbd6c1c3 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -410,7 +410,7 @@ static int stm32_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 	unsigned int num_configs;
- 	bool has_config = 0;
- 	unsigned reserve = 0;
--	int num_pins, num_funcs, maps_per_pin, i, err;
-+	int num_pins, num_funcs, maps_per_pin, i, err = 0;
+diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
+index a907555b2a3d..d602ae72eb81 100644
+--- a/drivers/clk/clk-stm32mp1.c
++++ b/drivers/clk/clk-stm32mp1.c
+@@ -1655,8 +1655,8 @@ static const struct stm32_mux_cfg ker_mux_cfg[M_LAST] = {
  
- 	pctl = pinctrl_dev_get_drvdata(pctldev);
+ static const struct clock_config stm32mp1_clock_cfg[] = {
+ 	/* Oscillator divider */
+-	DIV(NO_ID, "clk-hsi-div", "clk-hsi", 0, RCC_HSICFGR, 0, 2,
+-	    CLK_DIVIDER_READ_ONLY),
++	DIV(NO_ID, "clk-hsi-div", "clk-hsi", CLK_DIVIDER_POWER_OF_TWO,
++	    RCC_HSICFGR, 0, 2, CLK_DIVIDER_READ_ONLY),
  
-@@ -437,41 +437,45 @@ static int stm32_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 	if (has_config && num_pins >= 1)
- 		maps_per_pin++;
- 
--	if (!num_pins || !maps_per_pin)
--		return -EINVAL;
-+	if (!num_pins || !maps_per_pin) {
-+		err = -EINVAL;
-+		goto exit;
-+	}
- 
- 	reserve = num_pins * maps_per_pin;
- 
- 	err = pinctrl_utils_reserve_map(pctldev, map,
- 			reserved_maps, num_maps, reserve);
- 	if (err)
--		return err;
-+		goto exit;
- 
- 	for (i = 0; i < num_pins; i++) {
- 		err = of_property_read_u32_index(node, "pinmux",
- 				i, &pinfunc);
- 		if (err)
--			return err;
-+			goto exit;
- 
- 		pin = STM32_GET_PIN_NO(pinfunc);
- 		func = STM32_GET_PIN_FUNC(pinfunc);
- 
- 		if (!stm32_pctrl_is_function_valid(pctl, pin, func)) {
- 			dev_err(pctl->dev, "invalid function.\n");
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto exit;
- 		}
- 
- 		grp = stm32_pctrl_find_group_by_pin(pctl, pin);
- 		if (!grp) {
- 			dev_err(pctl->dev, "unable to match pin %d to group\n",
- 					pin);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto exit;
- 		}
- 
- 		err = stm32_pctrl_dt_node_to_map_func(pctl, pin, func, grp, map,
- 				reserved_maps, num_maps);
- 		if (err)
--			return err;
-+			goto exit;
- 
- 		if (has_config) {
- 			err = pinctrl_utils_add_map_configs(pctldev, map,
-@@ -479,11 +483,13 @@ static int stm32_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 					configs, num_configs,
- 					PIN_MAP_TYPE_CONFIGS_GROUP);
- 			if (err)
--				return err;
-+				goto exit;
- 		}
- 	}
- 
--	return 0;
-+exit:
-+	kfree(configs);
-+	return err;
- }
- 
- static int stm32_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	/*  External / Internal Oscillators */
+ 	GATE_MP1(CK_HSE, "ck_hse", "clk-hse", 0, RCC_OCENSETR, 8, 0),
 -- 
 2.17.1
 
