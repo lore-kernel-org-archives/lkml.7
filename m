@@ -2,67 +2,70 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B2DC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D50C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C9421781
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2586F21774
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:12:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YuoP3obc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXtMTc7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfK1VMV (ORCPT
+        id S1726742AbfK1VMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 16:12:21 -0500
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:37113 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbfK1VMU (ORCPT
+        Thu, 28 Nov 2019 16:12:24 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42029 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbfK1VMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 16:12:20 -0500
-Received: by mail-wr1-f49.google.com with SMTP id w15so1691246wru.4;
-        Thu, 28 Nov 2019 13:12:19 -0800 (PST)
+        Thu, 28 Nov 2019 16:12:23 -0500
+Received: by mail-wr1-f66.google.com with SMTP id a15so32647501wrf.9;
+        Thu, 28 Nov 2019 13:12:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=ZoopOf7bjFAgliAZM/EuWfHdb/60sjI4z+ge82oishU=;
-        b=YuoP3obc6Rgv6yO2zhNsdwmkVHGZXhVMI2cuOHFc1G3uVVL+ztRLHYq8VWKTiqJEOm
-         BOrLVHuA54MdJwwJo4fbyGLSP6T1u1jqC957UBUkjR3+fpd3VYiU1PAFugx7bFeFeMn1
-         8c90JFY/cZBdVpRLuav1oONzZ5twgkX/22pPNMNRw0rz0qNAcY4yykKiWVguAzdxVX1d
-         7uVi99MnoZtI2ruy5sJKOxWrln20wQlfDFEXRTPZ9Y48pxhem2suOdS3nre1Fb4uecrM
-         o+N3kiLo7v3LZ5kI934QSugzGNriwj1134PCpe/4QmivSWM/QfeUGq4wbWnf5h6Vkfvu
-         oLyQ==
+        bh=fIuQVSLMX/1X5Z+UmWPRtwbnLZp5pF/aLYF24EqxQ1U=;
+        b=JXtMTc7ocPvqqjhWGwL4N5XfTDj8IvidBJQBGqSy8ay6tVNlfhLMbwLCktvdaCLDUj
+         g2jup+T3ajILxGPZ5JSmGNH83XvXWl9GqSDsdG2Ww81oJyOhmWbFWH8LUZwJmsorW++T
+         WfD8SUnBT2p9Mc05X0HTlWYzTN+YpltX/UNH3zVBmWfmjMEmbaB0chJJxQb3KhoN5icz
+         7DJGUMHpKJLlqL/IfLWQ0YLKaElaF9gSOfTGPVUsVUKwMtMVlPdsZgtYd0FwS9M/wmNb
+         Z5OOPpGvRYhfFgQvyVlmaDhNqGxNxSGw2MG2zA/8zdSuLZEo/K5nFPyBuMIl/ssCrNQS
+         lGtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZoopOf7bjFAgliAZM/EuWfHdb/60sjI4z+ge82oishU=;
-        b=e/QMHe8YhA6VkjffAjVVn7U7LuJQXh+k6XuN5vQaEWFIp0BP9anQvZTLSC6l2y4bA4
-         np7Yj7KglKKDT/BiM5/sKJZ6hKEpWM3tc1TPzAFvULyRNIBQLmk08rc+3XdOUVgo8cCu
-         rtCNvZ3hzDHJWMA1ifsdAgAim7HEcqM2gDS10C+xvbA1VrKDkQdx2tJrxCP5RBP7CUqj
-         oVQs8agUPWr6dSz454ffsuZAjmgMq3oZploEbkhQAkP0r7/XN4LnHc5KhReULiw4ZkGA
-         xevttKWRg/0SPEVPx6vtJlQ54ZGcg3h1SHV2hyUQOh+koGT065lA3ZFeIDRXcDI/TYpJ
-         iC6g==
-X-Gm-Message-State: APjAAAU5B53ugs0gRAdDCG/q3pbp4uLHcyIWe+/SV10rff4/AJPbH/8U
-        +hz77ZI8iLMjqY560OApjgU=
-X-Google-Smtp-Source: APXvYqwGlF6HicOC1vZlQbi1CxgsIMGxhJuYWyTaQjToAlrPq7b8n+RGRz2p+iybhAjiYy22bZrBZw==
-X-Received: by 2002:adf:f20f:: with SMTP id p15mr78926wro.370.1574975538432;
-        Thu, 28 Nov 2019 13:12:18 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fIuQVSLMX/1X5Z+UmWPRtwbnLZp5pF/aLYF24EqxQ1U=;
+        b=rDQkJB5Vno0PiIJwwR8D5II81bx4VC7Itu0czFIaQs3ImAwi7ja9IfP304nFNPkKOl
+         a0hNgWZA1RL/4BNV/71hpZBi+BC42jJFWJux9B1kS42NO0voCEBOXQlc7Oz4IOPHXuhi
+         BF5NWL/Q1mtszU32OT0cXWsHZg0srm5rTDVMumA1uHQ+kFRfC9mHQQQCUaMV3ubQcAew
+         b1pjDND1Jc2h4+v5LLhaQ09R8XhqEREulwSpKo5HDSFaLFp/p+1Znlla9p2ui7h9RfcG
+         g81ZHAio+x0U2dvExbDRr8rqvFkTybh5MHD6rRiiaDB7lGaOaU+tP5f5AtCuSZnZ7gOU
+         dsmw==
+X-Gm-Message-State: APjAAAXGZawhaoAhvSUKfczkuYg7kTDLk3Iib2BegKARVKMpTwfXDgsa
+        VeV7/ihlJi/pQNhcBeNr92c=
+X-Google-Smtp-Source: APXvYqw9YPzhZ5G3E2CqjZguJrFN2rKInPTXGrl7fNNH7DDUc1clMMTdpDu41ANSrPWnVFCvDl5mKw==
+X-Received: by 2002:adf:ec48:: with SMTP id w8mr2500286wrn.19.1574975539807;
+        Thu, 28 Nov 2019 13:12:19 -0800 (PST)
 Received: from localhost.localdomain ([109.126.143.74])
-        by smtp.gmail.com with ESMTPSA id l26sm11620809wmj.48.2019.11.28.13.12.17
+        by smtp.gmail.com with ESMTPSA id l26sm11620809wmj.48.2019.11.28.13.12.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 13:12:17 -0800 (PST)
+        Thu, 28 Nov 2019 13:12:19 -0800 (PST)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] blk-mq: optimise plugging
-Date:   Fri, 29 Nov 2019 00:11:52 +0300
-Message-Id: <cover.1574974577.git.asml.silence@gmail.com>
+Subject: [PATCH 1/3] blk-mq: optimise rq sort function
+Date:   Fri, 29 Nov 2019 00:11:53 +0300
+Message-Id: <a21e91fff1abe201ebbc010d596b034f7b5123de.1574974577.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1574974577.git.asml.silence@gmail.com>
+References: <cover.1574974577.git.asml.silence@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,17 +73,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clean and optimise blk_mq_flush_plug_list().
+Check "!=" in multi-layer comparisons. The same memory usage, fewer
+instructions, and 2 from 4 jumps are replaced with SETcc.
 
-Pavel Begunkov (3):
-  blk-mq: optimise rq sort function
-  list: introduce list_for_each_continue()
-  blk-mq: optimise blk_mq_flush_plug_list()
+Note, that list_sort() doesn't differ 0 and <0.
 
- block/blk-mq.c       | 69 +++++++++++++++-----------------------------
- include/linux/list.h | 10 +++++++
- 2 files changed, 33 insertions(+), 46 deletions(-)
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ block/blk-mq.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 323c9cb28066..f32a3cfdd34e 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1668,14 +1668,10 @@ static int plug_rq_cmp(void *priv, struct list_head *a, struct list_head *b)
+ 	struct request *rqa = container_of(a, struct request, queuelist);
+ 	struct request *rqb = container_of(b, struct request, queuelist);
+ 
+-	if (rqa->mq_ctx < rqb->mq_ctx)
+-		return -1;
+-	else if (rqa->mq_ctx > rqb->mq_ctx)
+-		return 1;
+-	else if (rqa->mq_hctx < rqb->mq_hctx)
+-		return -1;
+-	else if (rqa->mq_hctx > rqb->mq_hctx)
+-		return 1;
++	if (rqa->mq_ctx != rqb->mq_ctx)
++		return rqa->mq_ctx > rqb->mq_ctx;
++	if (rqa->mq_hctx != rqb->mq_hctx)
++		return rqa->mq_hctx > rqb->mq_hctx;
+ 
+ 	return blk_rq_pos(rqa) > blk_rq_pos(rqb);
+ }
 -- 
 2.24.0
 
