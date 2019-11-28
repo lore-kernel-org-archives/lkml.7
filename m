@@ -2,101 +2,137 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EEFC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF8FC33C8C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738B4217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F75217AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574965484;
-	bh=gaP5jfaFoIxLnYYVijcQoHxXxDTDYYo0Nb1QBvYTOb4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=F1Ghrh8pP+gIHGWiggRG2CoKZmoijQKlD4nxPxckxEyJy9CbH++XLk/A6qbmV0TIe
-	 96mpBTac35+n4s78zxHGsOp99p5AYRRqxmlkZA3u1N/DEAc5d9m/SNOtTv37pKeGvP
-	 kOFuSGNzIwdY9z1jqsyDrA6UxxWTR9n+1wxYv/4A=
+	s=default; t=1574965495;
+	bh=mMXc779SXeCQxnAgqrWY8WGkspesVFib9Q6I1MXzP/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uCNBwXnuVwf7X3pG1EhZWrUnQx0XFhdENLrlHXHvaZYkVgJQKKSBhQXMdT43Ut8yC
+	 Kv5GOT7do6HWNDYGaj5wa90Ojr9oXBGsG0bVFmdIuII5RlE0dqZIIZecfpEWvlDFco
+	 Irmylr1xbo6HOgTd1xE+24VH/j2uf2USz4c5KCQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfK1SYn (ORCPT
+        id S1726696AbfK1SYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 13:24:43 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37275 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbfK1SYn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 13:24:43 -0500
-Received: by mail-lj1-f194.google.com with SMTP id u17so2029261lja.4;
-        Thu, 28 Nov 2019 10:24:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=++fr2irPtIHzb3D2aK7SmOZd1oRSgJeu/nXnMOMaZ3Y=;
-        b=pRxsRl2ZLi4epkNifiUSVR8pEOyXwX1WmsJHrO9XCXeAaVWe++GqzX6HFwhCJDTy6V
-         /nFgWgsMNYoVe4d99jt9nta9gv13xL6MxgHw1QBi5Jyum1nrjZFfieMcOI+dDUov6mAb
-         TNU1Ncx4ax2ijKYDTaDuipbRiE56s+M/i7r9xjuPpThgDn4G4NIS2qw8IowejrhWU8yB
-         gfMvCJftccMmMM6w5YIKR4ZVjXJuUkFsZjODVkBVWRpzuP/DsIfR5Jg9AzA8UpRZbM5u
-         t737BHPcW2uXY0Kqdq4i88r0RrMvDqWRTjZD4bxxPhLGGCmUlVAkJ9WM0b8T8Eyskpv2
-         mutg==
-X-Gm-Message-State: APjAAAW0jhjagfTmmfgDDYpu0TUNs6rv9eZIIY47YebyNA/x+u1hB1bt
-        UY4e8O0CYKVbRA854rq4u6E=
-X-Google-Smtp-Source: APXvYqxCIuCGnMbisCv+anAiHCumcyWZp1jEOHberaOJFCNbtaOm/QQxqVUXaIF5C+68Wfl0SPCp0g==
-X-Received: by 2002:a2e:910b:: with SMTP id m11mr10635547ljg.213.1574965480607;
-        Thu, 28 Nov 2019 10:24:40 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id a12sm4261166ljk.48.2019.11.28.10.24.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 10:24:39 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1iaOT2-0005hW-AA; Thu, 28 Nov 2019 19:24:40 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>
-Subject: [PATCH] Bluetooth: btusb: fix non-atomic allocation in completion handler
-Date:   Thu, 28 Nov 2019 19:24:27 +0100
-Message-Id: <20191128182427.21873-1-johan@kernel.org>
-X-Mailer: git-send-email 2.24.0
+        Thu, 28 Nov 2019 13:24:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbfK1SYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 13:24:54 -0500
+Received: from localhost (unknown [217.68.49.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6F7521775;
+        Thu, 28 Nov 2019 18:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574965492;
+        bh=mMXc779SXeCQxnAgqrWY8WGkspesVFib9Q6I1MXzP/o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Te/vPvcm6LPF/MJkwAUZuqL4Y/6nRQC1uGtL8nGJCJWq475Gjta4WmfGFImY/WEx5
+         flFT3V3/PnWOi0rSsLIext9zrrEmBM8JC6yIKo8CQ4PeyrZOEQC75i1vmzxB+shUJQ
+         4NM7WrQMn4lpF4Ai+K5rPenkl0GT12awRLhkfYSw=
+Date:   Thu, 28 Nov 2019 19:24:50 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>
+Subject: Re: [PATCH v23 12/24] x86/sgx: Linux Enclave Driver
+Message-ID: <20191128182450.GA3493127@kroah.com>
+References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+ <20191028210324.12475-13-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028210324.12475-13-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB completion handlers are called in atomic context and must
-specifically not allocate memory using GFP_KERNEL.
+On Mon, Oct 28, 2019 at 11:03:12PM +0200, Jarkko Sakkinen wrote:
+> +static struct device sgx_encl_dev;
 
-Fixes: a1c49c434e15 ("Bluetooth: btusb: Add protocol support for MediaTek MT7668U USB devices")
-Cc: stable <stable@vger.kernel.org>     # 5.3
-Cc: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/bluetooth/btusb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ugh, really?  After 23 versions of this patchset no one saw this?
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 70e385987d41..b6bf5c195d94 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -2602,7 +2602,7 @@ static void btusb_mtk_wmt_recv(struct urb *urb)
- 		 * and being processed the events from there then.
- 		 */
- 		if (test_bit(BTUSB_TX_WAIT_VND_EVT, &data->flags)) {
--			data->evt_skb = skb_clone(skb, GFP_KERNEL);
-+			data->evt_skb = skb_clone(skb, GFP_ATOMIC);
- 			if (!data->evt_skb)
- 				goto err_out;
- 		}
--- 
-2.24.0
+> +static struct cdev sgx_encl_cdev;
+> +static dev_t sgx_devt;
+> +
+> +static void sgx_dev_release(struct device *dev)
+> +{
+> +}
 
+The old kernel documentation used to say I was allowed to make fun of
+people who did this, but that was removed as it really wasn't that nice.
+
+But I'm seriously reconsidering that at the moment.
+
+No, this is NOT OK!
+
+Think about what you are doing here, and why you feel that it is ok to
+work around a kernel message that was added there explicitly to help you
+do things the right way.  I didn't add it just because I felt like it, I
+was trying to give you a chance to not get the use of this api
+incorrect.
+
+That failed :(
+
+Ugh, not ok.  Seriously, not ok...
+
+> +static __init int sgx_dev_init(const char *name, struct device *dev,
+> +			       struct cdev *cdev,
+> +			       const struct file_operations *fops, int minor)
+> +{
+> +	int ret;
+> +
+> +	device_initialize(dev);
+
+Why do you even need a struct device in the first place?
+
+> +
+> +	dev->bus = &sgx_bus_type;
+> +	dev->devt = MKDEV(MAJOR(sgx_devt), minor);
+> +	dev->release = sgx_dev_release;
+> +
+> +	ret = dev_set_name(dev, name);
+> +	if (ret) {
+> +		put_device(dev);
+> +		return ret;
+> +	}
+> +
+> +	cdev_init(cdev, fops);
+
+Why a whole cdev?
+
+Why not use a misc device?  YOu only have 2 devices right?  Why not 2
+misc devices then?  That saves the use of a whole major number and makes
+your code a _LOT_ simpler.
+
+> +	ret = bus_register(&sgx_bus_type);
+
+I'm afraid to look at this bus code.
+
+Instead I'm going to ask, why do you need a bus at all?  What drivers do
+you have for this bus?
+
+ugh I don't know why I looked at this code, but it's not ok as-is and
+anyone who reviewed the driver model interaction needs to rethink
+things...
+
+greg k-h
