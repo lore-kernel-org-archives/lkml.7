@@ -2,127 +2,184 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4EAC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332D5217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7A421781
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:29:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9am0Efc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="He6eccuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfK1VWa (ORCPT
+        id S1726609AbfK1V3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 16:22:30 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36273 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfK1VW3 (ORCPT
+        Thu, 28 Nov 2019 16:29:48 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34993 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfK1V3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 16:22:29 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so32645370wru.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 13:22:28 -0800 (PST)
+        Thu, 28 Nov 2019 16:29:48 -0500
+Received: by mail-ot1-f66.google.com with SMTP id o9so2130677ote.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 13:29:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zacUhBiF0D2r1M/XEfL2iZtJ1q7R7ytzGKqkS9NCn0w=;
-        b=N9am0EfcOq6pRgS/6stJ1kOB9hXFjaOE1psdZlacG0Q2+zMuIfHGvuGUDf9g02SPdw
-         8+HwHtp7YT1jKWgqM3g+DLTVRgSfNjLlsHsUdpoVYAbSHQGa4puCc9aNmE1a9GLVqNAi
-         iCtrX6lkyMohQWMFo6hJBneJu3yJz9GqeTbEVHFpKxV2pf0vjemgJN1BMFKA7sMdh7+P
-         JpEw94EjxA5uEv1p7POXpxtLeCOB0xI0yZ7RBnAU+FyoPNzluCSJBWVMJCO8GNy4S9Pd
-         JDoXHleDmU+d/x8TErQRg+gyELXyHkv3+pQfeZgyqNp1hW4mlPk/1iV6nRT4F7FsguRm
-         iwtg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=e2RH7F3RD7K4uIeBKMBnV6p64DBMWb5+gLz6yw1yZkY=;
+        b=He6eccuItgOem62ODw0Yr1vvV9qVzTEvg+IhGKSDSkGH4RILVXZ69B9DMIwSIOiUCJ
+         8Qt4Yt+WiLr5w3pRiseOazLMBKJMyu8tgZpRfH5cxZfvrnuN/dO2757w1POC1k8mf4Mp
+         7hZoaU3Ip0SspHG+HHsSSPiFmndM3x0ac+2g3pSXYiT4c96DrX+cfTpJKG3HmI5vNsWb
+         h4pEjooh98VEsHkFAYhM5CzwZrIvBGwTQ3JSZvP6grpGdwb1KXPD38isL9HrOdIqXJ0S
+         hcmZhioZjKnOdYnLrR6TnnTMiYm4vCr04RKH1LHcisXSGZpTgW1Sk0GFzCFSfhE7JDIR
+         keHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zacUhBiF0D2r1M/XEfL2iZtJ1q7R7ytzGKqkS9NCn0w=;
-        b=VyQYSIqngSmaP5SXgsyJvRd7FR1TV4r9ts2yUIiA7ijKOX21Zwt13usddlmBNBQHwM
-         EZMEyLnFB2dZFPK+YkbuH+jmppYXvC2lzz45Os1gEb9nrk/IlBLQUG8TB+y1pYErs+4R
-         09Fjq/eip8LT2bahNhg+xE6d7Ob/0OjACTFaErQk08FSfj9xXugLDXNMxBnEJrMgqTb3
-         dLvCHytJXzLDgHQhGjio34VPJ0e4HQAyyQ+YvqN9d4E+NuFUzS7z4q7rNJxjVUFLbXiA
-         gGVlTXIpX+PduG1pv2kKo/dmfWfpFMc6OzXfDiU6kDS1Dyo0aGluGt+BACL8MWV8TyZz
-         /agg==
-X-Gm-Message-State: APjAAAVLx9iUDjX5UBJptN7PnTRMVK9fvzz9UIziL7jp70rPZgEDaojd
-        dFOL24ur7ewgHHs+yjPU7ehKaKeH
-X-Google-Smtp-Source: APXvYqwmJCy9eDZLSUP4scaSc397AWw0L/AvZ5C/g8V+D/wrF4T+azaDEHfgexYGVoBn4iM/qOoNoQ==
-X-Received: by 2002:a5d:474c:: with SMTP id o12mr51701274wrs.170.1574976147572;
-        Thu, 28 Nov 2019 13:22:27 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id b8sm24301877wrt.39.2019.11.28.13.22.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Nov 2019 13:22:26 -0800 (PST)
-Date:   Thu, 28 Nov 2019 21:22:26 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/page_vma_mapped: use PMD_SIZE instead of
- calculating it
-Message-ID: <20191128212226.sfrhfs5m3q7m6tly@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20191128010321.21730-1-richardw.yang@linux.intel.com>
- <20191128083255.ab5rwj7gvktwunik@box.shutemov.name>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=e2RH7F3RD7K4uIeBKMBnV6p64DBMWb5+gLz6yw1yZkY=;
+        b=qGMFbcxo9crv5AIsU8B39fAnWGbc7YYTmymwWoYpKsa3hir1wW7sgZym8uiqaNBOzc
+         /BlG+n1JwiWqRLp9z+Sd2o3YPN9bS4iR7cVvZesew5uBnhWo8KaJpNjyAZcbJva3GIq6
+         VOEyxnnTVwV0CnISp7zYiAWnB5fxs5E1Ca2GaDxJlGexN+i9Gd5uOf2UCpgFePhLmFIj
+         q9SjNT2Us4xY9CX+mu3FNQEve83te1IREir6hzdD/LScNY1Bo4dNLIze+SQmQsQIGK3F
+         1jcEdEBmfppDKtIW4bvqAZ0pupJyxsoVE6KHmlaoQNpFvmNCMHswo4JVk36q0m3Il1gS
+         csmg==
+X-Gm-Message-State: APjAAAXqOVVVs6N2N3bcbGKFLq7wNoHxZZX3wR3Q8as4znlrj6ZFL+5S
+        AApOcl7WYyUICx4cG3kxwaM/1A==
+X-Google-Smtp-Source: APXvYqzG17sWkzpmf8ZfK5ueZnXVK71cDOpTYRQc7ZxzN2vtvCFlXYM9s7p4ArruqGQixqp/ipL8qw==
+X-Received: by 2002:a9d:65cd:: with SMTP id z13mr9163360oth.85.1574976585213;
+        Thu, 28 Nov 2019 13:29:45 -0800 (PST)
+Received: from [192.168.17.59] (CableLink-189-218-29-211.Hosts.InterCable.net. [189.218.29.211])
+        by smtp.gmail.com with ESMTPSA id 64sm1796296oth.31.2019.11.28.13.29.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Nov 2019 13:29:44 -0800 (PST)
+Subject: Re: [PATCH 5.3 00/95] 5.3.14-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191127202845.651587549@linuxfoundation.org>
+From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
+Message-ID: <7008c868-1907-08e4-e976-28dd0278e17a@linaro.org>
+Date:   Thu, 28 Nov 2019 15:29:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128083255.ab5rwj7gvktwunik@box.shutemov.name>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 11:32:55AM +0300, Kirill A. Shutemov wrote:
->On Thu, Nov 28, 2019 at 09:03:20AM +0800, Wei Yang wrote:
->> At this point, we are sure page is PageTransHuge, which means
->> hpage_nr_pages is HPAGE_PMD_NR.
->> 
->> This is safe to use PMD_SIZE instead of calculating it.
->> 
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> ---
->>  mm/page_vma_mapped.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
->> index eff4b4520c8d..76e03650a3ab 100644
->> --- a/mm/page_vma_mapped.c
->> +++ b/mm/page_vma_mapped.c
->> @@ -223,7 +223,7 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
->>  			if (pvmw->address >= pvmw->vma->vm_end ||
->>  			    pvmw->address >=
->>  					__vma_address(pvmw->page, pvmw->vma) +
->> -					hpage_nr_pages(pvmw->page) * PAGE_SIZE)
->> +					PMD_SIZE)
->>  				return not_found(pvmw);
->>  			/* Did we cross page table boundary? */
->>  			if (pvmw->address % PMD_SIZE == 0) {
->
->It is dubious cleanup. Maybe page_size(pvmw->page) instead? It will not
->break if we ever get PUD THP pages.
->
+Hello!
 
-Thanks for your comment.
+On 11/27/19 2:31 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.14 release.
+> There are 95 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.14-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-I took a look into the code again and found I may miss something.
+Results from Linaro’s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-I found we support PUD THP pages, whilc hpage_nr_pages() just return
-HPAGE_PMD_NR on PageTransHuge. Why this is not possible to return PUD number?
+Summary
+------------------------------------------------------------------------
 
-Search in the kernel tree, one implementation of PUD_SIZE fault is
-dev_dax_huge_fault. If page fault happens here, would this if break the loop
-too early?
+kernel: 5.3.14-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-5.3.y
+git commit: 27442d39830209266d439effe7503146b8f4d0a6
+git describe: v5.3.13-97-g27442d398302
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/build/v5.3.13-97-g27442d398302
 
->-- 
-> Kirill A. Shutemov
+No regressions (compared to build v5.3.13)
+
+No fixes (compared to build v5.3.13)
+
+Ran 24992 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-containers-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+
+Greetings!
+
+Daniel Díaz
+daniel.diaz@linaro.org
+
 
 -- 
-Wei Yang
-Help you, Help me
+Linaro LKFT
+https://lkft.linaro.org
