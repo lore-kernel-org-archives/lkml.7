@@ -2,43 +2,43 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE91EC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D327DC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABFE216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2839217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574948486;
-	bh=xsR6tF/LxKIaQ043g+ny47WVZx0E16iDscB9VAN2eWo=;
+	s=default; t=1574948489;
+	bh=FbyHzCkqqt4La7dQuHyRt78ivueB/7qDZTxHfAcFAhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z58Izm9yBCgXui2bnIFsAoEQgo+QxtHO5Fe/qTed6bstcIXYKjTgmhEi2wN9I2BUv
-	 zZmYm8ykeeNFXsCQBDEAHDgpJ+LSyfS1mGSBFzWxqwPqW1CrpFzRfrro/uNI2N2Up/
-	 aAfi7IUPEo+H9xEqj78wS9PoXlMOSgDdHgyONA8Q=
+	b=Xs7GktuuHsrSYKh3v7HDfjaYvAa/Uvj0eLi65Rn1GIlIxqMUqRZJgoBRbiIjWTT5A
+	 mwOyjEgf6pqg7bz8wStyuEer8qFRgEIuSmW/zHFp229t0c5VLX/uTEbEoaAH/jW2Nn
+	 i4q01VtmC8eqRkyNkAPmD+NO4xMKF4Felcl8dqtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfK1NlZ (ORCPT
+        id S1727307AbfK1Nl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:41:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37796 "EHLO mail.kernel.org"
+        Thu, 28 Nov 2019 08:41:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727208AbfK1NlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:41:17 -0500
+        id S1727263AbfK1NlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 08:41:25 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E567421789;
-        Thu, 28 Nov 2019 13:41:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C12FC217AB;
+        Thu, 28 Nov 2019 13:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574948476;
-        bh=xsR6tF/LxKIaQ043g+ny47WVZx0E16iDscB9VAN2eWo=;
+        s=default; t=1574948484;
+        bh=FbyHzCkqqt4La7dQuHyRt78ivueB/7qDZTxHfAcFAhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBpeEKXmPFLLynWIzG6fBrkEx0pQKTj1YBzusA6ENncrCmRw7idPw6wmHIA8NzTji
-         KP766KNbdWsrsHKA/dzM94VvSIOgfOlRHaJd7/g/DeAcZx/VBsBTiqiS75T52jdyTx
-         NyPE8v0xbTSV96Tm3Yqa1l+VZ+QVcvjLbd6lpOBg=
+        b=zZWzOWsIIeGHSaPE9zHssZ7pah2E1rH62tj5EgbTbySvIgsY1gtqgcV0mEmd9Nk4T
+         pyXp4yVp87BKAAUr+jjGmsrUA1N2xnH3bJsAt2Ku8G/T8ixtGK6pblUQTlFpoigC+c
+         +i5JY/tv4ccB3MfDjFrVrTW+izup0VBCR7goVjLU=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,148 +46,198 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 13/22] perf tests: Rename thread-mg-share to thread-maps-share
-Date:   Thu, 28 Nov 2019 10:40:18 -0300
-Message-Id: <20191128134027.23726-14-acme@kernel.org>
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH 15/22] perf tools: Allow to link with libbpf dynamicaly
+Date:   Thu, 28 Nov 2019 10:40:20 -0300
+Message-Id: <20191128134027.23726-16-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191128134027.23726-1-acme@kernel.org>
 References: <20191128134027.23726-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-One more step in merging 'struct maps' with 'struct map_groups'.
+Currently we support only static linking with kernel's libbpf
+(tools/lib/bpf). This patch adds libbpf package detection and support to
+link perf with it dynamically.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+The libbpf package status is displayed with:
+
+  $ make VF=1
+  Auto-detecting system features:
+  ...
+  ...                        libbpf: [ on  ]
+
+It's not checked by default, because it's quite new.  Once it's on most
+distros we can switch it on.
+
+For the same reason it's not added to the test-all check.
+
+Perf does not need advanced version of libbpf, so we can check just for
+the base bpf_object__open function.
+
+Adding new compile variable to detect libbpf package and link bpf
+dynamically:
+
+  $ make LIBBPF_DYNAMIC=1
+    ...
+    LINK     perf
+  $ ldd perf | grep bpf
+    libbpf.so.0 => /lib64/libbpf.so.0 (0x00007f46818bc000)
+
+If libbpf is not installed, build stops with:
+
+  Makefile.config:486: *** Error: No libbpf devel library found,\
+  please install libbpf-devel.  Stop.
+
+Committer testing:
+
+  $ make LIBBPF_DYNAMIC=1 -C tools/perf O=/tmp/build/perf
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+    BUILD:   Doing 'make -j8' parallel build
+  Makefile.config:493: *** Error: No libbpf devel library found, please install libbpf-devel.  Stop.
+  make[1]: *** [Makefile.perf:225: sub-make] Error 2
+  make: *** [Makefile:70: all] Error 2
+  make: Leaving directory '/home/acme/git/perf/tools/perf'
+  $
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Toke Høiland-Jørgensen <toke@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jesper Dangaard Brouer <brouer@redhat.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-naxsl3g4ou3fyxb8l8e0pn5e@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191126121253.28253-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/Build                        |  2 +-
- tools/perf/tests/builtin-test.c               |  4 ++--
- tools/perf/tests/tests.h                      |  2 +-
- ...{thread-mg-share.c => thread-maps-share.c} | 22 +++++++++----------
- 4 files changed, 15 insertions(+), 15 deletions(-)
- rename tools/perf/tests/{thread-mg-share.c => thread-maps-share.c} (77%)
+ tools/build/Makefile.feature      |  3 ++-
+ tools/build/feature/Makefile      |  4 ++++
+ tools/build/feature/test-libbpf.c |  7 +++++++
+ tools/perf/Makefile.config        | 10 ++++++++++
+ tools/perf/Makefile.perf          |  6 +++++-
+ 5 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 tools/build/feature/test-libbpf.c
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index e72accefd669..5b9b0a813916 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -27,7 +27,7 @@ perf-y += wp.o
- perf-y += task-exit.o
- perf-y += sw-clock.o
- perf-y += mmap-thread-lookup.o
--perf-y += thread-mg-share.o
-+perf-y += thread-maps-share.o
- perf-y += switch-tracking.o
- perf-y += keep-tracking.o
- perf-y += code-reading.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 8b286e9b7549..3a4b9837b54d 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -166,8 +166,8 @@ static struct test generic_tests[] = {
- 		.func = test__mmap_thread_lookup,
- 	},
- 	{
--		.desc = "Share thread mg",
--		.func = test__thread_mg_share,
-+		.desc = "Share thread maps",
-+		.func = test__thread_maps_share,
- 	},
- 	{
- 		.desc = "Sort output of hist entries",
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 9837b6e93023..f2b9bb024746 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -73,7 +73,7 @@ int test__dwarf_unwind(struct test *test, int subtest);
- int test__expr(struct test *test, int subtest);
- int test__hists_filter(struct test *test, int subtest);
- int test__mmap_thread_lookup(struct test *test, int subtest);
--int test__thread_mg_share(struct test *test, int subtest);
-+int test__thread_maps_share(struct test *test, int subtest);
- int test__hists_output(struct test *test, int subtest);
- int test__hists_cumulate(struct test *test, int subtest);
- int test__switch_tracking(struct test *test, int subtest);
-diff --git a/tools/perf/tests/thread-mg-share.c b/tools/perf/tests/thread-maps-share.c
-similarity index 77%
-rename from tools/perf/tests/thread-mg-share.c
-rename to tools/perf/tests/thread-maps-share.c
-index e3b0d692d565..9371484973f2 100644
---- a/tools/perf/tests/thread-mg-share.c
-+++ b/tools/perf/tests/thread-maps-share.c
-@@ -4,7 +4,7 @@
- #include "thread.h"
- #include "debug.h"
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 8a19753cc26a..574c2e0b9d20 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -96,7 +96,8 @@ FEATURE_TESTS_EXTRA :=                  \
+          cxx                            \
+          llvm                           \
+          llvm-version                   \
+-         clang
++         clang                          \
++         libbpf
  
--int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_unused)
-+int test__thread_maps_share(struct test *test __maybe_unused, int subtest __maybe_unused)
- {
- 	struct machines machines;
- 	struct machine *machine;
-@@ -16,7 +16,7 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
+ FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
  
- 	/* other process */
- 	struct thread *other, *other_leader;
--	struct maps *other_mg;
-+	struct maps *other_maps;
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 8499385365c0..f30a89046aa3 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -53,6 +53,7 @@ FILES=                                          \
+          test-zlib.bin                          \
+          test-lzma.bin                          \
+          test-bpf.bin                           \
++         test-libbpf.bin                        \
+          test-get_cpuid.bin                     \
+          test-sdt.bin                           \
+          test-cxx.bin                           \
+@@ -270,6 +271,9 @@ $(OUTPUT)test-get_cpuid.bin:
+ $(OUTPUT)test-bpf.bin:
+ 	$(BUILD)
  
- 	/*
- 	 * This test create 2 processes abstractions (struct thread)
-@@ -45,14 +45,14 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
- 	maps = leader->maps;
- 	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&maps->refcnt), 4);
++$(OUTPUT)test-libbpf.bin:
++	$(BUILD) -lbpf
++
+ $(OUTPUT)test-sdt.bin:
+ 	$(BUILD)
  
--	/* test the map groups pointer is shared */
--	TEST_ASSERT_VAL("map groups don't match", maps == t1->maps);
--	TEST_ASSERT_VAL("map groups don't match", maps == t2->maps);
--	TEST_ASSERT_VAL("map groups don't match", maps == t3->maps);
-+	/* test the maps pointer is shared */
-+	TEST_ASSERT_VAL("maps don't match", maps == t1->maps);
-+	TEST_ASSERT_VAL("maps don't match", maps == t2->maps);
-+	TEST_ASSERT_VAL("maps don't match", maps == t3->maps);
+diff --git a/tools/build/feature/test-libbpf.c b/tools/build/feature/test-libbpf.c
+new file mode 100644
+index 000000000000..a508756cf4cc
+--- /dev/null
++++ b/tools/build/feature/test-libbpf.c
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <bpf/libbpf.h>
++
++int main(void)
++{
++	return bpf_object__open("test") ? 0 : -1;
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 1783427da9b0..c90f4146e5a2 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -483,6 +483,16 @@ ifndef NO_LIBELF
+     ifeq ($(feature-bpf), 1)
+       CFLAGS += -DHAVE_LIBBPF_SUPPORT
+       $(call detected,CONFIG_LIBBPF)
++
++      # detecting libbpf without LIBBPF_DYNAMIC, so make VF=1 shows libbpf detection status
++      $(call feature_check,libbpf)
++      ifdef LIBBPF_DYNAMIC
++        ifeq ($(feature-libbpf), 1)
++          EXTLIBS += -lbpf
++        else
++          dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
++        endif
++      endif
+     endif
  
- 	/*
- 	 * Verify the other leader was created by previous call.
--	 * It should have shared map groups with no change in
-+	 * It should have shared maps with no change in
- 	 * refcnt.
- 	 */
- 	other_leader = machine__find_thread(machine, 4, 4);
-@@ -70,10 +70,10 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
- 	machine__remove_thread(machine, other);
- 	machine__remove_thread(machine, other_leader);
+     ifndef NO_DWARF
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 1cd294468a1f..eae5d5e95952 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -116,6 +116,8 @@ include ../scripts/utilities.mak
+ #
+ # Define TCMALLOC to enable tcmalloc heap profiling.
+ #
++# Define LIBBPF_DYNAMIC to enable libbpf dynamic linking.
++#
  
--	other_mg = other->maps;
--	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_mg->refcnt), 2);
-+	other_maps = other->maps;
-+	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_maps->refcnt), 2);
+ # As per kernel Makefile, avoid funny character set dependencies
+ unexport LC_ALL
+@@ -360,7 +362,9 @@ export PERL_PATH
  
--	TEST_ASSERT_VAL("map groups don't match", other_mg == other_leader->maps);
-+	TEST_ASSERT_VAL("maps don't match", other_maps == other_leader->maps);
+ PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD) $(LIBPERF)
+ ifndef NO_LIBBPF
+-  PERFLIBS += $(LIBBPF)
++  ifndef LIBBPF_DYNAMIC
++    PERFLIBS += $(LIBBPF)
++  endif
+ endif
  
- 	/* release thread group */
- 	thread__put(leader);
-@@ -89,7 +89,7 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
- 
- 	/* release other group  */
- 	thread__put(other_leader);
--	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_mg->refcnt), 1);
-+	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_maps->refcnt), 1);
- 
- 	thread__put(other);
- 
+ # We choose to avoid "if .. else if .. else .. endif endif"
 -- 
 2.21.0
 
