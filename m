@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0F5C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB3BC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F75215F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5222158A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfK1Bku (ORCPT
+        id S1727783AbfK1BkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 20:40:50 -0500
+        Wed, 27 Nov 2019 20:40:25 -0500
 Received: from mga02.intel.com ([134.134.136.20]:10954 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbfK1BkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 20:40:25 -0500
+        id S1727088AbfK1BkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 20:40:21 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 17:40:20 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 17:40:19 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,251,1571727600"; 
-   d="scan'208";a="221166522"
+   d="scan'208";a="221166474"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga002.jf.intel.com with ESMTP; 27 Nov 2019 17:40:20 -0800
+  by orsmga002.jf.intel.com with ESMTP; 27 Nov 2019 17:40:19 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -54,9 +54,9 @@ Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v4 18/19] perf/x86: Provide stubs of KVM helpers for non-Intel CPUs
-Date:   Wed, 27 Nov 2019 17:40:15 -0800
-Message-Id: <20191128014016.4389-19-sean.j.christopherson@intel.com>
+Subject: [PATCH v4 03/19] tools arch x86: Sync msr-index.h from kernel sources
+Date:   Wed, 27 Nov 2019 17:40:00 -0800
+Message-Id: <20191128014016.4389-4-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191128014016.4389-1-sean.j.christopherson@intel.com>
 References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
@@ -67,68 +67,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide stubs for perf_guest_get_msrs() and intel_pt_handle_vmx() when
-building without support for Intel CPUs, i.e. CPU_SUP_INTEL=n.  Lack of
-stubs is not currently a problem as the only user, KVM_INTEL, takes a
-dependency on CPU_SUP_INTEL=y.  Provide the stubs for all CPUs so that
-KVM_INTEL can be built for any CPU with compatible hardware support,
-e.g. Centuar and Zhaoxin CPUs.
+Sync msr-index.h to pull in recent renames of the IA32_FEATURE_CONTROL
+MSR definitions.  Update KVM's VMX selftest and turbostat accordingly.
+Keep the full name in turbostat's output to avoid breaking someone's
+workflow, e.g. if a script is looking for the full name.
 
-Note, the existing stub for perf_guest_get_msrs() is essentially dead
-code as KVM selects CONFIG_PERF_EVENTS, i.e. the only user guarantees
-the full implementation is built.
+While using the renamed defines is by no means necessary, do the sync
+now to avoid leaving a landmine that will get stepped on the next time
+msr-index.h needs to be refreshed for some other reason.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/perf_event.h | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ tools/arch/x86/include/asm/msr-index.h       | 30 ++++++++++++++++----
+ tools/power/x86/turbostat/turbostat.c        |  4 +--
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c |  8 +++---
+ 3 files changed, 30 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index ee26e9215f18..29964b0e1075 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -322,17 +322,10 @@ struct perf_guest_switch_msr {
- 	u64 host, guest;
- };
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index 20ce682a2540..0fc370bc7db5 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -93,6 +93,18 @@
+ 						  * Microarchitectural Data
+ 						  * Sampling (MDS) vulnerabilities.
+ 						  */
++#define ARCH_CAP_PSCHANGE_MC_NO		BIT(6)	 /*
++						  * The processor is not susceptible to a
++						  * machine check error due to modifying the
++						  * code page size along with either the
++						  * physical address or cache type
++						  * without TLB invalidation.
++						  */
++#define ARCH_CAP_TSX_CTRL_MSR		BIT(7)	/* MSR for TSX control is available. */
++#define ARCH_CAP_TAA_NO			BIT(8)	/*
++						 * Not susceptible to
++						 * TSX Async Abort (TAA) vulnerabilities.
++						 */
  
--extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr);
- extern void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap);
- extern void perf_check_microcode(void);
- extern int x86_perf_rdpmc_index(struct perf_event *event);
- #else
--static inline struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr)
--{
--	*nr = 0;
--	return NULL;
--}
+ #define MSR_IA32_FLUSH_CMD		0x0000010b
+ #define L1D_FLUSH			BIT(0)	/*
+@@ -103,6 +115,10 @@
+ #define MSR_IA32_BBL_CR_CTL		0x00000119
+ #define MSR_IA32_BBL_CR_CTL3		0x0000011e
+ 
++#define MSR_IA32_TSX_CTRL		0x00000122
++#define TSX_CTRL_RTM_DISABLE		BIT(0)	/* Disable RTM feature */
++#define TSX_CTRL_CPUID_CLEAR		BIT(1)	/* Disable TSX enumeration */
++
+ #define MSR_IA32_SYSENTER_CS		0x00000174
+ #define MSR_IA32_SYSENTER_ESP		0x00000175
+ #define MSR_IA32_SYSENTER_EIP		0x00000176
+@@ -540,7 +556,14 @@
+ #define MSR_IA32_EBL_CR_POWERON		0x0000002a
+ #define MSR_EBC_FREQUENCY_ID		0x0000002c
+ #define MSR_SMI_COUNT			0x00000034
+-#define MSR_IA32_FEATURE_CONTROL        0x0000003a
++
++/* Referred to as IA32_FEATURE_CONTROL in Intel's SDM. */
++#define MSR_IA32_FEAT_CTL		0x0000003a
++#define FEAT_CTL_LOCKED				BIT(0)
++#define FEAT_CTL_VMX_ENABLED_INSIDE_SMX		BIT(1)
++#define FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX	BIT(2)
++#define FEAT_CTL_LMCE_ENABLED			BIT(20)
++
+ #define MSR_IA32_TSC_ADJUST             0x0000003b
+ #define MSR_IA32_BNDCFGS		0x00000d90
+ 
+@@ -548,11 +571,6 @@
+ 
+ #define MSR_IA32_XSS			0x00000da0
+ 
+-#define FEATURE_CONTROL_LOCKED				(1<<0)
+-#define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX	(1<<1)
+-#define FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX	(1<<2)
+-#define FEATURE_CONTROL_LMCE				(1<<20)
 -
- static inline void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
+ #define MSR_IA32_APICBASE		0x0000001b
+ #define MSR_IA32_APICBASE_BSP		(1<<8)
+ #define MSR_IA32_APICBASE_ENABLE	(1<<11)
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 5d0fddda842c..31c1ca0bb3ee 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -4499,10 +4499,10 @@ void decode_feature_control_msr(void)
  {
- 	memset(cap, 0, sizeof(*cap));
-@@ -342,8 +335,23 @@ static inline void perf_events_lapic_init(void)	{ }
- static inline void perf_check_microcode(void) { }
- #endif
+ 	unsigned long long msr;
  
-+#if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
-+extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr);
-+#else
-+static inline struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr)
-+{
-+	*nr = 0;
-+	return NULL;
-+}
-+#endif
-+
- #ifdef CONFIG_CPU_SUP_INTEL
-  extern void intel_pt_handle_vmx(int on);
-+#else
-+static inline void intel_pt_handle_vmx(int on)
-+{
-+
-+}
- #endif
+-	if (!get_msr(base_cpu, MSR_IA32_FEATURE_CONTROL, &msr))
++	if (!get_msr(base_cpu, MSR_IA32_FEAT_CTL, &msr))
+ 		fprintf(outf, "cpu%d: MSR_IA32_FEATURE_CONTROL: 0x%08llx (%sLocked %s)\n",
+ 			base_cpu, msr,
+-			msr & FEATURE_CONTROL_LOCKED ? "" : "UN-",
++			msr & FEAT_CTL_LOCKED ? "" : "UN-",
+ 			msr & (1 << 18) ? "SGX" : "");
+ }
  
- #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_AMD)
+diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+index f6ec97b7eaef..85064baf5e97 100644
+--- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
++++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+@@ -157,11 +157,11 @@ bool prepare_for_vmx_operation(struct vmx_pages *vmx)
+ 	 *  Bit 2: Enables VMXON outside of SMX operation. If clear, VMXON
+ 	 *    outside of SMX causes a #GP.
+ 	 */
+-	required = FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX;
+-	required |= FEATURE_CONTROL_LOCKED;
+-	feature_control = rdmsr(MSR_IA32_FEATURE_CONTROL);
++	required = FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX;
++	required |= FEAT_CTL_LOCKED;
++	feature_control = rdmsr(MSR_IA32_FEAT_CTL);
+ 	if ((feature_control & required) != required)
+-		wrmsr(MSR_IA32_FEATURE_CONTROL, feature_control | required);
++		wrmsr(MSR_IA32_FEAT_CTL, feature_control | required);
+ 
+ 	/* Enter VMX root operation. */
+ 	*(uint32_t *)(vmx->vmxon) = vmcs_revision();
 -- 
 2.24.0
 
