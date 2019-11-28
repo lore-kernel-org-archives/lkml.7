@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BA7C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE120C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C67320880
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9292120880
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UIBQKkwY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B7oUa/oy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfK1WkZ (ORCPT
+        id S1726723AbfK1Wmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 17:40:25 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48154 "EHLO
+        Thu, 28 Nov 2019 17:42:32 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48310 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfK1WkZ (ORCPT
+        with ESMTP id S1726612AbfK1Wmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 17:40:25 -0500
+        Thu, 28 Nov 2019 17:42:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8s4OV8QdxGuKeWypyj3UNsLPvMPu6eIU4B1rnNMiCVk=; b=UIBQKkwYlA9v9WMMmXJQwIW3o
-        ul8DnxLBsDJcre9bnLzGrSbi3mx4Hrc9IwLNHl7BmkY3gOMJsrwqpHYRy7bj6oh9QnSNjd5sRPbfe
-        7GwbMXtP1MLrFuWld0bcdKHTX8az7ijTNuN2Ix0Z7xx+2dmWbXcVx9SAhkAPsTIHWe1jfD3l/Ip40
-        QuvBSD53+5bYSoo5afxJImzsvt0m1moQSXnjWNtw2/s3Wr8iQdYmYnnnLaiP8vQkvzgm6aoC0Nexh
-        zNGfjcjuyytb51YVH3guxoPn2C/V6yKfLLV7qI+nyXFbez6nI9bpxWqW4I1XNAzY7ED2Bd5+i7a1y
-        FeyKGkpxg==;
+         bh=YWU+2cL1a8V7zdnD6YoB1Y5aa4SlJGwwOBC43F4kcpk=; b=B7oUa/oy07Rxb6l4GSyDKkke8
+        nYDX7KYQgQquj8NbVkCT6qjBpdOaYkoUsO6+s4RThCUtsyP8Wjd0do7Nnh8n6SClZSYV3E97S8nmy
+        fmnfIhgWmfyTel5C2A52/qmjEeamSFVk8D+/So4kupvHq/S4SK0lpb7qGLdKH4Sbaz4Vp6i81grxh
+        jY/zTTq7x5kL5CWQMiUNTAiF61HaD9PNpMNm7tvAwZLFak25HhpafNjBcujjEsEkVqXBmDsViwSob
+        YxEZwxESxaWN06jZ+MAgrlr5f0wIu4jcl1PTEppfcsIXnSGIyhbNqws2uU9mClhyEVk7h5pDB+M9i
+        KdmjlaAmg==;
 Received: from [2601:1c0:6280:3f0::5a22]
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iaSSW-0000OZ-D3; Thu, 28 Nov 2019 22:40:24 +0000
+        id 1iaSUY-0000hU-2r; Thu, 28 Nov 2019 22:42:30 +0000
 To:     LKML <linux-kernel@vger.kernel.org>, linux-csky@vger.kernel.org
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, Guo Ren <guoren@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] clocksource: minor Kconfig help text fixes
-Message-ID: <87922baa-223a-345d-38ac-be5a94d15b34@infradead.org>
-Date:   Thu, 28 Nov 2019 14:40:22 -0800
+Subject: [PATCH] irqchip: cleanup Kconfig help text
+Message-ID: <ca14f757-f191-62a0-b896-6b3ba0f9d168@infradead.org>
+Date:   Thu, 28 Nov 2019 14:42:29 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
@@ -60,42 +59,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Minor cleanups in Kconfig help text:
+Fixes to Kconfig help text:
 
-- End a sentence with a period.
-- Fix verb grammar.
+- spell out "hardware"
+- fix verb usage
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: John Stultz <john.stultz@linaro.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <maz@kernel.org>
 Cc: linux-kernel@vger.kernel.org
 Cc: Guo Ren <guoren@kernel.org>
 Cc: linux-csky@vger.kernel.org
 ---
- drivers/clocksource/Kconfig |    4 ++--
+ drivers/irqchip/Kconfig |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- lnx-54.orig/drivers/clocksource/Kconfig
-+++ lnx-54/drivers/clocksource/Kconfig
-@@ -312,7 +312,7 @@ config ARC_TIMERS_64BIT
- 	depends on ARC_TIMERS
- 	select TIMER_OF
+--- lnx-54.orig/drivers/irqchip/Kconfig
++++ lnx-54/drivers/irqchip/Kconfig
+@@ -434,7 +434,7 @@ config CSKY_MPINTC
  	help
--	  This enables 2 different 64-bit timers: RTC (for UP) and GFRC (for SMP)
-+	  This enables 2 different 64-bit timers: RTC (for UP) and GFRC (for SMP).
- 	  RTC is implemented inside the core, while GFRC sits outside the core in
- 	  ARConnect IP block. Driver automatically picks one of them for clocksource
- 	  as appropriate.
-@@ -666,7 +666,7 @@ config CSKY_MP_TIMER
- 	  Say yes here to enable C-SKY SMP timer driver used for C-SKY SMP
- 	  system.
- 	  csky,mptimer is not only used in SMP system, it also could be used
--	  single core system. It's not a mmio reg and it use mtcr/mfcr instruction.
-+	  single core system. It's not a mmio reg and it uses mtcr/mfcr instruction.
+ 	  Say yes here to enable C-SKY SMP interrupt controller driver used
+ 	  for C-SKY SMP system.
+-	  In fact it's not mmio map in hw and it use ld/st to visit the
++	  In fact it's not mmio map in hardware and it uses ld/st to visit the
+ 	  controller's register inside CPU.
  
- config GX6605S_TIMER
- 	bool "Gx6605s SOC system timer driver" if COMPILE_TEST
-
+ config CSKY_APB_INTC
+@@ -442,7 +442,7 @@ config CSKY_APB_INTC
+ 	depends on CSKY
+ 	help
+ 	  Say yes here to enable C-SKY APB interrupt controller driver used
+-	  by C-SKY single core SOC system. It use mmio map apb-bus to visit
++	  by C-SKY single core SOC system. It uses mmio map apb-bus to visit
+ 	  the controller's register.
+ 
+ config IMX_IRQSTEER
 
