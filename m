@@ -2,84 +2,88 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117B3C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD43C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C2C2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC6E12075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfK1NAg (ORCPT
+        id S1726569AbfK1NEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:00:36 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:58291 "EHLO
+        Thu, 28 Nov 2019 08:04:08 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:44919 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfK1NAg (ORCPT
+        with ESMTP id S1726252AbfK1NEI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:00:36 -0500
-Received: from orion.localdomain ([95.117.37.214]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MKKER-1iEWnt3SjH-00LkPB; Thu, 28 Nov 2019 13:54:34 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     tim@buttersideup.com, james.morse@arm.com, rrichter@marvell.com,
-        jdelvare@suse.com, linux@roeck-us.net, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, linux-crypto@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: [PATCH 3/6] mtd: maps: amd76xrom: use pci_get_device_by_id()
-Date:   Thu, 28 Nov 2019 13:54:03 +0100
-Message-Id: <20191128125406.10417-3-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191128125406.10417-1-info@metux.net>
-References: <20191128125406.10417-1-info@metux.net>
-X-Provags-ID: V03:K1:kHHWDalUVUqjlafRyIBDsEVrMDclpS6WFOcs2fJqalWicwdQghg
- xuEXtV526bjd5k4WcJfvLri5gHj3mTA2elZo05psIN/BL0IYjbsFx73zY7qOePNgjzjErsa
- kephRy+9U7L17Fjl1nNwmeDO5WtgjG4pSkuT9CawtD2JlPNhZQi26P0EcKRYUshBzobhF/h
- zCsfwx4mIUAImOjsQ+atw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HVNFLXUI8no=:Nc0GdKIXzMS7m180256uDy
- jCFDBRie3blvAsXX+pcsXjmc479xIx8f5/lZCyg8xMQZwTcIOZWWhVvaXcrSQvuRmCkDJD+yz
- xi13CUwqIUGbCnxDx4HwD1DwXt3UW1QH0SwM0mtzNFbWBVXXoUZTl7S1YyTqwCZZG/QqFEql/
- KXGfoEv7z711cgxYbuynC1dj5W0vcc0n1QSZSdcCUrm/7nnrD70V9hEa3FdmyJYpX+EA7FqaE
- NE4sdcvhdg/EW6OQOv2QINUEofKv0d/g9h9H/POzWr8oQ8WPf0iXEMfQOFFWr3mk76Nia1l/x
- GeKYo2M7k3h+Q11m34NEcm6hmwAqotrk7gGSW8ICDHj36cDjFYY3wB2QknwRAGp3ONoC9x44J
- 2o3HnIhGKChll6830UJPp1xuG7bZZNiJO5apnFTK8lmlEgjSMPV/ynWGb0YGEATxI8bYUtSw8
- tD0Aycmup8cAkUGNFI3TrHtlg4sgYSRXHRcOCnbVqaBWmNwRmuXS4Q/fVvW0ayNZKcy8X274k
- GVDTQ8qX8E8RR5r8xEWtaFlh29j0UPWsJr1Afix5Yp/s2DiXQ/56GVkEDfp4nY7jx5dR9VP3C
- DdHyD7FXgrW5pPgGulBP5FOdKqCiTLdmlH+YcsrZY/6yh1MPvJWx9BLp5DaXAWdcQhj2vs3wf
- Cm5rWh57LhE43A/XHN6SSJGP0L7+u7PdHLWtYH36k/NFeXbeaTzR5e3311LdUauXeSht7/fNw
- lAJPgZfup5MeWPNT7Hq1tRVoC2apQG+jn70abCWQg/ybgXsLXerEWsCieft9hca8+V3btu1IW
- uu+dfpMkilp/WPQK1n86856jiB1m+wC896dZy8GvAM3YEA6yU3s9PHEIN7KIHE0+QKbKIaq8N
- SY+iucKAdtRbwvbTWAQw==
+        Thu, 28 Nov 2019 08:04:08 -0500
+Received: from [192.168.1.155] ([95.117.37.214]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N7zNt-1hmw9F0jwp-014znu; Thu, 28 Nov 2019 14:04:06 +0100
+Subject: Re: [PATCH] input: misc: Kconfig: use select instead of depends on
+ KEYBOARD_GPIO
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+References: <20191121132046.11977-1-info@metux.net>
+ <20191122195810.GD248138@dtor-ws>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <5600986e-239c-88a9-4f9c-ca261c33a156@metux.net>
+Date:   Thu, 28 Nov 2019 14:03:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191122195810.GD248138@dtor-ws>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:os83iEyCY0j6RVrNxP4Hm5JyZI3u36v6bKf2gADvY60LVEyvW6R
+ OS0f3wMnnl+JKqLt+ZptE5miYhHpeP3iw/Ig0gB0w1azVXHsDMI7ir6gBbjb068qSIDweEY
+ BMvZRGf6YkJkgE5UZ/p59tZx67xENZHC1PUYqW1hfrVW11j2Q12g6SMrFFjCPQmqo3WAdN0
+ d7jVigFH6mH35C2eS9sIw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vMCE3ttNetc=:fwnmfwxKx2kQy3o0xUqdbk
+ NqFEjlLrcYGmCOBZKgeCl3+t0YfOZTczc/3Zx1Wz67VkhqW3sik3mZXkqFU0+oTbjOVs/jwvC
+ 49jsCYrCR0ejVQws5p61E/RHHUwAuPiY+RlipouGOzvLkRhMxhC9vlWCohg4qewHGEEElrtbb
+ iXaaTIckby32iLGmQIyraeONHccYk/c17epikRYdg0z1bB4Qedaeg5W4cvLHhtU4MTsU8sHgh
+ Sn6Ol3Y4QRYKcvQxfbxWqaD1b+pR7rsDpv+0SDs9Ca3UMQjd+cziGKvqyYf5mql9mEFJoNNY8
+ dnydnkP2ti/eZaVYGsSqC/cwng58khlNJMisO/kD2A9k4uf80509PD1P14ZEqhQ0tVcZTWh2J
+ H8CbRGxHX9xJbJLyH7fXoPlQhSFvA0FB36eVH34uPsZG2qOSs79XRPO+hUFI9tbIzWo88X+s6
+ zySVPddL57Fs3CdIxJ6kV+WyHeMIOxEn15Jg0Ln05zxQaLD2yDJO1c59/losZgxzBeRWkEhwJ
+ YAP3f/q0z30f7YpSaoF4rksUbQ+yw62xHCa1o/ZvJO8eS6kdggnE/p0OLVL0hcydpug2bdZzJ
+ fTU6DUAUjgXqkqKcxbCeeYjXTHfw4+15gAD5UyT/Z3gQ2QWzFFl98857ZqurRIwCLgRkBbfyu
+ cX40S0b0G3WZuyw5Vjloz2FHh4aKCGD7MGP+yOcxsb+qQAmZFTp5VTDf1wSw8r+bL4fvesDKq
+ ir/NgHpzENgxALhSuHxIo5xx5zNBDndPhAt5RAkbGzr1Dv+m0byxa1QxlW9/76z0hEVL9KA2z
+ fwajE6ahACm9hyUOYMdDSZ7ViroZOSS2U3i8DVB/2qmI4UZS1dWTnWfadXI4R6FvQY4aqs22j
+ iKNnGFz+rVz60xquQjpA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new pci_get_device_by_id() helper in order to reduce
-a bit of boilerplate.
+On 22.11.19 20:58, Dmitry Torokhov wrote:
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/mtd/maps/amd76xrom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> KEYBOARD_GPIO depends on GPIOLIB and "select" does not propagate
+> dependencies, so you may still end up with invalid configs...
 
-diff --git a/drivers/mtd/maps/amd76xrom.c b/drivers/mtd/maps/amd76xrom.c
-index 462fadb56bdb..07a402dbdf44 100644
---- a/drivers/mtd/maps/amd76xrom.c
-+++ b/drivers/mtd/maps/amd76xrom.c
-@@ -323,7 +323,7 @@ static int __init init_amd76xrom(void)
- 	const struct pci_device_id *id;
- 	pdev = NULL;
- 	for(id = amd76xrom_pci_tbl; id->vendor; id++) {
--		pdev = pci_get_device(id->vendor, id->device, NULL);
-+		pdev = pci_get_device_by_id(id);
- 		if (pdev) {
- 			break;
- 		}
+Sure that they don't propagate ? In this case, I've got yet
+another todo ... :o
+
+
+--mtx
+
 -- 
-2.11.0
-
+Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
+sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/öffenen,
+selbst wenn diese von vermeintlich vertrauenswürdigen Absendern zu
+stammen scheinen. Andernfalls droht Totalschaden.
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
