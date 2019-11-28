@@ -2,148 +2,137 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B93AC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165EEC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DECE221739
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE0321774
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574961557;
+	bh=0eDcF33MHbh3guelUltnLjg7ZZiO5V4fJN2AmHy9rEY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N6GXZunLg68C5yBBiTTF/VHmY6wxl8HxX8o/ksrC+PGb4AeoDgSFKBxOBhJbW4aN/
+	 hg2buuWiFjlE1ahwBHbMaH3RE0tWvJjNXyOa/IldDx1ZijiMOBCH8aBCbFpQN8U17g
+	 6cFOsGnbRfOLg9ZHmDfmd8iX8dw+/Kyjz8y9L9uI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfK1RQX (ORCPT
+        id S1726663AbfK1RTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 12:16:23 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60758 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726587AbfK1RQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 12:16:22 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASHCG5O189865;
-        Thu, 28 Nov 2019 12:16:08 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wjah6rh8a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 12:16:08 -0500
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xASHCGQe189854;
-        Thu, 28 Nov 2019 12:16:07 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wjah6rh7u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 12:16:07 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xASHFa3l000649;
-        Thu, 28 Nov 2019 17:16:06 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma03dal.us.ibm.com with ESMTP id 2wevd7b1j5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 17:16:06 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xASHG5og32833932
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Nov 2019 17:16:05 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4ECD7BE053;
-        Thu, 28 Nov 2019 17:16:05 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 626A6BE04F;
-        Thu, 28 Nov 2019 17:16:03 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.137])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Nov 2019 17:16:03 +0000 (GMT)
-Message-ID: <263e73be1047014ad3b6c0ae28d57db4b9dea970.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] powerpc/kvm/book3s: Fixes possible 'use after
- release' of kvm
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Date:   Thu, 28 Nov 2019 14:15:59 -0300
-In-Reply-To: <f3750cf8-88fc-cae7-1cfb-cb4b86b44704@redhat.com>
-References: <20191126175212.377171-1-leonardo@linux.ibm.com>
-         <f3750cf8-88fc-cae7-1cfb-cb4b86b44704@redhat.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-l7jjVAuSfdlX1zRYI3pK"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Thu, 28 Nov 2019 12:19:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbfK1RTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 12:19:16 -0500
+Received: from localhost (unknown [217.68.49.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93B1B21739;
+        Thu, 28 Nov 2019 17:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574961554;
+        bh=0eDcF33MHbh3guelUltnLjg7ZZiO5V4fJN2AmHy9rEY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wGB5qa8GwmRs4uVVxB+IqfF3A9vdWuLHf2V2ZARa/dfI36r/7qzVipa1D51UOSxBK
+         uMyXK5VtJD3XG5hScvFF+eN1fg02rY3Wfyg6gklSP5PsJ6kX232bb+JDT40kM5hRsa
+         elNy3vFa1JVSC9jLgIf+s9BkkiyQKNw4wwVaKUQM=
+Date:   Thu, 28 Nov 2019 18:19:10 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     tanhuazhong@huawei.com, stable-commits@vger.kernel.org
+Subject: Re: Patch "net: hns3: fix error handling int the
+ hns3_get_vector_ring_chain" has been added to the 4.19-stable tree
+Message-ID: <20191128171910.GA3471498@kroah.com>
+References: <20191128150014.3202521787@mail.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_05:2019-11-28,2019-11-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 impostorscore=0 clxscore=1015 bulkscore=0
- adultscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911280146
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191128150014.3202521787@mail.kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 28, 2019 at 10:00:11AM -0500, Sasha Levin wrote:
+> This is a note to let you know that I've just added the patch titled
+> 
+>     net: hns3: fix error handling int the hns3_get_vector_ring_chain
+> 
+> to the 4.19-stable tree which can be found at:
+>     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+> 
+> The filename of the patch is:
+>      net-hns3-fix-error-handling-int-the-hns3_get_vector_.patch
+> and it can be found in the queue-4.19 subdirectory.
+> 
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
+> 
+> 
+> 
+> commit 4b01732de5278618d8b013fa300638742392d507
+> Author: Huazhong Tan <tanhuazhong@huawei.com>
+> Date:   Tue Dec 18 19:37:48 2018 +0800
+> 
+>     net: hns3: fix error handling int the hns3_get_vector_ring_chain
+>     
+>     [ Upstream commit cda69d244585bc4497d3bb878c22fe2b6ad647c1 ]
+>     
+>     When hns3_get_vector_ring_chain() failed in the
+>     hns3_nic_init_vector_data(), it should do the error handling instead
+>     of return directly.
+>     
+>     Also, cur_chain should be freed instead of chain and head->next should
+>     be set to NULL in error handling of hns3_get_vector_ring_chain.
+>     
+>     This patch fixes them.
+>     
+>     Fixes: 73b907a083b8 ("net: hns3: bugfix for buffer not free problem during resetting")
+>     Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+>     Signed-off-by: Peng Li <lipeng321@huawei.com>
+>     Signed-off-by: David S. Miller <davem@davemloft.net>
+>     Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+> index 3708f149d0a6a..2f1c4adf1734d 100644
+> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+> @@ -2597,9 +2597,10 @@ err_free_chain:
+>  	cur_chain = head->next;
+>  	while (cur_chain) {
+>  		chain = cur_chain->next;
+> -		devm_kfree(&pdev->dev, chain);
+> +		devm_kfree(&pdev->dev, cur_chain);
+>  		cur_chain = chain;
+>  	}
+> +	head->next = NULL;
+>  
+>  	return -ENOMEM;
+>  }
+> @@ -2671,7 +2672,7 @@ static int hns3_nic_init_vector_data(struct hns3_nic_priv *priv)
+>  		ret = hns3_get_vector_ring_chain(tqp_vector,
+>  						 &vector_ring_chain);
+>  		if (ret)
+> -			return ret;
+> +			goto map_ring_fail;
+>  
+>  		ret = h->ae_algo->ops->map_ring_to_vector(h,
+>  			tqp_vector->vector_irq, &vector_ring_chain);
 
---=-l7jjVAuSfdlX1zRYI3pK
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This breaks the build:
+../drivers/net/ethernet/hisilicon/hns3/hns3_enet.c: In function ‘hns3_nic_init_vector_data’:
+../drivers/net/ethernet/hisilicon/hns3/hns3_enet.c:2675:4: error: label ‘map_ring_fail’ used but not defined
+ 2675 |    goto map_ring_fail;
+      |    ^~~~
 
-On Wed, 2019-11-27 at 17:40 +0100, Paolo Bonzini wrote:
-> > diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s=
-_64_vio.c
-> > index 5834db0a54c6..a402ead833b6 100644
-> > --- a/arch/powerpc/kvm/book3s_64_vio.c
-> > +++ b/arch/powerpc/kvm/book3s_64_vio.c
-> > @@ -316,14 +316,13 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kv=
-m,
-> >  =20
-> >        if (ret >=3D 0)
-> >                list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
-> > -     else
-> > -             kvm_put_kvm(kvm);
-> >  =20
-> >        mutex_unlock(&kvm->lock);
-> >  =20
-> >        if (ret >=3D 0)
-> >                return ret;
-> >  =20
-> > +     kvm_put_kvm(kvm);
-> >        kfree(stt);
-> >    fail_acct:
-> >        account_locked_vm(current->mm, kvmppc_stt_pages(npages), false);
 
-Paul, do you think this change is still valid as it 'makes the code
-clearer', as said by Paolo before? I would write a new commit message
-to match the change.
+So I'm going to drop it from the tree.
 
-Best regards,
-Leonardo
+thanks,
 
---=-l7jjVAuSfdlX1zRYI3pK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3gAM8ACgkQlQYWtz9S
-ttTDJg//eBwp87AJa/nFXJRNohYve3mIdddUz+1Er3k4cXhuW3HWbrickBI+w+GM
-5s3kXIywUHeAEPFuaqhCxDvM3YHf9cXbKUSO+vYipwnukAAx6xlrQA8squ0CuKKm
-Njbz4qBf9crM7lkH9S8vEFTvC46dUrClfPcdvQTPw0jPCknIPzpW9RdwjbJUC7q/
-Woc0XfHhmvgwMHKI3Q1e7FEDIxYKZHDbvGhI2RN/+ROIvnsLcx/kdzrNE0LyhKfj
-hCfCfQ0i5LZwmUMh7bdGVb8qxuItuEMifrWZWjq0tly/KE0/1IrvRzWLG6uW4sTF
-gLRskMN2TQ3pAKHgTzqanYYkkBqh2VUTcPh6beVQP4qnSMzuEMR+AxA08NO1m2HQ
-s7l1GSiAVI+ae72YMUA8jcjoxnrcxKB+R5S39ZEXpoxoIsfYrx3QAiaBo2CyOrZL
-vD77YCthDMQ8Js4dINh4MMRgf0m95Pn4pD2BX5nD1L0NHHtD2paEayTapmBStaPR
-pBU9oTtajHcV7Fpo4Hq29Vj1Zl+Nbj101CnJknCoLy/7xT3Z5MnVHw3lYBAoN+hK
-sDG/XCfkWQ9+YkGda3LTjW2CxaTXHvpi2Y2BO2iHyULEZUZ+t8zyutd1v0pc6BiV
-lxjBZ9fbmQTQVOqWdueea85C7HVz/p7dohqQnwVLmCuMzCwB+cQ=
-=Kgb4
------END PGP SIGNATURE-----
-
---=-l7jjVAuSfdlX1zRYI3pK--
-
+greg k-h
