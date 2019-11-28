@@ -2,149 +2,387 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40447C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4919BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E189208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:32:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="jeCnXLY9";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="C2zEKw77"
+	by mail.kernel.org (Postfix) with ESMTP id 19EF621741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfK1Nc1 (ORCPT
+        id S1726694AbfK1Nec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:32:27 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:17244 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726496AbfK1Nc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:32:27 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASDQga5021021;
-        Thu, 28 Nov 2019 05:28:25 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=1j8OKNv/6FnUysx+Uq/1D3BAHkY4YrfhgGQ9oC34BJo=;
- b=jeCnXLY9DloHccMoek+VyRuvdNgqoxu/QCvUm1JGYfLgXZGx10Z8fDmiLSFatIbTEkXK
- 7fIatbNm3RHXrU9CAoPJ94RdAXyXpijiQ1e3EXLD3gRPRM4PteYo0gFWAw0wkOLMocsh
- CrRT+TSi0ui1aE4Ty2/HAYBEgLqf/vEriVAqRfIkcCiGPbgmmclIvt9lJCJTTvPcHl/K
- 2zeZJEa9Rbig9DUvzHMOn9jxVFKBiuDDLqsVSPFXv5EzkxIOAhX9VVp3rouQD/Rs3G1L
- 0/CrtKGK+7nYF5zKUCqL1SEdwBdmL9F2P3MkstXUGCmpad4//+zr09q1Hi3GNjHOudIZ Qg== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2whd08qc87-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 05:28:25 -0800
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 28 Nov
- 2019 05:28:24 -0800
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (104.47.32.58) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 28 Nov 2019 05:28:23 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EcFFzaKAEo+gYdQbxIRfUa9jF9iV5WaYrcARHGtSbfYdOy9gycCa3gK5jmKTK/3nkPSLGlAKzcnjSpgvlBWzDoWcv4nlyq/2ag3HfpRAEzJHl908hb6+QEQwWxAH9sQW6sTghfXX8iVdkoYkox0bOOjTodDugVn1BT8XIfA8t3z2TrAvV1J36QTzGk5hr2P5ILDlSJGuDKmzTaHpXRC9iWrN3g9T2x6e2kCaH29vv7+1Mm6FMB3Oarx/f0Yvxu1FruRqgr1z1vcsmjIcNhGtSX4gCJNTdIwbKB02XqqAmLcDm5r9+3q+/8mS636AEjGQJu3lgDBcRymeLcYHP8Wk0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1j8OKNv/6FnUysx+Uq/1D3BAHkY4YrfhgGQ9oC34BJo=;
- b=GmQSI9bQTgNyescMTwAoaYbgttqslVzbdYDupo58ljl7d2YWrZzE9v6ZCLlgh7C+e/dXI3yXGTzEwmaUM2MZAuD/C+5junqn1NHS9+unfBk3ZjFZ1VcvKTyaJNEAhdxSjYn6l0dRYpl1PN/hQGlVJCNy5KaTIhrgvHotns220ojGoIx6s2OmeXTSA+t1Ju3uOBH3+Vz3bDe82LmKqRoMbyZ9MTjoQSSB0Z2d0kScCii4VdoCtzg7QwisXvHyergNdOL7bkX2awBIvTihCo/YamuKlj3ILKJ/nI/TUiLonNsTLEMATbDmL0V5dKBk20xZyYkiYGZ2H+Qy+9Z2GKirUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1j8OKNv/6FnUysx+Uq/1D3BAHkY4YrfhgGQ9oC34BJo=;
- b=C2zEKw77mDQtjm6uOwjEF9bLRvLQvA6fq1VPXgWR2kBu5sgwpTHdL7E2ujAui1ziUFDsED/+HkIGnjjVH1O+MQfuvrq8BbslzUbItmnl67v8tXPkCD0ttIqt2t/LjXEMjnrNyYWmluuRbl9CB2MVLXULenDdCQexdTFDhX/4pwE=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB2765.namprd18.prod.outlook.com (20.179.22.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.21; Thu, 28 Nov 2019 13:28:22 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::657c:6c81:859d:106]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::657c:6c81:859d:106%7]) with mapi id 15.20.2474.023; Thu, 28 Nov 2019
- 13:28:21 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tim@buttersideup.com" <tim@buttersideup.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 4/6] edac: i82443bxgx_edac: use pci_get_device_by_id()
-Thread-Topic: [PATCH 4/6] edac: i82443bxgx_edac: use pci_get_device_by_id()
-Thread-Index: AQHVpe+0OOeXN/A3hUyun7nCMMonXg==
-Date:   Thu, 28 Nov 2019 13:28:21 +0000
-Message-ID: <20191128132812.tgqg7sak45ccantn@rric.localdomain>
-References: <20191128125406.10417-1-info@metux.net>
- <20191128125406.10417-4-info@metux.net>
-In-Reply-To: <20191128125406.10417-4-info@metux.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0502CA0002.eurprd05.prod.outlook.com
- (2603:10a6:3:e3::12) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f4159e12-6a41-47da-ba4f-08d77406d678
-x-ms-traffictypediagnostic: MN2PR18MB2765:
-x-microsoft-antispam-prvs: <MN2PR18MB2765EC5AF867EEF7CD59105CD9470@MN2PR18MB2765.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0235CBE7D0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(136003)(346002)(39860400002)(199004)(189003)(4326008)(6512007)(66476007)(64756008)(9686003)(66946007)(25786009)(66446008)(1250700005)(1076003)(4744005)(6506007)(316002)(66556008)(6246003)(478600001)(14454004)(7416002)(305945005)(386003)(256004)(14444005)(8936002)(99286004)(8676002)(5660300002)(86362001)(7736002)(102836004)(52116002)(53546011)(54906003)(66066001)(229853002)(6916009)(76176011)(2906002)(446003)(6486002)(71190400001)(81166006)(6436002)(26005)(81156014)(71200400001)(11346002)(186003)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2765;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sAO6A77pv9kXBlPZhOKcDnOriHrrygbPHpJUKJRVk+ZnklXbvCaj1iJU5iwV7M9qRZ3lpYtqtj1eqh2WLHBXi1fIdIeO5V1ZaK7do6ALvBlU4nItrlZaBtMcpnf2v+eeUdrmWyp5Bf1QmKOYylgVnGI0pYjE/kFyYSt9T21x5kmnR9mVlv8nB7Rif3YzYWPtm3W7NF0HlkS8xZ8HpFcqIDckwg9T2RKMQ8oDyBYeHul9S7ysFphdgENf+Q0IARtwsp3+2MnU26qK85y5FFY1m1W152ye4yDFR6SsYUQKkB61IYPbezs69PJ2zUXGChBlvQMwHdlxvflRmUwyPvfIrznxJcH0u3n9WckK1fZQZpWJJ4JoPng0ipvte8XpuSiV4bViqT86QFvNFoXD4Ow4oc6nUYJ3NzeBZXiSWfixQ2a31JVgDOXDgD+S44CvKTv3
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2342D6B7712EB243A1530E0A6D4956B2@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 28 Nov 2019 08:34:32 -0500
+Received: from mga17.intel.com ([192.55.52.151]:56394 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbfK1Neb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 08:34:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 05:34:27 -0800
+X-IronPort-AV: E=Sophos;i="5.69,253,1571727600"; 
+   d="scan'208";a="199529160"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 05:34:24 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        "maarten.lankhorst\@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "mripard\@kernel.org" <mripard@kernel.org>,
+        "sean\@poorly.run" <sean@poorly.run>,
+        "airlied\@linux.ie" <airlied@linux.ie>,
+        "daniel\@ffwll.ch" <daniel@ffwll.ch>
+Cc:     "dri-devel\@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] drm/dp_mst: Fix W=1 warnings
+In-Reply-To: <8f64b1e7-d7b8-43df-8efe-ca5af91e2cd3@st.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191128110012.23898-1-benjamin.gaignard@st.com> <87sgm8mekf.fsf@intel.com> <8f64b1e7-d7b8-43df-8efe-ca5af91e2cd3@st.com>
+Date:   Thu, 28 Nov 2019 15:34:21 +0200
+Message-ID: <87h82om8f6.fsf@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4159e12-6a41-47da-ba4f-08d77406d678
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Nov 2019 13:28:21.6104
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dc/QHMiIsrm79g4Y9+1fvA8HkuWcJXCu4qa8UawY9v/aO3Nw4VV49pr/cHorxXwdSOEZAOXJq9wR1nrzm6wiEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2765
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_03:2019-11-28,2019-11-28 signatures=0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.11.19 13:54:04, Enrico Weigelt, metux IT consult wrote:
-> Use the new pci_get_device_by_id() helper in order to reduce
-> a bit of boilerplate.
+On Thu, 28 Nov 2019, Benjamin GAIGNARD <benjamin.gaignard@st.com> wrote:
+> On 11/28/19 12:21 PM, Jani Nikula wrote:
+>> On Thu, 28 Nov 2019, Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
+>>> Fix the warnings that show up with W=1.
+>>> They are all about unused but set variables.
+>>> If functions returns are not used anymore make them void.
+>>>
+>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+>>> CC: Jani Nikula <jani.nikula@linux.intel.com>
+>>> ---
+>>> changes in version 2:
+>>> - fix indentations
+>>> - when possible change functions prototype to void
+>>>
+>>> Note: this patch may conflict with c485e2c97dae ("drm/dp_mst: Refactor pdt
+>>> setup/teardown, add more locking") when it will hit drm-misc-next
+>> Well, why create an unnecessary conflict when the referenced commit also
+>> fixes the same warnings as a side-effect?
+>
+> Because this commit is not merged (yet ?) in drm-misc-next which where I 
+> start.
 
-> -		while (mci_pdev =3D=3D NULL && id->vendor !=3D 0) {
-> -			mci_pdev =3D pci_get_device(id->vendor,
-> -					id->device, NULL);
-> +		while (mci_pdev =3D=3D NULL && i82443bxgx_pci_tbl[i].vendor) {
-> +			mci_pdev =3D pci_get_device_by_id(
-> +				&i82443bxgx_pci_tbl[i]);
+I mean just leave the hunk out and the problem will fix itself once the
+stuff gets backmerged to drm-misc-next.
 
-I don't see how this is less boilerplate. Since this differs from the
-typical pattern for this it is less readable now.
+BR,
+Jani.
 
--Robert
+
+>
+> Benjamin
+>
+>> BR,
+>> Jani.
+>>
+>>
+>>>   drivers/gpu/drm/drm_dp_mst_topology.c | 83 +++++++++++++----------------------
+>>>   1 file changed, 31 insertions(+), 52 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+>>> index b854a422a523..ff2d81db0778 100644
+>>> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+>>> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+>>> @@ -672,7 +672,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
+>>>   				      u8 *replybuf, u8 replybuflen, bool hdr)
+>>>   {
+>>>   	int ret;
+>>> -	u8 crc4;
+>>>   
+>>>   	if (hdr) {
+>>>   		u8 hdrlen;
+>>> @@ -714,8 +713,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
+>>>   	}
+>>>   
+>>>   	if (msg->curchunk_idx >= msg->curchunk_len) {
+>>> -		/* do CRC */
+>>> -		crc4 = drm_dp_msg_data_crc4(msg->chunk, msg->curchunk_len - 1);
+>>>   		/* copy chunk into bigger msg */
+>>>   		memcpy(&msg->msg[msg->curlen], msg->chunk, msg->curchunk_len - 1);
+>>>   		msg->curlen += msg->curchunk_len - 1;
+>>> @@ -1012,7 +1009,7 @@ static bool drm_dp_sideband_parse_req(struct drm_dp_sideband_msg_rx *raw,
+>>>   	}
+>>>   }
+>>>   
+>>> -static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
+>>> +static void build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
+>>>   {
+>>>   	struct drm_dp_sideband_msg_req_body req;
+>>>   
+>>> @@ -1022,17 +1019,14 @@ static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
+>>>   	req.u.dpcd_write.num_bytes = num_bytes;
+>>>   	req.u.dpcd_write.bytes = bytes;
+>>>   	drm_dp_encode_sideband_req(&req, msg);
+>>> -
+>>> -	return 0;
+>>>   }
+>>>   
+>>> -static int build_link_address(struct drm_dp_sideband_msg_tx *msg)
+>>> +static void build_link_address(struct drm_dp_sideband_msg_tx *msg)
+>>>   {
+>>>   	struct drm_dp_sideband_msg_req_body req;
+>>>   
+>>>   	req.req_type = DP_LINK_ADDRESS;
+>>>   	drm_dp_encode_sideband_req(&req, msg);
+>>> -	return 0;
+>>>   }
+>>>   
+>>>   static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int port_num)
+>>> @@ -1046,7 +1040,7 @@ static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int por
+>>>   	return 0;
+>>>   }
+>>>   
+>>> -static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
+>>> +static void build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
+>>>   				  u8 vcpi, uint16_t pbn,
+>>>   				  u8 number_sdp_streams,
+>>>   				  u8 *sdp_stream_sink)
+>>> @@ -1062,10 +1056,9 @@ static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_n
+>>>   		   number_sdp_streams);
+>>>   	drm_dp_encode_sideband_req(&req, msg);
+>>>   	msg->path_msg = true;
+>>> -	return 0;
+>>>   }
+>>>   
+>>> -static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
+>>> +static void build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
+>>>   				  int port_num, bool power_up)
+>>>   {
+>>>   	struct drm_dp_sideband_msg_req_body req;
+>>> @@ -1078,7 +1071,6 @@ static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
+>>>   	req.u.port_num.port_number = port_num;
+>>>   	drm_dp_encode_sideband_req(&req, msg);
+>>>   	msg->path_msg = true;
+>>> -	return 0;
+>>>   }
+>>>   
+>>>   static int drm_dp_mst_assign_payload_id(struct drm_dp_mst_topology_mgr *mgr,
+>>> @@ -1744,14 +1736,13 @@ static u8 drm_dp_calculate_rad(struct drm_dp_mst_port *port,
+>>>    */
+>>>   static bool drm_dp_port_setup_pdt(struct drm_dp_mst_port *port)
+>>>   {
+>>> -	int ret;
+>>>   	u8 rad[6], lct;
+>>>   	bool send_link = false;
+>>>   	switch (port->pdt) {
+>>>   	case DP_PEER_DEVICE_DP_LEGACY_CONV:
+>>>   	case DP_PEER_DEVICE_SST_SINK:
+>>>   		/* add i2c over sideband */
+>>> -		ret = drm_dp_mst_register_i2c_bus(&port->aux);
+>>> +		drm_dp_mst_register_i2c_bus(&port->aux);
+>>>   		break;
+>>>   	case DP_PEER_DEVICE_MST_BRANCHING:
+>>>   		lct = drm_dp_calculate_rad(port, rad);
+>>> @@ -1821,25 +1812,20 @@ ssize_t drm_dp_mst_dpcd_write(struct drm_dp_aux *aux,
+>>>   
+>>>   static void drm_dp_check_mstb_guid(struct drm_dp_mst_branch *mstb, u8 *guid)
+>>>   {
+>>> -	int ret;
+>>> -
+>>>   	memcpy(mstb->guid, guid, 16);
+>>>   
+>>>   	if (!drm_dp_validate_guid(mstb->mgr, mstb->guid)) {
+>>>   		if (mstb->port_parent) {
+>>> -			ret = drm_dp_send_dpcd_write(
+>>> -					mstb->mgr,
+>>> -					mstb->port_parent,
+>>> -					DP_GUID,
+>>> -					16,
+>>> -					mstb->guid);
+>>> +			drm_dp_send_dpcd_write(mstb->mgr,
+>>> +					       mstb->port_parent,
+>>> +					       DP_GUID,
+>>> +					       16,
+>>> +					       mstb->guid);
+>>>   		} else {
+>>> -
+>>> -			ret = drm_dp_dpcd_write(
+>>> -					mstb->mgr->aux,
+>>> -					DP_GUID,
+>>> -					mstb->guid,
+>>> -					16);
+>>> +			drm_dp_dpcd_write(mstb->mgr->aux,
+>>> +					  DP_GUID,
+>>> +					  mstb->guid,
+>>> +					  16);
+>>>   		}
+>>>   	}
+>>>   }
+>>> @@ -2195,7 +2181,7 @@ static bool drm_dp_validate_guid(struct drm_dp_mst_topology_mgr *mgr,
+>>>   	return false;
+>>>   }
+>>>   
+>>> -static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
+>>> +static void build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
+>>>   {
+>>>   	struct drm_dp_sideband_msg_req_body req;
+>>>   
+>>> @@ -2204,8 +2190,6 @@ static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
+>>>   	req.u.dpcd_read.dpcd_address = offset;
+>>>   	req.u.dpcd_read.num_bytes = num_bytes;
+>>>   	drm_dp_encode_sideband_req(&req, msg);
+>>> -
+>>> -	return 0;
+>>>   }
+>>>   
+>>>   static int drm_dp_send_sideband_msg(struct drm_dp_mst_topology_mgr *mgr,
+>>> @@ -2427,14 +2411,14 @@ static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
+>>>   {
+>>>   	struct drm_dp_sideband_msg_tx *txmsg;
+>>>   	struct drm_dp_link_address_ack_reply *reply;
+>>> -	int i, len, ret;
+>>> +	int i, ret;
+>>>   
+>>>   	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
+>>>   	if (!txmsg)
+>>>   		return;
+>>>   
+>>>   	txmsg->dst = mstb;
+>>> -	len = build_link_address(txmsg);
+>>> +	build_link_address(txmsg);
+>>>   
+>>>   	mstb->link_address_sent = true;
+>>>   	drm_dp_queue_down_tx(mgr, txmsg);
+>>> @@ -2476,7 +2460,6 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
+>>>   {
+>>>   	struct drm_dp_enum_path_resources_ack_reply *path_res;
+>>>   	struct drm_dp_sideband_msg_tx *txmsg;
+>>> -	int len;
+>>>   	int ret;
+>>>   
+>>>   	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
+>>> @@ -2484,7 +2467,7 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
+>>>   		return -ENOMEM;
+>>>   
+>>>   	txmsg->dst = mstb;
+>>> -	len = build_enum_path_resources(txmsg, port->port_num);
+>>> +	build_enum_path_resources(txmsg, port->port_num);
+>>>   
+>>>   	drm_dp_queue_down_tx(mgr, txmsg);
+>>>   
+>>> @@ -2567,7 +2550,7 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
+>>>   {
+>>>   	struct drm_dp_sideband_msg_tx *txmsg;
+>>>   	struct drm_dp_mst_branch *mstb;
+>>> -	int len, ret, port_num;
+>>> +	int ret, port_num;
+>>>   	u8 sinks[DRM_DP_MAX_SDP_STREAMS];
+>>>   	int i;
+>>>   
+>>> @@ -2592,9 +2575,9 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
+>>>   		sinks[i] = i;
+>>>   
+>>>   	txmsg->dst = mstb;
+>>> -	len = build_allocate_payload(txmsg, port_num,
+>>> -				     id,
+>>> -				     pbn, port->num_sdp_streams, sinks);
+>>> +	build_allocate_payload(txmsg, port_num,
+>>> +			       id,
+>>> +			       pbn, port->num_sdp_streams, sinks);
+>>>   
+>>>   	drm_dp_queue_down_tx(mgr, txmsg);
+>>>   
+>>> @@ -2623,7 +2606,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
+>>>   				 struct drm_dp_mst_port *port, bool power_up)
+>>>   {
+>>>   	struct drm_dp_sideband_msg_tx *txmsg;
+>>> -	int len, ret;
+>>> +	int ret;
+>>>   
+>>>   	port = drm_dp_mst_topology_get_port_validated(mgr, port);
+>>>   	if (!port)
+>>> @@ -2636,7 +2619,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
+>>>   	}
+>>>   
+>>>   	txmsg->dst = port->parent;
+>>> -	len = build_power_updown_phy(txmsg, port->port_num, power_up);
+>>> +	build_power_updown_phy(txmsg, port->port_num, power_up);
+>>>   	drm_dp_queue_down_tx(mgr, txmsg);
+>>>   
+>>>   	ret = drm_dp_mst_wait_tx_reply(port->parent, txmsg);
+>>> @@ -2856,7 +2839,6 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
+>>>   				 struct drm_dp_mst_port *port,
+>>>   				 int offset, int size, u8 *bytes)
+>>>   {
+>>> -	int len;
+>>>   	int ret = 0;
+>>>   	struct drm_dp_sideband_msg_tx *txmsg;
+>>>   	struct drm_dp_mst_branch *mstb;
+>>> @@ -2871,7 +2853,7 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
+>>>   		goto fail_put;
+>>>   	}
+>>>   
+>>> -	len = build_dpcd_read(txmsg, port->port_num, offset, size);
+>>> +	build_dpcd_read(txmsg, port->port_num, offset, size);
+>>>   	txmsg->dst = port->parent;
+>>>   
+>>>   	drm_dp_queue_down_tx(mgr, txmsg);
+>>> @@ -2909,7 +2891,6 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
+>>>   				  struct drm_dp_mst_port *port,
+>>>   				  int offset, int size, u8 *bytes)
+>>>   {
+>>> -	int len;
+>>>   	int ret;
+>>>   	struct drm_dp_sideband_msg_tx *txmsg;
+>>>   	struct drm_dp_mst_branch *mstb;
+>>> @@ -2924,7 +2905,7 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
+>>>   		goto fail_put;
+>>>   	}
+>>>   
+>>> -	len = build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
+>>> +	build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
+>>>   	txmsg->dst = mstb;
+>>>   
+>>>   	drm_dp_queue_down_tx(mgr, txmsg);
+>>> @@ -3147,7 +3128,7 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
+>>>   {
+>>>   	int len;
+>>>   	u8 replyblock[32];
+>>> -	int replylen, origlen, curreply;
+>>> +	int replylen, curreply;
+>>>   	int ret;
+>>>   	struct drm_dp_sideband_msg_rx *msg;
+>>>   	int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE : DP_SIDEBAND_MSG_DOWN_REP_BASE;
+>>> @@ -3167,7 +3148,6 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
+>>>   	}
+>>>   	replylen = msg->curchunk_len + msg->curchunk_hdrlen;
+>>>   
+>>> -	origlen = replylen;
+>>>   	replylen -= len;
+>>>   	curreply = len;
+>>>   	while (replylen > 0) {
+>>> @@ -3959,17 +3939,16 @@ void drm_dp_mst_dump_topology(struct seq_file *m,
+>>>   	mutex_lock(&mgr->lock);
+>>>   	if (mgr->mst_primary) {
+>>>   		u8 buf[DP_PAYLOAD_TABLE_SIZE];
+>>> -		int ret;
+>>>   
+>>> -		ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
+>>> +		drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
+>>>   		seq_printf(m, "dpcd: %*ph\n", DP_RECEIVER_CAP_SIZE, buf);
+>>> -		ret = drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
+>>> +		drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
+>>>   		seq_printf(m, "faux/mst: %*ph\n", 2, buf);
+>>> -		ret = drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
+>>> +		drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
+>>>   		seq_printf(m, "mst ctrl: %*ph\n", 1, buf);
+>>>   
+>>>   		/* dump the standard OUI branch header */
+>>> -		ret = drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
+>>> +		drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
+>>>   		seq_printf(m, "branch oui: %*phN devid: ", 3, buf);
+>>>   		for (i = 0x3; i < 0x8 && buf[i]; i++)
+>>>   			seq_printf(m, "%c", buf[i]);
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
