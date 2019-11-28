@@ -2,382 +2,488 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6C4C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D6EC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17EF121781
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E84208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOE6HI7i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMezP4i4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfK1NTe (ORCPT
+        id S1726583AbfK1NZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:19:34 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:44356 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfK1NTd (ORCPT
+        Thu, 28 Nov 2019 08:25:43 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46299 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfK1NZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:19:33 -0500
-Received: by mail-qv1-f68.google.com with SMTP id t11so1509383qvz.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:19:32 -0800 (PST)
+        Thu, 28 Nov 2019 08:25:43 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e9so28489482ljp.13;
+        Thu, 28 Nov 2019 05:25:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Zjik0pUerlWSaEXYEpMkyijdS9IBbVEuXj2G73b+Cv4=;
-        b=iOE6HI7iHzNxQQDteLWvHql+HRAqhddMR9ro9hE1mdjQ96m1b924h8tbK77cvDXG9r
-         VGTpDTgzmHg53f9D/Inl7TDlD+yFEYlzQnQxIW+eVDwPYpqxtNgZ2FdP4h7/6+/yX4/Z
-         3kxBbZZMTmZJRsV+J1biWm2uOg6d7QTYWis14IRTjLM1Js+UNmzWa4oMt4pMyF4yDTPr
-         Eu02nontquS7jzsTnn/wOK/c4wZzAsR73uJBYNor522Vi4FVxFywnqyiqWybRUc9GIEb
-         3tGW0cKX3vWh+NGezjt6UNW6GwBiYfiRnVS06Tg78+FaLRPmYD8jlqlu2LUT2S5dusPr
-         59OA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=G/d1TkhCeblT/3d5R7NOwD7vHd7mbksNpieQKKaf2tI=;
+        b=FMezP4i4ti/lGZ60nflNprU5hqRz2xlm2sII2k5g4PgjhJiwULTmlRvBZsmazyNZIL
+         dhsETjDC2xrE5oiRVY4d2IedJYeMrxsIpXRZXykSYLdvp1MrLvp4emkVv3T2M/1gPiaH
+         ya3zUuvhUbLEhRVpdIldAVfjUIHDe9fVdPDK02PTlm830XNS1JUJ3Ytjf3IqZBEsNE+9
+         P0T3K4Nf7PqYin2iEN6tP/KGh7PXe9kXWNIsYNZYoKqqIOBz2O55rnG5jjW3zSQzsFkB
+         KupkMgqX4bhlnGGrqCosi04VXIl/pUqzvoUdo5GlNxi8UcPhJ2/jg0s4uCYDcOMuSuAX
+         /kUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zjik0pUerlWSaEXYEpMkyijdS9IBbVEuXj2G73b+Cv4=;
-        b=Rz9o8I8eMLTXjPwNXu69lYU7A6+Ghmx+vQMa6RyV3IqKX2d8yqqGBwrbSudLQelyP+
-         iHHVmHK+w6okbqUoDiwohGJQmzjk0J+bql57Cyg+1Z/lihgpVyxy7O/m1DSjjH4ALtGZ
-         mABH4ouH3hBnhnip9IeYR2uNLb/Hep9oSszRcofL3015vORv/zgmE0ljnc8zOCOAMc5c
-         Ir4/5vwjBtx0I5bF1Lo0/ULHI8imZlDxRDSMZNLRSTq7xwjMIMWQks7p2z+Nhq38xsDw
-         bUtBMCmLr0/n7xP4z7eD43G5RyX7A/plQTXR4jIjyO4x5++LYgDebif1oFMn2xR3H+a4
-         946w==
-X-Gm-Message-State: APjAAAW+J9jhma90F8hyG69KmGBTg9Vtx2UZHAT6ufbceDY9IKFyNTMk
-        TK0b+6oOYT3szFnSnXDIKPo=
-X-Google-Smtp-Source: APXvYqwNMCZGH5bVBBSYzwOSuy0uwc0Vxfc6afwOFhqaJP7gqI6dHShRaX9d017hQfWPaWKG1SPM/A==
-X-Received: by 2002:a05:6214:1029:: with SMTP id k9mr10791404qvr.106.1574947172095;
-        Thu, 28 Nov 2019 05:19:32 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id v65sm8526272qkh.7.2019.11.28.05.19.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 05:19:31 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 86D0C405B6; Thu, 28 Nov 2019 10:19:28 -0300 (-03)
-Date:   Thu, 28 Nov 2019 10:19:28 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>, Leo Yan <leo.yan@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf jit: move test functionality in to a test
-Message-ID: <20191128131928.GD4063@kernel.org>
-References: <20191126235913.41855-1-irogers@google.com>
- <20191127152328.GI22719@kernel.org>
- <20191127160558.GM22719@kernel.org>
- <CAP-5=fVhXvMFtGU18-TMt29BsuZNySZ8sPvj_3r7GGsfZLPvuA@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=G/d1TkhCeblT/3d5R7NOwD7vHd7mbksNpieQKKaf2tI=;
+        b=YGWccmSl0LpxTIUHnDxVukof5KZ80PnoW04t/T5J5KmnUTU+uMLzT5uiDY35x2vwLQ
+         y5Fuam4VtdGWwJ4jON3ucvZNp6cTqTnN5s/ag7DPKmAthK6qb4AGrr9pGQyxiep1ZQKk
+         ooxdwi7cSIqAIIqtphfk334V68GsD62qHVO+e/tzkr5Y4IYz8MWHyMmlBk8c1Bb86T8p
+         yeoAxw+LnYvhxZDF1EcxapLsfdvsw9I7E/Y98w10DhgywdDInUZZMobkPzohAQc1Wqvs
+         d0WmD6ustnWdgMVPSnZXDcrB9S1NBfeJf1m4q6uKj1Yfu87xPlSaQ0kuiSHjlNp3Il2T
+         KdFQ==
+X-Gm-Message-State: APjAAAV6RW3RAzl+glcFaTDY7R2C8hcGRQ8InjLKWi3MPcRP0rIwoJgh
+        SOJoEDLAYsNpn6VWaFOtVcqwO5yb
+X-Google-Smtp-Source: APXvYqx9j7BiyJ0HxdpFuAkZX2e72pMr3lKSm7KZcyKygWIFPGRMNSL04xo3CPBVPznLbYNLsK8I2Q==
+X-Received: by 2002:a2e:9256:: with SMTP id v22mr3856958ljg.124.1574947539559;
+        Thu, 28 Nov 2019 05:25:39 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id c80sm9859720lfg.81.2019.11.28.05.25.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Nov 2019 05:25:38 -0800 (PST)
+Subject: Re: [PATCH v2 02/11] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        mturquette@baylibre.com, horms+renesas@verge.net.au,
+        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
+        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
+        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
+        markz@nvidia.com, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1574830773-14892-1-git-send-email-skomatineni@nvidia.com>
+ <1574830773-14892-3-git-send-email-skomatineni@nvidia.com>
+ <749de44c-ec59-3cab-c02e-7b8fcb1fb9f4@gmail.com>
+ <3d1492a1-f2a5-2d56-5341-a28fcb73fe64@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <484cb1bb-4fb2-9e71-87be-2bd5bd5b2348@gmail.com>
+Date:   Thu, 28 Nov 2019 16:25:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fVhXvMFtGU18-TMt29BsuZNySZ8sPvj_3r7GGsfZLPvuA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <3d1492a1-f2a5-2d56-5341-a28fcb73fe64@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Nov 27, 2019 at 10:49:29AM -0800, Ian Rogers escreveu:
-> On Wed, Nov 27, 2019 at 8:06 AM Arnaldo Carvalho de Melo
-> <arnaldo.melo@gmail.com> wrote:
-> >
-> > Em Wed, Nov 27, 2019 at 12:23:28PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Tue, Nov 26, 2019 at 03:59:13PM -0800, Ian Rogers escreveu:
-> > > > Adds a test for minimal jit_write_elf functionality.
-> > >
-> > > Thanks, tested and applied.
-> >
-> > Had to apply this to have it built in systems where HAVE_JITDUMP isn't
-> > defined:
+28.11.2019 01:57, Sowjanya Komatineni пишет:
 > 
-> Thanks for fixing this!
-> Ian
+> On 11/27/19 7:14 AM, Dmitry Osipenko wrote:
+>> 27.11.2019 07:59, Sowjanya Komatineni пишет:
+>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3 with
+>>> mux and gate for each of these clocks.
+>>>
+>>> Currently these PMC clocks are registered by Tegra clock driver using
+>>> clk_register_mux and clk_register_gate by passing PMC base address
+>>> and register offsets and PMC programming for these clocks happens
+>>> through direct PMC access by the clock driver.
+>>>
+>>> With this, when PMC is in secure mode any direct PMC access from the
+>>> non-secure world does not go through and these clocks will not be
+>>> functional.
+>>>
+>>> This patch adds these clocks registration with PMC as a clock provider
+>>> for these clocks. clk_ops callback implementations for these clocks
+>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC programming
+>>> in secure mode and non-secure mode.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   drivers/soc/tegra/pmc.c | 330
+>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 330 insertions(+)
+>>>
+>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>> index ea0e11a09c12..a353f6d0a832 100644
+>>> --- a/drivers/soc/tegra/pmc.c
+>>> +++ b/drivers/soc/tegra/pmc.c
+>>> @@ -13,6 +13,9 @@
+>>>     #include <linux/arm-smccc.h>
+>>>   #include <linux/clk.h>
+>>> +#include <linux/clk-provider.h>
+>>> +#include <linux/clkdev.h>
+>>> +#include <linux/clk/clk-conf.h>
+>>>   #include <linux/clk/tegra.h>
+>>>   #include <linux/debugfs.h>
+>>>   #include <linux/delay.h>
+>>> @@ -48,6 +51,7 @@
+>>>   #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+>>>   #include <dt-bindings/gpio/tegra186-gpio.h>
+>>>   #include <dt-bindings/gpio/tegra194-gpio.h>
+>>> +#include <dt-bindings/soc/tegra-pmc.h>
+>>>     #define PMC_CNTRL            0x0
+>>>   #define  PMC_CNTRL_INTR_POLARITY    BIT(17) /* inverts INTR
+>>> polarity */
+>>> @@ -100,6 +104,7 @@
+>>>   #define PMC_WAKE2_STATUS        0x168
+>>>   #define PMC_SW_WAKE2_STATUS        0x16c
+>>>   +#define PMC_CLK_OUT_CNTRL        0x1a8
+>>>   #define PMC_SENSOR_CTRL            0x1b0
+>>>   #define  PMC_SENSOR_CTRL_SCRATCH_WRITE    BIT(2)
+>>>   #define  PMC_SENSOR_CTRL_ENABLE_RST    BIT(1)
+>>> @@ -155,6 +160,91 @@
+>>>   #define  TEGRA_SMC_PMC_READ    0xaa
+>>>   #define  TEGRA_SMC_PMC_WRITE    0xbb
+>>>   +struct pmc_clk_mux {
+>>> +    struct clk_hw    hw;
+>>> +    unsigned long    offs;
+>>> +    u32        mask;
+>>> +    u32        shift;
+>>> +};
+>>> +
+>>> +#define to_pmc_clk_mux(_hw) container_of(_hw, struct pmc_clk_mux, hw)
+>>> +
+>>> +struct pmc_clk_gate {
+>>> +    struct clk_hw    hw;
+>>> +    unsigned long    offs;
+>>> +    u32        shift;
+>>> +};
+>>> +
+>>> +#define to_pmc_clk_gate(_hw) container_of(_hw, struct pmc_clk_gate, hw)
+>>> +
+>>> +struct pmc_clk_init_data {
+>>> +    char *mux_name;
+>>> +    char *gate_name;
+>>> +    const char **parents;
+>>> +    int num_parents;
+>>> +    int mux_id;
+>>> +    int gate_id;
+>>> +    char *dev_name;
+>>> +    u8 mux_shift;
+>>> +    u8 gate_shift;
+>>> +    u8 init_parent_index;
+>>> +    int init_state;
+>>> +};
+>>> +
+>>> +static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
+>>> +    "clk_m_div4", "extern1",
+>>> +};
+>>> +
+>>> +static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
+>>> +    "clk_m_div4", "extern2",
+>>> +};
+>>> +
+>>> +static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
+>>> +    "clk_m_div4", "extern3",
+>>> +};
+>>> +
+>>> +static struct pmc_clk_init_data tegra_pmc_clks_data[] = {
+>>> +    {
+>>> +        .mux_name = "clk_out_1_mux",
+>>> +        .gate_name = "clk_out_1",
+>>> +        .parents = clk_out1_parents,
+>>> +        .num_parents = ARRAY_SIZE(clk_out1_parents),
+>>> +        .mux_id = TEGRA_PMC_CLK_OUT_1_MUX,
+>>> +        .gate_id = TEGRA_PMC_CLK_OUT_1,
+>>> +        .dev_name = "extern1",
+>>> +        .mux_shift = 6,
+>>> +        .gate_shift = 2,
+>>> +        .init_parent_index = 3,
+>>> +        .init_state = 1,
+>>> +    },
+>>> +    {
+>>> +        .mux_name = "clk_out_2_mux",
+>>> +        .gate_name = "clk_out_2",
+>>> +        .parents = clk_out2_parents,
+>>> +        .num_parents = ARRAY_SIZE(clk_out2_parents),
+>>> +        .mux_id = TEGRA_PMC_CLK_OUT_2_MUX,
+>>> +        .gate_id = TEGRA_PMC_CLK_OUT_2,
+>>> +        .dev_name = "extern2",
+>>> +        .mux_shift = 14,
+>>> +        .gate_shift = 10,
+>>> +        .init_parent_index = 0,
+>>> +        .init_state = 0,
+>>> +    },
+>>> +    {
+>>> +        .mux_name = "clk_out_3_mux",
+>>> +        .gate_name = "clk_out_3",
+>>> +        .parents = clk_out3_parents,
+>>> +        .num_parents = ARRAY_SIZE(clk_out3_parents),
+>>> +        .mux_id = TEGRA_PMC_CLK_OUT_3_MUX,
+>>> +        .gate_id = TEGRA_PMC_CLK_OUT_3,
+>>> +        .dev_name = "extern3",
+>>> +        .mux_shift = 22,
+>>> +        .gate_shift = 18,
+>>> +        .init_parent_index = 0,
+>>> +        .init_state = 0,
+>>> +    },
+>>> +};
+>>> +
+>>>   struct tegra_powergate {
+>>>       struct generic_pm_domain genpd;
+>>>       struct tegra_pmc *pmc;
+>>> @@ -254,6 +344,9 @@ struct tegra_pmc_soc {
+>>>        */
+>>>       const struct tegra_wake_event *wake_events;
+>>>       unsigned int num_wake_events;
+>>> +
+>>> +    struct pmc_clk_init_data *pmc_clks_data;
+>>> +    unsigned int num_pmc_clks;
+>>>   };
+>>>     static const char * const tegra186_reset_sources[] = {
+>>> @@ -2163,6 +2256,228 @@ static int tegra_pmc_clk_notify_cb(struct
+>>> notifier_block *nb,
+>>>       return NOTIFY_OK;
+>>>   }
+>>>   +static void pmc_clk_fence_udelay(u32 offset)
+>>> +{
+>>> +    tegra_pmc_readl(pmc, offset);
+>>> +    /* pmc clk propagation delay 2 us */
+>>> +    udelay(2);
+>>> +}
+>>> +
+>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
+>>> +{
+>>> +    struct pmc_clk_mux *mux = to_pmc_clk_mux(hw);
+>>> +    int num_parents = clk_hw_get_num_parents(hw);
+>>> +    u32 val;
+>>> +
+>>> +    val = tegra_pmc_readl(pmc, mux->offs) >> mux->shift;
+>>> +    val &= mux->mask;
+>>> +
+>>> +    if (val >= num_parents)
+>>> +        return -EINVAL;
+>>> +
+>>> +    return val;
+>>> +}
+>>> +
+>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
+>>> +{
+>>> +    struct pmc_clk_mux *mux = to_pmc_clk_mux(hw);
+>>> +    u32 val;
+>>> +
+>>> +    val = tegra_pmc_readl(pmc, mux->offs);
+>>> +    val &= ~(mux->mask << mux->shift);
+>>> +    val |= index << mux->shift;
+>>> +    tegra_pmc_writel(pmc, val, mux->offs);
+>>> +    pmc_clk_fence_udelay(mux->offs);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static const struct clk_ops pmc_clk_mux_ops = {
+>>> +    .get_parent = pmc_clk_mux_get_parent,
+>>> +    .set_parent = pmc_clk_mux_set_parent,
+>>> +    .determine_rate = __clk_mux_determine_rate,
+>>> +};
+>>> +
+>>> +static struct clk *
+>>> +tegra_pmc_clk_mux_register(const char *name, const char * const
+>>> *parent_names,
+>>> +               int num_parents, unsigned long flags,
+>>> +               unsigned long offset, u32 shift, u32 mask)
+>>> +{
+>>> +    struct clk_init_data init;
+>>> +    struct pmc_clk_mux *mux;
+>>> +
+>>> +    mux = kzalloc(sizeof(*mux), GFP_KERNEL);
+>>> +    if (!mux)
+>>> +        return ERR_PTR(-ENOMEM);
+>>> +
+>>> +    init.name = name;
+>>> +    init.ops = &pmc_clk_mux_ops;
+>>> +    init.parent_names = parent_names;
+>>> +    init.num_parents = num_parents;
+>>> +    init.flags = flags;
+>>> +
+>>> +    mux->hw.init = &init;
+>>> +    mux->offs = offset;
+>>> +    mux->mask = mask;
+>>> +    mux->shift = shift;
+>>> +
+>>> +    return clk_register(NULL, &mux->hw);
+>>> +}
+>>> +
+>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
+>>> +{
+>>> +    struct pmc_clk_gate *gate = to_pmc_clk_gate(hw);
+>>> +
+>>> +    return tegra_pmc_readl(pmc, gate->offs) & BIT(gate->shift) ? 1 : 0;
+>>> +}
+>>> +
+>>> +static void pmc_clk_set_state(struct clk_hw *hw, int state)
+>>> +{
+>>> +    struct pmc_clk_gate *gate = to_pmc_clk_gate(hw);
+>>> +    u32 val;
+>>> +
+>>> +    val = tegra_pmc_readl(pmc, gate->offs);
+>>> +    val = state ? (val | BIT(gate->shift)) : (val & ~BIT(gate->shift));
+>>> +    tegra_pmc_writel(pmc, val, gate->offs);
+>>> +    pmc_clk_fence_udelay(gate->offs);
+>>> +}
+>>> +
+>>> +static int pmc_clk_enable(struct clk_hw *hw)
+>>> +{
+>>> +    pmc_clk_set_state(hw, 1);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static void pmc_clk_disable(struct clk_hw *hw)
+>>> +{
+>>> +    pmc_clk_set_state(hw, 0);
+>>> +}
+>>> +
+>>> +static const struct clk_ops pmc_clk_gate_ops = {
+>>> +    .is_enabled = pmc_clk_is_enabled,
+>>> +    .enable = pmc_clk_enable,
+>>> +    .disable = pmc_clk_disable,
+>>> +};
+>>> +
+>>> +static struct clk *
+>>> +tegra_pmc_clk_gate_register(const char *name, const char *parent_name,
+>>> +                unsigned long flags, unsigned long offset,
+>>> +                u32 shift)
+>>> +{
+>>> +    struct clk_init_data init;
+>>> +    struct pmc_clk_gate *gate;
+>>> +
+>>> +    gate = kzalloc(sizeof(*gate), GFP_KERNEL);
+>>> +    if (!gate)
+>>> +        return ERR_PTR(-ENOMEM);
+>>> +
+>>> +    init.name = name;
+>>> +    init.ops = &pmc_clk_gate_ops;
+>>> +    init.parent_names = &parent_name;
+>>> +    init.num_parents = 1;
+>>> +    init.flags = flags;
+>>> +
+>>> +    gate->hw.init = &init;
+>>> +    gate->offs = offset;
+>>> +    gate->shift = shift;
+>>> +
+>>> +    return clk_register(NULL, &gate->hw);
+>>> +}
+>>> +
+>>> +static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
+>>> +                     struct device_node *np)
+>>> +{
+>>> +    struct clk *clkmux, *clk, *parent;
+>>> +    struct clk_onecell_data *clk_data;
+>>> +    unsigned int num_clks;
+>>> +    int i, ret;
+>>> +
+>>> +    /* each pmc clock output has a mux and a gate */
+>>> +    num_clks = pmc->soc->num_pmc_clks * 2;
+>>> +
+>>> +    if (!num_clks)
+>>> +        return;
+>>> +
+>>> +    clk_data = kmalloc(sizeof(*clk_data), GFP_KERNEL);
+>>> +    if (!clk_data)
+>>> +        return;
+>>> +
+>>> +    clk_data->clks = kcalloc(TEGRA_PMC_CLK_MAX,
+>>> sizeof(*clk_data->clks),
+>>> +                 GFP_KERNEL);
+>>> +    if (!clk_data->clks)
+>>> +        goto free_clkdata;
+>>> +
+>>> +    clk_data->clk_num = num_clks;
+>>> +
+>>> +    for (i = 0; i < pmc->soc->num_pmc_clks; i++) {
+>>> +        struct pmc_clk_init_data *data;
+>>> +
+>>> +        data = pmc->soc->pmc_clks_data + i;
+>>> +
+>>> +        clkmux = tegra_pmc_clk_mux_register(data->mux_name,
+>>> +                            data->parents,
+>>> +                            data->num_parents,
+>>> +                            CLK_SET_RATE_NO_REPARENT |
+>>> +                            CLK_SET_RATE_PARENT,
+>>> +                            PMC_CLK_OUT_CNTRL,
+>>> +                            data->mux_shift, 3);
+>>> +        if (IS_ERR(clkmux))
+>>> +            goto free_clks;
+>>> +
+>>> +        clk_data->clks[data->mux_id] = clkmux;
+>>> +
+>>> +        clk = tegra_pmc_clk_gate_register(data->gate_name,
+>>> +                          data->mux_name,
+>>> +                          CLK_SET_RATE_PARENT,
+>>> +                          PMC_CLK_OUT_CNTRL,
+>>> +                          data->gate_shift);
+>>> +        if (IS_ERR(clk))
+>>> +            goto free_clks;
+>>> +
+>>> +        clk_data->clks[data->gate_id] = clk;
+>>> +
+>>> +        ret = clk_set_parent(clk, clkmux);
+>>> +        if (ret < 0) {
+>>> +            pr_err("failed to set parent of %s to %s\n",
+>>> +                   __func__, __clk_get_name(clk),
+>>> +                   __clk_get_name(clkmux));
+>>> +        }
+>>> +
+>>> +        clk_register_clkdev(clk, data->dev_name, data->gate_name);
+>>> +
+>>> +        /* configure initial clock parent and state */
+>>> +        parent = clk_get_sys(data->gate_name,
+>>> +                     data->parents[data->init_parent_index]);
+>>> +        if (!IS_ERR(parent)) {
+>>> +            ret = clk_set_parent(clkmux, parent);
+>>> +            if (ret < 0) {
+>>> +                pr_err("failed to set parent of %s to %s\n",
+>>> +                       __func__, __clk_get_name(clkmux),
+>>> +                       __clk_get_name(parent));
+>>> +                WARN_ON(1);
+>>> +            }
+>>> +        }
+>>> +
+>>> +        if (data->init_state) {
+>>> +            if (clk_prepare_enable(clk)) {
+>>> +                pr_err("failed to enable %s\n", __func__,
+>>> +                       __clk_get_name(clk));
+>>> +                WARN_ON(1);
 
-This needs some more work, as it is failing in some of the cross build
-containers, for arches not supported by that genelf.h header, where it
-should just detect that this feature shouldn't be used, warn the user
-and build what is possible to build, e.g.:
+Alternatively you could write it like this:
 
-  CC       /tmp/build/perf/util/evswitch.o
-In file included from tests/genelf.c:15:
-tests/../util/genelf.h:42:2: error: #error "unsupported architecture"
-   42 | #error "unsupported architecture"
-      |  ^~~~~
-tests/../util/genelf.h:51:5: error: "GEN_ELF_CLASS" is not defined, evaluates to 0 [-Werror=undef]
-   51 | #if GEN_ELF_CLASS == ELFCLASS64
-      |     ^~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-mv: cannot stat '/tmp/build/perf/tests/.genelf.o.tmp': No such file or directory
-make[4]: *** [/git/linux/tools/build/Makefile.build:96: /tmp/build/perf/tests/genelf.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-  CC       /tmp/build/perf/util/find_bit.o
-  CC       /tmp/build/perf/util/get_current_dir_name.o
+	err = clk_prepare_enable(clk);
 
+	WARN_ON(err, "failed to enable %s: %d\n",
+		__clk_get_name(clk), err);
 
-There is some wiring up to do here, related to:
-[acme@quaco perf]$ vim tools/perf/Makefile.config
-[acme@quaco perf]$ find . -type f| xargs grep PERF_HAVE_JITDUMP
-grep: ./et: No such file or directory
-grep: vi: No such file or directory
-^Xgrep: ./perf.data: Permission denied
-./tools/perf/arch/x86/Makefile:PERF_HAVE_JITDUMP := 1
-./tools/perf/arch/sparc/Makefile:PERF_HAVE_JITDUMP := 1
-./tools/perf/arch/arm/Makefile:PERF_HAVE_JITDUMP := 1
-./tools/perf/arch/arm64/Makefile:PERF_HAVE_JITDUMP := 1
-./tools/perf/arch/powerpc/Makefile:PERF_HAVE_JITDUMP := 1
-./tools/perf/arch/s390/Makefile:PERF_HAVE_JITDUMP := 1
-./tools/perf/Makefile.config:ifdef PERF_HAVE_JITDUMP
-^C
-[acme@quaco perf]$
+>> Should be a bit better to move the WARN_ON to the end of errors handling
+>> in order to catch all possible errors:
+>>
+>> @@ -2510,6 +2510,7 @@ static void tegra_pmc_clock_register(struct
+>> tegra_pmc *pmc,
+>>          return;
+>>
+>>   free_clks:
+>> +       WARN_ON(1);
+>>          kfree(clk_data->clks);
+>>   free_clkdata:
+>>          kfree(clk_data);
+> 
+> Reason I had WARN_ON right during clk_set_parent failure is to have the
+> loop continue for subsequence pmc clocks registration instead of
+> terminating all pmc clocks registration.
 
-But I'll defer this for later, not to hold what I have too much, after
-my next pull req I'll revisit this, if you haven't found a fix by then
-:-)
-
-The current patch is below, with my fixes, and looking at it again it
-seems its just to replace that HAVE_LIBELF_SUPPORT with HAVE_JITDUMP,
-will confirm that later, after sending the pull req to Ingo.
-
-- Arnaldo
-
-commit d006842faa9a26feb51b818e02c681f064b83b0a
-Author: Ian Rogers <irogers@google.com>
-Date:   Tue Nov 26 15:59:13 2019 -0800
-
-    perf jit: Move test functionality in to a test
-    
-    Adds a test for minimal jit_write_elf functionality.
-    
-    Committer testing:
-    
-      # perf test jit
-      61: Test jit_write_elf                                    : Ok
-      #
-    
-      # perf test -v jit
-      61: Test jit_write_elf                                    :
-      --- start ---
-      test child forked, pid 10460
-      Writing jit code to: /tmp/perf-test-KqxURR
-      test child finished with 0
-      ---- end ----
-      Test jit_write_elf: Ok
-      #
-    
-    Committer notes:
-    
-    Fix up the case where HAVE_JITDUMP is no defined.
-    
-    Signed-off-by: Ian Rogers <irogers@google.com>
-    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Alexios Zavras <alexios.zavras@intel.com>
-    Cc: Allison Randal <allison@lohutok.net>
-    Cc: Florian Fainelli <f.fainelli@gmail.com>
-    Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Cc: Jiri Olsa <jolsa@redhat.com>
-    Cc: Kate Stewart <kstewart@linuxfoundation.org>
-    Cc: Leo Yan <leo.yan@linaro.org>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Cc: Michael Petlan <mpetlan@redhat.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Song Liu <songliubraving@fb.com>
-    Cc: Stephane Eranian <eranian@google.com>
-    Cc: Thomas Gleixner <tglx@linutronix.de>
-    Link: http://lore.kernel.org/lkml/20191126235913.41855-1-irogers@google.com
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index a3c595fba943..1692529639b0 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -54,6 +54,7 @@ perf-y += unit_number__scnprintf.o
- perf-y += mem2node.o
- perf-y += maps.o
- perf-y += time-utils-test.o
-+perf-y += genelf.o
- 
- $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
- 	$(call rule_mkdir)
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 7115aa32a51e..970e2ecfb39f 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -296,6 +296,10 @@ static struct test generic_tests[] = {
- 		.desc = "time utils",
- 		.func = test__time_utils,
- 	},
-+	{
-+		.desc = "Test jit_write_elf",
-+		.func = test__jit_write_elf,
-+	},
- 	{
- 		.desc = "maps__merge_in",
- 		.func = test__maps__merge_in,
-diff --git a/tools/perf/tests/genelf.c b/tools/perf/tests/genelf.c
-new file mode 100644
-index 000000000000..28dfd17a6b9f
---- /dev/null
-+++ b/tools/perf/tests/genelf.c
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <limits.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <linux/compiler.h>
-+
-+#include "debug.h"
-+#include "tests.h"
-+
-+
-+#ifdef HAVE_LIBELF_SUPPORT
-+#include <libelf.h>
-+#include "../util/genelf.h"
-+#endif
-+
-+#define TEMPL "/tmp/perf-test-XXXXXX"
-+
-+int test__jit_write_elf(struct test *test __maybe_unused,
-+			int subtest __maybe_unused)
-+{
-+#ifdef HAVE_JITDUMP
-+	static unsigned char x86_code[] = {
-+		0xBB, 0x2A, 0x00, 0x00, 0x00, /* movl $42, %ebx */
-+		0xB8, 0x01, 0x00, 0x00, 0x00, /* movl $1, %eax */
-+		0xCD, 0x80            /* int $0x80 */
-+	};
-+	char path[PATH_MAX];
-+	int fd, ret;
-+
-+	strcpy(path, TEMPL);
-+
-+	fd = mkstemp(path);
-+	if (fd < 0) {
-+		perror("mkstemp failed");
-+		return TEST_FAIL;
-+	}
-+
-+	pr_info("Writing jit code to: %s\n", path);
-+
-+	ret = jit_write_elf(fd, 0, "main", x86_code, sizeof(x86_code),
-+			NULL, 0, NULL, 0, 0);
-+	close(fd);
-+
-+	unlink(path);
-+
-+	return ret ? TEST_FAIL : 0;
-+#else
-+	return TEST_SKIP;
-+#endif
-+}
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 25aea387e2bf..0e6d67910b0a 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -109,6 +109,7 @@ int test__unit_number__scnprint(struct test *test, int subtest);
- int test__mem2node(struct test *t, int subtest);
- int test__maps__merge_in(struct test *t, int subtest);
- int test__time_utils(struct test *t, int subtest);
-+int test__jit_write_elf(struct test *test, int subtest);
- 
- bool test__bp_signal_is_supported(void);
- bool test__bp_account_is_supported(void);
-diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-index f9f18b8b1df9..aed49806a09b 100644
---- a/tools/perf/util/genelf.c
-+++ b/tools/perf/util/genelf.c
-@@ -8,15 +8,12 @@
-  */
- 
- #include <sys/types.h>
--#include <stdio.h>
--#include <getopt.h>
- #include <stddef.h>
- #include <libelf.h>
- #include <string.h>
- #include <stdlib.h>
- #include <unistd.h>
- #include <inttypes.h>
--#include <limits.h>
- #include <fcntl.h>
- #include <err.h>
- #ifdef HAVE_DWARF_SUPPORT
-@@ -31,8 +28,6 @@
- #define NT_GNU_BUILD_ID 3
- #endif
- 
--#define JVMTI
--
- #define BUILD_ID_URANDOM /* different uuid for each run */
- 
- #ifdef HAVE_LIBCRYPTO
-@@ -511,44 +506,3 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
- 
- 	return retval;
- }
--
--#ifndef JVMTI
--
--static unsigned char x86_code[] = {
--    0xBB, 0x2A, 0x00, 0x00, 0x00, /* movl $42, %ebx */
--    0xB8, 0x01, 0x00, 0x00, 0x00, /* movl $1, %eax */
--    0xCD, 0x80            /* int $0x80 */
--};
--
--static struct options options;
--
--int main(int argc, char **argv)
--{
--	int c, fd, ret;
--
--	while ((c = getopt(argc, argv, "o:h")) != -1) {
--		switch (c) {
--		case 'o':
--			options.output = optarg;
--			break;
--		case 'h':
--			printf("Usage: genelf -o output_file [-h]\n");
--			return 0;
--		default:
--			errx(1, "unknown option");
--		}
--	}
--
--	fd = open(options.output, O_CREAT|O_TRUNC|O_RDWR, 0666);
--	if (fd == -1)
--		err(1, "cannot create file %s", options.output);
--
--	ret = jit_write_elf(fd, "main", x86_code, sizeof(x86_code));
--	close(fd);
--
--	if (ret != 0)
--		unlink(options.output);
--
--	return ret;
--}
--#endif
+Ah, okay. Nevertheless this WARN_ON in the end shouldn't be the least (IMO).
