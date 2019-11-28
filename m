@@ -2,262 +2,315 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC14C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F82C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FF821771
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228B121739
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfsCJJoY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e0PszaIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfK1SMb (ORCPT
+        id S1726721AbfK1SMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 13:12:31 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35173 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfK1SMb (ORCPT
+        Thu, 28 Nov 2019 13:12:39 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34693 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfK1SMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 13:12:31 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so170506wro.2;
-        Thu, 28 Nov 2019 10:12:28 -0800 (PST)
+        Thu, 28 Nov 2019 13:12:38 -0500
+Received: by mail-pl1-f196.google.com with SMTP id h13so11891147plr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 10:12:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gOiN12bbCUO3RyXfDznIGhTVWbfXcZK6Qh/ggc0OYes=;
-        b=JfsCJJoYOWVRUBanWqnaw6rbES9MvgO1W+VeDdTEsSXcudgctA8bu5oM7t5fkBGHiP
-         pdo2qGWyRJDDwtSNtT91ZVJRxJz8wm6qKFVhDMKvkRj8RQ5wHw2J2Vtu77oZ+0khj87G
-         YhF+q+Nq/UOAajz97vDvT3hrauJL3r81iVt38OllwKaweh+/S6qkCdE5Di0g2saDrOS2
-         85hMXPcXLJvM5QgY68iDSAztbgNuG8cJLXIvDwck9J+IX7x/9y1WUus4y1IttY71AnXr
-         86RXYTQ5jwPekVkozqp7hqLujCgBaRIUT0/9+8lTcxN5G4Wa1mTVN0SxBwpVTZ+n4EK7
-         Irrw==
+         :cc;
+        bh=Hslvdd+UNnW86ZlAi/jTHzdq/z/vsECwhgfOLicAxTU=;
+        b=e0PszaImOQfKSnQdB7FNjOtqpJ1HLeJtu/9Ie4wgFGyjgL0dLoroOLjPiLsYRcy9iF
+         E/4sL6wBke04PgsezEEYWOnCWftvx4rc5mhaNYR0dLApGLFQ2wqXG8ci0+m4ssonB+3L
+         zOFFtaPc9T5PWz1I5okkzstdi5UBixWiUeIW8TEJRTQDqZUXM2DRFiAo5FQIXNX9B5OZ
+         0nzuuDSAgNhJpRFd0jAHVPR5BRakOVGqOEfWVoaxVF5GcyWXuebK7f7moHotL7Xbrm/1
+         ZF+h9M8sOg+qnwqAgUXG7EPkMih80TzJSuwB9M9LBiFhKIlI0OR9pRY6qoOFNMcl85at
+         MgZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gOiN12bbCUO3RyXfDznIGhTVWbfXcZK6Qh/ggc0OYes=;
-        b=HhWtXoJ1uwCTHrE+D2JjqNRvOiLrPUJ1BM/rgWdDI48RoUJqafPu/JS0bS+bj+1FGt
-         bclFHo4Sakafv8g6EueyJTNyCQwKj/TDLemfyX0XSwd+dv2OeDwAs04FZBPwUqfVzZev
-         SCuvT9ex3lQ54scML8uPliYhL80gzx/RahIoYqvOgDitUD80tO1P5dU7O+nARFgwJo+R
-         XMKR+w0BWKDxfawi+zSiQl8n0NH5bw0zpxCCtVeWW4kscB4nYaOt08F2g3uQte0ag8c0
-         z0ui0B4FilLox4vXO8NzvcO81OFEXVE6c5EXK2SluyRiIEc0N+P/r/BMNah7eI4TJG6E
-         4q7w==
-X-Gm-Message-State: APjAAAWfpA79gltih091u8xopV+O99hjjBxWpMufhnyqOGgPn186FGSX
-        yVrD0FTiZ/70+Kxmq4VHb4QVvbQIYrHgxK/2NYs=
-X-Google-Smtp-Source: APXvYqwLivrUDOFwotPgOHEdBgkJYkN93LcnVm661eNB9GJY535YkvcBDz5QvPETO4ggUrOTK7S3wX1myz1hApCqs2c=
-X-Received: by 2002:adf:da52:: with SMTP id r18mr49789921wrl.167.1574964747263;
- Thu, 28 Nov 2019 10:12:27 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=Hslvdd+UNnW86ZlAi/jTHzdq/z/vsECwhgfOLicAxTU=;
+        b=Q7FOz8XIV94A3ysDSmBTl2rGaU7AazWmm39TKJgqB80hZ3imgyANkT/yJrI9bp5FxN
+         LTnLc+JlQSwLzYAMuWP4sAQFZEUHlXrXWOy0/zyqfC7hKA47Q2S1ooctXp+NFyLnfvoh
+         stdzRpvdg39rpc853GueoqJIeS0EWzcnl/TgQSrV4ago23g3OesJxXXUal28US1lMJtX
+         XVuthjOO4CW5zmEn4gpqDqQwJcfbv914oMhecqTRtiMsRDJ+90oMXoE88Zwa8cL7OAn7
+         v66Vha+gqyw71o8kQiB1Tr6tkIBP1X27R6AAzSaN4fb5W9NWmiaTFNNaXTsWfOpI3528
+         ug1Q==
+X-Gm-Message-State: APjAAAXkL2UTxeVN74mvaSHev4Ew8wgH9LFHFLJNONLiCms/jB6TSVPW
+        PaMDmPoSOI63kBhc9rUuI/65TcI9hX3kdqDWC6Rwjg==
+X-Google-Smtp-Source: APXvYqyY1eP3qTW2VXsUcSlfxt4GWTx1859sGNKLzFn92hhiH8xuuinbkF+o0g4BodizsWYCyavFHHJHGUkvuowQwEc=
+X-Received: by 2002:a17:90a:1f4b:: with SMTP id y11mr13869149pjy.123.1574964757405;
+ Thu, 28 Nov 2019 10:12:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20191123132435.22093-1-peron.clem@gmail.com> <20191128174204.tbr5ldilkadw42gc@gilmour.lan>
-In-Reply-To: <20191128174204.tbr5ldilkadw42gc@gilmour.lan>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 28 Nov 2019 19:12:16 +0100
-Message-ID: <CAJiuCccY7AFsd22bOxKZW=BAne5YEG0vmnVmUNFamU9cpW_vNA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: Convert to new-style SPDX license identifiers
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <00000000000024bbd7058682eda1@google.com> <00000000000080e9260586ead5b5@google.com>
+ <20191128180040.GE29518@localhost>
+In-Reply-To: <20191128180040.GE29518@localhost>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 28 Nov 2019 19:12:26 +0100
+Message-ID: <CAAeHK+yFx1nRWYSPGLj1RdUhSVUqRoAB9-oMnXc5sVVUy1ih3A@mail.gmail.com>
+Subject: Re: WARNING: ODEBUG bug in rsi_probe
+To:     Johan Hovold <johan@kernel.org>
+Cc:     syzbot <syzbot+1d1597a5aa3679c65b9f@syzkaller.appspotmail.com>,
+        amitkarwar@gmail.com, "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        siva8118@gmail.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
-
-On Thu, 28 Nov 2019 at 18:42, Maxime Ripard <mripard@kernel.org> wrote:
+On Thu, Nov 28, 2019 at 7:00 PM Johan Hovold <johan@kernel.org> wrote:
 >
-> Hi Clement,
->
-> Sorry for the pretty slow answer
->
-> On Sat, Nov 23, 2019 at 02:24:35PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Move the SPDX-License-Identifier lines to the top and drop the
-> > license splat.
+> On Fri, Apr 19, 2019 at 04:54:06PM -0700, syzbot wrote:
+> > syzbot has found a reproducer for the following crash on:
 > >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
+> > HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=13431e7b200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=1d1597a5aa3679c65b9f
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12534fdd200000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147c9247200000
 > >
-> > Hi,
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+1d1597a5aa3679c65b9f@syzkaller.appspotmail.com
 > >
-> > This the same logic that what has be done on Amlogic.
+> > rsi_91x: rsi_load_firmware: REGOUT read failed
+> > rsi_91x: rsi_hal_device_init: Failed to load TA instructions
+> > rsi_91x: rsi_probe: Failed in device init
+> > ------------[ cut here ]------------
+> > ODEBUG: free active (active state 0) object type: timer_list hint:
+> > bl_cmd_timeout+0x0/0x50 drivers/net/wireless/rsi/rsi_91x_hal.c:577
+> > WARNING: CPU: 0 PID: 563 at lib/debugobjects.c:325
+> > debug_print_object+0x162/0x250 lib/debugobjects.c:325
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 0 PID: 563 Comm: kworker/0:2 Not tainted 5.1.0-rc5-319617-gd34f951 #4
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+> >   panic+0x29d/0x5f2 kernel/panic.c:214
+> >   __warn.cold+0x20/0x48 kernel/panic.c:571
+> >   report_bug+0x262/0x2a0 lib/bug.c:186
+> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> >   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+> >   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+> >   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+> > RIP: 0010:debug_print_object+0x162/0x250 lib/debugobjects.c:325
+> > Code: dd c0 a8 b3 8e 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48
+> > 8b 14 dd c0 a8 b3 8e 48 c7 c7 40 9d b3 8e e8 8e c3 d2 fd <0f> 0b 83 05 f9
+> > 0f 5a 10 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+> > RSP: 0018:ffff88809e1ef110 EFLAGS: 00010086
+> > RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+> > RDX: 0000000000000000 RSI: ffffffff815b1d22 RDI: ffffed1013c3de14
+> > RBP: 0000000000000001 R08: ffff88809e1cb100 R09: ffffed1015a03edb
+> > R10: ffffed1015a03eda R11: ffff8880ad01f6d7 R12: ffffffff917e77c0
+> > R13: ffffffff8161e740 R14: ffffffff96d3ea28 R15: ffff8880a5a75f60
+> >   __debug_check_no_obj_freed lib/debugobjects.c:785 [inline]
+> >   debug_check_no_obj_freed+0x2a3/0x42e lib/debugobjects.c:817
+> >   slab_free_hook mm/slub.c:1426 [inline]
+> >   slab_free_freelist_hook+0xfb/0x140 mm/slub.c:1456
+> >   slab_free mm/slub.c:3003 [inline]
+> >   kfree+0xce/0x280 mm/slub.c:3958
+> >   rsi_probe+0xdf3/0x140d drivers/net/wireless/rsi/rsi_91x_sdio.c:1178
+> >   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+> >   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+> >   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+> >   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+> >   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+> >   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+> >   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+> >   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+> >   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+> >   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+> >   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+> >   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+> >   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+> >   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+> >   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+> >   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+> >   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+> >   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+> >   port_event drivers/usb/core/hub.c:5350 [inline]
+> >   hub_event+0x1398/0x3b00 drivers/usb/core/hub.c:5432
+> >   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+> >   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x313/0x420 kernel/kthread.c:253
+> >   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 > >
-> > Commit: ARM64: dts: amlogic: Convert to new-style SPDX license identifi=
-ers
-> > https://lore.kernel.org/patchwork/patch/890455/
+> > ======================================================
 >
-> So there's a bunch of different things that should be addressed in
-> separate patches here I believe.
+> Let's try to test the below combined patch which fixes both the above
+> use-after-free issue and a second one which syzbot is likely to hit once
+> the first one is fixed. Now hopefully with a proper commit id:
 >
-> >  arch/arm64/boot/dts/allwinner/axp803.dtsi     | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-pine64-lts.dts   |  3 +-
-> >  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +----------------
-> >  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-pinebook.dts     |  1 -
-> >  .../allwinner/sun50i-a64-sopine-baseboard.dts | 42 +------------------
-> >  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 42 +------------------
-> >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts |  3 +-
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +----------------
-> >  .../sun50i-h5-bananapi-m2-plus-v1.2.dts       |  4 +-
-> >  .../allwinner/sun50i-h5-bananapi-m2-plus.dts  |  4 +-
-> >  .../allwinner/sun50i-h5-nanopi-neo-plus2.dts  | 39 +----------------
-> >  .../dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 39 +----------------
-> >  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 39 +----------------
-> >  .../allwinner/sun50i-h5-orangepi-prime.dts    | 42 +------------------
-> >  .../sun50i-h5-orangepi-zero-plus.dts          |  3 +-
-> >  .../sun50i-h5-orangepi-zero-plus2.dts         | 39 +----------------
-> >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 39 +----------------
-> >  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  2 +-
-> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  2 +-
-> >  .../allwinner/sun50i-h6-orangepi-lite2.dts    |  2 +-
-> >  .../allwinner/sun50i-h6-orangepi-one-plus.dts |  2 +-
-> >  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  2 +-
-> >  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  2 +-
-> >  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     |  2 +-
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  2 +-
-> >  30 files changed, 33 insertions(+), 634 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boo=
-t/dts/allwinner/axp803.dtsi
-> > index f0349ef4bfdd..f4f2c70fde5c 100644
-> > --- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> > @@ -1,43 +1,6 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >  /*
-> >   * Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
-> > - *
-> > - * This file is dual-licensed: you can use it either under the terms
-> > - * of the GPL or the X11 license, at your option. Note that this dual
-> > - * licensing only applies to this file, and not this project as a
-> > - * whole.
-> > - *
-> > - *  a) This file is free software; you can redistribute it and/or
-> > - *     modify it under the terms of the GNU General Public License as
-> > - *     published by the Free Software Foundation; either version 2 of =
-the
-> > - *     License, or (at your option) any later version.
-> > - *
-> > - *     This file is distributed in the hope that it will be useful,
-> > - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > - *     GNU General Public License for more details.
-> > - *
-> > - * Or, alternatively,
-> > - *
-> > - *  b) Permission is hereby granted, free of charge, to any person
-> > - *     obtaining a copy of this software and associated documentation
-> > - *     files (the "Software"), to deal in the Software without
-> > - *     restriction, including without limitation the rights to use,
-> > - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > - *     sell copies of the Software, and to permit persons to whom the
-> > - *     Software is furnished to do so, subject to the following
-> > - *     conditions:
-> > - *
-> > - *     The above copyright notice and this permission notice shall be
-> > - *     included in all copies or substantial portions of the Software.
-> > - *
-> > - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> > - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> > - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> > - *     OTHER DEALINGS IN THE SOFTWARE.
-> >   */
->
-> So this is the first, obvious, one that you talk about in your commit
-> log. While the license says that it's X11, SPDX reports that it's now
-> MIT, can you clarify this?
+> #syz test: https://github.com/google/kasan.git da06441bb4
 
-As far as I know X11 and MIT are similar and MIT is preferred in Linux.
-see: LICENSES/preferred.
-So I have converted the X11 to MIT but it can be an explicit commit.
-This is done implicitly in the Amlogic commit.
+Hi Johan,
+
+The reproducer was found on commit d34f9519, so you need to specify
+that commit exactly when testing patches. Otherwise the reported
+result might be incorrect.
+
+Thanks!
 
 >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts b/=
-arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> > index 72d6961dc312..2ca36580436c 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> > @@ -1,6 +1,5 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >  /*
-> > - * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > - *
-> >   * Copyright (c) 2018 ARM Ltd.
-> >   */
+> Johan
 >
-> This is another kind of changes though. The SPDX identifier is there,
-> but under the wrong format and you're fixing it.
 >
-> That being said, I'm not a super fan of mixing the two comment styles
-> for two lines.
+> From 0fff9e8be7d92c37c0a03b8f58db415eb042c325 Mon Sep 17 00:00:00 2001
+> From: Johan Hovold <johan@kernel.org>
+> Date: Thu, 28 Nov 2019 16:07:57 +0100
+> Subject: [PATCH] rsi: fix use-after-free on failed probe and unbind
 >
-> What about using only // style comments for the header?
-
-Most of the other dts use this style for the header so I would like to
-keep this kind of style.
-Except if DT maintainers want explicity to move to another style.
-Having a coherency in all dts is better and we can move to another
-style with a simple script.
-
+> Make sure to stop both URBs before returning after failed probe as well
+> as on disconnect to avoid use-after-free in the completion handler.
 >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v=
-1.2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-> > index 2e2b14c0ae75..a61d58c4db24 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-> > @@ -1,5 +1,7 @@
-> >  // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > -// Copyright (C) 2018 Chen-Yu Tsai <wens@csie.org>
-> > +/*
-> > + * Copyright (C) 2018 Chen-Yu Tsai <wens@csie.org>
-> > + */
+> Reported-by: syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com
+> Fixes: a4302bff28e2 ("rsi: add bluetooth rx endpoint")
+> Fixes: dad0d04fa7ba ("rsi: Add RS9113 wireless driver")
+> Cc: stable <stable@vger.kernel.org>     # 3.15
+> Cc: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+> Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
+> Cc: Amitkumar Karwar <amit.karwar@redpinesignals.com>
+> Cc: Fariya Fatima <fariyaf@gmail.com>
 >
-> Here you change the comment style. And based on the comment above that
-> wouldn't be necessary.
-
-Ok, if we agree on the style.
-
+> rsi: fix use-after-free on probe errors
 >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/=
-arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > index f335f7482a73..84b7e9936300 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > @@ -1,4 +1,4 @@
-> > -// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >  /*
-> >   * Copyright (C) 2019 Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> >   */
+> The driver would fail to stop the command timer in most error paths,
+> something which specifically could lead to the timer being freed while
+> still active on I/O errors during probe.
 >
-> And I'm not sure what this one (and the next) is?
-
-The license expressions in dual licensed files is wrong here, "OR"
-should be uppercase.
-I can move it to a separate commit if you like.
-
-Regards,
-Cl=C3=A9ment
-
+> Fix this by making sure that each function starting the timer also stops
+> it in all relevant error paths.
 >
-> Thanks!
-> Maxime
+> Reported-by: syzbot+1d1597a5aa3679c65b9f@syzkaller.appspotmail.com
+> Fixes: b78e91bcfb33 ("rsi: Add new firmware loading method")
+> Cc: stable <stable@vger.kernel.org>     # 4.12
+> Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
+> Cc: Amitkumar Karwar <amit.karwar@redpinesignals.com>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+>  drivers/net/wireless/rsi/rsi_91x_hal.c | 12 ++++++------
+>  drivers/net/wireless/rsi/rsi_91x_usb.c | 18 +++++++++++++++++-
+>  2 files changed, 23 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/net/wireless/rsi/rsi_91x_hal.c b/drivers/net/wireless/rsi/rsi_91x_hal.c
+> index f84250bdb8cf..6f8d5f9a9f7e 100644
+> --- a/drivers/net/wireless/rsi/rsi_91x_hal.c
+> +++ b/drivers/net/wireless/rsi/rsi_91x_hal.c
+> @@ -622,6 +622,7 @@ static int bl_cmd(struct rsi_hw *adapter, u8 cmd, u8 exp_resp, char *str)
+>         bl_start_cmd_timer(adapter, timeout);
+>         status = bl_write_cmd(adapter, cmd, exp_resp, &regout_val);
+>         if (status < 0) {
+> +               bl_stop_cmd_timer(adapter);
+>                 rsi_dbg(ERR_ZONE,
+>                         "%s: Command %s (%0x) writing failed..\n",
+>                         __func__, str, cmd);
+> @@ -737,10 +738,9 @@ static int ping_pong_write(struct rsi_hw *adapter, u8 cmd, u8 *addr, u32 size)
+>         }
+>
+>         status = bl_cmd(adapter, cmd_req, cmd_resp, str);
+> -       if (status) {
+> -               bl_stop_cmd_timer(adapter);
+> +       if (status)
+>                 return status;
+> -       }
+> +
+>         return 0;
+>  }
+>
+> @@ -828,10 +828,9 @@ static int auto_fw_upgrade(struct rsi_hw *adapter, u8 *flash_content,
+>
+>         status = bl_cmd(adapter, EOF_REACHED, FW_LOADING_SUCCESSFUL,
+>                         "EOF_REACHED");
+> -       if (status) {
+> -               bl_stop_cmd_timer(adapter);
+> +       if (status)
+>                 return status;
+> -       }
+> +
+>         rsi_dbg(INFO_ZONE, "FW loading is done and FW is running..\n");
+>         return 0;
+>  }
+> @@ -849,6 +848,7 @@ static int rsi_hal_prepare_fwload(struct rsi_hw *adapter)
+>                                                   &regout_val,
+>                                                   RSI_COMMON_REG_SIZE);
+>                 if (status < 0) {
+> +                       bl_stop_cmd_timer(adapter);
+>                         rsi_dbg(ERR_ZONE,
+>                                 "%s: REGOUT read failed\n", __func__);
+>                         return status;
+> diff --git a/drivers/net/wireless/rsi/rsi_91x_usb.c b/drivers/net/wireless/rsi/rsi_91x_usb.c
+> index 53f41fc2cadf..30bed719486e 100644
+> --- a/drivers/net/wireless/rsi/rsi_91x_usb.c
+> +++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+> @@ -292,6 +292,15 @@ static void rsi_rx_done_handler(struct urb *urb)
+>                 dev_kfree_skb(rx_cb->rx_skb);
+>  }
+>
+> +static void rsi_rx_urb_kill(struct rsi_hw *adapter, u8 ep_num)
+> +{
+> +       struct rsi_91x_usbdev *dev = (struct rsi_91x_usbdev *)adapter->rsi_dev;
+> +       struct rx_usb_ctrl_block *rx_cb = &dev->rx_cb[ep_num - 1];
+> +       struct urb *urb = rx_cb->rx_urb;
+> +
+> +       usb_kill_urb(urb);
+> +}
+> +
+>  /**
+>   * rsi_rx_urb_submit() - This function submits the given URB to the USB stack.
+>   * @adapter: Pointer to the adapter structure.
+> @@ -823,10 +832,13 @@ static int rsi_probe(struct usb_interface *pfunction,
+>         if (adapter->priv->coex_mode > 1) {
+>                 status = rsi_rx_urb_submit(adapter, BT_EP);
+>                 if (status)
+> -                       goto err1;
+> +                       goto err_kill_wlan_urb;
+>         }
+>
+>         return 0;
+> +
+> +err_kill_wlan_urb:
+> +       rsi_rx_urb_kill(adapter, WLAN_EP);
+>  err1:
+>         rsi_deinit_usb_interface(adapter);
+>  err:
+> @@ -857,6 +869,10 @@ static void rsi_disconnect(struct usb_interface *pfunction)
+>                 adapter->priv->bt_adapter = NULL;
+>         }
+>
+> +       if (adapter->priv->coex_mode > 1)
+> +               rsi_rx_urb_kill(adapter, BT_EP);
+> +       rsi_rx_urb_kill(adapter, WLAN_EP);
+> +
+>         rsi_reset_card(adapter);
+>         rsi_deinit_usb_interface(adapter);
+>         rsi_91x_deinit(adapter);
+> --
+> 2.24.0
+>
