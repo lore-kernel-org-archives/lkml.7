@@ -2,121 +2,146 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCFDC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4E6C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54209217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5335217C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U899dvbj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="GoxDhbmI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfK1MRC (ORCPT
+        id S1726715AbfK1MRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 07:17:02 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57640 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfK1MRC (ORCPT
+        Thu, 28 Nov 2019 07:17:12 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:15783 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfK1MRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 07:17:02 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xASCEURn041078;
-        Thu, 28 Nov 2019 12:15:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=K23tF4ZOTDK2mqDQjS6SPO2vyRMwZ30j/1NOK4W0JhU=;
- b=U899dvbj2nf503rUrhC7bjlnabTEc8CnGq3kxTbIN9FQZZ7PaHselctxJP0PdlYJaLh1
- MtUr7y3iYlfnHUUoy7vW84HeRpysuJAHISh6hp36cHyPZ8CrfKPoUBbZerKOHfreJwJl
- 7UyhVeXac0Z2hHde+5XqVvg+llnJGS44sBpSHGrgmhKkhT/zKgScPs5ijVSg3N9rSZEt
- 0MpHQyi4PugxpNgdpMGeUxSXJyw4X+sETczYGhlCdIvjimklQs6DGtd17fc/S8IXirJi
- TkpL89TnxKaDyZDfgmvkf9es+AiGbWfo8LmUTCQ6BreW71hxMJ8MdO+fmzWmLT2jn2tT Pg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2wevqqkbnc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Nov 2019 12:15:20 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xASCEOYE100925;
-        Thu, 28 Nov 2019 12:15:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2why49ykr4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Nov 2019 12:15:19 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xASCFD2B023073;
-        Thu, 28 Nov 2019 12:15:14 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 Nov 2019 04:15:12 -0800
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Hannes Reinecke <hare@suse.de>, Arnd Bergmann <arnd@arndb.de>,
-        "\(Exiting\) Baolin Wang" <baolin.wang@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: Re: [PATCH v6 0/4] Add MMC software queue support
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <cover.1573456283.git.baolin.wang@linaro.org>
-        <CAK8P3a1we9D5C2NOBww=cW-4L1PT3t0NnDRmknLwiLm652TmKg@mail.gmail.com>
-        <CAMz4kuK9HEuGdhNqHO_qoy9jD=ccsPPhD_dKYwNRgQyWyYwqRA@mail.gmail.com>
-        <CAK8P3a0rNhyxmUWLUV1js3FsuAESDOPX3E4b8ActtL4GRT4uTA@mail.gmail.com>
-        <CADBw62pzV+5ZXBEbFvTQJ9essAd4cd7Xkz5j9AXB5rAQy0wLqA@mail.gmail.com>
-        <CAMz4kuK_3q4JY1vNXe6zGHDNF8Ep-SkcUq6Z25r790VSz4+Bjw@mail.gmail.com>
-        <CAK8P3a11vJb1riYseqPnF_5SuJA+YnYuGwC0XWx6_rk+eQ0Bmw@mail.gmail.com>
-        <f88856aa-9175-2a93-3747-c98215cb79c3@suse.de>
-        <20191127090023.GA23040@infradead.org>
-Date:   Thu, 28 Nov 2019 07:15:09 -0500
-In-Reply-To: <20191127090023.GA23040@infradead.org> (Christoph Hellwig's
-        message of "Wed, 27 Nov 2019 01:00:23 -0800")
-Message-ID: <yq1v9r46vua.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9454 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=949
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911280108
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9454 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911280108
+        Thu, 28 Nov 2019 07:17:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574943430;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=j2Zi7z7PshzDcW95CJR/hmzUfkNJXaAcZIHrohG8tZM=;
+        b=GoxDhbmI6D5113ctTCILcQ+dUylJMyAgX5mAfHdKkL/Tw62aoIHuGiUspDOS6nZyey
+        CVFP4JXQmpj3+9ASfeUEKXAznrD4+/HjSr2IiXlHGc6cerzL7Tc4/gD0mas9BAAv9Bdk
+        RETJHPjL3B7oOfXmJngRH0ucSb3ek+v/K3NfSldxHXcNEZTpUmRQUqTwX0dETGA9ZM/x
+        Fn4PK/HzFFU2Fv65uq0Wr/DloFJar8aWNy6YLP/yp4rlmBdx3pQYxg/5FhvEKHIu7u44
+        ncAPFDnoZ1SgXUXwz8s7sHgOGRkEophXbo+lx7CdlUhKuL17ejzoRqYzCBDIsWqHVKgR
+        FHSg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw43upSE="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
+        with ESMTPSA id y07703vASCGvJQg
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Thu, 28 Nov 2019 13:16:57 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <96b53936-a288-91bc-a14b-a501c5231a03@arm.com>
+Date:   Thu, 28 Nov 2019 13:16:57 +0100
+Cc:     linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        MIPS Creator CI20 Development 
+        <mips-creator-ci20-dev@googlegroups.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2966D06E-C754-4807-A48E-02D476EF1A24@goldelico.com>
+References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com> <703DC004-96E8-463D-8870-3CC410FE1C5E@goldelico.com> <3190d1a4-96c4-1843-3ae1-bae3a97af9fb@arm.com> <8D151C34-41A1-4DFE-92D6-D1B27AEC8730@goldelico.com> <3E2EEC19-F320-4320-9A85-67B4E615C74A@goldelico.com> <96b53936-a288-91bc-a14b-a501c5231a03@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Christoph,
+> Am 28.11.2019 um 13:05 schrieb Vincenzo Frascino =
+<vincenzo.frascino@arm.com>:
+>=20
+> Hi Nikolaus,
+>=20
+> On 27/11/2019 14:29, H. Nikolaus Schaller wrote:
+>> Hi Vincenco,
+>>=20
+> [...]
+>=20
+>>>=20
+>>> a) with 5.4 kernel
+>>>=20
+>=20
+> Could you please report the hash of your top commit?
 
-> equivalent to SCSI logical units and nvme namespace, just with a
-> pretty idiotic design decision that only allows I/O to one of them at
-> a time.  The block layer way to deal with them is to use a shared
-> tagset for multiple request queues, which doesn't use up a whole lot
-> of resources.  The only hard part is the draining when switching
-> between partitions, and there is no really nice way to deal with that.
-> If requests are batched enough we could just drain and switch every
-> time an other partition access comes in.
+We have our own config and some compile fixes. But the base
+commit is 219d54332a09
 
-This mirrors single_lun in SCSI closely. I was hoping we could
-eventually get rid of that travesty but if MMC needs something similar,
-maybe it would be good to move that plumbing to block?
+>=20
+> [...]
+>=20
+>>=20
+>> root@letux:~# ./gettime=20
+>> r =3D -1 errno=3D1
+>> tv.sec =3D 1
+>> tv.usec =3D 1
+>> rt =3D 1478193516 errno=3D1
+>> t =3D 1478193516
+>> root@letux:~#=20
+>>=20
+>=20
+> On arm64 the output of your application is what follows:
+>=20
+> r =3D 0 errno=3D0
+> tv.sec =3D 1574942449
+> tv.usec =3D 348684
+> rt =3D 1574942449 errno=3D0
+> t =3D 1574942449
+>=20
+> Which seems what it is expected.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Indeed. Well, on all other arm architectures I can test (omap3/4/5, =
+imx6, raspi)
+it is correct. Only on mips jz4780 I see this.
+
+>=20
+> On a previous email you mentioned what follows:
+>=20
+> root@letux:~# cat /proc/cpuinfo
+> system type             : JZ4780
+> machine                 : img,ci20
+> processor               : 0
+> cpu model               : Ingenic JZRISC V4.15  FPU V0.0
+> BogoMIPS                : 1196.85
+> wait instruction        : yes
+> microsecond timers      : no
+> tlb_entries             : 32
+> extra interrupt vector  : yes
+> hardware watchpoint     : yes, count: 1, address/irw mask: [0x0fff]
+> isa                     : mips1 mips2 mips32r1 mips32r2
+> ASEs implemented        :
+> shadow register sets    : 1
+> kscratch registers      : 0
+> package                 : 0
+> core                    : 0
+> VCED exceptions         : not available
+> VCEI exceptions         : not available
+>=20
+> I am not familiar with JZ4780, which HW clock is it using? (R4K, GIC =
+or NONE)?
+
+Ah, good question. How do I find out? Checking defconfig did not show =
+any
+config with R4K or GIC. So it is likely NONE. CONFIG_RTC_DRV_JZ4740=3Dy =
+if that
+helps.
+
+BR and thanks,
+Nikolaus=
