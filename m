@@ -2,72 +2,136 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15471C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C5E21770
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA44621770
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:08:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ld4ueGqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfK1JHy (ORCPT
+        id S1727171AbfK1JIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 04:07:54 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40788 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725789AbfK1JHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 04:07:53 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 538A8517B63887E92DE5;
-        Thu, 28 Nov 2019 17:07:51 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 28 Nov 2019 17:07:48 +0800
-From:   Daode Huang <huangdaode@hisilicon.com>
-To:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <maz@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <fabien.dessenne@st.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH] irqchip/stm32: Fix "WARNING: invalid free of devm_ allocated
-Date:   Thu, 28 Nov 2019 17:04:40 +0800
-Message-ID: <1574931880-168682-1-git-send-email-huangdaode@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 28 Nov 2019 04:08:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55972 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725789AbfK1JIG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 04:08:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574932085;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LQyMIOq1brhBX2bUMaM6TFXqa3RnBbkv7h2aLB1dU5Q=;
+        b=Ld4ueGqnZKPx4dNjtYdjIb739E2lG5QLQUHrajg5oxhafViAuBP+DL0WEuiU2WaT49T/Gu
+        RrJwsf/4FfejqfyW5eP8MYfBQhvxvZ0P7ZnNd5MA7KvAQD23JX/ngJQqNzEA4GgS51tmRh
+        Q7N0P9j9KwS5CqPW21Fv+PGYckFwzpU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-301-0ZLVFI1nP2WETMSLr2dzlg-1; Thu, 28 Nov 2019 04:08:03 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B577980183C;
+        Thu, 28 Nov 2019 09:08:00 +0000 (UTC)
+Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 552426084E;
+        Thu, 28 Nov 2019 09:07:54 +0000 (UTC)
+Subject: Re: [PATCH] KVM: vgic: Use warpper function to lock/unlock all vcpus
+ in kvm_vgic_create()
+To:     linmiaohe <linmiaohe@huawei.com>, maz@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, catalin.marinas@arm.com,
+        gregkh@linuxfoundation.org, will@kernel.org,
+        andre.przywara@arm.com, tglx@linutronix.de
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <1574910551-14351-1-git-send-email-linmiaohe@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <cdd7ef36-70ae-3e56-2ea3-48d7051991c3@redhat.com>
+Date:   Thu, 28 Nov 2019 10:07:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1574910551-14351-1-git-send-email-linmiaohe@huawei.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: 0ZLVFI1nP2WETMSLr2dzlg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since devm_ allocated data can be automaitcally released, it's no
-need to free it apparently, just remove it.
+Hi,
 
-Fixes: cfbf9e497094 ("irqchip/stm32: Use a platform driver for
-stm32mp1-exti device")
-Signed-off-by: Daode Huang <huangdaode@hisilicon.com>
----
- drivers/irqchip/irq-stm32-exti.c | 2 --
- 1 file changed, 2 deletions(-)
+On 11/28/19 4:09 AM, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> Use warpper function lock_all_vcpus()/unlock_all_vcpus()
+s/warpper/wrapper and also in the title.
+> in kvm_vgic_create() to remove duplicated code dealing
+> with locking and unlocking all vcpus in a vm.
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  virt/kvm/arm/vgic/vgic-init.c | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+> index b3c5de48064c..53e3969dfb52 100644
+> --- a/virt/kvm/arm/vgic/vgic-init.c
+> +++ b/virt/kvm/arm/vgic/vgic-init.c
+> @@ -70,7 +70,7 @@ void kvm_vgic_early_init(struct kvm *kvm)
+>   */
+>  int kvm_vgic_create(struct kvm *kvm, u32 type)
+>  {
+> -	int i, vcpu_lock_idx = -1, ret;
+> +	int i, ret;
+>  	struct kvm_vcpu *vcpu;
+>  
+>  	if (irqchip_in_kernel(kvm))
+> @@ -92,11 +92,8 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
+>  	 * that no other VCPUs are run while we create the vgic.
+>  	 */
+>  	ret = -EBUSY;
+> -	kvm_for_each_vcpu(i, vcpu, kvm) {
+> -		if (!mutex_trylock(&vcpu->mutex))
+> -			goto out_unlock;
+> -		vcpu_lock_idx = i;
+> -	}
+> +	if (!lock_all_vcpus(kvm))
+> +		return ret;
+>  
+>  	kvm_for_each_vcpu(i, vcpu, kvm) {
+>  		if (vcpu->arch.has_run_once)
+> @@ -125,10 +122,7 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
+>  		INIT_LIST_HEAD(&kvm->arch.vgic.rd_regions);
+>  
+>  out_unlock:
+> -	for (; vcpu_lock_idx >= 0; vcpu_lock_idx--) {
+> -		vcpu = kvm_get_vcpu(kvm, vcpu_lock_idx);
+> -		mutex_unlock(&vcpu->mutex);
+> -	}
+> +	unlock_all_vcpus(kvm);
+>  	return ret;
+>  }
+>  
+> 
+Besides, looks good to me
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index e00f2fa..46ec0af 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -779,8 +779,6 @@ static int __init stm32_exti_init(const struct stm32_exti_drv_data *drv_data,
- 	irq_domain_remove(domain);
- out_unmap:
- 	iounmap(host_data->base);
--	kfree(host_data->chips_data);
--	kfree(host_data);
- 	return ret;
- }
- 
--- 
-2.8.1
+Thanks
+
+Eric
 
