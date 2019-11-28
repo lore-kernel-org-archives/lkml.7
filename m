@@ -2,107 +2,144 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8218EC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF48FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C092176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938602176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:49:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="KWmWJv+U"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="elhI7pj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfK1Ns5 (ORCPT
+        id S1726773AbfK1Nt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:48:57 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:33431 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfK1Ns4 (ORCPT
+        Thu, 28 Nov 2019 08:49:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47305 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726227AbfK1Nt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:48:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574948934;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=/wIFaKm+ebxmf1zDi6heRwAyFXGyk1wVGBocTvOmgvg=;
-        b=KWmWJv+UuVCytxbtt7bbmW7qKStQeCk4zD7XVhLzCqDb3hwTytpgEmQyNi2Q9zUqLx
-        aHYNgAfouQOGcYDbM3WDIT/BO5VzcvBfQ9oV2J3gRhjkCpZzaeASLetkzld7DTLdVnU3
-        VlOqYjSnt84aH5xLZ9eQulQeV3fXY1NmG44oZChAY9smnzj/5Zf5Zox4luS2SOKgOtp4
-        q9+732esAeoKqI2PEfQxcwnT0s2ArjODDqUwfAKRHxA07QTG+rteBEhkKinxTHj3lFO3
-        FcHKfXX8r9TVijF2Tklh1au0VHoan7ujIrWOTO1LNu50DsYR8pN/Y1TsIUzh6t97yFyk
-        5BPg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw43upSE="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id y07703vASDmkKBI
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 28 Nov 2019 14:48:46 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <4807842.gtHLO0kk0V@hyperion>
-Date:   Thu, 28 Nov 2019 14:48:46 +0100
-Cc:     mips-creator-ci20-dev@googlegroups.com,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <01D75E67-EC2E-4C74-B9BB-752773C481A9@goldelico.com>
-References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com> <7b6275c7-ab2b-a647-6bf7-d5e1c4523c98@arm.com> <D1CE4D1E-9A42-4FAE-90A9-615C38B979C0@goldelico.com> <4807842.gtHLO0kk0V@hyperion>
-To:     Maarten ter Huurne <maarten@treewalker.org>
-X-Mailer: Apple Mail (2.3124)
+        Thu, 28 Nov 2019 08:49:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574948995;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YGu0d5nRzTCOt5B0VpP7FKFZ/eZdcWkMoSbZy1tSSR8=;
+        b=elhI7pj0KbBGIgqZkpIjoaHN2SqNia4DFOTSqct91Nevj+F8G7D/IWinaDUtOcz0AtW4AN
+        uBmXcGY8JOLnlZ/GZ/ECJDUfkOBtY4e+5O0IKzYQuPiucVWl9QqRhUAxKsLAFSy67u7S3G
+        7RpopLzNKPs8Dw9jJus38DngCEH3o9s=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-OVFRmzp0Og21BlRgw0ahVQ-1; Thu, 28 Nov 2019 08:49:46 -0500
+X-MC-Unique: OVFRmzp0Og21BlRgw0ahVQ-1
+Received: by mail-wr1-f71.google.com with SMTP id b2so12520317wrj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:49:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to;
+        bh=ZmGe5n3O3M6DV1wf0Ps1dVbZi2eWgc0G03f2LgnxlkE=;
+        b=Gy192lXw5mbz7VrgpcJtohYe3bUbsLEz5g8ZD5EOwIINjaOel/UmnivZ6ofBkot/Lh
+         8Fe/FzM64s1OXyhI2rmtcBJ5aboWr5/exyW+HG4hwED7lgZRrLC+Ln5nPcnJ9cGLPpGA
+         X6nqFqa9/YMM4zHnNcUmFEecFA4L3zYWzLIb8aUxj4qGkG8qLg7S7wGoQk0M2XnkOcdR
+         SUXUmdae/Gb1/BtVitL2Y1KmeJnYhyqLSz8hqww8kcsNZ+yQMxyEwjjJGr3Bi+maP1XQ
+         TLkkWGTSYVVGPLvklDuw6lGBGs2LmEEvkNUc7MLXr99knPBjw0enmR81WkN3m4QMInPc
+         wUfQ==
+X-Gm-Message-State: APjAAAWUUumXznDm8PW13xUON0W9pI/JttK9GHyybBEBoIPp2mmjgiU6
+        yobQvp6R4/1wAcWGtYFqh3WIaLdJPrM5TfWmsWZXEHgIRkZcvSmF+tzIe9AyIfDc5u2lJofEajs
+        KtSw7pets0DGwhNORCuWM32EB
+X-Received: by 2002:a5d:4b05:: with SMTP id v5mr47422472wrq.210.1574948985554;
+        Thu, 28 Nov 2019 05:49:45 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyo7HcXazQ+g8Uub3wjMyHoxjSedTWzFyFIa+sdDQUlYNKyn1oJh+oqfh+jQB6/ujGwKhd9qg==
+X-Received: by 2002:a5d:4b05:: with SMTP id v5mr47422451wrq.210.1574948985283;
+        Thu, 28 Nov 2019 05:49:45 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:459f:99a9:39f1:65ba? ([2001:b07:6468:f312:459f:99a9:39f1:65ba])
+        by smtp.gmail.com with ESMTPSA id u69sm11266129wmu.39.2019.11.28.05.49.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Nov 2019 05:49:44 -0800 (PST)
+Subject: Re: [PATCH] KVM: Add separate helper for putting borrowed reference
+ to kvm
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191021225842.23941-1-sean.j.christopherson@intel.com>
+ <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
+ <20191126171416.GA22233@linux.intel.com>
+ <0009c6c1bb635098fa68cb6db6414634555039fe.camel@linux.ibm.com>
+ <e1a4218f-2a70-3de3-1403-dbebf8a8abdf@redhat.com>
+ <bfa563e6a584bd85d3abe953ca088281dc0e167b.camel@linux.ibm.com>
+ <6beeff56-7676-5dfd-a578-1732730f8963@redhat.com>
+ <adcfe1b4c5b36b3c398a5d456da9543e0390cba3.camel@linux.ibm.com>
+ <20191127194757.GI22227@linux.intel.com>
+ <103b290917221baa10194c27c8e35b9803f3cafa.camel@linux.ibm.com>
+ <41fe3962ce1f1d5f61db5f5c28584f68ad66b2b1.camel@linux.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <a924cb9c-8354-23fe-1052-8ad564edad7f@redhat.com>
+Date:   Thu, 28 Nov 2019 14:49:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <41fe3962ce1f1d5f61db5f5c28584f68ad66b2b1.camel@linux.ibm.com>
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="2EOQw14S6yWgOPBTzrBp0a23SVveOhNfL"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--2EOQw14S6yWgOPBTzrBp0a23SVveOhNfL
+Content-Type: multipart/mixed; boundary="9jBDL15xpbJKsgN8Nju6MIyr9G8TyK9WX"
 
-> Am 28.11.2019 um 14:29 schrieb Maarten ter Huurne <maarten@treewalker.org>:
-> 
-> On Thursday, 28 November 2019 13:33:17 CET H. Nikolaus Schaller wrote:
->> Hi Vincenzo,
->> 
->>> Am 28.11.2019 um 13:21 schrieb Vincenzo Frascino
->>> <vincenzo.frascino@arm.com>:> 
->>> [...]
->>> The the lib that provides the gettimeofday() changes accordingly
->>> with vdso_data. 5.4 and 4.19 have 2 different vdso libraries as
->>> well.
->> 
->> Yes, that is what I have assumed what happens. How do these libs go
->> into an existing and working root-file-system with Debian Stretch?
-> 
-> I'm a novice when it comes to vDSO, so someone please correct me if I'm 
-> wrong.
-> 
-> From what I read vDSO is a library in the sense that it exports ELF 
-> symbols that applications and other libraries (libc in particular) can 
-> use, but it is not a file on disk.
+--9jBDL15xpbJKsgN8Nju6MIyr9G8TyK9WX
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Ah, ok. This would mean that the libc providing the gettimeofday()
-should be able to find out a modified changed vdso_data format by
-inspecting these ELF symbols.
+On 27/11/19 22:57, Leonardo Bras wrote:
+> But on the above case, kvm_put_kvm{,_no_destroy}() would be called
+> with refcount =3D=3D 1, and if reorder patch is applied, it would not cau=
+se
+> any use-after-free error, even on kvm_put_kvm() case.
 
-> 
-> As such, which rootfs you use shouldn't matter, since the vDSO is not in 
-> the rootfs. Instead, it is contained in the kernel image. Searching for 
-> "linux-vdso.so.1" on packages.debian.org indeed returns no hits.
-> 
-> There is a check in arch/mips/vdso/Makefile that disables vDSO on MIPS 
-> when building the kernel with binutils < 2.25. I don't know if that is 
-> in any way related to this issue.
+I think this is what you're missing: kvm_put_kvm_no_destroy() does not
+protect against bugs in the code that uses it.  It protect against bugs
+_elsewhere_.
 
-What still does not fit into the picture is the errno = 1 i.e. EPERM.
-Maybe I have to study the libc code that tries to read the ELF symbols
-you have mentioned. It may fail for unknown reasons.
+Therefore, kvm_put_kvm_no_destroy() is always a better choice when
+applicable, because it turns bugs in _other parts of the code_ from
+use-after-free to WARN+leak.
 
-BR and thanks,
-Nikolaus
+Paolo
+
+
+--9jBDL15xpbJKsgN8Nju6MIyr9G8TyK9WX--
+
+--2EOQw14S6yWgOPBTzrBp0a23SVveOhNfL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEE8TM4V0tmI4mGbHaCv/vSX3jHroMFAl3f0HYACgkQv/vSX3jH
+roMNEgf/Q3reWDs1tODfTThvp6Wza8S6DSLbioMx7K9JBrW2K7M+ZKsrXRV/j10j
+XPPHsCVx7KEp5cxNtKWt5AFdfaNJ/QRvb1dE8op90d/i++uYG8lh2ok68zlgd+oQ
+8dGrnGPhFNvp1vqxkkz0ca6tuLnEXRDc/UfgZLiXqHN7WmC4T/75QfRY5CZmQpbs
+2IR5QsXKH9yIS18phyWOrLUCRpteBpAlAiUGawDN9XCE61O6ddHQkJvA2jk4fOZ2
+qzybstGlwM5hK3i/FsIEZZiKJPPNT+Pg2+w8Xugbtw+zv57sG5uNgHpr2DVm+BxP
+8F1nuo5Csxfr0tgJH2/109OJ0/Mo7g==
+=65Gz
+-----END PGP SIGNATURE-----
+
+--2EOQw14S6yWgOPBTzrBp0a23SVveOhNfL--
+
