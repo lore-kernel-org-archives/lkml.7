@@ -2,134 +2,245 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A31C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7904AC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57152154A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:24:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574918643;
-	bh=VBbhkDJDkbjqoegiy3jUe6U+f7TMrtXr7r+3AKCvRhE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=u5fMGIynD8a+S2AXXkQeEdiiWXQ/YM+LXayR7UsCYg2MIMsHJXmLL3+2egsyYdiE1
-	 F/hsbQtS96xeyalQJr6Wrorl+tkIAKzpl5U0Jym6Gx8cMbE3HiQUKA181wgEof10Bd
-	 ITw/q5htD/WkNoyu3fG6ZOqjzD9RpUi5YyxXMopI=
+	by mail.kernel.org (Postfix) with ESMTP id 4DB6E2154A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfK1FX7 (ORCPT
+        id S1726963AbfK1FZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 00:23:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbfK1FX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 00:23:59 -0500
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74EA621781
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574918638;
-        bh=VBbhkDJDkbjqoegiy3jUe6U+f7TMrtXr7r+3AKCvRhE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XFSzWRJHCks5raSsyf2h45mbCkTAf/dnYcCDtm+C5Upm1SvhaW02lIbvnNjcPETLS
-         CBqDm56PLSRLJX5wGbK6pvwysYk+9WGUiaqYvaebu+K9MQdJ1iTR6UH5IPhboZR8YH
-         OVcGscC7dAJDPfHMrhG80AWHqevKP4gyt9UtA2WY=
-Received: by mail-wr1-f44.google.com with SMTP id s5so29446619wrw.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 21:23:58 -0800 (PST)
-X-Gm-Message-State: APjAAAV1Gk+pFDu+JbOp/r4mVBF6fVwd5npO4qMFvjnxXNSGM0zUSXfr
-        80Vaqi/QmJYH0oATB5/BL8HA2XFTnKO+QtHQfBBYYA==
-X-Google-Smtp-Source: APXvYqyR7ToFOKMB3H45yiG009eHrHB26hEhJubbVHuPxZ+9pxVJPUi3dXnZeWmiKmzURvTdaqF0QWrYWaEe9J3nQ5E=
-X-Received: by 2002:adf:f491:: with SMTP id l17mr4133365wro.149.1574918636807;
- Wed, 27 Nov 2019 21:23:56 -0800 (PST)
+        Thu, 28 Nov 2019 00:25:00 -0500
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:18112 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfK1FY7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 00:24:59 -0500
+Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xAS5Oc8o054443;
+        Thu, 28 Nov 2019 14:24:38 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp);
+ Thu, 28 Nov 2019 14:24:38 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp)
+Received: from [192.168.1.2] (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xAS5Obwk054428
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 28 Nov 2019 14:24:38 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH] arm64: dts: rockchip: split rk3399-rockpro64 for v2 and
+ v2.1 boards
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Hugh Cole-Baker <sigmaris@gmail.com>
+References: <20191126165529.30703-1-katsuhiro@katsuster.net>
+ <CA+E=qVcqu7OJayOdrEXRaWYW1JBhJKk7dPDTEJtCD-hDAKohxg@mail.gmail.com>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <0e187cef-c263-cb04-325c-43968fa77047@katsuster.net>
+Date:   Thu, 28 Nov 2019 14:24:37 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191115191728.87338-1-jannh@google.com> <20191115191728.87338-2-jannh@google.com>
- <CALCETrVQ2NqPnED_E6Y6EsCOEJJcz8GkQhgcKHk7JVAyykq06A@mail.gmail.com> <CAG48ez2z8i1nosA1nGrVdXx1cXXwHBqe7CC5kMB2W=uxbsvkjg@mail.gmail.com>
-In-Reply-To: <CAG48ez2z8i1nosA1nGrVdXx1cXXwHBqe7CC5kMB2W=uxbsvkjg@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 27 Nov 2019 21:23:44 -0800
-X-Gmail-Original-Message-ID: <CALCETrXU-hetnH7CTz-Z2xPDAkawx6GdxGtYo0=Jqq1YnoXrWg@mail.gmail.com>
-Message-ID: <CALCETrXU-hetnH7CTz-Z2xPDAkawx6GdxGtYo0=Jqq1YnoXrWg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
-To:     Jann Horn <jannh@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+E=qVcqu7OJayOdrEXRaWYW1JBhJKk7dPDTEJtCD-hDAKohxg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 12:27 PM Jann Horn <jannh@google.com> wrote:
->
-> On Sun, Nov 24, 2019 at 12:08 AM Andy Lutomirski <luto@kernel.org> wrote:
-> > On Fri, Nov 15, 2019 at 11:17 AM Jann Horn <jannh@google.com> wrote:
-> > > A frequent cause of #GP exceptions are memory accesses to non-canonical
-> > > addresses. Unlike #PF, #GP doesn't come with a fault address in CR2, so
-> > > the kernel doesn't currently print the fault address for #GP.
-> > > Luckily, we already have the necessary infrastructure for decoding X86
-> > > instructions and computing the memory address that is being accessed;
-> > > hook it up to the #GP handler so that we can figure out whether the #GP
-> > > looks like it was caused by a non-canonical address, and if so, print
-> > > that address.
-> [...]
-> > > +static void print_kernel_gp_address(struct pt_regs *regs)
-> > > +{
-> > > +#ifdef CONFIG_X86_64
-> > > +       u8 insn_bytes[MAX_INSN_SIZE];
-> > > +       struct insn insn;
-> > > +       unsigned long addr_ref;
-> > > +
-> > > +       if (probe_kernel_read(insn_bytes, (void *)regs->ip, MAX_INSN_SIZE))
-> > > +               return;
-> > > +
-> > > +       kernel_insn_init(&insn, insn_bytes, MAX_INSN_SIZE);
-> > > +       insn_get_modrm(&insn);
-> > > +       insn_get_sib(&insn);
-> > > +       addr_ref = (unsigned long)insn_get_addr_ref(&insn, regs);
-> [...]
-> > > +}
-> >
-> > Could you refactor this a little bit so that we end up with a helper
-> > that does the computation?  Something like:
-> >
-> > int probe_insn_get_memory_ref(void **addr, size_t *len, void *insn_addr);
-> >
-> > returns 1 if there was a memory operand and fills in addr and len,
-> > returns 0 if there was no memory operand, and returns a negative error
-> > on error.
-> >
-> > I think we're going to want this for #AC handling, too :)
->
-> Mmmh... the instruction decoder doesn't currently give us a reliable
-> access size though. (I know, I'm using it here regardless, but it
-> doesn't really matter here if the decoded size is too big from time to
-> time... whereas I imagine that that'd matter quite a bit for #AC
-> handling.) IIRC e.g. a MOVZX that loads 1 byte into a 4-byte register
-> is decoded as having .opnd_bytes==4; and if you look through
-> arch/x86/lib/insn.c, there isn't even anything that would ever set
-> ->opnd_bytes to 1. You'd have to add some plumbing to get reliable
-> access sizes. I don't want to add a helper for this before the
-> underlying infrastructure actually works properly.
+Hi Vasily,
 
-Fair enough.  Although, with #AC, we know a priori that the address is
-unaligned, so we could at least print "Unaligned access at 0x%lx\n".
-But we can certainly leave these details to someone else.
+On 2019/11/27 11:24, Vasily Khoruzhick wrote:
+> On Tue, Nov 26, 2019 at 8:55 AM Katsuhiro Suzuki
+> <katsuhiro@katsuster.net> wrote:
+> 
+> Hi Katsuhiro,
+> 
+>> This patch splits rk3399-rockpro64 dts file to 2 files for v2 and
+>> v2.1 boards.
+> 
+> Thanks for the patch!
+> 
+>> Both v2 and v2.1 boards can use almost same settings but we find a
+>> difference in I2C address of audio CODEC ES8136.
+> 
+> I'd prefer to avoid moving and renaming dts files since it can cause a
+> mess if you don't upgrade your bootloader.
+> 
+> Can we use existing rk3399-rockpro64.dts for v2.1 (and change model
+> name accordingly) and introduce new dts for v2.0?
+> 
 
-(For context, there are patches floating around to enable a formerly
-secret CPU feature to generate #AC on a LOCK instruction that spans a
-cache line.)
+OK, so rk3399-rockpro64.dts always follows the newest board version
+(currently for v2.1) and v2.1.dts will be split out if more newer
+board is released from Pine64.
 
---Andy
+I'll re-post a patch.
+
+Best Regards,
+Katsuhiro Suzuki
+
+
+> Regards,
+> Vasily
+> 
+> 
+>> Reported-by: Vasily Khoruzhick <anarsoul@gmail.com>
+>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/Makefile         |  3 +-
+>>   .../dts/rockchip/rk3399-rockpro64-v2.1.dts    | 30 +++++++++++++++++++
+>>   .../boot/dts/rockchip/rk3399-rockpro64-v2.dts | 30 +++++++++++++++++++
+>>   ...99-rockpro64.dts => rk3399-rockpro64.dtsi} | 18 -----------
+>>   4 files changed, 62 insertions(+), 19 deletions(-)
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.1.dts
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.dts
+>>   rename arch/arm64/boot/dts/rockchip/{rk3399-rockpro64.dts => rk3399-rockpro64.dtsi} (97%)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+>> index 48fb631d5451..3debaeb517fd 100644
+>> --- a/arch/arm64/boot/dts/rockchip/Makefile
+>> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+>> @@ -33,6 +33,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezzanine.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
+>> -dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
+>> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64-v2.dtb
+>> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64-v2.1.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.1.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.1.dts
+>> new file mode 100644
+>> index 000000000000..9450207bedad
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.1.dts
+>> @@ -0,0 +1,30 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
+>> + * Copyright (c) 2018 Akash Gajjar <Akash_Gajjar@mentor.com>
+>> + * Copyright (c) 2019 Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "rk3399-rockpro64.dtsi"
+>> +
+>> +/ {
+>> +       model = "Pine64 RockPro64 v2.1";
+>> +       compatible = "pine64,rockpro64", "rockchip,rk3399";
+>> +};
+>> +
+>> +&i2c1 {
+>> +       es8316: codec@11 {
+>> +               compatible = "everest,es8316";
+>> +               reg = <0x11>;
+>> +               clocks = <&cru SCLK_I2S_8CH_OUT>;
+>> +               clock-names = "mclk";
+>> +               #sound-dai-cells = <0>;
+>> +
+>> +               port {
+>> +                       es8316_p0_0: endpoint {
+>> +                               remote-endpoint = <&i2s1_p0_0>;
+>> +                       };
+>> +               };
+>> +       };
+>> +};
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.dts
+>> new file mode 100644
+>> index 000000000000..7bd37eaa1d57
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.dts
+>> @@ -0,0 +1,30 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
+>> + * Copyright (c) 2018 Akash Gajjar <Akash_Gajjar@mentor.com>
+>> + * Copyright (c) 2019 Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "rk3399-rockpro64.dtsi"
+>> +
+>> +/ {
+>> +       model = "Pine64 RockPro64 v2";
+>> +       compatible = "pine64,rockpro64", "rockchip,rk3399";
+>> +};
+>> +
+>> +&i2c1 {
+>> +       es8316: codec@10 {
+>> +               compatible = "everest,es8316";
+>> +               reg = <0x10>;
+>> +               clocks = <&cru SCLK_I2S_8CH_OUT>;
+>> +               clock-names = "mclk";
+>> +               #sound-dai-cells = <0>;
+>> +
+>> +               port {
+>> +                       es8316_p0_0: endpoint {
+>> +                               remote-endpoint = <&i2s1_p0_0>;
+>> +                       };
+>> +               };
+>> +       };
+>> +};
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
+>> similarity index 97%
+>> rename from arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>> rename to arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
+>> index 7f4b2eba31d4..183eda4ffb9c 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
+>> @@ -4,16 +4,12 @@
+>>    * Copyright (c) 2018 Akash Gajjar <Akash_Gajjar@mentor.com>
+>>    */
+>>
+>> -/dts-v1/;
+>>   #include <dt-bindings/input/linux-event-codes.h>
+>>   #include <dt-bindings/pwm/pwm.h>
+>>   #include "rk3399.dtsi"
+>>   #include "rk3399-opp.dtsi"
+>>
+>>   / {
+>> -       model = "Pine64 RockPro64";
+>> -       compatible = "pine64,rockpro64", "rockchip,rk3399";
+>> -
+>>          chosen {
+>>                  stdout-path = "serial2:1500000n8";
+>>          };
+>> @@ -476,20 +472,6 @@ &i2c1 {
+>>          i2c-scl-rising-time-ns = <300>;
+>>          i2c-scl-falling-time-ns = <15>;
+>>          status = "okay";
+>> -
+>> -       es8316: codec@11 {
+>> -               compatible = "everest,es8316";
+>> -               reg = <0x11>;
+>> -               clocks = <&cru SCLK_I2S_8CH_OUT>;
+>> -               clock-names = "mclk";
+>> -               #sound-dai-cells = <0>;
+>> -
+>> -               port {
+>> -                       es8316_p0_0: endpoint {
+>> -                               remote-endpoint = <&i2s1_p0_0>;
+>> -                       };
+>> -               };
+>> -       };
+>>   };
+>>
+>>   &i2c3 {
+>> --
+>> 2.24.0
+>>
+> 
+
