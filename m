@@ -2,121 +2,109 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC82C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F9BC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1781321741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574927597;
-	bh=Mn2fLKoZ7GJZlk08IbBurAvzrC0C1uKp4r18FrhSTbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LRqdB8lnKSflqsSrLnxBnX2WKfKu0Y4eKkGcDvNvaeiXjAV0rDQYS3N+OiIc0vRkk
-	 lAmLGv7gTwTbB5SDtbTeKN6QQy46OMAk1E+vYp+RpOfh88zamMZcDnZYAobwvyLy8s
-	 Onq2DqRgCX7EHB0P/K5yF187J6KHEtsW0aXlmIU0=
+	by mail.kernel.org (Postfix) with ESMTP id DADA921741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfK1HxQ (ORCPT
+        id S1727275AbfK1H40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 02:53:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbfK1HxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 02:53:16 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB0DB215E5;
-        Thu, 28 Nov 2019 07:53:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574927595;
-        bh=Mn2fLKoZ7GJZlk08IbBurAvzrC0C1uKp4r18FrhSTbE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NCh9h1lTVMMn+vQzN4RdQ+8hIGi0SEr4sAXzkz/c9AqERfRwFzj1Z4+wJ8QhQZp7Z
-         3AfUstxQCTm/rSNBtcUXSlwhhifBKaSFbpst1hD677xCbfnQIDWJoq7DNYjAtruIDV
-         eu3PDQIYBOzk71v7c6j3WWo3zLEJ4yzPLTMYCRQU=
-Date:   Thu, 28 Nov 2019 08:53:12 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 216/220] PM / devfreq: Fix static checker warning in
- try_then_request_governor
-Message-ID: <20191128075312.GA3362744@kroah.com>
-References: <20191122100912.732983531@linuxfoundation.org>
- <20191122100929.173069944@linuxfoundation.org>
- <20191128034020.necma5gpnf2wgsm4@toshiba.co.jp>
+        Thu, 28 Nov 2019 02:56:26 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40286 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbfK1H40 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 02:56:26 -0500
+Received: by mail-ot1-f67.google.com with SMTP id m15so21495833otq.7;
+        Wed, 27 Nov 2019 23:56:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o3hCFZ6+p7EcgiW/0t4v3r/wkobHJ7w7wfnwP0j/QsY=;
+        b=oFOuDCf2DUITMvlZdmvI0Dt0LDxmt7sY5Auey8e+wkABYGATVCM74L79XbF9R9gyj+
+         njFrpiUB2ZDF1cL26lSAhJFD13Zl8+vDp8WqDPUYqN0P8Q4+wO4veaEH239ZPoZ/tx8k
+         BbAtU1X4hJwqOhWfC5TypkFE8IJV9EGcEbHLybNmS7jdPsa0g1TmLMqQxPvmhfmLqVeA
+         khpbYuftCRBWJK7b5GAVlI0qnlV6doCxCZFYDnp4/MuAKLB7MBRn8IvMOlyJMNRxFPc6
+         EwSbsDYfRKUe6I30zKijDZbM+i2s+Z0/4qDmE7wnOVdl4yA3IWUaYCT1zW3kC4Qe1ZnF
+         bc1Q==
+X-Gm-Message-State: APjAAAWhoESBL8JdtBRJNeaeN2Ojj0UI/2dSUefqjBbgAzoabZSgsQ4M
+        aZu2v9k+yZn+UoQH7uVzxxn6GQMQYnD6W1hvvT69mA==
+X-Google-Smtp-Source: APXvYqwqkh/+m7CvwkKLpgmQVtVdyb2UFLRo1oNsNbjJ4rhfL6gGn9lIs/GN0Fr5g34/udViAXGDfuOsZi8Slv5+ukw=
+X-Received: by 2002:a9d:5d10:: with SMTP id b16mr1438412oti.250.1574927785474;
+ Wed, 27 Nov 2019 23:56:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128034020.necma5gpnf2wgsm4@toshiba.co.jp>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191113100556.15616-1-jacopo+renesas@jmondi.org> <20191113100556.15616-4-jacopo+renesas@jmondi.org>
+In-Reply-To: <20191113100556.15616-4-jacopo+renesas@jmondi.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 28 Nov 2019 08:56:14 +0100
+Message-ID: <CAMuHMdWS2bv=RhQ3y5gNzZFT6CeH-a+h7xc6KYvcv0Anht6zGw@mail.gmail.com>
+Subject: Re: [PATCH v7 3/7] drm: rcar-du: Add support for CMM
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms@verge.net.au>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 12:40:20PM +0900, Nobuhiro Iwamatsu wrote:
-> Hi,
-> 
-> On Fri, Nov 22, 2019 at 11:29:41AM +0100, Greg Kroah-Hartman wrote:
-> > From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > 
-> > [ Upstream commit b53b0128052ffd687797d5f4deeb76327e7b5711 ]
-> > 
-> > The patch 23c7b54ca1cd: "PM / devfreq: Fix devfreq_add_device() when
-> > drivers are built as modules." leads to the following static checker
-> > warning:
-> > 
-> >     drivers/devfreq/devfreq.c:1043 governor_store()
-> >     warn: 'governor' can also be NULL
-> > 
-> > The reason is that the try_then_request_governor() function returns both
-> > error pointers and NULL. It should just return error pointers, so fix
-> > this by returning a ERR_PTR to the error intead of returning NULL.
-> > 
-> > Fixes: 23c7b54ca1cd ("PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.")
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> > Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> The following commits are provided for this fix:
-> 
-> commit 7544fd7f384591038646d3cd9efb311ab4509e24
-> Author: Ezequiel Garcia <ezequiel@collabora.com>
-> Date:   Fri Jun 21 18:39:49 2019 -0300
-> 
->     PM / devfreq: Fix kernel oops on governor module load
-> 
->     A bit unexpectedly (but still documented), request_module may
->     return a positive value, in case of a modprobe error.
->     This is currently causing issues in the devfreq framework.
-> 
->     When a request_module exits with a positive value, we currently
->     return that via ERR_PTR. However, because the value is positive,
->     it's not a ERR_VALUE proper, and is therefore treated as a
->     valid struct devfreq_governor pointer, leading to a kernel oops.
-> 
->     Fix this by returning -EINVAL if request_module returns a positive
->     value.
-> 
->     Fixes: b53b0128052ff ("PM / devfreq: Fix static checker warning in try_then_request_governor")
->     Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
->     Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->     Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-> 
-> Please apply.
+Hi Jacopo,
 
-Good catch, now queued up.
+On Wed, Nov 13, 2019 at 11:04 AM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add a driver for the R-Car Display Unit Color Correction Module.
+> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
+> to perform image enhancement and color correction.
+>
+> Add support for CMM through a driver that supports configuration of
+> the 1-dimensional LUT table. More advanced CMM features will be
+> implemented on top of this initial one.
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-greg k-h
+> --- a/drivers/gpu/drm/rcar-du/Kconfig
+> +++ b/drivers/gpu/drm/rcar-du/Kconfig
+> @@ -5,6 +5,7 @@ config DRM_RCAR_DU
+>         depends on ARM || ARM64
+>         depends on ARCH_RENESAS || COMPILE_TEST
+>         imply DRM_RCAR_LVDS
+> +       imply DRM_RCAR_CMM
+>         select DRM_KMS_HELPER
+>         select DRM_KMS_CMA_HELPER
+>         select DRM_GEM_CMA_HELPER
+> @@ -13,6 +14,13 @@ config DRM_RCAR_DU
+>           Choose this option if you have an R-Car chipset.
+>           If M is selected the module will be called rcar-du-drm.
+>
+> +config DRM_RCAR_CMM
+> +       tristate "R-Car DU Color Management Module (CMM) Support"
+> +       depends on DRM && OF
+> +       depends on DRM_RCAR_DU
+
+DRM_RCAR_DU already depends on DRM && OF, so the line above
+can be removed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
