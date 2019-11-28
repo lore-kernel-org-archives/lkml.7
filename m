@@ -2,121 +2,143 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D83C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8679DC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C02B2154A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3D1215F2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:44:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="XngVSCZN"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="Pvze9Ofu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfK1Fbe (ORCPT
+        id S1726773AbfK1Foi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 00:31:34 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49397 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726608AbfK1Fbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 00:31:33 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47NmTZ1fn6z9sP3;
-        Thu, 28 Nov 2019 16:31:30 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1574919090;
-        bh=ZPov+v3E1/if62cEwMcoaXP+xa0mA1xp0953REZRHZU=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=XngVSCZN8JLigCgG1Xqra6cXB+GhAo/bpStfTmekNAxNXYBSmC+glmd8ZG+wl/uuh
-         AMmUt93vc4zORMGddjKK71657Z5vnMihzgNiGkO1O5M5SYq1CgpcngvRDXHlte5Ma8
-         b9ra29w2CAda48twEpVFUN3ukSOUTtdQKNT67nrOhjOi76yXQ2I7O5O2z5b0eF98rJ
-         TTaCkO/elH18c64gJAyVcpYAGsRxF1+EHnJJgFJU+uv2c7imJM9hS1co6Bs+hxtZrK
-         bFh+yV8ZdFrBaGbNGnrNMpbagr+GUqjCnQuQJFapxFm4Xmot5Fb126mHrdGam11JO2
-         sFOmDnJ54fSzw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 4/8] powerpc/vdso32: inline __get_datapage()
-In-Reply-To: <dd5e359b-5864-f8e3-876a-ec606b51eb65@c-s.fr>
-References: <cover.1572342582.git.christophe.leroy@c-s.fr> <9c9fe32df8633e6ba8e670274dc3eef82a1b5a65.1572342582.git.christophe.leroy@c-s.fr> <874kywbrjv.fsf@mpe.ellerman.id.au> <871ru0beke.fsf@mpe.ellerman.id.au> <dd5e359b-5864-f8e3-876a-ec606b51eb65@c-s.fr>
-Date:   Thu, 28 Nov 2019 16:31:27 +1100
-Message-ID: <87sgm8zhw0.fsf@mpe.ellerman.id.au>
+        Thu, 28 Nov 2019 00:44:38 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25807 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfK1Foh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 00:44:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574919859; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=BH7JyYOqdQS6xOUIv3hjDBaE7TTQNkFrnQOM08+qyEoyR5TUkySCZuovA1I5qtEJsGGU0UP/hZTJhMc5xxT2m7fz/fVaKbUJzBuQLGQ7oYCNtKx5GJJLiUdWfnynxOHVtEuuiHtkw75YyFbMJ/J7sif9JIpoHxN78OJ9ae19OqU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574919859; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=wlcW9ql9ymxbT2eCAktaPwVnrBMGWt3WmQxCIE59kNo=; 
+        b=FhSL5e4rbTlxvECc0hWciM1MMuFJVSeN0yUo5f2MNjbHlIsdmlJCQ96JClTAf2IbfZTOmU0pY7XY1oZP/vI33M1Wh3IhIEplTk2o9JsWVeKeUO3ewfzW8DpCJx85fL6uxZqDOTZGrB6t+nwRVGxvJsCeXqunQTBjIrrZr7rdbSI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=lBCHJiRIvFhUZqNr1O4QsrNCRpDsIY9aa5fM4zsrfiT5SzpUP3lpY75BY+edpRROefN6KOtsOAR4
+    ZDZ5sN5NyhahT/70slJRuAghLLqpxNeR+B0VOqUtZvnGTrl8RRQ8  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574919859;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=wlcW9ql9ymxbT2eCAktaPwVnrBMGWt3WmQxCIE59kNo=;
+        b=Pvze9OfuY6b+BkbJ/efBp5mfHCVTfMAL6gKdlJ8622tbpHzBCDp8y/0jOaVIssFL
+        ZMOKRXqlbWJ2D4jIWWXjTL1l7iUXZwR6qBG8qcRBte/J525IFLoKiB5F6PGdup0XQNN
+        Gqed/u6kUs9Tt9fraH9WwvEH0pighTKSLPuFMAhM=
+Received: from [192.168.88.130] (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
+        with SMTPS id 1574919858757240.6881108728262; Wed, 27 Nov 2019 21:44:18 -0800 (PST)
+Subject: Re: [PATCH 4/5] dt-bindings: clock: Add USB OTG clock for X1000.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1574825576-91028-1-git-send-email-zhouyanjie@zoho.com>
+ <1574825576-91028-5-git-send-email-zhouyanjie@zoho.com>
+ <1574875148.3.3@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DDF5EA9.8030007@zoho.com>
+Date:   Thu, 28 Nov 2019 13:44:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1574875148.3.3@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Le 22/11/2019 =C3=A0 07:38, Michael Ellerman a =C3=A9crit=C2=A0:
->> Michael Ellerman <mpe@ellerman.id.au> writes:
->>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>>> __get_datapage() is only a few instructions to retrieve the
->>>> address of the page where the kernel stores data to the VDSO.
->>>>
->>>> By inlining this function into its users, a bl/blr pair and
->>>> a mflr/mtlr pair is avoided, plus a few reg moves.
->>>>
->>>> The improvement is noticeable (about 55 nsec/call on an 8xx)
->>>>
->>>> vdsotest before the patch:
->>>> gettimeofday:    vdso: 731 nsec/call
->>>> clock-gettime-realtime-coarse:    vdso: 668 nsec/call
->>>> clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
->>>>
->>>> vdsotest after the patch:
->>>> gettimeofday:    vdso: 677 nsec/call
->>>> clock-gettime-realtime-coarse:    vdso: 613 nsec/call
->>>> clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
->>>>
->>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>>
->>> This doesn't build with gcc 4.6.3:
->>>
->>>    /linux/arch/powerpc/kernel/vdso32/gettimeofday.S: Assembler messages:
->>>    /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:41: Error: unsuppor=
-ted relocation against __kernel_datapage_offset
->>>    /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:86: Error: unsuppor=
-ted relocation against __kernel_datapage_offset
->>>    /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:213: Error: unsuppo=
-rted relocation against __kernel_datapage_offset
->>>    /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:247: Error: unsuppo=
-rted relocation against __kernel_datapage_offset
->>>    make[4]: *** [arch/powerpc/kernel/vdso32/gettimeofday.o] Error 1
->>=20
->> Actually I guess it's binutils, which is v2.22 in this case.
->>=20
->> Needed this:
->>=20
->> diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/inc=
-lude/asm/vdso_datapage.h
->> index 12785f72f17d..0048db347ddf 100644
->> --- a/arch/powerpc/include/asm/vdso_datapage.h
->> +++ b/arch/powerpc/include/asm/vdso_datapage.h
->> @@ -117,7 +117,7 @@ extern struct vdso_data *vdso_data;
->>   .macro get_datapage ptr, tmp
->>   	bcl	20, 31, .+4
->>   	mflr	\ptr
->> -	addi	\ptr, \ptr, __kernel_datapage_offset - (.-4)
->> +	addi	\ptr, \ptr, (__kernel_datapage_offset - (.-4))@l
->>   	lwz	\tmp, 0(\ptr)
->>   	add	\ptr, \tmp, \ptr
->>   .endm
->>=20
+Hi Paul,
+
+On 2019=E5=B9=B411=E6=9C=8828=E6=97=A5 01:19, Paul Cercueil wrote:
+> Hi Zhou,
 >
-> Are you still planning to getting this series merged ? Do you need any=20
-> help / rebase / re-spin ?
+>
+> Le mer., nov. 27, 2019 at 11:32, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+> =C3=A9crit :
+>> Add the USB OTC clock bindings for the X1000 Soc from Ingenic.
+>>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>> ---
+>>  include/dt-bindings/clock/x1000-cgu.h | 23 ++++++++++++-----------
+>>  1 file changed, 12 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/include/dt-bindings/clock/x1000-cgu.h=20
+>> b/include/dt-bindings/clock/x1000-cgu.h
+>> index bbaebaf..c401fce 100644
+>> --- a/include/dt-bindings/clock/x1000-cgu.h
+>> +++ b/include/dt-bindings/clock/x1000-cgu.h
+>> @@ -29,16 +29,17 @@
+>>  #define X1000_CLK_MSCMUX    14
+>>  #define X1000_CLK_MSC0        15
+>>  #define X1000_CLK_MSC1        16
+>> -#define X1000_CLK_SSIPLL    17
+>> -#define X1000_CLK_SSIMUX    18
+>> -#define X1000_CLK_SFC        19
+>> -#define X1000_CLK_I2C0        20
+>> -#define X1000_CLK_I2C1        21
+>> -#define X1000_CLK_I2C2        22
+>> -#define X1000_CLK_UART0        23
+>> -#define X1000_CLK_UART1        24
+>> -#define X1000_CLK_UART2        25
+>> -#define X1000_CLK_SSI        26
+>> -#define X1000_CLK_PDMA        27
+>
+> You can't do that. These macros are ABI now, since they are used in=20
+> the devicetree. Just use the next valid number for your OTG clock.
+>
 
-Not sure. I'll possibly send a 2nd pull request next week with it
-included.
+My fault, I will fix this in v2.
 
-cheers
+> Cheers,
+> -Paul
+>
+>> +#define X1000_CLK_OTG        17
+>> +#define X1000_CLK_SSIPLL    18
+>> +#define X1000_CLK_SSIMUX    19
+>> +#define X1000_CLK_SFC        20
+>> +#define X1000_CLK_I2C0        21
+>> +#define X1000_CLK_I2C1        22
+>> +#define X1000_CLK_I2C2        23
+>> +#define X1000_CLK_UART0        24
+>> +#define X1000_CLK_UART1        25
+>> +#define X1000_CLK_UART2        26
+>> +#define X1000_CLK_SSI        27
+>> +#define X1000_CLK_PDMA        28
+>>
+>>  #endif /* __DT_BINDINGS_CLOCK_X1000_CGU_H__ */
+>> --=20
+>> 2.7.4
+>>
+>>
+>
+>
+
+
+
