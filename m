@@ -2,125 +2,103 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6740BC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 23:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E873C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 23:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2D721775
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 23:20:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="DQ8SOL9l"
+	by mail.kernel.org (Postfix) with ESMTP id 648D4217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 23:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfK1XUx (ORCPT
+        id S1726670AbfK1Xf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 18:20:53 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39736 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfK1XUw (ORCPT
+        Thu, 28 Nov 2019 18:35:27 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48486 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfK1Xf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 18:20:52 -0500
-Received: by mail-qt1-f193.google.com with SMTP id g1so21239515qtj.6;
-        Thu, 28 Nov 2019 15:20:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4wrtfYJ0ZRrF4xIj+YbUY5RqDD+dbVWXsMfnfGny9K0=;
-        b=DQ8SOL9lmuVc4+VIprdeMwthCtcVkZkpRiob6V8S37zLs8HMl+j2V9n8hBAOis9L4y
-         TElD3yoUACaiWPWuAbDHwJ8S3nsnO9BthUkkZwafCnzIqnvu1tWRPFLcMU7ZZkRPtKLZ
-         0QdlGBcRuUIj9joHC36DEbJiszdfYb6tGDKxk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4wrtfYJ0ZRrF4xIj+YbUY5RqDD+dbVWXsMfnfGny9K0=;
-        b=jCkBOJfQDjLmpa09/0UBCLw3JbNsuLJEJ1mJKiSiRKGbKE8JLidhb0A/lwrUMWk2/P
-         SCRm9WQDxIh43/6EUArJLrclBeOR/NpaKmCPFSyKuCjwBFENROX9CWYVn82vlkaQm3s1
-         12eODAiMyEPjM3OC0eyC7cIVLyc+CYosWINwpaQQj4i87wPs5QhnGveKm+MlbH1wGMGH
-         MU0LJFhfL1WX/UV97sT5Gk7hYgwShSwlr6SDiZRSUwea4SWjDBXYZkXbIcoPOFSZTCeA
-         ds+c5kJ4tYyfHNWymciwmavbqMmT0blKkiFNV0Z5U+8p9mmsKKMREcVc3S1cuhafo7qx
-         Zc9Q==
-X-Gm-Message-State: APjAAAUVCWqVeZVHP1X7lqsbGR+eUiU64FPAXXCeXjGwuNEVqQzfIjGA
-        Xh0h9J8BsTQ5ufYYnZcatVg2TmkArbwDhcA5n80=
-X-Google-Smtp-Source: APXvYqwatmHj0nyfkI7nUoMvvCCmElW8d4G1PMsMWzHdku2gYbzMtkvo6PKmBNcVPGflvvGM9+dpNIRGvarYvaoZgT4=
-X-Received: by 2002:ac8:8f3:: with SMTP id y48mr48872868qth.269.1574983251287;
- Thu, 28 Nov 2019 15:20:51 -0800 (PST)
+        Thu, 28 Nov 2019 18:35:27 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 872BE2926DA
+Subject: Re: broonie-spi/for-next bisection: boot on beaglebone-black
+To:     Hulk Robot <hulkci@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        tomeu.vizoso@collabora.com, broonie@kernel.org,
+        khilman@baylibre.com, mgalka@collabora.com,
+        enric.balletbo@collabora.com, YueHaibing <yuehaibing@huawei.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <5de04b68.1c69fb81.66084.da9a@mx.google.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <61ce626c-e2d5-0ad5-df19-55e4ce7371a8@collabora.com>
+Date:   Thu, 28 Nov 2019 23:35:22 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191122233120.110344-1-colin.king@canonical.com>
-In-Reply-To: <20191122233120.110344-1-colin.king@canonical.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 28 Nov 2019 23:20:38 +0000
-Message-ID: <CACPK8Xe=Xa6fo98PDBKbXDyjgJNdu30gPOtY8K4TZyEqQ2VOuw@mail.gmail.com>
-Subject: Re: [PATCH] fsi: fix bogos error returns from cfam_read and cfam_write
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jeremy Kerr <jk@ozlabs.org>,
-        Alistar Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-fsi@lists.ozlabs.org, kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5de04b68.1c69fb81.66084.da9a@mx.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+On 28/11/2019 22:34, kernelci.org bot wrote:
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> *                                                               *
+> * If you do send a fix, please include this trailer:            *
+> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> *                                                               *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> 
+> broonie-spi/for-next bisection: boot on beaglebone-black
+> 
+> Summary:
+>   Start:      0e6352f543fd Merge remote-tracking branch 'spi/topic/ptp' into spi-next
+>   Details:    https://kernelci.org/boot/id/5ddfdaf8a8a8d1882ba1b7a1
+>   Plain log:  https://storage.kernelci.org//broonie-spi/for-next/v5.4-rc8-117-g0e6352f543fd/arm/omap2plus_defconfig/gcc-8/lab-baylibre/boot-am335x-boneblack.txt
+>   HTML log:   https://storage.kernelci.org//broonie-spi/for-next/v5.4-rc8-117-g0e6352f543fd/arm/omap2plus_defconfig/gcc-8/lab-baylibre/boot-am335x-boneblack.html
+>   Result:     1d4639567d97 mdio_bus: Fix PTR_ERR applied after initialization to constant
+> 
+> Checks:
+>   revert:     PASS
+>   verify:     PASS
+> 
+> Parameters:
+>   Tree:       broonie-spi
+>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
+>   Branch:     for-next
+>   Target:     beaglebone-black
+>   CPU arch:   arm
+>   Lab:        lab-baylibre
+>   Compiler:   gcc-8
+>   Config:     omap2plus_defconfig
+>   Test suite: boot
+> 
+> Breaking commit found:
+> 
+> -------------------------------------------------------------------------------
+> commit 1d4639567d970de087a893521f7f50a32740b595
+> Author: YueHaibing <yuehaibing@huawei.com>
+> Date:   Mon Nov 11 15:13:47 2019 +0800
+> 
+>     mdio_bus: Fix PTR_ERR applied after initialization to constant
 
-On Fri, 22 Nov 2019 at 23:31, Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> In the case where errors occur in functions cfam_read and cfam_write
-> the error return code in rc is not returned and a bogus non-error
-> count size is returned instead. Fix this by returning the correct
-> error code when an error occurs or the count size if the functions
-> worked correctly.
+Sorry for the noise again, disabling bisections on broonie-spi as
+well.  It appears that this patch has spread to many branches but
+not the fix for it.  I'll take a closer look at why this happened
+and see if we can find a way to avoid it in the future.
 
- You're correct that if there's an error we need to return an error.
-
-However the other case is when there's a partial read that completed.
-We already advance the file offset, but I think we should also return
-the number of bytes successfully read.
-
-Cheers,
-
-Joel
-
->
-> Addresses-Coverity: ("Unused value")
-> Fixes: d1dcd6782576 ("fsi: Add cfam char devices")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/fsi/fsi-core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-> index 8244da8a7241..c3885b138ead 100644
-> --- a/drivers/fsi/fsi-core.c
-> +++ b/drivers/fsi/fsi-core.c
-> @@ -718,7 +718,7 @@ static ssize_t cfam_read(struct file *filep, char __user *buf, size_t count,
->         rc = count;
->   fail:
->         *offset = off;
-> -       return count;
-> +       return rc;
->  }
->
->  static ssize_t cfam_write(struct file *filep, const char __user *buf,
-> @@ -755,7 +755,7 @@ static ssize_t cfam_write(struct file *filep, const char __user *buf,
->         rc = count;
->   fail:
->         *offset = off;
-> -       return count;
-> +       return rc;
->  }
->
->  static loff_t cfam_llseek(struct file *file, loff_t offset, int whence)
-> --
-> 2.24.0
->
+Guillaume
