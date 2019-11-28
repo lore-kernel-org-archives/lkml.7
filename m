@@ -2,386 +2,126 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8E7C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BFDC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10E92176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFB02176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:52:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="g3dwf/0t"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X2bSOyqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfK1NvM (ORCPT
+        id S1726758AbfK1NwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:51:12 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:52202 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726227AbfK1NvM (ORCPT
+        Thu, 28 Nov 2019 08:52:06 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46951 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfK1NwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:51:12 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASDWDgN017364;
-        Thu, 28 Nov 2019 14:51:00 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=RdCEJWlRruLcKjcQ6IcOBiZ9GxcUnr1rxsZyWsgitys=;
- b=g3dwf/0tLpMcwFnaBZlnUw7QkRy/3d0GUNv4MKobIMidYYhO27u4PB22uALuANV7SIpg
- TNltI/d3KAI9k2dKny5MxQr9n/OaJkCn+Hb3HtwB9pf04f3ed+w+8ncutpb1e2sO7KUU
- 8s3SIk3RHiIVtqbUZXGM6ubiVn4tUFi+YXh/WHpePwd5W3Nx0eRX4CICHkH7Ttxr5FQJ
- kebkz7JAprp6pea7u8lfWNzcRRckaKpZ00zzqWgPpqqR5aLp3foJGEw4q+IWAhBdw/ZR
- mwlS+jV0dnyrR58w0yCP+rFxeflhSPEEeYUnuBYUqCjdY9h6J+gfUWmkAE+PM9OxQNem 0g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2whcxkt6um-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 14:50:59 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2FF88100034;
-        Thu, 28 Nov 2019 14:50:59 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1DDA22B9214;
-        Thu, 28 Nov 2019 14:50:59 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 28 Nov 2019 14:50:58
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <sean@poorly.run>, <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: [PATCH v3] drm/dp_mst: Fix W=1 warnings
-Date:   Thu, 28 Nov 2019 14:50:57 +0100
-Message-ID: <20191128135057.20020-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Thu, 28 Nov 2019 08:52:05 -0500
+Received: by mail-ed1-f67.google.com with SMTP id m8so126082edi.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:52:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=OXomE3LhGTg9naIJXoKzldNxQQhZc2QZdqofXcgRGAw=;
+        b=X2bSOyqIdi8cnv05tOfNI+Mur1hm3UDPtX+7e7QriBG09PhJCRKlOlHpC2sJ4/eC27
+         AnUh4aIFMUnD8KV/32jsLizlgv17g3OiG3v1U+KoIp+xSuYvuTjvyZaKqUeJfLUw9OX6
+         5WXX0qzjfk0RqQC/cvZ4MhDdji1hktXsdNFQmDJmSCJx+wcmVgZkNn9TVn8mgMtXI9P7
+         r3iZOgXfCICax/BAAbUTucJPt8Fm54+2gdyjvQ8nkg5JbqfqAvrx/EKs+xc7SqSFlWkZ
+         AJFWRltnWa4zzIX0P71c6MFOFAo9Kp2+gDwRnk4pxzazBwPGVJfShsKVcot6KacPUYv4
+         EUJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OXomE3LhGTg9naIJXoKzldNxQQhZc2QZdqofXcgRGAw=;
+        b=KJZlE19iVK3vnV5dVUAf84KPnMK073aU3yt3EPTCXNZ9VZejCJKbd5dDE3hY6w7j7Q
+         IQ5P+8YV5RSN+OySW7JKlK5Du9w5PQAk0urMjYzhiSSn4Wu3bHKE+jugoPpI5DDG/WL6
+         jgm6D77JM7mt/oV43IcxW6GdUL+nzR+MIFKusCsVJmF+r56yFZ8xkhAcxj7vet967ARh
+         LPd2ptOf86wRJRZ1pJJlLMBmrV8a5Jv8mnpVLl6ZdKeZhCZTJcRucQzqGw9kInimm50n
+         fk4VUOo8UobXEWBSqbsVsR1CX0PI/szVuQbK5TJLGM0XvnNiZe6+g0q7T4JCyJ5gAK1G
+         4FOA==
+X-Gm-Message-State: APjAAAVFvJkpQkkeRgU+VO57vpiClZzUgdF2rD8e2ZuJ5/ZvDa20Ei8m
+        ttZA0c7xu8OxKYjxBtbQghezFw==
+X-Google-Smtp-Source: APXvYqze3moY1+8pWkzpxVwArM0DcJsWSudhDMAXq4Iy7IMU1isjW8C8xkNEfHZ7nMxTtW6CUd5m7g==
+X-Received: by 2002:aa7:cf83:: with SMTP id z3mr13233275edx.166.1574949123947;
+        Thu, 28 Nov 2019 05:52:03 -0800 (PST)
+Received: from [192.168.27.135] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id f18sm500625ejr.80.2019.11.28.05.52.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Nov 2019 05:52:03 -0800 (PST)
+Subject: Re: [PATCH 5/5] interconnect: qcom: Use the new common helper for
+ node removal
+To:     Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        evgreen@chromium.org, daidavid1@codeaurora.org,
+        masneyb@onstation.org, sibis@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20191128133435.25667-1-georgi.djakov@linaro.org>
+ <20191128133435.25667-5-georgi.djakov@linaro.org>
+ <5686a003-d72f-7a20-4851-9ebb3d2e9b20@gmail.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Message-ID: <3286eb91-f5b8-a4b4-2031-5be50cbb9206@linaro.org>
+Date:   Thu, 28 Nov 2019 15:52:02 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_03:2019-11-28,2019-11-28 signatures=0
+In-Reply-To: <5686a003-d72f-7a20-4851-9ebb3d2e9b20@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the warnings that show up with W=1.
-They are all about unused but set variables.
-If functions returns are not used anymore make them void.
+On 28.11.19 г. 15:43 ч., Dmitry Osipenko wrote:
+> 28.11.2019 16:34, Georgi Djakov пишет:
+>> There is a new helper function for removing all nodes. Let's use it instead
+>> of duplicating the code.
+>>
+>> In addition to the above, instead of duplicating the code, simplify the
+>> probe function error path by calling driver removal function directly.
+>>
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> ---
+>>   drivers/interconnect/qcom/msm8974.c | 40 ++++++++++-------------------
+>>   drivers/interconnect/qcom/qcs404.c  | 31 ++++++++--------------
+>>   drivers/interconnect/qcom/sdm845.c  | 29 +++++++--------------
+>>   3 files changed, 33 insertions(+), 67 deletions(-)
+>>
+[..]>> +static int qnoc_remove(struct platform_device *pdev)
+>> +{
+>> +	struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
+>> +
+>> +	icc_nodes_remove(&qp->provider);
+>> +	return icc_provider_del(&qp->provider);
+>> +}
+>> +
+>>   static int qnoc_probe(struct platform_device *pdev)
+>>   {
+>>   	const struct qcom_icc_desc *desc;
+>> @@ -855,29 +863,10 @@ static int qnoc_probe(struct platform_device *pdev)
+>>   
+>>   	return ret;
+>>   err:
+>> -	list_for_each_entry(node, &provider->nodes, node_list) {
+>> -		icc_node_del(node);
+>> -		icc_node_destroy(node->id);
+>> -	}
+>> -
+>> -	icc_provider_del(provider);
+>> +	qnoc_remove(pdev);
+> 
+> This is wrong because platform_set_drvdata() is invoked at the end of
+> qnoc_probe(), thus platform_get_drvdata() of qnoc_remove() returns NULL
+> here.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-CC: Jani Nikula <jani.nikula@linux.intel.com>
+True! Will fix it! Thank you!
 
-changes in version 3:
-- remove the hunk that may conflict with c485e2c97dae 
-  ("drm/dp_mst: Refactor pdt setup/teardown, add more locking")
-
-changes in version 2:
-- fix indentations
-- when possible change functions prototype to void
-
-drivers/gpu/drm/drm_dp_mst_topology.c | 83 +++++++++++++----------------------
- 1 file changed, 31 insertions(+), 52 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 1437bc46368b..d5cb5688b5dd 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -674,7 +674,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
- 				      u8 *replybuf, u8 replybuflen, bool hdr)
- {
- 	int ret;
--	u8 crc4;
- 
- 	if (hdr) {
- 		u8 hdrlen;
-@@ -716,8 +715,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
- 	}
- 
- 	if (msg->curchunk_idx >= msg->curchunk_len) {
--		/* do CRC */
--		crc4 = drm_dp_msg_data_crc4(msg->chunk, msg->curchunk_len - 1);
- 		/* copy chunk into bigger msg */
- 		memcpy(&msg->msg[msg->curlen], msg->chunk, msg->curchunk_len - 1);
- 		msg->curlen += msg->curchunk_len - 1;
-@@ -1014,7 +1011,7 @@ static bool drm_dp_sideband_parse_req(struct drm_dp_sideband_msg_rx *raw,
- 	}
- }
- 
--static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
-+static void build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
- {
- 	struct drm_dp_sideband_msg_req_body req;
- 
-@@ -1024,17 +1021,14 @@ static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
- 	req.u.dpcd_write.num_bytes = num_bytes;
- 	req.u.dpcd_write.bytes = bytes;
- 	drm_dp_encode_sideband_req(&req, msg);
--
--	return 0;
- }
- 
--static int build_link_address(struct drm_dp_sideband_msg_tx *msg)
-+static void build_link_address(struct drm_dp_sideband_msg_tx *msg)
- {
- 	struct drm_dp_sideband_msg_req_body req;
- 
- 	req.req_type = DP_LINK_ADDRESS;
- 	drm_dp_encode_sideband_req(&req, msg);
--	return 0;
- }
- 
- static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int port_num)
-@@ -1048,7 +1042,7 @@ static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int por
- 	return 0;
- }
- 
--static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
-+static void build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
- 				  u8 vcpi, uint16_t pbn,
- 				  u8 number_sdp_streams,
- 				  u8 *sdp_stream_sink)
-@@ -1064,10 +1058,9 @@ static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_n
- 		   number_sdp_streams);
- 	drm_dp_encode_sideband_req(&req, msg);
- 	msg->path_msg = true;
--	return 0;
- }
- 
--static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
-+static void build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
- 				  int port_num, bool power_up)
- {
- 	struct drm_dp_sideband_msg_req_body req;
-@@ -1080,7 +1073,6 @@ static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
- 	req.u.port_num.port_number = port_num;
- 	drm_dp_encode_sideband_req(&req, msg);
- 	msg->path_msg = true;
--	return 0;
- }
- 
- static int drm_dp_mst_assign_payload_id(struct drm_dp_mst_topology_mgr *mgr,
-@@ -1746,14 +1738,13 @@ static u8 drm_dp_calculate_rad(struct drm_dp_mst_port *port,
-  */
- static bool drm_dp_port_setup_pdt(struct drm_dp_mst_port *port)
- {
--	int ret;
- 	u8 rad[6], lct;
- 	bool send_link = false;
- 	switch (port->pdt) {
- 	case DP_PEER_DEVICE_DP_LEGACY_CONV:
- 	case DP_PEER_DEVICE_SST_SINK:
- 		/* add i2c over sideband */
--		ret = drm_dp_mst_register_i2c_bus(&port->aux);
-+		drm_dp_mst_register_i2c_bus(&port->aux);
- 		break;
- 	case DP_PEER_DEVICE_MST_BRANCHING:
- 		lct = drm_dp_calculate_rad(port, rad);
-@@ -1823,25 +1814,20 @@ ssize_t drm_dp_mst_dpcd_write(struct drm_dp_aux *aux,
- 
- static void drm_dp_check_mstb_guid(struct drm_dp_mst_branch *mstb, u8 *guid)
- {
--	int ret;
--
- 	memcpy(mstb->guid, guid, 16);
- 
- 	if (!drm_dp_validate_guid(mstb->mgr, mstb->guid)) {
- 		if (mstb->port_parent) {
--			ret = drm_dp_send_dpcd_write(
--					mstb->mgr,
--					mstb->port_parent,
--					DP_GUID,
--					16,
--					mstb->guid);
-+			drm_dp_send_dpcd_write(mstb->mgr,
-+					       mstb->port_parent,
-+					       DP_GUID,
-+					       16,
-+					       mstb->guid);
- 		} else {
--
--			ret = drm_dp_dpcd_write(
--					mstb->mgr->aux,
--					DP_GUID,
--					mstb->guid,
--					16);
-+			drm_dp_dpcd_write(mstb->mgr->aux,
-+					  DP_GUID,
-+					  mstb->guid,
-+					  16);
- 		}
- 	}
- }
-@@ -2197,7 +2183,7 @@ static bool drm_dp_validate_guid(struct drm_dp_mst_topology_mgr *mgr,
- 	return false;
- }
- 
--static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
-+static void build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
- {
- 	struct drm_dp_sideband_msg_req_body req;
- 
-@@ -2206,8 +2192,6 @@ static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
- 	req.u.dpcd_read.dpcd_address = offset;
- 	req.u.dpcd_read.num_bytes = num_bytes;
- 	drm_dp_encode_sideband_req(&req, msg);
--
--	return 0;
- }
- 
- static int drm_dp_send_sideband_msg(struct drm_dp_mst_topology_mgr *mgr,
-@@ -2429,14 +2413,14 @@ static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
- {
- 	struct drm_dp_sideband_msg_tx *txmsg;
- 	struct drm_dp_link_address_ack_reply *reply;
--	int i, len, ret;
-+	int i, ret;
- 
- 	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
- 	if (!txmsg)
- 		return;
- 
- 	txmsg->dst = mstb;
--	len = build_link_address(txmsg);
-+	build_link_address(txmsg);
- 
- 	mstb->link_address_sent = true;
- 	drm_dp_queue_down_tx(mgr, txmsg);
-@@ -2478,7 +2462,6 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
- {
- 	struct drm_dp_enum_path_resources_ack_reply *path_res;
- 	struct drm_dp_sideband_msg_tx *txmsg;
--	int len;
- 	int ret;
- 
- 	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
-@@ -2486,7 +2469,7 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
- 		return -ENOMEM;
- 
- 	txmsg->dst = mstb;
--	len = build_enum_path_resources(txmsg, port->port_num);
-+	build_enum_path_resources(txmsg, port->port_num);
- 
- 	drm_dp_queue_down_tx(mgr, txmsg);
- 
-@@ -2569,7 +2552,7 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
- {
- 	struct drm_dp_sideband_msg_tx *txmsg;
- 	struct drm_dp_mst_branch *mstb;
--	int len, ret, port_num;
-+	int ret, port_num;
- 	u8 sinks[DRM_DP_MAX_SDP_STREAMS];
- 	int i;
- 
-@@ -2594,9 +2577,9 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
- 		sinks[i] = i;
- 
- 	txmsg->dst = mstb;
--	len = build_allocate_payload(txmsg, port_num,
--				     id,
--				     pbn, port->num_sdp_streams, sinks);
-+	build_allocate_payload(txmsg, port_num,
-+			       id,
-+			       pbn, port->num_sdp_streams, sinks);
- 
- 	drm_dp_queue_down_tx(mgr, txmsg);
- 
-@@ -2625,7 +2608,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
- 				 struct drm_dp_mst_port *port, bool power_up)
- {
- 	struct drm_dp_sideband_msg_tx *txmsg;
--	int len, ret;
-+	int ret;
- 
- 	port = drm_dp_mst_topology_get_port_validated(mgr, port);
- 	if (!port)
-@@ -2638,7 +2621,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
- 	}
- 
- 	txmsg->dst = port->parent;
--	len = build_power_updown_phy(txmsg, port->port_num, power_up);
-+	build_power_updown_phy(txmsg, port->port_num, power_up);
- 	drm_dp_queue_down_tx(mgr, txmsg);
- 
- 	ret = drm_dp_mst_wait_tx_reply(port->parent, txmsg);
-@@ -2858,7 +2841,6 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
- 				 struct drm_dp_mst_port *port,
- 				 int offset, int size, u8 *bytes)
- {
--	int len;
- 	int ret = 0;
- 	struct drm_dp_sideband_msg_tx *txmsg;
- 	struct drm_dp_mst_branch *mstb;
-@@ -2873,7 +2855,7 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
- 		goto fail_put;
- 	}
- 
--	len = build_dpcd_read(txmsg, port->port_num, offset, size);
-+	build_dpcd_read(txmsg, port->port_num, offset, size);
- 	txmsg->dst = port->parent;
- 
- 	drm_dp_queue_down_tx(mgr, txmsg);
-@@ -2911,7 +2893,6 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
- 				  struct drm_dp_mst_port *port,
- 				  int offset, int size, u8 *bytes)
- {
--	int len;
- 	int ret;
- 	struct drm_dp_sideband_msg_tx *txmsg;
- 	struct drm_dp_mst_branch *mstb;
-@@ -2926,7 +2907,7 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
- 		goto fail_put;
- 	}
- 
--	len = build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
-+	build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
- 	txmsg->dst = mstb;
- 
- 	drm_dp_queue_down_tx(mgr, txmsg);
-@@ -3149,7 +3130,7 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
- {
- 	int len;
- 	u8 replyblock[32];
--	int replylen, origlen, curreply;
-+	int replylen, curreply;
- 	int ret;
- 	struct drm_dp_sideband_msg_rx *msg;
- 	int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE : DP_SIDEBAND_MSG_DOWN_REP_BASE;
-@@ -3169,7 +3150,6 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
- 	}
- 	replylen = msg->curchunk_len + msg->curchunk_hdrlen;
- 
--	origlen = replylen;
- 	replylen -= len;
- 	curreply = len;
- 	while (replylen > 0) {
-@@ -3961,17 +3941,16 @@ void drm_dp_mst_dump_topology(struct seq_file *m,
- 	mutex_lock(&mgr->lock);
- 	if (mgr->mst_primary) {
- 		u8 buf[DP_PAYLOAD_TABLE_SIZE];
--		int ret;
- 
--		ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
-+		drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
- 		seq_printf(m, "dpcd: %*ph\n", DP_RECEIVER_CAP_SIZE, buf);
--		ret = drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
-+		drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
- 		seq_printf(m, "faux/mst: %*ph\n", 2, buf);
--		ret = drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
-+		drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
- 		seq_printf(m, "mst ctrl: %*ph\n", 1, buf);
- 
- 		/* dump the standard OUI branch header */
--		ret = drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
-+		drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
- 		seq_printf(m, "branch oui: %*phN devid: ", 3, buf);
- 		for (i = 0x3; i < 0x8 && buf[i]; i++)
- 			seq_printf(m, "%c", buf[i]);
--- 
-2.15.0
-
+BR,
+Georgi
