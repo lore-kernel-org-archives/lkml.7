@@ -2,141 +2,95 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC42C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7D9C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDE12176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD4421771
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:21:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aYsQAOKb"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="J5jjpQUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfK1IVd (ORCPT
+        id S1727454AbfK1IVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 28 Nov 2019 03:21:33 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45218 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfK1IVc (ORCPT
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43226 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727042AbfK1IVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Nov 2019 03:21:32 -0500
-Received: by mail-wr1-f68.google.com with SMTP id j42so4094384wrj.12
+Received: by mail-lj1-f195.google.com with SMTP id a13so4310265ljm.10
         for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:21:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VOI036BPUwrbZowHT5GDUEXOWOhQmQWDUMNaY8GO7tI=;
-        b=aYsQAOKb1A7PKWIf5wGzlAze4eWPmdGPLKe1SsRZU2k+tm4SMPOV4cgWHesnBHGp+S
-         UhuJTmeX6pC8+bfFMrJo8ASo5EZgv85U5ojeERcDI6qYQAaU/NdssXIMa4sf40VLFh7d
-         7QRRyOvSR6Obq94UORxMiHh7CN+v/LEBj9X0XichLgfdrZezNY4/lhr9mI89UJcIWmN5
-         Gib8pPmxplFkJrhJLjiE8xQxxltLaNGhNaQwJbSxtz+OqQUxUJOfoWUpo4Y+8gVUi46T
-         qTLyVE8LlvEBsMD81mpln4RLMc4Gd7X3TvzNnjUotecTl3zoL1Ootn/mU1cM2egiLCeO
-         YEYQ==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2ihFBr3cTZF5UbIGSrYneP3g3wP0dgTzFZ3UMdlINS8=;
+        b=J5jjpQUv5v2GF6DCYcBiew6lGQkc4ZwvwIu/adjixp+GYregx+1kd88yD6wTfr4JDS
+         1K9Yo9uTNRwhLz8fkQ46u8c8uvYkHDhZnJuX3RAxwormPTkV2qghhQBujmD39++SZaJ5
+         tkwxsTjduuxNN8T1OpT9MCwU/3rTKOGzUpF3U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VOI036BPUwrbZowHT5GDUEXOWOhQmQWDUMNaY8GO7tI=;
-        b=MhyEtC/9wCZqRKhFti/b1TacHYpqTfEajWqq+O67SVxp/n9VTP5/q6q0cPatKg5F9A
-         s0pTixBQLn3PLkrHpSyZHCwj2Fk+BAXWs3CKHUmcZ6Hc6dhVjjQhgDEO5/fzxfLh7yxB
-         fcdI+ArRazjH/Mo/g0+Jm2r2RRJr7N6qtFcqduEetXyLAoDNotKrkRw7Sq/zzQJ6JJ3m
-         0czrQPm5Mf19HuoCyKopHbkp3IOvRaRkaxcY3hXza0GjdK5n3NeN3MuKja8T1cs+3HFY
-         ZP5spF8vAd6WILwasWAs639WdaP4RAwzqvN3NTdnSoHqLwRlgbCY7jWvhDd3AVzwyaun
-         p+jQ==
-X-Gm-Message-State: APjAAAWMWn7upghIGgd7/Z/sVTvoQWdESAfwlxC0PcjP+9GcvKkZCWj5
-        +kV6h3jnPUAdVhO6GkiMbSWtWA==
-X-Google-Smtp-Source: APXvYqwnYPAyBuUvcvS1pBiBRsm7B8Y/eawgeM5AHpFMzHjgdUnfsDOjjE//piFuuaBq8Ij9fBLegg==
-X-Received: by 2002:a5d:43c3:: with SMTP id v3mr38726407wrr.324.1574929290712;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2ihFBr3cTZF5UbIGSrYneP3g3wP0dgTzFZ3UMdlINS8=;
+        b=oLs0XvDzztM1kbRMYEC4LanyC13hpNw/GafBOFvj/g/qY64d4nHZxtjomh0YRwdISw
+         F/B7dPBQWDaN77AIjO2FxLFVH/HLJX3xKOIKwzCx5hfDtb+m0ycts5D3OR2S27Y0467e
+         sgU9l/1kc59ih4X9HVT39cQ1DfqxTs6470o4Q6f5QjrF2zs4ZVpSHJe91PeJM9m7b7D3
+         1yY11whYfLGnhlPAqvB8ocv4zUmIRpiM3NsYHACRQGcmGseEEQF5aDkdBL2AmI/EmEtH
+         ejdVkY0grPm3kRAxebt/Y5QjMnxaNGUCqCoNBL9vHm4GuF6Hfi7R63Zs8qxyYOucE0nW
+         4jMg==
+X-Gm-Message-State: APjAAAUh63dVzEMoC4SyONmB+wrEb0hlsyPdm8v2UediJmN4sRxVzMcZ
+        8IZ32AvD+vfTEBTqsyy+Aqci1w==
+X-Google-Smtp-Source: APXvYqzylbVeM08rCOM1v3hRMPRHexwt8hy7HEAa9Cw6a9N7StNSvCeWptnC34PM8HODyUpqqteTBg==
+X-Received: by 2002:a2e:884c:: with SMTP id z12mr32823718ljj.41.1574929290783;
         Thu, 28 Nov 2019 00:21:30 -0800 (PST)
-Received: from apalos.home (athedsl-4476713.home.otenet.gr. [94.71.27.49])
-        by smtp.gmail.com with ESMTPSA id q3sm502890wrn.33.2019.11.28.00.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id k10sm8096512lfo.76.2019.11.28.00.21.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Thu, 28 Nov 2019 00:21:30 -0800 (PST)
-Date:   Thu, 28 Nov 2019 10:21:27 +0200
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>, Sekhar Nori <nsekhar@ti.com>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] net: ethernet: ti: ale: ensure vlan/mdb deleted when no
- members
-Message-ID: <20191128082127.GA16359@apalos.home>
-References: <20191127155905.22921-1-grygorii.strashko@ti.com>
+Subject: Re: [PATCH 05/16] dyndbg: fix overcounting of ram used by dyndbg
+To:     Jim Cromie <jim.cromie@gmail.com>, jbaron@akamai.com,
+        linux-kernel@vger.kernel.org
+Cc:     greg@kroah.com, Andrew Morton <akpm@linux-foundation.org>
+References: <20191127175055.1351403-1-jim.cromie@gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <0f373a8c-8301-41d9-e042-cfe0cef4bd25@rasmusvillemoes.dk>
+Date:   Thu, 28 Nov 2019 09:21:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127155905.22921-1-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191127175055.1351403-1-jim.cromie@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 05:59:05PM +0200, Grygorii Strashko wrote:
-> The recently updated ALE APIs cpsw_ale_del_mcast() and
-> cpsw_ale_del_vlan_modify() have an issue and will not delete ALE entry even
-> if VLAN/mcast group has no more members. Hence fix it here and delete ALE
-> entry if !port_mask.
+On 27/11/2019 18.50, Jim Cromie wrote:
+> during dyndbg init, verbose logging prints its ram overhead.  It
+> counted strlens of struct _ddebug's 4 string members, in all callsite
+> entries, which would be approximately correct if each had been
+> mallocd.  But they are pointers into shared .rodata; for example, all
+> 10 kobject callsites have identical filename, module values.
 > 
-> The issue affected only new cpsw switchdev driver.
-> 
-> Fixes: e85c14370783 ("net: ethernet: ti: ale: modify vlan/mdb api for switchdev")
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  drivers/net/ethernet/ti/cpsw_ale.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-> index 929f3d3354e3..a5179ecfea05 100644
-> --- a/drivers/net/ethernet/ti/cpsw_ale.c
-> +++ b/drivers/net/ethernet/ti/cpsw_ale.c
-> @@ -396,12 +396,14 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
->  	if (port_mask) {
->  		mcast_members = cpsw_ale_get_port_mask(ale_entry,
->  						       ale->port_mask_bits);
-> -		mcast_members &= ~port_mask;
-> -		cpsw_ale_set_port_mask(ale_entry, mcast_members,
-> +		port_mask = mcast_members & ~port_mask;
-> +	}
-> +
-> +	if (port_mask)
-> +		cpsw_ale_set_port_mask(ale_entry, port_mask,
->  				       ale->port_mask_bits);
-> -	} else {
-> +	else
->  		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
-> -	}
+> Its best not to count that memory at all, since we cannot know they
+> were linked in because of CONFIG_DYNAMIC_DEBUG=y, and we want to
+> report a number that reflects what ram is saved by deconfiguring it.
 
-The code assumed calls cpsw_ale_del_mcast() should have a port mask '0' when
-deleting an entry. Do we want to have 'dual' functionality on it? 
-This will delete mcast entries if port mask is 0 or port mask matches exactly
-what's configured right?
+That, and we avoid 1000s of (mostly cache-cold) strlen() calls during boot.
 
->  	cpsw_ale_write(ale, idx, ale_entry);
->  	return 0;
-> @@ -478,6 +480,10 @@ static void cpsw_ale_del_vlan_modify(struct cpsw_ale *ale, u32 *ale_entry,
->  	members = cpsw_ale_get_vlan_member_list(ale_entry,
->  						ale->vlan_field_bits);
->  	members &= ~port_mask;
-> +	if (!members) {
-> +		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
-> +		return;
-> +	}
+Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-This makes sense the call was missing 
+I'll see if I can find time to review the other patches, then I think
+you need to resend with Andrew on the cc-list (added here). I think he's
+the one routing lib/dynamic_debug.c patches.
 
->  
->  	untag = cpsw_ale_get_vlan_untag_force(ale_entry,
->  					      ale->vlan_field_bits);
-> -- 
-> 2.17.1
-> 
-
-
-Thanks
-/Ilias
+Rasmus
