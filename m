@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C13FC432C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81D5C432C3
 	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E7A21771
+	by mail.kernel.org (Postfix) with ESMTP id B6F3521771
 	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="gnMSL36D"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="H9GNJFOo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfK1O6J (ORCPT
+        id S1727649AbfK1O6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:58:09 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41919 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727554AbfK1O6D (ORCPT
+        Thu, 28 Nov 2019 09:58:10 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40365 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbfK1O6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:58:03 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m4so28806118ljj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:58:00 -0800 (PST)
+        Thu, 28 Nov 2019 09:58:05 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y5so7553367lfy.7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:58:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KUBWPv3JkV5Q2rpwN8YKM1iLDpQKFkQg1V9KmI5YIqA=;
-        b=gnMSL36DxoMRWV5dmkqn64lmHepkAi/UCIfJXPlQpgy26UZTuq1MviK2Qwq0XpyewR
-         plZczgrN/M/mdswUw9R50HmZN2QjhZiXFk34AyfSzViZWRYCFTF5rtIK7G5qaiGCCR/K
-         jIf31rx5xnRhK1BzOC7zTsNV7YczeL2VTJkhM=
+        bh=PyA4fvyHPic1hHseYG61wC3TVgVcfbpZ17hSo3R3QxM=;
+        b=H9GNJFOo2tBgwxNF/Mvxe35zT+dq5pwGZ0owmVOSIU2EzzDigi/R9KMcG5HAWIvrIT
+         Qg8Nh9+oMFaBwCtzZOFWvEKKLVFDWNsMN4jJfpL5FlPmX8MwlNNI2NkNfPBm9Af9pQxA
+         iRix/HHPfoc8REM8iZpZBBjYY/GcODdO3UCM4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KUBWPv3JkV5Q2rpwN8YKM1iLDpQKFkQg1V9KmI5YIqA=;
-        b=PEVjXpS1Kl7PjkeRkYGURp8oYO4mnNV573uOOR+GgtE9ZuhGVXxJz217UjNvJFiyWM
-         xCXhdBGQWjv8K6dUyQVLX9KMY5TuKjTag/nvqAhSJe4JKU8+J4jC/v7GQh/IygS4ujv5
-         D9PBAvvZBhgDex5hVrOTOIRyolGc5gygj1YasfwdT6aqJx43vv/q4z6NfqgbKqvPLDHC
-         BMb8mwUeWrsXEFNamAfXTdZyHC7qxogsDnFyoUWpCKnphjBy461D74HAvZQt9rIP0FDM
-         faEzM0r4Tlhn/+Jdcmkdp5lnGdMJiVNKwZkRrEPDiMIK+xVgsIvveXW2SwWMsXgzV2xV
-         h9KQ==
-X-Gm-Message-State: APjAAAU0Bt+e2cfcQdh8Ni+ih7VVBzBkjAueLxucOvvYRNDW1Uf92BNe
-        WdKrrFSNkkE3hCXCixxkL9sVrQ==
-X-Google-Smtp-Source: APXvYqxZ7tTPDopj2M7w11v+y/JLwNd0sGMUxyWwupXPa/c1vlU0GkGXVop9xXN6GCNtZPzQf300Zg==
-X-Received: by 2002:a2e:b056:: with SMTP id d22mr22072255ljl.73.1574953079877;
-        Thu, 28 Nov 2019 06:57:59 -0800 (PST)
+        bh=PyA4fvyHPic1hHseYG61wC3TVgVcfbpZ17hSo3R3QxM=;
+        b=YwiKRvYSfdEep3qFVVqcX1es1BgtUmjiQvuQyE2WI8319NQ6M5vCDaTk2jvfXK9/Aa
+         QfcIUCCYg+AnxdMvXJmJdeVTvHkMjPpsTWEasWmuyf3WRL2/NAd+iTlWL1ScT7+4uSzM
+         INtngmnoL2R2zAJ77DosKlHisP2crLkW1XoOwtk6kIKmgkYurtdqUjmmFHJRKQYcmvNe
+         s3U4X9+IequYdh7oqtB4iEGceAHaCnpmjUw9LwtmjvISvIK8wz8VPs5jXa3om4puE+VV
+         0dKzhVdCjritZpCHk9h0o7s5ny5vdh2AQ6cRIJxrXClAHbBWfVbok16qBeQmlH720nzt
+         QhDQ==
+X-Gm-Message-State: APjAAAXsAXtyv228rJE1UaCcS9WmdK7a5fbGDCne+5QAWs2xAMKWmZCB
+        FQjGJUTVL4w8GpPsvd8mZxWrIw==
+X-Google-Smtp-Source: APXvYqyvt7YRsEI3f7Rdq/jHii7xfNyBE/f16tqd63AmAMdURuB/Q1c5U4ESjLrpdqfvdabSVNzicQ==
+X-Received: by 2002:a19:3f51:: with SMTP id m78mr1872602lfa.70.1574953081096;
+        Thu, 28 Nov 2019 06:58:01 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.58
+        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.58.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 06:57:59 -0800 (PST)
+        Thu, 28 Nov 2019 06:58:00 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v6 42/49] soc: fsl: qe: drop pointless check in qe_sdma_init()
-Date:   Thu, 28 Nov 2019 15:55:47 +0100
-Message-Id: <20191128145554.1297-43-linux@rasmusvillemoes.dk>
+Subject: [PATCH v6 43/49] soc: fsl: qe: avoid IS_ERR_VALUE in ucc_fast.c
+Date:   Thu, 28 Nov 2019 15:55:48 +0100
+Message-Id: <20191128145554.1297-44-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
 References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
@@ -73,30 +73,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sdma member of struct qe_immap is not at offset zero, so even if
-qe_immr wasn't initialized yet (i.e. NULL), &qe_immr->sdma would not
-be NULL.
+When building this on a 64-bit platform gcc rightly warns that the
+error checking is broken (-ENOMEM stored in an u32 does not compare
+greater than (unsigned long)-MAX_ERRNO). Instead, change the
+ucc_fast_[tr]x_virtual_fifo_base_offset members to s32 and use an
+ordinary check-for-negative. Also, this avoids treating 0 as "this
+cannot have been returned from qe_muram_alloc() so don't free it".
 
 Reviewed-by: Timur Tabi <timur@kernel.org>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/qe.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/soc/fsl/qe/ucc_fast.c | 15 ++++++---------
+ include/soc/fsl/qe/ucc_fast.h |  4 ++--
+ 2 files changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
-index 5bf279c679ef..96c2057d8d8e 100644
---- a/drivers/soc/fsl/qe/qe.c
-+++ b/drivers/soc/fsl/qe/qe.c
-@@ -367,9 +367,6 @@ static int qe_sdma_init(void)
- 	struct sdma __iomem *sdma = &qe_immr->sdma;
- 	static s32 sdma_buf_offset = -ENOMEM;
+diff --git a/drivers/soc/fsl/qe/ucc_fast.c b/drivers/soc/fsl/qe/ucc_fast.c
+index ca0452497a20..ad6193ea4597 100644
+--- a/drivers/soc/fsl/qe/ucc_fast.c
++++ b/drivers/soc/fsl/qe/ucc_fast.c
+@@ -197,6 +197,8 @@ int ucc_fast_init(struct ucc_fast_info * uf_info, struct ucc_fast_private ** ucc
+ 			__func__);
+ 		return -ENOMEM;
+ 	}
++	uccf->ucc_fast_tx_virtual_fifo_base_offset = -1;
++	uccf->ucc_fast_rx_virtual_fifo_base_offset = -1;
  
--	if (!sdma)
--		return -ENODEV;
+ 	/* Fill fast UCC structure */
+ 	uccf->uf_info = uf_info;
+@@ -265,10 +267,9 @@ int ucc_fast_init(struct ucc_fast_info * uf_info, struct ucc_fast_private ** ucc
+ 	/* Allocate memory for Tx Virtual Fifo */
+ 	uccf->ucc_fast_tx_virtual_fifo_base_offset =
+ 	    qe_muram_alloc(uf_info->utfs, UCC_FAST_VIRT_FIFO_REGS_ALIGNMENT);
+-	if (IS_ERR_VALUE(uccf->ucc_fast_tx_virtual_fifo_base_offset)) {
++	if (uccf->ucc_fast_tx_virtual_fifo_base_offset < 0) {
+ 		printk(KERN_ERR "%s: cannot allocate MURAM for TX FIFO\n",
+ 			__func__);
+-		uccf->ucc_fast_tx_virtual_fifo_base_offset = 0;
+ 		ucc_fast_free(uccf);
+ 		return -ENOMEM;
+ 	}
+@@ -278,10 +279,9 @@ int ucc_fast_init(struct ucc_fast_info * uf_info, struct ucc_fast_private ** ucc
+ 		qe_muram_alloc(uf_info->urfs +
+ 			   UCC_FAST_RECEIVE_VIRTUAL_FIFO_SIZE_FUDGE_FACTOR,
+ 			   UCC_FAST_VIRT_FIFO_REGS_ALIGNMENT);
+-	if (IS_ERR_VALUE(uccf->ucc_fast_rx_virtual_fifo_base_offset)) {
++	if (uccf->ucc_fast_rx_virtual_fifo_base_offset < 0) {
+ 		printk(KERN_ERR "%s: cannot allocate MURAM for RX FIFO\n",
+ 			__func__);
+-		uccf->ucc_fast_rx_virtual_fifo_base_offset = 0;
+ 		ucc_fast_free(uccf);
+ 		return -ENOMEM;
+ 	}
+@@ -384,11 +384,8 @@ void ucc_fast_free(struct ucc_fast_private * uccf)
+ 	if (!uccf)
+ 		return;
+ 
+-	if (uccf->ucc_fast_tx_virtual_fifo_base_offset)
+-		qe_muram_free(uccf->ucc_fast_tx_virtual_fifo_base_offset);
 -
- 	/* allocate 2 internal temporary buffers (512 bytes size each) for
- 	 * the SDMA */
- 	if (sdma_buf_offset < 0) {
+-	if (uccf->ucc_fast_rx_virtual_fifo_base_offset)
+-		qe_muram_free(uccf->ucc_fast_rx_virtual_fifo_base_offset);
++	qe_muram_free(uccf->ucc_fast_tx_virtual_fifo_base_offset);
++	qe_muram_free(uccf->ucc_fast_rx_virtual_fifo_base_offset);
+ 
+ 	if (uccf->uf_regs)
+ 		iounmap(uccf->uf_regs);
+diff --git a/include/soc/fsl/qe/ucc_fast.h b/include/soc/fsl/qe/ucc_fast.h
+index e9cc46042a83..ba0e838f962a 100644
+--- a/include/soc/fsl/qe/ucc_fast.h
++++ b/include/soc/fsl/qe/ucc_fast.h
+@@ -188,9 +188,9 @@ struct ucc_fast_private {
+ 	int stopped_tx;		/* Whether channel has been stopped for Tx
+ 				   (STOP_TX, etc.) */
+ 	int stopped_rx;		/* Whether channel has been stopped for Rx */
+-	u32 ucc_fast_tx_virtual_fifo_base_offset;/* pointer to base of Tx
++	s32 ucc_fast_tx_virtual_fifo_base_offset;/* pointer to base of Tx
+ 						    virtual fifo */
+-	u32 ucc_fast_rx_virtual_fifo_base_offset;/* pointer to base of Rx
++	s32 ucc_fast_rx_virtual_fifo_base_offset;/* pointer to base of Rx
+ 						    virtual fifo */
+ #ifdef STATISTICS
+ 	u32 tx_frames;		/* Transmitted frames counter. */
 -- 
 2.23.0
 
