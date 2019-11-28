@@ -2,98 +2,175 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D093C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60570C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0707D2158A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E472158A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbfK1C22 (ORCPT
+        id S1727985AbfK1C36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 21:28:28 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47089 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727432AbfK1C22 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 21:28:28 -0500
-Received: from callcc.thunk.org (97-71-153.205.biz.bhn.net [97.71.153.205] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xAS2SHsO003384
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 21:28:18 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 1C4934202FD; Wed, 27 Nov 2019 21:28:17 -0500 (EST)
-Date:   Wed, 27 Nov 2019 21:28:17 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Daniel Phillips <daniel@phunq.net>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
-Message-ID: <20191128022817.GE22921@mit.edu>
-References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
- <20191127142508.GB5143@mit.edu>
- <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Wed, 27 Nov 2019 21:29:58 -0500
+Received: from mga18.intel.com ([134.134.136.126]:17935 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbfK1C35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 21:29:57 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 18:29:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,251,1571727600"; 
+   d="scan'208";a="221176106"
+Received: from allen-box.sh.intel.com ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 27 Nov 2019 18:29:54 -0800
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     ashok.raj@intel.com, sanjay.k.kumar@intel.com,
+        jacob.jun.pan@linux.intel.com, kevin.tian@intel.com,
+        yi.l.liu@intel.com, yi.y.sun@intel.com,
+        Peter Xu <peterx@redhat.com>, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v2 0/8] Use 1st-level for DMA remapping
+Date:   Thu, 28 Nov 2019 10:25:42 +0800
+Message-Id: <20191128022550.9832-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 02:27:27PM -0800, Daniel Phillips wrote:
-> > (2) It's implemented as userspace code (e.g., it uses open(2),
-> > mmap(2), et. al) and using C++, so it would need to be reimplemented
-> > from scratch for use in the kernel.
-> 
-> Right. Some of these details, like open, are obviously trivial, others
-> less so. Reimplementing from scratch is an overstatement because the
-> actual intrusions of user space code are just a small portion of the code
-> and nearly all abstracted behind APIs that can be implemented as needed
-> for userspace or kernel in out of line helpers, so that the main source
-> is strictly unaware of the difference.
+Intel VT-d in scalable mode supports two types of page talbes
+for DMA translation: the first level page table and the second
+level page table. The first level page table uses the same
+format as the CPU page table, while the second level page table
+keeps compatible with previous formats. The software is able
+to choose any one of them for DMA remapping according to the use
+case.
 
-The use of C++ with templates is presumably one of the "less so"
-parts, and it was that which I had in mind when I said,
-"reimplementing from scratch".
+This patchset aims to move IOVA (I/O Virtual Address) translation
+to 1st-level page table in scalable mode. This will simplify vIOMMU
+(IOMMU simulated by VM hypervisor) design by using the two-stage
+translation, a.k.a. nested mode translation.
 
-> Also, most of this work is already being done for Tux3,
+As Intel VT-d architecture offers caching mode, guest IOVA (GIOVA)
+support is now implemented in a shadow page manner. The device
+simulation software, like QEMU, has to figure out GIOVA->GPA mappings
+and write them to a shadowed page table, which will be used by the
+physical IOMMU. Each time when mappings are created or destroyed in
+vIOMMU, the simulation software has to intervene. Hence, the changes
+on GIOVA->GPA could be shadowed to host.
 
-Great, when that work is done, we can take a look at the code and
-see....
 
-> > (5) The claim is made that readdir() accesses files sequentially; but
-> > there is also mention in Shardmap of compressing shards (e.g.,
-> > rewriting them) to squeeze out deleted and tombstone entries.  This
-> > pretty much guarantees that it will not be possible to satisfy POSIX
-> > requirements of telldir(2)/seekdir(3) (using a 32-bit or 64-bitt
-> > cookie), NFS (which also requires use of a 32-bit or 64-bit cookie
-> > while doing readdir scan), or readdir() semantics in the face of
-> > directory entries getting inserted or removed from the directory.
-> 
-> No problem, the data blocks are completely separate from the index so
-> readdir just walks through them in linear order a la classic UFS/Ext2.
-> What could possibly be simpler, faster or more POSIX compliant?
+     .-----------.
+     |  vIOMMU   |
+     |-----------|                 .--------------------.
+     |           |IOTLB flush trap |        QEMU        |
+     .-----------. (map/unmap)     |--------------------|
+     |GIOVA->GPA |---------------->|    .------------.  |
+     '-----------'                 |    | GIOVA->HPA |  |
+     |           |                 |    '------------'  |
+     '-----------'                 |                    |
+                                   |                    |
+                                   '--------------------'
+                                                |
+            <------------------------------------
+            |
+            v VFIO/IOMMU API
+      .-----------.
+      |  pIOMMU   |
+      |-----------|
+      |           |
+      .-----------.
+      |GIOVA->HPA |
+      '-----------'
+      |           |
+      '-----------'
 
-OK, so what you're saying then is for every single directory entry
-addition or removal, there must be (at least) two blocks which must be
-modified, an (at least one) index block, and a data block, no?  That
-makes it worse than htree, where most of the time we only need to
-modify a single leaf node.  We only have to touch an index block when
-a leaf node gets full and it needs to be split.
+In VT-d 3.0, scalable mode is introduced, which offers two-level
+translation page tables and nested translation mode. Regards to
+GIOVA support, it can be simplified by 1) moving the GIOVA support
+over 1st-level page table to store GIOVA->GPA mapping in vIOMMU,
+2) binding vIOMMU 1st level page table to the pIOMMU, 3) using pIOMMU
+second level for GPA->HPA translation, and 4) enable nested (a.k.a.
+dual-stage) translation in host. Compared with current shadow GIOVA
+support, the new approach makes the vIOMMU design simpler and more
+efficient as we only need to flush the pIOMMU IOTLB and possible
+device-IOTLB when an IOVA mapping in vIOMMU is torn down.
 
-Anyway, let's wait and see how you and Hirofumi-san work out those
-details for Tux3, and we can look at that and consider next steps at
-that time.
+     .-----------.
+     |  vIOMMU   |
+     |-----------|                 .-----------.
+     |           |IOTLB flush trap |   QEMU    |
+     .-----------.    (unmap)      |-----------|
+     |GIOVA->GPA |---------------->|           |
+     '-----------'                 '-----------'
+     |           |                       |
+     '-----------'                       |
+           <------------------------------
+           |      VFIO/IOMMU          
+           |  cache invalidation and  
+           | guest gpd bind interfaces
+           v
+     .-----------.
+     |  pIOMMU   |
+     |-----------|
+     .-----------.
+     |GIOVA->GPA |<---First level
+     '-----------'
+     | GPA->HPA  |<---Scond level
+     '-----------'
+     '-----------'
 
-Cheers,
+This patch set includes two parts. The former part implements the
+per-domain page table abstraction, which makes the page table
+difference transparent to various map/unmap APIs. The later part
+applies the first level page table for IOVA translation unless the
+DOMAIN_ATTR_NESTING domain attribution has been set, which indicates
+nested mode in use.
 
-						- Ted
+Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
+Based-on-idea-by: Kevin Tian <kevin.tian@intel.com>
+Based-on-idea-by: Liu Yi L <yi.l.liu@intel.com>
+Based-on-idea-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Based-on-idea-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+Based-on-idea-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Change log:
+
+ v1->v2
+ - The first series was posted here
+   https://lkml.org/lkml/2019/9/23/297
+ - Use per domain page table ops to handle different page tables.
+ - Use first level for DMA remapping by default on both bare metal
+   and vm guest.
+ - Code refine according to code review comments for v1.
+
+Lu Baolu (8):
+  iommu/vt-d: Add per domain page table ops
+  iommu/vt-d: Move domain_flush_cache helper into header
+  iommu/vt-d: Implement second level page table ops
+  iommu/vt-d: Apply per domain second level page table ops
+  iommu/vt-d: Add first level page table interfaces
+  iommu/vt-d: Implement first level page table ops
+  iommu/vt-d: Identify domains using first level page table
+  iommu/vt-d: Add set domain DOMAIN_ATTR_NESTING attr
+
+ drivers/iommu/Makefile             |   2 +-
+ drivers/iommu/intel-iommu.c        | 412 +++++++++++++++++++++++------
+ drivers/iommu/intel-pgtable.c      | 376 ++++++++++++++++++++++++++
+ include/linux/intel-iommu.h        |  64 ++++-
+ include/trace/events/intel_iommu.h |  60 +++++
+ 5 files changed, 837 insertions(+), 77 deletions(-)
+ create mode 100644 drivers/iommu/intel-pgtable.c
+
+-- 
+2.17.1
+
