@@ -2,103 +2,89 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A929FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E531AC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789682176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B68C62176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfK1LOX (ORCPT
+        id S1726980AbfK1LQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:14:23 -0500
-Received: from mga04.intel.com ([192.55.52.120]:64243 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfK1LOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:14:23 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 03:14:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,253,1571727600"; 
-   d="scan'208";a="221298377"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga002.jf.intel.com with SMTP; 28 Nov 2019 03:14:19 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 28 Nov 2019 13:14:18 +0200
-Date:   Thu, 28 Nov 2019 13:14:18 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Cc:     Uma Shankar <uma.shankar@intel.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [EXT] Re: [PATCH] drm: fix HDR static metadata type field
- numbering
-Message-ID: <20191128111418.GP1208@intel.com>
-References: <1574865719-24490-1-git-send-email-laurentiu.palcu@nxp.com>
- <20191127151703.GJ1208@intel.com>
- <20191128083940.GC10251@fsr-ub1664-121>
+        Thu, 28 Nov 2019 06:16:31 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:47858 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726594AbfK1LQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 06:16:31 -0500
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id B517DF91447D49C6887B;
+        Thu, 28 Nov 2019 19:16:29 +0800 (CST)
+Received: from dggeme765-chm.china.huawei.com (10.3.19.111) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 28 Nov 2019 19:16:29 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme765-chm.china.huawei.com (10.3.19.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Thu, 28 Nov 2019 19:16:29 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Thu, 28 Nov 2019 19:16:29 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Steven Price <steven.price@arm.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        "christoffer.dall@arm.com" <christoffer.dall@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] KVM: vgic: Use wrapper function to lock/unlock all
+ vcpus in kvm_vgic_create()
+Thread-Topic: [PATCH v2] KVM: vgic: Use wrapper function to lock/unlock all
+ vcpus in kvm_vgic_create()
+Thread-Index: AdWl3KlyTD6n4fFd4E+DqrFstDRVng==
+Date:   Thu, 28 Nov 2019 11:16:28 +0000
+Message-ID: <49f3dec1fa65498c84d0344e0ea629ce@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191128083940.GC10251@fsr-ub1664-121>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 08:39:41AM +0000, Laurentiu Palcu wrote:
-> On Wed, Nov 27, 2019 at 05:17:03PM +0200, Ville Syrjälä wrote:
-> > Caution: EXT Email
-> > 
-> > On Wed, Nov 27, 2019 at 02:42:35PM +0000, Laurentiu Palcu wrote:
-> > > According to CTA-861 specification, HDR static metadata data block allows a
-> > > sink to indicate which HDR metadata types it supports by setting the SM_0 to
-> > > SM_7 bits. Currently, only Static Metadata Type 1 is supported and this is
-> > > indicated by setting the SM_0 bit to 1.
-> > >
-> > > However, the connector->hdr_sink_metadata.hdmi_type1.metadata_type is always
-> > > 0, because hdr_metadata_type() in drm_edid.c checks the wrong bit.
-> > >
-> > > This patch corrects the HDMI_STATIC_METADATA_TYPE1 bit position.
-> > 
-> > Was confused for a while why this has even been workning, but I guess
-> > that's due to userspace populating the metadata infoframe blob correctly
-> > even if we misreported the metadata types in the parsed EDID metadata
-> > blob.
-> > 
-> > Hmm. Actually on further inspection this all seems to be dead code. The
-> > only thing we seem to use from the parsed EDID metadata stuff is
-> > eotf bitmask. We check that in drm_hdmi_infoframe_set_hdr_metadata()
-> > but we don't check the metadata type.
-> > 
-> > Maybe we should just nuke this EDID parsing stuff entirely? Seems
-> > pretty much pointless.
-> 
-> I've been thinking about that but we may need the rest of the fields as
-> well, even though they're not currently used. I'm referring to sink's
-> min/max luminance data. Shouldn't we also check min/max cll, besides
-> eotf, to make sure the source does not pass higher/lower luminance
-> values, than the sink supports, for optimal content rendering?
-> 
-> However, CTA-861 is not very clear on how a sink should behave if
-> the CLL values exceed the allowed range... :/ Also, if the CLL range or
-> the FALL values passed in the DRM infoframe exceed the sink's advertised
-> min/max values, I guess the sink cannot go lower/higher than it can
-> anyway. In which case, we don't really need the rest of the HDR static
-> metadata block and nuking that part should be ok.
-
-I'm thinking we should just conclude that such userspace is a 
-buggy mess and deserves whatever it gets.
-
--- 
-Ville Syrjälä
-Intel
+U3RldmVuIFByaWNlIHdyb3RlOg0KPj4gICANCj4+ICAgCWlmIChpcnFjaGlwX2luX2tlcm5lbChr
+dm0pKQ0KPj4gQEAgLTkyLDExICs5Miw4IEBAIGludCBrdm1fdmdpY19jcmVhdGUoc3RydWN0IGt2
+bSAqa3ZtLCB1MzIgdHlwZSkNCj5FeHRyYSBjb250ZXh0Og0KPg0KPgkvKg0KPgkgKiBBbnkgdGlt
+ZSBhIHZjcHUgaXMgcnVuLCB2Y3B1X2xvYWQgaXMgY2FsbGVkIHdoaWNoIHRyaWVzIHRvIGdyYWIg
+dGhlDQo+CSAqIHZjcHUtPm11dGV4LiAgQnkgZ3JhYmJpbmcgdGhlIHZjcHUtPm11dGV4IG9mIGFs
+bCBWQ1BVcyB3ZSBlbnN1cmUNCj4+ICAgCSAqIHRoYXQgbm8gb3RoZXIgVkNQVXMgYXJlIHJ1biB3
+aGlsZSB3ZSBjcmVhdGUgdGhlIHZnaWMuDQo+PiAgIAkgKi8NCj4NCj5UaGF0IGNvbW1lbnQgbm8g
+bG9uZ2VyIG1ha2VzIHNlbnNlIGhlcmUgLSB0aGVyZSdzIGEgdmVyeSBzaW1pbGFyIG9uZSBhbHJl
+YWR5IGluIGxvY2tfYWxsX3ZjcHVzKCkuIFdpdGggdGhhdCByZW1vdmVkOg0KPg0KPlJldmlld2Vk
+LWJ5OiBTdGV2ZW4gUHJpY2UgPHN0ZXZlbi5wcmljZUBhcm0uY29tPg0KPg0KTWFueSB0aGFua3Mg
+Zm9yIHlvdXIgcmV2aWV3LiBUaGF0IGNvbW1lbnQgbm8gbG9uZ2VyIG1ha2VzIHNlbnNlIGFzIHlv
+dSBmaWd1cmVkIG91dC4gSSB3aWxsDQpyZW1vdmUgdGhhdC4gVGhhbmtzIGFnYWluLg0KDQo+PiAg
+IAlyZXQgPSAtRUJVU1k7DQo+PiAtCWt2bV9mb3JfZWFjaF92Y3B1KGksIHZjcHUsIGt2bSkgew0K
+Pj4gLQkJaWYgKCFtdXRleF90cnlsb2NrKCZ2Y3B1LT5tdXRleCkpDQo+PiAtCQkJZ290byBvdXRf
+dW5sb2NrOw0KPj4gLQkJdmNwdV9sb2NrX2lkeCA9IGk7DQo=
