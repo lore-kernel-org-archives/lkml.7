@@ -2,272 +2,141 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C56C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9281C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D966C215F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED9D215A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:47:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="JW2HM0d3"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cCXLuSnt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfK1AqK (ORCPT
+        id S1727286AbfK1ArK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 19:46:10 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43723 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfK1AqJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 19:46:09 -0500
-Received: by mail-qt1-f194.google.com with SMTP id q8so24664788qtr.10;
-        Wed, 27 Nov 2019 16:46:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aJeoqcmKSSQvMjifG41URfXpoPD2I45j8yZ0E+rYsGo=;
-        b=JW2HM0d38B3YxpLDeP3VdWE5jC1VN+rWirnpsjbm7P1MG3Qvquz6yXZNb/VcCji6uh
-         B0aao0fYaU+rr3A/SmPrwOt9WA4bI5NBrlIQPqK5v/EKfh9j48phG2kk7fcK0d1D+Blm
-         UhV3sq6Z0f1FOKVWceulCSq6/F+rQ/sWTigVk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aJeoqcmKSSQvMjifG41URfXpoPD2I45j8yZ0E+rYsGo=;
-        b=NiciWzvKwnhMRUu9iuuZhBCQ0xM6ga1G5Er94uZoHZNP1PUMIleQAKLj2fiQB5yTHV
-         ARQ00uz/xjfxRmPvqoI4WRaC8kSiIaxox+Q6FIkniY8k6GpJUPIWbmThpynqw2GwAVAU
-         lkqtcKysALyM4aNrXJqTSXfTmtBA7Yg8gqA1LxhMnbtLH1Ysr4HOHetVk5TayoPBP4aM
-         wmmNDdj7WkNdGTevXO/djVm/qNJ214wErNJO0AcsVJI84zpkSFUAkb6pooLnJO2Dr3XW
-         p+bicQKxPWNdcP0KhCBTyIkqMhPa0WqTn0zPIrP7/gssNYwDGSLq/MEDe3mRRVnbmyX3
-         +z6Q==
-X-Gm-Message-State: APjAAAVIWaofWjtK3DjTS0CuV2Do31u1tjpbPJY+yngip3gu3Wkkir7h
-        SV2cUymD4XJMwJEwQvTGEp9ch6eA4U84RnRrQPw=
-X-Google-Smtp-Source: APXvYqwHl9cUPcDab0I8y61KT4zfdU3MEvfmMOQHLFg4tSI+jEGYfr73nyiTucDoGr+hQ7JGvoonYex7C6ghTlEKCJM=
-X-Received: by 2002:ac8:167c:: with SMTP id x57mr28046701qtk.255.1574901968058;
- Wed, 27 Nov 2019 16:46:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127060747.GA30829@cnn>
-In-Reply-To: <20191127060747.GA30829@cnn>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 28 Nov 2019 00:45:56 +0000
-Message-ID: <CACPK8Xc4jw_gPqbTZ5tbSBUD0NF3_aRk+aCbGDZBye3CF+n=rg@mail.gmail.com>
-Subject: Re: [PATCH v4] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>
-Cc:     Vijay Khemka <vijaykhemka@fb.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
+        Wed, 27 Nov 2019 19:47:10 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46011 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726947AbfK1ArJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 19:47:09 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Nf9P4kGCz9sRc;
+        Thu, 28 Nov 2019 11:47:04 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574902026;
+        bh=Nzi2yvwNdVNDAQPLExfA+w5TED31z+K4duO7wdrACd4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cCXLuSntHwNFLWnftlpmQ8E7FHybcr9nz4kOWWJ0sKC5hr3vy04t9WBACULi7yrJh
+         /bcgzXDE+gKrxRbWeyb5Xt/mJar5DZnMng50vo1DlGdt3302wEBAb73T7QofwFaqTn
+         F5Lws3tlaznKFQTF4L8OAlBPsf1LdbPuOLu4WxGKa7NCo33Bw83w7yuE82yC0hWW4m
+         qHbreliyhR3qEfF7WUGr2522c5suS4rE9dCex5tCIYIUL6oItXRY4NOSQgLude3Vsp
+         3jJb5XiPu2o7rmaK7fCSi/uuD9HtZHXXAGXR4oQyFYnhm0WJocaCq4dnx2bqTEqJfI
+         Z94cM45IzC99Q==
+Date:   Thu, 28 Nov 2019 11:47:04 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        manikandan.e@hcl.com
-Content-Type: text/plain; charset="UTF-8"
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Linus <torvalds@linux-foundation.org>
+Subject: Re: linux-next: manual merge of the ftrace tree with the tip tree
+Message-ID: <20191128114704.7d705a98@canb.auug.org.au>
+In-Reply-To: <20191121151041.4ff886d5@canb.auug.org.au>
+References: <20191121151041.4ff886d5@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/XaCCTprV_87L6q.X_BJH3e=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Nov 2019 at 06:07, manikandan-e
-<manikandan.hcl.ers.epl@gmail.com> wrote:
+--Sig_/XaCCTprV_87L6q.X_BJH3e=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Thu, 21 Nov 2019 15:10:40 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> The Yosemite V2 is a facebook multi-node server
-> platform that host four OCP server. The BMC
-> in the Yosemite V2 platorm based on AST2500 SoC.
+> Today's linux-next merge of the ftrace tree got a conflict in:
+>=20
+>   kernel/trace/trace_export.c
+>=20
+> between commit:
+>=20
+>   60fdad00827c ("ftrace: Rework event_create_dir()")
+>=20
+> from the tip tree and commit:
+>=20
+>   6dff4d7dd3e0 ("tracing: Make internal ftrace events static")
+>=20
+> from the ftrace tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc kernel/trace/trace_export.c
+> index 6d64c1c19fd5,2e6d2e9741cc..000000000000
+> --- a/kernel/trace/trace_export.c
+> +++ b/kernel/trace/trace_export.c
+> @@@ -142,10 -168,12 +142,10 @@@ static struct trace_event_fields ftrace
+>   #define F_printk(fmt, args...) __stringify(fmt) ", "  __stringify(args)
+>  =20
+>   #undef FTRACE_ENTRY_REG
+>  -#define FTRACE_ENTRY_REG(call, struct_name, etype, tstruct, print, filt=
+er,\
+>  -			 regfn)						\
+>  -									\
+>  +#define FTRACE_ENTRY_REG(call, struct_name, etype, tstruct, print, regf=
+n) \
+> - struct trace_event_class __refdata event_class_ftrace_##call =3D {	\
+> + static struct trace_event_class __refdata event_class_ftrace_##call =3D=
+ {	\
+>   	.system			=3D __stringify(TRACE_SYSTEM),		\
+>  -	.define_fields		=3D ftrace_define_fields_##call,		\
+>  +	.fields_array		=3D ftrace_event_fields_##call,		\
+>   	.fields			=3D LIST_HEAD_INIT(event_class_ftrace_##call.fields),\
+>   	.reg			=3D regfn,				\
+>   };									\
 
-spelling: platform
+This is now a conflict between the tip tree and Linus' tree.
 
->
-> This patch adds linux device tree entry related to
-> Yosemite V2 specific devices connected to BMC SoC.
->
-> Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+--=20
+Cheers,
+Stephen Rothwell
 
-Please see this:
+--Sig_/XaCCTprV_87L6q.X_BJH3e=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n418
+-----BEGIN PGP SIGNATURE-----
 
- > then you just add a line saying:
- >
- > Signed-off-by: Random J Developer <random@developer.example.org>
- >
- > using your real name (sorry, no pseudonyms or anonymous contributions.)
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3fGQgACgkQAVBC80lX
+0Gz3PwgAhkbyX2A7n+vXliUgkxh6yW0j7vGTwsr9aPxgxwbnoWDQPhDmG0pxCLPB
+o2+A9nM/biyz+KSePgc2EqP8G0e4iNCTzg0tmJ8a/tOU9GcCTx37ncnK9NRoXDom
+LMJWhdgNouBwPhsE5ZODNGL5ZhkCRYDC/iSr6EQcX/CBS+bC0bnYJDz/c0fQ1TsR
+E3fKJCmP2+kBgvbfN5V+i/HKwJxNd22f+yws+EzfJKKoeKlISjjvwwlUgI+1lOa1
+wPTzY9Uq3wMn41G/FQuqm0LUinIeZ+iJEwDtxfWjRuRkL6Pg4vXfFVdvitDh93vf
+4TQh2/Lo3ro1oHvPAOus0zGtGQY1bw==
+=K6Zq
+-----END PGP SIGNATURE-----
 
-Can you make sure you've got your real name there? You can make this
-global with:
-
- > git config --global user.name "Random J Developer"
- > git commit --amend --reset-author
-
-
-> ---
->  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 150 +++++++++++++++++++++
->  1 file changed, 150 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> new file mode 100644
-> index 0000000..44e2b17
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> @@ -0,0 +1,150 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-
-The kernel prefers this to be spelt "GPL-2.0-or-later"
-
-> +// Copyright (c) 2018 Facebook Inc.
-> +/dts-v1/;
-> +
-> +#include "aspeed-g5.dtsi"
-> +#include <dt-bindings/gpio/aspeed-gpio.h>
-> +
-> +/ {
-> +       model = "Facebook Yosemitev2 BMC";
-> +       compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-> +       aliases {
-> +               serial4 = &uart5;
-> +       };
-> +       chosen {
-> +               stdout-path = &uart5;
-> +       };
-> +
-> +       memory@80000000 {
-> +               reg = <0x80000000 0x20000000>;
-> +       };
-> +
-> +       iio-hwmon {
-> +               // VOLATAGE SENSOR
-> +               compatible = "iio-hwmon";
-> +               io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-> +               <&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-> +               <&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-> +               <&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-> +       };
-> +};
-> +
-> +&fmc {
-> +       status = "okay";
-> +       flash@0 {
-> +               status = "okay";
-> +               m25p,fast-read;
-> +#include "openbmc-flash-layout.dtsi"
-> +       };
-> +};
-> +
-> +&spi1 {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_spi1_default>;
-> +       flash@0 {
-> +               status = "okay";
-> +               m25p,fast-read;
-> +               label = "pnor";
-> +       };
-> +};
-> +
-> +&uart5 {
-> +       // BMC Console
-> +       status = "okay";
-> +};
-> +
-> +&mac0 {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_rmii1_default>;
-> +       use-ncsi;
-> +};
-> +
-> +&adc {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_adc0_default
-> +                       &pinctrl_adc1_default
-> +                       &pinctrl_adc2_default
-> +                       &pinctrl_adc3_default
-> +                       &pinctrl_adc4_default
-> +                       &pinctrl_adc5_default
-> +                       &pinctrl_adc6_default
-> +                       &pinctrl_adc7_default
-> +                       &pinctrl_adc8_default
-> +                       &pinctrl_adc9_default
-> +                       &pinctrl_adc10_default
-> +                       &pinctrl_adc11_default
-> +                       &pinctrl_adc12_default
-> +                       &pinctrl_adc13_default
-> +                       &pinctrl_adc14_default
-> +                       &pinctrl_adc15_default>;
-> +};
-> +
-> +&i2c8 {
-> +       status = "okay";
-> +       //FRU EEPROM
-> +       eeprom@51 {
-> +               compatible = "atmel,24c64";
-> +               reg = <0x51>;
-> +               pagesize = <32>;
-> +       };
-> +};
-> +
-> +&i2c9 {
-> +       status = "okay";
-> +       tmp421@4e {
-> +       //INLET TEMP
-
-Make this consistent by putting it one line up.
-
-> +               compatible = "ti,tmp421";
-> +               reg = <0x4e>;
-> +       };
-> +       //OUTLET TEMP
-> +       tmp421@4f {
-> +               compatible = "ti,tmp421";
-> +               reg = <0x4f>;
-> +       };
-> +};
-> +
-> +&i2c10 {
-> +       status = "okay";
-> +       //HSC
-> +       adm1278@40 {
-> +               compatible = "adi,adm1278";
-> +               reg = <0x40>;
-> +       };
-> +};
-> +
-> +&i2c11 {
-> +       status = "okay";
-> +       //MEZZ_TEMP_SENSOR
-> +       tmp421@1f {
-> +               compatible = "ti,tmp421";
-> +               reg = <0x1f>;
-> +       };
-> +};
-> +
-> +&i2c12 {
-> +       status = "okay";
-> +       //MEZZ_FRU
-> +       eeprom@51 {
-> +               compatible = "atmel,24c64";
-> +               reg = <0x51>;
-> +               pagesize = <32>;
-> +       };
-> +};
-> +
-> +&pwm_tacho {
-> +       status = "okay";
-> +       //FSC
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> +       fan@0 {
-> +               reg = <0x00>;
-> +               aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-> +       };
-> +       fan@1 {
-> +               reg = <0x01>;
-> +               aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-> +       };
-> +};
-> --
-> 2.7.4
->
+--Sig_/XaCCTprV_87L6q.X_BJH3e=--
