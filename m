@@ -2,219 +2,91 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD556C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC33C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD57E21775
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F4D217AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574962929;
-	bh=9XOdisxYU3SrPU4GTgh1Xcg39OSoWI0brVkbHYt0uCo=;
+	s=default; t=1574963088;
+	bh=cz99d7VnCSzayawBtX02NKhGh1MPuM8LousFrM8rWO8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tWXDKXVqjkGPjl/QeCw/V3qPIuoleBBRuJwAth2ZqPFzc3/KhI1P/NjKlpIuF5VFF
-	 K471WlNBHqpgtd/FuIleYrJcm4uExI2x+DDvGAfBBnXgmgeJ18NFMRxm3vNrTOIx8c
-	 MV43BmXaXO2zu+bApWFHHNWlH5iOv7SoalpucMZs=
+	b=ZW61s4RBs9NMA/dHdth3ABpj2VMHUzTJQ/plcrKkM4iFwFh6ZyRLc/p1b75eyVm8x
+	 aHw1x3e28q3sg5+oThIruF3xVK9E4f/0ye63QI75zBJDnx00GmpHwtJvWVrpIhafWb
+	 aoO1AXrwyF8cLrSivGWHW7li0POU6k20AbMu6A5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfK1RmI (ORCPT
+        id S1726712AbfK1Ror (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 12:42:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57256 "EHLO mail.kernel.org"
+        Thu, 28 Nov 2019 12:44:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbfK1RmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 12:42:08 -0500
+        id S1726446AbfK1Ror (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 12:44:47 -0500
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA4E1215F1;
-        Thu, 28 Nov 2019 17:42:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6821821781;
+        Thu, 28 Nov 2019 17:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574962927;
-        bh=9XOdisxYU3SrPU4GTgh1Xcg39OSoWI0brVkbHYt0uCo=;
+        s=default; t=1574963086;
+        bh=cz99d7VnCSzayawBtX02NKhGh1MPuM8LousFrM8rWO8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rotXDPKjiszwD1t/stqextUsMNyUQ83V1CEk4KFIbCIv9yGz52CBNmEPznFrB6iTx
-         R7nBRy0p81KEFn2yEdit0Epi7qofVxZ7Uu3FmsKMQviNneFnRF6NT1oRz63HB8Qz2a
-         u+p80433ZXTW47e8sBsLcTqlkyMcRqXxMkkqnWDA=
-Date:   Thu, 28 Nov 2019 18:42:04 +0100
+        b=nur2kTuKF2C7fIttF4ho3dt9RM0yi9+NaXYXKdNq7XxeF2pbzA2KdoYM6VqgMX7mH
+         tKEA7a6rMKCShzTVzzjd9b1tQXIl5+CJbrs/UNj1kV2YFed32ieOG73RxUBY1QvHFZ
+         w/1FEW/Tl02O/oZmD0PQVbPPUzG2pubZ97z+02bU=
+Date:   Thu, 28 Nov 2019 18:44:44 +0100
 From:   Maxime Ripard <mripard@kernel.org>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+To:     Yunhao Tian <18373444@buaa.edu.cn>
+Cc:     Icenowy Zheng <icenowy@aosc.io>, Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: allwinner: Convert to new-style SPDX license
- identifiers
-Message-ID: <20191128174204.tbr5ldilkadw42gc@gilmour.lan>
-References: <20191123132435.22093-1-peron.clem@gmail.com>
+Subject: Re: [PATCH] clk: sunxi-ng: v3s: Fix incorrect number of hw_clks.
+Message-ID: <20191128174444.ypkqrbsge7g3t6mg@gilmour.lan>
+References: <20191125125833.8023-1-18373444@buaa.edu.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2vgvz5ipypry7sum"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191123132435.22093-1-peron.clem@gmail.com>
+In-Reply-To: <20191125125833.8023-1-18373444@buaa.edu.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Clement,
 
-Sorry for the pretty slow answer
+--2vgvz5ipypry7sum
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sat, Nov 23, 2019 at 02:24:35PM +0100, Cl=E9ment P=E9ron wrote:
-> Move the SPDX-License-Identifier lines to the top and drop the
-> license splat.
+On Mon, Nov 25, 2019 at 08:58:32PM +0800, Yunhao Tian wrote:
+> The hws field of sun8i_v3s_hw_clks has only 74
+> members. However, the number specified by CLK_NUMBER
+> is 77 (= CLK_I2S0 + 1). This leads to runtime segmentation
+> fault that is not always reproducible.
 >
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> ---
+> This patch fixes the problem by specifying correct clock number.
 >
-> Hi,
->
-> This the same logic that what has be done on Amlogic.
->
-> Commit: ARM64: dts: amlogic: Convert to new-style SPDX license identifiers
-> https://lore.kernel.org/patchwork/patch/890455/
+> Signed-off-by: Yunhao Tian <18373444@buaa.edu.cn>
 
-So there's a bunch of different things that should be addressed in
-separate patches here I believe.
-
->  arch/arm64/boot/dts/allwinner/axp803.dtsi     | 39 +----------------
->  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +----------------
->  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +----------------
->  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +----------------
->  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +----------------
->  .../dts/allwinner/sun50i-a64-pine64-lts.dts   |  3 +-
->  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +----------------
->  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +----------------
->  .../dts/allwinner/sun50i-a64-pinebook.dts     |  1 -
->  .../allwinner/sun50i-a64-sopine-baseboard.dts | 42 +------------------
->  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 42 +------------------
->  .../boot/dts/allwinner/sun50i-a64-teres-i.dts |  3 +-
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +----------------
->  .../sun50i-h5-bananapi-m2-plus-v1.2.dts       |  4 +-
->  .../allwinner/sun50i-h5-bananapi-m2-plus.dts  |  4 +-
->  .../allwinner/sun50i-h5-nanopi-neo-plus2.dts  | 39 +----------------
->  .../dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 39 +----------------
->  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 39 +----------------
->  .../allwinner/sun50i-h5-orangepi-prime.dts    | 42 +------------------
->  .../sun50i-h5-orangepi-zero-plus.dts          |  3 +-
->  .../sun50i-h5-orangepi-zero-plus2.dts         | 39 +----------------
->  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 39 +----------------
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  2 +-
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  2 +-
->  .../allwinner/sun50i-h6-orangepi-lite2.dts    |  2 +-
->  .../allwinner/sun50i-h6-orangepi-one-plus.dts |  2 +-
->  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  2 +-
->  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  2 +-
->  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     |  2 +-
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  2 +-
->  30 files changed, 33 insertions(+), 634 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/=
-dts/allwinner/axp803.dtsi
-> index f0349ef4bfdd..f4f2c70fde5c 100644
-> --- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> @@ -1,43 +1,6 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->  /*
->   * Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
-> - *
-> - * This file is dual-licensed: you can use it either under the terms
-> - * of the GPL or the X11 license, at your option. Note that this dual
-> - * licensing only applies to this file, and not this project as a
-> - * whole.
-> - *
-> - *  a) This file is free software; you can redistribute it and/or
-> - *     modify it under the terms of the GNU General Public License as
-> - *     published by the Free Software Foundation; either version 2 of the
-> - *     License, or (at your option) any later version.
-> - *
-> - *     This file is distributed in the hope that it will be useful,
-> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - *     GNU General Public License for more details.
-> - *
-> - * Or, alternatively,
-> - *
-> - *  b) Permission is hereby granted, free of charge, to any person
-> - *     obtaining a copy of this software and associated documentation
-> - *     files (the "Software"), to deal in the Software without
-> - *     restriction, including without limitation the rights to use,
-> - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> - *     sell copies of the Software, and to permit persons to whom the
-> - *     Software is furnished to do so, subject to the following
-> - *     conditions:
-> - *
-> - *     The above copyright notice and this permission notice shall be
-> - *     included in all copies or substantial portions of the Software.
-> - *
-> - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> - *     OTHER DEALINGS IN THE SOFTWARE.
->   */
-
-So this is the first, obvious, one that you talk about in your commit
-log. While the license says that it's X11, SPDX reports that it's now
-MIT, can you clarify this?
-
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> index 72d6961dc312..2ca36580436c 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> @@ -1,6 +1,5 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->  /*
-> - * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> - *
->   * Copyright (c) 2018 ARM Ltd.
->   */
-
-This is another kind of changes though. The SPDX identifier is there,
-but under the wrong format and you're fixing it.
-
-That being said, I'm not a super fan of mixing the two comment styles
-for two lines.
-
-What about using only // style comments for the header?
-
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.=
-2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-> index 2e2b14c0ae75..a61d58c4db24 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-> @@ -1,5 +1,7 @@
->  // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> -// Copyright (C) 2018 Chen-Yu Tsai <wens@csie.org>
-> +/*
-> + * Copyright (C) 2018 Chen-Yu Tsai <wens@csie.org>
-> + */
-
-Here you change the comment style. And based on the comment above that
-wouldn't be necessary.
-
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> index f335f7482a73..84b7e9936300 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->  /*
->   * Copyright (C) 2019 Cl=E9ment P=E9ron <peron.clem@gmail.com>
->   */
-
-And I'm not sure what this one (and the next) is?
-
-Thanks!
+Queued as a fix, thanks!
 Maxime
+>
+
+--2vgvz5ipypry7sum
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXeAHjAAKCRDj7w1vZxhR
+xZ9EAQD4x+F88mtI2oJSbsrjcUafFH0q/ESBzvhi8Ii8aB8kXgD9FkwUCrG7y4di
+Qe+I/O7uhmYsoZBb8fRi+ku/eDY9ywE=
+=FAhq
+-----END PGP SIGNATURE-----
+
+--2vgvz5ipypry7sum--
