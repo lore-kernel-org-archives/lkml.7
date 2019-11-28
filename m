@@ -2,100 +2,98 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA6FC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D093C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE4A2158A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0707D2158A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbfK1C00 (ORCPT
+        id S1727969AbfK1C22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 21:26:26 -0500
-Received: from out28-52.mail.aliyun.com ([115.124.28.52]:50838 "EHLO
-        out28-52.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727432AbfK1C00 (ORCPT
+        Wed, 27 Nov 2019 21:28:28 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47089 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727432AbfK1C22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 21:26:26 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1442634|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0651011-0.0193909-0.915508;DS=CONTINUE|ham_regular_dialog|0.216232-0.0239754-0.759793;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07389;MF=yong.deng@magewell.com;NM=1;PH=DS;RN=8;RT=8;SR=0;TI=SMTPD_---.G6MWC7G_1574907969;
-Received: from John(mailfrom:yong.deng@magewell.com fp:SMTPD_---.G6MWC7G_1574907969)
-          by smtp.aliyun-inc.com(10.147.42.198);
-          Thu, 28 Nov 2019 10:26:09 +0800
-Date:   Thu, 28 Nov 2019 10:26:08 +0800
-From:   Yong <yong.deng@magewell.com>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-media@vger.kernel.org (open list:CSI DRIVERS FOR ALLWINNER V3s),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
-Subject: Re: [linux-sunxi] [PATCH] media: sun6i-csi: Fix incorrect
- HSYNC/VSYNC/PCLK polarity configuration
-Message-Id: <20191128102608.035cbb996c8681a6fb035336@magewell.com>
-In-Reply-To: <20191128020259.1338188-1-megous@megous.com>
-References: <20191128020259.1338188-1-megous@megous.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; i686-pc-mingw32)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 27 Nov 2019 21:28:28 -0500
+Received: from callcc.thunk.org (97-71-153.205.biz.bhn.net [97.71.153.205] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xAS2SHsO003384
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 21:28:18 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 1C4934202FD; Wed, 27 Nov 2019 21:28:17 -0500 (EST)
+Date:   Wed, 27 Nov 2019 21:28:17 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Daniel Phillips <daniel@phunq.net>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
+Message-ID: <20191128022817.GE22921@mit.edu>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+ <20191127142508.GB5143@mit.edu>
+ <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ondrej,
-
-This has been discussed.
-And Maxime sent a patch for this: 
-https://www.mail-archive.com/linux-media@vger.kernel.org/msg127149.html
-
-On Thu, 28 Nov 2019 03:02:59 +0100
-Ondrej Jirman <megous@megous.com> wrote:
-
-> This was discovered by writing a new camera driver and wondering, why
-> hsync/vsync polarity setting behaves in reverse to what would be
-> expected. Verified by looking at the actual signals and the SoC
-> user manual.
+On Wed, Nov 27, 2019 at 02:27:27PM -0800, Daniel Phillips wrote:
+> > (2) It's implemented as userspace code (e.g., it uses open(2),
+> > mmap(2), et. al) and using C++, so it would need to be reimplemented
+> > from scratch for use in the kernel.
 > 
-> Fixes: 5cc7522d8965 ("media: sun6i: Add support for Allwinner CSI V3s")
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> index f17e5550602d..98bbcca59a90 100644
-> --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> @@ -417,12 +417,12 @@ static void sun6i_csi_setup_bus(struct sun6i_csi_dev *sdev)
->  		if (flags & V4L2_MBUS_FIELD_EVEN_LOW)
->  			cfg |= CSI_IF_CFG_FIELD_POSITIVE;
->  
-> -		if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
-> +		if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
->  			cfg |= CSI_IF_CFG_VREF_POL_POSITIVE;
-> -		if (flags & V4L2_MBUS_HSYNC_ACTIVE_LOW)
-> +		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
->  			cfg |= CSI_IF_CFG_HREF_POL_POSITIVE;
->  
-> -		if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-> +		if (flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
->  			cfg |= CSI_IF_CFG_CLK_POL_FALLING_EDGE;
->  		break;
->  	case V4L2_MBUS_BT656:
-> -- 
-> 2.24.0
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191128020259.1338188-1-megous%40megous.com.
+> Right. Some of these details, like open, are obviously trivial, others
+> less so. Reimplementing from scratch is an overstatement because the
+> actual intrusions of user space code are just a small portion of the code
+> and nearly all abstracted behind APIs that can be implemented as needed
+> for userspace or kernel in out of line helpers, so that the main source
+> is strictly unaware of the difference.
 
+The use of C++ with templates is presumably one of the "less so"
+parts, and it was that which I had in mind when I said,
+"reimplementing from scratch".
 
-Thanks,
-Yong
+> Also, most of this work is already being done for Tux3,
+
+Great, when that work is done, we can take a look at the code and
+see....
+
+> > (5) The claim is made that readdir() accesses files sequentially; but
+> > there is also mention in Shardmap of compressing shards (e.g.,
+> > rewriting them) to squeeze out deleted and tombstone entries.  This
+> > pretty much guarantees that it will not be possible to satisfy POSIX
+> > requirements of telldir(2)/seekdir(3) (using a 32-bit or 64-bitt
+> > cookie), NFS (which also requires use of a 32-bit or 64-bit cookie
+> > while doing readdir scan), or readdir() semantics in the face of
+> > directory entries getting inserted or removed from the directory.
+> 
+> No problem, the data blocks are completely separate from the index so
+> readdir just walks through them in linear order a la classic UFS/Ext2.
+> What could possibly be simpler, faster or more POSIX compliant?
+
+OK, so what you're saying then is for every single directory entry
+addition or removal, there must be (at least) two blocks which must be
+modified, an (at least one) index block, and a data block, no?  That
+makes it worse than htree, where most of the time we only need to
+modify a single leaf node.  We only have to touch an index block when
+a leaf node gets full and it needs to be split.
+
+Anyway, let's wait and see how you and Hirofumi-san work out those
+details for Tux3, and we can look at that and consider next steps at
+that time.
+
+Cheers,
+
+						- Ted
