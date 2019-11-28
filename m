@@ -2,322 +2,274 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7EEC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F65BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1C4217AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AAC208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:48:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ZEf8gbiv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="byvcCgVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfK1OsP (ORCPT
+        id S1726754AbfK1OsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:48:15 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:56671 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfK1OsO (ORCPT
+        Thu, 28 Nov 2019 09:48:24 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51383 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfK1OsX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:48:14 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: CEJJy3g1ABzUI4/pZSk2hVZAh2UV9Gxl/M65jf27AOhfbkvDwKm0CTK0KPYEMwUxEo2rO8SutO
- CVUjZLFrQBvly80tszjY6LhAXmjTsDkKbKzVqLxGcZSl9/KnJzVU3ol32VKaU3rNT9PVYx0Dbn
- 6DvrRaDY+eb3dbulRqcLNJTXGKTucehTS5Pc0SC5wTXsY65EURgvhrIj387H1620woLDMT7cX/
- ZRyVwr5T9OmoF2oxeQiwRWonnJjEXAQydvvfF57TOMjf498G6frqiEzmP5fxck/6IGF9cPitXu
- 0T4=
-X-IronPort-AV: E=Sophos;i="5.69,253,1571727600"; 
-   d="scan'208";a="60042778"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Nov 2019 07:48:12 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 28 Nov 2019 07:48:13 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 28 Nov 2019 07:48:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XntT2Dm2KtwAfwudNggFz79Od+7OFEgBypg9JhdWT1kh0o4om2gVvealzfar+14XCzNx38JqZTPapJzIGm2dZccvgOflezkIgcNNce4FLgAKfsrxf6ijI73QaYrMTeVDuYwB3FRZWYTbCzAbKc2aLQ0HI6STt14NDu6otaibywBTFixL7C1uGqSGYu+N8Zp1Nt/wbk0rO3UcOX5SWoqeHT4VU6/lvW+Q582TS968b9ajFKvnVyY3O+lSMwdrsHFohMxiTppCIUOSGTroTd+mrPRAKoPLUxD14J6dYggwUKFBodvniITYHf7w+ChWfOVCWDCtWXd6+2CeGxw7BuUSsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6N3upTzDG+/yZzsPIpRP9+W9EtyHAjyZgDzcF61ALZM=;
- b=ItQLerJ3Rk3JKE5SoAQIAv/PrpoDBcBlzhvpCDpHgItN2HNjlwVEY1AXuUP0zm5hJs5AfqGSYDDjBVMPBNHdATk2ddT5KwCAAqUWmhfZlc51X/bmqDohdZI77ZJU41Mm2HrOQyi4vqDFi8DqXozEvPzbdPd1G/rMdj+VtNSrMuQuXt5JHomRQM9e5SgLIQLaHi692c1y0QKdOa/2PfKx8CQi2ow2WQNnyP5YpH1dIS91S4lbg2J+rdvxA5nJuIjMBJCWsWM/72sOp4OJXu910lgchMu05QX9qZWxejR2LLwtqpethQzZa8cTJafguExwb3aGPcnOonmgB077kc2sWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Thu, 28 Nov 2019 09:48:23 -0500
+Received: by mail-wm1-f65.google.com with SMTP id g206so11257033wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:48:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6N3upTzDG+/yZzsPIpRP9+W9EtyHAjyZgDzcF61ALZM=;
- b=ZEf8gbivdekUeyh7bv/9uHnOwLbzLY2eN7bzi51m+eCsOxm4BzDdFuAuNh2mif+bSrStAbEdgXfRfd+gntFc1NpRBZ6x+UbgXGewpj0ICdPU3Qv5o2RkWE3B9EhsoVKTqn7pcqSBmuHfJ17xE0CJ4zc6sSH9pSXYyklgGunI3J8=
-Received: from SN6PR11MB2830.namprd11.prod.outlook.com (52.135.93.21) by
- SN6PR11MB2736.namprd11.prod.outlook.com (52.135.92.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.20; Thu, 28 Nov 2019 14:48:10 +0000
-Received: from SN6PR11MB2830.namprd11.prod.outlook.com
- ([fe80::74c7:7e0e:5565:a0e5]) by SN6PR11MB2830.namprd11.prod.outlook.com
- ([fe80::74c7:7e0e:5565:a0e5%7]) with mapi id 15.20.2495.014; Thu, 28 Nov 2019
- 14:48:10 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <kamel.bouhara@bootlin.com>, <sre@kernel.org>,
-        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] power: reset: at91-reset: add sysfs interface to the
- power on reason
-Thread-Topic: [PATCH] power: reset: at91-reset: add sysfs interface to the
- power on reason
-Thread-Index: AQHVpfraa7jHkmKRFU6ARhaCvd32Mw==
-Date:   Thu, 28 Nov 2019 14:48:10 +0000
-Message-ID: <5ef83b2d-99f2-4953-4cd0-83af528b9a61@microchip.com>
-References: <20191017124058.19300-1-kamel.bouhara@bootlin.com>
-In-Reply-To: <20191017124058.19300-1-kamel.bouhara@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0080.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:18::20) To SN6PR11MB2830.namprd11.prod.outlook.com
- (2603:10b6:805:5b::21)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c85fcf6-4fb4-4f79-68b2-08d77411fcc1
-x-ms-traffictypediagnostic: SN6PR11MB2736:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB2736FDC0E9B544627A4C5E99E0470@SN6PR11MB2736.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:628;
-x-forefront-prvs: 0235CBE7D0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(396003)(376002)(346002)(136003)(52314003)(199004)(189003)(229853002)(31696002)(2501003)(86362001)(8676002)(81156014)(66066001)(6486002)(6436002)(36756003)(6246003)(81166006)(66946007)(25786009)(6512007)(8936002)(478600001)(110136005)(64756008)(66556008)(66476007)(66446008)(14454004)(54906003)(99286004)(102836004)(52116002)(2616005)(6116002)(3846002)(446003)(11346002)(305945005)(31686004)(316002)(7736002)(186003)(53546011)(26005)(386003)(6506007)(5660300002)(71200400001)(71190400001)(256004)(14444005)(4326008)(2906002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB2736;H:SN6PR11MB2830.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: r15j1EBm16KQqBP8T3KaCBxkQg0cR7UscbM57PxaAjutgG9y0PV2uXna+CEOP09vsBmgYrooXXMspvIH1z7PhXKBmTIKlzM7CsTO6mUQHmqF7bIm3oeesuW1dlgvOMKds95cqY3SXWQcRQPB12g4h5KMgqx3CHGjGfwBPCHJhZZ7jQAoDR9cIqnQ+u3QPb41rlXd8Oe+jryrZ82r46Aah6GAKwJlDCUSiKrXuWbhKN3GmYShywIgnTnJKCL4zva1MrNY49w8cNR6dAX8nF3aI29S0DoD1KHMyMB5jfSjnCBWD47MMNKmv25DlJmjaCN/qAsCYDDSaAfiJcwRbVnPfC43S+BUakfRruN30g03LoPQaNkTxF4VTMzEMOBekK6UXB30XnprJ9CUAXef/5iJo6og+a1wmQTubZr8FvXOUHZlpXHZ1emeFvmZQr82/xjz
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <E7400572D2F1604B903704146D5D0631@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=fwsV1lUBaH712UoSWSftV7v2W4F52UFOO1pDpAi3wfY=;
+        b=byvcCgVZS6gL8QkAK2NBfaVDPyZhrbB/I0OqF3e3SI5nItPE3IJztLQpAtLyLFI5WL
+         2Skldc5GqWHpzGKyzVg6mat4kT0a78st2l4CEeYLNL12S09MqsaYpyut3cyUmjt54n6L
+         92q07VQkhZXgiFZ0MDceKliIAR2WM5Uih7r4tMjph0NKUondXRpNv4cT4+uHDqpwd5WF
+         eDS1J95VPKzhOQ6/QSb32LMYDMQCvVfpglcfkI60idT22gW26XU673AJe9u3fhbNGpBV
+         bo67A/JYuOBi3Bulx9NKe+HOtiub/uViu1R0MUFQJvaBC5yk0Ha9UOrACtLzc4SaKkhV
+         rTEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=fwsV1lUBaH712UoSWSftV7v2W4F52UFOO1pDpAi3wfY=;
+        b=G9J1g4l5GlUL4KI+W9mN1MPoaLQYQZRqV7JHaIpDq6fOWcKWD7k0ANs0nSa6oM3QvN
+         ueRYSE/zKrnkdADUrLzuRw1oAde+qrIek774XEtLUmvb3s0E7rerpfjyC8waa4KlQj2Q
+         zf0JMnyA+NJq67aPN/667LRxuSGoQ/plfFCpgLnR964pS9SVaIoJ1ODkgG8ReuceaEwc
+         8iZBIzEYHPDP3ceIyNYaioniuQxPK7KX2bDb4g/mnVxqbqw347x9XDHrlBUwhBD14kQg
+         XkB4d9zWA8eSfZOYmDjJpbzu8TFQBXf3pfBUdIA9wg9TW7oBdsKshsWj07kqH4uE83XS
+         s6HA==
+X-Gm-Message-State: APjAAAWFMA9YSjIiPvHDrZdx1n4ZDsJ58SPSSvBwkir6EyFH9WTNT3dB
+        4GZ+EBwCt5kPWhhcD/pA0kQb8XFqSp4=
+X-Google-Smtp-Source: APXvYqx+wcfxiJN6fImx9a5jv7PiR4NZu3MOQJZZybOssP3B3HwLKxa3SYQJQGFBnNrFddXrESIVVw==
+X-Received: by 2002:a1c:a5c8:: with SMTP id o191mr9689023wme.168.1574952500260;
+        Thu, 28 Nov 2019 06:48:20 -0800 (PST)
+Received: from dell ([2.31.167.254])
+        by smtp.gmail.com with ESMTPSA id u16sm23667159wrr.65.2019.11.28.06.48.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 06:48:19 -0800 (PST)
+Date:   Thu, 28 Nov 2019 14:48:07 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] MFD for v5.5
+Message-ID: <20191128144807.GB14416@dell>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c85fcf6-4fb4-4f79-68b2-08d77411fcc1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Nov 2019 14:48:10.1763
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3qD0e0FRQDUJMYm232/UQPCCmYFTjgwSqMuIfpQAFaymH3LDIO1Kk6WVsDZDmK0rlC/CCkGNWSww9dYS/DFeTLFpYJgc4/gdxalXIpnfNU4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2736
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/10/2019 at 14:40, Kamel Bouhara wrote:
-> This patch export the power on reason through the sysfs interface and
-> introduce some generic reset sources.
-> Update the ABI documentation to list current power on sources.
->=20
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+Good afternoon Linus,
 
-I don't know the status of this.
-Anyway, here is my:
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-Thanks Kamel. Best regards,
-   Nicolas
+are available in the Git repository at:
 
-> ---
->   .../sysfs-devices-platform-power-on-reason    | 14 ++++++
->   drivers/power/reset/at91-reset.c              | 44 +++++++++++++------
->   include/linux/power/power_on_reason.h         | 19 ++++++++
->   3 files changed, 64 insertions(+), 13 deletions(-)
->   create mode 100644 Documentation/ABI/testing/sysfs-devices-platform-pow=
-er-on-reason
->   create mode 100644 include/linux/power/power_on_reason.h
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-devices-platform-power-on-re=
-ason b/Documentation/ABI/testing/sysfs-devices-platform-power-on-reason
-> new file mode 100644
-> index 000000000000..83daeb9b1aa2
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-devices-platform-power-on-reason
-> @@ -0,0 +1,14 @@
-> +What:		/sys/devices/platform/.../power_on_reason
-> +
-> +Date:		October 2019
-> +KernelVersion:	5.4
-> +Contact:	Kamel Bouhara <kamel.bouhara@bootlin.com>
-> +Description:	This file shows system power on reason.
-> +		The possible sources are:
-> +		General System Power-ON, RTC wakeup, Watchdog timeout,
-> +		Software Reset, User pressed reset button,
-> +		CPU Clock failure, 32.768kHz Oscillator Failure,
-> +		Low power mode exit, Unknown.
-> +
-> +		The file is read only.
-> +
-> diff --git a/drivers/power/reset/at91-reset.c b/drivers/power/reset/at91-=
-reset.c
-> index 44ca983a49a1..3cb2df40af37 100644
-> --- a/drivers/power/reset/at91-reset.c
-> +++ b/drivers/power/reset/at91-reset.c
-> @@ -17,7 +17,7 @@
->   #include <linux/of_address.h>
->   #include <linux/platform_device.h>
->   #include <linux/reboot.h>
-> -
-> +#include <linux/power/power_on_reason.h>
->   #include <soc/at91/at91sam9_ddrsdr.h>
->   #include <soc/at91/at91sam9_sdramc.h>
->=20
-> @@ -146,42 +146,42 @@ static int samx7_restart(struct notifier_block *thi=
-s, unsigned long mode,
->   	return NOTIFY_DONE;
->   }
->=20
-> -static void __init at91_reset_status(struct platform_device *pdev)
-> +static const char *at91_reset_reason(struct platform_device *pdev)
->   {
->   	const char *reason;
->   	u32 reg =3D readl(at91_rstc_base + AT91_RSTC_SR);
->=20
->   	switch ((reg & AT91_RSTC_RSTTYP) >> 8) {
->   	case RESET_TYPE_GENERAL:
-> -		reason =3D "general reset";
-> +		reason =3D POWER_ON_REASON_GENERAL;
->   		break;
->   	case RESET_TYPE_WAKEUP:
-> -		reason =3D "wakeup";
-> +		reason =3D POWER_ON_REASON_RTC;
->   		break;
->   	case RESET_TYPE_WATCHDOG:
-> -		reason =3D "watchdog reset";
-> +		reason =3D POWER_ON_REASON_WATCHDOG;
->   		break;
->   	case RESET_TYPE_SOFTWARE:
-> -		reason =3D "software reset";
-> +		reason =3D POWER_ON_REASON_SOFTWARE;
->   		break;
->   	case RESET_TYPE_USER:
-> -		reason =3D "user reset";
-> +		reason =3D POWER_ON_REASON_USER;
->   		break;
->   	case RESET_TYPE_CPU_FAIL:
-> -		reason =3D "CPU clock failure detection";
-> +		reason =3D POWER_ON_REASON_CPU_FAIL;
->   		break;
->   	case RESET_TYPE_XTAL_FAIL:
-> -		reason =3D "32.768 kHz crystal failure detection";
-> +		reason =3D POWER_ON_REASON_XTAL_FAIL;
->   		break;
->   	case RESET_TYPE_ULP2:
-> -		reason =3D "ULP2 reset";
-> +		reason =3D POWER_ON_REASON_LOW_POWER;
->   		break;
->   	default:
-> -		reason =3D "unknown reset";
-> +		reason =3D POWER_ON_REASON_UNKNOWN;
->   		break;
->   	}
->=20
-> -	dev_info(&pdev->dev, "Starting after %s\n", reason);
-> +	return reason;
->   }
->=20
->   static const struct of_device_id at91_ramc_of_match[] =3D {
-> @@ -204,6 +204,17 @@ static struct notifier_block at91_restart_nb =3D {
->   	.priority =3D 192,
->   };
->=20
-> +static ssize_t power_on_reason_show(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    char *buf)
-> +{
-> +	struct platform_device *pdev =3D to_platform_device(dev);
-> +
-> +	return sprintf(buf, "%s\n", at91_reset_reason(pdev));
-> +}
-> +
-> +static DEVICE_ATTR_RO(power_on_reason);
-> +
->   static int __init at91_reset_probe(struct platform_device *pdev)
->   {
->   	const struct of_device_id *match;
-> @@ -248,7 +259,14 @@ static int __init at91_reset_probe(struct platform_d=
-evice *pdev)
->   		return ret;
->   	}
->=20
-> -	at91_reset_status(pdev);
-> +	ret =3D device_create_file(&pdev->dev, &dev_attr_power_on_reason);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Could not create sysfs entry\n");
-> +		return ret;
-> +	}
-> +
-> +	dev_info(&pdev->dev, "Starting after %s reset\n",
-> +		 at91_reset_reason(pdev));
->=20
->   	return 0;
->   }
-> diff --git a/include/linux/power/power_on_reason.h b/include/linux/power/=
-power_on_reason.h
-> new file mode 100644
-> index 000000000000..9978cc757427
-> --- /dev/null
-> +++ b/include/linux/power/power_on_reason.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Author: Kamel Bouhra <kamel.bouhara@bootlin.com>
-> + */
-> +
-> +#ifndef POWER_ON_REASON_H
-> +#define POWER_ON_REASON_H
-> +
-> +#define POWER_ON_REASON_GENERAL "General"
-> +#define POWER_ON_REASON_RTC "RTC wakeup"
-> +#define POWER_ON_REASON_WATCHDOG "Watchdog timeout"
-> +#define POWER_ON_REASON_SOFTWARE "Software"
-> +#define POWER_ON_REASON_USER "User"
-> +#define POWER_ON_REASON_CPU_FAIL "CPU Clock Failure"
-> +#define POWER_ON_REASON_XTAL_FAIL "32.768k Crystal oscillator Failure"
-> +#define POWER_ON_REASON_LOW_POWER "Low power exit"
-> +#define POWER_ON_REASON_UNKNOWN "Unknown"
-> +
-> +#endif /* POWER_ON_REASON_H */
-> --
-> 2.23.0
->=20
->=20
->=20
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-next-5.5
 
+for you to fetch changes up to edfaeaf742b4c3ee6f58e0b8be95b5296a3375e8:
 
---=20
-Nicolas Ferre
+  Revert "mfd: syscon: Set name of regmap_config" (2019-11-13 11:07:40 +0000)
+
+----------------------------------------------------------------
+ - Core Frameworks
+   - Add support for a "resource managed strongly uncachable ioremap" call
+   - Provide a collection of MFD helper macros
+   - Remove mfd_clone_cell() from MFD core
+   - Add NULL de-reference protection in MFD core
+   - Remove superfluous function fd_platform_add_cell() from MFD core
+   - Honour Device Tree's request to disable a device
+
+ - New Drivers
+   - Add support for MediaTek MT6323 PMIC
+
+ - New Device Support
+   - Add support for Gemini Lake to Intel LPSS PCI
+   - Add support for Cherry Trail Crystal Cover PMIC to Intel SoC PMIC CRC
+   - Add support for PM{I}8950 to Qualcomm SPMI PMIC
+   - Add support for U8420 to ST-Ericsson DB8500
+   - Add support for Comet Lake PCH-H to Intel LPSS PCI
+
+ - New Functionality
+   - Add support for requested supply clocks; madera-core
+
+ - Fix-ups
+   - Lower interrupt priority; rk808
+   - Use provided helpers (macros, group functions, defines); rk808,
+		ipaq-micro, ab8500-core, db8500-prcmu, mt6397-core, cs5535-mfd
+   - Only allocate IRQs on request; max77620
+   - Use simplified API; arizona-core
+   - Remove redundant and/or duplicated code; wm8998-tables, arizona, syscon
+   - Device Tree binding fix-ups; madera, max77650, max77693
+   - Remove mfd_cell->id abuse hack; cs5535-mfd
+   - Remove only user of mfd_clone_cell(); cs5535-mfd
+   - Make resources static; rohm-bd70528
+
+ - Bug Fixes
+   - Fix product ID for RK818; rk808
+   - Fix Power Key; rk808
+   - Fix booting on the BananaPi; mt6397-core
+   - Endian fix-ups; twl.h
+   - Fix static error checker warnings; ti_am335x_tscadc
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      mfd: intel-lpss: Add Intel Comet Lake PCH-H PCI IDs
+      Revert "mfd: syscon: Set name of regmap_config"
+
+Angelo G. Del Regno (1):
+      mfd: qcom-spmi-pmic: Add support for PM/PMI8950
+
+Bartosz Golaszewski (1):
+      dt-bindings: mfd: max77650: Convert the binding document to yaml
+
+Charles Keepax (3):
+      mfd: wm8998: Remove some unused registers
+      mfd: madera: Update DT binding document to support clock supplies
+      mfd: madera: Add support for requesting the supply clocks
+
+Daniel Schultz (1):
+      mfd: rk808: Fix RK818 ID template
+
+Dmitry Torokhov (1):
+      mfd: arizona: Switch to using devm_gpiod_get()
+
+Fabien Parent (1):
+      mfd: mt6397: Use PLATFORM_DEVID_NONE macro instead of -1
+
+Frank Wunderlich (1):
+      mfd: mt6397: Fix probe after changing mt6397-core
+
+Hans de Goede (1):
+      mfd: intel_soc_pmic_crc: Add "cht_crystal_cove_pmic" cell to CHT cells
+
+Heiko Stuebner (3):
+      mfd: rk808: Fix RK817 powerkey integration
+      mfd: rk808: Set RK817 interrupt polarity to low
+      mfd: rk808: Use DEFINE_RES_IRQ for rk808 RTC alarm IRQ
+
+Jarkko Nikula (1):
+      mfd: intel-lpss: Add default I2C device properties for Gemini Lake
+
+Jonathan Cameron (1):
+      mfd: twl: Endian fixups in i2c write and read wrappers
+
+Josef Friedl (6):
+      dt-bindings: rtc: mediatek: add missing mt6397 rtc
+      rtc: mt6397: move some common definitions into rtc.h
+      rtc: mt6397: improvements of rtc driver
+      rtc: mt6397: add compatible for mt6323
+      power: reset: add driver for mt6323 poweroff
+      MAINTAINERS: add Mediatek shutdown drivers
+
+Lee Jones (15):
+      Merge branches 'ib-mfd-doc-sparc-libdevres-5.5' and 'ib-mfd-power-rtc-5.5' into ibs-for-mfd-merged
+      mfd: Provide MACRO to declare commonly defined MFD cell attributes
+      mfd: ab8500: Example using new OF_MFD_CELL MACRO
+      mfd: db8500-prcmu: Example using new OF_MFD_CELL/MFD_CELL_BASIC MACROs
+      mfd: cs5535-mfd: Use PLATFORM_DEVID_* defines and tidy error message
+      mfd: cs5535-mfd: Remove mfd_cell->id hack
+      mfd: cs5535-mfd: Request shared IO regions centrally
+      mfd: cs5535-mfd: Register clients using their own dedicated MFD cell entries
+      mfd: mfd-core: Protect against NULL call-back function pointer
+      mfd: mfd-core: Remove mfd_clone_cell()
+      x86: olpc-xo1-pm: Remove invocation of MFD's .enable()/.disable() call-backs
+      x86: olpc-xo1-sci: Remove invocation of MFD's .enable()/.disable() call-backs
+      mfd: mfd-core: Remove usage counting for .{en,dis}able() call-backs
+      mfd: mfd-core: Move pdev->mfd_cell creation back into mfd_add_device()
+      mfd: mfd-core: Honour Device Tree's request to disable a child-device
+
+Linus Walleij (1):
+      mfd: db8500-prcmu: Support U8420-sysclk firmware
+
+Markus Elfring (1):
+      mfd: ipaq-micro: Use devm_platform_ioremap_resource() in micro_probe()
+
+Matti Vaittinen (2):
+      dt-bindings: mfd: max77693: Fix missing curly brace
+      mfd: bd70528: Staticize bit value definitions
+
+Thierry Reding (1):
+      mfd: max77620: Do not allocate IRQs upfront
+
+Tuowen Zhao (4):
+      sparc64: implement ioremap_uc
+      lib: devres: add a helper function for ioremap_uc
+      mfd: intel-lpss: Use devm_ioremap_uc for MMIO
+      docs: driver-model: add devm_ioremap_uc
+
+Vignesh Raghavendra (1):
+      mfd: ti_am335x_tscadc: Fix static checker warning
+
+ Documentation/devicetree/bindings/mfd/madera.txt   |   8 ++
+ Documentation/devicetree/bindings/mfd/max77650.txt |  46 -------
+ .../devicetree/bindings/mfd/max77650.yaml          | 149 +++++++++++++++++++++
+ Documentation/devicetree/bindings/mfd/max77693.txt |   1 +
+ .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |   2 +
+ .../devicetree/bindings/rtc/rtc-mt6397.txt         |  29 ++++
+ Documentation/driver-api/driver-model/devres.rst   |   1 +
+ MAINTAINERS                                        |   7 +
+ arch/arm/mach-ux500/cpu-db8500.c                   |   2 +-
+ arch/sparc/include/asm/io_64.h                     |   1 +
+ arch/x86/platform/olpc/olpc-xo1-pm.c               |   8 --
+ arch/x86/platform/olpc/olpc-xo1-sci.c              |   6 -
+ drivers/mfd/ab8500-core.c                          | 138 ++++++-------------
+ drivers/mfd/arizona-core.c                         |   6 +-
+ drivers/mfd/cs5535-mfd.c                           | 108 +++++++--------
+ drivers/mfd/db8500-prcmu.c                         |  84 +++++++-----
+ drivers/mfd/intel-lpss-pci.c                       |  41 ++++--
+ drivers/mfd/intel-lpss.c                           |   2 +-
+ drivers/mfd/intel_soc_pmic_crc.c                   |   3 +
+ drivers/mfd/ipaq-micro.c                           |   6 +-
+ drivers/mfd/madera-core.c                          |  27 +++-
+ drivers/mfd/max77620.c                             |   5 +-
+ drivers/mfd/mfd-core.c                             | 118 ++++------------
+ drivers/mfd/mt6397-core.c                          |  76 ++++++-----
+ drivers/mfd/qcom-spmi-pmic.c                       |   4 +
+ drivers/mfd/rk808.c                                |  22 +--
+ drivers/mfd/rohm-bd70528.c                         |  17 ++-
+ drivers/mfd/syscon.c                               |   1 -
+ drivers/mfd/ti_am335x_tscadc.c                     |   2 +-
+ drivers/mfd/wm8998-tables.c                        |  12 --
+ drivers/power/reset/Kconfig                        |  10 ++
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/mt6323-poweroff.c              |  97 ++++++++++++++
+ drivers/rtc/rtc-mt6397.c                           | 107 +++------------
+ include/linux/io.h                                 |   2 +
+ include/linux/mfd/arizona/registers.h              |   7 -
+ include/linux/mfd/core.h                           |  49 ++++---
+ include/linux/mfd/db8500-prcmu.h                   |   4 +-
+ include/linux/mfd/dbx500-prcmu.h                   |   7 +-
+ include/linux/mfd/madera/core.h                    |  11 ++
+ include/linux/mfd/max77620.h                       |   1 -
+ include/linux/mfd/mt6397/rtc.h                     |  71 ++++++++++
+ include/linux/mfd/rk808.h                          |   2 +-
+ include/linux/mfd/twl.h                            |  12 +-
+ lib/devres.c                                       |  19 +++
+ 45 files changed, 770 insertions(+), 562 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+ create mode 100644 drivers/power/reset/mt6323-poweroff.c
+ create mode 100644 include/linux/mfd/mt6397/rtc.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
