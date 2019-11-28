@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3C3C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AECC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FAC020880
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A9C20880
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mcmXDonJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZPWSyz/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfK1LAo (ORCPT
+        id S1727354AbfK1LAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:00:44 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59264 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727286AbfK1LAk (ORCPT
+        Thu, 28 Nov 2019 06:00:51 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54028 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfK1LAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:00:40 -0500
+        Thu, 28 Nov 2019 06:00:48 -0500
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASB0YJl099863;
-        Thu, 28 Nov 2019 05:00:34 -0600
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASB0eAU117614;
+        Thu, 28 Nov 2019 05:00:40 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574938834;
-        bh=EOL7+ILAJKMK9C2xGDp+0K1qLoucOFWJ/CJCGCWfatY=;
+        s=ti-com-17Q1; t=1574938840;
+        bh=xZ0oyU8cZK0/i48N18FMFsOlTJ8+io2ZeiUS4/7rU2k=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=mcmXDonJ5NWH485ZKvPfhkaToVfvAYupKM6cmCiosdBInYMhrfRItfCbirdAoXapC
-         oc8xqLz99UE0wea/xt/YG2q6ZekIiINME7RyDHI0FMpLsj1aV6Ml7pkKb39Uy3dZo/
-         wq+0hj4DLlBqfHLKgWB7bT8yttFQ2dkFgrPeYU7U=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASB0Xea032273
+        b=ZPWSyz/Uy0wpba7ZiIdsggw1B1sLKbQq3D+/k+O7XCW9yiKBHPIQSIlddZf/IZZiq
+         AoCY3+eSlSyBkmM9bRg6AJOqmMXHEdYzuJlejgnHCZf92GZ12vUAhGQDHfp5Z58Zxk
+         CorxgEQVOjNOcIJFMZetoQSroEaHUQLSn6PhOSno=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASB0eMp032356
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Nov 2019 05:00:33 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 05:00:33 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
+        Thu, 28 Nov 2019 05:00:40 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
  (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
+ Nov 2019 05:00:40 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 05:00:33 -0600
+ Frontend Transport; Thu, 28 Nov 2019 05:00:40 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAxgJS073287;
-        Thu, 28 Nov 2019 05:00:30 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAxgJU073287;
+        Thu, 28 Nov 2019 05:00:37 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
         <ssantosh@kernel.org>
@@ -56,94 +56,99 @@ CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-Subject: [PATCH v6 14/17] dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
-Date:   Thu, 28 Nov 2019 12:59:42 +0200
-Message-ID: <20191128105945.13071-15-peter.ujfalusi@ti.com>
+Subject: [PATCH v6 16/17] firmware: ti_sci: rm: Add support for tx_tdtype parameter for tx channel
+Date:   Thu, 28 Nov 2019 12:59:44 +0200
+Message-ID: <20191128105945.13071-17-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191128105945.13071-1-peter.ujfalusi@ti.com>
 References: <20191128105945.13071-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split patch for review containing:
-Kconfig and Makefile changes
-
-DMA driver for
-Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
-
-The UDMA-P is intended to perform similar (but significantly upgraded) functions
-as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
-supports the transmission and reception of various packet types. The UDMA-P is
-architected to facilitate the segmentation and reassembly of SoC DMA data
-structure compliant packets to/from smaller data blocks that are natively
-compatible with the specific requirements of each connected peripheral. Multiple
-Tx and Rx channels are provided within the DMA which allow multiple segmentation
-or reassembly operations to be ongoing. The DMA controller maintains state
-information for each of the channels which allows packet segmentation and
-reassembly operations to be time division multiplexed between channels in order
-to share the underlying DMA hardware. An external DMA scheduler is used to
-control the ordering and rate at which this multiplexing occurs for Transmit
-operations. The ordering and rate of Receive operations is indirectly controlled
-by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
-
-The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-channels. Channels in the UDMA-P can be configured to be either Packet-Based or
-Third-Party channels on a channel by channel basis.
-
-The initial driver supports:
-- MEM_TO_MEM (TR mode)
-- DEV_TO_MEM (Packet / TR mode)
-- MEM_TO_DEV (Packet / TR mode)
-- Cyclic (Packet / TR mode)
-- Metadata for descriptors
+The system controller's resource manager have support for configuring the
+TDTYPE of TCHAN_CFG register on j721e.
+With this parameter the teardown completion can be controlled:
+TDTYPE == 0: Return without waiting for peer to complete the teardown
+TDTYPE == 1: Wait for peer to complete the teardown
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
 ---
- drivers/dma/ti/Kconfig  | 13 +++++++++++++
- drivers/dma/ti/Makefile |  1 +
- 2 files changed, 14 insertions(+)
+ drivers/firmware/ti_sci.c              | 1 +
+ drivers/firmware/ti_sci.h              | 7 +++++++
+ include/linux/soc/ti/ti_sci_protocol.h | 2 ++
+ 3 files changed, 10 insertions(+)
 
-diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
-index 72f3d2728178..a096f0ec3998 100644
---- a/drivers/dma/ti/Kconfig
-+++ b/drivers/dma/ti/Kconfig
-@@ -34,6 +34,19 @@ config DMA_OMAP
- 	  Enable support for the TI sDMA (System DMA or DMA4) controller. This
- 	  DMA engine is found on OMAP and DRA7xx parts.
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index 4126be9e3216..f13e4a96f3b7 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -2412,6 +2412,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const struct ti_sci_handle *handle,
+ 	req->fdepth = params->fdepth;
+ 	req->tx_sched_priority = params->tx_sched_priority;
+ 	req->tx_burst_size = params->tx_burst_size;
++	req->tx_tdtype = params->tx_tdtype;
  
-+config TI_K3_UDMA
-+	tristate "Texas Instruments UDMA support"
-+	depends on ARCH_K3 || COMPILE_TEST
-+	depends on TI_SCI_PROTOCOL
-+	depends on TI_SCI_INTA_IRQCHIP
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	select TI_K3_RINGACC
-+	select TI_K3_PSIL
-+        help
-+	  Enable support for the TI UDMA (Unified DMA) controller. This
-+	  DMA engine is used in AM65x.
-+
- config TI_K3_PSIL
- 	bool
+ 	ret = ti_sci_do_xfer(info, xfer);
+ 	if (ret) {
+diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
+index f0d068c03944..255327171dae 100644
+--- a/drivers/firmware/ti_sci.h
++++ b/drivers/firmware/ti_sci.h
+@@ -910,6 +910,7 @@ struct rm_ti_sci_msg_udmap_rx_flow_opt_cfg {
+  *   12 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_credit_count
+  *   13 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::fdepth
+  *   14 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_burst_size
++ *   15 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_tdtype
+  *
+  * @nav_id: SoC device ID of Navigator Subsystem where tx channel is located
+  *
+@@ -973,6 +974,11 @@ struct rm_ti_sci_msg_udmap_rx_flow_opt_cfg {
+  *
+  * @tx_burst_size: UDMAP transmit channel burst size configuration to be
+  * programmed into the tx_burst_size field of the TCHAN_TCFG register.
++ *
++ * @tx_tdtype: UDMAP transmit channel teardown type configuration to be
++ * programmed into the tdtype field of the TCHAN_TCFG register:
++ * 0 - Return immediately
++ * 1 - Wait for completion message from remote peer
+  */
+ struct ti_sci_msg_rm_udmap_tx_ch_cfg_req {
+ 	struct ti_sci_msg_hdr hdr;
+@@ -994,6 +1000,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg_req {
+ 	u16 fdepth;
+ 	u8 tx_sched_priority;
+ 	u8 tx_burst_size;
++	u8 tx_tdtype;
+ } __packed;
  
-diff --git a/drivers/dma/ti/Makefile b/drivers/dma/ti/Makefile
-index f8d912ad7eaf..9d787f009195 100644
---- a/drivers/dma/ti/Makefile
-+++ b/drivers/dma/ti/Makefile
-@@ -2,5 +2,6 @@
- obj-$(CONFIG_TI_CPPI41) += cppi41.o
- obj-$(CONFIG_TI_EDMA) += edma.o
- obj-$(CONFIG_DMA_OMAP) += omap-dma.o
-+obj-$(CONFIG_TI_K3_UDMA) += k3-udma.o
- obj-$(CONFIG_TI_K3_PSIL) += k3-psil.o k3-psil-am654.o k3-psil-j721e.o
- obj-$(CONFIG_TI_DMA_CROSSBAR) += dma-crossbar.o
+ /**
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index 9531ec823298..f3aed0b91564 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -342,6 +342,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg {
+ #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID        BIT(11)
+ #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_CREDIT_COUNT_VALID      BIT(12)
+ #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FDEPTH_VALID            BIT(13)
++#define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID            BIT(15)
+ 	u16 nav_id;
+ 	u16 index;
+ 	u8 tx_pause_on_err;
+@@ -359,6 +360,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg {
+ 	u16 fdepth;
+ 	u8 tx_sched_priority;
+ 	u8 tx_burst_size;
++	u8 tx_tdtype;
+ };
+ 
+ /**
 -- 
 Peter
 
