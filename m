@@ -5,65 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAE0C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87632084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F062084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="fr41RTJE"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="GU+FHdBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfK1O6u (ORCPT
+        id S1727707AbfK1O6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:58:50 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41929 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbfK1O6F (ORCPT
+        Thu, 28 Nov 2019 09:58:53 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38732 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727534AbfK1O6A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:58:05 -0500
-Received: by mail-lj1-f195.google.com with SMTP id m4so28806262ljj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:58:03 -0800 (PST)
+        Thu, 28 Nov 2019 09:58:00 -0500
+Received: by mail-lf1-f67.google.com with SMTP id r14so4005778lfm.5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LUyJI7Xtt6B49WNUawbgsGkfQ59e//4g+j9sie0K+wA=;
-        b=fr41RTJEy5Zr1Mf34JJS2aTc0bRxU1MD9uDHZeMlDw2PpU5RYyFvfn9cfdKFgw7gRi
-         2EnpXvd2e2Fbq0fLk6r3nWUB2D3yhONTgOXuQ+LTEUIQ9ozzk2aJcS/eQhTFDmKhAnrJ
-         enhP0jBLFcIMlhOAvq1jZL/fyPjFWIASW6ad0=
+        bh=72sEWcRrZShV6+ZtrbY8IpuEizwarRLNFp/8lkLUzfY=;
+        b=GU+FHdBJRYkw5UkPWN7s3g70/83WQOEmISQwX9qSdRVD3WHOUaGAFdBUx3Sme7fjHL
+         /Z+7qlogtJH6EcMtuHnCJMLrZd5CaVdwbfAxgYfHduzeaVVIkMdpB925f242Mn00PfSy
+         RuXGBWmdfSaOhpduQ3XxsbwxqdAElKPZlwwik=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LUyJI7Xtt6B49WNUawbgsGkfQ59e//4g+j9sie0K+wA=;
-        b=SHo6dkztTr5y/+99gncc+cwltyZxHXKlY8Zd+lL50lhvamJyOJIUq8RC/9AcKQPrms
-         amIbep5Ps4ER4tb6GrNto7+4/X3SBtFLXiltScgGZRItk+VJvc5zJZaLMF77nnWJ0evp
-         aZboff6P50deElSG5AdlfX17JxepzHmax7n7yi2MThhlq4mFJ7b08G/ur3D7lxkZ2TpE
-         gkIVm6Z1knKBlwKJ4aMK8KNOgiGboziGrtUsrMSXznUhRp7Zzb5VXy7Cv61OUkAsBSLo
-         6LJx+heng3qLosz7X2yAbL5nDTGoihHArPuE2OqDE3mTlRHFy3bq4ub+EhfxB9sxHCDz
-         ZYDQ==
-X-Gm-Message-State: APjAAAVDcogy9tERc95dz1RkWiDmNfHcW5ZEJvI7BoNBINvAP9RZ8lQg
-        VIbuI/d7/YpcnmK/yvZztz3yyTj/KKkE+vkB
-X-Google-Smtp-Source: APXvYqzvOsid7pV5utL0Oet589uRnpcNr0xR7W0TnHfGMl1kiNe7Uit0KU1mpk3Kb2fnMEJkAeqIoA==
-X-Received: by 2002:a2e:b5b8:: with SMTP id f24mr33942968ljn.188.1574953082288;
-        Thu, 28 Nov 2019 06:58:02 -0800 (PST)
+        bh=72sEWcRrZShV6+ZtrbY8IpuEizwarRLNFp/8lkLUzfY=;
+        b=ABwR8d+KKNt+NDRYEO0fI3VWhz7qovt0Pn8qSR+U/EK+LBT3coVQXIsmKG2k/rIuQw
+         V+w2hktxZ2U2erpaEVqa3x3tKxyfbySVAVFk/AO11E0ooZAxzW5wCPd2eww0PLsSGyrN
+         akAJJ4xyZDFY7aRRqDcbMZfF++cM9LAiCQmuHwlaAtt3V4Pk+69wiyON5j9Ncsg++MCJ
+         Z/6yg5YjCUAxOvfFXV/IHHliFOeteST/OJ+yfQo7Ish58Zi+XmBLyot9xUEKSKysmnQX
+         a+SvLsXpA8GvvnvfEVhN8+CmQ3wO8mzRKuhJty1T0+Z3Clx2WXOukv4fqfZr7p4ELEMN
+         xicw==
+X-Gm-Message-State: APjAAAXU1vtjG5I8Y6UEIMNZczbHTZzz1ue4g138ret+KZrRkYylBjJx
+        p5my1hwjoQ2u1buidRvc3ILr5IDhf3kggiS5
+X-Google-Smtp-Source: APXvYqz02uT5YFaXnAxzTLioQmYffM+bBn/MgPobmwNavfJAST5FVWoxj4QiDIoEsaR5yWe6ky9XnQ==
+X-Received: by 2002:a19:6b04:: with SMTP id d4mr33009525lfa.10.1574953077507;
+        Thu, 28 Nov 2019 06:57:57 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.58.01
+        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 06:58:01 -0800 (PST)
+        Thu, 28 Nov 2019 06:57:57 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
 Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        netdev@vger.kernel.org
-Subject: [PATCH v6 44/49] net/wan/fsl_ucc_hdlc: avoid use of IS_ERR_VALUE()
-Date:   Thu, 28 Nov 2019 15:55:49 +0100
-Message-Id: <20191128145554.1297-45-linux@rasmusvillemoes.dk>
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v6 40/49] soc: fsl: qe: avoid IS_ERR_VALUE in ucc_slow.c
+Date:   Thu, 28 Nov 2019 15:55:45 +0100
+Message-Id: <20191128145554.1297-41-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
 References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
@@ -74,73 +73,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building this on a 64-bit platform gcc rightly warns that the
-error checking is broken (-ENOMEM stored in an u32 does not compare
-greater than (unsigned long)-MAX_ERRNO). Instead, now that
-qe_muram_alloc() returns s32, use that type to store the return value
-and use standard kernel style "ret < 0".
+When trying to build this for a 64-bit platform, one gets warnings
+from using IS_ERR_VALUE on something which is not sizeof(long).
+
+Instead, change the various *_offset fields to store a signed integer,
+and simply check for a negative return from qe_muram_alloc(). Since
+qe_muram_free() now accepts and ignores a negative argument, we only
+need to make sure these fields are initialized with -1, and we can
+just unconditionally call qe_muram_free() in ucc_slow_free().
+
+Note that the error case for us_pram_offset failed to set that field
+to 0 (which, as noted earlier, is anyway a bogus sentinel value).
 
 Reviewed-by: Timur Tabi <timur@kernel.org>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/net/wan/fsl_ucc_hdlc.c | 10 +++++-----
- drivers/net/wan/fsl_ucc_hdlc.h |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/soc/fsl/qe/ucc_slow.c | 22 +++++++++-------------
+ include/soc/fsl/qe/ucc_slow.h |  6 +++---
+ 2 files changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
-index ce6af7d5380f..405b24a5a60d 100644
---- a/drivers/net/wan/fsl_ucc_hdlc.c
-+++ b/drivers/net/wan/fsl_ucc_hdlc.c
-@@ -84,8 +84,8 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
- 	int ret, i;
- 	void *bd_buffer;
- 	dma_addr_t bd_dma_addr;
--	u32 riptr;
--	u32 tiptr;
-+	s32 riptr;
-+	s32 tiptr;
- 	u32 gumr;
- 
- 	ut_info = priv->ut_info;
-@@ -195,7 +195,7 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
- 	priv->ucc_pram_offset = qe_muram_alloc(sizeof(struct ucc_hdlc_param),
- 				ALIGNMENT_OF_UCC_HDLC_PRAM);
- 
--	if (IS_ERR_VALUE(priv->ucc_pram_offset)) {
-+	if (priv->ucc_pram_offset < 0) {
- 		dev_err(priv->dev, "Can not allocate MURAM for hdlc parameter.\n");
- 		ret = -ENOMEM;
- 		goto free_tx_bd;
-@@ -233,14 +233,14 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
- 
- 	/* Alloc riptr, tiptr */
- 	riptr = qe_muram_alloc(32, 32);
--	if (IS_ERR_VALUE(riptr)) {
-+	if (riptr < 0) {
- 		dev_err(priv->dev, "Cannot allocate MURAM mem for Receive internal temp data pointer\n");
- 		ret = -ENOMEM;
- 		goto free_tx_skbuff;
+diff --git a/drivers/soc/fsl/qe/ucc_slow.c b/drivers/soc/fsl/qe/ucc_slow.c
+index 9b55fd0f50c6..274d34449846 100644
+--- a/drivers/soc/fsl/qe/ucc_slow.c
++++ b/drivers/soc/fsl/qe/ucc_slow.c
+@@ -154,6 +154,9 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
+ 			__func__);
+ 		return -ENOMEM;
  	}
++	uccs->rx_base_offset = -1;
++	uccs->tx_base_offset = -1;
++	uccs->us_pram_offset = -1;
  
- 	tiptr = qe_muram_alloc(32, 32);
--	if (IS_ERR_VALUE(tiptr)) {
-+	if (tiptr < 0) {
- 		dev_err(priv->dev, "Cannot allocate MURAM mem for Transmit internal temp data pointer\n");
- 		ret = -ENOMEM;
- 		goto free_riptr;
-diff --git a/drivers/net/wan/fsl_ucc_hdlc.h b/drivers/net/wan/fsl_ucc_hdlc.h
-index 8b3507ae1781..71d5ad0a7b98 100644
---- a/drivers/net/wan/fsl_ucc_hdlc.h
-+++ b/drivers/net/wan/fsl_ucc_hdlc.h
-@@ -98,7 +98,7 @@ struct ucc_hdlc_private {
+ 	/* Fill slow UCC structure */
+ 	uccs->us_info = us_info;
+@@ -179,7 +182,7 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
+ 	/* Get PRAM base */
+ 	uccs->us_pram_offset =
+ 		qe_muram_alloc(UCC_SLOW_PRAM_SIZE, ALIGNMENT_OF_UCC_SLOW_PRAM);
+-	if (IS_ERR_VALUE(uccs->us_pram_offset)) {
++	if (uccs->us_pram_offset < 0) {
+ 		printk(KERN_ERR "%s: cannot allocate MURAM for PRAM", __func__);
+ 		ucc_slow_free(uccs);
+ 		return -ENOMEM;
+@@ -206,10 +209,9 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
+ 	uccs->rx_base_offset =
+ 		qe_muram_alloc(us_info->rx_bd_ring_len * sizeof(struct qe_bd),
+ 				QE_ALIGNMENT_OF_BD);
+-	if (IS_ERR_VALUE(uccs->rx_base_offset)) {
++	if (uccs->rx_base_offset < 0) {
+ 		printk(KERN_ERR "%s: cannot allocate %u RX BDs\n", __func__,
+ 			us_info->rx_bd_ring_len);
+-		uccs->rx_base_offset = 0;
+ 		ucc_slow_free(uccs);
+ 		return -ENOMEM;
+ 	}
+@@ -217,9 +219,8 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
+ 	uccs->tx_base_offset =
+ 		qe_muram_alloc(us_info->tx_bd_ring_len * sizeof(struct qe_bd),
+ 			QE_ALIGNMENT_OF_BD);
+-	if (IS_ERR_VALUE(uccs->tx_base_offset)) {
++	if (uccs->tx_base_offset < 0) {
+ 		printk(KERN_ERR "%s: cannot allocate TX BDs", __func__);
+-		uccs->tx_base_offset = 0;
+ 		ucc_slow_free(uccs);
+ 		return -ENOMEM;
+ 	}
+@@ -352,14 +353,9 @@ void ucc_slow_free(struct ucc_slow_private * uccs)
+ 	if (!uccs)
+ 		return;
  
- 	unsigned short tx_ring_size;
- 	unsigned short rx_ring_size;
--	u32 ucc_pram_offset;
-+	s32 ucc_pram_offset;
+-	if (uccs->rx_base_offset)
+-		qe_muram_free(uccs->rx_base_offset);
+-
+-	if (uccs->tx_base_offset)
+-		qe_muram_free(uccs->tx_base_offset);
+-
+-	if (uccs->us_pram)
+-		qe_muram_free(uccs->us_pram_offset);
++	qe_muram_free(uccs->rx_base_offset);
++	qe_muram_free(uccs->tx_base_offset);
++	qe_muram_free(uccs->us_pram_offset);
  
- 	unsigned short encoding;
- 	unsigned short parity;
+ 	if (uccs->us_regs)
+ 		iounmap(uccs->us_regs);
+diff --git a/include/soc/fsl/qe/ucc_slow.h b/include/soc/fsl/qe/ucc_slow.h
+index 8696fdea2ae9..d187a6be83bc 100644
+--- a/include/soc/fsl/qe/ucc_slow.h
++++ b/include/soc/fsl/qe/ucc_slow.h
+@@ -185,7 +185,7 @@ struct ucc_slow_private {
+ 	struct ucc_slow_info *us_info;
+ 	struct ucc_slow __iomem *us_regs; /* Ptr to memory map of UCC regs */
+ 	struct ucc_slow_pram *us_pram;	/* a pointer to the parameter RAM */
+-	u32 us_pram_offset;
++	s32 us_pram_offset;
+ 	int enabled_tx;		/* Whether channel is enabled for Tx (ENT) */
+ 	int enabled_rx;		/* Whether channel is enabled for Rx (ENR) */
+ 	int stopped_tx;		/* Whether channel has been stopped for Tx
+@@ -194,8 +194,8 @@ struct ucc_slow_private {
+ 	struct list_head confQ;	/* frames passed to chip waiting for tx */
+ 	u32 first_tx_bd_mask;	/* mask is used in Tx routine to save status
+ 				   and length for first BD in a frame */
+-	u32 tx_base_offset;	/* first BD in Tx BD table offset (In MURAM) */
+-	u32 rx_base_offset;	/* first BD in Rx BD table offset (In MURAM) */
++	s32 tx_base_offset;	/* first BD in Tx BD table offset (In MURAM) */
++	s32 rx_base_offset;	/* first BD in Rx BD table offset (In MURAM) */
+ 	struct qe_bd *confBd;	/* next BD for confirm after Tx */
+ 	struct qe_bd *tx_bd;	/* next BD for new Tx request */
+ 	struct qe_bd *rx_bd;	/* next BD to collect after Rx */
 -- 
 2.23.0
 
