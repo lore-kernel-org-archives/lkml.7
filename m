@@ -2,151 +2,185 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67300C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC70C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2E0215F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:27:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="FCyCsZzP"
+	by mail.kernel.org (Postfix) with ESMTP id 00E23215F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfK1D1w (ORCPT
+        id S1727361AbfK1DdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 22:27:52 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25878 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbfK1D1w (ORCPT
+        Wed, 27 Nov 2019 22:33:17 -0500
+Received: from mo-csw1515.securemx.jp ([210.130.202.154]:36624 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727228AbfK1DdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 22:27:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574911629; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=SBgDnXauIGwMG/V3rh54/4hIICTGALqafTOQyTN5jT/ztfk4LnfHp3ni0PQ4YugvLb4j+uDt/NA/aD7DrMYi6n4h0ktCjyxTPmXVlsHgp1+xo4055xix3nn96YiCQm0IbOOsLEKJdhnU5m12G7p/3ljjlD7HoLLy87Ja1xMlUJo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574911629; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=2kXngwStwb77hgVkiYty+9VogGIhnRmmO+0aZj/j2Pw=; 
-        b=oBF8iA5I3dgw8hdbjjLvBoOmy+mvKPY7nnGWqozry2ImTnVv+KbhzStTErufcVoocBTXFiqoQ/U3DkXSoudb6zk73VmTfvccyPsUByPnC5UJAnK8SgRYIfEBggpl0icBRLih9Yf2rU8PHNDhixwPwV5/i6hLSDatR1sgEabYdok=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=jsuc/yQzIANxqCDQWoGtmfpWcSw3cLnu4Qih+yV4ilYpQSi1QSyWHgeGUcRT9UNYmIDOcKAfg7T4
-    4Opn16zsro+W+TjtjAdS8B5vF6JPK9diNJ2qHFzpdXQ76jBEcW8B  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574911629;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=2kXngwStwb77hgVkiYty+9VogGIhnRmmO+0aZj/j2Pw=;
-        b=FCyCsZzPB7tCWlH+awogkr2tMlOc7TtkpJQfF6VGPpkMnkuj4uRzu7V/pu2NjjQ3
-        XvcZN9FJ4whrlFh8u0LJV86kXSiH3r5nOyzMX1fsLKwqi3yvc7ztHNZBWGCbVQ1qmEU
-        7dVMDx57ErP4dUbOauNGVX+gqOOqooRuWRKPxd3I=
-Received: from [192.168.88.130] (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
-        with SMTPS id 1574911628677616.8260073790145; Wed, 27 Nov 2019 19:27:08 -0800 (PST)
-Subject: Re: [PATCH v4 5/6] MIPS: X1000: Add pdma controller DT node.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
- <1574787974-58040-6-git-send-email-zhouyanjie@zoho.com>
- <1574873298.3.0@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DDF3E81.2060502@zoho.com>
-Date:   Thu, 28 Nov 2019 11:26:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Wed, 27 Nov 2019 22:33:16 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1515) id xAS3X6ob005472; Thu, 28 Nov 2019 12:33:06 +0900
+X-Iguazu-Qid: 34trMIO5KQudw3XypG
+X-Iguazu-QSIG: v=2; s=0; t=1574911986; q=34trMIO5KQudw3XypG; m=TQwososeHkYd8YPQcmO3nAFvyvjdHxKubdsnV5Ex9r8=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1510) id xAS3X4IG034859;
+        Thu, 28 Nov 2019 12:33:05 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id xAS3X4FH013494;
+        Thu, 28 Nov 2019 12:33:04 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id xAS3X4Sr028371;
+        Thu, 28 Nov 2019 12:33:04 +0900
+Date:   Thu, 28 Nov 2019 12:33:02 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>
+Subject: Re: [PATCH 4.19 282/306] net-sysfs: Fix reference count leak in
+ rx|netdev_queue_add_kobject
+X-TSB-HOP: ON
+Message-ID: <20191128033302.riq5c55kt7mre3vw@toshiba.co.jp>
+References: <20191127203114.766709977@linuxfoundation.org>
+ <20191127203135.382666831@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <1574873298.3.0@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127203135.382666831@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hi,
 
-On 2019=E5=B9=B411=E6=9C=8828=E6=97=A5 00:48, Paul Cercueil wrote:
-> Hi Zhou,
->
->
-> Le mer., nov. 27, 2019 at 01:06, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-> =C3=A9crit :
->> Add the appropriate DT node to probe the pdma controller driver
->> using the devicetree.
->>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>
->> Notes:
->>     v4:
->>     New patch.
->>
->>  arch/mips/boot/dts/ingenic/x1000.dtsi | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
->> b/arch/mips/boot/dts/ingenic/x1000.dtsi
->> index 9e55edd..edfa70d 100644
->> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
->> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
->> @@ -1,5 +1,6 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  #include <dt-bindings/clock/x1000-cgu.h>
->> +#include <dt-bindings/dma/x1000-dma.h>
->
-> You're not using any macro from that include file, so there's no need=20
-> to have it here.
->
+On Wed, Nov 27, 2019 at 09:32:12PM +0100, Greg Kroah-Hartman wrote:
+> From: Jouni Hogander <jouni.hogander@unikie.com>
+> 
+> commit b8eb718348b8fb30b5a7d0a8fce26fb3f4ac741b upstream.
+> 
+> kobject_init_and_add takes reference even when it fails. This has
+> to be given up by the caller in error handling. Otherwise memory
+> allocated by kobject_init_and_add is never freed. Originally found
+> by Syzkaller:
+> 
+> BUG: memory leak
+> unreferenced object 0xffff8880679f8b08 (size 8):
+>   comm "netdev_register", pid 269, jiffies 4294693094 (age 12.132s)
+>   hex dump (first 8 bytes):
+>     72 78 2d 30 00 36 20 d4                          rx-0.6 .
+>   backtrace:
+>     [<000000008c93818e>] __kmalloc_track_caller+0x16e/0x290
+>     [<000000001f2e4e49>] kvasprintf+0xb1/0x140
+>     [<000000007f313394>] kvasprintf_const+0x56/0x160
+>     [<00000000aeca11c8>] kobject_set_name_vargs+0x5b/0x140
+>     [<0000000073a0367c>] kobject_init_and_add+0xd8/0x170
+>     [<0000000088838e4b>] net_rx_queue_update_kobjects+0x152/0x560
+>     [<000000006be5f104>] netdev_register_kobject+0x210/0x380
+>     [<00000000e31dab9d>] register_netdevice+0xa1b/0xf00
+>     [<00000000f68b2465>] __tun_chr_ioctl+0x20d5/0x3dd0
+>     [<000000004c50599f>] tun_chr_ioctl+0x2f/0x40
+>     [<00000000bbd4c317>] do_vfs_ioctl+0x1c7/0x1510
+>     [<00000000d4c59e8f>] ksys_ioctl+0x99/0xb0
+>     [<00000000946aea81>] __x64_sys_ioctl+0x78/0xb0
+>     [<0000000038d946e5>] do_syscall_64+0x16f/0x580
+>     [<00000000e0aa5d8f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>     [<00000000285b3d1a>] 0xffffffffffffffff
+> 
+> Cc: David Miller <davem@davemloft.net>
+> Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
 
-Sure, I will fix this in v7.
+We also need the following commits to fix this issue:
 
-Thanks and best regards!
+commit 48a322b6f9965b2f1e4ce81af972f0e287b07ed0
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Wed Nov 20 19:19:07 2019 -0800
 
-> Cheers,
-> -Paul
->
->
->>
->>  / {
->>      #address-cells =3D <1>;
->> @@ -173,4 +174,16 @@
->>
->>          status =3D "disabled";
->>      };
->> +
->> +    pdma: dma-controller@13420000 {
->> +        compatible =3D "ingenic,x1000-dma";
->> +        reg =3D <0x13420000 0x400
->> +               0x13421000 0x40>;
->> +        #dma-cells =3D <2>;
->> +
->> +        interrupt-parent =3D <&intc>;
->> +        interrupts =3D <10>;
->> +
->> +        clocks =3D <&cgu X1000_CLK_PDMA>;
->> +    };
->>  };
->> --=20
->> 2.7.4
->>
->>
->
->
+    net-sysfs: fix netdev_queue_add_kobject() breakage
+
+    kobject_put() should only be called in error path.
+
+    Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject")
+    Signed-off-by: Eric Dumazet <edumazet@google.com>
+    Cc: Jouni Hogander <jouni.hogander@unikie.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+And this should also apply to 4.14.y and 5.3.y.
+Please apply this commnit to 4.14.y, 4.19.y and 5.3.y
+
+Best regards,
+  Nobuhiro
 
 
-
+> ---
+>  net/core/net-sysfs.c |   24 +++++++++++++-----------
+>  1 file changed, 13 insertions(+), 11 deletions(-)
+> 
+> --- a/net/core/net-sysfs.c
+> +++ b/net/core/net-sysfs.c
+> @@ -932,21 +932,23 @@ static int rx_queue_add_kobject(struct n
+>  	error = kobject_init_and_add(kobj, &rx_queue_ktype, NULL,
+>  				     "rx-%u", index);
+>  	if (error)
+> -		return error;
+> +		goto err;
+>  
+>  	dev_hold(queue->dev);
+>  
+>  	if (dev->sysfs_rx_queue_group) {
+>  		error = sysfs_create_group(kobj, dev->sysfs_rx_queue_group);
+> -		if (error) {
+> -			kobject_put(kobj);
+> -			return error;
+> -		}
+> +		if (error)
+> +			goto err;
+>  	}
+>  
+>  	kobject_uevent(kobj, KOBJ_ADD);
+>  
+>  	return error;
+> +
+> +err:
+> +	kobject_put(kobj);
+> +	return error;
+>  }
+>  #endif /* CONFIG_SYSFS */
+>  
+> @@ -1471,21 +1473,21 @@ static int netdev_queue_add_kobject(stru
+>  	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
+>  				     "tx-%u", index);
+>  	if (error)
+> -		return error;
+> +		goto err;
+>  
+>  	dev_hold(queue->dev);
+>  
+>  #ifdef CONFIG_BQL
+>  	error = sysfs_create_group(kobj, &dql_group);
+> -	if (error) {
+> -		kobject_put(kobj);
+> -		return error;
+> -	}
+> +	if (error)
+> +		goto err;
+>  #endif
+>  
+>  	kobject_uevent(kobj, KOBJ_ADD);
+>  
+> -	return 0;
+> +err:
+> +	kobject_put(kobj);
+> +	return error;
+>  }
+>  #endif /* CONFIG_SYSFS */
+>  
+> 
+> 
+> 
