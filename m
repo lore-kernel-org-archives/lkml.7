@@ -2,125 +2,152 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F01C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7F6C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B072D21555
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7253A21555
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6pj5RYG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QshOovUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfK1Ab4 (ORCPT
+        id S1727218AbfK1Ad1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 19:31:56 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39192 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfK1Ab4 (ORCPT
+        Wed, 27 Nov 2019 19:33:27 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43841 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbfK1Ad1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 19:31:56 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e10so17291166ljj.6;
-        Wed, 27 Nov 2019 16:31:54 -0800 (PST)
+        Wed, 27 Nov 2019 19:33:27 -0500
+Received: by mail-ot1-f66.google.com with SMTP id l14so20714179oti.10
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 16:33:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=brQGdUxSSCA2qoufKtwecSuCiVuN/4tEwRhfBe6lmOo=;
-        b=E6pj5RYGJzxqrgP8rezjlVU5GiydmUWCItzBfy3b7wB/D79TsyKS+0pavZ1yLhuYeA
-         hbUEgAekrVAE+NfU8dnO/4GthJClqM8kgUCJOnwGuuDbtEE2BTbfPTzbNRFOX0X2q1ci
-         9TpYYk5jZB4f+G/jgrUNgVH9wZrBNicCD5HD2KMG+QwskQkhrezLEvHCjkwRZtCEMsFj
-         bnGBBsvb7nfXqV+p/Z3s5+R/VFfcxTy2tSMQWCgl50nzFADzOMZVS3yVBmsd9bAuzVXf
-         zWtxTO54GEW/tVOfPfzB22ugL4PS6+maFL6rl0dESNSLKJmWRF9ExoEtUKfid7DiN/aw
-         hF9w==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eBgl7IWFbAHYtCfwdXLuSMLWEguEG/dbDeqB2MJbK2k=;
+        b=QshOovUWthIqNFsT2YJCKBP1tF4y12XbFarYrmSV5KFvwfrFOuDNEtU8X8hBqyTNjM
+         0n0LvpLgeSOsBnCxR8XVYTKjgd63lj/QiW03wklwb9Pi4TOOFvNB0SsBxUZ9G+ojVFcZ
+         hK3qWu71xk2BupXpLm52soK9NB2g7aYzM5fcRXSQ5vEGDGhqP8mRvDjSrc6YXeDOlNkH
+         5pcy2RduEYp4s36tG389w6+pUTxt5eEanyGqbkwjULEZecaU+vJBe4Dz8YOfC3Df088c
+         i91EhfO8HyJtOxhL8xTfPVBt8N1zpWbf0olehu+oBSYqy8kvOxf7l0d42Cvd+Ita7y1t
+         Lg7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=brQGdUxSSCA2qoufKtwecSuCiVuN/4tEwRhfBe6lmOo=;
-        b=Waf1U27IRt7dv/RumKtCTVIt2JR2ixbsAiyo+O6EZNZW/FRYdU3/6T7UKSKl3mQIWD
-         QQ1l6bwZjJc1/9xOfgdEB+8o9deE+Qevuy1nPsXMsJ2MbLKVE1dt8GRjcrzKLqJeK57m
-         MlU3GaZWEU969j6CmoOonLbSTNBEggc71NjdrXZfncvbxTrkbqKcM3V0bXXLS7X5JmQh
-         4DYckWRJ3aJqLuLT/B00bEUr16cnXem/D9Nh8Gt7LnB1rzE89Zot66RyMpF4vU6endak
-         GQpdXW9E44hqzB0llZLD0epJwEfuvOqCDOLobKAd5taZ3jhDM8+zfKm23keRUk4yW9a/
-         ibQg==
-X-Gm-Message-State: APjAAAU4cBBEeb5VAapHs6AC0UeY9ppV9dqhNpla4HHwiixsmTydn98x
-        FWOduWyqqwuRXx4APuNOd1N8wjSc7qora/zs6dM=
-X-Google-Smtp-Source: APXvYqx5pjwO5jJzjfHPldQzZUKqIMyttQRfIJgn4Efx8cM5CC+kH93tbguHf8bU5sNE6wsUZe29GWiy9WguTVnf8jQ=
-X-Received: by 2002:a2e:b5b8:: with SMTP id f24mr31738677ljn.188.1574901113946;
- Wed, 27 Nov 2019 16:31:53 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eBgl7IWFbAHYtCfwdXLuSMLWEguEG/dbDeqB2MJbK2k=;
+        b=NEPtzImJahsuuBCHBCsXQx9fcRVLqvq9MKp3f3hrgzaXMCwn0zT4hOMXq8AfDmJ8+P
+         ujm9QBudelzos7dR81EYbhP4w/lvdcd5Kyb+0+Hz1g8mgD5urw3swPhFDMXjH7YfzZIV
+         8j1LeKuP4e/iBPw9MJ3cyJcMJCSEJGCvrRCBQpzVdF74608vuaR+5xb+UcFNEpxxOMVO
+         BoO2I5CC230pZ5UrdJCFw+3PwPBgBO9pAwCZHLo7Gh3UqXZ0JAkYL5NYcTgaRs4efJa8
+         gVJ7ow6oJOL7wVTrhRJl1Q5E38oqHuNUKUzinhFpXC7VTsTOwsNC2mSZu/+WnqtAYejD
+         7VlA==
+X-Gm-Message-State: APjAAAXM9dvdEMf/lQrFhtFQLn3r98G8025h9AaLvr8TRelv+V8KQqVl
+        4JZ4ifbczBp13d8Jg2mJ8aaFSBiD
+X-Google-Smtp-Source: APXvYqwIwse1AEa5mB3eWdhNqyckjWvBVpEw65GBmrefSM/TMsbMwE+58pTe87YUUD6+vjPVh5nkKg==
+X-Received: by 2002:a9d:739a:: with SMTP id j26mr5713049otk.40.1574901205522;
+        Wed, 27 Nov 2019 16:33:25 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 94sm5475523otx.3.2019.11.27.16.33.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Nov 2019 16:33:24 -0800 (PST)
+Subject: Re: [PATCH] driver core: Fix test_async_driver_probe if NUMA is
+ disabled
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20191127202453.28087-1-linux@roeck-us.net>
+ <4a2aa8554933c2d004761d5f3e8132018be5ea27.camel@linux.intel.com>
+ <377feb00-9288-e03c-b8a7-26ba87e24927@roeck-us.net>
+ <b5826338cd4479b724835ea5469c5a8318e88e2c.camel@linux.intel.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <dfc50096-d95f-8e57-4ba2-3fc122626af8@roeck-us.net>
+Date:   Wed, 27 Nov 2019 16:33:23 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <87imn6y4n9.fsf@toke.dk> <20191126183451.GC29071@kernel.org>
- <87d0dexyij.fsf@toke.dk> <20191126190450.GD29071@kernel.org>
- <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
- <20191126221018.GA22719@kernel.org> <20191126221733.GB22719@kernel.org>
- <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
- <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net> <20191126155228.0e6ed54c@cakuba.netronome.com>
- <20191127013901.GE29071@kernel.org>
-In-Reply-To: <20191127013901.GE29071@kernel.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 27 Nov 2019 16:31:41 -0800
-Message-ID: <CAADnVQJCMpke49NNzy33EKdwpW+SY1orTm+0f0b-JuW8+uA7Yw@mail.gmail.com>
-Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b5826338cd4479b724835ea5469c5a8318e88e2c.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 5:39 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Tue, Nov 26, 2019 at 03:52:28PM -0800, Jakub Kicinski escreveu:
-> > On Tue, 26 Nov 2019 15:10:30 -0800, Stanislav Fomichev wrote:
-> > > We are using this script with python2.7, works just fine :-)
-> > > So maybe doing s/python3/python/ is the way to go, whatever
-> > > default python is installed, it should work with that.
->
-> > That increases the risk someone will make a python2-only change
-> > and break Python 3.
->
-> > Python 2 is dead, I'm honestly surprised this needs to be said :)
->
-> It shouldn't have to be said, and probably it is old school to try and
-> keep things portable when there is no need to use new stuff for simple
-> tasks like this.
->
-> Anyway, it seems its just a matter of adding the python3 package to the
-> old container images and then most of them will work with what is in
-> that script, what doesn't work is really old and then NO_LIBBPF=1 is the
-> way to go.
->
-> In the end, kinda nothing to see here, go back to adding cool new stuff,
-> lets not hold eBPF from progressing ;-P
+On 11/27/19 3:13 PM, Alexander Duyck wrote:
+> On Wed, 2019-11-27 at 14:42 -0800, Guenter Roeck wrote:
+>> On 11/27/19 1:24 PM, Alexander Duyck wrote:
+>>> On Wed, 2019-11-27 at 12:24 -0800, Guenter Roeck wrote:
+>>>> Since commit 57ea974fb871 ("driver core: Rewrite test_async_driver_probe
+>>>> to cover serialization and NUMA affinity"), running the test with NUMA
+>>>> disabled results in warning messages similar to the following.
+>>>>
+>>>> test_async_driver test_async_driver.12: NUMA node mismatch -1 != 0
+>>>>
+>>>> If CONFIG_NUMA=n, dev_to_node(dev) returns -1, and numa_node_id()
+>>>> returns 0. Both are widely used, so it appears risky to change return
+>>>> values. Augment the check with IS_ENABLED(CONFIG_NUMA) instead
+>>>> to fix the problem.
+>>>>
+>>>> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>>> Fixes: 57ea974fb871 ("driver core: Rewrite test_async_driver_probe to cover serialization and NUMA affinity")
+>>>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>>>> ---
+>>>>    drivers/base/test/test_async_driver_probe.c | 3 ++-
+>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/base/test/test_async_driver_probe.c b/drivers/base/test/test_async_driver_probe.c
+>>>> index f4b1d8e54daf..3bb7beb127a9 100644
+>>>> --- a/drivers/base/test/test_async_driver_probe.c
+>>>> +++ b/drivers/base/test/test_async_driver_probe.c
+>>>> @@ -44,7 +44,8 @@ static int test_probe(struct platform_device *pdev)
+>>>>    	 * performing an async init on that node.
+>>>>    	 */
+>>>>    	if (dev->driver->probe_type == PROBE_PREFER_ASYNCHRONOUS) {
+>>>> -		if (dev_to_node(dev) != numa_node_id()) {
+>>>> +		if (IS_ENABLED(CONFIG_NUMA) &&
+>>>> +		    dev_to_node(dev) != numa_node_id()) {
+>>>>    			dev_warn(dev, "NUMA node mismatch %d != %d\n",
+>>>>    				 dev_to_node(dev), numa_node_id());
+>>>>    			atomic_inc(&warnings);
+>>>
+>>> I'm not sure that is really the correct fix. It might be better to test it
+>>> against NUMA_NO_NODE and then if it is not that make sure that it matches
+>>> the node ID. Adding the check against NUMA_NO_NODE would resolve the issue
+>>> for cases where the device might be assigned to multiple NUMA nodes.
+>>>
+>> I think you are suggesting that dev_to_node(dev) might return NUMA_NO_NODE
+>> even on systems with CONFIG_NUMA enabled. I have no idea if that can happen.
+>> The code in test_async_probe_init() seems to suggest that the node is set
+>> to a valid node id for all asynchronous nodes, so I don't immediately see
+>> how that could be the case. I may be missing something, of course.
+> 
+> Well thinking back to the Nehalem architecture I seem to recall that there
+> were devices that were connected to a shared IOH that was accessible
+> across both nodes. I thought that they might have a node ID of
+> NUMA_NO_NODE since they didn't really belong to either of the two nodes in
+> the sytem.
+> 
+> It would effectively work out the same as your patch compiler wise since
+> dev_to_node would be NUMA_NO_NODE in the non-NUMA case so it would compile
+> out the warning since it would fail the first check, and in the NUMA case
+> it would add an extra check to make sure that dev_to_node is actually
+> indicating the device needs a specific node in the NUMA enabled case.
+> 
 
-Absolutely. I think if some distro is still using 32-bit userland it's likely
-so much behind anything modern that its kernel is equally old too
-and appeal of new features (bpf or anything else) is probably low.
-So if I were you I would keep 32-bit builds of perf supported, but with
-minimal effort.
+I thought the code is specifically checking devices which it previously
+created, which are well defined and understood test devices. After all,
+the check is in the test driver's probe function. Guess I really don't
+understand the code. Please take my patch as bug report, and submit
+whatever fix you think is correct.
 
-Re: patch itself.
-I can take it as-is into bpf tree and it will be in Linus's tree in few days.
-Or I can take only tools/lib/bpf/Makefile hunk and you can take
-tools/perf/MANIFEST via perf tree?
-Whichever way is fine.
+Thanks,
+Guenter
