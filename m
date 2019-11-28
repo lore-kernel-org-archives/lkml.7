@@ -2,156 +2,126 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB50C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A411C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CA621741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF1C21775
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ulsUpUUe"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FaLrypxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfK1Kqc (ORCPT
+        id S1726764AbfK1Krk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:46:32 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35234 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfK1Kqb (ORCPT
+        Thu, 28 Nov 2019 05:47:40 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58016 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfK1Krk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:46:31 -0500
-Received: by mail-oi1-f196.google.com with SMTP id k196so6568879oib.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 02:46:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GQPDbYqNRXSh6PXhx4akn8aIavTIr5uskPQRjgpyFfM=;
-        b=ulsUpUUeLrxyO7qJDpjeMfLgZ7felgad/9o65ulMzMSfCJXi362CB75AlAmIIKGN9e
-         Pqt4YLmVeoEYaHUPDqyGzJGkyq33EPXwmhce31kVSamztL2pniW5LsuRGbBPCYfBbYB1
-         ID1L77YEHHCI5PIhtLb2SW2CwTHuWfdmZvyNpi+pGfpoMSitLqV+u0IypsSMA5Co/ZzD
-         2H/N8EnPxZMHvz+cCgoXvmgV707+s1DuDfkSAGrvlEt6I24tUzOwfu/q5/74d7dXg/8s
-         7xrPw1MbkMYW9Tz+JGo6sZCBl8h//JMyctHR7TyMu5PpIeDG85b5PfPkJe4RQtZ0azkO
-         ndvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GQPDbYqNRXSh6PXhx4akn8aIavTIr5uskPQRjgpyFfM=;
-        b=BNJCKI9UpmKypyODEEKbdLzTTMqJNM3v8ewHz7JgnLELLiNngwuEq5OJABI78D/Ikt
-         gU0Y14SisQI6msliPqYKySRnd2As7ArU3hG/fD/FB5XqtSEdJjScxJl2QyCiFYjOdYDA
-         6CFGbmqPdUN9rfAuReDdTzlIo9iRT8oR/pMah52pWylRgxdFc4wV2KWNIvaqQ5wqe6sF
-         YJnYJO13YGFkiUTY/RMiic+oyaj0sk0p4/KukS7ixTK73qPFWtG+LkZ/5KIH+EllbiYW
-         TMp7xV+m7+VfFB4W6EZB3znkiINbK/CF7FC0m0xTQlzrOHRo/QdEPhWsaZ8tqWS3rXYy
-         B3xQ==
-X-Gm-Message-State: APjAAAXzohUL1sdEHZE09n+KcRGvV4/ciyHY8XsAVi4kNOC/ou4R7aR1
-        RWJShJ5is2wBmf9B8KviaOEBmwNHR1AR/vEcj91LP2lA
-X-Google-Smtp-Source: APXvYqwgKWuNM3AaDjBIBvZISOlC0kMprIi47NTQkQds/weaknlkiS0CWm8bJ/afikYUhzQgCjXdlqD4YK1bVJEH0Xo=
-X-Received: by 2002:aca:4756:: with SMTP id u83mr8054092oia.147.1574937989831;
- Thu, 28 Nov 2019 02:46:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127135932.7223-1-m.felsch@pengutronix.de> <20191127135932.7223-2-m.felsch@pengutronix.de>
-In-Reply-To: <20191127135932.7223-2-m.felsch@pengutronix.de>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 28 Nov 2019 11:46:19 +0100
-Message-ID: <CAMpxmJXzBphmW7SWD05wtLjSAR7VBzVAgnYJYd3Sd49Bp6AmgQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] gpio: add support to get local gpio number
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        Thu, 28 Nov 2019 05:47:40 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAlarG096661;
+        Thu, 28 Nov 2019 04:47:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574938056;
+        bh=eKSU4P9KuQJ/Do7x57Iah14M9xnEYTaNHRuLpboeRuc=;
+        h=From:To:CC:Subject:Date;
+        b=FaLrypxIqB8k7gWSrE28fq6fjmJToxV1Uayoe3XvvTov8R7neFPcB1W1/PgUpPkS0
+         mAZTmfu77ZbysAOMBNz4/LpsoMiwN1nKMb5He+fm65W4EZR4U0ENEsYhOJ2YvasO5u
+         UirB8pRsa1rAr02K0kh58CSX5yPEZerUJvHxbgSc=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASAlaO6126286
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 Nov 2019 04:47:36 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
+ Nov 2019 04:47:36 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 28 Nov 2019 04:47:36 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAlX3v098163;
+        Thu, 28 Nov 2019 04:47:33 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Adam.Thomson.Opensource@diasemi.com,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Anil Varughese <aniljoy@cadence.com>,
+        Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v3 00/14] PHY: Add support for SERDES in TI's J721E SoC
+Date:   Thu, 28 Nov 2019 16:16:34 +0530
+Message-ID: <20191128104648.21894-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 27 lis 2019 o 14:59 Marco Felsch <m.felsch@pengutronix.de> napisa=
-=C5=82(a):
->
-> Sometimes consumers needs to know the gpio-chip local gpio number of a
-> 'struct gpio_desc' for further configuration. This is often the case for
-> mfd devices.
->
+TI's J721E SoC uses Cadence Sierra SERDES for USB, PCIe and SGMII.
+TI has a wrapper named WIZ to control input signals to Sierra and
+Torrent SERDES.
 
-We already have this support. It's just a matter of exporting it, so
-maybe adjust the commit message to not be confusing.
+This patch series:
+ 1) Add support to WIZ module present in TI's J721E SoC
+ 2) Adapt Cadence Sierra PHY driver to be used for J721E SoC
 
-That being said: I'm not really a fan of this - the whole idea of gpio
-descriptors was to make them opaque and their hardware offsets
-irrelevant. :(
+Changes from v2:
+ *) Deprecate "phy_clk" binding
+ *) Fix Rob's comment on dt bindings
+        -> Include BSD-2-Clause license identifier
+        -> drop "oneOf" and "items" for compatible
+        -> Fixed "num-lanes" to include only scalar keywords
+        -> Change to 32-bit address space for child nodes
+*) Rename cmn_refclk/cmn_refclk1 to cmn_refclk_dig_div/
+   cmn_refclk1_dig_div
 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->  drivers/gpio/gpiolib.c        |  6 ++++++
->  include/linux/gpio/consumer.h | 10 ++++++++++
->  2 files changed, 16 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 104ed299d5ea..7709648313fc 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -4377,6 +4377,12 @@ int gpiod_count(struct device *dev, const char *co=
-n_id)
->  }
->  EXPORT_SYMBOL_GPL(gpiod_count);
->
-> +int gpiod_to_offset(struct gpio_desc *desc)
+Changes from v1:
+ *) Change the dt binding Documentation of WIZ wrapper to YAML format
+ *) Fix an issue in Sierra while doimg rmmod
 
-Maybe call it: gpiod_desc_to_offset()?
+Anil Varughese (1):
+  phy: cadence: Sierra: Configure both lane cdb and common cdb registers
+    for external SSC
 
-> +{
-> +       return gpio_chip_hwgpio(desc);
-> +}
-> +EXPORT_SYMBOL_GPL(gpiod_to_offset);
-> +
->  /**
->   * gpiod_get - obtain a GPIO for a given GPIO function
->   * @dev:       GPIO consumer, can be NULL for system-global GPIOs
-> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.=
-h
-> index b70af921c614..e2178c3bf7fd 100644
-> --- a/include/linux/gpio/consumer.h
-> +++ b/include/linux/gpio/consumer.h
-> @@ -60,6 +60,9 @@ enum gpiod_flags {
->  /* Return the number of GPIOs associated with a device / function */
->  int gpiod_count(struct device *dev, const char *con_id);
->
-> +/* Get the local chip offset from a global desc */
-> +int gpiod_to_offset(struct gpio_desc *desc);
-> +
->  /* Acquire and dispose GPIOs */
->  struct gpio_desc *__must_check gpiod_get(struct device *dev,
->                                          const char *con_id,
-> @@ -189,6 +192,13 @@ static inline int gpiod_count(struct device *dev, co=
-nst char *con_id)
->         return 0;
->  }
->
-> +static inline int gpiod_to_offset(struct gpio_desc *desc)
-> +{
-> +       /* GPIO can never have been requested */
-> +       WARN_ON(desc);
-> +       return 0;
-> +}
-> +
->  static inline struct gpio_desc *__must_check gpiod_get(struct device *de=
-v,
->                                                        const char *con_id=
-,
->                                                        enum gpiod_flags f=
-lags)
-> --
-> 2.20.1
->
+Kishon Vijay Abraham I (13):
+  dt-bindings: phy: Sierra: Add bindings for Sierra in TI's J721E
+  phy: cadence: Sierra: Make "phy_clk" and "sierra_apb" optional
+    resources
+  phy: cadence: Sierra: Use "regmap" for read and write to Sierra
+    registers
+  phy: cadence: Sierra: Add support for SERDES_16G used in J721E SoC
+  phy: cadence: Sierra: Make cdns_sierra_phy_init() as phy_ops
+  phy: cadence: Sierra: Modify register macro names to be in sync with
+    Sierra user guide
+  phy: cadence: Sierra: Get reset control "array" for each link
+  phy: cadence: Sierra: Check for PLL lock during PHY power on
+  phy: cadence: Sierra: Change MAX_LANES of Sierra to 16
+  phy: cadence: Sierra: Set cmn_refclk_dig_div/cmn_refclk1_dig_div
+    frequency to 25MHz
+  phy: cadence: Sierra: Use correct dev pointer in
+    cdns_sierra_phy_remove()
+  dt-bindings: phy: Document WIZ (SERDES wrapper) bindings
+  phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC
+
+ .../bindings/phy/phy-cadence-sierra.txt       |  13 +-
+ .../bindings/phy/ti,phy-j721e-wiz.yaml        | 158 +++
+ drivers/phy/cadence/phy-cadence-sierra.c      | 699 +++++++++++---
+ drivers/phy/ti/Kconfig                        |  15 +
+ drivers/phy/ti/Makefile                       |   1 +
+ drivers/phy/ti/phy-j721e-wiz.c                | 904 ++++++++++++++++++
+ 6 files changed, 1651 insertions(+), 139 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+ create mode 100644 drivers/phy/ti/phy-j721e-wiz.c
+
+-- 
+2.17.1
+
