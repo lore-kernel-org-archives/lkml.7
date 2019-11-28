@@ -2,340 +2,98 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D715DC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1545221781
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5FF21781
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:39:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g4pwOX2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfK1Ljq (ORCPT
+        id S1726773AbfK1Ljp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:39:46 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:28884 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726296AbfK1Ljo (ORCPT
+        Thu, 28 Nov 2019 06:39:45 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31375 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726320AbfK1Ljm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:39:44 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 28 Nov 2019 17:03:32 +0530
-IronPort-SDR: qaAwLWiBhTycdIgQjI1VRac2sYSm3bP8PCucdsT0URiY8D5xaa2Ar9Yder4aHsP1mARgJ42LU0
- kupfEYpqVykBQ58JOBuoTT2XAxXxkgNjc1mWGvrO/8e1+0+P/K397ZiIZvm99LubwMvGaFaKc3
- GuDVwF8ZoTmePZ6iH/bab+bc5L7ud5QWTnAUOY87x2HyAAgQDHerD70uYQThe0aavVLlGYJMgo
- yUQB9MyBi1zHFsA4Frnt2iWu3nwKTEv1ZEaoaiuZDPqJyBVkT7m4r7a8qqcRXSzLoEfcJvgajE
- ZnWAMy48QBNqpuNRFnAQlhB6
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 28 Nov 2019 17:03:13 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 1A0FF19B8; Thu, 28 Nov 2019 17:03:12 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v2 2/3] dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings
-Date:   Thu, 28 Nov 2019 17:03:06 +0530
-Message-Id: <1574940787-1004-3-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574940787-1004-1-git-send-email-sanm@codeaurora.org>
-References: <1574940787-1004-1-git-send-email-sanm@codeaurora.org>
+        Thu, 28 Nov 2019 06:39:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574941181;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=x/jeELqhj5P3A7DPG/PC1XpTw6obMUxkE54tKkidDrQ=;
+        b=g4pwOX2rQhNfvIEUgpoCchPqBRTXF9WlB5YAMdLdK1DapGKS0RWhYXqhWd3U4Dd1YNHcLh
+        l6jYp036zIve75CJA663lxajKgV5eyVa7mFTN4U9SZahTclEpsHJ/af7BKwbBq9FurOZRY
+        JWPuQuHxRIz0kSEboLyVXdAJwcSIJG0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-JkfH9-oZNDChP8mZlQBhKw-1; Thu, 28 Nov 2019 06:39:35 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E29E107ACC7;
+        Thu, 28 Nov 2019 11:39:33 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 526BE5D9E1;
+        Thu, 28 Nov 2019 11:39:31 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 56292A1E0; Thu, 28 Nov 2019 12:39:30 +0100 (CET)
+Date:   Thu, 28 Nov 2019 12:39:30 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     robh@kernel.org, intel-gfx@lists.freedesktop.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] drm: call drm_gem_object_funcs.mmap with fake
+ offset
+Message-ID: <20191128113930.yhckvneecpvfhlls@sirius.home.kraxel.org>
+References: <20191127092523.5620-1-kraxel@redhat.com>
+ <20191127092523.5620-2-kraxel@redhat.com>
+MIME-Version: 1.0
+In-Reply-To: <20191127092523.5620-2-kraxel@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: JkfH9-oZNDChP8mZlQBhKw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert USB DWC3 bindings to DT schema format using json-schema.
+On Wed, Nov 27, 2019 at 10:25:22AM +0100, Gerd Hoffmann wrote:
+> The fake offset is going to stay, so change the calling convention for
+> drm_gem_object_funcs.mmap to include the fake offset.  Update all users
+> accordingly.
+>=20
+> Note that this reverts 83b8a6f242ea ("drm/gem: Fix mmap fake offset
+> handling for drm_gem_object_funcs.mmap") and on top then adds the fake
+> offset to  drm_gem_prime_mmap to make sure all paths leading to
+> obj->funcs->mmap are consistent.
+>=20
+> v3: move fake-offset tweak in drm_gem_prime_mmap() so we have this code
+>     only once in the function (Rob Herring).
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
----
- .../devicetree/bindings/usb/qcom,dwc3.txt          | 104 --------------
- .../devicetree/bindings/usb/qcom,dwc3.yaml         | 155 +++++++++++++++++++++
- 2 files changed, 155 insertions(+), 104 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.txt
- create mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+Now this series fails in Intel CI.  Can't see why though.  The
+difference between v2 and v3 is just the place where vma->vm_pgoff gets
+updated, and no code between the v2 and v3 location touches vma ...
 
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-deleted file mode 100644
-index cb695aa..0000000
---- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-+++ /dev/null
-@@ -1,104 +0,0 @@
--Qualcomm SuperSpeed DWC3 USB SoC controller
--
--Required properties:
--- compatible:		Compatible list, contains
--			"qcom,dwc3"
--			"qcom,msm8996-dwc3" for msm8996 SOC.
--			"qcom,msm8998-dwc3" for msm8998 SOC.
--			"qcom,sdm845-dwc3" for sdm845 SOC.
--- reg:			Offset and length of register set for QSCRATCH wrapper
--- power-domains:	specifies a phandle to PM domain provider node
--- clocks:		A list of phandle + clock-specifier pairs for the
--				clocks listed in clock-names
--- clock-names:		Should contain the following:
--  "core"		Master/Core clock, have to be >= 125 MHz for SS
--				operation and >= 60MHz for HS operation
--  "mock_utmi"		Mock utmi clock needed for ITP/SOF generation in
--				host mode. Its frequency should be 19.2MHz.
--  "sleep"		Sleep clock, used for wakeup when USB3 core goes
--				into low power mode (U3).
--
--Optional clocks:
--  "iface"		System bus AXI clock.
--			Not present on "qcom,msm8996-dwc3" compatible.
--  "cfg_noc"		System Config NOC clock.
--			Not present on "qcom,msm8996-dwc3" compatible.
--- assigned-clocks:	Should be:
--				MOCK_UTMI_CLK
--				MASTER_CLK
--- assigned-clock-rates: Should be:
--                                19.2Mhz (192000000) for MOCK_UTMI_CLK
--                                >=125Mhz (125000000) for MASTER_CLK in SS mode
--                                >=60Mhz (60000000) for MASTER_CLK in HS mode
--
--Optional properties:
--- resets:		Phandle to reset control that resets core and wrapper.
--- interrupts:		specifies interrupts from controller wrapper used
--			to wakeup from low power/susepnd state.	Must contain
--			one or more entry for interrupt-names property
--- interrupt-names:	Must include the following entries:
--			- "hs_phy_irq": The interrupt that is asserted when a
--			   wakeup event is received on USB2 bus
--			- "ss_phy_irq": The interrupt that is asserted when a
--			   wakeup event is received on USB3 bus
--			- "dm_hs_phy_irq" and "dp_hs_phy_irq": Separate
--			   interrupts for any wakeup event on DM and DP lines
--- qcom,select-utmi-as-pipe-clk: if present, disable USB3 pipe_clk requirement.
--				Used when dwc3 operates without SSPHY and only
--				HS/FS/LS modes are supported.
--
--Required child node:
--A child node must exist to represent the core DWC3 IP block. The name of
--the node is not important. The content of the node is defined in dwc3.txt.
--
--Phy documentation is provided in the following places:
--Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
--Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
--
--Example device nodes:
--
--		hs_phy: phy@100f8800 {
--			compatible = "qcom,qusb2-v2-phy";
--			...
--		};
--
--		ss_phy: phy@100f8830 {
--			compatible = "qcom,qmp-v3-usb3-phy";
--			...
--		};
--
--		usb3_0: usb30@a6f8800 {
--			compatible = "qcom,dwc3";
--			reg = <0xa6f8800 0x400>;
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges;
--
--			interrupts = <0 131 0>, <0 486 0>, <0 488 0>, <0 489 0>;
--			interrupt-names = "hs_phy_irq", "ss_phy_irq",
--				  "dm_hs_phy_irq", "dp_hs_phy_irq";
--
--			clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
--				<&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
--				<&gcc GCC_USB30_PRIM_SLEEP_CLK>;
--			clock-names = "core", "mock_utmi", "sleep";
--
--			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
--					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
--			assigned-clock-rates = <19200000>, <133000000>;
--
--			resets = <&gcc GCC_USB30_PRIM_BCR>;
--			reset-names = "core_reset";
--			power-domains = <&gcc USB30_PRIM_GDSC>;
--			qcom,select-utmi-as-pipe-clk;
--
--			dwc3@10000000 {
--				compatible = "snps,dwc3";
--				reg = <0x10000000 0xcd00>;
--				interrupts = <0 205 0x4>;
--				phys = <&hs_phy>, <&ss_phy>;
--				phy-names = "usb2-phy", "usb3-phy";
--				dr_mode = "host";
--			};
--		};
--
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-new file mode 100644
-index 0000000..48ff9c5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-@@ -0,0 +1,155 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm SuperSpeed DWC3 USB SoC controller
-+
-+maintainers:
-+  - Manu Gautam <mgautam@codeaurora.org>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - qcom,msm8996-dwc3
-+          - qcom,msm8998-dwc3
-+          - qcom,sdm845-dwc3
-+      - const: qcom,dwc3
-+
-+  reg:
-+    description: Offset and length of register set for QSCRATCH wrapper
-+    maxItems: 1
-+
-+  power-domains:
-+    description: specifies a phandle to PM domain provider node
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      A list of phandle and clock-specifier pairs for the clocks
-+      listed in clock-names.
-+    maxItems: 5
-+
-+  clock-names:
-+    maxItems: 5
-+    items:
-+    #Master/Core clock, have to be >= 125 MHz for SS operation
-+    # and >= 60MHz for HS operation
-+      - const: core
-+    #Mock utmi clock needed for ITP/SOF generation in host mode.
-+    #Its frequency should be 19.2MHz.
-+      - const: mock_utmi
-+    #Sleep clock, used for wakeup when USB3 core goes into low power mode (U3).
-+      - const: sleep
-+    #Optional:System bus AXI clock.Not present on "qcom,msm8996-dwc3" compatible.
-+      - const: iface
-+    #Optional:System Config NOC clock.Not present on "qcom,msm8996-dwc3" compatible.
-+      - const: cfg_noc
-+
-+  assigned-clocks:
-+    description:
-+      Should be MOCK_UTMI_CLK and MASTER_CLK
-+    maxItems: 2
-+
-+  assigned-clock-rates:
-+    description:
-+      Should be 19.2Mhz (192000000) for MOCK_UTMI_CLK
-+      >=125Mhz (125000000) for MASTER_CLK in SS mode
-+      >=60Mhz (60000000) for MASTER_CLK in HS mode
-+    maxItems: 2
-+
-+  resets:
-+    maxItems: 1
-+    description: Phandle to reset control that resets core and wrapper.
-+
-+  interrupts:
-+    description:
-+      specifies interrupts from controller wrapper used
-+      to wakeup from low power/suspend state.Must contain
-+      one or more entry for interrupt-names property
-+
-+  interrupt-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    items:
-+      #The interrupt that is asserted when a wakeup event
-+      #is received on USB2 bus
-+      - const: hs_phy_irq
-+      #The interrupt that is asserted when a wakeup event
-+      #is received on USB3 bus
-+      - const: ss_phy_irq
-+      #Separate interrupts for any wakeup event on DM and DP lines
-+      - const: dm_hs_phy_irq
-+      - const: dp_hs_phy_irq
-+
-+  qcom,select-utmi-as-pipe-clk:
-+    description:
-+      if present, disable USB3 pipe_clk requirement.
-+      Used when dwc3 operates without SSPHY and only
-+      HS/FS/LS modes are supported.
-+    type: boolean
-+
-+#Required child node:
-+#A child node must exist to represent the core DWC3 IP block. The name of
-+#the node is not important. The content of the node is defined in dwc3.txt.
-+
-+#Phy documentation is provided in the following places:
-+#Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
-+#Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
-+
-+required:
-+  - compatible
-+  - reg
-+  - power-domains
-+  - clocks
-+  - clock-names
-+  - assigned-clocks
-+  - assigned-clock-rates
-+
-+examples:
-+  - |
-+    hs_phy: phy@100f8800 {
-+            compatible = "qcom,qusb2-v2-phy";
-+            ...
-+        };
-+
-+        ss_phy: phy@100f8830 {
-+            compatible = "qcom,qmp-v3-usb3-phy";
-+            ...
-+        };
-+
-+        usb3_0: usb30@a6f8800 {
-+            compatible = "qcom,dwc3";
-+            reg = <0xa6f8800 0x400>;
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+            ranges;
-+
-+            interrupts = <0 131 0>, <0 486 0>, <0 488 0>, <0 489 0>;
-+            interrupt-names = "hs_phy_irq", "ss_phy_irq",
-+                    "dm_hs_phy_irq", "dp_hs_phy_irq";
-+
-+            clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
-+                     <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+                     <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
-+            clock-names = "core", "mock_utmi", "sleep";
-+
-+            assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+                              <&gcc GCC_USB30_PRIM_MASTER_CLK>;
-+            assigned-clock-rates = <19200000>, <133000000>;
-+
-+            resets = <&gcc GCC_USB30_PRIM_BCR>;
-+            reset-names = "core_reset";
-+            power-domains = <&gcc USB30_PRIM_GDSC>;
-+            qcom,select-utmi-as-pipe-clk;
-+
-+            dwc3@10000000 {
-+                compatible = "snps,dwc3";
-+                reg = <0x10000000 0xcd00>;
-+                interrupts = <0 205 0x4>;
-+                phys = <&hs_phy>, <&ss_phy>;
-+                phy-names = "usb2-phy", "usb3-phy";
-+                dr_mode = "host";
-+            };
-+        };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+confused,
+  Gerd
 
