@@ -2,127 +2,153 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5E6C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD53C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1073221739
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574960972;
-	bh=qXO6ANuaqpuzwCnc+nYME+znJctQ5JiScnQS/fLu3DU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xWNLKGSqKLKp/qibN4JAliVhfYa6PEtIrmvomRcyteJcsoBO6U3oATGl3cuaS6ZKw
-	 qMwIwsRDiTZhHDjR+ZokvpqAIZdDCF2MgJGWDaEhwVCiU5+wYUlCzmLDgnfCENVpZA
-	 knWtSp7s2PkKRhZk9e0Qweb/JsYSx8bcArYgYGT4=
+	by mail.kernel.org (Postfix) with ESMTP id C728A21739
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:10:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="qTjL2qO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfK1RJb (ORCPT
+        id S1726731AbfK1RK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 12:09:31 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44325 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfK1RJa (ORCPT
+        Thu, 28 Nov 2019 12:10:58 -0500
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:38151 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfK1RK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 12:09:30 -0500
-Received: by mail-lf1-f65.google.com with SMTP id v201so19501840lfa.11;
-        Thu, 28 Nov 2019 09:09:28 -0800 (PST)
+        Thu, 28 Nov 2019 12:10:57 -0500
+Received: by mail-wm1-f46.google.com with SMTP id z19so12472651wmk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 09:10:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unipv-it.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=kIU/4r5tg86qVELVsVrOVWZTmy5x4DTAtzCcw+A5vjQ=;
+        b=qTjL2qO1zywbtMgr9UGj+wX8baVWMvVpO/1UovbX8ti+3yalBXG08d4wzgS7i5jcdw
+         yV9lDxG48HYflHQ/f6NCpUMWV8BJniSDhiMRjqK9d4hmwN3uf44msWPJZbvjploujGh7
+         oixsWiaDTR2H4VPehEs3a70TdNYu9NhQKH4on643UKNFwOD7fxErivTUax1QEUlbPYR+
+         KjumCrMvG4H6r03U01JGkTCuXlQscbrGS1/25bGX3oJijKav6cDwazG3C4meui8jMXR9
+         qSom6G37FXqXxjpmAP+YTrOsgksXbOKAGv28oibk9lmktyvVovxgp1QhYvtWY3JFykY3
+         Rk/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oovU/UoFKB28dFGaRW8Or+9UKUNH0XZBR1OSIIn2e6g=;
-        b=hzUYfTjo39TXo9TZKRhA4uQkplsq/Afm5rr8HVeaS00BTHBIAshlEPwFfBySH6GsYa
-         RFZ6D2+upr3ft1ORzoRsbZw2pVihdkslv1nzdIkT46e/UkZsVJzSxKT0n/o8fq4D9mkT
-         f1EzquKXBwhodH8zCugZdwzqMX9nGrOl4bqpQNIeAQR2swOjQWKmfzrZCmr82Jcdxfrr
-         flp8A/5RRndGKm+C+Yu/7LuAGdE78bHZF9ZgHV81sjBaGF1DputFSM9KdcqIEQwOWkvD
-         s9NL6ob97ldEwq3V+4QrYZZJPjo1JGpZeOqj14d6TI8OyHIw8eBD5nim5Gox/BK/JFsY
-         bdew==
-X-Gm-Message-State: APjAAAWcKUf8tgyKeWNmUrw2y4oOXZG5Wmc+MRy7r5cnGGCwDPRhIyzr
-        lKk1PNzYr38PtTiBT4/SA5o=
-X-Google-Smtp-Source: APXvYqyC2MAIJEY4bDUxVTflyKT8VF64NIE4LP4BJiK3oFmTdYcB2IiwWxfJXkDZd75YflZLAYOIBg==
-X-Received: by 2002:a05:6512:71:: with SMTP id i17mr32858350lfo.113.1574960968041;
-        Thu, 28 Nov 2019 09:09:28 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id q20sm720796lfm.97.2019.11.28.09.09.27
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=kIU/4r5tg86qVELVsVrOVWZTmy5x4DTAtzCcw+A5vjQ=;
+        b=XoZHqEpZ76TvAManTAHxkX5Yzg8R36w8yXLyYxllCojIgtG/qbV8xr1caYrzTOdNdj
+         VUHpzg08yWcsADXlPM40sj+COZRGITaLwH5ILCzzveJ5GzVClTOJAricNYksH6f1c0xy
+         hx66hkZBYWSmLH8s1IB47r6EE4dNeUfiUfS7pYSq1hAsiurJtpGxx8I7bunKpmFqn0NT
+         SBSW/HtNepIMThCKbC553HHNAP+3FAmOeCHg+SvZsyiQjVqWldzlQQulhnyY7UbMX4la
+         vhTK7yDIwdulfgVqFB2MZQPihYNbf+SQG1Q2V03z9lVI+s7MrCMQwQHsYewujQ0gbDXH
+         INoA==
+X-Gm-Message-State: APjAAAX/zQj7X/NKIWdmywSb2ifwpjfs4V/Pr+ywLspQUDkFzzdc7/zN
+        ZAzWdaORA3dBNdYVkC93qc8Akg==
+X-Google-Smtp-Source: APXvYqyUO703ljkdm3t8cCiMOnzpUNZCOJtpRfQAphxjyipXLWTcDVfzJUQk7mhGZHQBsiAo8texHw==
+X-Received: by 2002:a1c:f317:: with SMTP id q23mr10064265wmq.97.1574961055084;
+        Thu, 28 Nov 2019 09:10:55 -0800 (PST)
+Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
+        by smtp.gmail.com with ESMTPSA id r6sm10484372wrq.92.2019.11.28.09.10.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 09:09:27 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1iaNIF-0006q2-ID; Thu, 28 Nov 2019 18:09:27 +0100
-Date:   Thu, 28 Nov 2019 18:09:27 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     syzbot <syzbot+7c72edfb407b2bd866ce@syzkaller.appspotmail.com>,
-        amitkarwar@gmail.com, "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Thu, 28 Nov 2019 09:10:54 -0800 (PST)
+Message-ID: <776d0c5f1d9f7787f353f97ed38597b05412529a.camel@unipv.it>
+Subject: Re: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+From:   Andrea Vai <andrea.vai@unipv.it>
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
         USB list <linux-usb@vger.kernel.org>,
-        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        siva8118@gmail.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: invalid-free in rsi_91x_deinit
-Message-ID: <20191128170927.GB29518@localhost>
-References: <0000000000005ae4cd058731d407@google.com>
- <CAAeHK+wDcQpQhDp2Ajz0GOFqKcqV9E_DSNvZ8UW26BdX+T-Uug@mail.gmail.com>
- <20191128170702.GA29518@localhost>
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Date:   Thu, 28 Nov 2019 18:10:53 +0100
+In-Reply-To: <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
+References: <20191109222828.GA30568@ming.t460p>
+                 <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>
+                 <20191123072726.GC25356@ming.t460p>
+                 <a9ffcca93657cbbb56819fd883c474a702423b41.camel@unipv.it>
+                 <20191125035437.GA3806@ming.t460p>
+         <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>
+                 <20191125102928.GA20489@ming.t460p>
+                 <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
+                 <20191125151535.GA8044@ming.t460p>
+                 <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>
+                 <20191126023253.GA24501@ming.t460p>
+         <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
+         <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128170702.GA29518@localhost>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 06:07:02PM +0100, Johan Hovold wrote:
-> On Tue, Nov 19, 2019 at 02:38:11PM +0100, Andrey Konovalov wrote:
-> > On Tue, Apr 23, 2019 at 2:36 PM syzbot
-> > <syzbot+7c72edfb407b2bd866ce@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
-> > > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=14a79403200000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=7c72edfb407b2bd866ce
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17547247200000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147b3a1d200000
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+7c72edfb407b2bd866ce@syzkaller.appspotmail.com
-> > >
-> > > usb 1-1: config 252 interface 115 altsetting 0 has 1 endpoint descriptor,
-> > > different from the interface descriptor's value: 4
-> > > usb 1-1: New USB device found, idVendor=1618, idProduct=9113,
-> > > bcdDevice=32.21
-> > > usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> > > rsi_91x: rsi_probe: Failed to init usb interface
-> > > ==================================================================
-> > > BUG: KASAN: double-free or invalid-free in slab_free mm/slub.c:3003 [inline]
-> > > BUG: KASAN: double-free or invalid-free in kfree+0xce/0x280 mm/slub.c:3958
-
-> > Most likely the same issue as:
+Il giorno mer, 27/11/2019 alle 11.21 +1100, Finn Thain ha scritto:
+> On Tue, 26 Nov 2019, Andrea Vai wrote:
+> 
+> > Then I started another set of 100 trials and let them run tonight,
+> and 
+> > the first 10 trials were around 1000s, then gradually decreased
+> to 
+> > ~300s, and finally settled around 200s with some trials below 70-
+> 80s. 
+> > This to say, times are extremely variable and for the first time
+> I 
+> > noticed a sort of "performance increase" with time.
 > > 
-> > #syz dup: WARNING: ODEBUG bug in rsi_probe
-> > 
-> > https://syzkaller.appspot.com/bug?extid=1d1597a5aa3679c65b9f
 > 
-> No, this was separate bug that was fixed by commit 8b51dc729147 ("rsi:
-> fix a double free bug in rsi_91x_deinit()").
+> The sheer volume of testing (probably some terabytes by now) would 
+> exercise the wear leveling algorithm in the FTL.
 > 
-> Let me try to mark it as such:
+> This in itself seems unlikely to improve performance significantly.
+> But if 
+> the flash memory came from a bad batch, perhaps it would have that
+> effect.
 > 
-> #syz undup
+> To find out, someone may need to source another (genuine) Kingston 
+> DataTraveller device.
 
-#syz fix: rsi: fix a double free bug in rsi_91x_deinit()
+I own another device (let's refer to it as "black odd"), identical to
+the "slow" one (call it "black even"), and used it as well  to do the
+tests, especially in the beginning of this story, because I suspected
+the problem could be related to a faulty pen drive. At a certain time
+I realized that the tests I performed didn't show any difference
+between the two flash drives, so since that time I kept using just the
+"black even". They were bought together, so of course both of them
+probably belong to the same "maybe-bad batch".
 
-Johan
+But I have another Kingston DataTraveler ("White"), externally
+slightly different from the other twos (it's white instead of black,
+and labeled G4 instead of G3), though lsusb shows the same IDs:
+0951:1666. It had been purchased some months after the other twos
+(well, actually, it may be the result of an RMA exchange).
+
+I have just ran one test on this White one, with the new (patched)
+kernel, and it took an average of 200seconds (st.dev=46s), which is
+not "good", but less "bad" than the real "bad" case of the "black"
+ones (>1000 seconds).
+
+I have also tried the "WHITE" one with the old fast kernel, and the
+behavior is almost the same as with the new kernel, though a little
+bit better (mean=173; st.dev.=11).
+
+Feel free to let me know if I should do other tries,
+
+thanks,
+Andrea
+
