@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974E0C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2772BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAC521771
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC1E21771
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="MsBrXnDd"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Fm9J/BPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfK1O62 (ORCPT
+        id S1727685AbfK1O6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:58:28 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35533 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbfK1O6I (ORCPT
+        Thu, 28 Nov 2019 09:58:33 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45892 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbfK1O6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Nov 2019 09:58:08 -0500
-Received: by mail-lj1-f196.google.com with SMTP id j6so19827390lja.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:58:07 -0800 (PST)
+Received: by mail-lj1-f195.google.com with SMTP id n21so28799723ljg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:58:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z0ILJLPvMSycr+N5z1WBGPbbOOzMeVGs3+El1NFG5gM=;
-        b=MsBrXnDd/G1Zjj210ATgY6vuErblELNtwtEokGCaoA1MxxkLkU5DMXWZ/DqI4rkd5Z
-         gETgTkCKjtmJ/BL1I8x41SvinDsW0tjkR9cfyiTi9zOlB2m8FMv18BEU617l2rIZlRYm
-         JgqrkOdeLh5F0tEM8F/+7LQYmLCxUlP6KBeO0=
+        bh=uJFqdfn2nSDjHf42hirywvV4nKXCcu5QZEHn2MRQUqE=;
+        b=Fm9J/BPtzefO6mLtz+s8hghaGLQl9/e0iHtM+c2WZUylSQ5IRCuZvLLrqa9pvESajc
+         sgUXiAdEW5ODvwgf/p7K3+6ps2qo4ojoUJEOeaW4+cvwZGzSxZUYdES0IEMWB57Deuf4
+         xjUml1c0Urakd08HfwFSCPyXLT1jfJ5CE/vuE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z0ILJLPvMSycr+N5z1WBGPbbOOzMeVGs3+El1NFG5gM=;
-        b=la89XoLNWrOg0G9jUu5EmQMLvFz4O6WmTpWeQyW6RFg89q8XxAu8gRqestvrMCe7jg
-         duORayNZeBBKT9EciOX9Lm188J1n5aR9yXB70Z998aJgvdYVEKomRvfQEHu/gtd9L2Dr
-         gEGgnF3D04vgoPpU6o3XnrqF0zHbjLPknPKGBdcM0BZJ5u6sHgje8NiHrrldDE3eRYjR
-         jD5IaaboIBcJUsGLBC42YMnyF/4y0U5g+ahY9KE/HPh9+1aw7eIN8c74aJd8P08HDYTF
-         Nd6YFZQvWfWRMr37a8lEz1O/UXjb2QFvoAI3Q1/DZlYT6VsgneMd9TYG/Gq2JXMYaigP
-         +GRg==
-X-Gm-Message-State: APjAAAXtxg6qhUHYiGQhlxPgRzLL8L1veoiLhmOLpOmLyo8uvBaK0zMl
-        ZcJXHO/FyOaZVPe280wv4/Sn4Q==
-X-Google-Smtp-Source: APXvYqzc2fQxY6lskiW/Z09onmsQDrBOExaD6v9SX5/irAT7oq304NVrn38+PRfo+mxcFltlRIIozA==
-X-Received: by 2002:a2e:9f4d:: with SMTP id v13mr35084645ljk.78.1574953086759;
-        Thu, 28 Nov 2019 06:58:06 -0800 (PST)
+        bh=uJFqdfn2nSDjHf42hirywvV4nKXCcu5QZEHn2MRQUqE=;
+        b=XcZSH7Vz6ciGo2vQnU1PP0od2PuyE71HMLHq9Fmh/M5K8o+AIylRFlsZs6oif4zaE7
+         LTQcxjg2zlmnKKMu4WRQmOvq2EDBjXm9bv3//1xqWZL0LnLzSPU8O0IfbcAegf6uYDgD
+         m/5M8TDjr5xhk83QYULapHnPmwh0R2wCh3EDpAiL69u0PyZgi7MlRcyoHd6UvV/FKZpy
+         aPzfm816t8GEneL2S6pwEQIwz7ickONXg1NyB3PQNUKNxjPQ92rmxNRMvl22nieEQLYj
+         fzabZ0YLVV1k3XtE+ekcJCYtQ+XOqeQftt9SQjpQRpW3iI8wZBsdS/7XtKT+d5i/0lZT
+         bLXA==
+X-Gm-Message-State: APjAAAXcBTKJMUlVtFdMQcuffk+LFlJDsd6pfN0oDB/1c250zK7ISz/6
+        EGz02BSeuTr3uA4rlz5WSUVdbQ==
+X-Google-Smtp-Source: APXvYqyvULz2Tjp/CvI4s3FOQVWvQSzO1JW8WbB25Ky4p0+qkSxEH1U0IiPoAs0MVz6PY4HNawn0gg==
+X-Received: by 2002:a2e:90da:: with SMTP id o26mr1140714ljg.25.1574953085644;
+        Thu, 28 Nov 2019 06:58:05 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.58.05
+        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.58.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 06:58:06 -0800 (PST)
+        Thu, 28 Nov 2019 06:58:05 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,10 +60,10 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH v6 48/49] soc: fsl: qe: remove unused #include of asm/irq.h from ucc.c
-Date:   Thu, 28 Nov 2019 15:55:53 +0100
-Message-Id: <20191128145554.1297-49-linux@rasmusvillemoes.dk>
+        netdev@vger.kernel.org
+Subject: [PATCH v6 47/49] net: ethernet: freescale: make UCC_GETH explicitly depend on PPC32
+Date:   Thu, 28 Nov 2019 15:55:52 +0100
+Message-Id: <20191128145554.1297-48-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
 References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
@@ -74,36 +74,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When allowing this driver to be built for ARM, the build fails (for
-CONFIG_SMP=y) since ARM's asm/irq.h header is not self-contained:
+Currently, QUICC_ENGINE depends on PPC32, so this in itself does not
+change anything. In order to allow removing the PPC32 dependency from
+QUICC_ENGINE and avoid allmodconfig build failures, add this explicit
+dependency.
 
-  In file included from drivers/soc/fsl/qe/ucc.c:18:0:
->> arch/arm/include/asm/irq.h:34:50: error: unknown type name 'cpumask_t'
-    extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
+Also, the QE Ethernet has never been integrated on any non-PowerPC SoC
+and most likely will not be in the future.
 
-But nothing in this file actually uses anything from asm/irq.h -
-removing this #include generates identical object code, both on PPC32
-and on ARM (the latter with a patch added to asm/irq.h to make the
-build work in the first place).
-
-Reported-by: kbuild test robot <lkp@intel.com>
+Reviewed-by: Timur Tabi <timur@kernel.org>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/ucc.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/freescale/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/fsl/qe/ucc.c b/drivers/soc/fsl/qe/ucc.c
-index da3d7e2dd837..90157acc5ba6 100644
---- a/drivers/soc/fsl/qe/ucc.c
-+++ b/drivers/soc/fsl/qe/ucc.c
-@@ -15,7 +15,6 @@
- #include <linux/spinlock.h>
- #include <linux/export.h>
+diff --git a/drivers/net/ethernet/freescale/Kconfig b/drivers/net/ethernet/freescale/Kconfig
+index 6a7e8993119f..2bd7ace0a953 100644
+--- a/drivers/net/ethernet/freescale/Kconfig
++++ b/drivers/net/ethernet/freescale/Kconfig
+@@ -74,7 +74,7 @@ config FSL_XGMAC_MDIO
  
--#include <asm/irq.h>
- #include <asm/io.h>
- #include <soc/fsl/qe/immap_qe.h>
- #include <soc/fsl/qe/qe.h>
+ config UCC_GETH
+ 	tristate "Freescale QE Gigabit Ethernet"
+-	depends on QUICC_ENGINE
++	depends on QUICC_ENGINE && PPC32
+ 	select FSL_PQ_MDIO
+ 	select PHYLIB
+ 	---help---
 -- 
 2.23.0
 
