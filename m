@@ -2,94 +2,85 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75F6C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97072C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747F721741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hok4NCld"
+	by mail.kernel.org (Postfix) with ESMTP id 6DCCD21741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfK1Ksb (ORCPT
+        id S1726641AbfK1KvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:48:31 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58058 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbfK1KsB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:48:01 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAlwKA096714;
-        Thu, 28 Nov 2019 04:47:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574938078;
-        bh=xsoCMaeYo5YfhzTn+vSlcz0XqN7p8MMRE1rbf+zv3po=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=hok4NCldInjJBbpF9gCmiWQPM9QgU/r0FoEHrqhASoUxwBWqOv576eh9y/bC1LVPq
-         GJP6tBPA+pm7Z0TroK56xFOC+z+pTUW5MgLPi6gqfR/I5w+TT/4+els9koxE7g31pK
-         LxFQNfVvHjVp57A9VeHfEljtZh8mjClABnnkeGyI=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASAlwCM126506
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Nov 2019 04:47:58 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 04:47:57 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 04:47:57 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAlX45098163;
-        Thu, 28 Nov 2019 04:47:55 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Anil Varughese <aniljoy@cadence.com>,
-        Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 08/14] phy: cadence: Sierra: Get reset control "array" for each link
-Date:   Thu, 28 Nov 2019 16:16:42 +0530
-Message-ID: <20191128104648.21894-9-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191128104648.21894-1-kishon@ti.com>
-References: <20191128104648.21894-1-kishon@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 28 Nov 2019 05:51:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38500 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726227AbfK1KvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 05:51:06 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0E73DAD78;
+        Thu, 28 Nov 2019 10:51:03 +0000 (UTC)
+Message-ID: <1574938260.21204.5.camel@suse.com>
+Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>
+Cc:     andreyknvl@google.com, hverkuil@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Date:   Thu, 28 Nov 2019 11:51:00 +0100
+In-Reply-To: <Pine.LNX.4.44L0.1911271304410.1319-100000@iolanthe.rowland.org>
+References: <Pine.LNX.4.44L0.1911271304410.1319-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A link may have multiple lanes each with a separate reset. Get
-reset control "array" in order to reset all the lanes associated
-with the link.
+Am Mittwoch, den 27.11.2019, 13:07 -0500 schrieb Alan Stern:
+> Index: usb-devel/drivers/media/radio/si470x/radio-si470x-usb.c
+> ===================================================================
+> --- usb-devel.orig/drivers/media/radio/si470x/radio-si470x-usb.c
+> +++ usb-devel/drivers/media/radio/si470x/radio-si470x-usb.c
+> @@ -370,15 +370,14 @@ static void si470x_int_in_callback(struc
+>         unsigned char tmpbuf[3];
+>  
+>         if (urb->status) {
+> -               if (urb->status == -ENOENT ||
+> +               if (!(urb->status == -ENOENT ||
+>                                 urb->status == -ECONNRESET ||
+> -                               urb->status == -ESHUTDOWN) {
+> -                       return;
+> -               } else {
+> +                               urb->status == -ESHUTDOWN))
+>                         dev_warn(&radio->intf->dev,
+> -                        "non-zero urb status (%d)\n", urb->status);
+> -                       goto resubmit; /* Maybe we can recover. */
+> -               }
+> +                                       "unrecognized urb status (%d)\n",
+> +                                       urb->status);
+> +               radio->int_in_running = 0;
+> +               return;
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/phy/cadence/phy-cadence-sierra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index fdca3bd178c6..497c83827670 100644
---- a/drivers/phy/cadence/phy-cadence-sierra.c
-+++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -499,7 +499,7 @@ static int cdns_sierra_phy_probe(struct platform_device *pdev)
- 		struct phy *gphy;
- 
- 		sp->phys[node].lnk_rst =
--			of_reset_control_get_exclusive_by_index(child, 0);
-+			of_reset_control_array_get_exclusive(child);
- 
- 		if (IS_ERR(sp->phys[node].lnk_rst)) {
- 			dev_err(dev, "failed to get reset %s\n",
--- 
-2.17.1
+it is a bit awkward to complain here, as your patch tests as correct
+while mine didn't, but this is a race condition.
+You can't guarantee that urb->status != 0.
+The kill may happen while the completion handler is running for
+a successful transfer.
+
+I really appreciate your help, but I must understand what is going
+wrong here. You are stopping the resubmit, but how could the resubmit
+ever have not failed?
+
+	Regards
+		Oliver
 
