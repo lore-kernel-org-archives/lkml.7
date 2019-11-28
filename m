@@ -2,150 +2,212 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CD8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AB6C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F065B2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6190721739
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:07:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mn+imX7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfK1QEp (ORCPT
+        id S1726696AbfK1QHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 11:04:45 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16772 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726545AbfK1QEo (ORCPT
+        Thu, 28 Nov 2019 11:07:36 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37822 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726545AbfK1QHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:04:44 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASG44K1009257;
-        Thu, 28 Nov 2019 11:04:38 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxrsrf5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 11:04:37 -0500
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xASG4A5l009840;
-        Thu, 28 Nov 2019 11:04:37 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxrsre6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 11:04:37 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xASG2Kkq005914;
-        Thu, 28 Nov 2019 16:04:36 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03dal.us.ibm.com with ESMTP id 2wevd7af5m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 16:04:36 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xASG4ZqL34210226
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Nov 2019 16:04:35 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B20C211206D;
-        Thu, 28 Nov 2019 16:04:35 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 95AAF112067;
-        Thu, 28 Nov 2019 16:04:34 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.137])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Nov 2019 16:04:34 +0000 (GMT)
-Message-ID: <aba06fb62083a7424a10170c074911de8cd4e347.camel@linux.ibm.com>
-Subject: Re: [PATCH] KVM: Add separate helper for putting borrowed reference
- to kvm
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 28 Nov 2019 13:04:30 -0300
-In-Reply-To: <a924cb9c-8354-23fe-1052-8ad564edad7f@redhat.com>
-References: <20191021225842.23941-1-sean.j.christopherson@intel.com>
-         <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
-         <20191126171416.GA22233@linux.intel.com>
-         <0009c6c1bb635098fa68cb6db6414634555039fe.camel@linux.ibm.com>
-         <e1a4218f-2a70-3de3-1403-dbebf8a8abdf@redhat.com>
-         <bfa563e6a584bd85d3abe953ca088281dc0e167b.camel@linux.ibm.com>
-         <6beeff56-7676-5dfd-a578-1732730f8963@redhat.com>
-         <adcfe1b4c5b36b3c398a5d456da9543e0390cba3.camel@linux.ibm.com>
-         <20191127194757.GI22227@linux.intel.com>
-         <103b290917221baa10194c27c8e35b9803f3cafa.camel@linux.ibm.com>
-         <41fe3962ce1f1d5f61db5f5c28584f68ad66b2b1.camel@linux.ibm.com>
-         <a924cb9c-8354-23fe-1052-8ad564edad7f@redhat.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Fts/3gcBB3+hmUFp/MtR"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Thu, 28 Nov 2019 11:07:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574957254;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+labIS8D1zO/EBrfo58WwyeK4b86yr4Ay45+sKAX7XA=;
+        b=Mn+imX7PLIFzqrsC8zwQb/uwvwocn/4GRi41fQ6GvmhEmNKEXqE/sHCskCmkfm06ntTSKS
+        leffiYj/Rw/aIBPisr3ALf7BZACHHgpVU4JIWUk1pZlIBwFITPEcSF8ryUXsKiSM4cCYco
+        5LF8LBzPhR+QiGMQIP/u344naIj3jwQ=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-299-mO-y99JUPIOowkQx_Vooag-1; Thu, 28 Nov 2019 11:07:31 -0500
+Received: by mail-lj1-f199.google.com with SMTP id j13so1177297ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 08:07:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=k7L035tT9zykqVz7rUhyuDfOzoQMwHGJVTJTz8M7cNU=;
+        b=EI7Ck0ri6K8JrcUg7kud0rzWz2rLHQcq2s6YMy05GQEsz+PyRz69eYwQLCCxeOdNyf
+         t2zqfvA5opekwTazFQWKzT4NVU2RdjPYUXm3j9jwJuIYkfB1p9Z4YG//giWhYWnPsFLf
+         6ux4x1y1b8bGZPMcd6quS48SWG3HS9OVXjA6T5AUY4I6YdoQsoGvnLjboI3S3PuzSZlx
+         udbVn5/G9Z6ujOKh+ga4tIojjDZMp75u/9Q0tRskXELslDiNvxWm9qemviHGxqZxJFCL
+         oM3X9fDKFrIx+6l8FV2a242SumPRaOHO+P0O5JC2c7PHyRkSBQ+xgyfBxuIX9qNVxv14
+         MRJA==
+X-Gm-Message-State: APjAAAUS5mlXcjuCO6wBdHV0ub3c9FdzrpDweTq50uvno9EY9fNTo/h1
+        NqzcHe2Um47y/lIAKJnRm+IeeAAS7/vNwOK17QSs2bOGmrYmg89iCTSkIGA/nJnFAEapTeKGyDU
+        Den8YKPWC8b0pVIOFKOjMS5Av
+X-Received: by 2002:a2e:94d6:: with SMTP id r22mr34524939ljh.7.1574957250205;
+        Thu, 28 Nov 2019 08:07:30 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxJfSZr/Clsrrcc/gC5NElQhCN1vMNa6l6YoOgiWGNNGSFJcqbgQqbvCxN1lg2chuuA5mTwPA==
+X-Received: by 2002:a2e:94d6:: with SMTP id r22mr34524914ljh.7.1574957249922;
+        Thu, 28 Nov 2019 08:07:29 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id q24sm8877350ljm.76.2019.11.28.08.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 08:07:29 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 9229C180339; Thu, 28 Nov 2019 17:07:28 +0100 (CET)
+From:   =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH bpf v3] bpftool: Allow to link libbpf dynamically
+Date:   Thu, 28 Nov 2019 17:07:12 +0100
+Message-Id: <20191128160712.1048793-1-toke@redhat.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191128145316.1044912-1-toke@redhat.com>
+References: 
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_04:2019-11-28,2019-11-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 clxscore=1015 adultscore=0 suspectscore=2
- phishscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911280135
+X-MC-Unique: mO-y99JUPIOowkQx_Vooag-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jiri Olsa <jolsa@kernel.org>
 
---=-Fts/3gcBB3+hmUFp/MtR
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Currently we support only static linking with kernel's libbpf
+(tools/lib/bpf). This patch adds LIBBPF_DYNAMIC compile variable
+that triggers libbpf detection and bpf dynamic linking:
 
-On Thu, 2019-11-28 at 14:49 +0100, Paolo Bonzini wrote:
-> On 27/11/19 22:57, Leonardo Bras wrote:
-> > But on the above case, kvm_put_kvm{,_no_destroy}() would be called
-> > with refcount =3D=3D 1, and if reorder patch is applied, it would not c=
-ause
-> > any use-after-free error, even on kvm_put_kvm() case.
->=20
-> I think this is what you're missing: kvm_put_kvm_no_destroy() does not
-> protect against bugs in the code that uses it.  It protect against bugs
-> _elsewhere_.
->=20
-> Therefore, kvm_put_kvm_no_destroy() is always a better choice when
-> applicable, because it turns bugs in _other parts of the code_ from
-> use-after-free to WARN+leak.
->=20
-> Paolo
->=20
+  $ make -C tools/bpf/bpftool make LIBBPF_DYNAMIC=3D1
 
-Hello Paolo,
+If libbpf is not installed, build (with LIBBPF_DYNAMIC=3D1) stops with:
 
-Thanks for explaining that! I think I got to understand it better now.
+  $ make -C tools/bpf/bpftool LIBBPF_DYNAMIC=3D1
+    Auto-detecting system features:
+    ...                        libbfd: [ on  ]
+    ...        disassembler-four-args: [ on  ]
+    ...                          zlib: [ on  ]
+    ...                        libbpf: [ OFF ]
 
-Best regards,
-Leonardo
+  Makefile:102: *** Error: No libbpf devel library found, please install li=
+bbpf-devel or libbpf-dev.
 
---=-Fts/3gcBB3+hmUFp/MtR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Adding LIBBPF_DIR compile variable to allow linking with
+libbpf installed into specific directory:
 
------BEGIN PGP SIGNATURE-----
+  $ make -C tools/lib/bpf/ prefix=3D/tmp/libbpf/ install_lib install_header=
+s
+  $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/tmp/libbpf/
 
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3f8A4ACgkQlQYWtz9S
-ttSxLw/+Pxm4KexspPrHxnbhSelogMo2/TtFjJ/t4zpdc8K6tDMRHQrGl2yptMPl
-J/Q4pSbmRLTtuqWsBcUEH8+6+NOytwk/qaWUGUF2hxLZZ3qDZ87Pj8y5u0DzXN1k
-NkxXofuB7r8CHxutdV4t+q6xL9cXUzNzjIjtg6MkgGUPYtWJCKB2xFy7ESQWga63
-kDr03Ekjq3tjk+NsymTj37+jRJeu5oukzzOOIEJ7F6D9Irc5EWGkYJEaZIheQxV8
-msAEFLDJJz/YsqueRCSRN8jd07oDIaPJGu2C7nBzMZmHzzZ5Vdaoumbo3nV27uZW
-Htf4bYzz0xThqDtjOJ+kgnnoCz362FtdIKFDFo8hJvLsnX4DbPb+OHiyx17mGDO9
-ZhOxO576TknKbgJqf5sFMpenygmTDFFZOLKQSOTKxQT9yXJvUIRM4PkygxpKsWg5
-8fUs/XM9PG9wvbas8DCgt7iQARsVDyRwFpv/V/Qyv2TgGlkxKof/cOmG6Qj9ntEW
-mzkF3fuRHfYuKQXYT/PYRHVaZIpAc7YNwkSVOtMv/5BF+Aou573CZV/LrPoYzuh7
-DgPfn8NE8GaMisEksVPv28LT9csmhZ15AD77ZhdJnwbZ2WcluelGzbvChh3xz78y
-Q+b4lax6EEkoOUXlwoYvETnHMJnfGFhRRPoJMnRk8HAf2sCJNVc=
-=4O3c
------END PGP SIGNATURE-----
+It might be needed to clean build tree first because features
+framework does not detect the change properly:
 
---=-Fts/3gcBB3+hmUFp/MtR--
+  $ make -C tools/build/feature clean
+  $ make -C tools/bpf/bpftool/ clean
+
+Since bpftool uses bits of libbpf that are not exported as public API in
+the .so version, we also pass in libbpf.a to the linker, which allows it to
+pick up the private functions from the static library without having to
+expose them as ABI.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+---
+v3:
+  - Keep $(LIBBPF) in $LIBS, and just add -lbpf on top
+  - Fix typo in error message
+v2:
+  - Pass .a file to linker when dynamically linking, so bpftool can use
+    private functions from libbpf without exposing them as API.
+
+ tools/bpf/bpftool/Makefile | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+index 39bc6f0f4f0b..15052dcaa39b 100644
+--- a/tools/bpf/bpftool/Makefile
++++ b/tools/bpf/bpftool/Makefile
+@@ -1,6 +1,15 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++# LIBBPF_DYNAMIC to enable libbpf dynamic linking.
++
+ include ../../scripts/Makefile.include
+ include ../../scripts/utilities.mak
++include ../../scripts/Makefile.arch
++
++ifeq ($(LP64), 1)
++  libdir_relative =3D lib64
++else
++  libdir_relative =3D lib
++endif
+=20
+ ifeq ($(srctree),)
+ srctree :=3D $(patsubst %/,%,$(dir $(CURDIR)))
+@@ -63,6 +72,19 @@ RM ?=3D rm -f
+ FEATURE_USER =3D .bpftool
+ FEATURE_TESTS =3D libbfd disassembler-four-args reallocarray zlib
+ FEATURE_DISPLAY =3D libbfd disassembler-four-args zlib
++ifdef LIBBPF_DYNAMIC
++  FEATURE_TESTS   +=3D libbpf
++  FEATURE_DISPLAY +=3D libbpf
++
++  # for linking with debug library run:
++  # make LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/opt/libbpf
++  ifdef LIBBPF_DIR
++    LIBBPF_CFLAGS  :=3D -I$(LIBBPF_DIR)/include
++    LIBBPF_LDFLAGS :=3D -L$(LIBBPF_DIR)/$(libdir_relative)
++    FEATURE_CHECK_CFLAGS-libbpf  :=3D $(LIBBPF_CFLAGS)
++    FEATURE_CHECK_LDFLAGS-libbpf :=3D $(LIBBPF_LDFLAGS)
++  endif
++endif
+=20
+ check_feat :=3D 1
+ NON_CHECK_FEAT_TARGETS :=3D clean uninstall doc doc-clean doc-install doc-=
+uninstall
+@@ -88,6 +110,18 @@ ifeq ($(feature-reallocarray), 0)
+ CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
+ endif
+=20
++ifdef LIBBPF_DYNAMIC
++  ifeq ($(feature-libbpf), 1)
++    # bpftool uses non-exported functions from libbpf, so just add the dyn=
+amic
++    # version of libbpf and let the linker figure it out
++    LIBS    :=3D -lbpf $(LIBS)
++    CFLAGS  +=3D $(LIBBPF_CFLAGS)
++    LDFLAGS +=3D $(LIBBPF_LDFLAGS)
++  else
++    dummy :=3D $(error Error: No libbpf devel library found, please instal=
+l libbpf-devel or libbpf-dev.)
++  endif
++endif
++
+ include $(wildcard $(OUTPUT)*.d)
+=20
+ all: $(OUTPUT)bpftool
+--=20
+2.24.0
 
