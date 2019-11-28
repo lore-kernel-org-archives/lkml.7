@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BDDC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DDDC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D97B221771
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BA121771
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfK1Pyz (ORCPT
+        id S1727047AbfK1PzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 10:54:55 -0500
+        Thu, 28 Nov 2019 10:55:08 -0500
 Received: from relay2-d.mail.gandi.net ([217.70.183.194]:41371 "EHLO
         relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbfK1Pyx (ORCPT
+        with ESMTP id S1726446AbfK1Pyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 10:54:53 -0500
+        Thu, 28 Nov 2019 10:54:52 -0500
 X-Originating-IP: 90.76.211.102
 Received: from localhost.localdomain (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id BEEF940022;
-        Thu, 28 Nov 2019 15:54:51 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id B4EE840002;
+        Thu, 28 Nov 2019 15:54:49 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -37,9 +36,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 4/5] dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
-Date:   Thu, 28 Nov 2019 16:54:37 +0100
-Message-Id: <20191128155438.325738-5-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v4 2/5] dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
+Date:   Thu, 28 Nov 2019 16:54:35 +0100
+Message-Id: <20191128155438.325738-3-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191128155438.325738-1-paul.kocialkowski@bootlin.com>
 References: <20191128155438.325738-1-paul.kocialkowski@bootlin.com>
@@ -50,90 +49,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Xylon LogiCVC display controller exports some GPIOs, which are
-exposed as a separate entity.
+The LogiCVC is a display engine which also exposes GPIO functionality.
+For this reason, it is described as a multi-function device that is expected
+to provide register access to its children nodes for gpio and display.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/gpio/xylon,logicvc-gpio.yaml     | 69 +++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
+ .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
 
-diff --git a/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
+diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
 new file mode 100644
-index 000000000000..d102888c1be7
+index 000000000000..abc9937506e0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
-@@ -0,0 +1,69 @@
++++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+@@ -0,0 +1,50 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +# Copyright 2019 Bootlin
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/gpio/xylon,logicvc-gpio.yaml#"
++$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Xylon LogiCVC GPIO controller
++title: Xylon LogiCVC multi-function device
 +
 +maintainers:
 +  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 +
 +description: |
-+  The LogiCVC GPIO describes the GPIO block included in the LogiCVC display
-+  controller. These are meant to be used for controlling display-related
-+  signals.
-+
-+  The controller exposes GPIOs from the display and power control registers,
-+  which are mapped by the driver as follows:
-+  - GPIO[4:0] (display control) mapped to index 0-4
-+  - EN_BLIGHT (power control) mapped to index 5
-+  - EN_VDD (power control) mapped to index 6
-+  - EN_VEE (power control) mapped to index 7
-+  - V_EN (power control) mapped to index 8
++  The LogiCVC is a display controller that also contains a GPIO controller.
++  As a result, a multi-function device is exposed as parent of the display
++  and GPIO blocks.
 +
 +properties:
-+  $nodename:
-+    pattern: "^gpio@[0-9a-f]+$"
-+
 +  compatible:
-+    enum:
-+      - xylon,logicvc-3.02.a-gpio
++    items:
++      - enum:
++          - xylon,logicvc-3.02.a
++      - const: syscon
++      - const: simple-mfd
 +
 +  reg:
 +    maxItems: 1
 +
-+  "#gpio-cells":
-+    const: 2
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - xylon,logicvc-3.02.a
 +
-+  gpio-controller: true
-+
-+  gpio-line-names:
-+    minItems: 1
-+    maxItems: 9
++  required:
++    - compatible
 +
 +required:
 +  - compatible
 +  - reg
-+  - "#gpio-cells"
-+  - gpio-controller
 +
 +examples:
 +  - |
 +    logicvc: logicvc@43c00000 {
 +      compatible = "xylon,logicvc-3.02.a", "syscon", "simple-mfd";
 +      reg = <0x43c00000 0x6000>;
-+
 +      #address-cells = <1>;
 +      #size-cells = <1>;
-+
-+      logicvc_gpio: gpio@40 {
-+        compatible = "xylon,logicvc-3.02.a-gpio";
-+        reg = <0x40 0x40>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio-line-names = "GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4",
-+               "EN_BLIGHT", "EN_VDD", "EN_VEE", "V_EN";
-+      };
 +    };
 -- 
 2.24.0
