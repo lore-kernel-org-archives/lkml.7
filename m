@@ -2,87 +2,145 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56511C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528B4C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA80216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:23:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lwgkM95E"
+	by mail.kernel.org (Postfix) with ESMTP id 26B87216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:24:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574961886;
+	bh=b4/AmTEV92WrE9X3EffjoPEtgDbvxRWEPGW8xFeckBY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AMAMDgUgLEyUIY8aQhEKQafxmhh6Ip/aFXYjjBc+KvyQFIpfG5CjADPye+QY1OiQ7
+	 Hlp55U2zJTB8kDBpvCWW9xCWZOer1ASogjJ2Liq1TD2nojWO5FdNbB3ZRxaNqJujyU
+	 rqSpRicENEby7Fews+36VE+J0R1u1g1zJ8WgCOeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfK1RXC (ORCPT
+        id S1726749AbfK1RYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 12:23:02 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:46888 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfK1RXC (ORCPT
+        Thu, 28 Nov 2019 12:24:45 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42688 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfK1RYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 12:23:02 -0500
-Received: by mail-qv1-f68.google.com with SMTP id t9so513391qvh.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 09:22:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=dxY7m/07nwpEoPmFlWFEy/QedJrHJ2tQnhpGMIFFBPA=;
-        b=lwgkM95EcPlajjkzOiW1CVT8SyikrffucLON3EJwUFlrJsyRMtR9+D5lB1ftY/W1Cz
-         uV29sjkzC68x3BL0tvgjhO8SG6alfLg1F0kChIF7XXTKTBb2MLiyLGQjk1Pt33GZ5hts
-         aa2JuCmLWsA6l3yEJlLCQbVj2vSO/BsXMeBZUxv81QYjPW1pDFPA6nsZNMVNR45ku2iW
-         XXPKD82T0GJhc4pTQOhd7nVohud1azDF2SMVkUUii+nlqpp3NnWUPD1uAU/Q1F3QaE/0
-         vMQz1y3Aa2CahQl/BlfOjtenF+BvMEzQF8XBV1BHpoomeWVua4NPHAIckFG5I1DsoBm0
-         wwDw==
+        Thu, 28 Nov 2019 12:24:44 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y19so20572152lfl.9;
+        Thu, 28 Nov 2019 09:24:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=dxY7m/07nwpEoPmFlWFEy/QedJrHJ2tQnhpGMIFFBPA=;
-        b=Y09SLBmg4JEql7hQcbQ6xqVwztd64CLDitcNKdP08c9Q3zDK4AlZ7Jn+f1NwoaIQg6
-         fUQrR/pcqnyp4VXZGJHJQIDaMF2CTYFIrqj7NkDGNllOADyuicz3lcY2YlGdgTa6TkoJ
-         R8UeyYQHlZE6enJdhv/RwQtXhJV0WjKs+DjpYNG+CKqsYyElpblTHuIKeH+5YMESqONc
-         BCD9U7IX16z2sX2JVKvY5VTyyIz3TeffBmk4tTJ/ScPDRkz600NvpvIsRdHnjerl3l+c
-         jJG5mxQlkDyzx49zXsSj6sqmhu3IjAx8NSvwmwBOSV0k+vPFatGxyRB5wRhiaWXquuKv
-         vvxg==
-X-Gm-Message-State: APjAAAXCnfAlX+jyGF7rabfqJLUUdL5evipkdovduExv24IkYgBKrCm6
-        enLthCO9S7abnO/SF5OzqsAGhg==
-X-Google-Smtp-Source: APXvYqxYRuvBPE0xGFypF88YG98wllF0IIMgWOkACR+5JbFUpq8+rry1pXmFuFbS4CnE5DVnRHzT7Q==
-X-Received: by 2002:a0c:e90b:: with SMTP id a11mr11720436qvo.229.1574961779319;
-        Thu, 28 Nov 2019 09:22:59 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j7sm8823693qkd.46.2019.11.28.09.22.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Nov 2019 09:22:58 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v1] mm/memory_hotplug: don't check the nid in find_(smallest|biggest)_section_pfn
-Date:   Thu, 28 Nov 2019 12:22:57 -0500
-Message-Id: <D7EFF3C1-E603-4729-8ABE-EBB6994795BF@lca.pw>
-References: <20191128154637.GO26807@dhcp22.suse.cz>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>
-In-Reply-To: <20191128154637.GO26807@dhcp22.suse.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-X-Mailer: iPhone Mail (17A878)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=trn2oJruIhuwCs6xMuGwp0kYiOcQXsbNZbrdFQNLYJE=;
+        b=QteH4IQ22KTDPseojpdNhFGKl9L1O/chT62Cik94gJLML6M5X7nVARktSDXUmZZ8FL
+         i07qSUjq7mGwrPVXO5ZUPGCQX+DXqenJR4dGvJN4Tq8OQ4WHLP96rBcVtw//+ypwXP+P
+         CYTYtOHRVAL2BJnLMGGL6WkXamiEwomXIZrpr1buPUYnBY5sZ7bUsJagi3qNfZtZhQCp
+         sJp+NivfJCZz8UwZt6mM5A0MT8KFkWidpMR8gIVCb22lgqosMvtxTzCcfrhMW9sTQceg
+         EJOoMC2DVQTgZvCRMeLb3xS0VRq2YaIW4JOSwD4UHCO76LZKhsuc2zVFeof+kMJM8AAX
+         apyg==
+X-Gm-Message-State: APjAAAWUEz9E8kLGd9smY7h2Kz44Loc3ODsNTd4F/9ClQnq511AXYXdM
+        NN93MqYIWloPDAZu8CRt8cc=
+X-Google-Smtp-Source: APXvYqxtH+XIdpH4HnL/JWO08m2iRo/IyYF6xtb7plDsp4uwvtDcMSNpC+r46yKkqLPgibeG4e5ejg==
+X-Received: by 2002:a19:da1a:: with SMTP id r26mr34062739lfg.60.1574961881917;
+        Thu, 28 Nov 2019 09:24:41 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id 145sm4249850ljj.69.2019.11.28.09.24.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 09:24:41 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1iaNWz-0006wR-HU; Thu, 28 Nov 2019 18:24:41 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com,
+        stable <stable@vger.kernel.org>,
+        Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
+        Prameela Rani Garnepudi <prameela.j04cs@gmail.com>,
+        Amitkumar Karwar <amit.karwar@redpinesignals.com>,
+        Fariya Fatima <fariyaf@gmail.com>
+Subject: [PATCH 1/5] rsi: fix use-after-free on failed probe and unbind
+Date:   Thu, 28 Nov 2019 18:22:00 +0100
+Message-Id: <20191128172204.26600-2-johan@kernel.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191128172204.26600-1-johan@kernel.org>
+References: <20191128172204.26600-1-johan@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Make sure to stop both URBs before returning after failed probe as well
+as on disconnect to avoid use-after-free in the completion handler.
 
+Reported-by: syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com
+Fixes: a4302bff28e2 ("rsi: add bluetooth rx endpoint")
+Fixes: dad0d04fa7ba ("rsi: Add RS9113 wireless driver")
+Cc: stable <stable@vger.kernel.org>     # 3.15
+Cc: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
+Cc: Amitkumar Karwar <amit.karwar@redpinesignals.com>
+Cc: Fariya Fatima <fariyaf@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/net/wireless/rsi/rsi_91x_usb.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-> On Nov 28, 2019, at 10:46 AM, Michal Hocko <mhocko@kernel.org> wrote:
->=20
-> I tend to push back on cleanups without a clear added value. In this
-> particular case it is not about aesthetic or a personal feeling about
-> the code though. Please read my comment with the ack.
+diff --git a/drivers/net/wireless/rsi/rsi_91x_usb.c b/drivers/net/wireless/rsi/rsi_91x_usb.c
+index 53f41fc2cadf..30bed719486e 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -292,6 +292,15 @@ static void rsi_rx_done_handler(struct urb *urb)
+ 		dev_kfree_skb(rx_cb->rx_skb);
+ }
+ 
++static void rsi_rx_urb_kill(struct rsi_hw *adapter, u8 ep_num)
++{
++	struct rsi_91x_usbdev *dev = (struct rsi_91x_usbdev *)adapter->rsi_dev;
++	struct rx_usb_ctrl_block *rx_cb = &dev->rx_cb[ep_num - 1];
++	struct urb *urb = rx_cb->rx_urb;
++
++	usb_kill_urb(urb);
++}
++
+ /**
+  * rsi_rx_urb_submit() - This function submits the given URB to the USB stack.
+  * @adapter: Pointer to the adapter structure.
+@@ -823,10 +832,13 @@ static int rsi_probe(struct usb_interface *pfunction,
+ 	if (adapter->priv->coex_mode > 1) {
+ 		status = rsi_rx_urb_submit(adapter, BT_EP);
+ 		if (status)
+-			goto err1;
++			goto err_kill_wlan_urb;
+ 	}
+ 
+ 	return 0;
++
++err_kill_wlan_urb:
++	rsi_rx_urb_kill(adapter, WLAN_EP);
+ err1:
+ 	rsi_deinit_usb_interface(adapter);
+ err:
+@@ -857,6 +869,10 @@ static void rsi_disconnect(struct usb_interface *pfunction)
+ 		adapter->priv->bt_adapter = NULL;
+ 	}
+ 
++	if (adapter->priv->coex_mode > 1)
++		rsi_rx_urb_kill(adapter, BT_EP);
++	rsi_rx_urb_kill(adapter, WLAN_EP);
++
+ 	rsi_reset_card(adapter);
+ 	rsi_deinit_usb_interface(adapter);
+ 	rsi_91x_deinit(adapter);
+-- 
+2.24.0
 
-I can only encourage you to push back more in general especially for those m=
-icro-size cleanups. On the other hand, it could be arbitrary because once yo=
-u are gone for vacations or some other reasons, it will be inconsistent of r=
-eviewing. You are mostly of my first defense those days.=
