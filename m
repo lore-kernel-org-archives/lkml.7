@@ -2,82 +2,113 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F6DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40DEC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0C721741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C2621741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574934197;
+	bh=MnCz93lIwuqAKZjOeDSCP9bthaSwxvp+XX7TgNiPf7Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CatRBsy96/wV2og64a702J2OFgXIWGU5TJItkmVHkX718b6BivWUZidLcN8/vriuW
+	 72kDjPmjRKaEBDr60NXhvAh/lRjwX7Jx9zDgwW71n6aX+3sMlzVouTzYBEBjvCdtd1
+	 +zgHfPE9Si6xXH+qsLVnEGHf9bUroqUITSQmfvs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfK1Jla (ORCPT
+        id S1726670AbfK1JnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 04:41:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:32828 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfK1Jla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 04:41:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A16D51FB;
-        Thu, 28 Nov 2019 01:41:29 -0800 (PST)
-Received: from [10.163.1.7] (unknown [10.163.1.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1560D3F52E;
-        Thu, 28 Nov 2019 01:41:26 -0800 (PST)
-Subject: Re: [v2 PATCH] mm: khugepaged: add trace status description for
- SCAN_PAGE_HAS_PRIVATE
-To:     Yang Shi <yang.shi@linux.alibaba.com>, songliubraving@fb.com,
-        kirill.shutemov@linux.intel.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1574793844-2914-1-git-send-email-yang.shi@linux.alibaba.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <caff6b97-fca8-4155-386a-cdd69717fef9@arm.com>
-Date:   Thu, 28 Nov 2019 15:12:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 28 Nov 2019 04:43:16 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41686 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfK1JnQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 04:43:16 -0500
+Received: by mail-wr1-f65.google.com with SMTP id b18so30253451wrj.8;
+        Thu, 28 Nov 2019 01:43:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UgTnLC+3ETJ4P4Qbb/UkyHfmjqLaw4B3tOIrLW9bCaw=;
+        b=EyQ+NTNTbYT83uwCrZSFdd7xibeDhUU6qgZj8abvlH1DIRp33/H7UwD7fBlUV32fws
+         vGInlnoz8FZC8og7ukCmL/wlMtgf0ludJ8pfg8MJy3kqO5l+tQn50fWiwh1Ny1e5CCNC
+         OzJY64afr4xEfwERaE3z99puOo39pBdrATesGDTUPa3NZFQASs2vx9eHomu0SgeBpG/r
+         4HSHJRezvDo6smmLXcvc6EqJMGboDiosR9xCG0qjEcVZq8Z+Wiea86kTnWSfO9e7y48P
+         9JMnNCb8XzLY+7swnjW8BMG7LuJd7EyLVEWOKmpzcpo6CY9kSQcNqH9UCpRIsfeBekOX
+         7gXw==
+X-Gm-Message-State: APjAAAUUr+Kat32a3FDknl8vg/Kd1iYNoBWs5qjwFWPa02xGdSGLEKx/
+        8cxmkfIUkt9dwLLeenDNbpI=
+X-Google-Smtp-Source: APXvYqwdZRlp/S4BaX1ZlxE2h9655+sgC0OLlqItykCfBmpFF+5UX/uwTKwitYPuGZ1XCtbmnwpBHA==
+X-Received: by 2002:a05:6000:12c9:: with SMTP id l9mr12196977wrx.304.1574934194317;
+        Thu, 28 Nov 2019 01:43:14 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id l4sm9453508wml.33.2019.11.28.01.43.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 01:43:13 -0800 (PST)
+Date:   Thu, 28 Nov 2019 10:43:12 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] mm: memcg/slab: wait for !root kmem_cache refcnt killing
+ on root kmem_cache destruction
+Message-ID: <20191128094312.GF26807@dhcp22.suse.cz>
+References: <20191125185453.278468-1-guro@fb.com>
+ <20191126092918.GB20912@dhcp22.suse.cz>
+ <20191126184135.GA66034@localhost.localdomain>
+ <20191127123225.GR20912@dhcp22.suse.cz>
+ <20191127172724.GA67742@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <1574793844-2914-1-git-send-email-yang.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127172724.GA67742@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/27/2019 12:14 AM, Yang Shi wrote:
-> The commit 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem)
-> FS") introduced a new khugepaged scan result: SCAN_PAGE_HAS_PRIVATE, but
-> the corresponding description for trace events were not added.
+On Wed 27-11-19 17:27:29, Roman Gushchin wrote:
+> On Wed, Nov 27, 2019 at 01:32:25PM +0100, Michal Hocko wrote:
+> > On Tue 26-11-19 18:41:41, Roman Gushchin wrote:
+> > > On Tue, Nov 26, 2019 at 10:29:18AM +0100, Michal Hocko wrote:
+> > > > On Mon 25-11-19 10:54:53, Roman Gushchin wrote:
+> > [...]
+> > > > > So in a rare case when not all children kmem_caches are destroyed
+> > > > > at the moment when the root kmem_cache is about to be gone, we need
+> > > > > to wait another rcu grace period before destroying the root
+> > > > > kmem_cache.
+> > > > 
+> > > > Could you explain how rare this really is please?
+> > > 
+> > > It seems that we don't destroy root kmem_caches with enabled memcg
+> > > accounting that often, but maybe I'm biased here.
+> > 
+> > So this happens each time a root kmem_cache is destroyed? Which would
+> > imply that only dynamically created ones?
 > 
-> Cc: Song Liu <songliubraving@fb.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
-> v2: *Adopted the comments from Anshuman Khandual
+> Yes, only dynamically created and only in those cases when destruction
+> of the root cache happens immediately after the deactivation of the
+> non-root cache.
+> Tbh I can't imagine any other case except rmmod after
+> removing the cgroup.
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Thanks for the confirmation! Could you please make this explicit in the
+changelog please? Maybe it is obvious to you but it took me quite some
+time to grasp what the hell is going on here. Both memcg and kmem_cache
+destruction are quite complex and convoluted.
 
-> 
->  include/trace/events/huge_memory.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
-> index dd4db33..d82a0f4 100644
-> --- a/include/trace/events/huge_memory.h
-> +++ b/include/trace/events/huge_memory.h
-> @@ -31,7 +31,8 @@
->  	EM( SCAN_ALLOC_HUGE_PAGE_FAIL,	"alloc_huge_page_failed")	\
->  	EM( SCAN_CGROUP_CHARGE_FAIL,	"ccgroup_charge_failed")	\
->  	EM( SCAN_EXCEED_SWAP_PTE,	"exceed_swap_pte")		\
-> -	EMe(SCAN_TRUNCATED,		"truncated")			\
-> +	EM( SCAN_TRUNCATED,		"truncated")			\
-> +	EMe(SCAN_PAGE_HAS_PRIVATE,	"page_has_private")		\
->  
->  #undef EM
->  #undef EMe
-> 
+Thanks a lot.
+
+-- 
+Michal Hocko
+SUSE Labs
