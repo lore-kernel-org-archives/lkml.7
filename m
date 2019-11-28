@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1161C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E52DC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B9921781
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524D521781
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m4dlAYMM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EZxEFdIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfK1Nen (ORCPT
+        id S1727005AbfK1Ney (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:34:43 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37999 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfK1Nel (ORCPT
+        Thu, 28 Nov 2019 08:34:54 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50289 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfK1Nem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:34:41 -0500
-Received: by mail-wr1-f68.google.com with SMTP id i12so31226569wro.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:34:40 -0800 (PST)
+        Thu, 28 Nov 2019 08:34:42 -0500
+Received: by mail-wm1-f68.google.com with SMTP id l17so11019450wmh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:34:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=V0r1Vz9ksKDupLD9OJqzUcDOf67hQCL9kz7e13IH3GE=;
-        b=m4dlAYMM/PIeKCsaJqVlO08YbmIhD6RhsLm7nOtLkOytXmO3qq1q/NJvnv0LeaLeXq
-         oOxVm1tA7z9hL1eDdcBG3ZUiO1MH5iA1h4sF3xpAlE1lKk6ohD8GACAbkL7U1OghSHi+
-         tmZI95GQrE0w++WAg0zQJylT9wyydK5AgU2j0e1JsJ11SuNdMrOSjevlP/Ik/E+liFev
-         RBrkrVi/nH5XUspOIPSa7aKqMRRDTzxZY7KpqXEQXr2a5qAohXFKbjJ78CV33+TMQcxj
-         UIzA9mthlQkhSlOU/7B04DggmQ2Ez87farNVp7idFzMk/LaeYnLpnkvgL4+KwERgHQjJ
-         O16A==
+        bh=efZXdx8nOE9IRhU/0a0pMggKVJBaJwNsJBonEmaYwBU=;
+        b=EZxEFdIxvM62pDLBLLIcES0NSWNTez/Q9a9uibJWaZ3fpi98XzuotDpSxZ2Ni1JC9p
+         Osoa0ZmcJGtW9bz8oF3eTtEsDo3cWTXVM65Pp+UxtNwwW/y52U4MLg2PKQw5nuuUbnCY
+         91v0xn/r7zmwsm6zVneHY20HFX4ZKRbf/rQF5T+iApX/Lpvy+1QMXKY4NzURC4HoE1RC
+         W+wSvMNPr1zRBZNs0t8/cHMoGyUJ7m/GSgeH5bbtafyMcJv2cbBtFg7xmon8QOYBmfON
+         KUy5wwJQus2MYRSx/tvqiaPK3DvKPq/Vp3LDRY165O62TU/Dr2TbMLo/0b0nY4Luc7Rx
+         frtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=V0r1Vz9ksKDupLD9OJqzUcDOf67hQCL9kz7e13IH3GE=;
-        b=TKNgMy+V/Y3NZLXCJfSRfEdCwcFPZL91YCjVPY4Ctkd0HddADsI1sUqbXGNNaVVNSE
-         6OUCGeRbxRc42levAz2k9yExCf9NkQgwcJpPP4Kxt1OxZxlNVB4pg+m21yjkPXuejxZ4
-         PgjaXRd1L0bPIqsfCIvu310TvQHWmtDQl/H8fYlUwpCq8a+uAdyyx9tyRnl12007Nad9
-         j+PmVt5EUH9Wj2FTd+0esJuvRLFq5ZoSGHgdxaiIKq7p5FCNmXbDbFepTvvDW43DWJNk
-         3CStmRI83s05bsPa/f2d7G4xJ65kANFE9GBVN2Jz9EAd8iD6t2J10T121pw3mcvyw7oR
-         3xbw==
-X-Gm-Message-State: APjAAAXzDFLrxpFL0w7/ai3TGxfP/cDloUVSKgLTzJCd6md0GRZF3984
-        P+sSZGvuhndvREzXD6Y1cV7srQ==
-X-Google-Smtp-Source: APXvYqy1rwDcBh0cI1GWX7oMKqVb5qJCvtu5a2XAY1XhhuLyV/p3LIlUO78MiO0KUCQBqiPRluL1bg==
-X-Received: by 2002:adf:f303:: with SMTP id i3mr46618947wro.157.1574948079524;
-        Thu, 28 Nov 2019 05:34:39 -0800 (PST)
+        bh=efZXdx8nOE9IRhU/0a0pMggKVJBaJwNsJBonEmaYwBU=;
+        b=uZ126WlXRnV67O5iJrqCdDy+lUMaejs43DoEvUDisz7pq6WSfeKdoneMqJrzDaBqKZ
+         QUvLmUH7gAZelKcWn2yeOD1DwtX+tsg8MxvQuzqJsGACawmCHEe0P02SLEy97TibKCno
+         wH4ITy9z6lFg5jB0E03C3Acnttx53Jz0Ko4hAy87WXaubwwXE75lMsdJBhue3oXjxeEY
+         iiQBbHPoUdqgHqV8JPaFWTJyRrROPjtK4a6Orjc/zCYhglmzHqt2LI+db+476WkS4GIc
+         +kg82oOqJt57XHeqHM0zeCmHHzjVlJ9lfrxSpqSJ7B73kLaC4PQYT1Z8GD+7HVUtNgZK
+         OC4w==
+X-Gm-Message-State: APjAAAXvFlDbZ5WVF4NFLCXuEhzB8vY/rgN7b3DlsCDvX0FkPNBr4iGV
+        037ssrO8HaymKF3mPmB4vVdkBg==
+X-Google-Smtp-Source: APXvYqwwb/ogD8FJGE0VinCuLLQUf1L1Nd1+voYXxUCs8+wa9MLOJK5JYZXlbgdV0e2MpXbmUoEpxA==
+X-Received: by 2002:a7b:cd82:: with SMTP id y2mr8272892wmj.58.1574948080885;
+        Thu, 28 Nov 2019 05:34:40 -0800 (PST)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id y20sm2220451wmi.25.2019.11.28.05.34.38
+        by smtp.googlemail.com with ESMTPSA id y20sm2220451wmi.25.2019.11.28.05.34.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 28 Nov 2019 05:34:39 -0800 (PST)
+        Thu, 28 Nov 2019 05:34:40 -0800 (PST)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     linux-pm@vger.kernel.org
 Cc:     bjorn.andersson@linaro.org, agross@kernel.org, digetx@gmail.com,
@@ -63,9 +63,9 @@ Cc:     bjorn.andersson@linaro.org, agross@kernel.org, digetx@gmail.com,
         masneyb@onstation.org, sibis@codeaurora.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         georgi.djakov@linaro.org
-Subject: [PATCH 3/5] interconnect: qcom: msm8974: Walk the list safely on node removal
-Date:   Thu, 28 Nov 2019 15:34:33 +0200
-Message-Id: <20191128133435.25667-3-georgi.djakov@linaro.org>
+Subject: [PATCH 4/5] interconnect: Add a common helper for removing all nodes
+Date:   Thu, 28 Nov 2019 15:34:34 +0200
+Message-Id: <20191128133435.25667-4-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191128133435.25667-1-georgi.djakov@linaro.org>
 References: <20191128133435.25667-1-georgi.djakov@linaro.org>
@@ -76,35 +76,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we will remove items off the list using list_del(), we need to use the
-safe version of list_for_each_entry().
+The removal of all nodes from a provider seem to be a common functionality
+for all existing users and it would make sense to factor out this into a
+a common helper function.
 
-Fixes: 4e60a9568dc6 ("interconnect: qcom: add msm8974 driver")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Suggested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- drivers/interconnect/qcom/msm8974.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/interconnect/core.c           | 22 ++++++++++++++++++++++
+ include/linux/interconnect-provider.h |  6 ++++++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/drivers/interconnect/qcom/msm8974.c b/drivers/interconnect/qcom/msm8974.c
-index ce599a0c83d9..0a1a8ba6afa7 100644
---- a/drivers/interconnect/qcom/msm8974.c
-+++ b/drivers/interconnect/qcom/msm8974.c
-@@ -732,7 +732,7 @@ static int msm8974_icc_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index 467c539310f3..0e4852feb395 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -735,6 +735,28 @@ void icc_node_del(struct icc_node *node)
+ }
+ EXPORT_SYMBOL_GPL(icc_node_del);
  
- err_del_icc:
--	list_for_each_entry(node, &provider->nodes, node_list) {
-+	list_for_each_entry_safe(node, &provider->nodes, node_list) {
- 		icc_node_del(node);
- 		icc_node_destroy(node->id);
- 	}
-@@ -750,7 +750,7 @@ static int msm8974_icc_remove(struct platform_device *pdev)
- 	struct icc_provider *provider = &qp->provider;
- 	struct icc_node *n;
++/**
++ * icc_nodes_remove() - remove all previously added nodes from provider
++ * @provider: the interconnect provider we are removing nodes from
++ *
++ * Return: 0 on success, or an error code otherwise
++ */
++int icc_nodes_remove(struct icc_provider *provider)
++{
++	struct icc_node *n, *tmp;
++
++	if (WARN_ON(IS_ERR_OR_NULL(provider)))
++		return -EINVAL;
++
++	list_for_each_entry_safe_reverse(n, tmp, &provider->nodes, node_list) {
++		icc_node_del(n);
++		icc_node_destroy(n->id);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(icc_nodes_remove);
++
+ /**
+  * icc_provider_add() - add a new interconnect provider
+  * @provider: the interconnect provider that will be added into topology
+diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
+index b16f9effa555..31440c921216 100644
+--- a/include/linux/interconnect-provider.h
++++ b/include/linux/interconnect-provider.h
+@@ -98,6 +98,7 @@ int icc_link_create(struct icc_node *node, const int dst_id);
+ int icc_link_destroy(struct icc_node *src, struct icc_node *dst);
+ void icc_node_add(struct icc_node *node, struct icc_provider *provider);
+ void icc_node_del(struct icc_node *node);
++int icc_nodes_remove(struct icc_provider *provider);
+ int icc_provider_add(struct icc_provider *provider);
+ int icc_provider_del(struct icc_provider *provider);
  
--	list_for_each_entry(n, &provider->nodes, node_list) {
-+	list_for_each_entry_safe(n, &provider->nodes, node_list) {
- 		icc_node_del(n);
- 		icc_node_destroy(n->id);
- 	}
+@@ -130,6 +131,11 @@ void icc_node_del(struct icc_node *node)
+ {
+ }
+ 
++static inline int icc_nodes_remove(struct icc_provider *provider)
++{
++	return -ENOTSUPP;
++}
++
+ static inline int icc_provider_add(struct icc_provider *provider)
+ {
+ 	return -ENOTSUPP;
