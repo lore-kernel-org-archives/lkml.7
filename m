@@ -2,65 +2,112 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC7BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96753C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F57216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69DB5216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:49:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dBa/zkhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfK1Isw (ORCPT
+        id S1727602AbfK1ItP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 03:48:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48160 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726301AbfK1Isw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:48:52 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 619A9ACF1;
-        Thu, 28 Nov 2019 08:48:50 +0000 (UTC)
-Subject: Re: [PATCH v2 0/2] xen/gntdev: sanitize user interface handling
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-References: <20191107111546.26579-1-jgross@suse.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <442417bc-ec65-0864-0a99-59583a52f866@suse.com>
-Date:   Thu, 28 Nov 2019 09:48:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 28 Nov 2019 03:49:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35533 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726301AbfK1ItP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 03:49:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574930954;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SR+KTTJ3GlEow7kpfjWw52TLP8VskmK7shD9jzjrLUk=;
+        b=dBa/zkhW7Ton+JH9ifZI2LO4hpMx5hP8fcEMRNZqPygU15vxRG7FozHVpi2/wSVMm9vlZb
+        GCl92h8vjxzhoFtaIJVVrMx8VKLfHbhmKZNTVu6U6xySU577EPfV9RfDXSzj6sXma+X5nl
+        YuG1cxHIHsXPqY2bN4b3tMNfpLxskEs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-391-k1I8B9FENh-njGBz-WF6VQ-1; Thu, 28 Nov 2019 03:49:13 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82A62107ACE3;
+        Thu, 28 Nov 2019 08:49:10 +0000 (UTC)
+Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DB6AD60C80;
+        Thu, 28 Nov 2019 08:49:03 +0000 (UTC)
+Subject: Re: [PATCH] KVM: vgic: Fix potential double free dist->spis in
+ __kvm_vgic_destroy()
+To:     linmiaohe <linmiaohe@huawei.com>, maz@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, catalin.marinas@arm.com,
+        gregkh@linuxfoundation.org, will@kernel.org,
+        andre.przywara@arm.com, tglx@linutronix.de
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <1574923128-19956-1-git-send-email-linmiaohe@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <115fbbb3-73d5-444a-0aec-61bca0dea435@redhat.com>
+Date:   Thu, 28 Nov 2019 09:49:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20191107111546.26579-1-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1574923128-19956-1-git-send-email-linmiaohe@huawei.com>
 Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: k1I8B9FENh-njGBz-WF6VQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.11.19 12:15, Juergen Gross wrote:
-> The Xen gntdev driver's checking of the number of allowed mapped pages
-> is in need of some sanitizing work.
+Hi,
+
+On 11/28/19 7:38 AM, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
 > 
-> Changes in V2:
-> - enhanced commit message of patch 1 (Andrew Cooper)
+> In kvm_vgic_dist_init() called from kvm_vgic_map_resources(), if
+> dist->vgic_model is invalid, dist->spis will be freed without set
+> dist->spis = NULL. And in vgicv2 resources clean up path,
+> __kvm_vgic_destroy() will be called to free allocated resources.
+> And dist->spis will be freed again in clean up chain because we
+> forget to set dist->spis = NULL in kvm_vgic_dist_init() failed
+> path. So double free would happen.
 > 
-> Juergen Gross (2):
->    xen/gntdev: replace global limit of mapped pages by limit per call
->    xen/gntdev: switch from kcalloc() to kvcalloc()
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+
+Thanks
+
+Eric
+
+> ---
+>  virt/kvm/arm/vgic/vgic-init.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->   drivers/xen/gntdev-common.h |  2 +-
->   drivers/xen/gntdev-dmabuf.c | 11 +++------
->   drivers/xen/gntdev.c        | 55 +++++++++++++++++++--------------------------
->   3 files changed, 27 insertions(+), 41 deletions(-)
+> diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+> index 53e3969dfb52..c17c29beeb72 100644
+> --- a/virt/kvm/arm/vgic/vgic-init.c
+> +++ b/virt/kvm/arm/vgic/vgic-init.c
+> @@ -171,6 +171,7 @@ static int kvm_vgic_dist_init(struct kvm *kvm, unsigned int nr_spis)
+>  			break;
+>  		default:
+>  			kfree(dist->spis);
+> +			dist->spis = NULL;
+>  			return -EINVAL;
+>  		}
+>  	}
 > 
 
-Boris, could you please comment on the patches?
-
-
-Juergen
