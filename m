@@ -2,99 +2,128 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CBBC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A4EC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA3E21741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2472321741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:12:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u8f2cCPV"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b9U7ovKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfK1KIO (ORCPT
+        id S1726569AbfK1KME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:08:14 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41707 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbfK1KIN (ORCPT
+        Thu, 28 Nov 2019 05:12:04 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54028 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfK1KMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:08:13 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so7196143otc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 02:08:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yNk3xsUZ+oSOk7bRz+4Bga5ws+iYwn78Pcl6qMinSnY=;
-        b=u8f2cCPVHZdz5qbvTe0N+QH3BCTn+DwqVU0ovpjUW79cGc/UyyhtcJJDTeTFKMzGNO
-         U8g5im8MNI4A0rVudkS7ji/3SJFqpbCmvfznJYiZK5BHS8n2zS7fCrB37gHSN5BMxlIB
-         Q9gT6Xrlp24+3ZTzKcyyQ8IyiGi1lUW7SsjKh4JFC0rhSy/BiQbkvnKjoqP498OAKrwp
-         FYX3Fu/Oa4snpMTCJl/SErXgEZQ8diNkkl9X0pw5X5vGUprmk4slAiXwJ4vnhEnyt65T
-         BWpQ+reXf0KINt53gWxAaAWYw+La2rjfJFu3GlnYMs36ebMku6FnQIHhntTsfSiQ1jF3
-         ObgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yNk3xsUZ+oSOk7bRz+4Bga5ws+iYwn78Pcl6qMinSnY=;
-        b=qtuwVO6ahVZOCLHlrmfxyoalTsU2yUfR0PzRuyXmqT8l8oHYguwtvDKrU9iiYCa+Si
-         5Thq5DWf1lfg8cB82q4VzZ9aVOkkAcNCXLEhftK9CxfLZABOe5Xk9ZyOkxlA5LkpcjuA
-         aciX5Ix9LKJofO59NwdEY04gmFZ8FPkwUD6yXSL7QGIaiiOw9AOgyChKVW2Uqq5doVAS
-         brLDR2zluU+yIrTBnPkoUYGHbCPYL15BWrfTJpo4v0wFTms3V//udrsKYD1TFtg4Fpkx
-         wARnEILA1eFZtEU/jG9Jva57zCd/O65kuyNENeslsF0vA7LbZqAULKQZatf69Wqk51xN
-         Nc4w==
-X-Gm-Message-State: APjAAAVX8CK/0d5UesFW9V8VUXVcacmE5YFBZetCirkfNxKJ/uquZeqI
-        UCJUoa7vlGM0fFwCCxZgGP0+yvP+G77+b8pjiic/4p46
-X-Google-Smtp-Source: APXvYqy2PMUfNncH77DaOJWnaAOzBzAJN4hv+1PXYJ8YkR9dHaty4QhojiAF5D2tEVm+0gdwe0n1c7sGXOEfpITUctg=
-X-Received: by 2002:a9d:4801:: with SMTP id c1mr6749995otf.32.1574935692364;
- Thu, 28 Nov 2019 02:08:12 -0800 (PST)
+        Thu, 28 Nov 2019 05:12:03 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAC0Nw088155;
+        Thu, 28 Nov 2019 04:12:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574935920;
+        bh=fUJokwFNOJXpknCrMcpTrziKaDtWMVGaJuYHRrG6Rm8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=b9U7ovKZraVzYMXkUIiwnORlbBokw3ywoFl1iccuIGg3caScMd8Mv4QwHYCVcryXQ
+         vcD+fuRj4km9GQf4wEDAbe1ZkdidY4zBg9VP9t0RlA08eHwV6JMxNHsvidCK+nCn7s
+         TtCxnW3FccsUhwgnXKySLfm+jsDsdRMKagfZLc24=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAC0nP063319;
+        Thu, 28 Nov 2019 04:12:00 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
+ Nov 2019 04:11:59 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 28 Nov 2019 04:11:59 -0600
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASABvep023862;
+        Thu, 28 Nov 2019 04:11:58 -0600
+Subject: Re: [PATCH] mmc: sdhci: Fix incorrect switch to HS mode
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Alan Cooper <alcooperx@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+References: <20190903115114.33053-1-alcooperx@gmail.com>
+ <CAPDyKFqaNBH3Thwy1O+KXkcsgM2gMrm9zNGYWH8vVP+Y2vSLdA@mail.gmail.com>
+ <CAOGqxeUJD7eQxRnH1rep=m2+Ga5DDF=uWMsc_j2NZgC+EnZqsg@mail.gmail.com>
+ <7e495749-1539-9164-d801-305a918318d6@ti.com>
+ <6de5746e-bca2-fbe7-ff48-46103b9500a7@intel.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <18618a7b-3ba4-86b3-b6db-29cc501e4594@ti.com>
+Date:   Thu, 28 Nov 2019 15:42:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
- <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
- <1d3a458a-fa79-5e33-b5ce-b473122f6d1a@kernel.dk> <CAG48ez2VBS4bVJqdCU9cUhYePYCiUURvXZWneBx2KGkg3L9d4g@mail.gmail.com>
- <f4144a96-58ef-fba7-79f0-e5178147b6bb@rasmusvillemoes.dk>
-In-Reply-To: <f4144a96-58ef-fba7-79f0-e5178147b6bb@rasmusvillemoes.dk>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 28 Nov 2019 11:07:46 +0100
-Message-ID: <CAG48ez1v5EmuSvn+LY8od_ZMt1QVdUWqi9DWLSp0CgMxkL=sNg@mail.gmail.com>
-Subject: Re: [PATCH RFC] signalfd: add support for SFD_TASK
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Jens Axboe <axboe@kernel.dk>, io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6de5746e-bca2-fbe7-ff48-46103b9500a7@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 10:02 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
-> On 28/11/2019 00.27, Jann Horn wrote:
->
-> > One more thing, though: We'll have to figure out some way to
-> > invalidate the fd when the target goes through execve(), in particular
-> > if it's a setuid execution. Otherwise we'll be able to just steal
-> > signals that were intended for the other task, that's probably not
-> > good.
-> >
-> > So we should:
-> >  a) prevent using ->wait() on an old signalfd once the task has gone
-> > through execve()
-> >  b) kick off all existing waiters
-> >  c) most importantly, prevent ->read() on an old signalfd once the
-> > task has gone through execve()
-> >
-> > We probably want to avoid using the cred_guard_mutex here, since it is
-> > quite broad and has some deadlocking issues; it might make sense to
-> > put the update of ->self_exec_id in fs/exec.c under something like the
-> > siglock,
->
-> What prevents one from exec'ing a trivial helper 2^32-1 times before
-> exec'ing into the victim binary?
+Adrian,
 
-Uh, yeah... that thing should probably become 64 bits wide, too.
+On 28/11/19 2:56 PM, Adrian Hunter wrote:
+> On 28/11/19 10:21 AM, Faiz Abbas wrote:
+>> Hi,
+>>
+>> On 19/09/19 5:27 PM, Alan Cooper wrote:
+>>> This does correct the sequence of switching to HS400 but it might be
+>>> safest to just add this to the latest until it gets a little testing
+>>> to make sure it doesn't expose some bug in existing controllers.
+>>>
+>>> Thanks
+>>> Al
+>>>
+>>> On Tue, Sep 3, 2019 at 10:52 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>>>
+>>>> On Tue, 3 Sep 2019 at 13:51, Al Cooper <alcooperx@gmail.com> wrote:
+>>>>>
+>>>>> When switching from any MMC speed mode that requires 1.8v
+>>>>> (HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
+>>>>> ends up configured for SDR12 with a 50MHz clock which is an illegal
+>>>>> mode.
+>>>>>
+>>>>> This happens because the SDHCI_CTRL_VDD_180 bit in the
+>>>>> SDHCI_HOST_CONTROL2 register is left set and when this bit is
+>>>>> set, the speed mode is controlled by the SDHCI_CTRL_UHS field
+>>>>> in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
+>>>>> will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
+>>>>> because there is no UHS mode being set.
+>>>>>
+>>>>> The fix is to change sdhci_set_uhs_signaling() to set the
+>>>>> SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
+>>>>> any switch to HS mode.
+>>
+>> This change has broken High speed mode in SD card for me in AM65x-evm. I
+>> guess this change only needs to be done for eMMC. SDR25 is decidedly not
+>> the same as high speed for SD card.
+> 
+> Shall we revert c894e33ddc1910e14d6f2a2016f60ab613fd8b37 and then Alan
+> could send a patch providing the desired behaviour in ->set_uhs_signaling()
+> of the relevant driver e.g.
+> 
+> void ???_set_uhs_signaling(struct sdhci_host *host, unsigned int timing)
+> {
+> 	if (timing == MMC_TIMING_SD_HS || timing == MMC_TIMING_MMC_HS)
+> 		timing = MMC_TIMING_UHS_SDR25;
+> 	sdhci_set_uhs_signaling(host, timing);
+> }
+> 
+Yes. Lets do that. I will send the revert.
+
+Thanks,
+Faiz
