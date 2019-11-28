@@ -2,110 +2,120 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BD4C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 887F3C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61ED62176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E2020880
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NJL1lyR+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K+IKYnZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfK1WiY (ORCPT
+        id S1726712AbfK1WjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 17:38:24 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:43739 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbfK1WiY (ORCPT
+        Thu, 28 Nov 2019 17:39:08 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48116 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfK1WjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 17:38:24 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 0C8B222EDB;
-        Thu, 28 Nov 2019 23:38:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1574980701;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Y4b1ub2wBoYW7RKVV+BH5we4lCb9ywzmaPsTxmMyDsk=;
-        b=NJL1lyR+dokvXhronO4ODUDIpDTJnoHq9SNH4vy7IYHQChy3MqCdy/OvuzrlxeOkZ3Qg6y
-        5cO7IEiUJmDgAMv7oLF5Rs5ylkckd0ssFX3HvDSA6O6Tl88Fcxq6LZY0CXobj6GT3+x+tN
-        qIlcpI5FRiExHQnBT6Da8KJ4Tly/dzA=
-From:   Michael Walle <michael@walle.cc>
-To:     alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Cc:     Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Michael Walle <michael@walle.cc>
-Subject: [PATCH] ASoC: fsl_sai: add IRQF_SHARED
-Date:   Thu, 28 Nov 2019 23:38:02 +0100
-Message-Id: <20191128223802.18228-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Thu, 28 Nov 2019 17:39:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pZCnrPr2b9gLMJqHgJo0gt01BaizFyA66hYSt9kdrmM=; b=K+IKYnZ/GsB+ZkQTbcKnhP/Pc
+        c6AKsa1pl3X/SWUAPvotc5kwRzdAocWRZcKuyIdCRNz2v3hWSfKpbjXcqKwKeFCsvKuiiRQruAJX4
+        rAybf2ktb0++MuvMBIyMcfEWakbScUlRpQD27Qib2+jeuGlVY8mTyLJDunoTWF6VdfJ99LKe4jvBD
+        NHIqDfxvOISGNpPt+cSNGVfXDAwJsH/TLz94fb/9EzXZErZCUIDLH2ypPdg9NSU7xq2OBZgTMLKZn
+        l/zH5R3FZnikl4Czt+RVpQLs1qiTVcUdBrTRq+bjjvD4I32SmtnJInWTvP1ET4xEY6dVFm0UBy4S0
+        +VU/OID+Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iaSRE-0007TB-JM; Thu, 28 Nov 2019 22:39:04 +0000
+Date:   Thu, 28 Nov 2019 14:39:04 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm/page_vma_mapped: page table boundary is already
+ guaranteed
+Message-ID: <20191128223904.GG20752@bombadil.infradead.org>
+References: <20191128010321.21730-1-richardw.yang@linux.intel.com>
+ <20191128010321.21730-2-richardw.yang@linux.intel.com>
+ <20191128083143.kwih655snxqa2qnm@box.shutemov.name>
+ <20191128210945.6gtt7wlygsvxip4n@master>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 0C8B222EDB
-X-Spamd-Result: default: False [6.40 / 15.00];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[12];
-         MID_CONTAINS_FROM(1.00)[];
-         NEURAL_HAM(-0.00)[-0.593];
-         FREEMAIL_CC(0.00)[kernel.org,gmail.com,perex.cz,suse.com,walle.cc];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128210945.6gtt7wlygsvxip4n@master>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LS1028A SoC uses the same interrupt line for adjacent SAIs. Use
-IRQF_SHARED to be able to use these SAIs simultaneously.
+On Thu, Nov 28, 2019 at 09:09:45PM +0000, Wei Yang wrote:
+> On Thu, Nov 28, 2019 at 11:31:43AM +0300, Kirill A. Shutemov wrote:
+> >On Thu, Nov 28, 2019 at 09:03:21AM +0800, Wei Yang wrote:
+> >> The check here is to guarantee pvmw->address iteration is limited in one
+> >> page table boundary. To be specific, here the address range should be in
+> >> one PMD_SIZE.
+> >> 
+> >> If my understanding is correct, this check is already done in the above
+> >> check:
+> >> 
+> >>     address >= __vma_address(page, vma) + PMD_SIZE
+> >> 
+> >> The boundary check here seems not necessary.
+> >> 
+> >> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> >
+> >NAK.
+> >
+> >THP can be mapped with PTE not aligned to PMD_SIZE. Consider mremap().
+> >
+> 
+> Hi, Kirill
+> 
+> Thanks for your comment during Thanks Giving Day. Happy holiday:-)
+> 
+> I didn't think about this case before, thanks for reminding. Then I tried to
+> understand your concern.
+> 
+> mremap() would expand/shrink a memory mapping. In this case, probably shrink
+> is in concern. Since pvmw->page and pvmw->vma are not changed in the loop, the
+> case you mentioned maybe pvmw->page is the head of a THP but part of it is
+> unmapped.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- sound/soc/fsl/fsl_sai.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+mremap() can also move a mapping, see MREMAP_FIXED.
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index b517e4bc1b87..8c3ea7300972 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -958,7 +958,8 @@ static int fsl_sai_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return irq;
- 
--	ret = devm_request_irq(&pdev->dev, irq, fsl_sai_isr, 0, np->name, sai);
-+	ret = devm_request_irq(&pdev->dev, irq, fsl_sai_isr, IRQF_SHARED,
-+			       np->name, sai);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to claim irq %u\n", irq);
- 		return ret;
--- 
-2.20.1
-
+> This means the following condition stands:
+> 
+>     vma->vm_start <= vma_address(page) 
+>     vma->vm_end <=   vma_address(page) + page_size(page)
+> 
+> Since we have checked address with vm_end, do you think this case is also
+> guarded?
+> 
+> Not sure my understanding is correct, look forward your comments.
+> 
+> >> Test:
+> >>    more than 48 hours kernel build test shows this code is not touched.
+> >
+> >Not an argument. I doubt mremap(2) is ever called in kernel build
+> >workload.
+> >
+> >-- 
+> > Kirill A. Shutemov
+> 
+> -- 
+> Wei Yang
+> Help you, Help me
+> 
