@@ -2,87 +2,138 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A394C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97004C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED8221774
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F2D2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfK1KRj (ORCPT
+        id S1726569AbfK1KTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:17:39 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:60734 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726133AbfK1KRi (ORCPT
+        Thu, 28 Nov 2019 05:19:42 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:60853 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfK1KTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:17:38 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-31-hUuKyJzuN2qaJR0SWDF11g-1; Thu, 28 Nov 2019 10:17:35 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 28 Nov 2019 10:17:34 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 28 Nov 2019 10:17:34 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Eric Dumazet' <eric.dumazet@gmail.com>,
-        'Paolo Abeni' <pabeni@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-CC:     'Marek Majkowski' <marek@cloudflare.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Subject: RE: epoll_wait() performance
-Thread-Topic: epoll_wait() performance
-Thread-Index: AdWgk3jgEIFNwcnRS6+4A+/jFPxTuQEdLCCAAAAn2qAADa2dEAAA53BgAAHhYYAAIluz0A==
-Date:   Thu, 28 Nov 2019 10:17:34 +0000
-Message-ID: <1265e30d04484d08b86ba2abef5f5822@AcuMS.aculab.com>
-References: <bc84e68c0980466096b0d2f6aec95747@AcuMS.aculab.com>
- <CAJPywTJYDxGQtDWLferh8ObjGp3JsvOn1om1dCiTOtY6S3qyVg@mail.gmail.com>
- <5f4028c48a1a4673bd3b38728e8ade07@AcuMS.aculab.com>
- <20191127164821.1c41deff@carbon>
- <0b8d7447e129539aec559fa797c07047f5a6a1b2.camel@redhat.com>
- <2f1635d9300a4bec8a0422e9e9518751@AcuMS.aculab.com>
- <313204cf-69fd-ec28-a22c-61526f1dea8b@gmail.com>
-In-Reply-To: <313204cf-69fd-ec28-a22c-61526f1dea8b@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 28 Nov 2019 05:19:42 -0500
+X-Originating-IP: 2.224.242.101
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id DB106FF80D;
+        Thu, 28 Nov 2019 10:19:37 +0000 (UTC)
+Date:   Thu, 28 Nov 2019 11:21:41 +0100
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Adam Ford <adam.ford@logicpd.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: ov5640: Fix check for PLL1 exceeding max allowed
+ rate
+Message-ID: <20191128102141.beq7wzdu5vxwx7wk@uno.localdomain>
+References: <20191029124211.15052-1-aford173@gmail.com>
+ <CAHCN7xKAJ3koJc1H2zyGFG3J6qu+uw0jozT=pQ_0i8HStX5TbQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: hUuKyJzuN2qaJR0SWDF11g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="iej6shqa67f73dq2"
+Content-Disposition: inline
+In-Reply-To: <CAHCN7xKAJ3koJc1H2zyGFG3J6qu+uw0jozT=pQ_0i8HStX5TbQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRXJpYyBEdW1hemV0DQo+IFNlbnQ6IDI3IE5vdmVtYmVyIDIwMTkgMTc6NDcNCi4uLg0K
-PiBBIFFVSUMgc2VydmVyIGhhbmRsZXMgaHVuZHJlZCBvZiB0aG91c2FuZHMgb2YgJyBVRFAgZmxv
-d3MnIGFsbCB1c2luZyBvbmx5IG9uZSBVRFAgc29ja2V0DQo+IHBlciBjcHUuDQo+IA0KPiBUaGlz
-IGlzIHJlYWxseSB0aGUgb25seSB3YXkgdG8gc2NhbGUsIGFuZCBkb2VzIG5vdCBuZWVkIGtlcm5l
-bCBjaGFuZ2VzIHRvIGVmZmljaWVudGx5DQo+IG9yZ2FuaXplIG1pbGxpb25zIG9mIFVEUCBzb2Nr
-ZXRzIChodWdlIG1lbW9yeSBmb290cHJpbnQgZXZlbiBpZiB3ZSBnZXQgcmlnaHQgaG93DQo+IHdl
-IG1hbmFnZSB0aGVtKQ0KPiANCj4gR2l2ZW4gdGhhdCBVRFAgaGFzIG5vIHN0YXRlLCB0aGVyZSBp
-cyByZWFsbHkgbm8gcG9pbnQgdHJ5aW5nIHRvIGhhdmUgb25lIFVEUA0KPiBzb2NrZXQgcGVyIGZs
-b3csIGFuZCBoYXZpbmcgdG8gZGVhbCB3aXRoIGVwb2xsKCkvcG9sbCgpIG92ZXJoZWFkLg0KDQpI
-b3cgY2FuIHlvdSBkbyB0aGF0IHdoZW4gYWxsIHRoZSBVRFAgZmxvd3MgaGF2ZSBkaWZmZXJlbnQg
-ZGVzdGluYXRpb24gcG9ydCBudW1iZXJzPw0KVGhlc2UgYXJlIG1lc3NhZ2UgZmxvd3Mgbm90IGlk
-ZW1wb3RlbnQgcmVxdWVzdHMuDQpJIGRvbid0IHJlYWxseSB3YW50IHRvIGNvbGxlY3QgdGhlIHBh
-Y2tldHMgYmVmb3JlIHRoZXkndmUgYmVlbiBwcm9jZXNzZWQgYnkgSVAuDQoNCkkgY291bGQgd3Jp
-dGUgYSBkcml2ZXIgdGhhdCB1c2VzIGtlcm5lbCB1ZHAgc29ja2V0cyB0byBnZW5lcmF0ZSBhIHNp
-bmdsZSBtZXNzYWdlIHF1ZXVlDQp0aGFuIGNhbiBiZSBlZmZpY2llbnRseSBwcm9jZXNzZWQgZnJv
-bSB1c2Vyc3BhY2UgLSBidXQgaXQgaXMgYSBmYWZmIGNvbXBpbGluZyBpdCBmb3INCnRoZSBzeXN0
-ZW1zIGtlcm5lbCB2ZXJzaW9uLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExh
-a2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQs
-IFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
+--iej6shqa67f73dq2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Adam,
+
+On Tue, Nov 26, 2019 at 08:08:05PM -0600, Adam Ford wrote:
+> On Tue, Oct 29, 2019 at 7:42 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > The variable _rate is by ov5640_compute_sys_clk() which returns
+> > zero if the PLL exceeds 1GHz.  Unfortunately, the check to see
+> > if the max PLL1 output is checking 'rate' and not '_rate' and
+> > 'rate' does not ever appear to be 0.
+
+This seems a bit convoluted. What about:
+
+"The PLL calculation routine checks the wrong variable 'rate' to
+verify that the calculated PLL1 output frequency does not exceed
+1GHz. Fix this by using the correct '_rate' one."
+
+Or something against these lines
+
+> >
+> > This patch changes the check against the returned value of
+> > '_rate' to determine if the PLL1 output exceeds 1GHz.
+> >
+> > Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
+> >
+>
+> I haven't seen any responses to this patch.  Has anyone had a chance
+> to review this?  It's been nearly a month.
+
+You're totally right! Sorry about this
+
+> I think it would be appropriate to backport to stable if deemed acceptable.
+>
+
+Indeed! This fixes a real issue
+
+Acked-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks
+  j
+
+> adam
+>
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> >
+> > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > index 5e495c833d32..bb968e764f31 100644
+> > --- a/drivers/media/i2c/ov5640.c
+> > +++ b/drivers/media/i2c/ov5640.c
+> > @@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
+> >                          * We have reached the maximum allowed PLL1 output,
+> >                          * increase sysdiv.
+> >                          */
+> > -                       if (!rate)
+> > +                       if (!_rate)
+> >                                 break;
+> >
+> >                         /*
+> > --
+> > 2.17.1
+> >
+
+--iej6shqa67f73dq2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3fn7EACgkQcjQGjxah
+Vjy86RAAw1kxOzkw1nnyB56pcH62BlNk9zY7bCQtKMIUFrqzDkEFM8qvECDtlbab
+6SU8TTSN5kcc0gRS8g95reKyefbdclhN4sSBQ8EZtOO7uj/UpkIzj3iHXG9kKmEB
++ffUjBhnWlCP6x7Im6t740b7wwJ6+OXVAskL32Ts9yAqTapAEtJfswxj+DADCJsa
+CpSy6OSBgR3o95Y2WuRS7i6e6Llr5ria3d1fzWO8gD4GFACAZJnotJ8NKmzyAZPM
+mMAtMu0XebSsMiFjHbfbD7dB4g/pyD6qxqwVJTLGa/Lhr5kpIcsKgkENO2jNEIpo
+CeUm71EJ4S133iYCarDCDHArqoOzeYWfBTSli6c38FGdk7zrEE1/ijFJw5sEJmO3
+PfhcxXxcpjHOyqxxHZmXnlKDmPDbyKqsTY7wKViVfTQWN+4qCuRBZTyKDC5LG+uB
+NMa9FYoDGoWCegpXcFHPy/KRNgJwyJoCEe7o8s9wDJHetJv1foufBaxoHlxGNsbl
+XgHtA8cKxQyVLcGmxRbQss/BLSHkR7479KjFgiRRppkh/+WPNjReO/2Kfna5MJuQ
+VkuSfgxKDVzlD20PTkvlqOv6+WwdFJLI0+9/mpJVfndcJ331sBqpZogW1g8uNrRa
+DC8g5qnayGYym4M3rqlDk6mld3psDdkatENsj6K3uUVL7yUvUW0=
+=Zsgt
+-----END PGP SIGNATURE-----
+
+--iej6shqa67f73dq2--
