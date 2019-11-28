@@ -2,171 +2,216 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1ADC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11250C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5209C217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC7B216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:49:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="FubLBC5b"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HGip8iRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfK1Qru (ORCPT
+        id S1726648AbfK1QtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 11:47:50 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:27892 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfK1Qru (ORCPT
+        Thu, 28 Nov 2019 11:49:08 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52366 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfK1QtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:47:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574959667;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=iVDytJazQOiDcNx610UmMzH53A/xpQq868WTOOzaQD8=;
-        b=FubLBC5bKxu0L4YEnhS2LjqIdXDt53d9ka+WYVdR+gVBxdpwFq8Lry6UZwvJfbTDLY
-        Ja1Lq6iyxk8h8ugB43V2zN7i/bEpYcQOGKyj53bBbtDrAqKr7/gGcVxRLz9MnwsLsQVV
-        Qbb/lqsioufVmrcsJTF2+RNES67Zaedwe/JhJKLQjUBDWQf4bFaDu2il6ycMJr6Wqn+b
-        DuDtwB4/ijUGIfRdEu4l3pXYeM1ektt+guywc59nQjI6ysjq4evl3Fp3e6NE6WZDwa6K
-        PnMTIdZM9VMfpNRnVWIqCHhVRbN4HR7XQV/SpQBhfsyq2Z8CO60MpoLskhuMJlZHCStO
-        gKbw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw43upSE="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id y07703vASGldLGm
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 28 Nov 2019 17:47:39 +0100 (CET)
+        Thu, 28 Nov 2019 11:49:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=OKUh+j5PvFxuowonI6NCUIxvddU58kroCLY7Dyzz66s=; b=HGip8iRiBQPsB6NFPKRdGrYUBJ
+        Jao40COIdH3hKYYyb1v+rUOG3z/plPJqR4iYO+j81i1H0wPrpcTVSxVXi27hROrbmp4IrTC+h3Nbw
+        DWmJbtv5xRy7AZvQnvA+FgWRoTz6OJrYv+T5FomGQFs3hNZjx0RrJTqV8kzLqAZlgvXw10wwO6Vfu
+        om3xSAdEgcM37A6g/FGgh09PGWBjQTL0eodM0trTA1jJQU+1LILU2th0vw0tOX4mF5ns6pvy/N0t2
+        F0ekKDjQ5Qjyb1v3Lmkx9IlWfaizMlbByNkfWavwObfTNHWYms0viG983a8T/+yA2lcv94IdHV3Uc
+        7+JybAOQ==;
+Received: from [91.112.188.190] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iaMyY-0003Gu-En; Thu, 28 Nov 2019 16:49:06 +0000
+Date:   Thu, 28 Nov 2019 17:49:04 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] dma-mapping updates for 5.5
+Message-ID: <20191128164904.GA20771@infradead.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <04b509b4-b1ef-3bcb-433e-8eed5772288f@arm.com>
-Date:   Thu, 28 Nov 2019 17:47:38 +0100
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        mips-creator-ci20-dev@googlegroups.com,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <BF04DB35-9DBA-4297-8FCA-BB422A56DFEC@goldelico.com>
-References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com> <7b6275c7-ab2b-a647-6bf7-d5e1c4523c98@arm.com> <D1CE4D1E-9A42-4FAE-90A9-615C38B979C0@goldelico.com> <4807842.gtHLO0kk0V@hyperion> <01D75E67-EC2E-4C74-B9BB-752773C481A9@goldelico.com> <20191128150721.GA20142@alpha.franken.de> <4F75970F-81DA-4727-8ADC-17CF6D77829B@goldelico.com> <04b509b4-b1ef-3bcb-433e-8eed5772288f@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincenzo,
+Hi Linus,
 
-> Am 28.11.2019 um 16:46 schrieb Vincenzo Frascino =
-<vincenzo.frascino@arm.com>:
->=20
->=20
-> On 28/11/2019 15:41, H. Nikolaus Schaller wrote:
->>=20
->>> Am 28.11.2019 um 16:07 schrieb Thomas Bogendoerfer =
-<tsbogend@alpha.franken.de>:
->>>=20
->>> On Thu, Nov 28, 2019 at 02:48:46PM +0100, H. Nikolaus Schaller =
-wrote:
->>>>=20
->>>> What still does not fit into the picture is the errno =3D 1 i.e. =
-EPERM.
->>>> Maybe I have to study the libc code that tries to read the ELF =
-symbols
->>>> you have mentioned. It may fail for unknown reasons.
->>>=20
->>> to understand vdso you might look at arch/mips/vdso and lib/vdso
->>> kernel sources.
->>=20
->> Yes that is what I know, but I do not know how glibc can return an =
-EPERM
->> through VDSO.
->>=20
->>>=20
->>> And if I understand it correctly you neither have a working high =
-resolution
->>> timer usable bei do_hres() in lib/vdso/gettimeofday.c or a working
->>> gettimeofday_fallback(), which is enabled via =
-CONFIG_MIPS_CLOCK_VSYSCALL
->>> and needs either CSRC_R4K or CLKSRC_MIPS_GIC.
->>=20
->> Well, on kernel v4.19 or using v5.4 with Jessie, gettimeofday() =
-works.
->>=20
->> So this may only be part of the reason it starts to fail with commit
->> 24640f233b466051ad3a5d2786d2951e43026c9d.
->>=20
->> MIPS_CLOCK_VSYSCALL is neither defined nor undefined in the =
-defconfig.
->> And removed if I manually add it to my defconfig.
->> And yes, it depends on either CSRC_R4K || CLKSRC_MIPS_GIC by =
-arch/mips/Kconfig.
->>=20
->> Maybe this was just forgotten to properly handle for the =
-ci20_defconfig
->> or jz4780?
->>=20
->> What does CSRC_R4K resp. CLKSRC_MIPS_GIC ecactly mean? Does the =
-jz4780 have this
->> feature?
->>=20
->=20
-> I think I know what is going on, it is the way on which libc does the =
-fallback.
-> Could you please try the patch below the scissors and let me know if =
-it works?
+please pull the dma-mapping updates for Linux 5.5.  Before the last commit
+I had to pull in a branch from the arm64 tree (which has already been
+merged in master) as we'd otherwise generate some horribly to resolve
+merge conflicts as both changed the area in different ways.  Except for
+that there should be not merge conflicts at all, which might be a first
+for this tree.
 
-Well, it does not immediately compile because CONFIG_MIPS_CLOCK_VSYSCALL =
-is not
-set and can not be configured by normal means:
+The following changes since commit 320000e72ec0613e164ce9608d865396fb2da278:
 
-Error:
+  Merge tag 'iommu-fixes-v5.4-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu (2019-10-30 14:17:18 +0100)
 
-/Volumes/CaseSensitive/master/lib/vdso/gettimeofday.c: In function =
-'__cvdso_gettimeofday':
-/Volumes/CaseSensitive/master/lib/vdso/gettimeofday.c:152:4: error: =
-implicit declaration of function 'gettimeofday_fallback' =
-[-Werror=3Dimplicit-function-declaration]
-    return gettimeofday_fallback(tv, tz);
-    ^
+are available in the Git repository at:
 
-So I force-#defined CONFIG_MIPS_CLOCK_VSYSCALL in =
-arch/mips/include/asm/vdso/gettimeofday.h
-which is also included by lib/vdso/gettimeofday.c
+  git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.5
 
-Yes, it works now! Great!!!
+for you to fetch changes up to a7ba70f1787f977f970cd116076c6fce4b9e01cc:
 
-root@letux:~# ./gettime=20
-r =3D 0 errno=3D0
-tv.sec =3D 1574959485
-tv.usec =3D 671306
-rt =3D 1574959485 errno=3D0
-t =3D 1574959485
-root@letux:~# cat /etc/debian_version=20
-9.11
-root@letux:~# uname -a
-Linux letux 5.4.0-letux-l400+ #1490 PREEMPT Thu Nov 28 17:23:32 CET 2019 =
-mips GNU/Linux
-root@letux:~# dhclient
-root@letux:~#=20
+  dma-mapping: treat dev->bus_dma_mask as a DMA limit (2019-11-21 18:14:35 +0100)
 
-> If it does I will create a proper one.
+----------------------------------------------------------------
+dma-mapping updates for 5.5-rc1
 
-It needs some mechanism to set CONFIG_MIPS_CLOCK_VSYSCALL.
+ - improve dma-debug scalability (Eric Dumazet)
+ - tiny dma-debug cleanup (Dan Carpenter)
+ - check for vmap memory in dma_map_single (Kees Cook)
+ - check for dma_addr_t overflows in dma-direct when using
+   DMA offsets (Nicolas Saenz Julienne)
+ - switch the x86 sta2x11 SOC to use more generic DMA code
+   (Nicolas Saenz Julienne)
+ - fix arm-nommu dma-ranges handling (Vladimir Murzin)
+ - use __initdata in CMA (Shyam Saini)
+ - replace the bus dma mask with a limit (Nicolas Saenz Julienne)
+ - merge the remapping helpers into the main dma-direct flow (me)
+ - switch xtensa to the generic dma remap handling (me)
+ - various cleanups around dma_capable (me)
+ - remove unused dev arguments to various dma-noncoherent helpers (me)
 
-I'll test if you have something new.
+----------------------------------------------------------------
+Catalin Marinas (1):
+      arm64: Make arm64_dma32_phys_limit static
 
-BR and thanks,
-Nikolaus
+Christoph Hellwig (12):
+      dma-direct: remove __dma_direct_free_pages
+      dma-direct: remove the dma_handle argument to __dma_direct_alloc_pages
+      dma-direct: provide mmap and get_sgtable method overrides
+      dma-mapping: merge the generic remapping helpers into dma-direct
+      xtensa: use the generic uncached segment support
+      dma-mapping: drop the dev argument to arch_sync_dma_for_*
+      dma-direct: unify the dma_capable definitions
+      dma-direct: avoid a forward declaration for phys_to_dma
+      powerpc: remove support for NULL dev in __phys_to_dma / __dma_to_phys
+      dma-direct: don't check swiotlb=force in dma_direct_map_resource
+      dma-direct: exclude dma_direct_map_resource from the min_low_pfn check
+      Merge branch 'for-next/zone-dma' of git://git.kernel.org/.../arm64/linux into dma-mapping-for-next
 
+Dan Carpenter (1):
+      dma-debug: clean up put_hash_bucket()
 
+Eric Dumazet (3):
+      dma-debug: add a schedule point in debug_dma_dump_mappings()
+      dma-debug: reorder struct dma_debug_entry fields
+      dma-debug: increase HASH_SIZE
+
+Kees Cook (2):
+      dma-mapping: Add vmap checks to dma_map_single()
+      usb: core: Remove redundant vmap checks
+
+Nathan Chancellor (1):
+      arm64: mm: Fix unused variable warning in zone_sizes_init
+
+Nicolas Saenz Julienne (9):
+      arm64: mm: use arm64_dma_phys_limit instead of calling max_zone_dma_phys()
+      arm64: rename variables used to calculate ZONE_DMA32's size
+      arm64: use both ZONE_DMA and ZONE_DMA32
+      mm: refresh ZONE_DMA and ZONE_DMA32 comments in 'enum zone_type'
+      dma/direct: turn ARCH_ZONE_DMA_BITS into a variable
+      arm64: mm: reserve CMA and crashkernel in ZONE_DMA32
+      dma-direct: check for overflows on 32 bit DMA addresses
+      x86/PCI: sta2x11: use default DMA address translation
+      dma-mapping: treat dev->bus_dma_mask as a DMA limit
+
+Shyam Saini (1):
+      kernel: dma-contiguous: mark CMA parameters __initdata/__initconst
+
+Vladimir Murzin (1):
+      dma-mapping: fix handling of dma-ranges for reserved memory (again)
+
+ arch/arc/Kconfig                       |   1 -
+ arch/arc/mm/dma.c                      |   8 +-
+ arch/arm/Kconfig                       |   1 -
+ arch/arm/include/asm/dma-direct.h      |  19 ----
+ arch/arm/mm/dma-mapping-nommu.c        |   2 +-
+ arch/arm/mm/dma-mapping.c              |  14 +--
+ arch/arm/xen/mm.c                      |  12 +--
+ arch/arm64/Kconfig                     |   5 +-
+ arch/arm64/mm/dma-mapping.c            |   8 +-
+ arch/arm64/mm/init.c                   |  77 +++++++++-----
+ arch/c6x/mm/dma-coherent.c             |  14 +--
+ arch/csky/mm/dma-mapping.c             |   8 +-
+ arch/hexagon/kernel/dma.c              |   4 +-
+ arch/ia64/Kconfig                      |   2 +-
+ arch/ia64/kernel/dma-mapping.c         |   6 --
+ arch/ia64/mm/init.c                    |   4 +-
+ arch/m68k/kernel/dma.c                 |   4 +-
+ arch/microblaze/Kconfig                |   1 -
+ arch/microblaze/kernel/dma.c           |  14 +--
+ arch/mips/Kconfig                      |   4 +-
+ arch/mips/bmips/dma.c                  |   2 +-
+ arch/mips/include/asm/dma-direct.h     |   8 --
+ arch/mips/jazz/jazzdma.c               |  17 ++-
+ arch/mips/mm/dma-noncoherent.c         |  18 ++--
+ arch/mips/pci/fixup-sb1250.c           |  16 +--
+ arch/nds32/kernel/dma.c                |   8 +-
+ arch/nios2/mm/dma-mapping.c            |   8 +-
+ arch/openrisc/kernel/dma.c             |   2 +-
+ arch/parisc/kernel/pci-dma.c           |   8 +-
+ arch/powerpc/include/asm/dma-direct.h  |  13 ---
+ arch/powerpc/include/asm/page.h        |   9 --
+ arch/powerpc/mm/dma-noncoherent.c      |   8 +-
+ arch/powerpc/mm/mem.c                  |  20 +++-
+ arch/powerpc/platforms/Kconfig.cputype |   1 -
+ arch/powerpc/sysdev/fsl_pci.c          |   6 +-
+ arch/s390/include/asm/page.h           |   2 -
+ arch/s390/mm/init.c                    |   1 +
+ arch/sh/kernel/dma-coherent.c          |   6 +-
+ arch/sparc/kernel/ioport.c             |   4 +-
+ arch/x86/Kconfig                       |   1 -
+ arch/x86/include/asm/device.h          |   3 -
+ arch/x86/include/asm/dma-direct.h      |   9 --
+ arch/x86/kernel/amd_gart_64.c          |   4 +-
+ arch/x86/kernel/pci-dma.c              |   2 +-
+ arch/x86/mm/mem_encrypt.c              |   2 +-
+ arch/x86/pci/sta2x11-fixup.c           | 135 +++++------------------
+ arch/xtensa/Kconfig                    |   6 +-
+ arch/xtensa/include/asm/platform.h     |  27 -----
+ arch/xtensa/kernel/Makefile            |   3 +-
+ arch/xtensa/kernel/pci-dma.c           | 129 +++-------------------
+ drivers/acpi/arm64/iort.c              |  20 ++--
+ drivers/ata/ahci.c                     |   2 +-
+ drivers/iommu/dma-iommu.c              |  13 ++-
+ drivers/of/device.c                    |   9 +-
+ drivers/usb/core/hcd.c                 |   8 +-
+ drivers/xen/swiotlb-xen.c              |  12 +--
+ include/linux/device.h                 |   6 +-
+ include/linux/dma-direct.h             |  37 +++++--
+ include/linux/dma-mapping.h            |  10 +-
+ include/linux/dma-noncoherent.h        |  22 ++--
+ include/linux/mmzone.h                 |  45 ++++----
+ include/xen/swiotlb-xen.h              |   8 +-
+ kernel/dma/Kconfig                     |  12 ++-
+ kernel/dma/coherent.c                  |  16 +--
+ kernel/dma/contiguous.c                |   9 +-
+ kernel/dma/debug.c                     |  39 ++++---
+ kernel/dma/direct.c                    | 188 ++++++++++++++++++++++++---------
+ kernel/dma/mapping.c                   |  45 ++------
+ kernel/dma/remap.c                     |  55 ----------
+ kernel/dma/swiotlb.c                   |   2 +-
+ 70 files changed, 509 insertions(+), 735 deletions(-)
+ delete mode 100644 arch/x86/include/asm/dma-direct.h
