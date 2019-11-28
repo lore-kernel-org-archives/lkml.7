@@ -2,136 +2,82 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15471C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EDFC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA44621770
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E60B21770
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ld4ueGqn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nbQb12OW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfK1JIG (ORCPT
+        id S1727198AbfK1JIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 04:08:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55972 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725789AbfK1JIG (ORCPT
+        Thu, 28 Nov 2019 04:08:41 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45464 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbfK1JIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 04:08:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574932085;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LQyMIOq1brhBX2bUMaM6TFXqa3RnBbkv7h2aLB1dU5Q=;
-        b=Ld4ueGqnZKPx4dNjtYdjIb739E2lG5QLQUHrajg5oxhafViAuBP+DL0WEuiU2WaT49T/Gu
-        RrJwsf/4FfejqfyW5eP8MYfBQhvxvZ0P7ZnNd5MA7KvAQD23JX/ngJQqNzEA4GgS51tmRh
-        Q7N0P9j9KwS5CqPW21Fv+PGYckFwzpU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-0ZLVFI1nP2WETMSLr2dzlg-1; Thu, 28 Nov 2019 04:08:03 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B577980183C;
-        Thu, 28 Nov 2019 09:08:00 +0000 (UTC)
-Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 552426084E;
-        Thu, 28 Nov 2019 09:07:54 +0000 (UTC)
-Subject: Re: [PATCH] KVM: vgic: Use warpper function to lock/unlock all vcpus
- in kvm_vgic_create()
-To:     linmiaohe <linmiaohe@huawei.com>, maz@kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, catalin.marinas@arm.com,
-        gregkh@linuxfoundation.org, will@kernel.org,
-        andre.przywara@arm.com, tglx@linutronix.de
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <1574910551-14351-1-git-send-email-linmiaohe@huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <cdd7ef36-70ae-3e56-2ea3-48d7051991c3@redhat.com>
-Date:   Thu, 28 Nov 2019 10:07:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Nov 2019 04:08:40 -0500
+Received: by mail-lj1-f195.google.com with SMTP id n21so27599263ljg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 01:08:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=78TUNxc9SDX9bG49GuEtf0MJi3qZ9js9cOuwvB8JDFM=;
+        b=nbQb12OW3QrlhRiNVts6U011R3m6RJ2IEahdggL7ug6hl7xtA+9L7UvULnrkncuKRU
+         gCNhiPKLz3OH0WAbv0A6fK18YGwpkmdibsvvq6qMPjp38/nElKb5NKEE3RrRsnbsRMYz
+         qEqpXH0p2ePUaP28QIYssojmsJK/Ua4i13WW4e7vIRQxY55UJ2+HRrDF5LE4lyClylpp
+         +m4Ae+pPeG18JfAcMMK8RNmm//6eMh/cROJgUUoLVqx4oa+tHcnX94Ad3FyBbDrimcPi
+         YLzifSmM/WtgXS/Oq7LbbS843h4fSTu9Logu1D04uiSyEp7zw/vHOOGXuFQgD6uEId/p
+         K96g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=78TUNxc9SDX9bG49GuEtf0MJi3qZ9js9cOuwvB8JDFM=;
+        b=rXHgKB0tE2OpK7ZvGcC5MUH6fX4/EXNsWHLFFeIpQIK0csIfNiUs6+zn5zYf+npuqi
+         /CTHCmDFzlFCEFy+gdAXjWdcQ7i9p8FIZA+GjvI9kGWg143R+7OmarwjSQ02/uhCUP8s
+         irNksMQqV586ugvmNK9EeAvxXA3RIkyGmXWnASmdPmnXRBC7O/f0OX659R5tuEalYtDn
+         k9LjxfSU1SyzVH+Y4gN7RRBDSiIq0B2dVZHYUEFKe4y65e6rOOnKgawAo3vLUyTX9AZV
+         OcMe4Wj077QmBmOM95nd+G7GvXZVdeToJU4WEF61oHf3MMNvukrWpwpG3iyEvceBDK4h
+         aMhA==
+X-Gm-Message-State: APjAAAUSJBb1spGAJqWFZbvtFM6ItwoJEVb1pIfdl7NWxyz8oYf7lzuA
+        2EbH1wScZCQrOVW/CgwKxflA2JHx7jZSTEl40X3upQ==
+X-Google-Smtp-Source: APXvYqxgwoUSOqDcdaqGDS7R5yA+8++vOzVHDWK3tPmj3lxVoGi4FFBLUdIzhwyII2/H891p5hwnicQruvpBBJvptCo=
+X-Received: by 2002:a05:651c:102a:: with SMTP id w10mr4635658ljm.77.1574932117200;
+ Thu, 28 Nov 2019 01:08:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1574910551-14351-1-git-send-email-linmiaohe@huawei.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: 0ZLVFI1nP2WETMSLr2dzlg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+References: <20191126131541.47393-1-mihail.atanassov@arm.com> <20191126131541.47393-25-mihail.atanassov@arm.com>
+In-Reply-To: <20191126131541.47393-25-mihail.atanassov@arm.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 28 Nov 2019 10:08:25 +0100
+Message-ID: <CACRpkdZViRq-cxfR5MsbBtduNm6mkYJtO9c6Beiep15gyvqYNw@mail.gmail.com>
+Subject: Re: [PATCH 24/30] drm/mcde: dsi: Use drm_bridge_init()
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Nov 26, 2019 at 2:16 PM Mihail Atanassov
+<Mihail.Atanassov@arm.com> wrote:
 
-On 11/28/19 4:09 AM, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> Use warpper function lock_all_vcpus()/unlock_all_vcpus()
-s/warpper/wrapper and also in the title.
-> in kvm_vgic_create() to remove duplicated code dealing
-> with locking and unlocking all vcpus in a vm.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  virt/kvm/arm/vgic/vgic-init.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
-> 
-> diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
-> index b3c5de48064c..53e3969dfb52 100644
-> --- a/virt/kvm/arm/vgic/vgic-init.c
-> +++ b/virt/kvm/arm/vgic/vgic-init.c
-> @@ -70,7 +70,7 @@ void kvm_vgic_early_init(struct kvm *kvm)
->   */
->  int kvm_vgic_create(struct kvm *kvm, u32 type)
->  {
-> -	int i, vcpu_lock_idx = -1, ret;
-> +	int i, ret;
->  	struct kvm_vcpu *vcpu;
->  
->  	if (irqchip_in_kernel(kvm))
-> @@ -92,11 +92,8 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
->  	 * that no other VCPUs are run while we create the vgic.
->  	 */
->  	ret = -EBUSY;
-> -	kvm_for_each_vcpu(i, vcpu, kvm) {
-> -		if (!mutex_trylock(&vcpu->mutex))
-> -			goto out_unlock;
-> -		vcpu_lock_idx = i;
-> -	}
-> +	if (!lock_all_vcpus(kvm))
-> +		return ret;
->  
->  	kvm_for_each_vcpu(i, vcpu, kvm) {
->  		if (vcpu->arch.has_run_once)
-> @@ -125,10 +122,7 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
->  		INIT_LIST_HEAD(&kvm->arch.vgic.rd_regions);
->  
->  out_unlock:
-> -	for (; vcpu_lock_idx >= 0; vcpu_lock_idx--) {
-> -		vcpu = kvm_get_vcpu(kvm, vcpu_lock_idx);
-> -		mutex_unlock(&vcpu->mutex);
-> -	}
-> +	unlock_all_vcpus(kvm);
->  	return ret;
->  }
->  
-> 
-Besides, looks good to me
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> No functional change.
+>
+> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
 
-Thanks
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Eric
-
+Yours,
+Linus Walleij
