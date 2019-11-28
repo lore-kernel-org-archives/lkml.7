@@ -2,384 +2,829 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A00BC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AABC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B810217BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE0220880
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="g+PBel5C"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xf+Xsusr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfK1LAl (ORCPT
+        id S1726655AbfK1LAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:00:41 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:39126 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727239AbfK1LAh (ORCPT
+        Thu, 28 Nov 2019 06:00:46 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34492 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfK1LAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:00:37 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASAq4aw023223;
-        Thu, 28 Nov 2019 12:00:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=YlvngK0gfmo41ZPgYNmQ5FeUoDq2NlVbgxbpkAXqaNo=;
- b=g+PBel5CcX28hOwSErBElntV7lIrjG+ImRaFZ/DcosdQWmLQa1wYF8wMdMTXXLxh8XK+
- LkW4iImv5f/JCPZQrARr5/V8I4k5ARI+P6RRaIlbLO7uDMBE2p4eASawAx6sxf6KZgd9
- lGgiaNJbL6CxItNeuSbAYVw/zEFE/WS0x3wtehG6OV7eSmN407na6kiKZja7TisHYQci
- vUGP69CrjA4to8oPnWPb+srmmZOiXEvl1aD9HiKCUF5m1gDKP0cYhrw2D3ISH5A1LH24
- BByv03/I1nrsxRea6jCBwt/kkD0oUMN3eSSx1XTLWH7H0FXUisgoRon83q5xGuxHopvB Yg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2whcxks8mc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 12:00:20 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6753C10002A;
-        Thu, 28 Nov 2019 12:00:16 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 31E532B11E2;
-        Thu, 28 Nov 2019 12:00:16 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 28 Nov 2019 12:00:15
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <sean@poorly.run>, <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: [PATCH v2] drm/dp_mst: Fix W=1 warnings
-Date:   Thu, 28 Nov 2019 12:00:12 +0100
-Message-ID: <20191128110012.23898-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Thu, 28 Nov 2019 06:00:39 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASB0USJ022881;
+        Thu, 28 Nov 2019 05:00:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574938830;
+        bh=gKuEiUsU4DVYNllS/pQWCqSbYp6qHW80p/cttaU5HZE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=xf+XsusrZKIeZKLJzey6asb4vH6InzojfMngdbHE5sEfChqmsbQBaJohXSevGUfKF
+         14zK2oB5OARCzJM8JACetqVG2c+VyMYbcRFC+/n0GGitCfmuLQ3I+7E2LqWF1pkb1Z
+         kfrRrk8QruXx9eaSKy8+VTzK9Fptzp7jNFzhV7Lw=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASB0UAb015312
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 Nov 2019 05:00:30 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
+ Nov 2019 05:00:30 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 28 Nov 2019 05:00:30 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAxgJR073287;
+        Thu, 28 Nov 2019 05:00:27 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+Subject: [PATCH v6 13/17] dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks 2
+Date:   Thu, 28 Nov 2019 12:59:41 +0200
+Message-ID: <20191128105945.13071-14-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191128105945.13071-1-peter.ujfalusi@ti.com>
+References: <20191128105945.13071-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_01:2019-11-28,2019-11-28 signatures=0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the warnings that show up with W=1.
-They are all about unused but set variables.
-If functions returns are not used anymore make them void.
+Split patch for review containing:
+device_prep_slave_sg and device_prep_dma_cyclic implementation supporting
+packet and TR channels.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-CC: Jani Nikula <jani.nikula@linux.intel.com>
+DMA driver for
+Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
+
+The UDMA-P is intended to perform similar (but significantly upgraded) functions
+as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
+supports the transmission and reception of various packet types. The UDMA-P is
+architected to facilitate the segmentation and reassembly of SoC DMA data
+structure compliant packets to/from smaller data blocks that are natively
+compatible with the specific requirements of each connected peripheral. Multiple
+Tx and Rx channels are provided within the DMA which allow multiple segmentation
+or reassembly operations to be ongoing. The DMA controller maintains state
+information for each of the channels which allows packet segmentation and
+reassembly operations to be time division multiplexed between channels in order
+to share the underlying DMA hardware. An external DMA scheduler is used to
+control the ordering and rate at which this multiplexing occurs for Transmit
+operations. The ordering and rate of Receive operations is indirectly controlled
+by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
+
+The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
+channels. Channels in the UDMA-P can be configured to be either Packet-Based or
+Third-Party channels on a channel by channel basis.
+
+The initial driver supports:
+- MEM_TO_MEM (TR mode)
+- DEV_TO_MEM (Packet / TR mode)
+- MEM_TO_DEV (Packet / TR mode)
+- Cyclic (Packet / TR mode)
+- Metadata for descriptors
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-changes in version 2:
-- fix indentations
-- when possible change functions prototype to void
+ drivers/dma/ti/k3-udma.c | 702 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 702 insertions(+)
 
-Note: this patch may conflict with c485e2c97dae ("drm/dp_mst: Refactor pdt
-setup/teardown, add more locking") when it will hit drm-misc-next
-
- drivers/gpu/drm/drm_dp_mst_topology.c | 83 +++++++++++++----------------------
- 1 file changed, 31 insertions(+), 52 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index b854a422a523..ff2d81db0778 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -672,7 +672,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
- 				      u8 *replybuf, u8 replybuflen, bool hdr)
- {
- 	int ret;
--	u8 crc4;
- 
- 	if (hdr) {
- 		u8 hdrlen;
-@@ -714,8 +713,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
- 	}
- 
- 	if (msg->curchunk_idx >= msg->curchunk_len) {
--		/* do CRC */
--		crc4 = drm_dp_msg_data_crc4(msg->chunk, msg->curchunk_len - 1);
- 		/* copy chunk into bigger msg */
- 		memcpy(&msg->msg[msg->curlen], msg->chunk, msg->curchunk_len - 1);
- 		msg->curlen += msg->curchunk_len - 1;
-@@ -1012,7 +1009,7 @@ static bool drm_dp_sideband_parse_req(struct drm_dp_sideband_msg_rx *raw,
- 	}
- }
- 
--static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
-+static void build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
- {
- 	struct drm_dp_sideband_msg_req_body req;
- 
-@@ -1022,17 +1019,14 @@ static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
- 	req.u.dpcd_write.num_bytes = num_bytes;
- 	req.u.dpcd_write.bytes = bytes;
- 	drm_dp_encode_sideband_req(&req, msg);
--
--	return 0;
- }
- 
--static int build_link_address(struct drm_dp_sideband_msg_tx *msg)
-+static void build_link_address(struct drm_dp_sideband_msg_tx *msg)
- {
- 	struct drm_dp_sideband_msg_req_body req;
- 
- 	req.req_type = DP_LINK_ADDRESS;
- 	drm_dp_encode_sideband_req(&req, msg);
--	return 0;
- }
- 
- static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int port_num)
-@@ -1046,7 +1040,7 @@ static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int por
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 9118db431438..0de79eacb278 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -1792,6 +1792,708 @@ static int udma_slave_config(struct dma_chan *chan,
  	return 0;
  }
  
--static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
-+static void build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
- 				  u8 vcpi, uint16_t pbn,
- 				  u8 number_sdp_streams,
- 				  u8 *sdp_stream_sink)
-@@ -1062,10 +1056,9 @@ static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_n
- 		   number_sdp_streams);
- 	drm_dp_encode_sideband_req(&req, msg);
- 	msg->path_msg = true;
--	return 0;
- }
- 
--static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
-+static void build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
- 				  int port_num, bool power_up)
++static struct udma_desc *udma_alloc_tr_desc(struct udma_chan *uc,
++					    size_t tr_size, int tr_count,
++					    enum dma_transfer_direction dir)
++{
++	struct udma_hwdesc *hwdesc;
++	struct cppi5_desc_hdr_t *tr_desc;
++	struct udma_desc *d;
++	u32 reload_count = 0;
++	u32 ring_id;
++
++	switch (tr_size) {
++	case 16:
++	case 32:
++	case 64:
++	case 128:
++		break;
++	default:
++		dev_err(uc->ud->dev, "Unsupported TR size of %zu\n", tr_size);
++		return NULL;
++	}
++
++	/* We have only one descriptor containing multiple TRs */
++	d = kzalloc(sizeof(*d) + sizeof(d->hwdesc[0]), GFP_ATOMIC);
++	if (!d)
++		return NULL;
++
++	d->sglen = tr_count;
++
++	d->hwdesc_count = 1;
++	hwdesc = &d->hwdesc[0];
++
++	/* Allocate memory for DMA ring descriptor */
++	if (uc->use_dma_pool) {
++		hwdesc->cppi5_desc_size = uc->hdesc_size;
++		hwdesc->cppi5_desc_vaddr = dma_pool_zalloc(uc->hdesc_pool,
++						GFP_ATOMIC,
++						&hwdesc->cppi5_desc_paddr);
++	} else {
++		hwdesc->cppi5_desc_size = cppi5_trdesc_calc_size(tr_size,
++								 tr_count);
++		hwdesc->cppi5_desc_size = ALIGN(hwdesc->cppi5_desc_size,
++						uc->ud->desc_align);
++		hwdesc->cppi5_desc_vaddr = dma_alloc_coherent(uc->ud->dev,
++						hwdesc->cppi5_desc_size,
++						&hwdesc->cppi5_desc_paddr,
++						GFP_ATOMIC);
++	}
++
++	if (!hwdesc->cppi5_desc_vaddr) {
++		kfree(d);
++		return NULL;
++	}
++
++	/* Start of the TR req records */
++	hwdesc->tr_req_base = hwdesc->cppi5_desc_vaddr + tr_size;
++	/* Start address of the TR response array */
++	hwdesc->tr_resp_base = hwdesc->tr_req_base + tr_size * tr_count;
++
++	tr_desc = hwdesc->cppi5_desc_vaddr;
++
++	if (uc->cyclic)
++		reload_count = CPPI5_INFO0_TRDESC_RLDCNT_INFINITE;
++
++	if (dir == DMA_DEV_TO_MEM)
++		ring_id = k3_ringacc_get_ring_id(uc->rflow->r_ring);
++	else
++		ring_id = k3_ringacc_get_ring_id(uc->tchan->tc_ring);
++
++	cppi5_trdesc_init(tr_desc, tr_count, tr_size, 0, reload_count);
++	cppi5_desc_set_pktids(tr_desc, uc->id, 0x3fff);
++	cppi5_desc_set_retpolicy(tr_desc, 0, ring_id);
++
++	return d;
++}
++
++static struct udma_desc *
++udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
++		      unsigned int sglen, enum dma_transfer_direction dir,
++		      unsigned long tx_flags, void *context)
++{
++	enum dma_slave_buswidth dev_width;
++	struct scatterlist *sgent;
++	struct udma_desc *d;
++	size_t tr_size;
++	struct cppi5_tr_type1_t *tr_req = NULL;
++	unsigned int i;
++	u32 burst;
++
++	if (dir == DMA_DEV_TO_MEM) {
++		dev_width = uc->cfg.src_addr_width;
++		burst = uc->cfg.src_maxburst;
++	} else if (dir == DMA_MEM_TO_DEV) {
++		dev_width = uc->cfg.dst_addr_width;
++		burst = uc->cfg.dst_maxburst;
++	} else {
++		dev_err(uc->ud->dev, "%s: bad direction?\n", __func__);
++		return NULL;
++	}
++
++	if (!burst)
++		burst = 1;
++
++	/* Now allocate and setup the descriptor. */
++	tr_size = sizeof(struct cppi5_tr_type1_t);
++	d = udma_alloc_tr_desc(uc, tr_size, sglen, dir);
++	if (!d)
++		return NULL;
++
++	d->sglen = sglen;
++
++	tr_req = (struct cppi5_tr_type1_t *)d->hwdesc[0].tr_req_base;
++	for_each_sg(sgl, sgent, sglen, i) {
++		d->residue += sg_dma_len(sgent);
++
++		cppi5_tr_init(&tr_req[i].flags, CPPI5_TR_TYPE1, false, false,
++			      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
++		cppi5_tr_csf_set(&tr_req[i].flags, CPPI5_TR_CSF_SUPR_EVT);
++
++		tr_req[i].addr = sg_dma_address(sgent);
++		tr_req[i].icnt0 = burst * dev_width;
++		tr_req[i].dim1 = burst * dev_width;
++		tr_req[i].icnt1 = sg_dma_len(sgent) / tr_req[i].icnt0;
++	}
++
++	cppi5_tr_csf_set(&tr_req[i - 1].flags, CPPI5_TR_CSF_EOP);
++
++	return d;
++}
++
++static int udma_configure_statictr(struct udma_chan *uc, struct udma_desc *d,
++				   enum dma_slave_buswidth dev_width,
++				   u16 elcnt)
++{
++	if (uc->ep_type != PSIL_EP_PDMA_XY)
++		return 0;
++
++	/* Bus width translates to the element size (ES) */
++	switch (dev_width) {
++	case DMA_SLAVE_BUSWIDTH_1_BYTE:
++		d->static_tr.elsize = 0;
++		break;
++	case DMA_SLAVE_BUSWIDTH_2_BYTES:
++		d->static_tr.elsize = 1;
++		break;
++	case DMA_SLAVE_BUSWIDTH_3_BYTES:
++		d->static_tr.elsize = 2;
++		break;
++	case DMA_SLAVE_BUSWIDTH_4_BYTES:
++		d->static_tr.elsize = 3;
++		break;
++	case DMA_SLAVE_BUSWIDTH_8_BYTES:
++		d->static_tr.elsize = 4;
++		break;
++	default: /* not reached */
++		return -EINVAL;
++	}
++
++	d->static_tr.elcnt = elcnt;
++
++	/*
++	 * PDMA must to close the packet when the channel is in packet mode.
++	 * For TR mode when the channel is not cyclic we also need PDMA to close
++	 * the packet otherwise the transfer will stall because PDMA holds on
++	 * the data it has received from the peripheral.
++	 */
++	if (uc->pkt_mode || !uc->cyclic) {
++		unsigned int div = dev_width * elcnt;
++
++		if (uc->cyclic)
++			d->static_tr.bstcnt = d->residue / d->sglen / div;
++		else
++			d->static_tr.bstcnt = d->residue / div;
++
++		if (uc->dir == DMA_DEV_TO_MEM &&
++		    d->static_tr.bstcnt > uc->ud->match_data->statictr_z_mask)
++			return -EINVAL;
++	} else {
++		d->static_tr.bstcnt = 0;
++	}
++
++	return 0;
++}
++
++static struct udma_desc *
++udma_prep_slave_sg_pkt(struct udma_chan *uc, struct scatterlist *sgl,
++		       unsigned int sglen, enum dma_transfer_direction dir,
++		       unsigned long tx_flags, void *context)
++{
++	struct scatterlist *sgent;
++	struct cppi5_host_desc_t *h_desc = NULL;
++	struct udma_desc *d;
++	u32 ring_id;
++	unsigned int i;
++
++	d = kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_ATOMIC);
++	if (!d)
++		return NULL;
++
++	d->sglen = sglen;
++	d->hwdesc_count = sglen;
++
++	if (dir == DMA_DEV_TO_MEM)
++		ring_id = k3_ringacc_get_ring_id(uc->rflow->r_ring);
++	else
++		ring_id = k3_ringacc_get_ring_id(uc->tchan->tc_ring);
++
++	for_each_sg(sgl, sgent, sglen, i) {
++		struct udma_hwdesc *hwdesc = &d->hwdesc[i];
++		dma_addr_t sg_addr = sg_dma_address(sgent);
++		struct cppi5_host_desc_t *desc;
++		size_t sg_len = sg_dma_len(sgent);
++
++		hwdesc->cppi5_desc_vaddr = dma_pool_zalloc(uc->hdesc_pool,
++						GFP_ATOMIC,
++						&hwdesc->cppi5_desc_paddr);
++		if (!hwdesc->cppi5_desc_vaddr) {
++			dev_err(uc->ud->dev,
++				"descriptor%d allocation failed\n", i);
++
++			udma_free_hwdesc(uc, d);
++			kfree(d);
++			return NULL;
++		}
++
++		d->residue += sg_len;
++		hwdesc->cppi5_desc_size = uc->hdesc_size;
++		desc = hwdesc->cppi5_desc_vaddr;
++
++		if (i == 0) {
++			cppi5_hdesc_init(desc, 0, 0);
++			/* Flow and Packed ID */
++			cppi5_desc_set_pktids(&desc->hdr, uc->id, 0x3fff);
++			cppi5_desc_set_retpolicy(&desc->hdr, 0, ring_id);
++		} else {
++			cppi5_hdesc_reset_hbdesc(desc);
++			cppi5_desc_set_retpolicy(&desc->hdr, 0, 0xffff);
++		}
++
++		/* attach the sg buffer to the descriptor */
++		cppi5_hdesc_attach_buf(desc, sg_addr, sg_len, sg_addr, sg_len);
++
++		/* Attach link as host buffer descriptor */
++		if (h_desc)
++			cppi5_hdesc_link_hbdesc(h_desc,
++						hwdesc->cppi5_desc_paddr);
++
++		if (dir == DMA_MEM_TO_DEV)
++			h_desc = desc;
++	}
++
++	if (d->residue >= SZ_4M) {
++		dev_err(uc->ud->dev,
++			"%s: Transfer size %u is over the supported 4M range\n",
++			__func__, d->residue);
++		udma_free_hwdesc(uc, d);
++		kfree(d);
++		return NULL;
++	}
++
++	h_desc = d->hwdesc[0].cppi5_desc_vaddr;
++	cppi5_hdesc_set_pktlen(h_desc, d->residue);
++
++	return d;
++}
++
++static int udma_attach_metadata(struct dma_async_tx_descriptor *desc,
++				void *data, size_t len)
++{
++	struct udma_desc *d = to_udma_desc(desc);
++	struct udma_chan *uc = to_udma_chan(desc->chan);
++	struct cppi5_host_desc_t *h_desc;
++	u32 psd_size = len;
++	u32 flags = 0;
++
++	if (!uc->pkt_mode || !uc->metadata_size)
++		return -ENOTSUPP;
++
++	if (!data || len > uc->metadata_size)
++		return -EINVAL;
++
++	if (uc->needs_epib && len < CPPI5_INFO0_HDESC_EPIB_SIZE)
++		return -EINVAL;
++
++	h_desc = d->hwdesc[0].cppi5_desc_vaddr;
++	if (d->dir == DMA_MEM_TO_DEV)
++		memcpy(h_desc->epib, data, len);
++
++	if (uc->needs_epib)
++		psd_size -= CPPI5_INFO0_HDESC_EPIB_SIZE;
++
++	d->metadata = data;
++	d->metadata_size = len;
++	if (uc->needs_epib)
++		flags |= CPPI5_INFO0_HDESC_EPIB_PRESENT;
++
++	cppi5_hdesc_update_flags(h_desc, flags);
++	cppi5_hdesc_update_psdata_size(h_desc, psd_size);
++
++	return 0;
++}
++
++static void *udma_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
++				   size_t *payload_len, size_t *max_len)
++{
++	struct udma_desc *d = to_udma_desc(desc);
++	struct udma_chan *uc = to_udma_chan(desc->chan);
++	struct cppi5_host_desc_t *h_desc;
++
++	if (!uc->pkt_mode || !uc->metadata_size)
++		return ERR_PTR(-ENOTSUPP);
++
++	h_desc = d->hwdesc[0].cppi5_desc_vaddr;
++
++	*max_len = uc->metadata_size;
++
++	*payload_len = cppi5_hdesc_epib_present(&h_desc->hdr) ?
++		       CPPI5_INFO0_HDESC_EPIB_SIZE : 0;
++	*payload_len += cppi5_hdesc_get_psdata_size(h_desc);
++
++	return h_desc->epib;
++}
++
++static int udma_set_metadata_len(struct dma_async_tx_descriptor *desc,
++				 size_t payload_len)
++{
++	struct udma_desc *d = to_udma_desc(desc);
++	struct udma_chan *uc = to_udma_chan(desc->chan);
++	struct cppi5_host_desc_t *h_desc;
++	u32 psd_size = payload_len;
++	u32 flags = 0;
++
++	if (!uc->pkt_mode || !uc->metadata_size)
++		return -ENOTSUPP;
++
++	if (payload_len > uc->metadata_size)
++		return -EINVAL;
++
++	if (uc->needs_epib && payload_len < CPPI5_INFO0_HDESC_EPIB_SIZE)
++		return -EINVAL;
++
++	h_desc = d->hwdesc[0].cppi5_desc_vaddr;
++
++	if (uc->needs_epib) {
++		psd_size -= CPPI5_INFO0_HDESC_EPIB_SIZE;
++		flags |= CPPI5_INFO0_HDESC_EPIB_PRESENT;
++	}
++
++	cppi5_hdesc_update_flags(h_desc, flags);
++	cppi5_hdesc_update_psdata_size(h_desc, psd_size);
++
++	return 0;
++}
++
++static struct dma_descriptor_metadata_ops metadata_ops = {
++	.attach = udma_attach_metadata,
++	.get_ptr = udma_get_metadata_ptr,
++	.set_len = udma_set_metadata_len,
++};
++
++static struct dma_async_tx_descriptor *
++udma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
++		   unsigned int sglen, enum dma_transfer_direction dir,
++		   unsigned long tx_flags, void *context)
++{
++	struct udma_chan *uc = to_udma_chan(chan);
++	enum dma_slave_buswidth dev_width;
++	struct udma_desc *d;
++	u32 burst;
++
++	if (dir != uc->dir) {
++		dev_err(chan->device->dev,
++			"%s: chan%d is for %s, not supporting %s\n",
++			__func__, uc->id, udma_get_dir_text(uc->dir),
++			udma_get_dir_text(dir));
++		return NULL;
++	}
++
++	if (dir == DMA_DEV_TO_MEM) {
++		dev_width = uc->cfg.src_addr_width;
++		burst = uc->cfg.src_maxburst;
++	} else if (dir == DMA_MEM_TO_DEV) {
++		dev_width = uc->cfg.dst_addr_width;
++		burst = uc->cfg.dst_maxburst;
++	} else {
++		dev_err(chan->device->dev, "%s: bad direction?\n", __func__);
++		return NULL;
++	}
++
++	if (!burst)
++		burst = 1;
++
++	if (uc->pkt_mode)
++		d = udma_prep_slave_sg_pkt(uc, sgl, sglen, dir, tx_flags,
++					   context);
++	else
++		d = udma_prep_slave_sg_tr(uc, sgl, sglen, dir, tx_flags,
++					  context);
++
++	if (!d)
++		return NULL;
++
++	d->dir = dir;
++	d->desc_idx = 0;
++	d->tr_idx = 0;
++
++	/* static TR for remote PDMA */
++	if (udma_configure_statictr(uc, d, dev_width, burst)) {
++		dev_err(uc->ud->dev,
++			"%s: StaticTR Z is limted to maximum 4095 (%u)\n",
++			__func__, d->static_tr.bstcnt);
++
++		udma_free_hwdesc(uc, d);
++		kfree(d);
++		return NULL;
++	}
++
++	if (uc->metadata_size)
++		d->vd.tx.metadata_ops = &metadata_ops;
++
++	return vchan_tx_prep(&uc->vc, &d->vd, tx_flags);
++}
++
++static struct udma_desc *
++udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
++			size_t buf_len, size_t period_len,
++			enum dma_transfer_direction dir, unsigned long flags)
++{
++	enum dma_slave_buswidth dev_width;
++	struct udma_desc *d;
++	size_t tr_size;
++	struct cppi5_tr_type1_t *tr_req;
++	unsigned int i;
++	unsigned int periods = buf_len / period_len;
++	u32 burst;
++
++	if (dir == DMA_DEV_TO_MEM) {
++		dev_width = uc->cfg.src_addr_width;
++		burst = uc->cfg.src_maxburst;
++	} else if (dir == DMA_MEM_TO_DEV) {
++		dev_width = uc->cfg.dst_addr_width;
++		burst = uc->cfg.dst_maxburst;
++	} else {
++		dev_err(uc->ud->dev, "%s: bad direction?\n", __func__);
++		return NULL;
++	}
++
++	if (!burst)
++		burst = 1;
++
++	/* Now allocate and setup the descriptor. */
++	tr_size = sizeof(struct cppi5_tr_type1_t);
++	d = udma_alloc_tr_desc(uc, tr_size, periods, dir);
++	if (!d)
++		return NULL;
++
++	tr_req = (struct cppi5_tr_type1_t *)d->hwdesc[0].tr_req_base;
++	for (i = 0; i < periods; i++) {
++		cppi5_tr_init(&tr_req[i].flags, CPPI5_TR_TYPE1, false, false,
++			      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
++
++		tr_req[i].addr = buf_addr + period_len * i;
++		tr_req[i].icnt0 = dev_width;
++		tr_req[i].icnt1 = period_len / dev_width;
++		tr_req[i].dim1 = dev_width;
++
++		if (!(flags & DMA_PREP_INTERRUPT))
++			cppi5_tr_csf_set(&tr_req[i].flags,
++					 CPPI5_TR_CSF_SUPR_EVT);
++	}
++
++	return d;
++}
++
++static struct udma_desc *
++udma_prep_dma_cyclic_pkt(struct udma_chan *uc, dma_addr_t buf_addr,
++			 size_t buf_len, size_t period_len,
++			 enum dma_transfer_direction dir, unsigned long flags)
++{
++	struct udma_desc *d;
++	u32 ring_id;
++	int i;
++	int periods = buf_len / period_len;
++
++	if (periods > (K3_UDMA_DEFAULT_RING_SIZE - 1))
++		return NULL;
++
++	if (period_len > 0x3FFFFF)
++		return NULL;
++
++	d = kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_ATOMIC);
++	if (!d)
++		return NULL;
++
++	d->hwdesc_count = periods;
++
++	/* TODO: re-check this... */
++	if (dir == DMA_DEV_TO_MEM)
++		ring_id = k3_ringacc_get_ring_id(uc->rflow->r_ring);
++	else
++		ring_id = k3_ringacc_get_ring_id(uc->tchan->tc_ring);
++
++	for (i = 0; i < periods; i++) {
++		struct udma_hwdesc *hwdesc = &d->hwdesc[i];
++		dma_addr_t period_addr = buf_addr + (period_len * i);
++		struct cppi5_host_desc_t *h_desc;
++
++		hwdesc->cppi5_desc_vaddr = dma_pool_zalloc(uc->hdesc_pool,
++						GFP_ATOMIC,
++						&hwdesc->cppi5_desc_paddr);
++		if (!hwdesc->cppi5_desc_vaddr) {
++			dev_err(uc->ud->dev,
++				"descriptor%d allocation failed\n", i);
++
++			udma_free_hwdesc(uc, d);
++			kfree(d);
++			return NULL;
++		}
++
++		hwdesc->cppi5_desc_size = uc->hdesc_size;
++		h_desc = hwdesc->cppi5_desc_vaddr;
++
++		cppi5_hdesc_init(h_desc, 0, 0);
++		cppi5_hdesc_set_pktlen(h_desc, period_len);
++
++		/* Flow and Packed ID */
++		cppi5_desc_set_pktids(&h_desc->hdr, uc->id, 0x3fff);
++		cppi5_desc_set_retpolicy(&h_desc->hdr, 0, ring_id);
++
++		/* attach each period to a new descriptor */
++		cppi5_hdesc_attach_buf(h_desc,
++				       period_addr, period_len,
++				       period_addr, period_len);
++	}
++
++	return d;
++}
++
++static struct dma_async_tx_descriptor *
++udma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
++		     size_t period_len, enum dma_transfer_direction dir,
++		     unsigned long flags)
++{
++	struct udma_chan *uc = to_udma_chan(chan);
++	enum dma_slave_buswidth dev_width;
++	struct udma_desc *d;
++	u32 burst;
++
++	if (dir != uc->dir) {
++		dev_err(chan->device->dev,
++			"%s: chan%d is for %s, not supporting %s\n",
++			__func__, uc->id, udma_get_dir_text(uc->dir),
++			udma_get_dir_text(dir));
++		return NULL;
++	}
++
++	uc->cyclic = true;
++
++	if (dir == DMA_DEV_TO_MEM) {
++		dev_width = uc->cfg.src_addr_width;
++		burst = uc->cfg.src_maxburst;
++	} else if (dir == DMA_MEM_TO_DEV) {
++		dev_width = uc->cfg.dst_addr_width;
++		burst = uc->cfg.dst_maxburst;
++	} else {
++		dev_err(uc->ud->dev, "%s: bad direction?\n", __func__);
++		return NULL;
++	}
++
++	if (!burst)
++		burst = 1;
++
++	if (uc->pkt_mode)
++		d = udma_prep_dma_cyclic_pkt(uc, buf_addr, buf_len, period_len,
++					     dir, flags);
++	else
++		d = udma_prep_dma_cyclic_tr(uc, buf_addr, buf_len, period_len,
++					    dir, flags);
++
++	if (!d)
++		return NULL;
++
++	d->sglen = buf_len / period_len;
++
++	d->dir = dir;
++	d->residue = buf_len;
++
++	/* static TR for remote PDMA */
++	if (udma_configure_statictr(uc, d, dev_width, burst)) {
++		dev_err(uc->ud->dev,
++			"%s: StaticTR Z is limted to maximum 4095 (%u)\n",
++			__func__, d->static_tr.bstcnt);
++
++		udma_free_hwdesc(uc, d);
++		kfree(d);
++		return NULL;
++	}
++
++	if (uc->metadata_size)
++		d->vd.tx.metadata_ops = &metadata_ops;
++
++	return vchan_tx_prep(&uc->vc, &d->vd, flags);
++}
++
++static struct dma_async_tx_descriptor *
++udma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
++		     size_t len, unsigned long tx_flags)
++{
++	struct udma_chan *uc = to_udma_chan(chan);
++	struct udma_desc *d;
++	struct cppi5_tr_type15_t *tr_req;
++	int num_tr;
++	size_t tr_size = sizeof(struct cppi5_tr_type15_t);
++	u16 tr0_cnt0, tr0_cnt1, tr1_cnt0;
++
++	if (uc->dir != DMA_MEM_TO_MEM) {
++		dev_err(chan->device->dev,
++			"%s: chan%d is for %s, not supporting %s\n",
++			__func__, uc->id, udma_get_dir_text(uc->dir),
++			udma_get_dir_text(DMA_MEM_TO_MEM));
++		return NULL;
++	}
++
++	if (len < SZ_64K) {
++		num_tr = 1;
++		tr0_cnt0 = len;
++		tr0_cnt1 = 1;
++	} else {
++		unsigned long align_to = __ffs(src | dest);
++
++		if (align_to > 3)
++			align_to = 3;
++		/*
++		 * Keep simple: tr0: SZ_64K-alignment blocks,
++		 *		tr1: the remaining
++		 */
++		num_tr = 2;
++		tr0_cnt0 = (SZ_64K - BIT(align_to));
++		if (len / tr0_cnt0 >= SZ_64K) {
++			dev_err(uc->ud->dev, "size %zu is not supported\n",
++				len);
++			return NULL;
++		}
++
++		tr0_cnt1 = len / tr0_cnt0;
++		tr1_cnt0 = len % tr0_cnt0;
++	}
++
++	d = udma_alloc_tr_desc(uc, tr_size, num_tr, DMA_MEM_TO_MEM);
++	if (!d)
++		return NULL;
++
++	d->dir = DMA_MEM_TO_MEM;
++	d->desc_idx = 0;
++	d->tr_idx = 0;
++	d->residue = len;
++
++	tr_req = (struct cppi5_tr_type15_t *)d->hwdesc[0].tr_req_base;
++
++	cppi5_tr_init(&tr_req[0].flags, CPPI5_TR_TYPE15, false, true,
++		      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
++	cppi5_tr_csf_set(&tr_req[0].flags, CPPI5_TR_CSF_SUPR_EVT);
++
++	tr_req[0].addr = src;
++	tr_req[0].icnt0 = tr0_cnt0;
++	tr_req[0].icnt1 = tr0_cnt1;
++	tr_req[0].icnt2 = 1;
++	tr_req[0].icnt3 = 1;
++	tr_req[0].dim1 = tr0_cnt0;
++
++	tr_req[0].daddr = dest;
++	tr_req[0].dicnt0 = tr0_cnt0;
++	tr_req[0].dicnt1 = tr0_cnt1;
++	tr_req[0].dicnt2 = 1;
++	tr_req[0].dicnt3 = 1;
++	tr_req[0].ddim1 = tr0_cnt0;
++
++	if (num_tr == 2) {
++		cppi5_tr_init(&tr_req[1].flags, CPPI5_TR_TYPE15, false, true,
++			      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
++		cppi5_tr_csf_set(&tr_req[1].flags, CPPI5_TR_CSF_SUPR_EVT);
++
++		tr_req[1].addr = src + tr0_cnt1 * tr0_cnt0;
++		tr_req[1].icnt0 = tr1_cnt0;
++		tr_req[1].icnt1 = 1;
++		tr_req[1].icnt2 = 1;
++		tr_req[1].icnt3 = 1;
++
++		tr_req[1].daddr = dest + tr0_cnt1 * tr0_cnt0;
++		tr_req[1].dicnt0 = tr1_cnt0;
++		tr_req[1].dicnt1 = 1;
++		tr_req[1].dicnt2 = 1;
++		tr_req[1].dicnt3 = 1;
++	}
++
++	cppi5_tr_csf_set(&tr_req[num_tr - 1].flags, CPPI5_TR_CSF_EOP);
++
++	if (uc->metadata_size)
++		d->vd.tx.metadata_ops = &metadata_ops;
++
++	return vchan_tx_prep(&uc->vc, &d->vd, tx_flags);
++}
++
+ static void udma_issue_pending(struct dma_chan *chan)
  {
- 	struct drm_dp_sideband_msg_req_body req;
-@@ -1078,7 +1071,6 @@ static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
- 	req.u.port_num.port_number = port_num;
- 	drm_dp_encode_sideband_req(&req, msg);
- 	msg->path_msg = true;
--	return 0;
- }
- 
- static int drm_dp_mst_assign_payload_id(struct drm_dp_mst_topology_mgr *mgr,
-@@ -1744,14 +1736,13 @@ static u8 drm_dp_calculate_rad(struct drm_dp_mst_port *port,
-  */
- static bool drm_dp_port_setup_pdt(struct drm_dp_mst_port *port)
- {
--	int ret;
- 	u8 rad[6], lct;
- 	bool send_link = false;
- 	switch (port->pdt) {
- 	case DP_PEER_DEVICE_DP_LEGACY_CONV:
- 	case DP_PEER_DEVICE_SST_SINK:
- 		/* add i2c over sideband */
--		ret = drm_dp_mst_register_i2c_bus(&port->aux);
-+		drm_dp_mst_register_i2c_bus(&port->aux);
- 		break;
- 	case DP_PEER_DEVICE_MST_BRANCHING:
- 		lct = drm_dp_calculate_rad(port, rad);
-@@ -1821,25 +1812,20 @@ ssize_t drm_dp_mst_dpcd_write(struct drm_dp_aux *aux,
- 
- static void drm_dp_check_mstb_guid(struct drm_dp_mst_branch *mstb, u8 *guid)
- {
--	int ret;
--
- 	memcpy(mstb->guid, guid, 16);
- 
- 	if (!drm_dp_validate_guid(mstb->mgr, mstb->guid)) {
- 		if (mstb->port_parent) {
--			ret = drm_dp_send_dpcd_write(
--					mstb->mgr,
--					mstb->port_parent,
--					DP_GUID,
--					16,
--					mstb->guid);
-+			drm_dp_send_dpcd_write(mstb->mgr,
-+					       mstb->port_parent,
-+					       DP_GUID,
-+					       16,
-+					       mstb->guid);
- 		} else {
--
--			ret = drm_dp_dpcd_write(
--					mstb->mgr->aux,
--					DP_GUID,
--					mstb->guid,
--					16);
-+			drm_dp_dpcd_write(mstb->mgr->aux,
-+					  DP_GUID,
-+					  mstb->guid,
-+					  16);
- 		}
- 	}
- }
-@@ -2195,7 +2181,7 @@ static bool drm_dp_validate_guid(struct drm_dp_mst_topology_mgr *mgr,
- 	return false;
- }
- 
--static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
-+static void build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
- {
- 	struct drm_dp_sideband_msg_req_body req;
- 
-@@ -2204,8 +2190,6 @@ static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
- 	req.u.dpcd_read.dpcd_address = offset;
- 	req.u.dpcd_read.num_bytes = num_bytes;
- 	drm_dp_encode_sideband_req(&req, msg);
--
--	return 0;
- }
- 
- static int drm_dp_send_sideband_msg(struct drm_dp_mst_topology_mgr *mgr,
-@@ -2427,14 +2411,14 @@ static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
- {
- 	struct drm_dp_sideband_msg_tx *txmsg;
- 	struct drm_dp_link_address_ack_reply *reply;
--	int i, len, ret;
-+	int i, ret;
- 
- 	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
- 	if (!txmsg)
- 		return;
- 
- 	txmsg->dst = mstb;
--	len = build_link_address(txmsg);
-+	build_link_address(txmsg);
- 
- 	mstb->link_address_sent = true;
- 	drm_dp_queue_down_tx(mgr, txmsg);
-@@ -2476,7 +2460,6 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
- {
- 	struct drm_dp_enum_path_resources_ack_reply *path_res;
- 	struct drm_dp_sideband_msg_tx *txmsg;
--	int len;
- 	int ret;
- 
- 	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
-@@ -2484,7 +2467,7 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
- 		return -ENOMEM;
- 
- 	txmsg->dst = mstb;
--	len = build_enum_path_resources(txmsg, port->port_num);
-+	build_enum_path_resources(txmsg, port->port_num);
- 
- 	drm_dp_queue_down_tx(mgr, txmsg);
- 
-@@ -2567,7 +2550,7 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
- {
- 	struct drm_dp_sideband_msg_tx *txmsg;
- 	struct drm_dp_mst_branch *mstb;
--	int len, ret, port_num;
-+	int ret, port_num;
- 	u8 sinks[DRM_DP_MAX_SDP_STREAMS];
- 	int i;
- 
-@@ -2592,9 +2575,9 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
- 		sinks[i] = i;
- 
- 	txmsg->dst = mstb;
--	len = build_allocate_payload(txmsg, port_num,
--				     id,
--				     pbn, port->num_sdp_streams, sinks);
-+	build_allocate_payload(txmsg, port_num,
-+			       id,
-+			       pbn, port->num_sdp_streams, sinks);
- 
- 	drm_dp_queue_down_tx(mgr, txmsg);
- 
-@@ -2623,7 +2606,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
- 				 struct drm_dp_mst_port *port, bool power_up)
- {
- 	struct drm_dp_sideband_msg_tx *txmsg;
--	int len, ret;
-+	int ret;
- 
- 	port = drm_dp_mst_topology_get_port_validated(mgr, port);
- 	if (!port)
-@@ -2636,7 +2619,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
- 	}
- 
- 	txmsg->dst = port->parent;
--	len = build_power_updown_phy(txmsg, port->port_num, power_up);
-+	build_power_updown_phy(txmsg, port->port_num, power_up);
- 	drm_dp_queue_down_tx(mgr, txmsg);
- 
- 	ret = drm_dp_mst_wait_tx_reply(port->parent, txmsg);
-@@ -2856,7 +2839,6 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
- 				 struct drm_dp_mst_port *port,
- 				 int offset, int size, u8 *bytes)
- {
--	int len;
- 	int ret = 0;
- 	struct drm_dp_sideband_msg_tx *txmsg;
- 	struct drm_dp_mst_branch *mstb;
-@@ -2871,7 +2853,7 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
- 		goto fail_put;
- 	}
- 
--	len = build_dpcd_read(txmsg, port->port_num, offset, size);
-+	build_dpcd_read(txmsg, port->port_num, offset, size);
- 	txmsg->dst = port->parent;
- 
- 	drm_dp_queue_down_tx(mgr, txmsg);
-@@ -2909,7 +2891,6 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
- 				  struct drm_dp_mst_port *port,
- 				  int offset, int size, u8 *bytes)
- {
--	int len;
- 	int ret;
- 	struct drm_dp_sideband_msg_tx *txmsg;
- 	struct drm_dp_mst_branch *mstb;
-@@ -2924,7 +2905,7 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
- 		goto fail_put;
- 	}
- 
--	len = build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
-+	build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
- 	txmsg->dst = mstb;
- 
- 	drm_dp_queue_down_tx(mgr, txmsg);
-@@ -3147,7 +3128,7 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
- {
- 	int len;
- 	u8 replyblock[32];
--	int replylen, origlen, curreply;
-+	int replylen, curreply;
- 	int ret;
- 	struct drm_dp_sideband_msg_rx *msg;
- 	int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE : DP_SIDEBAND_MSG_DOWN_REP_BASE;
-@@ -3167,7 +3148,6 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
- 	}
- 	replylen = msg->curchunk_len + msg->curchunk_hdrlen;
- 
--	origlen = replylen;
- 	replylen -= len;
- 	curreply = len;
- 	while (replylen > 0) {
-@@ -3959,17 +3939,16 @@ void drm_dp_mst_dump_topology(struct seq_file *m,
- 	mutex_lock(&mgr->lock);
- 	if (mgr->mst_primary) {
- 		u8 buf[DP_PAYLOAD_TABLE_SIZE];
--		int ret;
- 
--		ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
-+		drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
- 		seq_printf(m, "dpcd: %*ph\n", DP_RECEIVER_CAP_SIZE, buf);
--		ret = drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
-+		drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
- 		seq_printf(m, "faux/mst: %*ph\n", 2, buf);
--		ret = drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
-+		drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
- 		seq_printf(m, "mst ctrl: %*ph\n", 1, buf);
- 
- 		/* dump the standard OUI branch header */
--		ret = drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
-+		drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
- 		seq_printf(m, "branch oui: %*phN devid: ", 3, buf);
- 		for (i = 0x3; i < 0x8 && buf[i]; i++)
- 			seq_printf(m, "%c", buf[i]);
+ 	struct udma_chan *uc = to_udma_chan(chan);
 -- 
-2.15.0
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
