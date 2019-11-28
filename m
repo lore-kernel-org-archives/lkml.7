@@ -2,102 +2,103 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21785C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA432C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA2F2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881BA2176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="G6glzc+N"
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="cDgC2CAd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfK1JCt (ORCPT
+        id S1727484AbfK1JDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 04:02:49 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44300 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbfK1JCt (ORCPT
+        Thu, 28 Nov 2019 04:03:20 -0500
+Received: from dvalin.narfation.org ([213.160.73.56]:51930 "EHLO
+        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfK1JDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 04:02:49 -0500
-Received: by mail-lj1-f195.google.com with SMTP id c19so595953lji.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 01:02:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=J0ArWTMK2M2cZ2zXfxSef0laglMj50lskLz/N/COoyI=;
-        b=G6glzc+N9b1z4gASSZC5AEd2jFJOL3n0eIWVnAe5AFj6b9KL8p9l0fGtPjZWwqloVc
-         MbFAw7gXgY7/o9XSopUwxaWCYsOW18S4HjAnf9itzbbDFUaNMz31hPcYOSVv9JEZ7K8h
-         ktQw5DrGfazKfaU1IQ6XlCNocKnC3bQUx4EY0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J0ArWTMK2M2cZ2zXfxSef0laglMj50lskLz/N/COoyI=;
-        b=NLPae7gbMq3AZdp3SCF2yZwJF2WlNMLf1l1IkzlB+m8KiDur1FJ8JcWHiPnQjfvMNY
-         QlMMaJFBlqyCkLHlfuxwktfe73Se2G4yjqrZWszUfPkpPNo8IozG65FV9A0VSrIrOXH7
-         3G/BDLL172LOpKd36KBNCw3KzL3Wb7AMhBszU3lu9gVrcTex+Kg50Ic1hcccmeSqYjZF
-         auet8FnjAKRyP5NnM2CEOKwzpm7KoY+noWh6BEVzypo6pOiW+0Y81NWlg7vmBgtezugI
-         VSF5TmAKwuLSodiFnbSB1Q6PTkkRvR4dAhF7gE6sfQCsAjfbHt3NERj+t1P52fkwdr9Q
-         Z/Hg==
-X-Gm-Message-State: APjAAAVhX/LZmLmGfDwEnnauaLiZK48aDSsfugeQl6n9aKNm2wLkCAov
-        suohM9qg45/YwrAB8H/RNQxICA==
-X-Google-Smtp-Source: APXvYqzK+0aH2OxqnNebVIbBxsAx+sVVUV5///KJSvWtCfimRUSUBpmooYcKVoc1aZPo9aQXeAPhvA==
-X-Received: by 2002:a2e:9a12:: with SMTP id o18mr33630972lji.191.1574931766022;
-        Thu, 28 Nov 2019 01:02:46 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id r125sm8265681lff.59.2019.11.28.01.02.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Nov 2019 01:02:45 -0800 (PST)
-Subject: Re: [PATCH RFC] signalfd: add support for SFD_TASK
-To:     Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
- <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
- <1d3a458a-fa79-5e33-b5ce-b473122f6d1a@kernel.dk>
- <CAG48ez2VBS4bVJqdCU9cUhYePYCiUURvXZWneBx2KGkg3L9d4g@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <f4144a96-58ef-fba7-79f0-e5178147b6bb@rasmusvillemoes.dk>
-Date:   Thu, 28 Nov 2019 10:02:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 28 Nov 2019 04:03:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1574931798;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NrOadlV/ly7FreKTOQxgRCOUZAeZYFuDY0qoRN8icgo=;
+        b=cDgC2CAdf2rhtq7hEdWN7O6A53wGbKZtVnG7HANS56jXbJDlbuy4WBQ6tB4iITPMinNWTz
+        8ufAeJhojywWlqfMM3ThtQ7p76e0n8Sj8L24AyTXsWhh6j9yKnLRF3K4dLr/DCAK8TyW4I
+        Yv0u0zLnBVZ7HdnC57anmxMMBMsSSdc=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzkaller <syzkaller@googlegroups.com>,
+        syzbot <syzbot+a229d8d995b74f8c4b6c@syzkaller.appspotmail.com>,
+        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        =?utf-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>,
+        LKML <linux-kernel@vger.kernel.org>, mareklindner@neomailbox.ch,
+        netdev <netdev@vger.kernel.org>, sw@simonwunderlich.de,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        vinicius.gomes@intel.com, wang.yi59@zte.com.cn,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Subject: Re: WARNING in mark_lock (3)
+Date:   Thu, 28 Nov 2019 10:03:13 +0100
+Message-ID: <3691620.GRZi0niZ3p@sven-edge>
+In-Reply-To: <CACT4Y+abQSWfiN16BwXFOBi+d3CFGk53oj+5+zZwQPbcYu-Rew@mail.gmail.com>
+References: <0000000000009aa32205985e78b6@google.com> <1809369.KjlzdqruN6@sven-edge> <CACT4Y+abQSWfiN16BwXFOBi+d3CFGk53oj+5+zZwQPbcYu-Rew@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez2VBS4bVJqdCU9cUhYePYCiUURvXZWneBx2KGkg3L9d4g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="nextPart3339975.5L7NHtn4j8"; micalg="pgp-sha512"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/11/2019 00.27, Jann Horn wrote:
+--nextPart3339975.5L7NHtn4j8
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-> One more thing, though: We'll have to figure out some way to
-> invalidate the fd when the target goes through execve(), in particular
-> if it's a setuid execution. Otherwise we'll be able to just steal
-> signals that were intended for the other task, that's probably not
-> good.
+On Thursday, 28 November 2019 09:54:15 CET Dmitry Vyukov wrote:
+[...]
+> > I was thinking more about rerunning the same bisect but tell it to assume
+> > "crashed: general protection fault in batadv_iv_ogm_queue_add" as OK instead
+> > of assuming that it is a crashed like the previous "crashed: WARNING in
+> > mark_lock". Just to get a non-bogus bisect result. Or try to rerun the
+> > bisect between 40e220b4218b and 89d57dddd7d319ded00415790a0bb3c954b7e386
 > 
-> So we should:
->  a) prevent using ->wait() on an old signalfd once the task has gone
-> through execve()
->  b) kick off all existing waiters
->  c) most importantly, prevent ->read() on an old signalfd once the
-> task has gone through execve()
-> 
-> We probably want to avoid using the cred_guard_mutex here, since it is
-> quite broad and has some deadlocking issues; it might make sense to
-> put the update of ->self_exec_id in fs/exec.c under something like the
-> siglock,
+> But... but this done by a program. What do you mean by "tell it"?
 
-What prevents one from exec'ing a trivial helper 2^32-1 times before
-exec'ing into the victim binary?
+Sorry that I asked about what the infrastructure around syzbot can do and
+how the interaction with it looks like.
 
-Rasmus
+Kind regards,
+	Sven
+--nextPart3339975.5L7NHtn4j8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl3fjVEACgkQXYcKB8Em
+e0ajQhAAvetvCCehY5SmHsrLLKW7/YkVm3Ez3oqtbu/VCn8TEvau5PVt48ojQYmu
+zOIZAs05i4JRI1WHZXyrAzPF3CI4juDdFCwOibiPDzCU2C3qD5s2AsZfxK22iPUt
+dkBhW19Cq115ZgcOmerAor0nLkRkglYwoAEg6j+edtXUU3JYQG6PSGICN1NMGhmY
+Q1jcXAGR1Hm+2SbR1sBBCflQHt8E6/wURkeqrvV82AcRSO3sPqQBWSEZ7QzIe3mc
+oh0v4o5xZQMqppDByKmS9kZ5kRPH0yQid9l/KU4yGAQ8IDIZRKJGSHbpdOSGHNB4
+9Wc3SR04lmn8WhwRBE8vpB/6n8cAq0mAv/kTa6pEYzjY499z8BjEkkAh9ggOuxLQ
+AOb4dpu0L+wyXP/vLhUKJI+KWAJ+OOJoAVxNXh6HvhQRpShpTN/7+o1AVyRXLlBZ
+bdjxVh3McRWvn8KYat3DtkON90uQRCZ9ufyTXcIPKkTiqQuT/UpwY0fNe3kjYfpK
+pd5dyM86JWGxd39ramOhFSBQyNUAmJ+9pY2uVypbSABbbyIlqerGqzRSvgxoynNN
+UrrZN3MVBCouMxM9+ES7L63jUg8JQQdAwr4RoisEyGLSPsstEnOd6PWYdsk6WYA2
+kDoKPp9EjAeGEb7qH+IbXSm73qP2xX+rBBjfcTn/1CHCkgAPvTg=
+=lHZm
+-----END PGP SIGNATURE-----
+
+--nextPart3339975.5L7NHtn4j8--
+
+
+
