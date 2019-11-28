@@ -6,132 +6,87 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66104C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C16C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48339217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F4022217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfK1QYt (ORCPT
+        id S1726758AbfK1QZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 11:24:49 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58674 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726446AbfK1QYs (ORCPT
+        Thu, 28 Nov 2019 11:25:05 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:45783 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726610AbfK1QZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:24:48 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASGGZWH019825;
-        Thu, 28 Nov 2019 11:24:31 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wjf1v5y8c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 11:24:31 -0500
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xASGGuJw021288;
-        Thu, 28 Nov 2019 11:24:31 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wjf1v5y86-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 11:24:31 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xASGMjB2032468;
-        Thu, 28 Nov 2019 16:24:30 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03dal.us.ibm.com with ESMTP id 2wevd7ame2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 16:24:30 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xASGOT6B30081516
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Nov 2019 16:24:29 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5722D7805E;
-        Thu, 28 Nov 2019 16:24:29 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C5437805F;
-        Thu, 28 Nov 2019 16:24:27 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.137])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Nov 2019 16:24:27 +0000 (GMT)
-Message-ID: <5789f26ca5568f05b9554053a1c6c3309d5c36e8.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] powerpc/kvm/book3s: Fixes possible 'use after
- release' of kvm
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Paul Mackerras <paulus@ozlabs.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Date:   Thu, 28 Nov 2019 13:24:22 -0300
-In-Reply-To: <20191127225747.GA2317@blackberry>
-References: <20191126175212.377171-1-leonardo@linux.ibm.com>
-         <20191127225747.GA2317@blackberry>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-PNohgKkP6BiPP+29h/le"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Thu, 28 Nov 2019 11:25:04 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-234-9BIOC5miNL-BUa2iQ7QnXA-1; Thu, 28 Nov 2019 16:25:01 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 28 Nov 2019 16:25:00 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 28 Nov 2019 16:25:00 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Willem de Bruijn' <willemdebruijn.kernel@gmail.com>
+CC:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Marek Majkowski <marek@cloudflare.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "network dev" <netdev@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Paolo Abeni <pabeni@redhat.com>
+Subject: RE: epoll_wait() performance
+Thread-Topic: epoll_wait() performance
+Thread-Index: AdWgk3jgEIFNwcnRS6+4A+/jFPxTuQEdLCCAAAAn2qAADFPagAAAV68AAAgIvgAAHmS7QA==
+Date:   Thu, 28 Nov 2019 16:25:00 +0000
+Message-ID: <a52b09fdfbbc44c8b398d7fbadfc5a9c@AcuMS.aculab.com>
+References: <bc84e68c0980466096b0d2f6aec95747@AcuMS.aculab.com>
+ <CAJPywTJYDxGQtDWLferh8ObjGp3JsvOn1om1dCiTOtY6S3qyVg@mail.gmail.com>
+ <5f4028c48a1a4673bd3b38728e8ade07@AcuMS.aculab.com>
+ <20191127164821.1c41deff@carbon>
+ <5eecf41c7e124d7dbc0ab363d94b7d13@AcuMS.aculab.com>
+ <CA+FuTSe8vfEME7EO6xru=i1++OWCNRJGePLNCzta+BVv_TY3Zw@mail.gmail.com>
+In-Reply-To: <CA+FuTSe8vfEME7EO6xru=i1++OWCNRJGePLNCzta+BVv_TY3Zw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_05:2019-11-28,2019-11-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- impostorscore=0 phishscore=0 mlxlogscore=999 spamscore=0 adultscore=0
- lowpriorityscore=0 clxscore=1015 suspectscore=2 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911280136
+X-MC-Unique: 9BIOC5miNL-BUa2iQ7QnXA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-PNohgKkP6BiPP+29h/le
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2019-11-28 at 09:57 +1100, Paul Mackerras wrote:
-> There isn't a potential use-after-free here.  We are relying on the
-> property that the release function (kvm_vm_release) cannot be called
-> in parallel with this function.  The reason is that this function
-> (kvm_vm_ioctl_create_spapr_tce) is handling an ioctl on a kvm VM file
-> descriptor.  That means that a userspace process has the file
-> descriptor still open.  The code that implements the close() system
-> call makes sure that no thread is still executing inside any system
-> call that is using the same file descriptor before calling the file
-> descriptor's release function (in this case, kvm_vm_release).  That
-> means that this kvm_put_kvm() call here cannot make the reference
-> count go to zero.
-
-That was very informative. A lot of things are clear to me now.
-Thanks for explaining this Paul.=20
-
-Best regards,
-Leonardo
-
---=-PNohgKkP6BiPP+29h/le
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3f9LYACgkQlQYWtz9S
-ttTuFRAAzklmvK/yrMAbKL0SscgkU2u5KsQ6td7bys4CpwCyjrFvMpPEhTscVF6l
-oJ/MuPcpEikVISnJTdqpbnyRp3fyZE105GBKP1LN5aXp+1HxT4DZHggSwuQg0THh
-9dce2RIjBaa+dUtLlFselG4xWBkJoUzVM1yNpvxhNLJGc52+mCmDmUeA3icT/NoY
-uKVtuOBfE7/UK94AhuBUkvVoUNGMPmLof+czvZPIuVc8Vprga3cXIpjLT2lw8Stk
-nKriyJO0/MVDTEU6mcqUYRfHUW2c2SAeae3AGz0HiXfPX3ar0Xl+wCd8vX+yO07S
-QmkWlKnvyBQi7WSHwg54xtbPDQBxig0PwOrG2OTDlZDuWT3PfGvYy9q2C5FOABcH
-xgxe4fas0u1dw/MY/JKo/DnJBq7L+aIu2faQDCRV6E/BI6s7t84nkEqALxQAmDvK
-uGPEtt2L/5Y/V9h78kJG501Xfz0TESuSfa9dTlOkUTvgKz0MCogTJFVI5wgPGYS+
-PK9aGMCRNzggyNprKsy+V76fvWy5LyR4L1ZfvToSVpTkd3kXV6prD2oRH2hYuVTX
-+MGhuqMf56WNUug++Yc82DAHTNJAwMpAs9nOwK7xoOwIs+4t5di4PdjK1KjwFhlO
-SIDljErVyer2WdJSIvW+CaUczw8qlrx4qqus8ffqI/Jnf64fZPQ=
-=hQv1
------END PGP SIGNATURE-----
-
---=-PNohgKkP6BiPP+29h/le--
+RnJvbTogV2lsbGVtIGRlIEJydWlqbg0KPiBTZW50OiAyNyBOb3ZlbWJlciAyMDE5IDE5OjQ4DQou
+Li4NCj4gQXJlIHRoZSBsYXRlc3QgbnVtYmVycyB3aXRoIENPTkZJR19IQVJERU5FRF9VU0VSQ09Q
+WT8NCg0KQWNjb3JkaW5nIHRvIC9ib290L2NvbmZpZy1gdW5hbWUgLXJgIGl0IGlzIGVuYWJsZWQg
+b24gbXkgc3lzdGVtLg0KSSBzdXNwZWN0IGl0IGhhcyBhIG1lYXN1cmFibGUgZWZmZWN0IG9uIHRo
+ZXNlIHRlc3RzLg0KDQo+IEkgYXNzdW1lIHRoYXQgdGhlIHBvbGwoKSBhZnRlciByZWN2KCkgaXMg
+bm9uLWJsb2NraW5nLiBJZiB1c2luZw0KPiByZWN2bXNnLCB0aGF0IGV4dHJhIHN5c2NhbGwgY291
+bGQgYmUgYXZvaWRlZCBieSBpbXBsZW1lbnRpbmcgYSBjbXNnDQo+IGlucSBoaW50IGZvciB1ZHAg
+c29ja2V0cyBhbmFsb2dvdXMgdG8gVENQX0NNX0lOUS90Y3BfaW5xX2hpbnQuDQoNCkFsbCB0aGUg
+cG9sbCgpIGNhbGxzIGFyZSBub24tYmxvY2tpbmcuDQpUaGUgZmlyc3QgcG9sbCgpIGhhcyBhbGwg
+dGhlIHNvY2tldHMgaW4gaXQuDQpUaGUgc2Vjb25kIHBvbGwoKSBvbmx5IHRob3NlIHRoYXQgcmV0
+dXJuZWQgZGF0YSB0aGUgZmlyc3QgdGltZSBhcm91bmQuDQpUaGUgY29kZSB0aGVuIHNsZWVwcyBl
+bHNld2hlcmUgZm9yIHRoZSByZXN0IG9mIHRoZSAxMG1zIGludGVydmFsLg0KKEFjdHVhbGx5IHRo
+ZSBwb2xscyBhcmUgZG9uZSBpbiBibG9ja3Mgb2YgNjQsIGZpbGxpbmcgdXAgdGhlIHBmZFtdIGVh
+Y2ggdGltZS4pDQoNClRoaXMgYXZvaWRzIHRoZSBwcm9ibGVtIG9mIHJlcGVhdGVkbHkgc2V0dGlu
+ZyB1cCBhbmQgdGVhcmluZyBkb3duIHRoZQ0KcGVyLWZkIGRhdGEgZm9yIHBvbGwoKS4NCg0KPiBN
+b3JlIG91dGxhbmRpc2ggd291bGQgYmUgdG8gYWJ1c2UgdGhlIG1tc2doZHItPm1zZ19sZW4gZmll
+bGQgdG8gcGFzcw0KPiBmaWxlIGRlc2NyaXB0b3JzIGFuZCBhbW9ydGl6ZSB0aGUga2VybmVsIHBh
+Z2UtdGFibGUgaXNvbGF0aW9uIGNvc3QNCj4gYWNyb3NzIHNvY2tldHMuIEJsb2NraW5nIHNlbWFu
+dGljcyB3b3VsZCBiZSB3ZWlyZCwgZm9yIHN0YXJ0ZXJzLg0KDQpJdCB3b3VsZCBiZSBiZXR0ZXIg
+dG8gYWxsb3cgYSBzaW5nbGUgVURQIHNvY2tldCBiZSBib3VuZCB0byBtdWx0aXBsZSBwb3J0cy4N
+CkFuZCB0aGVuIHVzZSB0aGUgY21zZyBkYXRhIHRvIHNvcnQgb3V0IHRoZSBhY3R1YWwgZGVzdGlu
+YXRpb24gcG9ydC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwg
+QnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVn
+aXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
