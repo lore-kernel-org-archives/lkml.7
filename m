@@ -2,200 +2,334 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9943FC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFE3C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693902176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F206E21770
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="trqMBsyS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lvbXvRLT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfK1JxY (ORCPT
+        id S1726702AbfK1Jxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 04:53:24 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:38184 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfK1JxX (ORCPT
+        Thu, 28 Nov 2019 04:53:48 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41444 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfK1Jxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 04:53:23 -0500
-Received: by mail-qv1-f68.google.com with SMTP id t5so3252080qvs.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 01:53:23 -0800 (PST)
+        Thu, 28 Nov 2019 04:53:48 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m4so27762191ljj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 01:53:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=idVy1nzezWTkm1R/1G5BVNFaJvGirW1RbJcNW1zc+1w=;
-        b=trqMBsySiXIV0sj3AbB8YO5bHj7bVJVOE2Stpp4CdbkrJK7n9ZoLf5yVP+0HiCMqst
-         DRxfcE/2J3L8xgwFL4n7R+OLLHrc/Au8p60XxmCM8YP0FtNcFNEvMiRnvC6qMOOvxh7G
-         OABL+AQPX3J0XyZ+JVc7fU+kkJW9NaM3PtVPckXw4bAgiGnld4BrdfbYnMrwnSpOPrf8
-         +/OKPJtrmdVxbDJvKFDz85OHhIwc1kNscS1XmweAxKfp/gzmAcNS38A5iA+RfaRx9q/s
-         WGVqFDXcfQytWw2TeuE9w1mF5uq4EGRq0O5snFDIHwIrrUn1YFwXWyzMJaCRW/hdvsNp
-         SYqg==
+         :cc:content-transfer-encoding;
+        bh=Dvoqq6lg6uAO0koRLmAz/MR5uOAYKRgR9ZwJ/yNYPpc=;
+        b=lvbXvRLTHYmqmw9gxM9S2njRJ7fsmYqDfDpZ+M3OrafY5MxhTwGk+owws2qC9nl8jt
+         M+v1D7djTn48w3voWRd2Ksln6ehI9xqqignuTuuVPopc0mBRIms/hjZ35o3k+s9L/B3D
+         UbvNvjl5L/vmwx6KlRqth4rz6dtDYEok/rLzgwREMsZIk76NIAihFStNic0LcNYKxx9X
+         D79YZfc7jGyEzvtEmn8b7k3caoUnWnpR79AwFZuBrexBLzy1wGfFu9KAR+Hg6dpAogbv
+         kQjqPO8q89Z7ITNX9ou3zLgNeDsYjMYWqfHGenm6+q3DyMkYL20S7VNBKRaGb/eX1WXS
+         Mxfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=idVy1nzezWTkm1R/1G5BVNFaJvGirW1RbJcNW1zc+1w=;
-        b=OpiEkqWr3aS48340aAyrf3FGJzPIn3hO1FTHjxcJ1bNlxKJyZGNDGtx9Knad2oyPI8
-         GkQq17skZGCdHiCgQzpyPHuHHwEHveDAaXWjzvyrcylZJ9YbAxKS/cn6pH7yOnkWtxgo
-         4zumY1q8xicXJk/aJQhqAWV7MWVs+LkJypkuaBMALtPbFJJVkvdswaBB6XGwOiGhwGjw
-         XSvHzMGjkytAlXj7+WyeGr2/bulykywODJ0CBA/Rrib7TksCouXXSiVFBJSMl7FmSplW
-         adjIsoVntFcQGlPZG/M/Frf6PEtXyQkhlJXPQ18ji4Y9a3TeG6yXvrKDUapIlP+WzfaL
-         AfLQ==
-X-Gm-Message-State: APjAAAVwTz3PfHYTE7zzP3320+MfskjqnZ2F9Fm1qLSiRznpwhXqsXfv
-        zPxVVJcsrw6RzwXpcETC6wQLvenXdef1XWBtJUuWqQ==
-X-Google-Smtp-Source: APXvYqzKOHlkd2Jw/sJCN6hng19dePkMrosAYDQmltCA6Z/ehub1ahXkdmPit/WKFhLMzQsJsAAWVIV6o9QGHyUgLZg=
-X-Received: by 2002:a05:6214:8ee:: with SMTP id dr14mr10061695qvb.122.1574934802319;
- Thu, 28 Nov 2019 01:53:22 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Dvoqq6lg6uAO0koRLmAz/MR5uOAYKRgR9ZwJ/yNYPpc=;
+        b=JyrTUFMuyIAqID0MttpydbURTYEnYEbabiTmx2UJ36k10fynt2MFpWUlm2MaTOstkR
+         naZPL4txVtK65q+panuvgzPUWCumMDmCY8e+VyrFmGI7LlU3ZWa7Cyl34ehcOvv2j/UE
+         aThoK4P/qoToUVHtdU7LnxLYj6fwc25YcbdRdiJjdwb8acmd7XBCMe6ngLZ2qgKL0NKG
+         Zwf7LL2EKXf9X3F+NhXEr7nc4P6mxDLOkUf+HPts/OcOa6Q+ipw/rVqxLY38F+W/WX8J
+         Aam9h3ps3IET6R69sxQ/B/3qvg49lgr5donbgjIfrc1LH3tv3t0Xytv1ej7LMfbItxUh
+         mHDQ==
+X-Gm-Message-State: APjAAAWRElT0jN4txdaXvpoYgKsNVCMqPnOTrgEylP7HwP5GTjQ1Qr1n
+        Bi2mjeuEOrYz41F6KtNkY2uT9UaAApG8Tiw04fBs6R2m+kw=
+X-Google-Smtp-Source: APXvYqxi/yeVgLXvlOXMw779bmMTyreRfJvW1r8g175TT9qooUjERaSsq+3vdXMiR/o1BhNGYSfMVkY2zg9w3UieaqM=
+X-Received: by 2002:a2e:84d0:: with SMTP id q16mr22780320ljh.48.1574934825335;
+ Thu, 28 Nov 2019 01:53:45 -0800 (PST)
 MIME-Version: 1.0
-References: <000000000000e67a05057314ddf6@google.com> <0000000000005eb1070597ea3a1f@google.com>
- <20191122205453.GE31235@linux.intel.com> <CACT4Y+b9FD8GTHc0baY-kUkuNFo-gdXCJ-uk5JtJSyjsyt8jTg@mail.gmail.com>
- <20191125175417.GD12178@linux.intel.com>
-In-Reply-To: <20191125175417.GD12178@linux.intel.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 28 Nov 2019 10:53:10 +0100
-Message-ID: <CACT4Y+Yu2LxcpQmNMjVTzc4bWojda0+qWJmrdRSc-XTyN8C20A@mail.gmail.com>
-Subject: Re: general protection fault in __schedule (2)
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        syzkaller <syzkaller@googlegroups.com>
-Cc:     syzbot <syzbot+7e2ab84953e4084a638d@syzkaller.appspotmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jim Mattson <jmattson@google.com>,
-        James Morris <jmorris@namei.org>,
-        "Raslan, KarimAllah" <karahmed@amazon.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+References: <20191114113153.GB4213@ming.t460p> <20191114235415.GL4614@dread.disaster.area>
+ <20191115010824.GC4847@ming.t460p> <20191115045634.GN4614@dread.disaster.area>
+ <20191115070843.GA24246@ming.t460p> <20191128094003.752-1-hdanton@sina.com>
+In-Reply-To: <20191128094003.752-1-hdanton@sina.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 28 Nov 2019 10:53:33 +0100
+Message-ID: <CAKfTPtA23ErKGCEJVmg6vk-QoufkiUM3NbXd31mZmKnuwbTkFw@mail.gmail.com>
+Subject: Re: single aio thread is migrated crazily by scheduler
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Dave Chinner <david@fromorbit.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 6:54 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Thu, 28 Nov 2019 at 10:40, Hillf Danton <hdanton@sina.com> wrote:
 >
-> On Sat, Nov 23, 2019 at 06:15:15AM +0100, Dmitry Vyukov wrote:
-> > On Fri, Nov 22, 2019 at 9:54 PM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
+>
+> On Sat, 16 Nov 2019 10:40:05 Dave Chinner wrote:
+> > On Fri, Nov 15, 2019 at 03:08:43PM +0800, Ming Lei wrote:
+> > > On Fri, Nov 15, 2019 at 03:56:34PM +1100, Dave Chinner wrote:
+> > > > On Fri, Nov 15, 2019 at 09:08:24AM +0800, Ming Lei wrote:
+> > > I can reproduce the issue with 4k block size on another RH system, an=
+d
+> > > the login info of that system has been shared to you in RH BZ.
 > > >
-> > > On Thu, Nov 21, 2019 at 11:19:00PM -0800, syzbot wrote:
-> > > > syzbot has bisected this bug to:
-> > > >
-> > > > commit 8fcc4b5923af5de58b80b53a069453b135693304
-> > > > Author: Jim Mattson <jmattson@google.com>
-> > > > Date:   Tue Jul 10 09:27:20 2018 +0000
-> > > >
-> > > >     kvm: nVMX: Introduce KVM_CAP_NESTED_STATE
-> > > >
-> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=124cdbace00000
-> > > > start commit:   234b69e3 ocfs2: fix ocfs2 read block panic
-> > > > git tree:       upstream
-> > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=114cdbace00000
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=164cdbace00000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5fa12be50bca08d8
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=7e2ab84953e4084a638d
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150f0a4e400000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f67111400000
-> > > >
-> > > > Reported-by: syzbot+7e2ab84953e4084a638d@syzkaller.appspotmail.com
-> > > > Fixes: 8fcc4b5923af ("kvm: nVMX: Introduce KVM_CAP_NESTED_STATE")
-> > > >
-> > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> > >
-> > > Is there a way to have syzbot stop processing/bisecting these things
-> > > after a reasonable amount of time?  The original crash is from August of
-> > > last year...
-> > >
-> > > Note, the original crash is actually due to KVM's put_kvm() fd race, but
-> > > whatever we want to blame, it's a duplicate.
-> > >
-> > > #syz dup: general protection fault in kvm_lapic_hv_timer_in_use
+> > > 1)
+> > > sysctl kernel.sched_min_granularity_ns=3D10000000
+> > > sysctl kernel.sched_wakeup_granularity_ns=3D15000000
 > >
-> > Hi Sean,
+> > So, these settings definitely influence behaviour.
 > >
-> > syzbot only sends bisection results to open bugs with no known fixes.
-> > So what you did (marking the bug as invalid/dup, or attaching a fix)
-> > would stop it from doing/sending bisection.
+> > If these are set to kernel defaults (4ms and 3ms each):
 > >
-> > "Original crash happened a long time ago" is not necessary a good
-> > signal. On the syzbot dashboard
-> > (https://syzkaller.appspot.com/upstream), you can see bugs with the
-> > original crash 2+ years ago, but they are still pretty much relevant.
-> > The default kernel development process strategy for invalidating bug
-> > reports by burying them in oblivion has advantages, but also
-> > downsides. FWIW syzbot prefers explicit status tracking.
+> > sysctl kernel.sched_min_granularity_ns=3D4000000
+> > sysctl kernel.sched_wakeup_granularity_ns=3D3000000
+> >
+> > The migration problem largely goes away - the fio task migration
+> > event count goes from ~2,000 a run down to 200/run.
+> >
+> > That indicates that the migration trigger is likely load/timing
+> > based. The analysis below is based on the 10/15ms numbers above,
+> > because it makes it so much easier to reproduce.
+> >
+> > > 2)
+> > > ./xfs_complete 4k
+> > >
+> > > Then you should see 1k~1.5k fio io thread migration in above test,
+> > > either v5.4-rc7(build with rhel8 config) or RHEL 4.18 kernel.
+> >
+> > Almost all the fio task migrations are coming from migration/X
+> > kernel threads. i.e it's the scheduler active balancing that is
+> > causing the fio thread to bounce around.
+> >
+> > This is typical a typical trace, trimmed to remove extraneous noise.
+> > The fio process is running on CPU 10:
+> >
+> >              fio-3185  [010] 50419.285954: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D1004014 [ns] vruntime=3D27067882290 [ns]
+> >              fio-3185  [010] 50419.286953: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D979458 [ns] vruntime=3D27068861748 [ns]
+> >              fio-3185  [010] 50419.287998: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D1028471 [ns] vruntime=3D27069890219 [ns]
+> >              fio-3185  [010] 50419.289973: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D989989 [ns] vruntime=3D27071836208 [ns]
+> >              fio-3185  [010] 50419.290958: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D963914 [ns] vruntime=3D27072800122 [ns]
+> >              fio-3185  [010] 50419.291952: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D972532 [ns] vruntime=3D27073772654 [ns]
+> >
+> > fio consumes CPU for several milliseconds, then:
+> >
+> >              fio-3185  [010] 50419.292935: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D966032 [ns] vruntime=3D27074738686 [ns]
+> >              fio-3185  [010] 50419.292941: sched_switch:         fio:31=
+85 [120] S =3D=3D> kworker/10:0:2763 [120]
+> >     kworker/10:0-2763  [010] 50419.292954: sched_stat_runtime:   comm=
+=3Dkworker/10:0 pid=3D2763 runtime=3D13423 [ns] vruntime=3D27052479694 [ns]
+> >     kworker/10:0-2763  [010] 50419.292956: sched_switch:         kworke=
+r/10:0:2763 [120] R =3D=3D> fio:3185 [120]
+> >              fio-3185  [010] 50419.293115: sched_waking:         comm=
+=3Dkworker/10:0 pid=3D2763 prio=3D120 target_cpu=3D010
+> >              fio-3185  [010] 50419.293116: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D160370 [ns] vruntime=3D27074899056 [ns]
+> >              fio-3185  [010] 50419.293118: sched_wakeup:         kworke=
+r/10:0:2763 [120] success=3D1 CPU:010
+> >
+> > A context switch out to a kworker, then 13us later we immediately
+> > switch back to the fio process, and go on running. No doubt
+> > somewhere in what the fio process is doing, we queue up more work to
+> > be run on the cpu, but the fio task keeps running
+> > (due to CONFIG_PREEMPT=3Dn).
+> >
+> >              fio-3185  [010] 50419.293934: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D803135 [ns] vruntime=3D27075702191 [ns]
+> >              fio-3185  [010] 50419.294936: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D988478 [ns] vruntime=3D27076690669 [ns]
+> >              fio-3185  [010] 50419.295934: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D982219 [ns] vruntime=3D27077672888 [ns]
+> >              fio-3185  [010] 50419.296935: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D984781 [ns] vruntime=3D27078657669 [ns]
+> >              fio-3185  [010] 50419.297934: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D981703 [ns] vruntime=3D27079639372 [ns]
+> >              fio-3185  [010] 50419.298937: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D990057 [ns] vruntime=3D27080629429 [ns]
+> >              fio-3185  [010] 50419.299935: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D977554 [ns] vruntime=3D27081606983 [ns]
+> >
+> > About 6ms later, CPU 0 kicks the active load balancer on CPU 10...
+> >
+> >           <idle>-0     [000] 50419.300014: sched_waking:         comm=
+=3Dmigration/10 pid=3D70 prio=3D0 target_cpu=3D010
+> >              fio-3185  [010] 50419.300024: sched_wakeup:         migrat=
+ion/10:70 [0] success=3D1 CPU:010
+> >              fio-3185  [010] 50419.300026: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D79291 [ns] vruntime=3D27081686274 [ns]
+> >              fio-3185  [010] 50419.300027: sched_switch:         fio:31=
+85 [120] S =3D=3D> migration/10:70 [0]
+> >     migration/10-70    [010] 50419.300032: sched_migrate_task:   comm=
+=3Dfio pid=3D3185 prio=3D120 orig_cpu=3D10 dest_cpu=3D12
+> >     migration/10-70    [010] 50419.300040: sched_switch:         migrat=
+ion/10:70 [0] D =3D=3D> kworker/10:0:2763 [120]
+> >
+> > And 10us later the fio process is switched away, the active load
+> > balancer work is run and migrates the fio process to CPU 12. Then...
+> >
+> >     kworker/10:0-2763  [010] 50419.300048: sched_stat_runtime:   comm=
+=3Dkworker/10:0 pid=3D2763 runtime=3D9252 [ns] vruntime=3D27062908308 [ns]
+> >     kworker/10:0-2763  [010] 50419.300062: sched_switch:         kworke=
+r/10:0:2763 [120] R =3D=3D> swapper/10:0 [120]
+> >           <idle>-0     [010] 50419.300067: sched_waking:         comm=
+=3Dkworker/10:0 pid=3D2763 prio=3D120 target_cpu=3D010
+> >           <idle>-0     [010] 50419.300069: sched_wakeup:         kworke=
+r/10:0:2763 [120] success=3D1 CPU:010
+> >           <idle>-0     [010] 50419.300071: sched_switch:         swappe=
+r/10:0 [120] S =3D=3D> kworker/10:0:2763 [120]
+> >     kworker/10:0-2763  [010] 50419.300073: sched_switch:         kworke=
+r/10:0:2763 [120] R =3D=3D> swapper/10:0 [120]
+> >
+> > The kworker runs for another 10us and the CPU goes idle. Shortly
+> > after this, CPU 12 is woken:
+> >
+> >           <idle>-0     [012] 50419.300113: sched_switch:         swappe=
+r/12:0 [120] S =3D=3D> fio:3185 [120]
+> >              fio-3185  [012] 50419.300596: sched_waking:         comm=
+=3Dkworker/12:1 pid=3D227 prio=3D120 target_cpu=3D012
+> >              fio-3185  [012] 50419.300598: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D561137 [ns] vruntime=3D20361153275 [ns]
+> >              fio-3185  [012] 50419.300936: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D326187 [ns] vruntime=3D20361479462 [ns]
+> >              fio-3185  [012] 50419.301935: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D981201 [ns] vruntime=3D20362460663 [ns]
+> >              fio-3185  [012] 50419.302935: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D983160 [ns] vruntime=3D20363443823 [ns]
+> >              fio-3185  [012] 50419.303934: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D983855 [ns] vruntime=3D20364427678 [ns]
+> >              fio-3185  [012] 50419.304934: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D977757 [ns] vruntime=3D20365405435 [ns]
+> >              fio-3185  [012] 50419.305948: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D999563 [ns] vruntime=3D20366404998 [ns]
+> >
+> >
+> > and fio goes on running there. The pattern repeats very soon afterwards=
+:
+> >
+> >           <idle>-0     [000] 50419.314982: sched_waking:         comm=
+=3Dmigration/12 pid=3D82 prio=3D0 target_cpu=3D012
+> >              fio-3185  [012] 50419.314988: sched_wakeup:         migrat=
+ion/12:82 [0] success=3D1 CPU:012
+> >              fio-3185  [012] 50419.314990: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D46342 [ns] vruntime=3D20375268656 [ns]
+> >              fio-3185  [012] 50419.314991: sched_switch:         fio:31=
+85 [120] S =3D=3D> migration/12:82 [0]
+> >     migration/12-82    [012] 50419.314995: sched_migrate_task:   comm=
+=3Dfio pid=3D3185 prio=3D120 orig_cpu=3D12 dest_cpu=3D5
+> >     migration/12-82    [012] 50419.315001: sched_switch:         migrat=
+ion/12:82 [0] D =3D=3D> kworker/12:1:227 [120]
+> >     kworker/12:1-227   [012] 50419.315022: sched_stat_runtime:   comm=
+=3Dkworker/12:1 pid=3D227 runtime=3D21453 [ns] vruntime=3D20359477889 [ns]
+> >     kworker/12:1-227   [012] 50419.315028: sched_switch:         kworke=
+r/12:1:227 [120] R =3D=3D> swapper/12:0 [120]
+> >           <idle>-0     [005] 50419.315053: sched_switch:         swappe=
+r/5:0 [120] S =3D=3D> fio:3185 [120]
+> >              fio-3185  [005] 50419.315286: sched_waking:         comm=
+=3Dkworker/5:0 pid=3D2646 prio=3D120 target_cpu=3D005
+> >              fio-3185  [005] 50419.315288: sched_stat_runtime:   comm=
+=3Dfio pid=3D3185 runtime=3D287737 [ns] vruntime=3D33779011507 [ns]
+> >
+> > And fio is now running on CPU 5 - it only ran on CPU 12 for about
+> > 15ms. Hmmm:
+> >
+> > $ grep fio-3185 ~/tmp/sched.out | awk 'BEGIN {totcpu =3D 0.0; switches =
+=3D 0.0; prev_waket =3D 0.0 }/sched_waking/ { cpu =3D $2; split($3, t, ":")=
+; waket =3D t[1]; if (cpu !=3D prev_cpu) { t_on_cpu =3D waket - prev_waket;=
+ if (prev_waket) { print "time on CPU", cpu, "was", t_on_cpu; totcpu +=3D t=
+_on_cpu; switches++ } prev_waket =3D waket; prev_cpu =3D cpu; } } END { pri=
+nt "switches", switches, "time on cpu", totcpu, "aver time on cpu", (totcpu=
+ / switches) } ' | stats --trim-outliers
+> > switches 2211 time on cpu 30.0994 aver time on cpu 0.0136135
+> > time on CPU [0-23(8.8823+/-6.2)] was 0.000331-0.330772(0.0134759+/-0.01=
+2)
+> >
+> > Yeah, the fio task averages 13.4ms on any given CPU before being
+> > switched to another CPU. Mind you, the stddev is 12ms, so the range
+> > of how long it spends on any one CPU is pretty wide (330us to
+> > 330ms).
+> >
+> Hey Dave
 >
-> I have no objection to explicit status tracking or getting pinged on old
-> open bugs.  I suppose I don't even mind the belated bisection, I'd probably
-> whine if syzbot didn't do the bisection :-).
+> > IOWs, this doesn't look like a workqueue problem at all - this looks
 >
-> What's annoying is the report doesn't provide any information about when it
-> originally occured or on what kernel it originally failed.  It didn't occur
-> to me that the original bug might be a year old and I only realized it was
-> from an old kernel when I saw "4.19.0-rc4+" in the dashboard's sample crash
-> log.  Knowing that the original crash was a year old would have saved me
-> 5-10 minutes of getting myself oriented.
+> Surprised to see you're so sure it has little to do with wq,
 >
-> Could syzbot provide the date and reported kernel version (assuming the
-> kernel version won't be misleading) of the original failure in its reports?
+> > like the scheduler is repeatedly making the wrong load balancing
+> > decisions when mixing a very short runtime task (queued work) with a
+> > long runtime task on the same CPU....
+> >
+> and it helps more to know what is driving lb to make decisions like
+> this. Because for 70+ per cent of communters in cities like London it
+> is supposed tube is better than cab on work days, the end_io cb is
+> tweaked to be a lookalike of execute_in_process_context() in the diff
+> with the devoted s_dio_done_wq taken out of account. It's interesting
+> to see what difference lb will make in the tube environment.
+>
+> Hillf
+>
+> > This is not my area of expertise, so I have no idea why this might
+> > be happening. Scheduler experts: is this expected behaviour? What
+> > tunables directly influence the active load balancer (and/or CONFIG
+> > options) to change how aggressive it's behaviour is?
+> >
+> > > Not reproduced the issue with 512 block size on the RH system yet,
+> > > maybe it is related with my kernel config.
+> >
+> > I doubt it - this looks like a load specific corner case in the
+> > scheduling algorithm....
+> >
+> > Cheers,
+> >
+> > Dave.
+> > --
+> > Dave Chinner
+> > david@fromorbit.com
+>
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -157,10 +157,8 @@ static void iomap_dio_bio_end_io(struct
+>                         WRITE_ONCE(dio->submit.waiter, NULL);
+>                         blk_wake_io_task(waiter);
+>                 } else if (dio->flags & IOMAP_DIO_WRITE) {
+> -                       struct inode *inode =3D file_inode(dio->iocb->ki_=
+filp);
+> -
+>                         INIT_WORK(&dio->aio.work, iomap_dio_complete_work=
+);
+> -                       queue_work(inode->i_sb->s_dio_done_wq, &dio->aio.=
+work);
+> +                       schedule_work(&dio->aio.work);
 
-+syzkaller mailing list for syzbot discussion
+I'm not sure that this will make a real difference because it ends up
+to call queue_work(system_wq, ...) and system_wq is bounded as well so
+the work will still be pinned to a CPU
+Using system_unbound_wq should make a difference because it doesn't
+pin the work on a CPU
+ +                       queue_work(system_unbound_wq, &dio->aio.work);
 
-We tried to provide some aggregate info in email reports long time ago
-(like trees where it occurred, number of crashes). The problem was
-that any such info captured in emails become stale very quickly. E.g.
-later somebody looks at the report and thinking "oh, linux-next only"
-or "it happened only once", but maybe it's not for a long time. E.g.
-if we say "it last happened 3 months" ago, maybe it's just happened
-again once we send it... While this "emails always provide latest
-updates" works for kernel in other context b/c updates provided by
-humans and there is no other source of truth; it does not play well
-with automated systems, or syzbot will need to send several emails per
-second, because it's really the rate at which things change.
 
-If we add some info, which one should it be? The original crash, the
-one used for bisection, or the latest one? All these are different...
-syzbot does not know "4.19.0-rc4+" strings for commits, it generally
-identifies commits by hashes. There are dates, but then again which
-one? Author or commit? Author is what generally shown, but I remember
-a number of patches where Author date is 1.5 years old for just merged
-commits :)
-
-There is another problem: if we stuff too many info into emails,
-people still stop reading them. This is very serious and real concern.
-If you have 1000-page manual, it's well documented, but it's
-equivalent to no docs at all, nobody is reading 1000 pages to find 1
-bit of info. Especially if you don't know that there is an important
-bit that you need to find in the first place...
-
-What would be undoubtedly positive is presenting information on the
-dashboard better (If we find a way).
-Currently the page says near the top:
-
-First crash: 478d, last: 430d
-
-The idea was that "last: 430d" is supposed to communicate the bit of
-info that confused you. Is it what you were looking for? Is there a
-better way to present it?
-
-Unfortunately most of such problems are much harder if extended beyond
-1 concrete case...
+>                 } else {
+>                         iomap_dio_complete_work(&dio->aio.work);
+>                 }
+> --
+>
