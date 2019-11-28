@@ -2,152 +2,101 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7A8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EEFC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AD12176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:20:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RAz5rR4P"
+	by mail.kernel.org (Postfix) with ESMTP id 738B4217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574965484;
+	bh=gaP5jfaFoIxLnYYVijcQoHxXxDTDYYo0Nb1QBvYTOb4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=F1Ghrh8pP+gIHGWiggRG2CoKZmoijQKlD4nxPxckxEyJy9CbH++XLk/A6qbmV0TIe
+	 96mpBTac35+n4s78zxHGsOp99p5AYRRqxmlkZA3u1N/DEAc5d9m/SNOtTv37pKeGvP
+	 kOFuSGNzIwdY9z1jqsyDrA6UxxWTR9n+1wxYv/4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfK1SUI (ORCPT
+        id S1726633AbfK1SYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 13:20:08 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:39461 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfK1SUI (ORCPT
+        Thu, 28 Nov 2019 13:24:43 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37275 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfK1SYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 13:20:08 -0500
-Received: by mail-pj1-f66.google.com with SMTP id v93so8928450pjb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 10:20:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jAenmenrHTt9V810iAGKw5haSYY23tLCCDaq/fEikCk=;
-        b=RAz5rR4PRI4EgaZBCbMkUtdR+UVJv9GVxwyZYYZMW5QcLilDZrHxWCKhxfOEDCIQ8e
-         F3E0jz8dC+yAyBFyKMi6oXQ6gpVk7nEAiihE3WPl2TaL8/bV98q7FUqwszs89OgLEnna
-         AWRAeRsmlmQspzaXuUgHiF3+YwWU/K+7eePOM8rKWz93rdacbn2rEqWcLxHhIRn4yb2F
-         fVCow1ohFtnyjPhAxxEgU2FLK2ZG0cSsPAmOdJa57QHCGjBeqE5gJrKwUrsYA7A/yont
-         GJ82F1Gl3ClfYuDB/7j8ktVpSpkulb+gXSEFkG5mPrv50ssSHV4d7eDdOlyzW12HGUCx
-         26jw==
+        Thu, 28 Nov 2019 13:24:43 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u17so2029261lja.4;
+        Thu, 28 Nov 2019 10:24:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jAenmenrHTt9V810iAGKw5haSYY23tLCCDaq/fEikCk=;
-        b=QWDJjPli3/AhpABRHRNhx7RSp6AyGfg+/Jk7EAF/EjMFcLmR6tx1H/z79yR6mr83Vm
-         i+8X/qmc4Qm4acjZHsR8KOVEyjprrtN9Ba38v4ALvigjLtZS6rN901IUkx1v2qcZLgbV
-         caw267t6TYLB+oM4IDMmmw7DXgtGLOagOEdkE5ETEV08qaSXCWAL7OPZ1PydzQ9XVRdu
-         iLqhse15uVbeFTwJqYqmTp9H4rl2GQuP9+FirmPD2oglJhLzYGvvvueZJy/j53eZCFXz
-         0h+QxqMyioptaNHtrbslFehUR/PVjmadlRptFIkO6T+p6lHkzn3JBwzo3kPHp7vMG9T3
-         apCQ==
-X-Gm-Message-State: APjAAAVNbIT4KpQfxtgGpqswNxH3cUgyy9fpW7GDaOcmM7B+LiHfOWs/
-        VLIS0gJ1CxlTLDmPuRCTtmnnGg==
-X-Google-Smtp-Source: APXvYqxWG/WPs6VxZM3vPGSV/CyOAEHAuCFp2hEsXVro/tC2Gaj9FDbNfNm/+en6Cko9tPEHXCUKEw==
-X-Received: by 2002:a17:902:7b88:: with SMTP id w8mr10746205pll.205.1574965207520;
-        Thu, 28 Nov 2019 10:20:07 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x7sm21355802pfa.107.2019.11.28.10.20.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=++fr2irPtIHzb3D2aK7SmOZd1oRSgJeu/nXnMOMaZ3Y=;
+        b=pRxsRl2ZLi4epkNifiUSVR8pEOyXwX1WmsJHrO9XCXeAaVWe++GqzX6HFwhCJDTy6V
+         /nFgWgsMNYoVe4d99jt9nta9gv13xL6MxgHw1QBi5Jyum1nrjZFfieMcOI+dDUov6mAb
+         TNU1Ncx4ax2ijKYDTaDuipbRiE56s+M/i7r9xjuPpThgDn4G4NIS2qw8IowejrhWU8yB
+         gfMvCJftccMmMM6w5YIKR4ZVjXJuUkFsZjODVkBVWRpzuP/DsIfR5Jg9AzA8UpRZbM5u
+         t737BHPcW2uXY0Kqdq4i88r0RrMvDqWRTjZD4bxxPhLGGCmUlVAkJ9WM0b8T8Eyskpv2
+         mutg==
+X-Gm-Message-State: APjAAAW0jhjagfTmmfgDDYpu0TUNs6rv9eZIIY47YebyNA/x+u1hB1bt
+        UY4e8O0CYKVbRA854rq4u6E=
+X-Google-Smtp-Source: APXvYqxCIuCGnMbisCv+anAiHCumcyWZp1jEOHberaOJFCNbtaOm/QQxqVUXaIF5C+68Wfl0SPCp0g==
+X-Received: by 2002:a2e:910b:: with SMTP id m11mr10635547ljg.213.1574965480607;
+        Thu, 28 Nov 2019 10:24:40 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id a12sm4261166ljk.48.2019.11.28.10.24.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 10:20:06 -0800 (PST)
-Date:   Thu, 28 Nov 2019 10:20:04 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     linux-pm@vger.kernel.org, agross@kernel.org, digetx@gmail.com,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        masneyb@onstation.org, sibis@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 4/5] interconnect: Add a common helper for removing all
- nodes
-Message-ID: <20191128182004.GJ82109@yoga>
-References: <20191128133435.25667-1-georgi.djakov@linaro.org>
- <20191128133435.25667-4-georgi.djakov@linaro.org>
+        Thu, 28 Nov 2019 10:24:39 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1iaOT2-0005hW-AA; Thu, 28 Nov 2019 19:24:40 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>
+Subject: [PATCH] Bluetooth: btusb: fix non-atomic allocation in completion handler
+Date:   Thu, 28 Nov 2019 19:24:27 +0100
+Message-Id: <20191128182427.21873-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128133435.25667-4-georgi.djakov@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28 Nov 05:34 PST 2019, Georgi Djakov wrote:
+USB completion handlers are called in atomic context and must
+specifically not allocate memory using GFP_KERNEL.
 
-> The removal of all nodes from a provider seem to be a common functionality
-> for all existing users and it would make sense to factor out this into a
-> a common helper function.
-> 
-> Suggested-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Fixes: a1c49c434e15 ("Bluetooth: btusb: Add protocol support for MediaTek MT7668U USB devices")
+Cc: stable <stable@vger.kernel.org>     # 5.3
+Cc: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/bluetooth/btusb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 70e385987d41..b6bf5c195d94 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2602,7 +2602,7 @@ static void btusb_mtk_wmt_recv(struct urb *urb)
+ 		 * and being processed the events from there then.
+ 		 */
+ 		if (test_bit(BTUSB_TX_WAIT_VND_EVT, &data->flags)) {
+-			data->evt_skb = skb_clone(skb, GFP_KERNEL);
++			data->evt_skb = skb_clone(skb, GFP_ATOMIC);
+ 			if (!data->evt_skb)
+ 				goto err_out;
+ 		}
+-- 
+2.24.0
 
-> ---
->  drivers/interconnect/core.c           | 22 ++++++++++++++++++++++
->  include/linux/interconnect-provider.h |  6 ++++++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index 467c539310f3..0e4852feb395 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -735,6 +735,28 @@ void icc_node_del(struct icc_node *node)
->  }
->  EXPORT_SYMBOL_GPL(icc_node_del);
->  
-> +/**
-> + * icc_nodes_remove() - remove all previously added nodes from provider
-> + * @provider: the interconnect provider we are removing nodes from
-> + *
-> + * Return: 0 on success, or an error code otherwise
-> + */
-> +int icc_nodes_remove(struct icc_provider *provider)
-> +{
-> +	struct icc_node *n, *tmp;
-> +
-> +	if (WARN_ON(IS_ERR_OR_NULL(provider)))
-> +		return -EINVAL;
-> +
-> +	list_for_each_entry_safe_reverse(n, tmp, &provider->nodes, node_list) {
-> +		icc_node_del(n);
-> +		icc_node_destroy(n->id);
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(icc_nodes_remove);
-> +
->  /**
->   * icc_provider_add() - add a new interconnect provider
->   * @provider: the interconnect provider that will be added into topology
-> diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
-> index b16f9effa555..31440c921216 100644
-> --- a/include/linux/interconnect-provider.h
-> +++ b/include/linux/interconnect-provider.h
-> @@ -98,6 +98,7 @@ int icc_link_create(struct icc_node *node, const int dst_id);
->  int icc_link_destroy(struct icc_node *src, struct icc_node *dst);
->  void icc_node_add(struct icc_node *node, struct icc_provider *provider);
->  void icc_node_del(struct icc_node *node);
-> +int icc_nodes_remove(struct icc_provider *provider);
->  int icc_provider_add(struct icc_provider *provider);
->  int icc_provider_del(struct icc_provider *provider);
->  
-> @@ -130,6 +131,11 @@ void icc_node_del(struct icc_node *node)
->  {
->  }
->  
-> +static inline int icc_nodes_remove(struct icc_provider *provider)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
->  static inline int icc_provider_add(struct icc_provider *provider)
->  {
->  	return -ENOTSUPP;
