@@ -2,178 +2,136 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6089CC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAC1C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3334921770
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21CF52176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:57:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OLvoZlTG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLy9OlMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfK1I4k (ORCPT
+        id S1727649AbfK1I5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 03:56:40 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46888 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfK1I4k (ORCPT
+        Thu, 28 Nov 2019 03:57:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45814 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726656AbfK1I5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:56:40 -0500
-Received: by mail-lf1-f66.google.com with SMTP id a17so19401256lfi.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:56:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rsvhqVEc8W9N9lJvrGMrOxgnq8ofC0A7592rwPDo3sc=;
-        b=OLvoZlTGPhnIxJh6RXxAp6IInTJIJoOOfd1AkWrRBhriSGLCKTaGrTuXu+0LtW7q/W
-         ycCGvWy93cn2so2BAoLn53ktsbc2JO3q9YYH6/+QxQhxalaEvQCuCAiLzHG2bkDZjcyg
-         rTYU3RScyRyvvSISZYvCOZFJMfbxnMMpxKw/lMjuRd0iNeXMv3JwyPv5HCzmzMvOLX22
-         l8nTy+ZUASaCNCs21NvscKB+6pqVCIgDwTJJqcW/+HY0pFfKqXwrpbJ573axC/sGZDhG
-         j64p9DB7ZwJ9EJFK2PuBB5zqqvpsOitEhcV98P5hKtQUBhuGTDj6V+x1T4/tNPHnzE1Y
-         RaAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rsvhqVEc8W9N9lJvrGMrOxgnq8ofC0A7592rwPDo3sc=;
-        b=FUeoR010WoaXBScQGopFw19T2p0m3TXKcL6K0wSmSqQYhx60+rRFlERqEC240pVe99
-         n+5xeNVKPyqI6Xn3nuIy8fnSKac0N4xXNqLjf2rijGS4Fha/qPhRn8Z9QOwlyKO0rNMR
-         vekHsaYfqWFcQHFk9kJqciwXvcKqRGaDlzTWN7YlIhQV/qpQLk19y3c8akVgYvS5UvZU
-         s71E66D+Ap0OZvfSDf6COKC/nT3bH/6sCwm44gYsoTd7Gquzs2wE03eGBafVNhyFMp78
-         b6B8jf8gRKiOvDBdEO1VP5Kgi7ojxCyovzTALTTSECLAmb7fpX/4xviUhs8qESGxngI1
-         adTQ==
-X-Gm-Message-State: APjAAAWXwW1HN6hgaJCF9BjNfuCc3Evx6YmS9QoN2PecAZDHr4rdIoCH
-        bcjrwZlT4Eck87r6bvP4i4Q6MJxCJEGnjvLqxSiJ9g==
-X-Google-Smtp-Source: APXvYqy2r73CX24TK2abu/IrRUo8YzrxriqIzkMfeKAEKPSKbnnda6JFLmzOpLL1il8q4Vq3PuqemHsofHnXV5hjGRU=
-X-Received: by 2002:a19:8104:: with SMTP id c4mr25848755lfd.191.1574931398231;
- Thu, 28 Nov 2019 00:56:38 -0800 (PST)
+        Thu, 28 Nov 2019 03:57:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574931426;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UTqyxfqplr5cCVGYbvk1+6dr+xn0FSeXRHiQCzbM5Do=;
+        b=gLy9OlMfaMj5GVvF5/GIc3JFmn9VlDnDDzCGMETRVFHDBgwHwyw+NDQgXrVB2QWM5QZwHV
+        kwqhyYHvVmQ9b08JPAA44jEpVJ0xLLJUjNyj/YTN+EZ9qHIlNOT8i+sTQj2fjeqxXRLBvh
+        ApAYcVboUsuv3v5B+RgsboaMkeruG68=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-223-tdG362LsNXq1vxkm-wtRyA-1; Thu, 28 Nov 2019 03:57:04 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5381018B9FC1;
+        Thu, 28 Nov 2019 08:57:02 +0000 (UTC)
+Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B57B600C8;
+        Thu, 28 Nov 2019 08:56:56 +0000 (UTC)
+Subject: Re: [PATCH] KVM: arm64: eliminate unnecessary var err and jump label
+ in set_core_reg()
+To:     linmiaohe <linmiaohe@huawei.com>, maz@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, catalin.marinas@arm.com,
+        gregkh@linuxfoundation.org, will@kernel.org,
+        andre.przywara@arm.com, tglx@linutronix.de
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <1574910598-14468-1-git-send-email-linmiaohe@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <7210b73f-66a0-e276-74b4-83d011b57d21@redhat.com>
+Date:   Thu, 28 Nov 2019 09:56:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20191127202632.536277063@linuxfoundation.org>
-In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 28 Nov 2019 14:26:27 +0530
-Message-ID: <CA+G9fYt8UCoKYnemrGFX4btoNukF0FFTsppzePKDbGbV5sQrtg@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/66] 5.4.1-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1574910598-14468-1-git-send-email-linmiaohe@huawei.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: tdG362LsNXq1vxkm-wtRyA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Nov 2019 at 02:47, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.1 release.
-> There are 66 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.1-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Hi,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On 11/28/19 4:09 AM, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> The var err and jump label out isn't really needed in
+> set_core_reg(). Clean them up.
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-Summary
-------------------------------------------------------------------------
+Thanks
 
-kernel: 5.4.1-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: d6453d6b0c5737ef7e24b4216b86ddc013bfc158
-git describe: v5.4-67-gd6453d6b0c57
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4-67-gd6453d6b0c57
+Eric
 
-No regressions (compared to build v5.4)
+> ---
+>  arch/arm64/kvm/guest.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> index 3b836c91609e..88eb6e5399ed 100644
+> --- a/arch/arm64/kvm/guest.c
+> +++ b/arch/arm64/kvm/guest.c
+> @@ -159,7 +159,6 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+>  	__uint128_t tmp;
+>  	void *valp = &tmp;
+>  	u64 off;
+> -	int err = 0;
+>  
+>  	/* Our ID is an index into the kvm_regs struct. */
+>  	off = core_reg_offset_from_id(reg->id);
+> @@ -173,10 +172,8 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+>  	if (KVM_REG_SIZE(reg->id) > sizeof(tmp))
+>  		return -EINVAL;
+>  
+> -	if (copy_from_user(valp, uaddr, KVM_REG_SIZE(reg->id))) {
+> -		err = -EFAULT;
+> -		goto out;
+> -	}
+> +	if (copy_from_user(valp, uaddr, KVM_REG_SIZE(reg->id)))
+> +		return -EFAULT;
+>  
+>  	if (off == KVM_REG_ARM_CORE_REG(regs.pstate)) {
+>  		u64 mode = (*(u64 *)valp) & PSR_AA32_MODE_MASK;
+> @@ -200,14 +197,12 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+>  				return -EINVAL;
+>  			break;
+>  		default:
+> -			err = -EINVAL;
+> -			goto out;
+> +			return -EINVAL;
+>  		}
+>  	}
+>  
+>  	memcpy((u32 *)regs + off, valp, KVM_REG_SIZE(reg->id));
+> -out:
+> -	return err;
+> +	return 0;
+>  }
+>  
+>  #define vq_word(vq) (((vq) - SVE_VQ_MIN) / 64)
+> 
 
-No fixes (compared to build v5.4)
-
-
-Ran 26389 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
