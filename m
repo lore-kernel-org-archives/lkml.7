@@ -2,96 +2,103 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A90C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAEBC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAAE217BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F95217BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:14:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+fUHApH"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GE+oxFtg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfK1QOO (ORCPT
+        id S1726703AbfK1QOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 11:14:14 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36544 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfK1QOO (ORCPT
+        Thu, 28 Nov 2019 11:14:41 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:32803 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfK1QOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:14:14 -0500
-Received: by mail-oi1-f196.google.com with SMTP id c16so1573936oic.3;
-        Thu, 28 Nov 2019 08:14:13 -0800 (PST)
+        Thu, 28 Nov 2019 11:14:40 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c124so18749196qkg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 08:14:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HXjWgP31PN/DWn/Gi3jgWnG/yRkcUzhgwC3ec6Y3wKE=;
-        b=P+fUHApHfs+U79n9TrrAJgWExK4Go+XQ2giLCeFimABlbFnZtibZeX2rxpNdiYXJOu
-         WWP5w5Zu+1XnzpqaIXb8lYx1epECbNTCRqfEqIbQN1EI1osJNMpsJAEiD3W8nbkaXJMF
-         An+P+A/KS4G7M5VRs/lveJH3W03iBRBFxf9tF/j1v83fUg7xfZ4ozClXGe5PHYenE3+q
-         zuuwNQoEMc0tChPNn39VUPKPCvJurhBw5VLgWLvUfrrwt90Dj4gUYt3MbheklT6U6Sg/
-         yXYMraMV8MHxCrZ1mjeprAx4ZRpo1FeDErXQYHrT/3aoy+8GxTVI3Ujj6tGd0cZu3ZPK
-         MA+g==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=swAWjg0mWyZStjQq/JoheoQkEGMMdPmGAhVcEaoY9Xg=;
+        b=GE+oxFtgNAcg6ATJOcfNRJ0lYQnf+CYQZpnNvAGWVvLlUMMm1ZBE0v2LoaG8Sv5gVx
+         TQ7KDT/FmW8ULozZHKpdmQCCD7H87rs5XpLvQ0OJoUtrmEczrh0XUs1KkB5FAKUbeJ4m
+         l31UyKZ7ZQYOb/TXZS07ah9oVgMfi/Wr1JngN75TOCq2pVOlbqGsj5MrAMyRANP21c65
+         0mV3BniwOvi1nuc4BbZU9lw6T/7WQQKPBQsgKyDIgLG01XYKRCPpJfubIv4/CXCYceyb
+         QpaybOq3bVONNtF/zn42GQcvuabSgrhPbVD50XQ/BHBf/MHV/875GCgDLLK4SHhAWzjI
+         26aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HXjWgP31PN/DWn/Gi3jgWnG/yRkcUzhgwC3ec6Y3wKE=;
-        b=GgtQrlNcf0lm5Ou+UDi2XuJ2zrldddmdqbr87bK2AwuneQlv+NDrTy3QdgiacKCsAF
-         DZ+CuutM6f4oqZnZ/yVHc/VDe3fCcqDAlbegyb9AJVuAhtntstgo/QpUvSdpbu/0686v
-         7K+Co2JDu8VcYNAllk2t2yut7TkvV/u1YaCU+jPWto5mJpcvMbKlPLzEkv6Pj2kqCx9Z
-         5/QAH8/asTRvLTIeS6KbPzy65C8wZaXkyliY1jug6ywiM7w8Eog63LX5XzHUCuqmt0uZ
-         cCD/bZmJaHqJuO73W/gg2kpXIDM0mfUxTqKHSoAmFmwniB+WX13G5NMPCCfJMLKlAREZ
-         XY2Q==
-X-Gm-Message-State: APjAAAVisbdxoLpyoME2pQGYgBA1ftghU+klwL7oHVvK3oH3j7HSq7c0
-        dGnFHIBJZVC8wVdyV68OIosnqM81
-X-Google-Smtp-Source: APXvYqyOTtO4PjTIxnCNOdt2Y32h42qvaK+xClRrWlm6WtvVhpYyz3PylXp6B8U3WNszEGUMy38nPw==
-X-Received: by 2002:aca:4d0f:: with SMTP id a15mr9117057oib.21.1574957652899;
-        Thu, 28 Nov 2019 08:14:12 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x11sm6223187oie.25.2019.11.28.08.14.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Nov 2019 08:14:12 -0800 (PST)
-Subject: Re: [PATCH 4.9 000/151] 4.9.204-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191127203000.773542911@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <7468e29f-2ef1-59f6-8f71-f073a33b4d0a@roeck-us.net>
-Date:   Thu, 28 Nov 2019 08:14:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=swAWjg0mWyZStjQq/JoheoQkEGMMdPmGAhVcEaoY9Xg=;
+        b=MG+GTBu4lVwEN1vcZ7+XCKLIJh92E9xz/tt+DnGJ+zOuIjlkDEdKRzmKYuwexAY5rA
+         kvHYks04t8HV15gJa0elAGzPO6Lht2tApPIpuX2fXq9pQe2uJ/rrMM/Pr0zo6E3oamtF
+         uECzjaiYcdAG8+wTL1n8bYRVy/7FgWCD38h2GLOfQhfucpuH7a7GbqZWG1WGDhJ5/ewc
+         USG4TtZ1oGHsLya89U/mDvHFrpTSBbzJN+xsNI1E+DF/VohTUuglbse2fy2AdpZxbX6N
+         Wl34TAtEbl788x9MzXvn8/rwmp9AMw6zi8gaBM6B8FLnaHfSUC+yosSf/fo5LNIPCStD
+         FJWA==
+X-Gm-Message-State: APjAAAXRw2iR041hszuI4DyO3pqB5csiP3IdEzPoW4PdhoptGcDK0zIz
+        AbXJIa01RQfH+hPehxroMN6E0A==
+X-Google-Smtp-Source: APXvYqwmn1ld2Vuf1VCvbx1/sMMTG95qkXhxsIXLZuBxGTgd524dbZVKZj5tWKroDxg56BukvcLyAA==
+X-Received: by 2002:a05:620a:13cf:: with SMTP id g15mr10594494qkl.195.1574957679840;
+        Thu, 28 Nov 2019 08:14:39 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id x8sm9260293qts.82.2019.11.28.08.14.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Nov 2019 08:14:39 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 0/3] ubsan: Split out bounds checker
+Date:   Thu, 28 Nov 2019 11:14:38 -0500
+Message-Id: <4B3C1889-DE01-43A5-B0BD-0CFC33A5315A@lca.pw>
+References: <CACT4Y+a-0ZqGj0hQhOW=aUcjeQpf_487ASnnzdm_M2N7+z17Lg@mail.gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-hardening@lists.openwall.com,
+        syzkaller <syzkaller@googlegroups.com>
+In-Reply-To: <CACT4Y+a-0ZqGj0hQhOW=aUcjeQpf_487ASnnzdm_M2N7+z17Lg@mail.gmail.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/27/19 12:29 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.204 release.
-> There are 151 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> Anything received after that time might be too late.
-> 
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 356 pass: 356 fail: 0
 
-Guenter
+> On Nov 28, 2019, at 5:39 AM, 'Dmitry Vyukov' via kasan-dev <kasan-dev@goog=
+legroups.com> wrote:
+>=20
+> But also LOCKDEP, KMEMLEAK, ODEBUG, FAULT_INJECTS, etc, all untested
+> too. Nobody knows what they produce, and if they even still detect
+> bugs, report false positives, etc.
+> But that's the kernel testing story...
+
+Yes, those work except PROVE_LOCKING where there are existing potential dead=
+locks are almost impossible to fix them properly now. I have been running th=
+ose for linux-next daily with all those debugging on where you can borrow th=
+e configs etc.
+
+https://github.com/cailca/linux-mm=
