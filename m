@@ -2,137 +2,145 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA69C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89598C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B7B215F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:02:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sOAAZbEJ"
+	by mail.kernel.org (Postfix) with ESMTP id 67EAC21787
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfK1FCX (ORCPT
+        id S1726648AbfK1FGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 00:02:23 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46585 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfK1FCX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 00:02:23 -0500
-Received: by mail-lj1-f195.google.com with SMTP id e9so26949354ljp.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 21:02:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wwAHZEA0jlGAecazH8A4WVcg6j9/yx6Hh8ujY0Dq/vM=;
-        b=sOAAZbEJsiX980a7JeUj7a7cXAEr95sXDfUkO68+lZPsnHBdRXXUMmOuOUfkelWFY2
-         QXoGEOyxhVnNrKMCoI3Tg9MScml5yHLRbnXGUv7lilIRxSr3hqJ6afgvUC/KvDc3zVNA
-         PC5oR2+SpOGiF0REPK275GWQmDzzoYNk9GY4s5bz+LiZQLnVZTJpqkyxEvaZ7mfqZxrI
-         s+Wp3uvquKzzVBx4Lk5/vCmmlcE1VbRPMzLQ5kC38Jvzqoua5B7RRJexxunvid6APAIE
-         Qhg3mYe0ytbf+Ncj3d3oYF45GdwObSSUrO3Iv5HTtHUjFQdrfXcs3FnGJN+1HmMfJZoG
-         YJ5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wwAHZEA0jlGAecazH8A4WVcg6j9/yx6Hh8ujY0Dq/vM=;
-        b=laqoqn1F8qq35gS0B+uzqSw7EpfyXH1pVGjPQ1a7kSDIbojCWlGWsXvsBMCYBMAM2J
-         hRdo6BMceHABLV4Ptw5k7g4hW8Sq0vYDvzpr1OMyIN5pdZp3WAJiUvgVQyyKF8hXZb5G
-         V6Y2YLn1NKP2dcCm8cFUqdUC4pxMvv6jN2f3skJWkenedS230egTg6zW2NtRPBLOYppH
-         00DX6MkiqU8b14YxVwdhHward53w0GMYO+Tl9quheeWLTpYAV1gnLQu4A3gmD4XTT9zq
-         yFO0miZWYTWKZQVhusri/BB35Wdm6TgiXRUewZxkgCjL0UW1scQnOiXCnLFYTwWci3bs
-         Mjyw==
-X-Gm-Message-State: APjAAAWYWjnZiI1bUhBWcWXMrTzcwKc1hXRLbjJT/kZTkQsbGAXVR/71
-        jT1hFAvmSmJHuJpAzfb/kh3S4o3eTe42CI3sp+hiShbLWxk=
-X-Google-Smtp-Source: APXvYqypJIEfugB0UvdI6BgmE5R9HF/glAtn2wZ4w1z6KcQ3egurLdE1sd9MVMGYQzf/dnSD7MS/1JAMuJmSR4Kq+w0=
-X-Received: by 2002:a2e:7202:: with SMTP id n2mr29808167ljc.194.1574917341238;
- Wed, 27 Nov 2019 21:02:21 -0800 (PST)
+        Thu, 28 Nov 2019 00:06:16 -0500
+Received: from mga12.intel.com ([192.55.52.136]:20146 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726438AbfK1FGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 00:06:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 21:06:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,252,1571727600"; 
+   d="scan'208";a="292269571"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 27 Nov 2019 21:06:15 -0800
+Received: from [10.226.39.9] (unknown [10.226.39.9])
+        by linux.intel.com (Postfix) with ESMTP id E11385802E4;
+        Wed, 27 Nov 2019 21:06:12 -0800 (PST)
+Subject: Re: linux-next: Tree for Nov 27
+ (drivers/pci/controller/dwc/pcie-designware-host.c)
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>, bhelgaas@google.com
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+References: <20191127155717.400a60de@canb.auug.org.au>
+ <fc3586ef-a0a1-84b3-2e0e-b8ba5c41f229@infradead.org>
+ <20191127162614.GA6423@e121166-lin.cambridge.arm.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <5cebfc73-b753-0a75-922b-335bd829950b@linux.intel.com>
+Date:   Thu, 28 Nov 2019 13:06:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191127203049.431810767@linuxfoundation.org>
-In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 28 Nov 2019 10:32:10 +0530
-Message-ID: <CA+G9fYsMm5L+Yd99pZPDMWg3nKVp8RqiboUJ=YVitae8zmFnsA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 000/211] 4.14.157-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191127162614.GA6423@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Nov 2019 at 02:16, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.157 release.
-> There are 211 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.157-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
 
-This patch causing build failure for x86 32bit on stable-rc 4.14 and
-stable-rc-4.19
+On 11/28/2019 12:26 AM, Lorenzo Pieralisi wrote:
+> On Wed, Nov 27, 2019 at 07:55:57AM -0800, Randy Dunlap wrote:
+>> On 11/26/19 8:57 PM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Please do not add any material for v5.6 to your linux-next included
+>>> trees until after v5.5-rc1 has been released.
+>>>
+>>> Changes since 20191126:
+>>>
+>> on i386:
+>> # CONFIG_PCI_MSI is not set
+>>
+>>
+>> WARNING: unmet direct dependencies detected for PCIE_DW_HOST
+>>    Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
+>>    Selected by [y]:
+>>    - PCIE_INTEL_GW [=y] && PCI [=y] && OF [=y] && (X86 [=y] || COMPILE_TEST [=n])
+>>
+>> and related build errors:
+> Dilip,
+>
+> I will have to drop your series which unfortunately forces Bjorn to pull
+> my pci/dwc branch again, I don't think there is time for fixing it,
+> given release timing and Stephen's request above.
+My bad. I should have taken care of this.
+Sorry for breaking it. I will submit a patch by marking PCI_INTEL_GW 
+'depends on PCI_MSI_IRQ_DOMAIN'
 
-> Thomas Gleixner <tglx@linutronix.de>
->     x86/cpu_entry_area: Add guard page for entry stack on 32bit
-
-In file included from include/linux/kernel.h:10:0,
-                 from include/linux/list.h:9,
-                 from include/linux/preempt.h:11,
-                 from include/linux/spinlock.h:51,
-                 from arch/x86/mm/cpu_entry_area.c:3:
-In function 'setup_cpu_entry_area_ptes',
-    inlined from 'setup_cpu_entry_areas' at arch/x86/mm/cpu_entry_area.c:164:2:
-include/linux/compiler.h:334:38: error: call to
-'__compiletime_assert_147' declared with attribute error: BUILD_BUG_ON
-failed: (CPU_ENTRY_AREA_PAGES+1)*PAGE_SIZE != CPU_ENTRY_AREA_MAP_SIZE
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-                                      ^
-include/linux/compiler.h:314:4: note: in definition of macro
-'__compiletime_assert'
-    prefix ## suffix();    \
-    ^~~~~~
-include/linux/compiler.h:334:2: note: in expansion of macro
-'_compiletime_assert'
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-  ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:47:37: note: in expansion of macro
-'compiletime_assert'
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:71:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-  ^~~~~~~~~~~~~~~~
-arch/x86/mm/cpu_entry_area.c:147:2: note: in expansion of macro 'BUILD_BUG_ON'
-  BUILD_BUG_ON((CPU_ENTRY_AREA_PAGES+1)*PAGE_SIZE != CPU_ENTRY_AREA_MAP_SIZE);
-  ^~~~~~~~~~~~
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Regards,
+Dilip
+>
+> Lorenzo
+>
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:72:15: error: variable ‘dw_pcie_msi_domain_info’ has initializer but incomplete type
+>>   static struct msi_domain_info dw_pcie_msi_domain_info = {
+>>                 ^~~~~~~~~~~~~~~
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:3: error: ‘struct msi_domain_info’ has no member named ‘flags’
+>>    .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>>     ^~~~~
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:12: error: ‘MSI_FLAG_USE_DEF_DOM_OPS’ undeclared here (not in a function); did you mean ‘SIMPLE_DEV_PM_OPS’?
+>>    .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>>              ^~~~~~~~~~~~~~~~~~~~~~~~
+>>              SIMPLE_DEV_PM_OPS
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:39: error: ‘MSI_FLAG_USE_DEF_CHIP_OPS’ undeclared here (not in a function); did you mean ‘MSI_FLAG_USE_DEF_DOM_OPS’?
+>>    .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>>                                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>                                         MSI_FLAG_USE_DEF_DOM_OPS
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:74:6: error: ‘MSI_FLAG_PCI_MSIX’ undeclared here (not in a function); did you mean ‘SS_FLAG_BITS’?
+>>        MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
+>>        ^~~~~~~~~~~~~~~~~
+>>        SS_FLAG_BITS
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:74:26: error: ‘MSI_FLAG_MULTI_PCI_MSI’ undeclared here (not in a function); did you mean ‘MSI_FLAG_PCI_MSIX’?
+>>        MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
+>>                            ^~~~~~~~~~~~~~~~~~~~~~
+>>                            MSI_FLAG_PCI_MSIX
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:11: warning: excess elements in struct initializer
+>>    .flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>>             ^
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:73:11: note: (near initialization for ‘dw_pcie_msi_domain_info’)
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:75:3: error: ‘struct msi_domain_info’ has no member named ‘chip’
+>>    .chip = &dw_pcie_msi_irq_chip,
+>>     ^~~~
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:75:10: warning: excess elements in struct initializer
+>>    .chip = &dw_pcie_msi_irq_chip,
+>>            ^
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:75:10: note: (near initialization for ‘dw_pcie_msi_domain_info’)
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c: In function ‘dw_pcie_allocate_domains’:
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:267:19: error: implicit declaration of function ‘pci_msi_create_irq_domain’; did you mean ‘pci_msi_get_device_domain’? [-Werror=implicit-function-declaration]
+>>    pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+>>                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>                     pci_msi_get_device_domain
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:267:17: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+>>    pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+>>                   ^
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c: At top level:
+>> ../drivers/pci/controller/dwc/pcie-designware-host.c:72:31: error: storage size of ‘dw_pcie_msi_domain_info’ isn’t known
+>>   static struct msi_domain_info dw_pcie_msi_domain_info = {
+>>                                 ^~~~~~~~~~~~~~~~~~~~~~~
+>>
+>>
+>> -- 
+>> ~Randy
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
