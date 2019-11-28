@@ -7,237 +7,340 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D327DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C847C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2839217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB37217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574948489;
-	bh=FbyHzCkqqt4La7dQuHyRt78ivueB/7qDZTxHfAcFAhU=;
+	s=default; t=1574948500;
+	bh=djHhsXztbteyT3dOXw0FDkXT9QfP3RBta9fz/TeZ68k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xs7GktuuHsrSYKh3v7HDfjaYvAa/Uvj0eLi65Rn1GIlIxqMUqRZJgoBRbiIjWTT5A
-	 mwOyjEgf6pqg7bz8wStyuEer8qFRgEIuSmW/zHFp229t0c5VLX/uTEbEoaAH/jW2Nn
-	 i4q01VtmC8eqRkyNkAPmD+NO4xMKF4Felcl8dqtA=
+	b=dASA8lTPNLioGffv+cUWkcNm7VqyuFJwUrDXkJRZ7t6a+E+7QLvVTPDjTX72q+uW+
+	 iAYAqwNQDaPii0iOKUM9Ky1yKV2rFBTVHx6rYx7Afjb+dByAwBv0qTbm/muY+fuZVq
+	 yhnYbFhx8nJgCIkiP6bZtuwhrk0xeIoLLYhA3PFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfK1Nl2 (ORCPT
+        id S1727386AbfK1Nlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:41:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37940 "EHLO mail.kernel.org"
+        Thu, 28 Nov 2019 08:41:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727263AbfK1NlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:41:25 -0500
+        id S1727339AbfK1Nlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 08:41:36 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C12FC217AB;
-        Thu, 28 Nov 2019 13:41:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BABE217BA;
+        Thu, 28 Nov 2019 13:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574948484;
-        bh=FbyHzCkqqt4La7dQuHyRt78ivueB/7qDZTxHfAcFAhU=;
+        s=default; t=1574948495;
+        bh=djHhsXztbteyT3dOXw0FDkXT9QfP3RBta9fz/TeZ68k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zZWzOWsIIeGHSaPE9zHssZ7pah2E1rH62tj5EgbTbySvIgsY1gtqgcV0mEmd9Nk4T
-         pyXp4yVp87BKAAUr+jjGmsrUA1N2xnH3bJsAt2Ku8G/T8ixtGK6pblUQTlFpoigC+c
-         +i5JY/tv4ccB3MfDjFrVrTW+izup0VBCR7goVjLU=
+        b=tq7CHKgPnIDtZFttoBQYsPZov476gBt36i627CIprmptoF3QXIbjjAEAybMk3A5LE
+         AeCGme6WNLBlJLomQpuXoyzux3g3+yVkI5oOE2LzHrAz91hin6cnSfwfqbchG04xPx
+         q4kJNdGsmCCguTcahTLUn2kZgLXfMqRDrY6Bd5W8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH 15/22] perf tools: Allow to link with libbpf dynamicaly
-Date:   Thu, 28 Nov 2019 10:40:20 -0300
-Message-Id: <20191128134027.23726-16-acme@kernel.org>
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 19/22] perf pmu: Use file system cache to optimize sysfs access
+Date:   Thu, 28 Nov 2019 10:40:24 -0300
+Message-Id: <20191128134027.23726-20-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191128134027.23726-1-acme@kernel.org>
 References: <20191128134027.23726-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Andi Kleen <ak@linux.intel.com>
 
-Currently we support only static linking with kernel's libbpf
-(tools/lib/bpf). This patch adds libbpf package detection and support to
-link perf with it dynamically.
+pmu.c does a lot of redundant /sys accesses while parsing aliases
+and probing for PMUs. On large systems with a lot of PMUs this
+can get expensive (>2s):
 
-The libbpf package status is displayed with:
+  % time     seconds  usecs/call     calls    errors syscall
+  ------ ----------- ----------- --------- --------- ----------------
+   27.25    1.227847           8    160888     16976 openat
+   26.42    1.190481           7    164224    164077 stat
 
-  $ make VF=1
-  Auto-detecting system features:
-  ...
-  ...                        libbpf: [ on  ]
+Add a cache to remember if specific file names exist or don't
+exist, which eliminates most of this overhead.
 
-It's not checked by default, because it's quite new.  Once it's on most
-distros we can switch it on.
+Also optimize some stat() calls to be slightly cheaper access()
 
-For the same reason it's not added to the test-all check.
+Resulting in:
 
-Perf does not need advanced version of libbpf, so we can check just for
-the base bpf_object__open function.
+    0.18    0.004166           2      1851       305 open
+    0.08    0.001970           2       829       622 access
 
-Adding new compile variable to detect libbpf package and link bpf
-dynamically:
-
-  $ make LIBBPF_DYNAMIC=1
-    ...
-    LINK     perf
-  $ ldd perf | grep bpf
-    libbpf.so.0 => /lib64/libbpf.so.0 (0x00007f46818bc000)
-
-If libbpf is not installed, build stops with:
-
-  Makefile.config:486: *** Error: No libbpf devel library found,\
-  please install libbpf-devel.  Stop.
-
-Committer testing:
-
-  $ make LIBBPF_DYNAMIC=1 -C tools/perf O=/tmp/build/perf
-  make: Entering directory '/home/acme/git/perf/tools/perf'
-    BUILD:   Doing 'make -j8' parallel build
-  Makefile.config:493: *** Error: No libbpf devel library found, please install libbpf-devel.  Stop.
-  make[1]: *** [Makefile.perf:225: sub-make] Error 2
-  make: *** [Makefile:70: all] Error 2
-  make: Leaving directory '/home/acme/git/perf/tools/perf'
-  $
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Toke Høiland-Jørgensen <toke@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jesper Dangaard Brouer <brouer@redhat.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191126121253.28253-1-jolsa@kernel.org
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20191121001522.180827-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/Makefile.feature      |  3 ++-
- tools/build/feature/Makefile      |  4 ++++
- tools/build/feature/test-libbpf.c |  7 +++++++
- tools/perf/Makefile.config        | 10 ++++++++++
- tools/perf/Makefile.perf          |  6 +++++-
- 5 files changed, 28 insertions(+), 2 deletions(-)
- create mode 100644 tools/build/feature/test-libbpf.c
+ tools/perf/util/Build     |  1 +
+ tools/perf/util/fncache.c | 63 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/fncache.h |  7 +++++
+ tools/perf/util/pmu.c     | 34 +++++++--------------
+ tools/perf/util/srccode.c |  9 +-----
+ 5 files changed, 83 insertions(+), 31 deletions(-)
+ create mode 100644 tools/perf/util/fncache.c
+ create mode 100644 tools/perf/util/fncache.h
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 8a19753cc26a..574c2e0b9d20 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -96,7 +96,8 @@ FEATURE_TESTS_EXTRA :=                  \
-          cxx                            \
-          llvm                           \
-          llvm-version                   \
--         clang
-+         clang                          \
-+         libbpf
- 
- FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
- 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 8499385365c0..f30a89046aa3 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -53,6 +53,7 @@ FILES=                                          \
-          test-zlib.bin                          \
-          test-lzma.bin                          \
-          test-bpf.bin                           \
-+         test-libbpf.bin                        \
-          test-get_cpuid.bin                     \
-          test-sdt.bin                           \
-          test-cxx.bin                           \
-@@ -270,6 +271,9 @@ $(OUTPUT)test-get_cpuid.bin:
- $(OUTPUT)test-bpf.bin:
- 	$(BUILD)
- 
-+$(OUTPUT)test-libbpf.bin:
-+	$(BUILD) -lbpf
-+
- $(OUTPUT)test-sdt.bin:
- 	$(BUILD)
- 
-diff --git a/tools/build/feature/test-libbpf.c b/tools/build/feature/test-libbpf.c
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index b8e05a147b2b..aab05e2c01a5 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -49,6 +49,7 @@ perf-y += header.o
+ perf-y += callchain.o
+ perf-y += values.o
+ perf-y += debug.o
++perf-y += fncache.o
+ perf-y += machine.o
+ perf-y += map.o
+ perf-y += pstack.o
+diff --git a/tools/perf/util/fncache.c b/tools/perf/util/fncache.c
 new file mode 100644
-index 000000000000..a508756cf4cc
+index 000000000000..6225cbc52310
 --- /dev/null
-+++ b/tools/build/feature/test-libbpf.c
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <bpf/libbpf.h>
++++ b/tools/perf/util/fncache.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Manage a cache of file names' existence */
++#include <stdlib.h>
++#include <unistd.h>
++#include <string.h>
++#include <linux/list.h>
++#include "fncache.h"
 +
-+int main(void)
++struct fncache {
++	struct hlist_node nd;
++	bool res;
++	char name[];
++};
++
++#define FNHSIZE 61
++
++static struct hlist_head fncache_hash[FNHSIZE];
++
++unsigned shash(const unsigned char *s)
 +{
-+	return bpf_object__open("test") ? 0 : -1;
++	unsigned h = 0;
++	while (*s)
++		h = 65599 * h + *s++;
++	return h ^ (h >> 16);
 +}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 1783427da9b0..c90f4146e5a2 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -483,6 +483,16 @@ ifndef NO_LIBELF
-     ifeq ($(feature-bpf), 1)
-       CFLAGS += -DHAVE_LIBBPF_SUPPORT
-       $(call detected,CONFIG_LIBBPF)
 +
-+      # detecting libbpf without LIBBPF_DYNAMIC, so make VF=1 shows libbpf detection status
-+      $(call feature_check,libbpf)
-+      ifdef LIBBPF_DYNAMIC
-+        ifeq ($(feature-libbpf), 1)
-+          EXTLIBS += -lbpf
-+        else
-+          dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
-+        endif
-+      endif
-     endif
++static bool lookup_fncache(const char *name, bool *res)
++{
++	int h = shash((const unsigned char *)name) % FNHSIZE;
++	struct fncache *n;
++
++	hlist_for_each_entry(n, &fncache_hash[h], nd) {
++		if (!strcmp(n->name, name)) {
++			*res = n->res;
++			return true;
++		}
++	}
++	return false;
++}
++
++static void update_fncache(const char *name, bool res)
++{
++	struct fncache *n = malloc(sizeof(struct fncache) + strlen(name) + 1);
++	int h = shash((const unsigned char *)name) % FNHSIZE;
++
++	if (!n)
++		return;
++	strcpy(n->name, name);
++	n->res = res;
++	hlist_add_head(&n->nd, &fncache_hash[h]);
++}
++
++/* No LRU, only use when bounded in some other way. */
++bool file_available(const char *name)
++{
++	bool res;
++
++	if (lookup_fncache(name, &res))
++		return res;
++	res = access(name, R_OK) == 0;
++	update_fncache(name, res);
++	return res;
++}
+diff --git a/tools/perf/util/fncache.h b/tools/perf/util/fncache.h
+new file mode 100644
+index 000000000000..fe020beaefb1
+--- /dev/null
++++ b/tools/perf/util/fncache.h
+@@ -0,0 +1,7 @@
++#ifndef _FCACHE_H
++#define _FCACHE_H 1
++
++unsigned shash(const unsigned char *s);
++bool file_available(const char *name);
++
++#endif
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index e8d348988026..8b99fd312aae 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -24,6 +24,7 @@
+ #include "pmu-events/pmu-events.h"
+ #include "string2.h"
+ #include "strbuf.h"
++#include "fncache.h"
  
-     ifndef NO_DWARF
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 1cd294468a1f..eae5d5e95952 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -116,6 +116,8 @@ include ../scripts/utilities.mak
- #
- # Define TCMALLOC to enable tcmalloc heap profiling.
- #
-+# Define LIBBPF_DYNAMIC to enable libbpf dynamic linking.
-+#
+ struct perf_pmu_format {
+ 	char *name;
+@@ -82,7 +83,6 @@ int perf_pmu__format_parse(char *dir, struct list_head *head)
+  */
+ static int pmu_format(const char *name, struct list_head *format)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs = sysfs__mountpoint();
  
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
-@@ -360,7 +362,9 @@ export PERL_PATH
+@@ -92,8 +92,8 @@ static int pmu_format(const char *name, struct list_head *format)
+ 	snprintf(path, PATH_MAX,
+ 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/format", sysfs, name);
  
- PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD) $(LIBPERF)
- ifndef NO_LIBBPF
--  PERFLIBS += $(LIBBPF)
-+  ifndef LIBBPF_DYNAMIC
-+    PERFLIBS += $(LIBBPF)
-+  endif
- endif
+-	if (stat(path, &st) < 0)
+-		return 0;	/* no error if format does not exist */
++	if (!file_available(path))
++		return 0;
  
- # We choose to avoid "if .. else if .. else .. endif endif"
+ 	if (perf_pmu__format_parse(path, format))
+ 		return -1;
+@@ -475,7 +475,6 @@ static int pmu_aliases_parse(char *dir, struct list_head *head)
+  */
+ static int pmu_aliases(const char *name, struct list_head *head)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs = sysfs__mountpoint();
+ 
+@@ -485,8 +484,8 @@ static int pmu_aliases(const char *name, struct list_head *head)
+ 	snprintf(path, PATH_MAX,
+ 		 "%s/bus/event_source/devices/%s/events", sysfs, name);
+ 
+-	if (stat(path, &st) < 0)
+-		return 0;	 /* no error if 'events' does not exist */
++	if (!file_available(path))
++		return 0;
+ 
+ 	if (pmu_aliases_parse(path, head))
+ 		return -1;
+@@ -525,7 +524,6 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
+  */
+ static int pmu_type(const char *name, __u32 *type)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	FILE *file;
+ 	int ret = 0;
+@@ -537,7 +535,7 @@ static int pmu_type(const char *name, __u32 *type)
+ 	snprintf(path, PATH_MAX,
+ 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/type", sysfs, name);
+ 
+-	if (stat(path, &st) < 0)
++	if (access(path, R_OK) < 0)
+ 		return -1;
+ 
+ 	file = fopen(path, "r");
+@@ -628,14 +626,11 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
+ static bool pmu_is_uncore(const char *name)
+ {
+ 	char path[PATH_MAX];
+-	struct perf_cpu_map *cpus;
+-	const char *sysfs = sysfs__mountpoint();
++	const char *sysfs;
+ 
++	sysfs = sysfs__mountpoint();
+ 	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
+-	cpus = __pmu_cpumask(path);
+-	perf_cpu_map__put(cpus);
+-
+-	return !!cpus;
++	return file_available(path);
+ }
+ 
+ /*
+@@ -645,7 +640,6 @@ static bool pmu_is_uncore(const char *name)
+  */
+ static int is_arm_pmu_core(const char *name)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs = sysfs__mountpoint();
+ 
+@@ -655,10 +649,7 @@ static int is_arm_pmu_core(const char *name)
+ 	/* Look for cpu sysfs (specific to arm) */
+ 	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/cpus",
+ 				sysfs, name);
+-	if (stat(path, &st) == 0)
+-		return 1;
+-
+-	return 0;
++	return file_available(path);
+ }
+ 
+ static char *perf_pmu__getcpuid(struct perf_pmu *pmu)
+@@ -1544,7 +1535,6 @@ bool pmu_have_event(const char *pname, const char *name)
+ 
+ static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs;
+ 
+@@ -1554,10 +1544,8 @@ static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+ 
+ 	snprintf(path, PATH_MAX,
+ 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/%s", sysfs, pmu->name, name);
+-
+-	if (stat(path, &st) < 0)
++	if (!file_available(path))
+ 		return NULL;
+-
+ 	return fopen(path, "r");
+ }
+ 
+diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
+index d84ed8b6caaa..c29edaaca863 100644
+--- a/tools/perf/util/srccode.c
++++ b/tools/perf/util/srccode.c
+@@ -16,6 +16,7 @@
+ #include "srccode.h"
+ #include "debug.h"
+ #include <internal/lib.h> // page_size
++#include "fncache.h"
+ 
+ #define MAXSRCCACHE (32*1024*1024)
+ #define MAXSRCFILES     64
+@@ -36,14 +37,6 @@ static LIST_HEAD(srcfile_list);
+ static long map_total_sz;
+ static int num_srcfiles;
+ 
+-static unsigned shash(unsigned char *s)
+-{
+-	unsigned h = 0;
+-	while (*s)
+-		h = 65599 * h + *s++;
+-	return h ^ (h >> 16);
+-}
+-
+ static int countlines(char *map, int maplen)
+ {
+ 	int numl;
 -- 
 2.21.0
 
