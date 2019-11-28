@@ -2,67 +2,68 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B154CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4664FC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D48121771
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B2921771
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="V7b0edXO"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Qzpo3QLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfK1O5t (ORCPT
+        id S1727497AbfK1O5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:57:49 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40319 "EHLO
+        Thu, 28 Nov 2019 09:57:52 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46195 "EHLO
         mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbfK1O5m (ORCPT
+        with ESMTP id S1727440AbfK1O5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:57:42 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y5so7552190lfy.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:33 -0800 (PST)
+        Thu, 28 Nov 2019 09:57:46 -0500
+Received: by mail-lf1-f67.google.com with SMTP id a17so20228438lfi.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=J7FZMDBRGe07zJbsWaFNu9fNw6ApI6inEmetfD5aLPI=;
-        b=V7b0edXOPLWaPtWbImj1wAnV63DDtZWfsVLlhSPbhSZJrHiW9ByAmtRLj3CQqG//5C
-         YUNYN1ZTa1emRbDs8CnbTIQFM2n0mUIPpPI9tPECghLdzfyAe8+O//B3YcVcFZTDi9LK
-         L1xHhp/MjwC5+RhLgIMsmE3OTpg+OaoOnqh9k=
+        bh=IwWiOrkgvJGe2S3xk2HIPcakly8thb2mf75u7cEDG4s=;
+        b=Qzpo3QLoaPrsts+aYsvs4TocFngtawg6bmZ1YUWwDveKxkobQ4J4svuINqe2URRXnq
+         Md5jswSbPa13XGSnwVHgv/ghbi8w4DxJMKEqWhCApznSI1mViRgZoazg/TOwUEayTvc0
+         xXqfF8AhS2p5/ZODQuV6sPr5neGXvl/Pam3sM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=J7FZMDBRGe07zJbsWaFNu9fNw6ApI6inEmetfD5aLPI=;
-        b=R9Tq7M4dT5IsrDmTcD7+IBoDSE4Rvl6QRE3UmvhYyftUMUi1FGZubez/HXLzEhlU+m
-         SV85v8WQk7sj88BkUCTHs+AbfM8ZI5BeOY2VnF8HtcV/+5uu9YJctQ2PzZxaVTMD8LMJ
-         8Oax2Kezl8Wrbo5eyfGotDYQlX37h4m7WhUjwdR6LL9fFjoydMWwdyF/haZ9bgpqH0Rp
-         5IkvTXUzeClhu34zNEsWPfhpljAO5lotIOuglT5MA5It8M0esf1LMJTr1EQ50NlSbcaY
-         35WB5GcbOXKkcsl2dgoS2gJ/7DsSf7KKRinduZgEUZ2EH8NBb7xYPRNMBil8W81f+QPh
-         HaQw==
-X-Gm-Message-State: APjAAAVYySEDa2BzVyPOtlwwNwRjCofxM/1WP1iaA0iEEZLgq2rR6+cT
-        kiJQUvTW5dMWdHnESVgsjallKQ==
-X-Google-Smtp-Source: APXvYqwudNxZfHnhxUZC9mA0ey1lWF0jCKeFwAhu5ywzByRMDTw6q2WIFQZ6aHgGtM43hHITBAsJlA==
-X-Received: by 2002:a19:915c:: with SMTP id y28mr32089606lfj.65.1574953052303;
-        Thu, 28 Nov 2019 06:57:32 -0800 (PST)
+        bh=IwWiOrkgvJGe2S3xk2HIPcakly8thb2mf75u7cEDG4s=;
+        b=mHjFDVKn/uyu8tDKrD52mniND7ER8TDcL0P3jOMoBTHI3kCvnoddHEYnx/eGuOXudT
+         aobPha4AtQSvg87DCsPUfzNdzJg1yqd3O8ggzKlFWId0AHvY4ipEJpsHsCvyO1NwXNIH
+         xIkqSdamYavT0ggyDJamNFvRlEDeY44fTbb39VymL3WSS3SHMQ6c/xFePesOM0+RaSGp
+         bSkTsdq4havmjN56+gOuORgti6xgS5wF+EQKg7AwaevYbwVotlFlI3pXuGtfKWeSpvg2
+         pnqZ3Xz4u6A5/PtwSXAenwbWqtRuDVt6KUf+ARYqioJTwicEkUsfBxONergfAXwVysrr
+         CVhw==
+X-Gm-Message-State: APjAAAX8M3GHmk4latzV5X2ZpEEBwQsK/KShRg+I4DoHmlbnI0GwH2w/
+        x1gUDjKgD/1Rd65/Pg7d8Dhc2g==
+X-Google-Smtp-Source: APXvYqw4KhG8LfQmTlaq2oJTUbIjmo7UBhCMtzldnh1zEZKf2a8bkr59BYMefH8dK5stf5B1tLmOXw==
+X-Received: by 2002:a05:6512:41d:: with SMTP id u29mr36840lfk.0.1574953063115;
+        Thu, 28 Nov 2019 06:57:43 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.31
+        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 06:57:31 -0800 (PST)
+        Thu, 28 Nov 2019 06:57:42 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
 Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v6 21/49] soc: fsl: qe: merge qe_ic.h headers into qe_ic.c
-Date:   Thu, 28 Nov 2019 15:55:26 +0100
-Message-Id: <20191128145554.1297-22-linux@rasmusvillemoes.dk>
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v6 29/49] serial: ucc_uart: replace ppc-specific IO accessors
+Date:   Thu, 28 Nov 2019 15:55:34 +0100
+Message-Id: <20191128145554.1297-30-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
 References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
@@ -73,258 +74,409 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The public qe_ic.h header is no longer included by anything but
-qe_ic.c. Merge both headers into qe_ic.c, and drop the unused
-constants.
+Some ARM-based SOCs (e.g. LS1021A) also have a QUICC engine. As
+preparation for allowing this driver to build on ARM, replace the
+ppc-specific in_be16() etc. by the qe_io* helpers. Done via
+coccinelle.
 
 Reviewed-by: Timur Tabi <timur@kernel.org>
+Acked-by: Timur Tabi <timur@kernel.org>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/qe_ic.c | 52 +++++++++++++++++++-
- drivers/soc/fsl/qe/qe_ic.h | 99 --------------------------------------
- include/soc/fsl/qe/qe_ic.h | 56 ---------------------
- 3 files changed, 50 insertions(+), 157 deletions(-)
- delete mode 100644 drivers/soc/fsl/qe/qe_ic.h
- delete mode 100644 include/soc/fsl/qe/qe_ic.h
+ drivers/tty/serial/ucc_uart.c | 210 +++++++++++++++++-----------------
+ 1 file changed, 102 insertions(+), 108 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
-index 4832884da5bb..0dd5bdb04a14 100644
---- a/drivers/soc/fsl/qe/qe_ic.c
-+++ b/drivers/soc/fsl/qe/qe_ic.c
-@@ -15,6 +15,7 @@
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/errno.h>
-+#include <linux/irq.h>
- #include <linux/reboot.h>
- #include <linux/slab.h>
- #include <linux/stddef.h>
-@@ -25,9 +26,56 @@
- #include <asm/irq.h>
- #include <asm/io.h>
- #include <soc/fsl/qe/qe.h>
--#include <soc/fsl/qe/qe_ic.h>
+diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
+index 7e802616cba8..8a378ee5d34f 100644
+--- a/drivers/tty/serial/ucc_uart.c
++++ b/drivers/tty/serial/ucc_uart.c
+@@ -258,11 +258,11 @@ static unsigned int qe_uart_tx_empty(struct uart_port *port)
+ 	struct qe_bd *bdp = qe_port->tx_bd_base;
  
--#include "qe_ic.h"
-+#define NR_QE_IC_INTS		64
-+
-+/* QE IC registers offset */
-+#define QEIC_CICR		0x00
-+#define QEIC_CIVEC		0x04
-+#define QEIC_CIPXCC		0x10
-+#define QEIC_CIPYCC		0x14
-+#define QEIC_CIPWCC		0x18
-+#define QEIC_CIPZCC		0x1c
-+#define QEIC_CIMR		0x20
-+#define QEIC_CRIMR		0x24
-+#define QEIC_CIPRTA		0x30
-+#define QEIC_CIPRTB		0x34
-+#define QEIC_CHIVEC		0x60
-+
-+struct qe_ic {
-+	/* Control registers offset */
-+	u32 __iomem *regs;
-+
-+	/* The remapper for this QEIC */
-+	struct irq_domain *irqhost;
-+
-+	/* The "linux" controller struct */
-+	struct irq_chip hc_irq;
-+
-+	/* VIRQ numbers of QE high/low irqs */
-+	unsigned int virq_high;
-+	unsigned int virq_low;
-+};
-+
-+/*
-+ * QE interrupt controller internal structure
-+ */
-+struct qe_ic_info {
-+	/* Location of this source at the QIMR register */
-+	u32	mask;
-+
-+	/* Mask register offset */
-+	u32	mask_reg;
-+
-+	/*
-+	 * For grouped interrupts sources - the interrupt code as
-+	 * appears at the group priority register
-+	 */
-+	u8	pri_code;
-+
-+	/* Group priority register offset */
-+	u32	pri_reg;
-+};
+ 	while (1) {
+-		if (in_be16(&bdp->status) & BD_SC_READY)
++		if (qe_ioread16be(&bdp->status) & BD_SC_READY)
+ 			/* This BD is not done, so return "not done" */
+ 			return 0;
  
- static DEFINE_RAW_SPINLOCK(qe_ic_lock);
+-		if (in_be16(&bdp->status) & BD_SC_WRAP)
++		if (qe_ioread16be(&bdp->status) & BD_SC_WRAP)
+ 			/*
+ 			 * This BD is done and it's the last one, so return
+ 			 * "done"
+@@ -308,7 +308,7 @@ static void qe_uart_stop_tx(struct uart_port *port)
+ 	struct uart_qe_port *qe_port =
+ 		container_of(port, struct uart_qe_port, port);
  
-diff --git a/drivers/soc/fsl/qe/qe_ic.h b/drivers/soc/fsl/qe/qe_ic.h
-deleted file mode 100644
-index 9420378d9b6b..000000000000
---- a/drivers/soc/fsl/qe/qe_ic.h
-+++ /dev/null
-@@ -1,99 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * drivers/soc/fsl/qe/qe_ic.h
-- *
-- * QUICC ENGINE Interrupt Controller Header
-- *
-- * Copyright (C) 2006 Freescale Semiconductor, Inc. All rights reserved.
-- *
-- * Author: Li Yang <leoli@freescale.com>
-- * Based on code from Shlomi Gridish <gridish@freescale.com>
-- */
--#ifndef _POWERPC_SYSDEV_QE_IC_H
--#define _POWERPC_SYSDEV_QE_IC_H
+-	clrbits16(&qe_port->uccp->uccm, UCC_UART_UCCE_TX);
++	qe_clrbits_be16(&qe_port->uccp->uccm, UCC_UART_UCCE_TX);
+ }
+ 
+ /*
+@@ -343,10 +343,10 @@ static int qe_uart_tx_pump(struct uart_qe_port *qe_port)
+ 		p = qe2cpu_addr(bdp->buf, qe_port);
+ 
+ 		*p++ = port->x_char;
+-		out_be16(&bdp->length, 1);
+-		setbits16(&bdp->status, BD_SC_READY);
++		qe_iowrite16be(1, &bdp->length);
++		qe_setbits_be16(&bdp->status, BD_SC_READY);
+ 		/* Get next BD. */
+-		if (in_be16(&bdp->status) & BD_SC_WRAP)
++		if (qe_ioread16be(&bdp->status) & BD_SC_WRAP)
+ 			bdp = qe_port->tx_bd_base;
+ 		else
+ 			bdp++;
+@@ -365,7 +365,7 @@ static int qe_uart_tx_pump(struct uart_qe_port *qe_port)
+ 	/* Pick next descriptor and fill from buffer */
+ 	bdp = qe_port->tx_cur;
+ 
+-	while (!(in_be16(&bdp->status) & BD_SC_READY) &&
++	while (!(qe_ioread16be(&bdp->status) & BD_SC_READY) &&
+ 	       (xmit->tail != xmit->head)) {
+ 		count = 0;
+ 		p = qe2cpu_addr(bdp->buf, qe_port);
+@@ -378,11 +378,11 @@ static int qe_uart_tx_pump(struct uart_qe_port *qe_port)
+ 				break;
+ 		}
+ 
+-		out_be16(&bdp->length, count);
+-		setbits16(&bdp->status, BD_SC_READY);
++		qe_iowrite16be(count, &bdp->length);
++		qe_setbits_be16(&bdp->status, BD_SC_READY);
+ 
+ 		/* Get next BD. */
+-		if (in_be16(&bdp->status) & BD_SC_WRAP)
++		if (qe_ioread16be(&bdp->status) & BD_SC_WRAP)
+ 			bdp = qe_port->tx_bd_base;
+ 		else
+ 			bdp++;
+@@ -415,12 +415,12 @@ static void qe_uart_start_tx(struct uart_port *port)
+ 		container_of(port, struct uart_qe_port, port);
+ 
+ 	/* If we currently are transmitting, then just return */
+-	if (in_be16(&qe_port->uccp->uccm) & UCC_UART_UCCE_TX)
++	if (qe_ioread16be(&qe_port->uccp->uccm) & UCC_UART_UCCE_TX)
+ 		return;
+ 
+ 	/* Otherwise, pump the port and start transmission */
+ 	if (qe_uart_tx_pump(qe_port))
+-		setbits16(&qe_port->uccp->uccm, UCC_UART_UCCE_TX);
++		qe_setbits_be16(&qe_port->uccp->uccm, UCC_UART_UCCE_TX);
+ }
+ 
+ /*
+@@ -431,7 +431,7 @@ static void qe_uart_stop_rx(struct uart_port *port)
+ 	struct uart_qe_port *qe_port =
+ 		container_of(port, struct uart_qe_port, port);
+ 
+-	clrbits16(&qe_port->uccp->uccm, UCC_UART_UCCE_RX);
++	qe_clrbits_be16(&qe_port->uccp->uccm, UCC_UART_UCCE_RX);
+ }
+ 
+ /* Start or stop sending  break signal
+@@ -470,14 +470,14 @@ static void qe_uart_int_rx(struct uart_qe_port *qe_port)
+ 	 */
+ 	bdp = qe_port->rx_cur;
+ 	while (1) {
+-		status = in_be16(&bdp->status);
++		status = qe_ioread16be(&bdp->status);
+ 
+ 		/* If this one is empty, then we assume we've read them all */
+ 		if (status & BD_SC_EMPTY)
+ 			break;
+ 
+ 		/* get number of characters, and check space in RX buffer */
+-		i = in_be16(&bdp->length);
++		i = qe_ioread16be(&bdp->length);
+ 
+ 		/* If we don't have enough room in RX buffer for the entire BD,
+ 		 * then we try later, which will be the next RX interrupt.
+@@ -508,9 +508,10 @@ static void qe_uart_int_rx(struct uart_qe_port *qe_port)
+ 		}
+ 
+ 		/* This BD is ready to be used again. Clear status. get next */
+-		clrsetbits_be16(&bdp->status, BD_SC_BR | BD_SC_FR | BD_SC_PR |
+-			BD_SC_OV | BD_SC_ID, BD_SC_EMPTY);
+-		if (in_be16(&bdp->status) & BD_SC_WRAP)
++		qe_clrsetbits_be16(&bdp->status,
++				   BD_SC_BR | BD_SC_FR | BD_SC_PR | BD_SC_OV | BD_SC_ID,
++				   BD_SC_EMPTY);
++		if (qe_ioread16be(&bdp->status) & BD_SC_WRAP)
+ 			bdp = qe_port->rx_bd_base;
+ 		else
+ 			bdp++;
+@@ -569,8 +570,8 @@ static irqreturn_t qe_uart_int(int irq, void *data)
+ 	u16 events;
+ 
+ 	/* Clear the interrupts */
+-	events = in_be16(&uccp->ucce);
+-	out_be16(&uccp->ucce, events);
++	events = qe_ioread16be(&uccp->ucce);
++	qe_iowrite16be(events, &uccp->ucce);
+ 
+ 	if (events & UCC_UART_UCCE_BRKE)
+ 		uart_handle_break(&qe_port->port);
+@@ -601,17 +602,17 @@ static void qe_uart_initbd(struct uart_qe_port *qe_port)
+ 	bdp = qe_port->rx_bd_base;
+ 	qe_port->rx_cur = qe_port->rx_bd_base;
+ 	for (i = 0; i < (qe_port->rx_nrfifos - 1); i++) {
+-		out_be16(&bdp->status, BD_SC_EMPTY | BD_SC_INTRPT);
+-		out_be32(&bdp->buf, cpu2qe_addr(bd_virt, qe_port));
+-		out_be16(&bdp->length, 0);
++		qe_iowrite16be(BD_SC_EMPTY | BD_SC_INTRPT, &bdp->status);
++		qe_iowrite32be(cpu2qe_addr(bd_virt, qe_port), &bdp->buf);
++		qe_iowrite16be(0, &bdp->length);
+ 		bd_virt += qe_port->rx_fifosize;
+ 		bdp++;
+ 	}
+ 
+ 	/* */
+-	out_be16(&bdp->status, BD_SC_WRAP | BD_SC_EMPTY | BD_SC_INTRPT);
+-	out_be32(&bdp->buf, cpu2qe_addr(bd_virt, qe_port));
+-	out_be16(&bdp->length, 0);
++	qe_iowrite16be(BD_SC_WRAP | BD_SC_EMPTY | BD_SC_INTRPT, &bdp->status);
++	qe_iowrite32be(cpu2qe_addr(bd_virt, qe_port), &bdp->buf);
++	qe_iowrite16be(0, &bdp->length);
+ 
+ 	/* Set the physical address of the host memory
+ 	 * buffers in the buffer descriptors, and the
+@@ -622,21 +623,21 @@ static void qe_uart_initbd(struct uart_qe_port *qe_port)
+ 	qe_port->tx_cur = qe_port->tx_bd_base;
+ 	bdp = qe_port->tx_bd_base;
+ 	for (i = 0; i < (qe_port->tx_nrfifos - 1); i++) {
+-		out_be16(&bdp->status, BD_SC_INTRPT);
+-		out_be32(&bdp->buf, cpu2qe_addr(bd_virt, qe_port));
+-		out_be16(&bdp->length, 0);
++		qe_iowrite16be(BD_SC_INTRPT, &bdp->status);
++		qe_iowrite32be(cpu2qe_addr(bd_virt, qe_port), &bdp->buf);
++		qe_iowrite16be(0, &bdp->length);
+ 		bd_virt += qe_port->tx_fifosize;
+ 		bdp++;
+ 	}
+ 
+ 	/* Loopback requires the preamble bit to be set on the first TX BD */
+ #ifdef LOOPBACK
+-	setbits16(&qe_port->tx_cur->status, BD_SC_P);
++	qe_setbits_be16(&qe_port->tx_cur->status, BD_SC_P);
+ #endif
+ 
+-	out_be16(&bdp->status, BD_SC_WRAP | BD_SC_INTRPT);
+-	out_be32(&bdp->buf, cpu2qe_addr(bd_virt, qe_port));
+-	out_be16(&bdp->length, 0);
++	qe_iowrite16be(BD_SC_WRAP | BD_SC_INTRPT, &bdp->status);
++	qe_iowrite32be(cpu2qe_addr(bd_virt, qe_port), &bdp->buf);
++	qe_iowrite16be(0, &bdp->length);
+ }
+ 
+ /*
+@@ -658,78 +659,74 @@ static void qe_uart_init_ucc(struct uart_qe_port *qe_port)
+ 	ucc_slow_disable(qe_port->us_private, COMM_DIR_RX_AND_TX);
+ 
+ 	/* Program the UCC UART parameter RAM */
+-	out_8(&uccup->common.rbmr, UCC_BMR_GBL | UCC_BMR_BO_BE);
+-	out_8(&uccup->common.tbmr, UCC_BMR_GBL | UCC_BMR_BO_BE);
+-	out_be16(&uccup->common.mrblr, qe_port->rx_fifosize);
+-	out_be16(&uccup->maxidl, 0x10);
+-	out_be16(&uccup->brkcr, 1);
+-	out_be16(&uccup->parec, 0);
+-	out_be16(&uccup->frmec, 0);
+-	out_be16(&uccup->nosec, 0);
+-	out_be16(&uccup->brkec, 0);
+-	out_be16(&uccup->uaddr[0], 0);
+-	out_be16(&uccup->uaddr[1], 0);
+-	out_be16(&uccup->toseq, 0);
++	qe_iowrite8(UCC_BMR_GBL | UCC_BMR_BO_BE, &uccup->common.rbmr);
++	qe_iowrite8(UCC_BMR_GBL | UCC_BMR_BO_BE, &uccup->common.tbmr);
++	qe_iowrite16be(qe_port->rx_fifosize, &uccup->common.mrblr);
++	qe_iowrite16be(0x10, &uccup->maxidl);
++	qe_iowrite16be(1, &uccup->brkcr);
++	qe_iowrite16be(0, &uccup->parec);
++	qe_iowrite16be(0, &uccup->frmec);
++	qe_iowrite16be(0, &uccup->nosec);
++	qe_iowrite16be(0, &uccup->brkec);
++	qe_iowrite16be(0, &uccup->uaddr[0]);
++	qe_iowrite16be(0, &uccup->uaddr[1]);
++	qe_iowrite16be(0, &uccup->toseq);
+ 	for (i = 0; i < 8; i++)
+-		out_be16(&uccup->cchars[i], 0xC000);
+-	out_be16(&uccup->rccm, 0xc0ff);
++		qe_iowrite16be(0xC000, &uccup->cchars[i]);
++	qe_iowrite16be(0xc0ff, &uccup->rccm);
+ 
+ 	/* Configure the GUMR registers for UART */
+ 	if (soft_uart) {
+ 		/* Soft-UART requires a 1X multiplier for TX */
+-		clrsetbits_be32(&uccp->gumr_l,
+-			UCC_SLOW_GUMR_L_MODE_MASK | UCC_SLOW_GUMR_L_TDCR_MASK |
+-			UCC_SLOW_GUMR_L_RDCR_MASK,
+-			UCC_SLOW_GUMR_L_MODE_UART | UCC_SLOW_GUMR_L_TDCR_1 |
+-			UCC_SLOW_GUMR_L_RDCR_16);
 -
--#include <soc/fsl/qe/qe_ic.h>
+-		clrsetbits_be32(&uccp->gumr_h, UCC_SLOW_GUMR_H_RFW,
+-			UCC_SLOW_GUMR_H_TRX | UCC_SLOW_GUMR_H_TTX);
++		qe_clrsetbits_be32(&uccp->gumr_l,
++				   UCC_SLOW_GUMR_L_MODE_MASK | UCC_SLOW_GUMR_L_TDCR_MASK | UCC_SLOW_GUMR_L_RDCR_MASK,
++				   UCC_SLOW_GUMR_L_MODE_UART | UCC_SLOW_GUMR_L_TDCR_1 | UCC_SLOW_GUMR_L_RDCR_16);
++
++		qe_clrsetbits_be32(&uccp->gumr_h, UCC_SLOW_GUMR_H_RFW,
++				   UCC_SLOW_GUMR_H_TRX | UCC_SLOW_GUMR_H_TTX);
+ 	} else {
+-		clrsetbits_be32(&uccp->gumr_l,
+-			UCC_SLOW_GUMR_L_MODE_MASK | UCC_SLOW_GUMR_L_TDCR_MASK |
+-			UCC_SLOW_GUMR_L_RDCR_MASK,
+-			UCC_SLOW_GUMR_L_MODE_UART | UCC_SLOW_GUMR_L_TDCR_16 |
+-			UCC_SLOW_GUMR_L_RDCR_16);
 -
--#define NR_QE_IC_INTS		64
--
--/* QE IC registers offset */
--#define QEIC_CICR		0x00
--#define QEIC_CIVEC		0x04
--#define QEIC_CRIPNR		0x08
--#define QEIC_CIPNR		0x0c
--#define QEIC_CIPXCC		0x10
--#define QEIC_CIPYCC		0x14
--#define QEIC_CIPWCC		0x18
--#define QEIC_CIPZCC		0x1c
--#define QEIC_CIMR		0x20
--#define QEIC_CRIMR		0x24
--#define QEIC_CICNR		0x28
--#define QEIC_CIPRTA		0x30
--#define QEIC_CIPRTB		0x34
--#define QEIC_CRICR		0x3c
--#define QEIC_CHIVEC		0x60
--
--/* Interrupt priority registers */
--#define CIPCC_SHIFT_PRI0	29
--#define CIPCC_SHIFT_PRI1	26
--#define CIPCC_SHIFT_PRI2	23
--#define CIPCC_SHIFT_PRI3	20
--#define CIPCC_SHIFT_PRI4	13
--#define CIPCC_SHIFT_PRI5	10
--#define CIPCC_SHIFT_PRI6	7
--#define CIPCC_SHIFT_PRI7	4
--
--/* CICR priority modes */
--#define CICR_GWCC		0x00040000
--#define CICR_GXCC		0x00020000
--#define CICR_GYCC		0x00010000
--#define CICR_GZCC		0x00080000
--#define CICR_GRTA		0x00200000
--#define CICR_GRTB		0x00400000
--#define CICR_HPIT_SHIFT		8
--#define CICR_HPIT_MASK		0x00000300
--#define CICR_HP_SHIFT		24
--#define CICR_HP_MASK		0x3f000000
--
--/* CICNR */
--#define CICNR_WCC1T_SHIFT	20
--#define CICNR_ZCC1T_SHIFT	28
--#define CICNR_YCC1T_SHIFT	12
--#define CICNR_XCC1T_SHIFT	4
--
--/* CRICR */
--#define CRICR_RTA1T_SHIFT	20
--#define CRICR_RTB1T_SHIFT	28
--
--/* Signal indicator */
--#define SIGNAL_MASK		3
--#define SIGNAL_HIGH		2
--#define SIGNAL_LOW		0
--
--struct qe_ic {
--	/* Control registers offset */
--	u32 __iomem *regs;
--
--	/* The remapper for this QEIC */
--	struct irq_domain *irqhost;
--
--	/* The "linux" controller struct */
--	struct irq_chip hc_irq;
--
--	/* VIRQ numbers of QE high/low irqs */
--	unsigned int virq_high;
--	unsigned int virq_low;
--};
--
--/*
-- * QE interrupt controller internal structure
-- */
--struct qe_ic_info {
--	u32	mask;	  /* location of this source at the QIMR register. */
--	u32	mask_reg; /* Mask register offset */
--	u8	pri_code; /* for grouped interrupts sources - the interrupt
--			     code as appears at the group priority register */
--	u32	pri_reg;  /* Group priority register offset */
--};
--
--#endif /* _POWERPC_SYSDEV_QE_IC_H */
-diff --git a/include/soc/fsl/qe/qe_ic.h b/include/soc/fsl/qe/qe_ic.h
-deleted file mode 100644
-index 70bb5a0f6535..000000000000
---- a/include/soc/fsl/qe/qe_ic.h
-+++ /dev/null
-@@ -1,56 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Copyright (C) 2006 Freescale Semiconductor, Inc. All rights reserved.
-- *
-- * Authors: 	Shlomi Gridish <gridish@freescale.com>
-- * 		Li Yang <leoli@freescale.com>
-- *
-- * Description:
-- * QE IC external definitions and structure.
-- */
--#ifndef _ASM_POWERPC_QE_IC_H
--#define _ASM_POWERPC_QE_IC_H
--
--#include <linux/irq.h>
--
--struct device_node;
--struct qe_ic;
--
--#define NUM_OF_QE_IC_GROUPS	6
--
--/* Flags when we init the QE IC */
--#define QE_IC_SPREADMODE_GRP_W			0x00000001
--#define QE_IC_SPREADMODE_GRP_X			0x00000002
--#define QE_IC_SPREADMODE_GRP_Y			0x00000004
--#define QE_IC_SPREADMODE_GRP_Z			0x00000008
--#define QE_IC_SPREADMODE_GRP_RISCA		0x00000010
--#define QE_IC_SPREADMODE_GRP_RISCB		0x00000020
--
--#define QE_IC_LOW_SIGNAL			0x00000100
--#define QE_IC_HIGH_SIGNAL			0x00000200
--
--#define QE_IC_GRP_W_PRI0_DEST_SIGNAL_HIGH	0x00001000
--#define QE_IC_GRP_W_PRI1_DEST_SIGNAL_HIGH	0x00002000
--#define QE_IC_GRP_X_PRI0_DEST_SIGNAL_HIGH	0x00004000
--#define QE_IC_GRP_X_PRI1_DEST_SIGNAL_HIGH	0x00008000
--#define QE_IC_GRP_Y_PRI0_DEST_SIGNAL_HIGH	0x00010000
--#define QE_IC_GRP_Y_PRI1_DEST_SIGNAL_HIGH	0x00020000
--#define QE_IC_GRP_Z_PRI0_DEST_SIGNAL_HIGH	0x00040000
--#define QE_IC_GRP_Z_PRI1_DEST_SIGNAL_HIGH	0x00080000
--#define QE_IC_GRP_RISCA_PRI0_DEST_SIGNAL_HIGH	0x00100000
--#define QE_IC_GRP_RISCA_PRI1_DEST_SIGNAL_HIGH	0x00200000
--#define QE_IC_GRP_RISCB_PRI0_DEST_SIGNAL_HIGH	0x00400000
--#define QE_IC_GRP_RISCB_PRI1_DEST_SIGNAL_HIGH	0x00800000
--#define QE_IC_GRP_W_DEST_SIGNAL_SHIFT		(12)
--
--/* QE interrupt sources groups */
--enum qe_ic_grp_id {
--	QE_IC_GRP_W = 0,	/* QE interrupt controller group W */
--	QE_IC_GRP_X,		/* QE interrupt controller group X */
--	QE_IC_GRP_Y,		/* QE interrupt controller group Y */
--	QE_IC_GRP_Z,		/* QE interrupt controller group Z */
--	QE_IC_GRP_RISCA,	/* QE interrupt controller RISC group A */
--	QE_IC_GRP_RISCB		/* QE interrupt controller RISC group B */
--};
--
--#endif /* _ASM_POWERPC_QE_IC_H */
+-		clrsetbits_be32(&uccp->gumr_h,
+-			UCC_SLOW_GUMR_H_TRX | UCC_SLOW_GUMR_H_TTX,
+-			UCC_SLOW_GUMR_H_RFW);
++		qe_clrsetbits_be32(&uccp->gumr_l,
++				   UCC_SLOW_GUMR_L_MODE_MASK | UCC_SLOW_GUMR_L_TDCR_MASK | UCC_SLOW_GUMR_L_RDCR_MASK,
++				   UCC_SLOW_GUMR_L_MODE_UART | UCC_SLOW_GUMR_L_TDCR_16 | UCC_SLOW_GUMR_L_RDCR_16);
++
++		qe_clrsetbits_be32(&uccp->gumr_h,
++				   UCC_SLOW_GUMR_H_TRX | UCC_SLOW_GUMR_H_TTX,
++				   UCC_SLOW_GUMR_H_RFW);
+ 	}
+ 
+ #ifdef LOOPBACK
+-	clrsetbits_be32(&uccp->gumr_l, UCC_SLOW_GUMR_L_DIAG_MASK,
+-		UCC_SLOW_GUMR_L_DIAG_LOOP);
+-	clrsetbits_be32(&uccp->gumr_h,
+-		UCC_SLOW_GUMR_H_CTSP | UCC_SLOW_GUMR_H_RSYN,
+-		UCC_SLOW_GUMR_H_CDS);
++	qe_clrsetbits_be32(&uccp->gumr_l, UCC_SLOW_GUMR_L_DIAG_MASK,
++			   UCC_SLOW_GUMR_L_DIAG_LOOP);
++	qe_clrsetbits_be32(&uccp->gumr_h,
++			   UCC_SLOW_GUMR_H_CTSP | UCC_SLOW_GUMR_H_RSYN,
++			   UCC_SLOW_GUMR_H_CDS);
+ #endif
+ 
+ 	/* Disable rx interrupts  and clear all pending events.  */
+-	out_be16(&uccp->uccm, 0);
+-	out_be16(&uccp->ucce, 0xffff);
+-	out_be16(&uccp->udsr, 0x7e7e);
++	qe_iowrite16be(0, &uccp->uccm);
++	qe_iowrite16be(0xffff, &uccp->ucce);
++	qe_iowrite16be(0x7e7e, &uccp->udsr);
+ 
+ 	/* Initialize UPSMR */
+-	out_be16(&uccp->upsmr, 0);
++	qe_iowrite16be(0, &uccp->upsmr);
+ 
+ 	if (soft_uart) {
+-		out_be16(&uccup->supsmr, 0x30);
+-		out_be16(&uccup->res92, 0);
+-		out_be32(&uccup->rx_state, 0);
+-		out_be32(&uccup->rx_cnt, 0);
+-		out_8(&uccup->rx_bitmark, 0);
+-		out_8(&uccup->rx_length, 10);
+-		out_be32(&uccup->dump_ptr, 0x4000);
+-		out_8(&uccup->rx_temp_dlst_qe, 0);
+-		out_be32(&uccup->rx_frame_rem, 0);
+-		out_8(&uccup->rx_frame_rem_size, 0);
++		qe_iowrite16be(0x30, &uccup->supsmr);
++		qe_iowrite16be(0, &uccup->res92);
++		qe_iowrite32be(0, &uccup->rx_state);
++		qe_iowrite32be(0, &uccup->rx_cnt);
++		qe_iowrite8(0, &uccup->rx_bitmark);
++		qe_iowrite8(10, &uccup->rx_length);
++		qe_iowrite32be(0x4000, &uccup->dump_ptr);
++		qe_iowrite8(0, &uccup->rx_temp_dlst_qe);
++		qe_iowrite32be(0, &uccup->rx_frame_rem);
++		qe_iowrite8(0, &uccup->rx_frame_rem_size);
+ 		/* Soft-UART requires TX to be 1X */
+-		out_8(&uccup->tx_mode,
+-			UCC_UART_TX_STATE_UART | UCC_UART_TX_STATE_X1);
+-		out_be16(&uccup->tx_state, 0);
+-		out_8(&uccup->resD4, 0);
+-		out_be16(&uccup->resD5, 0);
++		qe_iowrite8(UCC_UART_TX_STATE_UART | UCC_UART_TX_STATE_X1,
++			    &uccup->tx_mode);
++		qe_iowrite16be(0, &uccup->tx_state);
++		qe_iowrite8(0, &uccup->resD4);
++		qe_iowrite16be(0, &uccup->resD5);
+ 
+ 		/* Set UART mode.
+ 		 * Enable receive and transmit.
+@@ -743,22 +740,19 @@ static void qe_uart_init_ucc(struct uart_qe_port *qe_port)
+ 		 * ...
+ 		 * 6.Receiver must use 16x over sampling
+ 		 */
+-		clrsetbits_be32(&uccp->gumr_l,
+-			UCC_SLOW_GUMR_L_MODE_MASK | UCC_SLOW_GUMR_L_TDCR_MASK |
+-			UCC_SLOW_GUMR_L_RDCR_MASK,
+-			UCC_SLOW_GUMR_L_MODE_QMC | UCC_SLOW_GUMR_L_TDCR_16 |
+-			UCC_SLOW_GUMR_L_RDCR_16);
++		qe_clrsetbits_be32(&uccp->gumr_l,
++				   UCC_SLOW_GUMR_L_MODE_MASK | UCC_SLOW_GUMR_L_TDCR_MASK | UCC_SLOW_GUMR_L_RDCR_MASK,
++				   UCC_SLOW_GUMR_L_MODE_QMC | UCC_SLOW_GUMR_L_TDCR_16 | UCC_SLOW_GUMR_L_RDCR_16);
+ 
+-		clrsetbits_be32(&uccp->gumr_h,
+-			UCC_SLOW_GUMR_H_RFW | UCC_SLOW_GUMR_H_RSYN,
+-			UCC_SLOW_GUMR_H_SUART | UCC_SLOW_GUMR_H_TRX |
+-			UCC_SLOW_GUMR_H_TTX | UCC_SLOW_GUMR_H_TFL);
++		qe_clrsetbits_be32(&uccp->gumr_h,
++				   UCC_SLOW_GUMR_H_RFW | UCC_SLOW_GUMR_H_RSYN,
++				   UCC_SLOW_GUMR_H_SUART | UCC_SLOW_GUMR_H_TRX | UCC_SLOW_GUMR_H_TTX | UCC_SLOW_GUMR_H_TFL);
+ 
+ #ifdef LOOPBACK
+-		clrsetbits_be32(&uccp->gumr_l, UCC_SLOW_GUMR_L_DIAG_MASK,
+-				UCC_SLOW_GUMR_L_DIAG_LOOP);
+-		clrbits32(&uccp->gumr_h, UCC_SLOW_GUMR_H_CTSP |
+-			  UCC_SLOW_GUMR_H_CDS);
++		qe_clrsetbits_be32(&uccp->gumr_l, UCC_SLOW_GUMR_L_DIAG_MASK,
++				   UCC_SLOW_GUMR_L_DIAG_LOOP);
++		qe_clrbits_be32(&uccp->gumr_h,
++				UCC_SLOW_GUMR_H_CTSP | UCC_SLOW_GUMR_H_CDS);
+ #endif
+ 
+ 		cecr_subblock = ucc_slow_get_qe_cr_subblock(qe_port->ucc_num);
+@@ -801,7 +795,7 @@ static int qe_uart_startup(struct uart_port *port)
+ 	}
+ 
+ 	/* Startup rx-int */
+-	setbits16(&qe_port->uccp->uccm, UCC_UART_UCCE_RX);
++	qe_setbits_be16(&qe_port->uccp->uccm, UCC_UART_UCCE_RX);
+ 	ucc_slow_enable(qe_port->us_private, COMM_DIR_RX_AND_TX);
+ 
+ 	return 0;
+@@ -837,7 +831,7 @@ static void qe_uart_shutdown(struct uart_port *port)
+ 
+ 	/* Stop uarts */
+ 	ucc_slow_disable(qe_port->us_private, COMM_DIR_RX_AND_TX);
+-	clrbits16(&uccp->uccm, UCC_UART_UCCE_TX | UCC_UART_UCCE_RX);
++	qe_clrbits_be16(&uccp->uccm, UCC_UART_UCCE_TX | UCC_UART_UCCE_RX);
+ 
+ 	/* Shut them really down and reinit buffer descriptors */
+ 	ucc_slow_graceful_stop_tx(qe_port->us_private);
+@@ -857,9 +851,9 @@ static void qe_uart_set_termios(struct uart_port *port,
+ 	struct ucc_slow __iomem *uccp = qe_port->uccp;
+ 	unsigned int baud;
+ 	unsigned long flags;
+-	u16 upsmr = in_be16(&uccp->upsmr);
++	u16 upsmr = qe_ioread16be(&uccp->upsmr);
+ 	struct ucc_uart_pram __iomem *uccup = qe_port->uccup;
+-	u16 supsmr = in_be16(&uccup->supsmr);
++	u16 supsmr = qe_ioread16be(&uccup->supsmr);
+ 	u8 char_length = 2; /* 1 + CL + PEN + 1 + SL */
+ 
+ 	/* Character length programmed into the mode register is the
+@@ -957,10 +951,10 @@ static void qe_uart_set_termios(struct uart_port *port,
+ 	/* Update the per-port timeout. */
+ 	uart_update_timeout(port, termios->c_cflag, baud);
+ 
+-	out_be16(&uccp->upsmr, upsmr);
++	qe_iowrite16be(upsmr, &uccp->upsmr);
+ 	if (soft_uart) {
+-		out_be16(&uccup->supsmr, supsmr);
+-		out_8(&uccup->rx_length, char_length);
++		qe_iowrite16be(supsmr, &uccup->supsmr);
++		qe_iowrite8(char_length, &uccup->rx_length);
+ 
+ 		/* Soft-UART requires a 1X multiplier for TX */
+ 		qe_setbrg(qe_port->us_info.rx_clock, baud, 16);
 -- 
 2.23.0
 
