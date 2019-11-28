@@ -2,146 +2,87 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99510C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C585C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0952071F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45F02071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:30:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFZ7jtEk"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Flvc2zOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfK1O3D (ORCPT
+        id S1726681AbfK1Oab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:29:03 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46114 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbfK1O3D (ORCPT
+        Thu, 28 Nov 2019 09:30:31 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46570 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfK1Oab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:29:03 -0500
-Received: by mail-il1-f194.google.com with SMTP id q1so24358588ile.13;
-        Thu, 28 Nov 2019 06:29:02 -0800 (PST)
+        Thu, 28 Nov 2019 09:30:31 -0500
+Received: by mail-qk1-f193.google.com with SMTP id f5so4516967qkm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:30:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sMU0IL8Rlq+6fLrJTHisOtaFzn6MftRpT5q5jbwKEnw=;
-        b=YFZ7jtEkcvX4TmeNwPif9CPkdwTp+mxAUEY4FjYbYpXyvr6efWAcYCoSjcmloOni+C
-         B2fcNsZhUGrmrruDM1Fn3X4PTW/l9ttFWinZhFQKNMSavM0wykqfuMFiTbZSRC36UeBK
-         pLV3M7nttXdZVdlpHpkYXvsYGV5MV9SVURwDy9O/5Js5r5o+q/RVNMaEfoUKKVONYEmi
-         HLg3M87cTSJGEVsZknsUUCwE67azeSxwSk7vAhOHPWIyNlJKro3oKWSJUPBFRJ9lm+vz
-         GerFAYGEf0CKOc6/T05YALXGQXDLIErDrirC6thnR/8sLw2iW41oDC7q72EBEaU0UuSI
-         ECnw==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=jYscQgO3B2aZoecEj2KE4EY+YiL/cnMaPDA5RlnwFLg=;
+        b=Flvc2zOaQTV13CEkOqjvW0TMJphIYyAkdWE2tT83veu2X0ERztNsQJcMztofB/ZN7l
+         MNFiYkNDzuFxliVxQlY9fUffjcmiawFNyhCWadPMqmpxzfTLcISszz0fDNTcDzZ+dC01
+         lIZl2jp8ZqCu6raKHn+219SSke74iMA3gJX3Hs7v3F4p/6J7SnmSCYg8LoyhIDkzy2Gk
+         gAxvQf3pq7JskO7K8YXiW10GRbIT6oIkY/iETkP3EQ0wPRDbuVHqx2qZqOzD4HdmTYbm
+         24LmdYGPoG5lUR/2FbvwSdihM5BesyomafPgmFtXxFvCU3kbFcW1feiBuZnLFMj/FzWW
+         Q3pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sMU0IL8Rlq+6fLrJTHisOtaFzn6MftRpT5q5jbwKEnw=;
-        b=rW+vAjZP9worDcfQMMP6EdvSaMYJeERhwrbK8fbBAXFWdiLBAxjZOxikH5Q+Vx16ea
-         S8jaeF1ejZ4zH2TY1B28Unsio66yf4KCIvicWNCpv5vqntSM0DjeiDFqmtzqrlrUEh+3
-         B7dgPaoXp5kh6g9ylzRy9FYxdT0hWyA5rfMx8yoeiRty/5bzFeFQIkPsFiOpKn8SkCgi
-         1opt95XqB1bZ+l+4s/qmOmYbxGQLgH1S5uhbUH/Mow4nOEED8HAgwhL2GsDk5oX1w8sQ
-         qOBRDfSLgrfqOr+9bVgyQtuTF4iofwf1Pr+LckysaN91+Lmr1HGVuTI/ZFhuJAxRHLA1
-         QKXA==
-X-Gm-Message-State: APjAAAWuObxHDV69yONcmx/A5S1eZvEnAMfz/aTmEn/RjqikYYD6HGGN
-        TPlECHYyYHIz9sAOzf1+mqn7yQUvXdV/vnydTuY=
-X-Google-Smtp-Source: APXvYqw67ERvKvsiBbN3SrEbzFjudGN5TzFNOBhuzvLOM1d9Nzm89YSmkAMVOANimiYGEaCZyTwj0zrIZHwowONaGWQ=
-X-Received: by 2002:a92:4095:: with SMTP id d21mr7689377ill.158.1574951341870;
- Thu, 28 Nov 2019 06:29:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20191029124211.15052-1-aford173@gmail.com> <CAHCN7xKAJ3koJc1H2zyGFG3J6qu+uw0jozT=pQ_0i8HStX5TbQ@mail.gmail.com>
- <20191128102141.beq7wzdu5vxwx7wk@uno.localdomain>
-In-Reply-To: <20191128102141.beq7wzdu5vxwx7wk@uno.localdomain>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Thu, 28 Nov 2019 08:28:49 -0600
-Message-ID: <CAHCN7xJpa68bB+acaywq+ca0sG0gYXM2wBiK=50KWLVp6e-9FA@mail.gmail.com>
-Subject: Re: [PATCH] media: ov5640: Fix check for PLL1 exceeding max allowed rate
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     linux-media <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=jYscQgO3B2aZoecEj2KE4EY+YiL/cnMaPDA5RlnwFLg=;
+        b=EvZvxsH1MXwu4Vdl0NPEu8cyHZF9g5qpELhFEuWNojxxoL7VBg/kEgWmZf8Xxngene
+         q4sc392AOR5f61q87PFE4wvJ4wGN1wkl9XzgWpdDZKrJi5In6e3w7I+l5tHqGIN1xopn
+         qHtFtNFfJ32i+GQmIGc7/8G1MuV6MA+VcU03S45RXmAyE9S9ejUp4rXX1LO1m+cIDYJE
+         fw5MppOM9h64dGEwfB7MymAp72miRPvldwhu09ukpEzr6pd7ZuK5+mcua4D1mgQZ20iA
+         HrfTQIM5k0j1vQ8uJkOsCTRz5YpyGIgto45C1fyVHZIuFK3Nsd4V7NbvSGKObG6wegfM
+         diyw==
+X-Gm-Message-State: APjAAAXZObLIrDFuZ+LnVNycUm2kkvnlF7mHhzC8Z+usBGKLHtwjlWkK
+        94N9Z2xBNRknZbeW1pXiwmeymg==
+X-Google-Smtp-Source: APXvYqyxjiPVBCqwpds4kxAvWyJeLoZVUi5Ie7C1ODzakCJWKx3kUUce4170/DFkgo9C+sTyOcG63g==
+X-Received: by 2002:ae9:eb53:: with SMTP id b80mr5848666qkg.430.1574951430457;
+        Thu, 28 Nov 2019 06:30:30 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id j3sm8354143qkk.133.2019.11.28.06.30.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Nov 2019 06:30:29 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v1] mm/memory_hotplug: don't check the nid in find_(smallest|biggest)_section_pfn
+Date:   Thu, 28 Nov 2019 09:30:29 -0500
+Message-Id: <270C2A1D-25B0-4BC5-A521-9EEADF3A6B75@lca.pw>
+References: <657e4a9d-767d-5140-a4f4-d963794cdf0c@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>
+In-Reply-To: <657e4a9d-767d-5140-a4f4-d963794cdf0c@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 4:19 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
->
-> Hi Adam,
->
-> On Tue, Nov 26, 2019 at 08:08:05PM -0600, Adam Ford wrote:
-> > On Tue, Oct 29, 2019 at 7:42 AM Adam Ford <aford173@gmail.com> wrote:
-> > >
-> > > The variable _rate is by ov5640_compute_sys_clk() which returns
-> > > zero if the PLL exceeds 1GHz.  Unfortunately, the check to see
-> > > if the max PLL1 output is checking 'rate' and not '_rate' and
-> > > 'rate' does not ever appear to be 0.
->
-> This seems a bit convoluted. What about:
->
-> "The PLL calculation routine checks the wrong variable 'rate' to
-> verify that the calculated PLL1 output frequency does not exceed
-> 1GHz. Fix this by using the correct '_rate' one."
->
-> Or something against these lines
 
-That makes sense.
 
-I'll do a V2 for this patch and change the description and add your
-'acked-by' note to it.
+> On Nov 28, 2019, at 9:03 AM, David Hildenbrand <david@redhat.com> wrote:
+>=20
+> That's why we have linux-next and plenty of people playing with it
+> (including you and me for example).
 
-I probably won't get to it until this weekend, since today is a
-holiday in the US, and I am traveling.
-
-adam
->
-> > >
-> > > This patch changes the check against the returned value of
-> > > '_rate' to determine if the PLL1 output exceeds 1GHz.
-> > >
-> > > Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
-> > >
-> >
-> > I haven't seen any responses to this patch.  Has anyone had a chance
-> > to review this?  It's been nearly a month.
->
-> You're totally right! Sorry about this
->
-> > I think it would be appropriate to backport to stable if deemed acceptable.
-> >
->
-> Indeed! This fixes a real issue
->
-> Acked-by: Jacopo Mondi <jacopo@jmondi.org>
->
-> Thanks
->   j
->
-> > adam
-> >
-> > > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > >
-> > > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> > > index 5e495c833d32..bb968e764f31 100644
-> > > --- a/drivers/media/i2c/ov5640.c
-> > > +++ b/drivers/media/i2c/ov5640.c
-> > > @@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
-> > >                          * We have reached the maximum allowed PLL1 output,
-> > >                          * increase sysdiv.
-> > >                          */
-> > > -                       if (!rate)
-> > > +                       if (!_rate)
-> > >                                 break;
-> > >
-> > >                         /*
-> > > --
-> > > 2.17.1
-> > >
+As mentioned, it is an expensive development practice. Once a patch was merg=
+ed into linux-next, it becomes someone else=E2=80=99s problems because if no=
+body flags it as problematic, all it needs is a good eye review and some tim=
+e before it gets merged into mainline eventually.=
