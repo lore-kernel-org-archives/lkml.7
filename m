@@ -2,134 +2,121 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E655C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF6FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7D421741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B5421741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:42:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FPFVGvrX"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="bm2BqqiA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfK1KmF (ORCPT
+        id S1726933AbfK1KmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:42:05 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:18397 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfK1KmF (ORCPT
+        Thu, 28 Nov 2019 05:42:08 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25858 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfK1KmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:42:05 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddfa4800007>; Thu, 28 Nov 2019 02:42:08 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 28 Nov 2019 02:42:04 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 28 Nov 2019 02:42:04 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Nov
- 2019 10:42:02 +0000
-Subject: Re: [PATCH 5.4 00/66] 5.4.1-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191127202632.536277063@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <772b6606-f65c-371f-ec74-e78aba55f798@nvidia.com>
-Date:   Thu, 28 Nov 2019 10:42:00 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191127202632.536277063@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574937728; bh=6I4zkpj5fqtewDd5jpLo35/AtSqfDrdezQcnaQiCaDk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FPFVGvrX1IFD8dQd4GH3i1FQiPDn53xmGx50Xa/1rHBmEJ3/C58KBqXIxKe8/atBP
-         jVBl32GMU5hFNm0h+y0OoI2PDWSjtEmQOfOz0Ru4fEcNgZoE8pkeMjuSoMlwFsmi0D
-         e+3+TRs2pEKOpRN5/4KxhmK70Q82ul+UDA/ORVoNZLWTgtpQA0Gw6uYDELSwUHqe5k
-         1Vs5jxO+i3PTR+1ZWyMDGUPw12TUsLInGW5vxfCECw+4a3Z01GnitcagYWOScnvK/+
-         ynLEaUhabg0UucRLZWXBR68MOZiIN2JB97zt/i3WrS1ptrOjqS/auDUQ5c4Vygnn2p
-         cmj0qjLlhrQGw==
+        Thu, 28 Nov 2019 05:42:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574937529; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=g+iqaSEt9t6mEBYpze1YBxtSpVuBILtAHDtMhG+OQRHzDT0/LeUkqcMsYLYujDKJtbJu1/NcE/XRtFw/H5h1vPxCM2s2vOql0193BTvGS0vJ8K8j299+SPzOrqQ5/67c7IhGFi0d/tXWNjGObgbik12Ghh+3qBg+uqAm5nL49+g=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574937529; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
+        bh=KNMab1ZXdB5UBvxQSnRm5OjTPZ0lTlMGVFskLJY0674=; 
+        b=Xw5N8Q4KkKozwWgAqT3e9WXWmGiLoEfsTQo05XlO26E5hIVrJ3fX3sP8SjDj44b1DsolQUBUj2jI8RNc6oq/Plr1ya8qE6/EOAkMH92cnj8r3bTlbWvutTD36BieeZraCOqrUbNmmHS49mx4mTKsmBJm+TajFny++5zmQRbXNPM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=ruqVQva/XTauqwBJs5udeIgFBWXgPIWEaf3XV1zUsaELRhwRpIpW9Ww9wNImrfMmMQao48+/QiTI
+    5FMJWSJiJjaZ4RibuT8xTdqpYac8mG9WHiIluMXfeOFpVVtmv829  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574937529;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=KNMab1ZXdB5UBvxQSnRm5OjTPZ0lTlMGVFskLJY0674=;
+        b=bm2BqqiAWYVk5gYVA0+fNy2AN3KALf2I3Ht7Pv5yrXHvmU73r4cQDEZAa/vE3oGg
+        Lu8kwrJM+v2yvKeaDOtwSKCwRkrMt81ibaI4nA5vTk3w4lHFhJDCTxNmRTNWbPlKmo6
+        EtOmsKa9QThk16tXGLVTIDq8O7EgqsyBU8fhWP/E=
+Received: from zhouyanjie-virtual-machine.localdomain (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
+        with SMTPS id 1574937527094777.0253424488163; Thu, 28 Nov 2019 02:38:47 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: [PATCH v5 05/10] MIPS: X1000: Add pdma controller DT node.
+Date:   Thu, 28 Nov 2019 18:37:42 +0800
+Message-Id: <1574937467-101907-6-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574937467-101907-1-git-send-email-zhouyanjie@zoho.com>
+References: <1574937467-101907-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the appropriate DT node to probe the pdma controller driver
+using the devicetree.
 
-On 27/11/2019 20:31, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.1 release.
-> There are 66 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.1-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+---
 
-Here are the test results for Tegra ...
+Notes:
+    v4:
+    New patch.
+    
+    v4->v5:
+    No change.
 
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	37 pass, 1 fail
+ arch/mips/boot/dts/ingenic/x1000.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Linux version:	5.4.1-rc1-gd6453d6b0c57
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-We are seeing 1 failure for Tegra194, but this is not a new failure this
-is present in v5.4 and it is a kernel warnings failure that has been
-fixed for v5.5 by the following commits.
-
-This one has been merged for v5.5 ...
-
-commit c745da8d4320c49e54662c0a8f7cb6b8204f44c4
-Author: Jon Hunter <jonathanh@nvidia.com>
-Date:   Fri Oct 11 09:34:59 2019 +0100
-
-    mailbox: tegra: Fix superfluous IRQ error message
-
-This one has not been merged for v5.5 yet ...
-
-commit d440538e5f219900a9fc9d96fd10727b4d2b3c48
-Author: Jon Hunter <jonathanh@nvidia.com>
-Date:   Wed Sep 25 15:12:28 2019 +0100
-
-    arm64: tegra: Fix 'active-low' warning for Jetson Xavier regulator
-
-If you like I can let you know once the above is merged so we can merge
-for linux-5.4.y.
-
-Cheers
-Jon
-
+diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+index 13a6c9ff..c432828 100644
+--- a/arch/mips/boot/dts/ingenic/x1000.dtsi
++++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <dt-bindings/clock/x1000-cgu.h>
++#include <dt-bindings/dma/x1000-dma.h>
+ 
+ / {
+ 	#address-cells = <1>;
+@@ -173,4 +174,16 @@
+ 
+ 		status = "disabled";
+ 	};
++
++	pdma: dma-controller@13420000 {
++		compatible = "ingenic,x1000-dma";
++		reg = <0x13420000 0x400
++			   0x13421000 0x40>;
++		#dma-cells = <2>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <10>;
++
++		clocks = <&cgu X1000_CLK_PDMA>;
++	};
+ };
 -- 
-nvpublic
+2.7.4
+
+
