@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157ABC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F481C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF95921789
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F76217AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574948468;
-	bh=dIOGrypPY/Tv2updsE/EeOJYMhxyDI/OtpZcrASRxYY=;
+	s=default; t=1574948471;
+	bh=OO5Bl+JnduIlPGSM0x4xjdImzL0DEUWCXQJyC5OU4x0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XtHw4w2u5phzcczB014imNgeArpTfwU4D6Vl7YAnVfJxO1JkP9aoK1yGKvdqihLMQ
-	 PTJK3EB7lrcvrKHDpQE/bQVZl7vrFzs313Nfdpsnm47lh6OqWhRn36stqmd9d5kUY8
-	 rW1IkKIAJpv8dKwIgrYC6sX1IAzVim9a1+7jJJdQ=
+	b=EzU3YDVgKyPZjS5AoBNEINuujq3aPqnkB7rkK954mC0HMz2ulEgLBcFqcTeGAZOoh
+	 Q6YEoTzrfShbl44SrRNeXBdHquYHO++01XIqklbFGPomWL5Ptu6Hm9bpAKb2/fHEDF
+	 Cn0aPYynO9PEKDzjEXUQOBV8J8gKAIwWuytd/vG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfK1NlH (ORCPT
+        id S1727133AbfK1NlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:41:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37564 "EHLO mail.kernel.org"
+        Thu, 28 Nov 2019 08:41:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbfK1NlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:41:05 -0500
+        id S1727085AbfK1NlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 08:41:02 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29B8D217D6;
-        Thu, 28 Nov 2019 13:41:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D6EE2176D;
+        Thu, 28 Nov 2019 13:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574948464;
-        bh=dIOGrypPY/Tv2updsE/EeOJYMhxyDI/OtpZcrASRxYY=;
+        s=default; t=1574948461;
+        bh=OO5Bl+JnduIlPGSM0x4xjdImzL0DEUWCXQJyC5OU4x0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ld4Hd46iwWTyaIOfNEFqpEvlNXusP/yltDp3eCOHL7lXzrFmH6HKabz4ncjTlQ/ag
-         R40IUdjMmDqdOXPgUrYnUBI+QqUvX6jcZonRQAOTmNE2154k3PZsDZ8rvaKoE+GJTF
-         nmTrIRA7JM7H/zJ4yo/aW3NF+yzRGIS+FUa6/UVQ=
+        b=VepleCBgRGQcLZh7p95TjpIAfozRJAujio3T+OGXjLcBfCGe4LVea1yy7KtvbCeKv
+         6MurzQWO3fH2NReJLkgd8LIMKoTH8nUDYVc89mb5DdFHiXXBGrxjxxaY3OEHCjyuuK
+         E6JNXdMIsUkyIfec2T94sPzBhrdFdUD6xLJOAc9U=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 09/22] perf addr_location: Rename al->mg to al->maps
-Date:   Thu, 28 Nov 2019 10:40:14 -0300
-Message-Id: <20191128134027.23726-10-acme@kernel.org>
+Subject: [PATCH 08/22] perf thread: Rename thread->mg to thread->maps
+Date:   Thu, 28 Nov 2019 10:40:13 -0300
+Message-Id: <20191128134027.23726-9-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191128134027.23726-1-acme@kernel.org>
 References: <20191128134027.23726-1-acme@kernel.org>
@@ -69,253 +69,437 @@ Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-foo95pyyp3bhocbt7yd8qrvq@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-69vcr8pubpym90skxhmbwhiw@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/callchain.c                          |  8 ++++----
- tools/perf/util/db-export.c                          | 12 ++++++------
- tools/perf/util/event.c                              |  6 +++---
- tools/perf/util/hist.c                               |  8 ++++----
- tools/perf/util/machine.c                            |  6 +++---
- .../perf/util/scripting-engines/trace-event-python.c |  2 +-
- tools/perf/util/symbol.h                             |  2 +-
- tools/perf/util/unwind-libdw.c                       |  2 +-
- tools/perf/util/unwind-libunwind-local.c             |  2 +-
- 9 files changed, 24 insertions(+), 24 deletions(-)
+ tools/perf/arch/arm/tests/dwarf-unwind.c     |  2 +-
+ tools/perf/arch/arm64/tests/dwarf-unwind.c   |  2 +-
+ tools/perf/arch/powerpc/tests/dwarf-unwind.c |  2 +-
+ tools/perf/arch/x86/tests/dwarf-unwind.c     |  2 +-
+ tools/perf/builtin-report.c                  |  2 +-
+ tools/perf/tests/code-reading.c              |  2 +-
+ tools/perf/tests/thread-mg-share.c           | 12 ++++----
+ tools/perf/ui/stdio/hist.c                   |  2 +-
+ tools/perf/util/db-export.c                  |  2 +-
+ tools/perf/util/event.c                      |  4 +--
+ tools/perf/util/machine.c                    | 16 +++++------
+ tools/perf/util/map.c                        |  2 +-
+ tools/perf/util/thread-stack.c               |  4 +--
+ tools/perf/util/thread.c                     | 30 ++++++++++----------
+ tools/perf/util/thread.h                     |  2 +-
+ tools/perf/util/unwind-libdw.c               |  2 +-
+ tools/perf/util/unwind-libunwind-local.c     |  4 +--
+ tools/perf/util/unwind-libunwind.c           |  4 +--
+ tools/perf/util/vdso.c                       |  2 +-
+ 19 files changed, 49 insertions(+), 49 deletions(-)
 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 5cefce33b66b..c7270c057b6b 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1106,7 +1106,7 @@ int hist_entry__append_callchain(struct hist_entry *he, struct perf_sample *samp
- int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *node,
- 			bool hide_unresolved)
- {
--	al->mg	= node->ms.mg;
-+	al->maps = node->ms.mg;
- 	al->map = node->ms.map;
- 	al->sym = node->ms.sym;
- 	al->srcline = node->srcline;
-@@ -1119,8 +1119,8 @@ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *
- 			goto out;
- 	}
+diff --git a/tools/perf/arch/arm/tests/dwarf-unwind.c b/tools/perf/arch/arm/tests/dwarf-unwind.c
+index 026737243766..ff0bea660cf9 100644
+--- a/tools/perf/arch/arm/tests/dwarf-unwind.c
++++ b/tools/perf/arch/arm/tests/dwarf-unwind.c
+@@ -26,7 +26,7 @@ static int sample_ustack(struct perf_sample *sample,
  
--	if (al->mg == &al->mg->machine->kmaps) {
--		if (machine__is_host(al->mg->machine)) {
-+	if (al->maps == &al->maps->machine->kmaps) {
-+		if (machine__is_host(al->maps->machine)) {
- 			al->cpumode = PERF_RECORD_MISC_KERNEL;
- 			al->level = 'k';
- 		} else {
-@@ -1128,7 +1128,7 @@ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *
- 			al->level = 'g';
+ 	sp = (unsigned long) regs[PERF_REG_ARM_SP];
+ 
+-	map = maps__find(thread->mg, (u64)sp);
++	map = maps__find(thread->maps, (u64)sp);
+ 	if (!map) {
+ 		pr_debug("failed to get stack map\n");
+ 		free(buf);
+diff --git a/tools/perf/arch/arm64/tests/dwarf-unwind.c b/tools/perf/arch/arm64/tests/dwarf-unwind.c
+index 886489632d17..85108437b3af 100644
+--- a/tools/perf/arch/arm64/tests/dwarf-unwind.c
++++ b/tools/perf/arch/arm64/tests/dwarf-unwind.c
+@@ -26,7 +26,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 
+ 	sp = (unsigned long) regs[PERF_REG_ARM64_SP];
+ 
+-	map = maps__find(thread->mg, (u64)sp);
++	map = maps__find(thread->maps, (u64)sp);
+ 	if (!map) {
+ 		pr_debug("failed to get stack map\n");
+ 		free(buf);
+diff --git a/tools/perf/arch/powerpc/tests/dwarf-unwind.c b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
+index b38117c50040..30658e3b32b2 100644
+--- a/tools/perf/arch/powerpc/tests/dwarf-unwind.c
++++ b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
+@@ -27,7 +27,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 
+ 	sp = (unsigned long) regs[PERF_REG_POWERPC_R1];
+ 
+-	map = maps__find(thread->mg, (u64)sp);
++	map = maps__find(thread->maps, (u64)sp);
+ 	if (!map) {
+ 		pr_debug("failed to get stack map\n");
+ 		free(buf);
+diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
+index f52132ed7a8c..418969cd64e9 100644
+--- a/tools/perf/arch/x86/tests/dwarf-unwind.c
++++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
+@@ -27,7 +27,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 
+ 	sp = (unsigned long) regs[PERF_REG_X86_SP];
+ 
+-	map = maps__find(thread->mg, (u64)sp);
++	map = maps__find(thread->maps, (u64)sp);
+ 	if (!map) {
+ 		pr_debug("failed to get stack map\n");
+ 		free(buf);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 729d68427cf7..830d563de889 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -790,7 +790,7 @@ static void task__print_level(struct task *task, FILE *fp, int level)
+ 
+ 	fprintf(fp, "%s\n", thread__comm_str(thread));
+ 
+-	maps__fprintf_task(thread->mg, comm_indent, fp);
++	maps__fprintf_task(thread->maps, comm_indent, fp);
+ 
+ 	if (!list_empty(&task->children)) {
+ 		list_for_each_entry(child, &task->children, list)
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index 1f017e1b2a55..6fe221d31f07 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -276,7 +276,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 		len = al.map->end - addr;
+ 
+ 	/* Read the object code using perf */
+-	ret_len = dso__data_read_offset(al.map->dso, thread->mg->machine,
++	ret_len = dso__data_read_offset(al.map->dso, thread->maps->machine,
+ 					al.addr, buf1, len);
+ 	if (ret_len != len) {
+ 		pr_debug("dso__data_read_offset failed\n");
+diff --git a/tools/perf/tests/thread-mg-share.c b/tools/perf/tests/thread-mg-share.c
+index 7f15eedabbf6..6032061958d2 100644
+--- a/tools/perf/tests/thread-mg-share.c
++++ b/tools/perf/tests/thread-mg-share.c
+@@ -42,13 +42,13 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
+ 	TEST_ASSERT_VAL("failed to create threads",
+ 			leader && t1 && t2 && t3 && other);
+ 
+-	mg = leader->mg;
++	mg = leader->maps;
+ 	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&mg->refcnt), 4);
+ 
+ 	/* test the map groups pointer is shared */
+-	TEST_ASSERT_VAL("map groups don't match", mg == t1->mg);
+-	TEST_ASSERT_VAL("map groups don't match", mg == t2->mg);
+-	TEST_ASSERT_VAL("map groups don't match", mg == t3->mg);
++	TEST_ASSERT_VAL("map groups don't match", mg == t1->maps);
++	TEST_ASSERT_VAL("map groups don't match", mg == t2->maps);
++	TEST_ASSERT_VAL("map groups don't match", mg == t3->maps);
+ 
+ 	/*
+ 	 * Verify the other leader was created by previous call.
+@@ -70,10 +70,10 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
+ 	machine__remove_thread(machine, other);
+ 	machine__remove_thread(machine, other_leader);
+ 
+-	other_mg = other->mg;
++	other_mg = other->maps;
+ 	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_mg->refcnt), 2);
+ 
+-	TEST_ASSERT_VAL("map groups don't match", other_mg == other_leader->mg);
++	TEST_ASSERT_VAL("map groups don't match", other_mg == other_leader->maps);
+ 
+ 	/* release thread group */
+ 	thread__put(leader);
+diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
+index 2d9c4843fd62..161d8342ce05 100644
+--- a/tools/perf/ui/stdio/hist.c
++++ b/tools/perf/ui/stdio/hist.c
+@@ -885,7 +885,7 @@ size_t hists__fprintf(struct hists *hists, bool show_header, int max_rows,
  		}
- 	} else {
--		if (machine__is_host(al->mg->machine)) {
-+		if (machine__is_host(al->maps->machine)) {
- 			al->cpumode = PERF_RECORD_MISC_USER;
- 			al->level = '.';
- 		} else if (perf_guest) {
+ 
+ 		if (h->ms.map == NULL && verbose > 1) {
+-			maps__fprintf(h->thread->mg, fp);
++			maps__fprintf(h->thread->maps, fp);
+ 			fprintf(fp, "%.10s end\n", graph_dotted_line);
+ 		}
+ 	}
 diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index e726922eb663..db7447154622 100644
+index d029faf9fc9f..e726922eb663 100644
 --- a/tools/perf/util/db-export.c
 +++ b/tools/perf/util/db-export.c
-@@ -181,7 +181,7 @@ static int db_ids_from_al(struct db_export *dbe, struct addr_location *al,
- 	if (al->map) {
- 		struct dso *dso = al->map->dso;
- 
--		err = db_export__dso(dbe, dso, al->mg->machine);
-+		err = db_export__dso(dbe, dso, al->maps->machine);
- 		if (err)
- 			return err;
- 		*dso_db_id = dso->db_id;
 @@ -251,7 +251,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
  		 */
  		al.sym = node->ms.sym;
  		al.map = node->ms.map;
--		al.mg  = thread->maps;
-+		al.maps = thread->maps;
+-		al.mg  = thread->mg;
++		al.mg  = thread->maps;
  		al.addr = node->ip;
  
  		if (al.map && !al.sym)
-@@ -360,13 +360,13 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
- 	if (err)
- 		return err;
- 
--	err = db_export__machine(dbe, al->mg->machine);
-+	err = db_export__machine(dbe, al->maps->machine);
- 	if (err)
- 		return err;
- 
--	main_thread = thread__main_thread(al->mg->machine, thread);
-+	main_thread = thread__main_thread(al->maps->machine, thread);
- 
--	err = db_export__threads(dbe, thread, main_thread, al->mg->machine, &comm);
-+	err = db_export__threads(dbe, thread, main_thread, al->maps->machine, &comm);
- 	if (err)
- 		goto out_put;
- 
-@@ -380,7 +380,7 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
- 		goto out_put;
- 
- 	if (dbe->cpr) {
--		struct call_path *cp = call_path_from_sample(dbe, al->mg->machine,
-+		struct call_path *cp = call_path_from_sample(dbe, al->maps->machine,
- 							     thread, sample,
- 							     evsel);
- 		if (cp) {
 diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 2f0b77366cc0..fc3da38beef0 100644
+index 0181790dd0c0..2f0b77366cc0 100644
 --- a/tools/perf/util/event.c
 +++ b/tools/perf/util/event.c
-@@ -461,7 +461,7 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+@@ -457,7 +457,7 @@ int perf_event__process(struct perf_tool *tool __maybe_unused,
+ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+ 			     struct addr_location *al)
+ {
+-	struct maps *mg = thread->mg;
++	struct maps *mg = thread->maps;
  	struct machine *machine = mg->machine;
  	bool load_map = false;
  
--	al->mg = mg;
-+	al->maps = mg;
- 	al->thread = thread;
- 	al->addr = addr;
- 	al->cpumode = cpumode;
-@@ -474,13 +474,13 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+@@ -523,7 +523,7 @@ struct map *thread__find_map_fb(struct thread *thread, u8 cpumode, u64 addr,
+ 				struct addr_location *al)
+ {
+ 	struct map *map = thread__find_map(thread, cpumode, addr, al);
+-	struct machine *machine = thread->mg->machine;
++	struct machine *machine = thread->maps->machine;
+ 	u8 addr_cpumode = machine__addr_cpumode(machine, cpumode, addr);
  
- 	if (cpumode == PERF_RECORD_MISC_KERNEL && perf_host) {
- 		al->level = 'k';
--		al->mg = mg = &machine->kmaps;
-+		al->maps = mg = &machine->kmaps;
- 		load_map = true;
- 	} else if (cpumode == PERF_RECORD_MISC_USER && perf_host) {
- 		al->level = '.';
- 	} else if (cpumode == PERF_RECORD_MISC_GUEST_KERNEL && perf_guest) {
- 		al->level = 'g';
--		al->mg = mg = &machine->kmaps;
-+		al->maps = mg = &machine->kmaps;
- 		load_map = true;
- 	} else if (cpumode == PERF_RECORD_MISC_GUEST_USER && perf_guest) {
- 		al->level = 'u';
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 0a8d72ae93ca..5ebfbe373442 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -692,7 +692,7 @@ __hists__add_entry(struct hists *hists,
- 			.ino = ns ? ns->link_info[CGROUP_NS_INDEX].ino : 0,
- 		},
- 		.ms = {
--			.mg	= al->mg,
-+			.mg	= al->maps,
- 			.map	= al->map,
- 			.sym	= al->sym,
- 		},
-@@ -760,7 +760,7 @@ struct hist_entry *hists__add_entry_block(struct hists *hists,
- 		.block_info = block_info,
- 		.hists = hists,
- 		.ms = {
--			.mg  = al->mg,
-+			.mg  = al->maps,
- 			.map = al->map,
- 			.sym = al->sym,
- 		},
-@@ -895,7 +895,7 @@ iter_next_branch_entry(struct hist_entry_iter *iter, struct addr_location *al)
- 	if (iter->curr >= iter->total)
- 		return 0;
- 
--	al->mg  = bi[i].to.ms.mg;
-+	al->maps = bi[i].to.ms.mg;
- 	al->map = bi[i].to.ms.map;
- 	al->sym = bi[i].to.ms.sym;
- 	al->addr = bi[i].to.addr;
-@@ -1072,7 +1072,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 		.comm = thread__comm(al->thread),
- 		.ip = al->addr,
- 		.ms = {
--			.mg  = al->mg,
-+			.mg  = al->maps,
- 			.map = al->map,
- 			.sym = al->sym,
- 		},
+ 	if (map || addr_cpumode == cpumode)
 diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index b351476407e6..de5d6b4727e3 100644
+index d646aea39333..b351476407e6 100644
 --- a/tools/perf/util/machine.c
 +++ b/tools/perf/util/machine.c
-@@ -1934,7 +1934,7 @@ static void ip__resolve_ams(struct thread *thread,
+@@ -412,28 +412,28 @@ static void machine__update_thread_pid(struct machine *machine,
+ 	if (!leader)
+ 		goto out_err;
  
- 	ams->addr = ip;
- 	ams->al_addr = al.addr;
--	ams->ms.mg  = al.mg;
-+	ams->ms.mg  = al.maps;
- 	ams->ms.sym = al.sym;
- 	ams->ms.map = al.map;
- 	ams->phys_addr = 0;
-@@ -1952,7 +1952,7 @@ static void ip__resolve_data(struct thread *thread,
+-	if (!leader->mg)
+-		leader->mg = maps__new(machine);
++	if (!leader->maps)
++		leader->maps = maps__new(machine);
  
- 	ams->addr = addr;
- 	ams->al_addr = al.addr;
--	ams->ms.mg  = al.mg;
-+	ams->ms.mg  = al.maps;
- 	ams->ms.sym = al.sym;
- 	ams->ms.map = al.map;
- 	ams->phys_addr = phys_addr;
-@@ -2069,7 +2069,7 @@ static int add_callchain_ip(struct thread *thread,
- 		iter_cycles = iter->cycles;
+-	if (!leader->mg)
++	if (!leader->maps)
+ 		goto out_err;
+ 
+-	if (th->mg == leader->mg)
++	if (th->maps == leader->maps)
+ 		return;
+ 
+-	if (th->mg) {
++	if (th->maps) {
+ 		/*
+ 		 * Maps are created from MMAP events which provide the pid and
+ 		 * tid.  Consequently there never should be any maps on a thread
+ 		 * with an unknown pid.  Just print an error if there are.
+ 		 */
+-		if (!maps__empty(th->mg))
++		if (!maps__empty(th->maps))
+ 			pr_err("Discarding thread maps for %d:%d\n",
+ 			       th->pid_, th->tid);
+-		maps__put(th->mg);
++		maps__put(th->maps);
  	}
  
--	ms.mg  = al.mg;
-+	ms.mg  = al.maps;
- 	ms.map = al.map;
- 	ms.sym = al.sym;
- 	srcline = callchain_srcline(&ms, al.addr);
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 9581a904af29..80ca5d0ab7fe 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1127,7 +1127,7 @@ static void python_export_sample_table(struct db_export *dbe,
+-	th->mg = maps__get(leader->mg);
++	th->maps = maps__get(leader->maps);
+ out_put:
+ 	thread__put(leader);
+ 	return;
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 4c9fd064028f..39bfed48b7f5 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -819,7 +819,7 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
+  */
+ int maps__clone(struct thread *thread, struct maps *parent)
+ {
+-	struct maps *mg = thread->mg;
++	struct maps *mg = thread->maps;
+ 	int err = -ENOMEM;
+ 	struct map *map;
  
- 	tuple_set_u64(t, 0, es->db_id);
- 	tuple_set_u64(t, 1, es->evsel->db_id);
--	tuple_set_u64(t, 2, es->al->mg->machine->db_id);
-+	tuple_set_u64(t, 2, es->al->maps->machine->db_id);
- 	tuple_set_u64(t, 3, es->al->thread->db_id);
- 	tuple_set_u64(t, 4, es->comm_db_id);
- 	tuple_set_u64(t, 5, es->dso_db_id);
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index d3e8faeab3f2..29c4ea4c354f 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -108,7 +108,7 @@ struct ref_reloc_sym {
+diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
+index cd8a948d03ec..0885967d5bc3 100644
+--- a/tools/perf/util/thread-stack.c
++++ b/tools/perf/util/thread-stack.c
+@@ -134,8 +134,8 @@ static int thread_stack__init(struct thread_stack *ts, struct thread *thread,
+ 	if (err)
+ 		return err;
  
- struct addr_location {
- 	struct thread *thread;
--	struct maps   *mg;
-+	struct maps   *maps;
- 	struct map    *map;
- 	struct symbol *sym;
- 	const char    *srcline;
+-	if (thread->mg && thread->mg->machine) {
+-		struct machine *machine = thread->mg->machine;
++	if (thread->maps && thread->maps->machine) {
++		struct machine *machine = thread->maps->machine;
+ 		const char *arch = perf_env__arch(machine->env);
+ 
+ 		ts->kernel_start = machine__kernel_start(machine);
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index b672a2a73b6b..28b719388028 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -24,16 +24,16 @@ int thread__init_maps(struct thread *thread, struct machine *machine)
+ 	pid_t pid = thread->pid_;
+ 
+ 	if (pid == thread->tid || pid == -1) {
+-		thread->mg = maps__new(machine);
++		thread->maps = maps__new(machine);
+ 	} else {
+ 		struct thread *leader = __machine__findnew_thread(machine, pid, pid);
+ 		if (leader) {
+-			thread->mg = maps__get(leader->mg);
++			thread->maps = maps__get(leader->maps);
+ 			thread__put(leader);
+ 		}
+ 	}
+ 
+-	return thread->mg ? 0 : -1;
++	return thread->maps ? 0 : -1;
+ }
+ 
+ struct thread *thread__new(pid_t pid, pid_t tid)
+@@ -86,9 +86,9 @@ void thread__delete(struct thread *thread)
+ 
+ 	thread_stack__free(thread);
+ 
+-	if (thread->mg) {
+-		maps__put(thread->mg);
+-		thread->mg = NULL;
++	if (thread->maps) {
++		maps__put(thread->maps);
++		thread->maps = NULL;
+ 	}
+ 	down_write(&thread->namespaces_lock);
+ 	list_for_each_entry_safe(namespaces, tmp_namespaces,
+@@ -251,7 +251,7 @@ static int ____thread__set_comm(struct thread *thread, const char *str,
+ 		list_add(&new->list, &thread->comm_list);
+ 
+ 		if (exec)
+-			unwind__flush_access(thread->mg);
++			unwind__flush_access(thread->maps);
+ 	}
+ 
+ 	thread->comm_set = true;
+@@ -324,19 +324,19 @@ int thread__comm_len(struct thread *thread)
+ size_t thread__fprintf(struct thread *thread, FILE *fp)
+ {
+ 	return fprintf(fp, "Thread %d %s\n", thread->tid, thread__comm_str(thread)) +
+-	       maps__fprintf(thread->mg, fp);
++	       maps__fprintf(thread->maps, fp);
+ }
+ 
+ int thread__insert_map(struct thread *thread, struct map *map)
+ {
+ 	int ret;
+ 
+-	ret = unwind__prepare_access(thread->mg, map, NULL);
++	ret = unwind__prepare_access(thread->maps, map, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+-	maps__fixup_overlappings(thread->mg, map, stderr);
+-	maps__insert(thread->mg, map);
++	maps__fixup_overlappings(thread->maps, map, stderr);
++	maps__insert(thread->maps, map);
+ 
+ 	return 0;
+ }
+@@ -345,13 +345,13 @@ static int __thread__prepare_access(struct thread *thread)
+ {
+ 	bool initialized = false;
+ 	int err = 0;
+-	struct maps *maps = thread->mg;
++	struct maps *maps = thread->maps;
+ 	struct map *map;
+ 
+ 	down_read(&maps->lock);
+ 
+ 	maps__for_each_entry(maps, map) {
+-		err = unwind__prepare_access(thread->mg, map, &initialized);
++		err = unwind__prepare_access(thread->maps, map, &initialized);
+ 		if (err || initialized)
+ 			break;
+ 	}
+@@ -377,13 +377,13 @@ static int thread__clone_maps(struct thread *thread, struct thread *parent, bool
+ 	if (thread->pid_ == parent->pid_)
+ 		return thread__prepare_access(thread);
+ 
+-	if (thread->mg == parent->mg) {
++	if (thread->maps == parent->maps) {
+ 		pr_debug("broken map groups on thread %d/%d parent %d/%d\n",
+ 			 thread->pid_, thread->tid, parent->pid_, parent->tid);
+ 		return 0;
+ 	}
+ 	/* But this one is new process, copy maps. */
+-	return do_maps_clone ? maps__clone(thread, parent->mg) : 0;
++	return do_maps_clone ? maps__clone(thread, parent->maps) : 0;
+ }
+ 
+ int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bool do_maps_clone)
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 4735d920dfb1..20b96b5d1f15 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -25,7 +25,7 @@ struct thread {
+ 		struct rb_node	 rb_node;
+ 		struct list_head node;
+ 	};
+-	struct maps		*mg;
++	struct maps		*maps;
+ 	pid_t			pid_; /* Not all tools update this */
+ 	pid_t			tid;
+ 	pid_t			ppid;
 diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index 33f655207c62..bb4f515bdff9 100644
+index d2a8df01c4a7..33f655207c62 100644
 --- a/tools/perf/util/unwind-libdw.c
 +++ b/tools/perf/util/unwind-libdw.c
-@@ -81,7 +81,7 @@ static int entry(u64 ip, struct unwind_info *ui)
- 		return -1;
- 
- 	e->ip	  = ip;
--	e->ms.mg  = al.mg;
-+	e->ms.mg  = al.maps;
- 	e->ms.map = al.map;
- 	e->ms.sym = al.sym;
- 
+@@ -200,7 +200,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+ 	struct unwind_info *ui, ui_buf = {
+ 		.sample		= data,
+ 		.thread		= thread,
+-		.machine	= thread->mg->machine,
++		.machine	= thread->maps->machine,
+ 		.cb		= cb,
+ 		.arg		= arg,
+ 		.max_stack	= max_stack,
 diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 30f921f63487..a744dfaefef5 100644
+index 31f77f8d515b..30f921f63487 100644
 --- a/tools/perf/util/unwind-libunwind-local.c
 +++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -578,7 +578,7 @@ static int entry(u64 ip, struct thread *thread,
- 	e.ms.sym = thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
- 	e.ip     = ip;
- 	e.ms.map = al.map;
--	e.ms.mg  = al.mg;
-+	e.ms.mg  = al.maps;
+@@ -660,7 +660,7 @@ static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
+ 	 */
+ 	if (max_stack - 1 > 0) {
+ 		WARN_ONCE(!ui->thread, "WARNING: ui->thread is NULL");
+-		addr_space = ui->thread->mg->addr_space;
++		addr_space = ui->thread->maps->addr_space;
  
- 	pr_debug("unwind: %s:ip = 0x%" PRIx64 " (0x%" PRIx64 ")\n",
- 		 al.sym ? al.sym->name : "''",
+ 		if (addr_space == NULL)
+ 			return -1;
+@@ -709,7 +709,7 @@ static int _unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+ 	struct unwind_info ui = {
+ 		.sample       = data,
+ 		.thread       = thread,
+-		.machine      = thread->mg->machine,
++		.machine      = thread->maps->machine,
+ 	};
+ 
+ 	if (!data->user_regs.regs)
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index 3769ae93ca5a..4003ae80edba 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -82,7 +82,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+ 			 struct thread *thread,
+ 			 struct perf_sample *data, int max_stack)
+ {
+-	if (thread->mg->unwind_libunwind_ops)
+-		return thread->mg->unwind_libunwind_ops->get_entries(cb, arg, thread, data, max_stack);
++	if (thread->maps->unwind_libunwind_ops)
++		return thread->maps->unwind_libunwind_ops->get_entries(cb, arg, thread, data, max_stack);
+ 	return 0;
+ }
+diff --git a/tools/perf/util/vdso.c b/tools/perf/util/vdso.c
+index 765b29acbf7c..3cc91ad048ea 100644
+--- a/tools/perf/util/vdso.c
++++ b/tools/perf/util/vdso.c
+@@ -144,7 +144,7 @@ static enum dso_type machine__thread_dso_type(struct machine *machine,
+ 	enum dso_type dso_type = DSO__TYPE_UNKNOWN;
+ 	struct map *map;
+ 
+-	maps__for_each_entry(thread->mg, map) {
++	maps__for_each_entry(thread->maps, map) {
+ 		struct dso *dso = map->dso;
+ 		if (!dso || dso->long_name[0] != '/')
+ 			continue;
 -- 
 2.21.0
 
