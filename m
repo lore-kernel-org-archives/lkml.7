@@ -5,65 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26193C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F3FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C8B21787
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BC621774
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Fs4SgS4/"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="OQQ2h+Re"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfK1O5x (ORCPT
+        id S1727524AbfK1O55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:57:53 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34251 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727482AbfK1O5v (ORCPT
+        Thu, 28 Nov 2019 09:57:57 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41901 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbfK1O5y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:57:51 -0500
-Received: by mail-lj1-f195.google.com with SMTP id m6so21459888ljc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:49 -0800 (PST)
+        Thu, 28 Nov 2019 09:57:54 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m4so28805659ljj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QBhz5rvCw4g2Ox9AwtLP/2ydNw3vwlfo4gXSav3FB44=;
-        b=Fs4SgS4/1psPKfkuhI4Ny+x/2oJrTK7HBfKE4/RCaNwwy+uA8dMiNwd3beo5/zLTHw
-         62oVxo+n4p+sA9/H9nbzmMU2pfSe0i3IY9PDEKXtA5Y16gW6pwQTd4R0Uiu6nNqFDpUH
-         SzXhTou8vQGjVBBwFvDic+ydbfn1zpUpRjhKA=
+        bh=p72ig8otN7OnmiLAjVP1RCBOnmxplTNtC1X7TZOVWpw=;
+        b=OQQ2h+RevdyQm5rInmg2I8t2k1UuIX7x88JoTaMJl0mP3FKso/s85V9nZHyzR4ZhWk
+         Bm+YZX5gRUEPF6MaHPscUB1QkrGXjl5izfcDhTmeqGqbsHLacR5wZ0c0MI3xxwYsCY/A
+         Vkupe+rAVPCpON95rrklzc/93kyPsSxYsbMfs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QBhz5rvCw4g2Ox9AwtLP/2ydNw3vwlfo4gXSav3FB44=;
-        b=L1l48ZqkPTy1katdprycsTr9CtZoqYQkcGWRzC+fN0OkTb+llSQJWAGV1X+XdmnGSd
-         RC0CxbrzzuK6m7yj538Jj1txA7CFDZwt5gS6CmvBmIxqPhtC9n6q5nCeHRI9vlsu3OpI
-         LlfVUs0O+95dFkxZ4DKGtZ4dFAGYzE1+eSgNtFOi+O2RMEBOqilaNuvkqWwkY2UUvPeG
-         uGqbBU5OCWvUBNqBOJgWwqOqe5dfSUuxjWiBKUbzKHy3fmH4WLyD1BxRBN/ZUPHemZgQ
-         dVc09PihAn6eKgt9viZlNulYPeS1mfMxRduhKdqXGfCudg+WNeGTERUAltL5GWJeesxn
-         CunA==
-X-Gm-Message-State: APjAAAXLvoaNf+BejIp1Pi18fbY8GpxYmghSRG5wC/eD206Vijc9W35i
-        xOutnUkffPC02QkAMfT96+ujDA==
-X-Google-Smtp-Source: APXvYqx99pjU5nTC/rq9MmsMvdS7IjR/57AJ+W7tuU3iN95pO3rx6CAJcCzrdDDJbnd7jwEkPdc8CQ==
-X-Received: by 2002:a2e:888b:: with SMTP id k11mr10315128lji.87.1574953068992;
-        Thu, 28 Nov 2019 06:57:48 -0800 (PST)
+        bh=p72ig8otN7OnmiLAjVP1RCBOnmxplTNtC1X7TZOVWpw=;
+        b=Nke70ut8o0u2jUSoa5ohor98XPbxd2X7Ch8MJfTOZIP/dJIM9APYd9KC+AU9vvqOwW
+         1RM3Zem+UyBx9vde9BxA54/qIgaNgiYjTQ7HbLSmx3E5/iNBIloagEoByITudaPLcdzk
+         3s+l45YKseD2kbb8gsM2Lx6nQZ2iVVG+KUIlypdiMfxbR8Sydo7APkhQKlQlDX9fUplf
+         a28trHkbk6NdWVQI8PEiYlDBCnjlYX2m3MEknTgXo1cDy4fWYQ8uRexX95B8UuiAiimm
+         6DPxFqhjMeYD3w++moWYsuX6nECDo54S33gOGfcXe0q5IyeM8xelLbCjQ3Mstl+peco6
+         8veQ==
+X-Gm-Message-State: APjAAAWj2dh1VvbN9QHtbAS8hHqloMKCvorNPlqMstIWVVaUEWufYBLT
+        MRTBpbd71jBXlyLqDl+Q5zYejA==
+X-Google-Smtp-Source: APXvYqxxNC4Y6aCUuJqmGxOPCQfQeCFNZetKzi9uwLhqGK8nTCBAxCbPU2Hw7eVjD4MOeMToWnl0OQ==
+X-Received: by 2002:a2e:6e07:: with SMTP id j7mr3590986ljc.18.1574953071630;
+        Thu, 28 Nov 2019 06:57:51 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.47
+        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 06:57:48 -0800 (PST)
+        Thu, 28 Nov 2019 06:57:51 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
 Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v6 33/49] serial: ucc_uart: limit brg-frequency workaround to PPC32
-Date:   Thu, 28 Nov 2019 15:55:38 +0100
-Message-Id: <20191128145554.1297-34-linux@rasmusvillemoes.dk>
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v6 35/49] soc: fsl: qe: change return type of cpm_muram_alloc() to s32
+Date:   Thu, 28 Nov 2019 15:55:40 +0100
+Message-Id: <20191128145554.1297-36-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
 References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
@@ -74,40 +73,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to Timur Tabi
+There are a number of problems with cpm_muram_alloc() and its
+callers. Most callers assign the return value to some variable and
+then use IS_ERR_VALUE to check for allocation failure. However, when
+that variable is not sizeof(long), this leads to warnings - and it is
+indeed broken to do e.g.
 
-    This bug in older U-Boots is definitely PowerPC-specific
+  u32 foo = cpm_muram_alloc();
+  if (IS_ERR_VALUE(foo))
 
-So before allowing this driver to be built for platforms other than
-PPC32, make sure that we don't accept malformed device trees on those
-other platforms.
+on a 64-bit platform, since the condition
 
-Suggested-by: Timur Tabi <timur@kernel.org>
+  foo >= (unsigned long)-ENOMEM
+
+is tautologically false. There are also callers that ignore the
+possibility of error, and then there are those that check for error by
+comparing the return value to 0...
+
+One could fix that by changing all callers to store the return value
+temporarily in an "unsigned long" and test that. However, use of
+IS_ERR_VALUE() is error-prone and should be restricted to things which
+are inherently long-sized (stuff in pt_regs etc.). Instead, let's aim
+for changing to the standard kernel style
+
+  int foo = cpm_muram_alloc();
+  if (foo < 0)
+    deal_with_it()
+  some->where = foo;
+
+Changing the return type from unsigned long to s32 (aka signed int)
+doesn't change the value that gets stored into any of the callers'
+variables except if the caller was storing the result in a u64 _and_
+the allocation failed, so in itself this patch should be a no-op.
+
+Another problem with cpm_muram_alloc() is that it can certainly
+validly return 0 - and except if some cpm_muram_alloc_fixed() call
+interferes, the very first cpm_muram_alloc() call will return just
+that. But that shows that both ucc_slow_free() and ucc_fast_free() are
+buggy, since they assume that a value of 0 means "that field was never
+allocated". We'll later change cpm_muram_free() to accept (and ignore)
+a negative offset, so callers can use a sentinel of -1 instead of 0
+and just unconditionally call cpm_muram_free().
+
 Reviewed-by: Timur Tabi <timur@kernel.org>
-Acked-by: Timur Tabi <timur@kernel.org>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/tty/serial/ucc_uart.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/soc/fsl/qe/qe_common.c | 29 ++++++++++++++++-------------
+ include/soc/fsl/qe/qe.h        | 16 ++++++++--------
+ 2 files changed, 24 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
-index c055abf4c919..9436b93d5cfa 100644
---- a/drivers/tty/serial/ucc_uart.c
-+++ b/drivers/tty/serial/ucc_uart.c
-@@ -1392,6 +1392,13 @@ static int ucc_uart_probe(struct platform_device *ofdev)
- 	if (val)
- 		qe_port->port.uartclk = val;
- 	else {
-+		if (!IS_ENABLED(CONFIG_PPC32)) {
-+			dev_err(&ofdev->dev,
-+				"invalid brg-frequency in device tree\n");
-+			ret = -EINVAL;
-+			goto out_np;
-+		}
-+
- 		/*
- 		 * Older versions of U-Boot do not initialize the brg-frequency
- 		 * property, so in this case we assume the BRG frequency is
+diff --git a/drivers/soc/fsl/qe/qe_common.c b/drivers/soc/fsl/qe/qe_common.c
+index 83e85e61669f..84c90105e588 100644
+--- a/drivers/soc/fsl/qe/qe_common.c
++++ b/drivers/soc/fsl/qe/qe_common.c
+@@ -32,7 +32,7 @@ static phys_addr_t muram_pbase;
+ 
+ struct muram_block {
+ 	struct list_head head;
+-	unsigned long start;
++	s32 start;
+ 	int size;
+ };
+ 
+@@ -110,13 +110,14 @@ int cpm_muram_init(void)
+  * @algo: algorithm for alloc.
+  * @data: data for genalloc's algorithm.
+  *
+- * This function returns an offset into the muram area.
++ * This function returns a non-negative offset into the muram area, or
++ * a negative errno on failure.
+  */
+-static unsigned long cpm_muram_alloc_common(unsigned long size,
+-		genpool_algo_t algo, void *data)
++static s32 cpm_muram_alloc_common(unsigned long size,
++				  genpool_algo_t algo, void *data)
+ {
+ 	struct muram_block *entry;
+-	unsigned long start;
++	s32 start;
+ 
+ 	if (!muram_pool && cpm_muram_init())
+ 		goto out2;
+@@ -137,7 +138,7 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
+ out1:
+ 	gen_pool_free(muram_pool, start, size);
+ out2:
+-	return (unsigned long)-ENOMEM;
++	return -ENOMEM;
+ }
+ 
+ /*
+@@ -145,13 +146,14 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
+  * @size: number of bytes to allocate
+  * @align: requested alignment, in bytes
+  *
+- * This function returns an offset into the muram area.
++ * This function returns a non-negative offset into the muram area, or
++ * a negative errno on failure.
+  * Use cpm_dpram_addr() to get the virtual address of the area.
+  * Use cpm_muram_free() to free the allocation.
+  */
+-unsigned long cpm_muram_alloc(unsigned long size, unsigned long align)
++s32 cpm_muram_alloc(unsigned long size, unsigned long align)
+ {
+-	unsigned long start;
++	s32 start;
+ 	unsigned long flags;
+ 	struct genpool_data_align muram_pool_data;
+ 
+@@ -168,7 +170,7 @@ EXPORT_SYMBOL(cpm_muram_alloc);
+  * cpm_muram_free - free a chunk of multi-user ram
+  * @offset: The beginning of the chunk as returned by cpm_muram_alloc().
+  */
+-int cpm_muram_free(unsigned long offset)
++int cpm_muram_free(s32 offset)
+ {
+ 	unsigned long flags;
+ 	int size;
+@@ -194,13 +196,14 @@ EXPORT_SYMBOL(cpm_muram_free);
+  * cpm_muram_alloc_fixed - reserve a specific region of multi-user ram
+  * @offset: offset of allocation start address
+  * @size: number of bytes to allocate
+- * This function returns an offset into the muram area
++ * This function returns @offset if the area was available, a negative
++ * errno otherwise.
+  * Use cpm_dpram_addr() to get the virtual address of the area.
+  * Use cpm_muram_free() to free the allocation.
+  */
+-unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
++s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
+ {
+-	unsigned long start;
++	s32 start;
+ 	unsigned long flags;
+ 	struct genpool_data_fixed muram_pool_data_fixed;
+ 
+diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
+index 521fa3a177e0..f589ae3f1216 100644
+--- a/include/soc/fsl/qe/qe.h
++++ b/include/soc/fsl/qe/qe.h
+@@ -98,26 +98,26 @@ static inline void qe_reset(void) {}
+ int cpm_muram_init(void);
+ 
+ #if defined(CONFIG_CPM) || defined(CONFIG_QUICC_ENGINE)
+-unsigned long cpm_muram_alloc(unsigned long size, unsigned long align);
+-int cpm_muram_free(unsigned long offset);
+-unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
++s32 cpm_muram_alloc(unsigned long size, unsigned long align);
++int cpm_muram_free(s32 offset);
++s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
+ void __iomem *cpm_muram_addr(unsigned long offset);
+ unsigned long cpm_muram_offset(void __iomem *addr);
+ dma_addr_t cpm_muram_dma(void __iomem *addr);
+ #else
+-static inline unsigned long cpm_muram_alloc(unsigned long size,
+-					    unsigned long align)
++static inline s32 cpm_muram_alloc(unsigned long size,
++				  unsigned long align)
+ {
+ 	return -ENOSYS;
+ }
+ 
+-static inline int cpm_muram_free(unsigned long offset)
++static inline int cpm_muram_free(s32 offset)
+ {
+ 	return -ENOSYS;
+ }
+ 
+-static inline unsigned long cpm_muram_alloc_fixed(unsigned long offset,
+-						  unsigned long size)
++static inline s32 cpm_muram_alloc_fixed(unsigned long offset,
++					unsigned long size)
+ {
+ 	return -ENOSYS;
+ }
 -- 
 2.23.0
 
