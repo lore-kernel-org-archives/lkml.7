@@ -2,262 +2,103 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2857EC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E34AC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB1121774
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:45:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9Blg2Oe"
+	by mail.kernel.org (Postfix) with ESMTP id 2026A208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfK1OpR (ORCPT
+        id S1726881AbfK1OpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:45:17 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37740 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfK1OpR (ORCPT
+        Thu, 28 Nov 2019 09:45:22 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:32973 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfK1OpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:45:17 -0500
-Received: by mail-io1-f66.google.com with SMTP id k24so18568128ioc.4;
-        Thu, 28 Nov 2019 06:45:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jSx1W6k2m7YVIJkPLFSMsX2YfgHqtWK8uY9ek4Pmf8I=;
-        b=X9Blg2OerSCWalXdH509wRdbP/CxlX29WC6jK8xUmtAVF+flTKe3nDE/R80ExoNQg+
-         pS4agCBMfd3Vm+UgEKVFKB9UzmB64Bsi2v3m9ReIyiP+9/8/mrkkbp4dI8q4zs2gqk3A
-         PzkVqCS36Iewh8ElHtAMwIIxnoM+YEjOmV96rgZHvFHkgAHDpzVY74sv1EXZtVID6Gn1
-         qowx6YYdNALYN64bWll/BHYm8m1xSkp6B5G9QanY/Td1fGKoQ+sxva7n08LF8SAkTX3/
-         UxT3cY5ZQ5RFNcjPjjZKy2Qtq/mbWZwD+E+3T7L2qgSaz0at0Lv7znMnmtP+khCNHP0A
-         omkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jSx1W6k2m7YVIJkPLFSMsX2YfgHqtWK8uY9ek4Pmf8I=;
-        b=qaZaqLNpJ/dmsQaa1gxPurEXoKh/lnPyhQlKNqIH/LIbuuhdA9K/NmDBFxTDXmP2Im
-         bogvGcg2t0ZXXBy/NwDKDPjtGOv+8xrBCVgXggdEdRuk/wK0U7t5vThrv7Vpn3M+b3YF
-         6zwBXRF78FFju/6qNpLeEqWQ/z2BmY831mwS+HBYJIeifoONVoZ7gGEzC6D1W6aB/XtT
-         I+qIhIWXR/hwlh//71046wqcMeDituTdWY9u8fSlsT5g9XhZfWfTNOx+XgBy6kvwKxv8
-         AtzKLNuUKVzZg6TzKTTyMJxrWeuLdGa71zyfa44peSJ0s3xVqKAF2vJNuqitAK25AbZI
-         dgVg==
-X-Gm-Message-State: APjAAAWCcfU26RGLSXZK7mLfXEPT54YmBFyw+zfswVj1FRWoeGBcVkPg
-        N27HD8m4URqdIT1NM5VVoHpeLfETo1Pg+n4c228=
-X-Google-Smtp-Source: APXvYqzLCeJzhm0WCeJJ0618OO8UX+1l72IcYyuPZXCOKVkkwktb50xDTqNF45Yemd5l5HIoAr3ZFDwmyA/+m/fzT90=
-X-Received: by 2002:a6b:b511:: with SMTP id e17mr12363141iof.18.1574952316211;
- Thu, 28 Nov 2019 06:45:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127052935.1719897-1-anarsoul@gmail.com> <20191127052935.1719897-3-anarsoul@gmail.com>
- <20191127174434.wousbqosmm5vxcsu@gilmour.lan> <CA+E=qVe22T1uhUo6iq9a82Y9bC014CZSkAtSJJNX4qsn6dJL9w@mail.gmail.com>
- <20191128074325.q47rpzhufwog6mbb@gilmour.lan> <CAEExFWs7A4TcB-QcatfR3w1hUX88dC-Sxd=epQppwB7p2CC6SA@mail.gmail.com>
-In-Reply-To: <CAEExFWs7A4TcB-QcatfR3w1hUX88dC-Sxd=epQppwB7p2CC6SA@mail.gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Thu, 28 Nov 2019 22:45:04 +0800
-Message-ID: <CAEExFWu4MPxA+Vs1BNzCqeR5EkbVT2SjMf6hRBK6nZ2doJmduA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for
- sun8i-thermal driver bindings
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 28 Nov 2019 09:45:21 -0500
+Received: from orion.localdomain ([95.117.37.214]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MYvLi-1iN5TA1aOO-00UqEE; Thu, 28 Nov 2019 15:45:16 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH 1/7] drivers: clk: unexport clk_register_gpio_gate()
+Date:   Thu, 28 Nov 2019 15:44:44 +0100
+Message-Id: <20191128144450.24094-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:ytzHB8lP63sR7iFpMp/kXfj5bC7FsWtA/SOrauIwrX+Okt4XuPp
+ K35KQMKwjdqYlLN0YaVavNIi7frbhpRr+h7eCMM9a0rMhhOC1a3ecatgHO7DVT2M2e3CjxH
+ FwcvrFpRruy54yxjNgInYjsiOcQOAAevSlLsShKRrmMajMPxzLvGS4bUI3ltofv3f9pEGNQ
+ zKXshcr3iYR8KKHsB0a3g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xxU+PuowVDM=:1RF/mbqmtWkrcSnfqUxM2x
+ JtxeMPVJVaQi8ufo25KmM+atvFzNaBwOTY0nxdRrqxA+sXThswHgC1pXvtH7Q9DUvJ+SYfT9B
+ 87ORJxBLs3H7alfLPFzmvSZ5VwSaWhSA0ZLsXwTZ9eCg3BTXxmwtIcn2+lGmweMCGXtdLn13V
+ Z1ZKMD4O4yNzVjKlTkU5TfpYGdvSxRIYqawb76Zn1sVNE2pJqdGoFhnk/JdquLWWD4UnrhRut
+ lcSGhVCBSVw8xKL115O2wsj082xVoxAN5+RIbA8fCEdTODzikUX/ejhvzAFYjSk8ytoRrmd5v
+ BBI5Q9oHRfOgnJpmyrllQ/2q2/n8pJ9Ij8h8q8gI9yMXNajHHWsQlyak64vRVQrxO7/I1zMki
+ dtiZ7YE1+BHlzzPYWMNUzyYi34U0B0m2a8LD5zaUfWDk2JrN13vrRt6ozsEQkyGIWxIXycVBB
+ tyqYTWgx5qdJnWJx78w+NHQ5rut1X7pIgz2GIfK37UZ+aGS3jrMmBze2Y4dJTM8jcF7xOaA2p
+ SfnPEPU9jAV6Tcjgsa5PqJDTGpmIcORg/zva14szzFRRvuy+qakGNUp1rb4wB+psCGtCRIOyC
+ GISekHaP8YtvQ8ZjRzlRJ7WsA0yjMH4830YU4YTVHGt04ppWbsCm98+uYqkSa8XruG9aoVFBA
+ Dn5aL2sQpGD88i9EYsZ9dGaEMIHkUV8o3DVV1n96WLt3Elf6HNxqfx7X16XCtiNzorXfTihR9
+ 8yvgX8de6jp6knOMoHpU9fRAiyqyuvVN448n1TJx/k1CUtSiG0yVLd558eSXUbCoFyqaNW/dt
+ QJcqMKnYPby/f2Ac5Pv9MZOTgLAylJY0a1DS06k6c//hCx9vhnLvuzZrFlnBbfz1atIXGTArz
+ PIUREeFZVhxciEj+rNXA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-new file mode 100644
-index 000000000000..1be32f09fcc8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-@@ -0,0 +1,160 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner SUN8I Thermal Controller Device Tree Bindings
-+
-+maintainers:
-+  - Yangtao Li <tiny.windzz@gmail.com>
-+
-+description: |-
-+  This describes the device tree binding for the Allwinner thermal
-+  controller which measures the on-SoC temperatures.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun8i-a83t-ths
-+      - allwinner,sun8i-h3-ths
-+      - allwinner,sun8i-r40-ths
-+      - allwinner,sun50i-a64-ths
-+      - allwinner,sun50i-h5-ths
-+      - allwinner,sun50i-h6-ths
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: ths bus clock
-+      - description: ths mod clock
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: bus
-+      - const: mod
-+
-+  "#thermal-sensor-cells":
-+    enum: [ 0, 1 ]
-+
-+  nvmem-cells:
-+    description: ths calibrate data
-+
-+  nvmem-cell-names:
-+    const: calibration
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#thermal-sensor-cells"
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - allwinner,sun8i-h3-ths
-+              - allwinner,sun8i-r40-ths
-+              - allwinner,sun50i-a64-ths
-+              - allwinner,sun50i-h5-ths
-+              - allwinner,sun50i-h6-ths
-+
-+    then:
-+      properties:
-+        resets:
-+          minItems: 1
-+          maxItems: 1
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun50i-h6-ths
-+
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 1
-+          maxItems: 1
-+
-+        clock-names:
-+          minItems: 1
-+          maxItems: 1
-+
-+    else:
-+      if:
-+        properties:
-+          compatible:
-+            contains:
-+              enum:
-+                - allwinner,sun8i-h3-ths
-+                - allwinner,sun8i-r40-ths
-+                - allwinner,sun50i-a64-ths
-+                - allwinner,sun50i-h5-ths
-+
-+      then:
-+        properties:
-+          clocks:
-+            minItems: 2
-+            maxItems: 2
-+
-+          clock-names:
-+            minItems: 2
-+            maxItems: 2
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun8i-h3-ths
-+
-+    then:
-+      properties:
-+        "#thermal-sensor-cells":
-+          const: 0
-+
-+    else:
-+      properties:
-+        "#thermal-sensor-cells":
-+          const: 1
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    ths: ths@5070400 {
-+        compatible = "allwinner,sun50i-h6-ths";
-+        reg = <0x05070400 0x100>;
-+        clocks = <&ccu 89>;
-+        clock-names = "bus";
-+        resets = <&ccu 36>;
-+        interrupts = <0 15 4>;
-+        nvmem-cells = <&tsen_calib>;
-+        nvmem-cell-names = "calibration";
-+        #thermal-sensor-cells = <1>;
-+    };
-+
-+    sid: sid@3006000 {
-+        compatible = "allwinner,sun50i-h6-sid";
-+        reg = <0x03006000 0x400>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        tsen_calib: calib@14 {
-+                reg = <0x14 6>;
-+        };
-+    };
-+...
+The function clk_register_gpio_gate() doesn't seem to have any users
+outside clk-gpio.c, thus unexport and make it static.
 
-On Thu, Nov 28, 2019 at 10:35 PM Frank Lee <tiny.windzz@gmail.com> wrote:
->
-> Hi,
->
-> How about this?
->
-> Best regards,
-> Yangtao
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/clk/clk-gpio.c       | 3 +--
+ include/linux/clk-provider.h | 3 ---
+ 2 files changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
+index 9d930edd6516..f9f81a31984a 100644
+--- a/drivers/clk/clk-gpio.c
++++ b/drivers/clk/clk-gpio.c
+@@ -186,7 +186,7 @@ struct clk_hw *clk_hw_register_gpio_gate(struct device *dev, const char *name,
+ }
+ EXPORT_SYMBOL_GPL(clk_hw_register_gpio_gate);
+ 
+-struct clk *clk_register_gpio_gate(struct device *dev, const char *name,
++static struct clk *clk_register_gpio_gate(struct device *dev, const char *name,
+ 		const char *parent_name, struct gpio_desc *gpiod,
+ 		unsigned long flags)
+ {
+@@ -197,7 +197,6 @@ struct clk *clk_register_gpio_gate(struct device *dev, const char *name,
+ 		return ERR_CAST(hw);
+ 	return hw->clk;
+ }
+-EXPORT_SYMBOL_GPL(clk_register_gpio_gate);
+ 
+ /**
+  * clk_hw_register_gpio_mux - register a gpio clock mux with the clock framework
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 2fdfe8061363..d283f9896e86 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -773,9 +773,6 @@ struct clk_gpio {
+ #define to_clk_gpio(_hw) container_of(_hw, struct clk_gpio, hw)
+ 
+ extern const struct clk_ops clk_gpio_gate_ops;
+-struct clk *clk_register_gpio_gate(struct device *dev, const char *name,
+-		const char *parent_name, struct gpio_desc *gpiod,
+-		unsigned long flags);
+ struct clk_hw *clk_hw_register_gpio_gate(struct device *dev, const char *name,
+ 		const char *parent_name, struct gpio_desc *gpiod,
+ 		unsigned long flags);
+-- 
+2.11.0
+
