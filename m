@@ -2,184 +2,154 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F072C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FEEC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32A82053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2282053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574936457;
+	bh=J1+iNaRSXKUt7bMtf7Wi4WCO+LwToo+LiJe8WeiPmPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jbK5ycNnVJTLugaXEI9nTyDyVNosl2BQWG4zsvYXy5R/WRBQoN9D9H6hCVHZaZ1ui
+	 7uEfdmhn4fJnV5KiVwaGrzQp3hI9p78j/GFdltmEI4GP2zFim7ydhfZaIsgaHes7ej
+	 vYWjEmN4XfgoPjjiJuKhOQpuJVzbIvVnMeBfC+gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfK1KUo (ORCPT
+        id S1726700AbfK1KU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:20:44 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38354 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726133AbfK1KUn (ORCPT
+        Thu, 28 Nov 2019 05:20:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34230 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfK1KU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:20:43 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASAHYnT067053
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:20:41 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2whcy8t3d0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:20:41 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
-        Thu, 28 Nov 2019 10:20:39 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Nov 2019 10:20:36 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xASAKZFA66322460
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Nov 2019 10:20:35 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6525152054;
-        Thu, 28 Nov 2019 10:20:35 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.87.233])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6085952057;
-        Thu, 28 Nov 2019 10:20:32 +0000 (GMT)
-Subject: Re: [PATCH] f2fs: Fix direct IO handling
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Javier Gonzalez <javier@javigon.com>,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-References: <20191126075719.1046485-1-damien.lemoal@wdc.com>
- <20191126083443.F1FD5A405B@b06wcsmtp001.portsmouth.uk.ibm.com>
- <BYAPR04MB5816C82F708612381216895BE7470@BYAPR04MB5816.namprd04.prod.outlook.com>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Thu, 28 Nov 2019 15:50:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 28 Nov 2019 05:20:56 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t2so30359639wrr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 02:20:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=caWmBHqOFCXoHvzB9Rg0Yov3N8s7t2SawQxPVgzqSw4=;
+        b=dCYQR2n44rq+7GWeL5Lgy7OmheUIf5XwE1+PFdVyCrsbnfPhLTrVBfN4pdpzsw8O/S
+         yv7sgl8CBCwiRYjZV8XJbik2idGU7y9fraEfU3U/9YS4rCp5WcBWieHRu0yK+sy64VUy
+         tjVH1fTv8H8DqVauPID3lOHN+AF0mrCypt1Zm9hGXr9ViFAEU0mDI7DiWNrhUkzwud0z
+         m/WhbFHURFWiXmwiXLYk8V8JQc8a4FK9JEWcgRxYWNyJlQ3VXfkQriIAPl76ru+d+hHD
+         OijLzNnGig5I5gNY+zSBdKiDbhQgQm8QyJqW19l9qgm+VIoEJCF0IfOKgzSBLnLcu+lE
+         /xSw==
+X-Gm-Message-State: APjAAAXeCFlkkR4xkyEudm2LR46R2iS6iQS2YN9u+VU7o/5cxJywdro7
+        cPw9LDSHYKQjEHVYS7ypR1w=
+X-Google-Smtp-Source: APXvYqwGRZRnVs75F0orSXv2n5n1SyiQDtgNO1It2H0+sjNBdyZzegh5FzGkWXuN2ViBfGB8/E225g==
+X-Received: by 2002:a5d:6886:: with SMTP id h6mr29500317wru.154.1574936452924;
+        Thu, 28 Nov 2019 02:20:52 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z6sm9672837wrw.36.2019.11.28.02.20.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 02:20:52 -0800 (PST)
+Date:   Thu, 28 Nov 2019 11:20:51 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v1] drivers/base/node.c: get rid of get_nid_for_pfn()
+Message-ID: <20191128102051.GI26807@dhcp22.suse.cz>
+References: <20191127174126.28064-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR04MB5816C82F708612381216895BE7470@BYAPR04MB5816.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19112810-4275-0000-0000-0000038770F9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112810-4276-0000-0000-0000389B0254
-Message-Id: <20191128102033.6085952057@d06av21.portsmouth.uk.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_01:2019-11-28,2019-11-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- spamscore=0 mlxlogscore=999 impostorscore=0 malwarescore=0 adultscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911280089
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127174126.28064-1-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/28/19 7:40 AM, Damien Le Moal wrote:
-> On 2019/11/26 17:34, Ritesh Harjani wrote:
->> Hello Damien,
->>
->> IIUC, you are trying to fix a stale data read by DIO read for the case
->> you explained in your patch w.r.t. DIO-write forced to write as buffIO.
->>
->> Coincidentally I was just looking at the same code path just now.
->> So I do have a query to you/f2fs group. Below could be silly one, as I
->> don't understand F2FS in great detail.
->>
->> How is the stale data by DIO read, is protected against a mmap
->> writes via f2fs_vm_page_mkwrite?
->>
->> f2fs_vm_page_mkwrite()		 f2fs_direct_IO (read)
->> 					filemap_write_and_wait_range()
->> 	-> f2fs_get_blocks()				
->> 					 -> submit_bio()
->>
->> 	-> set_page_dirty()
->>
->> Is above race possible with current f2fs code?
->> i.e. f2fs_direct_IO could read the stale data from the blocks
->> which were allocated due to mmap fault?
+On Wed 27-11-19 18:41:26, David Hildenbrand wrote:
+> Since commit d84f2f5a7552 ("drivers/base/node.c: simplify
+> unregister_memory_block_under_nodes()") we only have a single user of
+> get_nid_for_pfn(). Let's just inline that code and get rid of
+> get_nid_for_pfn().
 > 
-> The faulted page is locked until the fault is fully processed so direct
-> IO has to wait for that to complete first.
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-How about below parallelism?
+I am not really sure this is an improvement. The code is ugly as hell
+and open coding it just makes register_mem_sect_under_node harder to
+read.
 
-  f2fs_vm_page_mkwrite()		 f2fs_direct_IO (read)
-  					filemap_write_and_wait_range()
-	-> down_read(->i_mmap_sem);
-	-> lock_page()
-	-> f2fs_get_blocks()				
-  					 -> submit_bio()
+If anything get_nid_for_pfn deserves a comment why
+CONFIG_DEFERRED_STRUCT_PAGE_INIT calls for special case as
+early_pfn_to_nid is not bound to that config (it is defined when
+CONFIG_HAVE_ARCH_EARLY_PFN_TO_NID || CONFIG_HAVE_MEMBLOCK_NODE_MAP
 
-  	-> set_page_dirty()
-
-Can above DIO read not expose the stale data from block which was
-allocated in f2fs_vm_page_mkwrite path?
-
-
+> ---
+>  drivers/base/node.c | 23 +++++++----------------
+>  1 file changed, 7 insertions(+), 16 deletions(-)
 > 
->>
->> Am I missing something here?
->>
->> -ritesh
->>
->> On 11/26/19 1:27 PM, Damien Le Moal wrote:
->>> f2fs_preallocate_blocks() identifies direct IOs using the IOCB_DIRECT
->>> flag for a kiocb structure. However, the file system direct IO handler
->>> function f2fs_direct_IO() may have decided that a direct IO has to be
->>> exececuted as a buffered IO using the function f2fs_force_buffered_io().
->>> This is the case for instance for volumes including zoned block device
->>> and for unaligned write IOs with LFS mode enabled.
->>>
->>> These 2 different methods of identifying direct IOs can result in
->>> inconsistencies generating stale data access for direct reads after a
->>> direct IO write that is treated as a buffered write. Fix this
->>> inconsistency by combining the IOCB_DIRECT flag test with the result
->>> of f2fs_force_buffered_io().
->>>
->>> Reported-by: Javier Gonzalez <javier@javigon.com>
->>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
->>> ---
->>>    fs/f2fs/data.c | 4 +++-
->>>    1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->>> index 5755e897a5f0..8ac2d3b70022 100644
->>> --- a/fs/f2fs/data.c
->>> +++ b/fs/f2fs/data.c
->>> @@ -1073,6 +1073,8 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
->>>    	int flag;
->>>    	int err = 0;
->>>    	bool direct_io = iocb->ki_flags & IOCB_DIRECT;
->>> +	bool do_direct_io = direct_io &&
->>> +		!f2fs_force_buffered_io(inode, iocb, from);
->>>    
->>>    	/* convert inline data for Direct I/O*/
->>>    	if (direct_io) {
->>> @@ -1081,7 +1083,7 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
->>>    			return err;
->>>    	}
->>>    
->>> -	if (direct_io && allow_outplace_dio(inode, iocb, from))
->>> +	if (do_direct_io && allow_outplace_dio(inode, iocb, from))
->>>    		return 0;
->>>    
->>>    	if (is_inode_flag_set(inode, FI_NO_PREALLOC))
->>>
->>
->>
-> 
-> 
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index 98a31bafc8a2..735073fd2926 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -744,17 +744,6 @@ int unregister_cpu_under_node(unsigned int cpu, unsigned int nid)
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG_SPARSE
+> -static int __ref get_nid_for_pfn(unsigned long pfn)
+> -{
+> -	if (!pfn_valid_within(pfn))
+> -		return -1;
+> -#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+> -	if (system_state < SYSTEM_RUNNING)
+> -		return early_pfn_to_nid(pfn);
+> -#endif
+> -	return pfn_to_nid(pfn);
+> -}
+> -
+>  /* register memory section under specified node if it spans that node */
+>  static int register_mem_sect_under_node(struct memory_block *mem_blk,
+>  					 void *arg)
+> @@ -766,8 +755,6 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
+>  	unsigned long pfn;
+>  
+>  	for (pfn = start_pfn; pfn <= end_pfn; pfn++) {
+> -		int page_nid;
+> -
+>  		/*
+>  		 * memory block could have several absent sections from start.
+>  		 * skip pfn range from absent section
+> @@ -784,11 +771,15 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
+>  		 * block belong to the same node.
+>  		 */
+>  		if (system_state == SYSTEM_BOOTING) {
+> -			page_nid = get_nid_for_pfn(pfn);
+> -			if (page_nid < 0)
+> +			if (!pfn_valid_within(pfn))
+>  				continue;
+> -			if (page_nid != nid)
+> +#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+> +			if (early_pfn_to_nid(pfn) != nid)
+>  				continue;
+> +#else
+> +			if (pfn_to_nid(pfn) != nid)
+> +				continue;
+> +#endif
+>  		}
+>  
+>  		/*
+> -- 
+> 2.21.0
 
+-- 
+Michal Hocko
+SUSE Labs
