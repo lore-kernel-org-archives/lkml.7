@@ -2,113 +2,69 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E44C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 19:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1761EC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 19:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8AAA20880
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 19:19:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F8QNZvQZ"
+	by mail.kernel.org (Postfix) with ESMTP id DD8BC21775
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 19:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574968816;
+	bh=G58HprIePJ6qbY+OHsZVZgBg2KquNToguUNtXSRHJLo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=zLrC5xsshWNbm0XKh/rOGSSr+X7H/y+xccU9UMs37PbEnGvXGTkoF4UmiEV1tjqdO
+	 PafdgASuW67oHgpk1vBm+hdVdzOspZxhTBW4wzWnn5IsJNDrtr8Kt0stUn+ab+MCEG
+	 mw3I8ow0cy3P0/VZB92CsJ8TDN/1wAGSL3ykdPt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfK1TT1 (ORCPT
+        id S1726749AbfK1TUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 14:19:27 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35188 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfK1TT1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 14:19:27 -0500
-Received: by mail-oi1-f194.google.com with SMTP id k196so7747968oib.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 11:19:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Sa7Qo9GWk7jIcVb/UqPiStHbvEoHinr+Eez2kcCOf1c=;
-        b=F8QNZvQZFDC4R29kvG1rBgKm1kpx6PZbsIqFU0WaDGkxK0KPMas53EVmUrCxZEWKu+
-         TyLjB1Ji+sFJdqf10OEg/Jozf5L3+00M4S1V7iG1JEs3oz9wCN28WolNCGBvlMTdIfFE
-         bCJSycpiYuwAopQg9Lp7fG1kSZUha7EtNo2xhBUGQxHctbro13ju+XhNyk2oV0lydZPA
-         7tAjfzfqTCfQ8IlhZZ5l5iKkHtTTOt3RdXbCxk14A3d3bohxQt8+j1GpA3cJOQ0/5B1z
-         fRu4mh07clHKxnURShciN+a3Sjz8/CkJmxPsT2gWtE03/BSgjSI3V1fToG8TUdB/kN8q
-         mkWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sa7Qo9GWk7jIcVb/UqPiStHbvEoHinr+Eez2kcCOf1c=;
-        b=c7O5Bb+3Fp5XpFYhogBbzu18YFXaJWo2hjfOWVDONM+Iqiefrtcv6nRNy/FuEeDagV
-         NBYTAd31DXJIk0oAzPhXHFJoxsCT8iSDKkQ+6NVaSbUj51MoHGeWYoxamOQu/7GCg3Op
-         Ax+SwfQ+N/ZbxB/mFlMSqAkvAJcTrao9vljV3ZniXGHn9chZgYc43r5TVQvTdC32XVJf
-         yVNH4ji9gyUrd0UVDFBqIVh+2lMtcAZCzExoVze8mKTdhjvn83RDjt8fAA61Ki7nVdyh
-         JBhc6qr2dBXQT1wWSLIkuVKYrsQjay2xwySkVVV/cOpe5YbzOC3Ogzc11juFauDbYYxC
-         grew==
-X-Gm-Message-State: APjAAAV54fhYJwTAl7Ya5C1GLsUcWQ/XS9NM0T+XQq/j7/vV2m8eBF7U
-        ElJ8q2ipeudx65eMIxf+YZiYYKIwydYwk9iwZe28Cw==
-X-Google-Smtp-Source: APXvYqzumrng90jkIfbBLU7fDZd/qU3JI2V43WqgFg86Aeyg+t0BewnS9HPGkbBeXtjVOMeJs9BXjig5wfJCdgaE2LI=
-X-Received: by 2002:aca:ccd1:: with SMTP id c200mr9810023oig.157.1574968766126;
- Thu, 28 Nov 2019 11:19:26 -0800 (PST)
-MIME-Version: 1.0
-References: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
- <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
- <1d3a458a-fa79-5e33-b5ce-b473122f6d1a@kernel.dk> <CAG48ez2VBS4bVJqdCU9cUhYePYCiUURvXZWneBx2KGkg3L9d4g@mail.gmail.com>
- <f4144a96-58ef-fba7-79f0-e5178147b6bb@rasmusvillemoes.dk> <CAG48ez1v5EmuSvn+LY8od_ZMt1QVdUWqi9DWLSp0CgMxkL=sNg@mail.gmail.com>
-In-Reply-To: <CAG48ez1v5EmuSvn+LY8od_ZMt1QVdUWqi9DWLSp0CgMxkL=sNg@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 28 Nov 2019 20:18:55 +0100
-Message-ID: <CAG48ez1FK6h4tEv=cGGtm84NXDkeiMV+woFmqQYPbcsOZjKxZw@mail.gmail.com>
-Subject: Re: [PATCH RFC] signalfd: add support for SFD_TASK
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Jens Axboe <axboe@kernel.dk>, io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 28 Nov 2019 14:20:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726520AbfK1TUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 14:20:15 -0500
+Subject: Re: [GIT PULL] generic ioremap for 5.5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574968815;
+        bh=G58HprIePJ6qbY+OHsZVZgBg2KquNToguUNtXSRHJLo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=saTkmyL8AaaF6ya38BNFEko4VLzyro3RRGO5eOHLLkmMlbmJpBPZtObVUbVnoy4jG
+         j/xkb/2d3jd525W3z2wKnWm/zXQOFOuLNC3QC8DmKPa/USwQufeni2sJAHq843779j
+         MtdCnVGNeV1Mk5HauujwPqtbipzPKr13F2NIISsM=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191125192758.GA13913@infradead.org>
+References: <20191125192758.GA13913@infradead.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191125192758.GA13913@infradead.org>
+X-PR-Tracked-Remote: git://git.infradead.org/users/hch/ioremap.git
+ tags/ioremap-5.5
+X-PR-Tracked-Commit-Id: eafee59440623e06b0ce4a0e49f814a8cf31d8ca
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a308a7102215a582fc474375648965bc5692894b
+Message-Id: <157496881508.25622.2949823818676822496.pr-tracker-bot@kernel.org>
+Date:   Thu, 28 Nov 2019 19:20:15 +0000
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 11:07 AM Jann Horn <jannh@google.com> wrote:
-> On Thu, Nov 28, 2019 at 10:02 AM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
-> > On 28/11/2019 00.27, Jann Horn wrote:
-> >
-> > > One more thing, though: We'll have to figure out some way to
-> > > invalidate the fd when the target goes through execve(), in particular
-> > > if it's a setuid execution. Otherwise we'll be able to just steal
-> > > signals that were intended for the other task, that's probably not
-> > > good.
-> > >
-> > > So we should:
-> > >  a) prevent using ->wait() on an old signalfd once the task has gone
-> > > through execve()
-> > >  b) kick off all existing waiters
-> > >  c) most importantly, prevent ->read() on an old signalfd once the
-> > > task has gone through execve()
-> > >
-> > > We probably want to avoid using the cred_guard_mutex here, since it is
-> > > quite broad and has some deadlocking issues; it might make sense to
-> > > put the update of ->self_exec_id in fs/exec.c under something like the
-> > > siglock,
-> >
-> > What prevents one from exec'ing a trivial helper 2^32-1 times before
-> > exec'ing into the victim binary?
->
-> Uh, yeah... that thing should probably become 64 bits wide, too.
+The pull request you sent on Mon, 25 Nov 2019 20:27:58 +0100:
 
-Actually, that'd still be wrong even with the existing kernel code for
-two reasons:
+> git://git.infradead.org/users/hch/ioremap.git tags/ioremap-5.5
 
- - if you reparent to a subreaper, the existing exec_id comparison breaks
- - the new check here is going to break if a non-leader thread goes
-through execve(), because of the weird magic where the thread going
-through execve steals the thread id (PID) of the leader
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a308a7102215a582fc474375648965bc5692894b
 
-I'm gone for the day, but will try to dust off the years-old patch for
-this that I have lying around somewhere tomorrow. I should probably
-send it through akpm's tree with cc stable, given that this is already
-kinda broken in existing releases...
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
