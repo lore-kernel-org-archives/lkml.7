@@ -2,110 +2,148 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86C9C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6476C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A99B206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9FD20880
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:48:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y8Ea/smQ"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="obgBs6BW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfK1Wrc (ORCPT
+        id S1726712AbfK1Wsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 17:47:32 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43306 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfK1Wrc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 17:47:32 -0500
-Received: by mail-ot1-f68.google.com with SMTP id l14so23313361oti.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 14:47:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CUk7v7UPe6VTRCevALfgnUC9KL2cGJpFHn8mL3idLe0=;
-        b=Y8Ea/smQHjouC6SBRXFZkjwTn2tarmmechSnFeym66dooOOnkxhT2nHCmkSARtdQUe
-         ZXdW78yhSFGWQa9ZEKD+TSdGevk4bhR+ccadD5qPzyAVHBSeBpKWvJNNtVxHxWYdKSlw
-         tsLHHiQ1/WZPQ7fJQVfpJxtzU5skIztwBNzX5XZeRT1BCWYgL3D14cJyuo171iKI4apV
-         7E/2u7t3FvJMNVr/zLBD1kmeCWN/E3GUMZmzjsEZ0yKeEv5iUJpSKP1JivJYGprcKcsb
-         cVpqaAEL62COc9FyK1lg2vZAtfyTW3MfKZ4yqB7r/BorGWp6TDqqVlQRslci132N+iyF
-         Zafw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CUk7v7UPe6VTRCevALfgnUC9KL2cGJpFHn8mL3idLe0=;
-        b=IwumMKBE+XuMzloUrImKo3O0euYLOv12OJfyFYxuYP8ODGksOPBI8V5u0Ac2JPeheQ
-         AfOBQFDAXpLKJo5xNhQk9pvqUNqAHo8CRIY45eaSBBQBM5sHSAOy+aoZCv4N+80nj2nQ
-         FQ9YA7N4CXT07afwHtxtW8irZHJteWQ33aHf8tOwk3Yha+uTvDIA+TBIScLGByWPysCS
-         f/KwAKpo4JJ5gUyaGAG1LPTECiHUprrz4UzpmJIfdK6p8GiX2h/nM+Frzf1cu7Ghlgim
-         L2OThsezttkQidC6KFdNGdyqZP4pCH/cRqrZzIm/QlDqiXusio2CzhK/VB4oRsZhsDmK
-         5q5w==
-X-Gm-Message-State: APjAAAVOWJVZDRsbXB4ZbSsxn98TCbRk2pTjb9wkt2ifkYjauINtLiMh
-        xpUZb70Qq+EPS9J5uuEtZg96fsUgkeeC1hDmjTjFIw==
-X-Google-Smtp-Source: APXvYqwtrGRoVpfoYUQbpfscgR1YvjNIoEJwTjGpNh374JxCwGJYz8mI0UDKMJGK2aEAi5yUqMGk7HFD34Er13qtUfQ=
-X-Received: by 2002:a9d:4801:: with SMTP id c1mr8740496otf.32.1574981248999;
- Thu, 28 Nov 2019 14:47:28 -0800 (PST)
+        Thu, 28 Nov 2019 17:48:37 -0500
+Received: from cmta20.telus.net ([209.171.16.93]:58906 "EHLO cmta20.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbfK1Wsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 17:48:37 -0500
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id aSaKiIsVnN5I9aSaLiqyaf; Thu, 28 Nov 2019 15:48:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1574981315; bh=CPFK3woqfG6ZOimrL1hyYBRtHBi0+2WkWsR2eHMBihE=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=obgBs6BWp7aVFKj+IDbPc4DbdD6QYY5DDjRyWx21zRHHYN1AolGuUV42JFQASN6p6
+         87g2EkjmH/4gVEPYwBYqW2yceFZ2fNOzr1o0d4lOtvTcogeClfhOUVx4ZfHe/1X6SO
+         kugz9rVgeI/CqX8+5nyY/HBTX1/GYDO92FHUgH95fm/8lN1CaFcoyBr25Uk1/HT6Dw
+         rpsBqnsMC+lMtKHyLirTyFkEH1pgat/Wbvd+A9nOiOLv76TbQPK1G9JV1lbhY6ilCK
+         qrsv8lYLgSK63HPh7tsA9hdOTg0TQZyTHi8hsNxYvC7zMWqUrqXVY7N0JUIHsmzN+V
+         pQXdSzWYRS3pg==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=siDWz7SyTkNVcnO4k2gA:9 a=QEXdDO2ut3YA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
+Cc:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "'Mel Gorman'" <mgorman@techsingularity.net>,
+        "'Matt Fleming'" <matt@codeblueprint.co.uk>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Juri Lelli'" <juri.lelli@redhat.com>,
+        "'Paul Turner'" <pjt@google.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
+        "'Quentin Perret'" <qperret@qperret.net>,
+        "'Dietmar Eggemann'" <dietmar.eggemann@arm.com>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Borislav Petkov'" <bp@suse.de>, "'Len Brown'" <lenb@kernel.org>,
+        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
+References: <20191113124654.18122-1-ggherdovich@suse.cz>                 <20191113124654.18122-2-ggherdovich@suse.cz>                 <000001d5a29b$c944fd70$5bcef850$@net> <1574697961.16378.5.camel@suse.cz>         <000801d5a41e$a7fce2c0$f7f6a840$@net> <1574781600.7677.2.camel@suse.cz> <001d01d5a4f4$d96b21b0$8c416510$@net>
+In-Reply-To: <001d01d5a4f4$d96b21b0$8c416510$@net>
+Subject: RE: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
+Date:   Thu, 28 Nov 2019 14:48:27 -0800
+Message-ID: <003d01d5a63d$f6ab3950$e401abf0$@net>
 MIME-Version: 1.0
-References: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
- <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
- <1d3a458a-fa79-5e33-b5ce-b473122f6d1a@kernel.dk> <CAG48ez2VBS4bVJqdCU9cUhYePYCiUURvXZWneBx2KGkg3L9d4g@mail.gmail.com>
- <f4144a96-58ef-fba7-79f0-e5178147b6bb@rasmusvillemoes.dk> <CAG48ez1v5EmuSvn+LY8od_ZMt1QVdUWqi9DWLSp0CgMxkL=sNg@mail.gmail.com>
- <CAG48ez1FK6h4tEv=cGGtm84NXDkeiMV+woFmqQYPbcsOZjKxZw@mail.gmail.com>
-In-Reply-To: <CAG48ez1FK6h4tEv=cGGtm84NXDkeiMV+woFmqQYPbcsOZjKxZw@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 28 Nov 2019 23:46:59 +0100
-Message-ID: <CAG48ez11PjWtaFrPqtU6yPKsm0_0Sb3Te-8bvVQLEozDzx7cFw@mail.gmail.com>
-Subject: Re: [PATCH RFC] signalfd: add support for SFD_TASK
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Jens Axboe <axboe@kernel.dk>, io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdWkbC8LB/SpP9sCRCWbwO3FO+l3UwAhVS2wAEbrT1A=
+X-CMAE-Envelope: MS4wfOtRsfbZnTQ5Z2TeTXge1GkRx76NgDeB6Idj4Im7L8yxQYgF202u0DBMVSNoWZSRA184sTQcvdhfQTMZRqjm83yLiNYr7mi+r5B71b7H5gKcDmwyhPKz
+ YPpQGfo857MCu3WE+JalTWJ4pBObDzwNn/l12OWiQq9g3e7YROVQ9J9Q42vIJ0ETSG/z5Zp8i6FXpJUTcv287q4WIBzxoNm5KQWagwLCTT3Yb8acVnu5rXs4
+ fKQ1xFAFzXsewHb0L0G+y7FxkxzQq50q8YvEnOLhAIB8hI8B0xJg+YEKmKoYIfsGV6Vi003OVWNYcJOQitKBpbUYvgtPEFpFofN1TanLtiWvvmgRCVas3S6x
+ UTpOMF5GCtEcIY9lrf/Fee4UBQDaJ6KhGqWkRcQJW+MeKngOvGNbds2W2PehqUfeajE4lrUNzDHX9s1BRFHUJpFdp01XDw7Voujxx6jmz3iMwZe1zaL18nj1
+ Wri7NoVppwX5iJCltMdaaR7ATanz7Bhve2vI6keDBkC1pthBVMm3Zp2ZyIdWeSDmuD22EYWA8mI0JFykWIBa8AfFbxs3gNhQ601CQDPgFOQ10DSB+/+rt8HY
+ TwyjYpmGimfhRPkf2Wgeo1pUeNJ5qTT0eiLj0VBaDmp7NWDmxKMwhbyiI3LjmXWvFWN9/+N4B1wkyvtib4ayVW2FEJpDl/8tpUqsI02mBNBNJnKSnrc0EXlt
+ EIeiSs8c8tnKcfqvXIA4LFGNlzdBJAN7268FmshEVm0EEhi/H9S7vQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 8:18 PM Jann Horn <jannh@google.com> wrote:
-> On Thu, Nov 28, 2019 at 11:07 AM Jann Horn <jannh@google.com> wrote:
-> > On Thu, Nov 28, 2019 at 10:02 AM Rasmus Villemoes
-> > <linux@rasmusvillemoes.dk> wrote:
-> > > On 28/11/2019 00.27, Jann Horn wrote:
-> > >
-> > > > One more thing, though: We'll have to figure out some way to
-> > > > invalidate the fd when the target goes through execve(), in particular
-> > > > if it's a setuid execution. Otherwise we'll be able to just steal
-> > > > signals that were intended for the other task, that's probably not
-> > > > good.
-> > > >
-> > > > So we should:
-> > > >  a) prevent using ->wait() on an old signalfd once the task has gone
-> > > > through execve()
-> > > >  b) kick off all existing waiters
-> > > >  c) most importantly, prevent ->read() on an old signalfd once the
-> > > > task has gone through execve()
-> > > >
-> > > > We probably want to avoid using the cred_guard_mutex here, since it is
-> > > > quite broad and has some deadlocking issues; it might make sense to
-> > > > put the update of ->self_exec_id in fs/exec.c under something like the
-> > > > siglock,
-> > >
-> > > What prevents one from exec'ing a trivial helper 2^32-1 times before
-> > > exec'ing into the victim binary?
-> >
-> > Uh, yeah... that thing should probably become 64 bits wide, too.
->
-> Actually, that'd still be wrong even with the existing kernel code for
-> two reasons:
->
->  - if you reparent to a subreaper, the existing exec_id comparison breaks
+Summary: There never was an issue here.
 
-... actually, I was wrong about this, this case is fine because the
-->exit_signal is reset in reparent_leader().
+Sorry for the noise of this thread, and the resulting waste of time.
+
+On 2019.11.26 23:33 Doug Smythies wrote:
+> On 2019.11.26 07:20 Giovanni Gherdovich wrote:
+>> On Mon, 2019-11-25 at 21:59 -0800, Doug Smythies wrote:
+>>> [...]
+>>> The issue with the schedutil governor not working properly in the 5.4 RC series
+>>> appears to be hardware dependant.
+
+No it 's not.
+
+Issues with my Sandy Bridge, i7-2600K, test computer and kernel 5.4
+seem to be because it is running an older Ubuntu server version,
+apparently somewhat dependant on cgroup V1 and their cgmanager package.
+I am unable to remove the package to test further because I do use VMs
+that seem to depend on it.
+
+In the kernel configuration when CONFIG_UCLAMP_TASK_GROUP=y
+the computer behaves as though the new parameter "cpu.uclamp.min"
+is set to max rather than 0, but I can not prove it.
+
+>>> My test computer is Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz., Sandy Bridge.
+>>> On a temporary basis, I acquired a computer with an
+>>> Intel(R) Core(TM) i5-4460 CPU @ 3.20GHz, Haswell,
+>>> and schedutil governor behaviour with the exact same kernels is fine:
+
+I failed to mention that was brand new Ubuntu server 20.04 development version
+installation, which turns out to have been an important omission.
+
+>>> 
+>>> That "gitsource" test, "make test" 6 times, first run thrown out:
+>>> 
+>>> Kernel 5.4 intel_cpufreq/schedutil: 3411.8 seconds
+>>> Kernel 5.4 + gg 6 intel_cpufreq/schedutil: 1696.7 seconds
+>>> Ratio: 0.49
+>>> Recall you got a ratio of 0.49 with 5th generation, Broadwell.
+
+I took the disk from the Haswell computer and put it in the Sandy Bridge
+computer, and then everything was fine:
+
+Kernel 5.4 intel_cpufreq/schedutil: 3636 seconds
+Kernel 5.4 + gg 6 intel_cpufreq/schedutil: 2427.6 seconds
+Ratio: 0.67 which is consistent with previous Sandy Bridge results
+
+...
+
+Those above kernels included:
+
+CONFIG_UCLAMP_TASK_GROUP=y
+
+Which cause my older Ubuntu server edition using the 
+intel_cpufreq/schedutil to respond much like the performance
+governor, as reported the other day and above.
+
+I also booted the Sandy Bridge computer, with its original disk,
+with the kernel command line containing:
+
+cgroup_no_v1=all
+
+and, while it complained during boot, it did work as expected
+using the intel_cpufreq/schedutil driver/governor.
+
+... Doug
+
+
