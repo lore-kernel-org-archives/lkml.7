@@ -2,235 +2,170 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_QP_LONG_LINE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C595C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98BDC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B1AD206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC9AC2071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:49:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fpond.eu header.i=@fpond.eu header.b="kTHmdPrt"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="MnoCuKgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfK1DrJ (ORCPT
+        id S1727498AbfK1Ds7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 22:47:09 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.101]:32521 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbfK1DrI (ORCPT
+        Wed, 27 Nov 2019 22:48:59 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39498 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfK1Ds7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 22:47:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574912825;
-        s=strato-dkim-0002; d=fpond.eu;
-        h=Subject:References:In-Reply-To:Message-ID:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=YdruPdKAoK6txPA5JOxDAj/vTUfByn2ONRopUgEmExs=;
-        b=kTHmdPrtWh/7DTav16iKTsrWvF4XqHRxyD6DUumHVdUHwfW1VSA5/+MbeHjoqFns25
-        Iz1h1OtWNIMItVSrlEbi7ll5Amx7IZ/6WF2sC0zACKTEdwza740luxdAarqL16QcwyiF
-        nVDcPwTT+v2ds2lZ2Bbi8B4Sz+FiSJSHTLlvR19qEb9Txm73LUvH5KJDDPdHXLFt+hDp
-        xRvZX2REFsSYu6dYwH4xGKiofS3Lhs9WllrCEUeIeE2AdeWMQLvPPForB4420+vbjJxo
-        MpRcplKL3+ZJqJhALIxXlpx1We+w05zq09SQeoeM+FUMtlKtkVzQpEoN9B7hZa1WLnEo
-        256w==
-X-RZG-AUTH: ":OWANVUa4dPFUgKR/3dpvnYP0Np73amq+g13rqGzmt2bYDnKIKaws6YXTsc4="
-X-RZG-CLASS-ID: mo00
-Received: from oxapp04-01.back.ox.d0m.de
-        by smtp-ox.front (RZmta 46.0.0 AUTH)
-        with ESMTPSA id 604beevAS3f32J3
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 28 Nov 2019 04:41:03 +0100 (CET)
-Date:   Thu, 28 Nov 2019 04:41:02 +0100 (CET)
-From:   Ulrich Hecht <uli@fpond.eu>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org
-Message-ID: <761320534.1467709.1574912462950@webmail.strato.com>
-In-Reply-To: <20191127084253.16356-7-geert+renesas@glider.be>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-7-geert+renesas@glider.be>
-Subject: Re: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater
- documentation
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev22
-X-Originating-IP: 112.198.74.215
-X-Originating-Client: open-xchange-appsuite
+        Wed, 27 Nov 2019 22:48:59 -0500
+Received: by mail-pj1-f65.google.com with SMTP id v93so7965813pjb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 19:48:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=yv4lzaz/lJ+UAu0LhgGWX8+y+KBGfeSxnjpBF0v9wfw=;
+        b=MnoCuKgb7WTxxIhTf4H+faWz2M7maNA11WFAus47nFLD/Yv8Kr9B2HnVfFBtIX1taR
+         skamCl7z2aynaCRlOK7sH1c0JnVR0oNI6PmKASzXX3OQvh7fUteyV1lzUmdDJPFrmlgb
+         m37nvyOO+3lJyOfhAEdbRDTwcPdORbFegfMLWSpUopZdXbbaYJ154EowUZnRRdApk4I5
+         hJHj7CG/slexlYJCqxSyfWefzyRSGIjhxFSTfEL1aacmOyvCFmFz41ZX2wKoP3zh5qwP
+         K8J3llpNq6Wew03q8hr0PRa1oQwIeu90MrI09g6iwvJRyurbVzjdXKbejGUkWYcqOfAj
+         KoDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=yv4lzaz/lJ+UAu0LhgGWX8+y+KBGfeSxnjpBF0v9wfw=;
+        b=URdxIoebawI8Dl6LiCaverLoSzLBzGfqd0LyqsAe5/sJwaF3zENoFtNpD43wEqWH9m
+         0Bxf8sFeRk3pJNT0y3E4PgDsnMb9dqtdmehA/AUyWQAQbnbryH9sJlcjwJeSmykf7S6X
+         reRnExeZrBsAGH7v/3K1egVl9aV2IsoLO7XMdiA1arHojbGx2PhIGSRIj6BeZ5sCj8zz
+         XDVWdESkZ0oD41cHIm0G4JCLLnhb7NDVRQ+e0872ZMhd0Y/Ii9kPzYIjTX/yjM3VO9s1
+         aIzowXbtd4x1f5VIv5NrLdeK4VOn74oHec/1ND606bR675GnTF8fcDxf3uuzuloe6+Au
+         XExA==
+X-Gm-Message-State: APjAAAX11APqLBfWPI1gGDKAiEEm3i20jd4x5msOiCf7wsVeLsQqV/hJ
+        BSiyTp2yeJy5eWN5kRVQDwHr/w==
+X-Google-Smtp-Source: APXvYqyyBdGALJ9xeEsJ3KrCmaVDycwJs6ljGTasssYWlYkE3BMlOLomFjp5o7IPZAgNNjfxjsR6Kg==
+X-Received: by 2002:a17:902:b101:: with SMTP id q1mr7895615plr.154.1574912938343;
+        Wed, 27 Nov 2019 19:48:58 -0800 (PST)
+Received: from ?IPv6:2600:1010:b040:9410:acb0:9c64:b6aa:d8e3? ([2600:1010:b040:9410:acb0:9c64:b6aa:d8e3])
+        by smtp.gmail.com with ESMTPSA id c17sm18049268pfo.42.2019.11.27.19.48.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Nov 2019 19:48:57 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] lkdtm/bugs: Avoid ifdefs for DOUBLE_FAULT
+Date:   Wed, 27 Nov 2019 19:48:27 -0800
+Message-Id: <2BD95E04-8DA9-40CA-B9B0-1548325B044D@amacapital.net>
+References: <201911271852.4AA977DFD@keescook>
+Cc:     Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        x86 <x86@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <201911271852.4AA977DFD@keescook>
+To:     Kees Cook <keescook@chromium.org>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> On November 27, 2019 at 9:42 AM Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> 
-> 
-> Document the GPIO Aggregator/Repeater, and the three typical use-cases.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v3:
->   - New.
-> ---
->  .../admin-guide/gpio/gpio-aggregator.rst      | 111 ++++++++++++++++++
->  Documentation/admin-guide/gpio/index.rst      |   1 +
->  2 files changed, 112 insertions(+)
->  create mode 100644 Documentation/admin-guide/gpio/gpio-aggregator.rst
-> 
-> diff --git a/Documentation/admin-guide/gpio/gpio-aggregator.rst b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-> new file mode 100644
-> index 0000000000000000..826146e260253299
-> --- /dev/null
-> +++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-> @@ -0,0 +1,111 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +GPIO Aggregator/Repeater
-> +========================
-> +
-> +The GPIO Aggregator/Repeater allows to aggregate GPIOs, and expose them as a
-> +new gpio_chip.  This supports the following use cases.
-> +
-> +
-> +Aggregating GPIOs using Sysfs
-> +-----------------------------
-> +
-> +GPIO controllers are exported to userspace using /dev/gpiochip* character
-> +devices.  Access control to these devices is provided by standard UNIX file
-> +system permissions, on an all-or-nothing basis: either a GPIO controller is
-> +accessible for a user, or it is not.
-> +
-> +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
-> +them into a new gpio_chip, which can be assigned to a group or user using
-> +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
-> +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
-> +GPIO controller, and no longer needs to care about which GPIOs to grab and
-> +which not, reducing the attack surface.
-> +
-> +Aggregated GPIO controllers are instantiated and destroyed by writing to
-> +write-only attribute files in sysfs.
-> +
-> +    /sys/bus/platform/drivers/gpio-aggregator/
-> +
-> +	"new_device" ...
-> +		Userspace may ask the kernel to instantiate an aggregated GPIO
-> +		controller by writing a string describing the GPIOs to
-> +		aggregate to the "new_device" file, using the format
-> +
-> +		.. code-block:: none
-> +
-> +		    [<gpioA>] [<gpiochipB> <offsets>] ...
-> +
-> +		Where:
-> +
-> +		    "<gpioA>" ...
-> +			    is a GPIO line name,
-> +
-> +		    "<gpiochipB>" ...
-> +			    is a GPIO chip label or name, and
-> +
-> +		    "<offsets>" ...
-> +			    is a comma-separated list of GPIO offsets and/or
-> +			    GPIO offset ranges denoted by dashes.
-> +
-> +		Example: Instantiate a new GPIO aggregator by aggregating GPIO
-> +		19 of "e6052000.gpio" and GPIOs 20-21 of "gpiochip2" into a new
-> +		gpio_chip:
-> +
-> +		.. code-block:: bash
-> +
-> +		    echo 'e6052000.gpio 19 gpiochip2 20-21' > new_device
-> +
-> +	"delete_device" ...
-> +		Userspace may ask the kernel to destroy an aggregated GPIO
-> +		controller after use by writing its device name to the
-> +		"delete_device" file.
-> +
-> +		Example: Destroy the previously-created aggregated GPIO
-> +		controller "gpio-aggregator.0":
-> +
-> +		.. code-block:: bash
-> +
-> +		    echo gpio-aggregator.0 > delete_device
-> +
-> +
-> +GPIO Repeater in Device Tree
-> +----------------------------
-> +
-> +A GPIO Repeater is a node in a Device Tree representing a repeater for one or
-> +more GPIOs, possibly including physical signal property translation (e.g.
-> +polarity inversion).  This allows to model e.g. inverters in DT.
-> +
-> +See Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
-> +
-> +
-> +Generic GPIO Driver
-> +-------------------
-> +
-> +The GPIO Aggregator can also be used as a generic driver for a simple
-> +GPIO-operated device described in DT, without a dedicated in-kernel driver.
-> +This is not unlike e.g. spidev, which allows to communicated with an SPI device
-> +from userspace.
-> +
-> +Binding a device to the GPIO Aggregator is performed either by modifying the
-> +gpio-aggregator driver, or by writing to the "driver_override" file in Sysfs.
-> +
-> +Example: If "frobnicator" is a GPIO-operated device described in DT, using its
-> +own compatible value::
-> +
-> +        frobnicator {
-> +                compatible = "myvendor,frobnicator";
-> +
-> +                gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>,
-> +                        <&gpio2 20 GPIO_ACTIVE_LOW>;
-> +        };
-> +
-> +it can be bound to the GPIO Aggregator by either:
-> +
-> +1. Adding its compatible value to ``gpio_aggregator_dt_ids[]``,
-> +2. Binding manually using "driver_override":
-> +
-> +.. code-block:: bash
-> +
-> +    echo gpio-aggregator > /sys/bus/platform/devices/frobnicator/driver_override
-> +    echo frobnicator > /sys/bus/platform/drivers/gpio-aggregator/bind
-> diff --git a/Documentation/admin-guide/gpio/index.rst b/Documentation/admin-guide/gpio/index.rst
-> index a244ba4e87d5398a..ef2838638e967777 100644
-> --- a/Documentation/admin-guide/gpio/index.rst
-> +++ b/Documentation/admin-guide/gpio/index.rst
-> @@ -7,6 +7,7 @@ gpio
->  .. toctree::
->      :maxdepth: 1
->  
-> +    gpio-aggregator
->      sysfs
->  
->  .. only::  subproject and html
-> -- 
-> 2.17.1
->
 
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> On Nov 27, 2019, at 6:54 PM, Kees Cook <keescook@chromium.org> wrote:
+>=20
+> =EF=BB=BFOn Wed, Nov 27, 2019 at 06:15:17PM -0800, Andy Lutomirski wrote:
+>>=20
+>>>> On Nov 27, 2019, at 5:50 PM, Kees Cook <keescook@chromium.org> wrote:
+>>>=20
+>>> =EF=BB=BFOn Wed, Nov 27, 2019 at 01:01:40PM -0800, Andy Lutomirski wrote=
+:
+>>>>=20
+>>>>=20
+>>>>>> On Nov 27, 2019, at 11:19 AM, Kees Cook <keescook@chromium.org> wrote=
+:
+>>>>>=20
+>>>>> =EF=BB=BFLKDTM test visibility shouldn't change, so remove the ifdefs o=
+n
+>>>>> DOUBLE_FAULT and make sure test failure doesn't crash the system.
+>>>>>=20
+>>>>> Link: https://lore.kernel.org/lkml/20191127184837.GA35982@gmail.com
+>>>>> Fixes: b09511c253e5 ("lkdtm: Add a DOUBLE_FAULT crash type on x86")
+>>>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>>>> ---
+>>>>> applies on top of tip/x86/urgent
+>>>>> ---
+>>>>> drivers/misc/lkdtm/bugs.c  | 8 +++++---
+>>>>> drivers/misc/lkdtm/core.c  | 4 +---
+>>>>> drivers/misc/lkdtm/lkdtm.h | 2 --
+>>>>> 3 files changed, 6 insertions(+), 8 deletions(-)
+>>>>>=20
+>>>>> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+>>>>> index a4fdad04809a..22f5293414cc 100644
+>>>>> --- a/drivers/misc/lkdtm/bugs.c
+>>>>> +++ b/drivers/misc/lkdtm/bugs.c
+>>>>> @@ -342,9 +342,9 @@ void lkdtm_UNSET_SMEP(void)
+>>>>> #endif
+>>>>> }
+>>>>>=20
+>>>>> -#ifdef CONFIG_X86_32
+>>>>> void lkdtm_DOUBLE_FAULT(void)
+>>>>> {
+>>>>> +#ifdef CONFIG_X86_32
+>>>>>  /*
+>>>>>   * Trigger #DF by setting the stack limit to zero.  This clobbers
+>>>>>   * a GDT TLS slot, which is okay because the current task will die
+>>>>> @@ -373,6 +373,8 @@ void lkdtm_DOUBLE_FAULT(void)
+>>>>>  asm volatile ("movw %0, %%ss; addl $0, (%%esp)" ::
+>>>>>            "r" ((unsigned short)(GDT_ENTRY_TLS_MIN << 3)));
+>>>>>=20
+>>>>> -    panic("tried to double fault but didn't die\n");
+>>>>> -}
+>>>>> +    pr_err("FAIL: tried to double fault but didn't die!\n");
+>>>>> +#else
+>>>>> +    pr_err("FAIL: this test is only available on 32-bit x86.\n");
+>>>>> #endif
+>>>>> +}
+>>>>=20
+>>>> I=E2=80=99m not familiar with the userspace tooling, but this seems unf=
+ortunate. The first FAIL is =E2=80=9Cthe test case screwed up, and it=E2=80=99=
+s a bug.=E2=80=9D  The second FAIL is =E2=80=9Cnot applicable to this system=
+.=E2=80=9D
+>>>>=20
+>>>>=20
+>>>> ISTM simply not exposing the test on systems that don=E2=80=99t support=
+ makes sense. Can you clarify?
+>>>=20
+>>> I don't like the tests liked in the DIRECT file to change from build to
+>>> build (it should be stable per kernel version). Userspace needs to know
+>>> how to evaluate the results of running each test, so in both cases, I
+>>> consider it a failure: double fault didn't work or you tried to test
+>>> double fault on an unsupported architecture. (The SMEP test works
+>>> similarly.)
+>>>=20
+>>=20
+>>=20
+>> So how is the test harness supposed
+>> to distinguish success from failure?  If it printed UNSUPPORTED instead o=
+f FAIL, it would make more sense to me, but I=E2=80=99m not sure why that=E2=
+=80=99s better than just not exposing it at all.
+>=20
+> If kernelci or similar ever mentions this as a problem for them, I'm
+> happy to change it. I think it's an error to request this test in the
+> wrong environment (because that implies userspace doesn't know how to
+> evaluate the results). As I like it _available_ because having it
+> missing makes the code ugly (lots of ifdefs) and provides to signal to
+> userspace about it (EINVAL on the write to DIRECT) doesn't tell me if I
+> have the wrong kernel version or the wrong architecture, etc. Since the
+> tester needs to be parsing dmesg and system state (did it panic, etc), I
+> much prefer keeping the signals there.
+>=20
+>=20
 
-CU
-Uli
+Could we perhaps standardized on some particular error code to say =E2=80=9C=
+I know about this test, but it=E2=80=99s not implemented on this kernel?=E2=80=
+=9D=
