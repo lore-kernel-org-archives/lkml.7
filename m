@@ -2,32 +2,33 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50764C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D686C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3185E215A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9107215A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfK1CaY (ORCPT
+        id S1728298AbfK1CaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 21:30:24 -0500
+        Wed, 27 Nov 2019 21:30:05 -0500
 Received: from mga18.intel.com ([134.134.136.126]:17935 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbfK1CaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 21:30:18 -0500
+        id S1728232AbfK1CaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 21:30:02 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 18:30:17 -0800
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 18:30:01 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,251,1571727600"; 
-   d="scan'208";a="221176261"
+   d="scan'208";a="221176120"
 Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 27 Nov 2019 18:30:15 -0800
+  by orsmga002.jf.intel.com with ESMTP; 27 Nov 2019 18:29:59 -0800
 From:   Lu Baolu <baolu.lu@linux.intel.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         David Woodhouse <dwmw2@infradead.org>,
@@ -37,11 +38,10 @@ Cc:     ashok.raj@intel.com, sanjay.k.kumar@intel.com,
         yi.l.liu@intel.com, yi.y.sun@intel.com,
         Peter Xu <peterx@redhat.com>, iommu@lists.linux-foundation.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Yi Sun <yi.y.sun@linux.intel.com>
-Subject: [PATCH v2 8/8] iommu/vt-d: Add set domain DOMAIN_ATTR_NESTING attr
-Date:   Thu, 28 Nov 2019 10:25:50 +0800
-Message-Id: <20191128022550.9832-9-baolu.lu@linux.intel.com>
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v2 2/8] iommu/vt-d: Move domain_flush_cache helper into header
+Date:   Thu, 28 Nov 2019 10:25:44 +0800
+Message-Id: <20191128022550.9832-3-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191128022550.9832-1-baolu.lu@linux.intel.com>
 References: <20191128022550.9832-1-baolu.lu@linux.intel.com>
@@ -50,108 +50,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the Intel VT-d specific callback of setting
-DOMAIN_ATTR_NESTING domain attribution. It is necessary
-to let the VT-d driver know that the domain represents
-a virutual machine which requires the IOMMU hardware to
-support nested translation mode. Return success if the
-IOMMU hardware suports nested mode, otherwise failure.
+So that it could be used in other source files as well.
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Cc: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Yi Sun <yi.y.sun@linux.intel.com>
 Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 ---
- drivers/iommu/intel-iommu.c | 56 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ drivers/iommu/intel-iommu.c | 7 -------
+ include/linux/intel-iommu.h | 7 +++++++
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 68b2f98ecd65..ee717dcb9644 100644
+index 677e82a828f0..7752ff299cb5 100644
 --- a/drivers/iommu/intel-iommu.c
 +++ b/drivers/iommu/intel-iommu.c
-@@ -308,6 +308,12 @@ static int hw_pass_through = 1;
-  */
- #define DOMAIN_FLAG_LOSE_CHILDREN		BIT(1)
- 
-+/*
-+ * Domain represents a virtual machine which demands iommu nested
-+ * translation mode support.
-+ */
-+#define DOMAIN_FLAG_NESTING_MODE		BIT(2)
-+
- #define for_each_domain_iommu(idx, domain)			\
- 	for (idx = 0; idx < g_num_of_iommus; idx++)		\
- 		if (domain->iommu_refcnt[idx])
-@@ -5929,6 +5935,24 @@ static inline bool iommu_pasid_support(void)
- 	return ret;
+@@ -833,13 +833,6 @@ static struct intel_iommu *device_to_iommu(struct device *dev, u8 *bus, u8 *devf
+ 	return iommu;
  }
  
-+static inline bool nested_mode_support(void)
-+{
-+	struct dmar_drhd_unit *drhd;
-+	struct intel_iommu *iommu;
-+	bool ret = true;
-+
-+	rcu_read_lock();
-+	for_each_active_iommu(iommu, drhd) {
-+		if (!sm_supported(iommu) || !ecap_nest(iommu->ecap)) {
-+			ret = false;
-+			break;
-+		}
-+	}
-+	rcu_read_unlock();
-+
-+	return ret;
-+}
-+
- static bool intel_iommu_capable(enum iommu_cap cap)
+-static void domain_flush_cache(struct dmar_domain *domain,
+-			       void *addr, int size)
+-{
+-	if (!domain->iommu_coherency)
+-		clflush_cache_range(addr, size);
+-}
+-
+ static int device_context_mapped(struct intel_iommu *iommu, u8 bus, u8 devfn)
  {
- 	if (cap == IOMMU_CAP_CACHE_COHERENCY)
-@@ -6305,10 +6329,42 @@ static bool intel_iommu_is_attach_deferred(struct iommu_domain *domain,
- 	return dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO;
+ 	struct context_entry *context;
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index e8bfe7466ebb..9b259756057b 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -681,6 +681,13 @@ static inline int first_pte_in_page(struct dma_pte *pte)
+ 	return !((unsigned long)pte & ~VTD_PAGE_MASK);
  }
  
-+static int
-+intel_iommu_domain_set_attr(struct iommu_domain *domain,
-+			    enum iommu_attr attr, void *data)
++static inline void
++domain_flush_cache(struct dmar_domain *domain, void *addr, int size)
 +{
-+	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
-+	unsigned long flags;
-+	int ret = 0;
-+
-+	if (domain->type != IOMMU_DOMAIN_UNMANAGED)
-+		return -EINVAL;
-+
-+	switch (attr) {
-+	case DOMAIN_ATTR_NESTING:
-+		spin_lock_irqsave(&device_domain_lock, flags);
-+		if (nested_mode_support() &&
-+		    list_empty(&dmar_domain->devices)) {
-+			dmar_domain->flags |= DOMAIN_FLAG_NESTING_MODE;
-+			dmar_domain->ops = &second_lvl_pgtable_ops;
-+		} else {
-+			ret = -ENODEV;
-+		}
-+		spin_unlock_irqrestore(&device_domain_lock, flags);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	return ret;
++	if (!domain->iommu_coherency)
++		clflush_cache_range(addr, size);
 +}
 +
- const struct iommu_ops intel_iommu_ops = {
- 	.capable		= intel_iommu_capable,
- 	.domain_alloc		= intel_iommu_domain_alloc,
- 	.domain_free		= intel_iommu_domain_free,
-+	.domain_set_attr	= intel_iommu_domain_set_attr,
- 	.attach_dev		= intel_iommu_attach_device,
- 	.detach_dev		= intel_iommu_detach_device,
- 	.aux_attach_dev		= intel_iommu_aux_attach_device,
+ extern struct dmar_drhd_unit * dmar_find_matched_drhd_unit(struct pci_dev *dev);
+ extern int dmar_find_matched_atsr_unit(struct pci_dev *dev);
+ 
 -- 
 2.17.1
 
