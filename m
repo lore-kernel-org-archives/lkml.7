@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031B4C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A516BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB882084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0D321771
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="G3K0t1nl"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="K2wEiOKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfK1O5i (ORCPT
+        id S1727774AbfK1O7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:57:38 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38880 "EHLO
+        Thu, 28 Nov 2019 09:59:33 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42484 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727356AbfK1O5b (ORCPT
+        with ESMTP id S1727391AbfK1O5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:57:31 -0500
-Received: by mail-lj1-f194.google.com with SMTP id k8so18298410ljh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:30 -0800 (PST)
+        Thu, 28 Nov 2019 09:57:37 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e28so4647807ljo.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6RPbfdv0hDBEMr5jRu0991VlpKTzzf1sC9/XAmy4sgs=;
-        b=G3K0t1nlzwA3d3jHn4yj1bqgPjSU7rkRn5xHQvlnCYStcAfU2EOLNyPlf58l/kRURv
-         oxPucVu+N8o4zYJ1N5TlrwsqpubhOOPQAQvU5PVBJ6o8v2W27PBswbMNL7ah8jpFm1VU
-         Tb/0CmRp1Xf8vt82JUTxMYMrxMphmZqJV9kew=
+        bh=nzzyzsivy+YcXl/jyzCYf1SBk8p4BrEyK9ScDwPsYTY=;
+        b=K2wEiOKx+dAnA20pPj/gC7k2WKFK03JPBFAMB2+x1KJ6IuQ/uzYy9NIfORoCqtv3pO
+         dWqQg66agfm4ME7e+/iKZAKKQcUv7xPOdFY+K30U/ZIKEFr2OWIUlEL30xH0BCtMLQa4
+         fBZ6XqpmIXYhwdW204OYq/yNppQkLMCsU8gWI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6RPbfdv0hDBEMr5jRu0991VlpKTzzf1sC9/XAmy4sgs=;
-        b=S0yuclAkYAj2FMCLW3f2yTSAZDqz2XB+jOKiYYCegZKKODlxgVk3OWkb9oALKdF04c
-         4HND0Yvtuhbqe2itIFrsB21ATgPUPXI0wc5vdTAj9DJk1wwAF0zhzZzsRVYiARyvkO2A
-         L20mw6ZRjgBSWjkrdtetgRp7srAdPqmEhfC4WNkcf5SiUD4qgH5wZ6FLwj3mG+4Vfs4A
-         QvA4yNdxv8tVusJmOOUvR0UmbLtdLrynuex1pxE6+5wSQenMFomXapRqgXgFM6xbvoVE
-         YeWpdzV5yV4ECpHASoYd9psjVQUIYkAEehmFb/lU30ij8Ll4tz96N9T8bD7DLAjI5hF7
-         yzgQ==
-X-Gm-Message-State: APjAAAWh6aBJVcGpL/2CcanC62XRYs0HE8ld9PzeVpZDh9ya+i3SOZnN
-        lnzqEFkte8UNwW4o6pxp+CbAlw==
-X-Google-Smtp-Source: APXvYqyaNUn/imdGbgT/de4umQQV6PAgT8adP8yacv3I5sC9GoOzbCwUDIiv5Pz0lPz4XRI0PSVjcA==
-X-Received: by 2002:a2e:8855:: with SMTP id z21mr36009830ljj.212.1574953049771;
-        Thu, 28 Nov 2019 06:57:29 -0800 (PST)
+        bh=nzzyzsivy+YcXl/jyzCYf1SBk8p4BrEyK9ScDwPsYTY=;
+        b=B0yCp/iHJbdefbX8UUvq98HZYF3L0udVwfyJmX+lljsVWwyD1XbkwXzb8yyna+YyhM
+         SZW0bRe3Xey+ySuyrh1Z3pGBGyoUNy+9kCLlmStsUegClF5modzlzUTeeFkRL/QaqwNu
+         LnuDcXChH6B8GPuSHNhhPkTRvYCVskcI/JXsgS77e2mt+g96UZNqmj3aWQi7n80p/0VN
+         vBB+TjAe6HfsUMEAWCzwcdzeKUOV1T6OzGtTzjJnNnLCvIt02EstE5+7WYrWotsKo7za
+         rDTyP+9RAR+UIj+837CJypO2NadbOeWGtVD3AgCvh6Z9uAbvwxEA6YIf0yXqQPSwRKM5
+         syFQ==
+X-Gm-Message-State: APjAAAVkJsJvT2ItViF+9co/DMYQNe+hXTD7zbp730BeT4fz/uWkzIw2
+        AO7HYgaSxwz69jdO0/BIa+uYZQ==
+X-Google-Smtp-Source: APXvYqxcCZp9VC/hOwbAbqHS7Mi8diiPVBeVRdJba1gvlZ6qtvTT24K8z3rdfj6gIFE8XPjaG9eObw==
+X-Received: by 2002:a2e:9f4d:: with SMTP id v13mr35083259ljk.78.1574953054971;
+        Thu, 28 Nov 2019 06:57:34 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.28
+        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 06:57:29 -0800 (PST)
+        Thu, 28 Nov 2019 06:57:34 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v6 19/49] soc: fsl: qe: make qe_ic_get_{low,high}_irq static
-Date:   Thu, 28 Nov 2019 15:55:24 +0100
-Message-Id: <20191128145554.1297-20-linux@rasmusvillemoes.dk>
+Subject: [PATCH v6 23/49] soc: fsl: qe: qe_io.c: don't open-code of_parse_phandle()
+Date:   Thu, 28 Nov 2019 15:55:28 +0100
+Message-Id: <20191128145554.1297-24-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
 References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
@@ -73,56 +73,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are only called from within qe_ic.c, so make them static.
-
 Reviewed-by: Timur Tabi <timur@kernel.org>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/qe_ic.c |  4 ++--
- include/soc/fsl/qe/qe_ic.h | 10 ----------
- 2 files changed, 2 insertions(+), 12 deletions(-)
+ drivers/soc/fsl/qe/qe_io.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
-index 8f74bc6efd5c..23b457e884d8 100644
---- a/drivers/soc/fsl/qe/qe_ic.c
-+++ b/drivers/soc/fsl/qe/qe_ic.c
-@@ -283,7 +283,7 @@ static const struct irq_domain_ops qe_ic_host_ops = {
- };
- 
- /* Return an interrupt vector or 0 if no interrupt is pending. */
--unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
-+static unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
+diff --git a/drivers/soc/fsl/qe/qe_io.c b/drivers/soc/fsl/qe/qe_io.c
+index f6b10f38b2f4..99aeb01586bd 100644
+--- a/drivers/soc/fsl/qe/qe_io.c
++++ b/drivers/soc/fsl/qe/qe_io.c
+@@ -141,7 +141,6 @@ EXPORT_SYMBOL(par_io_data_set);
+ int par_io_of_config(struct device_node *np)
  {
- 	int irq;
+ 	struct device_node *pio;
+-	const phandle *ph;
+ 	int pio_map_len;
+ 	const unsigned int *pio_map;
  
-@@ -299,7 +299,7 @@ unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
- }
+@@ -150,14 +149,12 @@ int par_io_of_config(struct device_node *np)
+ 		return -1;
+ 	}
  
- /* Return an interrupt vector or 0 if no interrupt is pending. */
--unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
-+static unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
- {
- 	int irq;
+-	ph = of_get_property(np, "pio-handle", NULL);
+-	if (ph == NULL) {
++	pio = of_parse_phandle(np, "pio-handle", 0);
++	if (pio == NULL) {
+ 		printk(KERN_ERR "pio-handle not available\n");
+ 		return -1;
+ 	}
  
-diff --git a/include/soc/fsl/qe/qe_ic.h b/include/soc/fsl/qe/qe_ic.h
-index d47eb231519e..70bb5a0f6535 100644
---- a/include/soc/fsl/qe/qe_ic.h
-+++ b/include/soc/fsl/qe/qe_ic.h
-@@ -53,14 +53,4 @@ enum qe_ic_grp_id {
- 	QE_IC_GRP_RISCB		/* QE interrupt controller RISC group B */
- };
- 
--#ifdef CONFIG_QUICC_ENGINE
--unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic);
--unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic);
--#else
--static inline unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
--{ return 0; }
--static inline unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
--{ return 0; }
--#endif /* CONFIG_QUICC_ENGINE */
+-	pio = of_find_node_by_phandle(*ph);
 -
- #endif /* _ASM_POWERPC_QE_IC_H */
+ 	pio_map = of_get_property(pio, "pio-map", &pio_map_len);
+ 	if (pio_map == NULL) {
+ 		printk(KERN_ERR "pio-map is not set!\n");
 -- 
 2.23.0
 
