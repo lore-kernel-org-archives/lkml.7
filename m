@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAE6C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F016C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30470215A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D4B215A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v8Lraqn+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cr18FxmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfK1OSY (ORCPT
+        id S1726730AbfK1OS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:18:24 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37147 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfK1OSX (ORCPT
+        Thu, 28 Nov 2019 09:18:27 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40344 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfK1OSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:18:23 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so376103wru.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:18:22 -0800 (PST)
+        Thu, 28 Nov 2019 09:18:24 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c14so6715195wrn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:18:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bnMxp132Vd6L+3AapluWQFT+FYtyktAJGLaxzIjZpzU=;
-        b=v8Lraqn+HwF1Jmnt9l7ey+j9HyaetIIlDY3yX1tnMX9Muug090zyvm0w6i3cU4pd/K
-         Pa2OKpyX475YQw3p2FFtBoJO1iTAoSy9EeDen5vcawxNnvMHuELNp1gxnW9pgmc+BXpV
-         La6x8X6j3yVOszKKghMEX2Lfkea4i57LamXpzukoN5Fpr1D9LIPGl14cHGeQbwrXzRGK
-         jpjsCrtj/Fz6G6DutIfiPOiMUKRsScuurqCBE+UHtNHdC47r4FaIX75OVVk6CId06kVB
-         o0f+dM55SChfzPXMtQWLJY/r2IeFWVJZF5cBsKe2EYstl4RprPkAFlMLFYBr+yaK4qP9
-         /xUg==
+        bh=qyyDjQdnoeb2queL1lR7vTcgx8zyzYmqnXXfouU/oLY=;
+        b=Cr18FxmY/IBf8ucdTROQ28wKO0nRAvii2N1tI+avejHCJ4/M7e7lber8GjL6Z6I0st
+         Oe3eI3Ts6y+pKbGAl8WOoMVTRDGX8NDwhBn867vxFfbBxPea6/0RhV4zOLJkWtdVUnF0
+         Cq5KT7SilV9g0vqVttuzBuhy3w4thT4RQqxjrbixVTnPK0IH8fESguUQXqHoOSxcOpPF
+         GDTTtQKYJTpRDi9pMuOv5bxJuUfpxQnbFhJtH/GxKPc/XyzvR38MJfg72g9W1BFP7n5Y
+         iVvAtpxpO34HGYmRP2wO6okXrof2yNGfNh/BCvWrdvJALnRg1eawTMdSCK4vmMlfiDr7
+         djNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bnMxp132Vd6L+3AapluWQFT+FYtyktAJGLaxzIjZpzU=;
-        b=SuRaUReh0A9CThaZfSJvHVpu+N2TlJiv2M9rjCdkPfj8KuR8m2X37SHG8Xh1nWTlqb
-         rqIqF183FpdqIWFyfVnEd57DNqH1xl5mYONJNCItz7B2YxIu25KQ4q9wAlB2EUwjYnTj
-         t9cVytX5WBYOH6/08Q7E6Zb2wk8Reqy+ErljqqGoBHZY2SlIxKDMcRmKOxEibDobPwhs
-         mtStuOMo2w1CzkyXDThfvMof5wmaeuPuvjfnORKcT5iABI2wUGOBurCApkcePQEAg8WW
-         1XKVfadPaXsSjdZ0Zemj+qwLL8I3pup91eStVpBizThJbUtZCHTsWZ+/RpMCYkTyItEb
-         EYkg==
-X-Gm-Message-State: APjAAAVX4xpxV/8ilAmgKnuhau/5DH6mZdu1rIa5+QhD71LrBS5HsA1z
-        nowDY+FudQONIU07qpUFIZEvYA==
-X-Google-Smtp-Source: APXvYqxCS1zWwYMGux3VT17qKlhcgF1FX0vEaM5jx7QSq/PBF1udA38wr/OTGj0D25QUERplroOaYw==
-X-Received: by 2002:adf:d848:: with SMTP id k8mr2430296wrl.328.1574950701769;
-        Thu, 28 Nov 2019 06:18:21 -0800 (PST)
+        bh=qyyDjQdnoeb2queL1lR7vTcgx8zyzYmqnXXfouU/oLY=;
+        b=AG5QJUfdV7Zz0BlIxpdugBXcO5PyK484we615d3exB5yetBvSYB6RDHOsrFg6deNtR
+         2d3LQhjgilpJ0XmMEffaLYlDHEl1ZhAoRoQvtCYNzcgmKR44DSUqbHiWd7UBYTiqwkyY
+         9s0Tn44ZxA307cKabSXHmsBeAnBlSuV814Y2i3eNCT75PsAW61jaImPMmVScygz2QFFi
+         WiWte4vhfM8O5eSYv3+khLqKs5rmzeFvUL6S0S2BYUG5088f5BHus8ZPa3tpnBQYbWrt
+         0pIM7tmarbTCglLVObrZ6iIYe8ehdOPEBp3A4jnuE/A2Vu7KBtRKWdFNkrn26euw7DIK
+         B/DA==
+X-Gm-Message-State: APjAAAUCqK14dHMVKY+1tzgUObpWlgzZci+AcDSUF0YvtcMHq9n4wkc7
+        bERyFo2OXQIEufzGoyz9w7ZcBAMVR8U=
+X-Google-Smtp-Source: APXvYqwCgQz6TJbmvCy58G73SgRuCmaOeDmHeE5hwehaXWFQCG5K9PP7/edDoHjbuxaZQFCYw46elA==
+X-Received: by 2002:adf:ea8d:: with SMTP id s13mr48495689wrm.366.1574950703019;
+        Thu, 28 Nov 2019 06:18:23 -0800 (PST)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id f6sm23947092wrr.15.2019.11.28.06.18.20
+        by smtp.googlemail.com with ESMTPSA id f6sm23947092wrr.15.2019.11.28.06.18.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 28 Nov 2019 06:18:21 -0800 (PST)
+        Thu, 28 Nov 2019 06:18:22 -0800 (PST)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     linux-pm@vger.kernel.org
 Cc:     rostedt@goodmis.org, mingo@redhat.com, bjorn.andersson@linaro.org,
@@ -63,9 +63,9 @@ Cc:     rostedt@goodmis.org, mingo@redhat.com, bjorn.andersson@linaro.org,
         okukatla@codeaurora.org, evgreen@chromium.org, mka@chromium.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         georgi.djakov@linaro.org
-Subject: [PATCH v4 1/3] interconnect: Move internal structs into a separate file
-Date:   Thu, 28 Nov 2019 16:18:16 +0200
-Message-Id: <20191128141818.32168-2-georgi.djakov@linaro.org>
+Subject: [PATCH v4 2/3] interconnect: Add a name to struct icc_path
+Date:   Thu, 28 Nov 2019 16:18:17 +0200
+Message-Id: <20191128141818.32168-3-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191128141818.32168-1-georgi.djakov@linaro.org>
 References: <20191128141818.32168-1-georgi.djakov@linaro.org>
@@ -76,106 +76,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the interconnect framework internal structs into a separate file,
-so that it can be included and used by ftrace code. This will allow us
-to expose some more useful information in the traces.
+When debugging interconnect things, it turned out that saving the path
+name and including it in the traces is quite useful, especially for
+devices with multiple paths.
 
+For the path name we use the one specified in DT, or if we use platform
+data, the name is based on the source and destination node names.
+
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- drivers/interconnect/core.c     | 30 ++-----------------------
- drivers/interconnect/internal.h | 40 +++++++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+), 28 deletions(-)
- create mode 100644 drivers/interconnect/internal.h
+ drivers/interconnect/core.c     | 18 +++++++++++++++---
+ drivers/interconnect/internal.h |  2 ++
+ 2 files changed, 17 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 1b811423020a..f30a326dc7ce 100644
+index f30a326dc7ce..c9e16bc1331e 100644
 --- a/drivers/interconnect/core.c
 +++ b/drivers/interconnect/core.c
-@@ -19,39 +19,13 @@
- #include <linux/of.h>
- #include <linux/overflow.h>
+@@ -356,9 +356,17 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
  
-+#include "internal.h"
+ 	mutex_lock(&icc_lock);
+ 	path = path_find(dev, src_node, dst_node);
+-	if (IS_ERR(path))
+-		dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
+ 	mutex_unlock(&icc_lock);
++	if (IS_ERR(path)) {
++		dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
++		return path;
++	}
 +
- static DEFINE_IDR(icc_idr);
- static LIST_HEAD(icc_providers);
- static DEFINE_MUTEX(icc_lock);
- static struct dentry *icc_debugfs_dir;
++	if (name)
++		path->name = kstrdup(name, GFP_KERNEL);
++	else
++		path->name = kasprintf(GFP_KERNEL, "%s-%s",
++				       src_node->name, dst_node->name);
  
--/**
-- * struct icc_req - constraints that are attached to each node
-- * @req_node: entry in list of requests for the particular @node
-- * @node: the interconnect node to which this constraint applies
-- * @dev: reference to the device that sets the constraints
-- * @tag: path tag (optional)
-- * @avg_bw: an integer describing the average bandwidth in kBps
-- * @peak_bw: an integer describing the peak bandwidth in kBps
-- */
--struct icc_req {
--	struct hlist_node req_node;
--	struct icc_node *node;
--	struct device *dev;
--	u32 tag;
--	u32 avg_bw;
--	u32 peak_bw;
--};
--
--/**
-- * struct icc_path - interconnect path structure
-- * @num_nodes: number of hops (nodes)
-- * @reqs: array of the requests applicable to this path of nodes
-- */
--struct icc_path {
--	size_t num_nodes;
--	struct icc_req reqs[];
--};
--
- static void icc_summary_show_one(struct seq_file *s, struct icc_node *n)
- {
- 	if (!n)
+ 	return path;
+ }
+@@ -481,9 +489,12 @@ struct icc_path *icc_get(struct device *dev, const int src_id, const int dst_id)
+ 		goto out;
+ 
+ 	path = path_find(dev, src, dst);
+-	if (IS_ERR(path))
++	if (IS_ERR(path)) {
+ 		dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
++		goto out;
++	}
+ 
++	path->name = kasprintf(GFP_KERNEL, "%s-%s", src->name, dst->name);
+ out:
+ 	mutex_unlock(&icc_lock);
+ 	return path;
+@@ -519,6 +530,7 @@ void icc_put(struct icc_path *path)
+ 	}
+ 	mutex_unlock(&icc_lock);
+ 
++	kfree(path->name);
+ 	kfree(path);
+ }
+ EXPORT_SYMBOL_GPL(icc_put);
 diff --git a/drivers/interconnect/internal.h b/drivers/interconnect/internal.h
-new file mode 100644
-index 000000000000..5853e8faf223
---- /dev/null
+index 5853e8faf223..bf18cb7239df 100644
+--- a/drivers/interconnect/internal.h
 +++ b/drivers/interconnect/internal.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Interconnect framework internal structs
-+ *
-+ * Copyright (c) 2019, Linaro Ltd.
-+ * Author: Georgi Djakov <georgi.djakov@linaro.org>
-+ */
-+
-+#ifndef __DRIVERS_INTERCONNECT_INTERNAL_H
-+#define __DRIVERS_INTERCONNECT_INTERNAL_H
-+
-+/**
-+ * struct icc_req - constraints that are attached to each node
-+ * @req_node: entry in list of requests for the particular @node
-+ * @node: the interconnect node to which this constraint applies
-+ * @dev: reference to the device that sets the constraints
-+ * @tag: path tag (optional)
-+ * @avg_bw: an integer describing the average bandwidth in kBps
-+ * @peak_bw: an integer describing the peak bandwidth in kBps
-+ */
-+struct icc_req {
-+	struct hlist_node req_node;
-+	struct icc_node *node;
-+	struct device *dev;
-+	u32 tag;
-+	u32 avg_bw;
-+	u32 peak_bw;
-+};
-+
-+/**
-+ * struct icc_path - interconnect path structure
-+ * @num_nodes: number of hops (nodes)
-+ * @reqs: array of the requests applicable to this path of nodes
-+ */
-+struct icc_path {
-+	size_t num_nodes;
-+	struct icc_req reqs[];
-+};
-+
-+#endif
+@@ -29,10 +29,12 @@ struct icc_req {
+ 
+ /**
+  * struct icc_path - interconnect path structure
++ * @name: a string name of the path (useful for ftrace)
+  * @num_nodes: number of hops (nodes)
+  * @reqs: array of the requests applicable to this path of nodes
+  */
+ struct icc_path {
++	const char *name;
+ 	size_t num_nodes;
+ 	struct icc_req reqs[];
+ };
