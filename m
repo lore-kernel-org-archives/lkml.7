@@ -2,107 +2,132 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF908C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0655BC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B687F21789
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF52B2178F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZqFnPPmF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i9hyxSMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfK1NpM (ORCPT
+        id S1726634AbfK1Nsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:45:12 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46169 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbfK1NpL (ORCPT
+        Thu, 28 Nov 2019 08:48:45 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41915 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfK1Nso (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:45:11 -0500
-Received: by mail-lf1-f68.google.com with SMTP id a17so20066698lfi.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:45:09 -0800 (PST)
+        Thu, 28 Nov 2019 08:48:44 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b18so31209891wrj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:48:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qVyVH3GucIXCwfrLXX19RLZ09hFTpdgyonXBY6f04/k=;
-        b=ZqFnPPmFXVOZPQ+d07lBFfoR3OZn+DTxcIkmUV2Ixk3ZgAOc1136lj4VSNYn7ltmue
-         Y7q9kYYfko+UbksL+7cOxZg2Xfz1Uo6AavH2kyMi3RteXWGRsX5vpWqQf/RK77j9iwve
-         PAQgcfFrhlltVqBW3kwiFTki7LGoQaa+o8mJwOZ8PQ51I6y8SYdjhmMkWkaoOG8+KOaO
-         GhBnhG7YZzOGZpMTi96UUGJjxRLUc9Z09SJEjaM+uAlnWFpMohoEJNbhbL2mWtKnHjpU
-         lC67Wv4bSGZdmb7egsTcBU3DgjWUCP9ugxohPyZsLVuYTFzueoyVkJ0Ix1hmF6ZSR0zK
-         ueMA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hASZYFpvtuqMj2K9Ei/y6hgpj2q+o1mM77RhlWy+nlM=;
+        b=i9hyxSMdXuLPXnJAJs9ZWGt2uHdPrIAytFfduuedVuEyINMo//Lzg5xsxzqpWPohGs
+         NHBHrDvnfIsYCI3ppthFHJXFi8p6wrsMXd72bXnKBD2NQIjPv+qHrAoy1t4NYfiNfL3L
+         LyPsENVFPLEZtpjWFHEJKMoiURSE6B3UbPSaxgoF3cSh8Ms2oprtqQuD+frRIX1pmQPC
+         qEp+z6RftEsvK5EJ9nGb2TBP+VmuKU/PgV/Y/GyPqPdURFPde+H+ZPdaU/iCUpImxka9
+         CmlCw60wSsu1WvpdpohBK1rfaFzDLjEFDz+iJLJe9/kap3+/7D2iIo9hQxdGUlzyei+C
+         2ziQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qVyVH3GucIXCwfrLXX19RLZ09hFTpdgyonXBY6f04/k=;
-        b=euaUHI1//xsBHtKODR6knwPhJXEVCNz2u9sDr08IFZKvBiH1N2+m4QmWXKffvvMRy3
-         FK8q+wXMq7IGPTzv3WSMtJGWYCYr6+YsYbni/NpfRp8n7O3xEW5tl+Rl5vfyVcrhcBWx
-         Rc0x8yVcyj14zo1K2o963D+pDkfW+aCp0Hr9MwOQCT65g6Fmumc4Ung3LpUZ4NHEsJcQ
-         hCIJ5GJu4sdUFukwiXIsjtFpBodUaV5U9EO9IstqyD/eMOR7gYA2N4WwkexZsDgjhbGi
-         aK2QKDxBGXlrnfV5Nqc17+Gxtzr+d3L1dfAiIbZnr0jIkGbgsn7WQkInN2hTINJ4RKLV
-         y+vg==
-X-Gm-Message-State: APjAAAW3kvySLgJN0qeQ1Pouhm5SrgCaTieZlrJ5pPUuZjGfaMCRYsE6
-        xntazny0SEDZGHw9IwCvoAQBAcPGiKcSzUBLelZc4g==
-X-Google-Smtp-Source: APXvYqxmD5I6HnIUXKd0kI0HkU3aSQ4hioXpM0yhKdtcDcsx3EccroOaBtiV8gi40+vkYztiQmeRCAXkMncEdw2+E9Y=
-X-Received: by 2002:a19:f701:: with SMTP id z1mr26973589lfe.133.1574948708877;
- Thu, 28 Nov 2019 05:45:08 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hASZYFpvtuqMj2K9Ei/y6hgpj2q+o1mM77RhlWy+nlM=;
+        b=uUGSkHk9+7rQevTbgi2ZKhZ9Gi1JmhjoaEchGuXlanTW4E+aKFAP1extXNXTKMPlxE
+         ufGjg+O4OBx2rYbzNA2t6oabUkU+fT/gTzPmvktM5Oh8zORRAsvEwUlFhVxx72ld6xR1
+         JAf4+DyHVMBoywSpN2eExUTKh0zdIj2AUHmIKf8qrXElzpl+a/AEvl+Mv7O3MvmsqFAP
+         454y1nFFX2jJLQtqNwHnYihesasdXr0beurMZ7wzaOMoxX9MLwCj5TUmiPpW2fY3S2Ej
+         Uom5jRgVm1qP2W2pK6Vh/Pf4yr+sY0cHi1Mb/4vs8ZO4l1TFUpEthdXA+iLWadGnNecD
+         qxbw==
+X-Gm-Message-State: APjAAAWsfDWIxS0i9smXlaR5lvONSY3pvEhi3Dao/mDkwvUWlWbuvfcc
+        Wr9/Gw20tSE0GurlEge4/BqX3Y7eE6Q=
+X-Google-Smtp-Source: APXvYqwUl/c9Ev2fwHT9rSRo/CPTNmXhORMjUF9rVGT2228iCfXD2eVVfpBiCL+T0UowPmk9L4UngA==
+X-Received: by 2002:adf:f445:: with SMTP id f5mr26311139wrp.193.1574948920904;
+        Thu, 28 Nov 2019 05:48:40 -0800 (PST)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id m3sm8523734wrs.53.2019.11.28.05.48.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 28 Nov 2019 05:48:40 -0800 (PST)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org
+Cc:     evgreen@chromium.org, bjorn.andersson@linaro.org,
+        agross@kernel.org, daidavid1@codeaurora.org, masneyb@onstation.org,
+        sibis@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
+Subject: [PATCH 1/2] interconnect: Add a common standard aggregate function
+Date:   Thu, 28 Nov 2019 15:48:38 +0200
+Message-Id: <20191128134839.27606-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191120142038.30746-1-ktouil@baylibre.com> <20191120142038.30746-2-ktouil@baylibre.com>
- <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
- <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
- <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
- <CAMpxmJU_0MzroyD_ZF5WOxpZz3dkADLOmW7aKpWdJ7GCvo-RnA@mail.gmail.com>
- <CACRpkdaPQKxfC66yhG=xdmCOGGd9PjDVCwZquKb+4HmuS_=kNA@mail.gmail.com> <CALL1Z1xpcGyh_f3ooRT+gGApoAnS7YBMd2hUKqnt+pTcAFoeAg@mail.gmail.com>
-In-Reply-To: <CALL1Z1xpcGyh_f3ooRT+gGApoAnS7YBMd2hUKqnt+pTcAFoeAg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Nov 2019 14:44:56 +0100
-Message-ID: <CACRpkdYEEypRZOaO3Ta9aDgizNeLyUOSraBEhKaZcHaJV+o0gQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
-To:     Khouloud Touil <ktouil@baylibre.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 4:18 PM Khouloud Touil <ktouil@baylibre.com> wrote:
+Currently there is one very standard aggregation method that is used by
+several drivers. Let's add this as a common function, so that drivers
+could just point to it, instead of copy/pasting code.
 
-> [Me]
->> 4. The code still need to be modified to set the value
->>    to "1" to assert the line since the gpiolib now handles
->>    the inversion semantics.
+Suggested-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ drivers/interconnect/core.c           | 10 ++++++++++
+ include/linux/interconnect-provider.h |  8 ++++++++
+ 2 files changed, 18 insertions(+)
 
-> By saying "assert the wp" do you mean enable the write operation or
-> block it ?
-
-Yeah one more layer of confusion, sorry :/
-
-By "asserting WP" I mean driving the line to a state where
-writing to the EEPROM is enabled, i.e. the default state is
-that the EEPROM is write protected and when you "assert"
-WP it becomes writable.
-
-If you feel the inverse semantics are more intuitive (such that
-WP comes up asserted and thus write protected), be my
-guest :D
-
-As long as it is unambiguously documented in the bindings
-and with comments in the code I'm game for whatever the
-at24 people feel is most appropriate. (You will set the standard
-for everyone else.)
-
-Yours.
-Linus Walleij
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index 0e4852feb395..2633fd223875 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -221,6 +221,16 @@ static int apply_constraints(struct icc_path *path)
+ 	return ret;
+ }
+ 
++int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
++		      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
++{
++	*agg_avg += avg_bw;
++	*agg_peak = max(*agg_peak, peak_bw);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(icc_std_aggregate);
++
+ /* of_icc_xlate_onecell() - Translate function using a single index.
+  * @spec: OF phandle args to map into an interconnect node.
+  * @data: private data (pointer to struct icc_onecell_data)
+diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
+index 31440c921216..0c494534b4d3 100644
+--- a/include/linux/interconnect-provider.h
++++ b/include/linux/interconnect-provider.h
+@@ -92,6 +92,8 @@ struct icc_node {
+ 
+ #if IS_ENABLED(CONFIG_INTERCONNECT)
+ 
++int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
++		      u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
+ struct icc_node *icc_node_create(int id);
+ void icc_node_destroy(int id);
+ int icc_link_create(struct icc_node *node, const int dst_id);
+@@ -104,6 +106,12 @@ int icc_provider_del(struct icc_provider *provider);
+ 
+ #else
+ 
++static inline int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
++				    u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
++{
++	return -ENOTSUPP;
++}
++
+ static inline struct icc_node *icc_node_create(int id)
+ {
+ 	return ERR_PTR(-ENOTSUPP);
