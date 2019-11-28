@@ -2,105 +2,137 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E995C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAE5C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A4F21781
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mb3MIbxt"
+	by mail.kernel.org (Postfix) with ESMTP id 1374E21781
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574947147;
+	bh=OarF0C5kaF4ItcIGNn9IgRKW/z3NtBrYsb36TPUXSak=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=qDZ34KyJ1vUacZJkv886piTOoDWD/msUfyfvR2xL9gQtKF1yIxaxTKUiBoEKurXl4
+	 0idJQ+Z9nalB0jvmUuhjAQBXoYIqwPd1wr15Us8zv7SKuogSJ/PIyrJgL2fa9BQGa+
+	 8OqsY2mqeSSVfPIZVw83XKyxBFNNFp2bCbDJ1jaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbfK1NTF (ORCPT
+        id S1726881AbfK1NTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 28 Nov 2019 08:19:05 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39172 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfK1NTE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:19:04 -0500
-Received: by mail-lf1-f65.google.com with SMTP id f18so20016626lfj.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:19:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=a6UykuI2ITtmBK53f/J/gVoOVqoOXR1NtFRyFCtxoEc=;
-        b=mb3MIbxtl/blBcrQRjuFDoZUW5guLzIK8vDrdeEmPfM0TgQscB8bx+QXwUdKHptcrW
-         LUsKmQKHDKE/Gj2KYgIUHJYVsMguz+FL1i/16M16CXRYvG141LShZ3uAoWeBgCXpl3XD
-         YpBcYs5oSbYWRIsJYNBAQyboCcuMHBt7vVZThWALc0HOCu0VMMi+Zp6oszCHhCpLTplF
-         q7THgvqpOIjaAkrR9M/RC/7ugTyiDZ/SbTNmTgBASeXsqsK4Ws0vo1ddvCQY2qhpg86J
-         EGL9iR/UFL7h36bARljzkRPjvl+4T3Vn6ZtdDIzxTEx2YlZ/HlWX55i+LjJ3S5OYe4Dd
-         00CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=a6UykuI2ITtmBK53f/J/gVoOVqoOXR1NtFRyFCtxoEc=;
-        b=O7farmxDsBCLKJmPd+oqfFSQEp9QndTpEw16WaT7bjACj6p/xWJAF7Dot0SkhwZdIv
-         RRW/ReGQyQlkxSMM0Dg0BstsVRwMDEBD0rh+zdZYn7tjuYo78tf9ZO9vLthuw1Y/Y9an
-         cH62ceJBkwcE6QATDFQ2p1AdDcDvYb6BKJjD0KVLxTMg7TkjhQitMxwfa0KILaxykPxS
-         n0nMD+r4DhsOUA6Bmlt6uZ+gVBMEpkgs9QH49ZuwzH/By5EaWKUk1JYtl/s5nlT6EP+l
-         RjoYn6pa5zS4P6CGcx6VdVtAkh3AKScyBAq6LLVWBVmgLSNz4oGlUU8DrdauNRGVPogM
-         3c/g==
-X-Gm-Message-State: APjAAAU92aaR1si6fPSRkl/n3M0NgkKhnCa7GqOlc3vB9jruz0O3i1wN
-        Eh5wbjnjWspD1JwEdYMlcnd/xDdEhMUHpVQuGSBLnA==
-X-Google-Smtp-Source: APXvYqwYXHWQE8HF3VzPJ7gwhW7vLjPmEWwu9T2UbexqzTjOPa39f/ftjXJJSpBmdc1RK+4dxxgWXAT/gWFx58pcByE=
-X-Received: by 2002:ac2:410a:: with SMTP id b10mr5039588lfi.135.1574947142730;
- Thu, 28 Nov 2019 05:19:02 -0800 (PST)
-MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Nov 2019 14:18:51 +0100
-Message-ID: <CACRpkdb_5xjLBSPaGrDadHUj=4Npz13YELJw+Ov+JyigGPBZjg@mail.gmail.com>
-Subject: [GIT PULL] Oneliner fix for the pinctrl pull request
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from foss.arm.com ([217.140.110.172]:35314 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726734AbfK1NTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 08:19:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F122A30E;
+        Thu, 28 Nov 2019 05:19:04 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 701773F52E;
+        Thu, 28 Nov 2019 05:19:04 -0800 (PST)
+Date:   Thu, 28 Nov 2019 13:19:02 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     broonie@kernel.org, gregory.clement@bootlin.com,
+        linus.walleij@linaro.org, Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: dw: Correct handling of native chipselect" to the spi tree
+In-Reply-To: <20191127153936.29719-1-ckeepax@opensource.cirrus.com>
+Message-Id: <applied-20191127153936.29719-1-ckeepax@opensource.cirrus.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The patch
 
-as requested yesterday, a oneliner fix adding the license to
-the new Intel pin controller.
+   spi: dw: Correct handling of native chipselect
 
-This time just based on the top of your tree from yesterday.
+has been applied to the spi tree at
 
-Please pull it in.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
-Sorry for the mess.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Yours,
-Linus Walleij
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-The following changes since commit a6ed68d6468bd5a3da78a103344ded1435fed57a:
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-  Merge tag 'drm-next-2019-11-27' of
-git://anongit.freedesktop.org/drm/drm (2019-11-27 17:45:48 -0800)
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-are available in the Git repository at:
+Thanks,
+Mark
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.5-2
+From ada9e3fcc175db4538f5b5e05abf5dedf626e550 Mon Sep 17 00:00:00 2001
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Date: Wed, 27 Nov 2019 15:39:36 +0000
+Subject: [PATCH] spi: dw: Correct handling of native chipselect
 
-for you to fetch changes up to 6d29032c2cef31633db5dfd946fbcf9190dddef0:
+This patch reverts commit 6e0a32d6f376 ("spi: dw: Fix default polarity
+of native chipselect").
 
-  pinctrl: Fix warning by adding missing MODULE_LICENSE (2019-11-28
-09:12:43 +0100)
+The SPI framework always called the set_cs callback with the logic
+level it desired on the chip select line, which is what the drivers
+original handling supported. commit f3186dd87669 ("spi: Optionally
+use GPIO descriptors for CS GPIOs") changed these symantics, but only
+in the case of drivers that also support GPIO chip selects, to true
+meaning apply slave select rather than logic high. This left things in
+an odd state where a driver that only supports hardware chip selects,
+the core would handle polarity but if the driver supported GPIOs as
+well the driver should handle polarity.  At this point the reverted
+change was applied to change the logic in the driver to match new
+system.
 
-----------------------------------------------------------------
-Fixes a MODULE_LICENSE() problem in the Equilibrium pin
-controller.
+This was then broken by commit 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH
+setting when using native and GPIO CS") which reverted the core back
+to consistently calling set_cs with a logic level.
 
-----------------------------------------------------------------
-Rahul Tanwar (1):
-      pinctrl: Fix warning by adding missing MODULE_LICENSE
+This fix reverts the driver code back to its original state to match
+the current core code. This is probably a better fix as a) the set_cs
+callback is always called with consistent symantics and b) the
+inversion for SPI_CS_HIGH can be handled in the core and doesn't need
+to be coded in each driver supporting it.
 
- drivers/pinctrl/pinctrl-equilibrium.c | 1 +
- 1 file changed, 1 insertion(+)
+Fixes: 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH setting when using native and GPIO CS")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191127153936.29719-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-dw.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 466f5c67843b..9387f60eb496 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -129,10 +129,11 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
+ 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
+ 	struct chip_data *chip = spi_get_ctldata(spi);
+ 
++	/* Chip select logic is inverted from spi_set_cs() */
+ 	if (chip && chip->cs_control)
+-		chip->cs_control(enable);
++		chip->cs_control(!enable);
+ 
+-	if (enable)
++	if (!enable)
+ 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
+ 	else if (dws->cs_override)
+ 		dw_writel(dws, DW_SPI_SER, 0);
+-- 
+2.20.1
+
