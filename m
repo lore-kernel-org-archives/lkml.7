@@ -2,98 +2,87 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F168C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC8BC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69582178F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:45:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lYn5QAbb"
+	by mail.kernel.org (Postfix) with ESMTP id 53A5A217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:46:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574956004;
+	bh=kpfyC0QgVGkUUpZUbLGNa7ljW1T9+VcFSl9yPzjx47Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KLffm3W1litgMZ8wdt6WeB8Nd9JdSx4p4qIPPWjrzXdl3WBK8udDnBEr+f0OM0QnZ
+	 u/SBY48Lcnyaee028jS81U60Nhi8tx5eMZdWI6XtHijV1W+3dOgTMf4uZM1/4l3KK7
+	 F5hx0yZ6IdkssGLXC4vM50Rc91CHUMF/dvr82TJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfK1PpY (ORCPT
+        id S1726934AbfK1Pqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 10:45:24 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57104 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbfK1PpX (ORCPT
+        Thu, 28 Nov 2019 10:46:43 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39924 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfK1Pqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 10:45:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1Ua9kzhqWdT/XmuB+JkZPQ/zR7CbGzhbDxmS9/PUHRg=; b=lYn5QAbbuOgCVzO0wK72zGcGg
-        mQTVtUtKdl4KYiJHp4I5I3FXK/6FWZhfra4tUuTFV7QC78oDUm8NKzHIrgasl+8sbPlrCdG0T67u3
-        kgAQ57kaMp3R3h1Z+mwXZn4SMTDknO5FcjPcWJhT6kEGYu4yyJ+8h7G98UfdWJKrqUQljjAF2xpQv
-        RhfjlbJLk4dNosXzbNYjYOLiCEP2PZWfBnLjpu5EMP/cgJOBC3HTYk0zTcErIw08z7ffMbdnD/r09
-        tSSlveUJqScNNE8ME81M1Rd4A954YOsGafxeRRIk7ktZ64V53SmN+UKMgMG5kfHDds764Ihn7lkwx
-        SsNl980Fw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iaLym-0005vg-OI; Thu, 28 Nov 2019 15:45:16 +0000
-Date:   Thu, 28 Nov 2019 07:45:16 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH] fs: Fix page_mkwrite off-by-one errors
-Message-ID: <20191128154516.GA17166@infradead.org>
-References: <20191127151811.9229-1-agruenba@redhat.com>
- <20191127154954.GT6219@magnolia>
+        Thu, 28 Nov 2019 10:46:42 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so28568004wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 07:46:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=sIubRS4qLZI1jaaKqOxxNv4bjCiQZULaHKOwIakIJiY=;
+        b=Q3BQTiqX5Lg4QuiJLo2cdD0rmmi8R2EVUw9DjmYZq0c4OoYQmZiqXDkc3TK4ZuiPmZ
+         DE+QgTgEtvYiNRP4izFSOXzwYahsdjzutfo8QiiNzrfagpRGguD5CE0Jq6ToFK63+Knf
+         Il9sKC+ifrIbgdP1nPgkKoJlCKefiLvVJDsv+uYOof1u6uI6ZObcav/uNv4QvtKEycyr
+         YIj/eHivMXHWBPT6/ToXUNJr+nBzOcRXOx5qRSTzOzzBKFgpqDF62mu9ZGQHqeGYb0RY
+         869KaYmT14F3SwL4QFI2Pfcdcj64Tzjh7rBgVFf3n1V+A0hMEQd9w5nC70CGiXE3Xrlm
+         2+kQ==
+X-Gm-Message-State: APjAAAU6kYLtazbxOBVvVmyJwQgJHBPepBkjMjpS8UhycZrPhk13iugu
+        4bvNRWT/FyChkL5J3E9adqM=
+X-Google-Smtp-Source: APXvYqweU1Xq3ZlSnJcthj6s1cWlgUvpvTMSYvKjK+EzZFsvPtfmfrPAjkquxBMUXFmf8EH8boUJ5g==
+X-Received: by 2002:a5d:5222:: with SMTP id i2mr49099419wra.305.1574955999271;
+        Thu, 28 Nov 2019 07:46:39 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id m9sm22790884wro.66.2019.11.28.07.46.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 07:46:38 -0800 (PST)
+Date:   Thu, 28 Nov 2019 16:46:37 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v1] mm/memory_hotplug: don't check the nid in
+ find_(smallest|biggest)_section_pfn
+Message-ID: <20191128154637.GO26807@dhcp22.suse.cz>
+References: <c1857505-4565-99c8-d86d-efa6c076312a@redhat.com>
+ <687DAE43-C40F-4527-876D-CAC750D150B6@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191127154954.GT6219@magnolia>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <687DAE43-C40F-4527-876D-CAC750D150B6@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 07:49:54AM -0800, Darrick J. Wong wrote:
-> On Wed, Nov 27, 2019 at 04:18:11PM +0100, Andreas Gruenbacher wrote:
-> > Fix a check in block_page_mkwrite meant to determine whether an offset
-> > is within the inode size.  This error has spread to several filesystems
-> > and to iomap_page_mkwrite, so fix those instances as well.
-> 
-> Seeing how this has gotten screwed up at least six times in the kernel,
-> maybe we need a static inline helper to do this for us?
+On Thu 28-11-19 10:29:24, Qian Cai wrote:
+> What I don’t understand is that we have an policy prohibiting code
+> churn like code optimization in cold path, but allow those micro
+> cleanup of code. Those cleanup also tend to be unregulated and is
+> subject to personal tastes (for example, your CS teachers may have a
+> different taste from mine).
 
-Yes.  I think we really want a little helper that checks the mapping
-and the offset.  That also gives us the opportunity to document the
-semantics.
+I tend to push back on cleanups without a clear added value. In this
+particular case it is not about aesthetic or a personal feeling about
+the code though. Please read my comment with the ack.
 
-> 
-> > Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-> 
-> The iomap part looks ok,
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> (I might just extract the iomap part and put it in the iomap tree if
-> someone doesn't merge this one before I get to it...)
-
-I think we should just pull in the helper and conversions through
-some tree after all iomap bits are merged.  It might as well be
-the iomap tree as that seems to the place for file system read/write
-infrastructure these days.
+-- 
+Michal Hocko
+SUSE Labs
