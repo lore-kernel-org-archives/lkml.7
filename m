@@ -2,134 +2,102 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F314BC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21785C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED422176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA2F2176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:02:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SqLbd+9o"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="G6glzc+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfK1I73 (ORCPT
+        id S1727096AbfK1JCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 03:59:29 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43657 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfK1I73 (ORCPT
+        Thu, 28 Nov 2019 04:02:49 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44300 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbfK1JCt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:59:29 -0500
-Received: by mail-qk1-f193.google.com with SMTP id q28so3135816qkn.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:59:28 -0800 (PST)
+        Thu, 28 Nov 2019 04:02:49 -0500
+Received: by mail-lj1-f195.google.com with SMTP id c19so595953lji.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 01:02:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wZDOmo+mPfnPdaN//xLxORxFeLKUGqLr+J7G6xlCcv0=;
-        b=SqLbd+9oTES7vGoU6eGRMkOpdFNV40HLc8s+9TAEtizxbar9kUpZ2tYAOwvaCY1zJ+
-         h2RoTvo57zIm/phFl00V8pNUu++Ie3H2YdWs5duONa6ZKlqZcd3g5I+xw9BtKTc+uUCg
-         mkSzYl/52v0L6ZFbszaSXtmAE+0/SOnzVv8g/2TvaZz1fGjnWDca/ilGBsMv/qxl8KSL
-         xQAZnM9roykuNy0O/hXzxcFl4RG9lANGbs8Syy6W6Bf5a02XsRcE9w5/+oZcjCQaB01w
-         hwiQPa9y/o5RMKSE8pPl9j5Evo2S4Nyk5RdMnwDFqxg8avw58AnnFNmJXvs343DJaTt9
-         oMtw==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=J0ArWTMK2M2cZ2zXfxSef0laglMj50lskLz/N/COoyI=;
+        b=G6glzc+N9b1z4gASSZC5AEd2jFJOL3n0eIWVnAe5AFj6b9KL8p9l0fGtPjZWwqloVc
+         MbFAw7gXgY7/o9XSopUwxaWCYsOW18S4HjAnf9itzbbDFUaNMz31hPcYOSVv9JEZ7K8h
+         ktQw5DrGfazKfaU1IQ6XlCNocKnC3bQUx4EY0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wZDOmo+mPfnPdaN//xLxORxFeLKUGqLr+J7G6xlCcv0=;
-        b=dvdrjWwTgfctOjc8Z+/EvJzfy9z39D7NHi2nj801X9xGovhEZ14UDLFsBXbLSM/FeC
-         cg2G/BVY+EdnyNQ4B00gmZ+oLEewe3lNuGF0eAQhNBj9E/qVeT2MW3k8xSo7BPF+1vL4
-         EzB73Qiej2VlWHF0Rc4f6NNx5P1rGhv10A0Z2LwGIi7TlMDjqlTk0rA6g62rHJzSYJaL
-         syr6/2vuoem/lUSWkQhRfUZHO+uJRBeMU1huECCnoiQHZdUdtspHoRyPG3yu4N+4nY/8
-         WpSsOrsWeL/kA3/qp1kalIWRCxMOyFAcXnXvaMmaYq9sYFAqePKGPTc1XxNCCVqTJeqH
-         efVg==
-X-Gm-Message-State: APjAAAUT98ceYAnVrzMmHz7lXwKKPuJ0z4qiCkd+gImxO0A20jyzFjfN
-        oJHaigTl+ogdZK7FpLtGH+4YIylZySaet+V6UFha+0cm
-X-Google-Smtp-Source: APXvYqxQ8DtLmeAzs+5VWeB2Gdz5ZzKRF7gLOdRvhy2DWqwJIHm23YKNcX22+xkzBrqhwZiFwlBokOtLC2TXudHDan0=
-X-Received: by 2002:a37:e312:: with SMTP id y18mr5456024qki.250.1574931134398;
- Thu, 28 Nov 2019 00:52:14 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J0ArWTMK2M2cZ2zXfxSef0laglMj50lskLz/N/COoyI=;
+        b=NLPae7gbMq3AZdp3SCF2yZwJF2WlNMLf1l1IkzlB+m8KiDur1FJ8JcWHiPnQjfvMNY
+         QlMMaJFBlqyCkLHlfuxwktfe73Se2G4yjqrZWszUfPkpPNo8IozG65FV9A0VSrIrOXH7
+         3G/BDLL172LOpKd36KBNCw3KzL3Wb7AMhBszU3lu9gVrcTex+Kg50Ic1hcccmeSqYjZF
+         auet8FnjAKRyP5NnM2CEOKwzpm7KoY+noWh6BEVzypo6pOiW+0Y81NWlg7vmBgtezugI
+         VSF5TmAKwuLSodiFnbSB1Q6PTkkRvR4dAhF7gE6sfQCsAjfbHt3NERj+t1P52fkwdr9Q
+         Z/Hg==
+X-Gm-Message-State: APjAAAVhX/LZmLmGfDwEnnauaLiZK48aDSsfugeQl6n9aKNm2wLkCAov
+        suohM9qg45/YwrAB8H/RNQxICA==
+X-Google-Smtp-Source: APXvYqzK+0aH2OxqnNebVIbBxsAx+sVVUV5///KJSvWtCfimRUSUBpmooYcKVoc1aZPo9aQXeAPhvA==
+X-Received: by 2002:a2e:9a12:: with SMTP id o18mr33630972lji.191.1574931766022;
+        Thu, 28 Nov 2019 01:02:46 -0800 (PST)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id r125sm8265681lff.59.2019.11.28.01.02.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Nov 2019 01:02:45 -0800 (PST)
+Subject: Re: [PATCH RFC] signalfd: add support for SFD_TASK
+To:     Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
+ <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
+ <1d3a458a-fa79-5e33-b5ce-b473122f6d1a@kernel.dk>
+ <CAG48ez2VBS4bVJqdCU9cUhYePYCiUURvXZWneBx2KGkg3L9d4g@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <f4144a96-58ef-fba7-79f0-e5178147b6bb@rasmusvillemoes.dk>
+Date:   Thu, 28 Nov 2019 10:02:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <201911262053.C6317530@keescook> <00000000000085ce5905984f2c8b@google.com>
- <201911271124.F01A0B37@keescook>
-In-Reply-To: <201911271124.F01A0B37@keescook>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 28 Nov 2019 09:52:03 +0100
-Message-ID: <CACT4Y+aEeUaTQioc85nPXG9GM_ODojdoywNoVEOf5b6yXXU0cg@mail.gmail.com>
-Subject: Re: WARNING in generic_make_request_checks
-To:     Kees Cook <keescook@chromium.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Cc:     syzbot <syzbot+21cfe1f803e0e158acf1@syzkaller.appspotmail.com>,
-        00moses.alexander00@gmail.com, Jens Axboe <axboe@kernel.dk>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ilya Dryomov <idryomov@gmail.com>, joseph.qi@linux.alibaba.com,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Mike Snitzer <snitzer@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Tejun Heo <tj@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, wgh@torlan.ru,
-        zkabelac@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAG48ez2VBS4bVJqdCU9cUhYePYCiUURvXZWneBx2KGkg3L9d4g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 8:26 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Tue, Nov 26, 2019 at 11:45:00PM -0800, syzbot wrote:
-> > Hello,
-> >
-> > syzbot has tested the proposed patch and the reproducer did not trigger
-> > crash:
-> >
-> > Reported-and-tested-by:
-> > syzbot+21cfe1f803e0e158acf1@syzkaller.appspotmail.com
-> >
-> > Tested on:
-> >
-> > commit:         8b2ded1c block: don't warn when doing fsync on read-only d..
-> > git tree:
-> > git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d727e10a28207217
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=21cfe1f803e0e158acf1
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Note: testing is done by a robot and is best-effort only.
->
-> It seems for successful tests, I still need to tell syzbot that this is
-> fixed?
+On 28/11/2019 00.27, Jann Horn wrote:
 
-+syzkaller mailing list for syzbot discussion
+> One more thing, though: We'll have to figure out some way to
+> invalidate the fd when the target goes through execve(), in particular
+> if it's a setuid execution. Otherwise we'll be able to just steal
+> signals that were intended for the other task, that's probably not
+> good.
+> 
+> So we should:
+>  a) prevent using ->wait() on an old signalfd once the task has gone
+> through execve()
+>  b) kick off all existing waiters
+>  c) most importantly, prevent ->read() on an old signalfd once the
+> task has gone through execve()
+> 
+> We probably want to avoid using the cred_guard_mutex here, since it is
+> quite broad and has some deadlocking issues; it might make sense to
+> put the update of ->self_exec_id in fs/exec.c under something like the
+> siglock,
 
-Yes.
-You used a commit. But patch testing may work with raw attached
-patches, or on trees that are not merged, or it may just a trial run
-on HEAD or run with additional debugging only and it may incidentally
-succeed; or may be not incidentally but the patch disables part of
-functionality just to check if it affects the crash or not, but it's
-totally not a fix for the bug.
-Nobody ever figured out how all of this could work; allocate time to
-write a complete proposal for the workflow and implement this.
-So at the moment patch testing functionality is completely unrelated
-to the rest of the workflow. It's a convenience feature.
+What prevents one from exec'ing a trivial helper 2^32-1 times before
+exec'ing into the victim binary?
 
-
-> #syz fix: block: don't warn when doing fsync on read-only devices
->
-> --
-> Kees Cook
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/201911271124.F01A0B37%40keescook.
+Rasmus
