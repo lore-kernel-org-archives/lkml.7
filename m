@@ -2,135 +2,292 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AE1C33CBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA661C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601B120880
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:01:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jUjkHp5J"
+	by mail.kernel.org (Postfix) with ESMTP id C0C862178F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfK1LBN (ORCPT
+        id S1727433AbfK1LCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:01:13 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36362 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfK1LAP (ORCPT
+        Thu, 28 Nov 2019 06:02:20 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:44835 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726699AbfK1LCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:00:15 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASB03G9123044;
-        Thu, 28 Nov 2019 05:00:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574938804;
-        bh=1ejU+vd2T9/FB/A9l3rJiiNfVEy7pyhWG9mzxXGvrc8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=jUjkHp5JVl4RZhs8XuRgm28QRAzeaplL59MTXfgTHWnIG2x4Iv6aJYqhw8Skuxv+l
-         MV+3jQ03NjH6/1OOopjZ8t8HL0EWO8EmgOenSy6HNNV7jl2s0aDB5/+gvV2Ye6yudX
-         r5HQ7sLVo+F2n6s2TkdURqxNnGiGYnaGjiTkvBwY=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASB03WN045705
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Nov 2019 05:00:03 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 05:00:03 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 05:00:03 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAxgJJ073287;
-        Thu, 28 Nov 2019 05:00:00 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
-        <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-Subject: [PATCH v6 05/17] dmaengine: Add support for reporting DMA cached data amount
-Date:   Thu, 28 Nov 2019 12:59:33 +0200
-Message-ID: <20191128105945.13071-6-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191128105945.13071-1-peter.ujfalusi@ti.com>
-References: <20191128105945.13071-1-peter.ujfalusi@ti.com>
+        Thu, 28 Nov 2019 06:02:20 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TjIllLR_1574938929;
+Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TjIllLR_1574938929)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 28 Nov 2019 19:02:17 +0800
+From:   Shile Zhang <shile.zhang@linux.alibaba.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org
+Cc:     "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org,
+        Shile Zhang <shile.zhang@linux.alibaba.com>
+Subject: [RFC PATCH v5 4/7] scripts/sortextable: refactor do_func() function
+Date:   Thu, 28 Nov 2019 19:02:03 +0800
+Message-Id: <20191128110206.2107-5-shile.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191128110206.2107-1-shile.zhang@linux.alibaba.com>
+References: <20191128110206.2107-1-shile.zhang@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A DMA hardware can have big cache or FIFO and the amount of data sitting in
-the DMA fabric can be an interest for the clients.
+Refine the loop, naming and code structure, make the code more readable
+and extendable, no functional changes.
 
-For example in audio we want to know the delay in the data flow and in case
-the DMA have significantly large FIFO/cache, it can affect the latenc/delay
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
 ---
- drivers/dma/dmaengine.h   | 8 ++++++++
- include/linux/dmaengine.h | 2 ++
- 2 files changed, 10 insertions(+)
+ scripts/sortextable.c |   4 +-
+ scripts/sortextable.h | 115 ++++++++++++++++++++++--------------------
+ 2 files changed, 61 insertions(+), 58 deletions(-)
 
-diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
-index 501c0b063f85..b0b97475707a 100644
---- a/drivers/dma/dmaengine.h
-+++ b/drivers/dma/dmaengine.h
-@@ -77,6 +77,7 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
- 		state->last = complete;
- 		state->used = used;
- 		state->residue = 0;
-+		state->in_flight_bytes = 0;
- 	}
- 	return dma_async_is_complete(cookie, complete, used);
- }
-@@ -87,6 +88,13 @@ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
- 		state->residue = residue;
+diff --git a/scripts/sortextable.c b/scripts/sortextable.c
+index e5384e86b58c..efa2839865cd 100644
+--- a/scripts/sortextable.c
++++ b/scripts/sortextable.c
+@@ -320,7 +320,7 @@ static int do_file(char const *const fname, void *addr)
+ 				"unrecognized ET_EXEC/ET_DYN file: %s\n", fname);
+ 			break;
+ 		}
+-		rc = do32(ehdr, fname, custom_sort);
++		rc = do_sort_32(ehdr, fname, custom_sort);
+ 		break;
+ 	case ELFCLASS64:
+ 		{
+@@ -332,7 +332,7 @@ static int do_file(char const *const fname, void *addr)
+ 				fname);
+ 			break;
+ 		}
+-		rc = do64(ghdr, fname, custom_sort);
++		rc = do_sort_64(ghdr, fname, custom_sort);
+ 		}
+ 		break;
+ 	default:
+diff --git a/scripts/sortextable.h b/scripts/sortextable.h
+index a2e3af7bf211..6485513f7cae 100644
+--- a/scripts/sortextable.h
++++ b/scripts/sortextable.h
+@@ -12,7 +12,7 @@
+ 
+ #undef extable_ent_size
+ #undef compare_extable
+-#undef do_func
++#undef do_sort
+ #undef Elf_Addr
+ #undef Elf_Ehdr
+ #undef Elf_Shdr
+@@ -34,7 +34,7 @@
+ #ifdef SORTEXTABLE_64
+ # define extable_ent_size	16
+ # define compare_extable	compare_extable_64
+-# define do_func		do64
++# define do_sort		do_sort_64
+ # define Elf_Addr		Elf64_Addr
+ # define Elf_Ehdr		Elf64_Ehdr
+ # define Elf_Shdr		Elf64_Shdr
+@@ -55,7 +55,7 @@
+ #else
+ # define extable_ent_size	8
+ # define compare_extable	compare_extable_32
+-# define do_func		do32
++# define do_sort		do_sort_32
+ # define Elf_Addr		Elf32_Addr
+ # define Elf_Ehdr		Elf32_Ehdr
+ # define Elf_Shdr		Elf32_Shdr
+@@ -87,81 +87,81 @@ static int compare_extable(const void *a, const void *b)
+ 	return 0;
  }
  
-+static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
-+					   u32 in_flight_bytes)
-+{
-+	if (state)
-+		state->in_flight_bytes = in_flight_bytes;
-+}
+-static int do_func(Elf_Ehdr *ehdr,
++static int do_sort(Elf_Ehdr *ehdr,
+ 		   char const *const fname,
+ 		   table_sort_t custom_sort)
+ {
+-	Elf_Shdr *shdr;
+-	Elf_Shdr *shstrtab_sec;
++	Elf_Shdr *s, *shdr = (Elf_Shdr *)((char *)ehdr + _r(&ehdr->e_shoff));
+ 	Elf_Shdr *strtab_sec = NULL;
+ 	Elf_Shdr *symtab_sec = NULL;
+ 	Elf_Shdr *extab_sec = NULL;
+ 	Elf_Sym *sym;
+ 	const Elf_Sym *symtab;
+-	Elf32_Word *symtab_shndx_start = NULL;
+-	Elf_Sym *sort_needed_sym;
++	Elf32_Word *symtab_shndx = NULL;
++	Elf_Sym *sort_needed_sym = NULL;
+ 	Elf_Shdr *sort_needed_sec;
+ 	Elf_Rel *relocs = NULL;
+ 	int relocs_size = 0;
+-	uint32_t *sort_done_location;
+-	const char *secstrtab;
++	uint32_t *sort_needed_loc;
++	const char *secstrings;
+ 	const char *strtab;
+ 	char *extab_image;
+ 	int extab_index = 0;
+ 	int i;
+ 	int idx;
+-	unsigned int num_sections;
+-	unsigned int secindex_strings;
++	unsigned int shnum;
++	unsigned int shstrndx;
+ 
+-	shdr = (Elf_Shdr *)((char *)ehdr + _r(&ehdr->e_shoff));
++	shstrndx = r2(&ehdr->e_shstrndx);
++	if (shstrndx == SHN_XINDEX)
++		shstrndx = r(&shdr[0].sh_link);
++	secstrings = (const char *)ehdr + _r(&shdr[shstrndx].sh_offset);
+ 
+-	num_sections = r2(&ehdr->e_shnum);
+-	if (num_sections == SHN_UNDEF)
+-		num_sections = _r(&shdr[0].sh_size);
++	shnum = r2(&ehdr->e_shnum);
++	if (shnum == SHN_UNDEF)
++		shnum = _r(&shdr[0].sh_size);
+ 
+-	secindex_strings = r2(&ehdr->e_shstrndx);
+-	if (secindex_strings == SHN_XINDEX)
+-		secindex_strings = r(&shdr[0].sh_link);
+-
+-	shstrtab_sec = shdr + secindex_strings;
+-	secstrtab = (const char *)ehdr + _r(&shstrtab_sec->sh_offset);
+-	for (i = 0; i < num_sections; i++) {
+-		idx = r(&shdr[i].sh_name);
+-		if (!strcmp(secstrtab + idx, "__ex_table")) {
+-			extab_sec = shdr + i;
++	for (i = 0, s = shdr; s < shdr + shnum; i++, s++) {
++		idx = r(&s->sh_name);
++		if (!strcmp(secstrings + idx, "__ex_table")) {
++			extab_sec = s;
+ 			extab_index = i;
+ 		}
+-		if ((r(&shdr[i].sh_type) == SHT_REL ||
+-		     r(&shdr[i].sh_type) == SHT_RELA) &&
+-		    r(&shdr[i].sh_info) == extab_index) {
+-			relocs = (void *)ehdr + _r(&shdr[i].sh_offset);
+-			relocs_size = _r(&shdr[i].sh_size);
++		if (!strcmp(secstrings + idx, ".symtab"))
++			symtab_sec = s;
++		if (!strcmp(secstrings + idx, ".strtab"))
++			strtab_sec = s;
 +
- struct dmaengine_desc_callback {
- 	dma_async_tx_callback callback;
- 	dma_async_tx_callback_result callback_result;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 0e8b426bbde9..c4c5219030a6 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -682,11 +682,13 @@ static inline struct dma_async_tx_descriptor *txd_next(struct dma_async_tx_descr
-  * @residue: the remaining number of bytes left to transmit
-  *	on the selected transfer for states DMA_IN_PROGRESS and
-  *	DMA_PAUSED if this is implemented in the driver, else 0
-+ * @in_flight_bytes: amount of data in bytes cached by the DMA.
-  */
- struct dma_tx_state {
- 	dma_cookie_t last;
- 	dma_cookie_t used;
- 	u32 residue;
-+	u32 in_flight_bytes;
- };
++		if ((r(&s->sh_type) == SHT_REL ||
++		     r(&s->sh_type) == SHT_RELA) &&
++		    r(&s->sh_info) == extab_index) {
++			relocs = (void *)ehdr + _r(&s->sh_offset);
++			relocs_size = _r(&s->sh_size);
+ 		}
+-		if (!strcmp(secstrtab + idx, ".symtab"))
+-			symtab_sec = shdr + i;
+-		if (!strcmp(secstrtab + idx, ".strtab"))
+-			strtab_sec = shdr + i;
+-		if (r(&shdr[i].sh_type) == SHT_SYMTAB_SHNDX)
+-			symtab_shndx_start = (Elf32_Word *)(
+-				(const char *)ehdr + _r(&shdr[i].sh_offset));
++		if (r(&s->sh_type) == SHT_SYMTAB_SHNDX)
++			symtab_shndx = (Elf32_Word *)((const char *)ehdr +
++						      _r(&s->sh_offset));
+ 	}
+-	if (!strtab_sec) {
+-		fprintf(stderr,	"no .strtab in file: %s\n", fname);
++
++	if (!extab_sec) {
++		fprintf(stderr,	"no __ex_table in file: %s\n", fname);
+ 		return -1;
+ 	}
++
+ 	if (!symtab_sec) {
+ 		fprintf(stderr,	"no .symtab in file: %s\n", fname);
+ 		return -1;
+ 	}
+-	symtab = (const Elf_Sym *)((const char *)ehdr +
+-				   _r(&symtab_sec->sh_offset));
+-	if (!extab_sec) {
+-		fprintf(stderr,	"no __ex_table in file: %s\n", fname);
++
++	if (!strtab_sec) {
++		fprintf(stderr,	"no .strtab in file: %s\n", fname);
+ 		return -1;
+ 	}
+-	strtab = (const char *)ehdr + _r(&strtab_sec->sh_offset);
  
- /**
+ 	extab_image = (void *)ehdr + _r(&extab_sec->sh_offset);
++	strtab = (const char *)ehdr + _r(&strtab_sec->sh_offset);
++	symtab = (const Elf_Sym *)((const char *)ehdr +
++						  _r(&symtab_sec->sh_offset));
+ 
+ 	if (custom_sort) {
+ 		custom_sort(extab_image, _r(&extab_sec->sh_size));
+@@ -170,38 +170,41 @@ static int do_func(Elf_Ehdr *ehdr,
+ 		qsort(extab_image, num_entries,
+ 		      extable_ent_size, compare_extable);
+ 	}
++
+ 	/* If there were relocations, we no longer need them. */
+ 	if (relocs)
+ 		memset(relocs, 0, relocs_size);
+ 
+-	/* find main_extable_sort_needed */
+-	sort_needed_sym = NULL;
+-	for (i = 0; i < _r(&symtab_sec->sh_size) / sizeof(Elf_Sym); i++) {
+-		sym = (void *)ehdr + _r(&symtab_sec->sh_offset);
+-		sym += i;
++	/* find the flag main_extable_sort_needed */
++	for (sym = (void *)ehdr + _r(&symtab_sec->sh_offset);
++	     sym < sym + _r(&symtab_sec->sh_size) / sizeof(Elf_Sym);
++	     sym++) {
+ 		if (ELF_ST_TYPE(sym->st_info) != STT_OBJECT)
+ 			continue;
+-		idx = r(&sym->st_name);
+-		if (!strcmp(strtab + idx, "main_extable_sort_needed")) {
++		if (!strcmp(strtab + r(&sym->st_name),
++			    "main_extable_sort_needed")) {
+ 			sort_needed_sym = sym;
+ 			break;
+ 		}
+ 	}
++
+ 	if (!sort_needed_sym) {
+ 		fprintf(stderr,
+ 			"no main_extable_sort_needed symbol in file: %s\n",
+ 			fname);
+ 		return -1;
+ 	}
++
+ 	sort_needed_sec = &shdr[get_secindex(r2(&sym->st_shndx),
+ 					     sort_needed_sym - symtab,
+-					     symtab_shndx_start)];
+-	sort_done_location = (void *)ehdr +
++					     symtab_shndx)];
++	sort_needed_loc = (void *)ehdr +
+ 		_r(&sort_needed_sec->sh_offset) +
+ 		_r(&sort_needed_sym->st_value) -
+ 		_r(&sort_needed_sec->sh_addr);
+ 
+-	/* We sorted it, clear the flag. */
+-	w(0, sort_done_location);
++	/* extable has been sorted, clear the flag */
++	w(0, sort_needed_loc);
++
+ 	return 0;
+ }
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.24.0.rc2
 
