@@ -2,449 +2,173 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BD8C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5876FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A51221775
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207D821775
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:47:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7llt02i"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Gj+2pJlr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfK1Lns (ORCPT
+        id S1726583AbfK1Lrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:43:48 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44278 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfK1Lnr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:43:47 -0500
-Received: by mail-wr1-f66.google.com with SMTP id i12so30635902wrn.11;
-        Thu, 28 Nov 2019 03:43:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=s4KIjaDjoylBE/jhLiaOmwycMgn5SocvWrqVQfvEDRg=;
-        b=H7llt02iof//GJ0Ug5JVITHmGE3LT0WmhiZHY9BsvmdRNWTD8U5IFMuG9+k5uv59IR
-         xLu8osIR4nUnOFCCY5ZclkADrUV15wESyoriaayLhuxwi+QqZ7iIGOrC2JoQsFwO0fzQ
-         QlgtzmWRl4uGr2cUX3d71++B0mTtBfwhVAVXJ20TnABSTeGmf5D2+xqArsK99WNwB3tO
-         JqNyMl4fITNduUSfp0ld+ep1CwgihmORLzioOEeS0I9PrwPNVG0+qImEmImh468KLSLq
-         8WYgpNLDlPfktOPc4qn0/rDUPdyR7fetxkL71zJjOwAeRRxFtdaSne8vZirR++7D4e3d
-         E3WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s4KIjaDjoylBE/jhLiaOmwycMgn5SocvWrqVQfvEDRg=;
-        b=G141VXF0eIzBc/u/5b00Fea1tvlXf4qnVAgVsJHq+XnJBS5+I86ZgxgtuYDGFAiktI
-         M80ehAuHhoCTGCJ9KYB5lm6Snv53qSPz0BOLVYBJFML5PzpRskCF5kx+TKIcNhXZ6VYZ
-         Tx8ptv0tt0CGpTvdmV4moixtgvmE6ibSJVe6/J8AJXpZZn8d3jyYQ4x+ZF4QdB6RwWax
-         K3Hinu68o+/AOJh9KkTDZx7eR2P8qnTV7W5q72yvtuf5u2nmZjdC5h61sLzTubhgUxWU
-         Z3X/c5qV2I7nLkTO7qjrE4Sd5T9CamRi6Lup549ItkaLNZVoHrIvacts8B2CuBlfbLxN
-         hmow==
-X-Gm-Message-State: APjAAAWy1ev+YwOS0UwfWHL5/GJELNkqeSOujMkuXHMDGDh+f47CLkYq
-        H0PWFmCd+BMhqoriGfz8ApE=
-X-Google-Smtp-Source: APXvYqz5sULqQTjpWPr/ip7w52F2Kw5HwuAqOmvzaIGk1vwUEDZk42aP0QpcnLYhOInEogfNZpVYOA==
-X-Received: by 2002:a5d:6542:: with SMTP id z2mr49566002wrv.371.1574941423562;
-        Thu, 28 Nov 2019 03:43:43 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id x10sm22927351wrv.60.2019.11.28.03.43.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 03:43:41 -0800 (PST)
-Date:   Thu, 28 Nov 2019 12:43:39 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] iommu: dma: Use of_iommu_get_resv_regions()
-Message-ID: <20191128113633.GB280099@ulmo>
-References: <20190829111407.17191-1-thierry.reding@gmail.com>
- <20190829111407.17191-3-thierry.reding@gmail.com>
- <1caeaaa0-c5aa-b630-6d42-055b26764f40@arm.com>
- <20190902145245.GC1445@ulmo>
- <20190917175950.wrwiqnh5bp62uy3c@willie-the-truck>
- <20191126172910.GA2669319@ulmo>
- <20191127141631.GA280099@ulmo>
- <864d5afb-72b4-a3ef-9c93-3a8ad4864c56@arm.com>
+        Thu, 28 Nov 2019 06:47:49 -0500
+Received: from mout.gmx.net ([212.227.17.21]:56153 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbfK1Lrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 06:47:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1574941667;
+        bh=OFU9w/zGKnGvzzndAKFWY0LHoiUocdsTN9Uip9XNYq0=;
+        h=X-UI-Sender-Class:From:To:Subject:Date;
+        b=Gj+2pJlr18UWny0lLckaMwiWmx0Y1lo2FUigocmOHvzWOoEM8UY0gntyKYowyRC8A
+         C1jJtTEYjBNrjeOayyCXewQbtjoxE6Pgg+UMufjijsZTpKFhaLPENfdIoomryW3Qeh
+         gh/ZJw9LNh199hkH3FherJQf27JZyvK+gSD3qdk8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.75.75.47] ([185.75.75.47]) by web-mail.gmx.net
+ (3c-app-gmx-bap74.server.lan [172.19.172.174]) (via HTTP); Thu, 28 Nov 2019
+ 12:47:46 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
-Content-Disposition: inline
-In-Reply-To: <864d5afb-72b4-a3ef-9c93-3a8ad4864c56@arm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Message-ID: <trinity-37493268-972d-4d03-b299-82bba385422e-1574941666927@3c-app-gmx-bap74>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     linux-kernel@vger.kernel.org
+Subject: [BUG] NULL-Pointer crash in mutex_can_spin_on_owner
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 28 Nov 2019 12:47:46 +0100
+Importance: normal
+Sensitivity: Normal
+X-Priority: 3
+X-Provags-ID: V03:K1:W2Jgrg0rFtUa8WjF4GWauBeXj2myMTKCAVXLzQ4PRJ/W9lfCNqW4LLaT45ip9rZ7a13pQ
+ 386MDc2WxRZVq6iGAyY17pDj05KZL5T7uQh8OvrFZ2tfz0FhnT0mMow4dijvlPPy/PASwzTHwDBE
+ UD2i0pq9EarmU/5/kW4bgOlQvUkBw2Wsu+/ohwLBu3hFpodZcO2d1aYctkO5MQ5uof6JFlKSA2ke
+ 1BfUGe1z99Oeg+ZeEA8QQBKWYhqHfUdVcRSnJ59NnuJlz30wSy+xzsteCHYA6ro8RaKZeZvWg3X/
+ lA=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:p8shFzX6iA8=:lJl9RBj41xb70z730a+KSt
+ cntxJQRtobkms+LAd1/0sM0zKW7JRZlpUd9XJZwweZPsIBNe8eFFFLCPHIoofSE3O54qtV7dk
+ AGtvM2RQxiahYHcpdfIueEqQKTc5YJ5KRBPpyUICyhaZLgFVnEvsqUNoD0yQIGqYHfUcSAiL4
+ X5BpbyOHbzPSvuru5KMjbgRfqvlSxoKip/RiJezTkqAGkhfnl70HieU/+djx8AI0kfsGicrxO
+ xn8XhMMqF1t9CIOltgySPY4uWKECS6TxvSLen1Uu31ECk9MxfU2rwUGPCcO0w627hqemp6pqJ
+ XBVVpILdVsUwMY3xOUlq3Fx63ruCbU9LPN0i8xRcgI1ZCA+U+OMxhhCIUGLoZiZBew2I1Pb3G
+ 4/vMz7FiyZJCFxefYyYglGnxBbdkmXCJ90J42ihvpqGpe5l287y/PQTtU0nnj313GeFfa+Gik
+ p+dcjYqHZ474r1VoI5XYGGuY9E8TmdnC6T7kURlAGPMRWUfwpt7BDFp3/MhZcgOWF4P8TtNmj
+ mzS2UT5J4/85RkOY9dusp8Mt5WwRqdcW+b2U4DkhvjjlrOK58w7xagh/V1whMLZ4IvAhfRJ21
+ pVr8piWdAbv/vXio5eMLP6LPlX4V+LZd14lXBRugdryyJNm9PcdeSJNzE7KJ3+EqIgGLN1pNm
+ 7J7IBgQz8tHrFxTNEKLW418/4BFFasne7NqkYexE0YYM8xdEpyRPfZB79euvggg7ueuc=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---VrqPEDrXMn8OVzN4
-Content-Type: multipart/mixed; boundary="AqsLC8rIMeq19msA"
-Content-Disposition: inline
+i got a crash in mutex_can_spin_on_owner while trying to get mPCIe card (a=
+th10 driver) running in bananapi r64 (aarch64) using kernel 5.4
 
+[   11.381653] DEBUG: Passed mtk_pcie_irq_domain_alloc 441 port:0x00000000=
+bc0b7874 lock:0x0000000023f7fc2a
+[   11.391943] Unable to handle kernel NULL pointer dereference at virtual=
+ address 0000000000000260
+[   11.402178] Mem abort info:
+[   11.406356]   ESR =3D 0x96000005
+[   11.410868]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+[   11.417530]   SET =3D 0, FnV =3D 0
+[   11.421997]   EA =3D 0, S1PTW =3D 0
+[   11.425220] Data abort info:
+[   11.428196]   ISV =3D 0, ISS =3D 0x00000005
+[   11.428199]   CM =3D 0, WnR =3D 0
+[   11.428203] user pgtable: 4k pages, 39-bit VAs, pgdp=3D000000007c24b000
+[   11.428206] [0000000000000260] pgd=3D0000000000000000, pud=3D0000000000=
+000000
+[   11.428214] Internal error: Oops: 96000005 [#1] PREEMPT SMP
+[   11.428218] Modules linked in: ath10k_pci(+) ath10k_core mt7622(+) mt76=
+ ath mac80211 libarc4 cfg80211 btmtkuart
+034-ga5669c8a8027-dirty #32
+[   11.428243] Hardware name: Bananapi BPI-R64 (DT)
+[   11.428248] pstate: 00000005 (nzcv daif -PAN -UAO)
+[   11.428260] pc : mutex_can_spin_on_owner+0x30/0x5c
+[   11.428264] lr : mutex_can_spin_on_owner+0x24/0x5c
+[   11.428268] sp : ffffffc010c3b580
+[   11.428271] x29: ffffffc010c3b580 x28: 0000000000080000
+[   11.428275] x27: ffffffc010c3b838 x26: 0000000000000001
+[   11.428280] x25: 000000000000008d x24: 0000000000000002
+[   11.428284] x23: ffffff803d4e6800 x22: ffffff803e155500
+[   11.428288] x21: 0000000000000001 x20: ffffffc010808000
+[   11.428293] x19: ffffff803e155500 x18: 0000000000000000
+[   11.428297] x17: 0000000000000000 x16: 0000000000000000
+[   11.428302] x15: 0000000000000000 x14: 0000000000000000
+[   11.428306] x13: 0000000000000000 x12: 0000000000000001
+[   11.428310] x11: 0000000000000001 x10: 00000000000007c0
+[   11.428315] x9 : ffffffc010c3b3c0 x8 : ffffff803fdb07d0
+[   11.428319] x7 : ffffff803e155500 x6 : ffffff800336a400
+[   11.428324] x5 : 0000000000000220 x4 : 0000000000000220
+[   11.428328] x3 : ffffffc0108b7000 x2 : ffffff800336a400
+[   11.428332] x1 : ffffff800336a400 x0 : 0000000000000220
+[   11.428337] Call trace:
+[   11.428342]  mutex_can_spin_on_owner+0x30/0x5c
+[   11.428349]  __mutex_lock.isra.9+0x58/0x2a4
+[   11.428356]  __mutex_lock_slowpath+0x10/0x18
+[   11.428360]  mutex_lock+0x44/0x68
+[   11.428366]  mtk_pcie_irq_domain_alloc+0x60/0x120
+[   11.428371]  irq_domain_alloc_irqs_hierarchy+0x14/0x1c
+[   11.428375]  irq_domain_alloc_irqs_parent+0x14/0x24
+[   11.428379]  msi_domain_alloc+0x90/0x130
+[   11.428382]  irq_domain_alloc_irqs_hierarchy+0x14/0x1c
+[   11.428386]  __irq_domain_alloc_irqs+0x140/0x2b4
+[   11.428390]  msi_domain_alloc_irqs+0x134/0x2c4
+[   11.428394]  pci_msi_setup_msi_irqs+0x28/0x38
+[   11.428398]  __pci_enable_msi_range+0x208/0x30c
+[   11.428401]  pci_enable_msi+0x18/0x28
+[   11.428418]  ath10k_pci_probe+0x50c/0x6d8 [ath10k_pci]
+[   11.428423]  pci_device_probe+0xb4/0x144
+[   11.428430]  really_probe+0x238/0x3f8
+[   11.428436]  driver_probe_device+0x114/0x124
+[   11.428440]  device_driver_attach+0x40/0x68
+[   11.428444]  __driver_attach+0x134/0x138
+[   11.428448]  bus_for_each_dev+0x78/0xbc
 
---AqsLC8rIMeq19msA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+(gdb) list *(mtk_pcie_irq_domain_alloc+0x60)
+0xffffffc0102e68d0 is in mtk_pcie_irq_domain_alloc (drivers/pci/controller=
+/pcie-mediatek.c:446).
+441             printk(KERN_ALERT "DEBUG: Passed %s %d port:0x%p lock:0x%p=
+\n",__FUNCTION__,__LINE__,(void *)port,(void *)&port->lock);
+442
+443             WARN_ON(nr_irqs !=3D 1);
+444             mutex_lock(&port->lock);
+445
+446             printk(KERN_ALERT "DEBUG: Passed %s %d\n",__FUNCTION__,__L=
+INE__);
+447             bit =3D find_first_zero_bit(port->msi_irq_in_use, MTK_MSI_=
+IRQS_NUM);
+448             printk(KERN_ALERT "DEBUG: Passed %s %d bit:%lu,max:%u\n",_=
+_FUNCTION__,__LINE__,bit,MTK_MSI_IRQS_NUM);
+449
+450             if (bit >=3D MTK_MSI_IRQS_NUM) {
 
-On Wed, Nov 27, 2019 at 05:09:41PM +0000, Robin Murphy wrote:
-> On 27/11/2019 2:16 pm, Thierry Reding wrote:
-> [...]
-> > Nevermind that, I figured out that I was missingthe initialization of
-> > some of the S2CR variables. I've got something that I think is working
-> > now, though I don't know yet how to go about cleaning up the initial
-> > mapping and "recycling" it.
-> >=20
-> > I'll clean things up a bit, run some more tests and post a new patch
-> > that can serve as a basis for discussion.
->=20
-> I'm a little puzzled by the smmu->identity domain - disregarding the fact
-> that it's not actually used by the given diff ;) - if isolation is the
-> reason for not simply using a bypass S2CR for the window between reset and
-> the relevant .add_device call where the default domain proper comes in[1],
-> then surely exposing the union of memory regions to the union of all
-> associated devices isn't all that desirable either.
+(gdb) list *(mutex_can_spin_on_owner+0x30)
+0xffffffc0100d96f8 is in mutex_can_spin_on_owner (kernel/locking/mutex.c:6=
+05).
+600             /*
+601              * As lock holder preemption issue, we both skip spinning =
+if task is not
+602              * on cpu or its cpu is preempted
+603              */
+604             if (owner)
+605                     retval =3D owner->on_cpu && !vcpu_is_preempted(tas=
+k_cpu(owner));
+606             rcu_read_unlock();
+607
+608             /*
+609              * If lock->owner is not set, the mutex has been released.=
+ Return true
 
-A bypass S2CR was what I had originally in mind, but Will objected to
-that because it "leaves the thing wide open if we don't subsequently
-probe the master."[0]
+mutex is initialized in mtk_pcie_allocate_msi_domains which is called befo=
+re twice, so i guess the mutex itself is correctly initialized.
 
-Will went on to suggest setting up a page-table early for stream IDs
-with reserved regions, so that's what I implemented. It ends up working
-fairly nicely (see attached patch).
+can you give me some hint to debug it?
 
-I suppose putting all the masters into the same bucket isn't an ideal
-solution, but it's pretty simple and straightforward. Also, I don't
-expect this to be a very common use-case. In fact, the only place where
-I'm aware that this is needed is for display controllers scanning out a
-splash screen. So the worst that could happen here is if they somehow
-got the addresses mixed up and read each others' framebuffers, which
-would really only be possible if they were already doing so before the
-SMMU was initialized. Any harm from that would already be done.
-
-I don't think there's a real risk here. Before the ARM SMMU driver takes
-over and configures all contexts as fault by default all of these
-devices are reading from physical memory without any isolation. Setting
-up this identity domain will allow them to keep accessing the regions
-that they were meant to access, while still faulting when access happens
-outside.
-
-> Either way, I'll give you the pre-emptive warning that this is the SMMU in
-> the way of my EFI framebuffer ;)
->=20
-> ...
-> arm-smmu 7fb20000.iommu: 	1 context banks (1 stage-2 only)
-> ...
-
-Interesting. How did you avoid getting the faults by default? Do you
-just enable bypass by default?
-
-If I understand correctly, this would mean that you can have only a
-single IOMMU domain in that case, right? In that case it would perhaps
-be better to keep a list of identity IOMMU domains and later on somehow
-pass them on when the driver takes over. Basically these would have to
-become the IOMMU groups' default domains.
-
-> Robin.
->=20
-> [1] the fact that it currently depends on probe order whether getting that
-> .add_device call requires a driver probing for the device is an error as
-> discussed elsewhere, and will get fixed separately, I promise.
-
-I'm not sure I understand how that would fix anything. You'd still need
-to program the SMMU first before calling the ->add_device() for all the
-masters, in which case you're still going to run into faults.
-
-Thierry
-
-[0]: https://lkml.org/lkml/2019/9/17/745
-
---AqsLC8rIMeq19msA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline;
-	filename="0001-iommu-arm-smmu-Add-support-for-early-direct-mappings.patch"
-Content-Transfer-Encoding: quoted-printable
-
-=46rom cd7be912e74bdd463384e42f1aa275e959f4bee2 Mon Sep 17 00:00:00 2001
-=46rom: Thierry Reding <treding@nvidia.com>
-Date: Thu, 28 Nov 2019 12:03:58 +0100
-Subject: [PATCH] iommu: arm-smmu: Add support for early direct mappings
-
-On platforms, the firmware will setup hardware to read from a given
-region of memory. One such example is a display controller that is
-scanning out a splash screen from physical memory.
-
-During Linux's boot process, the ARM SMMU will configure all contexts to
-fault by default. This means that memory accesses that happen by an SMMU
-master before its driver has had a chance to properly set up the IOMMU
-will cause a fault. This is especially annoying for something like the
-display controller scanning out a splash screen because the faults will
-result in the display controller getting bogus data (all-ones on Tegra)
-and since it repeatedly scans that framebuffer, it will keep triggering
-such faults and spam the boot log with them.
-
-In order to work around such problems, scan the device tree for IOMMU
-masters and set up a special identity domain that will map 1:1 all of
-the reserved regions associated with them. This happens before the SMMU
-is enabled, so that the mappings are already set up before translations
-begin.
-
-TODO: remove identity domain when no longer in use
-
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/iommu/arm-smmu.c | 172 ++++++++++++++++++++++++++++++++++++++-
- drivers/iommu/arm-smmu.h |   2 +
- 2 files changed, 173 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 58ec52d3c5af..3d6c58ce3bab 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1887,6 +1887,172 @@ static int arm_smmu_device_cfg_probe(struct arm_smm=
-u_device *smmu)
- 	return 0;
- }
-=20
-+static int arm_smmu_identity_map_regions(struct arm_smmu_device *smmu,
-+					 struct device_node *np)
-+{
-+	struct device *dev =3D smmu->dev;
-+	struct of_phandle_iterator it;
-+	unsigned long page_size;
-+	unsigned int count =3D 0;
-+	int ret;
-+
-+	page_size =3D 1UL << __ffs(smmu->identity->pgsize_bitmap);
-+
-+	/* parse memory regions and add them to the identity mapping */
-+	of_for_each_phandle(&it, ret, np, "memory-region", NULL, 0) {
-+		int prot =3D IOMMU_READ | IOMMU_WRITE;
-+		dma_addr_t start, limit, iova;
-+		struct resource res;
-+
-+		ret =3D of_address_to_resource(it.node, 0, &res);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to parse memory region %pOF: %d\n",
-+				it.node, ret);
-+			continue;
-+		}
-+
-+		/* check that region is not empty */
-+		if (resource_size(&res) =3D=3D 0) {
-+			dev_dbg(dev, "skipping empty memory region %pOF\n",
-+				it.node);
-+			continue;
-+		}
-+
-+		start =3D ALIGN(res.start, page_size);
-+		limit =3D ALIGN(res.start + resource_size(&res), page_size);
-+
-+		for (iova =3D start; iova < limit; iova +=3D page_size) {
-+			phys_addr_t phys;
-+
-+			/* check that this IOVA isn't already mapped */
-+			phys =3D iommu_iova_to_phys(smmu->identity, iova);
-+			if (phys)
-+				continue;
-+
-+			ret =3D iommu_map(smmu->identity, iova, iova, page_size,
-+					prot);
-+			if (ret < 0) {
-+				dev_err(dev, "failed to map %pad for %pOF: %d\n",
-+					&iova, it.node, ret);
-+				continue;
-+			}
-+		}
-+
-+		dev_dbg(dev, "identity mapped memory region %pR\n", &res);
-+		count++;
-+	}
-+
-+	return count;
-+}
-+
-+static int arm_smmu_identity_add_master(struct arm_smmu_device *smmu,
-+					struct of_phandle_args *args)
-+{
-+	struct arm_smmu_domain *identity =3D to_smmu_domain(smmu->identity);
-+	struct arm_smmu_smr *smrs =3D smmu->smrs;
-+	struct device *dev =3D smmu->dev;
-+	unsigned int index;
-+	u16 sid, mask;
-+	u32 fwid;
-+	int ret;
-+
-+	/* skip masters that aren't ours */
-+	if (args->np !=3D dev->of_node)
-+		return 0;
-+
-+	fwid =3D arm_smmu_of_parse(args->np, args->args, args->args_count);
-+	sid =3D FIELD_GET(SMR_ID, fwid);
-+	mask =3D FIELD_GET(SMR_MASK, fwid);
-+
-+	ret =3D arm_smmu_find_sme(smmu, sid, mask);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to find SME: %d\n", ret);
-+		return ret;
-+	}
-+
-+	index =3D ret;
-+
-+	if (smrs && smmu->s2crs[index].count =3D=3D 0) {
-+		smrs[index].id =3D sid;
-+		smrs[index].mask =3D mask;
-+		smrs[index].valid =3D true;
-+	}
-+
-+	smmu->s2crs[index].type =3D S2CR_TYPE_TRANS;
-+	smmu->s2crs[index].privcfg =3D S2CR_PRIVCFG_DEFAULT;
-+	smmu->s2crs[index].cbndx =3D identity->cfg.cbndx;
-+	smmu->s2crs[index].count++;
-+
-+	return 0;
-+}
-+
-+static int arm_smmu_identity_add_device(struct arm_smmu_device *smmu,
-+					struct device_node *np)
-+{
-+	struct device *dev =3D smmu->dev;
-+	struct of_phandle_args args;
-+	unsigned int index =3D 0;
-+	int ret;
-+
-+	/* add stream IDs to the identity mapping */
-+	while (!of_parse_phandle_with_args(np, "iommus", "#iommu-cells",
-+					   index, &args)) {
-+		ret =3D arm_smmu_identity_add_master(smmu, &args);
-+		if (ret < 0)
-+			return ret;
-+
-+		index++;
-+	}
-+
-+	return 0;
-+}
-+
-+static int arm_smmu_setup_identity(struct arm_smmu_device *smmu)
-+{
-+	struct arm_smmu_domain *identity;
-+	struct device *dev =3D smmu->dev;
-+	struct device_node *np;
-+	int ret;
-+
-+	/* create early identity mapping */
-+	smmu->identity =3D arm_smmu_domain_alloc(IOMMU_DOMAIN_UNMANAGED);
-+	if (!smmu->identity) {
-+		dev_err(dev, "failed to create identity domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	smmu->identity->pgsize_bitmap =3D smmu->pgsize_bitmap;
-+	smmu->identity->type =3D IOMMU_DOMAIN_UNMANAGED;
-+	smmu->identity->ops =3D &arm_smmu_ops;
-+
-+	ret =3D arm_smmu_init_domain_context(smmu->identity, smmu);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to initialize identity domain: %d\n", ret);
-+		return ret;
-+	}
-+
-+	identity =3D to_smmu_domain(smmu->identity);
-+
-+	for_each_node_with_property(np, "iommus") {
-+		ret =3D arm_smmu_identity_map_regions(smmu, np);
-+		if (ret < 0)
-+			continue;
-+
-+		/*
-+		 * Do not add devices to the early identity mapping if they
-+		 * do not define any memory-regions.
-+		 */
-+		if (ret =3D=3D 0)
-+			continue;
-+
-+		ret =3D arm_smmu_identity_add_device(smmu, np);
-+		if (ret < 0)
-+			continue;
-+	}
-+
-+	return 0;
-+}
-+
- struct arm_smmu_match_data {
- 	enum arm_smmu_arch_version version;
- 	enum arm_smmu_implementation model;
-@@ -2128,6 +2294,10 @@ static int arm_smmu_device_probe(struct platform_dev=
-ice *pdev)
- 	if (err)
- 		return err;
-=20
-+	err =3D arm_smmu_setup_identity(smmu);
-+	if (err)
-+		return err;
-+
- 	if (smmu->version =3D=3D ARM_SMMU_V2) {
- 		if (smmu->num_context_banks > smmu->num_context_irqs) {
- 			dev_err(dev,
-@@ -2170,8 +2340,8 @@ static int arm_smmu_device_probe(struct platform_devi=
-ce *pdev)
- 	}
-=20
- 	platform_set_drvdata(pdev, smmu);
--	arm_smmu_device_reset(smmu);
- 	arm_smmu_test_smr_masks(smmu);
-+	arm_smmu_device_reset(smmu);
-=20
- 	/*
- 	 * We want to avoid touching dev->power.lock in fastpaths unless
-diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index 6b6b877135de..001e60a3d18c 100644
---- a/drivers/iommu/arm-smmu.h
-+++ b/drivers/iommu/arm-smmu.h
-@@ -280,6 +280,8 @@ struct arm_smmu_device {
-=20
- 	/* IOMMU core code handle */
- 	struct iommu_device		iommu;
-+
-+	struct iommu_domain		*identity;
- };
-=20
- enum arm_smmu_context_fmt {
---=20
-2.23.0
-
-
---AqsLC8rIMeq19msA--
-
---VrqPEDrXMn8OVzN4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3fsusACgkQ3SOs138+
-s6GAfg/9HnqEYP34VZRpHRKWFWE9obt/03KUw6jheVdj7YUz6VhONFCNI1aHKGMu
-GsJImtRYW2OnTQjBPCZqiEGJK5KQwIdpzHDRgwvgPViKyP7pyWJdV0ZZ8RgvDLtz
-LZtfJdyR8US0yuOcJBhALweoT4swq4rElmYa6SLZa3v2DyC3Yq4qi7arJZZBAND3
-bc/4dpc1LdOhpiED5QPBaq7aUMuKweUN4vDxL+QR5TBkBvRbOGksbQB7sAmF6/Xo
-RBZ7jfXbZ3kMfMVL2mtfRBcQjeuLWQwii9sbH1nKcXf/8Yyk+ar+Fs+7Lj7XIosg
-8mbhOQF0bvSKUJ0opLXy0+QL1WGSSU8JyoiNnWoU6MPS9la7TJsR5j2Kz2hFjMTz
-7wKHmd8A/ZsleroFbZmt6ymq623sLaxFp/HjBTqDp0yl/6KPIgZOC+y2oLpPVhQB
-v4jmKXzyUv++8HKQ6l7FUKeDWttUzjMS1WWNdHx5VCL+vh8MlZBr5w6bl/d0YHst
-5goP2MQcm2Y563cTWBPy9fiZHDidvDixtAud9HUDuPXxi74r2jeYazYZn1Wm/vKO
-nCdq0QR3Pe5DENDyvkzTIDnudVkRC4ABMmVq/UHsbf2zpbVJ5/oBB9O2L3S8MO2k
-+Ecv9e/8Lvwd3BRF1+lE0bwLlX9ouXtfTtlzj43jXFO/UECQ3nw=
-=Db6D
------END PGP SIGNATURE-----
-
---VrqPEDrXMn8OVzN4--
+regards Frank
