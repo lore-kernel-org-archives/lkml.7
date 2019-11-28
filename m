@@ -2,382 +2,201 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7687BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204D3C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A75206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D7C208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:17:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="jMlzZCJB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CF/bXBoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfK1FMh (ORCPT
+        id S1726700AbfK1FQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 00:12:37 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25803 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfK1FMg (ORCPT
+        Thu, 28 Nov 2019 00:16:59 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39906 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbfK1FQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 00:12:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574917916; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=nx4Uzg4pUF8dGZQgxktKp0iMZA1sRrYC0gvG9INTbzD9FlofPd6Ym4c1WTZF6cjyFEel96Ge+4sE34S4SCfJrYZXzTeFqzDcYvkBohPgkVwRFsjHui/HMYENje1GbbXVZYqFv0am/lCmGmYXKUu5kOouEzOafzYWxcH0dWyV1WQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574917916; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=Gv5khDipFDg8e+TeKCMd3YHA1629M59X1LmDNZoFAV4=; 
-        b=Q9OZPDoZl3UPWmTYpwZaKd6zfcPoo4epbV43k5NmxDmw7bQliEX3y6nykKYkOpAfgTso7PR8hd7uQptVBBQM5flkE1EJHj8GhKNBcrig+90alrDoOsRMlVA/447/PjhHFNOsxW856Nya+17PUjL6BTfYA1DOvZM42Z2EYCKZQ9o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=TsQd6KJYkOH8PSRnHQx0SYK/MIgQc42gEjqOoAR256DYqu5rEM0s+tPKQIvlA8k98wNEfO9uSoCh
-    DUZGPZOHK09dxte63zagQH4M9oCQGOrPt4IGODJdzFVL7uwRV5q8  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574917916;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=Gv5khDipFDg8e+TeKCMd3YHA1629M59X1LmDNZoFAV4=;
-        b=jMlzZCJBgsnwYkasczDEhkK9rEPqjZ0OR8N05jR9PS7IJhwIO7WiRBjPJAqewiw2
-        gbvWs6cQHTF/eNzoqimOfaoWgqdiqVmIikSkB4ui7O/QBOOfQWyPCGZI/4NUi5Zxa1t
-        Fh9/qwqogmbsP3QF6kFL3850iiJ7yKSDM0/jhZIc=
-Received: from [192.168.88.130] (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
-        with SMTPS id 157491791588131.159645916822114; Wed, 27 Nov 2019 21:11:55 -0800 (PST)
-Subject: Re: [PATCH v4 4/6] MIPS: Ingenic: Initial YSH & ATIL CU Neo board
- support.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
- <1574787974-58040-5-git-send-email-zhouyanjie@zoho.com>
- <1574873873.3.1@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DDF5711.9050008@zoho.com>
-Date:   Thu, 28 Nov 2019 13:11:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Thu, 28 Nov 2019 00:16:59 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f18so18968490lfj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 21:16:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lR12DaEE+AW1TedwejaQ5XBaagtm7RCiAuWey8Otkmg=;
+        b=CF/bXBoLEkRFv4y+G375Ejw43bwkSRxz7ttzZMIBn/MNndnQ8U+DXap2uA4fZbCive
+         WQS1QwFAjXzwXUju61HOYQqs0NBgPbLiPLmsz3SWG9RYbQnYsk4oejIXRkJRFcw6LCQ2
+         36a+jl4hq4qPAFWyLTccqagURnkUCGYALpaNJN6QVbIEADZQczdSt6bMLAf33zDtgOfl
+         1ArUrc55efVXjwXx1G68rVz2iFhQsH8odzaCsmD53Az94HlnwGd2tmSV/95rRxInzCjJ
+         5s+Lp6T5v3NuLYdDHZ2tkXxRLONdqvfLaByPrkswWE8U9Ws+gNkyGwAMKgjlAyMXBEwe
+         G5Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lR12DaEE+AW1TedwejaQ5XBaagtm7RCiAuWey8Otkmg=;
+        b=ZRbGJoRDOgrVgq7x1SuVVh7hOdARiPwcR1AoK7Kway/Ew+/yNz9nb7SGCb4EBV2vEU
+         1j3dL0Qybb+YrAtYdQEnih9SiUPxKmOAO/FrbBXXRuJPuuFKbE4/FuRb+bm4JDbpJRkb
+         d/2Y1hIQAOJJsn9xfkbyeOgOj79fkdeLYy4+1oRMeEwaQuIPNyHuJGthSh6OKEd/1ehz
+         wSVnI6lJhjze4dGPvDX2oXOMeO1bAHv042VTN53elaG48A5onUr2Fv8NV8mn0j7YolDQ
+         ivmBaA9BvPLfEzbgzE6jl/1bW5u++Ox4j/IeC0y1Ab9nrInXpWKzg/rG2u2I/fxPDu4C
+         b1BQ==
+X-Gm-Message-State: APjAAAUPGhL6LNWztuAu2mNQG3wo9U+7zWsOyz1gm3xCK/bjz9Gl3Lt8
+        9dIslMqWG2Vhn0mlbpeujuSWIB3O0r0Tqb8Rhes30g==
+X-Google-Smtp-Source: APXvYqyGXHIYd7ZRfGH3KoDb4L4AdaypYelyQIewvgdCPKt9eEmrdgZEoh3E6Dcfr7MuM8WLjOLjsNVEVCKQ1OZohQU=
+X-Received: by 2002:ac2:4a91:: with SMTP id l17mr3317369lfp.75.1574918216353;
+ Wed, 27 Nov 2019 21:16:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1574873873.3.1@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+References: <20191127203049.431810767@linuxfoundation.org>
+In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 28 Nov 2019 10:46:45 +0530
+Message-ID: <CA+G9fYtFNKTYiqm0Bvk_nqBTjsRMKTtNxr6PhE8YaDXFjqwhYQ@mail.gmail.com>
+Subject: Re: [PATCH 4.14 000/211] 4.14.157-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-
-On 2019=E5=B9=B411=E6=9C=8828=E6=97=A5 00:57, Paul Cercueil wrote:
-> Hi Zhou,
+On Thu, 28 Nov 2019 at 02:16, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
+> This is the start of the stable review cycle for the 4.14.157 release.
+> There are 211 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Le mer., nov. 27, 2019 at 01:06, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-> =C3=A9crit :
->> Add a device tree for the Ingenic X1000 based YSH & ATIL CU Neo board.
->> Note that this is unselectable via Kconfig until the X1000 SoC is made
->> selectable in a later commit.
->>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>
->> Notes:
->>     v1->v2:
->>     Rebase on top of mips-next, use TCU for system timer and=20
->> clocksource.
->>
->>     v2->v3:
->>     No change.
->>
->>     v3->v4:
->>     1.Adjust "model" in "cu1000.dts" to match the description in=20
->> "devices.yaml".
->>     2.Adjust "bool" in "Kconfig" to avoid duplicate names with=20
->> subsequent boards.
->>
->>  arch/mips/boot/dts/ingenic/Makefile   |   1 +
->>  arch/mips/boot/dts/ingenic/cu1000.dts |  52 ++++++++++++++++++
->>  arch/mips/configs/cu1000_defconfig    | 100=20
->> ++++++++++++++++++++++++++++++++++
->>  arch/mips/jz4740/Kconfig              |   4 ++
->>  4 files changed, 157 insertions(+)
->>  create mode 100644 arch/mips/boot/dts/ingenic/cu1000.dts
->>  create mode 100644 arch/mips/configs/cu1000_defconfig
->>
->> diff --git a/arch/mips/boot/dts/ingenic/Makefile=20
->> b/arch/mips/boot/dts/ingenic/Makefile
->> index 9cc4844..f6db7bb 100644
->> --- a/arch/mips/boot/dts/ingenic/Makefile
->> +++ b/arch/mips/boot/dts/ingenic/Makefile
->> @@ -2,5 +2,6 @@
->>  dtb-$(CONFIG_JZ4740_QI_LB60)    +=3D qi_lb60.dtb
->>  dtb-$(CONFIG_JZ4770_GCW0)    +=3D gcw0.dtb
->>  dtb-$(CONFIG_JZ4780_CI20)    +=3D ci20.dtb
->> +dtb-$(CONFIG_X1000_CU1000)    +=3D cu1000.dtb
->>
->>  obj-$(CONFIG_BUILTIN_DTB)    +=3D $(addsuffix .o, $(dtb-y))
->> diff --git a/arch/mips/boot/dts/ingenic/cu1000.dts=20
->> b/arch/mips/boot/dts/ingenic/cu1000.dts
->> new file mode 100644
->> index 00000000..f92f6af
->> --- /dev/null
->> +++ b/arch/mips/boot/dts/ingenic/cu1000.dts
->> @@ -0,0 +1,52 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/dts-v1/;
->> +
->> +#include "x1000.dtsi"
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/clock/ingenic,tcu.h>
->> +
->> +/ {
->> +    compatible =3D "yna,cu1000", "ingenic,x1000";
->> +    model =3D "YSH & ATIL General Board CU Neo";
->> +
->> +    aliases {
->> +        serial2 =3D &uart2;
->> +    };
->> +
->> +    chosen {
->> +        stdout-path =3D &uart2;
->> +    };
->> +
->> +    memory {
->> +        device_type =3D "memory";
->> +        reg =3D <0x0 0x04000000>;
->> +    };
->> +};
->> +
->> +&exclk {
->> +    clock-frequency =3D <24000000>;
->> +};
->> +
->> +&tcu {
->> +    /* 1500 kHz for the system timer and clocksource */
->> +    assigned-clocks =3D <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
->> +    assigned-clock-rates =3D <1500000>, <1500000>;
->> +
->> +    /* Use channel #1 for the system timer channel #2 for the=20
->> clocksource */
->> +    ingenic,pwm-channels-mask =3D <0xfa>;
+> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
+> Anything received after that time might be too late.
 >
-> From the mask used, I'm gessing that you're reserving channels #0 and=20
-> #2, not #1 and #2.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.157-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
 >
-
-My fault, you are right, it use channels #0 and #2.
-
->> +};
->> +
->> +&uart2 {
->> +    status =3D "okay";
->> +
->> +    pinctrl-names =3D "default";
->> +    pinctrl-0 =3D <&pins_uart2>;
->> +};
->> +
->> +&pinctrl {
->> +    pins_uart2: uart2 {
->> +        function =3D "uart2";
->> +        groups =3D "uart2-data-d";
->> +        bias-disable;
->> +    };
->> +};
->> diff --git a/arch/mips/configs/cu1000_defconfig=20
->> b/arch/mips/configs/cu1000_defconfig
->> new file mode 100644
->> index 00000000..88729ee
->> --- /dev/null
->> +++ b/arch/mips/configs/cu1000_defconfig
->> @@ -0,0 +1,100 @@
->> +CONFIG_LOCALVERSION_AUTO=3Dy
->> +CONFIG_KERNEL_GZIP=3Dy
->> +CONFIG_SYSVIPC=3Dy
->> +CONFIG_NO_HZ_IDLE=3Dy
->> +CONFIG_HIGH_RES_TIMERS=3Dy
->> +CONFIG_PREEMPT=3Dy
->> +CONFIG_IKCONFIG=3Dy
->> +CONFIG_IKCONFIG_PROC=3Dy
->> +CONFIG_LOG_BUF_SHIFT=3D14
->> +CONFIG_CGROUPS=3Dy
->> +CONFIG_MEMCG=3Dy
->> +CONFIG_MEMCG_KMEM=3Dy
->> +CONFIG_CGROUP_SCHED=3Dy
->> +CONFIG_CGROUP_FREEZER=3Dy
->> +CONFIG_CGROUP_DEVICE=3Dy
->> +CONFIG_CGROUP_CPUACCT=3Dy
->> +CONFIG_NAMESPACES=3Dy
->> +CONFIG_USER_NS=3Dy
->> +CONFIG_BLK_DEV_INITRD=3Dy
->> +CONFIG_INITRAMFS_SOURCE=3D"arch/mips/boot/ramdisk.cpio.gz"
->> +CONFIG_CC_OPTIMIZE_FOR_SIZE=3Dy
->> +CONFIG_SYSCTL_SYSCALL=3Dy
->> +CONFIG_KALLSYMS_ALL=3Dy
->> +CONFIG_EMBEDDED=3Dy
->> +# CONFIG_VM_EVENT_COUNTERS is not set
->> +# CONFIG_COMPAT_BRK is not set
->> +CONFIG_SLAB=3Dy
->> +CONFIG_MACH_INGENIC=3Dy
->> +CONFIG_X1000_CU1000=3Dy
->> +CONFIG_HIGHMEM=3Dy
->> +CONFIG_HZ_100=3Dy
->> +CONFIG_HZ=3D100
+> thanks,
 >
-> This line looks malformed.
+> greg k-h
 
-Ok, I'll remove it in v7.
+Kernel BUG noticed on x86_64 device while booting 4.14.157-rc1 kernel.
 
->
->> +# CONFIG_SECCOMP is not set
->> +# CONFIG_SUSPEND is not set
->> +# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
->> +# CONFIG_COMPACTION is not set
->> +CONFIG_CMA=3Dy
->> +CONFIG_CMA_AREAS=3D7
->> +CONFIG_UEVENT_HELPER=3Dy
->> +CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
->> +CONFIG_DEVTMPFS=3Dy
->> +# CONFIG_FW_LOADER is not set
->> +# CONFIG_ALLOW_DEV_COREDUMP is not set
->> +# CONFIG_INPUT_MOUSEDEV is not set
->> +# CONFIG_INPUT_KEYBOARD is not set
->> +# CONFIG_INPUT_MOUSE is not set
->> +# CONFIG_SERIO is not set
->> +CONFIG_VT_HW_CONSOLE_BINDING=3Dy
->> +CONFIG_LEGACY_PTY_COUNT=3D2
->> +CONFIG_SERIAL_EARLYCON=3Dy
->> +CONFIG_SERIAL_8250=3Dy
->> +CONFIG_SERIAL_8250_CONSOLE=3Dy
->> +CONFIG_SERIAL_8250_NR_UARTS=3D3
->> +CONFIG_SERIAL_8250_RUNTIME_UARTS=3D3
->> +CONFIG_SERIAL_8250_INGENIC=3Dy
->> +CONFIG_SERIAL_OF_PLATFORM=3Dy
->> +# CONFIG_HW_RANDOM is not set
->> +CONFIG_GPIO_SYSFS=3Dy
->> +# CONFIG_HWMON is not set
->> +# CONFIG_LCD_CLASS_DEVICE is not set
->> +# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
->> +# CONFIG_VGA_CONSOLE is not set
->> +# CONFIG_HID is not set
->> +# CONFIG_USB_SUPPORT is not set
->> +# CONFIG_IOMMU_SUPPORT is not set
->> +CONFIG_NVMEM=3Dy
->> +CONFIG_NVMEM_SYSFS=3Dy
->> +CONFIG_EXT4_FS=3Dy
->> +# CONFIG_DNOTIFY is not set
->> +CONFIG_PROC_KCORE=3Dy
->> +# CONFIG_PROC_PAGE_MONITOR is not set
->> +CONFIG_TMPFS=3Dy
->> +CONFIG_CONFIGFS_FS=3Dy
->> +CONFIG_NLS=3Dy
->> +CONFIG_NLS_CODEPAGE_936=3Dy
->> +CONFIG_NLS_CODEPAGE_950=3Dy
->> +CONFIG_NLS_ASCII=3Dy
->> +CONFIG_NLS_ISO8859_1=3Dy
->> +CONFIG_NLS_UTF8=3Dy
->> +CONFIG_CRYPTO_ECHAINIV=3Dy
->> +CONFIG_CRYPTO_AES=3Dy
->> +CONFIG_CRYPTO_DEFLATE=3Dy
->> +CONFIG_CRYPTO_LZO=3Dy
->> +CONFIG_PRINTK_TIME=3Dy
->> +CONFIG_CONSOLE_LOGLEVEL_DEFAULT=3D15
->> +CONFIG_CONSOLE_LOGLEVEL_QUIET=3D15
->> +CONFIG_MESSAGE_LOGLEVEL_DEFAULT=3D7
->> +CONFIG_DEBUG_INFO=3Dy
->> +CONFIG_STRIP_ASM_SYMS=3Dy
->> +CONFIG_DEBUG_FS=3Dy
->> +CONFIG_MAGIC_SYSRQ=3Dy
->> +CONFIG_PANIC_ON_OOPS=3Dy
->> +CONFIG_PANIC_TIMEOUT=3D10
->> +# CONFIG_SCHED_DEBUG is not set
->> +# CONFIG_DEBUG_PREEMPT is not set
->> +CONFIG_STACKTRACE=3Dy
->> +# CONFIG_FTRACE is not set
->> +CONFIG_CMDLINE_BOOL=3Dy
->> +CONFIG_CMDLINE=3D"console=3DttyS2,115200n8 mem=3D32M@0x0 earlycon=20
->> clk_ignore_unused"
->
-> You already specify the stdout-path in the devicetree, no need to pass=20
-> the "console" parameter.
->
+Summary
+------------------------------------------------------------------------
 
-According the test log , if remove "console=3DttyS2,115200n8", serial will =
-not
-initialized and will stuck after:
+kernel: 4.14.157-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.14.y
+git commit: 3ecb26dddb12a0368baea19c0778c267e215edff
+git describe: v4.14.156-212-g3ecb26dddb12
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe-sanity/build/v4.14.156-212-g3ecb26dddb12
+kernel-config: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-stable-rc-4.14/655/config
 
-[    0.016815] printk: bootconsole [x1000_uart0] disabled
+Regressions (compared to build v4.14.156)
 
-if remove both "console=3DttyS2,115200n8" and "earlycon" it will stuck afte=
-r:
+[    2.777657] BUG: unable to handle kernel NULL pointer dereference
+at 0000000000000090
+[    2.785487] IP: kernfs_find_ns+0x18/0xf0
+[    2.789408] PGD 0 P4D 0
+[    2.791941] Oops: 0000 [#1] SMP PTI
+[    2.795424] Modules linked in:
+[    2.798474] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 4.14.157-rc1 #1
+[    2.804906] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.2 05/23/2018
+[    2.812288] task: ffff8e09ee250000 task.stack: ffffa0f900028000
+[    2.818200] RIP: 0010:kernfs_find_ns+0x18/0xf0
+[    2.822636] RSP: 0000:ffffa0f90002bc48 EFLAGS: 00010286
+[    2.827854] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff9e6fb326
+[    2.834978] RDX: 0000000000000000 RSI: ffffffff9e7b9c81 RDI: 0000000000000000
+[    2.842102] RBP: ffffffff9e7b9c81 R08: ffffffff9d718df0 R09: 00000000000020b0
+[    2.849225] R10: ffffa0f90002bc80 R11: ffffffff9f8cfc40 R12: 0000000000000000
+[    2.856351] R13: 0000000000000000 R14: ffffffff9e7b9c81 R15: 0000000000000004
+[    2.863475] FS:  0000000000000000(0000) GS:ffff8e09f7880000(0000)
+knlGS:0000000000000000
+[    2.871550] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    2.877288] CR2: 0000000000000090 CR3: 000000014f41e001 CR4: 00000000003606e0
+[    2.884411] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    2.891536] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    2.898659] Call Trace:
+[    2.901106]  kernfs_find_and_get_ns+0x2e/0x50
+[    2.905463]  sysfs_remove_group+0x25/0x80
+[    2.909468]  netdev_queue_update_kobjects+0xbe/0x150
+[    2.914426]  netif_set_real_num_tx_queues+0x71/0x200
+[    2.919393]  __igb_open+0x19a/0x5c0
+[    2.922885]  __dev_open+0xa7/0x130
+[    2.926290]  ? __dev_change_flags+0x7c/0x190
+[    2.930554]  __dev_change_flags+0x153/0x190
+[    2.934739]  ? set_debug_rodata+0x11/0x11
+[    2.938744]  dev_change_flags+0x23/0x60
+[    2.942575]  ip_auto_config+0x202/0xe4e
+[    2.946415]  ? set_debug_rodata+0x11/0x11
+[    2.950424]  ? root_nfs_parse_addr+0x9e/0x9e
+[    2.954690]  ? do_one_initcall+0x3e/0x154
+[    2.958691]  do_one_initcall+0x3e/0x154
+[    2.962524]  kernel_init_freeable+0x1b1/0x238
+[    2.966875]  ? rest_init+0x190/0x190
+[    2.970444]  kernel_init+0xa/0x100
+[    2.973844]  ret_from_fork+0x3a/0x50
+[    2.977422] Code: 85 a5 fe ff ff e9 3c fe ff ff 66 0f 1f 84 00 00
+00 00 00 0f 1f 44 00 00 41 57 41 56 49 89 f6 41 55 41 54 49 89 fd 55
+53 49 89 d4 <0f> b7 af 90 00 00 00 8b 05 cb ab 3b 01 48 8b 5f 68 66 83
+e5 20
+[    2.996288] RIP: kernfs_find_ns+0x18/0xf0 RSP: ffffa0f90002bc48
+[    3.002199] CR2: 0000000000000090
+[    3.005512] ---[ end trace 93a0e1285ce8e359 ]---
+[    3.010131] BUG: sleeping function called from invalid context at
+/usr/src/kernel/include/linux/percpu-rwsem.h:34
+[    3.020381] in_atomic(): 0, irqs_disabled(): 1, pid: 1, name: swapper/0
+[    3.026984] INFO: lockdep is turned off.
+[    3.030901] irq event stamp: 912954
+[    3.034388] hardirqs last  enabled at (912953):
+[<ffffffff9dfa6502>] _raw_spin_unlock_irqrestore+0x32/0x50
+[    3.044064] hardirqs last disabled at (912954):
+[<ffffffff9e00159e>] error_entry+0x7e/0x100
+[    3.052415] softirqs last  enabled at (910778):
+[<ffffffff9e20037b>] __do_softirq+0x37b/0x4fa
+[    3.060933] softirqs last disabled at (910771):
+[<ffffffff9d4d6731>] irq_exit+0xd1/0xe0
+[    3.068922] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G      D
+4.14.157-rc1 #1
+[    3.076567] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.2 05/23/2018
+[    3.083949] Call Trace:
+[    3.086397]  dump_stack+0x71/0xa5
+[    3.089716]  ___might_sleep+0x149/0x230
+[    3.093555]  exit_signals+0x20/0x210
+[    3.097124]  do_exit+0xa0/0xd00
+[    3.100263]  ? kernel_init_freeable+0x1b1/0x238
+[    3.104796]  rewind_stack_do_exit+0x17/0x20
+[    3.108995] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x00000009
+[    3.108995]
+[    3.118161] Kernel Offset: 0x1c400000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 
-Starting kernel ...
-
-So I think both the "earlycon" and the "console=3DttyS2,115200n8 earlycon"=
-=20
-should be retained.
-
-> For the "mem" parameter, it's already set in the devicetree, so no=20
-> need to set it again here.
-> Besides, in the devicetree it is set to 64 MiB.
-
-Ok, I'll remove them in v7.
-
->
-> Why is clk_ignore_unused needed?
-
-In fact, I also don't know why "clk_ignore_unused" needed.
-This part of the parameter is copied from ci20_defconfig,
-but according to the test, if remove "clk_ignore_unused",
-it will stuck after :
-
-[    0.374361] printk: bootconsole [x1000_uart0] disabled
-
-Differeent from the case where "console=3DttyS2,115200n8" is removed,
-the serial is successfully initialized this time.
-
-So I think "clk_ignore_unused" should be retained.
-
-Thanks and best regards!
-
->
-> Cheers,
-> -Paul
->
->> +CONFIG_CMDLINE_OVERRIDE=3Dy
->> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
->> index 6b96844..ccaf507 100644
->> --- a/arch/mips/jz4740/Kconfig
->> +++ b/arch/mips/jz4740/Kconfig
->> @@ -16,6 +16,10 @@ config JZ4780_CI20
->>      bool "MIPS Creator CI20"
->>      select MACH_JZ4780
->>
->> +config X1000_CU1000
->> +    bool "YSH & ATIL General Module CU1000"
->> +    select MACH_X1000
->> +
->>  endchoice
->>
->>  config MACH_JZ4740
->> --=20
->> 2.7.4
->>
->>
->
->
+Full test log,
+https://lkft.validation.linaro.org/scheduler/job/1026224#L793
 
 
-
+--
+Linaro LKFT
+https://lkft.linaro.org
