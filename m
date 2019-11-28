@@ -2,55 +2,60 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,LONGWORDS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16ABC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82364C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E09B2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF9721787
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574948522;
-	bh=X5rmZh1wMdlxdkIrlFaExaEXEHjHisAwMcOHA05uzNA=;
+	s=default; t=1574948528;
+	bh=FRBQl0gNviWg1TRAlM5oC0XUVhLF9g+lQTh6nk5cCRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bncs5bfnemOGhVHcxZwAgTb8C8/PxBVArQVLh+CEBvjWqusJAgCJZvukE/HKAjnhp
-	 ERZYhkdm8x81YIbNAVTDPYpGRkb3GaHJba2lQ2fZ0ekLgcz+hp5vXvHG1HNpv/k+JM
-	 vaSKFY091OxDFKf8a6n4GdrtZtpTPEUZW+MpSzlQ=
+	b=z3+dVW5U8vSaQpMb1zdr7pAc3k8oahng0JtlEsk088lKhqHqrTwFlpJHIjhxrAx0p
+	 NxayMSQsejIQ5mqalfypWy6ussh6HMi/ybz7J+mILyEAORBU0S5Fmgm/BvAqAWECAa
+	 82A7nlhXBGPDXIzxpWkR0++fMCeS28A/NveKUH1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfK1NlQ (ORCPT
+        id S1727086AbfK1NlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:41:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37664 "EHLO mail.kernel.org"
+        Thu, 28 Nov 2019 08:41:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727165AbfK1NlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:41:12 -0500
+        id S1726733AbfK1Nk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 08:40:59 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1054821787;
-        Thu, 28 Nov 2019 13:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A4A5216F4;
+        Thu, 28 Nov 2019 13:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574948470;
-        bh=X5rmZh1wMdlxdkIrlFaExaEXEHjHisAwMcOHA05uzNA=;
+        s=default; t=1574948455;
+        bh=FRBQl0gNviWg1TRAlM5oC0XUVhLF9g+lQTh6nk5cCRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fxUG3rK80Gw3vKaVAr9vDtb0qVc8/YFk62uhLaiq2kGyqrQrwYmNnQKAMhdPl3IXW
-         /kINOnREgYqMVLya1gcjK52IqROlvJhJzUsGJS0zWgrh2J23eoiADBbAJD3gDU0T/T
-         bU44jDylxtLz19HoNwXpwdkOvFtlYNuGDewSYvX8=
+        b=iIezzaUakUj46JQ2ZzShrQFiLZPnf+nYysqkb2WsdopP+t8rTR14TPiKycQntVuSm
+         tmBLU7Tttz/+6642pVUU+9YpMOgrK0osodyFkqVA0CWQn/UzUW4znCTuUpoI6SnPrQ
+         U2kAdLpJyL8nFlSAGNm12ofdbSJVa1qwRMdE3frg=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 11/22] perf maps: Rename 'mg' variables to 'maps'
-Date:   Thu, 28 Nov 2019 10:40:16 -0300
-Message-Id: <20191128134027.23726-12-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org
+Subject: [PATCH 06/22] x86/insn: perf tools: Add some more instructions to the new instructions test
+Date:   Thu, 28 Nov 2019 10:40:11 -0300
+Message-Id: <20191128134027.23726-7-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191128134027.23726-1-acme@kernel.org>
 References: <20191128134027.23726-1-acme@kernel.org>
@@ -61,705 +66,1859 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Continuing the merge of 'struct maps' with 'struct map_groups'.
+Add to the "x86 instruction decoder - new instructions" test the following
+instructions:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+	v4fmaddps
+	v4fmaddss
+	v4fnmaddps
+	v4fnmaddss
+	vaesdec
+	vaesdeclast
+	vaesenc
+	vaesenclast
+	vcvtne2ps2bf16
+	vcvtneps2bf16
+	vdpbf16ps
+	gf2p8affineinvqb
+	vgf2p8affineinvqb
+	gf2p8affineqb
+	vgf2p8affineqb
+	gf2p8mulb
+	vgf2p8mulb
+	vp2intersectd
+	vp2intersectq
+	vp4dpwssd
+	vp4dpwssds
+	vpclmulqdq
+	vpcompressb
+	vpcompressw
+	vpdpbusd
+	vpdpbusds
+	vpdpwssd
+	vpdpwssds
+	vpexpandb
+	vpexpandw
+	vpopcntb
+	vpopcntd
+	vpopcntq
+	vpopcntw
+	vpshldd
+	vpshldq
+	vpshldvd
+	vpshldvq
+	vpshldvw
+	vpshldw
+	vpshrdd
+	vpshrdq
+	vpshrdvd
+	vpshrdvq
+	vpshrdvw
+	vpshrdw
+	vpshufbitqmb
+
+For information about the instructions, refer Intel SDM May 2019
+(325462-070US) and Intel Architecture Instruction Set Extensions May
+2019 (319433-037).
+
+Committer testing:
+
+  $ perf test x86
+  61: x86 rdpmc                                             : Ok
+  64: x86 instruction decoder - new instructions            : Ok
+  66: x86 bp modify                                         : Ok
+  $
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-z8d14wrw393a0fbvmnk1bqd9@git.kernel.org
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc: x86@kernel.org
+Link: http://lore.kernel.org/lkml/20191125125044.31879-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/map_groups.c            | 18 ++---
- tools/perf/tests/thread-mg-share.c       | 18 ++---
- tools/perf/util/event.c                  | 12 ++--
- tools/perf/util/machine.c                | 10 +--
- tools/perf/util/map.c                    | 89 ++++++++++++------------
- tools/perf/util/map_groups.h             | 36 +++++-----
- tools/perf/util/symbol.c                 | 44 ++++++------
- tools/perf/util/symbol.h                 |  2 +-
- tools/perf/util/unwind-libunwind-local.c | 16 ++---
- tools/perf/util/unwind-libunwind.c       | 30 ++++----
- 10 files changed, 135 insertions(+), 140 deletions(-)
+ tools/perf/arch/x86/tests/insn-x86-dat-32.c  | 366 +++++++++++
+ tools/perf/arch/x86/tests/insn-x86-dat-64.c  | 484 ++++++++++++++
+ tools/perf/arch/x86/tests/insn-x86-dat-src.c | 655 +++++++++++++++++++
+ 3 files changed, 1505 insertions(+)
 
-diff --git a/tools/perf/tests/map_groups.c b/tools/perf/tests/map_groups.c
-index db806e5a95c2..9df1d14db40e 100644
---- a/tools/perf/tests/map_groups.c
-+++ b/tools/perf/tests/map_groups.c
-@@ -35,7 +35,7 @@ static int check_maps(struct map_def *merged, unsigned int size, struct maps *ma
- 
- int test__map_groups__merge_in(struct test *t __maybe_unused, int subtest __maybe_unused)
- {
--	struct maps mg;
-+	struct maps maps;
- 	unsigned int i;
- 	struct map_def bpf_progs[] = {
- 		{ "bpf_prog_1", 200, 300 },
-@@ -64,7 +64,7 @@ int test__map_groups__merge_in(struct test *t __maybe_unused, int subtest __mayb
- 	struct map *map_kcore1, *map_kcore2, *map_kcore3;
- 	int ret;
- 
--	maps__init(&mg, NULL);
-+	maps__init(&maps, NULL);
- 
- 	for (i = 0; i < ARRAY_SIZE(bpf_progs); i++) {
- 		struct map *map;
-@@ -74,7 +74,7 @@ int test__map_groups__merge_in(struct test *t __maybe_unused, int subtest __mayb
- 
- 		map->start = bpf_progs[i].start;
- 		map->end   = bpf_progs[i].end;
--		maps__insert(&mg, map);
-+		maps__insert(&maps, map);
- 		map__put(map);
- 	}
- 
-@@ -99,22 +99,22 @@ int test__map_groups__merge_in(struct test *t __maybe_unused, int subtest __mayb
- 	map_kcore3->start = 880;
- 	map_kcore3->end   = 1100;
- 
--	ret = maps__merge_in(&mg, map_kcore1);
-+	ret = maps__merge_in(&maps, map_kcore1);
- 	TEST_ASSERT_VAL("failed to merge map", !ret);
- 
--	ret = check_maps(merged12, ARRAY_SIZE(merged12), &mg);
-+	ret = check_maps(merged12, ARRAY_SIZE(merged12), &maps);
- 	TEST_ASSERT_VAL("merge check failed", !ret);
- 
--	ret = maps__merge_in(&mg, map_kcore2);
-+	ret = maps__merge_in(&maps, map_kcore2);
- 	TEST_ASSERT_VAL("failed to merge map", !ret);
- 
--	ret = check_maps(merged12, ARRAY_SIZE(merged12), &mg);
-+	ret = check_maps(merged12, ARRAY_SIZE(merged12), &maps);
- 	TEST_ASSERT_VAL("merge check failed", !ret);
- 
--	ret = maps__merge_in(&mg, map_kcore3);
-+	ret = maps__merge_in(&maps, map_kcore3);
- 	TEST_ASSERT_VAL("failed to merge map", !ret);
- 
--	ret = check_maps(merged3, ARRAY_SIZE(merged3), &mg);
-+	ret = check_maps(merged3, ARRAY_SIZE(merged3), &maps);
- 	TEST_ASSERT_VAL("merge check failed", !ret);
- 	return TEST_OK;
- }
-diff --git a/tools/perf/tests/thread-mg-share.c b/tools/perf/tests/thread-mg-share.c
-index 6032061958d2..e3b0d692d565 100644
---- a/tools/perf/tests/thread-mg-share.c
-+++ b/tools/perf/tests/thread-mg-share.c
-@@ -12,7 +12,7 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
- 	/* thread group */
- 	struct thread *leader;
- 	struct thread *t1, *t2, *t3;
--	struct maps *mg;
-+	struct maps *maps;
- 
- 	/* other process */
- 	struct thread *other, *other_leader;
-@@ -42,13 +42,13 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
- 	TEST_ASSERT_VAL("failed to create threads",
- 			leader && t1 && t2 && t3 && other);
- 
--	mg = leader->maps;
--	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&mg->refcnt), 4);
-+	maps = leader->maps;
-+	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&maps->refcnt), 4);
- 
- 	/* test the map groups pointer is shared */
--	TEST_ASSERT_VAL("map groups don't match", mg == t1->maps);
--	TEST_ASSERT_VAL("map groups don't match", mg == t2->maps);
--	TEST_ASSERT_VAL("map groups don't match", mg == t3->maps);
-+	TEST_ASSERT_VAL("map groups don't match", maps == t1->maps);
-+	TEST_ASSERT_VAL("map groups don't match", maps == t2->maps);
-+	TEST_ASSERT_VAL("map groups don't match", maps == t3->maps);
- 
- 	/*
- 	 * Verify the other leader was created by previous call.
-@@ -77,13 +77,13 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
- 
- 	/* release thread group */
- 	thread__put(leader);
--	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&mg->refcnt), 3);
-+	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&maps->refcnt), 3);
- 
- 	thread__put(t1);
--	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&mg->refcnt), 2);
-+	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&maps->refcnt), 2);
- 
- 	thread__put(t2);
--	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&mg->refcnt), 1);
-+	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&maps->refcnt), 1);
- 
- 	thread__put(t3);
- 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index fc3da38beef0..c5447ff516a2 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -457,11 +457,11 @@ int perf_event__process(struct perf_tool *tool __maybe_unused,
- struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 			     struct addr_location *al)
- {
--	struct maps *mg = thread->maps;
--	struct machine *machine = mg->machine;
-+	struct maps *maps = thread->maps;
-+	struct machine *machine = maps->machine;
- 	bool load_map = false;
- 
--	al->maps = mg;
-+	al->maps = maps;
- 	al->thread = thread;
- 	al->addr = addr;
- 	al->cpumode = cpumode;
-@@ -474,13 +474,13 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 
- 	if (cpumode == PERF_RECORD_MISC_KERNEL && perf_host) {
- 		al->level = 'k';
--		al->maps = mg = &machine->kmaps;
-+		al->maps = maps = &machine->kmaps;
- 		load_map = true;
- 	} else if (cpumode == PERF_RECORD_MISC_USER && perf_host) {
- 		al->level = '.';
- 	} else if (cpumode == PERF_RECORD_MISC_GUEST_KERNEL && perf_guest) {
- 		al->level = 'g';
--		al->maps = mg = &machine->kmaps;
-+		al->maps = maps = &machine->kmaps;
- 		load_map = true;
- 	} else if (cpumode == PERF_RECORD_MISC_GUEST_USER && perf_guest) {
- 		al->level = 'u';
-@@ -500,7 +500,7 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 		return NULL;
- 	}
- 
--	al->map = maps__find(mg, al->addr);
-+	al->map = maps__find(maps, al->addr);
- 	if (al->map != NULL) {
- 		/*
- 		 * Kernel maps might be changed when loading symbols so loading
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index c1ae5e6f84e2..416d174d223c 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1259,10 +1259,10 @@ static bool is_kmod_dso(struct dso *dso)
- 	       dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE;
- }
- 
--static int maps__set_module_path(struct maps *mg, const char *path, struct kmod_path *m)
-+static int maps__set_module_path(struct maps *maps, const char *path, struct kmod_path *m)
- {
- 	char *long_name;
--	struct map *map = maps__find_by_name(mg, m->name);
-+	struct map *map = maps__find_by_name(maps, m->name);
- 
- 	if (map == NULL)
- 		return 0;
-@@ -1286,7 +1286,7 @@ static int maps__set_module_path(struct maps *mg, const char *path, struct kmod_
- 	return 0;
- }
- 
--static int maps__set_modules_path_dir(struct maps *mg, const char *dir_name, int depth)
-+static int maps__set_modules_path_dir(struct maps *maps, const char *dir_name, int depth)
- {
- 	struct dirent *dent;
- 	DIR *dir = opendir(dir_name);
-@@ -1318,7 +1318,7 @@ static int maps__set_modules_path_dir(struct maps *mg, const char *dir_name, int
- 					continue;
- 			}
- 
--			ret = maps__set_modules_path_dir(mg, path, depth + 1);
-+			ret = maps__set_modules_path_dir(maps, path, depth + 1);
- 			if (ret < 0)
- 				goto out;
- 		} else {
-@@ -1329,7 +1329,7 @@ static int maps__set_modules_path_dir(struct maps *mg, const char *dir_name, int
- 				goto out;
- 
- 			if (m.kmod)
--				ret = maps__set_module_path(mg, path, &m);
-+				ret = maps__set_module_path(maps, path, &m);
- 
- 			zfree(&m.name);
- 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 39bfed48b7f5..fdd5bddb3075 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -512,52 +512,50 @@ u64 map__objdump_2mem(struct map *map, u64 ip)
- 	return ip + map->reloc;
- }
- 
--void maps__init(struct maps *mg, struct machine *machine)
-+void maps__init(struct maps *maps, struct machine *machine)
- {
--	mg->entries = RB_ROOT;
--	init_rwsem(&mg->lock);
--	mg->machine = machine;
--	mg->last_search_by_name = NULL;
--	mg->nr_maps = 0;
--	mg->maps_by_name = NULL;
--	refcount_set(&mg->refcnt, 1);
-+	maps->entries = RB_ROOT;
-+	init_rwsem(&maps->lock);
-+	maps->machine = machine;
-+	maps->last_search_by_name = NULL;
-+	maps->nr_maps = 0;
-+	maps->maps_by_name = NULL;
-+	refcount_set(&maps->refcnt, 1);
- }
- 
--static void __maps__free_maps_by_name(struct maps *mg)
-+static void __maps__free_maps_by_name(struct maps *maps)
- {
- 	/*
- 	 * Free everything to try to do it from the rbtree in the next search
- 	 */
--	zfree(&mg->maps_by_name);
--	mg->nr_maps_allocated = 0;
-+	zfree(&maps->maps_by_name);
-+	maps->nr_maps_allocated = 0;
- }
- 
--void maps__insert(struct maps *mg, struct map *map)
-+void maps__insert(struct maps *maps, struct map *map)
- {
--	struct maps *maps = mg;
--
- 	down_write(&maps->lock);
- 	__maps__insert(maps, map);
--	++mg->nr_maps;
-+	++maps->nr_maps;
- 
- 	/*
- 	 * If we already performed some search by name, then we need to add the just
- 	 * inserted map and resort.
- 	 */
--	if (mg->maps_by_name) {
--		if (mg->nr_maps > mg->nr_maps_allocated) {
--			int nr_allocate = mg->nr_maps * 2;
--			struct map **maps_by_name = realloc(mg->maps_by_name, nr_allocate * sizeof(map));
-+	if (maps->maps_by_name) {
-+		if (maps->nr_maps > maps->nr_maps_allocated) {
-+			int nr_allocate = maps->nr_maps * 2;
-+			struct map **maps_by_name = realloc(maps->maps_by_name, nr_allocate * sizeof(map));
- 
- 			if (maps_by_name == NULL) {
- 				__maps__free_maps_by_name(maps);
- 				return;
- 			}
- 
--			mg->maps_by_name = maps_by_name;
--			mg->nr_maps_allocated = nr_allocate;
-+			maps->maps_by_name = maps_by_name;
-+			maps->nr_maps_allocated = nr_allocate;
- 		}
--		mg->maps_by_name[mg->nr_maps - 1] = map;
-+		maps->maps_by_name[maps->nr_maps - 1] = map;
- 		__maps__sort_by_name(maps);
- 	}
- 	up_write(&maps->lock);
-@@ -569,16 +567,15 @@ static void __maps__remove(struct maps *maps, struct map *map)
- 	map__put(map);
- }
- 
--void maps__remove(struct maps *mg, struct map *map)
-+void maps__remove(struct maps *maps, struct map *map)
- {
--	struct maps *maps = mg;
- 	down_write(&maps->lock);
--	if (mg->last_search_by_name == map)
--		mg->last_search_by_name = NULL;
-+	if (maps->last_search_by_name == map)
-+		maps->last_search_by_name = NULL;
- 
- 	__maps__remove(maps, map);
--	--mg->nr_maps;
--	if (mg->maps_by_name)
-+	--maps->nr_maps;
-+	if (maps->maps_by_name)
- 		__maps__free_maps_by_name(maps);
- 	up_write(&maps->lock);
- }
-@@ -607,30 +604,30 @@ bool maps__empty(struct maps *maps)
- 
- struct maps *maps__new(struct machine *machine)
- {
--	struct maps *mg = zalloc(sizeof(*mg)), *maps = mg;
-+	struct maps *maps = zalloc(sizeof(*maps));
- 
--	if (mg != NULL)
-+	if (maps != NULL)
- 		maps__init(maps, machine);
- 
--	return mg;
-+	return maps;
- }
- 
--void maps__delete(struct maps *mg)
-+void maps__delete(struct maps *maps)
- {
--	maps__exit(mg);
--	unwind__finish_access(mg);
--	free(mg);
-+	maps__exit(maps);
-+	unwind__finish_access(maps);
-+	free(maps);
- }
- 
--void maps__put(struct maps *mg)
-+void maps__put(struct maps *maps)
- {
--	if (mg && refcount_dec_and_test(&mg->refcnt))
--		maps__delete(mg);
-+	if (maps && refcount_dec_and_test(&maps->refcnt))
-+		maps__delete(maps);
- }
- 
--struct symbol *maps__find_symbol(struct maps *mg, u64 addr, struct map **mapp)
-+struct symbol *maps__find_symbol(struct maps *maps, u64 addr, struct map **mapp)
- {
--	struct map *map = maps__find(mg, addr);
-+	struct map *map = maps__find(maps, addr);
- 
- 	/* Ensure map is loaded before using map->map_ip */
- 	if (map != NULL && map__load(map) >= 0) {
-@@ -676,12 +673,12 @@ struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name, st
- 	return sym;
- }
- 
--int maps__find_ams(struct maps *mg, struct addr_map_symbol *ams)
-+int maps__find_ams(struct maps *maps, struct addr_map_symbol *ams)
- {
- 	if (ams->addr < ams->ms.map->start || ams->addr >= ams->ms.map->end) {
--		if (mg == NULL)
-+		if (maps == NULL)
- 			return -1;
--		ams->ms.map = maps__find(mg, ams->addr);
-+		ams->ms.map = maps__find(maps, ams->addr);
- 		if (ams->ms.map == NULL)
- 			return -1;
- 	}
-@@ -819,7 +816,7 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
-  */
- int maps__clone(struct thread *thread, struct maps *parent)
- {
--	struct maps *mg = thread->maps;
-+	struct maps *maps = thread->maps;
- 	int err = -ENOMEM;
- 	struct map *map;
- 
-@@ -830,11 +827,11 @@ int maps__clone(struct thread *thread, struct maps *parent)
- 		if (new == NULL)
- 			goto out_unlock;
- 
--		err = unwind__prepare_access(mg, new, NULL);
-+		err = unwind__prepare_access(maps, new, NULL);
- 		if (err)
- 			goto out_unlock;
- 
--		maps__insert(mg, new);
-+		maps__insert(maps, new);
- 		map__put(new);
- 	}
- 
-diff --git a/tools/perf/util/map_groups.h b/tools/perf/util/map_groups.h
-index 8a45994d6a97..ada2f401ebab 100644
---- a/tools/perf/util/map_groups.h
-+++ b/tools/perf/util/map_groups.h
-@@ -49,39 +49,39 @@ struct kmap {
- };
- 
- struct maps *maps__new(struct machine *machine);
--void maps__delete(struct maps *mg);
--bool maps__empty(struct maps *mg);
-+void maps__delete(struct maps *maps);
-+bool maps__empty(struct maps *maps);
- 
--static inline struct maps *maps__get(struct maps *mg)
-+static inline struct maps *maps__get(struct maps *maps)
- {
--	if (mg)
--		refcount_inc(&mg->refcnt);
--	return mg;
-+	if (maps)
-+		refcount_inc(&maps->refcnt);
-+	return maps;
- }
- 
--void maps__put(struct maps *mg);
--void maps__init(struct maps *mg, struct machine *machine);
--void maps__exit(struct maps *mg);
-+void maps__put(struct maps *maps);
-+void maps__init(struct maps *maps, struct machine *machine);
-+void maps__exit(struct maps *maps);
- int maps__clone(struct thread *thread, struct maps *parent);
--size_t maps__fprintf(struct maps *mg, FILE *fp);
-+size_t maps__fprintf(struct maps *maps, FILE *fp);
- 
--void maps__insert(struct maps *mg, struct map *map);
-+void maps__insert(struct maps *maps, struct map *map);
- 
--void maps__remove(struct maps *mg, struct map *map);
-+void maps__remove(struct maps *maps, struct map *map);
- 
--struct symbol *maps__find_symbol(struct maps *mg, u64 addr, struct map **mapp);
--struct symbol *maps__find_symbol_by_name(struct maps *mg, const char *name, struct map **mapp);
-+struct symbol *maps__find_symbol(struct maps *maps, u64 addr, struct map **mapp);
-+struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name, struct map **mapp);
- 
- struct addr_map_symbol;
- 
--int maps__find_ams(struct maps *mg, struct addr_map_symbol *ams);
-+int maps__find_ams(struct maps *maps, struct addr_map_symbol *ams);
- 
--int maps__fixup_overlappings(struct maps *mg, struct map *map, FILE *fp);
-+int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp);
- 
--struct map *maps__find_by_name(struct maps *mg, const char *name);
-+struct map *maps__find_by_name(struct maps *maps, const char *name);
- 
- int maps__merge_in(struct maps *kmaps, struct map *new_map);
- 
--void __maps__sort_by_name(struct maps *mg);
-+void __maps__sort_by_name(struct maps *maps);
- 
- #endif // __PERF_MAP_GROUPS_H
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index c70563622508..3b379b1296f1 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -239,9 +239,8 @@ void symbols__fixup_end(struct rb_root_cached *symbols)
- 		curr->end = roundup(curr->start, 4096) + 4096;
- }
- 
--void maps__fixup_end(struct maps *mg)
-+void maps__fixup_end(struct maps *maps)
- {
--	struct maps *maps = mg;
- 	struct map *prev = NULL, *curr;
- 
- 	down_write(&maps->lock);
-@@ -1771,68 +1770,67 @@ static int map__strcmp_name(const void *name, const void *b)
- 	return strcmp(name, map->dso->short_name);
- }
- 
--void __maps__sort_by_name(struct maps *mg)
-+void __maps__sort_by_name(struct maps *maps)
- {
--	qsort(mg->maps_by_name, mg->nr_maps, sizeof(struct map *), map__strcmp);
-+	qsort(maps->maps_by_name, maps->nr_maps, sizeof(struct map *), map__strcmp);
- }
- 
--static int map__groups__sort_by_name_from_rbtree(struct maps *mg)
-+static int map__groups__sort_by_name_from_rbtree(struct maps *maps)
- {
- 	struct map *map;
--	struct map **maps_by_name = realloc(mg->maps_by_name, mg->nr_maps * sizeof(map));
-+	struct map **maps_by_name = realloc(maps->maps_by_name, maps->nr_maps * sizeof(map));
- 	int i = 0;
- 
- 	if (maps_by_name == NULL)
- 		return -1;
- 
--	mg->maps_by_name = maps_by_name;
--	mg->nr_maps_allocated = mg->nr_maps;
-+	maps->maps_by_name = maps_by_name;
-+	maps->nr_maps_allocated = maps->nr_maps;
- 
--	maps__for_each_entry(mg, map)
-+	maps__for_each_entry(maps, map)
- 		maps_by_name[i++] = map;
- 
--	__maps__sort_by_name(mg);
-+	__maps__sort_by_name(maps);
- 	return 0;
- }
- 
--static struct map *__maps__find_by_name(struct maps *mg, const char *name)
-+static struct map *__maps__find_by_name(struct maps *maps, const char *name)
- {
- 	struct map **mapp;
- 
--	if (mg->maps_by_name == NULL &&
--	    map__groups__sort_by_name_from_rbtree(mg))
-+	if (maps->maps_by_name == NULL &&
-+	    map__groups__sort_by_name_from_rbtree(maps))
- 		return NULL;
- 
--	mapp = bsearch(name, mg->maps_by_name, mg->nr_maps, sizeof(*mapp), map__strcmp_name);
-+	mapp = bsearch(name, maps->maps_by_name, maps->nr_maps, sizeof(*mapp), map__strcmp_name);
- 	if (mapp)
- 		return *mapp;
- 	return NULL;
- }
- 
--struct map *maps__find_by_name(struct maps *mg, const char *name)
-+struct map *maps__find_by_name(struct maps *maps, const char *name)
- {
--	struct maps *maps = mg;
- 	struct map *map;
- 
- 	down_read(&maps->lock);
- 
--	if (mg->last_search_by_name && strcmp(mg->last_search_by_name->dso->short_name, name) == 0) {
--		map = mg->last_search_by_name;
-+	if (maps->last_search_by_name && strcmp(maps->last_search_by_name->dso->short_name, name) == 0) {
-+		map = maps->last_search_by_name;
- 		goto out_unlock;
- 	}
- 	/*
--	 * If we have mg->maps_by_name, then the name isn't in the rbtree,
--	 * as mg->maps_by_name mirrors the rbtree when lookups by name are
-+	 * If we have maps->maps_by_name, then the name isn't in the rbtree,
-+	 * as maps->maps_by_name mirrors the rbtree when lookups by name are
- 	 * made.
- 	 */
--	map = __maps__find_by_name(mg, name);
--	if (map || mg->maps_by_name != NULL)
-+	map = __maps__find_by_name(maps, name);
-+	if (map || maps->maps_by_name != NULL)
- 		goto out_unlock;
- 
- 	/* Fallback to traversing the rbtree... */
- 	maps__for_each_entry(maps, map)
- 		if (strcmp(map->dso->short_name, name) == 0) {
--			mg->last_search_by_name = map;
-+			maps->last_search_by_name = map;
- 			goto out_unlock;
- 		}
- 
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 29c4ea4c354f..93fc43db1be3 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -186,7 +186,7 @@ void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym,
- void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
- void symbols__fixup_duplicate(struct rb_root_cached *symbols);
- void symbols__fixup_end(struct rb_root_cached *symbols);
--void maps__fixup_end(struct maps *mg);
-+void maps__fixup_end(struct maps *maps);
- 
- typedef int (*mapfn_t)(u64 start, u64 len, u64 pgoff, void *data);
- int file__read_maps(int fd, bool exe, mapfn_t mapfn, void *data,
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 515131e85e9c..b4649f5a0c2f 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -616,26 +616,26 @@ static unw_accessors_t accessors = {
- 	.get_proc_name		= get_proc_name,
- };
- 
--static int _unwind__prepare_access(struct maps *mg)
-+static int _unwind__prepare_access(struct maps *maps)
- {
--	mg->addr_space = unw_create_addr_space(&accessors, 0);
--	if (!mg->addr_space) {
-+	maps->addr_space = unw_create_addr_space(&accessors, 0);
-+	if (!maps->addr_space) {
- 		pr_err("unwind: Can't create unwind address space.\n");
- 		return -ENOMEM;
- 	}
- 
--	unw_set_caching_policy(mg->addr_space, UNW_CACHE_GLOBAL);
-+	unw_set_caching_policy(maps->addr_space, UNW_CACHE_GLOBAL);
- 	return 0;
- }
- 
--static void _unwind__flush_access(struct maps *mg)
-+static void _unwind__flush_access(struct maps *maps)
- {
--	unw_flush_cache(mg->addr_space, 0, 0);
-+	unw_flush_cache(maps->addr_space, 0, 0);
- }
- 
--static void _unwind__finish_access(struct maps *mg)
-+static void _unwind__finish_access(struct maps *maps)
- {
--	unw_destroy_addr_space(mg->addr_space);
-+	unw_destroy_addr_space(maps->addr_space);
- }
- 
- static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
-diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
-index 4003ae80edba..e89a5479b361 100644
---- a/tools/perf/util/unwind-libunwind.c
-+++ b/tools/perf/util/unwind-libunwind.c
-@@ -12,12 +12,12 @@ struct unwind_libunwind_ops __weak *local_unwind_libunwind_ops;
- struct unwind_libunwind_ops __weak *x86_32_unwind_libunwind_ops;
- struct unwind_libunwind_ops __weak *arm64_unwind_libunwind_ops;
- 
--static void unwind__register_ops(struct maps *mg, struct unwind_libunwind_ops *ops)
-+static void unwind__register_ops(struct maps *maps, struct unwind_libunwind_ops *ops)
- {
--	mg->unwind_libunwind_ops = ops;
-+	maps->unwind_libunwind_ops = ops;
- }
- 
--int unwind__prepare_access(struct maps *mg, struct map *map, bool *initialized)
-+int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized)
- {
- 	const char *arch;
- 	enum dso_type dso_type;
-@@ -27,7 +27,7 @@ int unwind__prepare_access(struct maps *mg, struct map *map, bool *initialized)
- 	if (!dwarf_callchain_users)
- 		return 0;
- 
--	if (mg->addr_space) {
-+	if (maps->addr_space) {
- 		pr_debug("unwind: thread map already set, dso=%s\n",
- 			 map->dso->name);
- 		if (initialized)
-@@ -36,14 +36,14 @@ int unwind__prepare_access(struct maps *mg, struct map *map, bool *initialized)
- 	}
- 
- 	/* env->arch is NULL for live-mode (i.e. perf top) */
--	if (!mg->machine->env || !mg->machine->env->arch)
-+	if (!maps->machine->env || !maps->machine->env->arch)
- 		goto out_register;
- 
--	dso_type = dso__type(map->dso, mg->machine);
-+	dso_type = dso__type(map->dso, maps->machine);
- 	if (dso_type == DSO__TYPE_UNKNOWN)
- 		return 0;
- 
--	arch = perf_env__arch(mg->machine->env);
-+	arch = perf_env__arch(maps->machine->env);
- 
- 	if (!strcmp(arch, "x86")) {
- 		if (dso_type != DSO__TYPE_64BIT)
-@@ -58,24 +58,24 @@ int unwind__prepare_access(struct maps *mg, struct map *map, bool *initialized)
- 		return 0;
- 	}
- out_register:
--	unwind__register_ops(mg, ops);
-+	unwind__register_ops(maps, ops);
- 
--	err = mg->unwind_libunwind_ops->prepare_access(mg);
-+	err = maps->unwind_libunwind_ops->prepare_access(maps);
- 	if (initialized)
- 		*initialized = err ? false : true;
- 	return err;
- }
- 
--void unwind__flush_access(struct maps *mg)
-+void unwind__flush_access(struct maps *maps)
- {
--	if (mg->unwind_libunwind_ops)
--		mg->unwind_libunwind_ops->flush_access(mg);
-+	if (maps->unwind_libunwind_ops)
-+		maps->unwind_libunwind_ops->flush_access(maps);
- }
- 
--void unwind__finish_access(struct maps *mg)
-+void unwind__finish_access(struct maps *maps)
- {
--	if (mg->unwind_libunwind_ops)
--		mg->unwind_libunwind_ops->finish_access(mg);
-+	if (maps->unwind_libunwind_ops)
-+		maps->unwind_libunwind_ops->finish_access(maps);
- }
- 
- int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+diff --git a/tools/perf/arch/x86/tests/insn-x86-dat-32.c b/tools/perf/arch/x86/tests/insn-x86-dat-32.c
+index 58f8f2a095c4..e6461abc9e7b 100644
+--- a/tools/perf/arch/x86/tests/insn-x86-dat-32.c
++++ b/tools/perf/arch/x86/tests/insn-x86-dat-32.c
+@@ -667,6 +667,86 @@
+ "62 f2 55 0f 4f f4    \tvrsqrt14ss %xmm4,%xmm5,%xmm6{%k7}",},
+ {{0x62, 0xf2, 0xd5, 0x0f, 0x4f, 0xf4, }, 6, 0, "", "",
+ "62 f2 d5 0f 4f f4    \tvrsqrt14sd %xmm4,%xmm5,%xmm6{%k7}",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x50, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 50 d9    \tvpdpbusd %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x50, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 50 d9    \tvpdpbusd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x50, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 50 d9    \tvpdpbusd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x50, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 50 9c c8 78 56 34 12 \tvpdpbusd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x51, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 51 d9    \tvpdpbusds %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x51, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 51 d9    \tvpdpbusds %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x51, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 51 d9    \tvpdpbusds %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x51, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 51 9c c8 78 56 34 12 \tvpdpbusds 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6e, 0x08, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6e 08 52 d9    \tvdpbf16ps %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6e, 0x28, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6e 28 52 d9    \tvdpbf16ps %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6e, 0x48, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6e 48 52 d9    \tvdpbf16ps %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6e, 0x48, 0x52, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6e 48 52 9c c8 78 56 34 12 \tvdpbf16ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 52 d9    \tvpdpwssd %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 52 d9    \tvpdpwssd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 52 d9    \tvpdpwssd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x52, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 52 9c c8 78 56 34 12 \tvpdpwssd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x52, 0x20, }, 6, 0, "", "",
++"62 f2 7f 48 52 20    \tvp4dpwssd (%eax),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x52, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 48 52 a4 c8 78 56 34 12 \tvp4dpwssd 0x12345678(%eax,%ecx,8),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x53, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 53 d9    \tvpdpwssds %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x53, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 53 d9    \tvpdpwssds %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x53, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 53 d9    \tvpdpwssds %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x53, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 53 9c c8 78 56 34 12 \tvpdpwssds 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x53, 0x20, }, 6, 0, "", "",
++"62 f2 7f 48 53 20    \tvp4dpwssds (%eax),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x53, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 48 53 a4 c8 78 56 34 12 \tvp4dpwssds 0x12345678(%eax,%ecx,8),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x7d, 0x08, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 08 54 d1    \tvpopcntb %xmm1,%xmm2",},
++{{0x62, 0xf2, 0x7d, 0x28, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 28 54 d1    \tvpopcntb %ymm1,%ymm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 48 54 d1    \tvpopcntb %zmm1,%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x54, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7d 48 54 94 c8 78 56 34 12 \tvpopcntb 0x12345678(%eax,%ecx,8),%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x08, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 08 54 d1    \tvpopcntw %xmm1,%xmm2",},
++{{0x62, 0xf2, 0xfd, 0x28, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 28 54 d1    \tvpopcntw %ymm1,%ymm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 48 54 d1    \tvpopcntw %zmm1,%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x54, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 fd 48 54 94 c8 78 56 34 12 \tvpopcntw 0x12345678(%eax,%ecx,8),%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x08, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 08 55 d1    \tvpopcntd %xmm1,%xmm2",},
++{{0x62, 0xf2, 0x7d, 0x28, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 28 55 d1    \tvpopcntd %ymm1,%ymm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 48 55 d1    \tvpopcntd %zmm1,%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x55, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7d 48 55 94 c8 78 56 34 12 \tvpopcntd 0x12345678(%eax,%ecx,8),%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x08, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 08 55 d1    \tvpopcntq %xmm1,%xmm2",},
++{{0x62, 0xf2, 0xfd, 0x28, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 28 55 d1    \tvpopcntq %ymm1,%ymm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 48 55 d1    \tvpopcntq %zmm1,%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x55, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 fd 48 55 94 c8 78 56 34 12 \tvpopcntq 0x12345678(%eax,%ecx,8),%zmm2",},
+ {{0xc4, 0xe2, 0x79, 0x59, 0xf4, }, 5, 0, "", "",
+ "c4 e2 79 59 f4       \tvpbroadcastq %xmm4,%xmm6",},
+ {{0x62, 0xf2, 0x7d, 0x48, 0x59, 0xf7, }, 6, 0, "", "",
+@@ -681,6 +761,38 @@
+ "62 f2 7d 48 5b 31    \tvbroadcasti32x8 (%ecx),%zmm6",},
+ {{0x62, 0xf2, 0xfd, 0x48, 0x5b, 0x31, }, 6, 0, "", "",
+ "62 f2 fd 48 5b 31    \tvbroadcasti64x4 (%ecx),%zmm6",},
++{{0x62, 0xf2, 0x7d, 0x08, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 08 62 d1    \tvpexpandb %xmm1,%xmm2",},
++{{0x62, 0xf2, 0x7d, 0x28, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 28 62 d1    \tvpexpandb %ymm1,%ymm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 48 62 d1    \tvpexpandb %zmm1,%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x62, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7d 48 62 94 c8 78 56 34 12 \tvpexpandb 0x12345678(%eax,%ecx,8),%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x08, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 08 62 d1    \tvpexpandw %xmm1,%xmm2",},
++{{0x62, 0xf2, 0xfd, 0x28, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 28 62 d1    \tvpexpandw %ymm1,%ymm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 48 62 d1    \tvpexpandw %zmm1,%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x62, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 fd 48 62 94 c8 78 56 34 12 \tvpexpandw 0x12345678(%eax,%ecx,8),%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x08, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 7d 08 63 ca    \tvpcompressb %xmm1,%xmm2",},
++{{0x62, 0xf2, 0x7d, 0x28, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 7d 28 63 ca    \tvpcompressb %ymm1,%ymm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 7d 48 63 ca    \tvpcompressb %zmm1,%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x63, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7d 48 63 94 c8 78 56 34 12 \tvpcompressb %zmm2,0x12345678(%eax,%ecx,8)",},
++{{0x62, 0xf2, 0xfd, 0x08, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 fd 08 63 ca    \tvpcompressw %xmm1,%xmm2",},
++{{0x62, 0xf2, 0xfd, 0x28, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 fd 28 63 ca    \tvpcompressw %ymm1,%ymm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 fd 48 63 ca    \tvpcompressw %zmm1,%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x63, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 fd 48 63 94 c8 78 56 34 12 \tvpcompressw %zmm2,0x12345678(%eax,%ecx,8)",},
+ {{0x62, 0xf2, 0x55, 0x48, 0x64, 0xf4, }, 6, 0, "", "",
+ "62 f2 55 48 64 f4    \tvpblendmd %zmm4,%zmm5,%zmm6",},
+ {{0x62, 0xf2, 0xd5, 0x48, 0x64, 0xf4, }, 6, 0, "", "",
+@@ -693,6 +805,86 @@
+ "62 f2 55 48 66 f4    \tvpblendmb %zmm4,%zmm5,%zmm6",},
+ {{0x62, 0xf2, 0xd5, 0x48, 0x66, 0xf4, }, 6, 0, "", "",
+ "62 f2 d5 48 66 f4    \tvpblendmw %zmm4,%zmm5,%zmm6",},
++{{0x62, 0xf2, 0x6f, 0x08, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 08 68 d9    \tvp2intersectd %xmm1,%xmm2,%k3",},
++{{0x62, 0xf2, 0x6f, 0x28, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 28 68 d9    \tvp2intersectd %ymm1,%ymm2,%k3",},
++{{0x62, 0xf2, 0x6f, 0x48, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 48 68 d9    \tvp2intersectd %zmm1,%zmm2,%k3",},
++{{0x62, 0xf2, 0x6f, 0x48, 0x68, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6f 48 68 9c c8 78 56 34 12 \tvp2intersectd 0x12345678(%eax,%ecx,8),%zmm2,%k3",},
++{{0x62, 0xf2, 0xef, 0x08, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 ef 08 68 d9    \tvp2intersectq %xmm1,%xmm2,%k3",},
++{{0x62, 0xf2, 0xef, 0x28, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 ef 28 68 d9    \tvp2intersectq %ymm1,%ymm2,%k3",},
++{{0x62, 0xf2, 0xef, 0x48, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 ef 48 68 d9    \tvp2intersectq %zmm1,%zmm2,%k3",},
++{{0x62, 0xf2, 0xef, 0x48, 0x68, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ef 48 68 9c c8 78 56 34 12 \tvp2intersectq 0x12345678(%eax,%ecx,8),%zmm2,%k3",},
++{{0x62, 0xf2, 0xed, 0x08, 0x70, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 08 70 d9    \tvpshldvw %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0xed, 0x28, 0x70, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 28 70 d9    \tvpshldvw %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x70, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 70 d9    \tvpshldvw %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x70, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 70 9c c8 78 56 34 12 \tvpshldvw 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 71 d9    \tvpshldvd %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 71 d9    \tvpshldvd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 71 d9    \tvpshldvd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x71, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 71 9c c8 78 56 34 12 \tvpshldvd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x08, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 08 71 d9    \tvpshldvq %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0xed, 0x28, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 28 71 d9    \tvpshldvq %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 71 d9    \tvpshldvq %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x71, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 71 9c c8 78 56 34 12 \tvpshldvq 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6f, 0x08, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 08 72 d9    \tvcvtne2ps2bf16 %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6f, 0x28, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 28 72 d9    \tvcvtne2ps2bf16 %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6f, 0x48, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 48 72 d9    \tvcvtne2ps2bf16 %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6f, 0x48, 0x72, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6f 48 72 9c c8 78 56 34 12 \tvcvtne2ps2bf16 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x7e, 0x08, 0x72, 0xd1, }, 6, 0, "", "",
++"62 f2 7e 08 72 d1    \tvcvtneps2bf16 %xmm1,%xmm2",},
++{{0x62, 0xf2, 0x7e, 0x28, 0x72, 0xd1, }, 6, 0, "", "",
++"62 f2 7e 28 72 d1    \tvcvtneps2bf16 %ymm1,%xmm2",},
++{{0x62, 0xf2, 0x7e, 0x48, 0x72, 0xd1, }, 6, 0, "", "",
++"62 f2 7e 48 72 d1    \tvcvtneps2bf16 %zmm1,%ymm2",},
++{{0x62, 0xf2, 0x7e, 0x48, 0x72, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7e 48 72 94 c8 78 56 34 12 \tvcvtneps2bf16 0x12345678(%eax,%ecx,8),%ymm2",},
++{{0x62, 0xf2, 0xed, 0x08, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 08 72 d9    \tvpshrdvw %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0xed, 0x28, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 28 72 d9    \tvpshrdvw %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 72 d9    \tvpshrdvw %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x72, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 72 9c c8 78 56 34 12 \tvpshrdvw 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 73 d9    \tvpshrdvd %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 73 d9    \tvpshrdvd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 73 d9    \tvpshrdvd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x73, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 73 9c c8 78 56 34 12 \tvpshrdvd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x08, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 08 73 d9    \tvpshrdvq %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0xed, 0x28, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 28 73 d9    \tvpshrdvq %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 73 d9    \tvpshrdvq %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x73, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 73 9c c8 78 56 34 12 \tvpshrdvq 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
+ {{0x62, 0xf2, 0x55, 0x48, 0x75, 0xf4, }, 6, 0, "", "",
+ "62 f2 55 48 75 f4    \tvpermi2b %zmm4,%zmm5,%zmm6",},
+ {{0x62, 0xf2, 0xd5, 0x48, 0x75, 0xf4, }, 6, 0, "", "",
+@@ -745,6 +937,14 @@
+ "62 f2 55 48 8d f4    \tvpermb %zmm4,%zmm5,%zmm6",},
+ {{0x62, 0xf2, 0xd5, 0x48, 0x8d, 0xf4, }, 6, 0, "", "",
+ "62 f2 d5 48 8d f4    \tvpermw %zmm4,%zmm5,%zmm6",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x8f, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 8f d9    \tvpshufbitqmb %xmm1,%xmm2,%k3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x8f, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 8f d9    \tvpshufbitqmb %ymm1,%ymm2,%k3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x8f, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 8f d9    \tvpshufbitqmb %zmm1,%zmm2,%k3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x8f, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 8f 9c c8 78 56 34 12 \tvpshufbitqmb 0x12345678(%eax,%ecx,8),%zmm2,%k3",},
+ {{0xc4, 0xe2, 0x69, 0x90, 0x4c, 0x7d, 0x02, }, 7, 0, "", "",
+ "c4 e2 69 90 4c 7d 02 \tvpgatherdd %xmm2,0x2(%ebp,%xmm7,2),%xmm1",},
+ {{0xc4, 0xe2, 0xe9, 0x90, 0x4c, 0x7d, 0x04, }, 7, 0, "", "",
+@@ -761,6 +961,38 @@
+ "62 f2 7d 49 91 b4 fd 7b 00 00 00 \tvpgatherqd 0x7b(%ebp,%zmm7,8),%ymm6{%k1}",},
+ {{0x62, 0xf2, 0xfd, 0x49, 0x91, 0xb4, 0xfd, 0x7b, 0x00, 0x00, 0x00, }, 11, 0, "", "",
+ "62 f2 fd 49 91 b4 fd 7b 00 00 00 \tvpgatherqq 0x7b(%ebp,%zmm7,8),%zmm6{%k1}",},
++{{0xc4, 0xe2, 0x69, 0x9a, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 9a d9       \tvfmsub132ps %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0x9a, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d 9a d9       \tvfmsub132ps %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x9a, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 9a d9    \tvfmsub132ps %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x9a, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 9a 9c c8 78 56 34 12 \tvfmsub132ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0xe9, 0x9a, 0xd9, }, 5, 0, "", "",
++"c4 e2 e9 9a d9       \tvfmsub132pd %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xed, 0x9a, 0xd9, }, 5, 0, "", "",
++"c4 e2 ed 9a d9       \tvfmsub132pd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x9a, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 9a d9    \tvfmsub132pd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x9a, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 9a 9c c8 78 56 34 12 \tvfmsub132pd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x9a, 0x20, }, 6, 0, "", "",
++"62 f2 7f 48 9a 20    \tv4fmaddps (%eax),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x9a, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 48 9a a4 c8 78 56 34 12 \tv4fmaddps 0x12345678(%eax,%ecx,8),%zmm0,%zmm4",},
++{{0xc4, 0xe2, 0x69, 0x9b, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 9b d9       \tvfmsub132ss %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x69, 0x9b, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, 0, "", "",
++"c4 e2 69 9b 9c c8 78 56 34 12 \tvfmsub132ss 0x12345678(%eax,%ecx,8),%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xe9, 0x9b, 0xd9, }, 5, 0, "", "",
++"c4 e2 e9 9b d9       \tvfmsub132sd %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xe9, 0x9b, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, 0, "", "",
++"c4 e2 e9 9b 9c c8 78 56 34 12 \tvfmsub132sd 0x12345678(%eax,%ecx,8),%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x7f, 0x08, 0x9b, 0x20, }, 6, 0, "", "",
++"62 f2 7f 08 9b 20    \tv4fmaddss (%eax),%xmm0,%xmm4",},
++{{0x62, 0xf2, 0x7f, 0x08, 0x9b, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 08 9b a4 c8 78 56 34 12 \tv4fmaddss 0x12345678(%eax,%ecx,8),%xmm0,%xmm4",},
+ {{0x62, 0xf2, 0x7d, 0x49, 0xa0, 0xb4, 0xfd, 0x7b, 0x00, 0x00, 0x00, }, 11, 0, "", "",
+ "62 f2 7d 49 a0 b4 fd 7b 00 00 00 \tvpscatterdd %zmm6,0x7b(%ebp,%zmm7,8){%k1}",},
+ {{0x62, 0xf2, 0xfd, 0x49, 0xa0, 0xb4, 0xfd, 0x7b, 0x00, 0x00, 0x00, }, 11, 0, "", "",
+@@ -777,6 +1009,38 @@
+ "62 f2 7d 49 a3 b4 fd 7b 00 00 00 \tvscatterqps %ymm6,0x7b(%ebp,%zmm7,8){%k1}",},
+ {{0x62, 0xf2, 0xfd, 0x49, 0xa3, 0xb4, 0xfd, 0x7b, 0x00, 0x00, 0x00, }, 11, 0, "", "",
+ "62 f2 fd 49 a3 b4 fd 7b 00 00 00 \tvscatterqpd %zmm6,0x7b(%ebp,%zmm7,8){%k1}",},
++{{0xc4, 0xe2, 0x69, 0xaa, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 aa d9       \tvfmsub213ps %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xaa, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d aa d9       \tvfmsub213ps %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xaa, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 aa d9    \tvfmsub213ps %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xaa, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 aa 9c c8 78 56 34 12 \tvfmsub213ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0xe9, 0xaa, 0xd9, }, 5, 0, "", "",
++"c4 e2 e9 aa d9       \tvfmsub213pd %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xed, 0xaa, 0xd9, }, 5, 0, "", "",
++"c4 e2 ed aa d9       \tvfmsub213pd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0xaa, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 aa d9    \tvfmsub213pd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0xaa, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 aa 9c c8 78 56 34 12 \tvfmsub213pd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x7f, 0x48, 0xaa, 0x20, }, 6, 0, "", "",
++"62 f2 7f 48 aa 20    \tv4fnmaddps (%eax),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x7f, 0x48, 0xaa, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 48 aa a4 c8 78 56 34 12 \tv4fnmaddps 0x12345678(%eax,%ecx,8),%zmm0,%zmm4",},
++{{0xc4, 0xe2, 0x69, 0xab, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 ab d9       \tvfmsub213ss %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x69, 0xab, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, 0, "", "",
++"c4 e2 69 ab 9c c8 78 56 34 12 \tvfmsub213ss 0x12345678(%eax,%ecx,8),%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xe9, 0xab, 0xd9, }, 5, 0, "", "",
++"c4 e2 e9 ab d9       \tvfmsub213sd %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xe9, 0xab, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, 0, "", "",
++"c4 e2 e9 ab 9c c8 78 56 34 12 \tvfmsub213sd 0x12345678(%eax,%ecx,8),%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x7f, 0x08, 0xab, 0x20, }, 6, 0, "", "",
++"62 f2 7f 08 ab 20    \tv4fnmaddss (%eax),%xmm0,%xmm4",},
++{{0x62, 0xf2, 0x7f, 0x08, 0xab, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 08 ab a4 c8 78 56 34 12 \tv4fnmaddss 0x12345678(%eax,%ecx,8),%xmm0,%xmm4",},
+ {{0x62, 0xf2, 0xd5, 0x48, 0xb4, 0xf4, }, 6, 0, "", "",
+ "62 f2 d5 48 b4 f4    \tvpmadd52luq %zmm4,%zmm5,%zmm6",},
+ {{0x62, 0xf2, 0xd5, 0x48, 0xb5, 0xf4, }, 6, 0, "", "",
+@@ -805,6 +1069,50 @@
+ "62 f2 4d 0f cd fd    \tvrsqrt28ss %xmm5,%xmm6,%xmm7{%k7}",},
+ {{0x62, 0xf2, 0xcd, 0x0f, 0xcd, 0xfd, }, 6, 0, "", "",
+ "62 f2 cd 0f cd fd    \tvrsqrt28sd %xmm5,%xmm6,%xmm7{%k7}",},
++{{0x66, 0x0f, 0x38, 0xcf, 0xd9, }, 5, 0, "", "",
++"66 0f 38 cf d9       \tgf2p8mulb %xmm1,%xmm3",},
++{{0x66, 0x0f, 0x38, 0xcf, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, 0, "", "",
++"66 0f 38 cf 9c c8 78 56 34 12 \tgf2p8mulb 0x12345678(%eax,%ecx,8),%xmm3",},
++{{0xc4, 0xe2, 0x69, 0xcf, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 cf d9       \tvgf2p8mulb %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xcf, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d cf d9       \tvgf2p8mulb %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xcf, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 cf d9    \tvgf2p8mulb %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xcf, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 cf 9c c8 78 56 34 12 \tvgf2p8mulb 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0x69, 0xdc, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 dc d9       \tvaesenc %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xdc, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d dc d9       \tvaesenc %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdc, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 dc d9    \tvaesenc %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdc, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 dc 9c c8 78 56 34 12 \tvaesenc 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0x69, 0xdd, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 dd d9       \tvaesenclast %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xdd, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d dd d9       \tvaesenclast %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdd, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 dd d9    \tvaesenclast %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdd, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 dd 9c c8 78 56 34 12 \tvaesenclast 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0x69, 0xde, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 de d9       \tvaesdec %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xde, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d de d9       \tvaesdec %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xde, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 de d9    \tvaesdec %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xde, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 de 9c c8 78 56 34 12 \tvaesdec 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0x69, 0xdf, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 df d9       \tvaesdeclast %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xdf, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d df d9       \tvaesdeclast %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdf, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 df d9    \tvaesdeclast %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdf, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 df 9c c8 78 56 34 12 \tvaesdeclast 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
+ {{0x62, 0xf3, 0x4d, 0x48, 0x03, 0xfd, 0x12, }, 7, 0, "", "",
+ "62 f3 4d 48 03 fd 12 \tvalignd $0x12,%zmm5,%zmm6,%zmm7",},
+ {{0x62, 0xf3, 0xcd, 0x48, 0x03, 0xfd, 0x12, }, 7, 0, "", "",
+@@ -905,6 +1213,12 @@
+ "62 f3 4d 48 43 fd 12 \tvshufi32x4 $0x12,%zmm5,%zmm6,%zmm7",},
+ {{0x62, 0xf3, 0xcd, 0x48, 0x43, 0xfd, 0x12, }, 7, 0, "", "",
+ "62 f3 cd 48 43 fd 12 \tvshufi64x2 $0x12,%zmm5,%zmm6,%zmm7",},
++{{0xc4, 0xe3, 0x69, 0x44, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 69 44 d9 12    \tvpclmulqdq $0x12,%xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe3, 0x6d, 0x44, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 6d 44 d9 12    \tvpclmulqdq $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0x6d, 0x48, 0x44, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 48 44 d9 12 \tvpclmulqdq $0x12,%zmm1,%zmm2,%zmm3",},
+ {{0x62, 0xf3, 0x4d, 0x48, 0x50, 0xfd, 0x12, }, 7, 0, "", "",
+ "62 f3 4d 48 50 fd 12 \tvrangeps $0x12,%zmm5,%zmm6,%zmm7",},
+ {{0x62, 0xf3, 0xcd, 0x48, 0x50, 0xfd, 0x12, }, 7, 0, "", "",
+@@ -937,6 +1251,58 @@
+ "62 f3 7d 08 67 ef 12 \tvfpclassss $0x12,%xmm7,%k5",},
+ {{0x62, 0xf3, 0xfd, 0x08, 0x67, 0xef, 0x12, }, 7, 0, "", "",
+ "62 f3 fd 08 67 ef 12 \tvfpclasssd $0x12,%xmm7,%k5",},
++{{0x62, 0xf3, 0xed, 0x08, 0x70, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 08 70 d9 12 \tvpshldw $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0xed, 0x28, 0x70, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 28 70 d9 12 \tvpshldw $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0x70, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 70 d9 12 \tvpshldw $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf3, 0x6d, 0x08, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 08 71 d9 12 \tvpshldd $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0x6d, 0x28, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 28 71 d9 12 \tvpshldd $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0x6d, 0x48, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 48 71 d9 12 \tvpshldd $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf3, 0xed, 0x08, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 08 71 d9 12 \tvpshldq $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0xed, 0x28, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 28 71 d9 12 \tvpshldq $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 71 d9 12 \tvpshldq $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf3, 0xed, 0x08, 0x72, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 08 72 d9 12 \tvpshrdw $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0xed, 0x28, 0x72, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 28 72 d9 12 \tvpshrdw $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0x72, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 72 d9 12 \tvpshrdw $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf3, 0x6d, 0x08, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 08 73 d9 12 \tvpshrdd $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0x6d, 0x28, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 28 73 d9 12 \tvpshrdd $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0x6d, 0x48, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 48 73 d9 12 \tvpshrdd $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf3, 0xed, 0x08, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 08 73 d9 12 \tvpshrdq $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0xed, 0x28, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 28 73 d9 12 \tvpshrdq $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 73 d9 12 \tvpshrdq $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x66, 0x0f, 0x3a, 0xce, 0xd9, 0x12, }, 6, 0, "", "",
++"66 0f 3a ce d9 12    \tgf2p8affineqb $0x12,%xmm1,%xmm3",},
++{{0xc4, 0xe3, 0xe9, 0xce, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 e9 ce d9 12    \tvgf2p8affineqb $0x12,%xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe3, 0xed, 0xce, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 ed ce d9 12    \tvgf2p8affineqb $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0xce, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 ce d9 12 \tvgf2p8affineqb $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x66, 0x0f, 0x3a, 0xcf, 0xd9, 0x12, }, 6, 0, "", "",
++"66 0f 3a cf d9 12    \tgf2p8affineinvqb $0x12,%xmm1,%xmm3",},
++{{0xc4, 0xe3, 0xe9, 0xcf, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 e9 cf d9 12    \tvgf2p8affineinvqb $0x12,%xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe3, 0xed, 0xcf, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 ed cf d9 12    \tvgf2p8affineinvqb $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0xcf, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 cf d9 12 \tvgf2p8affineinvqb $0x12,%zmm1,%zmm2,%zmm3",},
+ {{0x62, 0xf1, 0x4d, 0x48, 0x72, 0xc5, 0x12, }, 7, 0, "", "",
+ "62 f1 4d 48 72 c5 12 \tvprord $0x12,%zmm5,%zmm6",},
+ {{0x62, 0xf1, 0xcd, 0x48, 0x72, 0xc5, 0x12, }, 7, 0, "", "",
+diff --git a/tools/perf/arch/x86/tests/insn-x86-dat-64.c b/tools/perf/arch/x86/tests/insn-x86-dat-64.c
+index 656f8aed31de..567ecccfad7c 100644
+--- a/tools/perf/arch/x86/tests/insn-x86-dat-64.c
++++ b/tools/perf/arch/x86/tests/insn-x86-dat-64.c
+@@ -587,6 +587,112 @@
+ "62 02 35 07 4f d0    \tvrsqrt14ss %xmm24,%xmm25,%xmm26{%k7}",},
+ {{0x62, 0x02, 0xb5, 0x07, 0x4f, 0xd0, }, 6, 0, "", "",
+ "62 02 b5 07 4f d0    \tvrsqrt14sd %xmm24,%xmm25,%xmm26{%k7}",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x50, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 50 d9    \tvpdpbusd %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x50, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 50 d9    \tvpdpbusd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x50, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 50 d9    \tvpdpbusd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x50, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 50 9c c8 78 56 34 12 \tvpdpbusd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0x50, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 50 9c c8 78 56 34 12 \tvpdpbusd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x51, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 51 d9    \tvpdpbusds %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x51, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 51 d9    \tvpdpbusds %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x51, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 51 d9    \tvpdpbusds %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x51, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 51 9c c8 78 56 34 12 \tvpdpbusds 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0x51, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 51 9c c8 78 56 34 12 \tvpdpbusds 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6e, 0x08, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6e 08 52 d9    \tvdpbf16ps %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6e, 0x28, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6e 28 52 d9    \tvdpbf16ps %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6e, 0x48, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6e 48 52 d9    \tvdpbf16ps %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6e, 0x48, 0x52, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6e 48 52 9c c8 78 56 34 12 \tvdpbf16ps 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6e, 0x48, 0x52, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6e 48 52 9c c8 78 56 34 12 \tvdpbf16ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 52 d9    \tvpdpwssd %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 52 d9    \tvpdpwssd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x52, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 52 d9    \tvpdpwssd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x52, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 52 9c c8 78 56 34 12 \tvpdpwssd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0x52, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 52 9c c8 78 56 34 12 \tvpdpwssd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x52, 0x20, }, 6, 0, "", "",
++"62 f2 7f 48 52 20    \tvp4dpwssd (%rax),%zmm0,%zmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x48, 0x52, 0x20, }, 7, 0, "", "",
++"67 62 f2 7f 48 52 20 \tvp4dpwssd (%eax),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x52, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 48 52 a4 c8 78 56 34 12 \tvp4dpwssd 0x12345678(%rax,%rcx,8),%zmm0,%zmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x48, 0x52, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7f 48 52 a4 c8 78 56 34 12 \tvp4dpwssd 0x12345678(%eax,%ecx,8),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x53, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 53 d9    \tvpdpwssds %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x53, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 53 d9    \tvpdpwssds %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x53, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 53 d9    \tvpdpwssds %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x53, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 53 9c c8 78 56 34 12 \tvpdpwssds 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0x53, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 53 9c c8 78 56 34 12 \tvpdpwssds 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x53, 0x20, }, 6, 0, "", "",
++"62 f2 7f 48 53 20    \tvp4dpwssds (%rax),%zmm0,%zmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x48, 0x53, 0x20, }, 7, 0, "", "",
++"67 62 f2 7f 48 53 20 \tvp4dpwssds (%eax),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x53, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 48 53 a4 c8 78 56 34 12 \tvp4dpwssds 0x12345678(%rax,%rcx,8),%zmm0,%zmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x48, 0x53, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7f 48 53 a4 c8 78 56 34 12 \tvp4dpwssds 0x12345678(%eax,%ecx,8),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x7d, 0x08, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 08 54 d1    \tvpopcntb %xmm1,%xmm2",},
++{{0x62, 0xf2, 0x7d, 0x28, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 28 54 d1    \tvpopcntb %ymm1,%ymm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 48 54 d1    \tvpopcntb %zmm1,%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x54, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7d 48 54 94 c8 78 56 34 12 \tvpopcntb 0x12345678(%rax,%rcx,8),%zmm2",},
++{{0x67, 0x62, 0xf2, 0x7d, 0x48, 0x54, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7d 48 54 94 c8 78 56 34 12 \tvpopcntb 0x12345678(%eax,%ecx,8),%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x08, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 08 54 d1    \tvpopcntw %xmm1,%xmm2",},
++{{0x62, 0xf2, 0xfd, 0x28, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 28 54 d1    \tvpopcntw %ymm1,%ymm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x54, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 48 54 d1    \tvpopcntw %zmm1,%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x54, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 fd 48 54 94 c8 78 56 34 12 \tvpopcntw 0x12345678(%rax,%rcx,8),%zmm2",},
++{{0x67, 0x62, 0xf2, 0xfd, 0x48, 0x54, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 fd 48 54 94 c8 78 56 34 12 \tvpopcntw 0x12345678(%eax,%ecx,8),%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x08, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 08 55 d1    \tvpopcntd %xmm1,%xmm2",},
++{{0x62, 0xf2, 0x7d, 0x28, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 28 55 d1    \tvpopcntd %ymm1,%ymm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 48 55 d1    \tvpopcntd %zmm1,%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x55, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7d 48 55 94 c8 78 56 34 12 \tvpopcntd 0x12345678(%rax,%rcx,8),%zmm2",},
++{{0x67, 0x62, 0xf2, 0x7d, 0x48, 0x55, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7d 48 55 94 c8 78 56 34 12 \tvpopcntd 0x12345678(%eax,%ecx,8),%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x08, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 08 55 d1    \tvpopcntq %xmm1,%xmm2",},
++{{0x62, 0xf2, 0xfd, 0x28, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 28 55 d1    \tvpopcntq %ymm1,%ymm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x55, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 48 55 d1    \tvpopcntq %zmm1,%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x55, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 fd 48 55 94 c8 78 56 34 12 \tvpopcntq 0x12345678(%rax,%rcx,8),%zmm2",},
++{{0x67, 0x62, 0xf2, 0xfd, 0x48, 0x55, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 fd 48 55 94 c8 78 56 34 12 \tvpopcntq 0x12345678(%eax,%ecx,8),%zmm2",},
+ {{0xc4, 0xe2, 0x79, 0x59, 0xf4, }, 5, 0, "", "",
+ "c4 e2 79 59 f4       \tvpbroadcastq %xmm4,%xmm6",},
+ {{0x62, 0x02, 0x7d, 0x48, 0x59, 0xd3, }, 6, 0, "", "",
+@@ -601,6 +707,46 @@
+ "62 62 7d 48 5b 21    \tvbroadcasti32x8 (%rcx),%zmm28",},
+ {{0x62, 0x62, 0xfd, 0x48, 0x5b, 0x11, }, 6, 0, "", "",
+ "62 62 fd 48 5b 11    \tvbroadcasti64x4 (%rcx),%zmm26",},
++{{0x62, 0xf2, 0x7d, 0x08, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 08 62 d1    \tvpexpandb %xmm1,%xmm2",},
++{{0x62, 0xf2, 0x7d, 0x28, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 28 62 d1    \tvpexpandb %ymm1,%ymm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 7d 48 62 d1    \tvpexpandb %zmm1,%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x62, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7d 48 62 94 c8 78 56 34 12 \tvpexpandb 0x12345678(%rax,%rcx,8),%zmm2",},
++{{0x67, 0x62, 0xf2, 0x7d, 0x48, 0x62, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7d 48 62 94 c8 78 56 34 12 \tvpexpandb 0x12345678(%eax,%ecx,8),%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x08, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 08 62 d1    \tvpexpandw %xmm1,%xmm2",},
++{{0x62, 0xf2, 0xfd, 0x28, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 28 62 d1    \tvpexpandw %ymm1,%ymm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x62, 0xd1, }, 6, 0, "", "",
++"62 f2 fd 48 62 d1    \tvpexpandw %zmm1,%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x62, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 fd 48 62 94 c8 78 56 34 12 \tvpexpandw 0x12345678(%rax,%rcx,8),%zmm2",},
++{{0x67, 0x62, 0xf2, 0xfd, 0x48, 0x62, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 fd 48 62 94 c8 78 56 34 12 \tvpexpandw 0x12345678(%eax,%ecx,8),%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x08, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 7d 08 63 ca    \tvpcompressb %xmm1,%xmm2",},
++{{0x62, 0xf2, 0x7d, 0x28, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 7d 28 63 ca    \tvpcompressb %ymm1,%ymm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 7d 48 63 ca    \tvpcompressb %zmm1,%zmm2",},
++{{0x62, 0xf2, 0x7d, 0x48, 0x63, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7d 48 63 94 c8 78 56 34 12 \tvpcompressb %zmm2,0x12345678(%rax,%rcx,8)",},
++{{0x67, 0x62, 0xf2, 0x7d, 0x48, 0x63, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7d 48 63 94 c8 78 56 34 12 \tvpcompressb %zmm2,0x12345678(%eax,%ecx,8)",},
++{{0x62, 0xf2, 0xfd, 0x08, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 fd 08 63 ca    \tvpcompressw %xmm1,%xmm2",},
++{{0x62, 0xf2, 0xfd, 0x28, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 fd 28 63 ca    \tvpcompressw %ymm1,%ymm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x63, 0xca, }, 6, 0, "", "",
++"62 f2 fd 48 63 ca    \tvpcompressw %zmm1,%zmm2",},
++{{0x62, 0xf2, 0xfd, 0x48, 0x63, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 fd 48 63 94 c8 78 56 34 12 \tvpcompressw %zmm2,0x12345678(%rax,%rcx,8)",},
++{{0x67, 0x62, 0xf2, 0xfd, 0x48, 0x63, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 fd 48 63 94 c8 78 56 34 12 \tvpcompressw %zmm2,0x12345678(%eax,%ecx,8)",},
+ {{0x62, 0x02, 0x25, 0x40, 0x64, 0xe2, }, 6, 0, "", "",
+ "62 02 25 40 64 e2    \tvpblendmd %zmm26,%zmm27,%zmm28",},
+ {{0x62, 0x02, 0xa5, 0x40, 0x64, 0xe2, }, 6, 0, "", "",
+@@ -613,6 +759,106 @@
+ "62 02 25 40 66 e2    \tvpblendmb %zmm26,%zmm27,%zmm28",},
+ {{0x62, 0x02, 0xa5, 0x40, 0x66, 0xe2, }, 6, 0, "", "",
+ "62 02 a5 40 66 e2    \tvpblendmw %zmm26,%zmm27,%zmm28",},
++{{0x62, 0xf2, 0x6f, 0x08, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 08 68 d9    \tvp2intersectd %xmm1,%xmm2,%k3",},
++{{0x62, 0xf2, 0x6f, 0x28, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 28 68 d9    \tvp2intersectd %ymm1,%ymm2,%k3",},
++{{0x62, 0xf2, 0x6f, 0x48, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 48 68 d9    \tvp2intersectd %zmm1,%zmm2,%k3",},
++{{0x62, 0xf2, 0x6f, 0x48, 0x68, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6f 48 68 9c c8 78 56 34 12 \tvp2intersectd 0x12345678(%rax,%rcx,8),%zmm2,%k3",},
++{{0x67, 0x62, 0xf2, 0x6f, 0x48, 0x68, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6f 48 68 9c c8 78 56 34 12 \tvp2intersectd 0x12345678(%eax,%ecx,8),%zmm2,%k3",},
++{{0x62, 0xf2, 0xef, 0x08, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 ef 08 68 d9    \tvp2intersectq %xmm1,%xmm2,%k3",},
++{{0x62, 0xf2, 0xef, 0x28, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 ef 28 68 d9    \tvp2intersectq %ymm1,%ymm2,%k3",},
++{{0x62, 0xf2, 0xef, 0x48, 0x68, 0xd9, }, 6, 0, "", "",
++"62 f2 ef 48 68 d9    \tvp2intersectq %zmm1,%zmm2,%k3",},
++{{0x62, 0xf2, 0xef, 0x48, 0x68, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ef 48 68 9c c8 78 56 34 12 \tvp2intersectq 0x12345678(%rax,%rcx,8),%zmm2,%k3",},
++{{0x67, 0x62, 0xf2, 0xef, 0x48, 0x68, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 ef 48 68 9c c8 78 56 34 12 \tvp2intersectq 0x12345678(%eax,%ecx,8),%zmm2,%k3",},
++{{0x62, 0xf2, 0xed, 0x08, 0x70, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 08 70 d9    \tvpshldvw %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0xed, 0x28, 0x70, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 28 70 d9    \tvpshldvw %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x70, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 70 d9    \tvpshldvw %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x70, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 70 9c c8 78 56 34 12 \tvpshldvw 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0xed, 0x48, 0x70, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 ed 48 70 9c c8 78 56 34 12 \tvpshldvw 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 71 d9    \tvpshldvd %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 71 d9    \tvpshldvd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 71 d9    \tvpshldvd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x71, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 71 9c c8 78 56 34 12 \tvpshldvd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0x71, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 71 9c c8 78 56 34 12 \tvpshldvd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x08, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 08 71 d9    \tvpshldvq %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0xed, 0x28, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 28 71 d9    \tvpshldvq %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x71, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 71 d9    \tvpshldvq %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x71, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 71 9c c8 78 56 34 12 \tvpshldvq 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0xed, 0x48, 0x71, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 ed 48 71 9c c8 78 56 34 12 \tvpshldvq 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6f, 0x08, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 08 72 d9    \tvcvtne2ps2bf16 %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6f, 0x28, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 28 72 d9    \tvcvtne2ps2bf16 %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6f, 0x48, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 6f 48 72 d9    \tvcvtne2ps2bf16 %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6f, 0x48, 0x72, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6f 48 72 9c c8 78 56 34 12 \tvcvtne2ps2bf16 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6f, 0x48, 0x72, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6f 48 72 9c c8 78 56 34 12 \tvcvtne2ps2bf16 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x7e, 0x08, 0x72, 0xd1, }, 6, 0, "", "",
++"62 f2 7e 08 72 d1    \tvcvtneps2bf16 %xmm1,%xmm2",},
++{{0x62, 0xf2, 0x7e, 0x28, 0x72, 0xd1, }, 6, 0, "", "",
++"62 f2 7e 28 72 d1    \tvcvtneps2bf16 %ymm1,%xmm2",},
++{{0x62, 0xf2, 0x7e, 0x48, 0x72, 0xd1, }, 6, 0, "", "",
++"62 f2 7e 48 72 d1    \tvcvtneps2bf16 %zmm1,%ymm2",},
++{{0x62, 0xf2, 0x7e, 0x48, 0x72, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7e 48 72 94 c8 78 56 34 12 \tvcvtneps2bf16 0x12345678(%rax,%rcx,8),%ymm2",},
++{{0x67, 0x62, 0xf2, 0x7e, 0x48, 0x72, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7e 48 72 94 c8 78 56 34 12 \tvcvtneps2bf16 0x12345678(%eax,%ecx,8),%ymm2",},
++{{0x62, 0xf2, 0xed, 0x08, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 08 72 d9    \tvpshrdvw %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0xed, 0x28, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 28 72 d9    \tvpshrdvw %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x72, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 72 d9    \tvpshrdvw %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x72, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 72 9c c8 78 56 34 12 \tvpshrdvw 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0xed, 0x48, 0x72, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 ed 48 72 9c c8 78 56 34 12 \tvpshrdvw 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 73 d9    \tvpshrdvd %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 73 d9    \tvpshrdvd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 73 d9    \tvpshrdvd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x73, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 73 9c c8 78 56 34 12 \tvpshrdvd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0x73, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 73 9c c8 78 56 34 12 \tvpshrdvd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x08, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 08 73 d9    \tvpshrdvq %xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf2, 0xed, 0x28, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 28 73 d9    \tvpshrdvq %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x73, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 73 d9    \tvpshrdvq %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x73, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 73 9c c8 78 56 34 12 \tvpshrdvq 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0xed, 0x48, 0x73, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 ed 48 73 9c c8 78 56 34 12 \tvpshrdvq 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
+ {{0x62, 0x02, 0x35, 0x40, 0x75, 0xd0, }, 6, 0, "", "",
+ "62 02 35 40 75 d0    \tvpermi2b %zmm24,%zmm25,%zmm26",},
+ {{0x62, 0x02, 0xa5, 0x40, 0x75, 0xe2, }, 6, 0, "", "",
+@@ -667,6 +913,16 @@
+ "62 02 25 40 8d e2    \tvpermb %zmm26,%zmm27,%zmm28",},
+ {{0x62, 0x02, 0xa5, 0x40, 0x8d, 0xe2, }, 6, 0, "", "",
+ "62 02 a5 40 8d e2    \tvpermw %zmm26,%zmm27,%zmm28",},
++{{0x62, 0xf2, 0x6d, 0x08, 0x8f, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 08 8f d9    \tvpshufbitqmb %xmm1,%xmm2,%k3",},
++{{0x62, 0xf2, 0x6d, 0x28, 0x8f, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 28 8f d9    \tvpshufbitqmb %ymm1,%ymm2,%k3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x8f, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 8f d9    \tvpshufbitqmb %zmm1,%zmm2,%k3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x8f, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 8f 9c c8 78 56 34 12 \tvpshufbitqmb 0x12345678(%rax,%rcx,8),%zmm2,%k3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0x8f, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 8f 9c c8 78 56 34 12 \tvpshufbitqmb 0x12345678(%eax,%ecx,8),%zmm2,%k3",},
+ {{0xc4, 0xe2, 0x69, 0x90, 0x4c, 0x7d, 0x02, }, 7, 0, "", "",
+ "c4 e2 69 90 4c 7d 02 \tvpgatherdd %xmm2,0x2(%rbp,%xmm7,2),%xmm1",},
+ {{0xc4, 0xe2, 0xe9, 0x90, 0x4c, 0x7d, 0x04, }, 7, 0, "", "",
+@@ -683,6 +939,54 @@
+ "62 22 7d 41 91 94 dd 7b 00 00 00 \tvpgatherqd 0x7b(%rbp,%zmm27,8),%ymm26{%k1}",},
+ {{0x62, 0x22, 0xfd, 0x41, 0x91, 0x94, 0xdd, 0x7b, 0x00, 0x00, 0x00, }, 11, 0, "", "",
+ "62 22 fd 41 91 94 dd 7b 00 00 00 \tvpgatherqq 0x7b(%rbp,%zmm27,8),%zmm26{%k1}",},
++{{0xc4, 0xe2, 0x69, 0x9a, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 9a d9       \tvfmsub132ps %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0x9a, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d 9a d9       \tvfmsub132ps %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x9a, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 9a d9    \tvfmsub132ps %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0x9a, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 9a 9c c8 78 56 34 12 \tvfmsub132ps 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0x9a, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 9a 9c c8 78 56 34 12 \tvfmsub132ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0xe9, 0x9a, 0xd9, }, 5, 0, "", "",
++"c4 e2 e9 9a d9       \tvfmsub132pd %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xed, 0x9a, 0xd9, }, 5, 0, "", "",
++"c4 e2 ed 9a d9       \tvfmsub132pd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x9a, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 9a d9    \tvfmsub132pd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0x9a, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 9a 9c c8 78 56 34 12 \tvfmsub132pd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0xed, 0x48, 0x9a, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 ed 48 9a 9c c8 78 56 34 12 \tvfmsub132pd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x9a, 0x20, }, 6, 0, "", "",
++"62 f2 7f 48 9a 20    \tv4fmaddps (%rax),%zmm0,%zmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x48, 0x9a, 0x20, }, 7, 0, "", "",
++"67 62 f2 7f 48 9a 20 \tv4fmaddps (%eax),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x7f, 0x48, 0x9a, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 48 9a a4 c8 78 56 34 12 \tv4fmaddps 0x12345678(%rax,%rcx,8),%zmm0,%zmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x48, 0x9a, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7f 48 9a a4 c8 78 56 34 12 \tv4fmaddps 0x12345678(%eax,%ecx,8),%zmm0,%zmm4",},
++{{0xc4, 0xe2, 0x69, 0x9b, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 9b d9       \tvfmsub132ss %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x69, 0x9b, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, 0, "", "",
++"c4 e2 69 9b 9c c8 78 56 34 12 \tvfmsub132ss 0x12345678(%rax,%rcx,8),%xmm2,%xmm3",},
++{{0x67, 0xc4, 0xe2, 0x69, 0x9b, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"67 c4 e2 69 9b 9c c8 78 56 34 12 \tvfmsub132ss 0x12345678(%eax,%ecx,8),%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xe9, 0x9b, 0xd9, }, 5, 0, "", "",
++"c4 e2 e9 9b d9       \tvfmsub132sd %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xe9, 0x9b, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, 0, "", "",
++"c4 e2 e9 9b 9c c8 78 56 34 12 \tvfmsub132sd 0x12345678(%rax,%rcx,8),%xmm2,%xmm3",},
++{{0x67, 0xc4, 0xe2, 0xe9, 0x9b, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"67 c4 e2 e9 9b 9c c8 78 56 34 12 \tvfmsub132sd 0x12345678(%eax,%ecx,8),%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x7f, 0x08, 0x9b, 0x20, }, 6, 0, "", "",
++"62 f2 7f 08 9b 20    \tv4fmaddss (%rax),%xmm0,%xmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x08, 0x9b, 0x20, }, 7, 0, "", "",
++"67 62 f2 7f 08 9b 20 \tv4fmaddss (%eax),%xmm0,%xmm4",},
++{{0x62, 0xf2, 0x7f, 0x08, 0x9b, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 08 9b a4 c8 78 56 34 12 \tv4fmaddss 0x12345678(%rax,%rcx,8),%xmm0,%xmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x08, 0x9b, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7f 08 9b a4 c8 78 56 34 12 \tv4fmaddss 0x12345678(%eax,%ecx,8),%xmm0,%xmm4",},
+ {{0x62, 0x22, 0x7d, 0x41, 0xa0, 0xa4, 0xed, 0x7b, 0x00, 0x00, 0x00, }, 11, 0, "", "",
+ "62 22 7d 41 a0 a4 ed 7b 00 00 00 \tvpscatterdd %zmm28,0x7b(%rbp,%zmm29,8){%k1}",},
+ {{0x62, 0x22, 0xfd, 0x41, 0xa0, 0x94, 0xdd, 0x7b, 0x00, 0x00, 0x00, }, 11, 0, "", "",
+@@ -699,6 +1003,54 @@
+ "62 b2 7d 41 a3 b4 ed 7b 00 00 00 \tvscatterqps %ymm6,0x7b(%rbp,%zmm29,8){%k1}",},
+ {{0x62, 0x22, 0xfd, 0x41, 0xa3, 0xa4, 0xed, 0x7b, 0x00, 0x00, 0x00, }, 11, 0, "", "",
+ "62 22 fd 41 a3 a4 ed 7b 00 00 00 \tvscatterqpd %zmm28,0x7b(%rbp,%zmm29,8){%k1}",},
++{{0xc4, 0xe2, 0x69, 0xaa, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 aa d9       \tvfmsub213ps %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xaa, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d aa d9       \tvfmsub213ps %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xaa, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 aa d9    \tvfmsub213ps %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xaa, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 aa 9c c8 78 56 34 12 \tvfmsub213ps 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0xaa, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 aa 9c c8 78 56 34 12 \tvfmsub213ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0xe9, 0xaa, 0xd9, }, 5, 0, "", "",
++"c4 e2 e9 aa d9       \tvfmsub213pd %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xed, 0xaa, 0xd9, }, 5, 0, "", "",
++"c4 e2 ed aa d9       \tvfmsub213pd %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0xaa, 0xd9, }, 6, 0, "", "",
++"62 f2 ed 48 aa d9    \tvfmsub213pd %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0xed, 0x48, 0xaa, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 ed 48 aa 9c c8 78 56 34 12 \tvfmsub213pd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0xed, 0x48, 0xaa, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 ed 48 aa 9c c8 78 56 34 12 \tvfmsub213pd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x7f, 0x48, 0xaa, 0x20, }, 6, 0, "", "",
++"62 f2 7f 48 aa 20    \tv4fnmaddps (%rax),%zmm0,%zmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x48, 0xaa, 0x20, }, 7, 0, "", "",
++"67 62 f2 7f 48 aa 20 \tv4fnmaddps (%eax),%zmm0,%zmm4",},
++{{0x62, 0xf2, 0x7f, 0x48, 0xaa, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 48 aa a4 c8 78 56 34 12 \tv4fnmaddps 0x12345678(%rax,%rcx,8),%zmm0,%zmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x48, 0xaa, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7f 48 aa a4 c8 78 56 34 12 \tv4fnmaddps 0x12345678(%eax,%ecx,8),%zmm0,%zmm4",},
++{{0xc4, 0xe2, 0x69, 0xab, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 ab d9       \tvfmsub213ss %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x69, 0xab, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, 0, "", "",
++"c4 e2 69 ab 9c c8 78 56 34 12 \tvfmsub213ss 0x12345678(%rax,%rcx,8),%xmm2,%xmm3",},
++{{0x67, 0xc4, 0xe2, 0x69, 0xab, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"67 c4 e2 69 ab 9c c8 78 56 34 12 \tvfmsub213ss 0x12345678(%eax,%ecx,8),%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xe9, 0xab, 0xd9, }, 5, 0, "", "",
++"c4 e2 e9 ab d9       \tvfmsub213sd %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0xe9, 0xab, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, 0, "", "",
++"c4 e2 e9 ab 9c c8 78 56 34 12 \tvfmsub213sd 0x12345678(%rax,%rcx,8),%xmm2,%xmm3",},
++{{0x67, 0xc4, 0xe2, 0xe9, 0xab, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"67 c4 e2 e9 ab 9c c8 78 56 34 12 \tvfmsub213sd 0x12345678(%eax,%ecx,8),%xmm2,%xmm3",},
++{{0x62, 0xf2, 0x7f, 0x08, 0xab, 0x20, }, 6, 0, "", "",
++"62 f2 7f 08 ab 20    \tv4fnmaddss (%rax),%xmm0,%xmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x08, 0xab, 0x20, }, 7, 0, "", "",
++"67 62 f2 7f 08 ab 20 \tv4fnmaddss (%eax),%xmm0,%xmm4",},
++{{0x62, 0xf2, 0x7f, 0x08, 0xab, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 7f 08 ab a4 c8 78 56 34 12 \tv4fnmaddss 0x12345678(%rax,%rcx,8),%xmm0,%xmm4",},
++{{0x67, 0x62, 0xf2, 0x7f, 0x08, 0xab, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 7f 08 ab a4 c8 78 56 34 12 \tv4fnmaddss 0x12345678(%eax,%ecx,8),%xmm0,%xmm4",},
+ {{0x62, 0x02, 0xa5, 0x40, 0xb4, 0xe2, }, 6, 0, "", "",
+ "62 02 a5 40 b4 e2    \tvpmadd52luq %zmm26,%zmm27,%zmm28",},
+ {{0x62, 0x02, 0xa5, 0x40, 0xb5, 0xe2, }, 6, 0, "", "",
+@@ -727,6 +1079,62 @@
+ "62 02 15 07 cd f4    \tvrsqrt28ss %xmm28,%xmm29,%xmm30{%k7}",},
+ {{0x62, 0x02, 0xad, 0x07, 0xcd, 0xd9, }, 6, 0, "", "",
+ "62 02 ad 07 cd d9    \tvrsqrt28sd %xmm25,%xmm26,%xmm27{%k7}",},
++{{0x66, 0x0f, 0x38, 0xcf, 0xd9, }, 5, 0, "", "",
++"66 0f 38 cf d9       \tgf2p8mulb %xmm1,%xmm3",},
++{{0x66, 0x0f, 0x38, 0xcf, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, 0, "", "",
++"66 0f 38 cf 9c c8 78 56 34 12 \tgf2p8mulb 0x12345678(%rax,%rcx,8),%xmm3",},
++{{0x67, 0x66, 0x0f, 0x38, 0xcf, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"67 66 0f 38 cf 9c c8 78 56 34 12 \tgf2p8mulb 0x12345678(%eax,%ecx,8),%xmm3",},
++{{0xc4, 0xe2, 0x69, 0xcf, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 cf d9       \tvgf2p8mulb %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xcf, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d cf d9       \tvgf2p8mulb %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xcf, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 cf d9    \tvgf2p8mulb %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xcf, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 cf 9c c8 78 56 34 12 \tvgf2p8mulb 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0xcf, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 cf 9c c8 78 56 34 12 \tvgf2p8mulb 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0x69, 0xdc, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 dc d9       \tvaesenc %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xdc, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d dc d9       \tvaesenc %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdc, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 dc d9    \tvaesenc %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdc, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 dc 9c c8 78 56 34 12 \tvaesenc 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0xdc, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 dc 9c c8 78 56 34 12 \tvaesenc 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0x69, 0xdd, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 dd d9       \tvaesenclast %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xdd, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d dd d9       \tvaesenclast %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdd, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 dd d9    \tvaesenclast %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdd, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 dd 9c c8 78 56 34 12 \tvaesenclast 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0xdd, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 dd 9c c8 78 56 34 12 \tvaesenclast 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0x69, 0xde, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 de d9       \tvaesdec %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xde, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d de d9       \tvaesdec %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xde, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 de d9    \tvaesdec %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xde, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 de 9c c8 78 56 34 12 \tvaesdec 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0xde, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 de 9c c8 78 56 34 12 \tvaesdec 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
++{{0xc4, 0xe2, 0x69, 0xdf, 0xd9, }, 5, 0, "", "",
++"c4 e2 69 df d9       \tvaesdeclast %xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe2, 0x6d, 0xdf, 0xd9, }, 5, 0, "", "",
++"c4 e2 6d df d9       \tvaesdeclast %ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdf, 0xd9, }, 6, 0, "", "",
++"62 f2 6d 48 df d9    \tvaesdeclast %zmm1,%zmm2,%zmm3",},
++{{0x62, 0xf2, 0x6d, 0x48, 0xdf, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 11, 0, "", "",
++"62 f2 6d 48 df 9c c8 78 56 34 12 \tvaesdeclast 0x12345678(%rax,%rcx,8),%zmm2,%zmm3",},
++{{0x67, 0x62, 0xf2, 0x6d, 0x48, 0xdf, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 12, 0, "", "",
++"67 62 f2 6d 48 df 9c c8 78 56 34 12 \tvaesdeclast 0x12345678(%eax,%ecx,8),%zmm2,%zmm3",},
+ {{0x62, 0x03, 0x15, 0x40, 0x03, 0xf4, 0x12, }, 7, 0, "", "",
+ "62 03 15 40 03 f4 12 \tvalignd $0x12,%zmm28,%zmm29,%zmm30",},
+ {{0x62, 0x03, 0xad, 0x40, 0x03, 0xd9, 0x12, }, 7, 0, "", "",
+@@ -827,6 +1235,14 @@
+ "62 03 2d 40 43 d9 12 \tvshufi32x4 $0x12,%zmm25,%zmm26,%zmm27",},
+ {{0x62, 0x03, 0x95, 0x40, 0x43, 0xf4, 0x12, }, 7, 0, "", "",
+ "62 03 95 40 43 f4 12 \tvshufi64x2 $0x12,%zmm28,%zmm29,%zmm30",},
++{{0xc4, 0xe3, 0x69, 0x44, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 69 44 d9 12    \tvpclmulqdq $0x12,%xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe3, 0x6d, 0x44, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 6d 44 d9 12    \tvpclmulqdq $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0x6d, 0x48, 0x44, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 48 44 d9 12 \tvpclmulqdq $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0x03, 0x2d, 0x40, 0x44, 0xd9, 0x12, }, 7, 0, "", "",
++"62 03 2d 40 44 d9 12 \tvpclmulqdq $0x12,%zmm25,%zmm26,%zmm27",},
+ {{0x62, 0x03, 0x2d, 0x40, 0x50, 0xd9, 0x12, }, 7, 0, "", "",
+ "62 03 2d 40 50 d9 12 \tvrangeps $0x12,%zmm25,%zmm26,%zmm27",},
+ {{0x62, 0x03, 0x95, 0x40, 0x50, 0xf4, 0x12, }, 7, 0, "", "",
+@@ -859,6 +1275,74 @@
+ "62 93 7d 08 67 eb 12 \tvfpclassss $0x12,%xmm27,%k5",},
+ {{0x62, 0x93, 0xfd, 0x08, 0x67, 0xee, 0x12, }, 7, 0, "", "",
+ "62 93 fd 08 67 ee 12 \tvfpclasssd $0x12,%xmm30,%k5",},
++{{0x62, 0xf3, 0xed, 0x08, 0x70, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 08 70 d9 12 \tvpshldw $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0xed, 0x28, 0x70, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 28 70 d9 12 \tvpshldw $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0x70, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 70 d9 12 \tvpshldw $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0x03, 0xad, 0x40, 0x70, 0xd9, 0x12, }, 7, 0, "", "",
++"62 03 ad 40 70 d9 12 \tvpshldw $0x12,%zmm25,%zmm26,%zmm27",},
++{{0x62, 0xf3, 0x6d, 0x08, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 08 71 d9 12 \tvpshldd $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0x6d, 0x28, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 28 71 d9 12 \tvpshldd $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0x6d, 0x48, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 48 71 d9 12 \tvpshldd $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0x03, 0x2d, 0x40, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 03 2d 40 71 d9 12 \tvpshldd $0x12,%zmm25,%zmm26,%zmm27",},
++{{0x62, 0xf3, 0xed, 0x08, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 08 71 d9 12 \tvpshldq $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0xed, 0x28, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 28 71 d9 12 \tvpshldq $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 71 d9 12 \tvpshldq $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0x03, 0xad, 0x40, 0x71, 0xd9, 0x12, }, 7, 0, "", "",
++"62 03 ad 40 71 d9 12 \tvpshldq $0x12,%zmm25,%zmm26,%zmm27",},
++{{0x62, 0xf3, 0xed, 0x08, 0x72, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 08 72 d9 12 \tvpshrdw $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0xed, 0x28, 0x72, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 28 72 d9 12 \tvpshrdw $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0x72, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 72 d9 12 \tvpshrdw $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0x03, 0xad, 0x40, 0x72, 0xd9, 0x12, }, 7, 0, "", "",
++"62 03 ad 40 72 d9 12 \tvpshrdw $0x12,%zmm25,%zmm26,%zmm27",},
++{{0x62, 0xf3, 0x6d, 0x08, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 08 73 d9 12 \tvpshrdd $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0x6d, 0x28, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 28 73 d9 12 \tvpshrdd $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0x6d, 0x48, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 6d 48 73 d9 12 \tvpshrdd $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0x03, 0x2d, 0x40, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 03 2d 40 73 d9 12 \tvpshrdd $0x12,%zmm25,%zmm26,%zmm27",},
++{{0x62, 0xf3, 0xed, 0x08, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 08 73 d9 12 \tvpshrdq $0x12,%xmm1,%xmm2,%xmm3",},
++{{0x62, 0xf3, 0xed, 0x28, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 28 73 d9 12 \tvpshrdq $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 73 d9 12 \tvpshrdq $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0x03, 0xad, 0x40, 0x73, 0xd9, 0x12, }, 7, 0, "", "",
++"62 03 ad 40 73 d9 12 \tvpshrdq $0x12,%zmm25,%zmm26,%zmm27",},
++{{0x66, 0x0f, 0x3a, 0xce, 0xd9, 0x12, }, 6, 0, "", "",
++"66 0f 3a ce d9 12    \tgf2p8affineqb $0x12,%xmm1,%xmm3",},
++{{0xc4, 0xe3, 0xe9, 0xce, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 e9 ce d9 12    \tvgf2p8affineqb $0x12,%xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe3, 0xed, 0xce, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 ed ce d9 12    \tvgf2p8affineqb $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0xce, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 ce d9 12 \tvgf2p8affineqb $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0x03, 0xad, 0x40, 0xce, 0xd9, 0x12, }, 7, 0, "", "",
++"62 03 ad 40 ce d9 12 \tvgf2p8affineqb $0x12,%zmm25,%zmm26,%zmm27",},
++{{0x66, 0x0f, 0x3a, 0xcf, 0xd9, 0x12, }, 6, 0, "", "",
++"66 0f 3a cf d9 12    \tgf2p8affineinvqb $0x12,%xmm1,%xmm3",},
++{{0xc4, 0xe3, 0xe9, 0xcf, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 e9 cf d9 12    \tvgf2p8affineinvqb $0x12,%xmm1,%xmm2,%xmm3",},
++{{0xc4, 0xe3, 0xed, 0xcf, 0xd9, 0x12, }, 6, 0, "", "",
++"c4 e3 ed cf d9 12    \tvgf2p8affineinvqb $0x12,%ymm1,%ymm2,%ymm3",},
++{{0x62, 0xf3, 0xed, 0x48, 0xcf, 0xd9, 0x12, }, 7, 0, "", "",
++"62 f3 ed 48 cf d9 12 \tvgf2p8affineinvqb $0x12,%zmm1,%zmm2,%zmm3",},
++{{0x62, 0x03, 0xad, 0x40, 0xcf, 0xd9, 0x12, }, 7, 0, "", "",
++"62 03 ad 40 cf d9 12 \tvgf2p8affineinvqb $0x12,%zmm25,%zmm26,%zmm27",},
+ {{0x62, 0x91, 0x2d, 0x40, 0x72, 0xc1, 0x12, }, 7, 0, "", "",
+ "62 91 2d 40 72 c1 12 \tvprord $0x12,%zmm25,%zmm26",},
+ {{0x62, 0x91, 0xad, 0x40, 0x72, 0xc1, 0x12, }, 7, 0, "", "",
+diff --git a/tools/perf/arch/x86/tests/insn-x86-dat-src.c b/tools/perf/arch/x86/tests/insn-x86-dat-src.c
+index dd85a3afd9ce..ddbf07c50bb8 100644
+--- a/tools/perf/arch/x86/tests/insn-x86-dat-src.c
++++ b/tools/perf/arch/x86/tests/insn-x86-dat-src.c
+@@ -510,6 +510,82 @@ int main(void)
+ 	asm volatile("vrsqrt14ss %xmm24,%xmm25,%xmm26{%k7}");
+ 	asm volatile("vrsqrt14sd %xmm24,%xmm25,%xmm26{%k7}");
+ 
++	/* AVX-512: Op code 0f 38 50 */
++
++	asm volatile("vpdpbusd %xmm1, %xmm2, %xmm3");
++	asm volatile("vpdpbusd %ymm1, %ymm2, %ymm3");
++	asm volatile("vpdpbusd %zmm1, %zmm2, %zmm3");
++	asm volatile("vpdpbusd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vpdpbusd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 51 */
++
++	asm volatile("vpdpbusds %xmm1, %xmm2, %xmm3");
++	asm volatile("vpdpbusds %ymm1, %ymm2, %ymm3");
++	asm volatile("vpdpbusds %zmm1, %zmm2, %zmm3");
++	asm volatile("vpdpbusds 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vpdpbusds 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 52 */
++
++	asm volatile("vdpbf16ps %xmm1, %xmm2, %xmm3");
++	asm volatile("vdpbf16ps %ymm1, %ymm2, %ymm3");
++	asm volatile("vdpbf16ps %zmm1, %zmm2, %zmm3");
++	asm volatile("vdpbf16ps 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vdpbf16ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vpdpwssd %xmm1, %xmm2, %xmm3");
++	asm volatile("vpdpwssd %ymm1, %ymm2, %ymm3");
++	asm volatile("vpdpwssd %zmm1, %zmm2, %zmm3");
++	asm volatile("vpdpwssd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vpdpwssd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vp4dpwssd (%rax), %zmm0, %zmm4");
++	asm volatile("vp4dpwssd (%eax), %zmm0, %zmm4");
++	asm volatile("vp4dpwssd 0x12345678(%rax,%rcx,8),%zmm0,%zmm4");
++	asm volatile("vp4dpwssd 0x12345678(%eax,%ecx,8),%zmm0,%zmm4");
++
++	/* AVX-512: Op code 0f 38 53 */
++
++	asm volatile("vpdpwssds %xmm1, %xmm2, %xmm3");
++	asm volatile("vpdpwssds %ymm1, %ymm2, %ymm3");
++	asm volatile("vpdpwssds %zmm1, %zmm2, %zmm3");
++	asm volatile("vpdpwssds 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vpdpwssds 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vp4dpwssds (%rax), %zmm0, %zmm4");
++	asm volatile("vp4dpwssds (%eax), %zmm0, %zmm4");
++	asm volatile("vp4dpwssds 0x12345678(%rax,%rcx,8),%zmm0,%zmm4");
++	asm volatile("vp4dpwssds 0x12345678(%eax,%ecx,8),%zmm0,%zmm4");
++
++	/* AVX-512: Op code 0f 38 54 */
++
++	asm volatile("vpopcntb %xmm1, %xmm2");
++	asm volatile("vpopcntb %ymm1, %ymm2");
++	asm volatile("vpopcntb %zmm1, %zmm2");
++	asm volatile("vpopcntb 0x12345678(%rax,%rcx,8),%zmm2");
++	asm volatile("vpopcntb 0x12345678(%eax,%ecx,8),%zmm2");
++
++	asm volatile("vpopcntw %xmm1, %xmm2");
++	asm volatile("vpopcntw %ymm1, %ymm2");
++	asm volatile("vpopcntw %zmm1, %zmm2");
++	asm volatile("vpopcntw 0x12345678(%rax,%rcx,8),%zmm2");
++	asm volatile("vpopcntw 0x12345678(%eax,%ecx,8),%zmm2");
++
++	/* AVX-512: Op code 0f 38 55 */
++
++	asm volatile("vpopcntd %xmm1, %xmm2");
++	asm volatile("vpopcntd %ymm1, %ymm2");
++	asm volatile("vpopcntd %zmm1, %zmm2");
++	asm volatile("vpopcntd 0x12345678(%rax,%rcx,8),%zmm2");
++	asm volatile("vpopcntd 0x12345678(%eax,%ecx,8),%zmm2");
++
++	asm volatile("vpopcntq %xmm1, %xmm2");
++	asm volatile("vpopcntq %ymm1, %ymm2");
++	asm volatile("vpopcntq %zmm1, %zmm2");
++	asm volatile("vpopcntq 0x12345678(%rax,%rcx,8),%zmm2");
++	asm volatile("vpopcntq 0x12345678(%eax,%ecx,8),%zmm2");
++
+ 	/* AVX-512: Op code 0f 38 59 */
+ 
+ 	asm volatile("vpbroadcastq %xmm4,%xmm6");
+@@ -526,6 +602,34 @@ int main(void)
+ 	asm volatile("vbroadcasti32x8 (%rcx),%zmm28");
+ 	asm volatile("vbroadcasti64x4 (%rcx),%zmm26");
+ 
++	/* AVX-512: Op code 0f 38 62 */
++
++	asm volatile("vpexpandb %xmm1, %xmm2");
++	asm volatile("vpexpandb %ymm1, %ymm2");
++	asm volatile("vpexpandb %zmm1, %zmm2");
++	asm volatile("vpexpandb 0x12345678(%rax,%rcx,8),%zmm2");
++	asm volatile("vpexpandb 0x12345678(%eax,%ecx,8),%zmm2");
++
++	asm volatile("vpexpandw %xmm1, %xmm2");
++	asm volatile("vpexpandw %ymm1, %ymm2");
++	asm volatile("vpexpandw %zmm1, %zmm2");
++	asm volatile("vpexpandw 0x12345678(%rax,%rcx,8),%zmm2");
++	asm volatile("vpexpandw 0x12345678(%eax,%ecx,8),%zmm2");
++
++	/* AVX-512: Op code 0f 38 63 */
++
++	asm volatile("vpcompressb %xmm1, %xmm2");
++	asm volatile("vpcompressb %ymm1, %ymm2");
++	asm volatile("vpcompressb %zmm1, %zmm2");
++	asm volatile("vpcompressb %zmm2,0x12345678(%rax,%rcx,8)");
++	asm volatile("vpcompressb %zmm2,0x12345678(%eax,%ecx,8)");
++
++	asm volatile("vpcompressw %xmm1, %xmm2");
++	asm volatile("vpcompressw %ymm1, %ymm2");
++	asm volatile("vpcompressw %zmm1, %zmm2");
++	asm volatile("vpcompressw %zmm2,0x12345678(%rax,%rcx,8)");
++	asm volatile("vpcompressw %zmm2,0x12345678(%eax,%ecx,8)");
++
+ 	/* AVX-512: Op code 0f 38 64 */
+ 
+ 	asm volatile("vpblendmd %zmm26,%zmm27,%zmm28");
+@@ -541,6 +645,76 @@ int main(void)
+ 	asm volatile("vpblendmb %zmm26,%zmm27,%zmm28");
+ 	asm volatile("vpblendmw %zmm26,%zmm27,%zmm28");
+ 
++	/* AVX-512: Op code 0f 38 68 */
++
++	asm volatile("vp2intersectd %xmm1, %xmm2, %k3");
++	asm volatile("vp2intersectd %ymm1, %ymm2, %k3");
++	asm volatile("vp2intersectd %zmm1, %zmm2, %k3");
++	asm volatile("vp2intersectd 0x12345678(%rax,%rcx,8),%zmm2,%k3");
++	asm volatile("vp2intersectd 0x12345678(%eax,%ecx,8),%zmm2,%k3");
++
++	asm volatile("vp2intersectq %xmm1, %xmm2, %k3");
++	asm volatile("vp2intersectq %ymm1, %ymm2, %k3");
++	asm volatile("vp2intersectq %zmm1, %zmm2, %k3");
++	asm volatile("vp2intersectq 0x12345678(%rax,%rcx,8),%zmm2,%k3");
++	asm volatile("vp2intersectq 0x12345678(%eax,%ecx,8),%zmm2,%k3");
++
++	/* AVX-512: Op code 0f 38 70 */
++
++	asm volatile("vpshldvw %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshldvw %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshldvw %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshldvw 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vpshldvw 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 71 */
++
++	asm volatile("vpshldvd %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshldvd %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshldvd %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshldvd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vpshldvd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vpshldvq %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshldvq %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshldvq %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshldvq 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vpshldvq 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 72 */
++
++	asm volatile("vcvtne2ps2bf16 %xmm1, %xmm2, %xmm3");
++	asm volatile("vcvtne2ps2bf16 %ymm1, %ymm2, %ymm3");
++	asm volatile("vcvtne2ps2bf16 %zmm1, %zmm2, %zmm3");
++	asm volatile("vcvtne2ps2bf16 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vcvtne2ps2bf16 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vcvtneps2bf16 %xmm1, %xmm2");
++	asm volatile("vcvtneps2bf16 %ymm1, %xmm2");
++	asm volatile("vcvtneps2bf16 %zmm1, %ymm2");
++	asm volatile("vcvtneps2bf16 0x12345678(%rax,%rcx,8),%ymm2");
++	asm volatile("vcvtneps2bf16 0x12345678(%eax,%ecx,8),%ymm2");
++
++	asm volatile("vpshrdvw %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshrdvw %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshrdvw %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshrdvw 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vpshrdvw 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 73 */
++
++	asm volatile("vpshrdvd %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshrdvd %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshrdvd %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshrdvd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vpshrdvd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vpshrdvq %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshrdvq %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshrdvq %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshrdvq 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vpshrdvq 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
+ 	/* AVX-512: Op code 0f 38 75 */
+ 
+ 	asm volatile("vpermi2b %zmm24,%zmm25,%zmm26");
+@@ -613,6 +787,14 @@ int main(void)
+ 	asm volatile("vpermb %zmm26,%zmm27,%zmm28");
+ 	asm volatile("vpermw %zmm26,%zmm27,%zmm28");
+ 
++	/* AVX-512: Op code 0f 38 8f */
++
++	asm volatile("vpshufbitqmb %xmm1, %xmm2, %k3");
++	asm volatile("vpshufbitqmb %ymm1, %ymm2, %k3");
++	asm volatile("vpshufbitqmb %zmm1, %zmm2, %k3");
++	asm volatile("vpshufbitqmb 0x12345678(%rax,%rcx,8),%zmm2,%k3");
++	asm volatile("vpshufbitqmb 0x12345678(%eax,%ecx,8),%zmm2,%k3");
++
+ 	/* AVX-512: Op code 0f 38 90 */
+ 
+ 	asm volatile("vpgatherdd %xmm2,0x02(%rbp,%xmm7,2),%xmm1");
+@@ -627,6 +809,40 @@ int main(void)
+ 	asm volatile("vpgatherqd 0x7b(%rbp,%zmm27,8),%ymm26{%k1}");
+ 	asm volatile("vpgatherqq 0x7b(%rbp,%zmm27,8),%zmm26{%k1}");
+ 
++	/* AVX-512: Op code 0f 38 9a */
++
++	asm volatile("vfmsub132ps %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub132ps %ymm1, %ymm2, %ymm3");
++	asm volatile("vfmsub132ps %zmm1, %zmm2, %zmm3");
++	asm volatile("vfmsub132ps 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vfmsub132ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vfmsub132pd %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub132pd %ymm1, %ymm2, %ymm3");
++	asm volatile("vfmsub132pd %zmm1, %zmm2, %zmm3");
++	asm volatile("vfmsub132pd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vfmsub132pd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("v4fmaddps (%rax), %zmm0, %zmm4");
++	asm volatile("v4fmaddps (%eax), %zmm0, %zmm4");
++	asm volatile("v4fmaddps 0x12345678(%rax,%rcx,8),%zmm0,%zmm4");
++	asm volatile("v4fmaddps 0x12345678(%eax,%ecx,8),%zmm0,%zmm4");
++
++	/* AVX-512: Op code 0f 38 9b */
++
++	asm volatile("vfmsub132ss %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub132ss 0x12345678(%rax,%rcx,8),%xmm2,%xmm3");
++	asm volatile("vfmsub132ss 0x12345678(%eax,%ecx,8),%xmm2,%xmm3");
++
++	asm volatile("vfmsub132sd %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub132sd 0x12345678(%rax,%rcx,8),%xmm2,%xmm3");
++	asm volatile("vfmsub132sd 0x12345678(%eax,%ecx,8),%xmm2,%xmm3");
++
++	asm volatile("v4fmaddss (%rax), %xmm0, %xmm4");
++	asm volatile("v4fmaddss (%eax), %xmm0, %xmm4");
++	asm volatile("v4fmaddss 0x12345678(%rax,%rcx,8),%xmm0,%xmm4");
++	asm volatile("v4fmaddss 0x12345678(%eax,%ecx,8),%xmm0,%xmm4");
++
+ 	/* AVX-512: Op code 0f 38 a0 */
+ 
+ 	asm volatile("vpscatterdd %zmm28,0x7b(%rbp,%zmm29,8){%k1}");
+@@ -647,6 +863,40 @@ int main(void)
+ 	asm volatile("vscatterqps %ymm6,0x7b(%rbp,%zmm29,8){%k1}");
+ 	asm volatile("vscatterqpd %zmm28,0x7b(%rbp,%zmm29,8){%k1}");
+ 
++	/* AVX-512: Op code 0f 38 aa */
++
++	asm volatile("vfmsub213ps %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub213ps %ymm1, %ymm2, %ymm3");
++	asm volatile("vfmsub213ps %zmm1, %zmm2, %zmm3");
++	asm volatile("vfmsub213ps 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vfmsub213ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vfmsub213pd %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub213pd %ymm1, %ymm2, %ymm3");
++	asm volatile("vfmsub213pd %zmm1, %zmm2, %zmm3");
++	asm volatile("vfmsub213pd 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vfmsub213pd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("v4fnmaddps (%rax), %zmm0, %zmm4");
++	asm volatile("v4fnmaddps (%eax), %zmm0, %zmm4");
++	asm volatile("v4fnmaddps 0x12345678(%rax,%rcx,8),%zmm0,%zmm4");
++	asm volatile("v4fnmaddps 0x12345678(%eax,%ecx,8),%zmm0,%zmm4");
++
++	/* AVX-512: Op code 0f 38 ab */
++
++	asm volatile("vfmsub213ss %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub213ss 0x12345678(%rax,%rcx,8),%xmm2,%xmm3");
++	asm volatile("vfmsub213ss 0x12345678(%eax,%ecx,8),%xmm2,%xmm3");
++
++	asm volatile("vfmsub213sd %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub213sd 0x12345678(%rax,%rcx,8),%xmm2,%xmm3");
++	asm volatile("vfmsub213sd 0x12345678(%eax,%ecx,8),%xmm2,%xmm3");
++
++	asm volatile("v4fnmaddss (%rax), %xmm0, %xmm4");
++	asm volatile("v4fnmaddss (%eax), %xmm0, %xmm4");
++	asm volatile("v4fnmaddss 0x12345678(%rax,%rcx,8),%xmm0,%xmm4");
++	asm volatile("v4fnmaddss 0x12345678(%eax,%ecx,8),%xmm0,%xmm4");
++
+ 	/* AVX-512: Op code 0f 38 b4 */
+ 
+ 	asm volatile("vpmadd52luq %zmm26,%zmm27,%zmm28");
+@@ -685,6 +935,50 @@ int main(void)
+ 	asm volatile("vrsqrt28ss %xmm28,%xmm29,%xmm30{%k7}");
+ 	asm volatile("vrsqrt28sd %xmm25,%xmm26,%xmm27{%k7}");
+ 
++	/* AVX-512: Op code 0f 38 cf */
++
++	asm volatile("gf2p8mulb %xmm1, %xmm3");
++	asm volatile("gf2p8mulb 0x12345678(%rax,%rcx,8),%xmm3");
++	asm volatile("gf2p8mulb 0x12345678(%eax,%ecx,8),%xmm3");
++
++	asm volatile("vgf2p8mulb %xmm1, %xmm2, %xmm3");
++	asm volatile("vgf2p8mulb %ymm1, %ymm2, %ymm3");
++	asm volatile("vgf2p8mulb %zmm1, %zmm2, %zmm3");
++	asm volatile("vgf2p8mulb 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vgf2p8mulb 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 dc */
++
++	asm volatile("vaesenc %xmm1, %xmm2, %xmm3");
++	asm volatile("vaesenc %ymm1, %ymm2, %ymm3");
++	asm volatile("vaesenc %zmm1, %zmm2, %zmm3");
++	asm volatile("vaesenc 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vaesenc 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 dd */
++
++	asm volatile("vaesenclast %xmm1, %xmm2, %xmm3");
++	asm volatile("vaesenclast %ymm1, %ymm2, %ymm3");
++	asm volatile("vaesenclast %zmm1, %zmm2, %zmm3");
++	asm volatile("vaesenclast 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vaesenclast 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 de */
++
++	asm volatile("vaesdec %xmm1, %xmm2, %xmm3");
++	asm volatile("vaesdec %ymm1, %ymm2, %ymm3");
++	asm volatile("vaesdec %zmm1, %zmm2, %zmm3");
++	asm volatile("vaesdec 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vaesdec 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 df */
++
++	asm volatile("vaesdeclast %xmm1, %xmm2, %xmm3");
++	asm volatile("vaesdeclast %ymm1, %ymm2, %ymm3");
++	asm volatile("vaesdeclast %zmm1, %zmm2, %zmm3");
++	asm volatile("vaesdeclast 0x12345678(%rax,%rcx,8),%zmm2,%zmm3");
++	asm volatile("vaesdeclast 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
+ 	/* AVX-512: Op code 0f 3a 03 */
+ 
+ 	asm volatile("valignd $0x12,%zmm28,%zmm29,%zmm30");
+@@ -804,6 +1098,13 @@ int main(void)
+ 	asm volatile("vshufi32x4 $0x12,%zmm25,%zmm26,%zmm27");
+ 	asm volatile("vshufi64x2 $0x12,%zmm28,%zmm29,%zmm30");
+ 
++	/* AVX-512: Op code 0f 3a 44 */
++
++	asm volatile("vpclmulqdq $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpclmulqdq $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpclmulqdq $0x12,%zmm1,%zmm2,%zmm3");
++	asm volatile("vpclmulqdq $0x12,%zmm25,%zmm26,%zmm27");
++
+ 	/* AVX-512: Op code 0f 3a 50 */
+ 
+ 	asm volatile("vrangeps $0x12,%zmm25,%zmm26,%zmm27");
+@@ -844,6 +1145,62 @@ int main(void)
+ 	asm volatile("vfpclassss $0x12,%xmm27,%k5");
+ 	asm volatile("vfpclasssd $0x12,%xmm30,%k5");
+ 
++	/* AVX-512: Op code 0f 3a 70 */
++
++	asm volatile("vpshldw $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshldw $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshldw $0x12,%zmm1,%zmm2,%zmm3");
++	asm volatile("vpshldw $0x12,%zmm25,%zmm26,%zmm27");
++
++	/* AVX-512: Op code 0f 3a 71 */
++
++	asm volatile("vpshldd $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshldd $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshldd $0x12,%zmm1,%zmm2,%zmm3");
++	asm volatile("vpshldd $0x12,%zmm25,%zmm26,%zmm27");
++
++	asm volatile("vpshldq $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshldq $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshldq $0x12,%zmm1,%zmm2,%zmm3");
++	asm volatile("vpshldq $0x12,%zmm25,%zmm26,%zmm27");
++
++	/* AVX-512: Op code 0f 3a 72 */
++
++	asm volatile("vpshrdw $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshrdw $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshrdw $0x12,%zmm1,%zmm2,%zmm3");
++	asm volatile("vpshrdw $0x12,%zmm25,%zmm26,%zmm27");
++
++	/* AVX-512: Op code 0f 3a 73 */
++
++	asm volatile("vpshrdd $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshrdd $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshrdd $0x12,%zmm1,%zmm2,%zmm3");
++	asm volatile("vpshrdd $0x12,%zmm25,%zmm26,%zmm27");
++
++	asm volatile("vpshrdq $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshrdq $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshrdq $0x12,%zmm1,%zmm2,%zmm3");
++	asm volatile("vpshrdq $0x12,%zmm25,%zmm26,%zmm27");
++
++	/* AVX-512: Op code 0f 3a ce */
++
++	asm volatile("gf2p8affineqb $0x12,%xmm1,%xmm3");
++
++	asm volatile("vgf2p8affineqb $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vgf2p8affineqb $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vgf2p8affineqb $0x12,%zmm1,%zmm2,%zmm3");
++	asm volatile("vgf2p8affineqb $0x12,%zmm25,%zmm26,%zmm27");
++
++	/* AVX-512: Op code 0f 3a cf */
++
++	asm volatile("gf2p8affineinvqb $0x12,%xmm1,%xmm3");
++
++	asm volatile("vgf2p8affineinvqb $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vgf2p8affineinvqb $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vgf2p8affineinvqb $0x12,%zmm1,%zmm2,%zmm3");
++	asm volatile("vgf2p8affineinvqb $0x12,%zmm25,%zmm26,%zmm27");
++
+ 	/* AVX-512: Op code 0f 72 (Grp13) */
+ 
+ 	asm volatile("vprord $0x12,%zmm25,%zmm26");
+@@ -1946,6 +2303,69 @@ int main(void)
+ 	asm volatile("vrsqrt14ss %xmm4,%xmm5,%xmm6{%k7}");
+ 	asm volatile("vrsqrt14sd %xmm4,%xmm5,%xmm6{%k7}");
+ 
++	/* AVX-512: Op code 0f 38 50 */
++
++	asm volatile("vpdpbusd %xmm1, %xmm2, %xmm3");
++	asm volatile("vpdpbusd %ymm1, %ymm2, %ymm3");
++	asm volatile("vpdpbusd %zmm1, %zmm2, %zmm3");
++	asm volatile("vpdpbusd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 51 */
++
++	asm volatile("vpdpbusds %xmm1, %xmm2, %xmm3");
++	asm volatile("vpdpbusds %ymm1, %ymm2, %ymm3");
++	asm volatile("vpdpbusds %zmm1, %zmm2, %zmm3");
++	asm volatile("vpdpbusds 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 52 */
++
++	asm volatile("vdpbf16ps %xmm1, %xmm2, %xmm3");
++	asm volatile("vdpbf16ps %ymm1, %ymm2, %ymm3");
++	asm volatile("vdpbf16ps %zmm1, %zmm2, %zmm3");
++	asm volatile("vdpbf16ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vpdpwssd %xmm1, %xmm2, %xmm3");
++	asm volatile("vpdpwssd %ymm1, %ymm2, %ymm3");
++	asm volatile("vpdpwssd %zmm1, %zmm2, %zmm3");
++	asm volatile("vpdpwssd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vp4dpwssd (%eax), %zmm0, %zmm4");
++	asm volatile("vp4dpwssd 0x12345678(%eax,%ecx,8),%zmm0,%zmm4");
++
++	/* AVX-512: Op code 0f 38 53 */
++
++	asm volatile("vpdpwssds %xmm1, %xmm2, %xmm3");
++	asm volatile("vpdpwssds %ymm1, %ymm2, %ymm3");
++	asm volatile("vpdpwssds %zmm1, %zmm2, %zmm3");
++	asm volatile("vpdpwssds 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vp4dpwssds (%eax), %zmm0, %zmm4");
++	asm volatile("vp4dpwssds 0x12345678(%eax,%ecx,8),%zmm0,%zmm4");
++
++	/* AVX-512: Op code 0f 38 54 */
++
++	asm volatile("vpopcntb %xmm1, %xmm2");
++	asm volatile("vpopcntb %ymm1, %ymm2");
++	asm volatile("vpopcntb %zmm1, %zmm2");
++	asm volatile("vpopcntb 0x12345678(%eax,%ecx,8),%zmm2");
++
++	asm volatile("vpopcntw %xmm1, %xmm2");
++	asm volatile("vpopcntw %ymm1, %ymm2");
++	asm volatile("vpopcntw %zmm1, %zmm2");
++	asm volatile("vpopcntw 0x12345678(%eax,%ecx,8),%zmm2");
++
++	/* AVX-512: Op code 0f 38 55 */
++
++	asm volatile("vpopcntd %xmm1, %xmm2");
++	asm volatile("vpopcntd %ymm1, %ymm2");
++	asm volatile("vpopcntd %zmm1, %zmm2");
++	asm volatile("vpopcntd 0x12345678(%eax,%ecx,8),%zmm2");
++
++	asm volatile("vpopcntq %xmm1, %xmm2");
++	asm volatile("vpopcntq %ymm1, %ymm2");
++	asm volatile("vpopcntq %zmm1, %zmm2");
++	asm volatile("vpopcntq 0x12345678(%eax,%ecx,8),%zmm2");
++
+ 	/* AVX-512: Op code 0f 38 59 */
+ 
+ 	asm volatile("vpbroadcastq %xmm4,%xmm6");
+@@ -1962,6 +2382,30 @@ int main(void)
+ 	asm volatile("vbroadcasti32x8 (%ecx),%zmm6");
+ 	asm volatile("vbroadcasti64x4 (%ecx),%zmm6");
+ 
++	/* AVX-512: Op code 0f 38 62 */
++
++	asm volatile("vpexpandb %xmm1, %xmm2");
++	asm volatile("vpexpandb %ymm1, %ymm2");
++	asm volatile("vpexpandb %zmm1, %zmm2");
++	asm volatile("vpexpandb 0x12345678(%eax,%ecx,8),%zmm2");
++
++	asm volatile("vpexpandw %xmm1, %xmm2");
++	asm volatile("vpexpandw %ymm1, %ymm2");
++	asm volatile("vpexpandw %zmm1, %zmm2");
++	asm volatile("vpexpandw 0x12345678(%eax,%ecx,8),%zmm2");
++
++	/* AVX-512: Op code 0f 38 63 */
++
++	asm volatile("vpcompressb %xmm1, %xmm2");
++	asm volatile("vpcompressb %ymm1, %ymm2");
++	asm volatile("vpcompressb %zmm1, %zmm2");
++	asm volatile("vpcompressb %zmm2,0x12345678(%eax,%ecx,8)");
++
++	asm volatile("vpcompressw %xmm1, %xmm2");
++	asm volatile("vpcompressw %ymm1, %ymm2");
++	asm volatile("vpcompressw %zmm1, %zmm2");
++	asm volatile("vpcompressw %zmm2,0x12345678(%eax,%ecx,8)");
++
+ 	/* AVX-512: Op code 0f 38 64 */
+ 
+ 	asm volatile("vpblendmd %zmm4,%zmm5,%zmm6");
+@@ -1977,6 +2421,66 @@ int main(void)
+ 	asm volatile("vpblendmb %zmm4,%zmm5,%zmm6");
+ 	asm volatile("vpblendmw %zmm4,%zmm5,%zmm6");
+ 
++	/* AVX-512: Op code 0f 38 68 */
++
++	asm volatile("vp2intersectd %xmm1, %xmm2, %k3");
++	asm volatile("vp2intersectd %ymm1, %ymm2, %k3");
++	asm volatile("vp2intersectd %zmm1, %zmm2, %k3");
++	asm volatile("vp2intersectd 0x12345678(%eax,%ecx,8),%zmm2,%k3");
++
++	asm volatile("vp2intersectq %xmm1, %xmm2, %k3");
++	asm volatile("vp2intersectq %ymm1, %ymm2, %k3");
++	asm volatile("vp2intersectq %zmm1, %zmm2, %k3");
++	asm volatile("vp2intersectq 0x12345678(%eax,%ecx,8),%zmm2,%k3");
++
++	/* AVX-512: Op code 0f 38 70 */
++
++	asm volatile("vpshldvw %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshldvw %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshldvw %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshldvw 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 71 */
++
++	asm volatile("vpshldvd %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshldvd %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshldvd %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshldvd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vpshldvq %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshldvq %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshldvq %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshldvq 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 72 */
++
++	asm volatile("vcvtne2ps2bf16 %xmm1, %xmm2, %xmm3");
++	asm volatile("vcvtne2ps2bf16 %ymm1, %ymm2, %ymm3");
++	asm volatile("vcvtne2ps2bf16 %zmm1, %zmm2, %zmm3");
++	asm volatile("vcvtne2ps2bf16 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vcvtneps2bf16 %xmm1, %xmm2");
++	asm volatile("vcvtneps2bf16 %ymm1, %xmm2");
++	asm volatile("vcvtneps2bf16 %zmm1, %ymm2");
++	asm volatile("vcvtneps2bf16 0x12345678(%eax,%ecx,8),%ymm2");
++
++	asm volatile("vpshrdvw %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshrdvw %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshrdvw %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshrdvw 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 73 */
++
++	asm volatile("vpshrdvd %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshrdvd %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshrdvd %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshrdvd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vpshrdvq %xmm1, %xmm2, %xmm3");
++	asm volatile("vpshrdvq %ymm1, %ymm2, %ymm3");
++	asm volatile("vpshrdvq %zmm1, %zmm2, %zmm3");
++	asm volatile("vpshrdvq 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
+ 	/* AVX-512: Op code 0f 38 75 */
+ 
+ 	asm volatile("vpermi2b %zmm4,%zmm5,%zmm6");
+@@ -2048,6 +2552,13 @@ int main(void)
+ 	asm volatile("vpermb %zmm4,%zmm5,%zmm6");
+ 	asm volatile("vpermw %zmm4,%zmm5,%zmm6");
+ 
++	/* AVX-512: Op code 0f 38 8f */
++
++	asm volatile("vpshufbitqmb %xmm1, %xmm2, %k3");
++	asm volatile("vpshufbitqmb %ymm1, %ymm2, %k3");
++	asm volatile("vpshufbitqmb %zmm1, %zmm2, %k3");
++	asm volatile("vpshufbitqmb 0x12345678(%eax,%ecx,8),%zmm2,%k3");
++
+ 	/* AVX-512: Op code 0f 38 90 */
+ 
+ 	asm volatile("vpgatherdd %xmm2,0x02(%ebp,%xmm7,2),%xmm1");
+@@ -2062,6 +2573,32 @@ int main(void)
+ 	asm volatile("vpgatherqd 0x7b(%ebp,%zmm7,8),%ymm6{%k1}");
+ 	asm volatile("vpgatherqq 0x7b(%ebp,%zmm7,8),%zmm6{%k1}");
+ 
++	/* AVX-512: Op code 0f 38 9a */
++
++	asm volatile("vfmsub132ps %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub132ps %ymm1, %ymm2, %ymm3");
++	asm volatile("vfmsub132ps %zmm1, %zmm2, %zmm3");
++	asm volatile("vfmsub132ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vfmsub132pd %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub132pd %ymm1, %ymm2, %ymm3");
++	asm volatile("vfmsub132pd %zmm1, %zmm2, %zmm3");
++	asm volatile("vfmsub132pd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("v4fmaddps (%eax), %zmm0, %zmm4");
++	asm volatile("v4fmaddps 0x12345678(%eax,%ecx,8),%zmm0,%zmm4");
++
++	/* AVX-512: Op code 0f 38 9b */
++
++	asm volatile("vfmsub132ss %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub132ss 0x12345678(%eax,%ecx,8),%xmm2,%xmm3");
++
++	asm volatile("vfmsub132sd %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub132sd 0x12345678(%eax,%ecx,8),%xmm2,%xmm3");
++
++	asm volatile("v4fmaddss (%eax), %xmm0, %xmm4");
++	asm volatile("v4fmaddss 0x12345678(%eax,%ecx,8),%xmm0,%xmm4");
++
+ 	/* AVX-512: Op code 0f 38 a0 */
+ 
+ 	asm volatile("vpscatterdd %zmm6,0x7b(%ebp,%zmm7,8){%k1}");
+@@ -2082,6 +2619,32 @@ int main(void)
+ 	asm volatile("vscatterqps %ymm6,0x7b(%ebp,%zmm7,8){%k1}");
+ 	asm volatile("vscatterqpd %zmm6,0x7b(%ebp,%zmm7,8){%k1}");
+ 
++	/* AVX-512: Op code 0f 38 aa */
++
++	asm volatile("vfmsub213ps %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub213ps %ymm1, %ymm2, %ymm3");
++	asm volatile("vfmsub213ps %zmm1, %zmm2, %zmm3");
++	asm volatile("vfmsub213ps 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("vfmsub213pd %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub213pd %ymm1, %ymm2, %ymm3");
++	asm volatile("vfmsub213pd %zmm1, %zmm2, %zmm3");
++	asm volatile("vfmsub213pd 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	asm volatile("v4fnmaddps (%eax), %zmm0, %zmm4");
++	asm volatile("v4fnmaddps 0x12345678(%eax,%ecx,8),%zmm0,%zmm4");
++
++	/* AVX-512: Op code 0f 38 ab */
++
++	asm volatile("vfmsub213ss %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub213ss 0x12345678(%eax,%ecx,8),%xmm2,%xmm3");
++
++	asm volatile("vfmsub213sd %xmm1, %xmm2, %xmm3");
++	asm volatile("vfmsub213sd 0x12345678(%eax,%ecx,8),%xmm2,%xmm3");
++
++	asm volatile("v4fnmaddss (%eax), %xmm0, %xmm4");
++	asm volatile("v4fnmaddss 0x12345678(%eax,%ecx,8),%xmm0,%xmm4");
++
+ 	/* AVX-512: Op code 0f 38 b4 */
+ 
+ 	asm volatile("vpmadd52luq %zmm4,%zmm5,%zmm6");
+@@ -2120,6 +2683,44 @@ int main(void)
+ 	asm volatile("vrsqrt28ss %xmm5,%xmm6,%xmm7{%k7}");
+ 	asm volatile("vrsqrt28sd %xmm5,%xmm6,%xmm7{%k7}");
+ 
++	/* AVX-512: Op code 0f 38 cf */
++
++	asm volatile("gf2p8mulb %xmm1, %xmm3");
++	asm volatile("gf2p8mulb 0x12345678(%eax,%ecx,8),%xmm3");
++
++	asm volatile("vgf2p8mulb %xmm1, %xmm2, %xmm3");
++	asm volatile("vgf2p8mulb %ymm1, %ymm2, %ymm3");
++	asm volatile("vgf2p8mulb %zmm1, %zmm2, %zmm3");
++	asm volatile("vgf2p8mulb 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 dc */
++
++	asm volatile("vaesenc %xmm1, %xmm2, %xmm3");
++	asm volatile("vaesenc %ymm1, %ymm2, %ymm3");
++	asm volatile("vaesenc %zmm1, %zmm2, %zmm3");
++	asm volatile("vaesenc 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 dd */
++
++	asm volatile("vaesenclast %xmm1, %xmm2, %xmm3");
++	asm volatile("vaesenclast %ymm1, %ymm2, %ymm3");
++	asm volatile("vaesenclast %zmm1, %zmm2, %zmm3");
++	asm volatile("vaesenclast 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 de */
++
++	asm volatile("vaesdec %xmm1, %xmm2, %xmm3");
++	asm volatile("vaesdec %ymm1, %ymm2, %ymm3");
++	asm volatile("vaesdec %zmm1, %zmm2, %zmm3");
++	asm volatile("vaesdec 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 38 df */
++
++	asm volatile("vaesdeclast %xmm1, %xmm2, %xmm3");
++	asm volatile("vaesdeclast %ymm1, %ymm2, %ymm3");
++	asm volatile("vaesdeclast %zmm1, %zmm2, %zmm3");
++	asm volatile("vaesdeclast 0x12345678(%eax,%ecx,8),%zmm2,%zmm3");
++
+ 	/* AVX-512: Op code 0f 3a 03 */
+ 
+ 	asm volatile("valignd $0x12,%zmm5,%zmm6,%zmm7");
+@@ -2239,6 +2840,12 @@ int main(void)
+ 	asm volatile("vshufi32x4 $0x12,%zmm5,%zmm6,%zmm7");
+ 	asm volatile("vshufi64x2 $0x12,%zmm5,%zmm6,%zmm7");
+ 
++	/* AVX-512: Op code 0f 3a 44 */
++
++	asm volatile("vpclmulqdq $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpclmulqdq $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpclmulqdq $0x12,%zmm1,%zmm2,%zmm3");
++
+ 	/* AVX-512: Op code 0f 3a 50 */
+ 
+ 	asm volatile("vrangeps $0x12,%zmm5,%zmm6,%zmm7");
+@@ -2279,6 +2886,54 @@ int main(void)
+ 	asm volatile("vfpclassss $0x12,%xmm7,%k5");
+ 	asm volatile("vfpclasssd $0x12,%xmm7,%k5");
+ 
++	/* AVX-512: Op code 0f 3a 70 */
++
++	asm volatile("vpshldw $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshldw $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshldw $0x12,%zmm1,%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 3a 71 */
++
++	asm volatile("vpshldd $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshldd $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshldd $0x12,%zmm1,%zmm2,%zmm3");
++
++	asm volatile("vpshldq $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshldq $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshldq $0x12,%zmm1,%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 3a 72 */
++
++	asm volatile("vpshrdw $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshrdw $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshrdw $0x12,%zmm1,%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 3a 73 */
++
++	asm volatile("vpshrdd $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshrdd $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshrdd $0x12,%zmm1,%zmm2,%zmm3");
++
++	asm volatile("vpshrdq $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vpshrdq $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vpshrdq $0x12,%zmm1,%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 3a ce */
++
++	asm volatile("gf2p8affineqb $0x12,%xmm1,%xmm3");
++
++	asm volatile("vgf2p8affineqb $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vgf2p8affineqb $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vgf2p8affineqb $0x12,%zmm1,%zmm2,%zmm3");
++
++	/* AVX-512: Op code 0f 3a cf */
++
++	asm volatile("gf2p8affineinvqb $0x12,%xmm1,%xmm3");
++
++	asm volatile("vgf2p8affineinvqb $0x12,%xmm1,%xmm2,%xmm3");
++	asm volatile("vgf2p8affineinvqb $0x12,%ymm1,%ymm2,%ymm3");
++	asm volatile("vgf2p8affineinvqb $0x12,%zmm1,%zmm2,%zmm3");
++
+ 	/* AVX-512: Op code 0f 72 (Grp13) */
+ 
+ 	asm volatile("vprord $0x12,%zmm5,%zmm6");
 -- 
 2.21.0
 
