@@ -2,100 +2,101 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F725C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D84C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F2C217AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D003C21787
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="RiROsxoQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N+fcqeko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfK1P30 (ORCPT
+        id S1726885AbfK1P3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 10:29:26 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34838 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfK1P30 (ORCPT
+        Thu, 28 Nov 2019 10:29:32 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36974 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfK1P3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 10:29:26 -0500
-Received: by mail-qk1-f195.google.com with SMTP id v23so15232111qkg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 07:29:25 -0800 (PST)
+        Thu, 28 Nov 2019 10:29:31 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 128so15547586oih.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 07:29:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=o25gVTM3POIQu+gqgts69ZSJpER0xLxj/NptxHj1lGY=;
-        b=RiROsxoQeTjFzPUjV2tSMBSlHoWH14G7MKaat8rAiHMEsMRQ6uHJWEZko66S5ZLYRR
-         D8Rgaa/jk1lC/LpAQ+SqVl8oJv9NPtAb6ozlqx1+a5x0sdEtQRpGPeMi5f3y7SrbXXlV
-         z9r/FfReU/k8ZaRBkh7jPNkTQPnCMD7cqmCoU1AxOX/3vE7MVg2yLblVUuPH95n1ayTG
-         seWpwnF2SGi+e1nrNnosoaZEwNXgOWc7m1vhr7PgcACk8jrd+ANE6nb3s0oRFh9FrKsd
-         N3C7AGSTPrAFbVlDWwJeuVA2mkHWEayVnRtWl/NmvtZmaGadHPfrWkawv+zLC7SK3c5o
-         5aTA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8jbWiJP8zuPwo1h57bhn9bSCas9rrkjtaMb7mPh1IdA=;
+        b=N+fcqekoOxQDhlpJGKAWkheEt+gN07VZ81/73rXPn1PTzGgsLa3Rcmh9TY+xjk+3Ih
+         qDS65BfoaV4kxITCwQ9aynD1HSih7wmCgb7HKN1o0H2yuxRclj9Ujkcv+DZ9XG9qqLfs
+         gYcHNBi7EmNxtYpBo1DwprVnLxrTtjU6Ewc2Z1bEnBpr9dgcHgNpZdxeFGtuNGpYZLXB
+         hvMrqTF858ayZPTPJw8NVYywiC4NY9H/sx9/Hg0jnT8HOwWZT4svLjw62xcIlt+rlAQX
+         SzBMJVlbbVULZs/zzvLYp6VnC0pl64WDBL9U0f3CF54c3vg/K2F81DElVEZbPOtUntZY
+         PnQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=o25gVTM3POIQu+gqgts69ZSJpER0xLxj/NptxHj1lGY=;
-        b=MIElty9oEyWhHtOxPPy6Po1gCvgMLg2O2ldqxo0f5IugsCOHE3o0ymJaVhKZ4LinM9
-         f59FCnSZrE+Bs1p8ULdTlYxPV4i8+yXYG5oHDvxqfLmwAjMEZLLvq9WrlD4CVIvfBPen
-         dLrWW+1a9PwJPEwW0NmcztQq5G5HhxcwnNc083YonFiPF+nOLRv0P+P616aBH5ZNhMLa
-         pKXI5t2MXYJKlToWsIqMnueMS2wbROnC/qADk7AMVfzyCFaOBDflNiIySmP0K6O7VFUw
-         bN6yAXQkRBG6pRWMEe2AHbJoXib3lKdRtUhq7e8aNpZHS+tMSNbd/mZ3m904A1yM/TUG
-         fPiw==
-X-Gm-Message-State: APjAAAWy7aXX0i5MK/oC9u6O6bHdAbjc3YQ+s6oUHZUOz4JH7sxv57FX
-        AdFzN/sF5OuPwCwaxgjhGN4qHQ==
-X-Google-Smtp-Source: APXvYqw1pdKo9iQXakvY4/z67dTdEia642ja75qtt6+Zp2jRCx47LSMi11S8cgfmAeOTImpKbpXPfg==
-X-Received: by 2002:a37:9fc9:: with SMTP id i192mr7687196qke.364.1574954965256;
-        Thu, 28 Nov 2019 07:29:25 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id u4sm4055273qkh.59.2019.11.28.07.29.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Nov 2019 07:29:24 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v1] mm/memory_hotplug: don't check the nid in find_(smallest|biggest)_section_pfn
-Date:   Thu, 28 Nov 2019 10:29:24 -0500
-Message-Id: <687DAE43-C40F-4527-876D-CAC750D150B6@lca.pw>
-References: <c1857505-4565-99c8-d86d-efa6c076312a@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>
-In-Reply-To: <c1857505-4565-99c8-d86d-efa6c076312a@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-X-Mailer: iPhone Mail (17A878)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8jbWiJP8zuPwo1h57bhn9bSCas9rrkjtaMb7mPh1IdA=;
+        b=i2L4vQb2nD3mXvewh1bhkycF+VO8F29x8WNz3/k64lfmF9rGmvagNClmlV3gkWpKWD
+         HFJYVBn2ZInRQVW2zt6j8VrYI9GI+MDcCsu0/L+naOEMC6L5RI7C1oiw3JU1loAw48fS
+         45f7RRuCYy1h5gpZp3u6/T7X3qIkg+g3i430riIakZWXhSOIefNhoRtUngdKXgxqFoJV
+         YBt5jaQQqh4QUVOe/JDd2mWYqL8YzhouOC6U8Ueb9pByLqBjjzz39UYnBaNvwhKsZ7SA
+         AJ3dNxRmhO19WSK/yCQ4D234IYJKrfAnxuQBNubF8jIioY0a8hT1smr0WEi0MYMHVRqU
+         XXJQ==
+X-Gm-Message-State: APjAAAUaiP7540wFzQcN41Ukt32yELtQD3CS/gVXlxAW4+TPKovQptKn
+        Js41qwu/+wzC00iCOEOC+xyGdsfxErztTUJhf4HGNw==
+X-Google-Smtp-Source: APXvYqwQF8gySZpP3ML3y1V5QupQwMNy5TOx2Z2uDdHPjHuyVgwkY34m3prkUOx4mIROyml0+fITWq8uzCmVDZn6HVs=
+X-Received: by 2002:aca:d783:: with SMTP id o125mr1403513oig.68.1574954969803;
+ Thu, 28 Nov 2019 07:29:29 -0800 (PST)
+MIME-Version: 1.0
+References: <0000000000009f46d4059863fdea@google.com> <71b86056-944f-c5e1-b4cf-35833a82761c@kernel.dk>
+In-Reply-To: <71b86056-944f-c5e1-b4cf-35833a82761c@kernel.dk>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 28 Nov 2019 16:29:03 +0100
+Message-ID: <CAG48ez09ZN2v2rTvnSgybrZu7BAa28vcnkcOU=Z7549rbpqz1A@mail.gmail.com>
+Subject: Re: INFO: trying to register non-static key in io_cqring_overflow_flush
+To:     Jens Axboe <axboe@kernel.dk>,
+        syzbot <syzbot+be9e13497969768c0e6e@syzkaller.appspotmail.com>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 28, 2019 at 4:19 PM Jens Axboe <axboe@kernel.dk> wrote:
+> On 11/28/19 12:35 AM, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    d7688697 Merge tag 'for-linus' of git://git.kernel.org/pub..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=145e5fcee00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=12f2051e3d8cdb3f
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=be9e13497969768c0e6e
+> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146c517ae00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16550b12e00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+be9e13497969768c0e6e@syzkaller.appspotmail.com
+>
+> This is the same as:
+>
+> syzbot+0d818c0d39399188f393@syzkaller.appspotmail.com
 
+syzbot listens to specific commands, see
+<https://github.com/google/syzkaller/blob/master/docs/syzbot.md#status>
+(linked in the report):
 
-> On Nov 28, 2019, at 9:52 AM, David Hildenbrand <david@redhat.com> wrote:
->=20
-> I also agree that it should not be used for basic functional/compile
-> tests (I said "It is a way of giving patches *more* testing."). It
-> should not be the only place to test stuff (especially to let somebody
-> else do it).
->=20
-> However, sometimes we really have to get additional test coverage via
-> linux-next, especially for weird archs/configurations/setups.
->=20
-> ... and if we don't have enough reviewers, it's really hard to get stuff
-> upstream.
->=20
-> I wish MM patches would get reviewed more thoroughly.
->=20
-> (If we all make a wish, maybe Santa Clause will listen ;) )
-
-What I don=E2=80=99t understand is that we have an policy prohibiting code c=
-hurn like code optimization in cold path, but allow those micro cleanup of c=
-ode. Those cleanup also tend to be unregulated and is subject to personal ta=
-stes (for example, your CS teachers may have a different taste from mine). I=
- can understand developers want to have fun, but perhaps there are other pla=
-yground areas that worth taking more risk?=20=
+#syz dup: INFO: trying to register non-static key in io_cqring_ev_posted
