@@ -2,143 +2,135 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8679DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E664C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 06:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3D1215F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 05:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3146215E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 06:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="Pvze9Ofu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lIw46c8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfK1Foi (ORCPT
+        id S1726723AbfK1GVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 00:44:38 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25807 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfK1Foh (ORCPT
+        Thu, 28 Nov 2019 01:21:52 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37929 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfK1GVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 00:44:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574919859; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=BH7JyYOqdQS6xOUIv3hjDBaE7TTQNkFrnQOM08+qyEoyR5TUkySCZuovA1I5qtEJsGGU0UP/hZTJhMc5xxT2m7fz/fVaKbUJzBuQLGQ7oYCNtKx5GJJLiUdWfnynxOHVtEuuiHtkw75YyFbMJ/J7sif9JIpoHxN78OJ9ae19OqU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574919859; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=wlcW9ql9ymxbT2eCAktaPwVnrBMGWt3WmQxCIE59kNo=; 
-        b=FhSL5e4rbTlxvECc0hWciM1MMuFJVSeN0yUo5f2MNjbHlIsdmlJCQ96JClTAf2IbfZTOmU0pY7XY1oZP/vI33M1Wh3IhIEplTk2o9JsWVeKeUO3ewfzW8DpCJx85fL6uxZqDOTZGrB6t+nwRVGxvJsCeXqunQTBjIrrZr7rdbSI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=lBCHJiRIvFhUZqNr1O4QsrNCRpDsIY9aa5fM4zsrfiT5SzpUP3lpY75BY+edpRROefN6KOtsOAR4
-    ZDZ5sN5NyhahT/70slJRuAghLLqpxNeR+B0VOqUtZvnGTrl8RRQ8  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574919859;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=wlcW9ql9ymxbT2eCAktaPwVnrBMGWt3WmQxCIE59kNo=;
-        b=Pvze9OfuY6b+BkbJ/efBp5mfHCVTfMAL6gKdlJ8622tbpHzBCDp8y/0jOaVIssFL
-        ZMOKRXqlbWJ2D4jIWWXjTL1l7iUXZwR6qBG8qcRBte/J525IFLoKiB5F6PGdup0XQNN
-        Gqed/u6kUs9Tt9fraH9WwvEH0pighTKSLPuFMAhM=
-Received: from [192.168.88.130] (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
-        with SMTPS id 1574919858757240.6881108728262; Wed, 27 Nov 2019 21:44:18 -0800 (PST)
-Subject: Re: [PATCH 4/5] dt-bindings: clock: Add USB OTG clock for X1000.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1574825576-91028-1-git-send-email-zhouyanjie@zoho.com>
- <1574825576-91028-5-git-send-email-zhouyanjie@zoho.com>
- <1574875148.3.3@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DDF5EA9.8030007@zoho.com>
-Date:   Thu, 28 Nov 2019 13:44:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Thu, 28 Nov 2019 01:21:51 -0500
+Received: by mail-lj1-f194.google.com with SMTP id k8so16605449ljh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 22:21:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jGpGxpC/wXWKh1C0/wBKFzSJF3Qe61l1DK5ccrhGvrI=;
+        b=lIw46c8sEh+S5n6n9HdGJrBBIpXd62YZNYBvqi/xV0hgqMHG2ExA4L1LozZoBPLa5y
+         dK8FNwPTwQS+PHs5WDKS3GZqDr5gNrtZg5G5kGBXbM9HdpFKq8OSx5VePntx4OBLqvCX
+         4NTtN1ApKyuFqki2PDWnrdTjjuZlzkiDUd7eWWSPfeBTJlye6er3Oac3o/fyNSgn5KF7
+         YAZEENqdcAcSEv6dzSWrH3qWRN1P6LGoMXLYbf4iNnpQe8itknFJX6yu3qVzew4Kll3i
+         J8qwqAdRGHEiF3qYrfS3pG7NDpoSVJgzsrSA1nF9AaFAl0gWcpRNnwiFW9e0cFTV1rT5
+         Dnvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jGpGxpC/wXWKh1C0/wBKFzSJF3Qe61l1DK5ccrhGvrI=;
+        b=ou3SplMe4bseL/3ixPlTr+hWUxjpsOH5V7jJ3fMeq+NC8MnPKqhSaUzqvPIL6kwu1d
+         MOtwVRsODslbRj8vy534OgZyFL0FMC987kVZrbf2iClNycyXLJQGWNywymY5QiY3Kmvx
+         chL66brToMTA+6FwCQZ39wUKCjSbgyLpJ4LYll0pXPrBhdnWleE0TdYyPqzwtP+2q3Mz
+         1BohXZKYNjna976R1v2fnjNyc8AmYxhwAhuPGCAQrwl2YbxYpjzMR0kj7NyLBfg7QNLc
+         fpxe/gUEzb/HVG82agw/4c7IIWxSjvixtKuDw49PeBNux5MHebCWqqpmak0p4Z0jsfSK
+         /Yig==
+X-Gm-Message-State: APjAAAXROuWCU+aWX1JyaVf3j48Xu2QWb/3xYh8KJTrL7HPd0LpX8R5w
+        LK7ob+523oFHDl8UoHYvwDbHcYpG5qhl4NpT4IT1eg==
+X-Google-Smtp-Source: APXvYqwkoBIjjv7fpkao3bfuld82KnBgOsLVb6dusFS/gVBJO4fpnHDQPkBAT7sgWsM/Xvw4Z8BfHvWbRuT42v6C1JM=
+X-Received: by 2002:a2e:7202:: with SMTP id n2mr29985958ljc.194.1574922108978;
+ Wed, 27 Nov 2019 22:21:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1574875148.3.3@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+References: <20191127203049.431810767@linuxfoundation.org> <CA+G9fYtFNKTYiqm0Bvk_nqBTjsRMKTtNxr6PhE8YaDXFjqwhYQ@mail.gmail.com>
+In-Reply-To: <CA+G9fYtFNKTYiqm0Bvk_nqBTjsRMKTtNxr6PhE8YaDXFjqwhYQ@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 28 Nov 2019 11:51:37 +0530
+Message-ID: <CA+G9fYsuM-ALP_EtoFEzJiia26QnUvuKWsH0b-vi43Sp++es6A@mail.gmail.com>
+Subject: Re: [PATCH 4.14 000/211] 4.14.157-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        jouni.hogander@unikie.com, "David S. Miller" <davem@davemloft.net>,
+        lukas.bulwahn@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hi Greg,
 
-On 2019=E5=B9=B411=E6=9C=8828=E6=97=A5 01:19, Paul Cercueil wrote:
-> Hi Zhou,
->
->
-> Le mer., nov. 27, 2019 at 11:32, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-> =C3=A9crit :
->> Add the USB OTC clock bindings for the X1000 Soc from Ingenic.
->>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>  include/dt-bindings/clock/x1000-cgu.h | 23 ++++++++++++-----------
->>  1 file changed, 12 insertions(+), 11 deletions(-)
->>
->> diff --git a/include/dt-bindings/clock/x1000-cgu.h=20
->> b/include/dt-bindings/clock/x1000-cgu.h
->> index bbaebaf..c401fce 100644
->> --- a/include/dt-bindings/clock/x1000-cgu.h
->> +++ b/include/dt-bindings/clock/x1000-cgu.h
->> @@ -29,16 +29,17 @@
->>  #define X1000_CLK_MSCMUX    14
->>  #define X1000_CLK_MSC0        15
->>  #define X1000_CLK_MSC1        16
->> -#define X1000_CLK_SSIPLL    17
->> -#define X1000_CLK_SSIMUX    18
->> -#define X1000_CLK_SFC        19
->> -#define X1000_CLK_I2C0        20
->> -#define X1000_CLK_I2C1        21
->> -#define X1000_CLK_I2C2        22
->> -#define X1000_CLK_UART0        23
->> -#define X1000_CLK_UART1        24
->> -#define X1000_CLK_UART2        25
->> -#define X1000_CLK_SSI        26
->> -#define X1000_CLK_PDMA        27
->
-> You can't do that. These macros are ABI now, since they are used in=20
-> the devicetree. Just use the next valid number for your OTG clock.
->
+> Kernel BUG noticed on x86_64 device while booting 4.14.157-rc1 kernel.
 
-My fault, I will fix this in v2.
 
-> Cheers,
-> -Paul
->
->> +#define X1000_CLK_OTG        17
->> +#define X1000_CLK_SSIPLL    18
->> +#define X1000_CLK_SSIMUX    19
->> +#define X1000_CLK_SFC        20
->> +#define X1000_CLK_I2C0        21
->> +#define X1000_CLK_I2C1        22
->> +#define X1000_CLK_I2C2        23
->> +#define X1000_CLK_UART0        24
->> +#define X1000_CLK_UART1        25
->> +#define X1000_CLK_UART2        26
->> +#define X1000_CLK_SSI        27
->> +#define X1000_CLK_PDMA        28
->>
->>  #endif /* __DT_BINDINGS_CLOCK_X1000_CGU_H__ */
->> --=20
->> 2.7.4
->>
->>
->
->
+The problematic patch is,
+>> Jouni Hogander <jouni.hogander@unikie.com>
+>>    net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
+
+And this kernel panic is been fixed by below patch,
+
+commit 48a322b6f9965b2f1e4ce81af972f0e287b07ed0
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Wed Nov 20 19:19:07 2019 -0800
+
+    net-sysfs: fix netdev_queue_add_kobject() breakage
+
+    kobject_put() should only be called in error path.
+
+    Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in
+rx|netdev_queue_add_kobject")
+    Signed-off-by: Eric Dumazet <edumazet@google.com>
+    Cc: Jouni Hogander <jouni.hogander@unikie.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
 
 
 
+> Regressions (compared to build v4.14.156)
+>
+> [    2.777657] BUG: unable to handle kernel NULL pointer dereference
+> at 0000000000000090
+> [    2.785487] IP: kernfs_find_ns+0x18/0xf0
+> [    2.789408] PGD 0 P4D 0
+> [    2.791941] Oops: 0000 [#1] SMP PTI
+> [    2.795424] Modules linked in:
+> [    2.798474] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 4.14.157-rc1 #1
+> [    2.804906] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> 2.2 05/23/2018
+> [    2.812288] task: ffff8e09ee250000 task.stack: ffffa0f900028000
+> [    2.818200] RIP: 0010:kernfs_find_ns+0x18/0xf0
+
+<trim>
+
+> [    3.108995] Kernel panic - not syncing: Attempted to kill init!
+> exitcode=0x00000009
+> [    3.108995]
+> [    3.118161] Kernel Offset: 0x1c400000 from 0xffffffff81000000
+> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+>
+> Full test log,
+> https://lkft.validation.linaro.org/scheduler/job/1026224#L793
+>
+
+--
+Linaro LKFT
+https://lkft.linaro.org
