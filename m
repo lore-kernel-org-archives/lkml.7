@@ -2,101 +2,176 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DD5C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A71C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0C821775
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22FC521775
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:14:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slvNZOZi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7H/vMgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfK1PMZ (ORCPT
+        id S1726698AbfK1POH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 10:12:25 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37974 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfK1PMY (ORCPT
+        Thu, 28 Nov 2019 10:14:07 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38236 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfK1POG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 10:12:24 -0500
-Received: by mail-qt1-f194.google.com with SMTP id 14so29400216qtf.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 07:12:24 -0800 (PST)
+        Thu, 28 Nov 2019 10:14:06 -0500
+Received: by mail-ot1-f65.google.com with SMTP id z25so22470945oti.5;
+        Thu, 28 Nov 2019 07:14:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0nOKjllZVklQ2GIcdzni0FFshP4MFkY2/Y2FlVOpnnI=;
-        b=slvNZOZiQ5EXiyFAj60j/ohD3r5UdfzuIjYo9KQSa+fLRTBYglzhfrryhAAlZPnoCN
-         jdxkLOROSabZqLq/hmHe1F7kCILCtfTtczZF3FD2o8OiiQO2WVEHAZDW1+C3pp5ZvaN+
-         wFGf/Oz8cMLddB3cEsrUg3aAwrsjhz8pe6t6oz0BwJOCYY5pS4BCA2wCLEDomHY8YHCM
-         cFH4xqY6SYJj+bET8dfmh/fUtxJLKwhhBFOG4sLClQPjiAD8rL6XrB/FRMkvM0ZP5Uay
-         i1U+4DVL7prNO5rhTcM+REL6Rhlxe6Z/3WzUB1h55D2u47caqI4b0xKmtiyEcL4v1OBE
-         OjuA==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HtuUzrcYCx4FDKvEYRGNCE7CBoyzQfGcKVK/4Fc5Xdo=;
+        b=U7H/vMgHKUQfGCWIqsAc2hDHGYhdMRtA9d/x76Mk5bgXtAUHQYEQezz4KCmwjzRW3Q
+         +hsmclBS9eH14K21262FlXFPBytrKVmtqE6z5p3Mhr0hBRSz6Z0pzVEFti39PLc/XAxR
+         zhD+DjtkdgHLUyMGBNkFnUDJXEDRhysdooejFjchqAbk1nkr7MKaHCVY0WU/efzuvrsy
+         f7sb0aw+V9v5w/zyksxHwYqHPfyNJvAnODn4HLzBofYH0/kjvpWUixCFUvHR0Kn2JOBg
+         AJvdKW3wjpEhw10cyE8N83V/fU3TEDHS51QKDX7k+/MRSvBF6VZIQ9wkkGDnU6m7vv3p
+         18+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0nOKjllZVklQ2GIcdzni0FFshP4MFkY2/Y2FlVOpnnI=;
-        b=H5uGjglLcMv4TjJu1Es/8rYgBkuPjcKYWzICDtH1Zk1X/JOiSP+8DHqI/Z/UD8TDh2
-         e6wKjcIsk4ALOLEZXU3q3a7DTykgm1Qk452GNSg6Rx+RvYSpZHI0SXTYCkyNkxOP5Lwb
-         wL9A+JNzZV5QDpRHvN2rWaghQB0yAKWIKmcL3TYZuB88Ct1CxbX49LND5OiifY3W+EMu
-         udpB8GEtI86m11p5hzzznLpim/xcX5/LQYwm6f6JoHmwWzm9QmJ/efOLlGDhoN6uPG3C
-         OrGD3CGAwHgKJKpCjb4uv7hpW1O0AsnWnp3NTTz07v23bXvOAVGV51wHDKs+ieCa3KkS
-         uK2Q==
-X-Gm-Message-State: APjAAAX8KgSqJbCf3vxcCoS9Z+BimDWRrJN4sn6iaT2xClFA5WNFLyLV
-        P685/r8PceJut3/yNDJPYVYp6gtHuCE/sE9IYqk=
-X-Google-Smtp-Source: APXvYqwIXuqtF4jrM4aCPdUaZgR5YjB6DQwQhdNa0N8yY2iuEaV2MebIMBqTNLRTMCrjbcoIFrkdXibep0A0iHVUETw=
-X-Received: by 2002:ac8:109:: with SMTP id e9mr37011432qtg.233.1574953943705;
- Thu, 28 Nov 2019 07:12:23 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HtuUzrcYCx4FDKvEYRGNCE7CBoyzQfGcKVK/4Fc5Xdo=;
+        b=uXDEK99CBKoKMznmkMemSpWODYPBfqA9C7TAj3uo13oa0cnETkMP4GeNbPK7z8vv0P
+         0viMPthldYPnFxEKHUKgYpqFDWjGUMyztXcynZfqCRFuQulhrKsSz23PQXY38iAQO5Or
+         TcnSSk2ZPap0X8wyyOCERj86/S6ZrFPrHB2RfvxmNwtGIOohMQT6Oq8/tj38pdsP6PDF
+         S5OyT+BBDTqzUjysyj8S7ExeWg24tupUvGbUYSZax8asraIMo9KLMNMFft8brNUxjupk
+         yzioJC087Z3g6x0thcaVmFCC/HRdzPB9DrrvUnXHeQadv6x/GA6CdT5JWPVWelKwz8pS
+         9q0w==
+X-Gm-Message-State: APjAAAX0BuTn6Oaiz0LdBoQ15nT8dgLS0BlPlbDY9VPrC5xDe4ZlUEAQ
+        BAmikxcFCZ2VUqVi2r9RsPg=
+X-Google-Smtp-Source: APXvYqwID9RssdR2nPQiWYVEbA9lQFH3JA3ZSSEgHgyZrAY109cux/TszBuuQeKLk9wPhsrCNT+FyQ==
+X-Received: by 2002:a05:6830:46:: with SMTP id d6mr8123426otp.7.1574954045573;
+        Thu, 28 Nov 2019 07:14:05 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l73sm2613001oib.0.2019.11.28.07.14.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Nov 2019 07:14:04 -0800 (PST)
+Subject: Re: [PATCH v2 7/8] nvme: hwmon: switch to use <linux/temperature.h>
+ helpers
+To:     Akinobu Mita <akinobu.mita@gmail.com>,
+        linux-nvme@lists.infradead.org, linux-hwmon@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+References: <1574952879-7200-1-git-send-email-akinobu.mita@gmail.com>
+ <1574952879-7200-8-git-send-email-akinobu.mita@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <479c99fe-51c6-910f-4471-4883de4cfd21@roeck-us.net>
+Date:   Thu, 28 Nov 2019 07:14:02 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191125145320.GA21484@haolee.github.io> <c8e88092-ddbe-2934-aa61-5db6cbad0c11@arm.com>
-In-Reply-To: <c8e88092-ddbe-2934-aa61-5db6cbad0c11@arm.com>
-From:   Hao Lee <haolee.swjtu@gmail.com>
-Date:   Thu, 28 Nov 2019 23:12:10 +0800
-Message-ID: <CA+PpKPnA2n+inG7nP0V66Q_-4LNn_nYZa2dqvHTz1fKT2J7e+Q@mail.gmail.com>
-Subject: Re: [PATCH] mm: use the existing variable instead of a duplicate statement
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     akpm@linux-foundation.org, Mel Gorman <mgorman@suse.de>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1574952879-7200-8-git-send-email-akinobu.mita@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Nov 2019 at 18:02, Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index ee4eecc7e1c2..de4b2d1e66be 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -363,22 +363,21 @@ unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone
-> >       for (zid = zone_idx + 1; zid < MAX_NR_ZONES; zid++) {
-> >               struct zone *zone = &lruvec_pgdat(lruvec)->node_zones[zid];
-> >               unsigned long size;
-> >
-> >               if (!managed_zone(zone))
-> >                       continue;
-> >
-> >               if (!mem_cgroup_disabled())
-> >                       size = mem_cgroup_get_zone_lru_size(lruvec, lru, zid);
-> >               else
-> > -                     size = zone_page_state(&lruvec_pgdat(lruvec)->node_zones[zid],
-> > -                                    NR_ZONE_LRU_BASE + lru);
-> > +                     size = zone_page_state(zone, NR_ZONE_LRU_BASE + lru);
->
-> Is not this already merged with following commit on next-20191126 ?
->
-> 54eacdb0dd8f9a ("mm: vmscan: simplify lruvec_lru_size()")
+On 11/28/19 6:54 AM, Akinobu Mita wrote:
+> This switches the nvme driver to use kelvin_to_millicelsius() and
+> millicelsius_to_kelvin() in <linux/temperature.h>.
+> 
+> Cc: Sujith Thomas <sujith.thomas@intel.com>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Andy Shevchenko <andy@infradead.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Amit Kucheria <amit.kucheria@verdurent.com>
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Keith Busch <kbusch@kernel.org>
+> Cc: Jens Axboe <axboe@fb.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Sagi Grimberg <sagi@grimberg.me>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 
-Yes...That's really a coincidence... I use torvalds' tree to develop
-but never think this function has been refactored on next tree just a
-few days ago. Thank you.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Regards,
-Hao Lee
+> ---
+> * v2
+> - add Reviewed-by tag
+> 
+>   drivers/nvme/host/hwmon.c | 13 +++++--------
+>   1 file changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/nvme/host/hwmon.c b/drivers/nvme/host/hwmon.c
+> index a5af21f..14720c1 100644
+> --- a/drivers/nvme/host/hwmon.c
+> +++ b/drivers/nvme/host/hwmon.c
+> @@ -5,14 +5,11 @@
+>    */
+>   
+>   #include <linux/hwmon.h>
+> +#include <linux/temperature.h>
+>   #include <asm/unaligned.h>
+>   
+>   #include "nvme.h"
+>   
+> -/* These macros should be moved to linux/temperature.h */
+> -#define MILLICELSIUS_TO_KELVIN(t) DIV_ROUND_CLOSEST((t) + 273150, 1000)
+> -#define KELVIN_TO_MILLICELSIUS(t) ((t) * 1000L - 273150)
+> -
+>   struct nvme_hwmon_data {
+>   	struct nvme_ctrl *ctrl;
+>   	struct nvme_smart_log log;
+> @@ -35,7 +32,7 @@ static int nvme_get_temp_thresh(struct nvme_ctrl *ctrl, int sensor, bool under,
+>   		return -EIO;
+>   	if (ret < 0)
+>   		return ret;
+> -	*temp = KELVIN_TO_MILLICELSIUS(status & NVME_TEMP_THRESH_MASK);
+> +	*temp = kelvin_to_millicelsius(status & NVME_TEMP_THRESH_MASK);
+>   
+>   	return 0;
+>   }
+> @@ -46,7 +43,7 @@ static int nvme_set_temp_thresh(struct nvme_ctrl *ctrl, int sensor, bool under,
+>   	unsigned int threshold = sensor << NVME_TEMP_THRESH_SELECT_SHIFT;
+>   	int ret;
+>   
+> -	temp = MILLICELSIUS_TO_KELVIN(temp);
+> +	temp = millicelsius_to_kelvin(temp);
+>   	threshold |= clamp_val(temp, 0, NVME_TEMP_THRESH_MASK);
+>   
+>   	if (under)
+> @@ -88,7 +85,7 @@ static int nvme_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>   	case hwmon_temp_min:
+>   		return nvme_get_temp_thresh(data->ctrl, channel, true, val);
+>   	case hwmon_temp_crit:
+> -		*val = KELVIN_TO_MILLICELSIUS(data->ctrl->cctemp);
+> +		*val = kelvin_to_millicelsius(data->ctrl->cctemp);
+>   		return 0;
+>   	default:
+>   		break;
+> @@ -105,7 +102,7 @@ static int nvme_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>   			temp = get_unaligned_le16(log->temperature);
+>   		else
+>   			temp = le16_to_cpu(log->temp_sensor[channel - 1]);
+> -		*val = KELVIN_TO_MILLICELSIUS(temp);
+> +		*val = kelvin_to_millicelsius(temp);
+>   		break;
+>   	case hwmon_temp_alarm:
+>   		*val = !!(log->critical_warning & NVME_SMART_CRIT_TEMPERATURE);
+> 
+
