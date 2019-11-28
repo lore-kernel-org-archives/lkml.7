@@ -2,113 +2,271 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9099CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADD6C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64693217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A14B217AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkjLgbwd"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="j5eEvv9F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfK1PcL (ORCPT
+        id S1726968AbfK1PcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 28 Nov 2019 10:32:11 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36794 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfK1PcK (ORCPT
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53350 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbfK1PcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Nov 2019 10:32:10 -0500
-Received: by mail-pf1-f194.google.com with SMTP id b19so13320933pfd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 07:32:10 -0800 (PST)
+Received: by mail-wm1-f65.google.com with SMTP id u18so11385244wmc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 07:32:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=PpHb3fvmg1wnxHHN6wZlT7oMOhT2IAI1cwgs8iwmgww=;
-        b=lkjLgbwdRqukZGNpN1LfTOVPQlzYOcqS8Sib6QnsDCumdKzmyZq+1cenQrSvRjVr1V
-         VxtfbnYVrHOgHkyVNtUofoVgXRx4rDds0sMvHQCe3tjF5A0/XPUIOu80OqTq8K5+TX05
-         Pm8Wve1ChsV5w9QT+PFGuQJmLmRLwaDfMcWdysS/ly0l4BcIXyNw5v9oPgT9zH7pRUOa
-         VyfMeWcFn9PWcurMvKxvy8xCLkirlRg2enDdLF1aFXsSq+BYio+R0/27n9tOjoVA7XiG
-         ueFKCL5VC4xQ7VgTVsiYdKrVSJZd/074jQjwi8AyYzPAzm+CtYPPlhPeJ65B+TAVnQ3H
-         8GoA==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:openpgp:autocrypt:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sj9mN9ZsJ6qIK1eZ9BSfajQYDocDuB1NNcBuyqoxXHw=;
+        b=j5eEvv9FjEE0wybqoNbFHlnR7Gr1JdZpOkW1jz/puBbCvXCSkJkhNNjJDgxwFFDEGF
+         9DP2xImVNYENrdA2Wu+jOCD7Bv4HUoVpDQ232/+Q/8hyW9PxTIvyHsrX68FzVhLOnGDy
+         CVhN2MM1o9cmPA+i2nkIuNGTAhd37bhoNUHZyiEkqqk5doJLuzCcO5okGCB/gLYzLNTk
+         l7g91K3OG7yLECQgHRwiLR+NUwGTjWALQeV9pPcqfNAaIKuEl6FKHdU1IuI5qPOq8GIO
+         lRzMkjP+6OQjCX1ma0ym0NFrjjJQATEg21GB2gYgY/HUvuobaX8WdXJSx0NHmCVIAeKA
+         Ap3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=PpHb3fvmg1wnxHHN6wZlT7oMOhT2IAI1cwgs8iwmgww=;
-        b=dP/ewwkbeTdFCUFlXAI2yYJe9XO1LU/V/whZuH6qj6h7RbTOauF3mWFXMMfcmOA2lG
-         cbFZg1bdI3+5xzJgHW2yOIQrmtVMi+vpEMXmzFseUNBH5/paJe7MrKU5c7PesrfmfkPi
-         5OxcAA9fOuXMVO8L1S8bb+CnWrK4Ht+4DZqjypBAjaoh+cd0Hn4B1QEfA1sc9rDcCOu8
-         Gp7uceb/VN4LgXZWeSrxB9BazIgE6utm77IP+ivFYeDh7PZz3pFtS+Vg+QxDBAfitb2s
-         309IeCvVApwhChfjKLosFAXx3whW2AJIGQ7MxhDjDpsunxKozg8VnO8r28CbwXTjADmJ
-         /DPg==
-X-Gm-Message-State: APjAAAVLu5uacwlfYr2s8bbo0YKud72eVW1k0kWmBIf8/a4dgbGlSQxE
-        bpwOQjMzckXNJwhDG7c13uw=
-X-Google-Smtp-Source: APXvYqw0ZuqqCQ3bpYNoPpQ541irC88FBLvvfU7BPliB9p4YDB9wkq1pQ+suOYZqqdaXq2l1fot78A==
-X-Received: by 2002:a63:d20f:: with SMTP id a15mr12262947pgg.268.1574955129913;
-        Thu, 28 Nov 2019 07:32:09 -0800 (PST)
-Received: from workstation-kernel-dev ([139.5.253.4])
-        by smtp.gmail.com with ESMTPSA id j7sm7624426pgn.0.2019.11.28.07.32.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 07:32:09 -0800 (PST)
-Date:   Thu, 28 Nov 2019 21:02:03 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH v2] kernel: audit.c: Add __rcu notation to RCU pointer
-Message-ID: <20191128153203.GA23803@workstation-kernel-dev>
+        h=x-gm-message-state:to:cc:references:from:openpgp:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=sj9mN9ZsJ6qIK1eZ9BSfajQYDocDuB1NNcBuyqoxXHw=;
+        b=I+qSJSThzzyCJ0URzo7dTvGoCT/OSX/I8Y4ocXbTg0XiYDrP8B+00/pojruhNykNZ8
+         k1R8L1/E65YgYa+0UpeWKqIqpIrDTQcR/GgjV/zZ539KA4/xa62OrMZN8m8WFj6H4avD
+         ZO4HY9rrpImTvyUtUdy/a0oLpXeqwCL3JAECUUV+K0/1dUpGi5AcdDXWCo7rIepPkq5e
+         iawd1dvwgv8VGBY5wTvErwrCzZiCE/WiZhC1eJ5QYlF/KE0r/iA2xaocVPakpzU1+qNC
+         nS4xutA+aztvbgcl4yLFp2AtsXVcyrcIpc8U9Ju/DgQ0epKEkj5CwrNEIfQyBYFR6A3T
+         1yXw==
+X-Gm-Message-State: APjAAAW/J96Gf41NnISvfkzicU0KsTQQN0LiS58f5KUBE6pIbHBkoV6B
+        ECPCEsKr+3RWzggHj5p5ZRfddQ==
+X-Google-Smtp-Source: APXvYqz+sSgwc/rvUouPPi7gz034nzHWDGhW5QBTeoMWZruGXNtCf8tmqqBpmRnS9wWrGajXIujERQ==
+X-Received: by 2002:a7b:c7cc:: with SMTP id z12mr3417400wmk.115.1574955127774;
+        Thu, 28 Nov 2019 07:32:07 -0800 (PST)
+Received: from [192.168.1.9] ([194.53.187.153])
+        by smtp.gmail.com with ESMTPSA id f1sm5364335wrp.93.2019.11.28.07.32.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Nov 2019 07:32:06 -0800 (PST)
+To:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20191128145316.1044912-1-toke@redhat.com>
+From:   Quentin Monnet <quentin.monnet@netronome.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
+ 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
+ RHhSHGnKaQ6MfrTge5Q0h5A=
+Subject: Re: [PATCH bpf v2] bpftool: Allow to link libbpf dynamically
+Message-ID: <497b4151-9aad-f3a9-3aff-78d665e5f750@netronome.com>
+Date:   Thu, 28 Nov 2019 15:32:05 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20191128145316.1044912-1-toke@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add __rcu notation to RCU protected global pointer auditd_conn
+2019-11-28 15:53 UTC+0100 ~ Toke Høiland-Jørgensen <toke@redhat.com>
+> From: Jiri Olsa <jolsa@kernel.org>
+> 
+> Currently we support only static linking with kernel's libbpf
+> (tools/lib/bpf). This patch adds LIBBPF_DYNAMIC compile variable
+> that triggers libbpf detection and bpf dynamic linking:
+> 
+>   $ make -C tools/bpf/bpftool make LIBBPF_DYNAMIC=1
+> 
+> If libbpf is not installed, build (with LIBBPF_DYNAMIC=1) stops with:
+> 
+>   $ make -C tools/bpf/bpftool LIBBPF_DYNAMIC=1
+>     Auto-detecting system features:
+>     ...                        libbfd: [ on  ]
+>     ...        disassembler-four-args: [ on  ]
+>     ...                          zlib: [ on  ]
+>     ...                        libbpf: [ OFF ]
+> 
+>   Makefile:102: *** Error: No libbpf devel library found, please install-devel or libbpf-dev.
+> 
+> Adding LIBBPF_DIR compile variable to allow linking with
+> libbpf installed into specific directory:
+> 
+>   $ make -C tools/lib/bpf/ prefix=/tmp/libbpf/ install_lib install_headers
+>   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/libbpf/
+> 
+> It might be needed to clean build tree first because features
+> framework does not detect the change properly:
+> 
+>   $ make -C tools/build/feature clean
+>   $ make -C tools/bpf/bpftool/ clean
+> 
+> Since bpftool uses bits of libbpf that are not exported as public API in
+> the .so version, we also pass in libbpf.a to the linker, which allows it to
+> pick up the private functions from the static library without having to
+> expose them as ABI.
+> 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> ---
+> v2:
+>   - Pass .a file to linker when dynamically linking, so bpftool can use
+>     private functions from libbpf without exposing them as API.
+>     
+>  tools/bpf/bpftool/Makefile | 38 +++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> index 39bc6f0f4f0b..397051ed9e41 100644
+> --- a/tools/bpf/bpftool/Makefile
+> +++ b/tools/bpf/bpftool/Makefile
+> @@ -1,6 +1,15 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> +# LIBBPF_DYNAMIC to enable libbpf dynamic linking.
+> +
+>  include ../../scripts/Makefile.include
+>  include ../../scripts/utilities.mak
+> +include ../../scripts/Makefile.arch
+> +
+> +ifeq ($(LP64), 1)
+> +  libdir_relative = lib64
+> +else
+> +  libdir_relative = lib
+> +endif
+>  
+>  ifeq ($(srctree),)
+>  srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+> @@ -55,7 +64,7 @@ ifneq ($(EXTRA_LDFLAGS),)
+>  LDFLAGS += $(EXTRA_LDFLAGS)
+>  endif
+>  
+> -LIBS = $(LIBBPF) -lelf -lz
+> +LIBS = -lelf -lz
 
-Fixes multiple instances of sparse error:
-error: incompatible types in comparison expression
-(different address spaces)
+Hi Toke,
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
-v2:
-- fix erroneous RCU pointer initialization
+You don't need to remove $(LIBBPF) here, because you add it in both
+cases below (whether $(LIBBPF_DYNAMIC) is defined or not).
 
- kernel/audit.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+>  
+>  INSTALL ?= install
+>  RM ?= rm -f
+> @@ -63,6 +72,19 @@ RM ?= rm -f
+>  FEATURE_USER = .bpftool
+>  FEATURE_TESTS = libbfd disassembler-four-args reallocarray zlib
+>  FEATURE_DISPLAY = libbfd disassembler-four-args zlib
+> +ifdef LIBBPF_DYNAMIC
+> +  FEATURE_TESTS   += libbpf
+> +  FEATURE_DISPLAY += libbpf
+> +
+> +  # for linking with debug library run:
+> +  # make LIBBPF_DYNAMIC=1 LIBBPF_DIR=/opt/libbpf
+> +  ifdef LIBBPF_DIR
+> +    LIBBPF_CFLAGS  := -I$(LIBBPF_DIR)/include
+> +    LIBBPF_LDFLAGS := -L$(LIBBPF_DIR)/$(libdir_relative)
+> +    FEATURE_CHECK_CFLAGS-libbpf  := $(LIBBPF_CFLAGS)
+> +    FEATURE_CHECK_LDFLAGS-libbpf := $(LIBBPF_LDFLAGS)
+> +  endif
+> +endif
+>  
+>  check_feat := 1
+>  NON_CHECK_FEAT_TARGETS := clean uninstall doc doc-clean doc-install doc-uninstall
+> @@ -88,6 +110,20 @@ ifeq ($(feature-reallocarray), 0)
+>  CFLAGS += -DCOMPAT_NEED_REALLOCARRAY
+>  endif
+>  
+> +ifdef LIBBPF_DYNAMIC
+> +  ifeq ($(feature-libbpf), 1)
+> +    # bpftool uses non-exported functions from libbpf, so pass both dynamic and
+> +    # static versions and let the linker figure it out
+> +    LIBS    := -lbpf $(LIBBPF) $(LIBS)
 
-diff --git a/kernel/audit.c b/kernel/audit.c
-index da8dc0db5bd3..ff7cfc61f53d 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -102,12 +102,13 @@ struct audit_net {
-  * This struct is RCU protected; you must either hold the RCU lock for reading
-  * or the associated spinlock for writing.
-  */
--static struct auditd_connection {
-+struct auditd_connection {
- 	struct pid *pid;
- 	u32 portid;
- 	struct net *net;
- 	struct rcu_head rcu;
--} *auditd_conn = NULL;
-+};
-+static struct auditd_connection __rcu *auditd_conn;
- static DEFINE_SPINLOCK(auditd_conn_lock);
- 
- /* If audit_rate_limit is non-zero, limit the rate of sending audit records
--- 
-2.24.0
+[$(LIBBPF) added to $(LIBS) here...]
 
+> +    CFLAGS  += $(LIBBPF_CFLAGS)
+> +    LDFLAGS += $(LIBBPF_LDFLAGS)
+> +  else
+> +    dummy := $(error Error: No libbpf devel library found, please install-devel or libbpf-dev.)
+
+“install-devel” :)
+
+> +  endif
+> +else
+> +  LIBS := $(LIBBPF) $(LIBS)
+
+[... and here]
+
+> +endif
+> +
+>  include $(wildcard $(OUTPUT)*.d)
+>  
+>  all: $(OUTPUT)bpftool
+> 
+
+Thanks,
+Quentin
