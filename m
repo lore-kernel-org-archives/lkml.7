@@ -2,135 +2,431 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E664C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 06:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492CCC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 06:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3146215E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 06:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6BA215E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 06:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lIw46c8s"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="q2hur5Z9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfK1GVw (ORCPT
+        id S1726773AbfK1GaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 01:21:52 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37929 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfK1GVv (ORCPT
+        Thu, 28 Nov 2019 01:30:04 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25801 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfK1GaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 01:21:51 -0500
-Received: by mail-lj1-f194.google.com with SMTP id k8so16605449ljh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 22:21:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jGpGxpC/wXWKh1C0/wBKFzSJF3Qe61l1DK5ccrhGvrI=;
-        b=lIw46c8sEh+S5n6n9HdGJrBBIpXd62YZNYBvqi/xV0hgqMHG2ExA4L1LozZoBPLa5y
-         dK8FNwPTwQS+PHs5WDKS3GZqDr5gNrtZg5G5kGBXbM9HdpFKq8OSx5VePntx4OBLqvCX
-         4NTtN1ApKyuFqki2PDWnrdTjjuZlzkiDUd7eWWSPfeBTJlye6er3Oac3o/fyNSgn5KF7
-         YAZEENqdcAcSEv6dzSWrH3qWRN1P6LGoMXLYbf4iNnpQe8itknFJX6yu3qVzew4Kll3i
-         J8qwqAdRGHEiF3qYrfS3pG7NDpoSVJgzsrSA1nF9AaFAl0gWcpRNnwiFW9e0cFTV1rT5
-         Dnvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jGpGxpC/wXWKh1C0/wBKFzSJF3Qe61l1DK5ccrhGvrI=;
-        b=ou3SplMe4bseL/3ixPlTr+hWUxjpsOH5V7jJ3fMeq+NC8MnPKqhSaUzqvPIL6kwu1d
-         MOtwVRsODslbRj8vy534OgZyFL0FMC987kVZrbf2iClNycyXLJQGWNywymY5QiY3Kmvx
-         chL66brToMTA+6FwCQZ39wUKCjSbgyLpJ4LYll0pXPrBhdnWleE0TdYyPqzwtP+2q3Mz
-         1BohXZKYNjna976R1v2fnjNyc8AmYxhwAhuPGCAQrwl2YbxYpjzMR0kj7NyLBfg7QNLc
-         fpxe/gUEzb/HVG82agw/4c7IIWxSjvixtKuDw49PeBNux5MHebCWqqpmak0p4Z0jsfSK
-         /Yig==
-X-Gm-Message-State: APjAAAXROuWCU+aWX1JyaVf3j48Xu2QWb/3xYh8KJTrL7HPd0LpX8R5w
-        LK7ob+523oFHDl8UoHYvwDbHcYpG5qhl4NpT4IT1eg==
-X-Google-Smtp-Source: APXvYqwkoBIjjv7fpkao3bfuld82KnBgOsLVb6dusFS/gVBJO4fpnHDQPkBAT7sgWsM/Xvw4Z8BfHvWbRuT42v6C1JM=
-X-Received: by 2002:a2e:7202:: with SMTP id n2mr29985958ljc.194.1574922108978;
- Wed, 27 Nov 2019 22:21:48 -0800 (PST)
+        Thu, 28 Nov 2019 01:30:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574922582; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=HHhh0B7e9XWMMkwY3vm1vjuKjEqX/1lFwWNOPLDSaDXaXB4j0txh7HDijXJgHBvwoNF5tAbPQGwB/F+/JTHNE14/X0giVS/v12WQ3ALQPcUyIZNHF8ZSKCtLuzcu8L03R8yVKMxvcA71qgP0gF4KS2Zm9Kea4Wcg/cms+wQzjkI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574922582; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=LZ1fwYSthwwXBIubSeQ4jYvibE6vhIL9pimY/9c6mzk=; 
+        b=hXNTPW/oGM4HIAUwyfV+NrurBhh4MK688FNbXP7UNGOH4XjEPVdG4kprebE8nujEVElOobclJSI/pwcgDheGum8Si/H8mH5atOgPpnCs3xmBNx8v6NwE07HFvWHMsdg9r/p/hnDOso4YJryvetE/HBtrOAxRub5LkRMX/Nw7ChI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=HCJj/OJmbMtb/eyCTs7UlCAJHBGN7lFbKu1qMbohy5UmvYuKwvGZFg9eb3vRLW2s6ZMJFd+zfHv/
+    6KkgYBHKaoRlDKRK6ymahqFNEZGiGwiitODQaPBWskTScoQbzGYr  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574922582;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=LZ1fwYSthwwXBIubSeQ4jYvibE6vhIL9pimY/9c6mzk=;
+        b=q2hur5Z9qDWAE0KA6XcJtj1lgzy/gPSdoLpsssmmpDewzAl4RPUzh2I+//Cb+chI
+        g4GvIk0zKP/Lhb9i8BwD3ZSiKjX5oKzQb7P73oOMjkQfIEMnPrwX7HlYPsKdpDZR63z
+        Vg+/EofN/86tZ9Wbwgy7UDhTNKHESnEeqI7KndkA=
+Received: from [192.168.88.130] (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
+        with SMTPS id 1574922580821765.3860581633037; Wed, 27 Nov 2019 22:29:40 -0800 (PST)
+Subject: Re: [PATCH 1/5] clk: Ingenic: Adjust code to make it compatible with
+ X1830.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1574825576-91028-1-git-send-email-zhouyanjie@zoho.com>
+ <1574825576-91028-2-git-send-email-zhouyanjie@zoho.com>
+ <1574876253.3.4@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DDF694B.1000902@zoho.com>
+Date:   Thu, 28 Nov 2019 14:29:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-References: <20191127203049.431810767@linuxfoundation.org> <CA+G9fYtFNKTYiqm0Bvk_nqBTjsRMKTtNxr6PhE8YaDXFjqwhYQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYtFNKTYiqm0Bvk_nqBTjsRMKTtNxr6PhE8YaDXFjqwhYQ@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 28 Nov 2019 11:51:37 +0530
-Message-ID: <CA+G9fYsuM-ALP_EtoFEzJiia26QnUvuKWsH0b-vi43Sp++es6A@mail.gmail.com>
-Subject: Re: [PATCH 4.14 000/211] 4.14.157-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        jouni.hogander@unikie.com, "David S. Miller" <davem@davemloft.net>,
-        lukas.bulwahn@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1574876253.3.4@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi Paul,
 
-> Kernel BUG noticed on x86_64 device while booting 4.14.157-rc1 kernel.
-
-
-The problematic patch is,
->> Jouni Hogander <jouni.hogander@unikie.com>
->>    net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
-
-And this kernel panic is been fixed by below patch,
-
-commit 48a322b6f9965b2f1e4ce81af972f0e287b07ed0
-Author: Eric Dumazet <edumazet@google.com>
-Date:   Wed Nov 20 19:19:07 2019 -0800
-
-    net-sysfs: fix netdev_queue_add_kobject() breakage
-
-    kobject_put() should only be called in error path.
-
-    Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in
-rx|netdev_queue_add_kobject")
-    Signed-off-by: Eric Dumazet <edumazet@google.com>
-    Cc: Jouni Hogander <jouni.hogander@unikie.com>
-    Signed-off-by: David S. Miller <davem@davemloft.net>
-
-
-
-> Regressions (compared to build v4.14.156)
+On 2019=E5=B9=B411=E6=9C=8828=E6=97=A5 01:37, Paul Cercueil wrote:
+> Hi Zhou,
 >
-> [    2.777657] BUG: unable to handle kernel NULL pointer dereference
-> at 0000000000000090
-> [    2.785487] IP: kernfs_find_ns+0x18/0xf0
-> [    2.789408] PGD 0 P4D 0
-> [    2.791941] Oops: 0000 [#1] SMP PTI
-> [    2.795424] Modules linked in:
-> [    2.798474] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 4.14.157-rc1 #1
-> [    2.804906] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> 2.2 05/23/2018
-> [    2.812288] task: ffff8e09ee250000 task.stack: ffffa0f900028000
-> [    2.818200] RIP: 0010:kernfs_find_ns+0x18/0xf0
-
-<trim>
-
-> [    3.108995] Kernel panic - not syncing: Attempted to kill init!
-> exitcode=0x00000009
-> [    3.108995]
-> [    3.118161] Kernel Offset: 0x1c400000 from 0xffffffff81000000
-> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 >
-> Full test log,
-> https://lkft.validation.linaro.org/scheduler/job/1026224#L793
+> Le mer., nov. 27, 2019 at 11:32, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+> =C3=A9crit :
+>> 1.Adjust the PLL related code in "cgu.c" and "cgu.h" to make it
+>>   compatible with the X1830 Soc from Ingenic.
+>> 2.Adjust the code in "jz4740-cgu.c" to be compatible with the
+>>   new cgu code.
+>> 3.Adjust the code in "jz4725b-cgu.c" to be compatible with the
+>>   new cgu code.
+>> 4.Adjust the code in "jz4770-cgu.c" to be compatible with the
+>>   new cgu code.
+>> 5.Adjust the code in "jz4780-cgu.c" to be compatible with the
+>>   new cgu code.
+>> 6.Adjust the code in "x1000-cgu.c" to be compatible with the
+>>   new cgu code.
+>>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>> ---
+>>  drivers/clk/ingenic/cgu.c         | 55=20
+>> +++++++++++++++++++++++++++++----------
+>>  drivers/clk/ingenic/cgu.h         | 12 ++++++++-
+>>  drivers/clk/ingenic/jz4725b-cgu.c |  3 ++-
+>>  drivers/clk/ingenic/jz4740-cgu.c  |  3 ++-
+>>  drivers/clk/ingenic/jz4770-cgu.c  |  6 +++--
+>>  drivers/clk/ingenic/jz4780-cgu.c  |  3 ++-
+>>  drivers/clk/ingenic/x1000-cgu.c   |  6 +++--
+>>  7 files changed, 66 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+>> index 6e96303..c3c69a8 100644
+>> --- a/drivers/clk/ingenic/cgu.c
+>> +++ b/drivers/clk/ingenic/cgu.c
+>> @@ -84,7 +84,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned=20
+>> long parent_rate)
+>>      pll_info =3D &clk_info->pll;
+>>
+>>      spin_lock_irqsave(&cgu->lock, flags);
+>> -    ctl =3D readl(cgu->base + pll_info->reg);
+>> +    ctl =3D readl(cgu->base + pll_info->reg[1]);
+>
+> I really don't like this patch. There is no info on what reg[1] and=20
+> reg[0] are. First, don't use hardcoded numbers, use macros with=20
+> meaningful names. Second, why not just have two fields instead of one=20
+> 2-values array? That would remove a lot of the noise.
 >
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Because the X1830's PLL has been greatly changed, the bypass control is
+placed in another register, so now two registers may needed to control the
+PLL. If two fields are used, all the PLL related code of jz47xx-cgu.c /=20
+x1000-cgu.c
+will be more verbose. Using array methods such as:
+.reg =3D { -1, CGU_REG_CPPCR0 },
+in jz4770-cgu.c,
+
+or :
+.reg =3D { CGU_REG_CPPCR, CGU_REG_APLL },
+in x1830-cgu.c,
+
+can let us intuitively see that how many control registers the PLL has.
+Maybe adding a corresponding comment to reg[0] and reg[1] is a better way?
+
+>
+>> spin_unlock_irqrestore(&cgu->lock, flags);
+>>
+>>      m =3D (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0)=
+;
+>> @@ -93,8 +93,17 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,=20
+>> unsigned long parent_rate)
+>>      n +=3D pll_info->n_offset;
+>>      od_enc =3D ctl >> pll_info->od_shift;
+>>      od_enc &=3D GENMASK(pll_info->od_bits - 1, 0);
+>> -    bypass =3D !pll_info->no_bypass_bit &&
+>> -         !!(ctl & BIT(pll_info->bypass_bit));
+>> +
+>> +    if (pll_info->version >=3D CGU_X1830) {
+>> +        spin_lock_irqsave(&cgu->lock, flags);
+>> +        ctl =3D readl(cgu->base + pll_info->reg[0]);
+>> +        spin_unlock_irqrestore(&cgu->lock, flags);
+>
+> Why the spinlock?
+>
+
+The original code used spinlock when reading the control register,
+so when reading this new control register, I think it should also
+be added with spinlock.
+
+>
+>> +
+>> +        bypass =3D !pll_info->no_bypass_bit &&
+>> +             !!(ctl & BIT(pll_info->bypass_bit));
+>> +    } else
+>
+> Please comply to the kernel coding style - use brackets after the else.
+>
+
+My fault, I will fix this in v2.
+
+>> +        bypass =3D !pll_info->no_bypass_bit &&
+>> +             !!(ctl & BIT(pll_info->bypass_bit));
+>>
+>>      if (bypass)
+>>          return parent_rate;
+>> @@ -106,7 +115,10 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,=20
+>> unsigned long parent_rate)
+>>      BUG_ON(od =3D=3D pll_info->od_max);
+>>      od++;
+>>
+>> -    return div_u64((u64)parent_rate * m, n * od);
+>> +    if (pll_info->version >=3D CGU_X1830)
+>> +        return div_u64((u64)parent_rate * m * 2, n * od);
+>
+> Where does that *2 come from?
+
+This is because the calculation method of the PLL frequency multiplication
+of X1830 has changed, and a factor of 2 is added compared to the original
+method (on page 381 of the X1830's PM manual).
+
+Thanks and best regards!
+
+>
+>> +    else
+>> +        return div_u64((u64)parent_rate * m, n * od);
+>>  }
+>>
+>>  static unsigned long
+>> @@ -139,7 +151,10 @@ ingenic_pll_calc(const struct=20
+>> ingenic_cgu_clk_info *clk_info,
+>>      if (pod)
+>>          *pod =3D od;
+>>
+>> -    return div_u64((u64)parent_rate * m, n * od);
+>> +    if (pll_info->version >=3D CGU_X1830)
+>> +        return div_u64((u64)parent_rate * m * 2, n * od);
+>> +    else
+>> +        return div_u64((u64)parent_rate * m, n * od);
+>>  }
+>>
+>>  static inline const struct ingenic_cgu_clk_info *to_clk_info(
+>> @@ -183,7 +198,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
+>> long req_rate,
+>>              clk_info->name, req_rate, rate);
+>>
+>>      spin_lock_irqsave(&cgu->lock, flags);
+>> -    ctl =3D readl(cgu->base + pll_info->reg);
+>> +    ctl =3D readl(cgu->base + pll_info->reg[1]);
+>>
+>>      ctl &=3D ~(GENMASK(pll_info->m_bits - 1, 0) << pll_info->m_shift);
+>>      ctl |=3D (m - pll_info->m_offset) << pll_info->m_shift;
+>> @@ -194,7 +209,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
+>> long req_rate,
+>>      ctl &=3D ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift)=
+;
+>>      ctl |=3D pll_info->od_encoding[od - 1] << pll_info->od_shift;
+>>
+>> -    writel(ctl, cgu->base + pll_info->reg);
+>> +    writel(ctl, cgu->base + pll_info->reg[1]);
+>>      spin_unlock_irqrestore(&cgu->lock, flags);
+>>
+>>      return 0;
+>> @@ -212,16 +227,28 @@ static int ingenic_pll_enable(struct clk_hw *hw)
+>>      u32 ctl;
+>>
+>>      spin_lock_irqsave(&cgu->lock, flags);
+>> -    ctl =3D readl(cgu->base + pll_info->reg);
+>>
+>> -    ctl &=3D ~BIT(pll_info->bypass_bit);
+>> +    if (pll_info->version >=3D CGU_X1830) {
+>> +        ctl =3D readl(cgu->base + pll_info->reg[0]);
+>> +
+>> +        ctl &=3D ~BIT(pll_info->bypass_bit);
+>> +
+>> +        writel(ctl, cgu->base + pll_info->reg[0]);
+>> +
+>> +        ctl =3D readl(cgu->base + pll_info->reg[1]);
+>> +    } else {
+>> +        ctl =3D readl(cgu->base + pll_info->reg[1]);
+>> +
+>> +        ctl &=3D ~BIT(pll_info->bypass_bit);
+>> +    }
+>> +
+>>      ctl |=3D BIT(pll_info->enable_bit);
+>>
+>> -    writel(ctl, cgu->base + pll_info->reg);
+>> +    writel(ctl, cgu->base + pll_info->reg[1]);
+>>
+>>      /* wait for the PLL to stabilise */
+>>      for (i =3D 0; i < timeout; i++) {
+>> -        ctl =3D readl(cgu->base + pll_info->reg);
+>> +        ctl =3D readl(cgu->base + pll_info->reg[1]);
+>>          if (ctl & BIT(pll_info->stable_bit))
+>>              break;
+>>          mdelay(1);
+>> @@ -245,11 +272,11 @@ static void ingenic_pll_disable(struct clk_hw *hw)
+>>      u32 ctl;
+>>
+>>      spin_lock_irqsave(&cgu->lock, flags);
+>> -    ctl =3D readl(cgu->base + pll_info->reg);
+>> +    ctl =3D readl(cgu->base + pll_info->reg[1]);
+>>
+>>      ctl &=3D ~BIT(pll_info->enable_bit);
+>>
+>> -    writel(ctl, cgu->base + pll_info->reg);
+>> +    writel(ctl, cgu->base + pll_info->reg[1]);
+>>      spin_unlock_irqrestore(&cgu->lock, flags);
+>>  }
+>>
+>> @@ -263,7 +290,7 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
+>>      u32 ctl;
+>>
+>>      spin_lock_irqsave(&cgu->lock, flags);
+>> -    ctl =3D readl(cgu->base + pll_info->reg);
+>> +    ctl =3D readl(cgu->base + pll_info->reg[1]);
+>>      spin_unlock_irqrestore(&cgu->lock, flags);
+>>
+>>      return !!(ctl & BIT(pll_info->enable_bit));
+>> diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+>> index 0dc8004..5f87be4 100644
+>> --- a/drivers/clk/ingenic/cgu.h
+>> +++ b/drivers/clk/ingenic/cgu.h
+>> @@ -42,8 +42,18 @@
+>>   * @stable_bit: the index of the stable bit in the PLL control register
+>>   * @no_bypass_bit: if set, the PLL has no bypass functionality
+>>   */
+>> +enum ingenic_cgu_version {
+>> +    CGU_JZ4740,
+>> +    CGU_JZ4725B,
+>> +    CGU_JZ4770,
+>> +    CGU_JZ4780,
+>> +    CGU_X1000,
+>> +    CGU_X1830,
+>> +};
+>> +
+>>  struct ingenic_cgu_pll_info {
+>> -    unsigned reg;
+>> +    enum ingenic_cgu_version version;
+>> +    unsigned reg[2];
+>>      const s8 *od_encoding;
+>>      u8 m_shift, m_bits, m_offset;
+>>      u8 n_shift, n_bits, n_offset;
+>> diff --git a/drivers/clk/ingenic/jz4725b-cgu.c=20
+>> b/drivers/clk/ingenic/jz4725b-cgu.c
+>> index a3b4635..6da7b41 100644
+>> --- a/drivers/clk/ingenic/jz4725b-cgu.c
+>> +++ b/drivers/clk/ingenic/jz4725b-cgu.c
+>> @@ -53,7 +53,8 @@ static const struct ingenic_cgu_clk_info=20
+>> jz4725b_cgu_clocks[] =3D {
+>>          "pll", CGU_CLK_PLL,
+>>          .parents =3D { JZ4725B_CLK_EXT, -1, -1, -1 },
+>>          .pll =3D {
+>> -            .reg =3D CGU_REG_CPPCR,
+>> +            .version =3D CGU_JZ4725B,
+>> +            .reg =3D { -1, CGU_REG_CPPCR },
+>>              .m_shift =3D 23,
+>>              .m_bits =3D 9,
+>>              .m_offset =3D 2,
+>> diff --git a/drivers/clk/ingenic/jz4740-cgu.c=20
+>> b/drivers/clk/ingenic/jz4740-cgu.c
+>> index 4f0e92c..3cf800d 100644
+>> --- a/drivers/clk/ingenic/jz4740-cgu.c
+>> +++ b/drivers/clk/ingenic/jz4740-cgu.c
+>> @@ -68,7 +68,8 @@ static const struct ingenic_cgu_clk_info=20
+>> jz4740_cgu_clocks[] =3D {
+>>          "pll", CGU_CLK_PLL,
+>>          .parents =3D { JZ4740_CLK_EXT, -1, -1, -1 },
+>>          .pll =3D {
+>> -            .reg =3D CGU_REG_CPPCR,
+>> +            .version =3D CGU_JZ4740,
+>> +            .reg =3D { -1, CGU_REG_CPPCR },
+>>              .m_shift =3D 23,
+>>              .m_bits =3D 9,
+>>              .m_offset =3D 2,
+>> diff --git a/drivers/clk/ingenic/jz4770-cgu.c=20
+>> b/drivers/clk/ingenic/jz4770-cgu.c
+>> index 956dd65..a62dfb1 100644
+>> --- a/drivers/clk/ingenic/jz4770-cgu.c
+>> +++ b/drivers/clk/ingenic/jz4770-cgu.c
+>> @@ -101,7 +101,8 @@ static const struct ingenic_cgu_clk_info=20
+>> jz4770_cgu_clocks[] =3D {
+>>          "pll0", CGU_CLK_PLL,
+>>          .parents =3D { JZ4770_CLK_EXT },
+>>          .pll =3D {
+>> -            .reg =3D CGU_REG_CPPCR0,
+>> +            .version =3D CGU_JZ4770,
+>> +            .reg =3D { -1, CGU_REG_CPPCR0 },
+>>              .m_shift =3D 24,
+>>              .m_bits =3D 7,
+>>              .m_offset =3D 1,
+>> @@ -123,7 +124,8 @@ static const struct ingenic_cgu_clk_info=20
+>> jz4770_cgu_clocks[] =3D {
+>>          "pll1", CGU_CLK_PLL,
+>>          .parents =3D { JZ4770_CLK_EXT },
+>>          .pll =3D {
+>> -            .reg =3D CGU_REG_CPPCR1,
+>> +            .version =3D CGU_JZ4770,
+>> +            .reg =3D { -1, CGU_REG_CPPCR1 },
+>>              .m_shift =3D 24,
+>>              .m_bits =3D 7,
+>>              .m_offset =3D 1,
+>> diff --git a/drivers/clk/ingenic/jz4780-cgu.c=20
+>> b/drivers/clk/ingenic/jz4780-cgu.c
+>> index ea905ff..59356d1b 100644
+>> --- a/drivers/clk/ingenic/jz4780-cgu.c
+>> +++ b/drivers/clk/ingenic/jz4780-cgu.c
+>> @@ -220,7 +220,8 @@ static const struct ingenic_cgu_clk_info=20
+>> jz4780_cgu_clocks[] =3D {
+>>      /* PLLs */
+>>
+>>  #define DEF_PLL(name) { \
+>> -    .reg =3D CGU_REG_ ## name, \
+>> +    .version =3D CGU_JZ4780, \
+>> +    .reg =3D { -1, CGU_REG_ ## name }, \
+>>      .m_shift =3D 19, \
+>>      .m_bits =3D 13, \
+>>      .m_offset =3D 1, \
+>> diff --git a/drivers/clk/ingenic/x1000-cgu.c=20
+>> b/drivers/clk/ingenic/x1000-cgu.c
+>> index b22d87b..7179b9f 100644
+>> --- a/drivers/clk/ingenic/x1000-cgu.c
+>> +++ b/drivers/clk/ingenic/x1000-cgu.c
+>> @@ -57,7 +57,8 @@ static const struct ingenic_cgu_clk_info=20
+>> x1000_cgu_clocks[] =3D {
+>>          "apll", CGU_CLK_PLL,
+>>          .parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+>>          .pll =3D {
+>> -            .reg =3D CGU_REG_APLL,
+>> +            .version =3D CGU_X1000,
+>> +            .reg =3D { -1, CGU_REG_APLL },
+>>              .m_shift =3D 24,
+>>              .m_bits =3D 7,
+>>              .m_offset =3D 1,
+>> @@ -78,7 +79,8 @@ static const struct ingenic_cgu_clk_info=20
+>> x1000_cgu_clocks[] =3D {
+>>          "mpll", CGU_CLK_PLL,
+>>          .parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+>>          .pll =3D {
+>> -            .reg =3D CGU_REG_MPLL,
+>> +            .version =3D CGU_X1000,
+>> +            .reg =3D { -1, CGU_REG_MPLL },
+>>              .m_shift =3D 24,
+>>              .m_bits =3D 7,
+>>              .m_offset =3D 1,
+>> --=20
+>> 2.7.4
+>>
+>>
+>
+>
+
+
+
