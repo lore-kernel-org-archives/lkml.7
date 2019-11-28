@@ -2,133 +2,102 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5201CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 20:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CECC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C37216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 20:25:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A4FEa4wn"
+	by mail.kernel.org (Postfix) with ESMTP id 6001221775
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574974992;
+	bh=lY7vOVucF5Go0+wTfxz1i3Kyw0d35VGMD4/2aYwSaEg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=TY6P9bIUGnOX8+w8x9sIs2pY2oMAv/aP0HhGNNibeBlLo0kuxbpgXKss7IYcsu+Mp
+	 86kVCuxacy6jT2UYBapsk5m43PZTJ4punC2TQc4JMb1Wv4A3lJ5Goe1uhDHbWaKr8Q
+	 YwxMWhzMP8gJt/HRvvlgPCrv72syr6LC5aOLCvwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfK1UZs (ORCPT
+        id S1726633AbfK1VCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 15:25:48 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27360 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726734AbfK1UZp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 15:25:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574972744;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=41xNMejmkDpiENDKO7RxAxz9cPSeln8z2A1ifqUYAvQ=;
-        b=A4FEa4wnQO9HoLDarqjdVRmY3PDV3ZOywcU262ZH2T/RQHnF1ukIr7W5ad8Oabb7uekQrm
-        kpDMkXZDiKssxtPIUq0lpBd3UzBENhN0R2Zx4hMlFpzJCMLgPjM+my7fDrIaehmYDwymGW
-        6M9xFEg5iLihEZ3Gv90BmkVZDA4KHz0=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-en5Uz7yDNUam-1N3Hc5pcw-1; Thu, 28 Nov 2019 15:25:43 -0500
-Received: by mail-pf1-f200.google.com with SMTP id b17so16710566pfb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 12:25:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=TnU1CF4ydXp0Re/7xQPqByhi17OoIqWu96aUm7ilAL8=;
-        b=bT5u8aisii303dxhPIVcNrUEmOBfgG76hIWgqTdYdNB+7zej2zA0KruEDTDhgk5MK8
-         sAazQ4q0yNHA/wNN1nRVMwR1084nQvAdHdWAQj3NzI2l4XvydvtVtHxe4+NVnbgvDnzY
-         ptHnTjmso1ycvPN8d5FU2m28FGmG/ib66zxmRLB7qOG9anRyFEsSFKq4jm11a3qjTo3X
-         ZK+gjPVhM0zWun3H+fLJFMihuEbmFdtFxqnCnjJy6JdiYxq5DG42RKpCiye7+Wu/YbA6
-         30x3+k6GhuMu26vp4/WOOoTXe/kLOujAyiEL7LVM3i4qoTjzJscRqVNTfcjvEMVv2z0/
-         aZ0w==
-X-Gm-Message-State: APjAAAVGRWgJdBk4ZsJIirPTbXZuL/5LUdA2mCuDnRFAvOpjI+bf6+Oo
-        3EAWS+DGwd74G8XIS/P0jnj9ZGtKr5C2w5+ZSQP+TeFsGmjCYs3hedfaoizOL5a1gGM1iUgyVE0
-        fyTf8Tae30ENjzJ4m8USmfAbO
-X-Received: by 2002:a17:90a:3463:: with SMTP id o90mr14440650pjb.4.1574972741097;
-        Thu, 28 Nov 2019 12:25:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw1994kyjpL8nA7jbNA2MDbvleaYMa6ZgrsQMiMtjPLDmyjZ21lIhTP8RXhXz67xc7yDAqxlg==
-X-Received: by 2002:a17:90a:3463:: with SMTP id o90mr14440628pjb.4.1574972740900;
-        Thu, 28 Nov 2019 12:25:40 -0800 (PST)
-Received: from localhost ([122.177.85.74])
-        by smtp.gmail.com with ESMTPSA id c184sm22569924pfc.159.2019.11.28.12.25.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Nov 2019 12:25:40 -0800 (PST)
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     bhsharma@redhat.com, bhupesh.linux@gmail.com, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Anderson <anderson@redhat.com>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: [PATCH v5 5/5] Documentation/vmcoreinfo: Add documentation for 'TCR_EL1.T1SZ'
-Date:   Fri, 29 Nov 2019 01:55:16 +0530
-Message-Id: <1574972716-25858-4-git-send-email-bhsharma@redhat.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574972716-25858-1-git-send-email-bhsharma@redhat.com>
-References: <1574972716-25858-1-git-send-email-bhsharma@redhat.com>
-X-MC-Unique: en5Uz7yDNUam-1N3Hc5pcw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+        Thu, 28 Nov 2019 16:02:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbfK1VCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 16:02:47 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3F0221775;
+        Thu, 28 Nov 2019 21:02:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574974967;
+        bh=lY7vOVucF5Go0+wTfxz1i3Kyw0d35VGMD4/2aYwSaEg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=L2QkWHLE8WI/Cb6RqQwzA+aEA/cw8Ba2BFn2KABgIRt6wALTgf/QYK2BPYKIslDPl
+         9TIf/uEBz2WbgS0HtBoH8/1YnoZfR+7aww40ZqfSVGSp6HGfu4MqO6ndLNGhNnD9jz
+         8Rl3D7wMytY+tg20XCQsGiyVQg9BPG4gNUBa6IGQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D041D3520BDA; Thu, 28 Nov 2019 13:02:46 -0800 (PST)
+Date:   Thu, 28 Nov 2019 13:02:46 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 12/14] torture: Replace cpu_up/down with
+ device_online/offline
+Message-ID: <20191128210246.GJ2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191125112754.25223-1-qais.yousef@arm.com>
+ <20191125112754.25223-13-qais.yousef@arm.com>
+ <20191127214725.GG2889@paulmck-ThinkPad-P72>
+ <20191128165611.7lmjaszjl4gbo7u2@e107158-lin.cambridge.arm.com>
+ <20191128170025.ii3vqbj4jpcyghut@e107158-lin.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128170025.ii3vqbj4jpcyghut@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for TCR_EL1.T1SZ variable being added to
-vmcoreinfo.
+On Thu, Nov 28, 2019 at 05:00:26PM +0000, Qais Yousef wrote:
+> On 11/28/19 16:56, Qais Yousef wrote:
+> > On 11/27/19 13:47, Paul E. McKenney wrote:
+> > > On Mon, Nov 25, 2019 at 11:27:52AM +0000, Qais Yousef wrote:
+> > > > The core device API performs extra housekeeping bits that are missing
+> > > > from directly calling cpu_up/down.
+> > > > 
+> > > > See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
+> > > > serialization during LPM") for an example description of what might go
+> > > > wrong.
+> > > > 
+> > > > This also prepares to make cpu_up/down a private interface for anything
+> > > > but the cpu subsystem.
+> > > > 
+> > > > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> > > > CC: Davidlohr Bueso <dave@stgolabs.net>
+> > > > CC: "Paul E. McKenney" <paulmck@kernel.org>
+> > > > CC: Josh Triplett <josh@joshtriplett.org>
+> > > > CC: linux-kernel@vger.kernel.org
+> > > 
+> > > Looks fine from an rcutorture viewpoint, but why not provide an API
+> > > that pulled lock_device_hotplug() and unlock_device_hotplug() into the
+> > > online/offline calls?
+> > 
+> > I *think* the right way to do what you say is by doing lock_device_hotplug()
+> > inside device_{online, offline}() - which affects all drivers not just the CPU.
 
-It indicates the size offset of the memory region addressed by TTBR1_EL1
-and hence can be used for determining the vabits_actual value.
+Or there could be a CPU-specific wrapper function that did the needed
+locking.  (Whether this is worth it or not of course depends on the
+number of invocations.)
 
-Cc: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Steve Capper <steve.capper@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Dave Anderson <anderson@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- Documentation/admin-guide/kdump/vmcoreinfo.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation=
-/admin-guide/kdump/vmcoreinfo.rst
-index 447b64314f56..f9349f9d3345 100644
---- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-+++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-@@ -398,6 +398,12 @@ KERNELOFFSET
- The kernel randomization offset. Used to compute the page offset. If
- KASLR is disabled, this value is zero.
-=20
-+TCR_EL1.T1SZ
-+------------
-+
-+Indicates the size offset of the memory region addressed by TTBR1_EL1
-+and hence can be used for determining the vabits_actual value.
-+
- arm
- =3D=3D=3D
-=20
---=20
-2.7.4
-
+							Thanx, Paul
