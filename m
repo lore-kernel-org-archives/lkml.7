@@ -2,62 +2,63 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A411C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AA9C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF1C21775
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7DA21741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FaLrypxI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UDzniReo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfK1Krk (ORCPT
+        id S1726987AbfK1Kro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:47:40 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58016 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfK1Krk (ORCPT
+        Thu, 28 Nov 2019 05:47:44 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35258 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfK1Krn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:47:40 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAlarG096661;
-        Thu, 28 Nov 2019 04:47:36 -0600
+        Thu, 28 Nov 2019 05:47:43 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAldD0120070;
+        Thu, 28 Nov 2019 04:47:39 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574938056;
-        bh=eKSU4P9KuQJ/Do7x57Iah14M9xnEYTaNHRuLpboeRuc=;
-        h=From:To:CC:Subject:Date;
-        b=FaLrypxIqB8k7gWSrE28fq6fjmJToxV1Uayoe3XvvTov8R7neFPcB1W1/PgUpPkS0
-         mAZTmfu77ZbysAOMBNz4/LpsoMiwN1nKMb5He+fm65W4EZR4U0ENEsYhOJ2YvasO5u
-         UirB8pRsa1rAr02K0kh58CSX5yPEZerUJvHxbgSc=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASAlaO6126286
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Nov 2019 04:47:36 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1574938059;
+        bh=nUDBKv4JrNDGM93TzKWCaAhzdc1M2/r35cweUvBTKlk=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=UDzniReoTIUaPQiKm/5GXqtJ8jPhkDJnS4yA9bZ3SAA2GWjn3y/Emc2qDZl9mwipl
+         qSkLogr7OWqzaLRr4h1TFqU3UHi+3y0Dw3oJzGNWk3pzut6V5joGY3KZRDBkV9bBCj
+         cV1JC9s1aKYcgqvoae4AxDJn/4s+qNgv4TK8MF9E=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAldjx118006;
+        Thu, 28 Nov 2019 04:47:39 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 04:47:36 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 04:47:38 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 04:47:36 -0600
+ Frontend Transport; Thu, 28 Nov 2019 04:47:38 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAlX3v098163;
-        Thu, 28 Nov 2019 04:47:33 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAlX3w098163;
+        Thu, 28 Nov 2019 04:47:36 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Anil Varughese <aniljoy@cadence.com>,
         Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>
 CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 00/14] PHY: Add support for SERDES in TI's J721E SoC
-Date:   Thu, 28 Nov 2019 16:16:34 +0530
-Message-ID: <20191128104648.21894-1-kishon@ti.com>
+Subject: [PATCH v3 01/14] dt-bindings: phy: Sierra: Add bindings for Sierra in TI's J721E
+Date:   Thu, 28 Nov 2019 16:16:35 +0530
+Message-ID: <20191128104648.21894-2-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191128104648.21894-1-kishon@ti.com>
+References: <20191128104648.21894-1-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -66,62 +67,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TI's J721E SoC uses Cadence Sierra SERDES for USB, PCIe and SGMII.
-TI has a wrapper named WIZ to control input signals to Sierra and
-Torrent SERDES.
+Add DT binding documentation for Sierra PHY IP used in TI's J721E
+SoC.
 
-This patch series:
- 1) Add support to WIZ module present in TI's J721E SoC
- 2) Adapt Cadence Sierra PHY driver to be used for J721E SoC
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ .../devicetree/bindings/phy/phy-cadence-sierra.txt  | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Changes from v2:
- *) Deprecate "phy_clk" binding
- *) Fix Rob's comment on dt bindings
-        -> Include BSD-2-Clause license identifier
-        -> drop "oneOf" and "items" for compatible
-        -> Fixed "num-lanes" to include only scalar keywords
-        -> Change to 32-bit address space for child nodes
-*) Rename cmn_refclk/cmn_refclk1 to cmn_refclk_dig_div/
-   cmn_refclk1_dig_div
-
-Changes from v1:
- *) Change the dt binding Documentation of WIZ wrapper to YAML format
- *) Fix an issue in Sierra while doimg rmmod
-
-Anil Varughese (1):
-  phy: cadence: Sierra: Configure both lane cdb and common cdb registers
-    for external SSC
-
-Kishon Vijay Abraham I (13):
-  dt-bindings: phy: Sierra: Add bindings for Sierra in TI's J721E
-  phy: cadence: Sierra: Make "phy_clk" and "sierra_apb" optional
-    resources
-  phy: cadence: Sierra: Use "regmap" for read and write to Sierra
-    registers
-  phy: cadence: Sierra: Add support for SERDES_16G used in J721E SoC
-  phy: cadence: Sierra: Make cdns_sierra_phy_init() as phy_ops
-  phy: cadence: Sierra: Modify register macro names to be in sync with
-    Sierra user guide
-  phy: cadence: Sierra: Get reset control "array" for each link
-  phy: cadence: Sierra: Check for PLL lock during PHY power on
-  phy: cadence: Sierra: Change MAX_LANES of Sierra to 16
-  phy: cadence: Sierra: Set cmn_refclk_dig_div/cmn_refclk1_dig_div
-    frequency to 25MHz
-  phy: cadence: Sierra: Use correct dev pointer in
-    cdns_sierra_phy_remove()
-  dt-bindings: phy: Document WIZ (SERDES wrapper) bindings
-  phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC
-
- .../bindings/phy/phy-cadence-sierra.txt       |  13 +-
- .../bindings/phy/ti,phy-j721e-wiz.yaml        | 158 +++
- drivers/phy/cadence/phy-cadence-sierra.c      | 699 +++++++++++---
- drivers/phy/ti/Kconfig                        |  15 +
- drivers/phy/ti/Makefile                       |   1 +
- drivers/phy/ti/phy-j721e-wiz.c                | 904 ++++++++++++++++++
- 6 files changed, 1651 insertions(+), 139 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
- create mode 100644 drivers/phy/ti/phy-j721e-wiz.c
-
+diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt b/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
+index 6e1b47bfce43..03f5939d3d19 100644
+--- a/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
++++ b/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
+@@ -2,21 +2,24 @@ Cadence Sierra PHY
+ -----------------------
+ 
+ Required properties:
+-- compatible:	cdns,sierra-phy-t0
+-- clocks:	Must contain an entry in clock-names.
+-		See ../clocks/clock-bindings.txt for details.
+-- clock-names:	Must be "phy_clk"
++- compatible:	Must be "cdns,sierra-phy-t0" for Sierra in Cadence platform
++		Must be "ti,sierra-phy-t0" for Sierra in TI's J721E SoC.
+ - resets:	Must contain an entry for each in reset-names.
+ 		See ../reset/reset.txt for details.
+ - reset-names:	Must include "sierra_reset" and "sierra_apb".
+ 		"sierra_reset" must control the reset line to the PHY.
+ 		"sierra_apb" must control the reset line to the APB PHY
+-		interface.
++		interface ("sierra_apb" is optional).
+ - reg:		register range for the PHY.
+ - #address-cells: Must be 1
+ - #size-cells:	Must be 0
+ 
+ Optional properties:
++- clocks:		Must contain an entry in clock-names.
++			See ../clocks/clock-bindings.txt for details.
++- clock-names:		Must contain "cmn_refclk_dig_div" and
++			"cmn_refclk1_dig_div" for configuring the frequency of
++			the clock to the lanes. "phy_clk" is deprecated.
+ - cdns,autoconf:	A boolean property whose presence indicates that the
+ 			PHY registers will be configured by hardware. If not
+ 			present, all sub-node optional properties must be
 -- 
 2.17.1
 
