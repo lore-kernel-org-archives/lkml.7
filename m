@@ -2,100 +2,178 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B2FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9840EC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9BA121741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8582158A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UYXh/YN6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zZCG9Utv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfK1Ikp (ORCPT
+        id S1727472AbfK1IoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 03:40:45 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34942 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbfK1Iko (ORCPT
+        Thu, 28 Nov 2019 03:44:15 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42957 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbfK1IoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:40:44 -0500
-Received: by mail-qk1-f193.google.com with SMTP id v23so14240228qkg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:40:44 -0800 (PST)
+        Thu, 28 Nov 2019 03:44:15 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y19so19389589lfl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:44:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5C8NbXcmc1aQS22jTcSPXOSGUlWN7oELXfg5QtAuVzM=;
-        b=UYXh/YN6exLANTxIPrG3gGtiatnbu0bh/kGC1PW6FqlM6fscc0zR8db0UZrtuQ59y6
-         DMUVc+CWnbnzVDLFDnZN91A0af6QT5QoRflpFOUUPCtPlgIUnHYGYjN8eKvR4nu70I6+
-         webO28+9bkOTJCKZP7zzfMu5CiR07YLI41peftG9RdPLOhEMjZzvzioWtO6Kj0Mz3fWD
-         aPXCADHuisIvqjqY2nPI46PRUn8Vfk8AFMHAc8VKRVD8AkqqYRl8syJMApsBIwn0HViO
-         irlmr7a1C8+9Sw04lbstTjm9zbtYBtejzY2mgPGy2dIgE3wBlJDIX5JNH1dTovt8Ld75
-         sM5g==
+         :cc:content-transfer-encoding;
+        bh=1QZ3A4o6jUAyB3PxC5zRpui47YcoCkxIVIayUdZmVu0=;
+        b=zZCG9UtvOwZAK1grCKaRzCYHS4KLRdtvuBphwaRPOLSx9Dn8TV16FEngYEvljnTFfm
+         mm38rlBvMPSM3w6jVxSbi+aF8Y6hS+NXSKhXUhc1IHvExzVz1XKTTUtKbSaBjxXYAytB
+         vxDohzZDHYT4HGbEV996fWwesJY4fAlTEd8wL8JeTRYQRFicH/G6GEod9BWiDeuxe6j5
+         HA5UlY5T/PA49/5c1xwqUXoZw9KJr/XAhZ+THXrupALH6Cw88QDN27Fy8btqfpwGPGfK
+         QtaSsgtsHK3T+ZxEBOCsVCZzVnycyCjM4Xxb0RrBT3bDHHlxBb3ktbVoXgLv5wvYe2Dv
+         TT3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5C8NbXcmc1aQS22jTcSPXOSGUlWN7oELXfg5QtAuVzM=;
-        b=HwNyApDTOJEpbIROuiYIx37pgWSGitt3DoCoJVmjKh6ZZgluL/2lBNG3npF5EoIefW
-         CvAZ+Izy+75ZiNbyEzHS3fiGqmFwhMR0h1PEVrikU4FkSJFm9o+kR5860U+YgryaP1nd
-         +H3jbAXMjVuqOIBGKgAOCDOcnh81kAxvV7yT/DCdYL1u3YVctTcG6fgTq48Up/MScb71
-         /c74LW4XiWXGu+9DoxfBKoA24EN7wuBUEiQDL2hPqoxfW67nJnIQ70AYIYxnabulbCWt
-         4LY5XnaorLnRmEJdyUCEvHa/PyfHFRhCs6myM+w9zkq+nnAsMO0IaoEnN7QDlmYZkNXL
-         ELHQ==
-X-Gm-Message-State: APjAAAXzzXpTJQDHlm0r6SCC5xqpWxSostNYdOxQeF9M59a68NAH6SGH
-        wfPL9YFhZ5ugyn3uU5P1wcmyPJb/LO+umfe9dPpG/w==
-X-Google-Smtp-Source: APXvYqwSOrs2sa+E7QbDi8H+rGvNlfN5l/NCXi93Y1fBJESRHAf13gMFAaGH1xt3XOfSvi2wrGNiBNIemXtPPjgIyrQ=
-X-Received: by 2002:a37:e312:: with SMTP id y18mr5426499qki.250.1574930443688;
- Thu, 28 Nov 2019 00:40:43 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1QZ3A4o6jUAyB3PxC5zRpui47YcoCkxIVIayUdZmVu0=;
+        b=W7z+dSEfhILS+Dst3wKCCCcyBPhxwJREsrUC3wFtWusYz2+1c5PeEkniL/qIfCk1Y9
+         XlPb7PbLdYFe6HZusISMFu3Bqn+MZ1FXHVbUgxPM+pV2WW+inP2TXkrM6TnSpa2NGpm2
+         z49uff3Ej0By+llfbwLsUJZ2gpNi55qMemy1T2ntX+793MXOnmVYSQyC7rpjskrD2rhh
+         pxnCwUEvzpTB2LD4Z2jiTOIRJ6RxS3YbR3FNW0kwFPhsq3pGuF22taFveFKUYfM2Gb2F
+         bCrhv45RmdoB9eo3qN0jCT/SOKYL2au/A+1uxfDTQfi80N2sbvjaNaBBdrlPs+sc1b4k
+         5eBg==
+X-Gm-Message-State: APjAAAW9W9+lNo8gbD/+Xv9sEMhSC0L+rPOkEKptzrA7Cd51WFP8NEBW
+        Yn9Yw9yl/hRtNVEgCjItH9Dzui1KXjBEqq/sGKbRqA==
+X-Google-Smtp-Source: APXvYqzXiIowksFeLWLRy3juK5p/6F+2j1PS5lSup6jUcBPDKGziJUD1f+cQUdIxMsaDb/PXZMAfEpj9Si2teDsNiXo=
+X-Received: by 2002:ac2:48b6:: with SMTP id u22mr8308593lfg.164.1574930651615;
+ Thu, 28 Nov 2019 00:44:11 -0800 (PST)
 MIME-Version: 1.0
-References: <0000000000009aa32205985e78b6@google.com> <2825703.dkhYCMB3mh@sven-edge>
-In-Reply-To: <2825703.dkhYCMB3mh@sven-edge>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 28 Nov 2019 09:40:32 +0100
-Message-ID: <CACT4Y+YwNGWCXBazm+7GHpSw-gXsxmA8NA-o7O7Mpj3d-dhGYA@mail.gmail.com>
-Subject: Re: WARNING in mark_lock (3)
-To:     Sven Eckelmann <sven@narfation.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Cc:     syzbot <syzbot+a229d8d995b74f8c4b6c@syzkaller.appspotmail.com>,
-        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>,
-        LKML <linux-kernel@vger.kernel.org>, mareklindner@neomailbox.ch,
-        netdev <netdev@vger.kernel.org>, sw@simonwunderlich.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        vinicius.gomes@intel.com, wang.yi59@zte.com.cn,
-        Cong Wang <xiyou.wangcong@gmail.com>
+References: <20191127203000.773542911@linuxfoundation.org>
+In-Reply-To: <20191127203000.773542911@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 28 Nov 2019 14:14:00 +0530
+Message-ID: <CA+G9fYv6LQXD4ZCKgtt_X1R6vXzSOwhrsH7nHoJNhvGY9_YnBA@mail.gmail.com>
+Subject: Re: [PATCH 4.9 000/151] 4.9.204-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 8:25 AM Sven Eckelmann <sven@narfation.org> wrote:
+On Thu, 28 Nov 2019 at 02:10, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Thursday, 28 November 2019 03:00:01 CET syzbot wrote:
-> [...]
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=132ee536e00000
-> > start commit:   89d57ddd Merge tag 'media/v5.5-1' of git://git.kernel.org/..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=10aee536e00000
+> This is the start of the stable review cycle for the 4.9.204 release.
+> There are 151 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Can the syzbot infrastructure be told to ignore this crash in the bisect run?
-> Because this should be an unrelated crash which is (hopefully) fixed in
-> 40e220b4218b ("batman-adv: Avoid free/alloc race when handling OGM buffer").
+> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.204-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-+syzkaller mailing list for syzbot discussion
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Hi Sven,
+Summary
+------------------------------------------------------------------------
 
-There is no such functionality at the moment.
-What exactly do you mean? Somehow telling it interactively? Or
-hardcode some set of crashes for linux? I don't see how any of these
-options can really work...
+kernel: 4.9.204-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 3bbfc6b1c25b08b1e400515f8a2c333a6bdc7f26
+git describe: v4.9.203-152-g3bbfc6b1c25b
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.203-152-g3bbfc6b1c25b
+
+
+No regressions (compared to build v4.9.203)
+
+No fixes (compared to build v4.9.203)
+
+
+Ran 23796 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-fs-tests
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
