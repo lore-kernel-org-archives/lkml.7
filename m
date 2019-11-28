@@ -2,143 +2,193 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72118C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43976C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35523208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10BEA208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UjvgZSxi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jaoo3tmC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfK1AA5 (ORCPT
+        id S1727208AbfK1AEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 19:00:57 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:35159 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfK1AA4 (ORCPT
+        Wed, 27 Nov 2019 19:04:16 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52884 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfK1AEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 19:00:56 -0500
-Received: by mail-qv1-f68.google.com with SMTP id y18so9667623qve.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 16:00:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:message-id;
-        bh=7NGFDtAUlGsxjN/dQKdrDmkDxdsAGrMP7xzXyoFEI2g=;
-        b=UjvgZSxijW9h73Mx0HnA3uKXnaQ/hxO3IIoZlyH5nWlVQ92tJ1kynC+Ef5DkEydoIY
-         a8qI5CqNLB3eNmvGrsb35dS2u2BqdAu2enG0vTcujj20rXo2g4+OGkyfps+HdxIiB5Vg
-         nYqL0PTJIAK6rcovKmvlh9Y7ZXvKdBQR0krjostma24z71WDWNzsr74bXyoCwh+LTWeX
-         YgLCCCfaLihHGNBlRFnly76AXSLJ41fs6N2YXxtBpEbFYjVS3TvsDmrCBpkQ9Q3ND2gS
-         Oh1DwYXfpJQ9CP2pKNnfIHGm2U5oQtGckiNLgwnAWecBByCvEP9WGe9VcgZdciRBZNQB
-         SPmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:message-id;
-        bh=7NGFDtAUlGsxjN/dQKdrDmkDxdsAGrMP7xzXyoFEI2g=;
-        b=PsKFT4luFnLSS77tLYrBiRPDqvfDXCNh4Jg8z9/NbKYyprxhVmE0Qv2d2MBW3oOcVz
-         HXVyyNEiHJ9/i7xADxdWJvlmIszbPKmPRxMU0Hjd0HBf8xjIYvRwBN4wP83PPYxkCPcq
-         f+piWLaLBJzOnVzA/+YVuTHq1/U/QAEySLUsx57d/aU45yT9jIboB0nw9Io5v1R3EL0V
-         yC7MaNdHhtO0q/x2+ezRqZa+bk/+527oOWQ4u3TTz4PWNXU1rIUDVOk303JVfW94bbEG
-         bkZqtUh43bPJb2Wtyh1ITYN7AZCpw8kZ1OQsxIm1DmWMQT9i+kXhos7uQHZ/+pWBUwIB
-         861w==
-X-Gm-Message-State: APjAAAWMgVvkIEjdi2fPrivEllojB6XK9hEly7ALgq5Qm3Z54rMXhNNM
-        w/WRAy+lE6IRDIVmKobETxw=
-X-Google-Smtp-Source: APXvYqwXZie5I+jqFzS57E05EtNky0MC0a0s7QpUU4GNXxBtpraw165/Gv5Ip7Tn/S9S7kL3Zex2BQ==
-X-Received: by 2002:a0c:b0fa:: with SMTP id p55mr8087516qvc.239.1574899255800;
-        Wed, 27 Nov 2019 16:00:55 -0800 (PST)
-Received: from [192.168.86.249] ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id p1sm7554477qkc.25.2019.11.27.16.00.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Nov 2019 16:00:55 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Date:   Wed, 27 Nov 2019 21:01:30 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20191127232657.GL84886@tassilo.jf.intel.com>
-References: <20191121001522.180827-1-andi@firstfloor.org> <20191127151657.GE22719@kernel.org> <20191127154305.GJ22719@kernel.org> <20191127232657.GL84886@tassilo.jf.intel.com>
+        Wed, 27 Nov 2019 19:04:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=53+hrlQtcGBEMjO7oiLH00LUT8Y7sBWSq/6hZ1cRVno=; b=jaoo3tmCadIqF66YJqeM3Or7C
+        EKTM99IUCcxVjssBHV/oGdQgUSdv4KEoXL8N+lJBVI7ApI9On9HF6D8C6ZIBB3s8QQwbWRoFUnRAs
+        3d+rCq650BR59KBfiNLmnYyPYikIkgLtAFHsbbb2lH42Q2OnS/zv3jd7cXMz6FNBSnwQj6p7wCtFO
+        YDbeCDRrVKntKLvEn8EJ5LYj5gR/rvGC2FDqnplzC9Ajy4rQ4/B1LtZFRfA89wXKLcvZAn9/RVt2p
+        36Dt8BNBojivO2wopZNRy9A2sbYr2vcc2JIGHp3hQbLbEQNWkn4xQn9eFLug1xIx+2f3YmB0DAKRR
+        miWYDlRKw==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ia7I6-0002qI-PG; Thu, 28 Nov 2019 00:04:14 +0000
+Subject: Re: linux-next: Tree for Oct 14 (insn_decoder_test)
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masami Hiramatsu <mhiramat@redhat.com>
+References: <20191014174707.469f596f@canb.auug.org.au>
+ <2d83682b-6206-4992-63cc-342d61641c0a@infradead.org>
+ <20191023144916.2cbd0ea16363b4cd4574f5ad@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3fe0f2d7-eab6-8224-bc48-ef513c7ce8e3@infradead.org>
+Date:   Wed, 27 Nov 2019 16:04:13 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: Optimize perf stat for large number of events/cpus
-To:     Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-CC:     Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <033E8FCB-2430-48E0-8631-0F0236D5E904@kernel.org>
+In-Reply-To: <20191023144916.2cbd0ea16363b4cd4574f5ad@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On November 27, 2019 8:26:57 PM GMT-03:00, Andi Kleen <ak@linux=2Eintel=2Ec=
-om> wrote:
->On Wed, Nov 27, 2019 at 12:43:05PM -0300, Arnaldo Carvalho de Melo
->wrote:
->> So, have you tried running 'perf test' after each cset is applied and
->> built?
->
->I ran it at the end, but there are quite a few fails out of the box,
->so I missed that one thanks=2E
->
->This patch fixes it=2E Let me know if I should submit it in a more
->formal way=2E
->
->---
->
->Fix event times test case
->
->Reported-by: Arnaldo
->Signed-off-by: Andi Kleen <ak@linux=2Eintel=2Ecom>
->
->diff --git a/tools/perf/lib/evsel=2Ec b/tools/perf/lib/evsel=2Ec
->index 4c6485fc31b9=2E=2E4dc06289f4c7 100644
->--- a/tools/perf/lib/evsel=2Ec
->+++ b/tools/perf/lib/evsel=2Ec
->@@ -224,7 +224,7 @@ int perf_evsel__enable(struct perf_evsel *evsel)
-> 	int i;
-> 	int err =3D 0;
->=20
->-	for (i =3D 0; i < evsel->cpus->nr && !err; i++)
->+	for (i =3D 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-> 		err =3D perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, i);
-> 	return err;
-> }
->@@ -239,7 +239,7 @@ int perf_evsel__disable(struct perf_evsel *evsel)
-> 	int i;
-> 	int err =3D 0;
->=20
->-	for (i =3D 0; i < evsel->cpus->nr && !err; i++)
->+	for (i =3D 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-> 		err =3D perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, i);
-> 	return err;
-> }
->diff --git a/tools/perf/util/evsel=2Ec b/tools/perf/util/evsel=2Ec
->index 59b9b4f3fe34=2E=2E0844e3e29fb0 100644
->--- a/tools/perf/util/evsel=2Ec
->+++ b/tools/perf/util/evsel=2Ec
->@@ -1853,6 +1853,10 @@ int perf_evsel__open_per_cpu(struct evsel
->*evsel,
-> 			     struct perf_cpu_map *cpus,
-> 			     int cpu)
-> {
->+	if (cpu =3D=3D -1)
->+		return evsel__open_cpu(evsel, cpus, NULL, 0,
->+					cpus ? cpus->nr : 1);
->+
-> 	return evsel__open_cpu(evsel, cpus, NULL, cpu, cpu + 1);
-> }
->=20
+On 10/22/19 10:49 PM, Masami Hiramatsu wrote:
+> Hi,
+> 
+> On Mon, 14 Oct 2019 08:30:02 -0700
+> Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+>> On 10/13/19 11:47 PM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20191011:
+>>>
+>>
+>> on x86_64:
+>>
+>>   HOSTCC  arch/x86/tools/insn_decoder_test
+>>   HOSTCC  arch/x86/tools/insn_sanity
+>>   TEST    posttest
+>> arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
+>> arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
+>> arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
+>> arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
+>>   TEST    posttest
+>> arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
+> 
+> Hmm, curious.
+> 
+> x86-opcode-map.txt said,
+> f7: Grp3_2 Ev (1A)
+> 
+> and "0x0b" is 00001011b, Group encoding bits are 5,4,3 (reg field),
+> so group index is 001.
+> 
+> GrpTable: Grp3_2
+> 0: TEST Ev,Iz
+> 1:
+> 
+> Hmm, "f7 0b" is not assigned to any instruction... (testl should be f7 03)
+> 
+> I've checked Intel SDM May 2019 version(*), but the Opcode Map (Table A-6. Opecode
+> Extensions for One- and Two-byte Opecodes by Group Number) showed the group index
+> 001 is still blank. I've also checked that Table B-13 (General Purpose Instruction
+>  Formats and Encodings for Non-64-Bit Modes (Note that this has no REX prefix)) but
+> I couldn't find "f7 0b".
+> 
+> At last, I found that on AMD64 Architecture Programmer's Manual Volume 3, Appendix A.2
+> Table A-6. ModRM.reg Extensions for the Primary Opcode Map(**), which shows that both
+> f7 + reg=000 and f7 + reg=001 are same. So only on AMD64, it is officially available
+> instruction.
+> 
+> (*) https://software.intel.com/sites/default/files/managed/a4/60/325383-sdm-vol-2abcd.pdf
+> (**) https://www.amd.com/system/files/TechDocs/24594.pdf
+> 
+> OK, so this should be fixed with below patch.
+> 
+> ------
+>>From b3f45b86df25be59fcf417730ab4c69c6310eaad Mon Sep 17 00:00:00 2001
+> From: Masami Hiramatsu <mhiramat@kernel.org>
+> Date: Wed, 23 Oct 2019 14:45:35 +0900
+> Subject: [PATCH] x86/decoder: Add TEST opcode to Group3-2
+> 
+> Add TEST opcode to Group3-2 reg=001b as same as Group3-1 does.
+> 
+> Commit 12a78d43de76 ("x86/decoder: Add new TEST instruction pattern")
+> added a TEST opcode assignment to f6 XX/001/XXX (Group 3-1), but not
+> added f7 XX/001/XXX (Group 3-2). Actually these TEST opcode is not
+> described in Intel SDM Vol2, but described in AMD64 Architecture
+> Programmer's Manual Vol.3, Appendix A.2 Table A-6. ModRM.reg
+> Extensions for the Primary Opcode Map.
+> 
+> Without this fix, Randy found a warning by insn_decoder_test related
+> to this issue as below.
+> 
+>   HOSTCC  arch/x86/tools/insn_decoder_test
+>   HOSTCC  arch/x86/tools/insn_sanity
+>   TEST    posttest
+> arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
+> arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
+> arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
+> arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
+>   TEST    posttest
+> arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
+> 
+> To fix this error, add TEST opcode according to AMD64 APM Vol.3.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Just save me some time by saying to which cset in v8 I should squash this =
-into, so that we keep the whole shebang bisectable,
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
-Thanks,
+Thanks.
 
-- Arnaldo
+> ---
+>  arch/x86/lib/x86-opcode-map.txt       | 2 +-
+>  tools/arch/x86/lib/x86-opcode-map.txt | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+> index e0b85930dd77..4635ce298d1d 100644
+> --- a/arch/x86/lib/x86-opcode-map.txt
+> +++ b/arch/x86/lib/x86-opcode-map.txt
+> @@ -907,7 +907,7 @@ EndTable
+>  
+>  GrpTable: Grp3_2
+>  0: TEST Ev,Iz
+> -1:
+> +1: TEST Ev,Iz
+>  2: NOT Ev
+>  3: NEG Ev
+>  4: MUL rAX,Ev
+> diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
+> index e0b85930dd77..4635ce298d1d 100644
+> --- a/tools/arch/x86/lib/x86-opcode-map.txt
+> +++ b/tools/arch/x86/lib/x86-opcode-map.txt
+> @@ -907,7 +907,7 @@ EndTable
+>  
+>  GrpTable: Grp3_2
+>  0: TEST Ev,Iz
+> -1:
+> +1: TEST Ev,Iz
+>  2: NOT Ev
+>  3: NEG Ev
+>  4: MUL rAX,Ev
+> 
+
+
+-- 
+~Randy
+
