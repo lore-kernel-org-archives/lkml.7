@@ -2,154 +2,125 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5952DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F01C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30780215A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B072D21555
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:31:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mGd9NCPU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6pj5RYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfK1A2J (ORCPT
+        id S1727252AbfK1Ab4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 19:28:09 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42075 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfK1A2I (ORCPT
+        Wed, 27 Nov 2019 19:31:56 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39192 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfK1Ab4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 19:28:08 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y19so18593564lfl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 16:28:07 -0800 (PST)
+        Wed, 27 Nov 2019 19:31:56 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e10so17291166ljj.6;
+        Wed, 27 Nov 2019 16:31:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vUTSULFNkXa63hLT0LoUe/dpIVtN+osB6R0TFxVC0AA=;
-        b=mGd9NCPU356ywtaPjV7VswYGYOThPIdwvUuAn4BHT8qHBcb7Y3U8V1fXZkP9cxXK4W
-         SYHQ5TI9c23u1N4IwTufFcQguYP/r2Iwgsbi0/PiGjr1Ltg8YZgVS6gXDyk23npcW2xp
-         8yPvJxdrx474+N5M8rKrPANKzaeJ2zC0PYv92Tzj1/SVUKLXhMzdWlCIld/ZrBENxaLm
-         INyDB43cv11RsozsgvUaQkV8ps/jHcV1QmfF4cbvUrrM/XcgGLuZhLvXiaqHy5Kxv5xR
-         2V8+8tw59ImN+1gAWfZejUJetvxHag8934lDCtdme+bbaNPasStNNG0Drr/1q0oD+/vw
-         1TLw==
+         :cc;
+        bh=brQGdUxSSCA2qoufKtwecSuCiVuN/4tEwRhfBe6lmOo=;
+        b=E6pj5RYGJzxqrgP8rezjlVU5GiydmUWCItzBfy3b7wB/D79TsyKS+0pavZ1yLhuYeA
+         hbUEgAekrVAE+NfU8dnO/4GthJClqM8kgUCJOnwGuuDbtEE2BTbfPTzbNRFOX0X2q1ci
+         9TpYYk5jZB4f+G/jgrUNgVH9wZrBNicCD5HD2KMG+QwskQkhrezLEvHCjkwRZtCEMsFj
+         bnGBBsvb7nfXqV+p/Z3s5+R/VFfcxTy2tSMQWCgl50nzFADzOMZVS3yVBmsd9bAuzVXf
+         zWtxTO54GEW/tVOfPfzB22ugL4PS6+maFL6rl0dESNSLKJmWRF9ExoEtUKfid7DiN/aw
+         hF9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vUTSULFNkXa63hLT0LoUe/dpIVtN+osB6R0TFxVC0AA=;
-        b=pX0pEZyWIjI02RZl/wrFuoclvsO81NSSM9rB3xN9bdPwNI+JshrAHPf4fByFxXoi/y
-         0dJi1T2eaOc1kjmi6hG0dqAmii0T1r2N8o6sx9qm9je6GlfcQwzGyq2IqPoksLlJYW9q
-         7hAW4A1ik95K9zdFWE5eeviBNUmZjpJtjGR5fduaBFznLYviu8EhNGxbTChScM/xiD4B
-         9q5np24A83scmjXt4vD0rBKjXppS5JUEQ5qgzvjBBqoC1s5g3nVuHNiUPgjz+MoDsvSt
-         BNoZbRTNNvbkyI5a/cihlytB13AW/06Y32cK7J+ZhSfQFheaAtQ87VokJD3JLriWrLCt
-         KVog==
-X-Gm-Message-State: APjAAAUlDpnFspDfwgwb/QrSVg3dkXgU7BCFvnnomQ00SRs2EN0vqtxB
-        yeaqA6EKlGi2854c2/UysCjvVjdkgTcPOpNFmc4/Z4Cbm+M=
-X-Google-Smtp-Source: APXvYqwpmb8XE+iNo9uoIQ0XJlsBc8SUSwa3YkH4q38p/AEKg+F7GraOPtYQYZbXWwISunA3LNtNKapmNqvCztk/N88=
-X-Received: by 2002:ac2:4102:: with SMTP id b2mr30863468lfi.16.1574900886440;
- Wed, 27 Nov 2019 16:28:06 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=brQGdUxSSCA2qoufKtwecSuCiVuN/4tEwRhfBe6lmOo=;
+        b=Waf1U27IRt7dv/RumKtCTVIt2JR2ixbsAiyo+O6EZNZW/FRYdU3/6T7UKSKl3mQIWD
+         QQ1l6bwZjJc1/9xOfgdEB+8o9deE+Qevuy1nPsXMsJ2MbLKVE1dt8GRjcrzKLqJeK57m
+         MlU3GaZWEU969j6CmoOonLbSTNBEggc71NjdrXZfncvbxTrkbqKcM3V0bXXLS7X5JmQh
+         4DYckWRJ3aJqLuLT/B00bEUr16cnXem/D9Nh8Gt7LnB1rzE89Zot66RyMpF4vU6endak
+         GQpdXW9E44hqzB0llZLD0epJwEfuvOqCDOLobKAd5taZ3jhDM8+zfKm23keRUk4yW9a/
+         ibQg==
+X-Gm-Message-State: APjAAAU4cBBEeb5VAapHs6AC0UeY9ppV9dqhNpla4HHwiixsmTydn98x
+        FWOduWyqqwuRXx4APuNOd1N8wjSc7qora/zs6dM=
+X-Google-Smtp-Source: APXvYqx5pjwO5jJzjfHPldQzZUKqIMyttQRfIJgn4Efx8cM5CC+kH93tbguHf8bU5sNE6wsUZe29GWiy9WguTVnf8jQ=
+X-Received: by 2002:a2e:b5b8:: with SMTP id f24mr31738677ljn.188.1574901113946;
+ Wed, 27 Nov 2019 16:31:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127203114.766709977@linuxfoundation.org>
-In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
-From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date:   Wed, 27 Nov 2019 18:27:55 -0600
-Message-ID: <CAEUSe7_KTY_06epzsXW0LFLVASOiLaFb0ZgRg+4bE2kjQXnEZA@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/306] 4.19.87-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        torvalds@linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+References: <87imn6y4n9.fsf@toke.dk> <20191126183451.GC29071@kernel.org>
+ <87d0dexyij.fsf@toke.dk> <20191126190450.GD29071@kernel.org>
+ <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
+ <20191126221018.GA22719@kernel.org> <20191126221733.GB22719@kernel.org>
+ <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+ <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net> <20191126155228.0e6ed54c@cakuba.netronome.com>
+ <20191127013901.GE29071@kernel.org>
+In-Reply-To: <20191127013901.GE29071@kernel.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 27 Nov 2019 16:31:41 -0800
+Message-ID: <CAADnVQJCMpke49NNzy33EKdwpW+SY1orTm+0f0b-JuW8+uA7Yw@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-
-On Wed, 27 Nov 2019 at 14:55, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> This is the start of the stable review cycle for the 4.19.87 release.
-> There are 306 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, Nov 26, 2019 at 5:39 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> Anything received after that time might be too late.
+> Em Tue, Nov 26, 2019 at 03:52:28PM -0800, Jakub Kicinski escreveu:
+> > On Tue, 26 Nov 2019 15:10:30 -0800, Stanislav Fomichev wrote:
+> > > We are using this script with python2.7, works just fine :-)
+> > > So maybe doing s/python3/python/ is the way to go, whatever
+> > > default python is installed, it should work with that.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.87-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
+> > That increases the risk someone will make a python2-only change
+> > and break Python 3.
 >
-> thanks,
+> > Python 2 is dead, I'm honestly surprised this needs to be said :)
 >
-> greg k-h
+> It shouldn't have to be said, and probably it is old school to try and
+> keep things portable when there is no need to use new stuff for simple
+> tasks like this.
+>
+> Anyway, it seems its just a matter of adding the python3 package to the
+> old container images and then most of them will work with what is in
+> that script, what doesn't work is really old and then NO_LIBBPF=1 is the
+> way to go.
+>
+> In the end, kinda nothing to see here, go back to adding cool new stuff,
+> lets not hold eBPF from progressing ;-P
 
-We're seeing this build failure on 4.19 (and 4.14) on x86 32-bits:
-> In file included from /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core=
-2-32/kernel-source/include/linux/export.h:45:0,
->                  from /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core=
-2-32/kernel-source/include/linux/linkage.h:7,
->                  from /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core=
-2-32/kernel-source/include/linux/preempt.h:10,
->                  from /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core=
-2-32/kernel-source/include/linux/spinlock.h:51,
->                  from /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core=
-2-32/kernel-source/arch/x86/mm/cpu_entry_area.c:3:
-> In function 'setup_cpu_entry_area_ptes',
->     inlined from 'setup_cpu_entry_areas' at /srv/oe/build/tmp-lkft-glibc/=
-work-shared/intel-core2-32/kernel-source/arch/x86/mm/cpu_entry_area.c:209:2=
-:
-> /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core2-32/kernel-source/inc=
-lude/linux/compiler.h:348:38: error: call to '__compiletime_assert_192' dec=
-lared with attribute error: BUILD_BUG_ON failed: (CPU_ENTRY_AREA_PAGES+1)*P=
-AGE_SIZE !=3D CPU_ENTRY_AREA_MAP_SIZE
->   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->                                       ^
-> /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core2-32/kernel-source/inc=
-lude/linux/compiler.h:329:4: note: in definition of macro '__compiletime_as=
-sert'
->     prefix ## suffix();    \
->     ^~~~~~
-> /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core2-32/kernel-source/inc=
-lude/linux/compiler.h:348:2: note: in expansion of macro '_compiletime_asse=
-rt'
->   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->   ^~~~~~~~~~~~~~~~~~~
-> /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core2-32/kernel-source/inc=
-lude/linux/build_bug.h:45:37: note: in expansion of macro 'compiletime_asse=
-rt'
->  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->                                      ^~~~~~~~~~~~~~~~~~
-> /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core2-32/kernel-source/inc=
-lude/linux/build_bug.h:69:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
->   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
->   ^~~~~~~~~~~~~~~~
-> /srv/oe/build/tmp-lkft-glibc/work-shared/intel-core2-32/kernel-source/arc=
-h/x86/mm/cpu_entry_area.c:192:2: note: in expansion of macro 'BUILD_BUG_ON'
->   BUILD_BUG_ON((CPU_ENTRY_AREA_PAGES+1)*PAGE_SIZE !=3D CPU_ENTRY_AREA_MAP=
-_SIZE);
->   ^~~~~~~~~~~~
+Absolutely. I think if some distro is still using 32-bit userland it's likely
+so much behind anything modern that its kernel is equally old too
+and appeal of new features (bpf or anything else) is probably low.
+So if I were you I would keep 32-bit builds of perf supported, but with
+minimal effort.
 
-Bisection points to "x86/cpu_entry_area: Add guard page for entry
-stack on 32bit" (e50622b4a1, also present in 4.14.y as 880a98c339).
-
-Greetings!
-
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
+Re: patch itself.
+I can take it as-is into bpf tree and it will be in Linus's tree in few days.
+Or I can take only tools/lib/bpf/Makefile hunk and you can take
+tools/perf/MANIFEST via perf tree?
+Whichever way is fine.
