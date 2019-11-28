@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81D5C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EB0C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F3521771
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD5F21771
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:58:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="H9GNJFOo"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Cu0pEa3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfK1O6K (ORCPT
+        id S1727673AbfK1O6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:58:10 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40365 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbfK1O6F (ORCPT
+        Thu, 28 Nov 2019 09:58:16 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46230 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727642AbfK1O6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:58:05 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y5so7553367lfy.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:58:01 -0800 (PST)
+        Thu, 28 Nov 2019 09:58:11 -0500
+Received: by mail-lf1-f65.google.com with SMTP id a17so20229357lfi.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:58:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PyA4fvyHPic1hHseYG61wC3TVgVcfbpZ17hSo3R3QxM=;
-        b=H9GNJFOo2tBgwxNF/Mvxe35zT+dq5pwGZ0owmVOSIU2EzzDigi/R9KMcG5HAWIvrIT
-         Qg8Nh9+oMFaBwCtzZOFWvEKKLVFDWNsMN4jJfpL5FlPmX8MwlNNI2NkNfPBm9Af9pQxA
-         iRix/HHPfoc8REM8iZpZBBjYY/GcODdO3UCM4=
+        bh=ApKAjcbgk3TFllS4KVlYulsx0IXhA9sg3keVA4kG7Kg=;
+        b=Cu0pEa3DGH8Jq4DqyrRVVK+6bn2ungANZKmPnurdLgGvoCh7zh9ab2EKVG+2ifp9f9
+         rF8n9op4NSmEteqozoQv7Ma5TFukZVpXhMk//1OFvFLfiiCXPFq6mIrgqPDMuC4k0F+i
+         tPXfxNLVhzbivJVrd/o409oUcl06X8HPclCC8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PyA4fvyHPic1hHseYG61wC3TVgVcfbpZ17hSo3R3QxM=;
-        b=YwiKRvYSfdEep3qFVVqcX1es1BgtUmjiQvuQyE2WI8319NQ6M5vCDaTk2jvfXK9/Aa
-         QfcIUCCYg+AnxdMvXJmJdeVTvHkMjPpsTWEasWmuyf3WRL2/NAd+iTlWL1ScT7+4uSzM
-         INtngmnoL2R2zAJ77DosKlHisP2crLkW1XoOwtk6kIKmgkYurtdqUjmmFHJRKQYcmvNe
-         s3U4X9+IequYdh7oqtB4iEGceAHaCnpmjUw9LwtmjvISvIK8wz8VPs5jXa3om4puE+VV
-         0dKzhVdCjritZpCHk9h0o7s5ny5vdh2AQ6cRIJxrXClAHbBWfVbok16qBeQmlH720nzt
-         QhDQ==
-X-Gm-Message-State: APjAAAXsAXtyv228rJE1UaCcS9WmdK7a5fbGDCne+5QAWs2xAMKWmZCB
-        FQjGJUTVL4w8GpPsvd8mZxWrIw==
-X-Google-Smtp-Source: APXvYqyvt7YRsEI3f7Rdq/jHii7xfNyBE/f16tqd63AmAMdURuB/Q1c5U4ESjLrpdqfvdabSVNzicQ==
-X-Received: by 2002:a19:3f51:: with SMTP id m78mr1872602lfa.70.1574953081096;
-        Thu, 28 Nov 2019 06:58:01 -0800 (PST)
+        bh=ApKAjcbgk3TFllS4KVlYulsx0IXhA9sg3keVA4kG7Kg=;
+        b=VIE+GrRvBhHTgPiaj9e75PLwJXDe4PwMiUTdeT8BuGCoxCdspdglHhuxZr4wAPpG6x
+         MfDQRnGSr0vwZrVEdU27GAzev1cdN5UeufoGipqMTR8V+WYCjOLhtFhiMHnVQ6LLVxJB
+         TFzqNY2CeQfG49CwhFeDbsEb1nQhYlzdx2CJPvbv/KKhJdl56xztZH2tu/+yzU7k/2ZB
+         PBnclaZJPmDFoqGKCMiwf9RP3CzlnvQdCMThGXvn7xnYH+yRhJF/r8v5AziG6lB83HFz
+         CdhMrnKR8X8bsHaEptc7miDSZTxmmshYXVsn4hK/ZhVNo/IwlhB4h2/JNzQbA55zIW7D
+         5WCQ==
+X-Gm-Message-State: APjAAAXOnqTuWpF3N1w0G/y9QnsR8jUtfDrCCsHObpz3xYQKxitxTIYL
+        oSHzlmy1OjZR0mcPWqbOXK2XIA==
+X-Google-Smtp-Source: APXvYqwJ2pFRjS+aCBBi6M5p/vBXoIE7qINVl1Cxd1FpO3O+0xRHnhugtUuDHZc9+RuUfUWk5qB68w==
+X-Received: by 2002:ac2:4adc:: with SMTP id m28mr8797486lfp.26.1574953087899;
+        Thu, 28 Nov 2019 06:58:07 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.58.00
+        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.58.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 06:58:00 -0800 (PST)
+        Thu, 28 Nov 2019 06:58:07 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v6 43/49] soc: fsl: qe: avoid IS_ERR_VALUE in ucc_fast.c
-Date:   Thu, 28 Nov 2019 15:55:48 +0100
-Message-Id: <20191128145554.1297-44-linux@rasmusvillemoes.dk>
+Subject: [PATCH v6 49/49] soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE
+Date:   Thu, 28 Nov 2019 15:55:54 +0100
+Message-Id: <20191128145554.1297-50-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
 References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
@@ -73,87 +73,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building this on a 64-bit platform gcc rightly warns that the
-error checking is broken (-ENOMEM stored in an u32 does not compare
-greater than (unsigned long)-MAX_ERRNO). Instead, change the
-ucc_fast_[tr]x_virtual_fifo_base_offset members to s32 and use an
-ordinary check-for-negative. Also, this avoids treating 0 as "this
-cannot have been returned from qe_muram_alloc() so don't free it".
+There are also PPC64, ARM and ARM64 based SOCs with a QUICC Engine,
+and the core QE code as well as net/wan/fsl_ucc_hdlc and
+tty/serial/ucc_uart has now been modified to not rely on ppcisms.
+
+So extend the architectures that can select QUICC_ENGINE, and add the
+rather modest requirements of OF && HAS_IOMEM.
+
+The core code as well as the ucc_uart driver has been tested on an
+LS1021A (arm), and it has also been tested that the QE code still
+works on an mpc8309 (ppc). Qiang Zhao has tested that the QE-HDLC code
+that gets enabled with this works on ARM64.
 
 Reviewed-by: Timur Tabi <timur@kernel.org>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/ucc_fast.c | 15 ++++++---------
- include/soc/fsl/qe/ucc_fast.h |  4 ++--
- 2 files changed, 8 insertions(+), 11 deletions(-)
+ drivers/soc/fsl/qe/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/fsl/qe/ucc_fast.c b/drivers/soc/fsl/qe/ucc_fast.c
-index ca0452497a20..ad6193ea4597 100644
---- a/drivers/soc/fsl/qe/ucc_fast.c
-+++ b/drivers/soc/fsl/qe/ucc_fast.c
-@@ -197,6 +197,8 @@ int ucc_fast_init(struct ucc_fast_info * uf_info, struct ucc_fast_private ** ucc
- 			__func__);
- 		return -ENOMEM;
- 	}
-+	uccf->ucc_fast_tx_virtual_fifo_base_offset = -1;
-+	uccf->ucc_fast_rx_virtual_fifo_base_offset = -1;
+diff --git a/drivers/soc/fsl/qe/Kconfig b/drivers/soc/fsl/qe/Kconfig
+index cfa4b2939992..357c5800b112 100644
+--- a/drivers/soc/fsl/qe/Kconfig
++++ b/drivers/soc/fsl/qe/Kconfig
+@@ -5,7 +5,8 @@
  
- 	/* Fill fast UCC structure */
- 	uccf->uf_info = uf_info;
-@@ -265,10 +267,9 @@ int ucc_fast_init(struct ucc_fast_info * uf_info, struct ucc_fast_private ** ucc
- 	/* Allocate memory for Tx Virtual Fifo */
- 	uccf->ucc_fast_tx_virtual_fifo_base_offset =
- 	    qe_muram_alloc(uf_info->utfs, UCC_FAST_VIRT_FIFO_REGS_ALIGNMENT);
--	if (IS_ERR_VALUE(uccf->ucc_fast_tx_virtual_fifo_base_offset)) {
-+	if (uccf->ucc_fast_tx_virtual_fifo_base_offset < 0) {
- 		printk(KERN_ERR "%s: cannot allocate MURAM for TX FIFO\n",
- 			__func__);
--		uccf->ucc_fast_tx_virtual_fifo_base_offset = 0;
- 		ucc_fast_free(uccf);
- 		return -ENOMEM;
- 	}
-@@ -278,10 +279,9 @@ int ucc_fast_init(struct ucc_fast_info * uf_info, struct ucc_fast_private ** ucc
- 		qe_muram_alloc(uf_info->urfs +
- 			   UCC_FAST_RECEIVE_VIRTUAL_FIFO_SIZE_FUDGE_FACTOR,
- 			   UCC_FAST_VIRT_FIFO_REGS_ALIGNMENT);
--	if (IS_ERR_VALUE(uccf->ucc_fast_rx_virtual_fifo_base_offset)) {
-+	if (uccf->ucc_fast_rx_virtual_fifo_base_offset < 0) {
- 		printk(KERN_ERR "%s: cannot allocate MURAM for RX FIFO\n",
- 			__func__);
--		uccf->ucc_fast_rx_virtual_fifo_base_offset = 0;
- 		ucc_fast_free(uccf);
- 		return -ENOMEM;
- 	}
-@@ -384,11 +384,8 @@ void ucc_fast_free(struct ucc_fast_private * uccf)
- 	if (!uccf)
- 		return;
- 
--	if (uccf->ucc_fast_tx_virtual_fifo_base_offset)
--		qe_muram_free(uccf->ucc_fast_tx_virtual_fifo_base_offset);
--
--	if (uccf->ucc_fast_rx_virtual_fifo_base_offset)
--		qe_muram_free(uccf->ucc_fast_rx_virtual_fifo_base_offset);
-+	qe_muram_free(uccf->ucc_fast_tx_virtual_fifo_base_offset);
-+	qe_muram_free(uccf->ucc_fast_rx_virtual_fifo_base_offset);
- 
- 	if (uccf->uf_regs)
- 		iounmap(uccf->uf_regs);
-diff --git a/include/soc/fsl/qe/ucc_fast.h b/include/soc/fsl/qe/ucc_fast.h
-index e9cc46042a83..ba0e838f962a 100644
---- a/include/soc/fsl/qe/ucc_fast.h
-+++ b/include/soc/fsl/qe/ucc_fast.h
-@@ -188,9 +188,9 @@ struct ucc_fast_private {
- 	int stopped_tx;		/* Whether channel has been stopped for Tx
- 				   (STOP_TX, etc.) */
- 	int stopped_rx;		/* Whether channel has been stopped for Rx */
--	u32 ucc_fast_tx_virtual_fifo_base_offset;/* pointer to base of Tx
-+	s32 ucc_fast_tx_virtual_fifo_base_offset;/* pointer to base of Tx
- 						    virtual fifo */
--	u32 ucc_fast_rx_virtual_fifo_base_offset;/* pointer to base of Rx
-+	s32 ucc_fast_rx_virtual_fifo_base_offset;/* pointer to base of Rx
- 						    virtual fifo */
- #ifdef STATISTICS
- 	u32 tx_frames;		/* Transmitted frames counter. */
+ config QUICC_ENGINE
+ 	bool "QUICC Engine (QE) framework support"
+-	depends on FSL_SOC && PPC32
++	depends on OF && HAS_IOMEM
++	depends on PPC || ARM || ARM64 || COMPILE_TEST
+ 	select GENERIC_ALLOCATOR
+ 	select CRC32
+ 	help
 -- 
 2.23.0
 
