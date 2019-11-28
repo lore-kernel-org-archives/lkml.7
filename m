@@ -7,18 +7,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEC0C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401FCC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D357C215F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A80A215A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfK1Bk1 (ORCPT
+        id S1727851AbfK1Bk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 20:40:27 -0500
-Received: from mga02.intel.com ([134.134.136.20]:10954 "EHLO mga02.intel.com"
+        Wed, 27 Nov 2019 20:40:28 -0500
+Received: from mga02.intel.com ([134.134.136.20]:10961 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727677AbfK1BkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727706AbfK1BkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 20:40:24 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -26,7 +26,7 @@ Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 17:40:19 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,251,1571727600"; 
-   d="scan'208";a="221166492"
+   d="scan'208";a="221166502"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga002.jf.intel.com with ESMTP; 27 Nov 2019 17:40:19 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -54,9 +54,9 @@ Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v4 09/19] x86/vmx: Introduce VMX_FEATURES_*
-Date:   Wed, 27 Nov 2019 17:40:06 -0800
-Message-Id: <20191128014016.4389-10-sean.j.christopherson@intel.com>
+Subject: [PATCH v4 12/19] x86/cpu: Set synthetic VMX cpufeatures during init_ia32_feat_ctl()
+Date:   Wed, 27 Nov 2019 17:40:09 -0800
+Message-Id: <20191128014016.4389-13-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191128014016.4389-1-sean.j.christopherson@intel.com>
 References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
@@ -67,175 +67,230 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a VMX specific variant of X86_FEATURE_* flags, which will eventually
-supplant the synthetic VMX flags defined in cpufeatures word 8.  Use the
-Intel-defined layouts for the major VMX execution controls so that their
-word entries can be directly populated from their respective MSRs, and
-so that the VMX_FEATURE_* flags can be used to define the existing bit
-definitions in asm/vmx.h, i.e. force developers to define a VMX_FEATURE
-flag when adding support for a new hardware feature.
-
-The majority of Intel's (and compatible CPU's) VMX capabilities are
-enumerated via MSRs and not CPUID, i.e. querying /proc/cpuinfo doesn't
-naturally provide any insight into the virtualization capabilities of
-VMX enabled CPUs.  Commit e38e05a85828d ("x86: extended "flags" to show
-virtualization HW feature in /proc/cpuinfo") attempted to address the
-issue by synthesizing select VMX features into a Linux-defined word in
-cpufeatures.
-
-Lack of reporting of VMX capabilities via /proc/cpuinfo is problematic
-because there is no sane way for a user to query the capabilities of
-their platform, e.g. when trying to find a platform to test a feature or
-debug an issue that has a hardware dependency.  Lack of reporting is
-especially problematic when the user isn't familiar with VMX, e.g. the
-format of the MSRs is non-standard, existence of some MSRs is reported
-by bits in other MSRs, several "features" from KVM's point of view are
-enumerated as 3+ distinct features by hardware, etc...
-
-The synthetic cpufeatures approach has several flaws:
-
-  - The set of synthesized VMX flags has become extremely stale with
-    respect to the full set of VMX features, e.g. only one new flag
-    (EPT A/D) has been added in the the decade since the introduction of
-    the synthetic VMX features.  Failure to keep the VMX flags up to
-    date is likely due to the lack of a mechanism that forces developers
-    to consider whether or not a new feature is worth reporting.
-
-  - The synthetic flags may incorrectly be misinterpreted as affecting
-    kernel behavior, i.e. KVM, the kernel's sole consumer of VMX,
-    completely ignores the synthetic flags.
-
-  - New CPU vendors that support VMX have duplicated the hideous code
-    that propagates VMX features from MSRs to cpufeatures.  Bringing the
-    synthetic VMX flags up to date would exacerbate the copy+paste
-    trainwreck.
-
-Define separate VMX_FEATURE flags to set the stage for enumerating VMX
-capabilities outside of the cpu_has() framework, and for adding
-functional usage of VMX_FEATURE_* to help ensure the features reported
-via /proc/cpuinfo is up to date with respect to kernel recognition of
-VMX capabilities.
+Set the synthetic VMX cpufeatures, which need to be kept to preserve
+/proc/cpuinfo's ABI, in the common IA32_FEAT_CTL initialization code.
+Remove the vendor code that manually sets the synthetic flags.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- MAINTAINERS                        |  2 +-
- arch/x86/include/asm/processor.h   |  1 +
- arch/x86/include/asm/vmxfeatures.h | 81 ++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/include/asm/vmxfeatures.h
+ arch/x86/kernel/cpu/centaur.c  | 35 ------------------------
+ arch/x86/kernel/cpu/feat_ctl.c | 14 ++++++++++
+ arch/x86/kernel/cpu/intel.c    | 49 ----------------------------------
+ arch/x86/kernel/cpu/zhaoxin.c  | 35 ------------------------
+ 4 files changed, 14 insertions(+), 119 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 31ea754560bd..d1f0fd8dc2c5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9107,7 +9107,7 @@ F:	arch/x86/include/uapi/asm/svm.h
- F:	arch/x86/include/asm/kvm*
- F:	arch/x86/include/asm/pvclock-abi.h
- F:	arch/x86/include/asm/svm.h
--F:	arch/x86/include/asm/vmx.h
-+F:	arch/x86/include/asm/vmx*.h
- F:	arch/x86/kernel/kvm.c
- F:	arch/x86/kernel/kvmclock.c
+diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
+index 084f6040b4df..02d99feb333e 100644
+--- a/arch/x86/kernel/cpu/centaur.c
++++ b/arch/x86/kernel/cpu/centaur.c
+@@ -18,13 +18,6 @@
+ #define RNG_ENABLED	(1 << 3)
+ #define RNG_ENABLE	(1 << 6)	/* MSR_VIA_RNG */
  
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 0340aad3f2fc..bab513404606 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -25,6 +25,7 @@ struct vm86;
- #include <asm/special_insns.h>
- #include <asm/fpu/types.h>
- #include <asm/unwind_hints.h>
-+#include <asm/vmxfeatures.h>
+-#define X86_VMX_FEATURE_PROC_CTLS_TPR_SHADOW	0x00200000
+-#define X86_VMX_FEATURE_PROC_CTLS_VNMI		0x00400000
+-#define X86_VMX_FEATURE_PROC_CTLS_2ND_CTLS	0x80000000
+-#define X86_VMX_FEATURE_PROC_CTLS2_VIRT_APIC	0x00000001
+-#define X86_VMX_FEATURE_PROC_CTLS2_EPT		0x00000002
+-#define X86_VMX_FEATURE_PROC_CTLS2_VPID		0x00000020
+-
+ static void init_c3(struct cpuinfo_x86 *c)
+ {
+ 	u32  lo, hi;
+@@ -119,31 +112,6 @@ static void early_init_centaur(struct cpuinfo_x86 *c)
+ 	}
+ }
  
- #include <linux/personality.h>
- #include <linux/cache.h>
-diff --git a/arch/x86/include/asm/vmxfeatures.h b/arch/x86/include/asm/vmxfeatures.h
-new file mode 100644
-index 000000000000..1b96b03c1147
---- /dev/null
-+++ b/arch/x86/include/asm/vmxfeatures.h
-@@ -0,0 +1,81 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_VMXFEATURES_H
-+#define _ASM_X86_VMXFEATURES_H
+-static void centaur_detect_vmx_virtcap(struct cpuinfo_x86 *c)
+-{
+-	u32 vmx_msr_low, vmx_msr_high, msr_ctl, msr_ctl2;
+-
+-	rdmsr(MSR_IA32_VMX_PROCBASED_CTLS, vmx_msr_low, vmx_msr_high);
+-	msr_ctl = vmx_msr_high | vmx_msr_low;
+-
+-	if (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_TPR_SHADOW)
+-		set_cpu_cap(c, X86_FEATURE_TPR_SHADOW);
+-	if (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_VNMI)
+-		set_cpu_cap(c, X86_FEATURE_VNMI);
+-	if (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_2ND_CTLS) {
+-		rdmsr(MSR_IA32_VMX_PROCBASED_CTLS2,
+-		      vmx_msr_low, vmx_msr_high);
+-		msr_ctl2 = vmx_msr_high | vmx_msr_low;
+-		if ((msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_VIRT_APIC) &&
+-		    (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_TPR_SHADOW))
+-			set_cpu_cap(c, X86_FEATURE_FLEXPRIORITY);
+-		if (msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_EPT)
+-			set_cpu_cap(c, X86_FEATURE_EPT);
+-		if (msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_VPID)
+-			set_cpu_cap(c, X86_FEATURE_VPID);
+-	}
+-}
+-
+ static void init_centaur(struct cpuinfo_x86 *c)
+ {
+ #ifdef CONFIG_X86_32
+@@ -251,9 +219,6 @@ static void init_centaur(struct cpuinfo_x86 *c)
+ #endif
+ 
+ 	init_ia32_feat_ctl(c);
+-
+-	if (cpu_has(c, X86_FEATURE_VMX))
+-		centaur_detect_vmx_virtcap(c);
+ }
+ 
+ #ifdef CONFIG_X86_32
+diff --git a/arch/x86/kernel/cpu/feat_ctl.c b/arch/x86/kernel/cpu/feat_ctl.c
+index 93268bde662a..9435d82be623 100644
+--- a/arch/x86/kernel/cpu/feat_ctl.c
++++ b/arch/x86/kernel/cpu/feat_ctl.c
+@@ -68,6 +68,20 @@ static void init_vmx_capabilities(struct cpuinfo_x86 *c)
+ 	    (c->vmx_capability[SECONDARY_PROC_CTLS] & F(VIRT_INTR_DELIVERY)) &&
+ 	    (c->vmx_capability[MISC_FEATURES] & F(POSTED_INTR)))
+ 		c->vmx_capability[MISC_FEATURES] |= F(APICV);
 +
-+/*
-+ * Note: If the comment begins with a quoted string, that string is used
-+ * in /proc/cpuinfo instead of the macro name.  If the string is "",
-+ * this feature bit is not displayed in /proc/cpuinfo at all.
-+ */
-+
-+/* Pin-Based VM-Execution Controls, EPT/VPID, APIC and VM-Functions, word 0 */
-+#define VMX_FEATURE_INTR_EXITING	( 0*32+  0) /* "" VM-Exit on vectored interrupts */
-+#define VMX_FEATURE_NMI_EXITING		( 0*32+  3) /* "" VM-Exit on NMIs */
-+#define VMX_FEATURE_VIRTUAL_NMIS	( 0*32+  5) /* NMI virtualization */
-+#define VMX_FEATURE_PREEMPTION_TIMER	( 0*32+  6) /* VMX Preemption Timer */
-+#define VMX_FEATURE_POSTED_INTR		( 0*32+  7) /* Posted Interrupts */
-+
-+/* EPT/VPID features, scattered to bits 16-23 */
-+#define VMX_FEATURE_INVVPID		( 0*32+ 16) /* INVVPID is supported */
-+#define VMX_FEATURE_EPT_EXECUTE_ONLY	( 0*32+ 17) /* "ept_x_only" EPT entries can be execute only */
-+#define VMX_FEATURE_EPT_AD		( 0*32+ 18) /* EPT Accessed/Dirty bits */
-+#define VMX_FEATURE_EPT_1GB		( 0*32+ 19) /* 1GB EPT pages */
-+
-+/* Aggregated APIC features 24-27 */
-+#define VMX_FEATURE_FLEXPRIORITY	( 0*32+ 24) /* TPR shadow + virt APIC */
-+#define VMX_FEATURE_APICV	        ( 0*32+ 25) /* TPR shadow + APIC reg virt + virt intr delivery + posted interrupts */
-+
-+/* VM-Functions, shifted to bits 28-31 */
-+#define VMX_FEATURE_EPTP_SWITCHING	( 0*32+ 28) /* EPTP switching (in guest) */
-+
-+/* Primary Processor-Based VM-Execution Controls, word 1 */
-+#define VMX_FEATURE_VIRTUAL_INTR_PENDING ( 1*32+  2) /* "" VM-Exit if INTRs are unblocked in guest */
-+#define VMX_FEATURE_TSC_OFFSETTING	( 1*32+  3) /* Offset hardware TSC when read in guest */
-+#define VMX_FEATURE_HLT_EXITING		( 1*32+  7) /* "" VM-Exit on HLT */
-+#define VMX_FEATURE_INVLPG_EXITING	( 1*32+  9) /* "" VM-Exit on INVLPG */
-+#define VMX_FEATURE_MWAIT_EXITING	( 1*32+ 10) /* "" VM-Exit on MWAIT */
-+#define VMX_FEATURE_RDPMC_EXITING	( 1*32+ 11) /* "" VM-Exit on RDPMC */
-+#define VMX_FEATURE_RDTSC_EXITING	( 1*32+ 12) /* "" VM-Exit on RDTSC */
-+#define VMX_FEATURE_CR3_LOAD_EXITING	( 1*32+ 15) /* "" VM-Exit on writes to CR3 */
-+#define VMX_FEATURE_CR3_STORE_EXITING	( 1*32+ 16) /* "" VM-Exit on reads from CR3 */
-+#define VMX_FEATURE_CR8_LOAD_EXITING	( 1*32+ 19) /* "" VM-Exit on writes to CR8 */
-+#define VMX_FEATURE_CR8_STORE_EXITING	( 1*32+ 20) /* "" VM-Exit on reads from CR8 */
-+#define VMX_FEATURE_VIRTUAL_TPR		( 1*32+ 21) /* TPR virtualization, a.k.a. TPR shadow */
-+#define VMX_FEATURE_VIRTUAL_NMI_PENDING	( 1*32+ 22) /* "" VM-Exit if NMIs are unblocked in guest */
-+#define VMX_FEATURE_MOV_DR_EXITING	( 1*32+ 23) /* "" VM-Exit on accesses to debug registers */
-+#define VMX_FEATURE_UNCOND_IO_EXITING	( 1*32+ 24) /* "" VM-Exit on *all* IN{S} and OUT{S}*/
-+#define VMX_FEATURE_USE_IO_BITMAPS	( 1*32+ 25) /* "" VM-Exit based on I/O port */
-+#define VMX_FEATURE_MONITOR_TRAP_FLAG	( 1*32+ 27) /* "mtf" VMX single-step VM-Exits */
-+#define VMX_FEATURE_USE_MSR_BITMAPS	( 1*32+ 28) /* "" VM-Exit based on MSR index */
-+#define VMX_FEATURE_MONITOR_EXITING	( 1*32+ 29) /* "" VM-Exit on MONITOR (MWAIT's accomplice) */
-+#define VMX_FEATURE_PAUSE_EXITING	( 1*32+ 30) /* "" VM-Exit on PAUSE (unconditionally) */
-+#define VMX_FEATURE_SEC_CONTROLS	( 1*32+ 31) /* "" Enable Secondary VM-Execution Controls */
-+
-+/* Secondary Processor-Based VM-Execution Controls, word 2 */
-+#define VMX_FEATURE_VIRT_APIC_ACCESSES	( 2*32+  0) /* Virtualize memory mapped APIC accesses */
-+#define VMX_FEATURE_EPT			( 2*32+  1) /* Extended Page Tables, a.k.a. Two-Dimensional Paging */
-+#define VMX_FEATURE_DESC_EXITING	( 2*32+  2) /* "" VM-Exit on {S,L}*DT instructions */
-+#define VMX_FEATURE_RDTSCP		( 2*32+  3) /* "" Enable RDTSCP in guest */
-+#define VMX_FEATURE_VIRTUAL_X2APIC	( 2*32+  4) /* "" Virtualize X2APIC for the guest */
-+#define VMX_FEATURE_VPID		( 2*32+  5) /* Virtual Processor ID (TLB ASID modifier) */
-+#define VMX_FEATURE_WBINVD_EXITING	( 2*32+  6) /* "" VM-Exit on WBINVD */
-+#define VMX_FEATURE_UNRESTRICTED_GUEST	( 2*32+  7) /* Allow Big Real Mode and other "invalid" states */
-+#define VMX_FEATURE_APIC_REGISTER_VIRT	( 2*32+  8) /* Hardware emulation of reads to the virtual-APIC */
-+#define VMX_FEATURE_VIRT_INTR_DELIVERY	( 2*32+  9) /* Evaluation and delivery of pending virtual interrupts */
-+#define VMX_FEATURE_PAUSE_LOOP_EXITING	( 2*32+ 10) /* "ple" Conditionally VM-Exit on PAUSE at CPL0 */
-+#define VMX_FEATURE_RDRAND_EXITING	( 2*32+ 11) /* "" VM-Exit on RDRAND*/
-+#define VMX_FEATURE_INVPCID		( 2*32+ 12) /* "" Enable INVPCID in guest */
-+#define VMX_FEATURE_VMFUNC		( 2*32+ 13) /* "" Enable VM-Functions (leaf dependent) */
-+#define VMX_FEATURE_SHADOW_VMCS		( 2*32+ 14) /* VMREAD/VMWRITE in guest can access shadow VMCS */
-+#define VMX_FEATURE_ENCLS_EXITING	( 2*32+ 15) /* "" VM-Exit on ENCLS (leaf dependent) */
-+#define VMX_FEATURE_RDSEED_EXITING	( 2*32+ 16) /* "" VM-Exit on RDSEED */
-+#define VMX_FEATURE_PAGE_MOD_LOGGING	( 2*32+ 17) /* "pml" Log dirty pages into buffer */
-+#define VMX_FEATURE_EPT_VIOLATION_VE	( 2*32+ 18) /* "" Conditionally reflect EPT violations as #VE exceptions */
-+#define VMX_FEATURE_PT_CONCEAL_VMX	( 2*32+ 19) /* "" Suppress VMX indicators in Processor Trace */
-+#define VMX_FEATURE_XSAVES		( 2*32+ 20) /* "" Enable XSAVES and XRSTORS in guest */
-+#define VMX_FEATURE_MODE_BASED_EPT_EXEC	( 2*32+ 22) /* Enable separate EPT EXEC bits for supervisor vs. user */
-+#define VMX_FEATURE_PT_USE_GPA		( 2*32+ 24) /* "" Processor Trace logs GPAs */
-+#define VMX_FEATURE_TSC_SCALING		( 2*32+ 25) /* Scale hardware TSC when read in guest */
-+#define VMX_FEATURE_ENCLV_EXITING	( 2*32+ 28) /* "" VM-Exit on ENCLV (leaf dependent) */
-+
-+#endif /* _ASM_X86_VMXFEATURES_H */
++	/* Set the synthetic cpufeatures to preserve /proc/cpuinfo's ABI. */
++	if (c->vmx_capability[PRIMARY_PROC_CTLS] & F(VIRTUAL_TPR))
++		set_cpu_cap(c, X86_FEATURE_TPR_SHADOW);
++	if (c->vmx_capability[MISC_FEATURES] & F(FLEXPRIORITY))
++		set_cpu_cap(c, X86_FEATURE_FLEXPRIORITY);
++	if (c->vmx_capability[MISC_FEATURES] & F(VIRTUAL_NMIS))
++		set_cpu_cap(c, X86_FEATURE_VNMI);
++	if (c->vmx_capability[SECONDARY_PROC_CTLS] & F(EPT))
++		set_cpu_cap(c, X86_FEATURE_EPT);
++	if (c->vmx_capability[MISC_FEATURES] & F(EPT_AD))
++		set_cpu_cap(c, X86_FEATURE_EPT_AD);
++	if (c->vmx_capability[MISC_FEATURES] & F(VPID))
++		set_cpu_cap(c, X86_FEATURE_VPID);
+ }
+ #endif /* CONFIG_X86_VMX_FEATURE_NAMES */
+ 
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 9129c170ea11..57473e2c0869 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -494,52 +494,6 @@ static void srat_detect_node(struct cpuinfo_x86 *c)
+ #endif
+ }
+ 
+-static void detect_vmx_virtcap(struct cpuinfo_x86 *c)
+-{
+-	/* Intel VMX MSR indicated features */
+-#define X86_VMX_FEATURE_PROC_CTLS_TPR_SHADOW	0x00200000
+-#define X86_VMX_FEATURE_PROC_CTLS_VNMI		0x00400000
+-#define X86_VMX_FEATURE_PROC_CTLS_2ND_CTLS	0x80000000
+-#define X86_VMX_FEATURE_PROC_CTLS2_VIRT_APIC	0x00000001
+-#define X86_VMX_FEATURE_PROC_CTLS2_EPT		0x00000002
+-#define X86_VMX_FEATURE_PROC_CTLS2_VPID		0x00000020
+-#define x86_VMX_FEATURE_EPT_CAP_AD		0x00200000
+-
+-	u32 vmx_msr_low, vmx_msr_high, msr_ctl, msr_ctl2;
+-	u32 msr_vpid_cap, msr_ept_cap;
+-
+-	clear_cpu_cap(c, X86_FEATURE_TPR_SHADOW);
+-	clear_cpu_cap(c, X86_FEATURE_VNMI);
+-	clear_cpu_cap(c, X86_FEATURE_FLEXPRIORITY);
+-	clear_cpu_cap(c, X86_FEATURE_EPT);
+-	clear_cpu_cap(c, X86_FEATURE_VPID);
+-	clear_cpu_cap(c, X86_FEATURE_EPT_AD);
+-
+-	rdmsr(MSR_IA32_VMX_PROCBASED_CTLS, vmx_msr_low, vmx_msr_high);
+-	msr_ctl = vmx_msr_high | vmx_msr_low;
+-	if (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_TPR_SHADOW)
+-		set_cpu_cap(c, X86_FEATURE_TPR_SHADOW);
+-	if (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_VNMI)
+-		set_cpu_cap(c, X86_FEATURE_VNMI);
+-	if (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_2ND_CTLS) {
+-		rdmsr(MSR_IA32_VMX_PROCBASED_CTLS2,
+-		      vmx_msr_low, vmx_msr_high);
+-		msr_ctl2 = vmx_msr_high | vmx_msr_low;
+-		if ((msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_VIRT_APIC) &&
+-		    (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_TPR_SHADOW))
+-			set_cpu_cap(c, X86_FEATURE_FLEXPRIORITY);
+-		if (msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_EPT) {
+-			set_cpu_cap(c, X86_FEATURE_EPT);
+-			rdmsr(MSR_IA32_VMX_EPT_VPID_CAP,
+-			      msr_ept_cap, msr_vpid_cap);
+-			if (msr_ept_cap & x86_VMX_FEATURE_EPT_CAP_AD)
+-				set_cpu_cap(c, X86_FEATURE_EPT_AD);
+-		}
+-		if (msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_VPID)
+-			set_cpu_cap(c, X86_FEATURE_VPID);
+-	}
+-}
+-
+ #define MSR_IA32_TME_ACTIVATE		0x982
+ 
+ /* Helpers to access TME_ACTIVATE MSR */
+@@ -757,9 +711,6 @@ static void init_intel(struct cpuinfo_x86 *c)
+ 
+ 	init_ia32_feat_ctl(c);
+ 
+-	if (cpu_has(c, X86_FEATURE_VMX))
+-		detect_vmx_virtcap(c);
+-
+ 	if (cpu_has(c, X86_FEATURE_TME))
+ 		detect_tme(c);
+ 
+diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
+index 630a1450ea70..6b2d3b0a63e6 100644
+--- a/arch/x86/kernel/cpu/zhaoxin.c
++++ b/arch/x86/kernel/cpu/zhaoxin.c
+@@ -16,13 +16,6 @@
+ #define RNG_ENABLED	(1 << 3)
+ #define RNG_ENABLE	(1 << 8)	/* MSR_ZHAOXIN_RNG */
+ 
+-#define X86_VMX_FEATURE_PROC_CTLS_TPR_SHADOW	0x00200000
+-#define X86_VMX_FEATURE_PROC_CTLS_VNMI		0x00400000
+-#define X86_VMX_FEATURE_PROC_CTLS_2ND_CTLS	0x80000000
+-#define X86_VMX_FEATURE_PROC_CTLS2_VIRT_APIC	0x00000001
+-#define X86_VMX_FEATURE_PROC_CTLS2_EPT		0x00000002
+-#define X86_VMX_FEATURE_PROC_CTLS2_VPID		0x00000020
+-
+ static void init_zhaoxin_cap(struct cpuinfo_x86 *c)
+ {
+ 	u32  lo, hi;
+@@ -89,31 +82,6 @@ static void early_init_zhaoxin(struct cpuinfo_x86 *c)
+ 
+ }
+ 
+-static void zhaoxin_detect_vmx_virtcap(struct cpuinfo_x86 *c)
+-{
+-	u32 vmx_msr_low, vmx_msr_high, msr_ctl, msr_ctl2;
+-
+-	rdmsr(MSR_IA32_VMX_PROCBASED_CTLS, vmx_msr_low, vmx_msr_high);
+-	msr_ctl = vmx_msr_high | vmx_msr_low;
+-
+-	if (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_TPR_SHADOW)
+-		set_cpu_cap(c, X86_FEATURE_TPR_SHADOW);
+-	if (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_VNMI)
+-		set_cpu_cap(c, X86_FEATURE_VNMI);
+-	if (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_2ND_CTLS) {
+-		rdmsr(MSR_IA32_VMX_PROCBASED_CTLS2,
+-		      vmx_msr_low, vmx_msr_high);
+-		msr_ctl2 = vmx_msr_high | vmx_msr_low;
+-		if ((msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_VIRT_APIC) &&
+-		    (msr_ctl & X86_VMX_FEATURE_PROC_CTLS_TPR_SHADOW))
+-			set_cpu_cap(c, X86_FEATURE_FLEXPRIORITY);
+-		if (msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_EPT)
+-			set_cpu_cap(c, X86_FEATURE_EPT);
+-		if (msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_VPID)
+-			set_cpu_cap(c, X86_FEATURE_VPID);
+-	}
+-}
+-
+ static void init_zhaoxin(struct cpuinfo_x86 *c)
+ {
+ 	early_init_zhaoxin(c);
+@@ -142,9 +110,6 @@ static void init_zhaoxin(struct cpuinfo_x86 *c)
+ #endif
+ 
+ 	init_ia32_feat_ctl(c);
+-
+-	if (cpu_has(c, X86_FEATURE_VMX))
+-		zhaoxin_detect_vmx_virtcap(c);
+ }
+ 
+ #ifdef CONFIG_X86_32
 -- 
 2.24.0
 
