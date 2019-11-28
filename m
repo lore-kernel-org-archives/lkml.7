@@ -2,147 +2,102 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1A6C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B8CC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E6F2080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:06:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="EJ6mTm1/"
+	by mail.kernel.org (Postfix) with ESMTP id 9E32C206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfK1DG4 (ORCPT
+        id S1727636AbfK1DJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 22:06:56 -0500
-Received: from vps.xff.cz ([195.181.215.36]:35758 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727088AbfK1DGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 22:06:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1574910414; bh=s0u7Q5tCoSp3oxGSwaQ6izZaVYzIABS3Gf4oK5gp2yU=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=EJ6mTm1/QSIj38AlCpaIu9dxOOeQ2Z1nlrGPfD1zFEvciSHY1yBzlpO3QM1y9NjgR
-         KS5/RS7PPDNcmYlcu/biPoRkj1E95jMk6VJZmGT79Gty4wlY7WVBmgMlTHaeQNWnrB
-         OQOLgbyXx+HWhDpWjzfGcHLi/22e1f+rGS2+4F2E=
-Date:   Thu, 28 Nov 2019 04:06:53 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Yong <yong.deng@magewell.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:CSI DRIVERS FOR ALLWINNER V3s" 
-        <linux-media@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [linux-sunxi] [PATCH] media: sun6i-csi: Fix incorrect
- HSYNC/VSYNC/PCLK polarity configuration
-Message-ID: <20191128030653.5fhcolvib6tzf4zc@core.my.home>
-Mail-Followup-To: Yong <yong.deng@magewell.com>,
-        linux-sunxi@googlegroups.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        "open list:CSI DRIVERS FOR ALLWINNER V3s" <linux-media@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191128020259.1338188-1-megous@megous.com>
- <20191128102608.035cbb996c8681a6fb035336@magewell.com>
+        Wed, 27 Nov 2019 22:09:21 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52262 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727088AbfK1DJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 22:09:21 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CCF043E07834170A7368;
+        Thu, 28 Nov 2019 11:09:18 +0800 (CST)
+Received: from huawei.com (10.175.105.18) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 28 Nov 2019
+ 11:09:08 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <maz@kernel.org>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <james.morse@arm.com>, <julien.thierry.kdev@gmail.com>,
+        <suzuki.poulose@arm.com>, <christoffer.dall@arm.com>,
+        <catalin.marinas@arm.com>, <eric.auger@redhat.com>,
+        <gregkh@linuxfoundation.org>, <will@kernel.org>,
+        <andre.przywara@arm.com>, <tglx@linutronix.de>
+CC:     <linmiaohe@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>
+Subject: [PATCH] KVM: vgic: Use warpper function to lock/unlock all vcpus in kvm_vgic_create()
+Date:   Thu, 28 Nov 2019 11:09:11 +0800
+Message-ID: <1574910551-14351-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128102608.035cbb996c8681a6fb035336@magewell.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Type: text/plain
+X-Originating-IP: [10.175.105.18]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-On Thu, Nov 28, 2019 at 10:26:08AM +0800, Yong wrote:
-> Hi Ondrej,
-> 
-> This has been discussed.
-> And Maxime sent a patch for this: 
-> https://www.mail-archive.com/linux-media@vger.kernel.org/msg127149.html
+Use warpper function lock_all_vcpus()/unlock_all_vcpus()
+in kvm_vgic_create() to remove duplicated code dealing
+with locking and unlocking all vcpus in a vm.
 
-Thanks for pointing to the previous patch. But that patch doesn't make any
-sense, and breaks things for me, and doesn't even match BSP code, which 
-has no such reversal, and works fine with about 30 cam drivers.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ virt/kvm/arm/vgic/vgic-init.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-Also how do you explain my findings?
+diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+index b3c5de48064c..53e3969dfb52 100644
+--- a/virt/kvm/arm/vgic/vgic-init.c
++++ b/virt/kvm/arm/vgic/vgic-init.c
+@@ -70,7 +70,7 @@ void kvm_vgic_early_init(struct kvm *kvm)
+  */
+ int kvm_vgic_create(struct kvm *kvm, u32 type)
+ {
+-	int i, vcpu_lock_idx = -1, ret;
++	int i, ret;
+ 	struct kvm_vcpu *vcpu;
+ 
+ 	if (irqchip_in_kernel(kvm))
+@@ -92,11 +92,8 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
+ 	 * that no other VCPUs are run while we create the vgic.
+ 	 */
+ 	ret = -EBUSY;
+-	kvm_for_each_vcpu(i, vcpu, kvm) {
+-		if (!mutex_trylock(&vcpu->mutex))
+-			goto out_unlock;
+-		vcpu_lock_idx = i;
+-	}
++	if (!lock_all_vcpus(kvm))
++		return ret;
+ 
+ 	kvm_for_each_vcpu(i, vcpu, kvm) {
+ 		if (vcpu->arch.has_run_once)
+@@ -125,10 +122,7 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
+ 		INIT_LIST_HEAD(&kvm->arch.vgic.rd_regions);
+ 
+ out_unlock:
+-	for (; vcpu_lock_idx >= 0; vcpu_lock_idx--) {
+-		vcpu = kvm_get_vcpu(kvm, vcpu_lock_idx);
+-		mutex_unlock(&vcpu->mutex);
+-	}
++	unlock_all_vcpus(kvm);
+ 	return ret;
+ }
+ 
+-- 
+2.19.1
 
-My camera is sending correct signals, verified by looking at them actually (see
-below), and CSI is not receiving the image. I have to flip HSYNC/VSYNC to be
-oposite of that what CSI driver expects and I get a noisy image and if I fix
-PCLK polarity too, the noise goes away, which means now I'm also sampling when
-the data are stable and not when they're changing.
-
-Here: (output from my cam, that I configured to have VSYNC ACTIVE LOW, HSYNC
-ACTIVE LOW) And the signal is clearly that, as you can see yourself:
-
-  https://megous.com/dl/tmp/98df81b7ed0126ec.png
-
-The above signals are received with CSI driver configured with
-V4L2_MBUS_VSYNC_ACTIVE_HIGH V4L2_MBUS_HSYNC_ACTIVE_HIGH. So CSI driver is
-clearly wrong.
-
-I think this is pretty clear the driver is buggy. At least for A83T SoC.
-
-I'm not sure what Maxime found out, but he should probably re-check his
-findings. Maxime, can you comment on this?
-
-regards,
-	o.
-
-> On Thu, 28 Nov 2019 03:02:59 +0100
-> Ondrej Jirman <megous@megous.com> wrote:
-> 
-> > This was discovered by writing a new camera driver and wondering, why
-> > hsync/vsync polarity setting behaves in reverse to what would be
-> > expected. Verified by looking at the actual signals and the SoC
-> > user manual.
-> > 
-> > Fixes: 5cc7522d8965 ("media: sun6i: Add support for Allwinner CSI V3s")
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > index f17e5550602d..98bbcca59a90 100644
-> > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > @@ -417,12 +417,12 @@ static void sun6i_csi_setup_bus(struct sun6i_csi_dev *sdev)
-> >  		if (flags & V4L2_MBUS_FIELD_EVEN_LOW)
-> >  			cfg |= CSI_IF_CFG_FIELD_POSITIVE;
-> >  
-> > -		if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
-> > +		if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-> >  			cfg |= CSI_IF_CFG_VREF_POL_POSITIVE;
-> > -		if (flags & V4L2_MBUS_HSYNC_ACTIVE_LOW)
-> > +		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-> >  			cfg |= CSI_IF_CFG_HREF_POL_POSITIVE;
-> >  
-> > -		if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-> > +		if (flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
-> >  			cfg |= CSI_IF_CFG_CLK_POL_FALLING_EDGE;
-> >  		break;
-> >  	case V4L2_MBUS_BT656:
-> > -- 
-> > 2.24.0
-> > 
-> > -- 
-> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191128020259.1338188-1-megous%40megous.com.
-> 
-> 
-> Thanks,
-> Yong
