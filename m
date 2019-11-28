@@ -2,109 +2,137 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F9BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A160CC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADA921741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED932176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:59:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="h88ZzfyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfK1H40 (ORCPT
+        id S1727150AbfK1H70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 02:56:26 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40286 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfK1H40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 02:56:26 -0500
-Received: by mail-ot1-f67.google.com with SMTP id m15so21495833otq.7;
-        Wed, 27 Nov 2019 23:56:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o3hCFZ6+p7EcgiW/0t4v3r/wkobHJ7w7wfnwP0j/QsY=;
-        b=oFOuDCf2DUITMvlZdmvI0Dt0LDxmt7sY5Auey8e+wkABYGATVCM74L79XbF9R9gyj+
-         njFrpiUB2ZDF1cL26lSAhJFD13Zl8+vDp8WqDPUYqN0P8Q4+wO4veaEH239ZPoZ/tx8k
-         BbAtU1X4hJwqOhWfC5TypkFE8IJV9EGcEbHLybNmS7jdPsa0g1TmLMqQxPvmhfmLqVeA
-         khpbYuftCRBWJK7b5GAVlI0qnlV6doCxCZFYDnp4/MuAKLB7MBRn8IvMOlyJMNRxFPc6
-         EwSbsDYfRKUe6I30zKijDZbM+i2s+Z0/4qDmE7wnOVdl4yA3IWUaYCT1zW3kC4Qe1ZnF
-         bc1Q==
-X-Gm-Message-State: APjAAAWhoESBL8JdtBRJNeaeN2Ojj0UI/2dSUefqjBbgAzoabZSgsQ4M
-        aZu2v9k+yZn+UoQH7uVzxxn6GQMQYnD6W1hvvT69mA==
-X-Google-Smtp-Source: APXvYqwqkh/+m7CvwkKLpgmQVtVdyb2UFLRo1oNsNbjJ4rhfL6gGn9lIs/GN0Fr5g34/udViAXGDfuOsZi8Slv5+ukw=
-X-Received: by 2002:a9d:5d10:: with SMTP id b16mr1438412oti.250.1574927785474;
- Wed, 27 Nov 2019 23:56:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20191113100556.15616-1-jacopo+renesas@jmondi.org> <20191113100556.15616-4-jacopo+renesas@jmondi.org>
-In-Reply-To: <20191113100556.15616-4-jacopo+renesas@jmondi.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 28 Nov 2019 08:56:14 +0100
-Message-ID: <CAMuHMdWS2bv=RhQ3y5gNzZFT6CeH-a+h7xc6KYvcv0Anht6zGw@mail.gmail.com>
-Subject: Re: [PATCH v7 3/7] drm: rcar-du: Add support for CMM
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 28 Nov 2019 02:59:26 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:47533 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726301AbfK1H70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 02:59:26 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47NqmB61v1z9ty0T;
+        Thu, 28 Nov 2019 08:59:22 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=h88ZzfyI; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id meBSBU5K6WRx; Thu, 28 Nov 2019 08:59:22 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47NqmB4d1Yz9ty0S;
+        Thu, 28 Nov 2019 08:59:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1574927962; bh=bXxBztW5NEcHfvFNCgqAzNMfqGx5TH9U7oF6whJQF44=;
+        h=From:Subject:To:Cc:Date:From;
+        b=h88ZzfyIM3y2pWCdwKDLZXeCeqTWRUg/ucdcwBiNtflSw4vAx0L/7nCQeIsm4pOUR
+         TVGilhkXGftoi+AQt7TR8rpSrtlRmzskFP7OSitGbN5xWW/oZCJjBzCsQVbqmd5RMQ
+         7p6Nrb5VcZiQm5HmRUcnyKX72wZd8XpwOAX1/Oak=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 605FA8B877;
+        Thu, 28 Nov 2019 08:59:23 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Sln_taC7m6WY; Thu, 28 Nov 2019 08:59:23 +0100 (CET)
+Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.103])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 468028B767;
+        Thu, 28 Nov 2019 08:59:23 +0100 (CET)
+Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 0F69C6B81B; Thu, 28 Nov 2019 07:59:22 +0000 (UTC)
+Message-Id: <d42fa9747df5afa41e67b08e374c98d3b40529c9.1574927918.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/fixmap: fix crash with HIGHMEM
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 28 Nov 2019 07:59:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+Commit f2bb86937d86 ("powerpc/fixmap: don't clear fixmap area in
+paging_init()") removed the clearing of fixmap area in order to
+avoid clearing fixmapped areas set earlier.
 
-On Wed, Nov 13, 2019 at 11:04 AM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Add a driver for the R-Car Display Unit Color Correction Module.
-> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
-> to perform image enhancement and color correction.
->
-> Add support for CMM through a driver that supports configuration of
-> the 1-dimensional LUT table. More advanced CMM features will be
-> implemented on top of this initial one.
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+However unlike all other users of fixmap which use __set_fixmap(),
+HIGHMEM functions directly use __set_pte_at(). This means
+the page table must pre-exist, otherwise the following crash
+can be encoutered due to the lack of entry in the PGD.
 
-> --- a/drivers/gpu/drm/rcar-du/Kconfig
-> +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> @@ -5,6 +5,7 @@ config DRM_RCAR_DU
->         depends on ARM || ARM64
->         depends on ARCH_RENESAS || COMPILE_TEST
->         imply DRM_RCAR_LVDS
-> +       imply DRM_RCAR_CMM
->         select DRM_KMS_HELPER
->         select DRM_KMS_CMA_HELPER
->         select DRM_GEM_CMA_HELPER
-> @@ -13,6 +14,13 @@ config DRM_RCAR_DU
->           Choose this option if you have an R-Car chipset.
->           If M is selected the module will be called rcar-du-drm.
->
-> +config DRM_RCAR_CMM
-> +       tristate "R-Car DU Color Management Module (CMM) Support"
-> +       depends on DRM && OF
-> +       depends on DRM_RCAR_DU
+Oops: Kernel access of bad area, sig: 11 [#1]
+BE PAGE_SIZE=4K MMU=Hash PowerMac
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0+ #2528
+NIP:  c0144ce8 LR: c0144ccc CTR: 00000080
+REGS: ef0b5aa0 TRAP: 0300   Not tainted  (5.4.0+)
+MSR:  00009032 <EE,ME,IR,DR,RI>  CR: 44282842  XER: 00000000
+DAR: fffdf000 DSISR: 42000000
+GPR00: c0144ccc ef0b5b58 ef0b0000 fffdf000 fffdf000 00000000 c0000f7c 00000000
+GPR08: c0833000 fffdf000 00000000 ef1c53c9 24042842 00000000 00000000 00000000
+GPR16: 00000000 00000000 ef7e7358 effe8160 00000000 c08a9660 c0851644 00000004
+GPR24: c08c70a8 00002dc2 00000000 00000001 00000201 effe8160 effe8160 00000000
+NIP [c0144ce8] prep_new_page+0x138/0x178
+LR [c0144ccc] prep_new_page+0x11c/0x178
+Call Trace:
+[ef0b5b58] [c0144ccc] prep_new_page+0x11c/0x178 (unreliable)
+[ef0b5b88] [c0147218] get_page_from_freelist+0x1fc/0xd88
+[ef0b5c38] [c0148328] __alloc_pages_nodemask+0xd4/0xbb4
+[ef0b5cf8] [c0142ba8] __vmalloc_node_range+0x1b4/0x2e0
+[ef0b5d38] [c0142dd0] vzalloc+0x48/0x58
+[ef0b5d58] [c0301c8c] check_partition+0x58/0x244
+[ef0b5d78] [c02ffe80] blk_add_partitions+0x44/0x2cc
+[ef0b5db8] [c01a32d8] bdev_disk_changed+0x68/0xfc
+[ef0b5de8] [c01a4494] __blkdev_get+0x290/0x460
+[ef0b5e28] [c02fdd40] __device_add_disk+0x480/0x4d8
+[ef0b5e68] [c0810688] brd_init+0xc0/0x188
+[ef0b5e88] [c0005194] do_one_initcall+0x40/0x19c
+[ef0b5ee8] [c07dd4dc] kernel_init_freeable+0x164/0x230
+[ef0b5f28] [c0005408] kernel_init+0x18/0x10c
+[ef0b5f38] [c0014274] ret_from_kernel_thread+0x14/0x1c
 
-DRM_RCAR_DU already depends on DRM && OF, so the line above
-can be removed.
+Partially revert that commit to still clear the fixmap area dedicated
+to HIGHMEM.
 
-Gr{oetje,eeting}s,
+Fixes: f2bb86937d86 ("powerpc/fixmap: don't clear fixmap area in paging_init()")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/mm/mem.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-                        Geert
-
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index a39e6408bbc5..ad299e72ec30 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -239,6 +239,12 @@ void __init paging_init(void)
+ 	phys_addr_t top_of_ram = memblock_end_of_DRAM();
+ 
+ #ifdef CONFIG_HIGHMEM
++	unsigned long v = __fix_to_virt(FIX_KMAP_END);
++	unsigned long end = __fix_to_virt(FIX_KMAP_BEGIN);
++
++	for (; v < end; v += PAGE_SIZE)
++		map_kernel_page(v, 0, __pgprot(0)); /* XXX gross */
++
+ 	map_kernel_page(PKMAP_BASE, 0, __pgprot(0));	/* XXX gross */
+ 	pkmap_page_table = virt_to_kpte(PKMAP_BASE);
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.13.3
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
