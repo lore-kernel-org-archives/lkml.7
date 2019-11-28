@@ -2,174 +2,142 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E65C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D22C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C890321846
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911AF20880
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:59:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ECzHCdVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfK1WvD (ORCPT
+        id S1726656AbfK1W7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 17:51:03 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63649 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbfK1WvC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 17:51:02 -0500
-Received: from 79.184.255.242.ipv4.supernova.orange.pl (79.184.255.242) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 5936317b2e2d446d; Thu, 28 Nov 2019 23:51:00 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     "Kenneth R. Crudup" <kenny@panix.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] ACPI: EC: Rework flushing of pending work
-Date:   Thu, 28 Nov 2019 23:47:51 +0100
-Message-ID: <5947679.MAvhsAmGqv@kreacher>
-In-Reply-To: <2787005.CsmIKtZlk9@kreacher>
-References: <2787005.CsmIKtZlk9@kreacher>
+        Thu, 28 Nov 2019 17:59:54 -0500
+Received: from mout.web.de ([212.227.15.3]:42843 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbfK1W7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 17:59:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1574981980;
+        bh=EvEfm6y/RB5YckvRo/5+L6OhoAw+x433Z/iu5wl68Pc=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=ECzHCdVK8KEUyJtqZfSrrZ5rMAtWX3SXgA7dsUO7RQnH+R2aRMLB+bBZpeGDyeK99
+         4ZVrDNHAQIW5cWGZRGvXZ//9OeKLiD2G1naPwu4sXD1PnxoEvZsjvYhFzSBKZH6+x8
+         VImnQiStQr+/dzVtdkkAz58VQAZRug68v1MOy/OE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.43.108] ([89.204.139.119]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LZvrx-1hwDzy32eD-00ll8L; Thu, 28
+ Nov 2019 23:59:39 +0100
+Subject: Re: [PATCH v2] arm64: dts: rockchip: split rk3399-rockpro64, for v2
+ and v2.1 boards
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        linux-rockchip@lists.infradead.org,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Hugh Cole-Baker <sigmaris@gmail.com>
+References: <3fa2e3df-221b-99a8-796a-2e21f75cf706@web.de>
+ <9133677.cKcSbgiQdr@phil>
+From:   Soeren Moch <smoch@web.de>
+Message-ID: <f6dc3daf-7cfb-0ac2-99ee-1c691eaf2ef0@web.de>
+Date:   Thu, 28 Nov 2019 23:59:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <9133677.cKcSbgiQdr@phil>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:GTMg10fwIdQgUypiLStUkuDQaNnuemDGISy4kPeso8Aml2Yiy3J
+ XtmDMK1Ck9OCIgB4gsvXpwluyfHEvVL6odI13iVUGcJkp8gIKMkbhpmj22h0kwTZ0gpG1iQ
+ hwb/wytSRQ4Fv3jJZaoAPEiNtYb7IWNr/qszbQWVTWnWM+BcdH7Wf2IQ39U68XlEdl1lWJg
+ JrMLLTWCDs1r/aF2CwWNA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tNqU8rJXfoE=:L/TF0Z0VappKZaTu5kUmcC
+ Y3w/seh85+uHhb3ZXodgr/DvZRVReMe09Nyb+V+oyWBETEvRbbL++HbPRFpk4M4XMUdjf76t+
+ pz1C0ILVqt/+8MFw+sP/Us5zWWdxDhPHQJA00ax2196FxN/9PYQwaeCBu6oA44P3f2WMxMQ1p
+ myRG9gtl3lGk4QLJcH2avmBUJAWuTpcOQcRbz3sbgN9acOTXVoxC04USTcUUmFz3d4ufnJIOi
+ WBklHLLxWVP0o8agZ+MYDxcX+thhsFnvzm+w7ofrdly7xfv/Jbi4Mf86fdStI4zS0x184dYC3
+ y+JwBVbNewVz/+iXUhc1bHdocbk6vdP78ZHLl5Oevgd/t/+ATFhV96y0i26KnXRk/IGb0s7+X
+ qAMUYXcA9XdpG1W7YWybCRpgzklqAXW1l6a8GqDqaPzIoow4mZN9SNNXU1dUdpS4JoPDh0Go0
+ HLuVQPgr3mVe02rFsa2NAyAskoaeQO/XB10r8DqOwejooToermq3y0t13+f642w8L4iJO/oqw
+ maqIFEsGkpGFDgcZlYiC6/XRqFlSLhJ+jylXXsCxKOiyBU9Bzz32OYXejcGRfGQJxo5V+RF51
+ 2VSMynG3lG0f7iaI2FAogltuzCLzzGGCOXgQSX6DMhTDeSUZ5wuHPkQfCdsjBsrKp8RmEM2D9
+ ebM0azGWsik6XZh1ecCcDCg+G/DcI//khthFQCPCaE0RF3CBNfB/zFwMJYxC+nRkTAbXyzKBE
+ 1cTWCWfH9usk5q3EW54j/GVBXhIM0q9ZmggCtTvINVDyVG80Z60x6Py4ZwcPYPcEcHPM2wC/3
+ JtY8UtwMgHW5ObswoItIU4+IOEnk5lWpb8nAZdksuSoochBX4fT/bHHGclCGZv9xOVlesslVV
+ 35DaV5YDxVxyBYczKnf2wrnXNbyD2FyHDUJvRYA6lqesBPipVlsFvxbvxdlaK+Kx0jWXBl0/I
+ OPRImOfES5z49bbvgkCBixNUvVM3muvShFLz6c3k6nbknNTKZzTLEHUCvFM5f2E38z3WRmedm
+ PYQyDHtQL0M8+gbDS0YrFMZjDrrsUakq9vfchxmRNn8ol0PooEArQ0ahHc1dzrgZfN5uTQQXC
+ hXI7+kLzgGOJCaPZw46Mitg+fP+Z7jgPo1YIl5UPksBeMiZz/xkwE5Sq07iQDM6WnU+62ly4f
+ sarMThs25UovzQSHKseDrDgV3OHbButJ1PBfF5GfiP9KVGSkbKZM+ygvLU+NvCD2WJOuPNUNK
+ Gn6ERpHWFPHsd+wlg855oiXLLJu5BCKDhIs0coA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 28.11.19 22:53, Heiko Stuebner wrote:
+> Am Donnerstag, 28. November 2019, 20:55:54 CET schrieb Soeren Moch:
+>>> On Thu, Nov 28, 2019 at 6:02 AM Katsuhiro Suzuki
+>>> <katsuhiro@katsuster.net> wrote:
+>>>> This patch splits rk3399-rockpro64 dts file to 2 files for v2 and
+>>>> v2.1 boards.
+>>>>
+>>>> Both v2 and v2.1 boards can use almost same settings but we find a
+>>>> difference in I2C address of audio CODEC ES8136.
+>>>>
+>>>> Reported-by: Vasily Khoruzhick <anarsoul@gmail.com>
+>>>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>>>>
+>>>> ---
+> [...]
+>
+>>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
+>>>> new file mode 100644
+>>>> index 000000000000..183eda4ffb9c
+>>>> --- /dev/null
+>> If we add this as new file, should we sort handles and properties
+>> alphabetically, where it is not done yet?
+> I'm torn here ... on one side, doing missing sorting might be nice
+> on the other hand, there is the moving without functional changes
+> paradigm, which is generally nice to adhere to.
+Agreed. Since we don't move a file, but most of it's content, it was not
+clear to me what's more important.
+>
+> But I guess sorting would generally be ok.
+>
+>> I'm not sure about all the exceptions that usually apply for rockchip
+>> devicetrees, status property at the end, also the pinctrl node?
+> In general I don't "enforce" the sorting, so don't reject patches but instead
+> just do sorting myself if necessary ;-).
+>
+> The general rule-of-thumb for nodes we came up with during the rk3288-veyron
+> era is something like:
+>
+> compatible
+> reg
+> interrupts
+> [alphabetical properties]
+> status
+>
+> as this makes it somewhat easier to parse the core properties (compatible,
+> reg, ints, status] when scrolling through a devicetree :-) .
+Thanks for your explanation, perfectly makes sense.
+>
+> Pinctrl position is at the discretion of the dt author :-D .
+> Position at the end has just the advantage that a long pin-group list does
+> not get in the way so much.
+>
+>> What about unused references, e.g. "fan"?
+> Don't change too much when moving stuff around :-)
+Yes, good compromise to do some sorting, but no other changes.
 
-There is a race condition in the ACPI EC driver, between
-__acpi_ec_flush_event() and acpi_ec_event_handler(), that may
-cause systems to stay in suspended-to-idle forever after a wakeup
-event coming from the EC.
-
-Namely, acpi_s2idle_wake() calls acpi_ec_flush_work() to wait until
-the delayed work resulting from the handling of the EC GPE in
-acpi_ec_dispatch_gpe() is processed, and that function invokes
-__acpi_ec_flush_event() which uses wait_event() to wait for
-ec->nr_pending_queries to become zero on ec->wait, and that wait
-queue may be woken up too early.
-
-Suppose that acpi_ec_dispatch_gpe() has caused acpi_ec_gpe_handler()
-to run, so advance_transaction() has been called and it has invoked
-acpi_ec_submit_query() to queue up an event work item, so
-ec->nr_pending_queries has been incremented (under ec->lock).  The
-work function of that work item, acpi_ec_event_handler() runs later
-and calls acpi_ec_query() to process the event.  That function calls
-acpi_ec_transaction() which invokes acpi_ec_transaction_unlocked()
-and the latter wakes up ec->wait under ec->lock, but it drops that
-lock before returning.
-
-When acpi_ec_query() returns, acpi_ec_event_handler() acquires
-ec->lock and decrements ec->nr_pending_queries, but at that point
-__acpi_ec_flush_event() (woken up previously) may already have
-acquired ec->lock, checked the value of ec->nr_pending_queries (and
-it would not have been zero then) and decided to go back to sleep.
-Next, if ec->nr_pending_queries is equal to zero now, the loop
-in acpi_ec_event_handler() terminates, ec->lock is released and
-acpi_ec_check_event() is called, but it does nothing unless
-ec_event_clearing is equal to ACPI_EC_EVT_TIMING_EVENT (which is
-not the case by default).  In the end, if no more event work items
-have been queued up while executing acpi_ec_transaction_unlocked(),
-there is nothing to wake up __acpi_ec_flush_event() again and it
-sleeps forever, so the suspend-to-idle loop cannot make progress and
-the system is permanently suspended.
-
-To avoid this issue, notice that it actually is not necessary to
-wait for ec->nr_pending_queries to become zero in every case in
-which __acpi_ec_flush_event() is used.
-
-First, during platform-based system suspend (not suspend-to-idle),
-__acpi_ec_flush_event() is called by acpi_ec_disable_event() after
-clearing the EC_FLAGS_QUERY_ENABLED flag, which prevents
-acpi_ec_submit_query() from submitting any new event work items,
-so calling flush_scheduled_work() and flushing ec_query_wq
-subsequently (in order to wait until all of the queries in that
-queue have been processed) would be sufficient to flush all of
-the pending EC work in that case.
-
-Second, the purpose of the flushing of pending EC work while
-suspended-to-idle described above really is to wait until the
-first event work item coming from acpi_ec_dispatch_gpe() is
-complete, because it should produce system wakeup events if
-that is a valid EC-based system wakeup, so calling
-flush_scheduled_work() followed by flushing ec_query_wq is also
-sufficient for that purpose.
-
-Rework the code to follow the above observations.
-
-Fixes: 56b9918490 ("PM: sleep: Simplify suspend-to-idle control flow")
-Reported-by: Kenneth R. Crudup <kenny@panix.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/ec.c |   36 +++++++++++++-----------------------
- 1 file changed, 13 insertions(+), 23 deletions(-)
-
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -525,26 +525,10 @@ static void acpi_ec_enable_event(struct
- }
- 
- #ifdef CONFIG_PM_SLEEP
--static bool acpi_ec_query_flushed(struct acpi_ec *ec)
-+static void __acpi_ec_flush_work(void)
- {
--	bool flushed;
--	unsigned long flags;
--
--	spin_lock_irqsave(&ec->lock, flags);
--	flushed = !ec->nr_pending_queries;
--	spin_unlock_irqrestore(&ec->lock, flags);
--	return flushed;
--}
--
--static void __acpi_ec_flush_event(struct acpi_ec *ec)
--{
--	/*
--	 * When ec_freeze_events is true, we need to flush events in
--	 * the proper position before entering the noirq stage.
--	 */
--	wait_event(ec->wait, acpi_ec_query_flushed(ec));
--	if (ec_query_wq)
--		flush_workqueue(ec_query_wq);
-+	flush_scheduled_work(); /* flush ec->work */
-+	flush_workqueue(ec_query_wq); /* flush queries */
- }
- 
- static void acpi_ec_disable_event(struct acpi_ec *ec)
-@@ -554,15 +538,21 @@ static void acpi_ec_disable_event(struct
- 	spin_lock_irqsave(&ec->lock, flags);
- 	__acpi_ec_disable_event(ec);
- 	spin_unlock_irqrestore(&ec->lock, flags);
--	__acpi_ec_flush_event(ec);
-+
-+	/*
-+	 * When ec_freeze_events is true, we need to flush events in
-+	 * the proper position before entering the noirq stage.
-+	 */
-+	__acpi_ec_flush_work();
- }
- 
- void acpi_ec_flush_work(void)
- {
--	if (first_ec)
--		__acpi_ec_flush_event(first_ec);
-+	/* Without ec_query_wq there is nothing to flush. */
-+	if (!ec_query_wq)
-+		return;
- 
--	flush_scheduled_work();
-+	__acpi_ec_flush_work();
- }
- #endif /* CONFIG_PM_SLEEP */
- 
-
-
-
+Thanks,
+Soeren
