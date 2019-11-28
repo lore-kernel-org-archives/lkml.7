@@ -2,97 +2,110 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE120C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9292120880
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A99B206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:47:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B7oUa/oy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y8Ea/smQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfK1Wmc (ORCPT
+        id S1726664AbfK1Wrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 17:42:32 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48310 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbfK1Wmc (ORCPT
+        Thu, 28 Nov 2019 17:47:32 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43306 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfK1Wrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 17:42:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YWU+2cL1a8V7zdnD6YoB1Y5aa4SlJGwwOBC43F4kcpk=; b=B7oUa/oy07Rxb6l4GSyDKkke8
-        nYDX7KYQgQquj8NbVkCT6qjBpdOaYkoUsO6+s4RThCUtsyP8Wjd0do7Nnh8n6SClZSYV3E97S8nmy
-        fmnfIhgWmfyTel5C2A52/qmjEeamSFVk8D+/So4kupvHq/S4SK0lpb7qGLdKH4Sbaz4Vp6i81grxh
-        jY/zTTq7x5kL5CWQMiUNTAiF61HaD9PNpMNm7tvAwZLFak25HhpafNjBcujjEsEkVqXBmDsViwSob
-        YxEZwxESxaWN06jZ+MAgrlr5f0wIu4jcl1PTEppfcsIXnSGIyhbNqws2uU9mClhyEVk7h5pDB+M9i
-        KdmjlaAmg==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iaSUY-0000hU-2r; Thu, 28 Nov 2019 22:42:30 +0000
-To:     LKML <linux-kernel@vger.kernel.org>, linux-csky@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] irqchip: cleanup Kconfig help text
-Message-ID: <ca14f757-f191-62a0-b896-6b3ba0f9d168@infradead.org>
-Date:   Thu, 28 Nov 2019 14:42:29 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 28 Nov 2019 17:47:32 -0500
+Received: by mail-ot1-f68.google.com with SMTP id l14so23313361oti.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 14:47:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CUk7v7UPe6VTRCevALfgnUC9KL2cGJpFHn8mL3idLe0=;
+        b=Y8Ea/smQHjouC6SBRXFZkjwTn2tarmmechSnFeym66dooOOnkxhT2nHCmkSARtdQUe
+         ZXdW78yhSFGWQa9ZEKD+TSdGevk4bhR+ccadD5qPzyAVHBSeBpKWvJNNtVxHxWYdKSlw
+         tsLHHiQ1/WZPQ7fJQVfpJxtzU5skIztwBNzX5XZeRT1BCWYgL3D14cJyuo171iKI4apV
+         7E/2u7t3FvJMNVr/zLBD1kmeCWN/E3GUMZmzjsEZ0yKeEv5iUJpSKP1JivJYGprcKcsb
+         cVpqaAEL62COc9FyK1lg2vZAtfyTW3MfKZ4yqB7r/BorGWp6TDqqVlQRslci132N+iyF
+         Zafw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CUk7v7UPe6VTRCevALfgnUC9KL2cGJpFHn8mL3idLe0=;
+        b=IwumMKBE+XuMzloUrImKo3O0euYLOv12OJfyFYxuYP8ODGksOPBI8V5u0Ac2JPeheQ
+         AfOBQFDAXpLKJo5xNhQk9pvqUNqAHo8CRIY45eaSBBQBM5sHSAOy+aoZCv4N+80nj2nQ
+         FQ9YA7N4CXT07afwHtxtW8irZHJteWQ33aHf8tOwk3Yha+uTvDIA+TBIScLGByWPysCS
+         f/KwAKpo4JJ5gUyaGAG1LPTECiHUprrz4UzpmJIfdK6p8GiX2h/nM+Frzf1cu7Ghlgim
+         L2OThsezttkQidC6KFdNGdyqZP4pCH/cRqrZzIm/QlDqiXusio2CzhK/VB4oRsZhsDmK
+         5q5w==
+X-Gm-Message-State: APjAAAVOWJVZDRsbXB4ZbSsxn98TCbRk2pTjb9wkt2ifkYjauINtLiMh
+        xpUZb70Qq+EPS9J5uuEtZg96fsUgkeeC1hDmjTjFIw==
+X-Google-Smtp-Source: APXvYqwtrGRoVpfoYUQbpfscgR1YvjNIoEJwTjGpNh374JxCwGJYz8mI0UDKMJGK2aEAi5yUqMGk7HFD34Er13qtUfQ=
+X-Received: by 2002:a9d:4801:: with SMTP id c1mr8740496otf.32.1574981248999;
+ Thu, 28 Nov 2019 14:47:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <254505c9-2b76-ebeb-306c-02aaf1704b88@kernel.dk>
+ <CAG48ez33ewwQB26cag+HhjbgGfQCdOLt6CvfmV1A5daCJoXiZQ@mail.gmail.com>
+ <1d3a458a-fa79-5e33-b5ce-b473122f6d1a@kernel.dk> <CAG48ez2VBS4bVJqdCU9cUhYePYCiUURvXZWneBx2KGkg3L9d4g@mail.gmail.com>
+ <f4144a96-58ef-fba7-79f0-e5178147b6bb@rasmusvillemoes.dk> <CAG48ez1v5EmuSvn+LY8od_ZMt1QVdUWqi9DWLSp0CgMxkL=sNg@mail.gmail.com>
+ <CAG48ez1FK6h4tEv=cGGtm84NXDkeiMV+woFmqQYPbcsOZjKxZw@mail.gmail.com>
+In-Reply-To: <CAG48ez1FK6h4tEv=cGGtm84NXDkeiMV+woFmqQYPbcsOZjKxZw@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 28 Nov 2019 23:46:59 +0100
+Message-ID: <CAG48ez11PjWtaFrPqtU6yPKsm0_0Sb3Te-8bvVQLEozDzx7cFw@mail.gmail.com>
+Subject: Re: [PATCH RFC] signalfd: add support for SFD_TASK
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Jens Axboe <axboe@kernel.dk>, io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, Nov 28, 2019 at 8:18 PM Jann Horn <jannh@google.com> wrote:
+> On Thu, Nov 28, 2019 at 11:07 AM Jann Horn <jannh@google.com> wrote:
+> > On Thu, Nov 28, 2019 at 10:02 AM Rasmus Villemoes
+> > <linux@rasmusvillemoes.dk> wrote:
+> > > On 28/11/2019 00.27, Jann Horn wrote:
+> > >
+> > > > One more thing, though: We'll have to figure out some way to
+> > > > invalidate the fd when the target goes through execve(), in particular
+> > > > if it's a setuid execution. Otherwise we'll be able to just steal
+> > > > signals that were intended for the other task, that's probably not
+> > > > good.
+> > > >
+> > > > So we should:
+> > > >  a) prevent using ->wait() on an old signalfd once the task has gone
+> > > > through execve()
+> > > >  b) kick off all existing waiters
+> > > >  c) most importantly, prevent ->read() on an old signalfd once the
+> > > > task has gone through execve()
+> > > >
+> > > > We probably want to avoid using the cred_guard_mutex here, since it is
+> > > > quite broad and has some deadlocking issues; it might make sense to
+> > > > put the update of ->self_exec_id in fs/exec.c under something like the
+> > > > siglock,
+> > >
+> > > What prevents one from exec'ing a trivial helper 2^32-1 times before
+> > > exec'ing into the victim binary?
+> >
+> > Uh, yeah... that thing should probably become 64 bits wide, too.
+>
+> Actually, that'd still be wrong even with the existing kernel code for
+> two reasons:
+>
+>  - if you reparent to a subreaper, the existing exec_id comparison breaks
 
-Fixes to Kconfig help text:
-
-- spell out "hardware"
-- fix verb usage
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: Guo Ren <guoren@kernel.org>
-Cc: linux-csky@vger.kernel.org
----
- drivers/irqchip/Kconfig |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- lnx-54.orig/drivers/irqchip/Kconfig
-+++ lnx-54/drivers/irqchip/Kconfig
-@@ -434,7 +434,7 @@ config CSKY_MPINTC
- 	help
- 	  Say yes here to enable C-SKY SMP interrupt controller driver used
- 	  for C-SKY SMP system.
--	  In fact it's not mmio map in hw and it use ld/st to visit the
-+	  In fact it's not mmio map in hardware and it uses ld/st to visit the
- 	  controller's register inside CPU.
- 
- config CSKY_APB_INTC
-@@ -442,7 +442,7 @@ config CSKY_APB_INTC
- 	depends on CSKY
- 	help
- 	  Say yes here to enable C-SKY APB interrupt controller driver used
--	  by C-SKY single core SOC system. It use mmio map apb-bus to visit
-+	  by C-SKY single core SOC system. It uses mmio map apb-bus to visit
- 	  the controller's register.
- 
- config IMX_IRQSTEER
-
+... actually, I was wrong about this, this case is fine because the
+->exit_signal is reset in reparent_leader().
