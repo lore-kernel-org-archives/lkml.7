@@ -2,103 +2,137 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA432C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1C2C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881BA2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E671F21770
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="cDgC2CAd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A74N8nFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfK1JDU (ORCPT
+        id S1727026AbfK1JHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 04:03:20 -0500
-Received: from dvalin.narfation.org ([213.160.73.56]:51930 "EHLO
-        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfK1JDU (ORCPT
+        Thu, 28 Nov 2019 04:07:04 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:41453 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726510AbfK1JHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 04:03:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1574931798;
+        Thu, 28 Nov 2019 04:07:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574932022;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NrOadlV/ly7FreKTOQxgRCOUZAeZYFuDY0qoRN8icgo=;
-        b=cDgC2CAdf2rhtq7hEdWN7O6A53wGbKZtVnG7HANS56jXbJDlbuy4WBQ6tB4iITPMinNWTz
-        8ufAeJhojywWlqfMM3ThtQ7p76e0n8Sj8L24AyTXsWhh6j9yKnLRF3K4dLr/DCAK8TyW4I
-        Yv0u0zLnBVZ7HdnC57anmxMMBMsSSdc=
-From:   Sven Eckelmann <sven@narfation.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzkaller <syzkaller@googlegroups.com>,
-        syzbot <syzbot+a229d8d995b74f8c4b6c@syzkaller.appspotmail.com>,
-        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        =?utf-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>,
-        LKML <linux-kernel@vger.kernel.org>, mareklindner@neomailbox.ch,
-        netdev <netdev@vger.kernel.org>, sw@simonwunderlich.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        vinicius.gomes@intel.com, wang.yi59@zte.com.cn,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Subject: Re: WARNING in mark_lock (3)
-Date:   Thu, 28 Nov 2019 10:03:13 +0100
-Message-ID: <3691620.GRZi0niZ3p@sven-edge>
-In-Reply-To: <CACT4Y+abQSWfiN16BwXFOBi+d3CFGk53oj+5+zZwQPbcYu-Rew@mail.gmail.com>
-References: <0000000000009aa32205985e78b6@google.com> <1809369.KjlzdqruN6@sven-edge> <CACT4Y+abQSWfiN16BwXFOBi+d3CFGk53oj+5+zZwQPbcYu-Rew@mail.gmail.com>
+        bh=Fc+1aWU1n7L4x+QFUaTGUrJ8QZV6jxVGyjTh715dkvk=;
+        b=A74N8nFoiAsXUKyDuny7Q4f2J4PTSBV3QVofw+v50hSaYIk3FKYiSm2fLn91AtWVBVG+pD
+        0xFFrUTsis8eGr76w0QcOtUS01JCdksS0ywyqW/2ZSYCDMtDJ51IRdelKV4fB34JRIN/oA
+        6jlmWKBt4ibMvKvEEOJu4pNmL5Srba4=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-oBTcpRAdPy6lVmq27WljXQ-1; Thu, 28 Nov 2019 04:07:01 -0500
+Received: by mail-lj1-f200.google.com with SMTP id n11so4837293lji.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 01:07:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=DvrocL/1GRTCvaXxuQQF+aHOAoWJJA60RMKFIr0Cm60=;
+        b=E/2K/HAOsaCefjw+SfYpoQKsKqtYLgysQNSiDiCkPZ0STQEADp8oxypu5t3kL+Pv3l
+         YoYqoMFU/bniPoMKe5vZHw54rD4LjNgm3SikAtvt5XXweztOmJc35XE7/svSoRHilIzr
+         1zPJOh7Wh4qqiRKn1reAH8WaiefS2WgIwhRrLheMZNgZGvlTcJ/AzVgaC2bDeMwPjI2J
+         L7VB5R6OrVb7lzq0/SNZlWCKuMU+ugnYAzk+5Wr/njqmvLo9nUMMvSudmgEulPBjF8uA
+         0LRXdYdIT8VDx40zkMfJdVhlVK1RtmtTwHbxnOYS0rzhnXGDzP2rDi6sBMUW5FzdSPPr
+         7CKw==
+X-Gm-Message-State: APjAAAVNXiPKiRV2V1OzFsVogYYJF3mQTgcb5EmDTaXK1cEd9iJbppp/
+        FLFmIndNVh5196krW95+5k96DIfroncacNVNUiGbzFEP8pBkjrNjk6E7/Y/a2xMQvFLWHtPHObK
+        zVLCEdLcC7abVmgtrMj15P/bP
+X-Received: by 2002:a2e:914d:: with SMTP id q13mr7972520ljg.198.1574932019916;
+        Thu, 28 Nov 2019 01:06:59 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwW+RawCEjX/SrVq5qTek4AHlvFYFzQbz7nhztA0ZhJ3BUPtFzw7uzugqmhWCO8ANdZ6bOJqQ==
+X-Received: by 2002:a2e:914d:: with SMTP id q13mr7972501ljg.198.1574932019671;
+        Thu, 28 Nov 2019 01:06:59 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id o26sm8079173lfi.57.2019.11.28.01.06.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 01:06:58 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 2377C1818BE; Thu, 28 Nov 2019 10:06:57 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
+In-Reply-To: <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
+References: <20191127094837.4045-1-jolsa@kernel.org> <CAADnVQLp2VTi9JhtfkLOR9Y1ipNFObOGH9DQe5zbKxz77juhqA@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Thu, 28 Nov 2019 10:06:57 +0100
+Message-ID: <87o8wwwery.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3339975.5L7NHtn4j8"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+X-MC-Unique: oBTcpRAdPy6lVmq27WljXQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart3339975.5L7NHtn4j8
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
 
-On Thursday, 28 November 2019 09:54:15 CET Dmitry Vyukov wrote:
-[...]
-> > I was thinking more about rerunning the same bisect but tell it to assume
-> > "crashed: general protection fault in batadv_iv_ogm_queue_add" as OK instead
-> > of assuming that it is a crashed like the previous "crashed: WARNING in
-> > mark_lock". Just to get a non-bogus bisect result. Or try to rerun the
-> > bisect between 40e220b4218b and 89d57dddd7d319ded00415790a0bb3c954b7e386
-> 
-> But... but this done by a program. What do you mean by "tell it"?
+> On Wed, Nov 27, 2019 at 1:48 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>>
+>> hi,
+>> adding support to link bpftool with libbpf dynamically,
+>> and config change for perf.
+>>
+>> It's now possible to use:
+>>   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1
+>>
+>> which will detect libbpf devel package with needed version,
+>> and if found, link it with bpftool.
+>>
+>> It's possible to use arbitrary installed libbpf:
+>>   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/tmp/libb=
+pf/
+>>
+>> I based this change on top of Arnaldo's perf/core, because
+>> it contains libbpf feature detection code as dependency.
+>> It's now also synced with latest bpf-next, so Toke's change
+>> applies correctly.
+>
+> I don't like it.
+> Especially Toke's patch to expose netlink as public and stable libbpf
+> api.
 
-Sorry that I asked about what the infrastructure around syzbot can do and
-how the interaction with it looks like.
+Figured you might say that :)
 
-Kind regards,
-	Sven
---nextPart3339975.5L7NHtn4j8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+> bpftools needs to stay tightly coupled with libbpf (and statically
+> linked for that reason).
+> Otherwise libbpf will grow a ton of public api that would have to be stab=
+le
+> and will quickly become a burden.
 
------BEGIN PGP SIGNATURE-----
+I can see why you don't want to expose the "internal" functions as
+LIBBPF_API. Doesn't *have* to mean we can't link bpftool dynamically
+against the .so version of libbpf, though; will see if I can figure out
+a clean way to do that...
 
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl3fjVEACgkQXYcKB8Em
-e0ajQhAAvetvCCehY5SmHsrLLKW7/YkVm3Ez3oqtbu/VCn8TEvau5PVt48ojQYmu
-zOIZAs05i4JRI1WHZXyrAzPF3CI4juDdFCwOibiPDzCU2C3qD5s2AsZfxK22iPUt
-dkBhW19Cq115ZgcOmerAor0nLkRkglYwoAEg6j+edtXUU3JYQG6PSGICN1NMGhmY
-Q1jcXAGR1Hm+2SbR1sBBCflQHt8E6/wURkeqrvV82AcRSO3sPqQBWSEZ7QzIe3mc
-oh0v4o5xZQMqppDByKmS9kZ5kRPH0yQid9l/KU4yGAQ8IDIZRKJGSHbpdOSGHNB4
-9Wc3SR04lmn8WhwRBE8vpB/6n8cAq0mAv/kTa6pEYzjY499z8BjEkkAh9ggOuxLQ
-AOb4dpu0L+wyXP/vLhUKJI+KWAJ+OOJoAVxNXh6HvhQRpShpTN/7+o1AVyRXLlBZ
-bdjxVh3McRWvn8KYat3DtkON90uQRCZ9ufyTXcIPKkTiqQuT/UpwY0fNe3kjYfpK
-pd5dyM86JWGxd39ramOhFSBQyNUAmJ+9pY2uVypbSABbbyIlqerGqzRSvgxoynNN
-UrrZN3MVBCouMxM9+ES7L63jUg8JQQdAwr4RoisEyGLSPsstEnOd6PWYdsk6WYA2
-kDoKPp9EjAeGEb7qH+IbXSm73qP2xX+rBBjfcTn/1CHCkgAPvTg=
-=lHZm
------END PGP SIGNATURE-----
-
---nextPart3339975.5L7NHtn4j8--
-
-
+-Toke
 
