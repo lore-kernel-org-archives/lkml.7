@@ -2,111 +2,98 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53948C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1C6C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2159121736
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574927010;
-	bh=MxbZZyhMxP8MypT5uzl2FbmRA7P2Fx2ZT4tGfc6hXSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OUiFKf5oI9Fngvfh/zcGTxcVSq9UuYQ9J3yKi3eHmbT6BwTCdXpULor2z9PWoQVNw
-	 kkIYpDwazQ5V0AyUn5T2yZYzKIevsmfiPg9/DYi0pKlq4sR4ifhDbTD0m7/fTCveld
-	 bM4w+Mmq/WHFnAQAbnMbLwgRpGU8o9k8yoRIwpwY=
+	by mail.kernel.org (Postfix) with ESMTP id 6C7A7216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:45:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ak2QGyGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfK1Hn3 (ORCPT
+        id S1727133AbfK1HpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 02:43:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbfK1Hn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 02:43:29 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAAB0215F2;
-        Thu, 28 Nov 2019 07:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574927008;
-        bh=MxbZZyhMxP8MypT5uzl2FbmRA7P2Fx2ZT4tGfc6hXSA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wm8PVK7LJ/eHbBcPlypR34e9nGdlHpiyX+tDcKnSJxAQM91yQgFENMYbMHwZzBPie
-         yRkIECYbg027w8uzuxwxYyGyI6EDte1JFAmNABgHVQO8I88Z5HY8A4vPdyjwu2xwR6
-         QmnlLKgm3/xS4ZOJqZlhnywaFER5ex6PX8/4i3LE=
-Date:   Thu, 28 Nov 2019 08:43:25 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for
- sun8i-thermal driver bindings
-Message-ID: <20191128074325.q47rpzhufwog6mbb@gilmour.lan>
-References: <20191127052935.1719897-1-anarsoul@gmail.com>
- <20191127052935.1719897-3-anarsoul@gmail.com>
- <20191127174434.wousbqosmm5vxcsu@gilmour.lan>
- <CA+E=qVe22T1uhUo6iq9a82Y9bC014CZSkAtSJJNX4qsn6dJL9w@mail.gmail.com>
+        Thu, 28 Nov 2019 02:45:07 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41781 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbfK1HpG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 02:45:06 -0500
+Received: by mail-oi1-f196.google.com with SMTP id e9so22534977oif.8
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 23:45:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8kiJRE/B/wxbSXxZog9CBfpnC1pt1UKvSf8bBaqAJYE=;
+        b=ak2QGyGqDHCjy7nbxkPXZde6Lx0OpuNAOr4gm0HSsjNPc657oJGqKn6WEwgB4ajJ/I
+         Fqb1vZbxmKjobjecJ+hpBwzIVooddcrgVbGa6Y0FWnKkrH8FX9KX9yyahyWSm2hbnQKG
+         iSFbL9EeJKB8SPQ8xn1Y3SbzzW6suYeWoTil2XA6Mo3xJKKnOwJFOI13NtgXbcdXUfcF
+         w2MQB0nzU2xEV0niOetqUjL7jPw/1XB054wyc8G5L7vOZVnKKnymX9kmjcQCCP5APHbi
+         CEkVMlgisgiCZ028mcD+Pvg/P2QGAE/n4zJajeimCa07k6dUcbMNPj7eA2MRd+gTfTxf
+         uvSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8kiJRE/B/wxbSXxZog9CBfpnC1pt1UKvSf8bBaqAJYE=;
+        b=nISi0ICU1cFhHVv7BuXopY693I9OrUJbP6Imoe+jIIFP9dw+5NqOnARFcy/NKsDlQ4
+         qwE8tCsCYDS4JCvKzPgX5j1zkx6vE9soanruiupQBiQSH7Lk4ogZSFgNHrBQlGoPHj0i
+         1wEY16OSK/CFzP9mnlelgiliCxzz6ePbC/HTbgZ7cvOvkRbncoTfWDPHptFavj6vvHlq
+         ZXhLjBaQJ1R8LQ+Jg65XJdt3pEJuKlg3PEY4Ks88SX1rEMzREP3qAmStRQY1yujt+cSx
+         rluPU/AypT4A+rGcPmYsgO+fct/msTs1lH3jU76v4cf9xfHe4VwL6Qhgw5Js5aYyOBqJ
+         Rqlw==
+X-Gm-Message-State: APjAAAWr+iX5VoJzp96LCFFnO/AyvvEkNBX3Y8PFokPKcAKp9jv8h8Lq
+        /gBm6uFEokAuYRQv1bn2iRI=
+X-Google-Smtp-Source: APXvYqzaD4ywu4vxa6MdhVQTJ1iRNw5fZuuhJQbHb3CLlD4zmMqcmTlyzdF1HhQzEf3yeKQW+1/uzw==
+X-Received: by 2002:a05:6808:6ce:: with SMTP id m14mr4510556oih.27.1574927105893;
+        Wed, 27 Nov 2019 23:45:05 -0800 (PST)
+Received: from ubuntu-x2-xlarge-x86 ([2604:1380:4111:8b00::7])
+        by smtp.gmail.com with ESMTPSA id w2sm2657096otp.55.2019.11.27.23.45.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Nov 2019 23:45:05 -0800 (PST)
+Date:   Thu, 28 Nov 2019 00:45:03 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v5 0/3] LLVM/Clang fixes for a few defconfigs
+Message-ID: <20191128074503.GA37339@ubuntu-x2-xlarge-x86>
+References: <20191014025101.18567-1-natechancellor@gmail.com>
+ <20191119045712.39633-1-natechancellor@gmail.com>
+ <CAKwvOd=3Ok8A8V30fccK5UzWFZ7zwG_zvGQV44S2BK4o2akbgw@mail.gmail.com>
+ <87v9r4zjdw.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cnk3ppztnbfqfu5l"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+E=qVe22T1uhUo6iq9a82Y9bC014CZSkAtSJJNX4qsn6dJL9w@mail.gmail.com>
+In-Reply-To: <87v9r4zjdw.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 28, 2019 at 03:59:07PM +1100, Michael Ellerman wrote:
+> Nick Desaulniers <ndesaulniers@google.com> writes:
+> > Hi Michael,
+> > Do you have feedback for Nathan? Rebasing these patches is becoming a
+> > nuisance for our CI, and we would like to keep building PPC w/ Clang.
+> 
+> Sorry just lost in the flood of patches.
+> 
+> Merged now.
+> 
+> cheers
 
---cnk3ppztnbfqfu5l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you very much for picking them up :)
 
-On Wed, Nov 27, 2019 at 12:23:53PM -0800, Vasily Khoruzhick wrote:
-> On Wed, Nov 27, 2019 at 9:44 AM Maxime Ripard <mripard@kernel.org> wrote:
-> > > +
-> > > +  nvmem-cell-names:
-> > > +    items:
-> > > +      - const: calibration
-> >
-> > Ditto for the const
->
-> Sorry, I don't quite get it. What exactly do you want me to do with
-> this one? nvmem-cell-names must be "calibration"
-
-You don't need the items here either, this can be
-
-nvmem-cell-names:
-  const: calibration
-
-Maxime
-
---cnk3ppztnbfqfu5l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXd96nQAKCRDj7w1vZxhR
-xRLoAQC3m7wZvI4EmXSfHN3h/VKMdIvvo5P5sgtpMsfd6hwbiAEAwqYBPjEtyyKB
-IP3PzaCesyLXY9dHooofrsm3Z7+pIgw=
-=I+ik
------END PGP SIGNATURE-----
-
---cnk3ppztnbfqfu5l--
+Cheers,
+Nathan
