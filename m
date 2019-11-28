@@ -2,144 +2,120 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50C6C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5BBC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25A521771
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8250B21771
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:58:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zc6c9VCL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfK1Q4Q (ORCPT
+        id S1726653AbfK1Q6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 11:56:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:38594 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfK1Q4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:56:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CC3E1FB;
-        Thu, 28 Nov 2019 08:56:15 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86FD13F6C4;
-        Thu, 28 Nov 2019 08:56:14 -0800 (PST)
-Date:   Thu, 28 Nov 2019 16:56:12 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 12/14] torture: Replace cpu_up/down with
- device_online/offline
-Message-ID: <20191128165611.7lmjaszjl4gbo7u2@e107158-lin.cambridge.arm.com>
-References: <20191125112754.25223-1-qais.yousef@arm.com>
- <20191125112754.25223-13-qais.yousef@arm.com>
- <20191127214725.GG2889@paulmck-ThinkPad-P72>
+        Thu, 28 Nov 2019 11:58:40 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49912 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726446AbfK1Q6k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 11:58:40 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASGvBHr004446;
+        Thu, 28 Nov 2019 17:58:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=6uAkgoICWFUgjFMDGrLU4fz1PG9x6Te7OG2wuxrtuP4=;
+ b=zc6c9VCLftGU4RdJOIzU/Q660Am1xjBcCtmGCF3qH3wPSTFxrFLDIgDWQ+6fGBMBzSzC
+ o2Wx757wT20weex4ZpMGbh5VdiLvO/WEAuug+GA91OY3U/craxu5RKwdmLsSDz0G3SSv
+ Rqb++cgzR7bTaxLmO3irSrROGs/Q1t57d5yGFUYMb1bS7M4/Cd5r/Y8sgbG898t/uZhP
+ JjN7RWXSL9bJyxQ07iK9u918kWhRQT+2kH5xWPjVedgMS/3k7pfXSFebUycjtdLusJ0e
+ SaRGMB/T8wiW7u2FQVVe2yiBW5dfaHCGK0XwUcfFN85rDV8rrpgwGmOHh7lHwXyAK8Ql tw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2whcxyk7cb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Nov 2019 17:58:27 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 823AB10002A;
+        Thu, 28 Nov 2019 17:58:24 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 63FC12C8513;
+        Thu, 28 Nov 2019 17:58:24 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Nov 2019 17:58:23
+ +0100
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Jessica Yu <jeyu@kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH] moduleparam: fix kerneldoc
+Date:   Thu, 28 Nov 2019 17:58:00 +0100
+Message-ID: <1574960280-28770-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191127214725.GG2889@paulmck-ThinkPad-P72>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-28_05:2019-11-28,2019-11-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/27/19 13:47, Paul E. McKenney wrote:
-> On Mon, Nov 25, 2019 at 11:27:52AM +0000, Qais Yousef wrote:
-> > The core device API performs extra housekeeping bits that are missing
-> > from directly calling cpu_up/down.
-> > 
-> > See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
-> > serialization during LPM") for an example description of what might go
-> > wrong.
-> > 
-> > This also prepares to make cpu_up/down a private interface for anything
-> > but the cpu subsystem.
-> > 
-> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> > CC: Davidlohr Bueso <dave@stgolabs.net>
-> > CC: "Paul E. McKenney" <paulmck@kernel.org>
-> > CC: Josh Triplett <josh@joshtriplett.org>
-> > CC: linux-kernel@vger.kernel.org
-> 
-> Looks fine from an rcutorture viewpoint, but why not provide an API
-> that pulled lock_device_hotplug() and unlock_device_hotplug() into the
-> online/offline calls?
+Document missing @args in xxx_param_cb().
+Typo: use 'value' instead of 'lvalue'.
 
-I *think* the right way to do what you say is by doing lock_device_hotplug()
-inside device_{online, offline}() - which affects all drivers not just the CPU.
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+ include/linux/moduleparam.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-And even then, I think we need to refcount it so nested calls won't deadlock.
+diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+index e5c3e23..944c569 100644
+--- a/include/linux/moduleparam.h
++++ b/include/linux/moduleparam.h
+@@ -135,7 +135,7 @@ struct kparam_array
+ /**
+  * module_param_named - typesafe helper for a renamed module/cmdline parameter
+  * @name: a valid C identifier which is the parameter name.
+- * @value: the actual lvalue to alter.
++ * @value: the actual value to alter.
+  * @type: the type of the parameter
+  * @perm: visibility in sysfs.
+  *
+@@ -160,6 +160,7 @@ struct kparam_array
+  * module_param_cb - general callback for a module/cmdline parameter
+  * @name: a valid C identifier which is the parameter name.
+  * @ops: the set & get operations for this parameter.
++ * @args: args for @ops
+  * @perm: visibility in sysfs.
+  *
+  * The ops can have NULL set or get functions.
+@@ -176,6 +177,7 @@ struct kparam_array
+  *                    to be evaluated before certain initcall level
+  * @name: a valid C identifier which is the parameter name.
+  * @ops: the set & get operations for this parameter.
++ * @args: args for @ops
+  * @perm: visibility in sysfs.
+  *
+  * The ops can have NULL set or get functions.
+@@ -457,7 +459,7 @@ enum hwparam_type {
+ /**
+  * module_param_hw_named - A parameter representing a hw parameters
+  * @name: a valid C identifier which is the parameter name.
+- * @value: the actual lvalue to alter.
++ * @value: the actual value to alter.
+  * @type: the type of the parameter
+  * @hwtype: what the value represents (enum hwparam_type)
+  * @perm: visibility in sysfs.
+-- 
+2.7.4
 
-I don't know if this can break any rule or not. If Greg thinks it's okay I'd be
-happy to post some patches that do just that.
-
-Thanks
-
---
-Qais Yousef
-
-> 
-> 							Thanx, Paul
-> 
-> > ---
-> >  kernel/torture.c | 15 +++++++++++----
-> >  1 file changed, 11 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/kernel/torture.c b/kernel/torture.c
-> > index 7c13f5558b71..12115024feb2 100644
-> > --- a/kernel/torture.c
-> > +++ b/kernel/torture.c
-> > @@ -97,7 +97,9 @@ bool torture_offline(int cpu, long *n_offl_attempts, long *n_offl_successes,
-> >  			 torture_type, cpu);
-> >  	starttime = jiffies;
-> >  	(*n_offl_attempts)++;
-> > -	ret = cpu_down(cpu);
-> > +	lock_device_hotplug();
-> > +	ret = device_offline(get_cpu_device(cpu));
-> > +	unlock_device_hotplug();
-> >  	if (ret) {
-> >  		if (verbose)
-> >  			pr_alert("%s" TORTURE_FLAG
-> > @@ -148,7 +150,9 @@ bool torture_online(int cpu, long *n_onl_attempts, long *n_onl_successes,
-> >  			 torture_type, cpu);
-> >  	starttime = jiffies;
-> >  	(*n_onl_attempts)++;
-> > -	ret = cpu_up(cpu);
-> > +	lock_device_hotplug();
-> > +	ret = device_online(get_cpu_device(cpu));
-> > +	unlock_device_hotplug();
-> >  	if (ret) {
-> >  		if (verbose)
-> >  			pr_alert("%s" TORTURE_FLAG
-> > @@ -192,17 +196,20 @@ torture_onoff(void *arg)
-> >  	for_each_online_cpu(cpu)
-> >  		maxcpu = cpu;
-> >  	WARN_ON(maxcpu < 0);
-> > -	if (!IS_MODULE(CONFIG_TORTURE_TEST))
-> > +	if (!IS_MODULE(CONFIG_TORTURE_TEST)) {
-> > +		lock_device_hotplug();
-> >  		for_each_possible_cpu(cpu) {
-> >  			if (cpu_online(cpu))
-> >  				continue;
-> > -			ret = cpu_up(cpu);
-> > +			ret = device_online(get_cpu_device(cpu));
-> >  			if (ret && verbose) {
-> >  				pr_alert("%s" TORTURE_FLAG
-> >  					 "%s: Initial online %d: errno %d\n",
-> >  					 __func__, torture_type, cpu, ret);
-> >  			}
-> >  		}
-> > +		unlock_device_hotplug();
-> > +	}
-> >  
-> >  	if (maxcpu == 0) {
-> >  		VERBOSE_TOROUT_STRING("Only one CPU, so CPU-hotplug testing is disabled");
-> > -- 
-> > 2.17.1
-> > 
