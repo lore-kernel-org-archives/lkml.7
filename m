@@ -2,151 +2,129 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E110DC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C230FC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8006215F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1CD215A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 00:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IuFrUWiG"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Xg9GNm45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfK1Ant (ORCPT
+        id S1727511AbfK1Ao3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 19:43:49 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54531 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbfK1Ant (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 19:43:49 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Nf5Y60nwz9sSJ;
-        Thu, 28 Nov 2019 11:43:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574901826;
-        bh=fJNZyl8+sIOW4DyiRjQoW8yVs95uN1nyytnbeN58Ct8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IuFrUWiGTsHuJAObPf1L0S8d56HUs3dCa0a1tIZn/Wirp0crD3UAkHmg4aL/pw75p
-         JfAQZJBzRnDzYrsCChSpyuMiCRp8RA3Hw1uZ7s69bY4FZ8BmgV5vLiO2EIZhQykvRP
-         hsBBtmzeIq51K1PLqrTCDTaBOPJKxjEDEF+cdz66vih6J3lxqSj0WGG2xpiQjmZhjf
-         bF/WVtOF6E0NmFSu1zAeHWO03CY6Wnvoja/tPxTkYzZ42pbLni4sKOrwa9wlwG4J5q
-         d3LvIdvfb+rZNB3J2HGG7wn12jHBJNYvNuapmgAz9Z+Ww2vypeJ/b6wmJ2MX4Eg4ZV
-         nNA8d1kYIxZFA==
-Date:   Thu, 28 Nov 2019 11:43:45 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Linus <torvalds@linux-foundation.org>
-Subject: Re: linux-next: manual merge of the char-misc tree with the keys
- tree
-Message-ID: <20191128114345.3d274b7d@canb.auug.org.au>
-In-Reply-To: <20191022133804.32ef6f86@canb.auug.org.au>
-References: <20191022133804.32ef6f86@canb.auug.org.au>
+        Wed, 27 Nov 2019 19:44:29 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:59684 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfK1Ao3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 19:44:29 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 6AB9720B7185;
+        Wed, 27 Nov 2019 16:44:28 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6AB9720B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1574901868;
+        bh=i45B9K6gVEFEes7FGLuQ9jYlPqhzKWyb3Cu2Dwz50MQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Xg9GNm45D60C+1lHv95rf09FhgFgasrx8uaOEEbCT6ewMV3l5IisnA0yQyyAlr2Cm
+         jKqcnwQSUCdd3rxD4IollqF7uIV9leFHlvoGIMnx1CB+1xudRcLTwqjq1Foyoqdl4r
+         ViIuxUNiaQZqSrL8PnBgxvEmLbnvMILJj3zG4yPs=
+Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+References: <20191127015654.3744-1-nramas@linux.microsoft.com>
+ <20191127015654.3744-6-nramas@linux.microsoft.com>
+ <1574880741.4793.292.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <18b30666-7c44-f81e-8515-189052007e47@linux.microsoft.com>
+Date:   Wed, 27 Nov 2019 16:44:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kgemz1Fwa6b_otqME0i73V1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <1574880741.4793.292.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kgemz1Fwa6b_otqME0i73V1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 11/27/19 10:52 AM, Mimi Zohar wrote:
 
-Hi all,
+Hi Mimi,
 
-On Tue, 22 Oct 2019 13:38:04 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the char-misc tree got conflicts in:
->=20
->   samples/Kconfig
->   samples/Makefile
->=20
-> between commit:
->=20
->   0b9c31597d81 ("Add sample notification program")
->=20
-> from the keys tree and commit:
->=20
->   6859eba4f6fb ("samples: mei: use hostprogs kbuild constructs")
->=20
-> from the char-misc tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc samples/Kconfig
-> index d0761f29ccb0,b663d9d24114..000000000000
-> --- a/samples/Kconfig
-> +++ b/samples/Kconfig
-> @@@ -169,11 -169,11 +169,17 @@@ config SAMPLE_VF
->   	  as mount API and statx().  Note that this is restricted to the x86
->   	  arch whilst it accesses system calls that aren't yet in all arches.
->  =20
->  +config SAMPLE_WATCH_QUEUE
->  +	bool "Build example /dev/watch_queue notification consumer"
->  +	depends on HEADERS_INSTALL
->  +	help
->  +	  Build example userspace program to use the new mount_notify(),
->  +	  sb_notify() syscalls and the KEYCTL_WATCH_KEY keyctl() function.
->  +
-> + config SAMPLE_INTEL_MEI
-> + 	bool "Build example program working with intel mei driver"
-> + 	depends on INTEL_MEI
-> + 	help
-> + 	  Build a sample program to work with mei device.
-> +=20
->  -
->   endif # SAMPLES
-> diff --cc samples/Makefile
-> index a61a39047d02,d6062ab25347..000000000000
-> --- a/samples/Makefile
-> +++ b/samples/Makefile
-> @@@ -20,4 -20,4 +20,5 @@@ obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+=3D tr
->   obj-$(CONFIG_VIDEO_PCI_SKELETON)	+=3D v4l/
->   obj-y					+=3D vfio-mdev/
->   subdir-$(CONFIG_SAMPLE_VFS)		+=3D vfs
->  +subdir-$(CONFIG_SAMPLE_WATCH_QUEUE)	+=3D watch_queue
-> + obj-$(CONFIG_SAMPLE_INTEL_MEI)		+=3D mei/
+>> +static bool ima_match_keyring(struct ima_rule_entry *rule,
+>> +			      const char *keyring)
+>> +{
+>> +	/*
+>> +	 * "keyrings=" is specified in the policy in the format below:
+>> +	 *   keyrings=.builtin_trusted_keys|.ima|.evm
+>> +	 *
+>> +	 * Each keyring name in the option is separated by a '|' and
+>> +	 * the last keyring name is null terminated.
+>> +	 *
+>> +	 * The given keyring is considered matched only if
+>> +	 * the whole keyring name matched a keyring name specified
+>> +	 * in the "keyrings=" option.
+>> +	 */
+>> +	p = strstr(rule->keyrings, keyring);
+>> +	if (p) {
+>> +		/*
+>> +		 * Found a substring match. Check if the character
+>> +		 * at the end of the keyring name is | (keyring name
+>> +		 * separator) or is the terminating null character.
+>> +		 * If yes, we have a whole string match.
+>> +		 */
+>> +		p += strlen(keyring);
+>> +		if (*p == '|' || *p == '\0')
+>> +			return true;
+>> +	}
+>> +
+> 
+> Using "while strsep()" would simplify this code, removing the need for
+> such a long comment.
+> 
+> Mimi
 
-This is now a conflict between the keys tree and Linus' tree.
+strsep() modifies the source string (replaces the delimiter with '\0' 
+and also updates the source string pointer). I am not sure it can be 
+used for our scenario. Please correct me if I am wrong.
 
---=20
-Cheers,
-Stephen Rothwell
+Initial IMA policy:
+-------------------
+measure func=KEY_CHECK 
+keyrings=.ima|.evm|.builtin_trusted_keys|.blacklist template=ima-buf
 
---Sig_/kgemz1Fwa6b_otqME0i73V1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Policy after adding a key to .ima keyring:
+------------------------------------------
+measure func=KEY_CHECK keyrings=.evm|.builtin_trusted_keys|.blacklist 
+template=ima-buf
 
------BEGIN PGP SIGNATURE-----
+Policy after adding a key to a keyring that is not listed in the policy:
+------------------------------------------------------------------------
+measure func=KEY_CHECK keyrings= template=ima-buf
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3fGEEACgkQAVBC80lX
-0GyR3wf/QLB0ePb9su3A1yl+k8Q+nSQX2gteW+L4fV33IfjJryVQrxl17Fk6M5/O
-vT2Z3qj5iQLe7IlIAcvxn/dBsfCNOQkD0IDkA2tpsS7eOxOZ/opUkxpPykpd1bD7
-2y+1fYXetLj84ND/kULFlgITo3mjvje4goMpTzmr8+XD9JmMHI3PxdBHZnXKajlQ
-GrKz0O1rOaDxDJAyLxf0itLXrLWK0hr6vO7uyBtQdnb6/zU7fcztwAMIV4N5pzzu
-gRIaCsAjG1e2LL9jc3ivGRT9W2+bILnlRpcWaq0tiq6MZkp9Kua6JNFw77SKsjnY
-H6msCLwlA32MT4Scb7MMjWPkfwxSug==
-=yL1C
------END PGP SIGNATURE-----
+********************************************************************************
 
---Sig_/kgemz1Fwa6b_otqME0i73V1--
+Please see the description from the man page for strsep():
+
+http://man7.org/linux/man-pages/man3/strsep.3.html
+
+char *strsep(char **stringp, const char *delim);
+
+This function finds the first token in the string *stringp, that is 
+delimited by one of the bytes in the string delim.  This token is 
+terminated by overwriting the delimiter with a null byte ('\0'), and 
+*stringp is updated to point past the token.
+
+thanks,
+  -lakshmi
