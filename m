@@ -2,101 +2,123 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB217C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C69DC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A4C216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574961926;
-	bh=sk66wdh0s6ovQd2JLxe5u9bb6Bf0Dn5Hfp1cBrwkuiE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=so2m2i0tNosymVusm9BEf5t7uPGxUyV1eHKq6ii11tWJrHXohtNszWK4FpNB6ycS8
-	 7yNJenq3/J05+XlTs94Db2aSsYmpVeJ4r8IkfT7/TXC1GQJidUS61iAew2ze0YYTts
-	 /EQuNW41hm3FtSlMfrHOLB1rfGjaFsTvai0+9WvM=
+	by mail.kernel.org (Postfix) with ESMTP id 53F89216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfK1RZZ (ORCPT
+        id S1727076AbfK1R00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 12:25:25 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45314 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbfK1RYp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 12:24:45 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 203so20557329lfa.12;
-        Thu, 28 Nov 2019 09:24:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AWIsUNUBq4Dwz0cIArwIvo4yXMQZOnNjmlUY90hEg3c=;
-        b=VytegU+3FG0xyu80nd+WJEXpNhRX6xcar8sa+cvmh25D/SWUv6F4DAOlOQtY+tCoOH
-         HmRs8hVJcx+XdjN+ZdncvX+ixDH5U1L7Cma6s4GqjRGIVoY9da2xRbJMlJNRBmb+Nv6E
-         EQgNlnWsu6vXTPkQdgp/pIfxDJhOYUwniYBSWq1pTM6+ro6y08yxdEZLG1qwnBye0nly
-         0QNgXxNZqVxMup1v4UhHGc3E8ppOWowwR51ZrpVqKrXM5dGQfeMH1n+E2BS1DUMjtwHC
-         Eb43H3qtulHFMYH/9tVGMMUq8pUdmTrs14AQaKfBjUs/tk2bxyghmnh8ipeDxaZCWj2K
-         rCig==
-X-Gm-Message-State: APjAAAXtzSOnwLmY1LHZXsEZT991o9mNlYMZMVfUiGoLHLUnNbm9aH3j
-        0lnkisbJF/6aUWGg5Ug1Ge4weFmW
-X-Google-Smtp-Source: APXvYqyGQ+dl8mFz1yMZ8m53S07teEo9C3EYzmzo4P+OaSDV4T/S6Nal03t5H/RlfWUyB7J0f2eR7Q==
-X-Received: by 2002:ac2:4212:: with SMTP id y18mr5297266lfh.2.1574961882298;
-        Thu, 28 Nov 2019 09:24:42 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id z20sm9302723ljj.85.2019.11.28.09.24.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 09:24:41 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1iaNWz-0006wN-Dj; Thu, 28 Nov 2019 18:24:41 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 0/5] rsi: fix use-after-free, memleak and sleep-while-atomic
-Date:   Thu, 28 Nov 2019 18:21:59 +0100
-Message-Id: <20191128172204.26600-1-johan@kernel.org>
+        Thu, 28 Nov 2019 12:26:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56404 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726594AbfK1R00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 12:26:26 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6B9A2AE20;
+        Thu, 28 Nov 2019 17:26:24 +0000 (UTC)
+From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To:     cgroups@vger.kernel.org
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] cgroup/pids: Make pids.events notifications affine to pids.max
+Date:   Thu, 28 Nov 2019 18:26:12 +0100
+Message-Id: <20191128172612.10259-1-mkoutny@suse.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The syzbot fuzzer has reported two separate use-after-free issues,
-which are fixed by the first two patches.
+Currently, when pids.max limit is breached in the hierarchy, the event
+is counted and reported in the cgroup where the forking task resides.
 
-Turns out there were more gems in this driver and the next two patches
-fixes a memory leak and a potential sleep-while-atomic found through
-inspection.
+The proper hierarchical behavior is to count and report the event in the
+cgroup whose limit is being exceeded. Apply this behavior in the default
+hierarchy.
 
-The last one tightens the seemingly broken endpoint sanity check which
-would have the driver try to submit a bulk URB to the default pipe (and
-fail).
+Reasons for RFC:
 
-Tested using a mockup device.
+1) If anyone has adjusted their readings to this behavior, this is a BC
+   break.
 
-Johan
+2) This solves no reported bug, just a spotted inconsistency.
 
+3) One step further would be to distinguish pids.events and
+   pids.events.local for proper hierarchical counting. (The current
+   behavior wouldn't match neither though.)
 
-Johan Hovold (5):
-  rsi: fix use-after-free on failed probe and unbind
-  rsi: fix use-after-free on probe errors
-  rsi: fix memory leak on failed URB submission
-  rsi: fix non-atomic allocation in completion handler
-  rsi: add missing endpoint sanity checks
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+---
+ kernel/cgroup/pids.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
- drivers/net/wireless/rsi/rsi_91x_hal.c | 12 +++----
- drivers/net/wireless/rsi/rsi_91x_usb.c | 47 ++++++++++++++++++++------
- 2 files changed, 43 insertions(+), 16 deletions(-)
-
+diff --git a/kernel/cgroup/pids.c b/kernel/cgroup/pids.c
+index 138059eb730d..5fc34d8b8f60 100644
+--- a/kernel/cgroup/pids.c
++++ b/kernel/cgroup/pids.c
+@@ -140,7 +140,7 @@ static void pids_charge(struct pids_cgroup *pids, int num)
+  * the new value to exceed the hierarchical limit. Returns 0 if the charge
+  * succeeded, otherwise -EAGAIN.
+  */
+-static int pids_try_charge(struct pids_cgroup *pids, int num)
++static int pids_try_charge(struct pids_cgroup *pids, int num, struct pids_cgroup **fail)
+ {
+ 	struct pids_cgroup *p, *q;
+ 
+@@ -153,8 +153,10 @@ static int pids_try_charge(struct pids_cgroup *pids, int num)
+ 		 * p->limit is %PIDS_MAX then we know that this test will never
+ 		 * fail.
+ 		 */
+-		if (new > limit)
++		if (new > limit) {
++			*fail = p;
+ 			goto revert;
++		}
+ 	}
+ 
+ 	return 0;
+@@ -217,20 +219,25 @@ static void pids_cancel_attach(struct cgroup_taskset *tset)
+ static int pids_can_fork(struct task_struct *task)
+ {
+ 	struct cgroup_subsys_state *css;
+-	struct pids_cgroup *pids;
++	struct pids_cgroup *pids, *pids_over_limit;
+ 	int err;
+ 
+ 	css = task_css_check(current, pids_cgrp_id, true);
+ 	pids = css_pids(css);
+-	err = pids_try_charge(pids, 1);
++	err = pids_try_charge(pids, 1, &pids_over_limit);
+ 	if (err) {
++		/* Backwards compatibility on v1 where events were notified in
++		 * leaves. */
++		if (!cgroup_subsys_on_dfl(pids_cgrp_subsys))
++			pids_over_limit = pids;
++
+ 		/* Only log the first time events_limit is incremented. */
+-		if (atomic64_inc_return(&pids->events_limit) == 1) {
++		if (atomic64_inc_return(&pids_over_limit->events_limit) == 1) {
+ 			pr_info("cgroup: fork rejected by pids controller in ");
+-			pr_cont_cgroup_path(css->cgroup);
++			pr_cont_cgroup_path(pids_over_limit->css.cgroup);
+ 			pr_cont("\n");
+ 		}
+-		cgroup_file_notify(&pids->events_file);
++		cgroup_file_notify(&pids_over_limit->events_file);
+ 	}
+ 	return err;
+ }
 -- 
 2.24.0
 
