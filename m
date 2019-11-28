@@ -2,165 +2,107 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75279C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8218EC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E2B2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C092176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:48:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZeoJzVb9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="KWmWJv+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfK1Nsr (ORCPT
+        id S1726729AbfK1Ns5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:48:47 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55966 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfK1Nsp (ORCPT
+        Thu, 28 Nov 2019 08:48:57 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:33431 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfK1Ns4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:48:45 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a131so6708579wme.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:48:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2+9lLzA6tYXl6Vs9wqUuF2Bk1fla14D0jQAd3Lh6NWE=;
-        b=ZeoJzVb9ioAAkeIhCTK8cIY6q3updyUVGelzHsYoR1wl03/0dEVMtb6UDeUP1sX/55
-         SxLFvJ5x1b79o2X4gs1K3n/3NzKn1zTm2A0RyoWwGwTfT2a6aOKxJLFaA/RYnGixcqpG
-         SR/EowZJO0/P9f9uYhS3MSkTKM8OwZOVdrw++9+gZPTaEaI7qt9wveKIzRxnt1m6aP1c
-         WyKq8qmYwoyINdTyqulOCXkM+2kg5T/awkMiRN6aXV0BivBCpcIip+ieUtOTRIdXF9Yr
-         y+2qubfrqtJYBblSJZwU4GnqQkPjKEGuwAejEsFBVaF3gUJ0B2XRVFeBg6jhsoMbq3iU
-         U8bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2+9lLzA6tYXl6Vs9wqUuF2Bk1fla14D0jQAd3Lh6NWE=;
-        b=TLGHnIB8vn9viMTzZPYQBsy0141XdA82eh8B7VZwtowI33BWjOAB7R49cYDL3pEfvt
-         zIg4GiOiIvp8Wm/9W7aYnfZxs/2cStmQ1m7rDEGnC8Ebm+ZDyTbfPeBb9itaJPniM2ch
-         oQdn5bHoRlXdQcog2Mk6LWE8cMST8O3Ak92M7GSs9TPL4gGpk4DbwGq1HRQ0uisvjB6v
-         gLf/Px4nC9FeUwEmFbDglNDzU1ErTomLHIYeATYccE2JdNBpceWEJjtEVUq6L291tMJt
-         Brfn5ze4MmJWAYJQV3a0aM99YtvnqJb6EQBit9q4Q7lunnNwJQPwLNc2NqC6MELHdb2H
-         vldw==
-X-Gm-Message-State: APjAAAVZNzifG730G6JXMJ6MVFnf3r2Y6C+pywoVnz7IfromMTv6+Xkq
-        uQZZgEfnL9YkadK+28ITe6SdQA==
-X-Google-Smtp-Source: APXvYqx893KX5X1qljg2pe226q0Tjt5gya+f21cHdySFX/8fWZ2rys9ahSyS/AlO16MbDm+lV2dAdA==
-X-Received: by 2002:a7b:c5d9:: with SMTP id n25mr9861214wmk.8.1574948922009;
-        Thu, 28 Nov 2019 05:48:42 -0800 (PST)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id m3sm8523734wrs.53.2019.11.28.05.48.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 28 Nov 2019 05:48:41 -0800 (PST)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org
-Cc:     evgreen@chromium.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, daidavid1@codeaurora.org, masneyb@onstation.org,
-        sibis@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
-Subject: [PATCH 2/2] interconnect: qcom: Use the standard aggregate function
-Date:   Thu, 28 Nov 2019 15:48:39 +0200
-Message-Id: <20191128134839.27606-2-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191128134839.27606-1-georgi.djakov@linaro.org>
-References: <20191128134839.27606-1-georgi.djakov@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 28 Nov 2019 08:48:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574948934;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=/wIFaKm+ebxmf1zDi6heRwAyFXGyk1wVGBocTvOmgvg=;
+        b=KWmWJv+UuVCytxbtt7bbmW7qKStQeCk4zD7XVhLzCqDb3hwTytpgEmQyNi2Q9zUqLx
+        aHYNgAfouQOGcYDbM3WDIT/BO5VzcvBfQ9oV2J3gRhjkCpZzaeASLetkzld7DTLdVnU3
+        VlOqYjSnt84aH5xLZ9eQulQeV3fXY1NmG44oZChAY9smnzj/5Zf5Zox4luS2SOKgOtp4
+        q9+732esAeoKqI2PEfQxcwnT0s2ArjODDqUwfAKRHxA07QTG+rteBEhkKinxTHj3lFO3
+        FcHKfXX8r9TVijF2Tklh1au0VHoan7ujIrWOTO1LNu50DsYR8pN/Y1TsIUzh6t97yFyk
+        5BPg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw43upSE="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
+        with ESMTPSA id y07703vASDmkKBI
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Thu, 28 Nov 2019 14:48:46 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <4807842.gtHLO0kk0V@hyperion>
+Date:   Thu, 28 Nov 2019 14:48:46 +0100
+Cc:     mips-creator-ci20-dev@googlegroups.com,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <01D75E67-EC2E-4C74-B9BB-752773C481A9@goldelico.com>
+References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com> <7b6275c7-ab2b-a647-6bf7-d5e1c4523c98@arm.com> <D1CE4D1E-9A42-4FAE-90A9-615C38B979C0@goldelico.com> <4807842.gtHLO0kk0V@hyperion>
+To:     Maarten ter Huurne <maarten@treewalker.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now we have a common function for standard aggregation, so let's use it,
-instead of duplicating the code.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/interconnect/qcom/msm8974.c | 15 +++------------
- drivers/interconnect/qcom/qcs404.c  | 15 +++------------
- 2 files changed, 6 insertions(+), 24 deletions(-)
+> Am 28.11.2019 um 14:29 schrieb Maarten ter Huurne <maarten@treewalker.org>:
+> 
+> On Thursday, 28 November 2019 13:33:17 CET H. Nikolaus Schaller wrote:
+>> Hi Vincenzo,
+>> 
+>>> Am 28.11.2019 um 13:21 schrieb Vincenzo Frascino
+>>> <vincenzo.frascino@arm.com>:> 
+>>> [...]
+>>> The the lib that provides the gettimeofday() changes accordingly
+>>> with vdso_data. 5.4 and 4.19 have 2 different vdso libraries as
+>>> well.
+>> 
+>> Yes, that is what I have assumed what happens. How do these libs go
+>> into an existing and working root-file-system with Debian Stretch?
+> 
+> I'm a novice when it comes to vDSO, so someone please correct me if I'm 
+> wrong.
+> 
+> From what I read vDSO is a library in the sense that it exports ELF 
+> symbols that applications and other libraries (libc in particular) can 
+> use, but it is not a file on disk.
 
-diff --git a/drivers/interconnect/qcom/msm8974.c b/drivers/interconnect/qcom/msm8974.c
-index 8823dce811c3..bf724c2ca02b 100644
---- a/drivers/interconnect/qcom/msm8974.c
-+++ b/drivers/interconnect/qcom/msm8974.c
-@@ -550,15 +550,6 @@ static struct msm8974_icc_desc msm8974_snoc = {
- 	.num_nodes = ARRAY_SIZE(msm8974_snoc_nodes),
- };
- 
--static int msm8974_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
--				 u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
--{
--	*agg_avg += avg_bw;
--	*agg_peak = max(*agg_peak, peak_bw);
--
--	return 0;
--}
--
- static void msm8974_icc_rpm_smd_send(struct device *dev, int rsc_type,
- 				     char *name, int id, u64 val)
- {
-@@ -603,8 +594,8 @@ static int msm8974_icc_set(struct icc_node *src, struct icc_node *dst)
- 	qp = to_msm8974_icc_provider(provider);
- 
- 	list_for_each_entry(n, &provider->nodes, node_list)
--		msm8974_icc_aggregate(n, 0, n->avg_bw, n->peak_bw,
--				      &agg_avg, &agg_peak);
-+		provider->aggregate(n, 0, n->avg_bw, n->peak_bw,
-+				    &agg_avg, &agg_peak);
- 
- 	sum_bw = icc_units_to_bps(agg_avg);
- 	max_peak_bw = icc_units_to_bps(agg_peak);
-@@ -703,7 +694,7 @@ static int msm8974_icc_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&provider->nodes);
- 	provider->dev = dev;
- 	provider->set = msm8974_icc_set;
--	provider->aggregate = msm8974_icc_aggregate;
-+	provider->aggregate = icc_std_aggregate;
- 	provider->xlate = of_icc_xlate_onecell;
- 	provider->data = data;
- 
-diff --git a/drivers/interconnect/qcom/qcs404.c b/drivers/interconnect/qcom/qcs404.c
-index a4c6ba715f61..ce2e6faa3a79 100644
---- a/drivers/interconnect/qcom/qcs404.c
-+++ b/drivers/interconnect/qcom/qcs404.c
-@@ -327,15 +327,6 @@ static struct qcom_icc_desc qcs404_snoc = {
- 	.num_nodes = ARRAY_SIZE(qcs404_snoc_nodes),
- };
- 
--static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
--			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
--{
--	*agg_avg += avg_bw;
--	*agg_peak = max(*agg_peak, peak_bw);
--
--	return 0;
--}
--
- static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
- {
- 	struct qcom_icc_provider *qp;
-@@ -354,8 +345,8 @@ static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
- 	qp = to_qcom_provider(provider);
- 
- 	list_for_each_entry(n, &provider->nodes, node_list)
--		qcom_icc_aggregate(n, 0, n->avg_bw, n->peak_bw,
--				   &agg_avg, &agg_peak);
-+		provider->aggregate(n, 0, n->avg_bw, n->peak_bw,
-+				    &agg_avg, &agg_peak);
- 
- 	sum_bw = icc_units_to_bps(agg_avg);
- 	max_peak_bw = icc_units_to_bps(agg_peak);
-@@ -465,7 +456,7 @@ static int qnoc_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&provider->nodes);
- 	provider->dev = dev;
- 	provider->set = qcom_icc_set;
--	provider->aggregate = qcom_icc_aggregate;
-+	provider->aggregate = icc_std_aggregate;
- 	provider->xlate = of_icc_xlate_onecell;
- 	provider->data = data;
- 
+Ah, ok. This would mean that the libc providing the gettimeofday()
+should be able to find out a modified changed vdso_data format by
+inspecting these ELF symbols.
+
+> 
+> As such, which rootfs you use shouldn't matter, since the vDSO is not in 
+> the rootfs. Instead, it is contained in the kernel image. Searching for 
+> "linux-vdso.so.1" on packages.debian.org indeed returns no hits.
+> 
+> There is a check in arch/mips/vdso/Makefile that disables vDSO on MIPS 
+> when building the kernel with binutils < 2.25. I don't know if that is 
+> in any way related to this issue.
+
+What still does not fit into the picture is the errno = 1 i.e. EPERM.
+Maybe I have to study the libc code that tries to read the ELF symbols
+you have mentioned. It may fail for unknown reasons.
+
+BR and thanks,
+Nikolaus
