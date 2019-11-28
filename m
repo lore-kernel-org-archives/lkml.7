@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4262C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52A7C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDEE21741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B929B21781
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bP5Ky/rG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aYTpBBll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfK1Kry (ORCPT
+        id S1727139AbfK1Kr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:47:54 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58034 "EHLO
+        Thu, 28 Nov 2019 05:47:56 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58040 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfK1Krw (ORCPT
+        with ESMTP id S1727091AbfK1Krx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:47:52 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAll4A096685;
-        Thu, 28 Nov 2019 04:47:47 -0600
+        Thu, 28 Nov 2019 05:47:53 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAloJN096691;
+        Thu, 28 Nov 2019 04:47:50 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574938067;
-        bh=agcoWtKSTenRqtUlTyzEyGcBRm6Q0+Ai3WNO3BmnFjE=;
+        s=ti-com-17Q1; t=1574938070;
+        bh=KgCdmhuOnIHUcH9TRzqb5Eaq1xWjKMdqrGjEhzQdvbA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=bP5Ky/rGWNRIJXiEqUEJ3ULSyhXE+Rtzp8Zic6HwXGobf24j5w9oaqrGKcqZ3L/8y
-         Tj2pAvhUnCDG+LRGvFaNIvTBWip7QGaV3oLNydvX6bJdm6YURNewSW/8KylHoPrslk
-         Gdd9nJHaazzctcWjYQhH6H1rD18OSwoM1Nb4gJPo=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASAllbp126409
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Nov 2019 04:47:47 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        b=aYTpBBllxSotKLUS+3aoeu31JUJNmHMGX1d6IHWfltmRBfws9iWrTeRUXljYo1SXt
+         R2jejvIr6vx1FrTi1wGnJAGTixTXhsQw2Si7nlkNPPaGvchV8BSNWlQ1sVohXV4X0Z
+         Lip9z23+0APbFNPUbFTt0YZZjvMY43x2lz9NUtZ8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAlo7A118143;
+        Thu, 28 Nov 2019 04:47:50 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 04:47:47 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 04:47:49 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 04:47:47 -0600
+ Frontend Transport; Thu, 28 Nov 2019 04:47:49 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAlX41098163;
-        Thu, 28 Nov 2019 04:47:44 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAlX42098163;
+        Thu, 28 Nov 2019 04:47:47 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Anil Varughese <aniljoy@cadence.com>,
         Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>
 CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 04/14] phy: cadence: Sierra: Add support for SERDES_16G used in J721E SoC
-Date:   Thu, 28 Nov 2019 16:16:38 +0530
-Message-ID: <20191128104648.21894-5-kishon@ti.com>
+Subject: [PATCH v3 05/14] phy: cadence: Sierra: Make cdns_sierra_phy_init() as phy_ops
+Date:   Thu, 28 Nov 2019 16:16:39 +0530
+Message-ID: <20191128104648.21894-6-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191128104648.21894-1-kishon@ti.com>
 References: <20191128104648.21894-1-kishon@ti.com>
@@ -68,44 +67,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SERDES_16G in TI's J721E SoC uses Cadence Sierra PHY. Add
-support to use Cadence Sierra driver in J721E SoC.
+Instead of invoking cdns_sierra_phy_init() from probe, add it in
+phy_ops so that it's initialized when the PHY consumer invokes
+phy_init()
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/phy/cadence/phy-cadence-sierra.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/phy/cadence/phy-cadence-sierra.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index c60809f615af..d3b0dac2db77 100644
+index d3b0dac2db77..bc2ae260359c 100644
 --- a/drivers/phy/cadence/phy-cadence-sierra.c
 +++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -553,11 +553,25 @@ static const struct cdns_sierra_data cdns_map_sierra = {
- 	cdns_usb_regs
+@@ -176,7 +176,7 @@ static struct regmap_config cdns_sierra_phy_config_ctrl_config = {
+ 	.reg_read = cdns_regmap_read,
  };
  
-+static const struct cdns_sierra_data cdns_ti_map_sierra = {
-+	SIERRA_MACRO_ID,
-+	0x0,
-+	0x1,
-+	ARRAY_SIZE(cdns_pcie_regs),
-+	ARRAY_SIZE(cdns_usb_regs),
-+	cdns_pcie_regs,
-+	cdns_usb_regs
-+};
+-static void cdns_sierra_phy_init(struct phy *gphy)
++static int cdns_sierra_phy_init(struct phy *gphy)
+ {
+ 	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
+ 	struct cdns_sierra_phy *phy = dev_get_drvdata(gphy->dev.parent);
+@@ -185,6 +185,10 @@ static void cdns_sierra_phy_init(struct phy *gphy)
+ 	struct cdns_reg_pairs *vals;
+ 	u32 num_regs;
+ 
++	/* Initialise the PHY registers, unless auto configured */
++	if (phy->autoconf)
++		return 0;
 +
- static const struct of_device_id cdns_sierra_id_table[] = {
- 	{
- 		.compatible = "cdns,sierra-phy-t0",
- 		.data = &cdns_map_sierra,
- 	},
-+	{
-+		.compatible = "ti,sierra-phy-t0",
-+		.data = &cdns_ti_map_sierra,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, cdns_sierra_id_table);
+ 	if (ins->phy_type == PHY_TYPE_PCIE) {
+ 		num_regs = phy->init_data->pcie_regs;
+ 		vals = phy->init_data->pcie_vals;
+@@ -192,7 +196,7 @@ static void cdns_sierra_phy_init(struct phy *gphy)
+ 		num_regs = phy->init_data->usb_regs;
+ 		vals = phy->init_data->usb_vals;
+ 	} else {
+-		return;
++		return -EINVAL;
+ 	}
+ 	for (i = 0; i < ins->num_lanes; i++) {
+ 		for (j = 0; j < num_regs ; j++) {
+@@ -200,6 +204,8 @@ static void cdns_sierra_phy_init(struct phy *gphy)
+ 			regmap_write(regmap, vals[j].off, vals[j].val);
+ 		}
+ 	}
++
++	return 0;
+ }
+ 
+ static int cdns_sierra_phy_on(struct phy *gphy)
+@@ -218,6 +224,7 @@ static int cdns_sierra_phy_off(struct phy *gphy)
+ }
+ 
+ static const struct phy_ops ops = {
++	.init		= cdns_sierra_phy_init,
+ 	.power_on	= cdns_sierra_phy_on,
+ 	.power_off	= cdns_sierra_phy_off,
+ 	.owner		= THIS_MODULE,
+@@ -438,10 +445,6 @@ static int cdns_sierra_phy_probe(struct platform_device *pdev)
+ 		sp->phys[node].phy = gphy;
+ 		phy_set_drvdata(gphy, &sp->phys[node]);
+ 
+-		/* Initialise the PHY registers, unless auto configured */
+-		if (!sp->autoconf)
+-			cdns_sierra_phy_init(gphy);
+-
+ 		node++;
+ 	}
+ 	sp->nsubnodes = node;
 -- 
 2.17.1
 
