@@ -2,96 +2,276 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96176C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55864C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E13F21771
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27BDB217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2oqZIAk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pCfa8I1b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfK1QVs (ORCPT
+        id S1726648AbfK1QYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 11:21:48 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44451 "EHLO
+        Thu, 28 Nov 2019 11:24:42 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45559 "EHLO
         mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfK1QVs (ORCPT
+        with ESMTP id S1726446AbfK1QYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:21:48 -0500
-Received: by mail-oi1-f196.google.com with SMTP id s71so23691286oih.11;
-        Thu, 28 Nov 2019 08:21:47 -0800 (PST)
+        Thu, 28 Nov 2019 11:24:42 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 14so23688309oir.12;
+        Thu, 28 Nov 2019 08:24:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ROLFe53saAFC47gBos/sXEaQxo/HwRqEwLRCW7ni3J8=;
-        b=K2oqZIAkJXv7Kec1vaw7bJeixMFCkbNzp3tFpH8iIjHS8/qaVHF9mZZDAnjaaCq6MI
-         0OkKIE6ohvM6Fkqv4Lx3dLzLxUdY1rXAGCpa2+5iL17nVhnZdGQa8brJkuHpmfwPkEfr
-         ihz3Doh3hYYd5RMaLjGD87y+HVgtqG5dPm2mpOsBZ0z3IomYla7pzNSbRQ94M3HUWT62
-         CtpcDmhNiLg32jKbYwls19Kdlg/26dEMrIenV1C1A3A8r2hNaDqClSviBaoRK4xC2LVp
-         ZRFJv7s7qLrkj9LsvU3/c/9wKyp/1JOj2wh0LHOSHKROlZoh4R5pAPi13dBJo+ILaypa
-         ngWg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z3VqpjrZB5dVKBqJG+mBiDtnZ2Bu7fCXo2j8f/VRZBE=;
+        b=pCfa8I1bGBJviToPnlI7I96+AvxXirWhqa1wUa20TPpvOfSet/Jbt0Lpoo+Nzqt4fE
+         LSz+mJ7sp9C3DNk2hs5CjRxI4FKiTSXqK3sBqj7cIALppBwCdLCmePe6GKkIy3QTYzEW
+         j8/WF9jIePBnNm9A5VK2yPfms5BHVw8K6ktYULdc3yBai4cXaxERnoUIQW/67pRftz+6
+         Ks9X6RGtaA/GLOUc8FFploAP1oPdB5RucTmtRXbp074EwSC2k5fpNywfVlN79xQDPutd
+         M0OjD4rctuwzHm+XTBODgvxhP7SoqKSRaXIY+5ShWrs96D+zE/kQ3fA+xPEeP76rZRV2
+         FQbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ROLFe53saAFC47gBos/sXEaQxo/HwRqEwLRCW7ni3J8=;
-        b=lc847OigZiIFvydC0wMQZbQqRYRo/iYRPi+IZWN8PFgTwQUmmYE2XINjdS9xNkLIzF
-         OO86uNlTxLPSpxXhUBtNdbs2wRl7IHMvFDGf9LEyNyv/LIMS4/8RV6KcXcILLopEOpml
-         lngKY24hjAE+sxeHKws4GAL49ytGFDJDdqAHQNgvQlLKGuzyEb9c849a7rZmW242K4/q
-         9bJGx90nkwBNePwTFFvbKin5e5wwEJFH0WPIJBWHBsGKEITfAYs4eY1JBVaJ6AixOy29
-         HpjeoIxBC11iq5QTbXsJaZIfi5sbe9OqoQOkW7qyYsKQTV8/0I1C4bcZ3ANvKEqXNJCn
-         PvHw==
-X-Gm-Message-State: APjAAAVrLV0bXDzKKV1oh/FYzw12XealQUlcND82uErEgS24mxQHuFZV
-        yKbWRhTGbZ2MJ16111Gu1cnnvJZa
-X-Google-Smtp-Source: APXvYqyneXmDfPlBUP6GChNm4UjPunM+fMpOrqQFGu4Ys9isyJ61rp9p/e0OrZohEtXRKeOn5G1pfw==
-X-Received: by 2002:a05:6808:ab4:: with SMTP id r20mr9293834oij.166.1574958107081;
-        Thu, 28 Nov 2019 08:21:47 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 202sm6281526oii.39.2019.11.28.08.21.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Nov 2019 08:21:46 -0800 (PST)
-Subject: Re: [PATCH 5.3 00/95] 5.3.14-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191127202845.651587549@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <b1e94ecb-ff95-489f-73bf-e579c7f81b73@roeck-us.net>
-Date:   Thu, 28 Nov 2019 08:21:45 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z3VqpjrZB5dVKBqJG+mBiDtnZ2Bu7fCXo2j8f/VRZBE=;
+        b=HaAMER7raYDjdqijVx3kSO06nXug+h85psJwilpguj2R2g0BmlhegGZ/TAQlKL2gsL
+         rkx5f4W8UBrcr5IHzky7AiNrHhvuQnBwl3xFHUGr1hUzcy+n2KgmI+CvvOuZ0KmjE/n8
+         QC+8bELHb5GEwGDAli+szzYZSgWG5IXcVmxb7gaGPHNxlyldJyd7Xz7MmznjfPfh2iGO
+         XXr+vrRtNA9zE8Oty77q1g+gAq0ttWGeKnR6d2ipPxq+i1ctPoxT34FJ7SJYMHfWgHvG
+         n4858OSsojkDbEqzRSkRTXMav6yF1OS0+yNPcvwsIM+HxB8U3ljC9Hz1I11zrZWBKwCw
+         wiDw==
+X-Gm-Message-State: APjAAAVv84HkpNLuw13pCQQRalTueebCS6j7Hry3aFm/5T5mTRjPl7IE
+        yaqBlZdT1i8huIWOSVknGFSS+WMygbgczfiLFXr8GbdN1ro=
+X-Google-Smtp-Source: APXvYqzz7ps6eXoUhwDQKMUk7cAIqzYXyKKS19x5F5J/c1WL4oGQ5D0Zg836VRhZZOC0G9Xb+Fho4S0eFMAeGSAZ8J4=
+X-Received: by 2002:aca:edd5:: with SMTP id l204mr6637720oih.98.1574958280574;
+ Thu, 28 Nov 2019 08:24:40 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191127052935.1719897-1-anarsoul@gmail.com> <20191127052935.1719897-3-anarsoul@gmail.com>
+ <20191127174434.wousbqosmm5vxcsu@gilmour.lan> <CA+E=qVe22T1uhUo6iq9a82Y9bC014CZSkAtSJJNX4qsn6dJL9w@mail.gmail.com>
+ <20191128074325.q47rpzhufwog6mbb@gilmour.lan> <CAEExFWs7A4TcB-QcatfR3w1hUX88dC-Sxd=epQppwB7p2CC6SA@mail.gmail.com>
+ <CAEExFWu4MPxA+Vs1BNzCqeR5EkbVT2SjMf6hRBK6nZ2doJmduA@mail.gmail.com>
+In-Reply-To: <CAEExFWu4MPxA+Vs1BNzCqeR5EkbVT2SjMf6hRBK6nZ2doJmduA@mail.gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Thu, 28 Nov 2019 08:24:14 -0800
+Message-ID: <CA+E=qVcp9MqFPoU9DCypAw7kK+obeDnES4QSeq7mSUc+rRLutw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for
+ sun8i-thermal driver bindings
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/27/19 12:31 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.14 release.
-> There are 95 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> Anything received after that time might be too late.
-> 
+On Thu, Nov 28, 2019 at 6:45 AM Frank Lee <tiny.windzz@gmail.com> wrote:
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 391 pass: 391 fail: 0
+Hey Yangtao,
 
-Guenter
+I've already addressed all the comments and fixed patchset is sitting
+in https://github.com/anarsoul/linux-2.6/tree/ths-5.4
+
+I'll rebase and submit new version after merge window is closed (in ~1.5 weeks?)
+
+Regards,
+Vasily
+
+> diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> new file mode 100644
+> index 000000000000..1be32f09fcc8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> @@ -0,0 +1,160 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Yangtao Li <tiny.windzz@gmail.com>
+> +
+> +description: |-
+> +  This describes the device tree binding for the Allwinner thermal
+> +  controller which measures the on-SoC temperatures.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - allwinner,sun8i-a83t-ths
+> +      - allwinner,sun8i-h3-ths
+> +      - allwinner,sun8i-r40-ths
+> +      - allwinner,sun50i-a64-ths
+> +      - allwinner,sun50i-h5-ths
+> +      - allwinner,sun50i-h6-ths
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: ths bus clock
+> +      - description: ths mod clock
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: bus
+> +      - const: mod
+> +
+> +  "#thermal-sensor-cells":
+> +    enum: [ 0, 1 ]
+> +
+> +  nvmem-cells:
+> +    description: ths calibrate data
+> +
+> +  nvmem-cell-names:
+> +    const: calibration
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - "#thermal-sensor-cells"
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - allwinner,sun8i-h3-ths
+> +              - allwinner,sun8i-r40-ths
+> +              - allwinner,sun50i-a64-ths
+> +              - allwinner,sun50i-h5-ths
+> +              - allwinner,sun50i-h6-ths
+> +
+> +    then:
+> +      properties:
+> +        resets:
+> +          minItems: 1
+> +          maxItems: 1
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: allwinner,sun50i-h6-ths
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 1
+> +          maxItems: 1
+> +
+> +        clock-names:
+> +          minItems: 1
+> +          maxItems: 1
+> +
+> +    else:
+> +      if:
+> +        properties:
+> +          compatible:
+> +            contains:
+> +              enum:
+> +                - allwinner,sun8i-h3-ths
+> +                - allwinner,sun8i-r40-ths
+> +                - allwinner,sun50i-a64-ths
+> +                - allwinner,sun50i-h5-ths
+> +
+> +      then:
+> +        properties:
+> +          clocks:
+> +            minItems: 2
+> +            maxItems: 2
+> +
+> +          clock-names:
+> +            minItems: 2
+> +            maxItems: 2
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: allwinner,sun8i-h3-ths
+> +
+> +    then:
+> +      properties:
+> +        "#thermal-sensor-cells":
+> +          const: 0
+> +
+> +    else:
+> +      properties:
+> +        "#thermal-sensor-cells":
+> +          const: 1
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    ths: ths@5070400 {
+> +        compatible = "allwinner,sun50i-h6-ths";
+> +        reg = <0x05070400 0x100>;
+> +        clocks = <&ccu 89>;
+> +        clock-names = "bus";
+> +        resets = <&ccu 36>;
+> +        interrupts = <0 15 4>;
+> +        nvmem-cells = <&tsen_calib>;
+> +        nvmem-cell-names = "calibration";
+> +        #thermal-sensor-cells = <1>;
+> +    };
+> +
+> +    sid: sid@3006000 {
+> +        compatible = "allwinner,sun50i-h6-sid";
+> +        reg = <0x03006000 0x400>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        tsen_calib: calib@14 {
+> +                reg = <0x14 6>;
+> +        };
+> +    };
+> +...
+>
+> On Thu, Nov 28, 2019 at 10:35 PM Frank Lee <tiny.windzz@gmail.com> wrote:
+> >
+> > Hi,
+> >
+> > How about this?
+> >
+> > Best regards,
+> > Yangtao
