@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23639C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC26C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E37F221787
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C5B21787
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574948479;
-	bh=7ebZxlQeK3i6HO6kyJkH5U3sX6wGAES1gtF55or1/4s=;
+	s=default; t=1574948483;
+	bh=Aa0oECrVA5qBTToYuctnSt1O62ukTrqomeZqD9+P00k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZcXr/xQHHXryODPFWc+ZvBZlZA1DrIvsnYLNJ+OKGaB8na/Ex/GWeFROgaQq4DfF
-	 SE20LPb5S/dZ4MvyN++jtDFqHT7DYD1I9lTxro8nGapw1bGX3dme/K2f8Ab2Xf0dcG
-	 PVcXkdt0EBsm1167LQjio8R/Yeg/jjrOop05Skc4=
+	b=kbUVetV4IB2jt/rAmLsuQhDo+jhZYLQ4h+guI6YD2yurf1qUfDwU7PVacaAqaNHiX
+	 gwJ7z7skO4URp74Imy8OaxjEfCE/GEizolHi/gz24I9dkING6IOwlqcJHj2EgvXlPO
+	 IgWZshsrt6r0rFfxfjwEBhS2MeimTJhc8xf9Xi4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfK1NlR (ORCPT
+        id S1727247AbfK1NlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:41:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37734 "EHLO mail.kernel.org"
+        Thu, 28 Nov 2019 08:41:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbfK1NlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:41:14 -0500
+        id S1727040AbfK1NlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 08:41:20 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 047D2217BA;
-        Thu, 28 Nov 2019 13:41:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D297A217D7;
+        Thu, 28 Nov 2019 13:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574948473;
-        bh=7ebZxlQeK3i6HO6kyJkH5U3sX6wGAES1gtF55or1/4s=;
+        s=default; t=1574948479;
+        bh=Aa0oECrVA5qBTToYuctnSt1O62ukTrqomeZqD9+P00k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lRKXoKB8jQ8lcUuaE+m6WLCaJi3BZ23+gDK/V0XByGFfaIz7WrbashVOxca/omUul
-         AQVc64eiHehnbLm6t3Hu04cVUJoUY+LMo20A2ABJflJauR22s6hRAIwNc32md6OMyn
-         TYqm061SQY3NnbfF+WxouoiIO4ZTiQ0JrZXRkOx0=
+        b=EdsYGujnD70lhqgh6bRzgXx1e1w53iyDqGWT8DtJgToIVA5kjuNKj97ETxVs3DeQN
+         7jaPAqBZEn3ZjQ7ZbQGar66itT0SWdjYoP++8VPi8no/252RBd0Vn76EP4u7ONb9eR
+         /CFQOCU/n+A+3Oqv49ujSS+LEfuWs7Zg9LoNHrjI=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 12/22] perf maps: Rename map_groups.h to maps.h
-Date:   Thu, 28 Nov 2019 10:40:17 -0300
-Message-Id: <20191128134027.23726-13-acme@kernel.org>
+Subject: [PATCH 14/22] perf tests: Rename tests/map_groups.c to tests/maps.c
+Date:   Thu, 28 Nov 2019 10:40:19 -0300
+Message-Id: <20191128134027.23726-15-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191128134027.23726-1-acme@kernel.org>
 References: <20191128134027.23726-1-acme@kernel.org>
@@ -63,181 +63,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-One more step in the merge of 'struct maps' with 'struct map_groups'.
+One more step in mergint the maps and map_groups structs.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-9ibtn3vua76f934t7woyf26w@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-bw6aagubqxc47m54k2maezfu@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm/tests/dwarf-unwind.c     | 2 +-
- tools/perf/arch/arm64/tests/dwarf-unwind.c   | 2 +-
- tools/perf/arch/powerpc/tests/dwarf-unwind.c | 2 +-
- tools/perf/arch/x86/tests/dwarf-unwind.c     | 2 +-
- tools/perf/tests/map_groups.c                | 2 +-
- tools/perf/ui/stdio/hist.c                   | 2 +-
- tools/perf/util/annotate.c                   | 2 +-
- tools/perf/util/machine.h                    | 2 +-
- tools/perf/util/{map_groups.h => maps.h}     | 6 +++---
- tools/perf/util/probe-event.c                | 2 +-
- tools/perf/util/symbol-elf.c                 | 2 +-
- 11 files changed, 13 insertions(+), 13 deletions(-)
- rename tools/perf/util/{map_groups.h => maps.h} (96%)
+ tools/perf/tests/Build                    | 2 +-
+ tools/perf/tests/builtin-test.c           | 4 ++--
+ tools/perf/tests/{map_groups.c => maps.c} | 2 +-
+ tools/perf/tests/tests.h                  | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+ rename tools/perf/tests/{map_groups.c => maps.c} (97%)
 
-diff --git a/tools/perf/arch/arm/tests/dwarf-unwind.c b/tools/perf/arch/arm/tests/dwarf-unwind.c
-index ff0bea660cf9..ccfa87055c4a 100644
---- a/tools/perf/arch/arm/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/arm/tests/dwarf-unwind.c
-@@ -3,7 +3,7 @@
- #include "perf_regs.h"
- #include "thread.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "event.h"
- #include "debug.h"
- #include "tests/tests.h"
-diff --git a/tools/perf/arch/arm64/tests/dwarf-unwind.c b/tools/perf/arch/arm64/tests/dwarf-unwind.c
-index 85108437b3af..46147a483049 100644
---- a/tools/perf/arch/arm64/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/arm64/tests/dwarf-unwind.c
-@@ -3,7 +3,7 @@
- #include "perf_regs.h"
- #include "thread.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "event.h"
- #include "debug.h"
- #include "tests/tests.h"
-diff --git a/tools/perf/arch/powerpc/tests/dwarf-unwind.c b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-index 30658e3b32b2..8efd9ed9e9db 100644
---- a/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-@@ -3,7 +3,7 @@
- #include "perf_regs.h"
- #include "thread.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "event.h"
- #include "debug.h"
- #include "tests/tests.h"
-diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
-index 418969cd64e9..ef43be9b6ec2 100644
---- a/tools/perf/arch/x86/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
-@@ -3,7 +3,7 @@
- #include "perf_regs.h"
- #include "thread.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "event.h"
- #include "debug.h"
- #include "tests/tests.h"
-diff --git a/tools/perf/tests/map_groups.c b/tools/perf/tests/map_groups.c
-index 9df1d14db40e..7febd02069ae 100644
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 5b9b0a813916..a3c595fba943 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -52,7 +52,7 @@ perf-y += perf-hooks.o
+ perf-y += clang.o
+ perf-y += unit_number__scnprintf.o
+ perf-y += mem2node.o
+-perf-y += map_groups.o
++perf-y += maps.o
+ perf-y += time-utils-test.o
+ 
+ $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 3a4b9837b54d..7115aa32a51e 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -297,8 +297,8 @@ static struct test generic_tests[] = {
+ 		.func = test__time_utils,
+ 	},
+ 	{
+-		.desc = "map_groups__merge_in",
+-		.func = test__map_groups__merge_in,
++		.desc = "maps__merge_in",
++		.func = test__maps__merge_in,
+ 	},
+ 	{
+ 		.func = NULL,
+diff --git a/tools/perf/tests/map_groups.c b/tools/perf/tests/maps.c
+similarity index 97%
+rename from tools/perf/tests/map_groups.c
+rename to tools/perf/tests/maps.c
+index 7febd02069ae..edcbc70ff9d6 100644
 --- a/tools/perf/tests/map_groups.c
-+++ b/tools/perf/tests/map_groups.c
-@@ -3,7 +3,7 @@
- #include <linux/kernel.h>
- #include "tests.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "dso.h"
- #include "debug.h"
++++ b/tools/perf/tests/maps.c
+@@ -33,7 +33,7 @@ static int check_maps(struct map_def *merged, unsigned int size, struct maps *ma
+ 	return TEST_OK;
+ }
  
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 161d8342ce05..2ab2af4d4849 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -8,7 +8,7 @@
- #include "../../util/event.h"
- #include "../../util/hist.h"
- #include "../../util/map.h"
--#include "../../util/map_groups.h"
-+#include "../../util/maps.h"
- #include "../../util/symbol.h"
- #include "../../util/sort.h"
- #include "../../util/evsel.h"
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 14f3edc3c261..f5e77ed237e8 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -23,7 +23,7 @@
- #include "dso.h"
- #include "env.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "symbol.h"
- #include "srcline.h"
- #include "units.h"
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index fe602cfc2163..be0a930eca89 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -4,7 +4,7 @@
+-int test__map_groups__merge_in(struct test *t __maybe_unused, int subtest __maybe_unused)
++int test__maps__merge_in(struct test *t __maybe_unused, int subtest __maybe_unused)
+ {
+ 	struct maps maps;
+ 	unsigned int i;
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index f2b9bb024746..25aea387e2bf 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -107,7 +107,7 @@ const char *test__clang_subtest_get_desc(int subtest);
+ int test__clang_subtest_get_nr(void);
+ int test__unit_number__scnprint(struct test *test, int subtest);
+ int test__mem2node(struct test *t, int subtest);
+-int test__map_groups__merge_in(struct test *t, int subtest);
++int test__maps__merge_in(struct test *t, int subtest);
+ int test__time_utils(struct test *t, int subtest);
  
- #include <sys/types.h>
- #include <linux/rbtree.h>
--#include "map_groups.h"
-+#include "maps.h"
- #include "dsos.h"
- #include "rwsem.h"
- 
-diff --git a/tools/perf/util/map_groups.h b/tools/perf/util/maps.h
-similarity index 96%
-rename from tools/perf/util/map_groups.h
-rename to tools/perf/util/maps.h
-index ada2f401ebab..3dd000ddf925 100644
---- a/tools/perf/util/map_groups.h
-+++ b/tools/perf/util/maps.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __PERF_MAP_GROUPS_H
--#define __PERF_MAP_GROUPS_H
-+#ifndef __PERF_MAPS_H
-+#define __PERF_MAPS_H
- 
- #include <linux/refcount.h>
- #include <linux/rbtree.h>
-@@ -84,4 +84,4 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map);
- 
- void __maps__sort_by_name(struct maps *maps);
- 
--#endif // __PERF_MAP_GROUPS_H
-+#endif // __PERF_MAPS_H
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index c06cc9764c3b..eea132f512b0 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -28,7 +28,7 @@
- #include "dso.h"
- #include "color.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "symbol.h"
- #include <api/fs/fs.h>
- #include "trace-event.h"	/* For __maybe_unused */
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index fac3f585e9b4..6658fbf196e6 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -9,7 +9,7 @@
- 
- #include "dso.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "symbol.h"
- #include "symsrc.h"
- #include "demangle-java.h"
+ bool test__bp_signal_is_supported(void);
 -- 
 2.21.0
 
