@@ -2,108 +2,79 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5766C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77648C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C2A21775
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574937370;
-	bh=0LqZo1Ue9uKr6TnWQN58wFAQwI492H+XmI66XuoUXv4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xFTuspgYuNTMWDlr7UB3yFT2gXbnHydQtOcAJjnpcnr91OE0Ik72n9nY9BnLIf5YY
-	 JE78D3hK6fZ5A+T2EAju6AYw8v21+AfKTGEO8g56mazwqL5Ll5HW9iUT8N6xpR0par
-	 0p0nEWfF2fNHzyaaJ5K6YeoHLvJCTadrlDduGLgw=
+	by mail.kernel.org (Postfix) with ESMTP id 4E31A21741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:38:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="k5YupAEv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfK1KgJ (ORCPT
+        id S1726586AbfK1Kiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:36:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfK1KgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:36:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55B9921774;
-        Thu, 28 Nov 2019 10:36:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574937366;
-        bh=0LqZo1Ue9uKr6TnWQN58wFAQwI492H+XmI66XuoUXv4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Uu4Dt/cwxfe0UblNon7Q0gUYwIJUbVNCqx+Wp9KeoSJRRHFINsfVqbEfUNT6S402Y
-         w1zwd55vqBYGCRMbvFRj84n9aRKsiDAK90n2ywqUdy/KUdtzW8H7/hGVibnzuFqPUz
-         nlCxftMVP2U1mYfFQLEnE2HYIXWWQoA+vQTQu9nw=
-Date:   Thu, 28 Nov 2019 11:36:04 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.3 00/95] 5.3.14-stable review
-Message-ID: <20191128103604.GB3399855@kroah.com>
-References: <20191127202845.651587549@linuxfoundation.org>
- <0c65f759-f22c-1b15-1f71-929def8ac43e@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0c65f759-f22c-1b15-1f71-929def8ac43e@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Thu, 28 Nov 2019 05:38:46 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25876 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfK1Kiq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 05:38:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574937489; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=XPqbXeBMXRdabPgNXCuXemkp9NfG7XufPrdRSGOrlGNKMc4at2sSg33OVaWvSIXErHhgQjwNtowJ+9Xzau/HtQofBt6cbCOfv5DT6jCJsqyAgce+n8ZNKS1OW80YsXS2fFqDYRNRE1pCrGqU12Hx9zRbABrzwYBryY14eF7j7Xg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574937489; h=Cc:Date:From:Message-ID:Subject:To; 
+        bh=yxfZjaSzvJmmIF3/UDAUmKpxvOzSWUdEnx1zq5UN/00=; 
+        b=edt0plzyFotImPqliddn1VNt+ejQtm0cj+LjaVGldNOsUpECRwNpGt0B4uRaKS32IqXUgujPny3J+vHgVnWS/fJLV8dAehZwxiyXBV6ZAZiU6vSO3hXWaUlfLFjn5v/t7gceS1icjjJecAdgWN8af4qrx7HKGWyODSscFky6s5Q=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=Io2VzhN8FYm+jCGBn/nLbNTlVcpCWv3hs1b2ku2MD775kJ7bubjrri20OYkDI6pF8TFJFvjoBXU2
+    l/Sc5UuK6Q80LD0n3caDC2rZfvna1fLebb4z1COopR/8aLE0+AWF  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574937489;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=yxfZjaSzvJmmIF3/UDAUmKpxvOzSWUdEnx1zq5UN/00=;
+        b=k5YupAEv7Akw3gLKEWaNctmtE9vvoYUt29NR6PCdiv8UyyFzPxzhhwb4tMtbpOmp
+        IoWMz4WooSgEEqW+pyrlpvpZ2mCkNAOGH+nTmnbK7OkW9DeHyamhXxzY8md7EiQeh/Z
+        VuN2u1slKce+YE7qgpQ8QEu7sQYMcdZ+m9zvdIM4=
+Received: from zhouyanjie-virtual-machine.localdomain (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
+        with SMTPS id 1574937487395663.3286323165637; Thu, 28 Nov 2019 02:38:07 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: Add initial support for Ingenic X1000 SoC and Y&A CU Neo board v5.
+Date:   Thu, 28 Nov 2019 18:37:37 +0800
+Message-Id: <1574937467-101907-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 09:15:45AM +0000, Jon Hunter wrote:
-> 
-> On 27/11/2019 20:31, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.3.14 release.
-> > There are 95 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.14-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> ...
-> 
-> > Jouni Hogander <jouni.hogander@unikie.com>
-> >     net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
-> 
-> The above commit is causing a boot regression (NULL pointer deference
-> crash) on Tegra210 for v5.3. Reverting this on top of 5.3.14-rc1 fixes
-> the problem. Complete results for Tegra are here ...
-> 
-> Test results for stable-v5.3:
->     13 builds:	13 pass, 0 fail
->     24 boots:	18 pass, 6 fail
->     34 tests:	34 pass, 0 fail
-> 
-> Linux version:	5.3.14-rc1-g7173a2d18fa6
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
+v4->v5:
+1.Adjust item naming to prevent conflicts with subsequent "CU Geo" boards.
+2.Rename "cu1000" to "cu1000-neo" to prevent conflicts with subsequent boards
+  such as "cu1000-geo", and so on.
+3.Remove "CONFIG_HZ=100" and "mem=32M@0x0" from defconfg, and update defconfig
+  for msc controller and rtc.
+4.Add msc controller and rtc DT node, and modify incorrect comments in DT.
 
-I've pushed out a -rc2 that should resolve this now.  If not, please let
-me know.
 
-thansk,
-
-greg k-h
