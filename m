@@ -4,118 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887F3C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BA7C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E2020880
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C67320880
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 22:40:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K+IKYnZ/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UIBQKkwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfK1WjI (ORCPT
+        id S1726722AbfK1WkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 17:39:08 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48116 "EHLO
+        Thu, 28 Nov 2019 17:40:25 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48154 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfK1WjH (ORCPT
+        with ESMTP id S1726582AbfK1WkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 17:39:07 -0500
+        Thu, 28 Nov 2019 17:40:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pZCnrPr2b9gLMJqHgJo0gt01BaizFyA66hYSt9kdrmM=; b=K+IKYnZ/GsB+ZkQTbcKnhP/Pc
-        c6AKsa1pl3X/SWUAPvotc5kwRzdAocWRZcKuyIdCRNz2v3hWSfKpbjXcqKwKeFCsvKuiiRQruAJX4
-        rAybf2ktb0++MuvMBIyMcfEWakbScUlRpQD27Qib2+jeuGlVY8mTyLJDunoTWF6VdfJ99LKe4jvBD
-        NHIqDfxvOISGNpPt+cSNGVfXDAwJsH/TLz94fb/9EzXZErZCUIDLH2ypPdg9NSU7xq2OBZgTMLKZn
-        l/zH5R3FZnikl4Czt+RVpQLs1qiTVcUdBrTRq+bjjvD4I32SmtnJInWTvP1ET4xEY6dVFm0UBy4S0
-        +VU/OID+Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iaSRE-0007TB-JM; Thu, 28 Nov 2019 22:39:04 +0000
-Date:   Thu, 28 Nov 2019 14:39:04 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm/page_vma_mapped: page table boundary is already
- guaranteed
-Message-ID: <20191128223904.GG20752@bombadil.infradead.org>
-References: <20191128010321.21730-1-richardw.yang@linux.intel.com>
- <20191128010321.21730-2-richardw.yang@linux.intel.com>
- <20191128083143.kwih655snxqa2qnm@box.shutemov.name>
- <20191128210945.6gtt7wlygsvxip4n@master>
+         bh=8s4OV8QdxGuKeWypyj3UNsLPvMPu6eIU4B1rnNMiCVk=; b=UIBQKkwYlA9v9WMMmXJQwIW3o
+        ul8DnxLBsDJcre9bnLzGrSbi3mx4Hrc9IwLNHl7BmkY3gOMJsrwqpHYRy7bj6oh9QnSNjd5sRPbfe
+        7GwbMXtP1MLrFuWld0bcdKHTX8az7ijTNuN2Ix0Z7xx+2dmWbXcVx9SAhkAPsTIHWe1jfD3l/Ip40
+        QuvBSD53+5bYSoo5afxJImzsvt0m1moQSXnjWNtw2/s3Wr8iQdYmYnnnLaiP8vQkvzgm6aoC0Nexh
+        zNGfjcjuyytb51YVH3guxoPn2C/V6yKfLLV7qI+nyXFbez6nI9bpxWqW4I1XNAzY7ED2Bd5+i7a1y
+        FeyKGkpxg==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iaSSW-0000OZ-D3; Thu, 28 Nov 2019 22:40:24 +0000
+To:     LKML <linux-kernel@vger.kernel.org>, linux-csky@vger.kernel.org
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, Guo Ren <guoren@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] clocksource: minor Kconfig help text fixes
+Message-ID: <87922baa-223a-345d-38ac-be5a94d15b34@infradead.org>
+Date:   Thu, 28 Nov 2019 14:40:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128210945.6gtt7wlygsvxip4n@master>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 09:09:45PM +0000, Wei Yang wrote:
-> On Thu, Nov 28, 2019 at 11:31:43AM +0300, Kirill A. Shutemov wrote:
-> >On Thu, Nov 28, 2019 at 09:03:21AM +0800, Wei Yang wrote:
-> >> The check here is to guarantee pvmw->address iteration is limited in one
-> >> page table boundary. To be specific, here the address range should be in
-> >> one PMD_SIZE.
-> >> 
-> >> If my understanding is correct, this check is already done in the above
-> >> check:
-> >> 
-> >>     address >= __vma_address(page, vma) + PMD_SIZE
-> >> 
-> >> The boundary check here seems not necessary.
-> >> 
-> >> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> >
-> >NAK.
-> >
-> >THP can be mapped with PTE not aligned to PMD_SIZE. Consider mremap().
-> >
-> 
-> Hi, Kirill
-> 
-> Thanks for your comment during Thanks Giving Day. Happy holiday:-)
-> 
-> I didn't think about this case before, thanks for reminding. Then I tried to
-> understand your concern.
-> 
-> mremap() would expand/shrink a memory mapping. In this case, probably shrink
-> is in concern. Since pvmw->page and pvmw->vma are not changed in the loop, the
-> case you mentioned maybe pvmw->page is the head of a THP but part of it is
-> unmapped.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-mremap() can also move a mapping, see MREMAP_FIXED.
+Minor cleanups in Kconfig help text:
 
-> This means the following condition stands:
-> 
->     vma->vm_start <= vma_address(page) 
->     vma->vm_end <=   vma_address(page) + page_size(page)
-> 
-> Since we have checked address with vm_end, do you think this case is also
-> guarded?
-> 
-> Not sure my understanding is correct, look forward your comments.
-> 
-> >> Test:
-> >>    more than 48 hours kernel build test shows this code is not touched.
-> >
-> >Not an argument. I doubt mremap(2) is ever called in kernel build
-> >workload.
-> >
-> >-- 
-> > Kirill A. Shutemov
-> 
-> -- 
-> Wei Yang
-> Help you, Help me
-> 
+- End a sentence with a period.
+- Fix verb grammar.
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Guo Ren <guoren@kernel.org>
+Cc: linux-csky@vger.kernel.org
+---
+ drivers/clocksource/Kconfig |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- lnx-54.orig/drivers/clocksource/Kconfig
++++ lnx-54/drivers/clocksource/Kconfig
+@@ -312,7 +312,7 @@ config ARC_TIMERS_64BIT
+ 	depends on ARC_TIMERS
+ 	select TIMER_OF
+ 	help
+-	  This enables 2 different 64-bit timers: RTC (for UP) and GFRC (for SMP)
++	  This enables 2 different 64-bit timers: RTC (for UP) and GFRC (for SMP).
+ 	  RTC is implemented inside the core, while GFRC sits outside the core in
+ 	  ARConnect IP block. Driver automatically picks one of them for clocksource
+ 	  as appropriate.
+@@ -666,7 +666,7 @@ config CSKY_MP_TIMER
+ 	  Say yes here to enable C-SKY SMP timer driver used for C-SKY SMP
+ 	  system.
+ 	  csky,mptimer is not only used in SMP system, it also could be used
+-	  single core system. It's not a mmio reg and it use mtcr/mfcr instruction.
++	  single core system. It's not a mmio reg and it uses mtcr/mfcr instruction.
+ 
+ config GX6605S_TIMER
+ 	bool "Gx6605s SOC system timer driver" if COMPILE_TEST
+
+
