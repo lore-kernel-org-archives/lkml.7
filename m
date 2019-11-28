@@ -2,71 +2,153 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D37C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2D2C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A6F215A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ng6lE0qi"
+	by mail.kernel.org (Postfix) with ESMTP id 47B23208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfK1Mr1 (ORCPT
+        id S1726594AbfK1Mtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 07:47:27 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:39569 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbfK1Mr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 07:47:26 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id db9d9fa5;
-        Thu, 28 Nov 2019 11:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=JWrJMMQI7xcRH9JA9rmWSPbtPaE=; b=ng6lE0
-        qiP3CR9yJpgauKGmvai0abXNjrKak/sIPsHkwMQGUKDxCzQ/vW1NZJyJ+SwjpP3x
-        I3DIJQTw+6Nc1RpXSUCy/RONCU1KKbAppCjBgrIn2DSIDcIo2tCP4OHLQQBbrkXU
-        YnH6HQcB68oQ2jYWMJGzdPT6FPrkSQSRmzdulYdSuOpzcl3QOK9KNTkB2U8W7W0P
-        1ZnYHj+lgEb6T+rlGlWm2J0Pt0FgfJnnhKBG4mk64LxHAV6+q/9pu/Yqiek3PWij
-        H6CqydFIgvOiGtC14XOIg01vFpr6mN6dA0hET/MLIVM7SVCl6vXWamtc8Ds5bcEc
-        cvyJAnZias5JXQLg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 1a5a440d (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 28 Nov 2019 11:53:24 +0000 (UTC)
-Received: by mail-oi1-f180.google.com with SMTP id l20so23200001oie.10;
-        Thu, 28 Nov 2019 04:47:23 -0800 (PST)
-X-Gm-Message-State: APjAAAXYoHOgaeCg+X0GXMEY2sKkOAanhkWEScpJIrVQBQqoaPi9z4DB
-        kx/LuII+gJgst5b01sAxJA+x9Mh4CTAp+7lDpUU=
-X-Google-Smtp-Source: APXvYqzeVCxssZpzO5edbpWpxx6KjrwlgZzbotvXWLRC9YbNC1MtYuhfauThDHga/WjFuthpM4cMXys/DpWcXkoscLk=
-X-Received: by 2002:a05:6808:906:: with SMTP id w6mr7805253oih.122.1574945242419;
- Thu, 28 Nov 2019 04:47:22 -0800 (PST)
+        Thu, 28 Nov 2019 07:49:50 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57769 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfK1Mtu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 07:49:50 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iaJEt-0001j4-6d; Thu, 28 Nov 2019 13:49:43 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iaJEs-00048Y-61; Thu, 28 Nov 2019 13:49:42 +0100
+Date:   Thu, 28 Nov 2019 13:49:42 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Adam.Thomson.Opensource@diasemi.com,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+Subject: Re: [PATCH v2 1/5] gpio: add support to get local gpio number
+Message-ID: <20191128124942.4ddyi5eeclvxmqbg@pengutronix.de>
+References: <20191127135932.7223-1-m.felsch@pengutronix.de>
+ <20191127135932.7223-2-m.felsch@pengutronix.de>
+ <CAMpxmJXzBphmW7SWD05wtLjSAR7VBzVAgnYJYd3Sd49Bp6AmgQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAHmME9oqT_BncUFaJRpj0xtL1MPcE=g5WQG_qE7oC231USQCPA@mail.gmail.com>
- <20191127.105506.1224335279309401228.davem@davemloft.net>
-In-Reply-To: <20191127.105506.1224335279309401228.davem@davemloft.net>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 28 Nov 2019 13:47:11 +0100
-X-Gmail-Original-Message-ID: <CAHmME9oo0GbTC6mxOoBkmHPWCgt9H9C9QJ9_oyP9OQjWY0AFgg@mail.gmail.com>
-Message-ID: <CAHmME9oo0GbTC6mxOoBkmHPWCgt9H9C9QJ9_oyP9OQjWY0AFgg@mail.gmail.com>
-Subject: Re: WireGuard for 5.5?
-To:     David Miller <davem@davemloft.net>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJXzBphmW7SWD05wtLjSAR7VBzVAgnYJYd3Sd49Bp6AmgQ@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 13:45:17 up 13 days,  4:03, 23 users,  load average: 0.29, 0.10,
+ 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 7:55 PM David Miller <davem@davemloft.net> wrote:
-> I haven't read the patch and plan to do so soon.
->
-> The merge window is open and thus net-next is closed, so we can put
-> this into the next merge window.
+On 19-11-28 11:46, Bartosz Golaszewski wrote:
+> śr., 27 lis 2019 o 14:59 Marco Felsch <m.felsch@pengutronix.de> napisał(a):
+> >
+> > Sometimes consumers needs to know the gpio-chip local gpio number of a
+> > 'struct gpio_desc' for further configuration. This is often the case for
+> > mfd devices.
+> >
+> 
+> We already have this support. It's just a matter of exporting it, so
+> maybe adjust the commit message to not be confusing.
 
-Okay, no problem. That means 5.6. If there are comments on the v1 I
-sent, I'll send the v2 when net-next is actually open, per the norm.
+Therefore I mentioned the consumers.
 
-Jason
+> That being said: I'm not really a fan of this - the whole idea of gpio
+> descriptors was to make them opaque and their hardware offsets
+> irrelevant. :(
+
+I know therefore I added a driver local helper but this wasn't the way
+Linus wanted to go..
+
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> >  drivers/gpio/gpiolib.c        |  6 ++++++
+> >  include/linux/gpio/consumer.h | 10 ++++++++++
+> >  2 files changed, 16 insertions(+)
+> >
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index 104ed299d5ea..7709648313fc 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -4377,6 +4377,12 @@ int gpiod_count(struct device *dev, const char *con_id)
+> >  }
+> >  EXPORT_SYMBOL_GPL(gpiod_count);
+> >
+> > +int gpiod_to_offset(struct gpio_desc *desc)
+> 
+> Maybe call it: gpiod_desc_to_offset()?
+
+The function name is proposed by Linus too so Linus what's your
+oppinion?
+
+Regards,
+  Marco
+
+> > +{
+> > +       return gpio_chip_hwgpio(desc);
+> > +}
+> > +EXPORT_SYMBOL_GPL(gpiod_to_offset);
+> > +
+> >  /**
+> >   * gpiod_get - obtain a GPIO for a given GPIO function
+> >   * @dev:       GPIO consumer, can be NULL for system-global GPIOs
+> > diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+> > index b70af921c614..e2178c3bf7fd 100644
+> > --- a/include/linux/gpio/consumer.h
+> > +++ b/include/linux/gpio/consumer.h
+> > @@ -60,6 +60,9 @@ enum gpiod_flags {
+> >  /* Return the number of GPIOs associated with a device / function */
+> >  int gpiod_count(struct device *dev, const char *con_id);
+> >
+> > +/* Get the local chip offset from a global desc */
+> > +int gpiod_to_offset(struct gpio_desc *desc);
+> > +
+> >  /* Acquire and dispose GPIOs */
+> >  struct gpio_desc *__must_check gpiod_get(struct device *dev,
+> >                                          const char *con_id,
+> > @@ -189,6 +192,13 @@ static inline int gpiod_count(struct device *dev, const char *con_id)
+> >         return 0;
+> >  }
+> >
+> > +static inline int gpiod_to_offset(struct gpio_desc *desc)
+> > +{
+> > +       /* GPIO can never have been requested */
+> > +       WARN_ON(desc);
+> > +       return 0;
+> > +}
+> > +
+> >  static inline struct gpio_desc *__must_check gpiod_get(struct device *dev,
+> >                                                        const char *con_id,
+> >                                                        enum gpiod_flags flags)
+> > --
+> > 2.20.1
+> >
