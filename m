@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80773C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D3AC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC4121789
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC431217AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CEErYtLf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pfouPufC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfK1LAZ (ORCPT
+        id S1727237AbfK1LAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:00:25 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59224 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbfK1LAW (ORCPT
+        Thu, 28 Nov 2019 06:00:33 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53988 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727128AbfK1LAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:00:22 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASB0BTu099689;
-        Thu, 28 Nov 2019 05:00:11 -0600
+        Thu, 28 Nov 2019 06:00:32 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASB0K6G117565;
+        Thu, 28 Nov 2019 05:00:20 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574938811;
-        bh=dC7TuRxrfBtQ3p2PCAibNTAreoacyGGgq/3yJ9Vgf24=;
+        s=ti-com-17Q1; t=1574938820;
+        bh=aKh3OKAT5EF32QaQs5rAAL9fJLbM4pX3WwqzFr82+kM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=CEErYtLfcYfdB+bggtRRuMiwbDc+2od+NW8of8hSa4BN3jFZZ3qdTewuttrsSkxTt
-         AZOqyrmhuvEKzsFjQprB/pHYNsX0OR6iwfU6nqtXSh1bWar97ZVFg4RNjTtmTYdEGr
-         QLnawVbgwd5gE2BoIOJB9YikZE5cCSYKUWByc8+M=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASB0BXx014849
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Nov 2019 05:00:11 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+        b=pfouPufCrHjpnaytdwVCLxa0LgjjfbkRh79yLw7lWSbftKEUrWmvw3roAUUh6vJA4
+         hCyCpaXjg2p5cYx7mbW3GGkaj64jrm82GJQJvP2B38mV3IbMP0Zfk4qzmgGAm+Ur2D
+         cRob+jWLiq96KCDlXFBaPfQj3EifGQLDDeEfSMeI=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASB0KxZ007147;
+        Thu, 28 Nov 2019 05:00:20 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 05:00:10 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 05:00:20 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 05:00:10 -0600
+ Frontend Transport; Thu, 28 Nov 2019 05:00:20 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAxgJL073287;
-        Thu, 28 Nov 2019 05:00:07 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAxgJO073287;
+        Thu, 28 Nov 2019 05:00:17 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
         <ssantosh@kernel.org>
@@ -56,709 +55,587 @@ CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-Subject: [PATCH v6 07/17] dmaengine: ti: k3 PSI-L remote endpoint configuration
-Date:   Thu, 28 Nov 2019 12:59:35 +0200
-Message-ID: <20191128105945.13071-8-peter.ujfalusi@ti.com>
+Subject: [PATCH v6 10/17] dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate and filter_fn
+Date:   Thu, 28 Nov 2019 12:59:38 +0200
+Message-ID: <20191128105945.13071-11-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191128105945.13071-1-peter.ujfalusi@ti.com>
 References: <20191128105945.13071-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In K3 architecture the DMA operates within threads. One end of the thread
-is UDMAP, the other is on the peripheral side.
+Split patch for review containing: module probe/remove functions, of_xlate
+and filter_fn for slave channel requests.
 
-The UDMAP channel configuration depends on the needs of the remote
-endpoint and it can be differ from peripheral to peripheral.
+DMA driver for
+Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
 
-This patch adds database for am654 and j721e and small API to fetch the
-PSI-L endpoint configuration from the database which should only used by
-the DMA driver(s).
+The UDMA-P is intended to perform similar (but significantly upgraded) functions
+as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
+supports the transmission and reception of various packet types. The UDMA-P is
+architected to facilitate the segmentation and reassembly of SoC DMA data
+structure compliant packets to/from smaller data blocks that are natively
+compatible with the specific requirements of each connected peripheral. Multiple
+Tx and Rx channels are provided within the DMA which allow multiple segmentation
+or reassembly operations to be ongoing. The DMA controller maintains state
+information for each of the channels which allows packet segmentation and
+reassembly operations to be time division multiplexed between channels in order
+to share the underlying DMA hardware. An external DMA scheduler is used to
+control the ordering and rate at which this multiplexing occurs for Transmit
+operations. The ordering and rate of Receive operations is indirectly controlled
+by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
 
-Another API is added for native peripherals to give possibility to pass new
-configuration for the threads they are using, which is needed to be able to
-handle changes caused by different firmware loaded for the peripheral for
-example.
+The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
+channels. Channels in the UDMA-P can be configured to be either Packet-Based or
+Third-Party channels on a channel by channel basis.
+
+The initial driver supports:
+- MEM_TO_MEM (TR mode)
+- DEV_TO_MEM (Packet / TR mode)
+- MEM_TO_DEV (Packet / TR mode)
+- Cyclic (Packet / TR mode)
+- Metadata for descriptors
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/Kconfig         |   3 +
- drivers/dma/ti/Makefile        |   1 +
- drivers/dma/ti/k3-psil-am654.c | 175 ++++++++++++++++++++++++++
- drivers/dma/ti/k3-psil-j721e.c | 222 +++++++++++++++++++++++++++++++++
- drivers/dma/ti/k3-psil-priv.h  |  39 ++++++
- drivers/dma/ti/k3-psil.c       |  97 ++++++++++++++
- include/linux/dma/k3-psil.h    |  71 +++++++++++
- 7 files changed, 608 insertions(+)
- create mode 100644 drivers/dma/ti/k3-psil-am654.c
- create mode 100644 drivers/dma/ti/k3-psil-j721e.c
- create mode 100644 drivers/dma/ti/k3-psil-priv.h
- create mode 100644 drivers/dma/ti/k3-psil.c
- create mode 100644 include/linux/dma/k3-psil.h
+ drivers/dma/ti/k3-udma.c | 521 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 521 insertions(+)
 
-diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
-index d507c24fbf31..72f3d2728178 100644
---- a/drivers/dma/ti/Kconfig
-+++ b/drivers/dma/ti/Kconfig
-@@ -34,5 +34,8 @@ config DMA_OMAP
- 	  Enable support for the TI sDMA (System DMA or DMA4) controller. This
- 	  DMA engine is found on OMAP and DRA7xx parts.
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 0f7e56f04a56..abd51242e396 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -1047,3 +1047,524 @@ static irqreturn_t udma_udma_irq_handler(int irq, void *data)
  
-+config TI_K3_PSIL
-+	bool
+ 	return IRQ_HANDLED;
+ }
 +
- config TI_DMA_CROSSBAR
- 	bool
-diff --git a/drivers/dma/ti/Makefile b/drivers/dma/ti/Makefile
-index 113e59ec9c32..f8d912ad7eaf 100644
---- a/drivers/dma/ti/Makefile
-+++ b/drivers/dma/ti/Makefile
-@@ -2,4 +2,5 @@
- obj-$(CONFIG_TI_CPPI41) += cppi41.o
- obj-$(CONFIG_TI_EDMA) += edma.o
- obj-$(CONFIG_DMA_OMAP) += omap-dma.o
-+obj-$(CONFIG_TI_K3_PSIL) += k3-psil.o k3-psil-am654.o k3-psil-j721e.o
- obj-$(CONFIG_TI_DMA_CROSSBAR) += dma-crossbar.o
-diff --git a/drivers/dma/ti/k3-psil-am654.c b/drivers/dma/ti/k3-psil-am654.c
-new file mode 100644
-index 000000000000..7da9242b6114
---- /dev/null
-+++ b/drivers/dma/ti/k3-psil-am654.c
-@@ -0,0 +1,175 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-+ */
++static struct platform_driver udma_driver;
 +
-+#include <linux/kernel.h>
-+
-+#include "k3-psil-priv.h"
-+
-+#define PSIL_PDMA_XY_TR(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_PDMA_XY,	\
-+		},					\
-+	}
-+
-+#define PSIL_PDMA_XY_PKT(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_PDMA_XY,	\
-+			.pkt_mode = 1,			\
-+		},					\
-+	}
-+
-+#define PSIL_ETHERNET(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_NATIVE,	\
-+			.pkt_mode = 1,			\
-+			.needs_epib = 1,		\
-+			.psd_size = 16,			\
-+		},					\
-+	}
-+
-+#define PSIL_SA2UL(x, tx)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_NATIVE,	\
-+			.pkt_mode = 1,			\
-+			.needs_epib = 1,		\
-+			.psd_size = 64,			\
-+			.notdpkt = tx,			\
-+		},					\
-+	}
-+
-+/* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
-+struct psil_ep am654_src_ep_map[] = {
-+	/* SA2UL */
-+	PSIL_SA2UL(0x4000, 0),
-+	PSIL_SA2UL(0x4001, 0),
-+	PSIL_SA2UL(0x4002, 0),
-+	PSIL_SA2UL(0x4003, 0),
-+	/* PRU_ICSSG0 */
-+	PSIL_ETHERNET(0x4100),
-+	PSIL_ETHERNET(0x4101),
-+	PSIL_ETHERNET(0x4102),
-+	PSIL_ETHERNET(0x4103),
-+	/* PRU_ICSSG1 */
-+	PSIL_ETHERNET(0x4200),
-+	PSIL_ETHERNET(0x4201),
-+	PSIL_ETHERNET(0x4202),
-+	PSIL_ETHERNET(0x4203),
-+	/* PRU_ICSSG2 */
-+	PSIL_ETHERNET(0x4300),
-+	PSIL_ETHERNET(0x4301),
-+	PSIL_ETHERNET(0x4302),
-+	PSIL_ETHERNET(0x4303),
-+	/* PDMA0 - McASPs */
-+	PSIL_PDMA_XY_TR(0x4400),
-+	PSIL_PDMA_XY_TR(0x4401),
-+	PSIL_PDMA_XY_TR(0x4402),
-+	/* PDMA1 - SPI0-4 */
-+	PSIL_PDMA_XY_PKT(0x4500),
-+	PSIL_PDMA_XY_PKT(0x4501),
-+	PSIL_PDMA_XY_PKT(0x4502),
-+	PSIL_PDMA_XY_PKT(0x4503),
-+	PSIL_PDMA_XY_PKT(0x4504),
-+	PSIL_PDMA_XY_PKT(0x4505),
-+	PSIL_PDMA_XY_PKT(0x4506),
-+	PSIL_PDMA_XY_PKT(0x4507),
-+	PSIL_PDMA_XY_PKT(0x4508),
-+	PSIL_PDMA_XY_PKT(0x4509),
-+	PSIL_PDMA_XY_PKT(0x450a),
-+	PSIL_PDMA_XY_PKT(0x450b),
-+	PSIL_PDMA_XY_PKT(0x450c),
-+	PSIL_PDMA_XY_PKT(0x450d),
-+	PSIL_PDMA_XY_PKT(0x450e),
-+	PSIL_PDMA_XY_PKT(0x450f),
-+	PSIL_PDMA_XY_PKT(0x4510),
-+	PSIL_PDMA_XY_PKT(0x4511),
-+	PSIL_PDMA_XY_PKT(0x4512),
-+	PSIL_PDMA_XY_PKT(0x4513),
-+	/* PDMA1 - USART0-2 */
-+	PSIL_PDMA_XY_PKT(0x4514),
-+	PSIL_PDMA_XY_PKT(0x4515),
-+	PSIL_PDMA_XY_PKT(0x4516),
-+	/* CPSW0 */
-+	PSIL_ETHERNET(0x7000),
-+	/* MCU_PDMA0 - ADCs */
-+	PSIL_PDMA_XY_TR(0x7100),
-+	PSIL_PDMA_XY_TR(0x7101),
-+	PSIL_PDMA_XY_TR(0x7102),
-+	PSIL_PDMA_XY_TR(0x7103),
-+	/* MCU_PDMA1 - MCU_SPI0-2 */
-+	PSIL_PDMA_XY_PKT(0x7200),
-+	PSIL_PDMA_XY_PKT(0x7201),
-+	PSIL_PDMA_XY_PKT(0x7202),
-+	PSIL_PDMA_XY_PKT(0x7203),
-+	PSIL_PDMA_XY_PKT(0x7204),
-+	PSIL_PDMA_XY_PKT(0x7205),
-+	PSIL_PDMA_XY_PKT(0x7206),
-+	PSIL_PDMA_XY_PKT(0x7207),
-+	PSIL_PDMA_XY_PKT(0x7208),
-+	PSIL_PDMA_XY_PKT(0x7209),
-+	PSIL_PDMA_XY_PKT(0x720a),
-+	PSIL_PDMA_XY_PKT(0x720b),
-+	/* MCU_PDMA1 - MCU_USART0 */
-+	PSIL_PDMA_XY_PKT(0x7212),
-+};
-+
-+/* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
-+struct psil_ep am654_dst_ep_map[] = {
-+	/* SA2UL */
-+	PSIL_SA2UL(0xc000, 1),
-+	PSIL_SA2UL(0xc001, 1),
-+	/* PRU_ICSSG0 */
-+	PSIL_ETHERNET(0xc100),
-+	PSIL_ETHERNET(0xc101),
-+	PSIL_ETHERNET(0xc102),
-+	PSIL_ETHERNET(0xc103),
-+	PSIL_ETHERNET(0xc104),
-+	PSIL_ETHERNET(0xc105),
-+	PSIL_ETHERNET(0xc106),
-+	PSIL_ETHERNET(0xc107),
-+	/* PRU_ICSSG1 */
-+	PSIL_ETHERNET(0xc200),
-+	PSIL_ETHERNET(0xc201),
-+	PSIL_ETHERNET(0xc202),
-+	PSIL_ETHERNET(0xc203),
-+	PSIL_ETHERNET(0xc204),
-+	PSIL_ETHERNET(0xc205),
-+	PSIL_ETHERNET(0xc206),
-+	PSIL_ETHERNET(0xc207),
-+	/* PRU_ICSSG2 */
-+	PSIL_ETHERNET(0xc300),
-+	PSIL_ETHERNET(0xc301),
-+	PSIL_ETHERNET(0xc302),
-+	PSIL_ETHERNET(0xc303),
-+	PSIL_ETHERNET(0xc304),
-+	PSIL_ETHERNET(0xc305),
-+	PSIL_ETHERNET(0xc306),
-+	PSIL_ETHERNET(0xc307),
-+	/* CPSW0 */
-+	PSIL_ETHERNET(0xf000),
-+	PSIL_ETHERNET(0xf001),
-+	PSIL_ETHERNET(0xf002),
-+	PSIL_ETHERNET(0xf003),
-+	PSIL_ETHERNET(0xf004),
-+	PSIL_ETHERNET(0xf005),
-+	PSIL_ETHERNET(0xf006),
-+	PSIL_ETHERNET(0xf007),
-+};
-+
-+struct psil_ep_map am654_ep_map = {
-+	.name = "am654",
-+	.src = am654_src_ep_map,
-+	.src_count = ARRAY_SIZE(am654_src_ep_map),
-+	.dst = am654_dst_ep_map,
-+	.dst_count = ARRAY_SIZE(am654_dst_ep_map),
-+};
-diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
-new file mode 100644
-index 000000000000..a609d496fddd
---- /dev/null
-+++ b/drivers/dma/ti/k3-psil-j721e.c
-@@ -0,0 +1,222 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-+ */
-+
-+#include <linux/kernel.h>
-+
-+#include "k3-psil-priv.h"
-+
-+#define PSIL_PDMA_XY_TR(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_PDMA_XY,	\
-+		},					\
-+	}
-+
-+#define PSIL_PDMA_XY_PKT(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_PDMA_XY,	\
-+			.pkt_mode = 1,			\
-+		},					\
-+	}
-+
-+#define PSIL_PDMA_MCASP(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_PDMA_XY,	\
-+			.pdma_acc32 = 1,		\
-+			.pdma_burst = 1,		\
-+		},					\
-+	}
-+
-+#define PSIL_ETHERNET(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_NATIVE,	\
-+			.pkt_mode = 1,			\
-+			.needs_epib = 1,		\
-+			.psd_size = 16,			\
-+		},					\
-+	}
-+
-+#define PSIL_SA2UL(x, tx)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_NATIVE,	\
-+			.pkt_mode = 1,			\
-+			.needs_epib = 1,		\
-+			.psd_size = 64,			\
-+			.notdpkt = tx,			\
-+		},					\
-+	}
-+
-+/* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
-+struct psil_ep j721e_src_ep_map[] = {
-+	/* SA2UL */
-+	PSIL_SA2UL(0x4000, 0),
-+	PSIL_SA2UL(0x4001, 0),
-+	PSIL_SA2UL(0x4002, 0),
-+	PSIL_SA2UL(0x4003, 0),
-+	/* PRU_ICSSG0 */
-+	PSIL_ETHERNET(0x4100),
-+	PSIL_ETHERNET(0x4101),
-+	PSIL_ETHERNET(0x4102),
-+	PSIL_ETHERNET(0x4103),
-+	/* PRU_ICSSG1 */
-+	PSIL_ETHERNET(0x4200),
-+	PSIL_ETHERNET(0x4201),
-+	PSIL_ETHERNET(0x4202),
-+	PSIL_ETHERNET(0x4203),
-+	/* PDMA6 (PSIL_PDMA_MCASP_G0) - McASP0-2 */
-+	PSIL_PDMA_MCASP(0x4400),
-+	PSIL_PDMA_MCASP(0x4401),
-+	PSIL_PDMA_MCASP(0x4402),
-+	/* PDMA7 (PSIL_PDMA_MCASP_G1) - McASP3-11 */
-+	PSIL_PDMA_MCASP(0x4500),
-+	PSIL_PDMA_MCASP(0x4501),
-+	PSIL_PDMA_MCASP(0x4502),
-+	PSIL_PDMA_MCASP(0x4503),
-+	PSIL_PDMA_MCASP(0x4504),
-+	PSIL_PDMA_MCASP(0x4505),
-+	PSIL_PDMA_MCASP(0x4506),
-+	PSIL_PDMA_MCASP(0x4507),
-+	PSIL_PDMA_MCASP(0x4508),
-+	/* PDMA8 (PDMA_MISC_G0) - SPI0-1 */
-+	PSIL_PDMA_XY_PKT(0x4600),
-+	PSIL_PDMA_XY_PKT(0x4601),
-+	PSIL_PDMA_XY_PKT(0x4602),
-+	PSIL_PDMA_XY_PKT(0x4603),
-+	PSIL_PDMA_XY_PKT(0x4604),
-+	PSIL_PDMA_XY_PKT(0x4605),
-+	PSIL_PDMA_XY_PKT(0x4606),
-+	PSIL_PDMA_XY_PKT(0x4607),
-+	/* PDMA9 (PDMA_MISC_G1) - SPI2-3 */
-+	PSIL_PDMA_XY_PKT(0x460c),
-+	PSIL_PDMA_XY_PKT(0x460d),
-+	PSIL_PDMA_XY_PKT(0x460e),
-+	PSIL_PDMA_XY_PKT(0x460f),
-+	PSIL_PDMA_XY_PKT(0x4610),
-+	PSIL_PDMA_XY_PKT(0x4611),
-+	PSIL_PDMA_XY_PKT(0x4612),
-+	PSIL_PDMA_XY_PKT(0x4613),
-+	/* PDMA10 (PDMA_MISC_G2) - SPI4-5 */
-+	PSIL_PDMA_XY_PKT(0x4618),
-+	PSIL_PDMA_XY_PKT(0x4619),
-+	PSIL_PDMA_XY_PKT(0x461a),
-+	PSIL_PDMA_XY_PKT(0x461b),
-+	PSIL_PDMA_XY_PKT(0x461c),
-+	PSIL_PDMA_XY_PKT(0x461d),
-+	PSIL_PDMA_XY_PKT(0x461e),
-+	PSIL_PDMA_XY_PKT(0x461f),
-+	/* PDMA11 (PDMA_MISC_G3) */
-+	PSIL_PDMA_XY_PKT(0x4624),
-+	PSIL_PDMA_XY_PKT(0x4625),
-+	PSIL_PDMA_XY_PKT(0x4626),
-+	PSIL_PDMA_XY_PKT(0x4627),
-+	PSIL_PDMA_XY_PKT(0x4628),
-+	PSIL_PDMA_XY_PKT(0x4629),
-+	PSIL_PDMA_XY_PKT(0x4630),
-+	PSIL_PDMA_XY_PKT(0x463a),
-+	/* PDMA13 (PDMA_USART_G0) - UART0-1 */
-+	PSIL_PDMA_XY_PKT(0x4700),
-+	PSIL_PDMA_XY_PKT(0x4701),
-+	/* PDMA14 (PDMA_USART_G1) - UART2-3 */
-+	PSIL_PDMA_XY_PKT(0x4702),
-+	PSIL_PDMA_XY_PKT(0x4703),
-+	/* PDMA15 (PDMA_USART_G2) - UART4-9 */
-+	PSIL_PDMA_XY_PKT(0x4704),
-+	PSIL_PDMA_XY_PKT(0x4705),
-+	PSIL_PDMA_XY_PKT(0x4706),
-+	PSIL_PDMA_XY_PKT(0x4707),
-+	PSIL_PDMA_XY_PKT(0x4708),
-+	PSIL_PDMA_XY_PKT(0x4709),
-+	/* CPSW9 */
-+	PSIL_ETHERNET(0x4a00),
-+	/* CPSW0 */
-+	PSIL_ETHERNET(0x7000),
-+	/* MCU_PDMA0 (MCU_PDMA_MISC_G0) - SPI0 */
-+	PSIL_PDMA_XY_PKT(0x7100),
-+	PSIL_PDMA_XY_PKT(0x7101),
-+	PSIL_PDMA_XY_PKT(0x7102),
-+	PSIL_PDMA_XY_PKT(0x7103),
-+	/* MCU_PDMA1 (MCU_PDMA_MISC_G1) - SPI1-2 */
-+	PSIL_PDMA_XY_PKT(0x7200),
-+	PSIL_PDMA_XY_PKT(0x7201),
-+	PSIL_PDMA_XY_PKT(0x7202),
-+	PSIL_PDMA_XY_PKT(0x7203),
-+	PSIL_PDMA_XY_PKT(0x7204),
-+	PSIL_PDMA_XY_PKT(0x7205),
-+	PSIL_PDMA_XY_PKT(0x7206),
-+	PSIL_PDMA_XY_PKT(0x7207),
-+	/* MCU_PDMA2 (MCU_PDMA_MISC_G2) - UART0 */
-+	PSIL_PDMA_XY_PKT(0x7300),
-+	/* MCU_PDMA_ADC - ADC0-1 */
-+	PSIL_PDMA_XY_TR(0x7400),
-+	PSIL_PDMA_XY_TR(0x7401),
-+	PSIL_PDMA_XY_TR(0x7402),
-+	PSIL_PDMA_XY_TR(0x7403),
-+	/* SA2UL */
-+	PSIL_SA2UL(0x7500, 0),
-+	PSIL_SA2UL(0x7501, 0),
-+};
-+
-+/* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
-+struct psil_ep j721e_dst_ep_map[] = {
-+	/* SA2UL */
-+	PSIL_SA2UL(0xc000, 1),
-+	PSIL_SA2UL(0xc001, 1),
-+	/* PRU_ICSSG0 */
-+	PSIL_ETHERNET(0xc100),
-+	PSIL_ETHERNET(0xc101),
-+	PSIL_ETHERNET(0xc102),
-+	PSIL_ETHERNET(0xc103),
-+	PSIL_ETHERNET(0xc104),
-+	PSIL_ETHERNET(0xc105),
-+	PSIL_ETHERNET(0xc106),
-+	PSIL_ETHERNET(0xc107),
-+	/* PRU_ICSSG1 */
-+	PSIL_ETHERNET(0xc200),
-+	PSIL_ETHERNET(0xc201),
-+	PSIL_ETHERNET(0xc202),
-+	PSIL_ETHERNET(0xc203),
-+	PSIL_ETHERNET(0xc204),
-+	PSIL_ETHERNET(0xc205),
-+	PSIL_ETHERNET(0xc206),
-+	PSIL_ETHERNET(0xc207),
-+	/* CPSW9 */
-+	PSIL_ETHERNET(0xca00),
-+	PSIL_ETHERNET(0xca01),
-+	PSIL_ETHERNET(0xca02),
-+	PSIL_ETHERNET(0xca03),
-+	PSIL_ETHERNET(0xca04),
-+	PSIL_ETHERNET(0xca05),
-+	PSIL_ETHERNET(0xca06),
-+	PSIL_ETHERNET(0xca07),
-+	/* CPSW0 */
-+	PSIL_ETHERNET(0xf000),
-+	PSIL_ETHERNET(0xf001),
-+	PSIL_ETHERNET(0xf002),
-+	PSIL_ETHERNET(0xf003),
-+	PSIL_ETHERNET(0xf004),
-+	PSIL_ETHERNET(0xf005),
-+	PSIL_ETHERNET(0xf006),
-+	PSIL_ETHERNET(0xf007),
-+	/* SA2UL */
-+	PSIL_SA2UL(0xf500, 1),
-+};
-+
-+struct psil_ep_map j721e_ep_map = {
-+	.name = "j721e",
-+	.src = j721e_src_ep_map,
-+	.src_count = ARRAY_SIZE(j721e_src_ep_map),
-+	.dst = j721e_dst_ep_map,
-+	.dst_count = ARRAY_SIZE(j721e_dst_ep_map),
-+};
-diff --git a/drivers/dma/ti/k3-psil-priv.h b/drivers/dma/ti/k3-psil-priv.h
-new file mode 100644
-index 000000000000..f74420653d8a
---- /dev/null
-+++ b/drivers/dma/ti/k3-psil-priv.h
-@@ -0,0 +1,39 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ */
-+
-+#ifndef K3_PSIL_PRIV_H_
-+#define K3_PSIL_PRIV_H_
-+
-+#include <linux/dma/k3-psil.h>
-+
-+struct psil_ep {
-+	u32 thread_id;
-+	struct psil_endpoint_config ep_config;
-+};
-+
-+/**
-+ * struct psil_ep_map - PSI-L thread ID configuration maps
-+ * @name:	Name of the map, set it to the name of the SoC
-+ * @src:	Array of source PSI-L thread configurations
-+ * @src_count:	Number of entries in the src array
-+ * @dst:	Array of destination PSI-L thread configurations
-+ * @dst_count:	Number of entries in the dst array
-+ *
-+ * In case of symmetric configuration for a matching src/dst thread (for example
-+ * 0x4400 and 0xc400) only the src configuration can be present. If no dst
-+ * configuration found the code will look for (dst_thread_id & ~0x8000) to find
-+ * the symmetric match.
-+ */
-+struct psil_ep_map {
-+	char *name;
-+	struct psil_ep	*src;
-+	int src_count;
-+	struct psil_ep	*dst;
-+	int dst_count;
-+};
-+
-+struct psil_endpoint_config *psil_get_ep_config(u32 thread_id);
-+
-+#endif /* K3_PSIL_PRIV_H_ */
-diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
-new file mode 100644
-index 000000000000..47e5e06d3292
---- /dev/null
-+++ b/drivers/dma/ti/k3-psil.c
-@@ -0,0 +1,97 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+
-+#include "k3-psil-priv.h"
-+
-+extern struct psil_ep_map am654_ep_map;
-+extern struct psil_ep_map j721e_ep_map;
-+
-+static DEFINE_MUTEX(ep_map_mutex);
-+static struct psil_ep_map *soc_ep_map;
-+
-+struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
++static bool udma_dma_filter_fn(struct dma_chan *chan, void *param)
 +{
++	struct psil_endpoint_config *ep_config;
++	struct udma_chan *uc;
++	struct udma_dev *ud;
++	u32 *args;
++
++	if (chan->device->dev->driver != &udma_driver.driver)
++		return false;
++
++	uc = to_udma_chan(chan);
++	ud = uc->ud;
++	args = param;
++	uc->remote_thread_id = args[0];
++
++	if (uc->remote_thread_id & K3_PSIL_DST_THREAD_ID_OFFSET)
++		uc->dir = DMA_MEM_TO_DEV;
++	else
++		uc->dir = DMA_DEV_TO_MEM;
++
++	ep_config = psil_get_ep_config(uc->remote_thread_id);
++	if (IS_ERR(ep_config)) {
++		dev_err(ud->dev, "No configuration for psi-l thread 0x%04x\n",
++			uc->remote_thread_id);
++		uc->dir = DMA_MEM_TO_MEM;
++		uc->remote_thread_id = -1;
++		return false;
++	}
++
++	uc->pkt_mode = ep_config->pkt_mode;
++	uc->channel_tpl = ep_config->channel_tpl;
++	uc->notdpkt = ep_config->notdpkt;
++	uc->ep_type = ep_config->ep_type;
++
++	if (uc->ep_type != PSIL_EP_NATIVE) {
++		const struct udma_match_data *match_data = ud->match_data;
++
++		if (match_data->flags & UDMA_FLAG_PDMA_ACC32)
++			uc->enable_acc32 = ep_config->pdma_acc32;
++		if (match_data->flags & UDMA_FLAG_PDMA_BURST)
++			uc->enable_burst = ep_config->pdma_burst;
++	}
++
++	uc->needs_epib = ep_config->needs_epib;
++	uc->psd_size = ep_config->psd_size;
++	uc->metadata_size = (uc->needs_epib ? CPPI5_INFO0_HDESC_EPIB_SIZE : 0) +
++			    uc->psd_size;
++
++	if (uc->pkt_mode)
++		uc->hdesc_size = ALIGN(sizeof(struct cppi5_host_desc_t) +
++				 uc->metadata_size, ud->desc_align);
++
++	dev_dbg(ud->dev, "chan%d: Remote thread: 0x%04x (%s)\n", uc->id,
++		uc->remote_thread_id, udma_get_dir_text(uc->dir));
++
++	return true;
++}
++
++static struct dma_chan *udma_of_xlate(struct of_phandle_args *dma_spec,
++				      struct of_dma *ofdma)
++{
++	struct udma_dev *ud = ofdma->of_dma_data;
++	dma_cap_mask_t mask = ud->ddev.cap_mask;
++	struct dma_chan *chan;
++
++	if (dma_spec->args_count != 1)
++		return NULL;
++
++	chan = __dma_request_channel(&mask, udma_dma_filter_fn,
++				     &dma_spec->args[0], ofdma->of_node);
++	if (!chan) {
++		dev_err(ud->dev, "get channel fail in %s.\n", __func__);
++		return ERR_PTR(-EINVAL);
++	}
++
++	return chan;
++}
++
++static struct udma_match_data am654_main_data = {
++	.psil_base = 0x1000,
++	.enable_memcpy_support = true,
++	.statictr_z_mask = GENMASK(11, 0),
++	.rchan_oes_offset = 0x2000,
++	.tpl_levels = 2,
++	.level_start_idx = {
++		[0] = 8, /* Normal channels */
++		[1] = 0, /* High Throughput channels */
++	},
++};
++
++static struct udma_match_data am654_mcu_data = {
++	.psil_base = 0x6000,
++	.enable_memcpy_support = false, /* MEM_TO_MEM is slow via MCU UDMA */
++	.statictr_z_mask = GENMASK(11, 0),
++	.rchan_oes_offset = 0x2000,
++	.tpl_levels = 2,
++	.level_start_idx = {
++		[0] = 2, /* Normal channels */
++		[1] = 0, /* High Throughput channels */
++	},
++};
++
++static struct udma_match_data j721e_main_data = {
++	.psil_base = 0x1000,
++	.enable_memcpy_support = true,
++	.flags = UDMA_FLAG_PDMA_ACC32 | UDMA_FLAG_PDMA_BURST,
++	.statictr_z_mask = GENMASK(23, 0),
++	.rchan_oes_offset = 0x400,
++	.tpl_levels = 3,
++	.level_start_idx = {
++		[0] = 16, /* Normal channels */
++		[1] = 4, /* High Throughput channels */
++		[2] = 0, /* Ultra High Throughput channels */
++	},
++};
++
++static struct udma_match_data j721e_mcu_data = {
++	.psil_base = 0x6000,
++	.enable_memcpy_support = false, /* MEM_TO_MEM is slow via MCU UDMA */
++	.flags = UDMA_FLAG_PDMA_ACC32 | UDMA_FLAG_PDMA_BURST,
++	.statictr_z_mask = GENMASK(23, 0),
++	.rchan_oes_offset = 0x400,
++	.tpl_levels = 2,
++	.level_start_idx = {
++		[0] = 2, /* Normal channels */
++		[1] = 0, /* High Throughput channels */
++	},
++};
++
++static const struct of_device_id udma_of_match[] = {
++	{
++		.compatible = "ti,am654-navss-main-udmap",
++		.data = &am654_main_data,
++	},
++	{
++		.compatible = "ti,am654-navss-mcu-udmap",
++		.data = &am654_mcu_data,
++	}, {
++		.compatible = "ti,j721e-navss-main-udmap",
++		.data = &j721e_main_data,
++	}, {
++		.compatible = "ti,j721e-navss-mcu-udmap",
++		.data = &j721e_mcu_data,
++	},
++	{ /* Sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, udma_of_match);
++
++static int udma_get_mmrs(struct platform_device *pdev, struct udma_dev *ud)
++{
++	struct resource *res;
 +	int i;
 +
-+	mutex_lock(&ep_map_mutex);
-+	if (!soc_ep_map) {
-+		if (of_machine_is_compatible("ti,am654")) {
-+			soc_ep_map = &am654_ep_map;
-+		} else if (of_machine_is_compatible("ti,j721e")) {
-+			soc_ep_map = &j721e_ep_map;
-+		} else {
-+			pr_err("PSIL: No compatible machine found for map\n");
-+			return ERR_PTR(-ENOTSUPP);
-+		}
-+		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
-+	}
-+	mutex_unlock(&ep_map_mutex);
-+
-+	if (thread_id & K3_PSIL_DST_THREAD_ID_OFFSET && soc_ep_map->dst) {
-+		/* check in destination thread map */
-+		for (i = 0; i < soc_ep_map->dst_count; i++) {
-+			if (soc_ep_map->dst[i].thread_id == thread_id)
-+				return &soc_ep_map->dst[i].ep_config;
-+		}
++	for (i = 0; i < MMR_LAST; i++) {
++		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++						   mmr_names[i]);
++		ud->mmrs[i] = devm_ioremap_resource(&pdev->dev, res);
++		if (IS_ERR(ud->mmrs[i]))
++			return PTR_ERR(ud->mmrs[i]);
 +	}
 +
-+	thread_id &= ~K3_PSIL_DST_THREAD_ID_OFFSET;
-+	if (soc_ep_map->src) {
-+		for (i = 0; i < soc_ep_map->src_count; i++) {
-+			if (soc_ep_map->src[i].thread_id == thread_id)
-+				return &soc_ep_map->src[i].ep_config;
-+		}
-+	}
-+
-+	return ERR_PTR(-ENOENT);
-+}
-+EXPORT_SYMBOL_GPL(psil_get_ep_config);
-+
-+int psil_set_new_ep_config(struct device *dev, const char *name,
-+			   struct psil_endpoint_config *ep_config)
-+{
-+	struct psil_endpoint_config *dst_ep_config;
-+	struct of_phandle_args dma_spec;
-+	u32 thread_id;
-+	int index;
-+
-+	if (!dev || !dev->of_node)
-+		return -EINVAL;
-+
-+	index = of_property_match_string(dev->of_node, "dma-names", name);
-+	if (index < 0)
-+		return index;
-+
-+	if (of_parse_phandle_with_args(dev->of_node, "dmas", "#dma-cells",
-+				       index, &dma_spec))
-+		return -ENOENT;
-+
-+	thread_id = dma_spec.args[0];
-+
-+	dst_ep_config = psil_get_ep_config(thread_id);
-+	if (IS_ERR(dst_ep_config)) {
-+		pr_err("PSIL: thread ID 0x%04x not defined in map\n",
-+		       thread_id);
-+		of_node_put(dma_spec.np);
-+		return PTR_ERR(dst_ep_config);
-+	}
-+
-+	memcpy(dst_ep_config, ep_config, sizeof(*dst_ep_config));
-+
-+	of_node_put(dma_spec.np);
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(psil_set_new_ep_config);
 +
-+MODULE_DESCRIPTION("TI K3 PSI-L endpoint database");
++static int udma_setup_resources(struct udma_dev *ud)
++{
++	struct device *dev = ud->dev;
++	int ch_count, ret, i, j;
++	u32 cap2, cap3;
++	struct ti_sci_resource_desc *rm_desc;
++	struct ti_sci_resource *rm_res, irq_res;
++	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
++	static const char * const range_names[] = { "ti,sci-rm-range-tchan",
++						    "ti,sci-rm-range-rchan",
++						    "ti,sci-rm-range-rflow" };
++
++	cap2 = udma_read(ud->mmrs[MMR_GCFG], 0x28);
++	cap3 = udma_read(ud->mmrs[MMR_GCFG], 0x2c);
++
++	ud->rflow_cnt = cap3 & 0x3fff;
++	ud->tchan_cnt = cap2 & 0x1ff;
++	ud->echan_cnt = (cap2 >> 9) & 0x1ff;
++	ud->rchan_cnt = (cap2 >> 18) & 0x1ff;
++	ch_count  = ud->tchan_cnt + ud->rchan_cnt;
++
++	ud->tchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->tchan_cnt),
++					   sizeof(unsigned long), GFP_KERNEL);
++	ud->tchans = devm_kcalloc(dev, ud->tchan_cnt, sizeof(*ud->tchans),
++				  GFP_KERNEL);
++	ud->rchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->rchan_cnt),
++					   sizeof(unsigned long), GFP_KERNEL);
++	ud->rchans = devm_kcalloc(dev, ud->rchan_cnt, sizeof(*ud->rchans),
++				  GFP_KERNEL);
++	ud->rflow_gp_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->rflow_cnt),
++					      sizeof(unsigned long),
++					      GFP_KERNEL);
++	ud->rflow_gp_map_allocated = devm_kcalloc(dev,
++						  BITS_TO_LONGS(ud->rflow_cnt),
++						  sizeof(unsigned long),
++						  GFP_KERNEL);
++	ud->rflow_in_use = devm_kcalloc(dev, BITS_TO_LONGS(ud->rflow_cnt),
++					sizeof(unsigned long),
++					GFP_KERNEL);
++	ud->rflows = devm_kcalloc(dev, ud->rflow_cnt, sizeof(*ud->rflows),
++				  GFP_KERNEL);
++
++	if (!ud->tchan_map || !ud->rchan_map || !ud->rflow_gp_map ||
++	    !ud->rflow_gp_map_allocated || !ud->tchans || !ud->rchans ||
++	    !ud->rflows || !ud->rflow_in_use)
++		return -ENOMEM;
++
++	/*
++	 * RX flows with the same Ids as RX channels are reserved to be used
++	 * as default flows if remote HW can't generate flow_ids. Those
++	 * RX flows can be requested only explicitly by id.
++	 */
++	bitmap_set(ud->rflow_gp_map_allocated, 0, ud->rchan_cnt);
++
++	/* by default no GP rflows are assigned to Linux */
++	bitmap_set(ud->rflow_gp_map, 0, ud->rflow_cnt);
++
++	/* Get resource ranges from tisci */
++	for (i = 0; i < RM_RANGE_LAST; i++)
++		tisci_rm->rm_ranges[i] =
++			devm_ti_sci_get_of_resource(tisci_rm->tisci, dev,
++						    tisci_rm->tisci_dev_id,
++						    (char *)range_names[i]);
++
++	/* tchan ranges */
++	rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
++	if (IS_ERR(rm_res)) {
++		bitmap_zero(ud->tchan_map, ud->tchan_cnt);
++	} else {
++		bitmap_fill(ud->tchan_map, ud->tchan_cnt);
++		for (i = 0; i < rm_res->sets; i++) {
++			rm_desc = &rm_res->desc[i];
++			bitmap_clear(ud->tchan_map, rm_desc->start,
++				     rm_desc->num);
++			dev_dbg(dev, "ti-sci-res: tchan: %d:%d\n",
++				rm_desc->start, rm_desc->num);
++		}
++	}
++	irq_res.sets = rm_res->sets;
++
++	/* rchan and matching default flow ranges */
++	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
++	if (IS_ERR(rm_res)) {
++		bitmap_zero(ud->rchan_map, ud->rchan_cnt);
++	} else {
++		bitmap_fill(ud->rchan_map, ud->rchan_cnt);
++		for (i = 0; i < rm_res->sets; i++) {
++			rm_desc = &rm_res->desc[i];
++			bitmap_clear(ud->rchan_map, rm_desc->start,
++				     rm_desc->num);
++			dev_dbg(dev, "ti-sci-res: rchan: %d:%d\n",
++				rm_desc->start, rm_desc->num);
++		}
++	}
++
++	irq_res.sets += rm_res->sets;
++	irq_res.desc = kcalloc(irq_res.sets, sizeof(*irq_res.desc), GFP_KERNEL);
++	rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
++	for (i = 0; i < rm_res->sets; i++) {
++		irq_res.desc[i].start = rm_res->desc[i].start;
++		irq_res.desc[i].num = rm_res->desc[i].num;
++	}
++	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
++	for (j = 0; j < rm_res->sets; j++, i++) {
++		irq_res.desc[i].start = rm_res->desc[j].start +
++					ud->match_data->rchan_oes_offset;
++		irq_res.desc[i].num = rm_res->desc[j].num;
++	}
++	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
++	kfree(irq_res.desc);
++	if (ret) {
++		dev_err(ud->dev, "Failed to allocate MSI interrupts\n");
++		return ret;
++	}
++
++	/* GP rflow ranges */
++	rm_res = tisci_rm->rm_ranges[RM_RANGE_RFLOW];
++	if (IS_ERR(rm_res)) {
++		/* all gp flows are assigned exclusively to Linux */
++		bitmap_clear(ud->rflow_gp_map, ud->rchan_cnt,
++			     ud->rflow_cnt - ud->rchan_cnt);
++	} else {
++		for (i = 0; i < rm_res->sets; i++) {
++			rm_desc = &rm_res->desc[i];
++			bitmap_clear(ud->rflow_gp_map, rm_desc->start,
++				     rm_desc->num);
++			dev_dbg(dev, "ti-sci-res: rflow: %d:%d\n",
++				rm_desc->start, rm_desc->num);
++		}
++	}
++
++	ch_count -= bitmap_weight(ud->tchan_map, ud->tchan_cnt);
++	ch_count -= bitmap_weight(ud->rchan_map, ud->rchan_cnt);
++	if (!ch_count)
++		return -ENODEV;
++
++	ud->channels = devm_kcalloc(dev, ch_count, sizeof(*ud->channels),
++				    GFP_KERNEL);
++	if (!ud->channels)
++		return -ENOMEM;
++
++	dev_info(dev, "Channels: %d (tchan: %u, rchan: %u, gp-rflow: %u)\n",
++		 ch_count,
++		 ud->tchan_cnt - bitmap_weight(ud->tchan_map, ud->tchan_cnt),
++		 ud->rchan_cnt - bitmap_weight(ud->rchan_map, ud->rchan_cnt),
++		 ud->rflow_cnt - bitmap_weight(ud->rflow_gp_map,
++					       ud->rflow_cnt));
++
++	return ch_count;
++}
++
++#define TI_UDMAC_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
++				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
++				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
++				 BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
++				 BIT(DMA_SLAVE_BUSWIDTH_8_BYTES))
++
++static int udma_probe(struct platform_device *pdev)
++{
++	struct device_node *navss_node = pdev->dev.parent->of_node;
++	struct device *dev = &pdev->dev;
++	struct udma_dev *ud;
++	const struct of_device_id *match;
++	int i, ret;
++	int ch_count;
++
++	ret = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(48));
++	if (ret)
++		dev_err(dev, "failed to set dma mask stuff\n");
++
++	ud = devm_kzalloc(dev, sizeof(*ud), GFP_KERNEL);
++	if (!ud)
++		return -ENOMEM;
++
++	ret = udma_get_mmrs(pdev, ud);
++	if (ret)
++		return ret;
++
++	ud->tisci_rm.tisci = ti_sci_get_by_phandle(dev->of_node, "ti,sci");
++	if (IS_ERR(ud->tisci_rm.tisci))
++		return PTR_ERR(ud->tisci_rm.tisci);
++
++	ret = of_property_read_u32(dev->of_node, "ti,sci-dev-id",
++				   &ud->tisci_rm.tisci_dev_id);
++	if (ret) {
++		dev_err(dev, "ti,sci-dev-id read failure %d\n", ret);
++		return ret;
++	}
++	pdev->id = ud->tisci_rm.tisci_dev_id;
++
++	ret = of_property_read_u32(navss_node, "ti,sci-dev-id",
++				   &ud->tisci_rm.tisci_navss_dev_id);
++	if (ret) {
++		dev_err(dev, "NAVSS ti,sci-dev-id read failure %d\n", ret);
++		return ret;
++	}
++
++	ud->tisci_rm.tisci_udmap_ops = &ud->tisci_rm.tisci->ops.rm_udmap_ops;
++	ud->tisci_rm.tisci_psil_ops = &ud->tisci_rm.tisci->ops.rm_psil_ops;
++
++	ud->ringacc = of_k3_ringacc_get_by_phandle(dev->of_node, "ti,ringacc");
++	if (IS_ERR(ud->ringacc))
++		return PTR_ERR(ud->ringacc);
++
++	dev->msi_domain = of_msi_get_domain(dev, dev->of_node,
++					    DOMAIN_BUS_TI_SCI_INTA_MSI);
++	if (!dev->msi_domain) {
++		dev_err(dev, "Failed to get MSI domain\n");
++		return -EPROBE_DEFER;
++	}
++
++	match = of_match_node(udma_of_match, dev->of_node);
++	if (!match) {
++		dev_err(dev, "No compatible match found\n");
++		return -ENODEV;
++	}
++	ud->match_data = match->data;
++
++	dma_cap_set(DMA_SLAVE, ud->ddev.cap_mask);
++	dma_cap_set(DMA_CYCLIC, ud->ddev.cap_mask);
++
++	ud->ddev.device_alloc_chan_resources = udma_alloc_chan_resources;
++	ud->ddev.device_config = udma_slave_config;
++	ud->ddev.device_prep_slave_sg = udma_prep_slave_sg;
++	ud->ddev.device_prep_dma_cyclic = udma_prep_dma_cyclic;
++	ud->ddev.device_issue_pending = udma_issue_pending;
++	ud->ddev.device_tx_status = udma_tx_status;
++	ud->ddev.device_pause = udma_pause;
++	ud->ddev.device_resume = udma_resume;
++	ud->ddev.device_terminate_all = udma_terminate_all;
++	ud->ddev.device_synchronize = udma_synchronize;
++
++	ud->ddev.device_free_chan_resources = udma_free_chan_resources;
++	ud->ddev.src_addr_widths = TI_UDMAC_BUSWIDTHS;
++	ud->ddev.dst_addr_widths = TI_UDMAC_BUSWIDTHS;
++	ud->ddev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
++	ud->ddev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
++	ud->ddev.copy_align = DMAENGINE_ALIGN_8_BYTES;
++	ud->ddev.desc_metadata_modes = DESC_METADATA_CLIENT |
++				       DESC_METADATA_ENGINE;
++	if (ud->match_data->enable_memcpy_support) {
++		dma_cap_set(DMA_MEMCPY, ud->ddev.cap_mask);
++		ud->ddev.device_prep_dma_memcpy = udma_prep_dma_memcpy;
++		ud->ddev.directions |= BIT(DMA_MEM_TO_MEM);
++	}
++
++	ud->ddev.dev = dev;
++	ud->dev = dev;
++	ud->psil_base = ud->match_data->psil_base;
++
++	INIT_LIST_HEAD(&ud->ddev.channels);
++	INIT_LIST_HEAD(&ud->desc_to_purge);
++
++	ch_count = udma_setup_resources(ud);
++	if (ch_count <= 0)
++		return ch_count;
++
++	spin_lock_init(&ud->lock);
++	INIT_WORK(&ud->purge_work, udma_purge_desc_work);
++
++	ud->desc_align = 64;
++	if (ud->desc_align < dma_get_cache_alignment())
++		ud->desc_align = dma_get_cache_alignment();
++
++	for (i = 0; i < ud->tchan_cnt; i++) {
++		struct udma_tchan *tchan = &ud->tchans[i];
++
++		tchan->id = i;
++		tchan->reg_rt = ud->mmrs[MMR_TCHANRT] + i * 0x1000;
++	}
++
++	for (i = 0; i < ud->rchan_cnt; i++) {
++		struct udma_rchan *rchan = &ud->rchans[i];
++
++		rchan->id = i;
++		rchan->reg_rt = ud->mmrs[MMR_RCHANRT] + i * 0x1000;
++	}
++
++	for (i = 0; i < ud->rflow_cnt; i++) {
++		struct udma_rflow *rflow = &ud->rflows[i];
++
++		rflow->id = i;
++	}
++
++	for (i = 0; i < ch_count; i++) {
++		struct udma_chan *uc = &ud->channels[i];
++
++		uc->ud = ud;
++		uc->vc.desc_free = udma_desc_free;
++		uc->id = i;
++		uc->remote_thread_id = -1;
++		uc->tchan = NULL;
++		uc->rchan = NULL;
++		uc->dir = DMA_MEM_TO_MEM;
++		uc->name = devm_kasprintf(dev, GFP_KERNEL, "%s chan%d",
++					  dev_name(dev), i);
++
++		vchan_init(&uc->vc, &ud->ddev);
++		/* Use custom vchan completion handling */
++		tasklet_init(&uc->vc.task, udma_vchan_complete,
++			     (unsigned long)&uc->vc);
++		init_completion(&uc->teardown_completed);
++	}
++
++	ret = dma_async_device_register(&ud->ddev);
++	if (ret) {
++		dev_err(dev, "failed to register slave DMA engine: %d\n", ret);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, ud);
++
++	ret = of_dma_controller_register(dev->of_node, udma_of_xlate, ud);
++	if (ret) {
++		dev_err(dev, "failed to register of_dma controller\n");
++		dma_async_device_unregister(&ud->ddev);
++	}
++
++	return ret;
++}
++
++static int udma_remove(struct platform_device *pdev)
++{
++	struct udma_dev *ud = platform_get_drvdata(pdev);
++	struct udma_chan *uc;
++
++	list_for_each_entry(uc, &ud->ddev.channels, vc.chan.device_node)
++		tasklet_kill(&uc->vc.task);
++
++	of_dma_controller_free(pdev->dev.of_node);
++	dma_async_device_unregister(&ud->ddev);
++
++	/* Make sure that we did proper cleanup */
++	cancel_work_sync(&ud->purge_work);
++	udma_purge_desc_work(&ud->purge_work);
++
++	return 0;
++}
++
++static struct platform_driver udma_driver = {
++	.driver = {
++		.name	= "ti-udma",
++		.of_match_table = udma_of_match,
++	},
++	.probe		= udma_probe,
++	.remove		= udma_remove,
++};
++
++module_platform_driver(udma_driver);
++
++MODULE_ALIAS("platform:ti-udma");
++MODULE_DESCRIPTION("TI K3 DMA driver for CPPI 5.0 compliant devices");
 +MODULE_AUTHOR("Peter Ujfalusi <peter.ujfalusi@ti.com>");
 +MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/dma/k3-psil.h b/include/linux/dma/k3-psil.h
-new file mode 100644
-index 000000000000..61d5cc0ad601
---- /dev/null
-+++ b/include/linux/dma/k3-psil.h
-@@ -0,0 +1,71 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ */
-+
-+#ifndef K3_PSIL_H_
-+#define K3_PSIL_H_
-+
-+#include <linux/types.h>
-+
-+#define K3_PSIL_DST_THREAD_ID_OFFSET 0x8000
-+
-+struct device;
-+
-+/**
-+ * enum udma_tp_level - Channel Throughput Levels
-+ * @UDMA_TP_NORMAL:	Normal channel
-+ * @UDMA_TP_HIGH:	High Throughput channel
-+ * @UDMA_TP_ULTRAHIGH:	Ultra High Throughput channel
-+ */
-+enum udma_tp_level {
-+	UDMA_TP_NORMAL = 0,
-+	UDMA_TP_HIGH,
-+	UDMA_TP_ULTRAHIGH,
-+	UDMA_TP_LAST,
-+};
-+
-+/**
-+ * enum psil_endpoint_type - PSI-L Endpoint type
-+ * @PSIL_EP_NATIVE:	Normal channel
-+ * @PSIL_EP_PDMA_XY:	XY mode PDMA
-+ * @PSIL_EP_PDMA_MCAN:	MCAN mode PDMA
-+ * @PSIL_EP_PDMA_AASRC: AASRC mode PDMA
-+ */
-+enum psil_endpoint_type {
-+	PSIL_EP_NATIVE = 0,
-+	PSIL_EP_PDMA_XY,
-+	PSIL_EP_PDMA_MCAN,
-+	PSIL_EP_PDMA_AASRC,
-+};
-+
-+/**
-+ * struct psil_endpoint_config - PSI-L Endpoint configuration
-+ * @ep_type:		PSI-L endpoint type
-+ * @pkt_mode:		If set, the channel must be in Packet mode, otherwise in
-+ *			TR mode
-+ * @notdpkt:		TDCM must be suppressed on the TX channel
-+ * @needs_epib:		Endpoint needs EPIB
-+ * @psd_size:		If set, PSdata is used by the endpoint
-+ * @channel_tpl:	Desired throughput level for the channel
-+ * @pdma_acc32:		ACC32 must be enabled on the PDMA side
-+ * @pdma_burst:		BURST must be enabled on the PDMA side
-+ */
-+struct psil_endpoint_config {
-+	enum psil_endpoint_type ep_type;
-+
-+	unsigned pkt_mode:1;
-+	unsigned notdpkt:1;
-+	unsigned needs_epib:1;
-+	u32 psd_size;
-+	enum udma_tp_level channel_tpl;
-+
-+	/* PDMA properties, valid for PSIL_EP_PDMA_* */
-+	unsigned pdma_acc32:1;
-+	unsigned pdma_burst:1;
-+};
-+
-+int psil_set_new_ep_config(struct device *dev, const char *name,
-+			   struct psil_endpoint_config *ep_config);
-+
-+#endif /* K3_PSIL_H_ */
 -- 
 Peter
 
