@@ -2,243 +2,141 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC22C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F60C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE3221771
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A01121771
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="DFl5tTg+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="v+MOEEjF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="izajUY86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfK1Rvl (ORCPT
+        id S1726700AbfK1Rxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 12:51:41 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:37491 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726569AbfK1Rvk (ORCPT
+        Thu, 28 Nov 2019 12:53:32 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:33907 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbfK1Rxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 12:51:40 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 8DFB1342C;
-        Thu, 28 Nov 2019 12:51:39 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 28 Nov 2019 12:51:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=ZW6UxhH0Hm8lRDs/4M+dETDPOEm
-        QhBVGqXhRss+nCzY=; b=DFl5tTg+prW79LfU+kzaWtNO/eowldIHYBmvX2oICxC
-        z4QBHxeowgDuQeqF/wcvVgXCD/JIA7vUBEnxyFJKacjnmq2D5DhVBaPUyJEFFNpr
-        ui0s990Z5w369E8CqQ+ROh372czQk2SQbSIwDUsymMubr/RBjguRYmpQqB6UX/2P
-        6bztS8S/q4uHFsQBkzNv6PQIemC7eQEEHVVW2adweCXZ8ms6fKQ0gGPz+WQpeHgc
-        mTugC6RfzC4yEu5nmcPLeKpcyHCSIA3gIaLXACbUgvWmjBsUztGVm6BthVVr4c/X
-        HpP8gyUiQ0b1BiXXkDwNBYfnlrWLB+73QCcjPQPcdVQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ZW6Uxh
-        H0Hm8lRDs/4M+dETDPOEmQhBVGqXhRss+nCzY=; b=v+MOEEjFVGd6R+cUGyIQEp
-        8BBMItY604U7PPVeZD8V6/l/Zrk6WUqRBidI5gGkP50HSr9OnjMCT851g1HvqL5Y
-        Q41d5T1R6mncxHXSErZpagb8ilXLBOWo7UG3q4R0MuBK82jFxXeMEw8AtlVBgyQQ
-        uT1dXj5P/x3KBHZZoIISmoZsljpqIq9UF7MNiONNRzf8SEVM07+nDYMsIJ7kEibe
-        flsO0R1+TMPHeh2VahjVuhvzMa9gJLdp0HIntlM0IiaqId/hra/wZfXV//jP3tgi
-        fOhgy4BJpUtf/rzV9atguRr7uaTIlXjgQj5M9TidtAQEBG98CIqwxpjy9ipy0y3w
-        ==
-X-ME-Sender: <xms:KgngXUFvbDaLBE-pkVmL-IxdYmhi9W6pBOi4-tLooEaa_Un3SFr1AA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeijedguddtvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
-    dtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegt
-    vghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:KgngXfpoBSPQMERQxdBXb7UMv4jVWUx_iGIDaIq5z7fVAfcpwFCD7g>
-    <xmx:KgngXc2r6XTst-90cPb2zh8ENJeZomZc3A3JB1-CFogecHw1dGTnFg>
-    <xmx:KgngXTBqAVjTXmpxTGOGdsJwwEPeMFdXLCarHVw-0XSOhJ9eAf8_Lg>
-    <xmx:KwngXfHecfjCy8435wuh4o8afqIqEiTRcu0y9GlfBm3Z9wGu7i1Y0A>
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DEE4180061;
-        Thu, 28 Nov 2019 12:51:37 -0500 (EST)
-Date:   Thu, 28 Nov 2019 18:51:34 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
-Message-ID: <20191128175134.kcgtylfo4ax6ifz7@gilmour.lan>
-References: <20191025175625.8011-1-jagan@amarulasolutions.com>
- <20191025175625.8011-5-jagan@amarulasolutions.com>
- <20191028153427.pc3tnoz2d23filhx@hendrix>
- <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
- <20191029085401.gvqpwmmpyml75vis@hendrix>
- <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
- <20191103173227.GF7001@gilmour>
- <CAMty3ZD5uxU=xb0z7PWaXzodYbWRJkP9HjGX-HZYFT4bwk0GOg@mail.gmail.com>
- <20191122181820.GQ4345@gilmour.lan>
- <CAMty3ZDePC=B-DgfCcjRhJTeciwZmSEU-c4u1=sN_Hs0RgbC7Q@mail.gmail.com>
+        Thu, 28 Nov 2019 12:53:31 -0500
+Received: by mail-pj1-f65.google.com with SMTP id bo14so12169895pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 09:53:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fdiyJnoIXW3HPN+NZ9TvpSYcuqNgzEMV8o501cdtSrw=;
+        b=izajUY866oRtivMGERDSR3ecrfQd4tWez6XLwZVvgf3FmPMa5/0AO/NCXYS0DgOKsC
+         x3VOrmIKk86sEz5tEVnEqFl16BSFwwl+tnD5MsGaypKq7Vtj+8FveuSFlJIPGcrVrQ0H
+         s0Bl83JBlxrV/5CpQidl36sfAfJ1YjjiRGT9rH3T7Ub3TY3Bs3ADIK3nBZn+e/at0Lzp
+         80Fe6uaybnuBKfMszoFoDVg/jgtP07L8GRMLfUhHcaQOmCtV0zSiBEjsZE5bHFsTVelT
+         ZPfD4MWwnHkN8WiyYbbeUr7occi8M7UI0544lqSrxlZqUebBUU4bSkZ1f4Yujjmkp1R9
+         GNuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fdiyJnoIXW3HPN+NZ9TvpSYcuqNgzEMV8o501cdtSrw=;
+        b=IxT1Rf1vh5wl4RJBDYLfiwIS/VvxPWGO2K40oQz8E26Blj5d9a7SXsvk+d8qy0TFTh
+         FWRpCHkMZoK0PCPYsA3IpyT1B8QT5YlUmN7doAP4P9Xf8rsKlluA0bUubVzWGNWKlVbR
+         9b711YerEU5v0lQ/8g1TvpTW3W208GL9u9rNa2TUcGFWoJYnZF+0l3cGVvQotAw5c9xt
+         v5YAfE7PbZy5BI6K2uczNmx7cbXI/pQnELTs0fY+RETivehuckiPhvLxWvkXTjx6k7Q4
+         3MV9GkPjbV3ueAE5/pvR0O2KyW+0t6FfVGaiIhHqrAC/AP3EOwcjsCgKLj6gTYJ+Oi6I
+         g9Aw==
+X-Gm-Message-State: APjAAAVu5HTjVM7EmQpvZa5IbIGEUji9IileDVx6awJ7XAZQsyGTbBNS
+        Eb2kgVNPaWNLeaXngwB/d8lhSw==
+X-Google-Smtp-Source: APXvYqwZUeynH3nuO3cHAd6ukK6Z0iaZZFDjlE/JN+br739G9O4/Gqwr7S/5/erl3PZ9BdY4if/BgA==
+X-Received: by 2002:a17:902:bc4b:: with SMTP id t11mr10373553plz.22.1574963610940;
+        Thu, 28 Nov 2019 09:53:30 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id e1sm4953181pfl.98.2019.11.28.09.53.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 09:53:30 -0800 (PST)
+Date:   Thu, 28 Nov 2019 09:53:27 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, evgreen@chromium.org, agross@kernel.org,
+        daidavid1@codeaurora.org, masneyb@onstation.org,
+        sibis@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] interconnect: Add a common standard aggregate
+ function
+Message-ID: <20191128175327.GD82109@yoga>
+References: <20191128134839.27606-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tueqnmro5e6uu24k"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZDePC=B-DgfCcjRhJTeciwZmSEU-c4u1=sN_Hs0RgbC7Q@mail.gmail.com>
+In-Reply-To: <20191128134839.27606-1-georgi.djakov@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 28 Nov 05:48 PST 2019, Georgi Djakov wrote:
 
---tueqnmro5e6uu24k
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Currently there is one very standard aggregation method that is used by
+> several drivers. Let's add this as a common function, so that drivers
+> could just point to it, instead of copy/pasting code.
+> 
+> Suggested-by: Evan Green <evgreen@chromium.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-On Sat, Nov 23, 2019 at 01:20:21AM +0530, Jagan Teki wrote:
-> > > Please have a look at this snippet, I have used your second
-> > > suggestions. let me know if you have any comments?
-> > >
-> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > index 8fa90cfc2ac8..91c95e56d870 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > @@ -1109,24 +1109,36 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
-> > >          return PTR_ERR(dsi->regulator);
-> > >      }
-> > >
-> > > -    dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
-> > > -                          &sun6i_dsi_regmap_config);
-> > > -    if (IS_ERR(dsi->regs)) {
-> > > -        dev_err(dev, "Couldn't create the DSI encoder regmap\n");
-> > > -        return PTR_ERR(dsi->regs);
-> > > -    }
-> > > -
-> > >      dsi->reset = devm_reset_control_get_shared(dev, NULL);
-> > >      if (IS_ERR(dsi->reset)) {
-> > >          dev_err(dev, "Couldn't get our reset line\n");
-> > >          return PTR_ERR(dsi->reset);
-> > >      }
-> > >
-> > > +    dsi->regs = regmap_init_mmio(dev, base, &sun6i_dsi_regmap_config);
-> >
-> > You should use the devm variant here
->
-> Sure.
->
-> >
-> > > +    if (IS_ERR(dsi->regs)) {
-> > > +        dev_err(dev, "Couldn't init regmap\n");
-> > > +        return PTR_ERR(dsi->regs);
-> > > +    }
-> > > +
-> > > +    dsi->bus_clk = devm_clk_get(dev, NULL);
-> >
-> > I guess you still need to pass 'bus' here?
->
-> But the idea here is not to specify clock name explicitly to support
-> A64. otherwise A64 would fail as we are not specifying the clock-names
-> explicitly on dsi node.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Right. But you have no guarantee that the bus clock is going to be the
-first one on the other SoCs either.
-
-What about something like that instead:
-
-char *clk_name = NULL;
-if (dsi->has_mod_clk)
-    clk_name = "bus";
-
-clk = devm_clk_get(dev, clk_name);
-if (IS_ERR(clk))
-    return PTR_ERR(clk));
-
-regmap_mmio_attach_clk(regmap, clk);
-
->
-> dsi: dsi@1ca0000 {
->        compatible = "allwinner,sun50i-a64-mipi-dsi";
->        reg = <0x01ca0000 0x1000>;
->        interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
->        clocks = <&ccu CLK_BUS_MIPI_DSI>;
->        resets = <&ccu RST_BUS_MIPI_DSI>;
->       phys = <&dphy>;
->       phy-names = "dphy";
-> .....
-> };
->
-> >
-> > > +    if (IS_ERR(dsi->bus_clk)) {
-> > > +        dev_err(dev, "Couldn't get the DSI bus clock\n");
-> > > +        ret = PTR_ERR(dsi->bus_clk);
-> > > +        goto err_regmap;
-> > > +    } else {
-> > > +        printk("Jagan.. Got the BUS clock\n");
-> > > +        ret = regmap_mmio_attach_clk(dsi->regs, dsi->bus_clk);
-> > > +        if (ret)
-> > > +            goto err_bus_clk;
-> > > +    }
-> > > +
-> > >      if (dsi->variant->has_mod_clk) {
-> > >          dsi->mod_clk = devm_clk_get(dev, "mod");
-> > >          if (IS_ERR(dsi->mod_clk)) {
-> > >              dev_err(dev, "Couldn't get the DSI mod clock\n");
-> > > -            return PTR_ERR(dsi->mod_clk);
-> > > +            ret = PTR_ERR(dsi->mod_clk);
-> > > +            goto err_attach_clk;
-> > >          }
-> > >      }
-> > >
-> > > @@ -1167,6 +1179,14 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
-> > >  err_unprotect_clk:
-> > >      if (dsi->variant->has_mod_clk)
-> > >          clk_rate_exclusive_put(dsi->mod_clk);
-> > > +err_attach_clk:
-> > > +    if (!IS_ERR(dsi->bus_clk))
-> > > +        regmap_mmio_detach_clk(dsi->regs);
-> > > +err_bus_clk:
-> > > +    if (!IS_ERR(dsi->bus_clk))
-> > > +        clk_put(dsi->bus_clk);
-> > > +err_regmap:
-> > > +    regmap_exit(dsi->regs);
-> > >      return ret;
-> > >  }
-> > >
-> > > @@ -1181,6 +1201,13 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
-> > >      if (dsi->variant->has_mod_clk)
-> > >          clk_rate_exclusive_put(dsi->mod_clk);
-> > >
-> > > +    if (!IS_ERR(dsi->bus_clk)) {
-> > > +        regmap_mmio_detach_clk(dsi->regs);
-> > > +        clk_put(dsi->bus_clk);
-> >
-> > This will trigger a warning, you put down the reference twice
->
-> You mean regmap_mmio_detach_clk will put the clk?
-
-No, devm_clk_get will.
-
-Maxime
-
---tueqnmro5e6uu24k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXeAJJgAKCRDj7w1vZxhR
-xeTeAQCacNpV8Wm/rBcNEWf932Rl1dECN/23C4NSORo+wFWl+QEA9eslBkFZsEsR
-8bsW4OOl0eHdwYb6HSh9C+3pq52yBgU=
-=UsjM
------END PGP SIGNATURE-----
-
---tueqnmro5e6uu24k--
+> ---
+>  drivers/interconnect/core.c           | 10 ++++++++++
+>  include/linux/interconnect-provider.h |  8 ++++++++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 0e4852feb395..2633fd223875 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -221,6 +221,16 @@ static int apply_constraints(struct icc_path *path)
+>  	return ret;
+>  }
+>  
+> +int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+> +		      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+> +{
+> +	*agg_avg += avg_bw;
+> +	*agg_peak = max(*agg_peak, peak_bw);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(icc_std_aggregate);
+> +
+>  /* of_icc_xlate_onecell() - Translate function using a single index.
+>   * @spec: OF phandle args to map into an interconnect node.
+>   * @data: private data (pointer to struct icc_onecell_data)
+> diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
+> index 31440c921216..0c494534b4d3 100644
+> --- a/include/linux/interconnect-provider.h
+> +++ b/include/linux/interconnect-provider.h
+> @@ -92,6 +92,8 @@ struct icc_node {
+>  
+>  #if IS_ENABLED(CONFIG_INTERCONNECT)
+>  
+> +int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+> +		      u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
+>  struct icc_node *icc_node_create(int id);
+>  void icc_node_destroy(int id);
+>  int icc_link_create(struct icc_node *node, const int dst_id);
+> @@ -104,6 +106,12 @@ int icc_provider_del(struct icc_provider *provider);
+>  
+>  #else
+>  
+> +static inline int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+> +				    u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+> +{
+> +	return -ENOTSUPP;
+> +}
+> +
+>  static inline struct icc_node *icc_node_create(int id)
+>  {
+>  	return ERR_PTR(-ENOTSUPP);
