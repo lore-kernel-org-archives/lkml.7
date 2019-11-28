@@ -2,102 +2,78 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC512C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EA6C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C097B2071F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:00:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDQPuq5T"
+	by mail.kernel.org (Postfix) with ESMTP id 9A494215E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574906518;
+	bh=NYRqSSSflb/7R2PJYKZYTmTZFfY5niNm/0KywUUvxio=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=raUOZTc0AyD+nb/nzBeLSHNypCM6ysAx+NAVX59ko8C5Im37CBZO5r0NkvUzIUPFa
+	 c19LFzW0nhzmOp4m31E6XPYJKXBTRNoV49GtS+N/Z6uBZVusQ3BsNCBoCLFGnwe3Kq
+	 BiY4aZp8sOuh1a4ebPvM/nMdgnysOfAvZDudfjCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbfK1CAg (ORCPT
+        id S1728734AbfK1CB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 21:00:36 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46408 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbfK1CAg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 21:00:36 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k1so3696606pga.13;
-        Wed, 27 Nov 2019 18:00:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1NWy/8kAMX+v65QvJYYfXEV09Sd7DFbVQpWA/O3VSdM=;
-        b=ZDQPuq5TBYpZoGzPhNGoHNbKKdXKxiCMMo601ZnEkkrmtx2u070725swBJXCqMCIgz
-         3LuimkszMxVGsLjMqO2UvAumaTNCGn8WhuwEa7k6pMaQisr75y8Oc7enPCWk3WYQzdGr
-         XXspDtLuA4K0Bny5rW/Y3DURJF37ZbHf8o3rPiaAVJHY81IdLFcFPW+TQM2n1hIi2YEV
-         N7moVQG/JEKQi1E30iPUzRCNdqyecCUsVzDig6/gxmwFLqLwFrLTSZ/iFRHWq9nRADQt
-         z9hDXDdaMUWFdQXl64g+aHn8A5fL/9PoCZPiZ9vwl+ZOR+S9If4E1HA2k+fDseJcBI4B
-         hsIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1NWy/8kAMX+v65QvJYYfXEV09Sd7DFbVQpWA/O3VSdM=;
-        b=iC1S056egVUWrkMC9gR36DB2UmSd60Infl/Y9PjquaGGJrbj+7lv9yTpf6c8293OXh
-         6esUZnXtDsXlg7jaiZkxiDQ+zMdaUkApDs5HSSxyCUnLSzKeL5bjHwJuf68Vo5QuOe9F
-         7sJJts0foGoZgqc7g2p78KSVh+rwTVhLCwtS4la1Fi+lmtGIkdYyEWclFqt5dueqUfE1
-         mCxB82TW1GyMTjH6kooEI9ZxDy8dbuavouJwc44ColIYsJbA5QaujLBqCzNcfFNGi0S+
-         r5NF+2QjHCLcl7EG2pvkqT2nkvnqc82DRaY9qrzEk+FdVDZbe59jcvGXEgtc/P9o7KW6
-         i1Kg==
-X-Gm-Message-State: APjAAAVBs5IYIDDy4WGYlixv/95a79zGju8yuKRQZT1xDTb0IWhkxtHL
-        xiZrGrxLKQfOmKTLN41pw70=
-X-Google-Smtp-Source: APXvYqy/8U61avG9uOn9PWYfv+bT9v34GayzyHYrcWi8xfRCZ3hYaXwujSgokK2MAY4WhpNKrB0NYg==
-X-Received: by 2002:aa7:9d9c:: with SMTP id f28mr30916321pfq.20.1574906435782;
-        Wed, 27 Nov 2019 18:00:35 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id a19sm18387016pfn.144.2019.11.27.18.00.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2019 18:00:35 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH net v4] net: macb: add missed tasklet_kill
-Date:   Thu, 28 Nov 2019 10:00:21 +0800
-Message-Id: <20191128020021.23761-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 27 Nov 2019 21:01:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728724AbfK1CB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 21:01:57 -0500
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84BAB215E5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 02:01:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574906516;
+        bh=NYRqSSSflb/7R2PJYKZYTmTZFfY5niNm/0KywUUvxio=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d3/F8gLLnZ4/ZaTDrULqhfAEOTrK5hqoj33SGcB2N+2GtEUIvYIk6ocWtm87pfr9E
+         fUhRI1eKjGKcugyl//SD6UsJK2es6aB/IA0F3t4aovNbxWgN3HwLOLVg24lfD+oKsf
+         y8gaKQpLRcHJsItyhqnQyg5roURrSg5Rcz0O6mDY=
+Received: by mail-lf1-f48.google.com with SMTP id r14so2470394lfm.5
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 18:01:56 -0800 (PST)
+X-Gm-Message-State: APjAAAXlTm55gINp3e3Uq7EKxU2dgHsV4sI3P6DSR8EuzC02qggz9C0r
+        4OS251dFxGzHsCAmqDf7fxutNcK24gCxtsKo4+s=
+X-Google-Smtp-Source: APXvYqwf0FBRz8oMYpv9971Qt4D0VHSAYNJ0z+XlnxTZwRI2xCRXhL3jA4u6airlbfQp9bZ+tt2Vn7X/XcURdrJGA2M=
+X-Received: by 2002:ac2:4469:: with SMTP id y9mr31061502lfl.33.1574906514716;
+ Wed, 27 Nov 2019 18:01:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20191121132919.29430-1-krzk@kernel.org> <87k17lo41g.fsf@intel.com>
+In-Reply-To: <87k17lo41g.fsf@intel.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 28 Nov 2019 10:01:43 +0800
+X-Gmail-Original-Message-ID: <CAJKOXPdCXFgZyF8tgLmOOoVgtC++RQGSSN8LT4twEXKz=+589Q@mail.gmail.com>
+Message-ID: <CAJKOXPdCXFgZyF8tgLmOOoVgtC++RQGSSN8LT4twEXKz=+589Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/vc4: Fix Kconfig indentation
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver forgets to kill tasklet in remove.
-Add the call to fix it.
+On Wed, 27 Nov 2019 at 21:14, Jani Nikula <jani.nikula@linux.intel.com> wrote:
+>
+> On Thu, 21 Nov 2019, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > Adjust indentation from spaces to tab (+optional two spaces) as in
+> > coding style with command like:
+> >       $ sed -e 's/^        /\t/' -i */Kconfig
+>
+> Btw have you updated checkpatch.pl to try to keep the Kconfigs from
+> bitrotting back to having different indentation? Or the config tools?
 
-Fixes: 032dc41ba6e2 ("net: macb: Handle HRESP error")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v4:
-  - Put tasklet_kill after unregister_netdev to ensure
-    IRQs are disabled when killing tasklet.
+Perl is not my domain but I can try. Let's see...
 
- drivers/net/ethernet/cadence/macb_main.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index d5ae2e1e0b0e..9c767ee252ac 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4422,6 +4422,7 @@ static int macb_remove(struct platform_device *pdev)
- 		mdiobus_free(bp->mii_bus);
- 
- 		unregister_netdev(dev);
-+		tasklet_kill(&bp->hresp_err_tasklet);
- 		pm_runtime_disable(&pdev->dev);
- 		pm_runtime_dont_use_autosuspend(&pdev->dev);
- 		if (!pm_runtime_suspended(&pdev->dev)) {
--- 
-2.24.0
-
+Best regards,
+Krzysztof
