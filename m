@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF7AC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37087C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C3C21771
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1003D21774
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:57:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="f7ELNEHL"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="DWaJoZNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbfK1O5Y (ORCPT
+        id S1727338AbfK1O51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:57:24 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38861 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbfK1O5U (ORCPT
+        Thu, 28 Nov 2019 09:57:27 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37878 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfK1O5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:57:20 -0500
-Received: by mail-lj1-f196.google.com with SMTP id k8so18297895ljh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:19 -0800 (PST)
+        Thu, 28 Nov 2019 09:57:19 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u17so1462988lja.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Vf2Fz+jj9lIDscUS3A8RQ3uOyXTjQEG0ba9IOOikoBs=;
-        b=f7ELNEHL3fudjaC9Is+gx4un2R7u3IQVwsuaM0hPXmik/iv0R/U+N8/DsXKAxHzE7F
-         wU5L5PXvtHQrsrOCSpKiFkyxiU7KI6s9/dEg1DzoSWlHRS01JYdvN9QzEDQcu3m/rfeh
-         g5XVdp+hoGqlaFksIMZ8c9vnaz5jW/z5ASgCQ=
+        bh=FmgfMIRsfesacuqaAWdy4m11iy4kXtcqJGU2jE1ib94=;
+        b=DWaJoZNKmVKJfjUISyttmUEuNUv/FC4di6OurSxwDjNRPf9fCoQE/A/qz2Dy66aw71
+         PMyfrMM8lWNdbHve3iKOns1KyW7JmJCa85Djs2qtRkWpz9X+k2Ozb14LpmYyBYaKsLE9
+         HPUmmm8ft3lQXqQmtEWC2OKlYzqlvX2OAcQXM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Vf2Fz+jj9lIDscUS3A8RQ3uOyXTjQEG0ba9IOOikoBs=;
-        b=QzVMNXB2Yambq5Hl+/VhvLe7szPcMbpFwxpS+2JjZRAcWq1Ro9glwZVApdmlrznDtA
-         XTmZOUyXp61F2pEQaUYVmQmgnuoPSPH9ns7U4n48LVv7ZGdB/ArpQMOmYpCug2Wc4lgg
-         paopuPCfAm2LygMWkWm/UNDtYv2StJDn2n3z/BGBpvMA+Ry4rPbyKAKCgzUSo4bg4DoG
-         R/Zfnfcvlji53ZhhoshkX/76oHqxHlO/d3SuFf8erStd0BPOCoEIdRRugf4uxmDlM8ow
-         b0A/24ArrWwBDMJ7qpCRPzuEusQOTtoADrOZHVAJHhk/6kyKWe3c90JUY4Vq7cAdTdOD
-         cvxA==
-X-Gm-Message-State: APjAAAVzeB2CPVEB+0ApEPUjFHOZGrzLR728ezjfDWn5yrzMM5jG41yF
-        8YKhoaFtM6OGiVRfxTbc46ehuQ==
-X-Google-Smtp-Source: APXvYqxXd79lDtjCrRoNuvF4Qp9y2Rk63R+FMcFQzuUK6zJh8aMrNu5UNhh51q3RvAg4iprPycUgTA==
-X-Received: by 2002:a05:651c:305:: with SMTP id a5mr35412802ljp.144.1574953039041;
-        Thu, 28 Nov 2019 06:57:19 -0800 (PST)
+        bh=FmgfMIRsfesacuqaAWdy4m11iy4kXtcqJGU2jE1ib94=;
+        b=kU+IEf7lO9pwU6aDT5KPVL0VCtyWVgWwcZhP4m4dT3K0Ek0bSZCCeBJvwfLi3TOvux
+         42/TsVrXbCejPtdRScOXdGd7GCziLwKfF4yzL9F4YUg7OeYTKTF9GmnQ1/VH453+c6Oi
+         8A9PeO0POoe8A+TZ6Le7F6SaYxVpGR97LSvNytrETuvtlb6ejJ1RQ/ER5c/XP52yETN+
+         i03KtBS2lCF+Igx0tjkJxrxSp8kOfm4XPAnRBojJ/7xt47vgMr2JV97NNpdkzxiDAgUd
+         I+V4on9gs35Eq8WMhMAuqxs33HokCDmixysQ4FTEZJXKpquCN/WEi06TzZyCwh2cuQlP
+         81rA==
+X-Gm-Message-State: APjAAAW2QmzoQ+ohzdqPdEEAYzfCkGViSSsSLQQlts8YLnOcP4h2pjkG
+        9SbyLZSzHnod33Rpk9po9HnJWQ==
+X-Google-Smtp-Source: APXvYqz+PF41ZfV2qdB0Q0B87NeIFa3uor094RTZMNig8ikkYiK55r+ga2Tn+9ewAJX6oroKuIa4Rw==
+X-Received: by 2002:a2e:91d5:: with SMTP id u21mr35420576ljg.32.1574953036398;
+        Thu, 28 Nov 2019 06:57:16 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.17
+        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 06:57:18 -0800 (PST)
+        Thu, 28 Nov 2019 06:57:15 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v6 11/49] soc: fsl: qe: use qe_ic_cascade_{low,high}_mpic also on 83xx
-Date:   Thu, 28 Nov 2019 15:55:16 +0100
-Message-Id: <20191128145554.1297-12-linux@rasmusvillemoes.dk>
+Subject: [PATCH v6 09/49] soc: fsl: qe: drop assign-only high_active in qe_ic_init
+Date:   Thu, 28 Nov 2019 15:55:14 +0100
+Message-Id: <20191128145554.1297-10-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
 References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
@@ -73,85 +73,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The *_ipic and *_mpic handlers are almost identical - the only
-difference is that the latter end with an unconditional
-chip->irq_eoi() call. Since IPIC does not have ->irq_eoi, we can
-reduce some code duplication by calling irq_eoi conditionally.
-
-This is similar to what is already done in mpc8xxx_gpio_irq_cascade().
-
-This leaves the functions slightly misnamed, but that will be fixed in
-a subsequent patch.
+high_active is only assigned to but never used. Remove it.
 
 Reviewed-by: Timur Tabi <timur@kernel.org>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- arch/powerpc/platforms/83xx/misc.c |  2 +-
- include/soc/fsl/qe/qe_ic.h         | 24 ++++--------------------
- 2 files changed, 5 insertions(+), 21 deletions(-)
+ drivers/soc/fsl/qe/qe_ic.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
-index f46d7bf3b140..779791c0570f 100644
---- a/arch/powerpc/platforms/83xx/misc.c
-+++ b/arch/powerpc/platforms/83xx/misc.c
-@@ -100,7 +100,7 @@ void __init mpc83xx_qe_init_IRQ(void)
- 		if (!np)
- 			return;
- 	}
--	qe_ic_init(np, 0, qe_ic_cascade_low_ipic, qe_ic_cascade_high_ipic);
-+	qe_ic_init(np, 0, qe_ic_cascade_low_mpic, qe_ic_cascade_high_mpic);
- 	of_node_put(np);
- }
- 
-diff --git a/include/soc/fsl/qe/qe_ic.h b/include/soc/fsl/qe/qe_ic.h
-index 714a9b890d8d..bfaa233d8328 100644
---- a/include/soc/fsl/qe/qe_ic.h
-+++ b/include/soc/fsl/qe/qe_ic.h
-@@ -74,24 +74,6 @@ void qe_ic_set_highest_priority(unsigned int virq, int high);
- int qe_ic_set_priority(unsigned int virq, unsigned int priority);
- int qe_ic_set_high_priority(unsigned int virq, unsigned int priority, int high);
- 
--static inline void qe_ic_cascade_low_ipic(struct irq_desc *desc)
--{
--	struct qe_ic *qe_ic = irq_desc_get_handler_data(desc);
--	unsigned int cascade_irq = qe_ic_get_low_irq(qe_ic);
--
--	if (cascade_irq != NO_IRQ)
--		generic_handle_irq(cascade_irq);
--}
--
--static inline void qe_ic_cascade_high_ipic(struct irq_desc *desc)
--{
--	struct qe_ic *qe_ic = irq_desc_get_handler_data(desc);
--	unsigned int cascade_irq = qe_ic_get_high_irq(qe_ic);
--
--	if (cascade_irq != NO_IRQ)
--		generic_handle_irq(cascade_irq);
--}
--
- static inline void qe_ic_cascade_low_mpic(struct irq_desc *desc)
+diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
+index 8c874372416b..4b03060d8079 100644
+--- a/drivers/soc/fsl/qe/qe_ic.c
++++ b/drivers/soc/fsl/qe/qe_ic.c
+@@ -320,7 +320,7 @@ void __init qe_ic_init(struct device_node *node, unsigned int flags,
  {
- 	struct qe_ic *qe_ic = irq_desc_get_handler_data(desc);
-@@ -101,7 +83,8 @@ static inline void qe_ic_cascade_low_mpic(struct irq_desc *desc)
- 	if (cascade_irq != NO_IRQ)
- 		generic_handle_irq(cascade_irq);
+ 	struct qe_ic *qe_ic;
+ 	struct resource res;
+-	u32 temp = 0, ret, high_active = 0;
++	u32 temp = 0, ret;
  
--	chip->irq_eoi(&desc->irq_data);
-+	if (chip->irq_eoi)
-+		chip->irq_eoi(&desc->irq_data);
- }
+ 	ret = of_address_to_resource(node, 0, &res);
+ 	if (ret)
+@@ -366,10 +366,8 @@ void __init qe_ic_init(struct device_node *node, unsigned int flags,
+ 		temp |= CICR_GRTB;
  
- static inline void qe_ic_cascade_high_mpic(struct irq_desc *desc)
-@@ -113,7 +96,8 @@ static inline void qe_ic_cascade_high_mpic(struct irq_desc *desc)
- 	if (cascade_irq != NO_IRQ)
- 		generic_handle_irq(cascade_irq);
+ 	/* choose destination signal for highest priority interrupt */
+-	if (flags & QE_IC_HIGH_SIGNAL) {
++	if (flags & QE_IC_HIGH_SIGNAL)
+ 		temp |= (SIGNAL_HIGH << CICR_HPIT_SHIFT);
+-		high_active = 1;
+-	}
  
--	chip->irq_eoi(&desc->irq_data);
-+	if (chip->irq_eoi)
-+		chip->irq_eoi(&desc->irq_data);
- }
+ 	qe_ic_write(qe_ic->regs, QEIC_CICR, temp);
  
- static inline void qe_ic_cascade_muxed_mpic(struct irq_desc *desc)
 -- 
 2.23.0
 
