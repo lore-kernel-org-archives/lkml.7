@@ -2,120 +2,65 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13272C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC7BC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1019216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="NFvPS2Oa"
+	by mail.kernel.org (Postfix) with ESMTP id 56F57216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfK1Iq4 (ORCPT
+        id S1727472AbfK1Isw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 03:46:56 -0500
-Received: from dvalin.narfation.org ([213.160.73.56]:51516 "EHLO
-        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfK1Iq4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:46:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1574930812;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=s8TzhMdKiX5v4SAFsZkpzZcqBHz/OSQqMD7KCPXL3Rg=;
-        b=NFvPS2Oa1a8d7d6Yck2Lp/F6l7WkAx9Ly8mi8YNZPmz83Zf2sdXmAtf1xh/YJyWEjcT3E8
-        7UkE5Vf3I78wi6dHpeh7u1r/T/gH8mQIYrCLJ7SZo7956lSY4QnJLMJ+p4P1SBT4u+BBWQ
-        44LoIaCEV5iFkAkJS377ae9KbtbxS54=
-From:   Sven Eckelmann <sven@narfation.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzkaller <syzkaller@googlegroups.com>,
-        syzbot <syzbot+a229d8d995b74f8c4b6c@syzkaller.appspotmail.com>,
-        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        =?utf-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>,
-        LKML <linux-kernel@vger.kernel.org>, mareklindner@neomailbox.ch,
-        netdev <netdev@vger.kernel.org>, sw@simonwunderlich.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        vinicius.gomes@intel.com, wang.yi59@zte.com.cn,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Subject: Re: WARNING in mark_lock (3)
-Date:   Thu, 28 Nov 2019 09:46:49 +0100
-Message-ID: <1809369.KjlzdqruN6@sven-edge>
-In-Reply-To: <CACT4Y+YwNGWCXBazm+7GHpSw-gXsxmA8NA-o7O7Mpj3d-dhGYA@mail.gmail.com>
-References: <0000000000009aa32205985e78b6@google.com> <2825703.dkhYCMB3mh@sven-edge> <CACT4Y+YwNGWCXBazm+7GHpSw-gXsxmA8NA-o7O7Mpj3d-dhGYA@mail.gmail.com>
+        Thu, 28 Nov 2019 03:48:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48160 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726301AbfK1Isw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 03:48:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 619A9ACF1;
+        Thu, 28 Nov 2019 08:48:50 +0000 (UTC)
+Subject: Re: [PATCH v2 0/2] xen/gntdev: sanitize user interface handling
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+References: <20191107111546.26579-1-jgross@suse.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <442417bc-ec65-0864-0a99-59583a52f866@suse.com>
+Date:   Thu, 28 Nov 2019 09:48:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5668474.S8tDUuPlPh"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+In-Reply-To: <20191107111546.26579-1-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart5668474.S8tDUuPlPh
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-On Thursday, 28 November 2019 09:40:32 CET Dmitry Vyukov wrote:
-> On Thu, Nov 28, 2019 at 8:25 AM Sven Eckelmann <sven@narfation.org> wrote:
-> >
-> > On Thursday, 28 November 2019 03:00:01 CET syzbot wrote:
-> > [...]
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=132ee536e00000
-> > > start commit:   89d57ddd Merge tag 'media/v5.5-1' of git://git.kernel.org/..
-> > > git tree:       upstream
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=10aee536e00000
-> >
-> > Can the syzbot infrastructure be told to ignore this crash in the bisect run?
-> > Because this should be an unrelated crash which is (hopefully) fixed in
-> > 40e220b4218b ("batman-adv: Avoid free/alloc race when handling OGM buffer").
+On 07.11.19 12:15, Juergen Gross wrote:
+> The Xen gntdev driver's checking of the number of allowed mapped pages
+> is in need of some sanitizing work.
 > 
-> +syzkaller mailing list for syzbot discussion
+> Changes in V2:
+> - enhanced commit message of patch 1 (Andrew Cooper)
 > 
-> Hi Sven,
+> Juergen Gross (2):
+>    xen/gntdev: replace global limit of mapped pages by limit per call
+>    xen/gntdev: switch from kcalloc() to kvcalloc()
 > 
-> There is no such functionality at the moment.
-> What exactly do you mean? Somehow telling it interactively? Or
-> hardcode some set of crashes for linux? I don't see how any of these
-> options can really work...
+>   drivers/xen/gntdev-common.h |  2 +-
+>   drivers/xen/gntdev-dmabuf.c | 11 +++------
+>   drivers/xen/gntdev.c        | 55 +++++++++++++++++++--------------------------
+>   3 files changed, 27 insertions(+), 41 deletions(-)
+> 
 
-I was thinking more about rerunning the same bisect but tell it to assume 
-"crashed: general protection fault in batadv_iv_ogm_queue_add" as OK instead 
-of assuming that it is a crashed like the previous "crashed: WARNING in 
-mark_lock". Just to get a non-bogus bisect result. Or try to rerun the
-bisect between 40e220b4218b and 89d57dddd7d319ded00415790a0bb3c954b7e386
-
-Kind regards,
-	Sven
---nextPart5668474.S8tDUuPlPh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl3fiXkACgkQXYcKB8Em
-e0aUTRAAiE/aMO9dt/lEAQXh270FSDvpoZUUk/4MxbE9B3niUjxx5CIqtT27U/4L
-I0dhj04aDedv/b5yWn4F7Ru1/dkMK8fPBrrkOwXWbU3UypUtgd3PEVC9m/6hU46v
-stMjVKXfWRBIU+KhS+/RHokrjyzSCqiaHMy+XXTspHy/lHe+3wz97K6ilVw+K+Kd
-nUIDzRiZgnuGmHXyUZCoZw8r79CXffr9Xrmdjf48zTwVMKTYXq+AfVT4oEvcYaj+
-RZ0alFRimq4y1r/4qNOE7bb4snJfzpUoPYNK3CrHoHf0ApffOf9vsjWCuvwOQAvo
-NjmXHqoyyQROeksc+1aJShSgehu3Ged2nc20RbZXQKBf3Am8BzouVWu8bxTQ95OD
-GoctEO9TxVRjO6bLZ35S58IbHhTJg9J4jXfysq6LbLNzFMgAC2kJPcGH8rDbeaxn
-iAGJ6gOJLQICQeT9GuKuux7T7NpCcSj22+pcwXHFcGXn6EdR/ddoUuht8MNJB+qs
-I3rOZ2/K2uhQlv5yPLOq8y9w0m1megfSxVKEoEaE+gDbHeqrOZGVM4cc08jHo4Xz
-OAkmaQ5m6GeFiYkaO4PWDdzTbfueK3Vj97vlgj3RuH2ykL6gkXUBg1Dft+7laEb5
-/JjPjbrajzioUEudQeB9TxK3oqJXUkxtDWnadAPrBtcg3XC3ZBw=
-=5EiG
------END PGP SIGNATURE-----
-
---nextPart5668474.S8tDUuPlPh--
+Boris, could you please comment on the patches?
 
 
-
+Juergen
