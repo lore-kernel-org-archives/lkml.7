@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39EDC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9A5C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59EB21775
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2475621775
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:02:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbfK1LC0 (ORCPT
+        id S1727489AbfK1LCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:02:26 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:37221 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726990AbfK1LCY (ORCPT
+        Thu, 28 Nov 2019 06:02:34 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:35878 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726670AbfK1LCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:02:24 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TjIllLR_1574938929;
+        Thu, 28 Nov 2019 06:02:32 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TjIllLR_1574938929;
 Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TjIllLR_1574938929)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 28 Nov 2019 19:02:18 +0800
+          Thu, 28 Nov 2019 19:02:16 +0800
 From:   Shile Zhang <shile.zhang@linux.alibaba.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -36,9 +36,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
         linux-kbuild@vger.kernel.org,
         Shile Zhang <shile.zhang@linux.alibaba.com>
-Subject: [RFC PATCH v5 7/7] x86/unwind/orc: remove run-time ORC unwind tables sort
-Date:   Thu, 28 Nov 2019 19:02:06 +0800
-Message-Id: <20191128110206.2107-8-shile.zhang@linux.alibaba.com>
+Subject: [RFC PATCH v5 1/7] scripts/sortextable: Rewrite error/success handling
+Date:   Thu, 28 Nov 2019 19:02:00 +0800
+Message-Id: <20191128110206.2107-2-shile.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.0.rc2
 In-Reply-To: <20191128110206.2107-1-shile.zhang@linux.alibaba.com>
 References: <20191128110206.2107-1-shile.zhang@linux.alibaba.com>
@@ -49,50 +49,289 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The orc_unwind and orc_unwind_ip tables are sorted in vmlinux link phase
-at build time, just remove the run-time sort.
+The sortextable token some code from recordmount, which uses
+the same setjmp/longjmp to manage control flow.
+Now, recordmcount has been rewritten the error handling by
+commit 3f1df12019f3 ("recordmcount: Rewrite error/success handling").
+
+So rewrite this part as well with more refactors, make it more readable
+and easy for further extend, no functional changes.
 
 Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
 ---
- arch/x86/kernel/unwind_orc.c | 8 +++++---
- scripts/link-vmlinux.sh      | 5 ++++-
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ scripts/sortextable.c | 119 +++++++++++++++---------------------------
+ scripts/sortextable.h |  11 ++--
+ 2 files changed, 48 insertions(+), 82 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 332ae6530fa8..280da6fa9922 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -273,9 +273,11 @@ void __init unwind_init(void)
- 		return;
+diff --git a/scripts/sortextable.c b/scripts/sortextable.c
+index 55768654e3c6..cd9762ba4467 100644
+--- a/scripts/sortextable.c
++++ b/scripts/sortextable.c
+@@ -22,7 +22,6 @@
+ #include <getopt.h>
+ #include <elf.h>
+ #include <fcntl.h>
+-#include <setjmp.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -51,61 +50,41 @@
+ #define EM_ARCV2	195
+ #endif
+ 
+-static int fd_map;	/* File descriptor for file being modified. */
+-static int mmap_failed; /* Boolean flag. */
+-static void *ehdr_curr; /* current ElfXX_Ehdr *  for resource cleanup */
+-static struct stat sb;	/* Remember .st_size, etc. */
+-static jmp_buf jmpenv;	/* setjmp/longjmp per-file error escape */
+-
+-/* setjmp() return values */
+-enum {
+-	SJ_SETJMP = 0,  /* hardwired first return */
+-	SJ_FAIL,
+-	SJ_SUCCEED
+-};
+-
+-/* Per-file resource cleanup when multiple files. */
+-static void
+-cleanup(void)
+-{
+-	if (!mmap_failed)
+-		munmap(ehdr_curr, sb.st_size);
+-	close(fd_map);
+-}
+-
+-static void __attribute__((noreturn))
+-fail_file(void)
+-{
+-	cleanup();
+-	longjmp(jmpenv, SJ_FAIL);
+-}
+-
+ /*
+  * Get the whole file as a programming convenience in order to avoid
+  * malloc+lseek+read+free of many pieces.  If successful, then mmap
+  * avoids copying unused pieces; else just read the whole file.
+  * Open for both read and write.
+  */
+-static void *mmap_file(char const *fname)
++static void *mmap_file(char const *fname, size_t *size)
+ {
+-	void *addr;
++	int fd;
++	struct stat sb;
++	void *addr = NULL;
+ 
+-	fd_map = open(fname, O_RDWR);
+-	if (fd_map < 0 || fstat(fd_map, &sb) < 0) {
++	fd = open(fname, O_RDWR);
++	if (fd < 0) {
+ 		perror(fname);
+-		fail_file();
++		return NULL;
++	}
++	if (fstat(fd, &sb) < 0) {
++		perror(fname);
++		goto out;
+ 	}
+ 	if (!S_ISREG(sb.st_mode)) {
+ 		fprintf(stderr, "not a regular file: %s\n", fname);
+-		fail_file();
++		goto out;
+ 	}
+-	addr = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_SHARED,
+-		    fd_map, 0);
++	addr = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+ 	if (addr == MAP_FAILED) {
+-		mmap_failed = 1;
+ 		fprintf(stderr, "Could not mmap file: %s\n", fname);
+-		fail_file();
++		goto out;
+ 	}
++
++	*size = sb.st_size;
++
++out:
++	close(fd);
+ 	return addr;
+ }
+ 
+@@ -264,19 +243,18 @@ static void sort_relative_table(char *extab_image, int image_size)
+ 	}
+ }
+ 
+-static void
+-do_file(char const *const fname)
++static int
++do_file(char const *const fname, void *addr)
+ {
+-	table_sort_t custom_sort;
+-	Elf32_Ehdr *ehdr = mmap_file(fname);
++	table_sort_t custom_sort = NULL;
++	Elf32_Ehdr *ehdr = addr;
++	int rc = -1;
+ 
+-	ehdr_curr = ehdr;
+ 	switch (ehdr->e_ident[EI_DATA]) {
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+ 			ehdr->e_ident[EI_DATA], fname);
+-		fail_file();
+-		break;
++		return -1;
+ 	case ELFDATA2LSB:
+ 		r = rle;
+ 		r2 = r2le;
+@@ -298,7 +276,7 @@ do_file(char const *const fname)
+ 	||  (r2(&ehdr->e_type) != ET_EXEC && r2(&ehdr->e_type) != ET_DYN)
+ 	||  ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
+ 		fprintf(stderr, "unrecognized ET_EXEC/ET_DYN file %s\n", fname);
+-		fail_file();
++		return -1;
  	}
  
--	/* Sort the .orc_unwind and .orc_unwind_ip tables: */
--	sort(__start_orc_unwind_ip, num_entries, sizeof(int), orc_sort_cmp,
--	     orc_sort_swap);
-+	/*
-+	 * Note, orc_unwind and orc_unwind_ip tables has been sorted in
-+	 * vmlinux link phase by sorttable tool at build time.
-+	 * Its ready for binary search now.
-+	 */
+ 	custom_sort = NULL;
+@@ -306,7 +284,6 @@ do_file(char const *const fname)
+ 	default:
+ 		fprintf(stderr, "unrecognized e_machine %d %s\n",
+ 			r2(&ehdr->e_machine), fname);
+-		fail_file();
+ 		break;
+ 	case EM_386:
+ 	case EM_X86_64:
+@@ -333,16 +310,15 @@ do_file(char const *const fname)
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF class %d %s\n",
+ 			ehdr->e_ident[EI_CLASS], fname);
+-		fail_file();
+ 		break;
+ 	case ELFCLASS32:
+ 		if (r2(&ehdr->e_ehsize) != sizeof(Elf32_Ehdr)
+ 		||  r2(&ehdr->e_shentsize) != sizeof(Elf32_Shdr)) {
+ 			fprintf(stderr,
+ 				"unrecognized ET_EXEC/ET_DYN file: %s\n", fname);
+-			fail_file();
++			break;
+ 		}
+-		do32(ehdr, fname, custom_sort);
++		rc = do32(ehdr, fname, custom_sort);
+ 		break;
+ 	case ELFCLASS64: {
+ 		Elf64_Ehdr *const ghdr = (Elf64_Ehdr *)ehdr;
+@@ -350,21 +326,22 @@ do_file(char const *const fname)
+ 		||  r2(&ghdr->e_shentsize) != sizeof(Elf64_Shdr)) {
+ 			fprintf(stderr,
+ 				"unrecognized ET_EXEC/ET_DYN file: %s\n", fname);
+-			fail_file();
++			break;
+ 		}
+-		do64(ghdr, fname, custom_sort);
++		rc = do64(ghdr, fname, custom_sort);
+ 		break;
+ 	}
+ 	}  /* end switch */
  
- 	/* Initialize the fast lookup table: */
- 	lookup_num_blocks = orc_lookup_end - orc_lookup;
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 01978d1e4c13..f0f08e2bbcd5 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -300,7 +300,10 @@ vmlinux_link vmlinux "${kallsymso}" ${btf_vmlinux_bin_o}
+-	cleanup();
++	return rc;
+ }
  
- if [ -n "${CONFIG_BUILDTIME_TABLE_SORT}" ]; then
- 	info SORTTAB vmlinux
--	sorttable vmlinux
-+	if ! sorttable vmlinux; then
-+		echo >&2 Failed to sort kernel tables
-+		exit 1
-+	fi
- fi
+ int
+ main(int argc, char *argv[])
+ {
+-	int n_error = 0;  /* gcc-4.3.0 false positive complaint */
+-	int i;
++	int i, n_error = 0;  /* gcc-4.3.0 false positive complaint */
++	size_t size = 0;
++	void *addr = NULL;
  
- info SYSMAP System.map
+ 	if (argc < 2) {
+ 		fprintf(stderr, "usage: sortextable vmlinux...\n");
+@@ -373,28 +350,16 @@ main(int argc, char *argv[])
+ 
+ 	/* Process each file in turn, allowing deep failure. */
+ 	for (i = 1; i < argc; i++) {
+-		char *file = argv[i];
+-		int const sjval = setjmp(jmpenv);
++		addr = mmap_file(argv[i], &size);
++		if (!addr) {
++			++n_error;
++			continue;
++		}
+ 
+-		switch (sjval) {
+-		default:
+-			fprintf(stderr, "internal error: %s\n", file);
+-			exit(1);
+-			break;
+-		case SJ_SETJMP:    /* normal sequence */
+-			/* Avoid problems if early cleanup() */
+-			fd_map = -1;
+-			ehdr_curr = NULL;
+-			mmap_failed = 1;
+-			do_file(file);
+-			break;
+-		case SJ_FAIL:    /* error in do_file or below */
++		if (do_file(argv[i], addr))
+ 			++n_error;
+-			break;
+-		case SJ_SUCCEED:    /* premature success */
+-			/* do nothing */
+-			break;
+-		}  /* end switch */
++
++		munmap(addr, size);
+ 	}
+ 	return !!n_error;
+ }
+diff --git a/scripts/sortextable.h b/scripts/sortextable.h
+index d4b3f6c40f02..5a62e94df678 100644
+--- a/scripts/sortextable.h
++++ b/scripts/sortextable.h
+@@ -87,7 +87,7 @@ static int compare_extable(const void *a, const void *b)
+ 	return 0;
+ }
+ 
+-static void
++static int
+ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
+ {
+ 	Elf_Shdr *shdr;
+@@ -146,17 +146,17 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
+ 	}
+ 	if (strtab_sec == NULL) {
+ 		fprintf(stderr,	"no .strtab in  file: %s\n", fname);
+-		fail_file();
++		return -1;
+ 	}
+ 	if (symtab_sec == NULL) {
+ 		fprintf(stderr,	"no .symtab in  file: %s\n", fname);
+-		fail_file();
++		return -1;
+ 	}
+ 	symtab = (const Elf_Sym *)((const char *)ehdr +
+ 				   _r(&symtab_sec->sh_offset));
+ 	if (extab_sec == NULL) {
+ 		fprintf(stderr,	"no __ex_table in  file: %s\n", fname);
+-		fail_file();
++		return -1;
+ 	}
+ 	strtab = (const char *)ehdr + _r(&strtab_sec->sh_offset);
+ 
+@@ -190,7 +190,7 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
+ 		fprintf(stderr,
+ 			"no main_extable_sort_needed symbol in  file: %s\n",
+ 			fname);
+-		fail_file();
++		return -1;
+ 	}
+ 	sort_needed_sec = &shdr[get_secindex(r2(&sym->st_shndx),
+ 					     sort_needed_sym - symtab,
+@@ -206,4 +206,5 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
+ #endif
+ 	/* We sorted it, clear the flag. */
+ 	w(0, sort_done_location);
++	return 0;
+ }
 -- 
 2.24.0.rc2
 
