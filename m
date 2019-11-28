@@ -5,63 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC7EC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D525C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B336E2158A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116042158A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:37:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QZshRNUZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q8CuEg+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfK1Ihg (ORCPT
+        id S1727551AbfK1Ihr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 03:37:36 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34760 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfK1Ihf (ORCPT
+        Thu, 28 Nov 2019 03:37:47 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44185 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfK1Ihr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:37:35 -0500
-Received: by mail-qt1-f193.google.com with SMTP id i17so28356331qtq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:37:33 -0800 (PST)
+        Thu, 28 Nov 2019 03:37:47 -0500
+Received: by mail-qk1-f196.google.com with SMTP id m16so22028948qki.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:37:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6u7P0pT+m1avw2GIFNYZQ34T01piQ8kE385X/AIq78g=;
-        b=QZshRNUZBr5ALtvOYHI55X9QPZjYHWQM6OkQ26CESw8JOkaLWVE3SCNpz6Jxef3GK1
-         N63xpQJB3YzktG8IgnD8WPkjs25k2zaLapcvRmNuhJqR+zsJ96rCzPCwuc+NUs2VKMsS
-         IPdzCRFYHKAkEPnN3iHHQGRzxdSa7BLD+dlI1rg7zgU32P2FLZGBiw8qabG37KMZBBhq
-         m/BQiQ2m2RizbI01ONfvloWjp36yG7R/Y5ipDkoCyZ5gaszGdxvdIztLdI+lUtVWO9IY
-         Dv7PKe/bGPx/jZvoGttLbsZWHGkox1cf1O6ebXIgh0rVbnWSzJRg1FHATqzYfx4o5zOV
-         YWOQ==
+        bh=i8Z/YQa2aCyECjnYWe042ixNkkLbjrkb5ABIpqk/Tog=;
+        b=Q8CuEg+6u0gpfgfJyGM55X5P4F8Fhm9bm0TLY6WSuJ7SFutiigbjO4OzBd8pEDm50m
+         b6P/NuOyU7r0pQHC0kGdBVbQFutxRYogYGarn6WTK7TKBN0d5kGPmpiA4H5d+OQmV85q
+         FoZkcBdQkFBZc0U32b2zT6q6NpFU72M4TC62LREznmuD7VjXfJo0/YZcVvNtC30s9ddh
+         wKvk+KGorte+wxjkXWnu+w8U6lbHLiNQWYwiIktKhYtBPrQ0RqYv+1qSCoLUytM6B7UP
+         HssYBaf1wsZ3Zkp8c0h1fk+Yo90me6tN5RkTdlcmbfh85QGOP3uHC0B2JcRcezEiwpGI
+         qCjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6u7P0pT+m1avw2GIFNYZQ34T01piQ8kE385X/AIq78g=;
-        b=Aq+oVFKEcQFCpuuvPBgHBFEIEXdTIq1ut9jTCJr43SsB9WLoCIXJ6H+G2Qi2p6Y449
-         zbd1HNjZTX/aCKM4amOOnolnuVhOWePIYwkdqhlNQiKf832HeW0de4N+5Ay/rRHdkDgC
-         EX452CDpSVJnJq2N7+/mgzAHzu9HnGPI5NwhPUigIpHu+nIkeugNnkF6wgFHlRCWIOL2
-         uKIM4jqfvfVwvWAKEDxEZ3GalVG8KSlE7ciODBsuMjEwV1HBMsSRuTq72dm0cmrQPn8Z
-         PNIGoqbFm3Xab0oe4kuNU4zl+vSB8JfSHTtShjnLSFLW6l9Ih1Z9IMtNS6glzQFdpq3a
-         G5rw==
-X-Gm-Message-State: APjAAAUPk2GijTTkRQpSWG+RrO1iZoeCKC3y7c2F0ocv3x9yxVhrfyb5
-        spWynHLHklBupUxbq3LBqcTzFWzq7Y2URJLco0SH3w==
-X-Google-Smtp-Source: APXvYqy2wNwhnjUiRqGpMgfQGEjumGsSuvzRRhYXY9a/aMTl2PaNqNDT9FcS/UKU7vz5kiAskbxayH5YmZbjcEwXchY=
-X-Received: by 2002:ac8:6a0e:: with SMTP id t14mr10980160qtr.57.1574930252182;
- Thu, 28 Nov 2019 00:37:32 -0800 (PST)
+        bh=i8Z/YQa2aCyECjnYWe042ixNkkLbjrkb5ABIpqk/Tog=;
+        b=oKzfioISjr1FxR+6RDqiuD/vLdoDDH+6rwrMoFevFgq51jJJpoVh5uvVUU5zj12pVh
+         Vm/4c0n5SIgDSGd50gTXnb4TYq4x+CWBXX4d2PJUmvq28v5DtfAawt9sq/GXN+y08SVF
+         WUfuNNzXR1C74BLI9yUPng55vtGLsRwLyv+sWVy397UyHimaAX6G7HWG3gl57SUuIJp4
+         p4FNmzX8HenVDj8KPl3HI3vzF1K5VEoDIrY7V393EFkYMNMrVnEivg8h8LUrmOWW5+7M
+         CyOhw1MN8gO43A7eaqTAohLl0AKC/RmOTyRTXdSuWmjt/AkADSVOQdpl9xcnnhXMCTsJ
+         gXdQ==
+X-Gm-Message-State: APjAAAWwYVKKMNljpGJd58HOJY6FJqpEBf2I71m32yedwNV/T00OJ5G2
+        fMYzWXYFHtfC5Yq9SoAUuGGZBc8gQvBj9dINZlMGcQ1agF4=
+X-Google-Smtp-Source: APXvYqzmxbfqlH7jpzLEspxGGe+knZPBomY6TBAVTy9u+4yNT63Oa3ZEs/cqqywtsDK6xlAqp2aQxbY8QFHGV1xHAcs=
+X-Received: by 2002:a37:de12:: with SMTP id h18mr9005076qkj.256.1574930265690;
+ Thu, 28 Nov 2019 00:37:45 -0800 (PST)
 MIME-Version: 1.0
-References: <000000000000a54cd9059863fd8c@google.com>
-In-Reply-To: <000000000000a54cd9059863fd8c@google.com>
+References: <000000000000a25df7059863fd92@google.com>
+In-Reply-To: <000000000000a25df7059863fd92@google.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 28 Nov 2019 09:37:20 +0100
-Message-ID: <CACT4Y+YnLC93dzGE51KQmqwgOgcULtnE1fS_ruJns_Ar1uqYhg@mail.gmail.com>
-Subject: Re: bpf build error (2)
-To:     syzbot <syzbot+c89a581922d5a98fccb8@syzkaller.appspotmail.com>
+Date:   Thu, 28 Nov 2019 09:37:34 +0100
+Message-ID: <CACT4Y+ZR2R8CQN9iVksAB-6MjcdFRcGC1geBeZ7sbG0BL7WcnA@mail.gmail.com>
+Subject: Re: linux-next build error (6)
+To:     syzbot <syzbot+88f3974342fd0f011404@syzkaller.appspotmail.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
         syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,23 +69,23 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, Nov 28, 2019 at 9:35 AM syzbot
-<syzbot+c89a581922d5a98fccb8@syzkaller.appspotmail.com> wrote:
+<syzbot+88f3974342fd0f011404@syzkaller.appspotmail.com> wrote:
 >
 > Hello,
 >
 > syzbot found the following crash on:
 >
-> HEAD commit:    7c3977d1 libbpf: Fix sym->st_value print on 32-bit arches
-> git tree:       bpf
-> console output: https://syzkaller.appspot.com/x/log.txt?x=108ab832e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7a7e892e3a014d76
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c89a581922d5a98fccb8
+> HEAD commit:    d26b0e22 Add linux-next specific files for 20191128
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10b94536e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=7e1b037422e4486b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=88f3974342fd0f011404
 > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 >
 > Unfortunately, I don't have any reproducer for this crash yet.
 >
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+c89a581922d5a98fccb8@syzkaller.appspotmail.com
+> Reported-by: syzbot+88f3974342fd0f011404@syzkaller.appspotmail.com
 >
 > failed to run ["make" "bzImage" "CC=/syzkaller/gcc/bin/gcc" "-j64"]: exit
 > status 2
