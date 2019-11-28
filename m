@@ -2,94 +2,111 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17007C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFDEC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90732176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C4F2176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:20:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l+E4ygaS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e5Y2B5c0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfK1IQW (ORCPT
+        id S1727433AbfK1IUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 03:16:22 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40001 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfK1IQV (ORCPT
+        Thu, 28 Nov 2019 03:20:36 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42154 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbfK1IUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:16:21 -0500
-Received: by mail-lj1-f196.google.com with SMTP id s22so8450523ljs.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:16:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dlwaqEfjT5graM8RWQ1ek299Dj4eK17tSarlzL5nZUM=;
-        b=l+E4ygaS3q5mYwlHDuFCSXQ77eYxgnZq4FdzjB4K2crLne5PNmNtouWf5MmH+0mP+a
-         KyoynhY40PGrUD+TebyOwFZ7I8rILisxXtwWvkjSjp+QFIcKF3t6ro7XSoXsUbsGa8uH
-         XHyTKCRmj/e/0OnKWOD2Y7d+xWz/TgL9/VHd5f1gwQc0UxFZ7PH3t3xWXhoCptaVW2I1
-         QmskW4aj5jbewzlKdZv7gv1VOEU0aFmTaAujR/2y70Cbdydft/nWRUpxbAauXDasusdc
-         q2007xskJ60GRtI5D8u2I2U9rHNvg6+7n279miEuRgOumNA8L9DgosI68SPwk/58zh8v
-         WFsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dlwaqEfjT5graM8RWQ1ek299Dj4eK17tSarlzL5nZUM=;
-        b=gQ16TFmBB6ltH+DWAyjVg/7ESoIGebGaxIs0YBF7+vea43pxvmW3tcCBx2EiWrjp3+
-         hPN7ic2oaiPx7RZsmunNAYs03sIsCoDYJPt+qsw+UJNxZj7QOSg7P7b++23XqTGzMZ21
-         kb0Pb87s6yTzVl6MQ+ezjTrHjpTjN52f7rN1Cy77gfn+kUJ4+chY/SD9CANQiOJGNm42
-         s+JS7qeKo10e0Yf7QRFk4SVFsMX/ng6uACYNr741pkaBRRGbnzwFl67px4Uz78kOBOc7
-         Pr4U6/uK1TGtqs6O1RgVEEGDoKpBqX/qm8dogMgKBVxXnn5tPgBkgt0SzqLz/YewuJvi
-         YeEg==
-X-Gm-Message-State: APjAAAUCOCqLZLXUqfR7rBP5Xubv7LhDxJKcMz+Z0YpxbspL0tak9MK8
-        V+LktVn5JcJzB4cjsqq3m3X7FG1HHYhPbQrApFC2bg==
-X-Google-Smtp-Source: APXvYqyTE9eYnDMIvHYYYoLUZ9fGJAvAWhf7bt6cQqx4sbnSjEzG3In1wSpDQ95JnJ/UyfSwZGmvFUTCfZ/EW9cdkyw=
-X-Received: by 2002:a2e:9699:: with SMTP id q25mr33605730lji.251.1574928978081;
- Thu, 28 Nov 2019 00:16:18 -0800 (PST)
+        Thu, 28 Nov 2019 03:20:36 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAS8KWpb108601;
+        Thu, 28 Nov 2019 02:20:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574929232;
+        bh=YeiqDx6xy0lLTLKZ4JJ6oMuelrCkWsSmvcEt2fV6Ns4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=e5Y2B5c0YN7+bkDzQrRBfV4wcDP4iPzLh2JtIINqVswslCLf0f7TJgmGCWKvCw2Ms
+         pFhKEHW/lhp3+OgtUoNVJrrnLlx9KPdflssR/N+SOCXoMvwtC1cisalSddQJBax9S7
+         kbRIYf2MwMS/KUfWgi5Gz6v/t+OokxzFApSXXZW0=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAS8KWDr067235
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 Nov 2019 02:20:32 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
+ Nov 2019 02:20:32 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 28 Nov 2019 02:20:32 -0600
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAS8KTAH062029;
+        Thu, 28 Nov 2019 02:20:30 -0600
+Subject: Re: [PATCH] mmc: sdhci: Fix incorrect switch to HS mode
+To:     Alan Cooper <alcooperx@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+References: <20190903115114.33053-1-alcooperx@gmail.com>
+ <CAPDyKFqaNBH3Thwy1O+KXkcsgM2gMrm9zNGYWH8vVP+Y2vSLdA@mail.gmail.com>
+ <CAOGqxeUJD7eQxRnH1rep=m2+Ga5DDF=uWMsc_j2NZgC+EnZqsg@mail.gmail.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <7e495749-1539-9164-d801-305a918318d6@ti.com>
+Date:   Thu, 28 Nov 2019 13:51:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191128080832.13529-1-rahul.tanwar@linux.intel.com> <20191128080832.13529-2-rahul.tanwar@linux.intel.com>
-In-Reply-To: <20191128080832.13529-2-rahul.tanwar@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Nov 2019 09:16:06 +0100
-Message-ID: <CACRpkdbKE6eHsyuCM5oCkhj=bP4H=omiFfdA6qf+g7xQzJBYQQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] pinctrl: Fix warning by adding missing MODULE_LICENSE
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAOGqxeUJD7eQxRnH1rep=m2+Ga5DDF=uWMsc_j2NZgC+EnZqsg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 9:08 AM Rahul Tanwar
-<rahul.tanwar@linux.intel.com> wrote:
+Hi,
 
-> Fix below build warning
->
->    WARNING: modpost: missing MODULE_LICENSE() in
->    drivers/pinctrl/pinctrl-equilibrium.o
->
-> Introduced by commit
->
->    1948d5c51dba ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
->
-> by adding missing MODULE_LICENSE.
->
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+On 19/09/19 5:27 PM, Alan Cooper wrote:
+> This does correct the sequence of switching to HS400 but it might be
+> safest to just add this to the latest until it gets a little testing
+> to make sure it doesn't expose some bug in existing controllers.
+> 
+> Thanks
+> Al
+> 
+> On Tue, Sep 3, 2019 at 10:52 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>
+>> On Tue, 3 Sep 2019 at 13:51, Al Cooper <alcooperx@gmail.com> wrote:
+>>>
+>>> When switching from any MMC speed mode that requires 1.8v
+>>> (HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
+>>> ends up configured for SDR12 with a 50MHz clock which is an illegal
+>>> mode.
+>>>
+>>> This happens because the SDHCI_CTRL_VDD_180 bit in the
+>>> SDHCI_HOST_CONTROL2 register is left set and when this bit is
+>>> set, the speed mode is controlled by the SDHCI_CTRL_UHS field
+>>> in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
+>>> will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
+>>> because there is no UHS mode being set.
+>>>
+>>> The fix is to change sdhci_set_uhs_signaling() to set the
+>>> SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
+>>> any switch to HS mode.
 
-Patch applied, I will send by express to Torvalds once the build
-servers are happy :)
+This change has broken High speed mode in SD card for me in AM65x-evm. I
+guess this change only needs to be done for eMMC. SDR25 is decidedly not
+the same as high speed for SD card.
 
-Yours,
-Linus Walleij
+Thanks,
+Faiz
+
