@@ -2,231 +2,199 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A66C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 04:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79A1C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 04:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F7D21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 04:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58592071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 04:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfK1EOz convert rfc822-to-8bit (ORCPT
+        id S1727541AbfK1E2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 23:14:55 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39711 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbfK1EOz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 23:14:55 -0500
-Received: by mail-ed1-f65.google.com with SMTP id n26so21564073edw.6;
-        Wed, 27 Nov 2019 20:14:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=5sfODevhRJ0fpp4KUyFGDUEZZ6v0++XmlIguNOG57fk=;
-        b=SdqudRZtiXntSWYVjsD+M3Dff6R0g1PA7mcqkadkbRKalHsT8/eRvK4wI1B+RCgmjw
-         MwB8CwNpJWCH9/pWViP2rcByUVhQkZDYcxD5hPl6e6zUw5GDw2GZrWc5ApyB0jXsVLK+
-         bGt9a5YvkD8Wf1Mix9OEkwN9DNlgGSgvOLIOqwe9vJINEmTrBfq8ELTmhi1vkpBQL831
-         KTcBY20yeUwQ7LX2Rmngsf96YK5YumNBeSBDcwJQ/s5NdZjPzVkVf0yflmR+e/i+K5eU
-         HsSsltFgQhrTePmFNmiKtFkNzp+fcMhYBx4ICsXr7sAAbvCqYXHlIBURPFNbxME6cDOU
-         LCqg==
-X-Gm-Message-State: APjAAAVJOGM/4NE0Pv6zN7mHKRnK3oYNjz4YxEpx12sWRhqlJWCpYzN1
-        9WvGsCPX8L3QLvRWcZCY0qmtUzqf+8s=
-X-Google-Smtp-Source: APXvYqzgFhD+T5fxUoya/jLtBL4eHuSsChCKXqhcBOGldyYTNxMyiPTKT3ULF356xWVfVgIUv7oYwA==
-X-Received: by 2002:a17:906:31c3:: with SMTP id f3mr30077832ejf.198.1574914491795;
-        Wed, 27 Nov 2019 20:14:51 -0800 (PST)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id z69sm907335ede.88.2019.11.27.20.14.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2019 20:14:51 -0800 (PST)
-Received: by mail-wr1-f51.google.com with SMTP id a15so29341678wrf.9;
-        Wed, 27 Nov 2019 20:14:51 -0800 (PST)
-X-Received: by 2002:adf:81e3:: with SMTP id 90mr2263793wra.23.1574914490971;
- Wed, 27 Nov 2019 20:14:50 -0800 (PST)
+        Wed, 27 Nov 2019 23:28:01 -0500
+Received: from mail.phunq.net ([66.183.183.73]:34312 "EHLO phunq.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbfK1E2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 23:28:01 -0500
+Received: from [172.16.1.14]
+        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+        (Exim 4.92.3)
+        (envelope-from <daniel@phunq.net>)
+        id 1iaBPL-0000xi-IQ; Wed, 27 Nov 2019 20:27:59 -0800
+Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+ <20191127142508.GB5143@mit.edu>
+ <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
+ <20191128022817.GE22921@mit.edu>
+From:   Daniel Phillips <daniel@phunq.net>
+Message-ID: <3b5f28e5-2b88-47bb-1b32-5c2fed989f0b@phunq.net>
+Date:   Wed, 27 Nov 2019 20:27:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191128020259.1338188-1-megous@megous.com> <20191128102608.035cbb996c8681a6fb035336@magewell.com>
- <20191128030653.5fhcolvib6tzf4zc@core.my.home> <CAGb2v65+4LhHU5UCOhnowKqK+GUiAKzi+wcPxkmuwtJ=itv-iw@mail.gmail.com>
- <20191128035056.77554jav3eo6h7su@core.my.home>
-In-Reply-To: <20191128035056.77554jav3eo6h7su@core.my.home>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Thu, 28 Nov 2019 12:14:35 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67Bfrn+_tSjF6Jeu0G3v9_BhrB__Sgag-yd5WwiSmztkA@mail.gmail.com>
-Message-ID: <CAGb2v67Bfrn+_tSjF6Jeu0G3v9_BhrB__Sgag-yd5WwiSmztkA@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH] media: sun6i-csi: Fix incorrect
- HSYNC/VSYNC/PCLK polarity configuration
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        Chen-Yu Tsai <wens@csie.org>, Yong <yong.deng@magewell.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        "open list:CSI DRIVERS FOR ALLWINNER V3s" 
-        <linux-media@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191128022817.GE22921@mit.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 11:51 AM Ondřej Jirman <megous@megous.com> wrote:
->
-> On Thu, Nov 28, 2019 at 11:26:24AM +0800, Chen-Yu Tsai wrote:
-> > On Thu, Nov 28, 2019 at 11:06 AM Ondřej Jirman <megous@megous.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, Nov 28, 2019 at 10:26:08AM +0800, Yong wrote:
-> > > > Hi Ondrej,
-> > > >
-> > > > This has been discussed.
-> > > > And Maxime sent a patch for this:
-> > > > https://www.mail-archive.com/linux-media@vger.kernel.org/msg127149.html
-> > >
-> > > Thanks for pointing to the previous patch. But that patch doesn't make any
-> > > sense, and breaks things for me, and doesn't even match BSP code, which
-> > > has no such reversal, and works fine with about 30 cam drivers.
-> > >
-> > > Also how do you explain my findings?
-> > >
-> > > My camera is sending correct signals, verified by looking at them actually (see
-> > > below), and CSI is not receiving the image. I have to flip HSYNC/VSYNC to be
-> > > oposite of that what CSI driver expects and I get a noisy image and if I fix
-> > > PCLK polarity too, the noise goes away, which means now I'm also sampling when
-> > > the data are stable and not when they're changing.
-> > >
-> > > Here: (output from my cam, that I configured to have VSYNC ACTIVE LOW, HSYNC
-> > > ACTIVE LOW) And the signal is clearly that, as you can see yourself:
-> > >
-> > >   https://megous.com/dl/tmp/98df81b7ed0126ec.png
-> >
-> > From the looks of things you have active-high VSYNC with active-low HREF.
-> > HREF is not the same as HSYNC, in fact quite the opposite. V/H SYNC are
-> > pulses, active only when there should be no data and the line/frame switch
-> > happens, while V/H REF are held active when there is data. I personally
-> > find these terms very confusing. :(
-> >
-> > Now the timing diagrams in the Allwinner manuals would suggest that when
-> > they are talking about H/V SYNC, they are actually referring to H/V REF.
-> > The HSYNC line is high/active when there is valid data, and the VSYNC line
-> > is high/active for the duration of the frame.
-> >
-> > I think both sides need to be checked that they are using the correct
-> > polarity, and maybe also have the media maintainers clarify how the
-> > polarity should be interpreted when the hardware uses H/V ref instead
-> > of H/V sync.
->
-> Oh my, so it's just a terminology issue? :)
->
-> This probably should be docummented somewhere. I just thought xSYNC_ACTIVE_HIGH
-> meant the respective signals are supposed to be HIGH during active phase of data
-> transmission: that is VSYNC HIGH during entire frame, and HSYNC high during row.
+On 2019-11-27 6:28 p.m., Theodore Y. Ts'o wrote:
+> On Wed, Nov 27, 2019 at 02:27:27PM -0800, Daniel Phillips wrote:
+>>> (2) It's implemented as userspace code (e.g., it uses open(2),
+>>> mmap(2), et. al) and using C++, so it would need to be reimplemented
+>>> from scratch for use in the kernel.
+>>
+>> Right. Some of these details, like open, are obviously trivial, others
+>> less so. Reimplementing from scratch is an overstatement because the
+>> actual intrusions of user space code are just a small portion of the code
+>> and nearly all abstracted behind APIs that can be implemented as needed
+>> for userspace or kernel in out of line helpers, so that the main source
+>> is strictly unaware of the difference.
+> 
+> The use of C++ with templates is presumably one of the "less so"
+> parts, and it was that which I had in mind when I said,
+> "reimplementing from scratch".
 
-Unfortunately I'm having a hard time finding a definitive source for this. My
-rationale is that since the sync signal is a pulse, the active part would refer
-to the pulsing part, not the at rest part.
+Ah, I see what you mean. To be honest, C++ has now become so natural for
+me that I don't even think about it. You and Linus really ought to get
+some of that :-)
 
-> DT bindings documentation doesn't help much either.
+If you look closely, you will notice that my C++ is largely just "C
+compiled by C++", and I cheerfully undertake to convert away the few
+places where I have simplified my life and sped up development by using
+actual idiomatic C++ constructs.
 
-Yeah. I think this should be sorted out for the whole subsystem, as this not
-only affects platform drivers, but the sensor drivers as well.
+By way of anecdote, coding the current user space version of Shardmap
+in C++ cut my development time to go from the pure C prototype to the
+world record persistent memory demonstration by a factor of roughly 3.
+I now find it far faster to develop in C++ and then translate mindlessly
+back to C as necessary, than to slog through the entire development
+process using nothing but classic C, a language that really ought to
+have done the right thing and stayed back in the century for which it
+was created.
 
-> And obviously manufacturers are confused too.
->
->   https://megous.com/dl/tmp/fae07dfb4897bbb3.png
+But to each his own. Ask for a pure C version licensed under GPLv2
+and you shall receive. Note that we already have one here:
 
-It seems at least OmniVision uses VSYNC + HREF. GalaxyCore seems to use VSYNC +
-HREF as well, but they call it HSYNC, and VSYNC polarity is inverted. :(
+   https://github.com/OGAWAHirofumi/tux3/blob/master/user/devel/shard.c
 
-The OV7670 sensor I was testing had an option to switch from HREF to HSYNC,
-and another one to invert HREF. Talk about confusing. And HSYNC != inverted
-HREF. They will be some PCLK cycles apart.
+Perhaps this will be easier on your eyes. It is essentially the same
+thing less the persistent memory support and plus a bug or two.
 
-> HSYNC/VSYNC "low valid" produces what you see on the previous signal capture
-> I posted. ;)
+Ah, one more anecdote. Shardmap implements polymorphic record block
+operations, so that low level record format can be uniquely tailored
+to the kind of data being stored. Overlooking the fact that we can
+simply remove that mechanism for the kernel port because Ext4 does
+not need more than one kind of record format, I can cheerfully
+report that the official C++ way of implementing polymorphism using
+virtual functions turned out to suck donkey dung compared to the
+classic C/kernel way, where function vectors are handled as first
+class data objects.
 
-Thanks. I don't have a scope or logic analyzer. I'll wait for the people who
-do to figure this out.
+I actually implemented it both ways, but the virtual function way
+turned out to be unspeakably painful for various reasons, hard to
+read, and hard to modify without having it regularly blow up into
+zillions of itty bitty little insane pieces. One day, after sinking
+a couple of weeks into getting it finally working the official C++
+way, I just threw this all out and recoded in kernel style, which
+took about 3 hours and the result was not only much easier to read
+and write, it generated better machine code.
 
+So there you have it, ammunition to use against C++ if you want it.
+But oh wait, it's still C++ isn't it? Why yes it is. C++, just try
+it, you'll like it, and nobody is too late to learn it.
 
-Regards
-ChenYu
+But once again, let's be very clear about it: I'm going to remove
+*all* the C++ from Shardmap in aid of integrating with Tux3 and
+Ext4. So there is no need at all to stay awake at night worrying
+about this question.
 
-> regards,
->         o.
->
-> >
-> > ChenYu
-> >
-> > > The above signals are received with CSI driver configured with
-> > > V4L2_MBUS_VSYNC_ACTIVE_HIGH V4L2_MBUS_HSYNC_ACTIVE_HIGH. So CSI driver is
-> > > clearly wrong.
-> > >
-> > > I think this is pretty clear the driver is buggy. At least for A83T SoC.
-> > >
-> > > I'm not sure what Maxime found out, but he should probably re-check his
-> > > findings. Maxime, can you comment on this?
-> > >
-> > > regards,
-> > >         o.
-> > >
-> > > > On Thu, 28 Nov 2019 03:02:59 +0100
-> > > > Ondrej Jirman <megous@megous.com> wrote:
-> > > >
-> > > > > This was discovered by writing a new camera driver and wondering, why
-> > > > > hsync/vsync polarity setting behaves in reverse to what would be
-> > > > > expected. Verified by looking at the actual signals and the SoC
-> > > > > user manual.
-> > > > >
-> > > > > Fixes: 5cc7522d8965 ("media: sun6i: Add support for Allwinner CSI V3s")
-> > > > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > > > ---
-> > > > >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 6 +++---
-> > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > > index f17e5550602d..98bbcca59a90 100644
-> > > > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > > @@ -417,12 +417,12 @@ static void sun6i_csi_setup_bus(struct sun6i_csi_dev *sdev)
-> > > > >             if (flags & V4L2_MBUS_FIELD_EVEN_LOW)
-> > > > >                     cfg |= CSI_IF_CFG_FIELD_POSITIVE;
-> > > > >
-> > > > > -           if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
-> > > > > +           if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-> > > > >                     cfg |= CSI_IF_CFG_VREF_POL_POSITIVE;
-> > > > > -           if (flags & V4L2_MBUS_HSYNC_ACTIVE_LOW)
-> > > > > +           if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-> > > > >                     cfg |= CSI_IF_CFG_HREF_POL_POSITIVE;
-> > > > >
-> > > > > -           if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-> > > > > +           if (flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
-> > > > >                     cfg |= CSI_IF_CFG_CLK_POL_FALLING_EDGE;
-> > > > >             break;
-> > > > >     case V4L2_MBUS_BT656:
-> > > > > --
-> > > > > 2.24.0
-> > > > >
-> > > > > --
-> > > > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > > > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > > > > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191128020259.1338188-1-megous%40megous.com.
-> > > >
-> > > >
-> > > > Thanks,
-> > > > Yong
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191128030653.5fhcolvib6tzf4zc%40core.my.home.
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191128035056.77554jav3eo6h7su%40core.my.home.
+>> Also, most of this work is already being done for Tux3,
+> 
+> Great, when that work is done, we can take a look at the code and
+> see....
+
+Surely there is much to discuss even before the Tux3 kernel port is
+completed. Discussing and planning being cheap compared to leaving
+things to the last minute as usual, then rushing them.
+
+>>> (5) The claim is made that readdir() accesses files sequentially; but
+>>> there is also mention in Shardmap of compressing shards (e.g.,
+>>> rewriting them) to squeeze out deleted and tombstone entries.  This
+>>> pretty much guarantees that it will not be possible to satisfy POSIX
+>>> requirements of telldir(2)/seekdir(3) (using a 32-bit or 64-bitt
+>>> cookie), NFS (which also requires use of a 32-bit or 64-bit cookie
+>>> while doing readdir scan), or readdir() semantics in the face of
+>>> directory entries getting inserted or removed from the directory.
+>>
+>> No problem, the data blocks are completely separate from the index so
+>> readdir just walks through them in linear order a la classic UFS/Ext2.
+>> What could possibly be simpler, faster or more POSIX compliant?
+> 
+> OK, so what you're saying then is for every single directory entry
+> addition or removal, there must be (at least) two blocks which must be
+> modified, an (at least one) index block, and a data block, no?  That
+> makes it worse than htree, where most of the time we only need to
+> modify a single leaf node.  We only have to touch an index block when
+> a leaf node gets full and it needs to be split.
+
+The operative word above is "single". Usually when we modify a single
+entry in a directory we do not care whether the file system touches one
+block or two, because a typical minimum commit involves many more than
+that.
+
+It may be that you were really thinking about mass instances of single
+updates, which Shardmap handles much more efficiently than HTree. Under
+mass insert, Shardmap repeatedly updates the same record block whereas
+HTree updates some random, usually different leaf block per insert.
+
+You are right that Shardmap also must update the shard fifo tail block,
+however there is only one index shard up to 64K entries, so all the new
+index entries go into the same tail block(s). Shardmap wins this one by
+a mile.
+
+As far as deletes go, of course you know how bad HTree is at that. Sure,
+HTree only needs to update a single block to remove an entry, but then
+it does unspeakable things to the inode table that tend to cause serious
+performance losses in not-so-rare corner cases. Shardmap definitely
+fixes that.
+
+For O_SYNC operation you have more of a point, however again I doubt
+that one directory block versus two will move the needle, and if it did
+to the point of somebody actually caring about it, we can easily finesse
+away one or both of those updates using journal techniques. More likely,
+nobody will ever notice or care about this single extra block per sync
+commit.
+
+> Anyway, let's wait and see how you and Hirofumi-san work out those
+> details for Tux3
+
+We need to discuss those details up front in order to avoid duplicating
+work or heading off in costly design directions that you may reject
+later. And who would dream of depriving the LKML viewing public of their
+weekly kernel design discussion entertainment? Not me.
+
+Important example: how is atomic directory commit going to work for
+Ext4? What can we do in the immediate future to make that work easier
+for Ext4 devs? And many other details. The atomic commit discussion
+alone is essential, and is a long lead item as we have all
+experienced.
+
+Bottom line: let's keep talking, it's better, and there is much of
+interest to discuss. Surely you would at least like to know what
+happened to your suggestion back in New Orleans about how to track
+free records in huge directories?
+
+Regards,
+
+Daniel
