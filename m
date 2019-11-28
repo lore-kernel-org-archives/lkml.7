@@ -2,157 +2,93 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A7DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E752C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEADE21739
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:51:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JPbZoZDa"
+	by mail.kernel.org (Postfix) with ESMTP id E56F821774
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfK1QvM (ORCPT
+        id S1727320AbfK1QwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 11:51:12 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37400 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbfK1QuJ (ORCPT
+        Thu, 28 Nov 2019 11:52:00 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54890 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726582AbfK1Qv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:50:09 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p24so13384599pfn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 08:50:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xgizS2ja8jWfUkSpIbZzCHqhCFBCkrH3reNwP/GggE4=;
-        b=JPbZoZDaha09542iyB4HlV5SyQ6DTAJpv5Q3TJmdEp9BmETD/i1XTVIb+ywiCIN1nv
-         iFSi5EaDWDVgT3cZefU2WyI90kZhp90IrppihlsCrB90kyAgihmTrdzb79Q6Cs6n2Zt4
-         64131Dc5KvTzv5O5U/OhW/L8pOVodKVM/9rKcPwZIemHMV2F+g1PsoWpF272QtSYPVIA
-         S1f4qXA2nSYcxs3e955yT1TqqkBPAWHx5BA46tf7JYW9Nbl6jMOgMVxzalEVIIiT57Gt
-         cCnrHd+k9IRVvJnBIPFwv46A1hORlLXKt+xT0ppDT3MlKk1FeZJ12TMXbtME2jcSQW+w
-         CUBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xgizS2ja8jWfUkSpIbZzCHqhCFBCkrH3reNwP/GggE4=;
-        b=KadVQXIha071HSzr3ES/3wHipllcPkrPzbywBmt8zw1gA9Q8QNpkInUOkMiACAYezV
-         STqJglyQNRvQ6eL/CaOvwVK9u0bJqJnwLeHyfOMq6IzmYVEEzV1neRCZqWxQJ10Z1pTf
-         hKHLTp/UxACjERtsDGTSSNeoG6/KNsFh6aov6JNYNoIvd2XkqVZs8DfGmGRZqtW128wU
-         mhppCkrV9qqeXY1UsDFo8Df/pfZD2m8sizlsMKdC7Bz0XCrfI2Zl312i7keNkELYPUmg
-         tW14ZAH23DC25OUpPyA/jusWdBgjr1uGF3s9q0ucSVyjdCeeee/e1nRkxd4sUIJmAAri
-         b6KA==
-X-Gm-Message-State: APjAAAU7ACnUu7vDsXfMHSrDs6aXQpMY9f04P2Yu1bh653qcirCwJ1RM
-        RkjVcmnqHYV7EJkOZOR5coQqBIyi4XU=
-X-Google-Smtp-Source: APXvYqyrDO9jQHqib3oqT9BAbQOeWFk5IjUh08VvarLRNXbKvMR2SUbyJX7YPgSzvjWKOAAcE8nJGw==
-X-Received: by 2002:a62:888c:: with SMTP id l134mr36436770pfd.216.1574959807222;
-        Thu, 28 Nov 2019 08:50:07 -0800 (PST)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id a15sm2450343pfh.169.2019.11.28.08.50.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 08:50:06 -0800 (PST)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     stable@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [stable 4.19][PATCH 03/17] media: stm32-dcmi: fix DMA corruption when stopping streaming
-Date:   Thu, 28 Nov 2019 09:49:48 -0700
-Message-Id: <20191128165002.6234-4-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191128165002.6234-1-mathieu.poirier@linaro.org>
-References: <20191128165002.6234-1-mathieu.poirier@linaro.org>
+        Thu, 28 Nov 2019 11:51:59 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASGlPqA042046
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 11:51:58 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wjah6qy4k-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 11:51:58 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Thu, 28 Nov 2019 16:51:54 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Nov 2019 16:51:50 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xASGpmKa46006438
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Nov 2019 16:51:48 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A437E52050;
+        Thu, 28 Nov 2019 16:51:48 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.112])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 4B1C052057;
+        Thu, 28 Nov 2019 16:51:48 +0000 (GMT)
+Date:   Thu, 28 Nov 2019 17:51:47 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     heiko.carstens@de.ibm.com, borntraeger@de.ibm.com,
+        jpoimboe@redhat.com, joe.lawrence@redhat.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jikos@kernel.org, pmladek@suse.com, nstange@suse.de,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] s390/unwind: drop unnecessary code around calling
+ ftrace_graph_ret_addr()
+References: <20191106095601.29986-1-mbenes@suse.cz>
+ <20191106095601.29986-2-mbenes@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191106095601.29986-2-mbenes@suse.cz>
+X-TM-AS-GCONF: 00
+x-cbid: 19112816-0028-0000-0000-000003C135A0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112816-0029-0000-0000-00002484414C
+Message-Id: <your-ad-here.call-01574959907-ext-0700@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-28_05:2019-11-28,2019-11-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ mlxscore=0 suspectscore=1 impostorscore=0 clxscore=1015 bulkscore=0
+ adultscore=0 priorityscore=1501 mlxlogscore=731 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911280142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugues Fruchet <hugues.fruchet@st.com>
+On Wed, Nov 06, 2019 at 10:55:58AM +0100, Miroslav Benes wrote:
+> The current code around calling ftrace_graph_ret_addr() is ifdeffed and
+> also tests if ftrace redirection is present on stack.
+> ftrace_graph_ret_addr() however performs the test internally and there
+> is a version for !CONFIG_FUNCTION_GRAPH_TRACER as well. The unnecessary
+> code can thus be dropped.
+> 
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> ---
+>  arch/s390/kernel/unwind_bc.c | 16 ++++------------
+>  1 file changed, 4 insertions(+), 12 deletions(-)
 
-commit b3ce6f6ff3c260ee53b0f2236e5fd950d46957da upstream
-
-Avoid call of dmaengine_terminate_all() between
-dmaengine_prep_slave_single() and dmaengine_submit() by locking
-the whole DMA submission sequence.
-
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: stable <stable@vger.kernel.org> # 4.19
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/media/platform/stm32/stm32-dcmi.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index 1d9c028e52cb..d86944109cbf 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -164,6 +164,9 @@ struct stm32_dcmi {
- 	int				errors_count;
- 	int				overrun_count;
- 	int				buffers_count;
-+
-+	/* Ensure DMA operations atomicity */
-+	struct mutex			dma_lock;
- };
- 
- static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
-@@ -314,6 +317,13 @@ static int dcmi_start_dma(struct stm32_dcmi *dcmi,
- 		return ret;
- 	}
- 
-+	/*
-+	 * Avoid call of dmaengine_terminate_all() between
-+	 * dmaengine_prep_slave_single() and dmaengine_submit()
-+	 * by locking the whole DMA submission sequence
-+	 */
-+	mutex_lock(&dcmi->dma_lock);
-+
- 	/* Prepare a DMA transaction */
- 	desc = dmaengine_prep_slave_single(dcmi->dma_chan, buf->paddr,
- 					   buf->size,
-@@ -322,6 +332,7 @@ static int dcmi_start_dma(struct stm32_dcmi *dcmi,
- 	if (!desc) {
- 		dev_err(dcmi->dev, "%s: DMA dmaengine_prep_slave_single failed for buffer phy=%pad size=%zu\n",
- 			__func__, &buf->paddr, buf->size);
-+		mutex_unlock(&dcmi->dma_lock);
- 		return -EINVAL;
- 	}
- 
-@@ -333,9 +344,12 @@ static int dcmi_start_dma(struct stm32_dcmi *dcmi,
- 	dcmi->dma_cookie = dmaengine_submit(desc);
- 	if (dma_submit_error(dcmi->dma_cookie)) {
- 		dev_err(dcmi->dev, "%s: DMA submission failed\n", __func__);
-+		mutex_unlock(&dcmi->dma_lock);
- 		return -ENXIO;
- 	}
- 
-+	mutex_unlock(&dcmi->dma_lock);
-+
- 	dma_async_issue_pending(dcmi->dma_chan);
- 
- 	return 0;
-@@ -717,7 +731,9 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
- 	spin_unlock_irq(&dcmi->irqlock);
- 
- 	/* Stop all pending DMA operations */
-+	mutex_lock(&dcmi->dma_lock);
- 	dmaengine_terminate_all(dcmi->dma_chan);
-+	mutex_unlock(&dcmi->dma_lock);
- 
- 	pm_runtime_put(dcmi->dev);
- 
-@@ -1719,6 +1735,7 @@ static int dcmi_probe(struct platform_device *pdev)
- 
- 	spin_lock_init(&dcmi->irqlock);
- 	mutex_init(&dcmi->lock);
-+	mutex_init(&dcmi->dma_lock);
- 	init_completion(&dcmi->complete);
- 	INIT_LIST_HEAD(&dcmi->buffers);
- 
--- 
-2.17.1
+This patch has been picked up from v2 already. It's in Linus tree.
 
