@@ -2,271 +2,351 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADD6C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C714C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A14B217AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E25621739
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="j5eEvv9F"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="XR/GqCPu";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="XR/GqCPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfK1PcL (ORCPT
+        id S1726699AbfK1PeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 10:32:11 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53350 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbfK1PcK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 10:32:10 -0500
-Received: by mail-wm1-f65.google.com with SMTP id u18so11385244wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 07:32:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:openpgp:autocrypt:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sj9mN9ZsJ6qIK1eZ9BSfajQYDocDuB1NNcBuyqoxXHw=;
-        b=j5eEvv9FjEE0wybqoNbFHlnR7Gr1JdZpOkW1jz/puBbCvXCSkJkhNNjJDgxwFFDEGF
-         9DP2xImVNYENrdA2Wu+jOCD7Bv4HUoVpDQ232/+Q/8hyW9PxTIvyHsrX68FzVhLOnGDy
-         CVhN2MM1o9cmPA+i2nkIuNGTAhd37bhoNUHZyiEkqqk5doJLuzCcO5okGCB/gLYzLNTk
-         l7g91K3OG7yLECQgHRwiLR+NUwGTjWALQeV9pPcqfNAaIKuEl6FKHdU1IuI5qPOq8GIO
-         lRzMkjP+6OQjCX1ma0ym0NFrjjJQATEg21GB2gYgY/HUvuobaX8WdXJSx0NHmCVIAeKA
-         Ap3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:openpgp:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=sj9mN9ZsJ6qIK1eZ9BSfajQYDocDuB1NNcBuyqoxXHw=;
-        b=I+qSJSThzzyCJ0URzo7dTvGoCT/OSX/I8Y4ocXbTg0XiYDrP8B+00/pojruhNykNZ8
-         k1R8L1/E65YgYa+0UpeWKqIqpIrDTQcR/GgjV/zZ539KA4/xa62OrMZN8m8WFj6H4avD
-         ZO4HY9rrpImTvyUtUdy/a0oLpXeqwCL3JAECUUV+K0/1dUpGi5AcdDXWCo7rIepPkq5e
-         iawd1dvwgv8VGBY5wTvErwrCzZiCE/WiZhC1eJ5QYlF/KE0r/iA2xaocVPakpzU1+qNC
-         nS4xutA+aztvbgcl4yLFp2AtsXVcyrcIpc8U9Ju/DgQ0epKEkj5CwrNEIfQyBYFR6A3T
-         1yXw==
-X-Gm-Message-State: APjAAAW/J96Gf41NnISvfkzicU0KsTQQN0LiS58f5KUBE6pIbHBkoV6B
-        ECPCEsKr+3RWzggHj5p5ZRfddQ==
-X-Google-Smtp-Source: APXvYqz+sSgwc/rvUouPPi7gz034nzHWDGhW5QBTeoMWZruGXNtCf8tmqqBpmRnS9wWrGajXIujERQ==
-X-Received: by 2002:a7b:c7cc:: with SMTP id z12mr3417400wmk.115.1574955127774;
-        Thu, 28 Nov 2019 07:32:07 -0800 (PST)
-Received: from [192.168.1.9] ([194.53.187.153])
-        by smtp.gmail.com with ESMTPSA id f1sm5364335wrp.93.2019.11.28.07.32.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Nov 2019 07:32:06 -0800 (PST)
-To:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20191128145316.1044912-1-toke@redhat.com>
-From:   Quentin Monnet <quentin.monnet@netronome.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
- 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
- RHhSHGnKaQ6MfrTge5Q0h5A=
-Subject: Re: [PATCH bpf v2] bpftool: Allow to link libbpf dynamically
-Message-ID: <497b4151-9aad-f3a9-3aff-78d665e5f750@netronome.com>
-Date:   Thu, 28 Nov 2019 15:32:05 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 28 Nov 2019 10:34:18 -0500
+Received: from mail-eopbgr140081.outbound.protection.outlook.com ([40.107.14.81]:41671
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726436AbfK1PeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 10:34:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rbaWo9nVqkjLcBGJycyvW1kzREZ6dBVcviZwznVjkP8=;
+ b=XR/GqCPuC36kLs8Ja3UkrlIAAr0BApaQFy1bIo13zGRm/HYEd40ERaOXsSkDOr6Bx+zga+dbYpPVIavvGwyROQk4apXqVBVN4PvsT0ogg7MQGfN8pVApayf+4PemxnkC1gGcKvYTOxWw551nN1Q9J65gS60ZqYztsIFU/bfyYkA=
+Received: from VI1PR0802CA0019.eurprd08.prod.outlook.com
+ (2603:10a6:800:aa::29) by DB7PR08MB3322.eurprd08.prod.outlook.com
+ (2603:10a6:5:26::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18; Thu, 28 Nov
+ 2019 15:34:08 +0000
+Received: from DB5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::201) by VI1PR0802CA0019.outlook.office365.com
+ (2603:10a6:800:aa::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.20 via Frontend
+ Transport; Thu, 28 Nov 2019 15:34:07 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT045.mail.protection.outlook.com (10.152.21.164) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18 via Frontend Transport; Thu, 28 Nov 2019 15:34:07 +0000
+Received: ("Tessian outbound d55de055a19b:v37"); Thu, 28 Nov 2019 15:34:06 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: e425c32ae8fdd41f
+X-CR-MTA-TID: 64aa7808
+Received: from cd8c12da6dc5.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id BAB62CD5-0FE5-4257-B825-3BE26B89D31B.1;
+        Thu, 28 Nov 2019 15:34:01 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id cd8c12da6dc5.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 28 Nov 2019 15:34:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T/6ZxN25yp3YqBcadzX0cok41UY9PAeuFtpOiquRLQSthICoYRxrY72nZqE1o8UxOicjU87TU9NzDW/ufLC0VU2CJyRdUHnRUCkiz4PEBi2kmbcOK8q/DJGGEygK+H4J1C5stbKQwcqf0bTwFkGMQkk+7wsXd6Sii1MtqAhCVwShfcj7HGnuhxwMk0httYIQ9uGFg0QSJuWm4T2i7YwRy0XFS3R3ST7FFxJEl6lnLlReCfrsiPHOjGWU/FJRxX7dj3XeDfFq9ZoGk77U2C8ZtdqpJoNLYWDvYa4u9BfMnaClBbSQ4//IYvpzA3yMci2whsL3ap1P0tlz8Q5ZkE9yKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rbaWo9nVqkjLcBGJycyvW1kzREZ6dBVcviZwznVjkP8=;
+ b=m28q/la/hPyctNi0zcivUBTIxTSRIhBaxk9KQXcbCBpdQPCM0aVDDmjEr6IL0PltRG6XYEObtKXu05KWNVxO6C2C3aPzVR5V8qNX1iKxczV+bHcm04SnB1a5URGFXtYfYVJqWT6HV35fo6hoxFfcrgJzS03Vv0uJ8bOU1AbRKlnDQdwftVCgnK/qzIrCM/Qk03o3CNQf32VZllWwM7r6WaRHjdrTS01vez9vvbSSvTlBIln9J1lt6E3NupxMSCnSbMkwC5EBin7KU/x6gXoLMsizKa62pa7cW03eVLu3gGKCBP21idtljjGAQpyBJ7aT7Jk5gXlsiu86TRHpNfMz6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rbaWo9nVqkjLcBGJycyvW1kzREZ6dBVcviZwznVjkP8=;
+ b=XR/GqCPuC36kLs8Ja3UkrlIAAr0BApaQFy1bIo13zGRm/HYEd40ERaOXsSkDOr6Bx+zga+dbYpPVIavvGwyROQk4apXqVBVN4PvsT0ogg7MQGfN8pVApayf+4PemxnkC1gGcKvYTOxWw551nN1Q9J65gS60ZqYztsIFU/bfyYkA=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB3694.eurprd08.prod.outlook.com (20.178.13.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.17; Thu, 28 Nov 2019 15:33:59 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::8191:f0ac:574a:d24d]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::8191:f0ac:574a:d24d%3]) with mapi id 15.20.2495.014; Thu, 28 Nov 2019
+ 15:33:59 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+CC:     nd <nd@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: Re: [PATCH 29/30] drm/bridge: add support for device links to bridge
+Thread-Topic: [PATCH 29/30] drm/bridge: add support for device links to bridge
+Thread-Index: AQHVpFu1iHJCIvZyo0WUUQNtpUlix6edhM4AgAMlaYA=
+Date:   Thu, 28 Nov 2019 15:33:59 +0000
+Message-ID: <6854050.X4Y1bUp2or@e123338-lin>
+References: <20191126131541.47393-1-mihail.atanassov@arm.com>
+ <20191126131541.47393-30-mihail.atanassov@arm.com>
+ <20191126143534.GW29965@phenom.ffwll.local>
+In-Reply-To: <20191126143534.GW29965@phenom.ffwll.local>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.55]
+x-clientproxiedby: LO2P265CA0075.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:8::15) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d45d412c-1780-4aea-98c4-08d77418687e
+X-MS-TrafficTypeDiagnostic: VI1PR08MB3694:|DB7PR08MB3322:
+X-Microsoft-Antispam-PRVS: <DB7PR08MB3322B3A129B6BF519123AB348F470@DB7PR08MB3322.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:10000;OLM:10000;
+x-forefront-prvs: 0235CBE7D0
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(39860400002)(136003)(366004)(346002)(396003)(376002)(52314003)(189003)(199004)(446003)(71190400001)(4326008)(305945005)(71200400001)(11346002)(478600001)(102836004)(2906002)(6506007)(9686003)(6512007)(14454004)(33716001)(386003)(7736002)(86362001)(5660300002)(66066001)(64756008)(66556008)(66476007)(229853002)(66446008)(14444005)(66946007)(6916009)(81156014)(81166006)(8676002)(8936002)(6486002)(6436002)(316002)(54906003)(26005)(25786009)(186003)(6116002)(76176011)(6246003)(99286004)(52116002)(3846002)(256004)(5024004)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3694;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: y5q5+p8Mkfj5/v5A9zWfNQ1UeWhl6ZFxpcr+U3/DnAkXeBE2pSVLoXEN4f4P79jaI/TC8rX38VJUXMBW4BdPhGXGOfdmavvY+VGRv/xbB1gbyZgOyETcIaoNQ8kDCWRMo9dbMGJhYrzCMlFiN7OYvvQ+LmnGWWe4J8Bkcrg9uAg86GICYxPxotE4FSimellIGZ59GsHfWydU3qiECzCz2pm4BBhcqXkIjPtpJB4qNqlAzdMfs/hLYk8D5WWjk/FlTlsDxcoUcOJfyJIRtSxOobesAy6etxPm6wBU/ksRH/wt5i5X1bBWHi5ByS5P3Ui5Irgzx5YyN2v9d2IYIk9ibGW9L/8+e1HfTc16Dp2jPN8sN1DIPBioX5IOPGKgrPcybzf1J8k4XInxXYTODcvEYmXZYi+MT1xpZvO3+dXlOPPFsKxzxKn4Mv7uU1UmkLz6
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <805C6FBABB19A6488E6B1FD5D40CFF5A@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20191128145316.1044912-1-toke@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3694
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(7916004)(396003)(136003)(376002)(346002)(39860400002)(199004)(189003)(52314003)(6486002)(86362001)(47776003)(8936002)(99286004)(8746002)(6506007)(386003)(102836004)(25786009)(5660300002)(14444005)(5024004)(186003)(26005)(336012)(33716001)(106002)(54906003)(2906002)(50466002)(316002)(76176011)(107886003)(22756006)(23726003)(6246003)(70586007)(70206006)(6862004)(76130400001)(6512007)(9686003)(97756001)(3846002)(4326008)(6116002)(66066001)(305945005)(81156014)(81166006)(26826003)(478600001)(8676002)(11346002)(446003)(356004)(14454004)(7736002)(229853002)(46406003)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3322;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: bf1933f9-e86f-4a64-db1d-08d774186343
+NoDisclaimer: True
+X-Forefront-PRVS: 0235CBE7D0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7Qgqf7Vd3zdx1sntrJNo1OIe0hNeZpt191jH6sLQHPbM/9Jby8Sg+/+YMX/oq1d2yyEusVs5lC2SyLxwE7JLF9Z8/84bt7p1OVFRNGvAc/YRSOMOShdAILr6k0llXexf1OQ9jswlrAde/n6qcA+mXtkJ3ifmcm7RKMTH4EdUPdmoi4bmkuvL1INix3DlbFGGkrn1TmAoFD+H7JjEQ7sPueeK6Jt7YpreziJTP6lGyH6N31s/lTiIn57Nz/OLlKUmWe8uZzAxMmxpb5YKc+qvO2sshPX5KQLUzNKNLo2jBMFwImVy7ii++35fhjCBcF8amdMFDQrzH9vfbGN/svQe/Ed+prxoYsPQWQkGhQHzqcKi7sPAonjUUJbLBMePKhBBY5b7gxZj5jtY0niXt+ZGCMyUa98jw1u/Zb1KD2zMlxnt88VEZBXryR7FGq8AHIG6
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2019 15:34:07.6878
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d45d412c-1780-4aea-98c4-08d77418687e
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3322
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-11-28 15:53 UTC+0100 ~ Toke Høiland-Jørgensen <toke@redhat.com>
-> From: Jiri Olsa <jolsa@kernel.org>
-> 
-> Currently we support only static linking with kernel's libbpf
-> (tools/lib/bpf). This patch adds LIBBPF_DYNAMIC compile variable
-> that triggers libbpf detection and bpf dynamic linking:
-> 
->   $ make -C tools/bpf/bpftool make LIBBPF_DYNAMIC=1
-> 
-> If libbpf is not installed, build (with LIBBPF_DYNAMIC=1) stops with:
-> 
->   $ make -C tools/bpf/bpftool LIBBPF_DYNAMIC=1
->     Auto-detecting system features:
->     ...                        libbfd: [ on  ]
->     ...        disassembler-four-args: [ on  ]
->     ...                          zlib: [ on  ]
->     ...                        libbpf: [ OFF ]
-> 
->   Makefile:102: *** Error: No libbpf devel library found, please install-devel or libbpf-dev.
-> 
-> Adding LIBBPF_DIR compile variable to allow linking with
-> libbpf installed into specific directory:
-> 
->   $ make -C tools/lib/bpf/ prefix=/tmp/libbpf/ install_lib install_headers
->   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/libbpf/
-> 
-> It might be needed to clean build tree first because features
-> framework does not detect the change properly:
-> 
->   $ make -C tools/build/feature clean
->   $ make -C tools/bpf/bpftool/ clean
-> 
-> Since bpftool uses bits of libbpf that are not exported as public API in
-> the .so version, we also pass in libbpf.a to the linker, which allows it to
-> pick up the private functions from the static library without having to
-> expose them as ABI.
-> 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-> ---
-> v2:
->   - Pass .a file to linker when dynamically linking, so bpftool can use
->     private functions from libbpf without exposing them as API.
->     
->  tools/bpf/bpftool/Makefile | 38 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 37 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-> index 39bc6f0f4f0b..397051ed9e41 100644
-> --- a/tools/bpf/bpftool/Makefile
-> +++ b/tools/bpf/bpftool/Makefile
-> @@ -1,6 +1,15 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +# LIBBPF_DYNAMIC to enable libbpf dynamic linking.
-> +
->  include ../../scripts/Makefile.include
->  include ../../scripts/utilities.mak
-> +include ../../scripts/Makefile.arch
-> +
-> +ifeq ($(LP64), 1)
-> +  libdir_relative = lib64
-> +else
-> +  libdir_relative = lib
-> +endif
->  
->  ifeq ($(srctree),)
->  srctree := $(patsubst %/,%,$(dir $(CURDIR)))
-> @@ -55,7 +64,7 @@ ifneq ($(EXTRA_LDFLAGS),)
->  LDFLAGS += $(EXTRA_LDFLAGS)
->  endif
->  
-> -LIBS = $(LIBBPF) -lelf -lz
-> +LIBS = -lelf -lz
+On Tuesday, 26 November 2019 14:35:34 GMT Daniel Vetter wrote:
+> On Tue, Nov 26, 2019 at 01:16:26PM +0000, Mihail Atanassov wrote:
+> > From: Russell King <rmk+kernel@armlinux.org.uk>
+> >=20
+> > Bridge devices have been a potential for kernel oops as their lifetime
+> > is independent of the DRM device that they are bound to.  Hence, if a
+> > bridge device is unbound while the parent DRM device is using them, the
+> > parent happily continues to use the bridge device, calling the driver
+> > and accessing its objects that have been freed.
+> >=20
+> > This can cause kernel memory corruption and kernel oops.
+> >=20
+> > To control this, use device links to ensure that the parent DRM device
+> > is unbound when the bridge device is unbound, and when the bridge
+> > device is re-bound, automatically rebind the parent DRM device.
+> >=20
+> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> > Tested-by: Mihail Atanassov <mihail.atanassov@arm.com>
+> > [reworked to use drm_bridge_init() for setting bridge->device]
+> > Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+>=20
+> So I thought the big plan was to put the device_link setup into
+> drm_bridge_attach, so that it's done for everyone. And we could then
+> slowly go through the existing drivers that use the component framework t=
+o
+> get this handled correctly.
+>=20
+> So my questions:
+> - is there a problem if we add the device_link for everyone?
 
-Hi Toke,
+So after spending time looking at the code and thinking
+about it, I'm slowly coming to the conclusion that getting device
+links right for everyone in one go is a much bigger task than this
+opt-in quick-fix here. I've hit, at the very least, the following
+snags in trying to apply it universally:
 
-You don't need to remove $(LIBBPF) here, because you add it in both
-cases below (whether $(LIBBPF_DYNAMIC) is defined or not).
+panel_bridge - removing one via drm_of_panel_bridge_remove() uses
+of_drm_find_bridge(), which would add a devlink at a very inopportune
+time;
 
->  
->  INSTALL ?= install
->  RM ?= rm -f
-> @@ -63,6 +72,19 @@ RM ?= rm -f
->  FEATURE_USER = .bpftool
->  FEATURE_TESTS = libbfd disassembler-four-args reallocarray zlib
->  FEATURE_DISPLAY = libbfd disassembler-four-args zlib
-> +ifdef LIBBPF_DYNAMIC
-> +  FEATURE_TESTS   += libbpf
-> +  FEATURE_DISPLAY += libbpf
-> +
-> +  # for linking with debug library run:
-> +  # make LIBBPF_DYNAMIC=1 LIBBPF_DIR=/opt/libbpf
-> +  ifdef LIBBPF_DIR
-> +    LIBBPF_CFLAGS  := -I$(LIBBPF_DIR)/include
-> +    LIBBPF_LDFLAGS := -L$(LIBBPF_DIR)/$(libdir_relative)
-> +    FEATURE_CHECK_CFLAGS-libbpf  := $(LIBBPF_CFLAGS)
-> +    FEATURE_CHECK_LDFLAGS-libbpf := $(LIBBPF_LDFLAGS)
-> +  endif
-> +endif
->  
->  check_feat := 1
->  NON_CHECK_FEAT_TARGETS := clean uninstall doc doc-clean doc-install doc-uninstall
-> @@ -88,6 +110,20 @@ ifeq ($(feature-reallocarray), 0)
->  CFLAGS += -DCOMPAT_NEED_REALLOCARRAY
->  endif
->  
-> +ifdef LIBBPF_DYNAMIC
-> +  ifeq ($(feature-libbpf), 1)
-> +    # bpftool uses non-exported functions from libbpf, so pass both dynamic and
-> +    # static versions and let the linker figure it out
-> +    LIBS    := -lbpf $(LIBBPF) $(LIBS)
+mipi_dsi_host - attach/detach, where e.g. dw-mipi-dsi.c handles bridge
+creation/destruction, doesn't correspond directly to a struct device's
+lifetime, so the device link would linger longer than is required;
 
-[$(LIBBPF) added to $(LIBS) here...]
+others that add/remove bridges at times different from probe/remove
+(drivers using the component framework?).
 
-> +    CFLAGS  += $(LIBBPF_CFLAGS)
-> +    LDFLAGS += $(LIBBPF_LDFLAGS)
-> +  else
-> +    dummy := $(error Error: No libbpf devel library found, please install-devel or libbpf-dev.)
+I think it'd still be valuable even with limiting the scope to drivers
+that get their bridge in probe() and drop it in remove() for now, and
+only roll it out as an opt-in. Thoughts?
 
-“install-devel” :)
+I think to get it right we need to use the links' refcount, with e.g.
+of_drm_find_bridge() giving you a refcount of 1, and bridge_detach()
+maybe dropping the refcount, but I can envision ways where this breaks
+too, so maybe just an of_drm_{get,put}_bridge()?
 
-> +  endif
-> +else
-> +  LIBS := $(LIBBPF) $(LIBS)
+> - is there an issue if we only add it at drm_bridge_attach time? I kinda
+>   assumed that it's not needed before that (EPROBE_DEFER should handle
+>   load dependencies as before), but it could be that some drivers ask for
+>   a bridge and then check more stuff and then drop the bridge without
+>   calling drm_bridge_attach. We probably don't have a case like this yet,
+>   but better robust than sorry.
+>=20
+> Anyway, I scrolled through the bridge patches, looked all good, huge
+> thanks for tackling this! Once we have some agreement on the bigger
+> questions here I'll try to go through them and review.
+>=20
+> Cheers, Daniel
+> > ---
+> >  drivers/gpu/drm/drm_bridge.c | 49 ++++++++++++++++++++++++++----------
+> >  include/drm/drm_bridge.h     |  4 +++
+> >  2 files changed, 40 insertions(+), 13 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.=
+c
+> > index cbe680aa6eac..e1f8db84651a 100644
+> > --- a/drivers/gpu/drm/drm_bridge.c
+> > +++ b/drivers/gpu/drm/drm_bridge.c
+> > @@ -26,6 +26,7 @@
+> >  #include <linux/mutex.h>
+> > =20
+> >  #include <drm/drm_bridge.h>
+> > +#include <drm/drm_device.h>
+> >  #include <drm/drm_encoder.h>
+> > =20
+> >  #include "drm_crtc_internal.h"
+> > @@ -109,6 +110,7 @@ void drm_bridge_init(struct drm_bridge *bridge, str=
+uct device *dev,
+> >  	bridge->encoder =3D NULL;
+> >  	bridge->next =3D NULL;
+> > =20
+> > +	bridge->device =3D dev;
+> >  #ifdef CONFIG_OF
+> >  	bridge->of_node =3D dev->of_node;
+> >  #endif
+> > @@ -492,6 +494,32 @@ void drm_atomic_bridge_enable(struct drm_bridge *b=
+ridge,
+> >  EXPORT_SYMBOL(drm_atomic_bridge_enable);
+> > =20
+> >  #ifdef CONFIG_OF
+> > +static struct drm_bridge *drm_bridge_find(struct drm_device *dev,
+> > +					  struct device_node *np, bool link)
+> > +{
+> > +	struct drm_bridge *bridge, *found =3D NULL;
+> > +	struct device_link *dl;
+> > +
+> > +	mutex_lock(&bridge_lock);
+> > +
+> > +	list_for_each_entry(bridge, &bridge_list, list)
+> > +		if (bridge->of_node =3D=3D np) {
+> > +			found =3D bridge;
+> > +			break;
+> > +		}
+> > +
+> > +	if (found && link) {
+> > +		dl =3D device_link_add(dev->dev, found->device,
+> > +				     DL_FLAG_AUTOPROBE_CONSUMER);
+> > +		if (!dl)
+> > +			found =3D NULL;
+> > +	}
+> > +
+> > +	mutex_unlock(&bridge_lock);
+> > +
+> > +	return found;
+> > +}
+> > +
+> >  /**
+> >   * of_drm_find_bridge - find the bridge corresponding to the device no=
+de in
+> >   *			the global bridge list
+> > @@ -503,21 +531,16 @@ EXPORT_SYMBOL(drm_atomic_bridge_enable);
+> >   */
+> >  struct drm_bridge *of_drm_find_bridge(struct device_node *np)
+> >  {
+> > -	struct drm_bridge *bridge;
+> > -
+> > -	mutex_lock(&bridge_lock);
+> > -
+> > -	list_for_each_entry(bridge, &bridge_list, list) {
+> > -		if (bridge->of_node =3D=3D np) {
+> > -			mutex_unlock(&bridge_lock);
+> > -			return bridge;
+> > -		}
+> > -	}
+> > -
+> > -	mutex_unlock(&bridge_lock);
+> > -	return NULL;
+> > +	return drm_bridge_find(NULL, np, false);
+> >  }
+> >  EXPORT_SYMBOL(of_drm_find_bridge);
+> > +
+> > +struct drm_bridge *of_drm_find_bridge_devlink(struct drm_device *dev,
+> > +					      struct device_node *np)
+> > +{
+> > +	return drm_bridge_find(dev, np, true);
+> > +}
+> > +EXPORT_SYMBOL(of_drm_find_bridge_devlink);
+> >  #endif
+> > =20
+> >  MODULE_AUTHOR("Ajay Kumar <ajaykumar.rs@samsung.com>");
+> > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> > index d6d9d5301551..68b27c69cc3d 100644
+> > --- a/include/drm/drm_bridge.h
+> > +++ b/include/drm/drm_bridge.h
+> > @@ -382,6 +382,8 @@ struct drm_bridge {
+> >  	struct drm_encoder *encoder;
+> >  	/** @next: the next bridge in the encoder chain */
+> >  	struct drm_bridge *next;
+> > +	/** @device: Linux driver model device */
+> > +	struct device *device;
+> >  #ifdef CONFIG_OF
+> >  	/** @of_node: device node pointer to the bridge */
+> >  	struct device_node *of_node;
+> > @@ -407,6 +409,8 @@ void drm_bridge_init(struct drm_bridge *bridge, str=
+uct device *dev,
+> >  		     const struct drm_bridge_timings *timings,
+> >  		     void *driver_private);
+> >  struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+> > +struct drm_bridge *of_drm_find_bridge_devlink(struct drm_device *dev,
+> > +					      struct device_node *np);
+> >  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *=
+bridge,
+> >  		      struct drm_bridge *previous);
+> > =20
+>=20
+>=20
 
-[... and here]
 
-> +endif
-> +
->  include $(wildcard $(OUTPUT)*.d)
->  
->  all: $(OUTPUT)bpftool
-> 
+--=20
+Mihail
 
-Thanks,
-Quentin
+
+
