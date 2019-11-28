@@ -2,184 +2,151 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBBDC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67300C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3442A2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2E0215F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:27:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="FCyCsZzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfK1D0m convert rfc822-to-8bit (ORCPT
+        id S1727413AbfK1D1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 22:26:42 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41164 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbfK1D0m (ORCPT
+        Wed, 27 Nov 2019 22:27:52 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25878 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbfK1D1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 22:26:42 -0500
-Received: by mail-ed1-f68.google.com with SMTP id n24so143307edo.8;
-        Wed, 27 Nov 2019 19:26:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=GaoENi4GGygQ3nQqcy3CJUnQOgf4koxEIDao896R3FY=;
-        b=dPNSPuTtjgVCeXDIawnm3DokEeJhbvi8YljNZWIhc5NkETTx5R64+n3l6lgWAN2o+L
-         9V1syxqOJUok1MK3o1VmsLOhl8xazx27U6o3oc5Ok1Xbob+BEYTsvw4WTMG2HFTBbSgA
-         SWJggrI6oiVjvl7NVerL4noyn334KlgX8bbKrPQM10oEZ+UARN4HlB+HsvHVPzoY2Hvk
-         LrcTeab5eT2SY2nV+7Ve5GImQP/DksZ7ph9LxbzrwjC7MZifSGAp7mCpTn9H8Tzo1xZv
-         MxLZ7GILV1NhVk4PhCCDV4gpUw9Hqikdk4c/wfUTOmfc4GvGmfCQ4eIq1mnfoguHsLGh
-         ZhsA==
-X-Gm-Message-State: APjAAAXw8cUerO/foQcXT5I/uPjGXrHgn8FCMDb4wWtXJ4OtaK93bdY+
-        DudVrNzcXklKNy32ZFNx+Jg+nH2G1Ak=
-X-Google-Smtp-Source: APXvYqwelZcjmeo16CrSMhOynJT2e9fglwvwRmClbLFKZ7CbVS8DoJg5lC2JjOjxUYmFG8kN+ORfXQ==
-X-Received: by 2002:a17:906:3495:: with SMTP id g21mr53601972ejb.190.1574911598648;
-        Wed, 27 Nov 2019 19:26:38 -0800 (PST)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
-        by smtp.gmail.com with ESMTPSA id d8sm924792edb.18.2019.11.27.19.26.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2019 19:26:38 -0800 (PST)
-Received: by mail-wr1-f48.google.com with SMTP id t2so29225796wrr.1;
-        Wed, 27 Nov 2019 19:26:37 -0800 (PST)
-X-Received: by 2002:a5d:4a45:: with SMTP id v5mr47663995wrs.288.1574911597488;
- Wed, 27 Nov 2019 19:26:37 -0800 (PST)
+        Wed, 27 Nov 2019 22:27:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574911629; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=SBgDnXauIGwMG/V3rh54/4hIICTGALqafTOQyTN5jT/ztfk4LnfHp3ni0PQ4YugvLb4j+uDt/NA/aD7DrMYi6n4h0ktCjyxTPmXVlsHgp1+xo4055xix3nn96YiCQm0IbOOsLEKJdhnU5m12G7p/3ljjlD7HoLLy87Ja1xMlUJo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574911629; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=2kXngwStwb77hgVkiYty+9VogGIhnRmmO+0aZj/j2Pw=; 
+        b=oBF8iA5I3dgw8hdbjjLvBoOmy+mvKPY7nnGWqozry2ImTnVv+KbhzStTErufcVoocBTXFiqoQ/U3DkXSoudb6zk73VmTfvccyPsUByPnC5UJAnK8SgRYIfEBggpl0icBRLih9Yf2rU8PHNDhixwPwV5/i6hLSDatR1sgEabYdok=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=jsuc/yQzIANxqCDQWoGtmfpWcSw3cLnu4Qih+yV4ilYpQSi1QSyWHgeGUcRT9UNYmIDOcKAfg7T4
+    4Opn16zsro+W+TjtjAdS8B5vF6JPK9diNJ2qHFzpdXQ76jBEcW8B  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574911629;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=2kXngwStwb77hgVkiYty+9VogGIhnRmmO+0aZj/j2Pw=;
+        b=FCyCsZzPB7tCWlH+awogkr2tMlOc7TtkpJQfF6VGPpkMnkuj4uRzu7V/pu2NjjQ3
+        XvcZN9FJ4whrlFh8u0LJV86kXSiH3r5nOyzMX1fsLKwqi3yvc7ztHNZBWGCbVQ1qmEU
+        7dVMDx57ErP4dUbOauNGVX+gqOOqooRuWRKPxd3I=
+Received: from [192.168.88.130] (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
+        with SMTPS id 1574911628677616.8260073790145; Wed, 27 Nov 2019 19:27:08 -0800 (PST)
+Subject: Re: [PATCH v4 5/6] MIPS: X1000: Add pdma controller DT node.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
+ <1574787974-58040-6-git-send-email-zhouyanjie@zoho.com>
+ <1574873298.3.0@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DDF3E81.2060502@zoho.com>
+Date:   Thu, 28 Nov 2019 11:26:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-References: <20191128020259.1338188-1-megous@megous.com> <20191128102608.035cbb996c8681a6fb035336@magewell.com>
- <20191128030653.5fhcolvib6tzf4zc@core.my.home>
-In-Reply-To: <20191128030653.5fhcolvib6tzf4zc@core.my.home>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Thu, 28 Nov 2019 11:26:24 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65+4LhHU5UCOhnowKqK+GUiAKzi+wcPxkmuwtJ=itv-iw@mail.gmail.com>
-Message-ID: <CAGb2v65+4LhHU5UCOhnowKqK+GUiAKzi+wcPxkmuwtJ=itv-iw@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH] media: sun6i-csi: Fix incorrect
- HSYNC/VSYNC/PCLK polarity configuration
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        Yong <yong.deng@magewell.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:CSI DRIVERS FOR ALLWINNER V3s" 
-        <linux-media@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1574873298.3.0@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 11:06 AM Ondřej Jirman <megous@megous.com> wrote:
->
-> Hi,
->
-> On Thu, Nov 28, 2019 at 10:26:08AM +0800, Yong wrote:
-> > Hi Ondrej,
-> >
-> > This has been discussed.
-> > And Maxime sent a patch for this:
-> > https://www.mail-archive.com/linux-media@vger.kernel.org/msg127149.html
->
-> Thanks for pointing to the previous patch. But that patch doesn't make any
-> sense, and breaks things for me, and doesn't even match BSP code, which
-> has no such reversal, and works fine with about 30 cam drivers.
->
-> Also how do you explain my findings?
->
-> My camera is sending correct signals, verified by looking at them actually (see
-> below), and CSI is not receiving the image. I have to flip HSYNC/VSYNC to be
-> oposite of that what CSI driver expects and I get a noisy image and if I fix
-> PCLK polarity too, the noise goes away, which means now I'm also sampling when
-> the data are stable and not when they're changing.
->
-> Here: (output from my cam, that I configured to have VSYNC ACTIVE LOW, HSYNC
-> ACTIVE LOW) And the signal is clearly that, as you can see yourself:
->
->   https://megous.com/dl/tmp/98df81b7ed0126ec.png
+Hi Paul,
 
-From the looks of things you have active-high VSYNC with active-low HREF.
-HREF is not the same as HSYNC, in fact quite the opposite. V/H SYNC are
-pulses, active only when there should be no data and the line/frame switch
-happens, while V/H REF are held active when there is data. I personally
-find these terms very confusing. :(
-
-Now the timing diagrams in the Allwinner manuals would suggest that when
-they are talking about H/V SYNC, they are actually referring to H/V REF.
-The HSYNC line is high/active when there is valid data, and the VSYNC line
-is high/active for the duration of the frame.
-
-I think both sides need to be checked that they are using the correct
-polarity, and maybe also have the media maintainers clarify how the
-polarity should be interpreted when the hardware uses H/V ref instead
-of H/V sync.
-
-
-ChenYu
-
-> The above signals are received with CSI driver configured with
-> V4L2_MBUS_VSYNC_ACTIVE_HIGH V4L2_MBUS_HSYNC_ACTIVE_HIGH. So CSI driver is
-> clearly wrong.
+On 2019=E5=B9=B411=E6=9C=8828=E6=97=A5 00:48, Paul Cercueil wrote:
+> Hi Zhou,
 >
-> I think this is pretty clear the driver is buggy. At least for A83T SoC.
 >
-> I'm not sure what Maxime found out, but he should probably re-check his
-> findings. Maxime, can you comment on this?
+> Le mer., nov. 27, 2019 at 01:06, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+> =C3=A9crit :
+>> Add the appropriate DT node to probe the pdma controller driver
+>> using the devicetree.
+>>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>> ---
+>>
+>> Notes:
+>>     v4:
+>>     New patch.
+>>
+>>  arch/mips/boot/dts/ingenic/x1000.dtsi | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
+>> b/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> index 9e55edd..edfa70d 100644
+>> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> @@ -1,5 +1,6 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>>  #include <dt-bindings/clock/x1000-cgu.h>
+>> +#include <dt-bindings/dma/x1000-dma.h>
 >
-> regards,
->         o.
+> You're not using any macro from that include file, so there's no need=20
+> to have it here.
 >
-> > On Thu, 28 Nov 2019 03:02:59 +0100
-> > Ondrej Jirman <megous@megous.com> wrote:
-> >
-> > > This was discovered by writing a new camera driver and wondering, why
-> > > hsync/vsync polarity setting behaves in reverse to what would be
-> > > expected. Verified by looking at the actual signals and the SoC
-> > > user manual.
-> > >
-> > > Fixes: 5cc7522d8965 ("media: sun6i: Add support for Allwinner CSI V3s")
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > ---
-> > >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > index f17e5550602d..98bbcca59a90 100644
-> > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > @@ -417,12 +417,12 @@ static void sun6i_csi_setup_bus(struct sun6i_csi_dev *sdev)
-> > >             if (flags & V4L2_MBUS_FIELD_EVEN_LOW)
-> > >                     cfg |= CSI_IF_CFG_FIELD_POSITIVE;
-> > >
-> > > -           if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
-> > > +           if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-> > >                     cfg |= CSI_IF_CFG_VREF_POL_POSITIVE;
-> > > -           if (flags & V4L2_MBUS_HSYNC_ACTIVE_LOW)
-> > > +           if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-> > >                     cfg |= CSI_IF_CFG_HREF_POL_POSITIVE;
-> > >
-> > > -           if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-> > > +           if (flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
-> > >                     cfg |= CSI_IF_CFG_CLK_POL_FALLING_EDGE;
-> > >             break;
-> > >     case V4L2_MBUS_BT656:
-> > > --
-> > > 2.24.0
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191128020259.1338188-1-megous%40megous.com.
-> >
-> >
-> > Thanks,
-> > Yong
+
+Sure, I will fix this in v7.
+
+Thanks and best regards!
+
+> Cheers,
+> -Paul
 >
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191128030653.5fhcolvib6tzf4zc%40core.my.home.
+>
+>>
+>>  / {
+>>      #address-cells =3D <1>;
+>> @@ -173,4 +174,16 @@
+>>
+>>          status =3D "disabled";
+>>      };
+>> +
+>> +    pdma: dma-controller@13420000 {
+>> +        compatible =3D "ingenic,x1000-dma";
+>> +        reg =3D <0x13420000 0x400
+>> +               0x13421000 0x40>;
+>> +        #dma-cells =3D <2>;
+>> +
+>> +        interrupt-parent =3D <&intc>;
+>> +        interrupts =3D <10>;
+>> +
+>> +        clocks =3D <&cgu X1000_CLK_PDMA>;
+>> +    };
+>>  };
+>> --=20
+>> 2.7.4
+>>
+>>
+>
+>
+
+
+
