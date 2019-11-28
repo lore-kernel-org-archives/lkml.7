@@ -2,180 +2,207 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D922C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696A9C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3926B21741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3134A21741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:06:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="na5oiyEi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MrIZCIXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfK1KG2 (ORCPT
+        id S1726681AbfK1KGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:06:28 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:53140 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfK1KG1 (ORCPT
+        Thu, 28 Nov 2019 05:06:50 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39452 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfK1KGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:06:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kAzGthTrVHAi7AX7oK1GGCcOfI4R/DIxoI7QEs76F5I=; b=na5oiyEis1GUKanh4lMUFOTQP
-        J1oTldWRG73YC7hsRSkSgrbMnI/UJrIbPiuHgWklDRuw+9e+E51uXkR+y2SAkIIJAKn/gsWjdocDX
-        +iUIcjua9ImyXRvVIajZawYfXc6kkyJB3OpoZuJhT7zETEpjE1ISyx7O7qYYEVzhIIBaSVqmWSh5O
-        JZygnJsgB3phfXJpHt30IYBn2Azng9gyu3oeTNnft1LCnTJ05Jv+1GW89fvBF9tQPm/9U/Hn/UIf6
-        ugkQWqXR5sLTG3JJhnqBta6dJoiW5pVv9yDwinXXd+zZm78mgtSbs4I0UnJ0ptbAD7XQWUYHYll6K
-        1OlkN0hkQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45710)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iaGgi-0000GT-Rg; Thu, 28 Nov 2019 10:06:17 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iaGgf-0001Bf-SB; Thu, 28 Nov 2019 10:06:13 +0000
-Date:   Thu, 28 Nov 2019 10:06:13 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH] i2c: imx: Defer probing if EDMA not available
-Message-ID: <20191128100613.GI25745@shell.armlinux.org.uk>
-References: <20191127071136.5240-1-peng.ma@nxp.com>
+        Thu, 28 Nov 2019 05:06:49 -0500
+Received: by mail-lj1-f193.google.com with SMTP id e10so18660540ljj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 02:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tUJALJT7TTpPicHHFkyqG0CxrKAUNpXMj/J44tCGQC4=;
+        b=MrIZCIXKCoWoT3alX7UY36qi/6SmTc8BmnSzXxmhsQpC3yJD3IGpnPHTHRA18Eq4Ii
+         dA9JQj8dImYM/knYLxHfT9Amb+CBMYLylpGe8yqPF3l74o2xTtnKKtGSQgoG6/WTJ/oL
+         HUwMesK82Mbk14A7KTmke+h5acBeYRP/otlWfqCq7PAbpIRdWJ10VEj2VCjL7tbbk+Rr
+         NxZZ9SHbyBXhfeY2zwMQ1yglciw9gS/q4pPMp2nX+/rBkPPnVgj9MQHTPDHOLO99uH2y
+         VKbEYHJ6ET/W96KuTASZNjb2IB0ZQxCPs672YjBtFM0beOSqC8SiM1NMvSwegQqNVtV1
+         +kQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tUJALJT7TTpPicHHFkyqG0CxrKAUNpXMj/J44tCGQC4=;
+        b=s2wVUvYi6CUC5yjOjp4BOzdN0KczyHwrM5VuZRWcmgwBBV/6Bir2YWGODeSlrMNVI0
+         vn0752evDUDu85x0Pc64WvjnZqsE+3l7wWi5mtYHLh4NlWg7RIO41fJxTjLcWJ0DvuY5
+         o9Ap/LdrPP6Lyp+EFBJJJLuhvV4Ug12SoUwffUfb05YE3DT0Jh9OhWUdAPo0C5YfFOAC
+         VnK3sHSLKelZwKthS7rWAEn7Mr/kh76Y7xa+B0ShpOatW6SD13jjVXkZVvv1uep2sYqO
+         q+2R1WK6NPWzBXJAXEGx7EocaPFxtSSVHtgAcdFtG8KU2x+LwYfIsynHL/4h1kkwLww1
+         2RJA==
+X-Gm-Message-State: APjAAAVONwfpscIrTbDGGeKpy71SLLdj4ecr4sBmh1Aq+5+DRPaZiqIM
+        0iCOaEVshN9cNvAEM0XJUqid6twwa80QTN/nK91ywA==
+X-Google-Smtp-Source: APXvYqwk5GfDLW4bgJe+dmZ3t+boVThpmLI6573Ta152HHaHVEwKJ6QpDlfomukhdkz0o/BidvY2uXE+XHx6i4GMZaA=
+X-Received: by 2002:a2e:9699:: with SMTP id q25mr33914816lji.251.1574935607136;
+ Thu, 28 Nov 2019 02:06:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127071136.5240-1-peng.ma@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-2-peter.ujfalusi@ti.com>
+ <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com> <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com>
+In-Reply-To: <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 28 Nov 2019 11:06:35 +0100
+Message-ID: <CACRpkdafEdsN6i16SA175wE4J_4+EhS5Uw4Qsg=cZ=EuDYHmgg@mail.gmail.com>
+Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 07:12:09AM +0000, Peng Ma wrote:
-> EDMA may be not available or defered due to dependencies on
-> other modules, If these scenarios is encountered, we should
-> defer probing.
+On Fri, Nov 22, 2019 at 2:36 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> On 22/11/2019 14.10, Linus Walleij wrote:
+> > On Wed, Nov 20, 2019 at 2:34 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> >
+> >> Boards might use the same GPIO line to control several external devices.
+> >> Add section to document on how a shared GPIO pin can be described.
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >
+> > As I've stated earlier I think this information is surplus.
+> > If two devices have a phandle to the same GPIO line
+> > then it is by definition shared.
+>
+> Well, phandle + line number to be precise.
 
-This has been tried before in this form, and it causes regressions.
+This is what I mean when I say "phandle to the same GPIO line".
+Like this:
 
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
-> ---
->  drivers/i2c/busses/i2c-imx.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-> index 40111a3..c2b0693 100644
-> --- a/drivers/i2c/busses/i2c-imx.c
-> +++ b/drivers/i2c/busses/i2c-imx.c
-> @@ -369,8 +369,8 @@ static void i2c_imx_reset_regs(struct imx_i2c_struct *i2c_imx)
->  }
->  
->  /* Functions for DMA support */
-> -static void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
-> -						dma_addr_t phy_addr)
-> +static int i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
-> +			       dma_addr_t phy_addr)
->  {
->  	struct imx_i2c_dma *dma;
->  	struct dma_slave_config dma_sconfig;
-> @@ -379,7 +379,7 @@ static void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
->  
->  	dma = devm_kzalloc(dev, sizeof(*dma), GFP_KERNEL);
->  	if (!dma)
-> -		return;
-> +		return -ENOMEM;
->  
->  	dma->chan_tx = dma_request_chan(dev, "tx");
->  	if (IS_ERR(dma->chan_tx)) {
-> @@ -424,7 +424,7 @@ static void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
->  	dev_info(dev, "using %s (tx) and %s (rx) for DMA transfers\n",
->  		dma_chan_name(dma->chan_tx), dma_chan_name(dma->chan_rx));
->  
-> -	return;
-> +	return 0;
->  
->  fail_rx:
->  	dma_release_channel(dma->chan_rx);
-> @@ -432,6 +432,8 @@ static void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
->  	dma_release_channel(dma->chan_tx);
->  fail_al:
->  	devm_kfree(dev, dma);
-> +
-> +	return ret;
+foo-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
 
-Some platforms don't have EDMA.  Doesn't this force everyone who wants
-I2C to have DMA?  The last attempt at this had:
+If the phandle <&gpio0 5 *>; appear in some other
+(non-disabled) node it has > 1 users.
 
-	/* return successfully if there is no dma support */
-	return ret == -ENODEV ? 0 : ret;
+> >> +               line_a {
+> >> +                       gpio-shared;
+> >
+> > So this is unnecessary: if the same line is referenced
+> > by phandle from two places it is shared, simple as that.
+>
+> phandle is pointing to the gpio controller, not to the line.
 
-here because of exactly this.
+Cleared up above.
 
->  }
->  
->  static void i2c_imx_dma_callback(void *arg)
-> @@ -1605,10 +1607,14 @@ static int i2c_imx_probe(struct platform_device *pdev)
->  	dev_info(&i2c_imx->adapter.dev, "IMX I2C adapter registered\n");
->  
->  	/* Init DMA config if supported */
-> -	i2c_imx_dma_request(i2c_imx, phy_addr);
-> +	ret = i2c_imx_dma_request(i2c_imx, phy_addr);
-> +	if (ret == -EPROBE_DEFER)
-> +		goto i2c_adapter_remove;
+> >> +                       gpios = <5 0>;
+> >> +                       output-low;
+> >
+> > This is overlapping with the use case to define initial
+> > state values for GPIOs, something that has been
+> > brought up repeatedly and I've collected links for
+> > previous discussions several times.
+>
+> I don't mind this to go away and the first set would configure the level.
+> Kept it here so I can reuse the gpio-hog code from gpiolib-of ;)
 
-This happens _after_ the adapter has been published to the rest of the
-kernel.  Claiming resources after publication is racy - the adapter may
-be in use by a request at this point.  Secondly, there's been problems
-with this causing regressions when EDMA is built as a module and i2c-imx
-is built-in.
+People have tried to reuse the hog code to set up
+initial line levels as well, it failed because they could
+not get the DT bindings through the door.
 
-See e8c220fac415 ("Revert "i2c: imx: improve the error handling in
-i2c_imx_dma_request()"") when exactly what you're proposing was tried
-and ended up having to be reverted.
+> > I guess if need be I have to look them up again.
+> >
+> > The DT maintainers don't like the hog syntax so
+> > something else is desired for this.
+>
+> I see, so the gpio-hog might change?
 
-AFAIK nothing has changed since, so merely reinstating the known to be
-broken code, thereby reintroducing the same (and more) problems, isn't
-going to be acceptable.
+They will not change since they are ABI, but their
+use case will not be extended AFAICT.
+Not my pick, I liked the hog syntax but we need
+consensus.
 
-Sorry, but this gets a big NAK from me.
+> > (snip)
+> >> +The shared GPIO line management strategy can be selected with either of the
+> >> +following properties:
+> >> +- refcounted-low: The line must be kept low as long as there is at least one
+> >> +               request asking it to be low.
+> >> +- refcounted-high: The line must be kept high as long as there is at least one
+> >> +               request asking it to be high.
+> >
+> > Is this really needed? Isn't it more appropriate to just define the
+> > semantics such that as soon as some consumer requests the line
+> > high it will be refcounted high, and as soon as it is requested
+> > low by any consumer it will be refcounted low.
+>
+> Well. How do we decide which level is the one that should be preserved?
 
->  
->  	return 0;   /* Return OK */
->  
-> +i2c_adapter_remove:
-> +	i2c_del_adapter(&i2c_imx->adapter);
->  clk_notifier_unregister:
->  	clk_notifier_unregister(i2c_imx->clk, &i2c_imx->clk_change_nb);
->  rpm_disable:
-> -- 
-> 2.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+First come first serve.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+If there is any conflict amongst the consumers we are
+screwed anyway so why try to establish where they should
+agree if they don't agree?
+
+> How would the core decide what to in a simplest case:
+> two device, they are the same part.
+> ENABLE pin which needs to be high to enable the device.
+> When the driver probes it asks for initial deasserted GPIO as the device
+> is not in active use.
+
+This makes me think it should be a unique driver
+with a unique compatible string, as it embodies
+use cases.
+
+It is too broad to just define
+refcounted-high or refcounted-low, that is hiding the
+real use case, so I would go for something like a
+resource in the device tree that all other devices that
+need it can take.
+
+Like a reset controller, precisely:
+
+reset: reset-controller {
+    compatible = "reset-gpio";
+    gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+    #reset-cells = <0>;
+};
+
+dev0 {
+    resets = <&reset>;
+};
+
+dev1 {
+    resets = <&reset>;
+};
+
+The ambition to use refcounted GPIOs to solve this
+usecase is probably wrong, I would say try to go for a
+GPIO-based reset controller instead.
+
+The fact that some Linux drivers are already using explicit
+GPIO's for their reset handling is maybe unfortunate,
+they will simply have to grow code to deal with a reset
+alternatively to GPIO, like first try to grab a reset
+handle and if that doesn't fall back to use a GPIO.
+
+I would say don't try to shoehorn this use case into the
+gpio library but instead try to create a reset controller that
+takes care of arbitrating the use of a single GPIO line.
+
+Yours,
+Linus Walleij
