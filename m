@@ -2,208 +2,146 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29CAC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99510C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C0F215A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0952071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:29:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBsr5Lpt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFZ7jtEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfK1OVi (ORCPT
+        id S1726622AbfK1O3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:21:38 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43933 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfK1OVi (ORCPT
+        Thu, 28 Nov 2019 09:29:03 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46114 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfK1O3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:21:38 -0500
-Received: by mail-ot1-f67.google.com with SMTP id l14so22305477oti.10;
-        Thu, 28 Nov 2019 06:21:36 -0800 (PST)
+        Thu, 28 Nov 2019 09:29:03 -0500
+Received: by mail-il1-f194.google.com with SMTP id q1so24358588ile.13;
+        Thu, 28 Nov 2019 06:29:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pAOuUXPMeoRavXucH0FHeoL8ht+w96IWOMyp3rFxFc8=;
-        b=KBsr5LptVS2b+zcFfq8COkxUXZcEB1jGnIvoAk8NwagRT1ELTfEAXLdstWJYDI6aaB
-         5ikq8r7yeXpZJUsmuCTsxVZBwkn5e6kdd3PYtYjd8hk5CMTpB+upcSPMdHn7RqXcRyw9
-         RinpBwEXjmy04jpU+6TDm7qfEQIz8RRtOLvhFl/p/3aDgIWn9sG3G5vb3HKjgi+KSAAt
-         ZaKa8rtzMcIV6WLvWbALGQEksQ5F0K8jfcop3LjNWaYqAbqrFM454dVpuZ9AJMzROeHP
-         h6bHdcHeRJOvB9+/tVwZlbfYUfLwkG8drmkGEA3Rtv+y2WYKJmiBXol2B/oaLD4Jmf2p
-         cFjQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sMU0IL8Rlq+6fLrJTHisOtaFzn6MftRpT5q5jbwKEnw=;
+        b=YFZ7jtEkcvX4TmeNwPif9CPkdwTp+mxAUEY4FjYbYpXyvr6efWAcYCoSjcmloOni+C
+         B2fcNsZhUGrmrruDM1Fn3X4PTW/l9ttFWinZhFQKNMSavM0wykqfuMFiTbZSRC36UeBK
+         pLV3M7nttXdZVdlpHpkYXvsYGV5MV9SVURwDy9O/5Js5r5o+q/RVNMaEfoUKKVONYEmi
+         HLg3M87cTSJGEVsZknsUUCwE67azeSxwSk7vAhOHPWIyNlJKro3oKWSJUPBFRJ9lm+vz
+         GerFAYGEf0CKOc6/T05YALXGQXDLIErDrirC6thnR/8sLw2iW41oDC7q72EBEaU0UuSI
+         ECnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pAOuUXPMeoRavXucH0FHeoL8ht+w96IWOMyp3rFxFc8=;
-        b=l/jhGirmfGJk+Ll0MmeGHYuAzTqXFt0aS5L8n3mgzyL4BrdTUnVJBzSC+ghQlLwVAA
-         gs2RKFKbqHzqFDqa/GRThcdds3QRsXkCCvMaDDwfFTcTDuPkonkkHDDcHlLC6CFiu8lW
-         FtsfXikCRfo/yF0SW5vNaJA4JYES0BC+4C4wIGk9oziyOsRzseBMUhdYtuXr7YSWc8Bk
-         imeiNhoIu9BJO2zfRWcWXE1IHf2Kf9KXxrjKrBdts3euv3zRhKPIRgFRqSgNbUsGR9H1
-         yM5hl6tO5lOiqX4kDxMi6Zb0s5vKzFg6xjWvK3usjlNoKq8lDNhOlKict5grFjVW5qNA
-         LDcg==
-X-Gm-Message-State: APjAAAVBkktTK4wRzI0wWqeD1uZgIpLrqdxwwTWvLKsvUqS9dZN4PbzB
-        pVCwBRM3/f8bLd7ztr2s4sCCjcay
-X-Google-Smtp-Source: APXvYqyg/dOuWAh3aONJFSxiOoY0asq6842kRVYbO07guEulmAV3bFhidrH7ncZ6zHHYAH92ywgZtA==
-X-Received: by 2002:a9d:744a:: with SMTP id p10mr7122237otk.235.1574950896159;
-        Thu, 28 Nov 2019 06:21:36 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l32sm6126339otl.74.2019.11.28.06.21.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Nov 2019 06:21:34 -0800 (PST)
-Subject: Re: [PATCH 6/6] (v3) drivers: hwmon: i5k_amb: simplify probing /
- device identification
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     tim@buttersideup.com, james.morse@arm.com, rrichter@marvell.com,
-        jdelvare@suse.com, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com, linux-crypto@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-pci@vger.kernel.org
-References: <20191128125406.10417-1-info@metux.net>
- <20191128125406.10417-6-info@metux.net>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <bee7ba11-6b4a-1cc7-ee8c-ddf17cb8daca@roeck-us.net>
-Date:   Thu, 28 Nov 2019 06:21:31 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sMU0IL8Rlq+6fLrJTHisOtaFzn6MftRpT5q5jbwKEnw=;
+        b=rW+vAjZP9worDcfQMMP6EdvSaMYJeERhwrbK8fbBAXFWdiLBAxjZOxikH5Q+Vx16ea
+         S8jaeF1ejZ4zH2TY1B28Unsio66yf4KCIvicWNCpv5vqntSM0DjeiDFqmtzqrlrUEh+3
+         B7dgPaoXp5kh6g9ylzRy9FYxdT0hWyA5rfMx8yoeiRty/5bzFeFQIkPsFiOpKn8SkCgi
+         1opt95XqB1bZ+l+4s/qmOmYbxGQLgH1S5uhbUH/Mow4nOEED8HAgwhL2GsDk5oX1w8sQ
+         qOBRDfSLgrfqOr+9bVgyQtuTF4iofwf1Pr+LckysaN91+Lmr1HGVuTI/ZFhuJAxRHLA1
+         QKXA==
+X-Gm-Message-State: APjAAAWuObxHDV69yONcmx/A5S1eZvEnAMfz/aTmEn/RjqikYYD6HGGN
+        TPlECHYyYHIz9sAOzf1+mqn7yQUvXdV/vnydTuY=
+X-Google-Smtp-Source: APXvYqw67ERvKvsiBbN3SrEbzFjudGN5TzFNOBhuzvLOM1d9Nzm89YSmkAMVOANimiYGEaCZyTwj0zrIZHwowONaGWQ=
+X-Received: by 2002:a92:4095:: with SMTP id d21mr7689377ill.158.1574951341870;
+ Thu, 28 Nov 2019 06:29:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191128125406.10417-6-info@metux.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191029124211.15052-1-aford173@gmail.com> <CAHCN7xKAJ3koJc1H2zyGFG3J6qu+uw0jozT=pQ_0i8HStX5TbQ@mail.gmail.com>
+ <20191128102141.beq7wzdu5vxwx7wk@uno.localdomain>
+In-Reply-To: <20191128102141.beq7wzdu5vxwx7wk@uno.localdomain>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Thu, 28 Nov 2019 08:28:49 -0600
+Message-ID: <CAHCN7xJpa68bB+acaywq+ca0sG0gYXM2wBiK=50KWLVp6e-9FA@mail.gmail.com>
+Subject: Re: [PATCH] media: ov5640: Fix check for PLL1 exceeding max allowed rate
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Adam Ford <adam.ford@logicpd.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/28/19 4:54 AM, Enrico Weigelt, metux IT consult wrote:
-> Simpilify the probing by putting all chip-specific data directly
-> into the pci match table, removing the redundant chipset_ids table.
-> 
-> Changes v3:
->      * use pci_get_device_by_id() introduces by a previous patch
->        of this queue
-> 
-> Changes v2:
->      * use PCI_DEVICE_DATA() macro in the pci match table
->      * directly pass the pci device id to i5k_channel_probe(),
->        instead of computing it internally by extra offset parameter
-> 
-> Submitted: 2019-06-06
-> Signed-off-by: Enrico Weigelt <info@metux.net>
+On Thu, Nov 28, 2019 at 4:19 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+>
+> Hi Adam,
+>
+> On Tue, Nov 26, 2019 at 08:08:05PM -0600, Adam Ford wrote:
+> > On Tue, Oct 29, 2019 at 7:42 AM Adam Ford <aford173@gmail.com> wrote:
+> > >
+> > > The variable _rate is by ov5640_compute_sys_clk() which returns
+> > > zero if the PLL exceeds 1GHz.  Unfortunately, the check to see
+> > > if the max PLL1 output is checking 'rate' and not '_rate' and
+> > > 'rate' does not ever appear to be 0.
+>
+> This seems a bit convoluted. What about:
+>
+> "The PLL calculation routine checks the wrong variable 'rate' to
+> verify that the calculated PLL1 output frequency does not exceed
+> 1GHz. Fix this by using the correct '_rate' one."
+>
+> Or something against these lines
 
-I don't immediately see how this is better. I am not even sure if it is correct.
+That makes sense.
 
-Guenter
+I'll do a V2 for this patch and change the description and add your
+'acked-by' note to it.
 
-> ---
->   drivers/hwmon/i5k_amb.c | 38 +++++++++++++++-----------------------
->   1 file changed, 15 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/hwmon/i5k_amb.c b/drivers/hwmon/i5k_amb.c
-> index b09c39abd3a8..cb85607d104f 100644
-> --- a/drivers/hwmon/i5k_amb.c
-> +++ b/drivers/hwmon/i5k_amb.c
-> @@ -414,16 +414,14 @@ static int i5k_amb_add(void)
->   }
->   
->   static int i5k_find_amb_registers(struct i5k_amb_data *data,
-> -					    unsigned long devid)
-> +				  const struct pci_device_id *devid)
->   {
->   	struct pci_dev *pcidev;
->   	u32 val32;
->   	int res = -ENODEV;
->   
->   	/* Find AMB register memory space */
-> -	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL,
-> -				devid,
-> -				NULL);
-> +	pcidev = pci_get_device_by_id(devid);
->   	if (!pcidev)
->   		return -ENODEV;
->   
-> @@ -447,14 +445,15 @@ static int i5k_find_amb_registers(struct i5k_amb_data *data,
->   	return res;
->   }
->   
-> -static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
-> +static int i5k_channel_probe(u16 *amb_present, unsigned int vendor,
-> +			     unsigned int device)
->   {
->   	struct pci_dev *pcidev;
->   	u16 val16;
->   	int res = -ENODEV;
->   
->   	/* Copy the DIMM presence map for these two channels */
-> -	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL, dev_id, NULL);
-> +	pcidev = pci_get_device(vendor, device, NULL);
->   	if (!pcidev)
->   		return -ENODEV;
->   
-> @@ -473,23 +472,12 @@ static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
->   	return res;
->   }
->   
-> -static struct {
-> -	unsigned long err;
-> -	unsigned long fbd0;
-> -} chipset_ids[]  = {
-> -	{ PCI_DEVICE_ID_INTEL_5000_ERR, PCI_DEVICE_ID_INTEL_5000_FBD0 },
-> -	{ PCI_DEVICE_ID_INTEL_5400_ERR, PCI_DEVICE_ID_INTEL_5400_FBD0 },
-> -	{ 0, 0 }
-> -};
-> -
-> -#ifdef MODULE
->   static const struct pci_device_id i5k_amb_ids[] = {
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5000_ERR) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5400_ERR) },
-> +	{ PCI_DEVICE_DATA(INTEL, 5000_ERR, PCI_DEVICE_ID_INTEL_5000_FBD0) },
-> +	{ PCI_DEVICE_DATA(INTEL, 5400_ERR, PCI_DEVICE_ID_INTEL_5400_FBD0) },
->   	{ 0, }
->   };
->   MODULE_DEVICE_TABLE(pci, i5k_amb_ids);
-> -#endif
->   
->   static int i5k_amb_probe(struct platform_device *pdev)
->   {
-> @@ -504,22 +492,26 @@ static int i5k_amb_probe(struct platform_device *pdev)
->   	/* Figure out where the AMB registers live */
->   	i = 0;
->   	do {
-> -		res = i5k_find_amb_registers(data, chipset_ids[i].err);
-> +		res = i5k_find_amb_registers(data, &i5k_amb_ids[i]);
->   		if (res == 0)
->   			break;
->   		i++;
-> -	} while (chipset_ids[i].err);
-> +	} while (i5k_amb_ids[i].device);
->   
->   	if (res)
->   		goto err;
->   
->   	/* Copy the DIMM presence map for the first two channels */
-> -	res = i5k_channel_probe(&data->amb_present[0], chipset_ids[i].fbd0);
-> +	res = i5k_channel_probe(&data->amb_present[0],
-> +				i5k_amb_ids[i].vendor,
-> +				i5k_amb_ids[i].driver_data);
->   	if (res)
->   		goto err;
->   
->   	/* Copy the DIMM presence map for the optional second two channels */
-> -	i5k_channel_probe(&data->amb_present[2], chipset_ids[i].fbd0 + 1);
-> +	i5k_channel_probe(&data->amb_present[2],
-> +			  i5k_amb_ids[i].vendor,
-> +			  i5k_amb_ids[i].driver_data+1);
->   
->   	/* Set up resource regions */
->   	reso = request_mem_region(data->amb_base, data->amb_len, DRVNAME);
-> 
+I probably won't get to it until this weekend, since today is a
+holiday in the US, and I am traveling.
 
+adam
+>
+> > >
+> > > This patch changes the check against the returned value of
+> > > '_rate' to determine if the PLL1 output exceeds 1GHz.
+> > >
+> > > Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
+> > >
+> >
+> > I haven't seen any responses to this patch.  Has anyone had a chance
+> > to review this?  It's been nearly a month.
+>
+> You're totally right! Sorry about this
+>
+> > I think it would be appropriate to backport to stable if deemed acceptable.
+> >
+>
+> Indeed! This fixes a real issue
+>
+> Acked-by: Jacopo Mondi <jacopo@jmondi.org>
+>
+> Thanks
+>   j
+>
+> > adam
+> >
+> > > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > >
+> > > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > > index 5e495c833d32..bb968e764f31 100644
+> > > --- a/drivers/media/i2c/ov5640.c
+> > > +++ b/drivers/media/i2c/ov5640.c
+> > > @@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
+> > >                          * We have reached the maximum allowed PLL1 output,
+> > >                          * increase sysdiv.
+> > >                          */
+> > > -                       if (!rate)
+> > > +                       if (!_rate)
+> > >                                 break;
+> > >
+> > >                         /*
+> > > --
+> > > 2.17.1
+> > >
