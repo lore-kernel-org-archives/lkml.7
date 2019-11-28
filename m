@@ -2,174 +2,303 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C2CC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17CF82176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2373220656
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 18:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574964046;
+	bh=WRgXVEhiwkd/dUqdu0RjJQT98abCCOrbMiC70TOgR+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pUgaBSXYmdd8nmkqBnhavUhIRLzuxhmIi9mVBjeh+PsMzoQ6CR3zNfjzZaHpzp1zH
+	 Zap62sVHrSVY/GDmvC95WxdF4gdDYFcA7T+TQkUpTYLkHPuKoxNo62mUTmQRS+RPez
+	 TvEpGf9ZQ4IBx1sRHVFIXa0UlAi9QzjHrU0aQbNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfK1R7z (ORCPT
+        id S1726900AbfK1SAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 12:59:55 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:53785 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726582AbfK1R7y (ORCPT
+        Thu, 28 Nov 2019 13:00:45 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40536 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfK1SAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 12:59:54 -0500
-Received: (qmail 22060 invoked by uid 500); 28 Nov 2019 12:59:53 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 28 Nov 2019 12:59:53 -0500
-Date:   Thu, 28 Nov 2019 12:59:53 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Michael Olbrich <m.olbrich@pengutronix.de>
-cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/2] usb: dwc3: gadget: restart the transfer if a isoc
- request is queued too late
-In-Reply-To: <20191128113633.5slzlehhwlmnc3zr@pengutronix.de>
-Message-ID: <Pine.LNX.4.44L0.1911281242330.19734-100000@netrider.rowland.org>
+        Thu, 28 Nov 2019 13:00:44 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y5so7947203lfy.7;
+        Thu, 28 Nov 2019 10:00:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ks5Wb3zeXH5ztvM31EC0/BUsiawA+hq7qrytLqaGafs=;
+        b=dH36X7Lgou5EYkJOBHvlUy4Y5ZtPllOdPmNU6e9SmvVpOOiCo+kKAG1rf92havfN8v
+         Rv9HFCrPfKWk3hCM1F1egeBZksbQ2nx0I5Kv/sZPby5f3tAz6FeX9nXNBlrSJXloUb7p
+         TlMu0lzbpIc5A4CMqWenMjcssD6P/lk9lfT0uF6ADjLHZzAos8+PzBTOA358ZmBTIHnx
+         RjwykrwT691i6/CxjDzfSjinWKZsjyrU7yn+abTWftWZpeC23b3nfF7/s6yt+cjcXQQl
+         KyakQpJVt7CZ+8qUbf9XBybzorxHRiy2rPIcBa4csVbte6CrgB0a6B94h26ypT4yJECh
+         w/gw==
+X-Gm-Message-State: APjAAAVdwFBc1RHcfWLzqJsFW1atk/bBq8Wu7SaXD/B9mIj/zvBFBb6p
+        MsSLptKKiqQ2tacozS7Ck5o=
+X-Google-Smtp-Source: APXvYqzs1ldSUYf6cyat/71IPm+JComuFa/aGv271L4Spjz/TAEwhm1Lm/InvUNw9/mnp+PTE4EDZw==
+X-Received: by 2002:a19:7602:: with SMTP id c2mr32861809lff.118.1574964041498;
+        Thu, 28 Nov 2019 10:00:41 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id u184sm9296700lja.86.2019.11.28.10.00.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 10:00:40 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1iaO5o-0007CK-Rp; Thu, 28 Nov 2019 19:00:40 +0100
+Date:   Thu, 28 Nov 2019 19:00:40 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     syzbot <syzbot+1d1597a5aa3679c65b9f@syzkaller.appspotmail.com>
+Cc:     amitkarwar@gmail.com, andreyknvl@google.com, davem@davemloft.net,
+        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, siva8118@gmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING: ODEBUG bug in rsi_probe
+Message-ID: <20191128180040.GE29518@localhost>
+References: <00000000000024bbd7058682eda1@google.com>
+ <00000000000080e9260586ead5b5@google.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000080e9260586ead5b5@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Nov 2019, Michael Olbrich wrote:
-
-> On Fri, Nov 15, 2019 at 04:06:10PM -0500, Alan Stern wrote:
-> > On Thu, 14 Nov 2019, Thinh Nguyen wrote:
-> > 
-> > > Michael Olbrich wrote:
-> > 
-> > > >>> How about changing the gadget driver instead?  For frames where the UVC
-> > > >>> gadget knows no video frame data is available (numbers 4, 8, 12, and so
-> > > >>> on in the example above), queue a zero-length request.  Then there
-> > > >>> won't be any gaps in the isochronous packet stream.
-> > > >> What Alan suggests may work. Have you tried this?
-> > > > Yes and it works in general. There are however some problems with that
-> > > > approach that I want to avoid:
-> > > >
-> > > > 1. It adds extra overhead to handle the extra zero-length request.
-> > > > Especially for encoded video the available bandwidth can be quite a bit
-> > > > larger that what is actually used. I want to avoid that.
-> > 
-> > This comment doesn't seem to make sense.  If the available bandwidth is
-> > much _larger_ than what is actually used, what's the problem?  You
-> > don't run into difficulties until the available bandwidth is too
-> > _small_.
-> > 
-> > The extra overhead of a zero-length request should be pretty small.  
-> > After all, the gadget expects to send a packet for every frame anyway,
-> > more or less.
+On Fri, Apr 19, 2019 at 04:54:06PM -0700, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
 > 
-> My current test-case is video frames with 450kB on average at 30fps. This
-> currently results in ~10 CPU load for the threaded interrupt handler.
-> At least in my test, filling the actual video data into the frame has very
-> little impact. So if I reserve 900kB to support occasionally larger video
-> frames, then I expect that this CPU load will almost double in all cases,
-> not just when the video frames are larger.
-
-This is the sort of thing you need to confirm by experimenting.  It is 
-not at all clear that doubling the interrupt rate will also double the 
-CPU load, especially if half of the interrupts don't require the CPU to 
-do much work.
-
-> > > > 2. The UVC gadget currently does no know how many zero-length request must
-> > > > added. So it needs fill all available request until a new video frame
-> > > > arrives. With the current 4 requests that is not a problem right now. But
-> > > > that does not scale for USB3 bandwidths. So one thing that I want to do is
-> > > > to queue many requests but only enable the interrupt for a few of than.
-> > > >  From what I can tell from the code, the gadget framework and the dwc3
-> > > > driver should already support this.
-> > > > This will result in extra latency. There is probably an acceptable
-> > > > trade-off with an acceptable interrupt load and latency. But I would like
-> > > > to avoid that if possible.
-> > 
-> > There are two different situations to consider:
-> > 
-> > 	In the middle of a video stream, latency isn't an issue.
-> > 	The gadget should expect to send a new packet for each frame,
-> > 	and it doesn't know what to put in that packet until it
-> > 	receives the video data or it knows there won't be any data.
-> > 
-> > 	At the start of a video stream, latency can be an issue.  But
-> > 	in this situation the gadget doesn't have to send 0-length
-> > 	requests until there actually is some data available.
-> > 
-> > Either way, it should be okay.
-> > 
-> > As far as interrupt load is concerned, I don't see how it relates to
-> > the issue of sending 0-length requests.
+> HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13431e7b200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1d1597a5aa3679c65b9f
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12534fdd200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147c9247200000
 > 
-> Maybe I don't understand, how 0-length requests work. My current
-> understanding is, that they are queued like any other request.
-
-That's right.
-
-> If I want to reduce the number of interrupts then I need to queue more
-> requests and only ask for an interrupt for some of them. This means that
-> potentially a lot of 0-length requests requests are queued when a new video
-> frame arrives and this means extra latency for the frame.
-
-Let's say you ask for an interrupt for only even-numbered requests.  
-Then there would be at most one 0-length request queued when a new
-video frame arrives.  Processing that 0-length request should require
-very little CPU time (almost none) because it contains no data, so the
-extra latency would be negligible.
-
-> I think the worst-case latency is 2x the time between two interrupts.
-> So less interrupts mean more latency.
-
-What matters is the interrupt rate.  If you double the rate at which 
-transfers are queued but ask for an interrupt on only half of them, 
-then the overall interrupt rate will remain the same and so will the 
-average latency.
-
-> The stop/start transfer this patch implements, the video frame can be sent
-> immediately without any extra latency.
-
-The same would be true if you queued a request at the full isochronous
-rate.  If video data is present, put it in the request; if not then
-queue a 0-length request.
-
-> > > Now, with UVC, it needs to communicate to the dwc3 driver that there 
-> > > will be a gap after a certain request (and that the device is expecting 
-> > > to send 0-length data). This is not a normal operation for isoc 
-> > > transfer. You may need to introduce a new way for the function driver to 
-> > > do that, possibly a new field in usb_request structure to indicate that. 
-> > > However, this seems a little awkward. Maybe others can comment on this.
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+1d1597a5aa3679c65b9f@syzkaller.appspotmail.com
 > 
-> I'm not sure how this is supposed to work. What exactly can the dwc3 driver
-> / hardware do to handle a gap?
-
-Are you talking about the driver on the gadget side or on the host 
-side?  The rules for the host-side driver are spelled out in the 
-kerneldoc for usb_submit_urb().  As far as I know, there is no 
-equivalent set of rules for the gadget-side drivers.
-
-> > Note that on the host side, there is a difference between receiving 
-> > a 0-length packet and receiving no packet at all.  As long as both the 
-> > host and the gadget expect the isochronous stream to be running, there 
-> > shouldn't be any gaps if you can avoid it.
+> rsi_91x: rsi_load_firmware: REGOUT read failed
+> rsi_91x: rsi_hal_device_init: Failed to load TA instructions
+> rsi_91x: rsi_probe: Failed in device init
+> ------------[ cut here ]------------
+> ODEBUG: free active (active state 0) object type: timer_list hint:  
+> bl_cmd_timeout+0x0/0x50 drivers/net/wireless/rsi/rsi_91x_hal.c:577
+> WARNING: CPU: 0 PID: 563 at lib/debugobjects.c:325  
+> debug_print_object+0x162/0x250 lib/debugobjects.c:325
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 563 Comm: kworker/0:2 Not tainted 5.1.0-rc5-319617-gd34f951 #4
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+>   panic+0x29d/0x5f2 kernel/panic.c:214
+>   __warn.cold+0x20/0x48 kernel/panic.c:571
+>   report_bug+0x262/0x2a0 lib/bug.c:186
+>   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+>   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+>   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+> RIP: 0010:debug_print_object+0x162/0x250 lib/debugobjects.c:325
+> Code: dd c0 a8 b3 8e 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48  
+> 8b 14 dd c0 a8 b3 8e 48 c7 c7 40 9d b3 8e e8 8e c3 d2 fd <0f> 0b 83 05 f9  
+> 0f 5a 10 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+> RSP: 0018:ffff88809e1ef110 EFLAGS: 00010086
+> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff815b1d22 RDI: ffffed1013c3de14
+> RBP: 0000000000000001 R08: ffff88809e1cb100 R09: ffffed1015a03edb
+> R10: ffffed1015a03eda R11: ffff8880ad01f6d7 R12: ffffffff917e77c0
+> R13: ffffffff8161e740 R14: ffffffff96d3ea28 R15: ffff8880a5a75f60
+>   __debug_check_no_obj_freed lib/debugobjects.c:785 [inline]
+>   debug_check_no_obj_freed+0x2a3/0x42e lib/debugobjects.c:817
+>   slab_free_hook mm/slub.c:1426 [inline]
+>   slab_free_freelist_hook+0xfb/0x140 mm/slub.c:1456
+>   slab_free mm/slub.c:3003 [inline]
+>   kfree+0xce/0x280 mm/slub.c:3958
+>   rsi_probe+0xdf3/0x140d drivers/net/wireless/rsi/rsi_91x_sdio.c:1178
+>   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+>   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+>   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+>   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+>   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+>   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+>   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+>   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+>   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+>   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+>   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+>   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+>   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+>   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+>   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+>   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+>   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+>   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>   port_event drivers/usb/core/hub.c:5350 [inline]
+>   hub_event+0x1398/0x3b00 drivers/usb/core/hub.c:5432
+>   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+>   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+>   kthread+0x313/0x420 kernel/kthread.c:253
+>   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 > 
-> Huh, so how is this handled on other hardware? From what I can tell the UVC
-> gadget works with other drivers and I've not found any special handling for
-> this. Is there no packet sent or are 0-length packet generated implicitly
-> somewhere?
+> ======================================================
 
-I don't know.  You can ask the UVC maintainer for more information; my 
-guess is that it treats 0-length packets and missing packets the same.  
-After all, what else could it do?  Either way, there is no data.
+Let's try to test the below combined patch which fixes both the above
+use-after-free issue and a second one which syzbot is likely to hit once
+the first one is fixed. Now hopefully with a proper commit id:
 
-Alan Stern
+#syz test: https://github.com/google/kasan.git da06441bb4
+
+Johan
+
+
+From 0fff9e8be7d92c37c0a03b8f58db415eb042c325 Mon Sep 17 00:00:00 2001
+From: Johan Hovold <johan@kernel.org>
+Date: Thu, 28 Nov 2019 16:07:57 +0100
+Subject: [PATCH] rsi: fix use-after-free on failed probe and unbind
+
+Make sure to stop both URBs before returning after failed probe as well
+as on disconnect to avoid use-after-free in the completion handler.
+
+Reported-by: syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com
+Fixes: a4302bff28e2 ("rsi: add bluetooth rx endpoint")
+Fixes: dad0d04fa7ba ("rsi: Add RS9113 wireless driver")
+Cc: stable <stable@vger.kernel.org>     # 3.15
+Cc: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
+Cc: Amitkumar Karwar <amit.karwar@redpinesignals.com>
+Cc: Fariya Fatima <fariyaf@gmail.com>
+
+rsi: fix use-after-free on probe errors
+
+The driver would fail to stop the command timer in most error paths,
+something which specifically could lead to the timer being freed while
+still active on I/O errors during probe.
+
+Fix this by making sure that each function starting the timer also stops
+it in all relevant error paths.
+
+Reported-by: syzbot+1d1597a5aa3679c65b9f@syzkaller.appspotmail.com
+Fixes: b78e91bcfb33 ("rsi: Add new firmware loading method")
+Cc: stable <stable@vger.kernel.org>     # 4.12
+Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
+Cc: Amitkumar Karwar <amit.karwar@redpinesignals.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/net/wireless/rsi/rsi_91x_hal.c | 12 ++++++------
+ drivers/net/wireless/rsi/rsi_91x_usb.c | 18 +++++++++++++++++-
+ 2 files changed, 23 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/wireless/rsi/rsi_91x_hal.c b/drivers/net/wireless/rsi/rsi_91x_hal.c
+index f84250bdb8cf..6f8d5f9a9f7e 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_hal.c
++++ b/drivers/net/wireless/rsi/rsi_91x_hal.c
+@@ -622,6 +622,7 @@ static int bl_cmd(struct rsi_hw *adapter, u8 cmd, u8 exp_resp, char *str)
+ 	bl_start_cmd_timer(adapter, timeout);
+ 	status = bl_write_cmd(adapter, cmd, exp_resp, &regout_val);
+ 	if (status < 0) {
++		bl_stop_cmd_timer(adapter);
+ 		rsi_dbg(ERR_ZONE,
+ 			"%s: Command %s (%0x) writing failed..\n",
+ 			__func__, str, cmd);
+@@ -737,10 +738,9 @@ static int ping_pong_write(struct rsi_hw *adapter, u8 cmd, u8 *addr, u32 size)
+ 	}
+ 
+ 	status = bl_cmd(adapter, cmd_req, cmd_resp, str);
+-	if (status) {
+-		bl_stop_cmd_timer(adapter);
++	if (status)
+ 		return status;
+-	}
++
+ 	return 0;
+ }
+ 
+@@ -828,10 +828,9 @@ static int auto_fw_upgrade(struct rsi_hw *adapter, u8 *flash_content,
+ 
+ 	status = bl_cmd(adapter, EOF_REACHED, FW_LOADING_SUCCESSFUL,
+ 			"EOF_REACHED");
+-	if (status) {
+-		bl_stop_cmd_timer(adapter);
++	if (status)
+ 		return status;
+-	}
++
+ 	rsi_dbg(INFO_ZONE, "FW loading is done and FW is running..\n");
+ 	return 0;
+ }
+@@ -849,6 +848,7 @@ static int rsi_hal_prepare_fwload(struct rsi_hw *adapter)
+ 						  &regout_val,
+ 						  RSI_COMMON_REG_SIZE);
+ 		if (status < 0) {
++			bl_stop_cmd_timer(adapter);
+ 			rsi_dbg(ERR_ZONE,
+ 				"%s: REGOUT read failed\n", __func__);
+ 			return status;
+diff --git a/drivers/net/wireless/rsi/rsi_91x_usb.c b/drivers/net/wireless/rsi/rsi_91x_usb.c
+index 53f41fc2cadf..30bed719486e 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -292,6 +292,15 @@ static void rsi_rx_done_handler(struct urb *urb)
+ 		dev_kfree_skb(rx_cb->rx_skb);
+ }
+ 
++static void rsi_rx_urb_kill(struct rsi_hw *adapter, u8 ep_num)
++{
++	struct rsi_91x_usbdev *dev = (struct rsi_91x_usbdev *)adapter->rsi_dev;
++	struct rx_usb_ctrl_block *rx_cb = &dev->rx_cb[ep_num - 1];
++	struct urb *urb = rx_cb->rx_urb;
++
++	usb_kill_urb(urb);
++}
++
+ /**
+  * rsi_rx_urb_submit() - This function submits the given URB to the USB stack.
+  * @adapter: Pointer to the adapter structure.
+@@ -823,10 +832,13 @@ static int rsi_probe(struct usb_interface *pfunction,
+ 	if (adapter->priv->coex_mode > 1) {
+ 		status = rsi_rx_urb_submit(adapter, BT_EP);
+ 		if (status)
+-			goto err1;
++			goto err_kill_wlan_urb;
+ 	}
+ 
+ 	return 0;
++
++err_kill_wlan_urb:
++	rsi_rx_urb_kill(adapter, WLAN_EP);
+ err1:
+ 	rsi_deinit_usb_interface(adapter);
+ err:
+@@ -857,6 +869,10 @@ static void rsi_disconnect(struct usb_interface *pfunction)
+ 		adapter->priv->bt_adapter = NULL;
+ 	}
+ 
++	if (adapter->priv->coex_mode > 1)
++		rsi_rx_urb_kill(adapter, BT_EP);
++	rsi_rx_urb_kill(adapter, WLAN_EP);
++
+ 	rsi_reset_card(adapter);
+ 	rsi_deinit_usb_interface(adapter);
+ 	rsi_91x_deinit(adapter);
+-- 
+2.24.0
 
