@@ -2,134 +2,153 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81414C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C84C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9E720637
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D92215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IX9bG93T"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F7pTQilg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbfK1Cp5 (ORCPT
+        id S1727870AbfK1Cyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 21:45:57 -0500
-Received: from mail-eopbgr00053.outbound.protection.outlook.com ([40.107.0.53]:34253
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727822AbfK1Cp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 21:45:56 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fVfood2aQUI1yW+raag/gnoaPAXpS/abIZ3tOGBSklL39V/e4fc6nqJ9WzfNT17bpozfM8IKV1ui9aUjIc6oQohKcB7Qnp6bnrcmWsapQQUldkbwkf49dTGDG+XYTdQALRphEw/02YJksd5vdm8cKJNKTV1Ob9I4TjP/seeST7F+CqDIFpw+DWGs9CqQrwyQCOQGSlUK06m86UXXG86xFciTTD7T5/ZTvsKUX89bmqojli4KHxy/AfcKrqtKUTRjcm+154Jms2KmZPRkVxgGFtT2gJDyJjSu7qNhb5JdM77bbTy/UQKfNf+W4c7xKhI7kKqucP3VIVvCwfkHdDR13w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yBUAQMT1gSwo/n+MArZ5u3w2kFcpbY5wmXTNcnEBJA0=;
- b=WQTtRVA89x1peVP6VEedyMloytpJRayYtvov3GIidUS57/HwmOgGAfY7je276RKFSuEylX4vLejYuwkP01ImrDgV+fsX6X1z2YylxFpM9Lv24yKoO2oioadcpm6fJQKq1yBg8rF6iUcGGHN6vbTGGX4IyiWinNH9kA6Jm1KkyCFGW5oo2x3DGTPZiH15VrarKrKqcsDriwx96T2w7DfgLcZfVSQnm46SElRe/Kc/QMpWNUebRoRCn5jj1mRiG1dXVyMy2NTaq3PGhyHawZEoHQ4dSyicrHeM8JoplyIz4c2RZfrJOoDuG3H/OrHsEsHdIwaq/KtTjYlt9nIz3y+9jw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yBUAQMT1gSwo/n+MArZ5u3w2kFcpbY5wmXTNcnEBJA0=;
- b=IX9bG93T1UIY3R9RruqpqKPDdA12GB9gcLffVP+Xn0k0wzfFqtz1NpPBUcxUcPsJH3tdQ5AF9vsW/UUUoR9M2r7N84oKz27auIMJJOYVqWNaL6gd8c5s2dUnDMuCdfJ0CuCgTsdW6H8NySdnavmPSWbXzlIxzSX8uc/Md5ndMpg=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB6174.eurprd04.prod.outlook.com (20.179.26.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17; Thu, 28 Nov 2019 02:45:52 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2%3]) with mapi id 15.20.2495.014; Thu, 28 Nov 2019
- 02:45:52 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH] i2c: imx: Defer probing if EDMA not available
-Thread-Topic: [EXT] Re: [PATCH] i2c: imx: Defer probing if EDMA not available
-Thread-Index: AQHVpPH7P18PyO0DCUWpmTSTyww0uaeenlSAgAFCqIA=
-Date:   Thu, 28 Nov 2019 02:45:52 +0000
-Message-ID: <VI1PR04MB44315FD37E81C7EE6903D49FED470@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20191127071136.5240-1-peng.ma@nxp.com>
- <20191127072723.7twwbjafqdd22v6m@pengutronix.de>
-In-Reply-To: <20191127072723.7twwbjafqdd22v6m@pengutronix.de>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3119104b-41e1-4c2f-b935-08d773ad1570
-x-ms-traffictypediagnostic: VI1PR04MB6174:|VI1PR04MB6174:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB617469A3EF96EA05467C9371ED470@VI1PR04MB6174.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0235CBE7D0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(346002)(376002)(39860400002)(199004)(13464003)(189003)(6506007)(71190400001)(71200400001)(102836004)(478600001)(14454004)(3846002)(6116002)(6916009)(446003)(99286004)(45080400002)(11346002)(86362001)(7736002)(74316002)(305945005)(26005)(44832011)(256004)(316002)(33656002)(66066001)(54906003)(186003)(66476007)(55016002)(8676002)(81166006)(66556008)(81156014)(6436002)(76116006)(4326008)(66946007)(6246003)(6306002)(229853002)(52536014)(7696005)(2906002)(8936002)(5660300002)(25786009)(66446008)(9686003)(76176011)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6174;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BstHFuXmRU1H6QTiUyXPhOUnZ/jbHEggdePER10eX9NpHC3fx2RyDeEa9+dAUYRiq1KkRnNIlj07n30REnGIGOpzw64gUy8tPf1RhFRbrwd4Z0X1aB6WqZfmNvIOD5aPIn0cuGWMxeEop7gmE5cvgf4F8U9zzfY0QwuKwNM987vo2fqvP+UriUgG5HHWtBxQ5JGlw+MpJZbrXloa9gakxpfhmm7HhvsGtzAUS3Yfy7KDAF6WhqHvQFOTGZoG+w/W1RWzzvd/Ynz21xD0qv/2m3aJdcDzk1vlFIZvrM8kFX59Ge+ZEWQmJs2h6ZJQZaabqd2du+U8l2+pD4mH9SZXIdsH7m/h2yVaKAuNg+6Wk/q2GVjFyAK2JQvUqNcHeJ/wMjRKb+HfDCkAnfqQc7C8GzTrgVFqz2rfu6CfDbQTnCeZ9ntIWsJXk41+GdMZCbDMdMBoqBVhjW/r4OJPglRBw+FeHiZBZb0eCawDXp06vAI=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 27 Nov 2019 21:54:51 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44215 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbfK1Cyv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 21:54:51 -0500
+Received: by mail-pg1-f195.google.com with SMTP id e6so12109094pgi.11
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 18:54:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=InKhsbIaHjq4gFdOUDlKjqE9Q00XjHb4Vn+0PbEJFRs=;
+        b=F7pTQilgEs48MIpVo0p7X2jCwHTYYnyiR4APuDJngRJhkrgRNxoNY8XuCqMcc1Edfo
+         OaKNuJfPBBq+EUDv15Ywjv9iNEoWiTl9UCRu3z63T53Ziiold2pliNBTh5e6pq4N7YYn
+         hBWSgomiw+Z0b0d8Jg+VkmpR0uQJHaSw8M8aE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=InKhsbIaHjq4gFdOUDlKjqE9Q00XjHb4Vn+0PbEJFRs=;
+        b=LC+vGGi0+LhMyAxFeK2P6BDqfTQhcjSUlm9hvn8Iar/WeCdAW4/4DMaNxyHqEOS7sb
+         dE1KWgnY5H+vnylIkRbeTB/ZnTmEpRd89PmHi9VQqD8pTGDzN6OezCUNCUH1Cdo1zPiH
+         WBZQDaNFiAzsN49y618pkmNmAJjjDH2DTbRRT9ysSlpZB6A8KcREZDKlswl/2sQBKN49
+         pAwIWNkW/QBWityVREkOuFUglig2WpON2eSJAq2vNuTGTwLzDb+hT/hjfXJ1nEIzyanZ
+         9tfzJ4LL45mMOOV/GGYAfmNYFquOglDn7VAqsmDVm+sc5cZ3EbVKZaf0hcMt6R+Pg0wF
+         uzGA==
+X-Gm-Message-State: APjAAAXxN23JT8078UWXcQQ4h7KfYcYt8l+EVkCApgU9c31JCQx3Gy1r
+        kq/ei2FgXX0drLmES242Kgm8Ow==
+X-Google-Smtp-Source: APXvYqw2tbfS77QohNjoXgVmMFVco9eO58SzL9dYggFhVVyedVA/u4/TedPGOs86o3gQ/HzqJyZf7A==
+X-Received: by 2002:a63:d613:: with SMTP id q19mr8810073pgg.350.1574909690334;
+        Wed, 27 Nov 2019 18:54:50 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a66sm18031276pfb.166.2019.11.27.18.54.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 18:54:49 -0800 (PST)
+Date:   Wed, 27 Nov 2019 18:54:48 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        x86 <x86@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lkdtm/bugs: Avoid ifdefs for DOUBLE_FAULT
+Message-ID: <201911271852.4AA977DFD@keescook>
+References: <201911271748.A7C361E28@keescook>
+ <C0659748-A5B3-45D3-B752-88A643C66E46@amacapital.net>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3119104b-41e1-4c2f-b935-08d773ad1570
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Nov 2019 02:45:52.1621
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hV8eaLCANzbvn57v0flbsANuhJ/5EEVX0mwhzNTDvT/rEQ5b4PHa0TpvLy+WdmvK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6174
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <C0659748-A5B3-45D3-B752-88A643C66E46@amacapital.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFV3ZSBLbGVpbmUtS8O2bmln
-IDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+DQo+U2VudDogMjAxOeW5tDEx5pyIMjfm
-l6UgMTU6MjcNCj5UbzogUGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPg0KPkNjOiBsaW51eEByZW1w
-ZWwtcHJpdmF0LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IHNoYXduZ3VvQGtlcm5lbC5vcmc7
-DQo+cy5oYXVlckBwZW5ndXRyb25peC5kZTsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
-ZGwtbGludXgtaW14DQo+PGxpbnV4LWlteEBueHAuY29tPjsgZmVzdGV2YW1AZ21haWwuY29tOw0K
-PmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtaTJjQHZnZXIua2Vy
-bmVsLm9yZw0KPlN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0hdIGkyYzogaW14OiBEZWZlciBwcm9i
-aW5nIGlmIEVETUEgbm90IGF2YWlsYWJsZQ0KPg0KPkNhdXRpb246IEVYVCBFbWFpbA0KPg0KPkhl
-bGxvLA0KPg0KPk9uIFdlZCwgTm92IDI3LCAyMDE5IGF0IDA3OjEyOjA5QU0gKzAwMDAsIFBlbmcg
-TWEgd3JvdGU6DQo+PiBFRE1BIG1heSBiZSBub3QgYXZhaWxhYmxlIG9yIGRlZmVyZWQgZHVlIHRv
-IGRlcGVuZGVuY2llcyBvbiBvdGhlcg0KPj4gbW9kdWxlcywgSWYgdGhlc2Ugc2NlbmFyaW9zIGlz
-IGVuY291bnRlcmVkLCB3ZSBzaG91bGQgZGVmZXIgcHJvYmluZy4NCj4NCj5JJ2Qgd3JpdGU6DQo+
-DQo+ICAgICAgICBpMmM6IGlteDogRGVmZXIgcHJvYmluZyBpZiByZXF1ZXN0aW5nIERNQSB5aWVs
-ZHMgRVBST0JFX0RFRkVSDQo+DQo+ICAgICAgICBETUEgbWlnaHQgbm90IGJlIGF2YWlsYWJsZSB5
-ZXQgd2hlbiB0aGUgaTJjIGRldmljZSBwcm9iZXMuDQo+ICAgICAgICBQcm9wZXJseSBoYW5kbGUg
-RVBST0JFX0RFRkVSIG9uIGRtYSBjaGFubmVsIGFsbG9jYXRpb24gYnkNCj4gICAgICAgIHBhc3Np
-bmcgb24gdGhpcyBlcnJvci4NCj4NCj5JdCB3b3VsZCBiZSBuaWNlIHRvIHBvaW50IG91dCB3aGVy
-ZS9ob3cgdGhpcyBmYWlsZWQgZm9yIHlvdS4NCj4NCj5PdGhlciB0aGFuIHRoYXQgdGhpcyBsb29r
-cyByZWFzb25hYmxlLg0KPg0KSGksIFV3ZSwNCg0KVGhhbmtzIHZlcnkgbXVjaCBmb3IgeW91ciBj
-b21tZW50cywgVGhhdCBsb29rcyBnb29kLg0KDQpCZXN0IFJlZ2FyZHMsDQpQZW5nDQo+QmVzdCBy
-ZWdhcmRzDQo+VXdlDQo+DQo+LS0NCj5QZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCBVd2UgS2xlaW5lLUvDtm5pZw0KPnwNCj5JbmR1c3RyaWFsIExpbnV4IFNvbHV0
-aW9ucyAgICAgICAgICAgICAgICAgfA0KPmh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rp
-b24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRnd3dy5wDQo+ZW5ndXRyb25peC5kZSUy
-RiZhbXA7ZGF0YT0wMiU3QzAxJTdDcGVuZy5tYSU0MG54cC5jb20lN0M0MjZlYzRmDQo+NWYxZjE0
-NzUxMDIyZjA4ZDc3MzBiNDA0MyU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdD
-MA0KPiU3QzElN0M2MzcxMDQzNjQ0NzA1Njg3MjImYW1wO3NkYXRhPUpqRDJvdnk0b3hac2VVRVV3
-TkVSQVNCSkNrDQo+MG9NTFNwbGI4cVJUa2hhVEUlM0QmYW1wO3Jlc2VydmVkPTAgfA0K
+On Wed, Nov 27, 2019 at 06:15:17PM -0800, Andy Lutomirski wrote:
+> 
+> > On Nov 27, 2019, at 5:50 PM, Kees Cook <keescook@chromium.org> wrote:
+> > 
+> > ﻿On Wed, Nov 27, 2019 at 01:01:40PM -0800, Andy Lutomirski wrote:
+> >> 
+> >> 
+> >>>> On Nov 27, 2019, at 11:19 AM, Kees Cook <keescook@chromium.org> wrote:
+> >>> 
+> >>> ﻿LKDTM test visibility shouldn't change, so remove the ifdefs on
+> >>> DOUBLE_FAULT and make sure test failure doesn't crash the system.
+> >>> 
+> >>> Link: https://lore.kernel.org/lkml/20191127184837.GA35982@gmail.com
+> >>> Fixes: b09511c253e5 ("lkdtm: Add a DOUBLE_FAULT crash type on x86")
+> >>> Signed-off-by: Kees Cook <keescook@chromium.org>
+> >>> ---
+> >>> applies on top of tip/x86/urgent
+> >>> ---
+> >>> drivers/misc/lkdtm/bugs.c  | 8 +++++---
+> >>> drivers/misc/lkdtm/core.c  | 4 +---
+> >>> drivers/misc/lkdtm/lkdtm.h | 2 --
+> >>> 3 files changed, 6 insertions(+), 8 deletions(-)
+> >>> 
+> >>> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+> >>> index a4fdad04809a..22f5293414cc 100644
+> >>> --- a/drivers/misc/lkdtm/bugs.c
+> >>> +++ b/drivers/misc/lkdtm/bugs.c
+> >>> @@ -342,9 +342,9 @@ void lkdtm_UNSET_SMEP(void)
+> >>> #endif
+> >>> }
+> >>> 
+> >>> -#ifdef CONFIG_X86_32
+> >>> void lkdtm_DOUBLE_FAULT(void)
+> >>> {
+> >>> +#ifdef CONFIG_X86_32
+> >>>   /*
+> >>>    * Trigger #DF by setting the stack limit to zero.  This clobbers
+> >>>    * a GDT TLS slot, which is okay because the current task will die
+> >>> @@ -373,6 +373,8 @@ void lkdtm_DOUBLE_FAULT(void)
+> >>>   asm volatile ("movw %0, %%ss; addl $0, (%%esp)" ::
+> >>>             "r" ((unsigned short)(GDT_ENTRY_TLS_MIN << 3)));
+> >>> 
+> >>> -    panic("tried to double fault but didn't die\n");
+> >>> -}
+> >>> +    pr_err("FAIL: tried to double fault but didn't die!\n");
+> >>> +#else
+> >>> +    pr_err("FAIL: this test is only available on 32-bit x86.\n");
+> >>> #endif
+> >>> +}
+> >> 
+> >> I’m not familiar with the userspace tooling, but this seems unfortunate. The first FAIL is “the test case screwed up, and it’s a bug.”  The second FAIL is “not applicable to this system.”
+> >> 
+> >> 
+> >> ISTM simply not exposing the test on systems that don’t support makes sense. Can you clarify?
+> > 
+> > I don't like the tests liked in the DIRECT file to change from build to
+> > build (it should be stable per kernel version). Userspace needs to know
+> > how to evaluate the results of running each test, so in both cases, I
+> > consider it a failure: double fault didn't work or you tried to test
+> > double fault on an unsupported architecture. (The SMEP test works
+> > similarly.)
+> > 
+> 
+> 
+> So how is the test harness supposed
+> to distinguish success from failure?  If it printed UNSUPPORTED instead of FAIL, it would make more sense to me, but I’m not sure why that’s better than just not exposing it at all.
+
+If kernelci or similar ever mentions this as a problem for them, I'm
+happy to change it. I think it's an error to request this test in the
+wrong environment (because that implies userspace doesn't know how to
+evaluate the results). As I like it _available_ because having it
+missing makes the code ugly (lots of ifdefs) and provides to signal to
+userspace about it (EINVAL on the write to DIRECT) doesn't tell me if I
+have the wrong kernel version or the wrong architecture, etc. Since the
+tester needs to be parsing dmesg and system state (did it panic, etc), I
+much prefer keeping the signals there.
+
+-- 
+Kees Cook
