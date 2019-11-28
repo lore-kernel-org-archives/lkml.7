@@ -2,203 +2,70 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB448C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF8FC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A711E2084D
+	by mail.kernel.org (Postfix) with ESMTP id DB27B21739
 	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kZeh47RN"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="cFFKW6Kt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfK1Vnq (ORCPT
+        id S1726715AbfK1Vns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 16:43:46 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46455 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfK1Vnq (ORCPT
+        Thu, 28 Nov 2019 16:43:48 -0500
+Received: from sonic314-22.consmr.mail.bf2.yahoo.com ([74.6.132.196]:37297
+        "EHLO sonic314-22.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726558AbfK1Vns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 16:43:46 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k1so5046758pga.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 13:43:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=K9FrLAOFp0g+hrdsabPVchjdViFjj8h0GNkeqZ4HQlM=;
-        b=kZeh47RNC2BtHUa2wCS8rsZONatpvYYLR3K646pyo72NUYaJ/cDpbMeVmz5Yvj0lCo
-         1g50TyX6V1STK60yAw+cgJZzEYfha6eRSBmYJKBnzZxOAzADErDowc173BZOHaPbENxU
-         6XEK3SKBHCw4edPwidyFtxBU1GPm2Fc8/d6gF9GtscAYtRINmE3LoMEADij0to1zXv/u
-         FDHww8EWCZu4DbibNnBJyYzbZkmBFEpKsZesGrvC9mPqVDMSsSLkonwZ+WIsJUl0grPT
-         fpQubcqqSy7C7c9k6rCEm4zTvqF7lbdNMowTyWWA8U6O6FQ1eYS//74MurZ87a9CHWGH
-         dCwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K9FrLAOFp0g+hrdsabPVchjdViFjj8h0GNkeqZ4HQlM=;
-        b=cHOmDq0plKbOHyYMKEBk4UizkhfyDJfEFFEQefsPqsdNpC5fd/kabXnSj0j/a7yhll
-         wCKTN/z73nKqOEWjKFuIvWn5Zv9NJ61NisNOCdDMln4u0W9xaCsHtn1l96r+N5CJ/tQd
-         qhFjnYAjPWBS9wIXM5f9kDaRXpVfP3rBPT2hBmNM0nhSwDLOgwh8HaobNdPmg5J/IAck
-         BWFnDdQZ+wW3WnHw/OmbuBxBaOrF79Snh5Hl5c2cMOf5bIlZLeJ3Kh0Fghpqtkjd7M+7
-         h9NG9YSKzr7Jftg4fhR8asTIvZ/KpNneC4/kTdrVl7+U/2n0BC1WKoSG26Vk4otTLbj4
-         t9jg==
-X-Gm-Message-State: APjAAAVXpfuwCw8QDM1Hw2QYQman45srNX+RSxxZzMSnQJXCKxThDw2t
-        CkdG79PmdZDmds4ZPqcyXlP+4A==
-X-Google-Smtp-Source: APXvYqxXK5VlxZHgjn3ehpw/1a/UvQMzGfyMHy3vxqme3i6QHac5tFm6KotaQWcLg7ThtP7KXY6L6w==
-X-Received: by 2002:aa7:90d0:: with SMTP id k16mr55284524pfk.131.1574977423508;
-        Thu, 28 Nov 2019 13:43:43 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o23sm21753750pgj.90.2019.11.28.13.43.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 13:43:42 -0800 (PST)
-Date:   Thu, 28 Nov 2019 13:43:39 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH 1/3] drivers: thermal: tsens: Add critical interrupt
- support
-Message-ID: <20191128214339.GL82109@yoga>
-References: <cover.1573499020.git.amit.kucheria@linaro.org>
- <4b949a4f401a7f9d403ed0f0c16c7feb083f3524.1573499020.git.amit.kucheria@linaro.org>
- <20191112193852.GC3140946@builder>
- <CAHLCerN1VXhU0VQWN15PB2R16mkCV0i6Mn3+LW=xXtB5_7Z6JQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHLCerN1VXhU0VQWN15PB2R16mkCV0i6Mn3+LW=xXtB5_7Z6JQ@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Thu, 28 Nov 2019 16:43:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1574977427; bh=JJX53ZDVgTgnh3OnafAf9V2Zn5t6h/TnhI0z0ZSSrJE=; h=From:Subject:Date:To:References:From:Subject; b=cFFKW6KtwqZQLc92mm0z/Pr10I/cXyjDFxdjG49h781PC0+m89VTw9/bi/7EyaA5HcPWokcJV/zVqNHHQD2fPN1E2XYJkAuKWtB73jZVDGJ6y37pB7yrxUW+PJMUIu6vbW2S+nIklovJr7lXxNDcm/XB0JuzCjGUAHefI3n5mrLIen2k5db13BqXt6ifzldgmpNkFB3Kvq3UUSFlhFhDXwNnLPnWGi/Qar7GEWnnGDn+tR/Yph46kTqHfaO6pk2cTHmaufOcSOS3uDgSzyalCZoQa3/dSUowculyvfPV9igmh5UoyG7rCP/3XplK/A2O8emjLMTzUDz32HUJwn6Clw==
+X-YMail-OSG: nyen1NUVM1mtumbf5cI5zYfS5DdYJZhbS3fHrCi8b0ql4ryOG9N9MAG3Ywboxmw
+ svb0eAv6XNW959VIoqebxi.rIG2nlh2m5SUGMKPqHsRMy_qUnS9G0hN5Ys41uqdZM6b0ReFxQAcn
+ p2.HOlrHzGdRocyUMqk..jF0QskGL6EY4O80oPGBCZLVnG6sbVfVFi66kbMIktDkFJIc3UsUK3Rg
+ y6vqPNNr86UhVOwTlbITmSSsdUiNCvkdWeAdtPLl8Kl0dtFzQ6uiE0aAJzVdACYrG2VDbTxVSfCo
+ 8iLE0ylTUHeWuVYd.jz4.fo43c_8YisGhryMlRGheEUJleaEuqAWqgP.XRvOH3jxYOSei2a4_qmN
+ lHFPkZZOywYBrE.4X.lJ1zOQNGgvx2lDdOAwX5w5dysApOlqG.HctEnY0px2cz6nCrdAPVogMyzQ
+ QtE.kAEQ8goNnNNuf2lg_g9JXCqeWfwOCE7GQKw46Fg2I_R9W0fX.TiIQpg96tWttumfoKOb45hX
+ OdEWS4HI27POlIR_mCEUmJzBn.GVEQqFwDMJZGg7bBF00jzou5qg37RBBYkR9ZWaATOFlBa8CMYM
+ 4IWPxaOtjDP5SBSzahwMmreKht2wk9RF3kGriD.bJvmCSZ3H3C.gpcj526RoexeMv6XXlwm9ITlI
+ NoxSFwVIYM400qzZQYxKSuAD5yts8t6BinKIRvR8EBEx.DQj95a_RVE4lCwRmbIT2Co4KUrqETPM
+ .vrlZ5fAC.BetxUQWYo.TIJe8Kk7narwfxQVVqLiEXBTPcRvO6ORxnac8IfPf8WH2O8C6MANBJTQ
+ wgbnfXHAKkDiBS3UhqSeDNk8pD4JujG46Uhqx9efU3NNVBY2pt0fjs22p1J9ua3G4mfZ9YyDe.TE
+ G387HH_CNF29LPz0ZdL9.LM4bOc92mwcuwXWkE0tIDYuavR6LmWMkmjqYyoZ8gQYHmHQNdv9Eq5X
+ jloIzJH56xwKU1I8gyG6u531_iEvzE82mTsjyqQyzXmKwERLHRxt4IO6JPJu00wyxw6VbJJLV9gZ
+ AvzwUA0D0eO5H_ZCbq6E11QmIyQIFePyiJYav_zQtisRDfG_glwryAoT6F_Irsuo6B059uIIeZiY
+ chEh9iSLxyUuFboZ_wFYK92l4vO3iXfL02zOPxz8ZEfzHWGO.py6y9n5G0y__siLuSFkNC5SQoVx
+ e8y0pLeu3.jVaIIKfNZXhsIJ7joQQFzgpaA7xM9mufiYgSvtT2fAH1eYv2oXuQCYgMnZM_KGWcLt
+ VaOhue3IwegaDvPtfIsWLAuUwzjAPJxduCnLt5_A71HuPGtyAooCGcGE.9kNbNgKO6_xtHcw_79q
+ BbJIEjXedTNJuH_i344Nm6v.GDzx7YM3Vmak3fdkVKT_779v5fFP.Xi_OQ_eaZEc1t1lgwCJNin.
+ XGp_MVeZnm.cbFOYUDS92yBSXeQ--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.bf2.yahoo.com with HTTP; Thu, 28 Nov 2019 21:43:47 +0000
+Received: by smtp422.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 65a850a23e72b4d8af12bb5f0e296bc3;
+          Thu, 28 Nov 2019 21:43:45 +0000 (UTC)
+From:   "admin ." <admin@0x55-0x4e-0x49-0x45-0x46.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: You can use c++ to compile the linux kernel!!
+Message-Id: <55D04AA9-FA9B-4EFE-A469-1940FCBC94B4@0x55-0x4e-0x49-0x45-0x46.com>
+Date:   Thu, 28 Nov 2019 13:43:36 -0800
+To:     LKML <linux-kernel@vger.kernel.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+References: <55D04AA9-FA9B-4EFE-A469-1940FCBC94B4.ref@0x55-0x4e-0x49-0x45-0x46.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28 Nov 10:46 PST 2019, Amit Kucheria wrote:
+Just symlink c++ to cc, it works partially on my computer
 
-> On Wed, Nov 13, 2019 at 1:08 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > On Mon 11 Nov 11:21 PST 2019, Amit Kucheria wrote:
-> >
-> > > TSENS IP v2.x adds critical threshold interrupt support for each sensor
-> > > in addition to the upper/lower threshold interrupt. Add support in the
-> > > driver.
-> > >
-> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > ---
-> > >  drivers/thermal/qcom/tsens-common.c | 129 ++++++++++++++++++++++++++--
-> > >  drivers/thermal/qcom/tsens-v2.c     |   8 +-
-> > >  drivers/thermal/qcom/tsens.c        |  21 +++++
-> > >  drivers/thermal/qcom/tsens.h        |  73 ++++++++++++++++
-> > >  4 files changed, 220 insertions(+), 11 deletions(-)
-> > >
-> > > diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-> > > index 4359a4247ac3..2989cb952cdb 100644
-> > > --- a/drivers/thermal/qcom/tsens-common.c
-> > > +++ b/drivers/thermal/qcom/tsens-common.c
-> > > @@ -23,6 +23,10 @@
-> > >   * @low_thresh:     lower threshold temperature value
-> > >   * @low_irq_mask:   mask register for lower threshold irqs
-> > >   * @low_irq_clear:  clear register for lower threshold irqs
-> > > + * @crit_viol:      critical threshold violated
-> >
-> > "violated" as in "temperature is above crit_thresh"?
-> 
-> Yes.
-> 
-> >
-> > > + * @crit_thresh:    critical threshold temperature value
-> > > + * @crit_irq_mask:  mask register for critical threshold irqs
-> > > + * @crit_irq_clear: clear register for critical threshold irqs
-> > >   *
-> > [..]
-> > > diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-> > > index 7d317660211e..784c4976c4f9 100644
-> > > --- a/drivers/thermal/qcom/tsens.c
-> > > +++ b/drivers/thermal/qcom/tsens.c
-> > > @@ -121,6 +121,27 @@ static int tsens_register(struct tsens_priv *priv)
-> > >
-> > >       enable_irq_wake(irq);
-> > >
-> > > +     if (tsens_version(priv) > VER_1_X) {
-> > > +             irq = platform_get_irq_byname(pdev, "critical");
-> > > +             if (irq < 0) {
-> >
-> > Treating this as a fatal error breaks backwards compatibility with
-> > current devicetree; and even within your patch series, tsens should fail
-> > to probe between this patch and the application of patch 3.
-> 
-> Good catch.
-> 
-> > Please flip this around and do:
-> >
-> > irq = platform_get_irq_byname(pdev, "critical");
-> > if (irq >= 0 && tsens_version(priv) > VER_1_X) {
-> >         request_irq()...
-> > }
-> 
-> Won't this still break with current devicetree since irq < 0 until
-> patch 3? Or are you saying we shouldn't check for
-> platform_get_irq_byname() failure?
-> 
+That means classes, smart pointers, all that junk
 
-I'm trying to say that dtsi without "critical" defined should cause the
-driver to simply skip this segment, not fail to initialize.
+Right?
 
-> I can see two ways out:
-> 1. We patch the dtsi before the code change.
-
-You're expected to maintain backwards compatibility with existing dtb
-files out there. The support for critical interrupt is an additional
-feature, so you should be able to do this by detecting if "critical" is
-defined (e.g. by checking the return value of
-platform_get_irq_byname()).
-
-> 2. We make critical interrupt failure non-fatal by just printing some
-> messages and still returning success.
-> 
-
-Try to make it as specific as possible (without adding a bunch of code)
-and throw in a dev_info() if no "critical" is found.
-
-Regards,
-Bjorn
-
-> Regards,
-> Amit
-> 
-> 
-> > > +                     ret = irq;
-> > > +                     goto err_put_device;
-> > > +             }
-> > > +
-> > > +             ret = devm_request_threaded_irq(&pdev->dev, irq,
-> > > +                                             NULL, tsens_critical_irq_thread,
-> > > +                                             IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-> > > +                                             dev_name(&pdev->dev), priv);
-> > > +             if (ret) {
-> > > +                     dev_err(&pdev->dev, "%s: failed to get critical irq\n", __func__);
-> > > +                     goto err_put_device;
-> > > +             }
-> > > +
-> > > +             enable_irq_wake(irq);
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +
-> > >  err_put_device:
-> > >       put_device(&pdev->dev);
-> > >       return ret;
-> >
-> > Regards,
-> > Bjorn
+Unidef 
