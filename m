@@ -2,130 +2,229 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13667C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4419CC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCB4215A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p836t4C/"
+	by mail.kernel.org (Postfix) with ESMTP id 265C02158A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfK1B05 (ORCPT
+        id S1727625AbfK1BkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 20:26:57 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34908 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbfK1B04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 20:26:56 -0500
-Received: by mail-qk1-f195.google.com with SMTP id v23so13529564qkg.2;
-        Wed, 27 Nov 2019 17:26:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:message-id;
-        bh=v8LU2xOwjieQDa2R6tGnD5twL2ibcfNQBKehMMo1pOM=;
-        b=p836t4C/Mb+9Qvhxsav8CCyUyHlm3wBMtfPfrn7bYMeeIejCGlv2YUMbpMA0MK1L/+
-         VXLxbYJ1NRwLdz4WkoVp/VfhBcqoiVEyHiO7HWdo6shS9Tl5xZzi0OMXtAc3vfX8T99h
-         M5iouGVNciEqs7b5tcU+peOjlNwiRSnt8kZXmpIwK0Ur818WjukKiDKLjldfYPg+FV72
-         xwAZ6ZIEcbcyos8SKyHW7pFoJFtzmgL1p8HGIUpHLHd2dqkmRjrT1TmtSvbIT80C2myy
-         ArzTiwQSWj70wXmczp2vX7IPGgt7mx746sp/kEm5s0K2x9XVmeuEHXoYAcAEChc6dcfN
-         PmIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:message-id;
-        bh=v8LU2xOwjieQDa2R6tGnD5twL2ibcfNQBKehMMo1pOM=;
-        b=SjPM2F7Q+zOq9wFKOTsQwHw6zlo9qWtMowfHTpHokZzg7FB3qbQfAIqVb//vi0hyfp
-         i9+WWPFndCBxGyNPNUFdJ2sVh0qVAa2DF0vnYtRtnvRJ7UdYpoPOTRjRm1sTnDtZNRe/
-         3icA/6Xdz17fB5QUfPZemWwMutbzL8U7yRkLg0Yf9pXmFqFXg8i8VEyAEtOBz2aloyuR
-         gdXA1O5TjFsu2SOMOA+xJ/2kgF1P1yxMU8LGVaAkxXx6r4z0L/6kM9yrbN5NKxcFRWJW
-         9CxpXTwNiqhvCiCIdQn4OpDqptDokcpnRVSNN1B/Nci54iDOFFmDpOfwzwMm2aDl7azw
-         v4rA==
-X-Gm-Message-State: APjAAAX7kGd00KlJt6D+7hwSiuM0HiASiGUWslCHKonFJw5J2fL3WddM
-        87g5D0zkwez6hZRK5qsabLk=
-X-Google-Smtp-Source: APXvYqxB/VbbPWmpBnSxp8Xt72z5BjnOGfBI/88tlr4XpstuxJxLusLIEXERyHyxku4qUIZyCYEegw==
-X-Received: by 2002:a37:b12:: with SMTP id 18mr7235035qkl.387.1574904413916;
-        Wed, 27 Nov 2019 17:26:53 -0800 (PST)
-Received: from [192.168.86.249] ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id o33sm9020218qta.27.2019.11.27.17.26.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Nov 2019 17:26:53 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Date:   Wed, 27 Nov 2019 22:27:31 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAADnVQLFVH000BJM4cN29kcC+KKDmVek3jaen3cZz2=12jP58g@mail.gmail.com>
-References: <87imn6y4n9.fsf@toke.dk> <20191126183451.GC29071@kernel.org> <87d0dexyij.fsf@toke.dk> <20191126190450.GD29071@kernel.org> <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com> <20191126221018.GA22719@kernel.org> <20191126221733.GB22719@kernel.org> <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com> <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net> <20191126155228.0e6ed54c@cakuba.netronome.com> <20191127013901.GE29071@kernel.org> <CAADnVQJCMpke49NNzy33EKdwpW+SY1orTm+0f0b-JuW8+uA7Yw@mail.gmail.com> <2993CDB0-8D4D-4A0C-9DB2-8FDD1A0538AB@kernel.org> <CAADnVQJc2cBU2jWmtbe5mNjWsE67DvunhubqJWWG_gaQc3p=Aw@mail.gmail.com> <58CA150B-D006-48DF-A279-077BA2FFD6EC@kernel.org> <CAADnVQLFVH000BJM4cN29kcC+KKDmVek3jaen3cZz2=12jP58g@mail.gmail.com>
+        Wed, 27 Nov 2019 20:40:21 -0500
+Received: from mga02.intel.com ([134.134.136.20]:10954 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727109AbfK1BkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 20:40:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 17:40:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,251,1571727600"; 
+   d="scan'208";a="221166461"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga002.jf.intel.com with ESMTP; 27 Nov 2019 17:40:18 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v4 00/19] x86/cpu: Clean up handling of VMX features
+Date:   Wed, 27 Nov 2019 17:39:57 -0800
+Message-Id: <20191128014016.4389-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-CC:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        =?ISO-8859-1?Q?Toke_H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Message-ID: <D93F5A0F-7675-4A66-B90A-C6091F995BE5@kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On November 27, 2019 10:20:17 PM GMT-03:00, Alexei Starovoitov <alexei=2Est=
-arovoitov@gmail=2Ecom> wrote:
->On Wed, Nov 27, 2019 at 5:17 PM Arnaldo Carvalho de Melo
-><arnaldo=2Emelo@gmail=2Ecom> wrote:
->>
->> On November 27, 2019 9:59:15 PM GMT-03:00, Alexei Starovoitov
-><alexei=2Estarovoitov@gmail=2Ecom> wrote:
->> >On Wed, Nov 27, 2019 at 4:50 PM Arnaldo Carvalho de Melo
->> ><arnaldo=2Emelo@gmail=2Ecom> wrote:
->> >>
->> >> Take it as one, I think it's what should have been in the cset it
->is
->> >fixing, that way no breakage would have happened=2E
->> >
->> >Ok=2E I trimmed commit log and applied here:
->>
->>https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/bpf/bpf=2Egit/commit=
-/?id=3D1fd450f99272791df8ea8e1b0f5657678e118e90
->> >
->> >What about your other fix and my suggestion there?
->> >(__u64) cast instead of PRI ?
->> >We do this already in two places:
->> >libbpf=2Ec:                shdr_idx, (__u64)sym->st_value);
->> >libbpf=2Ec:             (__u64)sym=2Est_value,
->GELF_ST_TYPE(sym=2Est_info),
->>
->>
->> I'm using the smartphone now, but I thought you first suggested using
->a cast to long, if you mean using %llu + cast to __u64, then should be
->was ugly as using PRI, IOW, should work on both 64 bit and 32 bit=2E :-)
->
->Yes=2E I suggested (long) first, but then found two cases in libbpf that
->solve this with (__u64),
->so better to stick to that for consistency=2E
+Clean up a handful of interrelated warts in the kernel's handling of VMX:
 
-If it's already being used elsewhere in lubbpf, it was tested already with=
- the build containers and since nobody complained, go with it :-)
+  - Enable VMX in IA32_FEATURE_CONTROL during boot instead of on-demand
+    during KVM load to avoid future contention over IA32_FEATURE_CONTROL.
 
-- Arnaldo
+  - Rework VMX feature reporting so that it is accurate and up-to-date,
+    now and in the future.
+
+  - Consolidate code across CPUs that support VMX.
+
+This series stems from two separate but related issues.  The first issue,
+pointed out by Boris in the SGX enabling series[1], is that the kernel
+currently doesn't ensure the IA32_FEATURE_CONTROL MSR is configured during
+boot.  The second issue is that the kernel's reporting of VMX features is
+stale, potentially inaccurate, and difficult to maintain.
+
+v4:
+  - Rebase to tip/master, 8a1b070333f4 ("Merge branch 'WIP.x86/mm'")
+  - Rename everything feature control related to IA32_FEAT_CTL. [Boris]
+  - Minor coding style tweaks [Boris and Jarkko].
+  - Print VMX feature flags in "vmx flags" to avoid polluting "flags",
+    but keep printing the current synthetic VMX in "flags" so as not to
+    break the ABI. [Boris]
+  - Don't bother printing an error message in the extremely unlikely
+    event VMX is supported but IA32_FEAT_CTL doesn't exist. [Boris]
+  - Beef up a few changelogs and comments. [Boris]
+  - Add a comment in the LMCE code for the new WARN. [Jarkko]
+  - Check CONFIG_KVM_INTEL instead of CONFIG_KVM when deciding whether
+    or not to enable VMX.
+  - Add a patch to introduce X86_FEATURE_MSR_IA32_FEAT_CTL.
+  - Dropped Jim's Reviewed-by from a few KVM patches due to the above
+    addition.
+
+v3:
+  - Rebase to tip/master, ceceaf1f12ba ("Merge branch 'WIP.x86/cleanups'").
+  - Rename the feature control MSR bit defines [Boris].
+  - Rewrite the error message displayed when reading feature control MSR
+    faults on a VMX capable CPU to explicitly state that it's likely a
+    hardware or hypervisor issue [Boris].
+  - Collect a Reviewed-by for the LMCE change [Boris].
+  - Enable VMX in feature control (if it's unlocked) if and only if
+    KVM is enabled [Paolo].
+  - Remove a big pile of redudant MSR defines from the KVM selftests that
+    was discovered when renaming the feature control defines.
+  - Fix a changelog typoe [Boris].
+
+v2:
+  - Rebase to latest tip/x86/cpu (1edae1ae6258, "x86/Kconfig: Enforce...)
+  - Collect Jim's reviews.
+  - Fix a typo in setting of EPT capabilities [TonyWWang-oc].
+  - Remove defines for reserved VMX feature flags [Paolo].
+  - Print the VMX features under "flags" and maintain all existing names
+    to be backward compatible with the ABI [Paolo].
+  - Create aggregate APIC features to report FLEXPRIORITY and APICV, so
+    that the full feature *and* their associated individual features are
+    printed, e.g. to aid in recognizing why an APIC feature isn't being
+    used.
+  - Fix a few copy paste errors in changelogs.
+
+
+v1 cover letter:
+
+== IA32_FEATURE_CONTROL ==
+Lack of IA32_FEATURE_CONTROL configuration during boot isn't a functional
+issue in the current kernel as the majority of platforms set and lock
+IA32_FEATURE_CONTROL in firmware.  And when the MSR is left unlocked, KVM
+is the only subsystem that writes IA32_FEATURE_CONTROL.  That will change
+if/when SGX support is enabled, as SGX will also want to fully enable
+itself when IA32_FEATURE_CONTROL is unlocked.
+
+== VMX Feature Reporting ==
+VMX features are not enumerated via CPUID, but instead are enumerated
+through VMX MSRs.  As a result, new VMX features are not automatically
+reported via /proc/cpuinfo.
+
+An attempt was made long ago to report interesting and/or meaningful VMX
+features by synthesizing select features into a Linux-defined cpufeatures
+word.  Synthetic feature flags worked for the initial purpose, but the
+existence of the synthetic flags was forgotten almost immediately, e.g.
+only one new flag (EPT A/D) has been added in the the decade since the
+synthetic VMX features were introduced, while VMX and KVM have gained
+support for many new features.
+
+Placing the synthetic flags in x86_capability also allows them to be
+queried via cpu_has() and company, which is misleading as the flags exist
+purely for reporting via /proc/cpuinfo.  KVM, the only in-kernel user of
+VMX, ignores the flags.
+
+Last but not least, VMX features are reported in /proc/cpuinfo even
+when VMX is unusable due to lack of enabling in IA32_FEATURE_CONTROL.
+
+== Caveats ==
+All of the testing of non-standard flows was done in a VM, as I don't
+have a system that leaves IA32_FEATURE_CONTROL unlocked, or locks it with
+VMX disabled.
+
+The Centaur and Zhaoxin changes are somewhat speculative, as I haven't
+confirmed they actually support IA32_FEATURE_CONTROL, or that they want to
+gain "official" KVM support.  I assume they unofficially support KVM given
+that both CPUs went through the effort of enumerating VMX features.  That
+in turn would require them to support IA32_FEATURE_CONTROL since KVM will
+fault and refuse to load if the MSR doesn't exist.
+
+[1] https://lkml.kernel.org/r/20190925085156.GA3891@zn.tnic
+
+Sean Christopherson (19):
+  x86/msr-index: Clean up bit defines for IA32_FEATURE_CONTROL MSR
+  selftests: kvm: Replace manual MSR defs with common msr-index.h
+  tools arch x86: Sync msr-index.h from kernel sources
+  x86/intel: Initialize IA32_FEAT_CTL MSR at boot
+  x86/mce: WARN once if IA32_FEAT_CTL MSR is left unlocked
+  x86/centaur: Use common IA32_FEAT_CTL MSR initialization
+  x86/zhaoxin: Use common IA32_FEAT_CTL MSR initialization
+  x86/cpu: Clear VMX feature flag if VMX is not fully enabled
+  x86/vmx: Introduce VMX_FEATURES_*
+  x86/cpu: Detect VMX features on Intel, Centaur and Zhaoxin CPUs
+  x86/cpu: Print VMX flags in /proc/cpuinfo using VMX_FEATURES_*
+  x86/cpu: Set synthetic VMX cpufeatures during init_ia32_feat_ctl()
+  x86/cpufeatures: Add flag to track whether MSR IA32_FEAT_CTL is
+    configured
+  KVM: VMX: Drop initialization of IA32_FEAT_CTL MSR
+  KVM: VMX: Use VMX feature flag to query BIOS enabling
+  KVM: VMX: Check for full VMX support when verifying CPU compatibility
+  KVM: VMX: Use VMX_FEATURE_* flags to define VMCS control bits
+  perf/x86: Provide stubs of KVM helpers for non-Intel CPUs
+  KVM: VMX: Allow KVM_INTEL when building for Centaur and/or Zhaoxin
+    CPUs
+
+ MAINTAINERS                                   |   2 +-
+ arch/x86/Kconfig.cpu                          |   8 +
+ arch/x86/boot/mkcpustr.c                      |   1 +
+ arch/x86/include/asm/cpufeatures.h            |   1 +
+ arch/x86/include/asm/msr-index.h              |  14 +-
+ arch/x86/include/asm/perf_event.h             |  22 +-
+ arch/x86/include/asm/processor.h              |   4 +
+ arch/x86/include/asm/vmx.h                    | 105 +--
+ arch/x86/include/asm/vmxfeatures.h            |  86 +++
+ arch/x86/kernel/cpu/Makefile                  |   6 +-
+ arch/x86/kernel/cpu/centaur.c                 |  35 +-
+ arch/x86/kernel/cpu/common.c                  |   3 +
+ arch/x86/kernel/cpu/cpu.h                     |   4 +
+ arch/x86/kernel/cpu/feat_ctl.c                | 140 ++++
+ arch/x86/kernel/cpu/intel.c                   |  49 +-
+ arch/x86/kernel/cpu/mce/intel.c               |  15 +-
+ arch/x86/kernel/cpu/mkcapflags.sh             |  15 +-
+ arch/x86/kernel/cpu/proc.c                    |  15 +
+ arch/x86/kernel/cpu/zhaoxin.c                 |  35 +-
+ arch/x86/kvm/Kconfig                          |  10 +-
+ arch/x86/kvm/vmx/nested.c                     |   4 +-
+ arch/x86/kvm/vmx/vmx.c                        |  67 +-
+ arch/x86/kvm/vmx/vmx.h                        |   2 +-
+ arch/x86/kvm/x86.c                            |   2 +-
+ tools/arch/x86/include/asm/msr-index.h        |  30 +-
+ tools/power/x86/turbostat/turbostat.c         |   4 +-
+ tools/testing/selftests/kvm/Makefile          |   4 +-
+ .../selftests/kvm/include/x86_64/processor.h  | 726 +-----------------
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c  |   8 +-
+ 29 files changed, 431 insertions(+), 986 deletions(-)
+ create mode 100644 arch/x86/include/asm/vmxfeatures.h
+ create mode 100644 arch/x86/kernel/cpu/feat_ctl.c
+
+-- 
+2.24.0
 
