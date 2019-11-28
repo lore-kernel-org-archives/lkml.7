@@ -6,46 +6,45 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E42BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126E2C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05BAA2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CBD2176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfK1IfJ (ORCPT
+        id S1727557AbfK1IfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 03:35:09 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:56571 "EHLO
+        Thu, 28 Nov 2019 03:35:11 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:37620 "EHLO
         mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbfK1IfI (ORCPT
+        with ESMTP id S1727484AbfK1IfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:35:08 -0500
-Received: by mail-il1-f200.google.com with SMTP id e5so21440139ile.23
+        Thu, 28 Nov 2019 03:35:10 -0500
+Received: by mail-il1-f200.google.com with SMTP id q1so21674649ile.4
         for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:35:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=iftIAuBJlzuFdFQ/gen9t495x074EdBNfttXbnSun7c=;
-        b=VcZxdhsoLjUXyypS/UVoaEqK4OMmc4Cav8lpuPWjl/258XKZirXIFHAZuHAn+QRJY8
-         z5oNTNIDmVsaFWL5zvbRNkgNXZYzRmBKvQ5CaR4JumaQV8dqnFFCDpsK8VMpwsSYZ/uf
-         8amhkzOv1G3KJwmvy9ddEe0uytFSaIUaydPm1QwomhcnhqzBk39n4xYuspE0CEWHdick
-         tPL064t2avy5uNQtfoINlESZt/uSxKcIYIWXrecX1wBKeXUIEpCRKL+s2gMCyyvmR7Fn
-         p3ppLPWHh28fCQBiFyrrRsCvvQZ2K6DXugwjFBGhfEl7/WTTFC57hfSykB9LsO+5z0xt
-         GLqA==
-X-Gm-Message-State: APjAAAXZ2uZbNeEU2UHPLrHXjxUSkrei2rxMYNrW5eyRb/8bOsS5PWH4
-        0va0ExG7fARfKf/qQPn6HXbJd18Nzt7DmYJOD+WWVbSUXmun
-X-Google-Smtp-Source: APXvYqwc47ILKJSLeuogY0PCo5YYTgjn4x40uA/q653uZTlpFte125o18QRBlnDlCaHQrv4yol95s47lHqrmG2zlnnpSVVLS5Dm3
+        bh=Gz18FyUwK1aVWTzv+JEr+hzUFjvffQzf1zVUbXCWy7c=;
+        b=ronNVygjfK4Gdh5Vd5P6Ub7SQy7cDom7bBFfuBTM8u21LnZAH9qY37NmNKJE8TMV1a
+         CH07LZYQxllA/WwY4s745UjTiWhmldZSn4ztPIOtij8b7WpqfnxT+g3k/WpvHeoH0V4z
+         HniUjLNEdGn4WSOKSAyItXZIwg/PMptZxShDkM9bu5kJUQmoEVql9EDly+BuXeCBMEfs
+         E/QxWrNSykdj5+3oTil7NXEnJw5N432OgDXbiskk0dnJHWyEr6EX9H3CReczSSX7Kvb/
+         oH76JRaKYJ9Xbt0PLyeUaXGiVDalnUiEJDK0tnz8OcrCZKRm7vc/C/PtCSvFwJb8tBG0
+         Z20g==
+X-Gm-Message-State: APjAAAVTLCUJQuPq1Splk49XMYWtrooJ5RdJF1/w59XPw8ULNbP/EnMf
+        iu9GgW0bPfs743YmJ1j2XAIQQNzthXx8dq7SZz94uThbdmYu
+X-Google-Smtp-Source: APXvYqzmfsPcBS6Zs8M5bkFi6krUOcyZS4k6U40mmu3gZ05AEbMj9csEH//3n0PH2VWL5xcZlO+D5G64bgHQG6QIGb20vqYiHxvd
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9294:: with SMTP id s20mr4653198iom.157.1574930108203;
+X-Received: by 2002:a92:8459:: with SMTP id l86mr49733771ild.236.1574930108011;
  Thu, 28 Nov 2019 00:35:08 -0800 (PST)
 Date:   Thu, 28 Nov 2019 00:35:08 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a54cd9059863fd8c@google.com>
-Subject: bpf build error (2)
-From:   syzbot <syzbot+c89a581922d5a98fccb8@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000a25df7059863fd92@google.com>
+Subject: linux-next build error (6)
+From:   syzbot <syzbot+88f3974342fd0f011404@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -56,17 +55,17 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    7c3977d1 libbpf: Fix sym->st_value print on 32-bit arches
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=108ab832e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7a7e892e3a014d76
-dashboard link: https://syzkaller.appspot.com/bug?extid=c89a581922d5a98fccb8
+HEAD commit:    d26b0e22 Add linux-next specific files for 20191128
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b94536e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7e1b037422e4486b
+dashboard link: https://syzkaller.appspot.com/bug?extid=88f3974342fd0f011404
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c89a581922d5a98fccb8@syzkaller.appspotmail.com
+Reported-by: syzbot+88f3974342fd0f011404@syzkaller.appspotmail.com
 
 failed to run ["make" "bzImage" "CC=/syzkaller/gcc/bin/gcc" "-j64"]: exit  
 status 2
