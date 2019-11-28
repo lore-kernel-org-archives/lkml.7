@@ -2,137 +2,131 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A160CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF78C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED932176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A17421771
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="h88ZzfyI"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="W+KaMDK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfK1H70 (ORCPT
+        id S1727318AbfK1ICU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 02:59:26 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:47533 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbfK1H70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 02:59:26 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47NqmB61v1z9ty0T;
-        Thu, 28 Nov 2019 08:59:22 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=h88ZzfyI; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id meBSBU5K6WRx; Thu, 28 Nov 2019 08:59:22 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47NqmB4d1Yz9ty0S;
-        Thu, 28 Nov 2019 08:59:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1574927962; bh=bXxBztW5NEcHfvFNCgqAzNMfqGx5TH9U7oF6whJQF44=;
-        h=From:Subject:To:Cc:Date:From;
-        b=h88ZzfyIM3y2pWCdwKDLZXeCeqTWRUg/ucdcwBiNtflSw4vAx0L/7nCQeIsm4pOUR
-         TVGilhkXGftoi+AQt7TR8rpSrtlRmzskFP7OSitGbN5xWW/oZCJjBzCsQVbqmd5RMQ
-         7p6Nrb5VcZiQm5HmRUcnyKX72wZd8XpwOAX1/Oak=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 605FA8B877;
-        Thu, 28 Nov 2019 08:59:23 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Sln_taC7m6WY; Thu, 28 Nov 2019 08:59:23 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.103])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 468028B767;
-        Thu, 28 Nov 2019 08:59:23 +0100 (CET)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 0F69C6B81B; Thu, 28 Nov 2019 07:59:22 +0000 (UTC)
-Message-Id: <d42fa9747df5afa41e67b08e374c98d3b40529c9.1574927918.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/fixmap: fix crash with HIGHMEM
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 28 Nov 2019 07:59:22 +0000 (UTC)
+        Thu, 28 Nov 2019 03:02:20 -0500
+Received: from mail-eopbgr690078.outbound.protection.outlook.com ([40.107.69.78]:62438
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726301AbfK1ICU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 03:02:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M/6X1GJBEeC7+whfQEowb+v72Pmaiby9+ca0BWinNtNK4Zzrzp4zYKHBXOv49FqxTXSnpgZurMfzedlzlV8guNMwOwe7YNrKO8lTlfglHSn0ZHD9ATL/lkAYyHRn3fcjeDZsDECOhViVmO087KcsxNjgw2r3m9BriHGxbu8JdaDtDpcsVuqEeI0kDLuxY9+s577FrWebLcVhaqQ13NdCYMGEeZdFgDko3n84+x5VFEJ71wQoox9sMjzN40saj+2bNmE8gO3EfBzcStMC91uz9PVR0i7gvpPFM2aRBrh5DsgkVmerSH8TUIidoun2fSuIayd7c2quHXZhSNpSpO+zvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7UfAHjMeBYFMwiwe/nLzFwJqwu0w5BD61k6bcS6y3GY=;
+ b=UDQfxf8kohpweUBIPjEVXhJVOro6UeJmZFPa1ZCALEc4WLWtRw7XMGBvJi/ioI/4KaFyOZZ4MPjuLfTxw2KlC3h0Mt8VmO/K8c6NNyVdP/ysOaFVXahPAHrPgvQREU0oHjJMDTS081LXm0rUS0Rfc9fD77snVhAwbgvPMaZ09jfAAz4MQRCzC9eBIMnemyVCrMGKBvXEgrSZYwAb7jNyE6DU0V4vOZvVFsk8gvxz/8yRGWtrND4x09NK2EpDm2LXOXc4Qt+sotQinCgCCrIWHDSzXytIywiVpQYvi7NwtJvKEo0bH7jCM+UjvERl7DWUsnuKGKaD+qOUJhqx/70Esg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7UfAHjMeBYFMwiwe/nLzFwJqwu0w5BD61k6bcS6y3GY=;
+ b=W+KaMDK7qloT9i4YXpyGf7TGdwpJctUxzocMN8mBV1FOD80NeYfb5sFkYi3w16uAXwUs2yv20cHAICwM+gp+wQUcVIYdrsH8W4Yp8vVvKSbrGrtgJ1uWaPuHZMLNrGjy/K39L68hysLy2diK5oQ9Ayag0YFnK4CSr+r+U5RPqAQ=
+Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
+ MN2PR05MB6125.namprd05.prod.outlook.com (20.178.242.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.13; Thu, 28 Nov 2019 08:02:16 +0000
+Received: from MN2PR05MB6141.namprd05.prod.outlook.com
+ ([fe80::611e:6a6b:9109:5aa8]) by MN2PR05MB6141.namprd05.prod.outlook.com
+ ([fe80::611e:6a6b:9109:5aa8%7]) with mapi id 15.20.2495.014; Thu, 28 Nov 2019
+ 08:02:16 +0000
+From:   Thomas Hellstrom <thellstrom@vmware.com>
+To:     "hch@lst.de" <hch@lst.de>
+CC:     "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: Re: [PATCH 2/2] dma-mapping: force unencryped devices are always
+ addressing limited
+Thread-Topic: [PATCH 2/2] dma-mapping: force unencryped devices are always
+ addressing limited
+Thread-Index: AQHVpTCUSCVjXh+W+0SSCl6TSmyYRg==
+Date:   Thu, 28 Nov 2019 08:02:16 +0000
+Message-ID: <MN2PR05MB6141B6D7E28A146EBF9CE79FA1470@MN2PR05MB6141.namprd05.prod.outlook.com>
+References: <20191127144006.25998-1-hch@lst.de>
+ <20191127144006.25998-3-hch@lst.de>
+ <a95d9115fc2a80de2f97f001bbcd9aba6636e685.camel@vmware.com>
+ <20191128075153.GD20659@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=thellstrom@vmware.com; 
+x-originating-ip: [155.4.205.35]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b3653bef-8f4f-40f5-577d-08d773d94934
+x-ms-traffictypediagnostic: MN2PR05MB6125:
+x-microsoft-antispam-prvs: <MN2PR05MB6125BE1AACA6769A9C3CCEC0A1470@MN2PR05MB6125.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0235CBE7D0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(136003)(366004)(39860400002)(189003)(199004)(81156014)(66946007)(256004)(54906003)(6436002)(186003)(9686003)(55016002)(6916009)(14454004)(99286004)(305945005)(8936002)(8676002)(1730700003)(2906002)(14444005)(81166006)(86362001)(7736002)(76176011)(6246003)(52536014)(2351001)(7696005)(478600001)(74316002)(5640700003)(25786009)(4326008)(5660300002)(66476007)(33656002)(3846002)(316002)(66556008)(91956017)(76116006)(66066001)(71200400001)(102836004)(6116002)(64756008)(66446008)(71190400001)(26005)(229853002)(4744005)(53546011)(6506007)(446003)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6125;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ymrhfljteewxg0TBmIjfZpbvMt2RCn2o5CxO3NYrnP71+UjYCNkCJzEyEki2awOohyBk56K7D45O0qHOyKqT7DZkd4ebMJeVRxjEjwGIWvK6SPLAoemFRUrdBSxZMt/uqxZIoSIy/BNvJE06OuCMOTMhC86oqvI0Pc+Ejsi13VULW6hf4h7bNhrdt5aiM8qeiPSfPFX5Z6JmNFhxLYsR+65/fojlk2q9LplgC2qgxpSNqfUUpqRTaNoWI00Ax2t8n1sWqEfWMQWMgnmg2z6cOh4l9ERNTECHTkgfScyfZxFl8kULetmBZsbvUNTMbust8ObvnO1TU9hRVmLKu2+bLh4aNeGxmzK1Ztp5dDGfLf4H/B5erTJtTtWGZMel9DrSiHBeaMaFBq4IaSsPslU5xvUX6RSBwJjlM4ENd0+wpO+7yz4kiZTKai7yFSf4tiOk
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3653bef-8f4f-40f5-577d-08d773d94934
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Nov 2019 08:02:16.8369
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0MmJ5kec9vsnBAnVI86Nno4Bb1VP2+Y5sxvpn1qsuJnmy8ZA1ZWq5DFS7zUqaga3UygpOGMp3DIFnEcOKAIa6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit f2bb86937d86 ("powerpc/fixmap: don't clear fixmap area in
-paging_init()") removed the clearing of fixmap area in order to
-avoid clearing fixmapped areas set earlier.
-
-However unlike all other users of fixmap which use __set_fixmap(),
-HIGHMEM functions directly use __set_pte_at(). This means
-the page table must pre-exist, otherwise the following crash
-can be encoutered due to the lack of entry in the PGD.
-
-Oops: Kernel access of bad area, sig: 11 [#1]
-BE PAGE_SIZE=4K MMU=Hash PowerMac
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0+ #2528
-NIP:  c0144ce8 LR: c0144ccc CTR: 00000080
-REGS: ef0b5aa0 TRAP: 0300   Not tainted  (5.4.0+)
-MSR:  00009032 <EE,ME,IR,DR,RI>  CR: 44282842  XER: 00000000
-DAR: fffdf000 DSISR: 42000000
-GPR00: c0144ccc ef0b5b58 ef0b0000 fffdf000 fffdf000 00000000 c0000f7c 00000000
-GPR08: c0833000 fffdf000 00000000 ef1c53c9 24042842 00000000 00000000 00000000
-GPR16: 00000000 00000000 ef7e7358 effe8160 00000000 c08a9660 c0851644 00000004
-GPR24: c08c70a8 00002dc2 00000000 00000001 00000201 effe8160 effe8160 00000000
-NIP [c0144ce8] prep_new_page+0x138/0x178
-LR [c0144ccc] prep_new_page+0x11c/0x178
-Call Trace:
-[ef0b5b58] [c0144ccc] prep_new_page+0x11c/0x178 (unreliable)
-[ef0b5b88] [c0147218] get_page_from_freelist+0x1fc/0xd88
-[ef0b5c38] [c0148328] __alloc_pages_nodemask+0xd4/0xbb4
-[ef0b5cf8] [c0142ba8] __vmalloc_node_range+0x1b4/0x2e0
-[ef0b5d38] [c0142dd0] vzalloc+0x48/0x58
-[ef0b5d58] [c0301c8c] check_partition+0x58/0x244
-[ef0b5d78] [c02ffe80] blk_add_partitions+0x44/0x2cc
-[ef0b5db8] [c01a32d8] bdev_disk_changed+0x68/0xfc
-[ef0b5de8] [c01a4494] __blkdev_get+0x290/0x460
-[ef0b5e28] [c02fdd40] __device_add_disk+0x480/0x4d8
-[ef0b5e68] [c0810688] brd_init+0xc0/0x188
-[ef0b5e88] [c0005194] do_one_initcall+0x40/0x19c
-[ef0b5ee8] [c07dd4dc] kernel_init_freeable+0x164/0x230
-[ef0b5f28] [c0005408] kernel_init+0x18/0x10c
-[ef0b5f38] [c0014274] ret_from_kernel_thread+0x14/0x1c
-
-Partially revert that commit to still clear the fixmap area dedicated
-to HIGHMEM.
-
-Fixes: f2bb86937d86 ("powerpc/fixmap: don't clear fixmap area in paging_init()")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/mm/mem.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index a39e6408bbc5..ad299e72ec30 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -239,6 +239,12 @@ void __init paging_init(void)
- 	phys_addr_t top_of_ram = memblock_end_of_DRAM();
- 
- #ifdef CONFIG_HIGHMEM
-+	unsigned long v = __fix_to_virt(FIX_KMAP_END);
-+	unsigned long end = __fix_to_virt(FIX_KMAP_BEGIN);
-+
-+	for (; v < end; v += PAGE_SIZE)
-+		map_kernel_page(v, 0, __pgprot(0)); /* XXX gross */
-+
- 	map_kernel_page(PKMAP_BASE, 0, __pgprot(0));	/* XXX gross */
- 	pkmap_page_table = virt_to_kpte(PKMAP_BASE);
- 
--- 
-2.13.3
-
+On 11/28/19 8:51 AM, hch@lst.de wrote:=0A=
+> On Wed, Nov 27, 2019 at 06:22:57PM +0000, Thomas Hellstrom wrote:=0A=
+>>>  bool dma_addressing_limited(struct device *dev)=0A=
+>>>  {=0A=
+>>> +	if (force_dma_unencrypted(dev))=0A=
+>>> +		return true;=0A=
+>>>  	return min_not_zero(dma_get_mask(dev), dev->bus_dma_limit) <=0A=
+>>>  			    dma_get_required_mask(dev);=0A=
+>>>  }=0A=
+>> Any chance to have the case=0A=
+>>=0A=
+>> (swiotlb_force =3D=3D SWIOTLB_FORCE)=0A=
+>>=0A=
+>> also included?=0A=
+> We have a hard time handling that in generic code.  Do we have any=0A=
+> good use case for SWIOTLB_FORCE not that we have force_dma_unencrypted?=
+=0A=
+> I'd love to be able to get rid of it..=0A=
+>=0A=
+IIRC the justification for it is debugging. Drivers that don't do=0A=
+syncing correctly or have incorrect assumptions of initialization of DMA=0A=
+memory will not work properly when SWIOTLB is forced. We recently found=0A=
+a vmw_pvscsi device flaw that way...=0A=
+=0A=
+/Thomas=0A=
+=0A=
+=0A=
+=0A=
