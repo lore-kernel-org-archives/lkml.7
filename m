@@ -2,456 +2,147 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06698C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1A6C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E9D215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E6F2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 03:06:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kOzM4GBP"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="EJ6mTm1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfK1DGQ (ORCPT
+        id S1727732AbfK1DG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 22:06:16 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35140 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfK1DGQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 22:06:16 -0500
-Received: by mail-pl1-f193.google.com with SMTP id s10so10938302plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 19:06:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=nFJCJ5SIo3p9Jx2NXig3r4Tk0t2z15WotK9DXLBHJu4=;
-        b=kOzM4GBPxqieO/FZ+Kl7+6YKGqI6sw6hSmzUx0PkcXgfB+/Hx2mwc2mVHZ9IBAHXoZ
-         idrIzJmTfQrmaoza88doyvx1Ep876gFgIxl64RPfip2JqhYF9UNTTS+2Y2ywpBgADf/1
-         Hx/yVBLoV7SHyiVXt1tRvBAIdHW2G7+XGbH/fg79IIRf1Dm3GnNVPVkocRJipmnowve+
-         Ru4hOGo8i3zJyIB4S8oib1bBCMsaTGSyzd3y1YYqrY7zes05UWTYbM0CMuXlsrRUiQpT
-         L/6SdxczY38ouLPJXEzzcw2pmLZvBC675IoA4TvVdKGR/A7T2CrJtD+YeH55piaZrAoo
-         L8hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=nFJCJ5SIo3p9Jx2NXig3r4Tk0t2z15WotK9DXLBHJu4=;
-        b=F4CeeLLqkmFO1evEfrudDMtl/iueTOhCNAX1amXS5MzD5e+iwCgyrrwgxwIKg8Pp9z
-         MXOJnn+WiPpa19dJigrfe5ViHApj6riyWm0AYEdTjrI4A6DW6iBQVZ7/EcgPBzzZyh0Y
-         4QQp+lfyloP1ScYHF8ESvXZ+WlIn+KELbRSjnj0EdGls6vlV7XZMRiY3+WPJmZq4h08W
-         RFy/zr3KWkWSQX1EZejbDXCNSMp1HskawUil/5FLzYNq7KcbbwCQhhgKDYF+P+EFmOaD
-         n3+uDM5n6H8IPqyLkvDDJxrLoBBhWKzB9ibm/aaZ883V7yF9TuSReGJ2Oy1MZcQ8C4vu
-         CUCw==
-X-Gm-Message-State: APjAAAUthfXQ8BKMe+hH3OsvYedhnJ6NfF3z6KtHPKtOEUknGviNRcrC
-        k7mB3AxujMsE0W+pYl1GV4vV3Q==
-X-Google-Smtp-Source: APXvYqyz0MgyzHb3Q1OWlZcOBF+9VwXHOFIPqtW6eeZ/KjrlXD1ju4GZUXMcHHf24qYS0l3AFJB0gQ==
-X-Received: by 2002:a17:90a:9604:: with SMTP id v4mr9847580pjo.105.1574910374131;
-        Wed, 27 Nov 2019 19:06:14 -0800 (PST)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id o8sm3559963pjo.7.2019.11.27.19.06.12
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 27 Nov 2019 19:06:13 -0800 (PST)
-Date:   Wed, 27 Nov 2019 19:06:01 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-cc:     "Kirill A. Shutemov" <kirill@shutemov.name>, hughd@google.com,
-        kirill.shutemov@linux.intel.com, aarcange@redhat.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] mm: shmem: allow split THP when truncating THP
- partially
-In-Reply-To: <14b7c24b-706e-79cf-6fbc-f3c042f30f06@linux.alibaba.com>
-Message-ID: <alpine.LSU.2.11.1911271718130.652@eggly.anvils>
-References: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com> <20191125093611.hlamtyo4hvefwibi@box> <3a35da3a-dff0-a8ca-8269-3018fff8f21b@linux.alibaba.com> <20191125183350.5gmcln6t3ofszbsy@box> <9a68b929-2f84-083d-0ac8-2ceb3eab8785@linux.alibaba.com>
- <14b7c24b-706e-79cf-6fbc-f3c042f30f06@linux.alibaba.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Wed, 27 Nov 2019 22:06:56 -0500
+Received: from vps.xff.cz ([195.181.215.36]:35758 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727088AbfK1DGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 22:06:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1574910414; bh=s0u7Q5tCoSp3oxGSwaQ6izZaVYzIABS3Gf4oK5gp2yU=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=EJ6mTm1/QSIj38AlCpaIu9dxOOeQ2Z1nlrGPfD1zFEvciSHY1yBzlpO3QM1y9NjgR
+         KS5/RS7PPDNcmYlcu/biPoRkj1E95jMk6VJZmGT79Gty4wlY7WVBmgMlTHaeQNWnrB
+         OQOLgbyXx+HWhDpWjzfGcHLi/22e1f+rGS2+4F2E=
+Date:   Thu, 28 Nov 2019 04:06:53 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Yong <yong.deng@magewell.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:CSI DRIVERS FOR ALLWINNER V3s" 
+        <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [linux-sunxi] [PATCH] media: sun6i-csi: Fix incorrect
+ HSYNC/VSYNC/PCLK polarity configuration
+Message-ID: <20191128030653.5fhcolvib6tzf4zc@core.my.home>
+Mail-Followup-To: Yong <yong.deng@magewell.com>,
+        linux-sunxi@googlegroups.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        "open list:CSI DRIVERS FOR ALLWINNER V3s" <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191128020259.1338188-1-megous@megous.com>
+ <20191128102608.035cbb996c8681a6fb035336@magewell.com>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="0-183993477-1574910373=:652"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128102608.035cbb996c8681a6fb035336@magewell.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---0-183993477-1574910373=:652
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Thu, Nov 28, 2019 at 10:26:08AM +0800, Yong wrote:
+> Hi Ondrej,
+> 
+> This has been discussed.
+> And Maxime sent a patch for this: 
+> https://www.mail-archive.com/linux-media@vger.kernel.org/msg127149.html
 
-On Tue, 26 Nov 2019, Yang Shi wrote:
-> On 11/25/19 11:33 AM, Yang Shi wrote:
-> > On 11/25/19 10:33 AM, Kirill A. Shutemov wrote:
-> > > On Mon, Nov 25, 2019 at 10:24:38AM -0800, Yang Shi wrote:
-> > > > On 11/25/19 1:36 AM, Kirill A. Shutemov wrote:
-> > > > > On Sat, Nov 23, 2019 at 09:05:32AM +0800, Yang Shi wrote:
-> > > > > > Currently when truncating shmem file, if the range is partial o=
-f
-> > > > > > THP
-> > > > > > (start or end is in the middle of THP), the pages actually will
-> > > > > > just get
-> > > > > > cleared rather than being freed unless the range cover the whol=
-e
-> > > > > > THP.
-> > > > > > Even though all the subpages are truncated (randomly or
-> > > > > > sequentially),
-> > > > > > the THP may still be kept in page cache.=C2=A0 This might be fi=
-ne for
-> > > > > > some
-> > > > > > usecases which prefer preserving THP.
-> > > > > >=20
-> > > > > > But, when doing balloon inflation in QEMU, QEMU actually does h=
-ole
-> > > > > > punch
-> > > > > > or MADV_DONTNEED in base page size granulairty if hugetlbfs is =
-not
-> > > > > > used.
-> > > > > > So, when using shmem THP as memory backend QEMU inflation actua=
-lly
-> > > > > > doesn't
-> > > > > > work as expected since it doesn't free memory.=C2=A0 But, the i=
-nflation
-> > > > > > usecase really needs get the memory freed.=C2=A0 Anonymous THP =
-will not
-> > > > > > get
-> > > > > > freed right away too but it will be freed eventually when all
-> > > > > > subpages are
-> > > > > > unmapped, but shmem THP would still stay in page cache.
-> > > > > >=20
-> > > > > > To protect the usecases which may prefer preserving THP, introd=
-uce
-> > > > > > a
-> > > > > > new fallocate mode: FALLOC_FL_SPLIT_HPAGE, which means spltting=
- THP
-> > > > > > is
-> > > > > > preferred behavior if truncating partial THP.=C2=A0 This mode j=
-ust makes
-> > > > > > sense to tmpfs for the time being.
+Thanks for pointing to the previous patch. But that patch doesn't make any
+sense, and breaks things for me, and doesn't even match BSP code, which 
+has no such reversal, and works fine with about 30 cam drivers.
 
-Sorry, I haven't managed to set aside enough time for this until now.
+Also how do you explain my findings?
 
-First off, let me say that I firmly believe this punch-split behavior
-should be the standard behavior (like in my huge tmpfs implementation),
-and we should not need a special FALLOC_FL_SPLIT_HPAGE to do it.
-But I don't know if I'll be able to persuade Kirill of that.
+My camera is sending correct signals, verified by looking at them actually (see
+below), and CSI is not receiving the image. I have to flip HSYNC/VSYNC to be
+oposite of that what CSI driver expects and I get a noisy image and if I fix
+PCLK polarity too, the noise goes away, which means now I'm also sampling when
+the data are stable and not when they're changing.
 
-If the caller wants to write zeroes into the file, she can do so with the
-write syscall: the caller has asked to punch a hole or truncate the file,
-and in our case, like your QEMU case, hopes that memory and memcg charge
-will be freed by doing so.  I'll be surprised if changing the behavior
-to yours and mine turns out to introduce a regression, but if it does,
-I guess we'll then have to put it behind a sysctl or whatever.
+Here: (output from my cam, that I configured to have VSYNC ACTIVE LOW, HSYNC
+ACTIVE LOW) And the signal is clearly that, as you can see yourself:
 
-IIUC the reason that it's currently implemented by clearing the hole
-is because split_huge_page() (unlike in older refcounting days) cannot
-be guaranteed to succeed.  Which is unfortunate, and none of us is very
-keen to build a filesystem on unreliable behavior; but the failure cases
-appear in practice to be rare enough, that it's on balance better to give
-the punch-hole-truncate caller what she asked for whenever possible.
+  https://megous.com/dl/tmp/98df81b7ed0126ec.png
 
-> > > > > We need to clarify interaction with khugepaged. This implementati=
-on
-> > > > > doesn't do anything to prevent khugepaged from collapsing the ran=
-ge
-> > > > > back
-> > > > > to THP just after the split.
-> > > > Yes, it doesn't. Will clarify this in the commit log.
-> > > Okay, but I'm not sure that documention alone will be enough. We need
-> > > proper design.
-> >=20
-> > Maybe we could try to hold inode lock with read during collapse_file().=
- The
-> > shmem fallocate does acquire inode lock with write, this should be able=
- to
-> > synchronize hole punch and khugepaged. And, shmem just needs hold inode
-> > lock for llseek and fallocate, I'm supposed they are should be called n=
-ot
-> > that frequently to have impact on khugepaged. The llseek might be often=
-,
-> > but it should be quite fast. However, they might get blocked by khugepa=
-ged.
-> >=20
-> > It sounds safe to hold a rwsem during collapsing THP.
+The above signals are received with CSI driver configured with
+V4L2_MBUS_VSYNC_ACTIVE_HIGH V4L2_MBUS_HSYNC_ACTIVE_HIGH. So CSI driver is
+clearly wrong.
 
-No, I don't think we want to take any more locks while collapsing THP,
-but that wasn't really the point.  We're not concerned about a *race*
-between splitting and khugepaged reassembling (I'm assuming that any
-such race would already exist, and be well-guarded against by all the
-refcount checks, punchhole not adding anything new here; but perhaps
-I'm assuming too blithely, and it is worth checking over).
+I think this is pretty clear the driver is buggy. At least for A83T SoC.
 
-The point, as I see it anyway, is the contradiction in effort: the
-caller asks for hole to be punched, we do that, then a few seconds
-or minutes later, khugepaged comes along and fills in the hole (if
-huge page availability and memcg limit allow it).
+I'm not sure what Maxime found out, but he should probably re-check his
+findings. Maxime, can you comment on this?
 
-I agree that's not very satisfactory, but I think it's a side issue:
-we don't have a good mechanism to tell khugepaged to keep off a range.
-As it is, fallocate and ftruncate ought to do the job expected of them,
-and khugepaged ought to do the job expected of it.  And in many cases,
-the punched file will not even be mapped (visible to khugepaged), or
-max_ptes_none set to exclude working on such holes.
+regards,
+	o.
 
-Is khugepaged's action an issue for your QEMU case?
-
-> >=20
-> > Or we could set VM_NOHUGEPAGE in shmem inode's flag with hole punch and
-> > clear it after truncate, then check the flag before doing collapse in
-> > khugepaged. khugepaged should not need hold the inode lock during colla=
-pse
-> > since it could be released after the flag is checked.
->=20
-> By relooking the code, it looks the latter one (check VM_NOHUGEPAGE) does=
-n't
-> make sense, it can't prevent khugepaged from collapsing THP in parallel.
->=20
-> >=20
-> > >=20
-> > > > > > @@ -976,8 +1022,31 @@ static void shmem_undo_range(struct inode
-> > > > > > *inode, loff_t lstart, loff_t lend,
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 }
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 unlock_page(page);
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > > > > +rescan_split:
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pa=
-gevec_remove_exceptionals(&pvec);
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pa=
-gevec_release(&pvec);
-> > > > > > +
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (split && PageTr=
-ansCompound(page)) {
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 /* The THP may get freed under us */
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 if (!get_page_unless_zero(compound_head(page)))
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto rescan_out;
-> > > > > > +
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 lock_page(page);
-> > > > > > +
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 /*
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 * The extra pins from page cache lookup have been
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 * released by pagevec_release().
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 */
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 if (!split_huge_page(page)) {
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unlock_page(page);
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 put_page(page);
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Re-look up page cache from current index =
-*/
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto again;
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 }
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 unlock_page(page);
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 put_page(page);
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > > > > +rescan_out:
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 in=
-dex++;
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > > > Doing get_page_unless_zero() just after you've dropped the pin fo=
-r
-> > > > > the
-> > > > > page looks very suboptimal.
-> > > > If I don't drop the pins the THP can't be split. And, there might b=
-e
-> > > > more
-> > > > than one pins from find_get_entries() if I read the code correctly.=
- For
-> > > > example, truncate 8K length in the middle of THP, the THP's refcoun=
-t
-> > > > would
-> > > > get bumpped twice since=C2=A0 two sub pages would be returned.
-> > > Pin the page before pagevec_release() and avoid get_page_unless_zero(=
-).
-> > >=20
-> > > Current code is buggy. You need to check that the page is still belon=
-g to
-> > > the file after speculative lookup.
-
-Yes indeed (I think you can even keep the page locked, but I may be wrong).
-
-> >=20
-> > Yes, I missed this point. Thanks for the suggestion.
-
-The main problem I see is your "goto retry" and "goto again":
-split_huge_page() may fail because a get_page() somewhere is holding
-a transient reference to the page, or it may fail because there's a
-GUP that holds a reference for days: you do not want to be stuck here
-going round and around the loop waiting for that GUP to be released!
-
-It's nice that we already have a trylock_page() loop followed by a
-lock_page() loop.  When split_huge_page() fails, the trylock_page()
-loop can simply move on to the next page (skip over the compound page,
-or retry it subpage by subpage? I've forgotten the pros and cons),
-and leave final resolution to the later lock_page() loop: which has to
-accept when split_huge_page() failed, and fall back to clearing instead.
-
-I would prefer a smaller patch than your RFC: making split the
-default behavior cuts out a lot of it, but I think there's still
-more that can be cut.  Here's the patch we've been using internally,
-which deletes quite a lot of the old code; but you'll quickly notice
-has a "Revisit later" hack in find_get_entries(), which I've not got
-around to revisiting yet.  Please blend what you can from my patch
-into yours, or vice versa.
-
-Hugh
-
----
-
- mm/filemap.c |    3 +
- mm/shmem.c   |   86 +++++++++++++++++--------------------------------
- 2 files changed, 34 insertions(+), 55 deletions(-)
-
---- v5.4/mm/filemap.c=092019-11-24 16:32:01.000000000 -0800
-+++ linux/mm/filemap.c=092019-11-27 16:21:16.316801433 -0800
-@@ -1752,6 +1752,9 @@ unsigned find_get_entries(struct address
- =09=09=09goto put_page;
- =09=09page =3D find_subpage(page, xas.xa_index);
-=20
-+=09=09/* Revisit later: make shmem_undo_range() easier for now */
-+=09=09if (PageTransCompound(page))
-+=09=09=09nr_entries =3D ret + 1;
- export:
- =09=09indices[ret] =3D xas.xa_index;
- =09=09entries[ret] =3D page;
---- v5.4/mm/shmem.c=092019-11-24 16:32:01.000000000 -0800
-+++ linux/mm/shmem.c=092019-11-27 16:21:16.320801450 -0800
-@@ -788,6 +788,20 @@ void shmem_unlock_mapping(struct address
- =09}
- }
-=20
-+static bool shmem_punch_compound(struct page *page, pgoff_t start, pgoff_t=
- end)
-+{
-+=09if (!PageTransCompound(page))
-+=09=09return true;
-+
-+=09/* Just proceed to delete a huge page wholly within the range punched *=
-/
-+=09if (PageHead(page) &&
-+=09    page->index >=3D start && page->index + HPAGE_PMD_NR <=3D end)
-+=09=09return true;
-+
-+=09/* Try to split huge page, so we can truly punch the hole or truncate *=
-/
-+=09return split_huge_page(page) >=3D 0;
-+}
-+
- /*
-  * Remove range of pages and swap entries from page cache, and free them.
-  * If !unfalloc, truncate or punch hole; if unfalloc, undo failed fallocat=
-e.
-@@ -838,31 +852,11 @@ static void shmem_undo_range(struct inod
- =09=09=09if (!trylock_page(page))
- =09=09=09=09continue;
-=20
--=09=09=09if (PageTransTail(page)) {
--=09=09=09=09/* Middle of THP: zero out the page */
--=09=09=09=09clear_highpage(page);
--=09=09=09=09unlock_page(page);
--=09=09=09=09continue;
--=09=09=09} else if (PageTransHuge(page)) {
--=09=09=09=09if (index =3D=3D round_down(end, HPAGE_PMD_NR)) {
--=09=09=09=09=09/*
--=09=09=09=09=09 * Range ends in the middle of THP:
--=09=09=09=09=09 * zero out the page
--=09=09=09=09=09 */
--=09=09=09=09=09clear_highpage(page);
--=09=09=09=09=09unlock_page(page);
--=09=09=09=09=09continue;
--=09=09=09=09}
--=09=09=09=09index +=3D HPAGE_PMD_NR - 1;
--=09=09=09=09i +=3D HPAGE_PMD_NR - 1;
--=09=09=09}
--
--=09=09=09if (!unfalloc || !PageUptodate(page)) {
--=09=09=09=09VM_BUG_ON_PAGE(PageTail(page), page);
--=09=09=09=09if (page_mapping(page) =3D=3D mapping) {
--=09=09=09=09=09VM_BUG_ON_PAGE(PageWriteback(page), page);
-+=09=09=09if ((!unfalloc || !PageUptodate(page)) &&
-+=09=09=09    page_mapping(page) =3D=3D mapping) {
-+=09=09=09=09VM_BUG_ON_PAGE(PageWriteback(page), page);
-+=09=09=09=09if (shmem_punch_compound(page, start, end))
- =09=09=09=09=09truncate_inode_page(mapping, page);
--=09=09=09=09}
- =09=09=09}
- =09=09=09unlock_page(page);
- =09=09}
-@@ -936,43 +930,25 @@ static void shmem_undo_range(struct inod
-=20
- =09=09=09lock_page(page);
-=20
--=09=09=09if (PageTransTail(page)) {
--=09=09=09=09/* Middle of THP: zero out the page */
--=09=09=09=09clear_highpage(page);
--=09=09=09=09unlock_page(page);
--=09=09=09=09/*
--=09=09=09=09 * Partial thp truncate due 'start' in middle
--=09=09=09=09 * of THP: don't need to look on these pages
--=09=09=09=09 * again on !pvec.nr restart.
--=09=09=09=09 */
--=09=09=09=09if (index !=3D round_down(end, HPAGE_PMD_NR))
--=09=09=09=09=09start++;
--=09=09=09=09continue;
--=09=09=09} else if (PageTransHuge(page)) {
--=09=09=09=09if (index =3D=3D round_down(end, HPAGE_PMD_NR)) {
--=09=09=09=09=09/*
--=09=09=09=09=09 * Range ends in the middle of THP:
--=09=09=09=09=09 * zero out the page
--=09=09=09=09=09 */
--=09=09=09=09=09clear_highpage(page);
--=09=09=09=09=09unlock_page(page);
--=09=09=09=09=09continue;
--=09=09=09=09}
--=09=09=09=09index +=3D HPAGE_PMD_NR - 1;
--=09=09=09=09i +=3D HPAGE_PMD_NR - 1;
--=09=09=09}
--
- =09=09=09if (!unfalloc || !PageUptodate(page)) {
--=09=09=09=09VM_BUG_ON_PAGE(PageTail(page), page);
--=09=09=09=09if (page_mapping(page) =3D=3D mapping) {
--=09=09=09=09=09VM_BUG_ON_PAGE(PageWriteback(page), page);
--=09=09=09=09=09truncate_inode_page(mapping, page);
--=09=09=09=09} else {
-+=09=09=09=09if (page_mapping(page) !=3D mapping) {
- =09=09=09=09=09/* Page was replaced by swap: retry */
- =09=09=09=09=09unlock_page(page);
- =09=09=09=09=09index--;
- =09=09=09=09=09break;
- =09=09=09=09}
-+=09=09=09=09VM_BUG_ON_PAGE(PageWriteback(page), page);
-+=09=09=09=09if (shmem_punch_compound(page, start, end))
-+=09=09=09=09=09truncate_inode_page(mapping, page);
-+=09=09=09=09else {
-+=09=09=09=09=09/* Wipe the page and don't get stuck */
-+=09=09=09=09=09clear_highpage(page);
-+=09=09=09=09=09flush_dcache_page(page);
-+=09=09=09=09=09set_page_dirty(page);
-+=09=09=09=09=09if (index <
-+=09=09=09=09=09    round_up(start, HPAGE_PMD_NR))
-+=09=09=09=09=09=09start =3D index + 1;
-+=09=09=09=09}
- =09=09=09}
- =09=09=09unlock_page(page);
- =09=09}
---0-183993477-1574910373=:652--
+> On Thu, 28 Nov 2019 03:02:59 +0100
+> Ondrej Jirman <megous@megous.com> wrote:
+> 
+> > This was discovered by writing a new camera driver and wondering, why
+> > hsync/vsync polarity setting behaves in reverse to what would be
+> > expected. Verified by looking at the actual signals and the SoC
+> > user manual.
+> > 
+> > Fixes: 5cc7522d8965 ("media: sun6i: Add support for Allwinner CSI V3s")
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > index f17e5550602d..98bbcca59a90 100644
+> > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > @@ -417,12 +417,12 @@ static void sun6i_csi_setup_bus(struct sun6i_csi_dev *sdev)
+> >  		if (flags & V4L2_MBUS_FIELD_EVEN_LOW)
+> >  			cfg |= CSI_IF_CFG_FIELD_POSITIVE;
+> >  
+> > -		if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+> > +		if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
+> >  			cfg |= CSI_IF_CFG_VREF_POL_POSITIVE;
+> > -		if (flags & V4L2_MBUS_HSYNC_ACTIVE_LOW)
+> > +		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> >  			cfg |= CSI_IF_CFG_HREF_POL_POSITIVE;
+> >  
+> > -		if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> > +		if (flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
+> >  			cfg |= CSI_IF_CFG_CLK_POL_FALLING_EDGE;
+> >  		break;
+> >  	case V4L2_MBUS_BT656:
+> > -- 
+> > 2.24.0
+> > 
+> > -- 
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191128020259.1338188-1-megous%40megous.com.
+> 
+> 
+> Thanks,
+> Yong
