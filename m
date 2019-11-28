@@ -2,904 +2,171 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22787C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0613BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D33942176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19FE217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:54:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="QMBwExph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfK1NxC (ORCPT
+        id S1726608AbfK1Nyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:53:02 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:33594 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbfK1NxC (ORCPT
+        Thu, 28 Nov 2019 08:54:55 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52445 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfK1Nyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:53:02 -0500
-Received: by mail-il1-f199.google.com with SMTP id s14so22228242ila.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:53:01 -0800 (PST)
+        Thu, 28 Nov 2019 08:54:55 -0500
+Received: by mail-wm1-f68.google.com with SMTP id l1so11070238wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:54:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CAcvbytV4i2a1AoQdWPTiNmNKQ9t7p9KSzPJ6vzgFPc=;
+        b=QMBwExphVxemOgnNlthrCN7d7TjJUTnBj6TFZ01UYgrmsdtrFkVTgNQ/Zi2/3ACcIq
+         MPCvzCrDCSKSbGAIlSiuzm/9IxULCIaUciW2rDKc5/GughrDE761PaCJzeJ3o4DFyIN1
+         u6Dk+3Z+zoHFjRUWPPL+xJXI/HnB8Dp3709yTU0b7PGkUQkdQThZA5kdg8KJgrw6g09+
+         HSFXkXZClgDL0w5p1KmmVGklJE7ss8pTa94TOnp5uMpMlYnISTq3F1uaCZyzZK0kRDx2
+         IP03p7J5zu8P02+fmdHuhBcC/2luiuieGYBDtDqWJt22FwqfAyeq4HSJ0PN4GnBMRv6k
+         Q+1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=HlNtWG4QLHoqNy7xSs6hxWc2ATZTr6pJooFGudGc1j0=;
-        b=ln+LWDimWaUf1Y+kMS27dbec0Bh+2n+eQ4420vVddTCNr+D3nBS7dxxWDVmWXhYJ56
-         v4/m61w/IrwZCZxNjSdNHrUPNFirJpoUkcaFzVD/dt9ZYURzukEWnWcfCEAQj+YapoVw
-         3ut1jsmINC4QB0J9+LBstx7gLkwGjBDX2EYN9w1sP1gEDGwtT24WGg8CX5R4/WQ5rIOK
-         ixg64cuYLuOs6zfNEE8/SNlg3Jy6YPq7MyLKrXzO8yK/T3ElU0JOiOuKcc9351hW8del
-         b+GJJ4EKjDr5O9AqywfT85F/BIdGzsylpnxOV/5sdBUyFEeipdf1j8ZAdRJun4FBbGMm
-         snzg==
-X-Gm-Message-State: APjAAAVL6dYk9Xybq8FloNWY+Pn2MH1dSFVaBBkBgH8BVvad0pDDT5q9
-        beL9Oll4P9mScpjziMq8f41/UzI2HPpHory5vfgsuc0Fc2Vi
-X-Google-Smtp-Source: APXvYqxmzCC9oDeVozKl23bF9fkflTFKNISqXLHUSKoTnBgv7WRylx34I3DYJ06Mbkh1hzBiO3e5P/VqByEpL2XN2VX7jqCOYyK+
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CAcvbytV4i2a1AoQdWPTiNmNKQ9t7p9KSzPJ6vzgFPc=;
+        b=pLWhfd+wrLwD8FV4csru0gmMCwzfMrfoMvqNDwA6TaJ3w4oyrUn5ZO8JgY97GZXTDH
+         X1aXInVm1IOUtV88i04I5s38S+DhNq/TDV1NKtmNajtz2WInYWD/F+LUaW/f2SYKQM5g
+         WS0P8Pcv6yA4iFtjuXLIBMi+WR0E8KAXpes837sVlwJNHMQqS4meX+w0jiWtV4rMvTCV
+         LVWNZvStwpIxho2dh/tSRVzy6hj9QJfndEQnE9nyOsf7TzpCDL9NCJs2J0e5X/t+lXci
+         5wJ4DL7rgg9bPhrIGuByb8bVmKwurTpzYEo3CfuRC4UL1I/zYlHf38aoux8dAe1eW0If
+         JmmQ==
+X-Gm-Message-State: APjAAAVlBUQ7wUZNWeTDMWTZVFDVV2y9t1fVni+oY9VwZ+e6m871H295
+        vS1rdr5mw/6uO2XR3iUG1RXfbA==
+X-Google-Smtp-Source: APXvYqztu2661hM/tDpwiKNjROy9HqloK/NHG6y+VNcJz+qgtBkEj0z6E7TTM4iuyyiQM/oIV5bVQw==
+X-Received: by 2002:a1c:2846:: with SMTP id o67mr9868162wmo.7.1574949292213;
+        Thu, 28 Nov 2019 05:54:52 -0800 (PST)
+Received: from cobook.home (nikaet.starlink.ru. [94.141.168.29])
+        by smtp.gmail.com with ESMTPSA id r2sm10960599wma.44.2019.11.28.05.54.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 05:54:51 -0800 (PST)
+From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: [PATCH v2] ASoC: tlv320aic31xx: Add HP output driver pop reduction controls
+Date:   Thu, 28 Nov 2019 16:54:47 +0300
+Message-Id: <20191128135447.26458-1-nikita.yoush@cogentembedded.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191128122337.GC4210@sirena.org.uk>
+References: <20191128122337.GC4210@sirena.org.uk>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:f401:: with SMTP id i1mr33495843iog.241.1574949180646;
- Thu, 28 Nov 2019 05:53:00 -0800 (PST)
-Date:   Thu, 28 Nov 2019 05:53:00 -0800
-In-Reply-To: <1574939450.21204.7.camel@suse.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000073b7ed0598686e8d@google.com>
-Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
-From:   syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, hverkuil@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org, oneukum@suse.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+HP output driver has two parameters that can be configured to reduce
+pop noise: power-on delay and ramp-up step time. Two new kcontrols
+have been added to set these parameters.
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-INFO: rcu detected stall in dummy_timer
+Also have to alter timeout in aic31xx_dapm_power_event() because default
+timeout does fire when higher supported power-on delay are configured.
 
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-rcu: INFO: rcu_sched self-detected stall on CPU
-rcu: 	1-...!: (1 GPs behind) idle=82a/0/0x3 softirq=3099/3100 fqs=0
-	(t=10503 jiffies g=2445 q=28)
-rcu: rcu_sched kthread starved for 10505 jiffies! g2445 f0x0  
-RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
-rcu: RCU grace-period kthread stack dump:
-rcu_sched       R  running task    29384    10      2 0x80004000
-Call Trace:
-  schedule+0xca/0x250 kernel/sched/core.c:4136
-  schedule_timeout+0x440/0xb20 kernel/time/timer.c:1895
-  rcu_gp_fqs_loop kernel/rcu/tree.c:1639 [inline]
-  rcu_gp_kthread+0xaff/0x29e0 kernel/rcu/tree.c:1799
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-NMI backtrace for cpu 1
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.4.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x55/0x96 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x1b0/0x1c7 lib/nmi_backtrace.c:62
-  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
-  rcu_dump_cpu_stacks+0x169/0x1b3 kernel/rcu/tree_stall.h:254
-  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
-  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
-  rcu_pending kernel/rcu/tree.c:2795 [inline]
-  rcu_sched_clock_irq.cold+0x4da/0x936 kernel/rcu/tree.c:2244
-  update_process_times+0x25/0x60 kernel/time/timer.c:1726
-  tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:167
-  tick_sched_timer+0x42/0x130 kernel/time/tick-sched.c:1299
-  __run_hrtimer kernel/time/hrtimer.c:1514 [inline]
-  __hrtimer_run_queues+0x303/0xc60 kernel/time/hrtimer.c:1576
-  hrtimer_interrupt+0x2e8/0x730 kernel/time/hrtimer.c:1638
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
-  smp_apic_timer_interrupt+0xf5/0x500 arch/x86/kernel/apic/apic.c:1135
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160  
-[inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0x40/0x50  
-kernel/locking/spinlock.c:191
-Code: e8 95 14 b3 fb 48 89 ef e8 6d f3 b3 fb f6 c7 02 75 11 53 9d e8 61 ba  
-d0 fb 65 ff 0d a2 67 8f 7a 5b 5d c3 e8 02 be d0 fb 53 9d <eb> ed 0f 1f 40  
-00 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 fd 65 ff
-RSP: 0018:ffff8881db309b08 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000007 RBX: 0000000000000206 RCX: 0000000000000002
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8881da21384c
-RBP: ffff8881d50e0000 R08: ffff8881da213000 R09: fffffbfff11b23b8
-R10: fffffbfff11b23b7 R11: ffffffff88d91dbf R12: 0000000000000080
-R13: 0000000000000000 R14: dffffc0000000000 R15: ffff8881d2f05b00
-  spin_unlock_irqrestore include/linux/spinlock.h:393 [inline]
-  dummy_timer+0x131b/0x2fa2 drivers/usb/gadget/udc/dummy_hcd.c:1980
-  call_timer_fn+0x179/0x650 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers kernel/time/timer.c:1773 [inline]
-  __run_timers kernel/time/timer.c:1740 [inline]
-  run_timer_softirq+0x5e3/0x1490 kernel/time/timer.c:1786
-  __do_softirq+0x221/0x912 kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x178/0x1a0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x12f/0x500 arch/x86/kernel/apic/apic.c:1137
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  </IRQ>
-RIP: 0010:default_idle+0x28/0x2e0 arch/x86/kernel/process.c:581
-Code: 90 90 41 56 41 55 65 44 8b 2d f4 20 8f 7a 41 54 55 53 0f 1f 44 00 00  
-e8 c6 d2 d0 fb e9 07 00 00 00 0f 00 2d ea c5 4f 00 fb f4 <65> 44 8b 2d d0  
-20 8f 7a 0f 1f 44 00 00 5b 5d 41 5c 41 5d 41 5e c3
-RSP: 0018:ffff8881da22fdc8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000007 RBX: ffff8881da213000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8881da21384c
-RBP: ffffed103b442600 R08: ffff8881da213000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000000
-  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-  do_idle+0x3b6/0x500 kernel/sched/idle.c:263
-  cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:355
-  start_secondary+0x27d/0x330 arch/x86/kernel/smpboot.c:264
-  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 1-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
-radio-si470x 2-1:0.0: non-zero urb status (-71)
-In resubmit code path with result 0
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+---
+ sound/soc/codecs/tlv320aic31xx.c | 32 ++++++++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
-
-Tested on:
-
-commit:         22be26f7 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=10baff5ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
-dashboard link: https://syzkaller.appspot.com/bug?extid=9ca7a12fd736d93e0232
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=164cd702e00000
+diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+index f6f19fdc72f5..d6c462f21370 100644
+--- a/sound/soc/codecs/tlv320aic31xx.c
++++ b/sound/soc/codecs/tlv320aic31xx.c
+@@ -262,6 +262,19 @@ static SOC_ENUM_SINGLE_DECL(mic1lm_p_enum, AIC31XX_MICPGAPI, 2,
+ static SOC_ENUM_SINGLE_DECL(mic1lm_m_enum, AIC31XX_MICPGAMI, 4,
+ 	mic_select_text);
+ 
++static const char * const hp_poweron_time_text[] = {
++	"0us", "15.3us", "153us", "1.53ms", "15.3ms", "76.2ms",
++	"153ms", "304ms", "610ms", "1.22s", "3.04s", "6.1s" };
++
++static SOC_ENUM_SINGLE_DECL(hp_poweron_time_enum, AIC31XX_HPPOP, 3,
++	hp_poweron_time_text);
++
++static const char * const hp_rampup_step_text[] = {
++	"0ms", "0.98ms", "1.95ms", "3.9ms" };
++
++static SOC_ENUM_SINGLE_DECL(hp_rampup_step_enum, AIC31XX_HPPOP, 1,
++	hp_rampup_step_text);
++
+ static const DECLARE_TLV_DB_SCALE(dac_vol_tlv, -6350, 50, 0);
+ static const DECLARE_TLV_DB_SCALE(adc_fgain_tlv, 0, 10, 0);
+ static const DECLARE_TLV_DB_SCALE(adc_cgain_tlv, -2000, 50, 0);
+@@ -285,6 +298,14 @@ static const struct snd_kcontrol_new common31xx_snd_controls[] = {
+ 
+ 	SOC_DOUBLE_R_TLV("HP Analog Playback Volume", AIC31XX_LANALOGHPL,
+ 			 AIC31XX_RANALOGHPR, 0, 0x7F, 1, hp_vol_tlv),
++
++	/* HP de-pop control: apply power not immediately but via ramp
++	 * function with these psarameters. Note that power up sequence
++	 * has to wait for this to complete; this is implemented by
++	 * polling HP driver status in aic31xx_dapm_power_event()
++	 */
++	SOC_ENUM("HP Output Driver Power-On time", hp_poweron_time_enum),
++	SOC_ENUM("HP Output Driver Ramp-up step", hp_rampup_step_enum),
+ };
+ 
+ static const struct snd_kcontrol_new aic31xx_snd_controls[] = {
+@@ -357,6 +378,7 @@ static int aic31xx_dapm_power_event(struct snd_soc_dapm_widget *w,
+ 	struct aic31xx_priv *aic31xx = snd_soc_component_get_drvdata(component);
+ 	unsigned int reg = AIC31XX_DACFLAG1;
+ 	unsigned int mask;
++	unsigned int timeout = 500 * USEC_PER_MSEC;
+ 
+ 	switch (WIDGET_BIT(w->reg, w->shift)) {
+ 	case WIDGET_BIT(AIC31XX_DACSETUP, 7):
+@@ -367,9 +389,13 @@ static int aic31xx_dapm_power_event(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	case WIDGET_BIT(AIC31XX_HPDRIVER, 7):
+ 		mask = AIC31XX_HPLDRVPWRSTATUS_MASK;
++		if (event == SND_SOC_DAPM_POST_PMU)
++			timeout = 7 * USEC_PER_SEC;
+ 		break;
+ 	case WIDGET_BIT(AIC31XX_HPDRIVER, 6):
+ 		mask = AIC31XX_HPRDRVPWRSTATUS_MASK;
++		if (event == SND_SOC_DAPM_POST_PMU)
++			timeout = 7 * USEC_PER_SEC;
+ 		break;
+ 	case WIDGET_BIT(AIC31XX_SPKAMP, 7):
+ 		mask = AIC31XX_SPLDRVPWRSTATUS_MASK;
+@@ -389,9 +415,11 @@ static int aic31xx_dapm_power_event(struct snd_soc_dapm_widget *w,
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_POST_PMU:
+-		return aic31xx_wait_bits(aic31xx, reg, mask, mask, 5000, 100);
++		return aic31xx_wait_bits(aic31xx, reg, mask, mask,
++				5000, timeout / 5000);
+ 	case SND_SOC_DAPM_POST_PMD:
+-		return aic31xx_wait_bits(aic31xx, reg, mask, 0, 5000, 100);
++		return aic31xx_wait_bits(aic31xx, reg, mask, 0,
++				5000, timeout / 5000);
+ 	default:
+ 		dev_dbg(component->dev,
+ 			"Unhandled dapm widget event %d from %s\n",
+-- 
+2.20.1
 
