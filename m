@@ -2,166 +2,180 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED62FC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE09C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C283C21775
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="jXLwhfyT"
+	by mail.kernel.org (Postfix) with ESMTP id 3111720880
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfK1LfB (ORCPT
+        id S1726715AbfK1Lgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:35:01 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43647 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfK1LfA (ORCPT
+        Thu, 28 Nov 2019 06:36:42 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38007 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfK1Lgl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:35:00 -0500
-Received: by mail-lj1-f193.google.com with SMTP id a13so4957288ljm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 03:34:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=XOqt1jA1mHDLa304qf2rgZ/MgYLbFa3pf/BnMQUaDUU=;
-        b=jXLwhfyTQDXvRp9KdmQMJpPvWCMrvfQGfjoalvLtnweIxV6eaWL6+FxOW54SN3/lCi
-         O8wSfDPhKFc69w1M5A955/eZVWOjKZCY/VB7lrcL39YTZx+dE4acIA6eJOzhzHS4CzKa
-         VCxz0bz0HA6fDAJnVxCT0n7LlVuwO7g3xojM1ysv1c/UlW/yOQavAWvsJMFoopU+AeCa
-         yrGiEyCYkuRjGYQcrkmvfPA3+2JFT3nyOxyLG+kO5sEvy+SMFWuPQEby779MxARBw7+0
-         4+N8ie63zkjuc/DuanK9ypI5ccyxAyMBz4aB6uafa3Kb/4C7OcOLaXQfXzQudgKPd0RU
-         QYKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=XOqt1jA1mHDLa304qf2rgZ/MgYLbFa3pf/BnMQUaDUU=;
-        b=f2+XuEdUO0cXo8uCBViI1ffe5xQEjPk88UicuOOrQJ/XF4uwow7QhA7oSIhqQFLhT8
-         ZYPx4Z2L/Z9K0vTntM9MYmKQFdeBsu3aBIqDffAn+IjJMKybPEyDjuaGF04FJsxA+ccp
-         ejlyM2ZCUToamz5MxCOlHD2tN03g6mapDnrLn78MN41Ys5QXE5T4JFwzEoJtK4o2gZJx
-         WOZ5CWl8XO45wCwROYcpJlRCI1aKe5nNosEHkXNNVPnHMmzUX5sIMwQurbRPDgIhF0er
-         HJyti7yGzsVmJs1CX//lzIM7Q9jM3YmKMCXx3zcinl8brD6MSsER3qG9jwpZ2UanBCpl
-         o4rw==
-X-Gm-Message-State: APjAAAUzr6XU9pHTwxTn0kcfoyOueouugX//gy+sAzi3cIr7s1oCXQj/
-        4PcvpQFVZMNW9FAdE/a6NPLe2w==
-X-Google-Smtp-Source: APXvYqxtsM0j/fet/8Hd0wppyL5kmHFHQSC8L5N/GAw4xOFXmFoZ5D9szeElJt5bgd2+LoHbl99hcA==
-X-Received: by 2002:a2e:8e27:: with SMTP id r7mr34842858ljk.101.1574940898131;
-        Thu, 28 Nov 2019 03:34:58 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id f11sm4228455lfa.9.2019.11.28.03.34.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 03:34:57 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 6B5A310188A; Thu, 28 Nov 2019 14:34:56 +0300 (+03)
-Date:   Thu, 28 Nov 2019 14:34:56 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        kirill.shutemov@linux.intel.com, aarcange@redhat.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] mm: shmem: allow split THP when truncating THP
- partially
-Message-ID: <20191128113456.5phjhd3ajgky3h3i@box>
-References: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com>
- <20191125093611.hlamtyo4hvefwibi@box>
- <3a35da3a-dff0-a8ca-8269-3018fff8f21b@linux.alibaba.com>
- <20191125183350.5gmcln6t3ofszbsy@box>
- <9a68b929-2f84-083d-0ac8-2ceb3eab8785@linux.alibaba.com>
- <14b7c24b-706e-79cf-6fbc-f3c042f30f06@linux.alibaba.com>
- <alpine.LSU.2.11.1911271718130.652@eggly.anvils>
+        Thu, 28 Nov 2019 06:36:41 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mol@pengutronix.de>)
+        id 1iaI67-0003Kl-DU; Thu, 28 Nov 2019 12:36:35 +0100
+Received: from mol by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mol@pengutronix.de>)
+        id 1iaI65-0004MZ-Pg; Thu, 28 Nov 2019 12:36:33 +0100
+Date:   Thu, 28 Nov 2019 12:36:33 +0100
+From:   Michael Olbrich <m.olbrich@pengutronix.de>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/2] usb: dwc3: gadget: restart the transfer if a isoc
+ request is queued too late
+Message-ID: <20191128113633.5slzlehhwlmnc3zr@pengutronix.de>
+Mail-Followup-To: Alan Stern <stern@rowland.harvard.edu>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <6d4b87c8-5aca-18cb-81db-a8d2fd4bd86e@synopsys.com>
+ <Pine.LNX.4.44L0.1911151549370.1527-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.LSU.2.11.1911271718130.652@eggly.anvils>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <Pine.LNX.4.44L0.1911151549370.1527-100000@iolanthe.rowland.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:32:14 up 143 days, 16:42, 146 users,  load average: 0.66, 0.30,
+ 0.22
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mol@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 07:06:01PM -0800, Hugh Dickins wrote:
-> On Tue, 26 Nov 2019, Yang Shi wrote:
-> > On 11/25/19 11:33 AM, Yang Shi wrote:
-> > > On 11/25/19 10:33 AM, Kirill A. Shutemov wrote:
-> > > > On Mon, Nov 25, 2019 at 10:24:38AM -0800, Yang Shi wrote:
-> > > > > On 11/25/19 1:36 AM, Kirill A. Shutemov wrote:
-> > > > > > On Sat, Nov 23, 2019 at 09:05:32AM +0800, Yang Shi wrote:
-> > > > > > > Currently when truncating shmem file, if the range is partial of
-> > > > > > > THP
-> > > > > > > (start or end is in the middle of THP), the pages actually will
-> > > > > > > just get
-> > > > > > > cleared rather than being freed unless the range cover the whole
-> > > > > > > THP.
-> > > > > > > Even though all the subpages are truncated (randomly or
-> > > > > > > sequentially),
-> > > > > > > the THP may still be kept in page cache.  This might be fine for
-> > > > > > > some
-> > > > > > > usecases which prefer preserving THP.
-> > > > > > > 
-> > > > > > > But, when doing balloon inflation in QEMU, QEMU actually does hole
-> > > > > > > punch
-> > > > > > > or MADV_DONTNEED in base page size granulairty if hugetlbfs is not
-> > > > > > > used.
-> > > > > > > So, when using shmem THP as memory backend QEMU inflation actually
-> > > > > > > doesn't
-> > > > > > > work as expected since it doesn't free memory.  But, the inflation
-> > > > > > > usecase really needs get the memory freed.  Anonymous THP will not
-> > > > > > > get
-> > > > > > > freed right away too but it will be freed eventually when all
-> > > > > > > subpages are
-> > > > > > > unmapped, but shmem THP would still stay in page cache.
-> > > > > > > 
-> > > > > > > To protect the usecases which may prefer preserving THP, introduce
-> > > > > > > a
-> > > > > > > new fallocate mode: FALLOC_FL_SPLIT_HPAGE, which means spltting THP
-> > > > > > > is
-> > > > > > > preferred behavior if truncating partial THP.  This mode just makes
-> > > > > > > sense to tmpfs for the time being.
+On Fri, Nov 15, 2019 at 04:06:10PM -0500, Alan Stern wrote:
+> On Thu, 14 Nov 2019, Thinh Nguyen wrote:
 > 
-> Sorry, I haven't managed to set aside enough time for this until now.
+> > Michael Olbrich wrote:
 > 
-> First off, let me say that I firmly believe this punch-split behavior
-> should be the standard behavior (like in my huge tmpfs implementation),
-> and we should not need a special FALLOC_FL_SPLIT_HPAGE to do it.
-> But I don't know if I'll be able to persuade Kirill of that.
+> > >>> How about changing the gadget driver instead?  For frames where the UVC
+> > >>> gadget knows no video frame data is available (numbers 4, 8, 12, and so
+> > >>> on in the example above), queue a zero-length request.  Then there
+> > >>> won't be any gaps in the isochronous packet stream.
+> > >> What Alan suggests may work. Have you tried this?
+> > > Yes and it works in general. There are however some problems with that
+> > > approach that I want to avoid:
+> > >
+> > > 1. It adds extra overhead to handle the extra zero-length request.
+> > > Especially for encoded video the available bandwidth can be quite a bit
+> > > larger that what is actually used. I want to avoid that.
 > 
-> If the caller wants to write zeroes into the file, she can do so with the
-> write syscall: the caller has asked to punch a hole or truncate the file,
-> and in our case, like your QEMU case, hopes that memory and memcg charge
-> will be freed by doing so.  I'll be surprised if changing the behavior
-> to yours and mine turns out to introduce a regression, but if it does,
-> I guess we'll then have to put it behind a sysctl or whatever.
+> This comment doesn't seem to make sense.  If the available bandwidth is
+> much _larger_ than what is actually used, what's the problem?  You
+> don't run into difficulties until the available bandwidth is too
+> _small_.
 > 
-> IIUC the reason that it's currently implemented by clearing the hole
-> is because split_huge_page() (unlike in older refcounting days) cannot
-> be guaranteed to succeed.  Which is unfortunate, and none of us is very
-> keen to build a filesystem on unreliable behavior; but the failure cases
-> appear in practice to be rare enough, that it's on balance better to give
-> the punch-hole-truncate caller what she asked for whenever possible.
+> The extra overhead of a zero-length request should be pretty small.  
+> After all, the gadget expects to send a packet for every frame anyway,
+> more or less.
 
-I don't have a firm position here. Maybe you are right and we should try
-to split pages right away.
+My current test-case is video frames with 450kB on average at 30fps. This
+currently results in ~10 CPU load for the threaded interrupt handler.
+At least in my test, filling the actual video data into the frame has very
+little impact. So if I reserve 900kB to support occasionally larger video
+frames, then I expect that this CPU load will almost double in all cases,
+not just when the video frames are larger.
 
-It might be useful to consider case wider than shmem.
+> > > 2. The UVC gadget currently does no know how many zero-length request must
+> > > added. So it needs fill all available request until a new video frame
+> > > arrives. With the current 4 requests that is not a problem right now. But
+> > > that does not scale for USB3 bandwidths. So one thing that I want to do is
+> > > to queue many requests but only enable the interrupt for a few of than.
+> > >  From what I can tell from the code, the gadget framework and the dwc3
+> > > driver should already support this.
+> > > This will result in extra latency. There is probably an acceptable
+> > > trade-off with an acceptable interrupt load and latency. But I would like
+> > > to avoid that if possible.
+> 
+> There are two different situations to consider:
+> 
+> 	In the middle of a video stream, latency isn't an issue.
+> 	The gadget should expect to send a new packet for each frame,
+> 	and it doesn't know what to put in that packet until it
+> 	receives the video data or it knows there won't be any data.
+> 
+> 	At the start of a video stream, latency can be an issue.  But
+> 	in this situation the gadget doesn't have to send 0-length
+> 	requests until there actually is some data available.
+> 
+> Either way, it should be okay.
+> 
+> As far as interrupt load is concerned, I don't see how it relates to
+> the issue of sending 0-length requests.
 
-On traditional filesystem with a backing storage semantics of the same
-punch hole operation is somewhat different. It doesn't have explicit
-implications on memory footprint. It's about managing persistent storage.
-With shmem/tmpfs it is lumped together.
+Maybe I don't understand, how 0-length requests work. My current
+understanding is, that they are queued like any other request.
 
-It might be nice to write down pages that can be discarded under memory
-pressure and leave the huge page intact until then...
+If I want to reduce the number of interrupts then I need to queue more
+requests and only ask for an interrupt for some of them. This means that
+potentially a lot of 0-length requests requests are queued when a new video
+frame arrives and this means extra latency for the frame.
 
-[ I don't see a problem with your patch as long as we agree that it's
-desired semantics for the interface. ]
+I think the worst-case latency is 2x the time between two interrupts.
+So less interrupts mean more latency.
+The stop/start transfer this patch implements, the video frame can be sent
+immediately without any extra latency.
+
+> > I think I understand the problem you're trying to solve now.
+> > 
+> > The dwc3 driver does not know that there's a gap until after a new 
+> > request was queued, which then it will send an END_TRANSFER command and 
+> > dequeue all the requests to restart the transfer due to missed_isoc.
+> > We do this because the dwc3 driver does not know whether the new request 
+> > is actually stale data, and we should not change this behavior.
+> > 
+> > Now, with UVC, it needs to communicate to the dwc3 driver that there 
+> > will be a gap after a certain request (and that the device is expecting 
+> > to send 0-length data). This is not a normal operation for isoc 
+> > transfer. You may need to introduce a new way for the function driver to 
+> > do that, possibly a new field in usb_request structure to indicate that. 
+> > However, this seems a little awkward. Maybe others can comment on this.
+
+I'm not sure how this is supposed to work. What exactly can the dwc3 driver
+/ hardware do to handle a gap?
+
+> Note that on the host side, there is a difference between receiving 
+> a 0-length packet and receiving no packet at all.  As long as both the 
+> host and the gadget expect the isochronous stream to be running, there 
+> shouldn't be any gaps if you can avoid it.
+
+Huh, so how is this handled on other hardware? From what I can tell the UVC
+gadget works with other drivers and I've not found any special handling for
+this. Is there no packet sent or are 0-length packet generated implicitly
+somewhere?
+
+Regards,
+Michael
 
 -- 
- Kirill A. Shutemov
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
