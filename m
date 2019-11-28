@@ -2,421 +2,384 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE11CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A00BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABE721789
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B810217BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oBeQnpqx"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="g+PBel5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfK1LAh (ORCPT
+        id S1727300AbfK1LAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:00:37 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34488 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727240AbfK1LAf (ORCPT
+        Thu, 28 Nov 2019 06:00:41 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:39126 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727239AbfK1LAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:00:35 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASB0R6m022872;
-        Thu, 28 Nov 2019 05:00:27 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574938827;
-        bh=ZXivKUgJOKcIo/wkS6se6UfPlbG89d/zwDP/S+jN/TA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=oBeQnpqxPVXWlRb/Um8Qc1Z+B0iRwZ05E9n2GeznbUQs9HvVsw1oMoggJ1yAo07Tp
-         ykCZ73vZGQujYJbuP863aqP63ijEqaHAMjoIVvnG4p7HbEzMpv0ivzgcEjWB1B4dP1
-         tTa3gXbRksxyFCe8z/J1AjcB4/6uUYXCR4va3FMY=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASB0RKT015248
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Nov 2019 05:00:27 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 05:00:26 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 05:00:26 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAxgJQ073287;
-        Thu, 28 Nov 2019 05:00:23 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
-        <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-Subject: [PATCH v6 12/17] dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks 1
-Date:   Thu, 28 Nov 2019 12:59:40 +0200
-Message-ID: <20191128105945.13071-13-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191128105945.13071-1-peter.ujfalusi@ti.com>
-References: <20191128105945.13071-1-peter.ujfalusi@ti.com>
+        Thu, 28 Nov 2019 06:00:37 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASAq4aw023223;
+        Thu, 28 Nov 2019 12:00:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=YlvngK0gfmo41ZPgYNmQ5FeUoDq2NlVbgxbpkAXqaNo=;
+ b=g+PBel5CcX28hOwSErBElntV7lIrjG+ImRaFZ/DcosdQWmLQa1wYF8wMdMTXXLxh8XK+
+ LkW4iImv5f/JCPZQrARr5/V8I4k5ARI+P6RRaIlbLO7uDMBE2p4eASawAx6sxf6KZgd9
+ lGgiaNJbL6CxItNeuSbAYVw/zEFE/WS0x3wtehG6OV7eSmN407na6kiKZja7TisHYQci
+ vUGP69CrjA4to8oPnWPb+srmmZOiXEvl1aD9HiKCUF5m1gDKP0cYhrw2D3ISH5A1LH24
+ BByv03/I1nrsxRea6jCBwt/kkD0oUMN3eSSx1XTLWH7H0FXUisgoRon83q5xGuxHopvB Yg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2whcxks8mc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Nov 2019 12:00:20 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6753C10002A;
+        Thu, 28 Nov 2019 12:00:16 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 31E532B11E2;
+        Thu, 28 Nov 2019 12:00:16 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 28 Nov 2019 12:00:15
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <sean@poorly.run>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Subject: [PATCH v2] drm/dp_mst: Fix W=1 warnings
+Date:   Thu, 28 Nov 2019 12:00:12 +0100
+Message-ID: <20191128110012.23898-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-28_01:2019-11-28,2019-11-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split patch for review containing:
-device_config, device_issue_pending, device_tx_status, device_pause,
-device_resume, device_terminate_all and device_synchronize callback
-implementation and the custom udma_vchan_complete.
+Fix the warnings that show up with W=1.
+They are all about unused but set variables.
+If functions returns are not used anymore make them void.
 
-DMA driver for
-Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
-
-The UDMA-P is intended to perform similar (but significantly upgraded) functions
-as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
-supports the transmission and reception of various packet types. The UDMA-P is
-architected to facilitate the segmentation and reassembly of SoC DMA data
-structure compliant packets to/from smaller data blocks that are natively
-compatible with the specific requirements of each connected peripheral. Multiple
-Tx and Rx channels are provided within the DMA which allow multiple segmentation
-or reassembly operations to be ongoing. The DMA controller maintains state
-information for each of the channels which allows packet segmentation and
-reassembly operations to be time division multiplexed between channels in order
-to share the underlying DMA hardware. An external DMA scheduler is used to
-control the ordering and rate at which this multiplexing occurs for Transmit
-operations. The ordering and rate of Receive operations is indirectly controlled
-by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
-
-The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-channels. Channels in the UDMA-P can be configured to be either Packet-Based or
-Third-Party channels on a channel by channel basis.
-
-The initial driver supports:
-- MEM_TO_MEM (TR mode)
-- DEV_TO_MEM (Packet / TR mode)
-- MEM_TO_DEV (Packet / TR mode)
-- Cyclic (Packet / TR mode)
-- Metadata for descriptors
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+CC: Jani Nikula <jani.nikula@linux.intel.com>
 ---
- drivers/dma/ti/k3-udma.c | 293 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 293 insertions(+)
+changes in version 2:
+- fix indentations
+- when possible change functions prototype to void
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 0b5d709f6dad..9118db431438 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -1782,6 +1782,299 @@ static int udma_alloc_chan_resources(struct dma_chan *chan)
- 	return ret;
+Note: this patch may conflict with c485e2c97dae ("drm/dp_mst: Refactor pdt
+setup/teardown, add more locking") when it will hit drm-misc-next
+
+ drivers/gpu/drm/drm_dp_mst_topology.c | 83 +++++++++++++----------------------
+ 1 file changed, 31 insertions(+), 52 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index b854a422a523..ff2d81db0778 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -672,7 +672,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
+ 				      u8 *replybuf, u8 replybuflen, bool hdr)
+ {
+ 	int ret;
+-	u8 crc4;
+ 
+ 	if (hdr) {
+ 		u8 hdrlen;
+@@ -714,8 +713,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
+ 	}
+ 
+ 	if (msg->curchunk_idx >= msg->curchunk_len) {
+-		/* do CRC */
+-		crc4 = drm_dp_msg_data_crc4(msg->chunk, msg->curchunk_len - 1);
+ 		/* copy chunk into bigger msg */
+ 		memcpy(&msg->msg[msg->curlen], msg->chunk, msg->curchunk_len - 1);
+ 		msg->curlen += msg->curchunk_len - 1;
+@@ -1012,7 +1009,7 @@ static bool drm_dp_sideband_parse_req(struct drm_dp_sideband_msg_rx *raw,
+ 	}
  }
  
-+static int udma_slave_config(struct dma_chan *chan,
-+			     struct dma_slave_config *cfg)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+
-+	memcpy(&uc->cfg, cfg, sizeof(uc->cfg));
-+
-+	return 0;
-+}
-+
-+static void udma_issue_pending(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&uc->vc.lock, flags);
-+
-+	/* If we have something pending and no active descriptor, then */
-+	if (vchan_issue_pending(&uc->vc) && !uc->desc) {
-+		/*
-+		 * start a descriptor if the channel is NOT [marked as
-+		 * terminating _and_ it is still running (teardown has not
-+		 * completed yet)].
-+		 */
-+		if (!(uc->state == UDMA_CHAN_IS_TERMINATING &&
-+		      udma_is_chan_running(uc)))
-+			udma_start(uc);
-+	}
-+
-+	spin_unlock_irqrestore(&uc->vc.lock, flags);
-+}
-+
-+static enum dma_status udma_tx_status(struct dma_chan *chan,
-+				      dma_cookie_t cookie,
-+				      struct dma_tx_state *txstate)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+	enum dma_status ret;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&uc->vc.lock, flags);
-+
-+	ret = dma_cookie_status(chan, cookie, txstate);
-+
-+	if (!udma_is_chan_running(uc))
-+		ret = DMA_COMPLETE;
-+
-+	if (ret == DMA_COMPLETE || !txstate)
-+		goto out;
-+
-+	if (uc->desc && uc->desc->vd.tx.cookie == cookie) {
-+		u32 peer_bcnt = 0;
-+		u32 bcnt = 0;
-+		u32 residue = uc->desc->residue;
-+		u32 delay = 0;
-+
-+		if (uc->desc->dir == DMA_MEM_TO_DEV) {
-+			bcnt = udma_tchanrt_read(uc->tchan,
-+						 UDMA_TCHAN_RT_SBCNT_REG);
-+
-+			if (uc->ep_type != PSIL_EP_NATIVE) {
-+				peer_bcnt = udma_tchanrt_read(uc->tchan,
-+						UDMA_TCHAN_RT_PEER_BCNT_REG);
-+
-+				if (bcnt > peer_bcnt)
-+					delay = bcnt - peer_bcnt;
-+			}
-+		} else if (uc->desc->dir == DMA_DEV_TO_MEM) {
-+			bcnt = udma_rchanrt_read(uc->rchan,
-+						 UDMA_RCHAN_RT_BCNT_REG);
-+
-+			if (uc->ep_type != PSIL_EP_NATIVE) {
-+				peer_bcnt = udma_rchanrt_read(uc->rchan,
-+						UDMA_RCHAN_RT_PEER_BCNT_REG);
-+
-+				if (peer_bcnt > bcnt)
-+					delay = peer_bcnt - bcnt;
-+			}
-+		} else {
-+			bcnt = udma_tchanrt_read(uc->tchan,
-+						 UDMA_TCHAN_RT_BCNT_REG);
-+		}
-+
-+		bcnt -= uc->bcnt;
-+		if (bcnt && !(bcnt % uc->desc->residue))
-+			residue = 0;
-+		else
-+			residue -= bcnt % uc->desc->residue;
-+
-+		if (!residue && (uc->dir == DMA_DEV_TO_MEM || !delay)) {
-+			ret = DMA_COMPLETE;
-+			delay = 0;
-+		}
-+
-+		dma_set_residue(txstate, residue);
-+		dma_set_in_flight_bytes(txstate, delay);
-+
-+	} else {
-+		ret = DMA_COMPLETE;
-+	}
-+
-+out:
-+	spin_unlock_irqrestore(&uc->vc.lock, flags);
-+	return ret;
-+}
-+
-+static int udma_pause(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+
-+	if (!uc->desc)
-+		return -EINVAL;
-+
-+	/* pause the channel */
-+	switch (uc->desc->dir) {
-+	case DMA_DEV_TO_MEM:
-+		udma_rchanrt_update_bits(uc->rchan,
-+					 UDMA_RCHAN_RT_PEER_RT_EN_REG,
-+					 UDMA_PEER_RT_EN_PAUSE,
-+					 UDMA_PEER_RT_EN_PAUSE);
-+		break;
-+	case DMA_MEM_TO_DEV:
-+		udma_tchanrt_update_bits(uc->tchan,
-+					 UDMA_TCHAN_RT_PEER_RT_EN_REG,
-+					 UDMA_PEER_RT_EN_PAUSE,
-+					 UDMA_PEER_RT_EN_PAUSE);
-+		break;
-+	case DMA_MEM_TO_MEM:
-+		udma_tchanrt_update_bits(uc->tchan, UDMA_TCHAN_RT_CTL_REG,
-+					 UDMA_CHAN_RT_CTL_PAUSE,
-+					 UDMA_CHAN_RT_CTL_PAUSE);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int udma_resume(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+
-+	if (!uc->desc)
-+		return -EINVAL;
-+
-+	/* resume the channel */
-+	switch (uc->desc->dir) {
-+	case DMA_DEV_TO_MEM:
-+		udma_rchanrt_update_bits(uc->rchan,
-+					 UDMA_RCHAN_RT_PEER_RT_EN_REG,
-+					 UDMA_PEER_RT_EN_PAUSE, 0);
-+
-+		break;
-+	case DMA_MEM_TO_DEV:
-+		udma_tchanrt_update_bits(uc->tchan,
-+					 UDMA_TCHAN_RT_PEER_RT_EN_REG,
-+					 UDMA_PEER_RT_EN_PAUSE, 0);
-+		break;
-+	case DMA_MEM_TO_MEM:
-+		udma_tchanrt_update_bits(uc->tchan, UDMA_TCHAN_RT_CTL_REG,
-+					 UDMA_CHAN_RT_CTL_PAUSE, 0);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int udma_terminate_all(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+	unsigned long flags;
-+	LIST_HEAD(head);
-+
-+	spin_lock_irqsave(&uc->vc.lock, flags);
-+
-+	if (udma_is_chan_running(uc))
-+		udma_stop(uc);
-+
-+	if (uc->desc) {
-+		uc->terminated_desc = uc->desc;
-+		uc->desc = NULL;
-+		uc->terminated_desc->terminated = true;
-+	}
-+
-+	uc->paused = false;
-+
-+	vchan_get_all_descriptors(&uc->vc, &head);
-+	spin_unlock_irqrestore(&uc->vc.lock, flags);
-+	vchan_dma_desc_free_list(&uc->vc, &head);
-+
-+	return 0;
-+}
-+
-+static void udma_synchronize(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+	unsigned long timeout = msecs_to_jiffies(1000);
-+
-+	vchan_synchronize(&uc->vc);
-+
-+	if (uc->state == UDMA_CHAN_IS_TERMINATING) {
-+		timeout = wait_for_completion_timeout(&uc->teardown_completed,
-+						      timeout);
-+		if (!timeout) {
-+			dev_warn(uc->ud->dev, "chan%d teardown timeout!\n",
-+				 uc->id);
-+			udma_dump_chan_stdata(uc);
-+			udma_reset_chan(uc, true);
-+		}
-+	}
-+
-+	udma_reset_chan(uc, false);
-+	if (udma_is_chan_running(uc))
-+		dev_warn(uc->ud->dev, "chan%d refused to stop!\n", uc->id);
-+
-+	udma_reset_rings(uc);
-+}
-+
-+static void udma_desc_pre_callback(struct virt_dma_chan *vc,
-+				   struct virt_dma_desc *vd,
-+				   struct dmaengine_result *result)
-+{
-+	struct udma_chan *uc = to_udma_chan(&vc->chan);
-+	struct udma_desc *d;
-+
-+	if (!vd)
-+		return;
-+
-+	d = to_udma_desc(&vd->tx);
-+
-+	if (d->metadata_size)
-+		udma_fetch_epib(uc, d);
-+
-+	/* Provide residue information for the client */
-+	if (result) {
-+		void *desc_vaddr = udma_curr_cppi5_desc_vaddr(d, d->desc_idx);
-+
-+		if (cppi5_desc_get_type(desc_vaddr) ==
-+		    CPPI5_INFO0_DESC_TYPE_VAL_HOST) {
-+			result->residue = cppi5_hdesc_get_pktlen(desc_vaddr);
-+			if (result->residue == d->residue)
-+				result->result = DMA_TRANS_NOERROR;
-+			else
-+				result->result = DMA_TRANS_ABORTED;
-+		} else {
-+			result->residue = d->residue;
-+			result->result = DMA_TRANS_NOERROR;
-+		}
-+	}
-+}
-+
-+/*
-+ * This tasklet handles the completion of a DMA descriptor by
-+ * calling its callback and freeing it.
-+ */
-+static void udma_vchan_complete(unsigned long arg)
-+{
-+	struct virt_dma_chan *vc = (struct virt_dma_chan *)arg;
-+	struct virt_dma_desc *vd, *_vd;
-+	struct dmaengine_desc_callback cb;
-+	LIST_HEAD(head);
-+
-+	spin_lock_irq(&vc->lock);
-+	list_splice_tail_init(&vc->desc_completed, &head);
-+	vd = vc->cyclic;
-+	if (vd) {
-+		vc->cyclic = NULL;
-+		dmaengine_desc_get_callback(&vd->tx, &cb);
-+	} else {
-+		memset(&cb, 0, sizeof(cb));
-+	}
-+	spin_unlock_irq(&vc->lock);
-+
-+	udma_desc_pre_callback(vc, vd, NULL);
-+	dmaengine_desc_callback_invoke(&cb, NULL);
-+
-+	list_for_each_entry_safe(vd, _vd, &head, node) {
-+		struct dmaengine_result result;
-+
-+		dmaengine_desc_get_callback(&vd->tx, &cb);
-+
-+		list_del(&vd->node);
-+
-+		udma_desc_pre_callback(vc, vd, &result);
-+		dmaengine_desc_callback_invoke(&cb, &result);
-+
-+		vchan_vdesc_fini(vd);
-+	}
-+}
-+
- static void udma_free_chan_resources(struct dma_chan *chan)
+-static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
++static void build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
  {
- 	struct udma_chan *uc = to_udma_chan(chan);
+ 	struct drm_dp_sideband_msg_req_body req;
+ 
+@@ -1022,17 +1019,14 @@ static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
+ 	req.u.dpcd_write.num_bytes = num_bytes;
+ 	req.u.dpcd_write.bytes = bytes;
+ 	drm_dp_encode_sideband_req(&req, msg);
+-
+-	return 0;
+ }
+ 
+-static int build_link_address(struct drm_dp_sideband_msg_tx *msg)
++static void build_link_address(struct drm_dp_sideband_msg_tx *msg)
+ {
+ 	struct drm_dp_sideband_msg_req_body req;
+ 
+ 	req.req_type = DP_LINK_ADDRESS;
+ 	drm_dp_encode_sideband_req(&req, msg);
+-	return 0;
+ }
+ 
+ static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int port_num)
+@@ -1046,7 +1040,7 @@ static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int por
+ 	return 0;
+ }
+ 
+-static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
++static void build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
+ 				  u8 vcpi, uint16_t pbn,
+ 				  u8 number_sdp_streams,
+ 				  u8 *sdp_stream_sink)
+@@ -1062,10 +1056,9 @@ static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_n
+ 		   number_sdp_streams);
+ 	drm_dp_encode_sideband_req(&req, msg);
+ 	msg->path_msg = true;
+-	return 0;
+ }
+ 
+-static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
++static void build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
+ 				  int port_num, bool power_up)
+ {
+ 	struct drm_dp_sideband_msg_req_body req;
+@@ -1078,7 +1071,6 @@ static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
+ 	req.u.port_num.port_number = port_num;
+ 	drm_dp_encode_sideband_req(&req, msg);
+ 	msg->path_msg = true;
+-	return 0;
+ }
+ 
+ static int drm_dp_mst_assign_payload_id(struct drm_dp_mst_topology_mgr *mgr,
+@@ -1744,14 +1736,13 @@ static u8 drm_dp_calculate_rad(struct drm_dp_mst_port *port,
+  */
+ static bool drm_dp_port_setup_pdt(struct drm_dp_mst_port *port)
+ {
+-	int ret;
+ 	u8 rad[6], lct;
+ 	bool send_link = false;
+ 	switch (port->pdt) {
+ 	case DP_PEER_DEVICE_DP_LEGACY_CONV:
+ 	case DP_PEER_DEVICE_SST_SINK:
+ 		/* add i2c over sideband */
+-		ret = drm_dp_mst_register_i2c_bus(&port->aux);
++		drm_dp_mst_register_i2c_bus(&port->aux);
+ 		break;
+ 	case DP_PEER_DEVICE_MST_BRANCHING:
+ 		lct = drm_dp_calculate_rad(port, rad);
+@@ -1821,25 +1812,20 @@ ssize_t drm_dp_mst_dpcd_write(struct drm_dp_aux *aux,
+ 
+ static void drm_dp_check_mstb_guid(struct drm_dp_mst_branch *mstb, u8 *guid)
+ {
+-	int ret;
+-
+ 	memcpy(mstb->guid, guid, 16);
+ 
+ 	if (!drm_dp_validate_guid(mstb->mgr, mstb->guid)) {
+ 		if (mstb->port_parent) {
+-			ret = drm_dp_send_dpcd_write(
+-					mstb->mgr,
+-					mstb->port_parent,
+-					DP_GUID,
+-					16,
+-					mstb->guid);
++			drm_dp_send_dpcd_write(mstb->mgr,
++					       mstb->port_parent,
++					       DP_GUID,
++					       16,
++					       mstb->guid);
+ 		} else {
+-
+-			ret = drm_dp_dpcd_write(
+-					mstb->mgr->aux,
+-					DP_GUID,
+-					mstb->guid,
+-					16);
++			drm_dp_dpcd_write(mstb->mgr->aux,
++					  DP_GUID,
++					  mstb->guid,
++					  16);
+ 		}
+ 	}
+ }
+@@ -2195,7 +2181,7 @@ static bool drm_dp_validate_guid(struct drm_dp_mst_topology_mgr *mgr,
+ 	return false;
+ }
+ 
+-static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
++static void build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
+ {
+ 	struct drm_dp_sideband_msg_req_body req;
+ 
+@@ -2204,8 +2190,6 @@ static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
+ 	req.u.dpcd_read.dpcd_address = offset;
+ 	req.u.dpcd_read.num_bytes = num_bytes;
+ 	drm_dp_encode_sideband_req(&req, msg);
+-
+-	return 0;
+ }
+ 
+ static int drm_dp_send_sideband_msg(struct drm_dp_mst_topology_mgr *mgr,
+@@ -2427,14 +2411,14 @@ static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
+ {
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+ 	struct drm_dp_link_address_ack_reply *reply;
+-	int i, len, ret;
++	int i, ret;
+ 
+ 	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
+ 	if (!txmsg)
+ 		return;
+ 
+ 	txmsg->dst = mstb;
+-	len = build_link_address(txmsg);
++	build_link_address(txmsg);
+ 
+ 	mstb->link_address_sent = true;
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+@@ -2476,7 +2460,6 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
+ {
+ 	struct drm_dp_enum_path_resources_ack_reply *path_res;
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+-	int len;
+ 	int ret;
+ 
+ 	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
+@@ -2484,7 +2467,7 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
+ 		return -ENOMEM;
+ 
+ 	txmsg->dst = mstb;
+-	len = build_enum_path_resources(txmsg, port->port_num);
++	build_enum_path_resources(txmsg, port->port_num);
+ 
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+ 
+@@ -2567,7 +2550,7 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
+ {
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+ 	struct drm_dp_mst_branch *mstb;
+-	int len, ret, port_num;
++	int ret, port_num;
+ 	u8 sinks[DRM_DP_MAX_SDP_STREAMS];
+ 	int i;
+ 
+@@ -2592,9 +2575,9 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
+ 		sinks[i] = i;
+ 
+ 	txmsg->dst = mstb;
+-	len = build_allocate_payload(txmsg, port_num,
+-				     id,
+-				     pbn, port->num_sdp_streams, sinks);
++	build_allocate_payload(txmsg, port_num,
++			       id,
++			       pbn, port->num_sdp_streams, sinks);
+ 
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+ 
+@@ -2623,7 +2606,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
+ 				 struct drm_dp_mst_port *port, bool power_up)
+ {
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+-	int len, ret;
++	int ret;
+ 
+ 	port = drm_dp_mst_topology_get_port_validated(mgr, port);
+ 	if (!port)
+@@ -2636,7 +2619,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
+ 	}
+ 
+ 	txmsg->dst = port->parent;
+-	len = build_power_updown_phy(txmsg, port->port_num, power_up);
++	build_power_updown_phy(txmsg, port->port_num, power_up);
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+ 
+ 	ret = drm_dp_mst_wait_tx_reply(port->parent, txmsg);
+@@ -2856,7 +2839,6 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
+ 				 struct drm_dp_mst_port *port,
+ 				 int offset, int size, u8 *bytes)
+ {
+-	int len;
+ 	int ret = 0;
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+ 	struct drm_dp_mst_branch *mstb;
+@@ -2871,7 +2853,7 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
+ 		goto fail_put;
+ 	}
+ 
+-	len = build_dpcd_read(txmsg, port->port_num, offset, size);
++	build_dpcd_read(txmsg, port->port_num, offset, size);
+ 	txmsg->dst = port->parent;
+ 
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+@@ -2909,7 +2891,6 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
+ 				  struct drm_dp_mst_port *port,
+ 				  int offset, int size, u8 *bytes)
+ {
+-	int len;
+ 	int ret;
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+ 	struct drm_dp_mst_branch *mstb;
+@@ -2924,7 +2905,7 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
+ 		goto fail_put;
+ 	}
+ 
+-	len = build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
++	build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
+ 	txmsg->dst = mstb;
+ 
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+@@ -3147,7 +3128,7 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
+ {
+ 	int len;
+ 	u8 replyblock[32];
+-	int replylen, origlen, curreply;
++	int replylen, curreply;
+ 	int ret;
+ 	struct drm_dp_sideband_msg_rx *msg;
+ 	int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE : DP_SIDEBAND_MSG_DOWN_REP_BASE;
+@@ -3167,7 +3148,6 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
+ 	}
+ 	replylen = msg->curchunk_len + msg->curchunk_hdrlen;
+ 
+-	origlen = replylen;
+ 	replylen -= len;
+ 	curreply = len;
+ 	while (replylen > 0) {
+@@ -3959,17 +3939,16 @@ void drm_dp_mst_dump_topology(struct seq_file *m,
+ 	mutex_lock(&mgr->lock);
+ 	if (mgr->mst_primary) {
+ 		u8 buf[DP_PAYLOAD_TABLE_SIZE];
+-		int ret;
+ 
+-		ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
++		drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
+ 		seq_printf(m, "dpcd: %*ph\n", DP_RECEIVER_CAP_SIZE, buf);
+-		ret = drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
++		drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
+ 		seq_printf(m, "faux/mst: %*ph\n", 2, buf);
+-		ret = drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
++		drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
+ 		seq_printf(m, "mst ctrl: %*ph\n", 1, buf);
+ 
+ 		/* dump the standard OUI branch header */
+-		ret = drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
++		drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
+ 		seq_printf(m, "branch oui: %*phN devid: ", 3, buf);
+ 		for (i = 0x3; i < 0x8 && buf[i]; i++)
+ 			seq_printf(m, "%c", buf[i]);
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.15.0
 
