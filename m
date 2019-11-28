@@ -2,116 +2,141 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94135C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B58C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C68C21774
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4EF21781
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 09:17:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JPxrg/kz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BI8clD1t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfK1JPu (ORCPT
+        id S1726822AbfK1JRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 04:15:50 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:16231 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfK1JPu (ORCPT
+        Thu, 28 Nov 2019 04:17:39 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50639 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726252AbfK1JRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 04:15:50 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddf903f0000>; Thu, 28 Nov 2019 01:15:43 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 28 Nov 2019 01:15:49 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 28 Nov 2019 01:15:49 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Nov
- 2019 09:15:47 +0000
-Subject: Re: [PATCH 5.3 00/95] 5.3.14-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191127202845.651587549@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <0c65f759-f22c-1b15-1f71-929def8ac43e@nvidia.com>
-Date:   Thu, 28 Nov 2019 09:15:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 28 Nov 2019 04:17:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574932657;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=i0SBG/w7iwc1VC5pdiCftNu6+szwsgUJz8hkCGOzsEs=;
+        b=BI8clD1tWsyNwOgGl6gFUy1Xn6kW/iyWhWDmPFKcx4JMIgZUTw7QDiVztFANjr+TuMulUG
+        SBeo4UmjBQk3hrVs33nbYALV4xU41PTtU/K51/WVRlNmOHN8LLlFGETZ7SqOMMdDQ6wrmB
+        SONswyVcPg19wDl9Bg+fbEquqsUGD2Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-ylZ3XNEdMrS6uXP-I6wdZg-1; Thu, 28 Nov 2019 04:17:32 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9102810054E3;
+        Thu, 28 Nov 2019 09:17:29 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-17.pek2.redhat.com [10.72.8.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1E92B600C8;
+        Thu, 28 Nov 2019 09:17:18 +0000 (UTC)
+Date:   Thu, 28 Nov 2019 17:17:12 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>
+Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191128091712.GD15549@ming.t460p>
+References: <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>
+ <20191125102928.GA20489@ming.t460p>
+ <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
+ <20191125151535.GA8044@ming.t460p>
+ <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>
+ <20191126023253.GA24501@ming.t460p>
+ <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
+ <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
+ <cb6e84781c4542229a3f31572cef19ab@SVR-IES-MBX-03.mgc.mentorg.com>
+ <c1358b840b3a4971aa35a25d8495c2c8953403ea.camel@unipv.it>
 MIME-Version: 1.0
-In-Reply-To: <20191127202845.651587549@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574932543; bh=V74iSjsTEwiiPrnOfi0LtxlFEQG8OKs27AT3qLvjsjc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JPxrg/kzFyWejtuin+B7lEjpILoBP8FbjcVwUgvfWi5xZ8KpE4KsL8q6fRaiaMW7f
-         5MAARFZ/tyj9byIb367//45vEhD//K0O3BKr2XIhPlYEfohxBObmlyCl67Rb3y356s
-         whZ2nUrueugKuX5P0brgcP08mI5nLg2LYtrd6pwp6PZz47pBvLqXygHfX5Fh23eYB7
-         eM/GforiEKy5Ej473jN0IkVWHHql4pfLnKEHV8Qz8p8AUw7CZe4rGXqZJB2syLhgJW
-         botpMgAc0p+txnVjSAHXBoq7o8gIKIbM5M4Of8I6hQsEb5aHZvG1lWfqp5Hgk5IV5B
-         N0qfM57UqAtDQ==
+In-Reply-To: <c1358b840b3a4971aa35a25d8495c2c8953403ea.camel@unipv.it>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: ylZ3XNEdMrS6uXP-I6wdZg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 28, 2019 at 08:46:57AM +0100, Andrea Vai wrote:
+> Il giorno mer, 27/11/2019 alle 08.14 +0000, Schmid, Carsten ha
+> scritto:
+> > >=20
+> > > > Then I started another set of 100 trials and let them run
+> > tonight, and
+> > > > the first 10 trials were around 1000s, then gradually decreased
+> > to
+> > > > ~300s, and finally settled around 200s with some trials below
+> > 70-80s.
+> > > > This to say, times are extremely variable and for the first time
+> > I
+> > > > noticed a sort of "performance increase" with time.
+> > > >
+> > >=20
+> > > The sheer volume of testing (probably some terabytes by now) would
+> > > exercise the wear leveling algorithm in the FTL.
+> > >=20
+> > But with "old kernel" the copy operation still is "fast", as far as
+> > i understood.
+> > If FTL (e.g. wear leveling) would slow down, we would see that also
+> > in
+> > the old kernel, right?
+> >=20
+> > Andrea, can you confirm that the same device used with the old fast
+> > kernel is still fast today?
+>=20
+> Yes, it is still fast. Just ran a 100 trials test and got an average
+> of 70 seconds with standard deviation =3D 6 seconds, aligned with the
+> past values of the same kernel.
 
-On 27/11/2019 20:31, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.14 release.
-> There are 95 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.14-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Then can you collect trace on the old kernel via the previous script?
 
-...
+#!/bin/sh
 
-> Jouni Hogander <jouni.hogander@unikie.com>
->     net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
+MAJ=3D$1
+MIN=3D$2
+MAJ=3D$(( $MAJ << 20 ))
+DEV=3D$(( $MAJ | $MIN ))
 
-The above commit is causing a boot regression (NULL pointer deference
-crash) on Tegra210 for v5.3. Reverting this on top of 5.3.14-rc1 fixes
-the problem. Complete results for Tegra are here ...
+/usr/share/bcc/tools/trace -t -C \
+    't:block:block_rq_issue (args->dev =3D=3D '$DEV') "%s %d %d", args->rwb=
+s, args->sector, args->nr_sector' \
+    't:block:block_rq_insert (args->dev =3D=3D '$DEV') "%s %d %d", args->rw=
+bs, args->sector, args->nr_sector'
 
-Test results for stable-v5.3:
-    13 builds:	13 pass, 0 fail
-    24 boots:	18 pass, 6 fail
-    34 tests:	34 pass, 0 fail
+Both the two trace points and bcc should be available on the old kernel.
 
-Linux version:	5.3.14-rc1-g7173a2d18fa6
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+Thanks,
+Ming
 
-Cheers
-Jon
-
--- 
-nvpublic
