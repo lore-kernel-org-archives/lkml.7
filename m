@@ -2,101 +2,105 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D84C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026FCC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D003C21787
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E90217BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:31:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N+fcqeko"
+	dkim=pass (1024-bit key) header.d=protonmail.ch header.i=@protonmail.ch header.b="DWR+RBx1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfK1P3c (ORCPT
+        id S1726703AbfK1Pbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 10:29:32 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36974 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfK1P3b (ORCPT
+        Thu, 28 Nov 2019 10:31:39 -0500
+Received: from mail-40130.protonmail.ch ([185.70.40.130]:57608 "EHLO
+        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfK1Pbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 10:29:31 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 128so15547586oih.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 07:29:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8jbWiJP8zuPwo1h57bhn9bSCas9rrkjtaMb7mPh1IdA=;
-        b=N+fcqekoOxQDhlpJGKAWkheEt+gN07VZ81/73rXPn1PTzGgsLa3Rcmh9TY+xjk+3Ih
-         qDS65BfoaV4kxITCwQ9aynD1HSih7wmCgb7HKN1o0H2yuxRclj9Ujkcv+DZ9XG9qqLfs
-         gYcHNBi7EmNxtYpBo1DwprVnLxrTtjU6Ewc2Z1bEnBpr9dgcHgNpZdxeFGtuNGpYZLXB
-         hvMrqTF858ayZPTPJw8NVYywiC4NY9H/sx9/Hg0jnT8HOwWZT4svLjw62xcIlt+rlAQX
-         SzBMJVlbbVULZs/zzvLYp6VnC0pl64WDBL9U0f3CF54c3vg/K2F81DElVEZbPOtUntZY
-         PnQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8jbWiJP8zuPwo1h57bhn9bSCas9rrkjtaMb7mPh1IdA=;
-        b=i2L4vQb2nD3mXvewh1bhkycF+VO8F29x8WNz3/k64lfmF9rGmvagNClmlV3gkWpKWD
-         HFJYVBn2ZInRQVW2zt6j8VrYI9GI+MDcCsu0/L+naOEMC6L5RI7C1oiw3JU1loAw48fS
-         45f7RRuCYy1h5gpZp3u6/T7X3qIkg+g3i430riIakZWXhSOIefNhoRtUngdKXgxqFoJV
-         YBt5jaQQqh4QUVOe/JDd2mWYqL8YzhouOC6U8Ueb9pByLqBjjzz39UYnBaNvwhKsZ7SA
-         AJ3dNxRmhO19WSK/yCQ4D234IYJKrfAnxuQBNubF8jIioY0a8hT1smr0WEi0MYMHVRqU
-         XXJQ==
-X-Gm-Message-State: APjAAAUaiP7540wFzQcN41Ukt32yELtQD3CS/gVXlxAW4+TPKovQptKn
-        Js41qwu/+wzC00iCOEOC+xyGdsfxErztTUJhf4HGNw==
-X-Google-Smtp-Source: APXvYqwQF8gySZpP3ML3y1V5QupQwMNy5TOx2Z2uDdHPjHuyVgwkY34m3prkUOx4mIROyml0+fITWq8uzCmVDZn6HVs=
-X-Received: by 2002:aca:d783:: with SMTP id o125mr1403513oig.68.1574954969803;
- Thu, 28 Nov 2019 07:29:29 -0800 (PST)
+        Thu, 28 Nov 2019 10:31:39 -0500
+Date:   Thu, 28 Nov 2019 15:31:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.ch;
+        s=default; t=1574955096;
+        bh=jrPTZgi0SU4x8PDrknsTeduahbLr99zyjShTd7swWm4=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=DWR+RBx1r49fxhEEvwf506KeubbDh7cTV/Gh20Uuetz+r+wT8yoUCjTAxuTw44Wz1
+         FlgwK6mIc0S99+e/1Uu67LxCQU3GTDA6YPZc5B9esHWhQAVq2Z8geR14gPDLVkV4ay
+         hp9RBO0Y9dLoQedLXRNDT44BZzJi8aG1rNVE16u0=
+To:     Steven Rostedt <rostedt@goodmis.org>
+From:   Jordan Glover <Golden_Miller83@protonmail.ch>
+Cc:     dann frazier <dann.frazier@canonical.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Reply-To: Jordan Glover <Golden_Miller83@protonmail.ch>
+Subject: Re: tracefs splats in lockdown=confidentiality mode
+Message-ID: <2vtDIdkutRsBBbaiswjFZlGeQPSlDHF3et5ZxQ4YJ4zArOKo7-53A6d8SwpUtt7NCYdQEmmkeTADvrS7NCzw0Stw33n44vJC_qspqXgRPZQ=@protonmail.ch>
+In-Reply-To: <20191101181501.4beff81b@grimm.local.home>
+References: <20191101210803.GA9841@xps13.dannf>
+ <20191101181501.4beff81b@grimm.local.home>
+Feedback-ID: QEdvdaLhFJaqnofhWA-dldGwsuoeDdDw7vz0UPs8r8sanA3bIt8zJdf4aDqYKSy4gJuZ0WvFYJtvq21y6ge_uQ==:Ext:ProtonMail
 MIME-Version: 1.0
-References: <0000000000009f46d4059863fdea@google.com> <71b86056-944f-c5e1-b4cf-35833a82761c@kernel.dk>
-In-Reply-To: <71b86056-944f-c5e1-b4cf-35833a82761c@kernel.dk>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 28 Nov 2019 16:29:03 +0100
-Message-ID: <CAG48ez09ZN2v2rTvnSgybrZu7BAa28vcnkcOU=Z7549rbpqz1A@mail.gmail.com>
-Subject: Re: INFO: trying to register non-static key in io_cqring_overflow_flush
-To:     Jens Axboe <axboe@kernel.dk>,
-        syzbot <syzbot+be9e13497969768c0e6e@syzkaller.appspotmail.com>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 4:19 PM Jens Axboe <axboe@kernel.dk> wrote:
-> On 11/28/19 12:35 AM, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    d7688697 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=145e5fcee00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=12f2051e3d8cdb3f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=be9e13497969768c0e6e
-> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146c517ae00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16550b12e00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+be9e13497969768c0e6e@syzkaller.appspotmail.com
->
-> This is the same as:
->
-> syzbot+0d818c0d39399188f393@syzkaller.appspotmail.com
+On Friday, November 1, 2019 10:15 PM, Steven Rostedt <rostedt@goodmis.org> =
+wrote:
 
-syzbot listens to specific commands, see
-<https://github.com/google/syzkaller/blob/master/docs/syzbot.md#status>
-(linked in the report):
+> On Fri, 1 Nov 2019 15:08:03 -0600
+> dann frazier dann.frazier@canonical.com wrote:
+>
+> > hey,
+> > fyi, I'm seeing a bunch of errors from tracefs when booting 5.4-rc5 in
+> > lockdown=3Dconfidentiality mode:
+> > [ 1.763630] Lockdown: swapper/0: use of tracefs is restricted; see man =
+kernel_lockdown.7
+> > [ 1.772332] Could not create tracefs 'available_events' entry
+> > [ 1.778633] Lockdown: swapper/0: use of tracefs is restricted; see man =
+kernel_lockdown.7
+> > [ 1.787095] Could not create tracefs 'set_event' entry
+> > [ 1.792412] Lockdown: swapper/0: use of tracefs is restricted; see man =
+kernel_lockdown.7
+> > (...)
+> > [ 2.899481] Could not create tracefs 'set_graph_notrace' entry
+> > [ 2.905671] Lockdown: swapper/0: use of tracefs is restricted; see man =
+kernel_lockdown.7
+> > [ 2.913934] ------------[ cut here ]------------
+> > [ 2.918435] Could not register function stat for cpu 0
+> > [ 2.923717] WARNING: CPU: 1 PID: 1 at kernel/trace/ftrace.c:987 ftrace_=
+init_tracefs_toplevel+0x168/0x1bc
+> > [ 2.933939] Modules linked in:
+> > [ 2.937290] CPU: 1 PID: 1 Comm:
+>
+> Looks to me that it's working as designed ;-)
+>
+> I'm guessing we could quiet these warnings for boot up though. :-/
+>
+> But there should be at least one message that states that the tracefs
+> files are not being created due to lockdown.
+>
+> -- Steve
 
-#syz dup: INFO: trying to register non-static key in io_cqring_ev_posted
+Could you clarify what functionality is lost here and if it affects
+system stability?
+
+I agree that triggering WARNING on every boot with supported kernel
+configuration isn't optimal experience for users.
+
+Jordan
