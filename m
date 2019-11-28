@@ -2,127 +2,73 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D91C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53A6C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192D12178F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:42:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="aT4eqKsQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9AC2E2178F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfK1PmL (ORCPT
+        id S1726909AbfK1PnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 10:42:11 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:16821 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfK1PmK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 10:42:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574955728;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=nIftciHtdIZW58XYe32SJEVSKmd/d/4nuYbsUj5SOW4=;
-        b=aT4eqKsQjooGlWu4T6PVkQr6dH6MsdWCkVplXu52Fd+oY9e69v2hFeHKensb0S/k43
-        OqJnrNoFPIGt5zq9FvfhX73aYzP4VLLaR9+ZxOBHJ9ZI6eXXa7IHy+F6RD+aqH0wUl/4
-        C8ZabKa5q/l+0sT+USRNWFZW8//w+gNXoUrcE+8JvPXDjfqKRQHuBtgUWMnjvVpyG6Rn
-        EcGHz0FAXHChegSR4LbQ68hZ/mx7RG7rnWc8MSOF6eJju3O5BkAIzEcJrmwU2cqxcW/E
-        jn/LaMPyNHU1+3+GDIJKtSGU4wZBV+24kJm+Hu21Jn8RYR2/V3bjliQL8QITkY0hfXoD
-        GzSQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw43upSE="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id y07703vASFg1Kot
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 28 Nov 2019 16:42:01 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <64ee0c3e-9a54-f86a-daf5-32d54454b8ad@arm.com>
-Date:   Thu, 28 Nov 2019 16:42:01 +0100
+        Thu, 28 Nov 2019 10:43:15 -0500
+Received: from elvis.franken.de ([193.175.24.41]:53133 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726510AbfK1PnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 10:43:15 -0500
+X-Greylist: delayed 1529 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 Nov 2019 10:43:15 EST
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1iaLY8-0003pZ-00; Thu, 28 Nov 2019 16:17:44 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id F11D9C0638; Thu, 28 Nov 2019 16:07:21 +0100 (CET)
+Date:   Thu, 28 Nov 2019 16:07:21 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
 Cc:     Maarten ter Huurne <maarten@treewalker.org>,
-        MIPS Creator CI20 Development 
-        <mips-creator-ci20-dev@googlegroups.com>,
+        mips-creator-ci20-dev@googlegroups.com,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Discussions about the Letux Kernel 
         <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3B85F0EB-DEB4-478B-8745-B44C991D82F4@goldelico.com>
-References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com> <7b6275c7-ab2b-a647-6bf7-d5e1c4523c98@arm.com> <D1CE4D1E-9A42-4FAE-90A9-615C38B979C0@goldelico.com> <4807842.gtHLO0kk0V@hyperion> <01D75E67-EC2E-4C74-B9BB-752773C481A9@goldelico.com> <64ee0c3e-9a54-f86a-daf5-32d54454b8ad@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-X-Mailer: Apple Mail (2.3124)
+Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
+Message-ID: <20191128150721.GA20142@alpha.franken.de>
+References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com>
+ <7b6275c7-ab2b-a647-6bf7-d5e1c4523c98@arm.com>
+ <D1CE4D1E-9A42-4FAE-90A9-615C38B979C0@goldelico.com>
+ <4807842.gtHLO0kk0V@hyperion>
+ <01D75E67-EC2E-4C74-B9BB-752773C481A9@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01D75E67-EC2E-4C74-B9BB-752773C481A9@goldelico.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 28, 2019 at 02:48:46PM +0100, H. Nikolaus Schaller wrote:
+> 
+> What still does not fit into the picture is the errno = 1 i.e. EPERM.
+> Maybe I have to study the libc code that tries to read the ELF symbols
+> you have mentioned. It may fail for unknown reasons.
 
-> Am 28.11.2019 um 15:01 schrieb Vincenzo Frascino =
-<vincenzo.frascino@arm.com>:
->=20
->>>=20
->>=20
->> What still does not fit into the picture is the errno =3D 1 i.e. =
-EPERM.
->> Maybe I have to study the libc code that tries to read the ELF =
-symbols
->> you have mentioned. It may fail for unknown reasons.
->>=20
->=20
-> This is what I was going to suggest next. It might be that something =
-is not
-> working there.
->=20
-> Let us know your findings.
+to understand vdso you might look at arch/mips/vdso and lib/vdso
+kernel sources.
 
-Well, my findings are that the gettimeofday() function in glibc-2.24 =
-(used by
-Debian Stretch) is simple:
+And if I understand it correctly you neither have a working high resolution
+timer usable bei do_hres() in lib/vdso/gettimeofday.c or a working
+gettimeofday_fallback(), which is enabled via CONFIG_MIPS_CLOCK_VSYSCALL
+and needs either CSRC_R4K or CLKSRC_MIPS_GIC.
 
-> #include <errno.h>
-> #include <sys/time.h>
->=20
-> #undef __gettimeofday
->=20
-> #ifdef HAVE_GETTIMEOFDAY_VSYSCALL
-> # define HAVE_VSYSCALL
-> #endif
-> #include <sysdep-vdso.h>
->=20
-> /* Get the current time of day and timezone information,
->    putting it into *tv and *tz.  If tz is null, *tz is not filled.
->    Returns 0 on success, -1 on errors.  */
-> int
-> __gettimeofday (struct timeval *tv, struct timezone *tz)
-> {
->   return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
-> }
-> libc_hidden_def (__gettimeofday)
-> weak_alias (__gettimeofday, gettimeofday)
-> libc_hidden_weak (gettimeofday)
->=20
+Thomas.
 
-but the macro INLINE_VSYSCALL is not immediately understandable.
-
-So I have no idea how to patch the kernel to check why that
-sets errno. And patching libc is beyond my range of experience.
-
-It is only clear that your kernel patch did break it for MIPS
-(at least for CI20) but for obvious reasons not for ARM.
-
-BTW: kernel v5.4 works with Debian Jessie, i.e. glibc-2.19.
-Maybe it triggers a fallback.
-
-BR and thanks,
-Nikolaus
-
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
