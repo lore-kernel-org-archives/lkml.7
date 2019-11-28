@@ -2,145 +2,238 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FB2C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25724C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28CDD2178F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E73082176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:55:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWQcb5fI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DTxMyJ8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfK1Lyq (ORCPT
+        id S1726730AbfK1Lzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:54:46 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38646 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfK1Lyq (ORCPT
+        Thu, 28 Nov 2019 06:55:50 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59724 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfK1Lzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:54:46 -0500
-Received: by mail-ed1-f66.google.com with SMTP id s10so22514963edi.5;
-        Thu, 28 Nov 2019 03:54:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fJ1qEAjftKv4KFT+qYxhcQRrloDrH252fRzp4v2mOIA=;
-        b=HWQcb5fISvzc7dzW/LwSkYoYP72pXvepeXpeq0QChIvEEvJQZMv/9tsCBDDRZIS35Q
-         zL3ZMkuWSYUO/EyFXpermAZ9RZWZSkvu0pQto62bpXxuU6PIyE00l3ozUeZ7nIw7zgAB
-         g1Ro4CfkyjLTjaRQflNljm5GdxYLQMtvxlIt9yMX98x0ScmyqVc7n1lMfeaoWRLL1DJS
-         IhLbu5FosIRb1jQ7RwtCZMAqqJV4tR6TCGaIKnafsf8EmkQYedojHJxSp2XzaaBBgNLs
-         YCfHQ5o36094vUyplRqwjbwGQ/JHETvxtHkY5r4y+p084JRDCDIYJSQ0od55wJjU6nuv
-         Vafg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fJ1qEAjftKv4KFT+qYxhcQRrloDrH252fRzp4v2mOIA=;
-        b=mOM8v95NmHoi9doUgX8vK0Fe77y7EbawzY4W5234PLp6W6bpZSGl/JSYISTI698+LL
-         gV+azUgqGQenl0TaIbLLOOt2V8JUHw/pVkIUSEBhk0PZ0OUF8l1/yxC7ilC45W5v8Oiy
-         tUcDnUUrFGeYSV9MZcrACgvTDX81hfXhS0qdZWtYOVrCXnFEs/2IS789b9zdvGpT5qdp
-         u/Rj11LXzgYGmbCnOn6gB4Lhky2Wp4LYkQvOrM+b/L0drac2/TvfOM5s2kfgxtD9FaZU
-         fgqNETZCG7WSxFBE6EQfQ1p/oMo7M94MzrRhdU0ISQRCcpP+/u44muPvUsIUXBp4J+WP
-         FVnQ==
-X-Gm-Message-State: APjAAAXHNH+PV8zIQna/eFbkXwuKGBc/ikrO4dkLa8QKkYzBCTdoGagM
-        mU6yuFjNtG6+hNLrEokToOX9tpyaZrLxAs3Ec3s=
-X-Google-Smtp-Source: APXvYqyLp6/hXTjbnJ1ipBT5cREkaCmbhUdK6K4O2YMDxHaFUlhpK/aPWwzMePKrShDjywJgigpgYguLM50HKPA9rLM=
-X-Received: by 2002:a05:6402:3cf:: with SMTP id t15mr37391787edw.21.1574942084243;
- Thu, 28 Nov 2019 03:54:44 -0800 (PST)
+        Thu, 28 Nov 2019 06:55:49 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASBtdj3129928;
+        Thu, 28 Nov 2019 05:55:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574942139;
+        bh=3J+AVC3Pcb6Yw4883ZHaDaBKebxD+28yuArSAn5pnYs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DTxMyJ8IM+hI9lzEyMDfVjAXcgvEWo4yuQAAxh045FStAR9dwHNIf2D9heiAneEsk
+         KgNtb4oyXiqgYGAQQPahAyykbgZg1HRGSeS6M8Uh8MaXjetcrggR90rpEgG2MpZUiO
+         JM824LXxaS86t9zrzbLw+g5U1f7WF/YT6E+iMjxE=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASBtc3d083362;
+        Thu, 28 Nov 2019 05:55:39 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
+ Nov 2019 05:55:38 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 28 Nov 2019 05:55:38 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASBtYaM109133;
+        Thu, 28 Nov 2019 05:55:35 -0600
+Subject: Re: [PATCH v7 net-next 06/13] dt-bindings: net: ti: add new cpsw
+ switch driver bindings
+To:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     netdev <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        <devicetree@vger.kernel.org>
+References: <20191119221925.28426-1-grygorii.strashko@ti.com>
+ <20191119221925.28426-7-grygorii.strashko@ti.com>
+ <CAL_JsqKfWOZeXXxqyKtH98cbccXUoV7djRtxzyoq0hA_qx-bpQ@mail.gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <9dc06cb7-c875-6fc1-e755-3832e9f39a52@ti.com>
+Date:   Thu, 28 Nov 2019 13:55:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190131213957.11568-1-alex.williams@ettus.com>
- <CAKfKVtFM1zPb-MjBwY8WREy4xoHW60JrjZ-LnSzBvJ1Yv_zgsw@mail.gmail.com> <CAJZzcDiv8BGDa8pj-2gP+BWiu=CfrsDi15xHr=UUFwCwE-E4zg@mail.gmail.com>
-In-Reply-To: <CAJZzcDiv8BGDa8pj-2gP+BWiu=CfrsDi15xHr=UUFwCwE-E4zg@mail.gmail.com>
-From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Date:   Thu, 28 Nov 2019 17:24:32 +0530
-Message-ID: <CAKfKVtE8zaQhcYCOSjO26u9MjTJhLDO_R_L2Nca7_EbzBz8DEg@mail.gmail.com>
-Subject: Re: [PATCH] i2c: cadence: Handle transfer_size rollover
-To:     Alex Williams <alex.williams@ettus.com>
-Cc:     mical.simek@xilinx.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alex Williams <alex.williams@ni.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAL_JsqKfWOZeXXxqyKtH98cbccXUoV7djRtxzyoq0hA_qx-bpQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi ,
-Apologies for teh late reply,
-Somehow replied only to Alex.
-On Fri, Feb 15, 2019 at 8:59 PM Alex Williams <alex.williams@ettus.com> wrote:
->
-> On Fri, Feb 15, 2019 at 2:53 AM Shubhrajyoti Datta
-> <shubhrajyoti.datta@gmail.com> wrote:
-> >
-> > HI Alex,
-> >
-> > Thanks for the patch.
-> >
-> > On Fri, Feb 1, 2019 at 4:22 AM <alex.williams@ettus.com> wrote:
-> > >
-> > > From: Alex Williams <alex.williams@ni.com>
-> > >
-> > > Under certain conditions, Cadence's I2C controller's transfer_size
-> >
-> > Any help in reproducing the conditions would be appreciated
-> >
-> >
-> > > register will roll over and generate invalid read transactions. Before
-> > > this change, the ISR relied solely on the RXDV bit to determine when to
-> > > write more data to the user's buffer. The invalid read data would cause
-> > > overruns, smashing stacks and worse.
-> > >
-> > > This change stops the buffer writes to the requested boundary and
-> > > reports the error. The controller will be reset so normal transactions
-> > > may resume.
-> > >
-> > > Signed-off-by: Alex Williams <alex.williams@ni.com>
->
->
-> One possible related errata is here:
-> https://www.xilinx.com/support/answers/61664.html
->
-> In our case, we only needed to hammer on i2c to reproduce in a few
-> minutes, with a script like this:
-> while true
->     do date
->     cat /sys/class/gpio/gpio882/direction > /dev/null
->     cat /sys/class/gpio/gpio883/direction > /dev/null
->     cat /sys/class/gpio/gpio884/direction > /dev/null
->     cat /sys/class/gpio/gpio885/direction > /dev/null
->     cat /sys/class/gpio/gpio886/direction > /dev/null
->     cat /sys/class/gpio/gpio887/direction > /dev/null
->     cat /sys/class/gpio/gpio888/direction > /dev/null
->     cat /sys/class/gpio/gpio889/direction > /dev/null
->     cat /sys/class/gpio/gpio890/direction > /dev/null
->     cat /sys/class/gpio/gpio891/direction > /dev/null
->     cat /sys/class/gpio/gpio892/direction > /dev/null
->
->     cat /sys/class/gpio/gpio894/direction > /dev/null
->     cat /sys/class/gpio/gpio895/direction > /dev/null
->     cat /sys/class/gpio/gpio896/direction > /dev/null
->     cat /sys/class/gpio/gpio897/direction > /dev/null
->     cat /sys/class/gpio/gpio898/direction > /dev/null
->     cat /sys/class/gpio/gpio899/direction > /dev/null
->     cat /sys/class/gpio/gpio900/direction > /dev/null
->     cat /sys/class/gpio/gpio901/direction > /dev/null
->     cat /sys/class/gpio/gpio902/direction > /dev/null
->     cat /sys/class/gpio/gpio903/direction > /dev/null
->     cat /sys/class/gpio/gpio904/direction > /dev/null
->     cat /sys/class/gpio/gpio905/direction > /dev/null
-> done
->
-> In normal usage, we have code that sets up a number of i2c GPIO
-> expanders and pokes them for values as it initializes devices.
-> Occasionally, the transfer size register will roll over, and the ISR
-> will cause memory corruption, since it doesn't stop writing at the
-> requested boundary.
-Reviewed-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Hi Rob,
+
+On 21/11/2019 21:24, Rob Herring wrote:
+> On Tue, Nov 19, 2019 at 4:19 PM Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+>>
+>> Add bindings for the new TI CPSW switch driver. Comparing to the legacy
+>> bindings (net/cpsw.txt):
+>> - ports definition follows DSA bindings (net/dsa/dsa.txt) and ports can be
+>> marked as "disabled" if not physically wired.
+>> - all deprecated properties dropped;
+>> - all legacy propertiies dropped which represent constant HW cpapbilities
+>> (cpdma_channels, ale_entries, bd_ram_size, mac_control, slaves,
+>> active_slave)
+>> - TI CPTS DT properties are reused as is, but grouped in "cpts" sub-node
+>> - TI Davinci MDIO DT bindings are reused as is, because Davinci MDIO is
+>> reused.
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> ---
+>>   .../bindings/net/ti,cpsw-switch.yaml          | 240 ++++++++++++++++++
+>>   1 file changed, 240 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
+> 
+> I see David has applied this already, but it still has numerous
+> problems. Please send a follow-up.
+> 
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
+>> new file mode 100644
+>> index 000000000000..81ae8cafabc1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
+>> @@ -0,0 +1,240 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+> 
+> For new bindings, please dual license:
+> 
+> (GPL-2.0-only OR BSD-2-Clause)
+> 
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/net/ti,cpsw-switch.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: TI SoC Ethernet Switch Controller (CPSW) Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Grygorii Strashko <grygorii.strashko@ti.com>
+>> +  - Sekhar Nori <nsekhar@ti.com>
+>> +
+>> +description:
+>> +  The 3-port switch gigabit ethernet subsystem provides ethernet packet
+>> +  communication and can be configured as an ethernet switch. It provides the
+>> +  gigabit media independent interface (GMII),reduced gigabit media
+>> +  independent interface (RGMII), reduced media independent interface (RMII),
+>> +  the management data input output (MDIO) for physical layer device (PHY)
+>> +  management.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - const: ti,cpsw-switch
+>> +      - items:
+>> +         - const: ti,am335x-cpsw-switch
+>> +         - const: ti,cpsw-switch
+>> +      - items:
+>> +        - const: ti,am4372-cpsw-switch
+>> +        - const: ti,cpsw-switch
+>> +      - items:
+>> +        - const: ti,dra7-cpsw-switch
+>> +        - const: ti,cpsw-switch
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +    description:
+>> +       The physical base address and size of full the CPSW module IO range
+>> +
+>> +  ranges: true
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +    description: CPSW functional clock
+>> +
+>> +  clock-names:
+>> +    maxItems: 1
+>> +    items:
+>> +      - const: fck
+>> +
+>> +  interrupts:
+>> +    items:
+>> +      - description: RX_THRESH interrupt
+>> +      - description: RX interrupt
+>> +      - description: TX interrupt
+>> +      - description: MISC interrupt
+>> +
+>> +  interrupt-names:
+>> +    items:
+>> +      - const: "rx_thresh"
+>> +      - const: "rx"
+>> +      - const: "tx"
+>> +      - const: "misc"
+>> +
+>> +  pinctrl-names: true
+>> +
+>> +  syscon:
+>> +    $ref: /schemas/types.yaml#definitions/phandle
+>> +    description:
+>> +      Phandle to the system control device node which provides access to
+>> +      efuse IO range with MAC addresses
+> 
+> Can't you use nvmem binding for this?
+> 
+I've sent patch to fix other comments except this one.
+
+About nvmem,I've been thinking about it for a long time already, but in our case
+MAC address is encoded in eFuse register in a different way for different SoCs.
+
+So even if I'll try to use nvmem and define some MAC cell:
+
+	efuse: efuse {
+		compatible = "...";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		eth_mac: eth_mac@34 {
+			reg = <0x34 0x10>;
+		};
+	};
+
+	portX {
+		...
+		nvmem-cells = <&eth_mac>;
+		nvmem-cell-names = "mac-address";
+	};
+
+the of_get_mac_address() will finally call
+   nvmem->reg_read(priv, offset, val, bytes);
+
+and at this point nvmem driver will have no knowledge about the type of the cell
+(MAC address), so no decoding can not be done and returned mac will be incorrect.
+
+Not sure how to proceed here. One of the ways is to pass cell info in
+struct nvmem_device .reg_read()/.reg_write() callbacks, cell name could be use
+to perform some actions.
+
+Another thing which need to be considered is - MAC can be assigned per port,
+so dev->of_node != port_of_node (and of_get_mac_addr_nvmem() will fail).
+
+
+
+-- 
+Best regards,
+grygorii
