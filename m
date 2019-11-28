@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6C5C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6C3C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EED42176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8945721774
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:51:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="MNLpt3U6"
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="Q97BIevk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfK1Mvp (ORCPT
+        id S1726709AbfK1Mv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 07:51:45 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34146 "EHLO
+        Thu, 28 Nov 2019 07:51:57 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42591 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfK1Mvo (ORCPT
+        with ESMTP id S1726401AbfK1Mv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 07:51:44 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t2so30932042wrr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 04:51:41 -0800 (PST)
+        Thu, 28 Nov 2019 07:51:57 -0500
+Received: by mail-wr1-f65.google.com with SMTP id a15so30967657wrf.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 04:51:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=9elements.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5BT5HmN6JZ5OG28KXs+NMJ8uueVa88wJcLvt0GsOJPo=;
-        b=MNLpt3U6DymTaDgSDDwnGP0g1XxCa3+iJG6q/TlSmD4XaioNJfr1xVeqn9oIm48VKy
-         JxR5GQSZ5hZI24mRVBJsWIMsekJ7FTwpGn5YqAvpbXVBt9LjqH1ek08ackDlI5YJcK29
-         vPwP61KAf8amFdnYex3W0JewoqojzbGUK9yTeZ3wKqxtNKq+jIo+gtMG5PxD2+OFHflX
-         tAASz1t9dj2A9fFMaFgs/mKQ/C2vcOxiw/GtjEKIrEnOYLsFa5gUcN4MjYO+VfRh9DOK
-         DXlknjtFCmw8yPDMSOtfrQr+ENLDL+iIseh+ytMUXVK8yJTd2n1MKrEswJC/CFBGZSOZ
-         BLTQ==
+        bh=r/Qtb3ZERKyiKM574EOCUn87VIOAQ2MiAJTI9WZq8LQ=;
+        b=Q97BIevkGIp1y4UcUa6BeYIKIcwlLB7yRoPh4CA3a6dJNZYsUbyRQJpN3RV9EVmsDp
+         mUiCVdEOOWVF+vwKGrsGIFW3lg2DCGAOFpd/Bp76xb90UVJSiJwZG/DjopYLetkhRBNk
+         jy2lA1bE48RdwFzu2gM/uRfh8Pk2vR98Q1+nMMwFZlPGFPx8m8Glnc9g0wDmRgN3kG8N
+         1JB/6JmmAEtZ/pEWb9pMbWPL0jj7NqYLMpcsLXl+mt+miXwvqFCnEi404OcWGZZRHTz7
+         9hY5jzkCTvLeoBQ7NMHeoASYZ4cwpVQOX1yx7sud8k3g8t3jn47YS6Ii/qtcNajp2Wmq
+         QLMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5BT5HmN6JZ5OG28KXs+NMJ8uueVa88wJcLvt0GsOJPo=;
-        b=aoSvQdx0I/rwudBcGK1/ZPLAR0kg079Jmt1KtUz15ssOVQnEXzEz86XfSMG7tL1ItT
-         IRBmUuZKOv2/sruVCJ9+/fsM+bzg4uAtdmppNSdE2/v//WHRQD3B/8Zj+wkIhr4yNFJP
-         5NAR5oCySWL2gknIBfPHMTMsIxZ8JSZo9D9x6B4HFEYbxCLnowwTaEKgtrL0ByOnABgQ
-         F0OUidyFIhOe7s/xfHkVKIJOIpSUWo98Hd4ADuiaAvCvWgw6p8LVsl0W1A9cpj0NjHn7
-         Ko15vXAaaqriunq6k/634/MipcREXaDlX3du3aB3znpy0uSDTvm8s5/m5/cESli5y6yG
-         YlqA==
-X-Gm-Message-State: APjAAAXhtkpE9yAIN8VhOBGKK6DEPe+kmgn8Or3oxb9H1tzldKSVKmRR
-        vnZKpzn3h6Onxkz8hXc7g8OGO8nTQv0EkGJv
-X-Google-Smtp-Source: APXvYqykQCQ8xILefkitGfhfR9S/+/+8uK4r81PozR6+ZXktTaZ5xIa8SS6gmBmMMiY0op25D24DYg==
-X-Received: by 2002:a5d:4592:: with SMTP id p18mr9776431wrq.40.1574945500451;
-        Thu, 28 Nov 2019 04:51:40 -0800 (PST)
+        bh=r/Qtb3ZERKyiKM574EOCUn87VIOAQ2MiAJTI9WZq8LQ=;
+        b=mCehRRhsyn9ZPFu4QJNkPQvd39ZwI63iOcgrOZhFjpkeuzTaMi/7xSCDXRYBggdKK0
+         kp/N9nVpiHTBhNaIMrZKX5V16HgjuJUcY1PeiYnx4N8zFbSPGTgACStBnuFskGWel1wz
+         AgiRerUWBjwPz0VTsg/IVMTk09OgMk8QU6UZmvudwhicLXlggax1U5QtgqZX/pWovyt9
+         kqYh7pvU0Na9E5xwb921eIMNoJjuGQ7jGEzIqowP4sWZo/rntNT3xQPRrbz3fZ0PRwMR
+         Bmg+YLJ42gfCMoBXyNNdW4AQSMSkpyd60xaKulrVWQqXB+3nTlbddx0GiwDDS6hLa/Id
+         gOaQ==
+X-Gm-Message-State: APjAAAVWitVprxVvJMfQVXsl3LA8ovzymrziRlM9yAaE1X9EL36gu8wQ
+        FiND8miXgFbdh5RwldQiK7lLs1jymZ1NmOev
+X-Google-Smtp-Source: APXvYqwiSCqweZZ3jxD//3HM+oAedWhPc9yXhVekgzLINkqjous/lAUYSqfU7tc/1eEgnB80VR8uOw==
+X-Received: by 2002:adf:e5ce:: with SMTP id a14mr26520284wrn.214.1574945512016;
+        Thu, 28 Nov 2019 04:51:52 -0800 (PST)
 Received: from rudolphp.sr1.9esec.dev (b2b-78-94-0-50.unitymedia.biz. [78.94.0.50])
-        by smtp.gmail.com with ESMTPSA id j11sm22959607wrq.26.2019.11.28.04.51.39
+        by smtp.gmail.com with ESMTPSA id j11sm22959607wrq.26.2019.11.28.04.51.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 04:51:39 -0800 (PST)
+        Thu, 28 Nov 2019 04:51:51 -0800 (PST)
 From:   patrick.rudolph@9elements.com
 To:     linux-kernel@vger.kernel.org
 Cc:     Patrick Rudolph <patrick.rudolph@9elements.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Julius Werner <jwerner@chromium.org>,
         Stephen Boyd <swboyd@chromium.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Julius Werner <jwerner@chromium.org>
-Subject: [PATCH v3 1/2] firmware: google: Expose CBMEM over sysfs
-Date:   Thu, 28 Nov 2019 13:50:50 +0100
-Message-Id: <20191128125100.14291-2-patrick.rudolph@9elements.com>
+        Samuel Holland <samuel@sholland.org>
+Subject: [PATCH v3 2/2] firmware: google: Expose coreboot tables over sysfs
+Date:   Thu, 28 Nov 2019 13:50:51 +0100
+Message-Id: <20191128125100.14291-3-patrick.rudolph@9elements.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191128125100.14291-1-patrick.rudolph@9elements.com>
 References: <20191128125100.14291-1-patrick.rudolph@9elements.com>
@@ -81,188 +81,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Patrick Rudolph <patrick.rudolph@9elements.com>
 
-Make all CBMEM buffers available to userland. This is useful for tools
-that are currently using /dev/mem.
+Make all coreboot table entries available to userland. This is useful for
+tools that are currently using /dev/mem.
 
-Make the id, size and address available, as well as the raw table data.
+Besides the tag and size also expose the raw table data itself.
 
-Tools can easily scan the right CBMEM buffer by reading
-/sys/bus/coreboot/drivers/cbmem/coreboot*/cbmem_attributes/id
-or
-/sys/bus/coreboot/devices/coreboot*/cbmem_attributes/id
+Update the ABI documentation to explain the new sysfs interface.
 
+Tools can easily scan for the right coreboot table by reading
+/sys/bus/coreboot/devices/coreboot*/attributes/id
 The binary table data can then be read from
-/sys/bus/coreboot/drivers/cbmem/coreboot*/cbmem_attributes/data
-or
-/sys/bus/coreboot/devices/coreboot*/cbmem_attributes/data
+/sys/bus/coreboot/devices/coreboot*/attributes/data
 
 Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
----
  -v2:
 	- Add ABI documentation
 	- Add 0x prefix on hex values
+	- Remove wrong ioremap hint as found by CI
  -v3:
 	- Use BIN_ATTR_RO
 ---
- Documentation/ABI/stable/sysfs-bus-coreboot |  43 ++++++
- drivers/firmware/google/Kconfig             |   9 ++
- drivers/firmware/google/Makefile            |   1 +
- drivers/firmware/google/cbmem-coreboot.c    | 159 ++++++++++++++++++++
- drivers/firmware/google/coreboot_table.h    |  13 ++
- 5 files changed, 225 insertions(+)
- create mode 100644 Documentation/ABI/stable/sysfs-bus-coreboot
- create mode 100644 drivers/firmware/google/cbmem-coreboot.c
+ Documentation/ABI/stable/sysfs-bus-coreboot | 30 +++++++++++
+ drivers/firmware/google/coreboot_table.c    | 57 +++++++++++++++++++++
+ 2 files changed, 87 insertions(+)
 
 diff --git a/Documentation/ABI/stable/sysfs-bus-coreboot b/Documentation/ABI/stable/sysfs-bus-coreboot
-new file mode 100644
-index 000000000000..1b04b8abc858
---- /dev/null
+index 1b04b8abc858..0f28601229f3 100644
+--- a/Documentation/ABI/stable/sysfs-bus-coreboot
 +++ b/Documentation/ABI/stable/sysfs-bus-coreboot
-@@ -0,0 +1,43 @@
-+What:		/sys/bus/coreboot/devices/.../cbmem_attributes/id
+@@ -41,3 +41,33 @@ Description:
+ 		buffer.
+ 		The file holds a read-only binary representation of the CBMEM
+ 		buffer.
++
++What:		/sys/bus/coreboot/devices/.../attributes/id
++Date:		Nov 2019
++KernelVersion:	5.5
++Contact:	Patrick Rudolph <patrick.rudolph@9elements.com>
++Description:
++		coreboot device directory can contain a file named attributes/id.
++		The file holds an ASCII representation of the coreboot table ID
++		in hex (e.g. 0x000000ef). On coreboot enabled platforms the ID is
++		usually called TAG.
++
++What:		/sys/bus/coreboot/devices/.../attributes/size
 +Date:		Nov 2019
 +KernelVersion:	5.5
 +Contact:	Patrick Rudolph <patrick.rudolph@9elements.com>
 +Description:
 +		coreboot device directory can contain a file named
-+		cbmem_attributes/id if the device corresponds to a CBMEM
-+		buffer.
-+		The file holds an ASCII representation of the CBMEM ID in hex
-+		(e.g. 0xdeadbeef).
++		attributes/size.
++		The file holds an ASCII representation as decimal number of the
++		coreboot table size (e.g. 64).
 +
-+What:		/sys/bus/coreboot/devices/.../cbmem_attributes/size
++What:		/sys/bus/coreboot/devices/.../attributes/data
 +Date:		Nov 2019
 +KernelVersion:	5.5
 +Contact:	Patrick Rudolph <patrick.rudolph@9elements.com>
 +Description:
 +		coreboot device directory can contain a file named
-+		cbmem_attributes/size if the device corresponds to a CBMEM
-+		buffer.
-+		The file holds an representation as decimal number of the
-+		CBMEM buffer size (e.g. 64).
-+
-+What:		/sys/bus/coreboot/devices/.../cbmem_attributes/address
-+Date:		Nov 2019
-+KernelVersion:	5.5
-+Contact:	Patrick Rudolph <patrick.rudolph@9elements.com>
-+Description:
-+		coreboot device directory can contain a file named
-+		cbmem_attributes/address if the device corresponds to a CBMEM
-+		buffer.
-+		The file holds an ASCII representation of the physical address
-+		of the CBMEM buffer in hex (e.g. 0x000000008000d000).
-+
-+What:		/sys/bus/coreboot/devices/.../cbmem_attributes/data
-+Date:		Nov 2019
-+KernelVersion:	5.5
-+Contact:	Patrick Rudolph <patrick.rudolph@9elements.com>
-+Description:
-+		coreboot device directory can contain a file named
-+		cbmem_attributes/data if the device corresponds to a CBMEM
-+		buffer.
-+		The file holds a read-only binary representation of the CBMEM
-+		buffer.
-diff --git a/drivers/firmware/google/Kconfig b/drivers/firmware/google/Kconfig
-index a3a6ca659ffa..11a67c397ab3 100644
---- a/drivers/firmware/google/Kconfig
-+++ b/drivers/firmware/google/Kconfig
-@@ -58,6 +58,15 @@ config GOOGLE_FRAMEBUFFER_COREBOOT
- 	  This option enables the kernel to search for a framebuffer in
- 	  the coreboot table.  If found, it is registered with simplefb.
- 
-+config GOOGLE_CBMEM_COREBOOT
-+	tristate "Coreboot CBMEM access"
-+	depends on GOOGLE_COREBOOT_TABLE
-+	help
-+	  This option exposes all available CBMEM buffers to userland.
-+	  The CBMEM id, size and address as well as the raw table data
-+	  are exported as sysfs attributes of the corresponding coreboot
-+	  table.
-+
- config GOOGLE_MEMCONSOLE_COREBOOT
- 	tristate "Firmware Memory Console"
- 	depends on GOOGLE_COREBOOT_TABLE
-diff --git a/drivers/firmware/google/Makefile b/drivers/firmware/google/Makefile
-index d17caded5d88..62053cd6d058 100644
---- a/drivers/firmware/google/Makefile
-+++ b/drivers/firmware/google/Makefile
-@@ -2,6 +2,7 @@
- 
- obj-$(CONFIG_GOOGLE_SMI)		+= gsmi.o
- obj-$(CONFIG_GOOGLE_COREBOOT_TABLE)        += coreboot_table.o
-+obj-$(CONFIG_GOOGLE_CBMEM_COREBOOT)        += cbmem-coreboot.o
- obj-$(CONFIG_GOOGLE_FRAMEBUFFER_COREBOOT)  += framebuffer-coreboot.o
- obj-$(CONFIG_GOOGLE_MEMCONSOLE)            += memconsole.o
- obj-$(CONFIG_GOOGLE_MEMCONSOLE_COREBOOT)   += memconsole-coreboot.o
-diff --git a/drivers/firmware/google/cbmem-coreboot.c b/drivers/firmware/google/cbmem-coreboot.c
-new file mode 100644
-index 000000000000..c67651a9c287
---- /dev/null
-+++ b/drivers/firmware/google/cbmem-coreboot.c
-@@ -0,0 +1,159 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * fmap-coreboot.c
-+ *
-+ * Exports CBMEM as attributes in sysfs.
-+ *
-+ * Copyright 2012-2013 David Herrmann <dh.herrmann@gmail.com>
-+ * Copyright 2017 Google Inc.
++		attributes/data.
++		The file holds a read-only binary representation of the coreboot
++		table.
+diff --git a/drivers/firmware/google/coreboot_table.c b/drivers/firmware/google/coreboot_table.c
+index 8d132e4f008a..1f7329d72f54 100644
+--- a/drivers/firmware/google/coreboot_table.c
++++ b/drivers/firmware/google/coreboot_table.c
+@@ -6,6 +6,7 @@
+  *
+  * Copyright 2017 Google Inc.
+  * Copyright 2017 Samuel Holland <samuel@sholland.org>
 + * Copyright 2019 9elements Agency GmbH
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/string.h>
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+
-+#include "coreboot_table.h"
-+
-+#define CB_TAG_CBMEM_ENTRY 0x31
-+
-+struct cb_priv {
-+	void *remap;
-+	struct lb_cbmem_entry entry;
-+};
-+
+  */
+ 
+ #include <linux/acpi.h>
+@@ -84,6 +85,60 @@ void coreboot_driver_unregister(struct coreboot_driver *driver)
+ }
+ EXPORT_SYMBOL(coreboot_driver_unregister);
+ 
 +static ssize_t id_show(struct device *dev,
 +		       struct device_attribute *attr, char *buffer)
 +{
-+	const struct cb_priv *priv;
++	struct coreboot_device *device = CB_DEV(dev);
 +
-+	priv = (const struct cb_priv *)dev_get_platdata(dev);
-+
-+	return sprintf(buffer, "0x%08x\n", priv->entry.id);
++	return sprintf(buffer, "0x%08x\n", device->entry.tag);
 +}
 +
 +static ssize_t size_show(struct device *dev,
 +			 struct device_attribute *attr, char *buffer)
 +{
-+	const struct cb_priv *priv;
++	struct coreboot_device *device = CB_DEV(dev);
 +
-+	priv = (const struct cb_priv *)dev_get_platdata(dev);
-+
-+	return sprintf(buffer, "%u\n", priv->entry.size);
-+}
-+
-+static ssize_t address_show(struct device *dev,
-+			    struct device_attribute *attr, char *buffer)
-+{
-+	const struct cb_priv *priv;
-+
-+	priv = (const struct cb_priv *)dev_get_platdata(dev);
-+
-+	return sprintf(buffer, "0x%016llx\n", priv->entry.address);
++	return sprintf(buffer, "%u\n", device->entry.size);
 +}
 +
 +static DEVICE_ATTR_RO(id);
 +static DEVICE_ATTR_RO(size);
-+static DEVICE_ATTR_RO(address);
 +
-+static struct attribute *cb_mem_attrs[] = {
-+	&dev_attr_address.attr,
++static struct attribute *cb_dev_attrs[] = {
 +	&dev_attr_id.attr,
 +	&dev_attr_size.attr,
 +	NULL
@@ -273,123 +189,42 @@ index 000000000000..c67651a9c287
 +			 char *buffer, loff_t offset, size_t count)
 +{
 +	struct device *dev = kobj_to_dev(kobj);
-+	const struct cb_priv *priv;
-+
-+	priv = (const struct cb_priv *)dev_get_platdata(dev);
++	struct coreboot_device *device = CB_DEV(dev);
 +
 +	return memory_read_from_buffer(buffer, count, &offset,
-+				       priv->remap, priv->entry.size);
++				       &device->entry, device->entry.size);
 +}
 +
 +static BIN_ATTR_RO(data, 0);
 +
-+static struct bin_attribute *cb_mem_bin_attrs[] = {
++static struct bin_attribute *cb_dev_bin_attrs[] = {
 +	&bin_attr_data,
 +	NULL
 +};
 +
-+static struct attribute_group cb_mem_attr_group = {
-+	.name = "cbmem_attributes",
-+	.attrs = cb_mem_attrs,
-+	.bin_attrs = cb_mem_bin_attrs,
++static const struct attribute_group cb_dev_attr_group = {
++	.name = "attributes",
++	.attrs = cb_dev_attrs,
++	.bin_attrs = cb_dev_bin_attrs,
 +};
 +
-+static int cbmem_probe(struct coreboot_device *cdev)
-+{
-+	struct device *dev = &cdev->dev;
-+	struct cb_priv *priv;
-+	int err;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	memcpy(&priv->entry, &cdev->cbmem_entry, sizeof(priv->entry));
-+
-+	priv->remap = memremap(priv->entry.address,
-+			       priv->entry.entry_size, MEMREMAP_WB);
-+	if (!priv->remap) {
-+		err = -ENOMEM;
-+		goto failure;
-+	}
-+
-+	err = sysfs_create_group(&dev->kobj, &cb_mem_attr_group);
-+	if (err) {
-+		dev_err(dev, "failed to create sysfs attributes: %d\n", err);
-+		memunmap(priv->remap);
-+		goto failure;
-+	}
-+
-+	dev->platform_data = priv;
-+
-+	return 0;
-+failure:
-+	kfree(priv);
-+	return err;
-+}
-+
-+static int cbmem_remove(struct coreboot_device *cdev)
-+{
-+	struct device *dev = &cdev->dev;
-+	const struct cb_priv *priv;
-+
-+	priv = (const struct cb_priv *)dev_get_platdata(dev);
-+
-+	sysfs_remove_group(&dev->kobj, &cb_mem_attr_group);
-+
-+	if (priv)
-+		memunmap(priv->remap);
-+	kfree(priv);
-+
-+	dev->platform_data = NULL;
-+
-+	return 0;
-+}
-+
-+static struct coreboot_driver cbmem_driver = {
-+	.probe = cbmem_probe,
-+	.remove = cbmem_remove,
-+	.drv = {
-+		.name = "cbmem",
-+	},
-+	.tag = CB_TAG_CBMEM_ENTRY,
++static const struct attribute_group *cb_dev_attr_groups[] = {
++	&cb_dev_attr_group,
++	NULL
 +};
 +
-+module_coreboot_driver(cbmem_driver);
+ static int coreboot_table_populate(struct device *dev, void *ptr)
+ {
+ 	int i, ret;
+@@ -104,6 +159,8 @@ static int coreboot_table_populate(struct device *dev, void *ptr)
+ 		device->dev.parent = dev;
+ 		device->dev.bus = &coreboot_bus_type;
+ 		device->dev.release = coreboot_device_release;
++		device->dev.groups = cb_dev_attr_groups;
 +
-+MODULE_AUTHOR("9elements Agency GmbH");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/firmware/google/coreboot_table.h b/drivers/firmware/google/coreboot_table.h
-index 7b7b4a6eedda..506048c724d8 100644
---- a/drivers/firmware/google/coreboot_table.h
-+++ b/drivers/firmware/google/coreboot_table.h
-@@ -59,6 +59,18 @@ struct lb_framebuffer {
- 	u8  reserved_mask_size;
- };
+ 		memcpy(&device->entry, ptr_entry, entry->size);
  
-+/* There can be more than one of these records as there is one per cbmem entry.
-+ * Describes a buffer in memory containing runtime data.
-+ */
-+struct lb_cbmem_entry {
-+	u32 tag;
-+	u32 size;
-+
-+	u64 address;
-+	u32 entry_size;
-+	u32 id;
-+};
-+
- /* A device, additionally with information from coreboot. */
- struct coreboot_device {
- 	struct device dev;
-@@ -66,6 +78,7 @@ struct coreboot_device {
- 		struct coreboot_table_entry entry;
- 		struct lb_cbmem_ref cbmem_ref;
- 		struct lb_framebuffer framebuffer;
-+		struct lb_cbmem_entry cbmem_entry;
- 	};
- };
- 
+ 		ret = device_register(&device->dev);
 -- 
 2.21.0
 
