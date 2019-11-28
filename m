@@ -2,171 +2,133 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0613BC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA03C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19FE217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6332176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="QMBwExph"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bQeVibLN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfK1Nyz (ORCPT
+        id S1726656AbfK1N4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:54:55 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52445 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbfK1Nyz (ORCPT
+        Thu, 28 Nov 2019 08:56:20 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33642 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfK1N4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:54:55 -0500
-Received: by mail-wm1-f68.google.com with SMTP id l1so11070238wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:54:52 -0800 (PST)
+        Thu, 28 Nov 2019 08:56:19 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c124so18380368qkg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:56:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CAcvbytV4i2a1AoQdWPTiNmNKQ9t7p9KSzPJ6vzgFPc=;
-        b=QMBwExphVxemOgnNlthrCN7d7TjJUTnBj6TFZ01UYgrmsdtrFkVTgNQ/Zi2/3ACcIq
-         MPCvzCrDCSKSbGAIlSiuzm/9IxULCIaUciW2rDKc5/GughrDE761PaCJzeJ3o4DFyIN1
-         u6Dk+3Z+zoHFjRUWPPL+xJXI/HnB8Dp3709yTU0b7PGkUQkdQThZA5kdg8KJgrw6g09+
-         HSFXkXZClgDL0w5p1KmmVGklJE7ss8pTa94TOnp5uMpMlYnISTq3F1uaCZyzZK0kRDx2
-         IP03p7J5zu8P02+fmdHuhBcC/2luiuieGYBDtDqWJt22FwqfAyeq4HSJ0PN4GnBMRv6k
-         Q+1A==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=GPF1IwzBdQ5yidrnlKXQMZUft0/1YjCBcLLbgUMkwSA=;
+        b=bQeVibLNv0W4Ge31ScS1b7LxH775Dv26sXTe3gm5YcEVqKour6+GxwH+VaEtW0AlSQ
+         JlXrLLr6h2l8wIZJKhCuN80AcLS6nbmNTUhVyXi7bUAAXGgenJtESggHdX1NmWCfMVUa
+         Qex01RzxAowI7SzDsRKZpVEL/LcMsaf+g4hSdIlHAU7VHwKJRuQj1RUsjNd2JhjXslls
+         x71FVamwhCwffjJBOcSfpv9oMSLMYek9WyoErTtgjjDjPzCWRBYd+UK9NwH/PfARd7Nv
+         7jkOg8yXE9Km5UII4P/RzC9zdJi8dWkEG29I8NRct028QPKIeukjcwIaLiaOCbHPIB5Z
+         2AWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CAcvbytV4i2a1AoQdWPTiNmNKQ9t7p9KSzPJ6vzgFPc=;
-        b=pLWhfd+wrLwD8FV4csru0gmMCwzfMrfoMvqNDwA6TaJ3w4oyrUn5ZO8JgY97GZXTDH
-         X1aXInVm1IOUtV88i04I5s38S+DhNq/TDV1NKtmNajtz2WInYWD/F+LUaW/f2SYKQM5g
-         WS0P8Pcv6yA4iFtjuXLIBMi+WR0E8KAXpes837sVlwJNHMQqS4meX+w0jiWtV4rMvTCV
-         LVWNZvStwpIxho2dh/tSRVzy6hj9QJfndEQnE9nyOsf7TzpCDL9NCJs2J0e5X/t+lXci
-         5wJ4DL7rgg9bPhrIGuByb8bVmKwurTpzYEo3CfuRC4UL1I/zYlHf38aoux8dAe1eW0If
-         JmmQ==
-X-Gm-Message-State: APjAAAVlBUQ7wUZNWeTDMWTZVFDVV2y9t1fVni+oY9VwZ+e6m871H295
-        vS1rdr5mw/6uO2XR3iUG1RXfbA==
-X-Google-Smtp-Source: APXvYqztu2661hM/tDpwiKNjROy9HqloK/NHG6y+VNcJz+qgtBkEj0z6E7TTM4iuyyiQM/oIV5bVQw==
-X-Received: by 2002:a1c:2846:: with SMTP id o67mr9868162wmo.7.1574949292213;
-        Thu, 28 Nov 2019 05:54:52 -0800 (PST)
-Received: from cobook.home (nikaet.starlink.ru. [94.141.168.29])
-        by smtp.gmail.com with ESMTPSA id r2sm10960599wma.44.2019.11.28.05.54.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 05:54:51 -0800 (PST)
-From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Subject: [PATCH v2] ASoC: tlv320aic31xx: Add HP output driver pop reduction controls
-Date:   Thu, 28 Nov 2019 16:54:47 +0300
-Message-Id: <20191128135447.26458-1-nikita.yoush@cogentembedded.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191128122337.GC4210@sirena.org.uk>
-References: <20191128122337.GC4210@sirena.org.uk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=GPF1IwzBdQ5yidrnlKXQMZUft0/1YjCBcLLbgUMkwSA=;
+        b=ttd7aHLwDmC53pYmsxLtcznxBkJyc0Zj0bitLqFW5gd/RxRJ61rLh7vLuN8HHOPPlE
+         6faxC8fejVDvcGg+HYGuagokaf0HmklM7ChFV01xRDZlBYqvPlYmnknJDhQ6RAgX7x/2
+         HUq5aaizbDGxL/9sCz8DvfaZreRNjkMaUoMDDWBeHpGTp3GJi73mviBYhWBA9KOmxxU+
+         /PLKtBGX/j1disxyf44Rb8k49mh0rRed6S5SCI+DkSH93qo0haDZP4UA1n2yEJofqyYY
+         MmsAnoMTWQLFsj7uAu0WSbbtlcHzvaQdvA96Qf5xfJOXhPmKmic21PGQoGWogxB+G/5T
+         uXbQ==
+X-Gm-Message-State: APjAAAU3uL3+OFB5JU6DicRJilxBb4r6xRuDI9Ju4Bysr/rT+XhvZVkq
+        ZItO1Vl3Wl2vjww+xftUO357lw==
+X-Google-Smtp-Source: APXvYqwvpwZ1lBshgaHtwnnPvGdUJcF04QWGaWBn5/C3LdQ96sZe3+t4RvAbJfA5kkwn9wAUwIal0w==
+X-Received: by 2002:a05:620a:1663:: with SMTP id d3mr10482225qko.204.1574949378602;
+        Thu, 28 Nov 2019 05:56:18 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id v143sm8609685qka.3.2019.11.28.05.56.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Nov 2019 05:56:17 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v1] mm/memory_hotplug: don't check the nid in find_(smallest|biggest)_section_pfn
+Date:   Thu, 28 Nov 2019 08:56:17 -0500
+Message-Id: <F768F9E2-6413-437A-827F-6105D6DDCD94@lca.pw>
+References: <4cfadccf-d77e-0cff-f870-0ff069d41271@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>
+In-Reply-To: <4cfadccf-d77e-0cff-f870-0ff069d41271@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HP output driver has two parameters that can be configured to reduce
-pop noise: power-on delay and ramp-up step time. Two new kcontrols
-have been added to set these parameters.
 
-Also have to alter timeout in aic31xx_dapm_power_event() because default
-timeout does fire when higher supported power-on delay are configured.
 
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
----
- sound/soc/codecs/tlv320aic31xx.c | 32 ++++++++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
+> On Nov 28, 2019, at 3:46 AM, David Hildenbrand <david@redhat.com> wrote:
+>=20
+> I'm sorry to say but one of the main reasons we have linux-next for is
+> to find BUGs early, before they go upstream. It is a way of giving
+> patches *more* testing. Yes, you are doing to dirty work (which is
+> highly appreciated btw) by debugging all that crap, and I can understand
+> how that can be frustrating.
 
-diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index f6f19fdc72f5..d6c462f21370 100644
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -262,6 +262,19 @@ static SOC_ENUM_SINGLE_DECL(mic1lm_p_enum, AIC31XX_MICPGAPI, 2,
- static SOC_ENUM_SINGLE_DECL(mic1lm_m_enum, AIC31XX_MICPGAMI, 4,
- 	mic_select_text);
- 
-+static const char * const hp_poweron_time_text[] = {
-+	"0us", "15.3us", "153us", "1.53ms", "15.3ms", "76.2ms",
-+	"153ms", "304ms", "610ms", "1.22s", "3.04s", "6.1s" };
-+
-+static SOC_ENUM_SINGLE_DECL(hp_poweron_time_enum, AIC31XX_HPPOP, 3,
-+	hp_poweron_time_text);
-+
-+static const char * const hp_rampup_step_text[] = {
-+	"0ms", "0.98ms", "1.95ms", "3.9ms" };
-+
-+static SOC_ENUM_SINGLE_DECL(hp_rampup_step_enum, AIC31XX_HPPOP, 1,
-+	hp_rampup_step_text);
-+
- static const DECLARE_TLV_DB_SCALE(dac_vol_tlv, -6350, 50, 0);
- static const DECLARE_TLV_DB_SCALE(adc_fgain_tlv, 0, 10, 0);
- static const DECLARE_TLV_DB_SCALE(adc_cgain_tlv, -2000, 50, 0);
-@@ -285,6 +298,14 @@ static const struct snd_kcontrol_new common31xx_snd_controls[] = {
- 
- 	SOC_DOUBLE_R_TLV("HP Analog Playback Volume", AIC31XX_LANALOGHPL,
- 			 AIC31XX_RANALOGHPR, 0, 0x7F, 1, hp_vol_tlv),
-+
-+	/* HP de-pop control: apply power not immediately but via ramp
-+	 * function with these psarameters. Note that power up sequence
-+	 * has to wait for this to complete; this is implemented by
-+	 * polling HP driver status in aic31xx_dapm_power_event()
-+	 */
-+	SOC_ENUM("HP Output Driver Power-On time", hp_poweron_time_enum),
-+	SOC_ENUM("HP Output Driver Ramp-up step", hp_rampup_step_enum),
- };
- 
- static const struct snd_kcontrol_new aic31xx_snd_controls[] = {
-@@ -357,6 +378,7 @@ static int aic31xx_dapm_power_event(struct snd_soc_dapm_widget *w,
- 	struct aic31xx_priv *aic31xx = snd_soc_component_get_drvdata(component);
- 	unsigned int reg = AIC31XX_DACFLAG1;
- 	unsigned int mask;
-+	unsigned int timeout = 500 * USEC_PER_MSEC;
- 
- 	switch (WIDGET_BIT(w->reg, w->shift)) {
- 	case WIDGET_BIT(AIC31XX_DACSETUP, 7):
-@@ -367,9 +389,13 @@ static int aic31xx_dapm_power_event(struct snd_soc_dapm_widget *w,
- 		break;
- 	case WIDGET_BIT(AIC31XX_HPDRIVER, 7):
- 		mask = AIC31XX_HPLDRVPWRSTATUS_MASK;
-+		if (event == SND_SOC_DAPM_POST_PMU)
-+			timeout = 7 * USEC_PER_SEC;
- 		break;
- 	case WIDGET_BIT(AIC31XX_HPDRIVER, 6):
- 		mask = AIC31XX_HPRDRVPWRSTATUS_MASK;
-+		if (event == SND_SOC_DAPM_POST_PMU)
-+			timeout = 7 * USEC_PER_SEC;
- 		break;
- 	case WIDGET_BIT(AIC31XX_SPKAMP, 7):
- 		mask = AIC31XX_SPLDRVPWRSTATUS_MASK;
-@@ -389,9 +415,11 @@ static int aic31xx_dapm_power_event(struct snd_soc_dapm_widget *w,
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_POST_PMU:
--		return aic31xx_wait_bits(aic31xx, reg, mask, mask, 5000, 100);
-+		return aic31xx_wait_bits(aic31xx, reg, mask, mask,
-+				5000, timeout / 5000);
- 	case SND_SOC_DAPM_POST_PMD:
--		return aic31xx_wait_bits(aic31xx, reg, mask, 0, 5000, 100);
-+		return aic31xx_wait_bits(aic31xx, reg, mask, 0,
-+				5000, timeout / 5000);
- 	default:
- 		dev_dbg(component->dev,
- 			"Unhandled dapm widget event %d from %s\n",
--- 
-2.20.1
+It is already an expensive development practice if developers need to rely o=
+n someone else to figure out their own bugs in linux-next. linux-next is for=
+ integration testing, but majority of those regressions I had to deal with n=
+owadays have nothing to do with integration, i.e., interaction with other su=
+bsystems.
 
+>=20
+> But believe me, the world won't end if your on vacation for a couple of
+> weeks, even though some BUGs could sneak in ... e.g., lately I try to
+> review as much as I can on the MM list (and Michal is steadily watching
+> out as well).
+
+Sure, the world will still be running, but good luck on solely rely on revie=
+wing with bare eyes before merging.
+
+>=20
+> The solution to your problem is more review and testing, really. E.g.,
+> I'd be very happy if other developers would test their patches more
+> thoroughly and if there would be more review activity on the MM list in
+> general (my patches barely get any review ... and I sent a lot of fixes
+> lately).
+
+Of course, that helps but it is a culture that very difficult to change now.=
+ How many times I saw even high-profile developers proudly sent out patches l=
+abeled =E2=80=9Cno testing=E2=80=9D explicitly and implicitly ?
+
+>=20
+> As soon as we stop touching our code because we are afraid of BUGs, we
+> lost the battle against an unmaintainable code base.
+
+Your generalizations of things make me sorrow.
+
+>=20
+> BTW: [1] mentions "unbalanced software development culture with regard
+> to quality vs quantity that supplies an endless stream of bugs". I don't
+> agree to this statement. There will *always* be an endless stream of
+> BUGs - and most of them come from new features and performance
+> improvements IMHO. To me, cleanups and refactorings are important tools
+> to improve the software quality (and reduce the code size). All we can
+> do is try to minimize the number of BUGs - e.g., via more code review,
+> manual testing, automatic testing, and by actually understanding the
+> code. Cleanups/refactorings can even fix undiscovered BUGs (e.g., latest
+> example is [2])
+
+Surely, most of people probably don=E2=80=99t care about those endless bugs b=
+ecause Linux is a monopoly in data center and open source and it is always l=
+ike this since Linux was born as a hobby project.=
