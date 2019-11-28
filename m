@@ -2,295 +2,168 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F75C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3F9C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5EC217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121DC2178F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfK1KDk (ORCPT
+        id S1726699AbfK1KEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:03:40 -0500
-Received: from mga03.intel.com ([134.134.136.65]:9956 "EHLO mga03.intel.com"
+        Thu, 28 Nov 2019 05:04:00 -0500
+Received: from mail.phunq.net ([66.183.183.73]:34700 "EHLO phunq.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfK1KDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:03:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 02:03:38 -0800
-X-IronPort-AV: E=Sophos;i="5.69,253,1571727600"; 
-   d="scan'208";a="203389544"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 02:03:34 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH] drm/dp_mst: Fix W=1 warnings
-In-Reply-To: <20191112123938.2346-1-benjamin.gaignard@st.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191112123938.2346-1-benjamin.gaignard@st.com>
-Date:   Thu, 28 Nov 2019 12:03:32 +0200
-Message-ID: <877e3knwqz.fsf@intel.com>
+        id S1726133AbfK1KD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 05:03:59 -0500
+Received: from [172.16.1.14]
+        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+        (Exim 4.92.3)
+        (envelope-from <daniel@phunq.net>)
+        id 1iaGeR-00021r-7l; Thu, 28 Nov 2019 02:03:55 -0800
+Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Viacheslav Dubeyko <slava@dubeyko.com>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        "Darrick J. Wong" <djwong@kernel.org>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+ <8ece0424ceeeffbc4df5d52bfa270a9522f81cda.camel@dubeyko.com>
+ <5c9b5bd3-028a-5211-30a6-a5a8706b373e@phunq.net>
+ <B9F8658C-B88F-44A1-BBEF-98A8259E0712@dubeyko.com>
+ <5e909ace-b5c9-9bf2-616f-018b52e065de@phunq.net>
+ <A94F595C-462B-456C-ADBE-809C61886A2D@dilger.ca>
+From:   Daniel Phillips <daniel@phunq.net>
+Message-ID: <0da770cb-07ce-2b81-8eae-64d32ad80c3f@phunq.net>
+Date:   Thu, 28 Nov 2019 02:03:55 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <A94F595C-462B-456C-ADBE-809C61886A2D@dilger.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019, Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
-> Fix the warnings that show up with W=1.
-> They are all about unused but set variables.
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 50 +++++++++++++----------------------
->  1 file changed, 19 insertions(+), 31 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index b854a422a523..6ff554be8000 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -672,7 +672,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
->  				      u8 *replybuf, u8 replybuflen, bool hdr)
->  {
->  	int ret;
-> -	u8 crc4;
->  
->  	if (hdr) {
->  		u8 hdrlen;
-> @@ -714,8 +713,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
->  	}
->  
->  	if (msg->curchunk_idx >= msg->curchunk_len) {
-> -		/* do CRC */
-> -		crc4 = drm_dp_msg_data_crc4(msg->chunk, msg->curchunk_len - 1);
 
-Someone who knows this code really needs to check if we should be using
-crc4 instead of just throwing this away as unused.
 
->  		/* copy chunk into bigger msg */
->  		memcpy(&msg->msg[msg->curlen], msg->chunk, msg->curchunk_len - 1);
->  		msg->curlen += msg->curchunk_len - 1;
-> @@ -1744,14 +1741,13 @@ static u8 drm_dp_calculate_rad(struct drm_dp_mst_port *port,
->   */
->  static bool drm_dp_port_setup_pdt(struct drm_dp_mst_port *port)
+On 2019-11-28 1:15 a.m., Andreas Dilger wrote:
+> On Nov 27, 2019, at 7:54 PM, Daniel Phillips <daniel@phunq.net> wrote:
+>>
+>> On 2019-11-27 11:35 a.m., Viacheslav Dubeyko wrote:
+>>> So, it looks like that Shardmap could be better for the case of billion files in one folder.  But what’s about the regular case when it could be
+>>> dozens/hundreds of files in one folder? Will Shardmap be better than HTree?
+>>
+>> Yes, Shardmap is also faster than HTree in that case. Both Shardmap and
+>> HTree are unindexed in that range, however Shardmap is faster because of
+>> two things:
+>>
+>> 1) Shardmap uses a more efficient record block format that incorporates
+>> a single byte hash code that avoids 99% of failed string compares.
+>>
+>> 2) Shardmap "pins" the current target block in which new entries are
+>> created, avoiding repeated radix tree lookups for insert under load.
+>>
+>> As soon as you get into thousands of files, the difference between
+>> Shardmap and HTree widens dramatically so that Shardmap ends up faster
+>> by a factor of 2, 3, 4, etc as directory size increases. Not just
+>> faster than HTree, but faster than any tree based scheme, because of
+>> the O(1) / O(log N) equation.
+>>
+>> Up in the millions and billions of files, HTree just drops out of the
+>> running, but if it were actually improved to operate in that range then
+> 
+> Actually, 3-level htree was implemented for ext4 several years ago, but
+> was held back because there was no e2fsck support for it.  That was
+> finished and the 3-level htree support was landed to ext4 in 2017 in
+> commit v4.12-rc2-15-ge08ac99.  In theory it could allow ~5B entries in
+> a single directory (the 2GB size limit was also removed at the same time).
+> 
+> The code change for this was relatively straight forward,
 
-The function changed in c485e2c97dae ("drm/dp_mst: Refactor pdt
-setup/teardown, add more locking").
+Let's clarify: straightforward for you. The fact that HTree sat for 15
+years with my lame, coded-in-a-day two level scheme suggests that this
+would not be straightforward for everyone. In my defence, I plead that
+at the time I regarded 10 millions files as essentially infinite. This
+makes me think of "640K ought to be enough for anyone" naturally.
 
->  {
-> -	int ret;
->  	u8 rad[6], lct;
->  	bool send_link = false;
->  	switch (port->pdt) {
->  	case DP_PEER_DEVICE_DP_LEGACY_CONV:
->  	case DP_PEER_DEVICE_SST_SINK:
->  		/* add i2c over sideband */
-> -		ret = drm_dp_mst_register_i2c_bus(&port->aux);
-> +		drm_dp_mst_register_i2c_bus(&port->aux);
->  		break;
->  	case DP_PEER_DEVICE_MST_BRANCHING:
->  		lct = drm_dp_calculate_rad(port, rad);
-> @@ -1821,21 +1817,18 @@ ssize_t drm_dp_mst_dpcd_write(struct drm_dp_aux *aux,
->  
->  static void drm_dp_check_mstb_guid(struct drm_dp_mst_branch *mstb, u8 *guid)
->  {
-> -	int ret;
-> -
->  	memcpy(mstb->guid, guid, 16);
->  
->  	if (!drm_dp_validate_guid(mstb->mgr, mstb->guid)) {
->  		if (mstb->port_parent) {
-> -			ret = drm_dp_send_dpcd_write(
-> +			drm_dp_send_dpcd_write(
->  					mstb->mgr,
->  					mstb->port_parent,
->  					DP_GUID,
->  					16,
->  					mstb->guid);
+Some day somebody will have a use case for billion file directories.
+Until that day comes, I am ok with regarding this capability as a mere
+stunt, or proof of scalability. Scaling 2 orders of magnitude higher is
+just one of the improvements Shardmap offers, and in some sense, the
+least important of them.
 
-Indentation could be fixed while at it.
+> but as you
+> wrote elsewhere the big problem is each htree insert/lookup/remove
+> operation degrades to random 4KB IOPS for every change (for the
+> directory leaf blocks on insert/remove, and for the itable blocks on
+> readdir), so has about 4096 / 64 = 64x write inflation or more.
 
->  		} else {
-> -
-> -			ret = drm_dp_dpcd_write(
-> +			drm_dp_dpcd_write(
->  					mstb->mgr->aux,
->  					DP_GUID,
->  					mstb->guid,
-> @@ -2427,14 +2420,14 @@ static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
->  {
->  	struct drm_dp_sideband_msg_tx *txmsg;
->  	struct drm_dp_link_address_ack_reply *reply;
-> -	int i, len, ret;
-> +	int i, ret;
->  
->  	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
->  	if (!txmsg)
->  		return;
->  
->  	txmsg->dst = mstb;
-> -	len = build_link_address(txmsg);
-> +	build_link_address(txmsg);
+Right. Shardmap linearizes pretty much everything, which seems to be
+pretty much a necessity to achieve optimal performance with lowest
+cache pressure, particularly with machines that are only marginally
+capable of the load they are attempting.
 
-Maybe you should make the function void while at it?
+> A log-structured directory insert/remove feature is appealing to me
+> if it can avoid this overhead in practise.
 
->  
->  	mstb->link_address_sent = true;
->  	drm_dp_queue_down_tx(mgr, txmsg);
-> @@ -2476,7 +2469,6 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
->  {
->  	struct drm_dp_enum_path_resources_ack_reply *path_res;
->  	struct drm_dp_sideband_msg_tx *txmsg;
-> -	int len;
->  	int ret;
->  
->  	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
-> @@ -2484,7 +2476,7 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
->  		return -ENOMEM;
->  
->  	txmsg->dst = mstb;
-> -	len = build_enum_path_resources(txmsg, port->port_num);
-> +	build_enum_path_resources(txmsg, port->port_num);
+The main problem with pure log structured updates is reading back the
+log, which is randomly interleaved if written out in strict creation
+order. This is the issue that LSM (as used by RocksDB and friends)
+attempts to address:
 
-Maybe you should make the function void while at it?
+   https://en.wikipedia.org/wiki/Log-structured_merge-tree
 
->  	drm_dp_queue_down_tx(mgr, txmsg);
->  
-> @@ -2567,7 +2559,7 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
->  {
->  	struct drm_dp_sideband_msg_tx *txmsg;
->  	struct drm_dp_mst_branch *mstb;
-> -	int len, ret, port_num;
-> +	int ret, port_num;
->  	u8 sinks[DRM_DP_MAX_SDP_STREAMS];
->  	int i;
->  
-> @@ -2592,9 +2584,9 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
->  		sinks[i] = i;
->  
->  	txmsg->dst = mstb;
-> -	len = build_allocate_payload(txmsg, port_num,
-> -				     id,
-> -				     pbn, port->num_sdp_streams, sinks);
-> +	build_allocate_payload(txmsg, port_num,
-> +			       id,
-> +			       pbn, port->num_sdp_streams, sinks);
+Unfortunately, these solutions tend to be complex and top heavy on the
+read side. In practice Shardmap won solidly in all of insert, lookup
+and delete benchmarks when we benchmarked it. I am not sure why that
+is, but it seems to be trying to do a lot of fancy stuff.
 
-Maybe you should make the function void while at it?
+Shardmap uses a far simpler update technique: each new index entry is
+simply appended to the end of the appropriate shard. The fewer the
+shards, the more efficient that is. However, even when there are 1K
+or up to 8K shards as we use for our 1 billion file benchmark, this
+algorithm still works well in practice. The key trick is, include
+enough updates in the commit so that each shard receives enough to
+reduce the tail block write multiplication to a dull roar.
 
->  
->  	drm_dp_queue_down_tx(mgr, txmsg);
->  
-> @@ -2623,7 +2615,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
->  				 struct drm_dp_mst_port *port, bool power_up)
->  {
->  	struct drm_dp_sideband_msg_tx *txmsg;
-> -	int len, ret;
-> +	int ret;
->  
->  	port = drm_dp_mst_topology_get_port_validated(mgr, port);
->  	if (!port)
-> @@ -2636,7 +2628,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
->  	}
->  
->  	txmsg->dst = port->parent;
-> -	len = build_power_updown_phy(txmsg, port->port_num, power_up);
-> +	build_power_updown_phy(txmsg, port->port_num, power_up);
+On my not very spectacular Ryzen 7 workstation backed by SSD, we
+create 1 billion directory entries in a bit less than 12 minutes. Is
+this fast enough? On spinning rust it takes two or three minutes
+longer. Clearly Ext4 plus the block layer are doing a nice job of
+minimizing seeks for this load.
 
-Maybe you should make the function void while at it?
+>> lookups would be at least 4 times slower due to index block probes, and
+>> heavy insert loads would be orders of magnitude slower due to write
+>> multiplication on commit. Of course I hear you when you say that you
+>> don't have any million file directories to worry about, but some folks
+>> do. (Any comment, Andreas?)
+> 
+> We regularly have directories in the 1M+ size, because of users can easily
+> run many thousands of processes concurrently creating files in the same
+> directory.  The 2-level htree topped out around 10-12M entries, which was
+> hit occasionally.  At the same time, we also put in directory size limits
+> so that admins could *prevent* users from doing this, because it also can
+> cause problems for the user/admin when they need to process such large
+> directories ("ls -l" will of course never finish).
 
->  	drm_dp_queue_down_tx(mgr, txmsg);
->  
->  	ret = drm_dp_mst_wait_tx_reply(port->parent, txmsg);
-> @@ -2856,7 +2848,6 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
->  				 struct drm_dp_mst_port *port,
->  				 int offset, int size, u8 *bytes)
->  {
-> -	int len;
->  	int ret = 0;
->  	struct drm_dp_sideband_msg_tx *txmsg;
->  	struct drm_dp_mst_branch *mstb;
-> @@ -2871,7 +2862,7 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
->  		goto fail_put;
->  	}
->  
-> -	len = build_dpcd_read(txmsg, port->port_num, offset, size);
-> +	build_dpcd_read(txmsg, port->port_num, offset, size);
+OK, this confirms my impression of the sort of loads you feed to HTree.
+In this range, I promise that you will see a solid speedup from Shardmap
+for the directory ops alone, plus far better cache coherency with respect
+to the inode table, and of course, a readdir that does not verge on
+brilliant insanity.
 
-Maybe you should make the function void while at it?
+Thanks for the comments Andreas, and I hope it is clear that I am also
+offering Shardmap for Lustre. Not that you would even need to ask.
 
->  	txmsg->dst = port->parent;
->  
->  	drm_dp_queue_down_tx(mgr, txmsg);
-> @@ -2909,7 +2900,6 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
->  				  struct drm_dp_mst_port *port,
->  				  int offset, int size, u8 *bytes)
->  {
-> -	int len;
->  	int ret;
->  	struct drm_dp_sideband_msg_tx *txmsg;
->  	struct drm_dp_mst_branch *mstb;
-> @@ -2924,7 +2914,7 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
->  		goto fail_put;
->  	}
->  
-> -	len = build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
-> +	build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
+Regards,
 
-Maybe you should make the function void while at it?
-
->  	txmsg->dst = mstb;
->  
->  	drm_dp_queue_down_tx(mgr, txmsg);
-> @@ -3147,7 +3137,7 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
->  {
->  	int len;
->  	u8 replyblock[32];
-> -	int replylen, origlen, curreply;
-> +	int replylen, curreply;
->  	int ret;
->  	struct drm_dp_sideband_msg_rx *msg;
->  	int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE : DP_SIDEBAND_MSG_DOWN_REP_BASE;
-> @@ -3167,7 +3157,6 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
->  	}
->  	replylen = msg->curchunk_len + msg->curchunk_hdrlen;
->  
-> -	origlen = replylen;
->  	replylen -= len;
->  	curreply = len;
->  	while (replylen > 0) {
-> @@ -3959,17 +3948,16 @@ void drm_dp_mst_dump_topology(struct seq_file *m,
->  	mutex_lock(&mgr->lock);
->  	if (mgr->mst_primary) {
->  		u8 buf[DP_PAYLOAD_TABLE_SIZE];
-> -		int ret;
->  
-> -		ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
-> +		drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
->  		seq_printf(m, "dpcd: %*ph\n", DP_RECEIVER_CAP_SIZE, buf);
-> -		ret = drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
-> +		drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
->  		seq_printf(m, "faux/mst: %*ph\n", 2, buf);
-> -		ret = drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
-> +		drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
->  		seq_printf(m, "mst ctrl: %*ph\n", 1, buf);
->  
->  		/* dump the standard OUI branch header */
-> -		ret = drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
-> +		drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
->  		seq_printf(m, "branch oui: %*phN devid: ", 3, buf);
->  		for (i = 0x3; i < 0x8 && buf[i]; i++)
->  			seq_printf(m, "%c", buf[i]);
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Daniel
