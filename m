@@ -2,110 +2,107 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE28C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF908C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42B921736
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B687F21789
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tIfp8pk9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZqFnPPmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfK1Nnx (ORCPT
+        id S1727126AbfK1NpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:43:53 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37102 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfK1Nnw (ORCPT
+        Thu, 28 Nov 2019 08:45:12 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46169 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbfK1NpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:43:52 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f129so11725879wmf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:43:49 -0800 (PST)
+        Thu, 28 Nov 2019 08:45:11 -0500
+Received: by mail-lf1-f68.google.com with SMTP id a17so20066698lfi.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 05:45:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vtzLD0tyab7VEFg5K+G3bH3VUcvOhRi/b0o/Pb84uPg=;
-        b=tIfp8pk983wWAlUIotSYeqWNg3ZI5ZwNr8gf2fngdwvGRNbPC89oqvVwYbs5HxV5Xp
-         jUJ9wSR8H29ha+IAEKJUY7BA6srBV8K2TXitMb0yjTK0w9Ir6AkJCuCxtOtdCkdBbPJw
-         fYDpGW59cKqQFb6Q61PO0ksF0XvWW/IeWTDZvbvjlSXC0JE3Et/LvYLs3mope5NEBUuF
-         ro3PeFyseq+2RJ9/JpJRqJKLx7wXF44XSH9kta2wYFBpvjuZxJ1Ihz9nDZwUeBmPZFfT
-         LOPg6sEsZpP/5eHcFfm+8l23a+QEdgZtNH8B1kZeZMEPLfeaICFCAnS9Oa4K27so7MLu
-         aqcQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qVyVH3GucIXCwfrLXX19RLZ09hFTpdgyonXBY6f04/k=;
+        b=ZqFnPPmFXVOZPQ+d07lBFfoR3OZn+DTxcIkmUV2Ixk3ZgAOc1136lj4VSNYn7ltmue
+         Y7q9kYYfko+UbksL+7cOxZg2Xfz1Uo6AavH2kyMi3RteXWGRsX5vpWqQf/RK77j9iwve
+         PAQgcfFrhlltVqBW3kwiFTki7LGoQaa+o8mJwOZ8PQ51I6y8SYdjhmMkWkaoOG8+KOaO
+         GhBnhG7YZzOGZpMTi96UUGJjxRLUc9Z09SJEjaM+uAlnWFpMohoEJNbhbL2mWtKnHjpU
+         lC67Wv4bSGZdmb7egsTcBU3DgjWUCP9ugxohPyZsLVuYTFzueoyVkJ0Ix1hmF6ZSR0zK
+         ueMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vtzLD0tyab7VEFg5K+G3bH3VUcvOhRi/b0o/Pb84uPg=;
-        b=sc3xmdt5VXE1LhZu375wbhzUYPSTmZ0et2vnpniw0DyWXpKV8gpBGu8oiguv4g1VHx
-         KWrQAOo1Unukx6IkJ4I0reofbhzlspxoTHiXb6Vk1xVQwa4gm8aD3RF7zcA8LZ3hMDYW
-         vrO7IyrpAnZMZMNoXGZ2fmGzVvwxXzork+pJZyeqFANB4K6cc4vK6R+A05H3CS/+uudf
-         DLhcGsoNb5hBP8oXrBCH/a2jtYr4ugw1K0n+sD60VSsu58ik/3uicgLNPyxlsPwwwCtP
-         67GeIsQ4bZYIKkxS25jVvd0ERfydgJ9Q2DkWNbqyqjWJ5CRnSs2+zkXeVfFuJyMKe1I2
-         8wCg==
-X-Gm-Message-State: APjAAAWpBqU4+1f/1ZBViuWsVOEFR7w7BfZRqwmxSQpLMonqlmhMarRy
-        uPKn+sYX4mWl93K39/QelN/+KInh5I4=
-X-Google-Smtp-Source: APXvYqyf46hZBfKvDKQEzIdpHO2/RKf7J9rYHD3HrhxoRz2Bcmo6J8EHzeVg7tSXozyJK0+Qyq4wGw==
-X-Received: by 2002:a1c:3b82:: with SMTP id i124mr9015505wma.122.1574948628635;
-        Thu, 28 Nov 2019 05:43:48 -0800 (PST)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id u26sm10743407wmj.9.2019.11.28.05.43.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 05:43:48 -0800 (PST)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Cc:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Nagarjuna Kristam <nkristam@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 1/2] usb: common: usb-conn-gpio: Don't log an error on probe deferral
-Date:   Thu, 28 Nov 2019 13:43:57 +0000
-Message-Id: <20191128134358.3880498-2-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191128134358.3880498-1-bryan.odonoghue@linaro.org>
-References: <20191128134358.3880498-1-bryan.odonoghue@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qVyVH3GucIXCwfrLXX19RLZ09hFTpdgyonXBY6f04/k=;
+        b=euaUHI1//xsBHtKODR6knwPhJXEVCNz2u9sDr08IFZKvBiH1N2+m4QmWXKffvvMRy3
+         FK8q+wXMq7IGPTzv3WSMtJGWYCYr6+YsYbni/NpfRp8n7O3xEW5tl+Rl5vfyVcrhcBWx
+         Rc0x8yVcyj14zo1K2o963D+pDkfW+aCp0Hr9MwOQCT65g6Fmumc4Ung3LpUZ4NHEsJcQ
+         hCIJ5GJu4sdUFukwiXIsjtFpBodUaV5U9EO9IstqyD/eMOR7gYA2N4WwkexZsDgjhbGi
+         aK2QKDxBGXlrnfV5Nqc17+Gxtzr+d3L1dfAiIbZnr0jIkGbgsn7WQkInN2hTINJ4RKLV
+         y+vg==
+X-Gm-Message-State: APjAAAW3kvySLgJN0qeQ1Pouhm5SrgCaTieZlrJ5pPUuZjGfaMCRYsE6
+        xntazny0SEDZGHw9IwCvoAQBAcPGiKcSzUBLelZc4g==
+X-Google-Smtp-Source: APXvYqxmD5I6HnIUXKd0kI0HkU3aSQ4hioXpM0yhKdtcDcsx3EccroOaBtiV8gi40+vkYztiQmeRCAXkMncEdw2+E9Y=
+X-Received: by 2002:a19:f701:: with SMTP id z1mr26973589lfe.133.1574948708877;
+ Thu, 28 Nov 2019 05:45:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191120142038.30746-1-ktouil@baylibre.com> <20191120142038.30746-2-ktouil@baylibre.com>
+ <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
+ <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
+ <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
+ <CAMpxmJU_0MzroyD_ZF5WOxpZz3dkADLOmW7aKpWdJ7GCvo-RnA@mail.gmail.com>
+ <CACRpkdaPQKxfC66yhG=xdmCOGGd9PjDVCwZquKb+4HmuS_=kNA@mail.gmail.com> <CALL1Z1xpcGyh_f3ooRT+gGApoAnS7YBMd2hUKqnt+pTcAFoeAg@mail.gmail.com>
+In-Reply-To: <CALL1Z1xpcGyh_f3ooRT+gGApoAnS7YBMd2hUKqnt+pTcAFoeAg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 28 Nov 2019 14:44:56 +0100
+Message-ID: <CACRpkdYEEypRZOaO3Ta9aDgizNeLyUOSraBEhKaZcHaJV+o0gQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
+To:     Khouloud Touil <ktouil@baylibre.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch makes the printout of the error message for failing to get a
-VBUS regulator handle conditional on the error code being something other
-than -EPROBE_DEFER.
+On Tue, Nov 26, 2019 at 4:18 PM Khouloud Touil <ktouil@baylibre.com> wrote:
 
-Deferral is a normal thing, we don't need an error message for this.
+> [Me]
+>> 4. The code still need to be modified to set the value
+>>    to "1" to assert the line since the gpiolib now handles
+>>    the inversion semantics.
 
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Nagarjuna Kristam <nkristam@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
- drivers/usb/common/usb-conn-gpio.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> By saying "assert the wp" do you mean enable the write operation or
+> block it ?
 
-diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
-index 87338f9eb5be..ed204cbb63ea 100644
---- a/drivers/usb/common/usb-conn-gpio.c
-+++ b/drivers/usb/common/usb-conn-gpio.c
-@@ -156,7 +156,8 @@ static int usb_conn_probe(struct platform_device *pdev)
- 
- 	info->vbus = devm_regulator_get(dev, "vbus");
- 	if (IS_ERR(info->vbus)) {
--		dev_err(dev, "failed to get vbus\n");
-+		if (PTR_ERR(info->vbus) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get vbus\n");
- 		return PTR_ERR(info->vbus);
- 	}
- 
--- 
-2.24.0
+Yeah one more layer of confusion, sorry :/
 
+By "asserting WP" I mean driving the line to a state where
+writing to the EEPROM is enabled, i.e. the default state is
+that the EEPROM is write protected and when you "assert"
+WP it becomes writable.
+
+If you feel the inverse semantics are more intuitive (such that
+WP comes up asserted and thus write protected), be my
+guest :D
+
+As long as it is unambiguously documented in the bindings
+and with comments in the code I'm game for whatever the
+at24 people feel is most appropriate. (You will set the standard
+for everyone else.)
+
+Yours.
+Linus Walleij
