@@ -2,488 +2,306 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D6EC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4159FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E84208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02526208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMezP4i4"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="OszpPgxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfK1NZn (ORCPT
+        id S1726617AbfK1N0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:25:43 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46299 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfK1NZn (ORCPT
+        Thu, 28 Nov 2019 08:26:55 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37638 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726227AbfK1N0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:25:43 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e9so28489482ljp.13;
-        Thu, 28 Nov 2019 05:25:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=G/d1TkhCeblT/3d5R7NOwD7vHd7mbksNpieQKKaf2tI=;
-        b=FMezP4i4ti/lGZ60nflNprU5hqRz2xlm2sII2k5g4PgjhJiwULTmlRvBZsmazyNZIL
-         dhsETjDC2xrE5oiRVY4d2IedJYeMrxsIpXRZXykSYLdvp1MrLvp4emkVv3T2M/1gPiaH
-         ya3zUuvhUbLEhRVpdIldAVfjUIHDe9fVdPDK02PTlm830XNS1JUJ3Ytjf3IqZBEsNE+9
-         P0T3K4Nf7PqYin2iEN6tP/KGh7PXe9kXWNIsYNZYoKqqIOBz2O55rnG5jjW3zSQzsFkB
-         KupkMgqX4bhlnGGrqCosi04VXIl/pUqzvoUdo5GlNxi8UcPhJ2/jg0s4uCYDcOMuSuAX
-         /kUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G/d1TkhCeblT/3d5R7NOwD7vHd7mbksNpieQKKaf2tI=;
-        b=YGWccmSl0LpxTIUHnDxVukof5KZ80PnoW04t/T5J5KmnUTU+uMLzT5uiDY35x2vwLQ
-         y5Fuam4VtdGWwJ4jON3ucvZNp6cTqTnN5s/ag7DPKmAthK6qb4AGrr9pGQyxiep1ZQKk
-         ooxdwi7cSIqAIIqtphfk334V68GsD62qHVO+e/tzkr5Y4IYz8MWHyMmlBk8c1Bb86T8p
-         yeoAxw+LnYvhxZDF1EcxapLsfdvsw9I7E/Y98w10DhgywdDInUZZMobkPzohAQc1Wqvs
-         d0WmD6ustnWdgMVPSnZXDcrB9S1NBfeJf1m4q6uKj1Yfu87xPlSaQ0kuiSHjlNp3Il2T
-         KdFQ==
-X-Gm-Message-State: APjAAAV6RW3RAzl+glcFaTDY7R2C8hcGRQ8InjLKWi3MPcRP0rIwoJgh
-        SOJoEDLAYsNpn6VWaFOtVcqwO5yb
-X-Google-Smtp-Source: APXvYqx9j7BiyJ0HxdpFuAkZX2e72pMr3lKSm7KZcyKygWIFPGRMNSL04xo3CPBVPznLbYNLsK8I2Q==
-X-Received: by 2002:a2e:9256:: with SMTP id v22mr3856958ljg.124.1574947539559;
-        Thu, 28 Nov 2019 05:25:39 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id c80sm9859720lfg.81.2019.11.28.05.25.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Nov 2019 05:25:38 -0800 (PST)
-Subject: Re: [PATCH v2 02/11] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1574830773-14892-1-git-send-email-skomatineni@nvidia.com>
- <1574830773-14892-3-git-send-email-skomatineni@nvidia.com>
- <749de44c-ec59-3cab-c02e-7b8fcb1fb9f4@gmail.com>
- <3d1492a1-f2a5-2d56-5341-a28fcb73fe64@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <484cb1bb-4fb2-9e71-87be-2bd5bd5b2348@gmail.com>
-Date:   Thu, 28 Nov 2019 16:25:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <3d1492a1-f2a5-2d56-5341-a28fcb73fe64@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 28 Nov 2019 08:26:55 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASDHJdX019875;
+        Thu, 28 Nov 2019 14:26:39 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=RaVz5vwLS9KwNeHlDd6nou+fZsJexuBBSbET8fSUIQo=;
+ b=OszpPgxxauBQNVWIVa083np7PsC5z+6veh47ZBG6Ct5c4KxA/15CljQwpFXnmJGpd5jb
+ TkjRf0Wb3H/2plC7gTZ4vgz9EhyWjxTmAREAXX98xUzcF3vhd+mreiaobRzOIzXmFGaC
+ zQMTOijNi6soan7/3mZFhGR6bOj3bD9HZczMosQMrJyxgxph3ztBjXlN+nq5VUoUvtWY
+ S1yGomD2jZJWVTDJDzwDfICgnfzM44BoCMiMt90id0M8dTudJdgAvPgrh3spTjAN4/K8
+ n8z9Ry4BNe5HdECNPi6PnEb28/lHnND+mcztshM1B6vKPFK8PFHDq5RF4aGvg9sGODEX UQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2whcxyj95r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Nov 2019 14:26:39 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E95E4100034;
+        Thu, 28 Nov 2019 14:26:38 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B0D8C2B75A8;
+        Thu, 28 Nov 2019 14:26:38 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 28 Nov
+ 2019 14:26:38 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Thu, 28 Nov 2019 14:26:37 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] drm/dp_mst: Fix W=1 warnings
+Thread-Topic: [PATCH v2] drm/dp_mst: Fix W=1 warnings
+Thread-Index: AQHVpdsDCZn0ecTrnUSlCXIFdvSMgaegX4QAgAAi7oA=
+Date:   Thu, 28 Nov 2019 13:26:37 +0000
+Message-ID: <8f64b1e7-d7b8-43df-8efe-ca5af91e2cd3@st.com>
+References: <20191128110012.23898-1-benjamin.gaignard@st.com>
+ <87sgm8mekf.fsf@intel.com>
+In-Reply-To: <87sgm8mekf.fsf@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8C53A9ED04A80649B5E332E8C9DB8CB5@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-28_03:2019-11-28,2019-11-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.11.2019 01:57, Sowjanya Komatineni пишет:
-> 
-> On 11/27/19 7:14 AM, Dmitry Osipenko wrote:
->> 27.11.2019 07:59, Sowjanya Komatineni пишет:
->>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3 with
->>> mux and gate for each of these clocks.
->>>
->>> Currently these PMC clocks are registered by Tegra clock driver using
->>> clk_register_mux and clk_register_gate by passing PMC base address
->>> and register offsets and PMC programming for these clocks happens
->>> through direct PMC access by the clock driver.
->>>
->>> With this, when PMC is in secure mode any direct PMC access from the
->>> non-secure world does not go through and these clocks will not be
->>> functional.
->>>
->>> This patch adds these clocks registration with PMC as a clock provider
->>> for these clocks. clk_ops callback implementations for these clocks
->>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC programming
->>> in secure mode and non-secure mode.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/soc/tegra/pmc.c | 330
->>> ++++++++++++++++++++++++++++++++++++++++++++++++
->>>   1 file changed, 330 insertions(+)
->>>
->>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>> index ea0e11a09c12..a353f6d0a832 100644
->>> --- a/drivers/soc/tegra/pmc.c
->>> +++ b/drivers/soc/tegra/pmc.c
->>> @@ -13,6 +13,9 @@
->>>     #include <linux/arm-smccc.h>
->>>   #include <linux/clk.h>
->>> +#include <linux/clk-provider.h>
->>> +#include <linux/clkdev.h>
->>> +#include <linux/clk/clk-conf.h>
->>>   #include <linux/clk/tegra.h>
->>>   #include <linux/debugfs.h>
->>>   #include <linux/delay.h>
->>> @@ -48,6 +51,7 @@
->>>   #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
->>>   #include <dt-bindings/gpio/tegra186-gpio.h>
->>>   #include <dt-bindings/gpio/tegra194-gpio.h>
->>> +#include <dt-bindings/soc/tegra-pmc.h>
->>>     #define PMC_CNTRL            0x0
->>>   #define  PMC_CNTRL_INTR_POLARITY    BIT(17) /* inverts INTR
->>> polarity */
->>> @@ -100,6 +104,7 @@
->>>   #define PMC_WAKE2_STATUS        0x168
->>>   #define PMC_SW_WAKE2_STATUS        0x16c
->>>   +#define PMC_CLK_OUT_CNTRL        0x1a8
->>>   #define PMC_SENSOR_CTRL            0x1b0
->>>   #define  PMC_SENSOR_CTRL_SCRATCH_WRITE    BIT(2)
->>>   #define  PMC_SENSOR_CTRL_ENABLE_RST    BIT(1)
->>> @@ -155,6 +160,91 @@
->>>   #define  TEGRA_SMC_PMC_READ    0xaa
->>>   #define  TEGRA_SMC_PMC_WRITE    0xbb
->>>   +struct pmc_clk_mux {
->>> +    struct clk_hw    hw;
->>> +    unsigned long    offs;
->>> +    u32        mask;
->>> +    u32        shift;
->>> +};
->>> +
->>> +#define to_pmc_clk_mux(_hw) container_of(_hw, struct pmc_clk_mux, hw)
->>> +
->>> +struct pmc_clk_gate {
->>> +    struct clk_hw    hw;
->>> +    unsigned long    offs;
->>> +    u32        shift;
->>> +};
->>> +
->>> +#define to_pmc_clk_gate(_hw) container_of(_hw, struct pmc_clk_gate, hw)
->>> +
->>> +struct pmc_clk_init_data {
->>> +    char *mux_name;
->>> +    char *gate_name;
->>> +    const char **parents;
->>> +    int num_parents;
->>> +    int mux_id;
->>> +    int gate_id;
->>> +    char *dev_name;
->>> +    u8 mux_shift;
->>> +    u8 gate_shift;
->>> +    u8 init_parent_index;
->>> +    int init_state;
->>> +};
->>> +
->>> +static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
->>> +    "clk_m_div4", "extern1",
->>> +};
->>> +
->>> +static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
->>> +    "clk_m_div4", "extern2",
->>> +};
->>> +
->>> +static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
->>> +    "clk_m_div4", "extern3",
->>> +};
->>> +
->>> +static struct pmc_clk_init_data tegra_pmc_clks_data[] = {
->>> +    {
->>> +        .mux_name = "clk_out_1_mux",
->>> +        .gate_name = "clk_out_1",
->>> +        .parents = clk_out1_parents,
->>> +        .num_parents = ARRAY_SIZE(clk_out1_parents),
->>> +        .mux_id = TEGRA_PMC_CLK_OUT_1_MUX,
->>> +        .gate_id = TEGRA_PMC_CLK_OUT_1,
->>> +        .dev_name = "extern1",
->>> +        .mux_shift = 6,
->>> +        .gate_shift = 2,
->>> +        .init_parent_index = 3,
->>> +        .init_state = 1,
->>> +    },
->>> +    {
->>> +        .mux_name = "clk_out_2_mux",
->>> +        .gate_name = "clk_out_2",
->>> +        .parents = clk_out2_parents,
->>> +        .num_parents = ARRAY_SIZE(clk_out2_parents),
->>> +        .mux_id = TEGRA_PMC_CLK_OUT_2_MUX,
->>> +        .gate_id = TEGRA_PMC_CLK_OUT_2,
->>> +        .dev_name = "extern2",
->>> +        .mux_shift = 14,
->>> +        .gate_shift = 10,
->>> +        .init_parent_index = 0,
->>> +        .init_state = 0,
->>> +    },
->>> +    {
->>> +        .mux_name = "clk_out_3_mux",
->>> +        .gate_name = "clk_out_3",
->>> +        .parents = clk_out3_parents,
->>> +        .num_parents = ARRAY_SIZE(clk_out3_parents),
->>> +        .mux_id = TEGRA_PMC_CLK_OUT_3_MUX,
->>> +        .gate_id = TEGRA_PMC_CLK_OUT_3,
->>> +        .dev_name = "extern3",
->>> +        .mux_shift = 22,
->>> +        .gate_shift = 18,
->>> +        .init_parent_index = 0,
->>> +        .init_state = 0,
->>> +    },
->>> +};
->>> +
->>>   struct tegra_powergate {
->>>       struct generic_pm_domain genpd;
->>>       struct tegra_pmc *pmc;
->>> @@ -254,6 +344,9 @@ struct tegra_pmc_soc {
->>>        */
->>>       const struct tegra_wake_event *wake_events;
->>>       unsigned int num_wake_events;
->>> +
->>> +    struct pmc_clk_init_data *pmc_clks_data;
->>> +    unsigned int num_pmc_clks;
->>>   };
->>>     static const char * const tegra186_reset_sources[] = {
->>> @@ -2163,6 +2256,228 @@ static int tegra_pmc_clk_notify_cb(struct
->>> notifier_block *nb,
->>>       return NOTIFY_OK;
->>>   }
->>>   +static void pmc_clk_fence_udelay(u32 offset)
->>> +{
->>> +    tegra_pmc_readl(pmc, offset);
->>> +    /* pmc clk propagation delay 2 us */
->>> +    udelay(2);
->>> +}
->>> +
->>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
->>> +{
->>> +    struct pmc_clk_mux *mux = to_pmc_clk_mux(hw);
->>> +    int num_parents = clk_hw_get_num_parents(hw);
->>> +    u32 val;
->>> +
->>> +    val = tegra_pmc_readl(pmc, mux->offs) >> mux->shift;
->>> +    val &= mux->mask;
->>> +
->>> +    if (val >= num_parents)
->>> +        return -EINVAL;
->>> +
->>> +    return val;
->>> +}
->>> +
->>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
->>> +{
->>> +    struct pmc_clk_mux *mux = to_pmc_clk_mux(hw);
->>> +    u32 val;
->>> +
->>> +    val = tegra_pmc_readl(pmc, mux->offs);
->>> +    val &= ~(mux->mask << mux->shift);
->>> +    val |= index << mux->shift;
->>> +    tegra_pmc_writel(pmc, val, mux->offs);
->>> +    pmc_clk_fence_udelay(mux->offs);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static const struct clk_ops pmc_clk_mux_ops = {
->>> +    .get_parent = pmc_clk_mux_get_parent,
->>> +    .set_parent = pmc_clk_mux_set_parent,
->>> +    .determine_rate = __clk_mux_determine_rate,
->>> +};
->>> +
->>> +static struct clk *
->>> +tegra_pmc_clk_mux_register(const char *name, const char * const
->>> *parent_names,
->>> +               int num_parents, unsigned long flags,
->>> +               unsigned long offset, u32 shift, u32 mask)
->>> +{
->>> +    struct clk_init_data init;
->>> +    struct pmc_clk_mux *mux;
->>> +
->>> +    mux = kzalloc(sizeof(*mux), GFP_KERNEL);
->>> +    if (!mux)
->>> +        return ERR_PTR(-ENOMEM);
->>> +
->>> +    init.name = name;
->>> +    init.ops = &pmc_clk_mux_ops;
->>> +    init.parent_names = parent_names;
->>> +    init.num_parents = num_parents;
->>> +    init.flags = flags;
->>> +
->>> +    mux->hw.init = &init;
->>> +    mux->offs = offset;
->>> +    mux->mask = mask;
->>> +    mux->shift = shift;
->>> +
->>> +    return clk_register(NULL, &mux->hw);
->>> +}
->>> +
->>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
->>> +{
->>> +    struct pmc_clk_gate *gate = to_pmc_clk_gate(hw);
->>> +
->>> +    return tegra_pmc_readl(pmc, gate->offs) & BIT(gate->shift) ? 1 : 0;
->>> +}
->>> +
->>> +static void pmc_clk_set_state(struct clk_hw *hw, int state)
->>> +{
->>> +    struct pmc_clk_gate *gate = to_pmc_clk_gate(hw);
->>> +    u32 val;
->>> +
->>> +    val = tegra_pmc_readl(pmc, gate->offs);
->>> +    val = state ? (val | BIT(gate->shift)) : (val & ~BIT(gate->shift));
->>> +    tegra_pmc_writel(pmc, val, gate->offs);
->>> +    pmc_clk_fence_udelay(gate->offs);
->>> +}
->>> +
->>> +static int pmc_clk_enable(struct clk_hw *hw)
->>> +{
->>> +    pmc_clk_set_state(hw, 1);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static void pmc_clk_disable(struct clk_hw *hw)
->>> +{
->>> +    pmc_clk_set_state(hw, 0);
->>> +}
->>> +
->>> +static const struct clk_ops pmc_clk_gate_ops = {
->>> +    .is_enabled = pmc_clk_is_enabled,
->>> +    .enable = pmc_clk_enable,
->>> +    .disable = pmc_clk_disable,
->>> +};
->>> +
->>> +static struct clk *
->>> +tegra_pmc_clk_gate_register(const char *name, const char *parent_name,
->>> +                unsigned long flags, unsigned long offset,
->>> +                u32 shift)
->>> +{
->>> +    struct clk_init_data init;
->>> +    struct pmc_clk_gate *gate;
->>> +
->>> +    gate = kzalloc(sizeof(*gate), GFP_KERNEL);
->>> +    if (!gate)
->>> +        return ERR_PTR(-ENOMEM);
->>> +
->>> +    init.name = name;
->>> +    init.ops = &pmc_clk_gate_ops;
->>> +    init.parent_names = &parent_name;
->>> +    init.num_parents = 1;
->>> +    init.flags = flags;
->>> +
->>> +    gate->hw.init = &init;
->>> +    gate->offs = offset;
->>> +    gate->shift = shift;
->>> +
->>> +    return clk_register(NULL, &gate->hw);
->>> +}
->>> +
->>> +static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
->>> +                     struct device_node *np)
->>> +{
->>> +    struct clk *clkmux, *clk, *parent;
->>> +    struct clk_onecell_data *clk_data;
->>> +    unsigned int num_clks;
->>> +    int i, ret;
->>> +
->>> +    /* each pmc clock output has a mux and a gate */
->>> +    num_clks = pmc->soc->num_pmc_clks * 2;
->>> +
->>> +    if (!num_clks)
->>> +        return;
->>> +
->>> +    clk_data = kmalloc(sizeof(*clk_data), GFP_KERNEL);
->>> +    if (!clk_data)
->>> +        return;
->>> +
->>> +    clk_data->clks = kcalloc(TEGRA_PMC_CLK_MAX,
->>> sizeof(*clk_data->clks),
->>> +                 GFP_KERNEL);
->>> +    if (!clk_data->clks)
->>> +        goto free_clkdata;
->>> +
->>> +    clk_data->clk_num = num_clks;
->>> +
->>> +    for (i = 0; i < pmc->soc->num_pmc_clks; i++) {
->>> +        struct pmc_clk_init_data *data;
->>> +
->>> +        data = pmc->soc->pmc_clks_data + i;
->>> +
->>> +        clkmux = tegra_pmc_clk_mux_register(data->mux_name,
->>> +                            data->parents,
->>> +                            data->num_parents,
->>> +                            CLK_SET_RATE_NO_REPARENT |
->>> +                            CLK_SET_RATE_PARENT,
->>> +                            PMC_CLK_OUT_CNTRL,
->>> +                            data->mux_shift, 3);
->>> +        if (IS_ERR(clkmux))
->>> +            goto free_clks;
->>> +
->>> +        clk_data->clks[data->mux_id] = clkmux;
->>> +
->>> +        clk = tegra_pmc_clk_gate_register(data->gate_name,
->>> +                          data->mux_name,
->>> +                          CLK_SET_RATE_PARENT,
->>> +                          PMC_CLK_OUT_CNTRL,
->>> +                          data->gate_shift);
->>> +        if (IS_ERR(clk))
->>> +            goto free_clks;
->>> +
->>> +        clk_data->clks[data->gate_id] = clk;
->>> +
->>> +        ret = clk_set_parent(clk, clkmux);
->>> +        if (ret < 0) {
->>> +            pr_err("failed to set parent of %s to %s\n",
->>> +                   __func__, __clk_get_name(clk),
->>> +                   __clk_get_name(clkmux));
->>> +        }
->>> +
->>> +        clk_register_clkdev(clk, data->dev_name, data->gate_name);
->>> +
->>> +        /* configure initial clock parent and state */
->>> +        parent = clk_get_sys(data->gate_name,
->>> +                     data->parents[data->init_parent_index]);
->>> +        if (!IS_ERR(parent)) {
->>> +            ret = clk_set_parent(clkmux, parent);
->>> +            if (ret < 0) {
->>> +                pr_err("failed to set parent of %s to %s\n",
->>> +                       __func__, __clk_get_name(clkmux),
->>> +                       __clk_get_name(parent));
->>> +                WARN_ON(1);
->>> +            }
->>> +        }
->>> +
->>> +        if (data->init_state) {
->>> +            if (clk_prepare_enable(clk)) {
->>> +                pr_err("failed to enable %s\n", __func__,
->>> +                       __clk_get_name(clk));
->>> +                WARN_ON(1);
-
-Alternatively you could write it like this:
-
-	err = clk_prepare_enable(clk);
-
-	WARN_ON(err, "failed to enable %s: %d\n",
-		__clk_get_name(clk), err);
-
->> Should be a bit better to move the WARN_ON to the end of errors handling
->> in order to catch all possible errors:
->>
->> @@ -2510,6 +2510,7 @@ static void tegra_pmc_clock_register(struct
->> tegra_pmc *pmc,
->>          return;
->>
->>   free_clks:
->> +       WARN_ON(1);
->>          kfree(clk_data->clks);
->>   free_clkdata:
->>          kfree(clk_data);
-> 
-> Reason I had WARN_ON right during clk_set_parent failure is to have the
-> loop continue for subsequence pmc clocks registration instead of
-> terminating all pmc clocks registration.
-
-Ah, okay. Nevertheless this WARN_ON in the end shouldn't be the least (IMO).
+DQpPbiAxMS8yOC8xOSAxMjoyMSBQTSwgSmFuaSBOaWt1bGEgd3JvdGU6DQo+IE9uIFRodSwgMjgg
+Tm92IDIwMTksIEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+IHdy
+b3RlOg0KPj4gRml4IHRoZSB3YXJuaW5ncyB0aGF0IHNob3cgdXAgd2l0aCBXPTEuDQo+PiBUaGV5
+IGFyZSBhbGwgYWJvdXQgdW51c2VkIGJ1dCBzZXQgdmFyaWFibGVzLg0KPj4gSWYgZnVuY3Rpb25z
+IHJldHVybnMgYXJlIG5vdCB1c2VkIGFueW1vcmUgbWFrZSB0aGVtIHZvaWQuDQo+Pg0KPj4gU2ln
+bmVkLW9mZi1ieTogQmVuamFtaW4gR2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJkQHN0LmNvbT4N
+Cj4+IENDOiBKYW5pIE5pa3VsYSA8amFuaS5uaWt1bGFAbGludXguaW50ZWwuY29tPg0KPj4gLS0t
+DQo+PiBjaGFuZ2VzIGluIHZlcnNpb24gMjoNCj4+IC0gZml4IGluZGVudGF0aW9ucw0KPj4gLSB3
+aGVuIHBvc3NpYmxlIGNoYW5nZSBmdW5jdGlvbnMgcHJvdG90eXBlIHRvIHZvaWQNCj4+DQo+PiBO
+b3RlOiB0aGlzIHBhdGNoIG1heSBjb25mbGljdCB3aXRoIGM0ODVlMmM5N2RhZSAoImRybS9kcF9t
+c3Q6IFJlZmFjdG9yIHBkdA0KPj4gc2V0dXAvdGVhcmRvd24sIGFkZCBtb3JlIGxvY2tpbmciKSB3
+aGVuIGl0IHdpbGwgaGl0IGRybS1taXNjLW5leHQNCj4gV2VsbCwgd2h5IGNyZWF0ZSBhbiB1bm5l
+Y2Vzc2FyeSBjb25mbGljdCB3aGVuIHRoZSByZWZlcmVuY2VkIGNvbW1pdCBhbHNvDQo+IGZpeGVz
+IHRoZSBzYW1lIHdhcm5pbmdzIGFzIGEgc2lkZS1lZmZlY3Q/DQoNCkJlY2F1c2UgdGhpcyBjb21t
+aXQgaXMgbm90IG1lcmdlZCAoeWV0ID8pIGluIGRybS1taXNjLW5leHQgd2hpY2ggd2hlcmUgSSAN
+CnN0YXJ0Lg0KDQpCZW5qYW1pbg0KDQo+IEJSLA0KPiBKYW5pLg0KPg0KPg0KPj4gICBkcml2ZXJz
+L2dwdS9kcm0vZHJtX2RwX21zdF90b3BvbG9neS5jIHwgODMgKysrKysrKysrKysrKy0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKyksIDUy
+IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2Rw
+X21zdF90b3BvbG9neS5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9kcF9tc3RfdG9wb2xvZ3kuYw0K
+Pj4gaW5kZXggYjg1NGE0MjJhNTIzLi5mZjJkODFkYjA3NzggMTAwNjQ0DQo+PiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vZHJtX2RwX21zdF90b3BvbG9neS5jDQo+PiArKysgYi9kcml2ZXJzL2dwdS9k
+cm0vZHJtX2RwX21zdF90b3BvbG9neS5jDQo+PiBAQCAtNjcyLDcgKzY3Miw2IEBAIHN0YXRpYyBi
+b29sIGRybV9kcF9zaWRlYmFuZF9tc2dfYnVpbGQoc3RydWN0IGRybV9kcF9zaWRlYmFuZF9tc2df
+cnggKm1zZywNCj4+ICAgCQkJCSAgICAgIHU4ICpyZXBseWJ1ZiwgdTggcmVwbHlidWZsZW4sIGJv
+b2wgaGRyKQ0KPj4gICB7DQo+PiAgIAlpbnQgcmV0Ow0KPj4gLQl1OCBjcmM0Ow0KPj4gICANCj4+
+ICAgCWlmIChoZHIpIHsNCj4+ICAgCQl1OCBoZHJsZW47DQo+PiBAQCAtNzE0LDggKzcxMyw2IEBA
+IHN0YXRpYyBib29sIGRybV9kcF9zaWRlYmFuZF9tc2dfYnVpbGQoc3RydWN0IGRybV9kcF9zaWRl
+YmFuZF9tc2dfcnggKm1zZywNCj4+ICAgCX0NCj4+ICAgDQo+PiAgIAlpZiAobXNnLT5jdXJjaHVu
+a19pZHggPj0gbXNnLT5jdXJjaHVua19sZW4pIHsNCj4+IC0JCS8qIGRvIENSQyAqLw0KPj4gLQkJ
+Y3JjNCA9IGRybV9kcF9tc2dfZGF0YV9jcmM0KG1zZy0+Y2h1bmssIG1zZy0+Y3VyY2h1bmtfbGVu
+IC0gMSk7DQo+PiAgIAkJLyogY29weSBjaHVuayBpbnRvIGJpZ2dlciBtc2cgKi8NCj4+ICAgCQlt
+ZW1jcHkoJm1zZy0+bXNnW21zZy0+Y3VybGVuXSwgbXNnLT5jaHVuaywgbXNnLT5jdXJjaHVua19s
+ZW4gLSAxKTsNCj4+ICAgCQltc2ctPmN1cmxlbiArPSBtc2ctPmN1cmNodW5rX2xlbiAtIDE7DQo+
+PiBAQCAtMTAxMiw3ICsxMDA5LDcgQEAgc3RhdGljIGJvb2wgZHJtX2RwX3NpZGViYW5kX3BhcnNl
+X3JlcShzdHJ1Y3QgZHJtX2RwX3NpZGViYW5kX21zZ19yeCAqcmF3LA0KPj4gICAJfQ0KPj4gICB9
+DQo+PiAgIA0KPj4gLXN0YXRpYyBpbnQgYnVpbGRfZHBjZF93cml0ZShzdHJ1Y3QgZHJtX2RwX3Np
+ZGViYW5kX21zZ190eCAqbXNnLCB1OCBwb3J0X251bSwgdTMyIG9mZnNldCwgdTggbnVtX2J5dGVz
+LCB1OCAqYnl0ZXMpDQo+PiArc3RhdGljIHZvaWQgYnVpbGRfZHBjZF93cml0ZShzdHJ1Y3QgZHJt
+X2RwX3NpZGViYW5kX21zZ190eCAqbXNnLCB1OCBwb3J0X251bSwgdTMyIG9mZnNldCwgdTggbnVt
+X2J5dGVzLCB1OCAqYnl0ZXMpDQo+PiAgIHsNCj4+ICAgCXN0cnVjdCBkcm1fZHBfc2lkZWJhbmRf
+bXNnX3JlcV9ib2R5IHJlcTsNCj4+ICAgDQo+PiBAQCAtMTAyMiwxNyArMTAxOSwxNCBAQCBzdGF0
+aWMgaW50IGJ1aWxkX2RwY2Rfd3JpdGUoc3RydWN0IGRybV9kcF9zaWRlYmFuZF9tc2dfdHggKm1z
+ZywgdTggcG9ydF9udW0sIHUzMg0KPj4gICAJcmVxLnUuZHBjZF93cml0ZS5udW1fYnl0ZXMgPSBu
+dW1fYnl0ZXM7DQo+PiAgIAlyZXEudS5kcGNkX3dyaXRlLmJ5dGVzID0gYnl0ZXM7DQo+PiAgIAlk
+cm1fZHBfZW5jb2RlX3NpZGViYW5kX3JlcSgmcmVxLCBtc2cpOw0KPj4gLQ0KPj4gLQlyZXR1cm4g
+MDsNCj4+ICAgfQ0KPj4gICANCj4+IC1zdGF0aWMgaW50IGJ1aWxkX2xpbmtfYWRkcmVzcyhzdHJ1
+Y3QgZHJtX2RwX3NpZGViYW5kX21zZ190eCAqbXNnKQ0KPj4gK3N0YXRpYyB2b2lkIGJ1aWxkX2xp
+bmtfYWRkcmVzcyhzdHJ1Y3QgZHJtX2RwX3NpZGViYW5kX21zZ190eCAqbXNnKQ0KPj4gICB7DQo+
+PiAgIAlzdHJ1Y3QgZHJtX2RwX3NpZGViYW5kX21zZ19yZXFfYm9keSByZXE7DQo+PiAgIA0KPj4g
+ICAJcmVxLnJlcV90eXBlID0gRFBfTElOS19BRERSRVNTOw0KPj4gICAJZHJtX2RwX2VuY29kZV9z
+aWRlYmFuZF9yZXEoJnJlcSwgbXNnKTsNCj4+IC0JcmV0dXJuIDA7DQo+PiAgIH0NCj4+ICAgDQo+
+PiAgIHN0YXRpYyBpbnQgYnVpbGRfZW51bV9wYXRoX3Jlc291cmNlcyhzdHJ1Y3QgZHJtX2RwX3Np
+ZGViYW5kX21zZ190eCAqbXNnLCBpbnQgcG9ydF9udW0pDQo+PiBAQCAtMTA0Niw3ICsxMDQwLDcg
+QEAgc3RhdGljIGludCBidWlsZF9lbnVtX3BhdGhfcmVzb3VyY2VzKHN0cnVjdCBkcm1fZHBfc2lk
+ZWJhbmRfbXNnX3R4ICptc2csIGludCBwb3INCj4+ICAgCXJldHVybiAwOw0KPj4gICB9DQo+PiAg
+IA0KPj4gLXN0YXRpYyBpbnQgYnVpbGRfYWxsb2NhdGVfcGF5bG9hZChzdHJ1Y3QgZHJtX2RwX3Np
+ZGViYW5kX21zZ190eCAqbXNnLCBpbnQgcG9ydF9udW0sDQo+PiArc3RhdGljIHZvaWQgYnVpbGRf
+YWxsb2NhdGVfcGF5bG9hZChzdHJ1Y3QgZHJtX2RwX3NpZGViYW5kX21zZ190eCAqbXNnLCBpbnQg
+cG9ydF9udW0sDQo+PiAgIAkJCQkgIHU4IHZjcGksIHVpbnQxNl90IHBibiwNCj4+ICAgCQkJCSAg
+dTggbnVtYmVyX3NkcF9zdHJlYW1zLA0KPj4gICAJCQkJICB1OCAqc2RwX3N0cmVhbV9zaW5rKQ0K
+Pj4gQEAgLTEwNjIsMTAgKzEwNTYsOSBAQCBzdGF0aWMgaW50IGJ1aWxkX2FsbG9jYXRlX3BheWxv
+YWQoc3RydWN0IGRybV9kcF9zaWRlYmFuZF9tc2dfdHggKm1zZywgaW50IHBvcnRfbg0KPj4gICAJ
+CSAgIG51bWJlcl9zZHBfc3RyZWFtcyk7DQo+PiAgIAlkcm1fZHBfZW5jb2RlX3NpZGViYW5kX3Jl
+cSgmcmVxLCBtc2cpOw0KPj4gICAJbXNnLT5wYXRoX21zZyA9IHRydWU7DQo+PiAtCXJldHVybiAw
+Ow0KPj4gICB9DQo+PiAgIA0KPj4gLXN0YXRpYyBpbnQgYnVpbGRfcG93ZXJfdXBkb3duX3BoeShz
+dHJ1Y3QgZHJtX2RwX3NpZGViYW5kX21zZ190eCAqbXNnLA0KPj4gK3N0YXRpYyB2b2lkIGJ1aWxk
+X3Bvd2VyX3VwZG93bl9waHkoc3RydWN0IGRybV9kcF9zaWRlYmFuZF9tc2dfdHggKm1zZywNCj4+
+ICAgCQkJCSAgaW50IHBvcnRfbnVtLCBib29sIHBvd2VyX3VwKQ0KPj4gICB7DQo+PiAgIAlzdHJ1
+Y3QgZHJtX2RwX3NpZGViYW5kX21zZ19yZXFfYm9keSByZXE7DQo+PiBAQCAtMTA3OCw3ICsxMDcx
+LDYgQEAgc3RhdGljIGludCBidWlsZF9wb3dlcl91cGRvd25fcGh5KHN0cnVjdCBkcm1fZHBfc2lk
+ZWJhbmRfbXNnX3R4ICptc2csDQo+PiAgIAlyZXEudS5wb3J0X251bS5wb3J0X251bWJlciA9IHBv
+cnRfbnVtOw0KPj4gICAJZHJtX2RwX2VuY29kZV9zaWRlYmFuZF9yZXEoJnJlcSwgbXNnKTsNCj4+
+ICAgCW1zZy0+cGF0aF9tc2cgPSB0cnVlOw0KPj4gLQlyZXR1cm4gMDsNCj4+ICAgfQ0KPj4gICAN
+Cj4+ICAgc3RhdGljIGludCBkcm1fZHBfbXN0X2Fzc2lnbl9wYXlsb2FkX2lkKHN0cnVjdCBkcm1f
+ZHBfbXN0X3RvcG9sb2d5X21nciAqbWdyLA0KPj4gQEAgLTE3NDQsMTQgKzE3MzYsMTMgQEAgc3Rh
+dGljIHU4IGRybV9kcF9jYWxjdWxhdGVfcmFkKHN0cnVjdCBkcm1fZHBfbXN0X3BvcnQgKnBvcnQs
+DQo+PiAgICAqLw0KPj4gICBzdGF0aWMgYm9vbCBkcm1fZHBfcG9ydF9zZXR1cF9wZHQoc3RydWN0
+IGRybV9kcF9tc3RfcG9ydCAqcG9ydCkNCj4+ICAgew0KPj4gLQlpbnQgcmV0Ow0KPj4gICAJdTgg
+cmFkWzZdLCBsY3Q7DQo+PiAgIAlib29sIHNlbmRfbGluayA9IGZhbHNlOw0KPj4gICAJc3dpdGNo
+IChwb3J0LT5wZHQpIHsNCj4+ICAgCWNhc2UgRFBfUEVFUl9ERVZJQ0VfRFBfTEVHQUNZX0NPTlY6
+DQo+PiAgIAljYXNlIERQX1BFRVJfREVWSUNFX1NTVF9TSU5LOg0KPj4gICAJCS8qIGFkZCBpMmMg
+b3ZlciBzaWRlYmFuZCAqLw0KPj4gLQkJcmV0ID0gZHJtX2RwX21zdF9yZWdpc3Rlcl9pMmNfYnVz
+KCZwb3J0LT5hdXgpOw0KPj4gKwkJZHJtX2RwX21zdF9yZWdpc3Rlcl9pMmNfYnVzKCZwb3J0LT5h
+dXgpOw0KPj4gICAJCWJyZWFrOw0KPj4gICAJY2FzZSBEUF9QRUVSX0RFVklDRV9NU1RfQlJBTkNI
+SU5HOg0KPj4gICAJCWxjdCA9IGRybV9kcF9jYWxjdWxhdGVfcmFkKHBvcnQsIHJhZCk7DQo+PiBA
+QCAtMTgyMSwyNSArMTgxMiwyMCBAQCBzc2l6ZV90IGRybV9kcF9tc3RfZHBjZF93cml0ZShzdHJ1
+Y3QgZHJtX2RwX2F1eCAqYXV4LA0KPj4gICANCj4+ICAgc3RhdGljIHZvaWQgZHJtX2RwX2NoZWNr
+X21zdGJfZ3VpZChzdHJ1Y3QgZHJtX2RwX21zdF9icmFuY2ggKm1zdGIsIHU4ICpndWlkKQ0KPj4g
+ICB7DQo+PiAtCWludCByZXQ7DQo+PiAtDQo+PiAgIAltZW1jcHkobXN0Yi0+Z3VpZCwgZ3VpZCwg
+MTYpOw0KPj4gICANCj4+ICAgCWlmICghZHJtX2RwX3ZhbGlkYXRlX2d1aWQobXN0Yi0+bWdyLCBt
+c3RiLT5ndWlkKSkgew0KPj4gICAJCWlmIChtc3RiLT5wb3J0X3BhcmVudCkgew0KPj4gLQkJCXJl
+dCA9IGRybV9kcF9zZW5kX2RwY2Rfd3JpdGUoDQo+PiAtCQkJCQltc3RiLT5tZ3IsDQo+PiAtCQkJ
+CQltc3RiLT5wb3J0X3BhcmVudCwNCj4+IC0JCQkJCURQX0dVSUQsDQo+PiAtCQkJCQkxNiwNCj4+
+IC0JCQkJCW1zdGItPmd1aWQpOw0KPj4gKwkJCWRybV9kcF9zZW5kX2RwY2Rfd3JpdGUobXN0Yi0+
+bWdyLA0KPj4gKwkJCQkJICAgICAgIG1zdGItPnBvcnRfcGFyZW50LA0KPj4gKwkJCQkJICAgICAg
+IERQX0dVSUQsDQo+PiArCQkJCQkgICAgICAgMTYsDQo+PiArCQkJCQkgICAgICAgbXN0Yi0+Z3Vp
+ZCk7DQo+PiAgIAkJfSBlbHNlIHsNCj4+IC0NCj4+IC0JCQlyZXQgPSBkcm1fZHBfZHBjZF93cml0
+ZSgNCj4+IC0JCQkJCW1zdGItPm1nci0+YXV4LA0KPj4gLQkJCQkJRFBfR1VJRCwNCj4+IC0JCQkJ
+CW1zdGItPmd1aWQsDQo+PiAtCQkJCQkxNik7DQo+PiArCQkJZHJtX2RwX2RwY2Rfd3JpdGUobXN0
+Yi0+bWdyLT5hdXgsDQo+PiArCQkJCQkgIERQX0dVSUQsDQo+PiArCQkJCQkgIG1zdGItPmd1aWQs
+DQo+PiArCQkJCQkgIDE2KTsNCj4+ICAgCQl9DQo+PiAgIAl9DQo+PiAgIH0NCj4+IEBAIC0yMTk1
+LDcgKzIxODEsNyBAQCBzdGF0aWMgYm9vbCBkcm1fZHBfdmFsaWRhdGVfZ3VpZChzdHJ1Y3QgZHJt
+X2RwX21zdF90b3BvbG9neV9tZ3IgKm1nciwNCj4+ICAgCXJldHVybiBmYWxzZTsNCj4+ICAgfQ0K
+Pj4gICANCj4+IC1zdGF0aWMgaW50IGJ1aWxkX2RwY2RfcmVhZChzdHJ1Y3QgZHJtX2RwX3NpZGVi
+YW5kX21zZ190eCAqbXNnLCB1OCBwb3J0X251bSwgdTMyIG9mZnNldCwgdTggbnVtX2J5dGVzKQ0K
+Pj4gK3N0YXRpYyB2b2lkIGJ1aWxkX2RwY2RfcmVhZChzdHJ1Y3QgZHJtX2RwX3NpZGViYW5kX21z
+Z190eCAqbXNnLCB1OCBwb3J0X251bSwgdTMyIG9mZnNldCwgdTggbnVtX2J5dGVzKQ0KPj4gICB7
+DQo+PiAgIAlzdHJ1Y3QgZHJtX2RwX3NpZGViYW5kX21zZ19yZXFfYm9keSByZXE7DQo+PiAgIA0K
+Pj4gQEAgLTIyMDQsOCArMjE5MCw2IEBAIHN0YXRpYyBpbnQgYnVpbGRfZHBjZF9yZWFkKHN0cnVj
+dCBkcm1fZHBfc2lkZWJhbmRfbXNnX3R4ICptc2csIHU4IHBvcnRfbnVtLCB1MzINCj4+ICAgCXJl
+cS51LmRwY2RfcmVhZC5kcGNkX2FkZHJlc3MgPSBvZmZzZXQ7DQo+PiAgIAlyZXEudS5kcGNkX3Jl
+YWQubnVtX2J5dGVzID0gbnVtX2J5dGVzOw0KPj4gICAJZHJtX2RwX2VuY29kZV9zaWRlYmFuZF9y
+ZXEoJnJlcSwgbXNnKTsNCj4+IC0NCj4+IC0JcmV0dXJuIDA7DQo+PiAgIH0NCj4+ICAgDQo+PiAg
+IHN0YXRpYyBpbnQgZHJtX2RwX3NlbmRfc2lkZWJhbmRfbXNnKHN0cnVjdCBkcm1fZHBfbXN0X3Rv
+cG9sb2d5X21nciAqbWdyLA0KPj4gQEAgLTI0MjcsMTQgKzI0MTEsMTQgQEAgc3RhdGljIHZvaWQg
+ZHJtX2RwX3NlbmRfbGlua19hZGRyZXNzKHN0cnVjdCBkcm1fZHBfbXN0X3RvcG9sb2d5X21nciAq
+bWdyLA0KPj4gICB7DQo+PiAgIAlzdHJ1Y3QgZHJtX2RwX3NpZGViYW5kX21zZ190eCAqdHhtc2c7
+DQo+PiAgIAlzdHJ1Y3QgZHJtX2RwX2xpbmtfYWRkcmVzc19hY2tfcmVwbHkgKnJlcGx5Ow0KPj4g
+LQlpbnQgaSwgbGVuLCByZXQ7DQo+PiArCWludCBpLCByZXQ7DQo+PiAgIA0KPj4gICAJdHhtc2cg
+PSBremFsbG9jKHNpemVvZigqdHhtc2cpLCBHRlBfS0VSTkVMKTsNCj4+ICAgCWlmICghdHhtc2cp
+DQo+PiAgIAkJcmV0dXJuOw0KPj4gICANCj4+ICAgCXR4bXNnLT5kc3QgPSBtc3RiOw0KPj4gLQls
+ZW4gPSBidWlsZF9saW5rX2FkZHJlc3ModHhtc2cpOw0KPj4gKwlidWlsZF9saW5rX2FkZHJlc3Mo
+dHhtc2cpOw0KPj4gICANCj4+ICAgCW1zdGItPmxpbmtfYWRkcmVzc19zZW50ID0gdHJ1ZTsNCj4+
+ICAgCWRybV9kcF9xdWV1ZV9kb3duX3R4KG1nciwgdHhtc2cpOw0KPj4gQEAgLTI0NzYsNyArMjQ2
+MCw2IEBAIGRybV9kcF9zZW5kX2VudW1fcGF0aF9yZXNvdXJjZXMoc3RydWN0IGRybV9kcF9tc3Rf
+dG9wb2xvZ3lfbWdyICptZ3IsDQo+PiAgIHsNCj4+ICAgCXN0cnVjdCBkcm1fZHBfZW51bV9wYXRo
+X3Jlc291cmNlc19hY2tfcmVwbHkgKnBhdGhfcmVzOw0KPj4gICAJc3RydWN0IGRybV9kcF9zaWRl
+YmFuZF9tc2dfdHggKnR4bXNnOw0KPj4gLQlpbnQgbGVuOw0KPj4gICAJaW50IHJldDsNCj4+ICAg
+DQo+PiAgIAl0eG1zZyA9IGt6YWxsb2Moc2l6ZW9mKCp0eG1zZyksIEdGUF9LRVJORUwpOw0KPj4g
+QEAgLTI0ODQsNyArMjQ2Nyw3IEBAIGRybV9kcF9zZW5kX2VudW1fcGF0aF9yZXNvdXJjZXMoc3Ry
+dWN0IGRybV9kcF9tc3RfdG9wb2xvZ3lfbWdyICptZ3IsDQo+PiAgIAkJcmV0dXJuIC1FTk9NRU07
+DQo+PiAgIA0KPj4gICAJdHhtc2ctPmRzdCA9IG1zdGI7DQo+PiAtCWxlbiA9IGJ1aWxkX2VudW1f
+cGF0aF9yZXNvdXJjZXModHhtc2csIHBvcnQtPnBvcnRfbnVtKTsNCj4+ICsJYnVpbGRfZW51bV9w
+YXRoX3Jlc291cmNlcyh0eG1zZywgcG9ydC0+cG9ydF9udW0pOw0KPj4gICANCj4+ICAgCWRybV9k
+cF9xdWV1ZV9kb3duX3R4KG1nciwgdHhtc2cpOw0KPj4gICANCj4+IEBAIC0yNTY3LDcgKzI1NTAs
+NyBAQCBzdGF0aWMgaW50IGRybV9kcF9wYXlsb2FkX3NlbmRfbXNnKHN0cnVjdCBkcm1fZHBfbXN0
+X3RvcG9sb2d5X21nciAqbWdyLA0KPj4gICB7DQo+PiAgIAlzdHJ1Y3QgZHJtX2RwX3NpZGViYW5k
+X21zZ190eCAqdHhtc2c7DQo+PiAgIAlzdHJ1Y3QgZHJtX2RwX21zdF9icmFuY2ggKm1zdGI7DQo+
+PiAtCWludCBsZW4sIHJldCwgcG9ydF9udW07DQo+PiArCWludCByZXQsIHBvcnRfbnVtOw0KPj4g
+ICAJdTggc2lua3NbRFJNX0RQX01BWF9TRFBfU1RSRUFNU107DQo+PiAgIAlpbnQgaTsNCj4+ICAg
+DQo+PiBAQCAtMjU5Miw5ICsyNTc1LDkgQEAgc3RhdGljIGludCBkcm1fZHBfcGF5bG9hZF9zZW5k
+X21zZyhzdHJ1Y3QgZHJtX2RwX21zdF90b3BvbG9neV9tZ3IgKm1nciwNCj4+ICAgCQlzaW5rc1tp
+XSA9IGk7DQo+PiAgIA0KPj4gICAJdHhtc2ctPmRzdCA9IG1zdGI7DQo+PiAtCWxlbiA9IGJ1aWxk
+X2FsbG9jYXRlX3BheWxvYWQodHhtc2csIHBvcnRfbnVtLA0KPj4gLQkJCQkgICAgIGlkLA0KPj4g
+LQkJCQkgICAgIHBibiwgcG9ydC0+bnVtX3NkcF9zdHJlYW1zLCBzaW5rcyk7DQo+PiArCWJ1aWxk
+X2FsbG9jYXRlX3BheWxvYWQodHhtc2csIHBvcnRfbnVtLA0KPj4gKwkJCSAgICAgICBpZCwNCj4+
+ICsJCQkgICAgICAgcGJuLCBwb3J0LT5udW1fc2RwX3N0cmVhbXMsIHNpbmtzKTsNCj4+ICAgDQo+
+PiAgIAlkcm1fZHBfcXVldWVfZG93bl90eChtZ3IsIHR4bXNnKTsNCj4+ICAgDQo+PiBAQCAtMjYy
+Myw3ICsyNjA2LDcgQEAgaW50IGRybV9kcF9zZW5kX3Bvd2VyX3VwZG93bl9waHkoc3RydWN0IGRy
+bV9kcF9tc3RfdG9wb2xvZ3lfbWdyICptZ3IsDQo+PiAgIAkJCQkgc3RydWN0IGRybV9kcF9tc3Rf
+cG9ydCAqcG9ydCwgYm9vbCBwb3dlcl91cCkNCj4+ICAgew0KPj4gICAJc3RydWN0IGRybV9kcF9z
+aWRlYmFuZF9tc2dfdHggKnR4bXNnOw0KPj4gLQlpbnQgbGVuLCByZXQ7DQo+PiArCWludCByZXQ7
+DQo+PiAgIA0KPj4gICAJcG9ydCA9IGRybV9kcF9tc3RfdG9wb2xvZ3lfZ2V0X3BvcnRfdmFsaWRh
+dGVkKG1nciwgcG9ydCk7DQo+PiAgIAlpZiAoIXBvcnQpDQo+PiBAQCAtMjYzNiw3ICsyNjE5LDcg
+QEAgaW50IGRybV9kcF9zZW5kX3Bvd2VyX3VwZG93bl9waHkoc3RydWN0IGRybV9kcF9tc3RfdG9w
+b2xvZ3lfbWdyICptZ3IsDQo+PiAgIAl9DQo+PiAgIA0KPj4gICAJdHhtc2ctPmRzdCA9IHBvcnQt
+PnBhcmVudDsNCj4+IC0JbGVuID0gYnVpbGRfcG93ZXJfdXBkb3duX3BoeSh0eG1zZywgcG9ydC0+
+cG9ydF9udW0sIHBvd2VyX3VwKTsNCj4+ICsJYnVpbGRfcG93ZXJfdXBkb3duX3BoeSh0eG1zZywg
+cG9ydC0+cG9ydF9udW0sIHBvd2VyX3VwKTsNCj4+ICAgCWRybV9kcF9xdWV1ZV9kb3duX3R4KG1n
+ciwgdHhtc2cpOw0KPj4gICANCj4+ICAgCXJldCA9IGRybV9kcF9tc3Rfd2FpdF90eF9yZXBseShw
+b3J0LT5wYXJlbnQsIHR4bXNnKTsNCj4+IEBAIC0yODU2LDcgKzI4MzksNiBAQCBzdGF0aWMgaW50
+IGRybV9kcF9zZW5kX2RwY2RfcmVhZChzdHJ1Y3QgZHJtX2RwX21zdF90b3BvbG9neV9tZ3IgKm1n
+ciwNCj4+ICAgCQkJCSBzdHJ1Y3QgZHJtX2RwX21zdF9wb3J0ICpwb3J0LA0KPj4gICAJCQkJIGlu
+dCBvZmZzZXQsIGludCBzaXplLCB1OCAqYnl0ZXMpDQo+PiAgIHsNCj4+IC0JaW50IGxlbjsNCj4+
+ICAgCWludCByZXQgPSAwOw0KPj4gICAJc3RydWN0IGRybV9kcF9zaWRlYmFuZF9tc2dfdHggKnR4
+bXNnOw0KPj4gICAJc3RydWN0IGRybV9kcF9tc3RfYnJhbmNoICptc3RiOw0KPj4gQEAgLTI4NzEs
+NyArMjg1Myw3IEBAIHN0YXRpYyBpbnQgZHJtX2RwX3NlbmRfZHBjZF9yZWFkKHN0cnVjdCBkcm1f
+ZHBfbXN0X3RvcG9sb2d5X21nciAqbWdyLA0KPj4gICAJCWdvdG8gZmFpbF9wdXQ7DQo+PiAgIAl9
+DQo+PiAgIA0KPj4gLQlsZW4gPSBidWlsZF9kcGNkX3JlYWQodHhtc2csIHBvcnQtPnBvcnRfbnVt
+LCBvZmZzZXQsIHNpemUpOw0KPj4gKwlidWlsZF9kcGNkX3JlYWQodHhtc2csIHBvcnQtPnBvcnRf
+bnVtLCBvZmZzZXQsIHNpemUpOw0KPj4gICAJdHhtc2ctPmRzdCA9IHBvcnQtPnBhcmVudDsNCj4+
+ICAgDQo+PiAgIAlkcm1fZHBfcXVldWVfZG93bl90eChtZ3IsIHR4bXNnKTsNCj4+IEBAIC0yOTA5
+LDcgKzI4OTEsNiBAQCBzdGF0aWMgaW50IGRybV9kcF9zZW5kX2RwY2Rfd3JpdGUoc3RydWN0IGRy
+bV9kcF9tc3RfdG9wb2xvZ3lfbWdyICptZ3IsDQo+PiAgIAkJCQkgIHN0cnVjdCBkcm1fZHBfbXN0
+X3BvcnQgKnBvcnQsDQo+PiAgIAkJCQkgIGludCBvZmZzZXQsIGludCBzaXplLCB1OCAqYnl0ZXMp
+DQo+PiAgIHsNCj4+IC0JaW50IGxlbjsNCj4+ICAgCWludCByZXQ7DQo+PiAgIAlzdHJ1Y3QgZHJt
+X2RwX3NpZGViYW5kX21zZ190eCAqdHhtc2c7DQo+PiAgIAlzdHJ1Y3QgZHJtX2RwX21zdF9icmFu
+Y2ggKm1zdGI7DQo+PiBAQCAtMjkyNCw3ICsyOTA1LDcgQEAgc3RhdGljIGludCBkcm1fZHBfc2Vu
+ZF9kcGNkX3dyaXRlKHN0cnVjdCBkcm1fZHBfbXN0X3RvcG9sb2d5X21nciAqbWdyLA0KPj4gICAJ
+CWdvdG8gZmFpbF9wdXQ7DQo+PiAgIAl9DQo+PiAgIA0KPj4gLQlsZW4gPSBidWlsZF9kcGNkX3dy
+aXRlKHR4bXNnLCBwb3J0LT5wb3J0X251bSwgb2Zmc2V0LCBzaXplLCBieXRlcyk7DQo+PiArCWJ1
+aWxkX2RwY2Rfd3JpdGUodHhtc2csIHBvcnQtPnBvcnRfbnVtLCBvZmZzZXQsIHNpemUsIGJ5dGVz
+KTsNCj4+ICAgCXR4bXNnLT5kc3QgPSBtc3RiOw0KPj4gICANCj4+ICAgCWRybV9kcF9xdWV1ZV9k
+b3duX3R4KG1nciwgdHhtc2cpOw0KPj4gQEAgLTMxNDcsNyArMzEyOCw3IEBAIHN0YXRpYyBib29s
+IGRybV9kcF9nZXRfb25lX3NiX21zZyhzdHJ1Y3QgZHJtX2RwX21zdF90b3BvbG9neV9tZ3IgKm1n
+ciwgYm9vbCB1cCkNCj4+ICAgew0KPj4gICAJaW50IGxlbjsNCj4+ICAgCXU4IHJlcGx5YmxvY2tb
+MzJdOw0KPj4gLQlpbnQgcmVwbHlsZW4sIG9yaWdsZW4sIGN1cnJlcGx5Ow0KPj4gKwlpbnQgcmVw
+bHlsZW4sIGN1cnJlcGx5Ow0KPj4gICAJaW50IHJldDsNCj4+ICAgCXN0cnVjdCBkcm1fZHBfc2lk
+ZWJhbmRfbXNnX3J4ICptc2c7DQo+PiAgIAlpbnQgYmFzZXJlZyA9IHVwID8gRFBfU0lERUJBTkRf
+TVNHX1VQX1JFUV9CQVNFIDogRFBfU0lERUJBTkRfTVNHX0RPV05fUkVQX0JBU0U7DQo+PiBAQCAt
+MzE2Nyw3ICszMTQ4LDYgQEAgc3RhdGljIGJvb2wgZHJtX2RwX2dldF9vbmVfc2JfbXNnKHN0cnVj
+dCBkcm1fZHBfbXN0X3RvcG9sb2d5X21nciAqbWdyLCBib29sIHVwKQ0KPj4gICAJfQ0KPj4gICAJ
+cmVwbHlsZW4gPSBtc2ctPmN1cmNodW5rX2xlbiArIG1zZy0+Y3VyY2h1bmtfaGRybGVuOw0KPj4g
+ICANCj4+IC0Jb3JpZ2xlbiA9IHJlcGx5bGVuOw0KPj4gICAJcmVwbHlsZW4gLT0gbGVuOw0KPj4g
+ICAJY3VycmVwbHkgPSBsZW47DQo+PiAgIAl3aGlsZSAocmVwbHlsZW4gPiAwKSB7DQo+PiBAQCAt
+Mzk1OSwxNyArMzkzOSwxNiBAQCB2b2lkIGRybV9kcF9tc3RfZHVtcF90b3BvbG9neShzdHJ1Y3Qg
+c2VxX2ZpbGUgKm0sDQo+PiAgIAltdXRleF9sb2NrKCZtZ3ItPmxvY2spOw0KPj4gICAJaWYgKG1n
+ci0+bXN0X3ByaW1hcnkpIHsNCj4+ICAgCQl1OCBidWZbRFBfUEFZTE9BRF9UQUJMRV9TSVpFXTsN
+Cj4+IC0JCWludCByZXQ7DQo+PiAgIA0KPj4gLQkJcmV0ID0gZHJtX2RwX2RwY2RfcmVhZChtZ3It
+PmF1eCwgRFBfRFBDRF9SRVYsIGJ1ZiwgRFBfUkVDRUlWRVJfQ0FQX1NJWkUpOw0KPj4gKwkJZHJt
+X2RwX2RwY2RfcmVhZChtZ3ItPmF1eCwgRFBfRFBDRF9SRVYsIGJ1ZiwgRFBfUkVDRUlWRVJfQ0FQ
+X1NJWkUpOw0KPj4gICAJCXNlcV9wcmludGYobSwgImRwY2Q6ICUqcGhcbiIsIERQX1JFQ0VJVkVS
+X0NBUF9TSVpFLCBidWYpOw0KPj4gLQkJcmV0ID0gZHJtX2RwX2RwY2RfcmVhZChtZ3ItPmF1eCwg
+RFBfRkFVWF9DQVAsIGJ1ZiwgMik7DQo+PiArCQlkcm1fZHBfZHBjZF9yZWFkKG1nci0+YXV4LCBE
+UF9GQVVYX0NBUCwgYnVmLCAyKTsNCj4+ICAgCQlzZXFfcHJpbnRmKG0sICJmYXV4L21zdDogJSpw
+aFxuIiwgMiwgYnVmKTsNCj4+IC0JCXJldCA9IGRybV9kcF9kcGNkX3JlYWQobWdyLT5hdXgsIERQ
+X01TVE1fQ1RSTCwgYnVmLCAxKTsNCj4+ICsJCWRybV9kcF9kcGNkX3JlYWQobWdyLT5hdXgsIERQ
+X01TVE1fQ1RSTCwgYnVmLCAxKTsNCj4+ICAgCQlzZXFfcHJpbnRmKG0sICJtc3QgY3RybDogJSpw
+aFxuIiwgMSwgYnVmKTsNCj4+ICAgDQo+PiAgIAkJLyogZHVtcCB0aGUgc3RhbmRhcmQgT1VJIGJy
+YW5jaCBoZWFkZXIgKi8NCj4+IC0JCXJldCA9IGRybV9kcF9kcGNkX3JlYWQobWdyLT5hdXgsIERQ
+X0JSQU5DSF9PVUksIGJ1ZiwgRFBfQlJBTkNIX09VSV9IRUFERVJfU0laRSk7DQo+PiArCQlkcm1f
+ZHBfZHBjZF9yZWFkKG1nci0+YXV4LCBEUF9CUkFOQ0hfT1VJLCBidWYsIERQX0JSQU5DSF9PVUlf
+SEVBREVSX1NJWkUpOw0KPj4gICAJCXNlcV9wcmludGYobSwgImJyYW5jaCBvdWk6ICUqcGhOIGRl
+dmlkOiAiLCAzLCBidWYpOw0KPj4gICAJCWZvciAoaSA9IDB4MzsgaSA8IDB4OCAmJiBidWZbaV07
+IGkrKykNCj4+ICAgCQkJc2VxX3ByaW50ZihtLCAiJWMiLCBidWZbaV0pOw==
