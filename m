@@ -2,119 +2,140 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12711C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34103C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E48D820880
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C29521774
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfK1LEl (ORCPT
+        id S1726733AbfK1LKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:04:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:33936 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfK1LEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:04:40 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2F411FB;
-        Thu, 28 Nov 2019 03:04:39 -0800 (PST)
-Received: from [10.37.9.137] (unknown [10.37.9.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB81F3F6C4;
-        Thu, 28 Nov 2019 03:04:35 -0800 (PST)
-Subject: Re: [PATCH v2] KVM: vgic: Use wrapper function to lock/unlock all
- vcpus in kvm_vgic_create()
-To:     linmiaohe <linmiaohe@huawei.com>, maz@kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, catalin.marinas@arm.com,
-        eric.auger@redhat.com, gregkh@linuxfoundation.org, will@kernel.org,
-        andre.przywara@arm.com, tglx@linutronix.de
-Cc:     kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1574933208-24911-1-git-send-email-linmiaohe@huawei.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <ea23652a-8a1a-7bfe-96d6-838038f3a93b@arm.com>
-Date:   Thu, 28 Nov 2019 11:04:33 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1574933208-24911-1-git-send-email-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+        Thu, 28 Nov 2019 06:10:55 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52730 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726582AbfK1LKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 06:10:55 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D2AD6AD10;
+        Thu, 28 Nov 2019 11:10:52 +0000 (UTC)
+Message-ID: <1574939450.21204.7.camel@suse.com>
+Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, hverkuil@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Date:   Thu, 28 Nov 2019 12:10:50 +0100
+In-Reply-To: <000000000000f47f0b0595307ddc@google.com>
+References: <000000000000f47f0b0595307ddc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/11/2019 09:26, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
+Am Freitag, den 18.10.2019, 07:53 -0700 schrieb syzbot:
+> Hello,
 > 
-> Use wrapper function lock_all_vcpus()/unlock_all_vcpus()
-> in kvm_vgic_create() to remove duplicated code dealing
-> with locking and unlocking all vcpus in a vm.
+> syzbot found the following crash on:
 > 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
-> -v2:
-> 	Fix some spelling mistake in patch title and commit log.
-> ---
->   virt/kvm/arm/vgic/vgic-init.c | 14 ++++----------
->   1 file changed, 4 insertions(+), 10 deletions(-)
+> HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=102b65cf600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9ca7a12fd736d93e0232
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143b9060e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d3b94b600000
 > 
-> diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
-> index b3c5de48064c..53e3969dfb52 100644
-> --- a/virt/kvm/arm/vgic/vgic-init.c
-> +++ b/virt/kvm/arm/vgic/vgic-init.c
-> @@ -70,7 +70,7 @@ void kvm_vgic_early_init(struct kvm *kvm)
->    */
->   int kvm_vgic_create(struct kvm *kvm, u32 type)
->   {
-> -	int i, vcpu_lock_idx = -1, ret;
-> +	int i, ret;
->   	struct kvm_vcpu *vcpu;
->   
->   	if (irqchip_in_kernel(kvm))
-> @@ -92,11 +92,8 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
-Extra context:
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com
 
-	/*
-	 * Any time a vcpu is run, vcpu_load is called which tries to grab the
-	 * vcpu->mutex.  By grabbing the vcpu->mutex of all VCPUs we ensure
->   	 * that no other VCPUs are run while we create the vgic.
->   	 */
+JUST FOR DEBUGGING
 
-That comment no longer makes sense here - there's a very similar one already
-in lock_all_vcpus(). With that removed:
+#syz test: https://github.com/google/kasan.git 22be26f7
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+From 6e4c324c34b2fead2bdd1bc1274bd2e978df2be5 Mon Sep 17 00:00:00 2001
+From: Oliver Neukum <oneukum@suse.com>
+Date: Mon, 18 Nov 2019 14:41:51 +0100
+Subject: [PATCH] si470x: prevent resubmission
 
->   	ret = -EBUSY;
-> -	kvm_for_each_vcpu(i, vcpu, kvm) {
-> -		if (!mutex_trylock(&vcpu->mutex))
-> -			goto out_unlock;
-> -		vcpu_lock_idx = i;
-> -	}
-> +	if (!lock_all_vcpus(kvm))
-> +		return ret;
->   
->   	kvm_for_each_vcpu(i, vcpu, kvm) {
->   		if (vcpu->arch.has_run_once)
-> @@ -125,10 +122,7 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
->   		INIT_LIST_HEAD(&kvm->arch.vgic.rd_regions);
->   
->   out_unlock:
-> -	for (; vcpu_lock_idx >= 0; vcpu_lock_idx--) {
-> -		vcpu = kvm_get_vcpu(kvm, vcpu_lock_idx);
-> -		mutex_unlock(&vcpu->mutex);
-> -	}
-> +	unlock_all_vcpus(kvm);
->   	return ret;
->   }
->   
-> 
+Starting IO to a device is not necessarily a NOP in every error
+case. So we need to terminate all IO in every case of probe
+failure and disconnect with absolute certainty.
+
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+---
+ drivers/media/radio/si470x/radio-si470x-usb.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
+index fedff68d8c49..3a3c539ee39a 100644
+--- a/drivers/media/radio/si470x/radio-si470x-usb.c
++++ b/drivers/media/radio/si470x/radio-si470x-usb.c
+@@ -373,6 +373,7 @@ static void si470x_int_in_callback(struct urb *urb)
+ 		if (urb->status == -ENOENT ||
+ 				urb->status == -ECONNRESET ||
+ 				urb->status == -ESHUTDOWN) {
++			printk(KERN_ERR"Int URB killed\n");
+ 			return;
+ 		} else {
+ 			dev_warn(&radio->intf->dev,
+@@ -463,6 +464,7 @@ static void si470x_int_in_callback(struct urb *urb)
+ 	/* Resubmit if we're still running. */
+ 	if (radio->int_in_running && radio->usbdev) {
+ 		retval = usb_submit_urb(radio->int_in_urb, GFP_ATOMIC);
++		printk(KERN_ERR"In resubmit code path with result %d\n", retval);
+ 		if (retval) {
+ 			dev_warn(&radio->intf->dev,
+ 			       "resubmitting urb failed (%d)", retval);
+@@ -542,6 +544,8 @@ static int si470x_start_usb(struct si470x_device *radio)
+ 		radio->int_in_running = 0;
+ 	}
+ 	radio->status_rssi_auto_update = radio->int_in_running;
++	if (retval < 0)
++		return retval;
+ 
+ 	/* start radio */
+ 	retval = si470x_start(radio);
+@@ -734,7 +738,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 	/* start radio */
+ 	retval = si470x_start_usb(radio);
+ 	if (retval < 0)
+-		goto err_buf;
++		/* the urb may be running even after an error */
++		goto err_all;
+ 
+ 	/* set initial frequency */
+ 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
+@@ -749,7 +754,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 
+ 	return 0;
+ err_all:
+-	usb_kill_urb(radio->int_in_urb);
++	usb_poison_urb(radio->int_in_urb);
+ err_buf:
+ 	kfree(radio->buffer);
+ err_ctrl:
+@@ -824,7 +829,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
+ 	mutex_lock(&radio->lock);
+ 	v4l2_device_disconnect(&radio->v4l2_dev);
+ 	video_unregister_device(&radio->videodev);
+-	usb_kill_urb(radio->int_in_urb);
++	usb_poison_urb(radio->int_in_urb);
+ 	usb_set_intfdata(intf, NULL);
+ 	mutex_unlock(&radio->lock);
+ 	v4l2_device_put(&radio->v4l2_dev);
+-- 
+2.16.4
 
