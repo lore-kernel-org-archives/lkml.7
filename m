@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A42FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23639C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A53217BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E37F221787
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 13:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574948474;
-	bh=cVxAZu35gdOfj8K0z13XbLSyK0//MIM05FD8BIT7nh8=;
+	s=default; t=1574948479;
+	bh=7ebZxlQeK3i6HO6kyJkH5U3sX6wGAES1gtF55or1/4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pp3iKRAG6ZLtRqTBPolAkGkENFoeRLN37X5G5pBLUR3wpZg/DlZyTdgiQJKipJm5j
-	 SA6/3AItdZBfbLXkULcinfa4ZgRQl1nkF8cUUi356j20ojvknpUWeGcGfOY/hY57Id
-	 nPUrBvsTNEy2Y2VWLHiY1kff7qk4wXCEv5v1OdAg=
+	b=xZcXr/xQHHXryODPFWc+ZvBZlZA1DrIvsnYLNJ+OKGaB8na/Ex/GWeFROgaQq4DfF
+	 SE20LPb5S/dZ4MvyN++jtDFqHT7DYD1I9lTxro8nGapw1bGX3dme/K2f8Ab2Xf0dcG
+	 PVcXkdt0EBsm1167LQjio8R/Yeg/jjrOop05Skc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfK1NlN (ORCPT
+        id S1727230AbfK1NlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:41:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37614 "EHLO mail.kernel.org"
+        Thu, 28 Nov 2019 08:41:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbfK1NlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 08:41:08 -0500
+        id S1727040AbfK1NlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 08:41:14 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2210921887;
-        Thu, 28 Nov 2019 13:41:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 047D2217BA;
+        Thu, 28 Nov 2019 13:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574948467;
-        bh=cVxAZu35gdOfj8K0z13XbLSyK0//MIM05FD8BIT7nh8=;
+        s=default; t=1574948473;
+        bh=7ebZxlQeK3i6HO6kyJkH5U3sX6wGAES1gtF55or1/4s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l5Cz49e+ndHebsFOTl9JSR3CAJ2bkPIjusMJbQ98B/BPqPuG9VspLRh3MS0tIPCL1
-         /wXtiNZ+L1c7aaGUuQ1HRTxwkgyUrpao39+AI4+Ah+XexMFEh+NrIGJaWdC7AhWapY
-         VA4yIVPyMJtAumhhn4PhqcURk5vleUzLotGIbyus=
+        b=lRKXoKB8jQ8lcUuaE+m6WLCaJi3BZ23+gDK/V0XByGFfaIz7WrbashVOxca/omUul
+         AQVc64eiHehnbLm6t3Hu04cVUJoUY+LMo20A2ABJflJauR22s6hRAIwNc32md6OMyn
+         TYqm061SQY3NnbfF+WxouoiIO4ZTiQ0JrZXRkOx0=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 10/22] perf map_symbol: Rename ms->mg to ms->maps
-Date:   Thu, 28 Nov 2019 10:40:15 -0300
-Message-Id: <20191128134027.23726-11-acme@kernel.org>
+Subject: [PATCH 12/22] perf maps: Rename map_groups.h to maps.h
+Date:   Thu, 28 Nov 2019 10:40:17 -0300
+Message-Id: <20191128134027.23726-13-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191128134027.23726-1-acme@kernel.org>
 References: <20191128134027.23726-1-acme@kernel.org>
@@ -63,206 +63,181 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-One more step on the merge of 'struct maps' with 'struct map_groups'.
+One more step in the merge of 'struct maps' with 'struct map_groups'.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-61rra2wg392rhvdgw421wzpt@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-9ibtn3vua76f934t7woyf26w@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/annotate/instructions.c | 2 +-
- tools/perf/ui/browsers/annotate.c            | 2 +-
- tools/perf/util/annotate.c                   | 6 +++---
- tools/perf/util/callchain.c                  | 2 +-
- tools/perf/util/hist.c                       | 8 ++++----
- tools/perf/util/machine.c                    | 6 +++---
- tools/perf/util/map_symbol.h                 | 2 +-
- tools/perf/util/unwind-libdw.c               | 2 +-
- tools/perf/util/unwind-libunwind-local.c     | 2 +-
- 9 files changed, 16 insertions(+), 16 deletions(-)
+ tools/perf/arch/arm/tests/dwarf-unwind.c     | 2 +-
+ tools/perf/arch/arm64/tests/dwarf-unwind.c   | 2 +-
+ tools/perf/arch/powerpc/tests/dwarf-unwind.c | 2 +-
+ tools/perf/arch/x86/tests/dwarf-unwind.c     | 2 +-
+ tools/perf/tests/map_groups.c                | 2 +-
+ tools/perf/ui/stdio/hist.c                   | 2 +-
+ tools/perf/util/annotate.c                   | 2 +-
+ tools/perf/util/machine.h                    | 2 +-
+ tools/perf/util/{map_groups.h => maps.h}     | 6 +++---
+ tools/perf/util/probe-event.c                | 2 +-
+ tools/perf/util/symbol-elf.c                 | 2 +-
+ 11 files changed, 13 insertions(+), 13 deletions(-)
+ rename tools/perf/util/{map_groups.h => maps.h} (96%)
 
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index 57be973aea74..0e136630659e 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -38,7 +38,7 @@ static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
- 		return -1;
- 	target.addr = map__objdump_2mem(map, ops->target.addr);
+diff --git a/tools/perf/arch/arm/tests/dwarf-unwind.c b/tools/perf/arch/arm/tests/dwarf-unwind.c
+index ff0bea660cf9..ccfa87055c4a 100644
+--- a/tools/perf/arch/arm/tests/dwarf-unwind.c
++++ b/tools/perf/arch/arm/tests/dwarf-unwind.c
+@@ -3,7 +3,7 @@
+ #include "perf_regs.h"
+ #include "thread.h"
+ #include "map.h"
+-#include "map_groups.h"
++#include "maps.h"
+ #include "event.h"
+ #include "debug.h"
+ #include "tests/tests.h"
+diff --git a/tools/perf/arch/arm64/tests/dwarf-unwind.c b/tools/perf/arch/arm64/tests/dwarf-unwind.c
+index 85108437b3af..46147a483049 100644
+--- a/tools/perf/arch/arm64/tests/dwarf-unwind.c
++++ b/tools/perf/arch/arm64/tests/dwarf-unwind.c
+@@ -3,7 +3,7 @@
+ #include "perf_regs.h"
+ #include "thread.h"
+ #include "map.h"
+-#include "map_groups.h"
++#include "maps.h"
+ #include "event.h"
+ #include "debug.h"
+ #include "tests/tests.h"
+diff --git a/tools/perf/arch/powerpc/tests/dwarf-unwind.c b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
+index 30658e3b32b2..8efd9ed9e9db 100644
+--- a/tools/perf/arch/powerpc/tests/dwarf-unwind.c
++++ b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
+@@ -3,7 +3,7 @@
+ #include "perf_regs.h"
+ #include "thread.h"
+ #include "map.h"
+-#include "map_groups.h"
++#include "maps.h"
+ #include "event.h"
+ #include "debug.h"
+ #include "tests/tests.h"
+diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
+index 418969cd64e9..ef43be9b6ec2 100644
+--- a/tools/perf/arch/x86/tests/dwarf-unwind.c
++++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
+@@ -3,7 +3,7 @@
+ #include "perf_regs.h"
+ #include "thread.h"
+ #include "map.h"
+-#include "map_groups.h"
++#include "maps.h"
+ #include "event.h"
+ #include "debug.h"
+ #include "tests/tests.h"
+diff --git a/tools/perf/tests/map_groups.c b/tools/perf/tests/map_groups.c
+index 9df1d14db40e..7febd02069ae 100644
+--- a/tools/perf/tests/map_groups.c
++++ b/tools/perf/tests/map_groups.c
+@@ -3,7 +3,7 @@
+ #include <linux/kernel.h>
+ #include "tests.h"
+ #include "map.h"
+-#include "map_groups.h"
++#include "maps.h"
+ #include "dso.h"
+ #include "debug.h"
  
--	if (maps__find_ams(ms->mg, &target) == 0 &&
-+	if (maps__find_ams(ms->maps, &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 992705c78bd0..badbddbb30f8 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -430,7 +430,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 		return true;
- 	}
- 
--	target_ms.mg  = ms->mg;
-+	target_ms.maps = ms->maps;
- 	target_ms.map = ms->map;
- 	target_ms.sym = dl->ops.target.sym;
- 	pthread_mutex_unlock(&notes->lock);
+diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
+index 161d8342ce05..2ab2af4d4849 100644
+--- a/tools/perf/ui/stdio/hist.c
++++ b/tools/perf/ui/stdio/hist.c
+@@ -8,7 +8,7 @@
+ #include "../../util/event.h"
+ #include "../../util/hist.h"
+ #include "../../util/map.h"
+-#include "../../util/map_groups.h"
++#include "../../util/maps.h"
+ #include "../../util/symbol.h"
+ #include "../../util/sort.h"
+ #include "../../util/evsel.h"
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 1b0980afdc3c..14f3edc3c261 100644
+index 14f3edc3c261..f5e77ed237e8 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -271,7 +271,7 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- find_target:
- 	target.addr = map__objdump_2mem(map, ops->target.addr);
+@@ -23,7 +23,7 @@
+ #include "dso.h"
+ #include "env.h"
+ #include "map.h"
+-#include "map_groups.h"
++#include "maps.h"
+ #include "symbol.h"
+ #include "srcline.h"
+ #include "units.h"
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index fe602cfc2163..be0a930eca89 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -4,7 +4,7 @@
  
--	if (maps__find_ams(ms->mg, &target) == 0 &&
-+	if (maps__find_ams(ms->maps, &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
+ #include <sys/types.h>
+ #include <linux/rbtree.h>
+-#include "map_groups.h"
++#include "maps.h"
+ #include "dsos.h"
+ #include "rwsem.h"
  
-@@ -391,7 +391,7 @@ static int jump__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- 	 * Actual navigation will come next, with further understanding of how
- 	 * the symbol searching and disassembly should be done.
- 	 */
--	if (maps__find_ams(ms->mg, &target) == 0 &&
-+	if (maps__find_ams(ms->maps, &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
+diff --git a/tools/perf/util/map_groups.h b/tools/perf/util/maps.h
+similarity index 96%
+rename from tools/perf/util/map_groups.h
+rename to tools/perf/util/maps.h
+index ada2f401ebab..3dd000ddf925 100644
+--- a/tools/perf/util/map_groups.h
++++ b/tools/perf/util/maps.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __PERF_MAP_GROUPS_H
+-#define __PERF_MAP_GROUPS_H
++#ifndef __PERF_MAPS_H
++#define __PERF_MAPS_H
  
-@@ -1545,7 +1545,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
- 			.ms = { .map = map, },
- 		};
+ #include <linux/refcount.h>
+ #include <linux/rbtree.h>
+@@ -84,4 +84,4 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map);
  
--		if (!maps__find_ams(args->ms.mg, &target) &&
-+		if (!maps__find_ams(args->ms.maps, &target) &&
- 		    target.ms.sym->start == target.al_addr)
- 			dl->ops.target.sym = target.ms.sym;
- 	}
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index c7270c057b6b..818aa4efd386 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1106,7 +1106,7 @@ int hist_entry__append_callchain(struct hist_entry *he, struct perf_sample *samp
- int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *node,
- 			bool hide_unresolved)
- {
--	al->maps = node->ms.mg;
-+	al->maps = node->ms.maps;
- 	al->map = node->ms.map;
- 	al->sym = node->ms.sym;
- 	al->srcline = node->srcline;
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 5ebfbe373442..ca5a8f4d007e 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -692,7 +692,7 @@ __hists__add_entry(struct hists *hists,
- 			.ino = ns ? ns->link_info[CGROUP_NS_INDEX].ino : 0,
- 		},
- 		.ms = {
--			.mg	= al->maps,
-+			.maps	= al->maps,
- 			.map	= al->map,
- 			.sym	= al->sym,
- 		},
-@@ -760,7 +760,7 @@ struct hist_entry *hists__add_entry_block(struct hists *hists,
- 		.block_info = block_info,
- 		.hists = hists,
- 		.ms = {
--			.mg  = al->maps,
-+			.maps = al->maps,
- 			.map = al->map,
- 			.sym = al->sym,
- 		},
-@@ -895,7 +895,7 @@ iter_next_branch_entry(struct hist_entry_iter *iter, struct addr_location *al)
- 	if (iter->curr >= iter->total)
- 		return 0;
+ void __maps__sort_by_name(struct maps *maps);
  
--	al->maps = bi[i].to.ms.mg;
-+	al->maps = bi[i].to.ms.maps;
- 	al->map = bi[i].to.ms.map;
- 	al->sym = bi[i].to.ms.sym;
- 	al->addr = bi[i].to.addr;
-@@ -1072,7 +1072,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 		.comm = thread__comm(al->thread),
- 		.ip = al->addr,
- 		.ms = {
--			.mg  = al->maps,
-+			.maps = al->maps,
- 			.map = al->map,
- 			.sym = al->sym,
- 		},
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index de5d6b4727e3..c1ae5e6f84e2 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1934,7 +1934,7 @@ static void ip__resolve_ams(struct thread *thread,
+-#endif // __PERF_MAP_GROUPS_H
++#endif // __PERF_MAPS_H
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index c06cc9764c3b..eea132f512b0 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -28,7 +28,7 @@
+ #include "dso.h"
+ #include "color.h"
+ #include "map.h"
+-#include "map_groups.h"
++#include "maps.h"
+ #include "symbol.h"
+ #include <api/fs/fs.h>
+ #include "trace-event.h"	/* For __maybe_unused */
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index fac3f585e9b4..6658fbf196e6 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -9,7 +9,7 @@
  
- 	ams->addr = ip;
- 	ams->al_addr = al.addr;
--	ams->ms.mg  = al.maps;
-+	ams->ms.maps = al.maps;
- 	ams->ms.sym = al.sym;
- 	ams->ms.map = al.map;
- 	ams->phys_addr = 0;
-@@ -1952,7 +1952,7 @@ static void ip__resolve_data(struct thread *thread,
- 
- 	ams->addr = addr;
- 	ams->al_addr = al.addr;
--	ams->ms.mg  = al.maps;
-+	ams->ms.maps = al.maps;
- 	ams->ms.sym = al.sym;
- 	ams->ms.map = al.map;
- 	ams->phys_addr = phys_addr;
-@@ -2069,7 +2069,7 @@ static int add_callchain_ip(struct thread *thread,
- 		iter_cycles = iter->cycles;
- 	}
- 
--	ms.mg  = al.maps;
-+	ms.maps = al.maps;
- 	ms.map = al.map;
- 	ms.sym = al.sym;
- 	srcline = callchain_srcline(&ms, al.addr);
-diff --git a/tools/perf/util/map_symbol.h b/tools/perf/util/map_symbol.h
-index bd985c1c6831..5b8ca93798e9 100644
---- a/tools/perf/util/map_symbol.h
-+++ b/tools/perf/util/map_symbol.h
-@@ -9,7 +9,7 @@ struct map;
- struct symbol;
- 
- struct map_symbol {
--	struct maps   *mg;
-+	struct maps   *maps;
- 	struct map    *map;
- 	struct symbol *sym;
- };
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index bb4f515bdff9..7a3dbc259cec 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -81,7 +81,7 @@ static int entry(u64 ip, struct unwind_info *ui)
- 		return -1;
- 
- 	e->ip	  = ip;
--	e->ms.mg  = al.maps;
-+	e->ms.maps = al.maps;
- 	e->ms.map = al.map;
- 	e->ms.sym = al.sym;
- 
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index a744dfaefef5..515131e85e9c 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -578,7 +578,7 @@ static int entry(u64 ip, struct thread *thread,
- 	e.ms.sym = thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
- 	e.ip     = ip;
- 	e.ms.map = al.map;
--	e.ms.mg  = al.maps;
-+	e.ms.maps = al.maps;
- 
- 	pr_debug("unwind: %s:ip = 0x%" PRIx64 " (0x%" PRIx64 ")\n",
- 		 al.sym ? al.sym->name : "''",
+ #include "dso.h"
+ #include "map.h"
+-#include "map_groups.h"
++#include "maps.h"
+ #include "symbol.h"
+ #include "symsrc.h"
+ #include "demangle-java.h"
 -- 
 2.21.0
 
