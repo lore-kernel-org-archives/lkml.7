@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FC8C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 031B4C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6F52084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB882084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="B5Dv63RR"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="G3K0t1nl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfK1O70 (ORCPT
+        id S1727409AbfK1O5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:59:26 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33974 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727428AbfK1O5m (ORCPT
+        Thu, 28 Nov 2019 09:57:38 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38880 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727356AbfK1O5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:57:42 -0500
-Received: by mail-lf1-f67.google.com with SMTP id l18so2229752lfc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:40 -0800 (PST)
+        Thu, 28 Nov 2019 09:57:31 -0500
+Received: by mail-lj1-f194.google.com with SMTP id k8so18298410ljh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:57:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qF5A7O/IvrSbLrPy3H+9dqWM8UA+mIW6ZOrUrJXGJ2Q=;
-        b=B5Dv63RR/4pl4ZTNUITqsFRQQZ5TAI+PA/AhP8AenPQ4xG7rpFpGcDBxA0xbml85u5
-         oiAdj7WL2T+g4bt3ulClOJHjd19qEsp17OzR97zqwpMNOOndADtLGUvta4gcSO+d5iga
-         juT6tqHk6l4CJNz6EPeJxH8b9Gv9Dl9QSZehg=
+        bh=6RPbfdv0hDBEMr5jRu0991VlpKTzzf1sC9/XAmy4sgs=;
+        b=G3K0t1nlzwA3d3jHn4yj1bqgPjSU7rkRn5xHQvlnCYStcAfU2EOLNyPlf58l/kRURv
+         oxPucVu+N8o4zYJ1N5TlrwsqpubhOOPQAQvU5PVBJ6o8v2W27PBswbMNL7ah8jpFm1VU
+         Tb/0CmRp1Xf8vt82JUTxMYMrxMphmZqJV9kew=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qF5A7O/IvrSbLrPy3H+9dqWM8UA+mIW6ZOrUrJXGJ2Q=;
-        b=K4vJXv5xouIloI8mHd/FU1zMYyMaeidhrtlcNaRLMRP493B205eW8P1DBWs8qadBNu
-         3npiyEDEmLtMwL7dZoEWRm4HExemsx1xj5atLEk8zEj8L0TWQpNcGHJca+prH+kDWSn3
-         l8kcJENXLPiftxq3m5rBYD5jo5jm6tovqdsediV+fIVNCqXfRFYBWpafr9GZQIGKGeAG
-         ktpCld0VwXjVL/H0FkWfsSmcgKWYiGmxTPXJGyY7ug2HSzc0GA6CF208e9dhBnKCVvcm
-         KEfI9PK9gGuJenO64wIAZGUSTi4DA84Crjl6jYSgX8tCIvxttenDBr1ctEzfYvjo88By
-         H6nQ==
-X-Gm-Message-State: APjAAAWipWKxyQox+qXTHCR4YLO7uZGWXvBQQwJxEBUeuVBbqne7pL7T
-        5US4pPMvhM/3akMOe3AGGlH0ng==
-X-Google-Smtp-Source: APXvYqwJE77ccwhGv7KUUNqfmf/Szn+K7DK68gwlig7WSVAkchsABzo/HLFah4BDnOh9yuV4ngQ3xw==
-X-Received: by 2002:ac2:42c2:: with SMTP id n2mr4840125lfl.152.1574953060221;
-        Thu, 28 Nov 2019 06:57:40 -0800 (PST)
+        bh=6RPbfdv0hDBEMr5jRu0991VlpKTzzf1sC9/XAmy4sgs=;
+        b=S0yuclAkYAj2FMCLW3f2yTSAZDqz2XB+jOKiYYCegZKKODlxgVk3OWkb9oALKdF04c
+         4HND0Yvtuhbqe2itIFrsB21ATgPUPXI0wc5vdTAj9DJk1wwAF0zhzZzsRVYiARyvkO2A
+         L20mw6ZRjgBSWjkrdtetgRp7srAdPqmEhfC4WNkcf5SiUD4qgH5wZ6FLwj3mG+4Vfs4A
+         QvA4yNdxv8tVusJmOOUvR0UmbLtdLrynuex1pxE6+5wSQenMFomXapRqgXgFM6xbvoVE
+         YeWpdzV5yV4ECpHASoYd9psjVQUIYkAEehmFb/lU30ij8Ll4tz96N9T8bD7DLAjI5hF7
+         yzgQ==
+X-Gm-Message-State: APjAAAWh6aBJVcGpL/2CcanC62XRYs0HE8ld9PzeVpZDh9ya+i3SOZnN
+        lnzqEFkte8UNwW4o6pxp+CbAlw==
+X-Google-Smtp-Source: APXvYqyaNUn/imdGbgT/de4umQQV6PAgT8adP8yacv3I5sC9GoOzbCwUDIiv5Pz0lPz4XRI0PSVjcA==
+X-Received: by 2002:a2e:8855:: with SMTP id z21mr36009830ljj.212.1574953049771;
+        Thu, 28 Nov 2019 06:57:29 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.38
+        by smtp.gmail.com with ESMTPSA id u2sm2456803lfl.18.2019.11.28.06.57.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 06:57:39 -0800 (PST)
+        Thu, 28 Nov 2019 06:57:29 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v6 27/49] soc/fsl/qe/qe.h: update include path for cpm.h
-Date:   Thu, 28 Nov 2019 15:55:32 +0100
-Message-Id: <20191128145554.1297-28-linux@rasmusvillemoes.dk>
+Subject: [PATCH v6 19/49] soc: fsl: qe: make qe_ic_get_{low,high}_irq static
+Date:   Thu, 28 Nov 2019 15:55:24 +0100
+Message-Id: <20191128145554.1297-20-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
 References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
@@ -73,29 +73,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-asm/cpm.h under arch/powerpc is now just a wrapper for including
-soc/fsl/cpm.h. In order to make the qe.h header usable on other
-architectures, use the latter path directly.
+These are only called from within qe_ic.c, so make them static.
 
 Reviewed-by: Timur Tabi <timur@kernel.org>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- include/soc/fsl/qe/qe.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/fsl/qe/qe_ic.c |  4 ++--
+ include/soc/fsl/qe/qe_ic.h | 10 ----------
+ 2 files changed, 2 insertions(+), 12 deletions(-)
 
-diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
-index 9cac04c692fd..521fa3a177e0 100644
---- a/include/soc/fsl/qe/qe.h
-+++ b/include/soc/fsl/qe/qe.h
-@@ -17,7 +17,7 @@
- #include <linux/spinlock.h>
- #include <linux/errno.h>
- #include <linux/err.h>
--#include <asm/cpm.h>
-+#include <soc/fsl/cpm.h>
- #include <soc/fsl/qe/immap_qe.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
+diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
+index 8f74bc6efd5c..23b457e884d8 100644
+--- a/drivers/soc/fsl/qe/qe_ic.c
++++ b/drivers/soc/fsl/qe/qe_ic.c
+@@ -283,7 +283,7 @@ static const struct irq_domain_ops qe_ic_host_ops = {
+ };
+ 
+ /* Return an interrupt vector or 0 if no interrupt is pending. */
+-unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
++static unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
+ {
+ 	int irq;
+ 
+@@ -299,7 +299,7 @@ unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
+ }
+ 
+ /* Return an interrupt vector or 0 if no interrupt is pending. */
+-unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
++static unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
+ {
+ 	int irq;
+ 
+diff --git a/include/soc/fsl/qe/qe_ic.h b/include/soc/fsl/qe/qe_ic.h
+index d47eb231519e..70bb5a0f6535 100644
+--- a/include/soc/fsl/qe/qe_ic.h
++++ b/include/soc/fsl/qe/qe_ic.h
+@@ -53,14 +53,4 @@ enum qe_ic_grp_id {
+ 	QE_IC_GRP_RISCB		/* QE interrupt controller RISC group B */
+ };
+ 
+-#ifdef CONFIG_QUICC_ENGINE
+-unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic);
+-unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic);
+-#else
+-static inline unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
+-{ return 0; }
+-static inline unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
+-{ return 0; }
+-#endif /* CONFIG_QUICC_ENGINE */
+-
+ #endif /* _ASM_POWERPC_QE_IC_H */
 -- 
 2.23.0
 
