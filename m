@@ -2,236 +2,148 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 332E7C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B93AC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1BCE21787
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:15:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gme6DFps"
+	by mail.kernel.org (Postfix) with ESMTP id DECE221739
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 17:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfK1RPw (ORCPT
+        id S1727142AbfK1RQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 12:15:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56038 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727010AbfK1RPj (ORCPT
+        Thu, 28 Nov 2019 12:16:23 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60758 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726587AbfK1RQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 12:15:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574961338;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5auX1CvYbu3yZRsbt+Lmj7tuXc5Und38I/LjU8EXijg=;
-        b=Gme6DFpsmRq90pucWX4aOMaMgl31v9cybP0/xu8Gh1mpREG/GQ0hM7j87fTYqwygqAtXmh
-        gZnDQKTMvOzx9RyJIVxochWg3OuDpHcwoerPByyzi329lbx41MnNDg6069PWfFPBCH153P
-        MBqVv3YRgI5e5jqfXhwg/zs59QnSo/8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-j_2Yy6OxNziUa1CniJMwSw-1; Thu, 28 Nov 2019 12:15:35 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDD8D107ACC4;
-        Thu, 28 Nov 2019 17:15:33 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-117-168.ams2.redhat.com [10.36.117.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7723B600C8;
-        Thu, 28 Nov 2019 17:15:31 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: [RFC PATCH 2/3] vsock/virtio_transport_common: handle netns of received packets
-Date:   Thu, 28 Nov 2019 18:15:18 +0100
-Message-Id: <20191128171519.203979-3-sgarzare@redhat.com>
-In-Reply-To: <20191128171519.203979-1-sgarzare@redhat.com>
-References: <20191128171519.203979-1-sgarzare@redhat.com>
+        Thu, 28 Nov 2019 12:16:22 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASHCG5O189865;
+        Thu, 28 Nov 2019 12:16:08 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wjah6rh8a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Nov 2019 12:16:08 -0500
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xASHCGQe189854;
+        Thu, 28 Nov 2019 12:16:07 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wjah6rh7u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Nov 2019 12:16:07 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xASHFa3l000649;
+        Thu, 28 Nov 2019 17:16:06 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma03dal.us.ibm.com with ESMTP id 2wevd7b1j5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Nov 2019 17:16:06 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xASHG5og32833932
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Nov 2019 17:16:05 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4ECD7BE053;
+        Thu, 28 Nov 2019 17:16:05 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 626A6BE04F;
+        Thu, 28 Nov 2019 17:16:03 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.137])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Nov 2019 17:16:03 +0000 (GMT)
+Message-ID: <263e73be1047014ad3b6c0ae28d57db4b9dea970.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] powerpc/kvm/book3s: Fixes possible 'use after
+ release' of kvm
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Date:   Thu, 28 Nov 2019 14:15:59 -0300
+In-Reply-To: <f3750cf8-88fc-cae7-1cfb-cb4b86b44704@redhat.com>
+References: <20191126175212.377171-1-leonardo@linux.ibm.com>
+         <f3750cf8-88fc-cae7-1cfb-cb4b86b44704@redhat.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-l7jjVAuSfdlX1zRYI3pK"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: j_2Yy6OxNziUa1CniJMwSw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-28_05:2019-11-28,2019-11-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ mlxscore=0 suspectscore=0 impostorscore=0 clxscore=1015 bulkscore=0
+ adultscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911280146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows transports that use virtio_transport_common
-to specify the network namespace where a received packet is to
-be delivered.
 
-virtio_transport and vhost_transport, for now, use the default
-network namespace.
+--=-l7jjVAuSfdlX1zRYI3pK
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-vsock_loopback uses the same network namespace of the trasmitter.
+On Wed, 2019-11-27 at 17:40 +0100, Paolo Bonzini wrote:
+> > diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s=
+_64_vio.c
+> > index 5834db0a54c6..a402ead833b6 100644
+> > --- a/arch/powerpc/kvm/book3s_64_vio.c
+> > +++ b/arch/powerpc/kvm/book3s_64_vio.c
+> > @@ -316,14 +316,13 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kv=
+m,
+> >  =20
+> >        if (ret >=3D 0)
+> >                list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
+> > -     else
+> > -             kvm_put_kvm(kvm);
+> >  =20
+> >        mutex_unlock(&kvm->lock);
+> >  =20
+> >        if (ret >=3D 0)
+> >                return ret;
+> >  =20
+> > +     kvm_put_kvm(kvm);
+> >        kfree(stt);
+> >    fail_acct:
+> >        account_locked_vm(current->mm, kvmppc_stt_pages(npages), false);
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- drivers/vhost/vsock.c                   |  1 +
- include/linux/virtio_vsock.h            |  2 ++
- net/vmw_vsock/virtio_transport.c        |  2 ++
- net/vmw_vsock/virtio_transport_common.c | 13 ++++++++++---
- 4 files changed, 15 insertions(+), 3 deletions(-)
+Paul, do you think this change is still valid as it 'makes the code
+clearer', as said by Paolo before? I would write a new commit message
+to match the change.
 
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index dde392b91bb3..31b0f3608752 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -474,6 +474,7 @@ static void vhost_vsock_handle_tx_kick(struct vhost_wor=
-k *work)
- =09=09=09continue;
- =09=09}
-=20
-+=09=09pkt->net =3D vsock_default_net();
- =09=09len =3D pkt->len;
-=20
- =09=09/* Deliver to monitoring devices all received packets */
-diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-index 71c81e0dc8f2..a025d105a456 100644
---- a/include/linux/virtio_vsock.h
-+++ b/include/linux/virtio_vsock.h
-@@ -43,6 +43,7 @@ struct virtio_vsock_pkt {
- =09struct list_head list;
- =09/* socket refcnt not held, only use for cancellation */
- =09struct vsock_sock *vsk;
-+=09struct net *net;
- =09void *buf;
- =09u32 buf_len;
- =09u32 len;
-@@ -53,6 +54,7 @@ struct virtio_vsock_pkt {
- struct virtio_vsock_pkt_info {
- =09u32 remote_cid, remote_port;
- =09struct vsock_sock *vsk;
-+=09struct net *net;
- =09struct msghdr *msg;
- =09u32 pkt_len;
- =09u16 type;
-diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transp=
-ort.c
-index dfbaf6bd8b1c..fb03a1535c21 100644
---- a/net/vmw_vsock/virtio_transport.c
-+++ b/net/vmw_vsock/virtio_transport.c
-@@ -527,6 +527,8 @@ static void virtio_transport_rx_work(struct work_struct=
- *work)
- =09=09=09}
-=20
- =09=09=09pkt->len =3D len - sizeof(pkt->hdr);
-+=09=09=09pkt->net =3D vsock_default_net();
-+
- =09=09=09virtio_transport_deliver_tap_pkt(pkt);
- =09=09=09virtio_transport_recv_pkt(&virtio_transport, pkt);
- =09=09}
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio=
-_transport_common.c
-index 10a8cbe39f61..f249dc099c38 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -60,6 +60,7 @@ virtio_transport_alloc_pkt(struct virtio_vsock_pkt_info *=
-info,
- =09pkt->hdr.len=09=09=3D cpu_to_le32(len);
- =09pkt->reply=09=09=3D info->reply;
- =09pkt->vsk=09=09=3D info->vsk;
-+=09pkt->net=09=09=3D info->net;
-=20
- =09if (info->msg && len > 0) {
- =09=09pkt->buf =3D kmalloc(len, GFP_KERNEL);
-@@ -260,6 +261,7 @@ static int virtio_transport_send_credit_update(struct v=
-sock_sock *vsk,
- =09=09.op =3D VIRTIO_VSOCK_OP_CREDIT_UPDATE,
- =09=09.type =3D type,
- =09=09.vsk =3D vsk,
-+=09=09.net =3D sock_net(sk_vsock(vsk)),
- =09};
-=20
- =09return virtio_transport_send_pkt_info(vsk, &info);
-@@ -609,6 +611,7 @@ int virtio_transport_connect(struct vsock_sock *vsk)
- =09=09.op =3D VIRTIO_VSOCK_OP_REQUEST,
- =09=09.type =3D VIRTIO_VSOCK_TYPE_STREAM,
- =09=09.vsk =3D vsk,
-+=09=09.net =3D sock_net(sk_vsock(vsk)),
- =09};
-=20
- =09return virtio_transport_send_pkt_info(vsk, &info);
-@@ -625,6 +628,7 @@ int virtio_transport_shutdown(struct vsock_sock *vsk, i=
-nt mode)
- =09=09=09 (mode & SEND_SHUTDOWN ?
- =09=09=09  VIRTIO_VSOCK_SHUTDOWN_SEND : 0),
- =09=09.vsk =3D vsk,
-+=09=09.net =3D sock_net(sk_vsock(vsk)),
- =09};
-=20
- =09return virtio_transport_send_pkt_info(vsk, &info);
-@@ -652,6 +656,7 @@ virtio_transport_stream_enqueue(struct vsock_sock *vsk,
- =09=09.msg =3D msg,
- =09=09.pkt_len =3D len,
- =09=09.vsk =3D vsk,
-+=09=09.net =3D sock_net(sk_vsock(vsk)),
- =09};
-=20
- =09return virtio_transport_send_pkt_info(vsk, &info);
-@@ -674,6 +679,7 @@ static int virtio_transport_reset(struct vsock_sock *vs=
-k,
- =09=09.type =3D VIRTIO_VSOCK_TYPE_STREAM,
- =09=09.reply =3D !!pkt,
- =09=09.vsk =3D vsk,
-+=09=09.net =3D sock_net(sk_vsock(vsk)),
- =09};
-=20
- =09/* Send RST only if the original pkt is not a RST pkt */
-@@ -694,6 +700,7 @@ static int virtio_transport_reset_no_sock(const struct =
-virtio_transport *t,
- =09=09.op =3D VIRTIO_VSOCK_OP_RST,
- =09=09.type =3D le16_to_cpu(pkt->hdr.type),
- =09=09.reply =3D true,
-+=09=09.net =3D pkt->net,
- =09};
-=20
- =09/* Send RST only if the original pkt is not a RST pkt */
-@@ -978,6 +985,7 @@ virtio_transport_send_response(struct vsock_sock *vsk,
- =09=09.remote_port =3D le32_to_cpu(pkt->hdr.src_port),
- =09=09.reply =3D true,
- =09=09.vsk =3D vsk,
-+=09=09.net =3D sock_net(sk_vsock(vsk)),
- =09};
-=20
- =09return virtio_transport_send_pkt_info(vsk, &info);
-@@ -1075,7 +1083,6 @@ virtio_transport_recv_listen(struct sock *sk, struct =
-virtio_vsock_pkt *pkt,
- void virtio_transport_recv_pkt(struct virtio_transport *t,
- =09=09=09       struct virtio_vsock_pkt *pkt)
- {
--=09struct net *net =3D vsock_default_net();
- =09struct sockaddr_vm src, dst;
- =09struct vsock_sock *vsk;
- =09struct sock *sk;
-@@ -1103,9 +1110,9 @@ void virtio_transport_recv_pkt(struct virtio_transpor=
-t *t,
- =09/* The socket must be in connected or bound table
- =09 * otherwise send reset back
- =09 */
--=09sk =3D vsock_find_connected_socket(&src, &dst, net);
-+=09sk =3D vsock_find_connected_socket(&src, &dst, pkt->net);
- =09if (!sk) {
--=09=09sk =3D vsock_find_bound_socket(&dst, net);
-+=09=09sk =3D vsock_find_bound_socket(&dst, pkt->net);
- =09=09if (!sk) {
- =09=09=09(void)virtio_transport_reset_no_sock(t, pkt);
- =09=09=09goto free_pkt;
---=20
-2.23.0
+Best regards,
+Leonardo
+
+--=-l7jjVAuSfdlX1zRYI3pK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3gAM8ACgkQlQYWtz9S
+ttTDJg//eBwp87AJa/nFXJRNohYve3mIdddUz+1Er3k4cXhuW3HWbrickBI+w+GM
+5s3kXIywUHeAEPFuaqhCxDvM3YHf9cXbKUSO+vYipwnukAAx6xlrQA8squ0CuKKm
+Njbz4qBf9crM7lkH9S8vEFTvC46dUrClfPcdvQTPw0jPCknIPzpW9RdwjbJUC7q/
+Woc0XfHhmvgwMHKI3Q1e7FEDIxYKZHDbvGhI2RN/+ROIvnsLcx/kdzrNE0LyhKfj
+hCfCfQ0i5LZwmUMh7bdGVb8qxuItuEMifrWZWjq0tly/KE0/1IrvRzWLG6uW4sTF
+gLRskMN2TQ3pAKHgTzqanYYkkBqh2VUTcPh6beVQP4qnSMzuEMR+AxA08NO1m2HQ
+s7l1GSiAVI+ae72YMUA8jcjoxnrcxKB+R5S39ZEXpoxoIsfYrx3QAiaBo2CyOrZL
+vD77YCthDMQ8Js4dINh4MMRgf0m95Pn4pD2BX5nD1L0NHHtD2paEayTapmBStaPR
+pBU9oTtajHcV7Fpo4Hq29Vj1Zl+Nbj101CnJknCoLy/7xT3Z5MnVHw3lYBAoN+hK
+sDG/XCfkWQ9+YkGda3LTjW2CxaTXHvpi2Y2BO2iHyULEZUZ+t8zyutd1v0pc6BiV
+lxjBZ9fbmQTQVOqWdueea85C7HVz/p7dohqQnwVLmCuMzCwB+cQ=
+=Kgb4
+-----END PGP SIGNATURE-----
+
+--=-l7jjVAuSfdlX1zRYI3pK--
 
