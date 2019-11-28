@@ -2,238 +2,128 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25724C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F0FC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E73082176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 11:55:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DTxMyJ8I"
+	by mail.kernel.org (Postfix) with ESMTP id C92402176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574942487;
+	bh=5elKrlvhdQ7vepqSptwVWBtOg70SCO7dMvSbkpx2ZDI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ot8aUncv2t/CMLE+Bb3uI3MJmbGmPUsxUaknXwwtaE8pA4geB1bJr+Ykq/v3Kwpc0
+	 hGUwFTWDVkvbfkIprt7H/d/8rDYVAyZm6MftrweURl1bgXs756Abwkx65fAk69L/+o
+	 OSK2uiDVgUAzJg9FPXrn5D5xmkQX7OhDJBMECnaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfK1Lzu (ORCPT
+        id S1726561AbfK1MB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:55:50 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59724 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfK1Lzt (ORCPT
+        Thu, 28 Nov 2019 07:01:27 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54646 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfK1MB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:55:49 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASBtdj3129928;
-        Thu, 28 Nov 2019 05:55:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574942139;
-        bh=3J+AVC3Pcb6Yw4883ZHaDaBKebxD+28yuArSAn5pnYs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DTxMyJ8IM+hI9lzEyMDfVjAXcgvEWo4yuQAAxh045FStAR9dwHNIf2D9heiAneEsk
-         KgNtb4oyXiqgYGAQQPahAyykbgZg1HRGSeS6M8Uh8MaXjetcrggR90rpEgG2MpZUiO
-         JM824LXxaS86t9zrzbLw+g5U1f7WF/YT6E+iMjxE=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASBtc3d083362;
-        Thu, 28 Nov 2019 05:55:39 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 05:55:38 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 05:55:38 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASBtYaM109133;
-        Thu, 28 Nov 2019 05:55:35 -0600
-Subject: Re: [PATCH v7 net-next 06/13] dt-bindings: net: ti: add new cpsw
- switch driver bindings
-To:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     netdev <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        <devicetree@vger.kernel.org>
-References: <20191119221925.28426-1-grygorii.strashko@ti.com>
- <20191119221925.28426-7-grygorii.strashko@ti.com>
- <CAL_JsqKfWOZeXXxqyKtH98cbccXUoV7djRtxzyoq0hA_qx-bpQ@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <9dc06cb7-c875-6fc1-e755-3832e9f39a52@ti.com>
-Date:   Thu, 28 Nov 2019 13:55:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 28 Nov 2019 07:01:26 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b11so10633405wmj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 04:01:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x+ZPcKqtkDfuCFJU9X4A+4eWzs0Y9EwU+RIvA4jfhmI=;
+        b=EKuHKvxaQmsvm6UX3Q1rh8Z5gx5aYL5UqwtWk1leVUVRrS1BkBUNLcrN8mK+KLHasd
+         yW55hQi4TSaGQMzbg1Clwbt3T3EEBmMq8N1tIa4ine30fCMU62nRjYZ8K3g4oGl5Eu3e
+         /SI7G3EilES99WYx4QnBiJk3KNI/imVK9uIBLEEerSxdnij/YvCCAj9g+aUj3sxU+Z6U
+         kq3ZxRxaz3rZ1or/aEaYZiCU6xS1IXzF/24N+TYBrLXI+oPfHTCVvX2m9t/AWzPvGldT
+         XVGyao3WOeuO5NwTXGB5gZnwcOCPG+LKY1AE+A2ADRHudnwD2vQ+HTch33p7GFky4Rqh
+         X3pQ==
+X-Gm-Message-State: APjAAAXEzo7KCmqJlQJbHXw/Wk89IToHtjxPN4qntTXXSlpjvBaLFFWV
+        mqO+njIoePh77KYHxIUpMD4=
+X-Google-Smtp-Source: APXvYqwlSTr1gJjZOtmXNwoyOTPrCKLdd89moEKk18AxOv5EqnRPkYNyia2krUAaIi5brv5PrIcOLw==
+X-Received: by 2002:a1c:610b:: with SMTP id v11mr9082613wmb.156.1574942483551;
+        Thu, 28 Nov 2019 04:01:23 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id m9sm22149062wro.66.2019.11.28.04.01.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 04:01:22 -0800 (PST)
+Date:   Thu, 28 Nov 2019 13:01:21 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v1] drivers/base/node.c: get rid of get_nid_for_pfn()
+Message-ID: <20191128120121.GL26807@dhcp22.suse.cz>
+References: <20191128102051.GI26807@dhcp22.suse.cz>
+ <5E2F5866-0605-4DD2-9AEA-4B1C44E57D9F@redhat.com>
+ <c8d2225f-9a90-65fa-5553-f4af8ca39b44@redhat.com>
+ <20191128115021.GJ26807@dhcp22.suse.cz>
+ <c7a3c823-d07d-54f7-19f1-bb75fb8f82df@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKfWOZeXXxqyKtH98cbccXUoV7djRtxzyoq0hA_qx-bpQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7a3c823-d07d-54f7-19f1-bb75fb8f82df@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On 21/11/2019 21:24, Rob Herring wrote:
-> On Tue, Nov 19, 2019 at 4:19 PM Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
->>
->> Add bindings for the new TI CPSW switch driver. Comparing to the legacy
->> bindings (net/cpsw.txt):
->> - ports definition follows DSA bindings (net/dsa/dsa.txt) and ports can be
->> marked as "disabled" if not physically wired.
->> - all deprecated properties dropped;
->> - all legacy propertiies dropped which represent constant HW cpapbilities
->> (cpdma_channels, ale_entries, bd_ram_size, mac_control, slaves,
->> active_slave)
->> - TI CPTS DT properties are reused as is, but grouped in "cpts" sub-node
->> - TI Davinci MDIO DT bindings are reused as is, because Davinci MDIO is
->> reused.
->>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>   .../bindings/net/ti,cpsw-switch.yaml          | 240 ++++++++++++++++++
->>   1 file changed, 240 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
+On Thu 28-11-19 12:52:16, David Hildenbrand wrote:
+> On 28.11.19 12:50, Michal Hocko wrote:
+> > On Thu 28-11-19 12:23:08, David Hildenbrand wrote:
+> > [...]
+> >> >From fc13fd540a1702592e389e821f6266098e41e2bd Mon Sep 17 00:00:00 2001
+> >> From: David Hildenbrand <david@redhat.com>
+> >> Date: Wed, 27 Nov 2019 16:18:42 +0100
+> >> Subject: [PATCH] drivers/base/node.c: optimize get_nid_for_pfn()
+> >>
+> >> Since commit d84f2f5a7552 ("drivers/base/node.c: simplify
+> >> unregister_memory_block_under_nodes()") we only have a single user of
+> >> get_nid_for_pfn(). The remaining user calls this function when booting -
+> >> where all added memory is online.
+> >>
+> >> Make it clearer that this function should only be used during boot (
+> >> e.g., calling it on offline memory would be bad) by renaming the
+> >> function to something meaningful, optimize out the ifdef and the additional
+> >> system_state check, and add a comment why CONFIG_DEFERRED_STRUCT_PAGE_INIT
+> >> handling is in place at all.
+> >>
+> >> Also, optimize the call site. There is no need to check against
+> >> page_nid < 0 - it will never match the nid (nid >= 0).
+> >>
+> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> >> Cc: Michal Hocko <mhocko@kernel.org>
+> >> Cc: Oscar Salvador <osalvador@suse.de>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Signed-off-by: David Hildenbrand <david@redhat.com>
+> > 
+> > Yes this looks much better! I am not sure this will pass all weird
+> > config combinations because IS_ENABLED will not hide early_pfn_to_nid
+> > from the early compiler stages so it might complain. But if this passes
+> > 0day compile scrutiny then this is much much better. If not then we just
+> > have to use ifdef which is a minor thing.
 > 
-> I see David has applied this already, but it still has numerous
-> problems. Please send a follow-up.
+> The compiler should optimize out
 > 
->>
->> diff --git a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
->> new file mode 100644
->> index 000000000000..81ae8cafabc1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
->> @@ -0,0 +1,240 @@
->> +# SPDX-License-Identifier: GPL-2.0
+> if (0)
+> 	code
 > 
-> For new bindings, please dual license:
-> 
-> (GPL-2.0-only OR BSD-2-Clause)
-> 
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/net/ti,cpsw-switch.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: TI SoC Ethernet Switch Controller (CPSW) Device Tree Bindings
->> +
->> +maintainers:
->> +  - Grygorii Strashko <grygorii.strashko@ti.com>
->> +  - Sekhar Nori <nsekhar@ti.com>
->> +
->> +description:
->> +  The 3-port switch gigabit ethernet subsystem provides ethernet packet
->> +  communication and can be configured as an ethernet switch. It provides the
->> +  gigabit media independent interface (GMII),reduced gigabit media
->> +  independent interface (RGMII), reduced media independent interface (RMII),
->> +  the management data input output (MDIO) for physical layer device (PHY)
->> +  management.
->> +
->> +properties:
->> +  compatible:
->> +    oneOf:
->> +      - const: ti,cpsw-switch
->> +      - items:
->> +         - const: ti,am335x-cpsw-switch
->> +         - const: ti,cpsw-switch
->> +      - items:
->> +        - const: ti,am4372-cpsw-switch
->> +        - const: ti,cpsw-switch
->> +      - items:
->> +        - const: ti,dra7-cpsw-switch
->> +        - const: ti,cpsw-switch
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description:
->> +       The physical base address and size of full the CPSW module IO range
->> +
->> +  ranges: true
->> +
->> +  clocks:
->> +    maxItems: 1
->> +    description: CPSW functional clock
->> +
->> +  clock-names:
->> +    maxItems: 1
->> +    items:
->> +      - const: fck
->> +
->> +  interrupts:
->> +    items:
->> +      - description: RX_THRESH interrupt
->> +      - description: RX interrupt
->> +      - description: TX interrupt
->> +      - description: MISC interrupt
->> +
->> +  interrupt-names:
->> +    items:
->> +      - const: "rx_thresh"
->> +      - const: "rx"
->> +      - const: "tx"
->> +      - const: "misc"
->> +
->> +  pinctrl-names: true
->> +
->> +  syscon:
->> +    $ref: /schemas/types.yaml#definitions/phandle
->> +    description:
->> +      Phandle to the system control device node which provides access to
->> +      efuse IO range with MAC addresses
-> 
-> Can't you use nvmem binding for this?
-> 
-I've sent patch to fix other comments except this one.
+> and therefore never link to early_pfn_to_nid.
 
-About nvmem,I've been thinking about it for a long time already, but in our case
-MAC address is encoded in eFuse register in a different way for different SoCs.
-
-So even if I'll try to use nvmem and define some MAC cell:
-
-	efuse: efuse {
-		compatible = "...";
-		#address-cells = <1>;
-		#size-cells = <1>;
-
-		eth_mac: eth_mac@34 {
-			reg = <0x34 0x10>;
-		};
-	};
-
-	portX {
-		...
-		nvmem-cells = <&eth_mac>;
-		nvmem-cell-names = "mac-address";
-	};
-
-the of_get_mac_address() will finally call
-   nvmem->reg_read(priv, offset, val, bytes);
-
-and at this point nvmem driver will have no knowledge about the type of the cell
-(MAC address), so no decoding can not be done and returned mac will be incorrect.
-
-Not sure how to proceed here. One of the ways is to pass cell info in
-struct nvmem_device .reg_read()/.reg_write() callbacks, cell name could be use
-to perform some actions.
-
-Another thing which need to be considered is - MAC can be assigned per port,
-so dev->of_node != port_of_node (and of_get_mac_addr_nvmem() will fail).
-
-
+You are right, but there is a catch. The optimization phase is much
+later than the syntactic check so if the code doesn't make sense
+for the syntactic point of view then it will complain. This is a notable
+difference to #ifdef which just removes the whole block in the
+preprocessor phase.
 
 -- 
-Best regards,
-grygorii
+Michal Hocko
+SUSE Labs
