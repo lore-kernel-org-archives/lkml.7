@@ -2,428 +2,434 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32466C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85754C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E354A2158A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eV3DZqc0"
+	by mail.kernel.org (Postfix) with ESMTP id 64EDA21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfK1BxE (ORCPT
+        id S1727961AbfK1BxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 20:53:04 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:41228 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727802AbfK1BxD (ORCPT
+        Wed, 27 Nov 2019 20:53:07 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:45756 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbfK1BxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 20:53:03 -0500
-Received: from pendragon.ideasonboard.com (unknown [104.132.253.101])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E38D54FF;
-        Thu, 28 Nov 2019 02:52:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1574905979;
-        bh=B7iiRFAP7yNrqFy1QHlxqmaxXM0DvDVg+ZOBcqTu9xw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eV3DZqc0C1jxN0Ywzyc8mYyAoKFVDMok/OVh0x91NBy10TXjB7+DmqQ+N5tXnaAu1
-         +Rd4oFSLGGV+m46Ob5nJFuWYs2qgkqq5G08kDdE6QpljybXYlOjrJa/8L+4iweQYAk
-         AGZ9zOyVI9YbCggHbmPZoxeu56yyKqeYIcemCDAk=
-Date:   Thu, 28 Nov 2019 03:52:49 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu, airlied@linux.ie,
-        daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 3/7] drm: rcar-du: Add support for CMM
-Message-ID: <20191128015249.GB13942@pendragon.ideasonboard.com>
-References: <20191113100556.15616-1-jacopo+renesas@jmondi.org>
- <20191113100556.15616-4-jacopo+renesas@jmondi.org>
+        Wed, 27 Nov 2019 20:53:04 -0500
+Received: from [5.158.153.53] (helo=g2noscherz.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1ia8zK-00083b-Qc; Thu, 28 Nov 2019 02:52:58 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        kexec@lists.infradead.org
+Subject: [RFC PATCH v5 3/3] printk-rb: add test module
+Date:   Thu, 28 Nov 2019 02:58:35 +0106
+Message-Id: <20191128015235.12940-4-john.ogness@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191128015235.12940-1-john.ogness@linutronix.de>
+References: <20191128015235.12940-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191113100556.15616-4-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+This module does some heavy write stress testing on the ringbuffer
+with a reader that is checking for integrity.
 
-Thank you for the patch.
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+---
+ kernel/printk/Makefile   |   3 +
+ kernel/printk/test_prb.c | 347 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 350 insertions(+)
+ create mode 100644 kernel/printk/test_prb.c
 
-On Wed, Nov 13, 2019 at 11:05:52AM +0100, Jacopo Mondi wrote:
-> Add a driver for the R-Car Display Unit Color Correction Module.
-> 
-> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
-> to perform image enhancement and color correction.
-> 
-> Add support for CMM through a driver that supports configuration of
-> the 1-dimensional LUT table. More advanced CMM features will be
-> implemented on top of this initial one.
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> ---
-> v6 -> v7
-> - Expand rcar_cmm_setup() function documentation to detail its relationship
->   with rcar_cmm_enable() and their call order precedence.
-> 
-> - Kconfig update: Make DRM_RCAR_CMM a tristate option and 'imply' it from the
->   RCAR_DU one. This guarantees that if DU is built as a module CMM can only be
->   built as a module as well. At the same time, if DU is built-in, CMM can
->   be built-in only.
-> ---
->  drivers/gpu/drm/rcar-du/Kconfig    |   8 ++
->  drivers/gpu/drm/rcar-du/Makefile   |   1 +
->  drivers/gpu/drm/rcar-du/rcar_cmm.c | 217 +++++++++++++++++++++++++++++
->  drivers/gpu/drm/rcar-du/rcar_cmm.h |  58 ++++++++
->  4 files changed, 284 insertions(+)
->  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
->  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-> index 1529849e217e..6ed7a4f3c44e 100644
-> --- a/drivers/gpu/drm/rcar-du/Kconfig
-> +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> @@ -5,6 +5,7 @@ config DRM_RCAR_DU
->  	depends on ARM || ARM64
->  	depends on ARCH_RENESAS || COMPILE_TEST
->  	imply DRM_RCAR_LVDS
-> +	imply DRM_RCAR_CMM
-
-I'll swap those two lines.
-
->  	select DRM_KMS_HELPER
->  	select DRM_KMS_CMA_HELPER
->  	select DRM_GEM_CMA_HELPER
-> @@ -13,6 +14,13 @@ config DRM_RCAR_DU
->  	  Choose this option if you have an R-Car chipset.
->  	  If M is selected the module will be called rcar-du-drm.
-> 
-> +config DRM_RCAR_CMM
-> +	tristate "R-Car DU Color Management Module (CMM) Support"
-> +	depends on DRM && OF
-> +	depends on DRM_RCAR_DU
-
-I just wanted to point out that this prevents DRM_RCAR_DU=m and
-DRM_RCAR_CMM=y, but I don't think that is a useful use case.
-
-> +	help
-> +	  Enable support for R-Car Color Management Module (CMM).
-> +
->  config DRM_RCAR_DW_HDMI
->  	tristate "R-Car DU Gen3 HDMI Encoder Support"
->  	depends on DRM && OF
-> diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
-> index 6c2ed9c46467..4d1187ccc3e5 100644
-> --- a/drivers/gpu/drm/rcar-du/Makefile
-> +++ b/drivers/gpu/drm/rcar-du/Makefile
-> @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
->  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
->  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
-> 
-> +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
->  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
->  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
->  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> new file mode 100644
-> index 000000000000..c578095b09a5
-> --- /dev/null
-> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> @@ -0,0 +1,217 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * rcar_cmm.c -- R-Car Display Unit Color Management Module
-> + *
-> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +
-> +#include <drm/drm_color_mgmt.h>
-> +
-> +#include "rcar_cmm.h"
-> +
-> +#define CM2_LUT_CTRL		0x0000
-> +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
-> +#define CM2_LUT_TBL_BASE	0x0600
-> +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
-> +
-> +struct rcar_cmm {
-> +	void __iomem *base;
-> +
-> +	/*
-> +	 * @lut:		1D-LUT state
-> +	 * @lut.enabled:	1D-LUT enabled flag
-> +	 */
-> +	struct {
-> +		bool enabled;
-> +	} lut;
-> +};
-> +
-> +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
-> +{
-> +	return ioread32(rcmm->base + reg);
-> +}
-> +
-> +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
-> +{
-> +	iowrite32(data, rcmm->base + reg);
-> +}
-> +
-> +/*
-> + * rcar_cmm_lut_write() - Scale the DRM LUT table entries to hardware precision
-> + *			  and write to the CMM registers
-> + * @rcmm: Pointer to the CMM device
-> + * @drm_lut: Pointer to the DRM LUT table
-> + */
-> +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm,
-> +			       const struct drm_color_lut *drm_lut)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < CM2_LUT_SIZE; ++i) {
-> +		u32 entry = drm_color_lut_extract(drm_lut[i].red, 8) << 16
-> +			  | drm_color_lut_extract(drm_lut[i].green, 8) << 8
-> +			  | drm_color_lut_extract(drm_lut[i].blue, 8);
-> +
-> +		rcar_cmm_write(rcmm, CM2_LUT_TBL(i), entry);
-> +	}
-> +}
-> +
-> +/*
-> + * rcar_cmm_setup() - Configure the CMM unit
-> + * @pdev: The platform device associated with the CMM instance
-> + * @config: The CMM unit configuration
-> + *
-> + * Configure the CMM unit with the given configuration. Currently enabling,
-> + * disabling and programming of the 1-D LUT unit is supported.
-> + *
-> + * As rcar_cmm_setup() accesses the CMM registers the unit should be powered
-> + * and its functional clock enabled. To guarantee this, before any call to
-> + * this function is made, the CMM unit has to be enabled by calling
-> + * rcar_cmm_enable() first.
-> + *
-> + * TODO: Add support for LUT double buffer operations to avoid updating the
-> + * LUT table entries while a frame is being displayed.
-> + */
-> +int rcar_cmm_setup(struct platform_device *pdev,
-> +		   const struct rcar_cmm_config *config)
-> +{
-> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> +
-> +	/* Disable LUT if no table is provided. */
-> +	if (!config->lut.table) {
-> +		if (rcmm->lut.enabled) {
-> +			rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> +			rcmm->lut.enabled = false;
-> +		}
-> +
-> +		return 0;
-> +	}
-> +
-> +	/* Enable LUT and program the new gamma table values. */
-> +	if (!rcmm->lut.enabled) {
-> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
-> +		rcmm->lut.enabled = true;
-> +	}
-> +
-> +	rcar_cmm_lut_write(rcmm, config->lut.table);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
-> +
-> +/*
-> + * rcar_cmm_enable() - Enable the CMM unit
-> + * @pdev: The platform device associated with the CMM instance
-> + *
-> + * When the output of the corresponding DU channel is routed to the CMM unit,
-> + * the unit shall be enabled before the DU channel is started, and remain
-> + * enabled until the channel is stopped. The CMM unit shall be disabled with
-> + * rcar_cmm_disable().
-> + *
-> + * Calls to rcar_cmm_enable() and rcar_cmm_disable() are not reference-counted.
-> + * It is an error to attempt to enable an already enabled CMM unit, or to
-> + * attempt to disable a disabled unit.
-> + */
-> +int rcar_cmm_enable(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	ret = pm_runtime_get_sync(&pdev->dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
-> +
-> +/*
-> + * rcar_cmm_disable() - Disable the CMM unit
-> + * @pdev: The platform device associated with the CMM instance
-> + *
-> + * See rcar_cmm_enable() for usage information.
-> + *
-> + * Disabling the CMM unit disable all the internal processing blocks. The CMM
-> + * state shall thus be restored with rcar_cmm_setup() when re-enabling the CMM
-> + * unit after the next rcar_cmm_enable() call.
-> + */
-> +void rcar_cmm_disable(struct platform_device *pdev)
-> +{
-> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> +
-> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> +	rcmm->lut.enabled = false;
-> +
-> +	pm_runtime_put(&pdev->dev);
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
-> +
-> +/*
-> + * rcar_cmm_init() - Initialize the CMM unit
-> + * @pdev: The platform device associated with the CMM instance
-> + *
-> + * Return: 0 on success, -EPROBE_DEFER if the CMM is not available yet,
-> + *         -ENODEV if the DRM_RCAR_CMM config option is disabled
-> + */
-> +int rcar_cmm_init(struct platform_device *pdev)
-> +{
-> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> +
-> +	if (!rcmm)
-> +		return -EPROBE_DEFER;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_init);
-> +
-> +static int rcar_cmm_probe(struct platform_device *pdev)
-> +{
-> +	struct rcar_cmm *rcmm;
-> +
-> +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
-> +	if (!rcmm)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, rcmm);
-> +
-> +	rcmm->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(rcmm->base))
-> +		return PTR_ERR(rcmm->base);
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rcar_cmm_remove(struct platform_device *pdev)
-> +{
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id rcar_cmm_of_table[] = {
-> +	{ .compatible = "renesas,rcar-gen3-cmm", },
-> +	{ .compatible = "renesas,rcar-gen2-cmm", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
-> +
-> +static struct platform_driver rcar_cmm_platform_driver = {
-> +	.probe		= rcar_cmm_probe,
-> +	.remove		= rcar_cmm_remove,
-> +	.driver		= {
-> +		.name	= "rcar-cmm",
-> +		.of_match_table = rcar_cmm_of_table,
-> +	},
-> +};
-> +
-> +module_platform_driver(rcar_cmm_platform_driver);
-> +
-> +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
-> +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> new file mode 100644
-> index 000000000000..b5f7ec6db04a
-> --- /dev/null
-> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> @@ -0,0 +1,58 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * rcar_cmm.h -- R-Car Display Unit Color Management Module
-> + *
-> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + */
-> +
-> +#ifndef __RCAR_CMM_H__
-> +#define __RCAR_CMM_H__
-> +
-> +#define CM2_LUT_SIZE		256
-> +
-> +struct drm_color_lut;
-> +struct platform_device;
-> +
-> +/**
-> + * struct rcar_cmm_config - CMM configuration
-> + *
-> + * @lut:	1D-LUT configuration
-> + * @lut.table:	1D-LUT table entries. Disable LUT operations when NULL
-> + */
-> +struct rcar_cmm_config {
-> +	struct {
-> +		struct drm_color_lut *table;
-> +	} lut;
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_DRM_RCAR_CMM)
-> +int rcar_cmm_init(struct platform_device *pdev);
-> +
-> +int rcar_cmm_enable(struct platform_device *pdev);
-> +void rcar_cmm_disable(struct platform_device *pdev);
-> +
-> +int rcar_cmm_setup(struct platform_device *pdev,
-> +		   const struct rcar_cmm_config *config);
-> +#else
-> +static inline int rcar_cmm_init(struct platform_device *pdev)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static inline int rcar_cmm_enable(struct platform_device *pdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void rcar_cmm_disable(struct platform_device *pdev)
-> +{
-> +}
-> +
-> +static inline int rcar_cmm_setup(struct platform_device *pdev,
-> +				 const struct rcar_cmm_config *config)
-> +{
-> +	return 0;
-> +}
-> +#endif /* IS_ENABLED(CONFIG_DRM_RCAR_CMM) */
-> +
-> +#endif /* __RCAR_CMM_H__ */
-
+diff --git a/kernel/printk/Makefile b/kernel/printk/Makefile
+index 4d052fc6bcde..2aabbe561efc 100644
+--- a/kernel/printk/Makefile
++++ b/kernel/printk/Makefile
+@@ -2,3 +2,6 @@
+ obj-y	= printk.o
+ obj-$(CONFIG_PRINTK)	+= printk_safe.o
+ obj-$(CONFIG_A11Y_BRAILLE_CONSOLE)	+= braille.o
++
++prbtest-y = printk_ringbuffer.o test_prb.o
++obj-m += prbtest.o
+diff --git a/kernel/printk/test_prb.c b/kernel/printk/test_prb.c
+new file mode 100644
+index 000000000000..d038b16bf01b
+--- /dev/null
++++ b/kernel/printk/test_prb.c
+@@ -0,0 +1,347 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/kthread.h>
++#include <linux/delay.h>
++#include <linux/random.h>
++#include <linux/slab.h>
++#include <linux/wait.h>
++#include "printk_ringbuffer.h"
++
++/*
++ * This is a test module that starts "num_online_cpus()" writer threads
++ * that each write data of varying length. They do this as fast as
++ * they can.
++ *
++ * Dictionary data is stored in a separate data ring. The writers will
++ * only write dictionary data about half the time. This is to make the
++ * test more realistic with text and dict data rings containing
++ * different data blocks.
++ *
++ * Because the threads are running in such tight loops, they will call
++ * schedule() from time to time so the system stays alive.
++ *
++ * If the writers encounter an error, the test is aborted. Test results are
++ * recorded to the ftrace buffers, with some additional information also
++ * provided via printk. The test can be aborted manually by removing the
++ * module. (Ideally the test should never abort on its own.)
++ */
++
++/* not used right now */
++DECLARE_WAIT_QUEUE_HEAD(test_wait);
++
++/* test data structure */
++struct rbdata {
++	int len;
++	char text[0];
++};
++
++static char *test_running;
++static int halt_test;
++
++/* dump text or dictionary data to the trace buffers */
++static void print_record(const char *name, struct rbdata *dat, u64 seq)
++{
++	char buf[160];
++
++	snprintf(buf, sizeof(buf), "%s", dat->text);
++	buf[sizeof(buf) - 1] = 0;
++
++	trace_printk("seq=%llu len=%d %sval=%s\n",
++		     seq, dat->len, name,
++		     dat->len < sizeof(buf) ? buf : "<invalid>");
++}
++
++/*
++ * sequentially dump all the valid records in the ringbuffer
++ * (used to verify memory integrity)
++ *
++ * Since there is no reader interface, the internal members are
++ * directly accessed. This function is called after all writers
++ * are finished so there is no need for any memory barriers.
++ */
++static void dump_rb(struct printk_ringbuffer *rb)
++{
++	struct printk_info info;
++	struct printk_record r;
++	char text_buf[200];
++	char dict_buf[200];
++	u64 seq = 0;
++
++	r.info = &info;
++	r.text_buf = &text_buf[0];
++	r.dict_buf = &dict_buf[0];
++	r.text_buf_size = sizeof(text_buf);
++	r.dict_buf_size = sizeof(dict_buf);
++
++	trace_printk("BEGIN full dump\n");
++
++	while (prb_read_valid(rb, seq, &r)) {
++		/* check/track the sequence */
++		if (info.seq != seq)
++			trace_printk("DROPPED %llu\n", info.seq - seq);
++
++		print_record("TEXT", (struct rbdata *)&r.text_buf[0],
++			     info.seq);
++		if (info.dict_len) {
++			print_record("DICT", (struct rbdata *)&r.dict_buf[0],
++				     info.seq);
++		}
++
++		seq = info.seq + 1;
++	}
++
++	trace_printk("END full dump\n");
++}
++
++DECLARE_PRINTKRB(test_rb, 15, 5, 5);
++
++static int prbtest_writer(void *data)
++{
++	unsigned long num = (unsigned long)data;
++	struct prb_reserved_entry e;
++	char text_id = 'A' + num;
++	char dict_id = 'a' + num;
++	unsigned long count = 0;
++	struct printk_record r;
++	struct rbdata *dat;
++	int len;
++
++	pr_err("prbtest: start thread %03lu (writer)\n", num);
++
++	for (;;) {
++		len = sizeof(struct rbdata) + (prandom_u32() & 0x7f) + 2;
++
++		/* specify the text/dict sizes for reservation */
++		r.text_buf_size = len;
++		/* only add a dictionary on some records */
++		if (len % 2)
++			r.dict_buf_size = len;
++		else
++			r.dict_buf_size = 0;
++
++		if (prb_reserve(&e, &test_rb, &r)) {
++			len -= sizeof(struct rbdata) + 1;
++
++			dat = (struct rbdata *)&r.text_buf[0];
++			dat->len = len;
++			memset(&dat->text[0], text_id, len);
++			dat->text[len] = 0;
++
++			/* dictionary reservation is allowed to fail */
++			if (r.dict_buf) {
++				dat = (struct rbdata *)&r.dict_buf[0];
++				dat->len = len;
++				memset(&dat->text[0], dict_id, len);
++				dat->text[len] = 0;
++			} else if (r.text_buf_size % 2) {
++				trace_printk(
++				    "writer%lu (%c) dict dropped: seq=%llu\n",
++				    num, text_id, r.info->seq);
++			}
++
++			prb_commit(&e);
++			wake_up_interruptible(&test_wait);
++		} else {
++			WRITE_ONCE(halt_test, 1);
++			trace_printk("writer%lu (%c) reserve failed\n",
++				     num, text_id);
++		}
++
++		if ((count++ & 0x3fff) == 0)
++			schedule();
++
++		if (READ_ONCE(halt_test) == 1)
++			break;
++	}
++
++	pr_err("prbtest: end thread %03lu (writer, wrote %lu)\n", num, count);
++
++	test_running[num] = 0;
++
++	return 0;
++}
++
++static bool check_data(struct rbdata *dat, u64 seq, unsigned long num)
++{
++	int len;
++
++	len = strnlen(dat->text, 160);
++
++	if (len != dat->len || len >= 160) {
++		WRITE_ONCE(halt_test, 1);
++		trace_printk("reader%lu invalid len for %llu (%d<->%d)\n",
++			     num, seq, len, dat->len);
++		return false;
++	}
++
++	while (len) {
++		len--;
++		if (dat->text[len] != dat->text[0]) {
++			WRITE_ONCE(halt_test, 1);
++			trace_printk("reader%lu bad data\n", num);
++			return false;
++		}
++	}
++
++	return true;
++}
++
++static int prbtest_reader(void *data)
++{
++	unsigned long num = (unsigned long)data;
++	unsigned long total_lost = 0;
++	unsigned long max_lost = 0;
++	unsigned long count = 0;
++	struct printk_info info;
++	struct printk_record r;
++	char text_buf[200];
++	char dict_buf[200];
++	int did_sched = 1;
++	u64 seq = 0;
++
++	r.info = &info;
++	r.text_buf = &text_buf[0];
++	r.dict_buf = &dict_buf[0];
++	r.text_buf_size = sizeof(text_buf);
++	r.dict_buf_size = sizeof(dict_buf);
++
++	pr_err("prbtest: start thread %03lu (reader)\n", num);
++
++	while (!wait_event_interruptible(test_wait,
++				kthread_should_stop() ||
++				prb_read_valid(&test_rb, seq, &r))) {
++		if (kthread_should_stop())
++			break;
++		/* check/track the sequence */
++		if (info.seq < seq) {
++			WRITE_ONCE(halt_test, 1);
++			trace_printk("reader%lu invalid seq %llu -> %llu\n",
++				num, seq, info.seq);
++			break;
++		} else if (info.seq != seq && !did_sched) {
++			total_lost += info.seq - seq;
++			if (max_lost < info.seq - seq)
++				max_lost = info.seq - seq;
++		}
++
++		if (!check_data((struct rbdata *)&r.text_buf[0],
++				info.seq, num)) {
++			trace_printk("text error\n");
++			break;
++		}
++
++		if (info.dict_len) {
++			if (!check_data((struct rbdata *)&r.dict_buf[0],
++					info.seq, num)) {
++				trace_printk("dict error\n");
++				break;
++			}
++		} else if (info.text_len % 2) {
++			trace_printk("dict dropped: seq=%llu\n", info.seq);
++		}
++
++		did_sched = 0;
++		if ((count++ & 0x3fff) == 0) {
++			did_sched = 1;
++			schedule();
++		}
++
++		if (READ_ONCE(halt_test) == 1)
++			break;
++
++		seq = info.seq + 1;
++	}
++
++	pr_err(
++	 "reader%lu: total_lost=%lu max_lost=%lu total_read=%lu seq=%llu\n",
++	 num, total_lost, max_lost, count, info.seq);
++
++	pr_err("prbtest: end thread %03lu (reader)\n", num);
++
++	while (!kthread_should_stop())
++		msleep(1000);
++	test_running[num] = 0;
++
++	return 0;
++}
++
++static int module_test_running;
++static struct task_struct *reader_thread;
++
++static int start_test(void *arg)
++{
++	struct task_struct *thread;
++	unsigned long i;
++	int num_cpus;
++
++	num_cpus = num_online_cpus();
++	test_running = kzalloc(num_cpus, GFP_KERNEL);
++	if (!test_running)
++		return -ENOMEM;
++
++	module_test_running = 1;
++
++	pr_err("prbtest: starting test\n");
++
++	for (i = 0; i < num_cpus; i++) {
++		test_running[i] = 1;
++		if (i < num_cpus - 1) {
++			thread = kthread_run(prbtest_writer, (void *)i,
++					     "prbtest writer");
++		} else {
++			thread = kthread_run(prbtest_reader, (void *)i,
++					     "prbtest reader");
++			reader_thread = thread;
++		}
++		if (IS_ERR(thread)) {
++			pr_err("prbtest: unable to create thread %lu\n", i);
++			test_running[i] = 0;
++		}
++	}
++
++	for (;;) {
++		msleep(1000);
++
++		for (i = 0; i < num_cpus; i++) {
++			if (test_running[i] == 1)
++				break;
++		}
++		if (i == num_cpus)
++			break;
++	}
++
++	pr_err("prbtest: completed test\n");
++
++	dump_rb(&test_rb);
++
++	module_test_running = 0;
++
++	return 0;
++}
++
++static int prbtest_init(void)
++{
++	kthread_run(start_test, NULL, "prbtest");
++	return 0;
++}
++
++static void prbtest_exit(void)
++{
++	if (reader_thread && !IS_ERR(reader_thread))
++		kthread_stop(reader_thread);
++
++	WRITE_ONCE(halt_test, 1);
++
++	while (module_test_running)
++		msleep(1000);
++	kfree(test_running);
++}
++
++module_init(prbtest_init);
++module_exit(prbtest_exit);
++
++MODULE_AUTHOR("John Ogness <john.ogness@linutronix.de>");
++MODULE_DESCRIPTION("printk ringbuffer test");
++MODULE_LICENSE("GPL v2");
 -- 
-Regards,
+2.20.1
 
-Laurent Pinchart
