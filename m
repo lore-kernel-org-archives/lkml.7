@@ -2,111 +2,141 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFDEC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC42C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C4F2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDE12176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:21:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e5Y2B5c0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aYsQAOKb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfK1IUg (ORCPT
+        id S1727484AbfK1IVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 03:20:36 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42154 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfK1IUg (ORCPT
+        Thu, 28 Nov 2019 03:21:33 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45218 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbfK1IVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:20:36 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAS8KWpb108601;
-        Thu, 28 Nov 2019 02:20:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574929232;
-        bh=YeiqDx6xy0lLTLKZ4JJ6oMuelrCkWsSmvcEt2fV6Ns4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=e5Y2B5c0YN7+bkDzQrRBfV4wcDP4iPzLh2JtIINqVswslCLf0f7TJgmGCWKvCw2Ms
-         pFhKEHW/lhp3+OgtUoNVJrrnLlx9KPdflssR/N+SOCXoMvwtC1cisalSddQJBax9S7
-         kbRIYf2MwMS/KUfWgi5Gz6v/t+OokxzFApSXXZW0=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAS8KWDr067235
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Nov 2019 02:20:32 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 02:20:32 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 02:20:32 -0600
-Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAS8KTAH062029;
-        Thu, 28 Nov 2019 02:20:30 -0600
-Subject: Re: [PATCH] mmc: sdhci: Fix incorrect switch to HS mode
-To:     Alan Cooper <alcooperx@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-References: <20190903115114.33053-1-alcooperx@gmail.com>
- <CAPDyKFqaNBH3Thwy1O+KXkcsgM2gMrm9zNGYWH8vVP+Y2vSLdA@mail.gmail.com>
- <CAOGqxeUJD7eQxRnH1rep=m2+Ga5DDF=uWMsc_j2NZgC+EnZqsg@mail.gmail.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <7e495749-1539-9164-d801-305a918318d6@ti.com>
-Date:   Thu, 28 Nov 2019 13:51:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 28 Nov 2019 03:21:32 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j42so4094384wrj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:21:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VOI036BPUwrbZowHT5GDUEXOWOhQmQWDUMNaY8GO7tI=;
+        b=aYsQAOKb1A7PKWIf5wGzlAze4eWPmdGPLKe1SsRZU2k+tm4SMPOV4cgWHesnBHGp+S
+         UhuJTmeX6pC8+bfFMrJo8ASo5EZgv85U5ojeERcDI6qYQAaU/NdssXIMa4sf40VLFh7d
+         7QRRyOvSR6Obq94UORxMiHh7CN+v/LEBj9X0XichLgfdrZezNY4/lhr9mI89UJcIWmN5
+         Gib8pPmxplFkJrhJLjiE8xQxxltLaNGhNaQwJbSxtz+OqQUxUJOfoWUpo4Y+8gVUi46T
+         qTLyVE8LlvEBsMD81mpln4RLMc4Gd7X3TvzNnjUotecTl3zoL1Ootn/mU1cM2egiLCeO
+         YEYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VOI036BPUwrbZowHT5GDUEXOWOhQmQWDUMNaY8GO7tI=;
+        b=MhyEtC/9wCZqRKhFti/b1TacHYpqTfEajWqq+O67SVxp/n9VTP5/q6q0cPatKg5F9A
+         s0pTixBQLn3PLkrHpSyZHCwj2Fk+BAXWs3CKHUmcZ6Hc6dhVjjQhgDEO5/fzxfLh7yxB
+         fcdI+ArRazjH/Mo/g0+Jm2r2RRJr7N6qtFcqduEetXyLAoDNotKrkRw7Sq/zzQJ6JJ3m
+         0czrQPm5Mf19HuoCyKopHbkp3IOvRaRkaxcY3hXza0GjdK5n3NeN3MuKja8T1cs+3HFY
+         ZP5spF8vAd6WILwasWAs639WdaP4RAwzqvN3NTdnSoHqLwRlgbCY7jWvhDd3AVzwyaun
+         p+jQ==
+X-Gm-Message-State: APjAAAWMWn7upghIGgd7/Z/sVTvoQWdESAfwlxC0PcjP+9GcvKkZCWj5
+        +kV6h3jnPUAdVhO6GkiMbSWtWA==
+X-Google-Smtp-Source: APXvYqwnYPAyBuUvcvS1pBiBRsm7B8Y/eawgeM5AHpFMzHjgdUnfsDOjjE//piFuuaBq8Ij9fBLegg==
+X-Received: by 2002:a5d:43c3:: with SMTP id v3mr38726407wrr.324.1574929290712;
+        Thu, 28 Nov 2019 00:21:30 -0800 (PST)
+Received: from apalos.home (athedsl-4476713.home.otenet.gr. [94.71.27.49])
+        by smtp.gmail.com with ESMTPSA id q3sm502890wrn.33.2019.11.28.00.21.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 00:21:30 -0800 (PST)
+Date:   Thu, 28 Nov 2019 10:21:27 +0200
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>, Sekhar Nori <nsekhar@ti.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH] net: ethernet: ti: ale: ensure vlan/mdb deleted when no
+ members
+Message-ID: <20191128082127.GA16359@apalos.home>
+References: <20191127155905.22921-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOGqxeUJD7eQxRnH1rep=m2+Ga5DDF=uWMsc_j2NZgC+EnZqsg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127155905.22921-1-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 19/09/19 5:27 PM, Alan Cooper wrote:
-> This does correct the sequence of switching to HS400 but it might be
-> safest to just add this to the latest until it gets a little testing
-> to make sure it doesn't expose some bug in existing controllers.
+On Wed, Nov 27, 2019 at 05:59:05PM +0200, Grygorii Strashko wrote:
+> The recently updated ALE APIs cpsw_ale_del_mcast() and
+> cpsw_ale_del_vlan_modify() have an issue and will not delete ALE entry even
+> if VLAN/mcast group has no more members. Hence fix it here and delete ALE
+> entry if !port_mask.
 > 
-> Thanks
-> Al
+> The issue affected only new cpsw switchdev driver.
 > 
-> On Tue, Sep 3, 2019 at 10:52 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>
->> On Tue, 3 Sep 2019 at 13:51, Al Cooper <alcooperx@gmail.com> wrote:
->>>
->>> When switching from any MMC speed mode that requires 1.8v
->>> (HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
->>> ends up configured for SDR12 with a 50MHz clock which is an illegal
->>> mode.
->>>
->>> This happens because the SDHCI_CTRL_VDD_180 bit in the
->>> SDHCI_HOST_CONTROL2 register is left set and when this bit is
->>> set, the speed mode is controlled by the SDHCI_CTRL_UHS field
->>> in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
->>> will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
->>> because there is no UHS mode being set.
->>>
->>> The fix is to change sdhci_set_uhs_signaling() to set the
->>> SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
->>> any switch to HS mode.
+> Fixes: e85c14370783 ("net: ethernet: ti: ale: modify vlan/mdb api for switchdev")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  drivers/net/ethernet/ti/cpsw_ale.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+> index 929f3d3354e3..a5179ecfea05 100644
+> --- a/drivers/net/ethernet/ti/cpsw_ale.c
+> +++ b/drivers/net/ethernet/ti/cpsw_ale.c
+> @@ -396,12 +396,14 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
+>  	if (port_mask) {
+>  		mcast_members = cpsw_ale_get_port_mask(ale_entry,
+>  						       ale->port_mask_bits);
+> -		mcast_members &= ~port_mask;
+> -		cpsw_ale_set_port_mask(ale_entry, mcast_members,
+> +		port_mask = mcast_members & ~port_mask;
+> +	}
+> +
+> +	if (port_mask)
+> +		cpsw_ale_set_port_mask(ale_entry, port_mask,
+>  				       ale->port_mask_bits);
+> -	} else {
+> +	else
+>  		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
+> -	}
 
-This change has broken High speed mode in SD card for me in AM65x-evm. I
-guess this change only needs to be done for eMMC. SDR25 is decidedly not
-the same as high speed for SD card.
+The code assumed calls cpsw_ale_del_mcast() should have a port mask '0' when
+deleting an entry. Do we want to have 'dual' functionality on it? 
+This will delete mcast entries if port mask is 0 or port mask matches exactly
+what's configured right?
 
-Thanks,
-Faiz
+>  	cpsw_ale_write(ale, idx, ale_entry);
+>  	return 0;
+> @@ -478,6 +480,10 @@ static void cpsw_ale_del_vlan_modify(struct cpsw_ale *ale, u32 *ale_entry,
+>  	members = cpsw_ale_get_vlan_member_list(ale_entry,
+>  						ale->vlan_field_bits);
+>  	members &= ~port_mask;
+> +	if (!members) {
+> +		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
+> +		return;
+> +	}
 
+This makes sense the call was missing 
+
+>  
+>  	untag = cpsw_ale_get_vlan_untag_force(ale_entry,
+>  					      ale->vlan_field_bits);
+> -- 
+> 2.17.1
+> 
+
+
+Thanks
+/Ilias
