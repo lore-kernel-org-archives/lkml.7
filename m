@@ -2,603 +2,162 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DE9C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCFBC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E68B2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4862F2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:02:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iro+kjaj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mslmdNSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfK1PCJ (ORCPT
+        id S1727079AbfK1PC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 10:02:09 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41522 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfK1PCI (ORCPT
+        Thu, 28 Nov 2019 10:02:26 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40712 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfK1PC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 10:02:08 -0500
-Received: by mail-pl1-f194.google.com with SMTP id t8so11651624plr.8;
-        Thu, 28 Nov 2019 07:02:08 -0800 (PST)
+        Thu, 28 Nov 2019 10:02:26 -0500
+Received: by mail-pg1-f194.google.com with SMTP id e17so13022467pgd.7;
+        Thu, 28 Nov 2019 07:02:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Ew2TyWxmi0xWVU9wFxSLMjQSKDTKC/5GdEmgyJQJNZ4=;
-        b=iro+kjajOwe+hCJbLNAbKJ1fV+jG4rhV66Y4a1koncUpd1pB8JisQBEivNIWIg32EH
-         ZNcl4G1WZabW9F7zABRoIJts6nQwlL5SUQQZrECxjn1ziO6CWp8xjbEGysuFCoFQecpK
-         ryNmRmJ3OEubngFSMpaoa1zKGlFiKnRKMebNq7OHV5IuafxRRl5+HzGionl9r5+vHn4g
-         sdq8yo/OtT6+b+PdWLrV5+wO6QBErDuiwIgOxJ2p7ntb0jqUo1tEf5fdPO7JMKSDCaCf
-         Lij5SxAGcoyIOzZLxmNLHle53+FSkUvDyctJ8CqVaHNgNmyX59griYO7MTSUmBR6GhMG
-         1SFQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/yK+bP/ZquyDqTbwLOoQFt7m4Vf6MNFvYmMx+oPcx0U=;
+        b=mslmdNSSudE7yrNxVl9gLKm+PW7faAyM+eH7GAB9JmUxunrZ+delEqNm4/4ejVIm5R
+         6A5ngV7ImLhf+KfUj3ECrYK2CM9yXjTX3V5eI2cMxq+8if3m3CelEq6oXt3EyoWAHau9
+         2gAH1IOUpTOUyYQ8lI4m/+7Ivw/GDUGd3qiZ3R3pBEz4IN/eQ8tdI/9op3ZUewTeoCd8
+         tV8D6Hgp1CryCOZsHcgWKckLtcxCEnAjEtlgrDkkBy3CZJh//UQYr3sJp2k/U6Ppla8E
+         Ks9XUiSVHgPIcCpmMxw+IWteo2+p2EWvcNJA7+zoeviWLLedA4ku1VpbfrpkL8xh3fNN
+         eRlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Ew2TyWxmi0xWVU9wFxSLMjQSKDTKC/5GdEmgyJQJNZ4=;
-        b=McLzL5x5GRzAWjMAqaRuQCXP8wl3hatT5+uyWoRE+rMDK9hjWaAKHePzkUHn7oCGbs
-         y/BxIzTbbBA8/wTNa/jSdA+xEJhF70aPj9b9PdGSjDAPXcqpsfchCWOZBHTkYG8O7fpq
-         s/l+MMqjURJg6rwwuA5wax5PfDCCdiNCtFkBa2kJaclxWA5YjZQeWZY7iu1Kyzd5MLid
-         9rLV2jhJsnHOtOcTaX+HkK93zRbjTcTChkt7e43knlrXYcv+dExArGMWyboM7maOMMXa
-         aTiP5t0TKL5+bSxZhDAK3cTcZWpLpI35pydxgnQPf/4NV/JxeTPmCt75SwuS3/4Kcxp7
-         wvOg==
-X-Gm-Message-State: APjAAAXDUKlWRocR3Jd3/8L9llEnhYNxqdYt4tTu9GoCkkN2Q7MWsvje
-        tQfS62MEwODeZfa6dahoYfSPMF6XIX4=
-X-Google-Smtp-Source: APXvYqwrvUIuTy7pXTleYTRgjAyM/Za3/f8x3ibPisVbTCJwrFw7fJ/iC+NCKzjZ+9oiC6AtM6dY4w==
-X-Received: by 2002:a17:90a:bb82:: with SMTP id v2mr13084469pjr.90.1574953326873;
-        Thu, 28 Nov 2019 07:02:06 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id p7sm20364003pfn.14.2019.11.28.07.02.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Nov 2019 07:02:06 -0800 (PST)
-Date:   Thu, 28 Nov 2019 23:02:00 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 7/8] gpiolib: add new ioctl() for monitoring changes in
- line info
-Message-ID: <20191128150200.GA16492@sol>
-References: <20191127133510.10614-1-brgl@bgdev.pl>
- <20191127133510.10614-8-brgl@bgdev.pl>
- <20191127152410.GA24936@sol>
- <CAMRc=MdLnZFJQ+qMJSiSQSh6pOnKpLeU79u9ymA7HaujgK0kcg@mail.gmail.com>
- <20191127232330.GA3761@sol>
- <CAMRc=Me5kNUuPQCTM_H=2QjUL=7R-ii+uRvdNvAz3SqL_sPzcQ@mail.gmail.com>
- <20191128141028.GA15454@sol>
- <CAMRc=MeZzjuU25L_-qjP9n3O6Z3ucYUZkUoCA3sX0Z0yaXtgMw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/yK+bP/ZquyDqTbwLOoQFt7m4Vf6MNFvYmMx+oPcx0U=;
+        b=Ep7Z4MOrMxQp5HXaeDCArD8lNMB5XH8F25hXmAHUtoB+grvNAvWmsB3I+5SWr8Gmf7
+         VtpU+gOaELFiNjxLbtuj3RBN50AZGK6eEgfReqwqOQa7k2OuSN2uIY96ZV9R5jWgXk0D
+         1Uaj1dluHzU2y9zLUyYj9JKEiQZw2MlTPDG0JdNvprFk9GaP8/wT/Kt2b39fka+/dQ3L
+         pfJERhrg+GWzxNtjv/swXxr4l4twBAzSlH0ZKx8CbeEsyzc3Gj7bdtqylJTHIb+omLBv
+         GU9U9iGjv1HPDSlJx0/HlZVx1Y7tSa7c+aPbnD4UUbTnJEgi8iIuoEp0GF5XSUY512GV
+         j3ZA==
+X-Gm-Message-State: APjAAAWaNvmSDb/IhEyzrSjx0y5ihJezj4EPUPjbA2Ig/5Yb+k8y+5bz
+        sfxbVVabol8XqsHtB3Hair7ztAnQYxQM3fJgfLQ=
+X-Google-Smtp-Source: APXvYqzI7Qf+yzT4pAOOBFmdCFGcdvppyFYuVIaWxgTEMPPJrdcAYC6dW5CPkHAinmujdN25OW+CtNH57+kcSY3ry0o=
+X-Received: by 2002:a65:6118:: with SMTP id z24mr11995545pgu.203.1574953345343;
+ Thu, 28 Nov 2019 07:02:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeZzjuU25L_-qjP9n3O6Z3ucYUZkUoCA3sX0Z0yaXtgMw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1574952879-7200-1-git-send-email-akinobu.mita@gmail.com> <1574952879-7200-5-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1574952879-7200-5-git-send-email-akinobu.mita@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 28 Nov 2019 17:02:15 +0200
+Message-ID: <CAHp75VdswWO9r5zO=Tph7GF0qtxXVXBQFeNQ3etTDj+8hNhV3Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] platform/x86: intel_menlow: switch to use
+ <linux/temperature.h> helpers
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 03:36:19PM +0100, Bartosz Golaszewski wrote:
-> czw., 28 lis 2019 o 15:10 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-> > On Thu, Nov 28, 2019 at 10:45:46AM +0100, Bartosz Golaszewski wrote:
-> > > czw., 28 lis 2019 o 00:23 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > > >
-> > > > On Wed, Nov 27, 2019 at 04:50:43PM +0100, Bartosz Golaszewski wrote:
-> > > > > śr., 27 lis 2019 o 16:24 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > > > > >
-> > > > > > On Wed, Nov 27, 2019 at 02:35:09PM +0100, Bartosz Golaszewski wrote:
-> > > > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > > > >
-> > > > > > > Currently there is no way for user-space to be informed about changes
-> > > > > > > in status of GPIO lines e.g. when someone else requests the line or its
-> > > > > > > config changes. We can only periodically re-read the line-info. This
-> > > > > > > is fine for simple one-off user-space tools, but any daemon that provides
-> > > > > > > a centralized access to GPIO chips would benefit hugely from an event
-> > > > > > > driven line info synchronization.
-> > > > > > >
-> > > > > > > This patch adds a new ioctl() that allows user-space processes to retrieve
-> > > > > > > a file-descriptor for given GPIO lines which can be polled for line status
-> > > > > > > change events.
-> > > > > > >
-> > > > > > > Currently the events are generated on three types of status changes: when
-> > > > > > > a line is requested, when it's released and when its config is changed.
-> > > > > > > The first two are self-explanatory. For the third one: this will only
-> > > > > > > happen when another user-space process calls the new SET_CONFIG ioctl()
-> > > > > > > as any changes that can happen from within the kernel (i.e.
-> > > > > > > set_transitory() or set_debounce()) are of no interest to user-space.
-> > > > > > >
-> > > > > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > > > > ---
-> > > > > > >  drivers/gpio/gpiolib.c    | 218 ++++++++++++++++++++++++++++++++++++++
-> > > > > > >  drivers/gpio/gpiolib.h    |   1 +
-> > > > > > >  include/uapi/linux/gpio.h |  36 +++++++
-> > > > > > >  3 files changed, 255 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > > > > > > index d094b1be334d..be5df4bdf44b 100644
-> > > > > > > --- a/drivers/gpio/gpiolib.c
-> > > > > > > +++ b/drivers/gpio/gpiolib.c
-> > > > > > > @@ -547,6 +547,9 @@ static long linehandle_set_config(struct linehandle_state *lh,
-> > > > > > >                       if (ret)
-> > > > > > >                               return ret;
-> > > > > > >               }
-> > > > > > > +
-> > > > > > > +             atomic_notifier_call_chain(&desc->gdev->notifier,
-> > > > > > > +                                        GPIOLINE_CHANGED_CONFIG, desc);
-> > > > > > >       }
-> > > > > > >       return 0;
-> > > > > > >  }
-> > > > > > > @@ -1148,6 +1151,212 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
-> > > > > > >       return ret;
-> > > > > > >  }
-> > > > > > >
-> > > > > > > +struct linechanged_fd_state {
-> > > > > > > +     struct gpio_device *gdev;
-> > > > > > > +     struct gpio_desc *descs[GPIOHANDLES_MAX];
-> > > > > > > +     size_t numdescs;
-> > > > > > > +     wait_queue_head_t waitqueue;
-> > > > > > > +     DECLARE_KFIFO(events, struct gpioline_changed, 16);
-> > > > > > > +     struct mutex lock;
-> > > > > > > +     struct notifier_block changed_nb;
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +static int linechanged_fd_release(struct inode *inode, struct file *filep)
-> > > > > > > +{
-> > > > > > > +     struct linechanged_fd_state *lc_state = filep->private_data;
-> > > > > > > +
-> > > > > > > +     atomic_notifier_chain_unregister(&lc_state->gdev->notifier,
-> > > > > > > +                                      &lc_state->changed_nb);
-> > > > > > > +     put_device(&lc_state->gdev->dev);
-> > > > > > > +     kfree(lc_state);
-> > > > > > > +
-> > > > > > > +     return 0;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static __poll_t linechanged_fd_poll(struct file *filep,
-> > > > > > > +                                 struct poll_table_struct *pollt)
-> > > > > > > +{
-> > > > > > > +     struct linechanged_fd_state *lc_state = filep->private_data;
-> > > > > > > +     __poll_t events = 0;
-> > > > > > > +
-> > > > > > > +     poll_wait(filep, &lc_state->waitqueue, pollt);
-> > > > > > > +
-> > > > > > > +     mutex_lock(&lc_state->lock);
-> > > > > > > +     if (!kfifo_is_empty(&lc_state->events))
-> > > > > > > +             events = EPOLLIN | EPOLLRDNORM;
-> > > > > > > +     mutex_unlock(&lc_state->lock);
-> > > > > > > +
-> > > > > > > +     return events;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static ssize_t linechanged_fd_read(struct file *filep, char __user *buf,
-> > > > > > > +                                size_t count, loff_t *off)
-> > > > > > > +{
-> > > > > > > +     struct linechanged_fd_state *lc_state = filep->private_data;
-> > > > > > > +     unsigned int copied;
-> > > > > > > +     int ret;
-> > > > > > > +
-> > > > > > > +     if (count < sizeof(struct gpioline_changed))
-> > > > > > > +             return -EINVAL;
-> > > > > > > +
-> > > > > > > +     do {
-> > > > > > > +             mutex_lock(&lc_state->lock);
-> > > > > > > +             if (kfifo_is_empty(&lc_state->events)) {
-> > > > > > > +                     mutex_unlock(&lc_state->lock);
-> > > > > > > +                     if (filep->f_flags & O_NONBLOCK)
-> > > > > > > +                             return -EAGAIN;
-> > > > > > > +
-> > > > > > > +                     ret = wait_event_interruptible(lc_state->waitqueue,
-> > > > > > > +                                     !kfifo_is_empty(&lc_state->events));
-> > > > > > > +                     if (ret)
-> > > > > > > +                             return ret;
-> > > > > > > +             } else {
-> > > > > > > +                     mutex_unlock(&lc_state->lock);
-> > > > > > > +             }
-> > > > > > > +
-> > > > > > > +             if (mutex_lock_interruptible(&lc_state->lock))
-> > > > > > > +                     return -ERESTARTSYS;
-> > > > > > > +
-> > > > > > > +             ret = kfifo_to_user(&lc_state->events, buf, count, &copied);
-> > > > > > > +             mutex_unlock(&lc_state->lock);
-> > > > > > > +             if (ret)
-> > > > > > > +                     return ret;
-> > > > > > > +
-> > > > > > > +             if (copied == 0 && (filep->f_flags & O_NONBLOCK))
-> > > > > > > +                     return -EAGAIN;
-> > > > > > > +     } while (copied == 0);
-> > > > > > > +
-> > > > > > > +     return copied;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static const struct file_operations linechanged_fd_fileops = {
-> > > > > > > +     .release = linechanged_fd_release,
-> > > > > > > +     .owner = THIS_MODULE,
-> > > > > > > +     .llseek = noop_llseek,
-> > > > > > > +     .poll = linechanged_fd_poll,
-> > > > > > > +     .read = linechanged_fd_read,
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +static struct linechanged_fd_state *
-> > > > > > > +to_linechanged_fd_state(struct notifier_block *nb)
-> > > > > > > +{
-> > > > > > > +     return container_of(nb, struct linechanged_fd_state, changed_nb);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static int linechanged_fd_notify(struct notifier_block *nb,
-> > > > > > > +                              unsigned long action, void *data)
-> > > > > > > +{
-> > > > > > > +     struct linechanged_fd_state *lc_state = to_linechanged_fd_state(nb);
-> > > > > > > +     struct gpio_desc *desc = data;
-> > > > > > > +     struct gpioline_changed chg;
-> > > > > > > +     int i, ret;
-> > > > > > > +
-> > > > > > > +     for (i = 0; i < lc_state->numdescs; i++) {
-> > > > > > > +             /* Are we watching this desc? */
-> > > > > > > +             if (desc == lc_state->descs[i]) {
-> > > > > > > +                     /* Yes - prepare the event. */
-> > > > > > > +                     memset(&chg, 0, sizeof(chg));
-> > > > > > > +                     chg.line_offset = gpio_chip_hwgpio(desc);
-> > > > > > > +                     chg.event_type = action;
-> > > > > > > +
-> > > > > > > +                     mutex_lock(&lc_state->lock);
-> > > > > > > +                     ret = kfifo_put(&lc_state->events, chg);
-> > > > > > > +                     mutex_unlock(&lc_state->lock);
-> > > > > > > +                     if (ret)
-> > > > > > > +                             wake_up_poll(&lc_state->waitqueue, EPOLLIN);
-> > > > > > > +
-> > > > > > > +                     return NOTIFY_OK;
-> > > > > > > +             }
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     return NOTIFY_DONE;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static int linechanged_fd_create(struct gpio_device *gdev, void __user *ip)
-> > > > > > > +{
-> > > > > > > +     struct gpioline_changed_fd_request changed_req;
-> > > > > > > +     struct linechanged_fd_state *lc_state;
-> > > > > > > +     struct gpio_desc *desc;
-> > > > > > > +     struct file *file;
-> > > > > > > +     int ret, i, fd;
-> > > > > > > +     u32 offset;
-> > > > > > > +
-> > > > > > > +     ret = copy_from_user(&changed_req, ip, sizeof(changed_req));
-> > > > > > > +     if (ret)
-> > > > > > > +             return -EFAULT;
-> > > > > > > +
-> > > > > > > +     if ((changed_req.num_lines == 0) ||
-> > > > > > > +         (changed_req.num_lines > GPIOHANDLES_MAX))
-> > > > > > > +             return -EINVAL;
-> > > > > > > +
-> > > > > > > +     lc_state = kzalloc(sizeof(*lc_state), GFP_KERNEL);
-> > > > > > > +     if (!lc_state)
-> > > > > > > +             return -ENOMEM;
-> > > > > > > +
-> > > > > > > +     lc_state->gdev = gdev;
-> > > > > > > +     get_device(&gdev->dev);
-> > > > > > > +
-> > > > > > > +     for (i = 0; i < changed_req.num_lines; i++) {
-> > > > > > > +             offset = changed_req.lineoffsets[i];
-> > > > > > > +             desc = gpiochip_get_desc(gdev->chip, offset);
-> > > > > > > +             if (IS_ERR(desc)) {
-> > > > > > > +                     ret = PTR_ERR(desc);
-> > > > > > > +                     goto out_free_lc_state;
-> > > > > > > +             }
-> > > > > > > +
-> > > > > > > +             lc_state->descs[i] = desc;
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     lc_state->numdescs = changed_req.num_lines;
-> > > > > > > +
-> > > > > > > +     init_waitqueue_head(&lc_state->waitqueue);
-> > > > > > > +     INIT_KFIFO(lc_state->events);
-> > > > > > > +     mutex_init(&lc_state->lock);
-> > > > > > > +
-> > > > > > > +     lc_state->changed_nb.notifier_call = linechanged_fd_notify;
-> > > > > > > +
-> > > > > > > +     ret = atomic_notifier_chain_register(&gdev->notifier,
-> > > > > > > +                                          &lc_state->changed_nb);
-> > > > > > > +     if (ret)
-> > > > > > > +             goto out_free_lc_state;
-> > > > > > > +
-> > > > > > > +     fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
-> > > > > > > +     if (fd < 0) {
-> > > > > > > +             ret = fd;
-> > > > > > > +             goto out_unregister_notifier;
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     file = anon_inode_getfile("gpio-line-changed-fd",
-> > > > > > > +                               &linechanged_fd_fileops,
-> > > > > > > +                               lc_state, O_RDONLY | O_CLOEXEC);
-> > > > > > > +     if (IS_ERR(file)) {
-> > > > > > > +             ret = PTR_ERR(file);
-> > > > > > > +             goto out_put_unused_fd;
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     changed_req.fd = fd;
-> > > > > > > +     ret = copy_to_user(ip, &changed_req, sizeof(changed_req));
-> > > > > > > +     if (ret) {
-> > > > > > > +             fput(file);
-> > > > > > > +             put_unused_fd(fd);
-> > > > > > > +             return -EFAULT;
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     fd_install(fd, file);
-> > > > > > > +
-> > > > > > > +     return 0;
-> > > > > > > +
-> > > > > > > +out_put_unused_fd:
-> > > > > > > +     put_unused_fd(fd);
-> > > > > > > +out_unregister_notifier:
-> > > > > > > +     atomic_notifier_chain_unregister(&gdev->notifier,
-> > > > > > > +                                      &lc_state->changed_nb);
-> > > > > > > +out_free_lc_state:
-> > > > > > > +     kfree(lc_state);
-> > > > > > > +
-> > > > > > > +     return ret;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > >  /*
-> > > > > > >   * gpio_ioctl() - ioctl handler for the GPIO chardev
-> > > > > > >   */
-> > > > > > > @@ -1238,6 +1447,8 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
-> > > > > > >               return linehandle_create(gdev, ip);
-> > > > > > >       } else if (cmd == GPIO_GET_LINEEVENT_IOCTL) {
-> > > > > > >               return lineevent_create(gdev, ip);
-> > > > > > > +     } else if (cmd == GPIO_GET_LINECHANGED_FD_IOCTL) {
-> > > > > > > +             return linechanged_fd_create(gdev, ip);
-> > > > > > >       }
-> > > > > > >       return -EINVAL;
-> > > > > > >  }
-> > > > > > > @@ -1499,6 +1710,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
-> > > > > > >       for (i = 0; i < chip->ngpio; i++)
-> > > > > > >               gdev->descs[i].gdev = gdev;
-> > > > > > >
-> > > > > > > +     ATOMIC_INIT_NOTIFIER_HEAD(&gdev->notifier);
-> > > > > > > +
-> > > > > > >  #ifdef CONFIG_PINCTRL
-> > > > > > >       INIT_LIST_HEAD(&gdev->pin_ranges);
-> > > > > > >  #endif
-> > > > > > > @@ -2837,6 +3050,8 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
-> > > > > > >               spin_lock_irqsave(&gpio_lock, flags);
-> > > > > > >       }
-> > > > > > >  done:
-> > > > > > > +     atomic_notifier_call_chain(&desc->gdev->notifier,
-> > > > > > > +                                GPIOLINE_CHANGED_REQUESTED, desc);
-> > > > > > >       spin_unlock_irqrestore(&gpio_lock, flags);
-> > > > > > >       return ret;
-> > > > > > >  }
-> > > > > > > @@ -2934,6 +3149,8 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
-> > > > > > >               ret = true;
-> > > > > > >       }
-> > > > > > >
-> > > > > > > +     atomic_notifier_call_chain(&desc->gdev->notifier,
-> > > > > > > +                                GPIOLINE_CHANGED_RELEASED, desc);
-> > > > > > >       spin_unlock_irqrestore(&gpio_lock, flags);
-> > > > > > >       return ret;
-> > > > > > >  }
-> > > > > > > @@ -3097,6 +3314,7 @@ static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
-> > > > > > >               if (ret != -ENOTSUPP)
-> > > > > > >                       return ret;
-> > > > > > >       }
-> > > > > > > +
-> > > > > > >       return 0;
-> > > > > > >  }
-> > > > > > >
-> > > > > > > diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> > > > > > > index a1cbeabadc69..8e3969616cfe 100644
-> > > > > > > --- a/drivers/gpio/gpiolib.h
-> > > > > > > +++ b/drivers/gpio/gpiolib.h
-> > > > > > > @@ -54,6 +54,7 @@ struct gpio_device {
-> > > > > > >       const char              *label;
-> > > > > > >       void                    *data;
-> > > > > > >       struct list_head        list;
-> > > > > > > +     struct atomic_notifier_head notifier;
-> > > > > > >
-> > > > > > >  #ifdef CONFIG_PINCTRL
-> > > > > > >       /*
-> > > > > > > diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-> > > > > > > index 799cf823d493..c61429467dd4 100644
-> > > > > > > --- a/include/uapi/linux/gpio.h
-> > > > > > > +++ b/include/uapi/linux/gpio.h
-> > > > > > > @@ -59,6 +59,40 @@ struct gpioline_info {
-> > > > > > >  /* Maximum number of requested handles */
-> > > > > > >  #define GPIOHANDLES_MAX 64
-> > > > > > >
-> > > > > > > +/**
-> > > > > > > + * struct gpioline_changed_fd_request - Information about a linechanged fd
-> > > > > > > + * request
-> > > > > > > + * @lineoffsets: an array of desired lines, specified by offset index for the
-> > > > > > > + * associated GPIO device
-> > > > > > > + * @num_lines: number of lines requested in this request, i.e. the number of
-> > > > > > > + * valid fields in the above arrays, set to 1 to request a single line
-> > > > > > > + * @fd: if successful this field will contain a valid anonymous file handle
-> > > > > > > + */
-> > > > > > > +struct gpioline_changed_fd_request {
-> > > > > > > +     __u32 lineoffsets[GPIOHANDLES_MAX];
-> > > > > > > +     __u32 num_lines;
-> > > > > > > +     int fd;
-> > > > > > > +};
-> > > > > > > +
-> > > > > >
-> > > > > > Wouldn't the most common case be to watch all the lines on a chip?
-> > > > > > How about an easy way to do that, say num_lines=0?
-> > > > > >
-> > > > >
-> > > > > IMO this is too implicit - it's literally a magic value. I'd prefer to
-> > > > > keep it this way for the same reason I didn't want to have implicit
-> > > > > BIAS settings. I prefer the kernel uAPI to be explicit and then we can
-> > > > > wrap it in simple helpers in the library.
-> > > > >
-> > > >
-> > > > Or you could add a watch_all flag to make it explicit.
-> > > > But fair enough to leave as is - it probably keeps the kernel cleaner.
-> > > >
-> > > > > > > +/* Possible line status change events */
-> > > > > > > +enum {
-> > > > > > > +     GPIOLINE_CHANGED_REQUESTED = 1,
-> > > > > > > +     GPIOLINE_CHANGED_RELEASED,
-> > > > > > > +     GPIOLINE_CHANGED_CONFIG,
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +/**
-> > > > > > > + * struct gpioline_changed - Information about a change in status
-> > > > > > > + * of a GPIO line
-> > > > > > > + * @line_offset: offset of the line that changed relative to the gpiochip
-> > > > > > > + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELEASED
-> > > > > > > + * and GPIOLINE_CHANGED_CONFIG
-> > > > > > > + */
-> > > > > > > +struct gpioline_changed {
-> > > > > > > +     __u32 line_offset;
-> > > > > > > +     __u32 event_type;
-> > > > > > > +};
-> > > > > > > +
-> > > > > >
-> > > > > > Rather than sending an event type, and requiring userspace to poll
-> > > > > > LINEINFO, which is racy, how about passing the updated info flags here?
-> > > > > > A change in the state of the GPIOLINE_FLAG_KERNEL implies the
-> > > > > > GPIOLINE_CHANGED_REQUESTED or GPIOLINE_CHANGED_RELEASED, so the
-> > > > > > event_type is then redundant.
-> > > > > > Userspace would then only have to poll LINEINFO if they were interested
-> > > > > > in the consumer on GPIOLINE_CHANGED_REQUESTED.
-> > > > > >
-> > > > > > To sync kernel and userspace state the current state of each line
-> > > > > > should be returned immediately via the fd as soon as the fd is created,
-> > > > > > and then subsequently on any change.
-> > > > > >
-> > > > >
-> > > > > I guess you're right. You even made me think we could go as far as to
-> > > > > embed the whole gpioline_info structure in struct gpioline_changed.
-> > > > > I'd still keep the event type though - otherwise we'd have to assume
-> > > > > the user always calls LINEINFO_IOCTL before obtaining the LINECHANGED
-> > > > > fd.
-> > > > >
-> > > >
-> > > > I suggested sending the current state of each line as soon as the fd
-> > > > is created so that you don't have to assume anything.  That initial change
-> > > > report is effectively the same as having the user call LINEINFO on each
-> > > > line at the same time - without all the race issues.
-> > > >
-> > >
-> > > Right, I didn't get this. That means you'd have to call the ioctl()
-> > > and immediately follow up with a read(). I'm not a fan of this.
-> > > Especially if we were to include a timestamp - what would it refer to?
-> > >
-> > > > I also considered the full gpioline_info structure, as well as reporting
-> > > > bulk line changes (replacing line_offset with lineoffsets and num_lines),
-> > > > but then I thought it was probably better to keep it minimal and simple.
-> > > > The name and consumer are relatively large.
-> > >
-> > > In terms of performance - we're not really degrading it as this is
-> > > still not a lot of data.
-> > >
-> > > How about the following:
-> > > 1. Move the code filling out the struct gpioline_info to a separate
-> > > function in the kernel.
-> > > 2. Call the new ioctl() GET_LINEINFO_FD to indicate it's an extension
-> > > of GET_LINEINFO.
-> > > 3. Embed struct gpioline_info in struct gpioline_info_fd so that the
-> > > initial info be read when the file descriptor is created.
-> > > 4. Likewise embed struct gpioline_info in struct gpioline_changed and
-> > > on every status change event provide the whole set of information?
-> > >
-> >
-> > You mean an array of info in the ioctl return, along with the fd?
-> > That would work too.
-> 
-> I overlooked the fact that we can watch multiple lines. In this case
-> it's either a separate fd for every watched line (not optimal) or
-> doing what you proposed: read the initial lineinfo directly from the
-> fd. But in this case again: what about the timestamp?
-> 
+On Thu, Nov 28, 2019 at 4:55 PM Akinobu Mita <akinobu.mita@gmail.com> wrote:
+>
+> This switches the intel_menlow driver to use deci_kelvin_to_celsius() and
+> celsius_to_deci_kelvin() in <linux/temperature.h> instead of helpers in
+> <linux/thermal.h>.
+>
+> This is preparation for centralizing the kelvin to/from Celsius conversion
+> helpers in <linux/temperature.h>.
+>
+> This also removes a trailing space, while we're at it.
+>
 
-It is set to the time the fd was created.
-If you want you could also return that timestamp via the ioctl return
-for comparison.
-But most likely the userspace code will just ignore the timestamp for
-those initial num_lines reports - those reports will get special
-treatment anyway.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Those initial reports are really part of the fd request handshake, so
-I would expect the reading and handling of them to be part of the fd
-request function in libgpiod, and they would be hidden from the end user.
-The fd would only be returned to the user after the initial reports
-have already been read and the line states synchronised.
-OTOH I haven't put much thought into how the libgpiod API would look...
+> Cc: Sujith Thomas <sujith.thomas@intel.com>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Andy Shevchenko <andy@infradead.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Amit Kucheria <amit.kucheria@verdurent.com>
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Keith Busch <kbusch@kernel.org>
+> Cc: Jens Axboe <axboe@fb.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Sagi Grimberg <sagi@grimberg.me>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+> * v2
+> - include <linux/temperature.h> explicitly from thermal drivers
+> - fix s/temprature/temperature/ typo in commit log
+> - don't mix up another fix (format string for cellsius value)
+>
+>  drivers/platform/x86/intel_menlow.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
+> index b102f6d..12c1094 100644
+> --- a/drivers/platform/x86/intel_menlow.c
+> +++ b/drivers/platform/x86/intel_menlow.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/pm.h>
+>  #include <linux/slab.h>
+> +#include <linux/temperature.h>
+>  #include <linux/thermal.h>
+>  #include <linux/types.h>
+>
+> @@ -302,8 +303,10 @@ static ssize_t aux_show(struct device *dev, struct device_attribute *dev_attr,
+>         int result;
+>
+>         result = sensor_get_auxtrip(attr->handle, idx, &value);
+> +       if (result)
+> +               return result;
+>
+> -       return result ? result : sprintf(buf, "%lu", DECI_KELVIN_TO_CELSIUS(value));
+> +       return sprintf(buf, "%lu", deci_kelvin_to_celsius(value));
+>  }
+>
+>  static ssize_t aux0_show(struct device *dev,
+> @@ -332,8 +335,8 @@ static ssize_t aux_store(struct device *dev, struct device_attribute *dev_attr,
+>         if (value < 0)
+>                 return -EINVAL;
+>
+> -       result = sensor_set_auxtrip(attr->handle, idx,
+> -                                   CELSIUS_TO_DECI_KELVIN(value));
+> +       result = sensor_set_auxtrip(attr->handle, idx,
+> +                                   celsius_to_deci_kelvin(value));
+>         return result ? result : count;
+>  }
+>
+> --
+> 2.7.4
+>
 
-Kent.
 
-> Bart
-> 
-> >
-> > I'm used to setting up streams like this in a networked environment
-> > where returning data via the stream setup isn't an option, the only
-> > option is to sync via the stream itself, so I overlooked the possibility
-> > of using the ioctl return.
-> >
-> > > > The name is immutable(??), and so is pointless to include.
-> > >
-> > > It is now, but let's be future-proof. I can imagine having modifiable
-> > > line names in the future. The code putting this info in struct
-> > > gpioline_info wouldn't be really duplicated and the size of such small
-> > > structures doesn't matter much - it's still a single context switch to
-> > > read it.
-> > >
-> > > > The consumer only changes when the line is requested, so I was willing
-> > > > to live with still having to poll for that.
-> > > > And what you gain by reporting bulk lines you might lose in increased
-> > > > report size and associated code.  OTOH it would make it explicit which
-> > > > lines are being changed together...
-> > > > So I could well be wrong on that - a full bulk report may be better.
-> > >
-> > > I'm not sure we need bulk reporting - just as we don't provide bulk
-> > > GET_GPIOLINE_INFO. The corresponding ioctl() structure would get
-> > > pretty complicated soon.
-> > >
-> >
-> > That was my initial feeling as well.
-> > And bulk is no longer an option if you want to include name in the change
-> > report.
-> >
-> > Kent.
-> >
-> > > Bartosz
-> > >
-> > > >
-> > > > Kent.
-> > > >
-> > > > > > And a timestamp might be useful, as per gpioevent_data?
-> > > > >
-> > > > > Sure thing!
-> > > > >
-> > > > > Bart
-> > > > >
-> > > > > >
-> > > > > > Kent.
-> > > > > >
-> > > > > > >  /* Linerequest flags */
-> > > > > > >  #define GPIOHANDLE_REQUEST_INPUT     (1UL << 0)
-> > > > > > >  #define GPIOHANDLE_REQUEST_OUTPUT    (1UL << 1)
-> > > > > > > @@ -176,6 +210,8 @@ struct gpioevent_data {
-> > > > > > >
-> > > > > > >  #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
-> > > > > > >  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
-> > > > > > > +#define GPIO_GET_LINECHANGED_FD_IOCTL \
-> > > > > > > +             _IOWR(0xB4, 0x0b, struct gpioline_changed_fd_request)
-> > > > > > >  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
-> > > > > > >  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
-> > > > > > >
-> > > > > > > --
-> > > > > > > 2.23.0
-> > > > > > >
+-- 
+With Best Regards,
+Andy Shevchenko
