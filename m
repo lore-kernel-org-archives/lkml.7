@@ -2,112 +2,208 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5C2C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29CAC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55030215A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C0F215A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 14:21:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aM1vUqNs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBsr5Lpt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfK1OSZ (ORCPT
+        id S1726715AbfK1OVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 09:18:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46179 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfK1OSY (ORCPT
+        Thu, 28 Nov 2019 09:21:38 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43933 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfK1OVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:18:24 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so27879546wrl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 06:18:21 -0800 (PST)
+        Thu, 28 Nov 2019 09:21:38 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l14so22305477oti.10;
+        Thu, 28 Nov 2019 06:21:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zmBrf0xqWz93gyW7QbCHP8mXJjqNqFkUYk+vbwEVB8s=;
-        b=aM1vUqNsSpqBNiApc4iz65iEABx7XJ1axHnAjaD8ZrzUv0tRaVVhznKeoFj9RvUCmD
-         ppZSu2UVOxZhScA22OQ63Hj2t8SsB1Y3o/8ozblAcVgp3jSyjw6M2+i4r9mkqtkZVjRm
-         gEgySW2xq6vdzwcZ48FCn1Tg+WyXjt4OTusE/pLxYGkn8xC1391qiwtRrhqjMiLNDeFt
-         Egg7mbZ0tm7Yb0Obo0seGdRUxvkKyS8DG/egQfTdRIu0GTJeJSZqhCzAWWjhe7s/f1v9
-         XgrmLEXUxHXd1BE+9aMHiO6OfygrtYfiScxmxsycVCVKT5ksGDwMZjWYfbDKrr020FE1
-         uv/w==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pAOuUXPMeoRavXucH0FHeoL8ht+w96IWOMyp3rFxFc8=;
+        b=KBsr5LptVS2b+zcFfq8COkxUXZcEB1jGnIvoAk8NwagRT1ELTfEAXLdstWJYDI6aaB
+         5ikq8r7yeXpZJUsmuCTsxVZBwkn5e6kdd3PYtYjd8hk5CMTpB+upcSPMdHn7RqXcRyw9
+         RinpBwEXjmy04jpU+6TDm7qfEQIz8RRtOLvhFl/p/3aDgIWn9sG3G5vb3HKjgi+KSAAt
+         ZaKa8rtzMcIV6WLvWbALGQEksQ5F0K8jfcop3LjNWaYqAbqrFM454dVpuZ9AJMzROeHP
+         h6bHdcHeRJOvB9+/tVwZlbfYUfLwkG8drmkGEA3Rtv+y2WYKJmiBXol2B/oaLD4Jmf2p
+         cFjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=zmBrf0xqWz93gyW7QbCHP8mXJjqNqFkUYk+vbwEVB8s=;
-        b=O0nMhoPtf+aEwAfoUAiVPMBr+KL8Ub0A6/e70VKbZHtwrseqj9Tbdw+ag5dTkYhJI0
-         J1pAhU/+AkggVoWdxjARurmJYUr3HV5AfcunxBT7Qri4OjLKJdmPuixdHAW8YmCAUzWM
-         84setwgNsMWzta3LdgEjv700bCeB4KTjI01726Rxccuzvh1ejn18ePSCG2XL6rhGrZpj
-         WDyujKCvqRNlvgyyHnH0Nl5Xhq5QcAZa8wjcNcFwhBuAYq6ptnR5TT+X7rscUSnD4oA5
-         WzNLeva5rmlkojIJbn+El+XFvvZn7H2i8GqH+wK53ziIeLuTGzRUoqRi8+UJkfrXHrt6
-         aRfQ==
-X-Gm-Message-State: APjAAAUzHZAtunitHfD4oo/6GaDZ3V1jXPnB7YtUuu2EUI6liP3eRZzd
-        7NtGwmWbW9WNOiOUtHb4wxzFiQ==
-X-Google-Smtp-Source: APXvYqz8o+Q52MqClLfUk6mTe+L+SVyrESEGjsTfL5qd16dFy78u2RSOKRh8c9qQv3AWXa+WkyjGWQ==
-X-Received: by 2002:a5d:5704:: with SMTP id a4mr27635310wrv.198.1574950700480;
-        Thu, 28 Nov 2019 06:18:20 -0800 (PST)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id f6sm23947092wrr.15.2019.11.28.06.18.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 28 Nov 2019 06:18:19 -0800 (PST)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org
-Cc:     rostedt@goodmis.org, mingo@redhat.com, bjorn.andersson@linaro.org,
-        vincent.guittot@linaro.org, daidavid1@codeaurora.org,
-        okukatla@codeaurora.org, evgreen@chromium.org, mka@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georgi.djakov@linaro.org
-Subject: [PATCH v4 0/3] interconnect: Add basic tracepoints
-Date:   Thu, 28 Nov 2019 16:18:15 +0200
-Message-Id: <20191128141818.32168-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        bh=pAOuUXPMeoRavXucH0FHeoL8ht+w96IWOMyp3rFxFc8=;
+        b=l/jhGirmfGJk+Ll0MmeGHYuAzTqXFt0aS5L8n3mgzyL4BrdTUnVJBzSC+ghQlLwVAA
+         gs2RKFKbqHzqFDqa/GRThcdds3QRsXkCCvMaDDwfFTcTDuPkonkkHDDcHlLC6CFiu8lW
+         FtsfXikCRfo/yF0SW5vNaJA4JYES0BC+4C4wIGk9oziyOsRzseBMUhdYtuXr7YSWc8Bk
+         imeiNhoIu9BJO2zfRWcWXE1IHf2Kf9KXxrjKrBdts3euv3zRhKPIRgFRqSgNbUsGR9H1
+         yM5hl6tO5lOiqX4kDxMi6Zb0s5vKzFg6xjWvK3usjlNoKq8lDNhOlKict5grFjVW5qNA
+         LDcg==
+X-Gm-Message-State: APjAAAVBkktTK4wRzI0wWqeD1uZgIpLrqdxwwTWvLKsvUqS9dZN4PbzB
+        pVCwBRM3/f8bLd7ztr2s4sCCjcay
+X-Google-Smtp-Source: APXvYqyg/dOuWAh3aONJFSxiOoY0asq6842kRVYbO07guEulmAV3bFhidrH7ncZ6zHHYAH92ywgZtA==
+X-Received: by 2002:a9d:744a:: with SMTP id p10mr7122237otk.235.1574950896159;
+        Thu, 28 Nov 2019 06:21:36 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l32sm6126339otl.74.2019.11.28.06.21.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Nov 2019 06:21:34 -0800 (PST)
+Subject: Re: [PATCH 6/6] (v3) drivers: hwmon: i5k_amb: simplify probing /
+ device identification
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     tim@buttersideup.com, james.morse@arm.com, rrichter@marvell.com,
+        jdelvare@suse.com, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com, linux-crypto@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-pci@vger.kernel.org
+References: <20191128125406.10417-1-info@metux.net>
+ <20191128125406.10417-6-info@metux.net>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <bee7ba11-6b4a-1cc7-ee8c-ddf17cb8daca@roeck-us.net>
+Date:   Thu, 28 Nov 2019 06:21:31 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191128125406.10417-6-info@metux.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tracepoints can help with understanding the system behavior of a
-given interconnect path when the consumer drivers change their bandwidth
-demands. This might be interesting when we want to monitor the requested
-interconnect bandwidth for each client driver. The paths may share the
-same nodes and this will help to understand "who and when is requesting
-what". All this is useful for subsystem drivers developers and may also
-provide hints when optimizing the power and performance profile of the
-system.
+On 11/28/19 4:54 AM, Enrico Weigelt, metux IT consult wrote:
+> Simpilify the probing by putting all chip-specific data directly
+> into the pci match table, removing the redundant chipset_ids table.
+> 
+> Changes v3:
+>      * use pci_get_device_by_id() introduces by a previous patch
+>        of this queue
+> 
+> Changes v2:
+>      * use PCI_DEVICE_DATA() macro in the pci match table
+>      * directly pass the pci device id to i5k_channel_probe(),
+>        instead of computing it internally by extra offset parameter
+> 
+> Submitted: 2019-06-06
+> Signed-off-by: Enrico Weigelt <info@metux.net>
 
-v4:
-- Move CREATE_TRACE_POINTS below all other headers and remove internal.h
-  from trace.h
-- Picked Steven's Reviewed-by.
+I don't immediately see how this is better. I am not even sure if it is correct.
 
-v3: http://lore.kernel.org/r/20191122152712.19105-1-georgi.djakov@linaro.org
-- In order to avoid #including a file with relative path, move the trace.h
-  header into drivers/interconnect/. (Steven)
+Guenter
 
-v2: https://lore.kernel.org/r/20191101130031.27996-1-georgi.djakov@linaro.org
-- Moved dev_name() into TP_fast_assign() to reduce cache footprint. (Steven)
-- Added path name to traces (Bjorn)
-- Added trace for path, device and ret. (Bjorn)
-
-v1: https://lore.kernel.org/r/20191018140224.15087-1-georgi.djakov@linaro.org
-
-Georgi Djakov (3):
-  interconnect: Move internal structs into a separate file
-  interconnect: Add a name to struct icc_path
-  interconnect: Add basic tracepoints
-
- drivers/interconnect/Makefile   |  1 +
- drivers/interconnect/core.c     | 55 +++++++++------------
- drivers/interconnect/internal.h | 42 ++++++++++++++++
- drivers/interconnect/trace.h    | 88 +++++++++++++++++++++++++++++++++
- 4 files changed, 155 insertions(+), 31 deletions(-)
- create mode 100644 drivers/interconnect/internal.h
- create mode 100644 drivers/interconnect/trace.h
+> ---
+>   drivers/hwmon/i5k_amb.c | 38 +++++++++++++++-----------------------
+>   1 file changed, 15 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/hwmon/i5k_amb.c b/drivers/hwmon/i5k_amb.c
+> index b09c39abd3a8..cb85607d104f 100644
+> --- a/drivers/hwmon/i5k_amb.c
+> +++ b/drivers/hwmon/i5k_amb.c
+> @@ -414,16 +414,14 @@ static int i5k_amb_add(void)
+>   }
+>   
+>   static int i5k_find_amb_registers(struct i5k_amb_data *data,
+> -					    unsigned long devid)
+> +				  const struct pci_device_id *devid)
+>   {
+>   	struct pci_dev *pcidev;
+>   	u32 val32;
+>   	int res = -ENODEV;
+>   
+>   	/* Find AMB register memory space */
+> -	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL,
+> -				devid,
+> -				NULL);
+> +	pcidev = pci_get_device_by_id(devid);
+>   	if (!pcidev)
+>   		return -ENODEV;
+>   
+> @@ -447,14 +445,15 @@ static int i5k_find_amb_registers(struct i5k_amb_data *data,
+>   	return res;
+>   }
+>   
+> -static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
+> +static int i5k_channel_probe(u16 *amb_present, unsigned int vendor,
+> +			     unsigned int device)
+>   {
+>   	struct pci_dev *pcidev;
+>   	u16 val16;
+>   	int res = -ENODEV;
+>   
+>   	/* Copy the DIMM presence map for these two channels */
+> -	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL, dev_id, NULL);
+> +	pcidev = pci_get_device(vendor, device, NULL);
+>   	if (!pcidev)
+>   		return -ENODEV;
+>   
+> @@ -473,23 +472,12 @@ static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
+>   	return res;
+>   }
+>   
+> -static struct {
+> -	unsigned long err;
+> -	unsigned long fbd0;
+> -} chipset_ids[]  = {
+> -	{ PCI_DEVICE_ID_INTEL_5000_ERR, PCI_DEVICE_ID_INTEL_5000_FBD0 },
+> -	{ PCI_DEVICE_ID_INTEL_5400_ERR, PCI_DEVICE_ID_INTEL_5400_FBD0 },
+> -	{ 0, 0 }
+> -};
+> -
+> -#ifdef MODULE
+>   static const struct pci_device_id i5k_amb_ids[] = {
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5000_ERR) },
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5400_ERR) },
+> +	{ PCI_DEVICE_DATA(INTEL, 5000_ERR, PCI_DEVICE_ID_INTEL_5000_FBD0) },
+> +	{ PCI_DEVICE_DATA(INTEL, 5400_ERR, PCI_DEVICE_ID_INTEL_5400_FBD0) },
+>   	{ 0, }
+>   };
+>   MODULE_DEVICE_TABLE(pci, i5k_amb_ids);
+> -#endif
+>   
+>   static int i5k_amb_probe(struct platform_device *pdev)
+>   {
+> @@ -504,22 +492,26 @@ static int i5k_amb_probe(struct platform_device *pdev)
+>   	/* Figure out where the AMB registers live */
+>   	i = 0;
+>   	do {
+> -		res = i5k_find_amb_registers(data, chipset_ids[i].err);
+> +		res = i5k_find_amb_registers(data, &i5k_amb_ids[i]);
+>   		if (res == 0)
+>   			break;
+>   		i++;
+> -	} while (chipset_ids[i].err);
+> +	} while (i5k_amb_ids[i].device);
+>   
+>   	if (res)
+>   		goto err;
+>   
+>   	/* Copy the DIMM presence map for the first two channels */
+> -	res = i5k_channel_probe(&data->amb_present[0], chipset_ids[i].fbd0);
+> +	res = i5k_channel_probe(&data->amb_present[0],
+> +				i5k_amb_ids[i].vendor,
+> +				i5k_amb_ids[i].driver_data);
+>   	if (res)
+>   		goto err;
+>   
+>   	/* Copy the DIMM presence map for the optional second two channels */
+> -	i5k_channel_probe(&data->amb_present[2], chipset_ids[i].fbd0 + 1);
+> +	i5k_channel_probe(&data->amb_present[2],
+> +			  i5k_amb_ids[i].vendor,
+> +			  i5k_amb_ids[i].driver_data+1);
+>   
+>   	/* Set up resource regions */
+>   	reso = request_mem_region(data->amb_base, data->amb_len, DRVNAME);
+> 
 
