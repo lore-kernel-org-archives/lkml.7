@@ -4,29 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E3DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CADC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87842158A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1247C2158A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfK1BkY (ORCPT
+        id S1728035AbfK1Bl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 20:40:24 -0500
-Received: from mga02.intel.com ([134.134.136.20]:10961 "EHLO mga02.intel.com"
+        Wed, 27 Nov 2019 20:41:27 -0500
+Received: from mga02.intel.com ([134.134.136.20]:10954 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727628AbfK1BkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 20:40:22 -0500
+        id S1727724AbfK1BkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 20:40:24 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 17:40:19 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 17:40:20 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,251,1571727600"; 
-   d="scan'208";a="221166479"
+   d="scan'208";a="221166505"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga002.jf.intel.com with ESMTP; 27 Nov 2019 17:40:19 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -54,9 +53,9 @@ Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v4 05/19] x86/mce: WARN once if IA32_FEAT_CTL MSR is left unlocked
-Date:   Wed, 27 Nov 2019 17:40:02 -0800
-Message-Id: <20191128014016.4389-6-sean.j.christopherson@intel.com>
+Subject: [PATCH v4 13/19] x86/cpufeatures: Add flag to track whether MSR IA32_FEAT_CTL is configured
+Date:   Wed, 27 Nov 2019 17:40:10 -0800
+Message-Id: <20191128014016.4389-14-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191128014016.4389-1-sean.j.christopherson@intel.com>
 References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
@@ -67,39 +66,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WARN if the IA32_FEAT_CTL MSR is somehow left unlocked now that CPU
-initialization unconditionally locks the MSR.
+Add a new feature flag, X86_FEATURE_MSR_IA32_FEAT_CTL, to track whether
+IA32_FEAT_CTL has been initialized.  This will allow KVM, and any future
+subsystems that depend on IA32_FEAT_CTL, to rely purely on cpufeatures
+to query platform support, e.g. allows a future patch to remove KVM's
+manual IA32_FEAT_CTL MSR checks.
+
+Various features (on platforms that support IA32_FEAT_CTL) are dependent
+on IA32_FEAT_CTL being configured and locked, e.g. VMX and LMCE.  The
+MSR is always configured during boot, but only if the CPU vendor is
+recognized by the kernel.  Because CPUID doesn't incorporate the current
+IA32_FEAT_CTL value in its reporting of relevant features, it's possible
+for a feature to be reported as supported in cpufeatures but not truly
+enabled, e.g. if the CPU supports VMX but the kernel doesn't recognize
+the CPU.
+
+As a result, without the flag, KVM would see VMX as supported even if
+IA32_FEAT_CTL hasn't been initialized, and so would need to manually
+read the MSR and check the various enabling bits to avoid taking an
+unexpected #GP on VMXON.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kernel/cpu/mce/intel.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-index c238518b84a2..5627b1091b85 100644
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -116,14 +116,15 @@ static bool lmce_supported(void)
- 	/*
- 	 * BIOS should indicate support for LMCE by setting bit 20 in
- 	 * IA32_FEAT_CTL without which touching MCG_EXT_CTL will generate a #GP
--	 * fault.
-+	 * fault.  The MSR must also be locked for LMCE_ENABLED to take effect.
-+	 * WARN if the MSR isn't locked as init_ia32_feat_ctl() unconditionally
-+	 * locks the MSR in the event that it wasn't already locked by BIOS.
- 	 */
- 	rdmsrl(MSR_IA32_FEAT_CTL, tmp);
--	if ((tmp & (FEAT_CTL_LOCKED | FEAT_CTL_LMCE_ENABLED)) ==
--		   (FEAT_CTL_LOCKED | FEAT_CTL_LMCE_ENABLED))
--		return true;
-+	if (WARN_ON_ONCE(!(tmp & FEAT_CTL_LOCKED)))
-+		return false;
+I tried darn hard to avoid this patch, but couldn't come up with a less
+crappy alternative.  Arguably, letting KVM #GP in the above scenario is
+acceptable because it means the user is doing something silly.  But, KVM
+currently handles this scenario gracefully, and I think we'll have the
+same conundrum for SGX.  Requiring KVM and SGX to check the MSR sort of
+defeats the purpose of this series.
+
+Another option I thought of was to call init_ia32_feat_ctl() from common
+code, but that would mean taking a #GP on the RDMSR on AMD and company,
+which seems far worse than adding a synthetic feature flag.
+
+The last option I tried was to clear the VMX flag in default_init(), but
+then we'd have to do the same for SGX and any other new features that get
+dumped into IA32_FEAT_CTL, which again seems worse than adding a synthetic
+flag.
+
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/kernel/cpu/feat_ctl.c     | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index e9b62498fe75..67d21b25ff78 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -220,6 +220,7 @@
+ #define X86_FEATURE_ZEN			( 7*32+28) /* "" CPU is AMD family 0x17 (Zen) */
+ #define X86_FEATURE_L1TF_PTEINV		( 7*32+29) /* "" L1TF workaround PTE inversion */
+ #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
++#define X86_FEATURE_MSR_IA32_FEAT_CTL	( 7*32+31) /* "" MSR IA32_FEAT_CTL configured */
  
--	return false;
-+	return tmp & FEAT_CTL_LMCE_ENABLED;
- }
+ /* Virtualization flags: Linux defined, word 8 */
+ #define X86_FEATURE_TPR_SHADOW		( 8*32+ 0) /* Intel TPR Shadow */
+diff --git a/arch/x86/kernel/cpu/feat_ctl.c b/arch/x86/kernel/cpu/feat_ctl.c
+index 9435d82be623..c3782c13c3f9 100644
+--- a/arch/x86/kernel/cpu/feat_ctl.c
++++ b/arch/x86/kernel/cpu/feat_ctl.c
+@@ -122,6 +122,8 @@ void init_ia32_feat_ctl(struct cpuinfo_x86 *c)
+ 	wrmsrl(MSR_IA32_FEAT_CTL, msr);
  
- bool mce_intel_cmci_poll(void)
+ update_caps:
++	set_cpu_cap(c, X86_FEATURE_MSR_IA32_FEAT_CTL);
++
+ 	if (!cpu_has(c, X86_FEATURE_VMX))
+ 		return;
+ 
 -- 
 2.24.0
 
