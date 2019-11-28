@@ -2,64 +2,121 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3537AC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC82C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11349215E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1781321741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 07:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574927597;
+	bh=Mn2fLKoZ7GJZlk08IbBurAvzrC0C1uKp4r18FrhSTbE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LRqdB8lnKSflqsSrLnxBnX2WKfKu0Y4eKkGcDvNvaeiXjAV0rDQYS3N+OiIc0vRkk
+	 lAmLGv7gTwTbB5SDtbTeKN6QQy46OMAk1E+vYp+RpOfh88zamMZcDnZYAobwvyLy8s
+	 Onq2DqRgCX7EHB0P/K5yF187J6KHEtsW0aXlmIU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfK1Hv4 (ORCPT
+        id S1727209AbfK1HxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 02:51:56 -0500
-Received: from verein.lst.de ([213.95.11.211]:50864 "EHLO verein.lst.de"
+        Thu, 28 Nov 2019 02:53:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbfK1Hvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 02:51:55 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 7F47868B05; Thu, 28 Nov 2019 08:51:53 +0100 (CET)
-Date:   Thu, 28 Nov 2019 08:51:53 +0100
-From:   "hch@lst.de" <hch@lst.de>
-To:     Thomas Hellstrom <thellstrom@vmware.com>
-Cc:     "hch@lst.de" <hch@lst.de>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: Re: [PATCH 2/2] dma-mapping: force unencryped devices are always
- addressing limited
-Message-ID: <20191128075153.GD20659@lst.de>
-References: <20191127144006.25998-1-hch@lst.de> <20191127144006.25998-3-hch@lst.de> <a95d9115fc2a80de2f97f001bbcd9aba6636e685.camel@vmware.com>
+        id S1726448AbfK1HxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 02:53:16 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0DB215E5;
+        Thu, 28 Nov 2019 07:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574927595;
+        bh=Mn2fLKoZ7GJZlk08IbBurAvzrC0C1uKp4r18FrhSTbE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NCh9h1lTVMMn+vQzN4RdQ+8hIGi0SEr4sAXzkz/c9AqERfRwFzj1Z4+wJ8QhQZp7Z
+         3AfUstxQCTm/rSNBtcUXSlwhhifBKaSFbpst1hD677xCbfnQIDWJoq7DNYjAtruIDV
+         eu3PDQIYBOzk71v7c6j3WWo3zLEJ4yzPLTMYCRQU=
+Date:   Thu, 28 Nov 2019 08:53:12 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 216/220] PM / devfreq: Fix static checker warning in
+ try_then_request_governor
+Message-ID: <20191128075312.GA3362744@kroah.com>
+References: <20191122100912.732983531@linuxfoundation.org>
+ <20191122100929.173069944@linuxfoundation.org>
+ <20191128034020.necma5gpnf2wgsm4@toshiba.co.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a95d9115fc2a80de2f97f001bbcd9aba6636e685.camel@vmware.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20191128034020.necma5gpnf2wgsm4@toshiba.co.jp>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 06:22:57PM +0000, Thomas Hellstrom wrote:
-> >  bool dma_addressing_limited(struct device *dev)
-> >  {
-> > +	if (force_dma_unencrypted(dev))
-> > +		return true;
-> >  	return min_not_zero(dma_get_mask(dev), dev->bus_dma_limit) <
-> >  			    dma_get_required_mask(dev);
-> >  }
+On Thu, Nov 28, 2019 at 12:40:20PM +0900, Nobuhiro Iwamatsu wrote:
+> Hi,
 > 
-> Any chance to have the case
+> On Fri, Nov 22, 2019 at 11:29:41AM +0100, Greg Kroah-Hartman wrote:
+> > From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > 
+> > [ Upstream commit b53b0128052ffd687797d5f4deeb76327e7b5711 ]
+> > 
+> > The patch 23c7b54ca1cd: "PM / devfreq: Fix devfreq_add_device() when
+> > drivers are built as modules." leads to the following static checker
+> > warning:
+> > 
+> >     drivers/devfreq/devfreq.c:1043 governor_store()
+> >     warn: 'governor' can also be NULL
+> > 
+> > The reason is that the try_then_request_governor() function returns both
+> > error pointers and NULL. It should just return error pointers, so fix
+> > this by returning a ERR_PTR to the error intead of returning NULL.
+> > 
+> > Fixes: 23c7b54ca1cd ("PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.")
+> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> > Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > 
-> (swiotlb_force == SWIOTLB_FORCE)
+> The following commits are provided for this fix:
 > 
-> also included?
+> commit 7544fd7f384591038646d3cd9efb311ab4509e24
+> Author: Ezequiel Garcia <ezequiel@collabora.com>
+> Date:   Fri Jun 21 18:39:49 2019 -0300
+> 
+>     PM / devfreq: Fix kernel oops on governor module load
+> 
+>     A bit unexpectedly (but still documented), request_module may
+>     return a positive value, in case of a modprobe error.
+>     This is currently causing issues in the devfreq framework.
+> 
+>     When a request_module exits with a positive value, we currently
+>     return that via ERR_PTR. However, because the value is positive,
+>     it's not a ERR_VALUE proper, and is therefore treated as a
+>     valid struct devfreq_governor pointer, leading to a kernel oops.
+> 
+>     Fix this by returning -EINVAL if request_module returns a positive
+>     value.
+> 
+>     Fixes: b53b0128052ff ("PM / devfreq: Fix static checker warning in try_then_request_governor")
+>     Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+>     Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>     Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> 
+> Please apply.
 
-We have a hard time handling that in generic code.  Do we have any
-good use case for SWIOTLB_FORCE not that we have force_dma_unencrypted?
-I'd love to be able to get rid of it..
+Good catch, now queued up.
+
+greg k-h
