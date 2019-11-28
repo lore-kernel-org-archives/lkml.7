@@ -2,99 +2,71 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6750C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 19:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4B7C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 19:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD2721739
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 19:02:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574967721;
-	bh=Gh5Fit5zM2KRuKwsnEnkMfIt8gIXsZkzjUVJHGHbn38=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MfregpwprxCJ4dVJ6P7Coi8yd2pLjfLsQ7n0zpadIeV3vik+NAxXq6/dN953O05ee
-	 Ztc3TcKl2XJacMR06AsNmbjUichz6egvuaQTxcUc9W2tGaPk3kXiTq7J3L1INmDGwH
-	 SOSpnaqGgTE1LuXWAaZ/rjJ62cXMi2CqmwCODfMI=
+	by mail.kernel.org (Postfix) with ESMTP id 3061C20880
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 19:12:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="K6kQHa1W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfK1TCA (ORCPT
+        id S1726593AbfK1TM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 14:02:00 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35172 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfK1TCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 14:02:00 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j6so20475896lja.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 11:01:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kms9D4Zy2ihiCy7HMi5BOaZjm7P5PFIIQbQR9jGbStk=;
-        b=b5g5gSwguERR/Nzen1eoEVefV7DQz4Lx1FYfgDbApKGYFioIssfoXka7xt7f8cMGpx
-         zbgrhxRAEeH/y7eqEcigSJYRkrQYH1zj8Y5N1Co6NZqY0n/bEF12spFmD2GYEp4LQsnK
-         urSMJtjl5ImIPkpHpxPAqBgA4Z4umOZAT9ikU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kms9D4Zy2ihiCy7HMi5BOaZjm7P5PFIIQbQR9jGbStk=;
-        b=CnW1PeeRZAkewVQUI95jGmzj/EOppgs8K5xPnECnoSpwrKDnWtS8cOT5MFy2tVDjo/
-         /oLH/gLnDvtC0RLELvS9VDh9mFKqkWSw+HTZxFRbwTwGne6hBslYx38wG6LgF2dGfL7i
-         p9YkZuI04+tHhgTHHq6LMjTHKrqESVXnScn6j+Exsw+PrFPQ433BIPO03yQXTLBCCjA9
-         4pMsTJgQ8LP/NSQjTym0dxEKDNKS55/4pnFWa6oy0KbNf+JcOZHrg9yyelev9IZDGYLd
-         YW6rD1Vg+kUZGFNDAJHYrhrAhv/MZgj3D4fSmhIacMMZSNcs+VQ8YwzJjDQB7tMxolZ+
-         JDyQ==
-X-Gm-Message-State: APjAAAUpAuBfKtWlJKeMcKPfjYQJDhJ5w2//qgknrhISKQgDxYsMNnjH
-        Yc91Xc+Yffjg0coUi9gx6JsKBmXCx84=
-X-Google-Smtp-Source: APXvYqzhaXnnESk5XmraP1QGOLW+umRMJ4+AHlVAPd7cJ7xw1hBcJnqSZHQqxMKIcl+1/BptF4MKcg==
-X-Received: by 2002:a2e:80d9:: with SMTP id r25mr9779965ljg.8.1574967715727;
-        Thu, 28 Nov 2019 11:01:55 -0800 (PST)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id e20sm1962996ljk.44.2019.11.28.11.01.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Nov 2019 11:01:54 -0800 (PST)
-Received: by mail-lj1-f180.google.com with SMTP id j6so20475799lja.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 11:01:54 -0800 (PST)
-X-Received: by 2002:a2e:b4c7:: with SMTP id r7mr3273388ljm.82.1574967714127;
- Thu, 28 Nov 2019 11:01:54 -0800 (PST)
+        Thu, 28 Nov 2019 14:12:27 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:48604 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbfK1TM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 14:12:26 -0500
+Received: from zn.tnic (p200300EC2F0E060039EF63088A4922F4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:600:39ef:6308:8a49:22f4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4F46F1EC0CEA;
+        Thu, 28 Nov 2019 20:12:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574968345;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=VO2+3nbvrUPhWFSa9tZrx9TObzJHTuLsupwv5J4Y3KI=;
+        b=K6kQHa1WBaoFI36JJUNyFCuq19p0sLeyfmXiiv/V1XqQyilirOzavm9V9Zm40IGCddJOmr
+        Md3K+7Z/KxKSpSYCcZ8p6CGkyM5AtA6ttaRx4S39ZnRX+E9tOk0jKX9akCOSY5TwsfC+e5
+        TKcz3YjWWKnU/2i0k9MD/SiyBRhRdcQ=
+Date:   Thu, 28 Nov 2019 20:12:18 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: unchecked MSR access error in throttle_active_work()
+Message-ID: <20191128191218.GG17745@zn.tnic>
+References: <20191128085447.GA3682@owl.dominikbrodowski.net>
+ <20191128094419.GB17745@zn.tnic>
+ <20191128102930.jgra6igtp4rppmis@isilmar-4.linta.de>
+ <2859c017f515695eae1de47fdcf34db35bc5be39.camel@linux.intel.com>
+ <20191128185607.GA3726@owl.dominikbrodowski.net>
 MIME-Version: 1.0
-References: <20191125192758.GA13913@infradead.org>
-In-Reply-To: <20191125192758.GA13913@infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 Nov 2019 11:01:38 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whpKDQze+kcCw5e-TK2J4T9-qACQ_o7XAtTO+dD+FJOsw@mail.gmail.com>
-Message-ID: <CAHk-=whpKDQze+kcCw5e-TK2J4T9-qACQ_o7XAtTO+dD+FJOsw@mail.gmail.com>
-Subject: Re: [GIT PULL] generic ioremap for 5.5
-To:     Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191128185607.GA3726@owl.dominikbrodowski.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Added PaulW ]
+On Thu, Nov 28, 2019 at 07:56:07PM +0100, Dominik Brodowski wrote:
+> Seems to work fine now. Thanks!
 
-On Mon, Nov 25, 2019 at 11:28 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> There are two conflicts with the riscv tree - one is a trivial makefile
-> context one with the nommu support, and the other is the split of the
-> riscv <asm/io.h> which means that the removals in this pull request need
-> to be applied to the new location that they were moved to in the riscv
-> tree.
+Does that mean I can add Reported-by: and Tested-by: you?
 
-The conflict was trivial to fix up, but since I don't do RISC-V
-cross-builds, I'd like PaulW to please check that there weren't any
-surprising semantic issues too - or that I didn't mess up.
+Thx.
 
-Paul? (It's not actually pushed out yet, it's still building, but the
-ioremap merge should be there in a moment)
+-- 
+Regards/Gruss,
+    Boris.
 
-              Linus
+https://people.kernel.org/tglx/notes-about-netiquette
