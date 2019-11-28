@@ -2,147 +2,100 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_QP_LONG_LINE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E367AC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA6FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABA2215F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:15:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="LojbQ22s"
+	by mail.kernel.org (Postfix) with ESMTP id AEE4A2158A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 02:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfK1CPW (ORCPT
+        id S1727784AbfK1C00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 21:15:22 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38663 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728254AbfK1CPW (ORCPT
+        Wed, 27 Nov 2019 21:26:26 -0500
+Received: from out28-52.mail.aliyun.com ([115.124.28.52]:50838 "EHLO
+        out28-52.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727432AbfK1C00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Nov 2019 21:15:22 -0500
-Received: by mail-pl1-f195.google.com with SMTP id o8so6535354pls.5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Nov 2019 18:15:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=XKJnukPRIpRZM8ESM42CDezgPUH+DNpYUDF+AgeMnxA=;
-        b=LojbQ22sjkATQWlWLgldJDisEccdNnFSAr/WbVbHBsNFqUEJQd4EfE+e+k2L7buwJX
-         72qUUsnI9S87uUkAp2a3K4sw17UOrP8a8hEnQYdVv2PFz/fvRyjnJqxX57LdSk17hAm7
-         fQCMeZXtebD75ZrZ00EeGdAKSAD3TiPv8BHzCDTMNKvrCXPZBoG4/LYmR9VtmQRpOO5Y
-         LE+/ceeilOK2yMrLC54h5Zko8plN3PCbNl/x67egNAy/KMg+PeNcAcWkzqzvr9eAY2eq
-         rE0WxH0UZlxAXVB3qns3e1sYH1EKDJVmldgOgGuILNa+XKFi6BpbhYP3jVtubo0l9/EG
-         tKWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=XKJnukPRIpRZM8ESM42CDezgPUH+DNpYUDF+AgeMnxA=;
-        b=ZWWNN90MTHS9qdJSx7/jZcC3y0VxFo5judruv8p17Vpe3RbcM7jOdLPuEBHv6ZhO+Q
-         XaL5xwfXpdxgH/KF+VADcE5xe2HSAm2kcB44Au72hTvAUkM9XY4P+TK0irr1joYmDyON
-         n2EPASJLx4ArdChRP4eZj7ZhE85OBty5XcjFOthlgaG80/NFrG/1sq2WRz5NwRIqFK/S
-         L36aRj/NtGgoQiJasUwC2EhgdNF5ZwEh9/5iENKPVWSAskfEIDUNZ4zMCu+f2tBwCghi
-         06AsfzKFF7vt/suunIdSCm2obDiNFOCImGb5s/2CQ93I+m7aGjd6QB8fLKhsBX1fcEIg
-         EbhA==
-X-Gm-Message-State: APjAAAVb3PCU4oJqQ4BvjJbPS5SgRluzey9DXHW6kzhP0BoNbEpUou1q
-        Nz8bN/P2UJCswxcm6s/T+rfNDg==
-X-Google-Smtp-Source: APXvYqwTRN+B7usIpZ2EjxKm7sld1bFhj6BbhPH3fXWS8xVewpkEMaeYUAea0ocTRBZgtWFWNJef/w==
-X-Received: by 2002:a17:902:8ec4:: with SMTP id x4mr7060349plo.114.1574907320118;
-        Wed, 27 Nov 2019 18:15:20 -0800 (PST)
-Received: from ?IPv6:2601:646:c200:1ef2:d875:fac7:54dc:40be? ([2601:646:c200:1ef2:d875:fac7:54dc:40be])
-        by smtp.gmail.com with ESMTPSA id p5sm17953369pgj.63.2019.11.27.18.15.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2019 18:15:19 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] lkdtm/bugs: Avoid ifdefs for DOUBLE_FAULT
-Date:   Wed, 27 Nov 2019 18:15:17 -0800
-Message-Id: <C0659748-A5B3-45D3-B752-88A643C66E46@amacapital.net>
-References: <201911271748.A7C361E28@keescook>
-Cc:     Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        x86 <x86@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <201911271748.A7C361E28@keescook>
-To:     Kees Cook <keescook@chromium.org>
-X-Mailer: iPhone Mail (17A878)
+        Wed, 27 Nov 2019 21:26:26 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1442634|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0651011-0.0193909-0.915508;DS=CONTINUE|ham_regular_dialog|0.216232-0.0239754-0.759793;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07389;MF=yong.deng@magewell.com;NM=1;PH=DS;RN=8;RT=8;SR=0;TI=SMTPD_---.G6MWC7G_1574907969;
+Received: from John(mailfrom:yong.deng@magewell.com fp:SMTPD_---.G6MWC7G_1574907969)
+          by smtp.aliyun-inc.com(10.147.42.198);
+          Thu, 28 Nov 2019 10:26:09 +0800
+Date:   Thu, 28 Nov 2019 10:26:08 +0800
+From:   Yong <yong.deng@magewell.com>
+To:     megous@megous.com
+Cc:     linux-sunxi@googlegroups.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-media@vger.kernel.org (open list:CSI DRIVERS FOR ALLWINNER V3s),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
+Subject: Re: [linux-sunxi] [PATCH] media: sun6i-csi: Fix incorrect
+ HSYNC/VSYNC/PCLK polarity configuration
+Message-Id: <20191128102608.035cbb996c8681a6fb035336@magewell.com>
+In-Reply-To: <20191128020259.1338188-1-megous@megous.com>
+References: <20191128020259.1338188-1-megous@megous.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; i686-pc-mingw32)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ondrej,
 
-> On Nov 27, 2019, at 5:50 PM, Kees Cook <keescook@chromium.org> wrote:
->=20
-> =EF=BB=BFOn Wed, Nov 27, 2019 at 01:01:40PM -0800, Andy Lutomirski wrote:
->>=20
->>=20
->>>> On Nov 27, 2019, at 11:19 AM, Kees Cook <keescook@chromium.org> wrote:
->>>=20
->>> =EF=BB=BFLKDTM test visibility shouldn't change, so remove the ifdefs on=
+This has been discussed.
+And Maxime sent a patch for this: 
+https://www.mail-archive.com/linux-media@vger.kernel.org/msg127149.html
 
->>> DOUBLE_FAULT and make sure test failure doesn't crash the system.
->>>=20
->>> Link: https://lore.kernel.org/lkml/20191127184837.GA35982@gmail.com
->>> Fixes: b09511c253e5 ("lkdtm: Add a DOUBLE_FAULT crash type on x86")
->>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>> ---
->>> applies on top of tip/x86/urgent
->>> ---
->>> drivers/misc/lkdtm/bugs.c  | 8 +++++---
->>> drivers/misc/lkdtm/core.c  | 4 +---
->>> drivers/misc/lkdtm/lkdtm.h | 2 --
->>> 3 files changed, 6 insertions(+), 8 deletions(-)
->>>=20
->>> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
->>> index a4fdad04809a..22f5293414cc 100644
->>> --- a/drivers/misc/lkdtm/bugs.c
->>> +++ b/drivers/misc/lkdtm/bugs.c
->>> @@ -342,9 +342,9 @@ void lkdtm_UNSET_SMEP(void)
->>> #endif
->>> }
->>>=20
->>> -#ifdef CONFIG_X86_32
->>> void lkdtm_DOUBLE_FAULT(void)
->>> {
->>> +#ifdef CONFIG_X86_32
->>>   /*
->>>    * Trigger #DF by setting the stack limit to zero.  This clobbers
->>>    * a GDT TLS slot, which is okay because the current task will die
->>> @@ -373,6 +373,8 @@ void lkdtm_DOUBLE_FAULT(void)
->>>   asm volatile ("movw %0, %%ss; addl $0, (%%esp)" ::
->>>             "r" ((unsigned short)(GDT_ENTRY_TLS_MIN << 3)));
->>>=20
->>> -    panic("tried to double fault but didn't die\n");
->>> -}
->>> +    pr_err("FAIL: tried to double fault but didn't die!\n");
->>> +#else
->>> +    pr_err("FAIL: this test is only available on 32-bit x86.\n");
->>> #endif
->>> +}
->>=20
->> I=E2=80=99m not familiar with the userspace tooling, but this seems unfor=
-tunate. The first FAIL is =E2=80=9Cthe test case screwed up, and it=E2=80=99=
-s a bug.=E2=80=9D  The second FAIL is =E2=80=9Cnot applicable to this system=
-.=E2=80=9D
->>=20
->>=20
->> ISTM simply not exposing the test on systems that don=E2=80=99t support m=
-akes sense. Can you clarify?
->=20
-> I don't like the tests liked in the DIRECT file to change from build to
-> build (it should be stable per kernel version). Userspace needs to know
-> how to evaluate the results of running each test, so in both cases, I
-> consider it a failure: double fault didn't work or you tried to test
-> double fault on an unsupported architecture. (The SMEP test works
-> similarly.)
->=20
+On Thu, 28 Nov 2019 03:02:59 +0100
+Ondrej Jirman <megous@megous.com> wrote:
+
+> This was discovered by writing a new camera driver and wondering, why
+> hsync/vsync polarity setting behaves in reverse to what would be
+> expected. Verified by looking at the actual signals and the SoC
+> user manual.
+> 
+> Fixes: 5cc7522d8965 ("media: sun6i: Add support for Allwinner CSI V3s")
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> index f17e5550602d..98bbcca59a90 100644
+> --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> @@ -417,12 +417,12 @@ static void sun6i_csi_setup_bus(struct sun6i_csi_dev *sdev)
+>  		if (flags & V4L2_MBUS_FIELD_EVEN_LOW)
+>  			cfg |= CSI_IF_CFG_FIELD_POSITIVE;
+>  
+> -		if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+> +		if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
+>  			cfg |= CSI_IF_CFG_VREF_POL_POSITIVE;
+> -		if (flags & V4L2_MBUS_HSYNC_ACTIVE_LOW)
+> +		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+>  			cfg |= CSI_IF_CFG_HREF_POL_POSITIVE;
+>  
+> -		if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> +		if (flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
+>  			cfg |= CSI_IF_CFG_CLK_POL_FALLING_EDGE;
+>  		break;
+>  	case V4L2_MBUS_BT656:
+> -- 
+> 2.24.0
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191128020259.1338188-1-megous%40megous.com.
 
 
-So how is the test harness supposed
-to distinguish success from failure?  If it printed UNSUPPORTED instead of FA=
-IL, it would make more sense to me, but I=E2=80=99m not sure why that=E2=80=99=
-s better than just not exposing it at all.=
+Thanks,
+Yong
