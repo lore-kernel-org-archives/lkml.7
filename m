@@ -4,29 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019CDC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8C7C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7F82158A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A139D2158A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 01:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfK1Blg (ORCPT
+        id S1727691AbfK1BkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Nov 2019 20:41:36 -0500
-Received: from mga02.intel.com ([134.134.136.20]:10961 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727678AbfK1BkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Nov 2019 20:40:23 -0500
+Received: from mga02.intel.com ([134.134.136.20]:10954 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727109AbfK1BkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Nov 2019 20:40:22 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 17:40:19 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,251,1571727600"; 
-   d="scan'208";a="221166496"
+   d="scan'208";a="221166477"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga002.jf.intel.com with ESMTP; 27 Nov 2019 17:40:19 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -54,9 +53,9 @@ Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v4 10/19] x86/cpu: Detect VMX features on Intel, Centaur and Zhaoxin CPUs
-Date:   Wed, 27 Nov 2019 17:40:07 -0800
-Message-Id: <20191128014016.4389-11-sean.j.christopherson@intel.com>
+Subject: [PATCH v4 04/19] x86/intel: Initialize IA32_FEAT_CTL MSR at boot
+Date:   Wed, 27 Nov 2019 17:40:01 -0800
+Message-Id: <20191128014016.4389-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191128014016.4389-1-sean.j.christopherson@intel.com>
 References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
@@ -67,168 +66,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an entry in struct cpuinfo_x86 to track VMX capabilities and fill
-the capabilities during IA32_FEAT_CTL MSR initialization.
+Opportunistically initialize IA32_FEAT_CTL to enable VMX when the MSR is
+left unlocked by BIOS.  Configuring feature control at boot time paves
+the way for similar enabling of other features, e.g. Software Guard
+Extensions (SGX).
 
-Make the VMX capabilities dependent on IA32_FEAT_CTL and
-X86_FEATURE_NAMES so as to avoid unnecessary overhead on CPUs that can't
-possibly support VMX, or when /proc/cpuinfo is not available.
+Temporarily leave equivalent KVM code in place in order to avoid
+introducing a regression on Centaur and Zhaoxin CPUs, e.g. removing
+KVM's code would leave the MSR unlocked on those CPUs and would break
+existing functionality if people are loading kvm_intel on Centaur and/or
+Zhaoxin.  Defer enablement of the boot-time configuration on Centaur and
+Zhaoxin to future patches to aid bisection.
 
+Note, Local Machine Check Exceptions (LMCE) are also supported by the
+kernel and enabled via feature control, but the kernel currently uses
+LMCE if and and only if the feature is explicitly enabled by BIOS.  Keep
+the current behavior to avoid introducing bugs, future patches can opt
+in to opportunistic enabling if it's deemed desirable to do so.
+
+Always lock IA32_FEAT_CTL if it exists, even if the CPU doesn't support
+VMX, so that other existing and future kernel code that queries the MSR
+can assume it's locked.
+
+Start from a clean slate when constructing the value to write to
+IA32_FEAT_CTL, i.e. ignore whatever value BIOS left in the MSR so as not
+to enable random features or fault on the WRMSR.
+
+Suggested-by: Borislav Petkov <bp@suse.de>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/Kconfig.cpu               |  4 ++
- arch/x86/include/asm/processor.h   |  3 ++
- arch/x86/include/asm/vmxfeatures.h |  5 +++
- arch/x86/kernel/cpu/common.c       |  3 ++
- arch/x86/kernel/cpu/feat_ctl.c     | 70 ++++++++++++++++++++++++++++++
- 5 files changed, 85 insertions(+)
+ arch/x86/Kconfig.cpu           |  4 ++++
+ arch/x86/kernel/cpu/Makefile   |  1 +
+ arch/x86/kernel/cpu/cpu.h      |  4 ++++
+ arch/x86/kernel/cpu/feat_ctl.c | 37 ++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/intel.c    |  2 ++
+ 5 files changed, 48 insertions(+)
+ create mode 100644 arch/x86/kernel/cpu/feat_ctl.c
 
 diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-index 526425fcaedc..bc3a497c029c 100644
+index af9c967782f6..98be76fa2978 100644
 --- a/arch/x86/Kconfig.cpu
 +++ b/arch/x86/Kconfig.cpu
-@@ -391,6 +391,10 @@ config IA32_FEAT_CTL
+@@ -387,6 +387,10 @@ config X86_DEBUGCTLMSR
  	def_bool y
- 	depends on CPU_SUP_INTEL || CPU_SUP_CENTAUR || CPU_SUP_ZHAOXIN
+ 	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX || M586TSC || M586 || M486SX || M486) && !UML
  
-+config X86_VMX_FEATURE_NAMES
++config IA32_FEAT_CTL
 +	def_bool y
-+	depends on IA32_FEAT_CTL && X86_FEATURE_NAMES
++	depends on CPU_SUP_INTEL
 +
  menuconfig PROCESSOR_SELECT
  	bool "Supported processor vendors" if EXPERT
  	---help---
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index bab513404606..3324cf036dfb 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -85,6 +85,9 @@ struct cpuinfo_x86 {
- #ifdef CONFIG_X86_64
- 	/* Number of 4K pages in DTLB/ITLB combined(in pages): */
- 	int			x86_tlbsize;
-+#endif
-+#ifdef CONFIG_X86_VMX_FEATURE_NAMES
-+	__u32			vmx_capability[NVMXINTS];
- #endif
- 	__u8			x86_virt_bits;
- 	__u8			x86_phys_bits;
-diff --git a/arch/x86/include/asm/vmxfeatures.h b/arch/x86/include/asm/vmxfeatures.h
-index 1b96b03c1147..ab42d94e2359 100644
---- a/arch/x86/include/asm/vmxfeatures.h
-+++ b/arch/x86/include/asm/vmxfeatures.h
-@@ -2,6 +2,11 @@
- #ifndef _ASM_X86_VMXFEATURES_H
- #define _ASM_X86_VMXFEATURES_H
+diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
+index a704fb9ee98e..4173b0de7a2f 100644
+--- a/arch/x86/kernel/cpu/Makefile
++++ b/arch/x86/kernel/cpu/Makefile
+@@ -32,6 +32,7 @@ obj-y			+= umwait.o
+ obj-$(CONFIG_PROC_FS)	+= proc.o
+ obj-$(CONFIG_X86_FEATURE_NAMES) += capflags.o powerflags.o
  
-+/*
-+ * Defines VMX CPU feature bits
-+ */
-+#define NVMXINTS			3 /* N 32-bit words worth of info */
++obj-$(CONFIG_IA32_FEAT_CTL) += feat_ctl.o
+ ifdef CONFIG_CPU_SUP_INTEL
+ obj-y			+= intel.o intel_pconfig.o tsx.o
+ obj-$(CONFIG_PM)	+= intel_epb.o
+diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
+index 38ab6e115eac..37fdefd14f28 100644
+--- a/arch/x86/kernel/cpu/cpu.h
++++ b/arch/x86/kernel/cpu/cpu.h
+@@ -80,4 +80,8 @@ extern void x86_spec_ctrl_setup_ap(void);
+ 
+ extern u64 x86_read_arch_cap_msr(void);
+ 
++#ifdef CONFIG_IA32_FEAT_CTL
++void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
++#endif
 +
- /*
-  * Note: If the comment begins with a quoted string, that string is used
-  * in /proc/cpuinfo instead of the macro name.  If the string is "",
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 9d6a35a4586e..df1eacd26443 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1449,6 +1449,9 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- #endif
- 	c->x86_cache_alignment = c->x86_clflush_size;
- 	memset(&c->x86_capability, 0, sizeof(c->x86_capability));
-+#ifdef CONFIG_X86_VMX_FEATURE_NAMES
-+	memset(&c->vmx_capability, 0, sizeof(c->vmx_capability));
-+#endif
- 
- 	generic_identify(c);
- 
+ #endif /* ARCH_X86_CPU_H */
 diff --git a/arch/x86/kernel/cpu/feat_ctl.c b/arch/x86/kernel/cpu/feat_ctl.c
-index a46c9e46f937..93268bde662a 100644
---- a/arch/x86/kernel/cpu/feat_ctl.c
+new file mode 100644
+index 000000000000..c4f8f767853b
+--- /dev/null
 +++ b/arch/x86/kernel/cpu/feat_ctl.c
-@@ -4,6 +4,72 @@
- #include <asm/cpufeature.h>
- #include <asm/msr-index.h>
- #include <asm/processor.h>
-+#include <asm/vmx.h>
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/tboot.h>
 +
-+#ifdef CONFIG_X86_VMX_FEATURE_NAMES
-+enum vmx_feature_leafs {
-+	MISC_FEATURES = 0,
-+	PRIMARY_PROC_CTLS,
-+	SECONDARY_PROC_CTLS,
-+	NR_VMX_FEATURE_WORDS,
-+};
++#include <asm/cpufeature.h>
++#include <asm/msr-index.h>
++#include <asm/processor.h>
 +
-+#define F(x) BIT(VMX_FEATURE_##x & 0x1f)
-+
-+static void init_vmx_capabilities(struct cpuinfo_x86 *c)
++void init_ia32_feat_ctl(struct cpuinfo_x86 *c)
 +{
-+	u32 supported, funcs, ept, vpid, ign;
++	u64 msr;
 +
-+	BUILD_BUG_ON(NVMXINTS != NR_VMX_FEATURE_WORDS);
++	if (rdmsrl_safe(MSR_IA32_FEAT_CTL, &msr))
++		return;
 +
-+	/*
-+	 * The high bits contain the allowed-1 settings, i.e. features that can
-+	 * be turned on.  The low bits contain the allowed-0 settings, i.e.
-+	 * features that can be turned off.  Ignore the allowed-0 settings,
-+	 * if a feature can be turned on then it's supported.
-+	 */
-+	rdmsr(MSR_IA32_VMX_PROCBASED_CTLS, ign, supported);
-+	c->vmx_capability[PRIMARY_PROC_CTLS] = supported;
-+
-+	rdmsr_safe(MSR_IA32_VMX_PROCBASED_CTLS2, &ign, &supported);
-+	c->vmx_capability[SECONDARY_PROC_CTLS] = supported;
-+
-+	rdmsr(MSR_IA32_VMX_PINBASED_CTLS, ign, supported);
-+	rdmsr_safe(MSR_IA32_VMX_VMFUNC, &ign, &funcs);
++	if (msr & FEAT_CTL_LOCKED)
++		return;
 +
 +	/*
-+	 * Except for EPT+VPID, which enumerates support for both in a single
-+	 * MSR, low for EPT, high for VPID.
++	 * Ignore whatever value BIOS left in the MSR to avoid enabling random
++	 * features or faulting on the WRMSR.
 +	 */
-+	rdmsr_safe(MSR_IA32_VMX_EPT_VPID_CAP, &ept, &vpid);
++	msr = FEAT_CTL_LOCKED;
 +
-+	/* Pin, EPT, VPID and VM-Func are merged into a single word. */
-+	WARN_ON_ONCE(supported >> 16);
-+	WARN_ON_ONCE(funcs >> 4);
-+	c->vmx_capability[MISC_FEATURES] = (supported & 0xffff) |
-+					   ((vpid & 0x1) << 16) |
-+					   ((funcs & 0xf) << 28);
++	/*
++	 * Enable VMX if and only if the kernel may do VMXON at some point,
++	 * i.e. KVM is enabled, to avoid unnecessarily adding an attack vector
++	 * for the kernel, e.g. using VMX to hide malicious code.
++	 */
++	if (cpu_has(c, X86_FEATURE_VMX) && IS_ENABLED(CONFIG_KVM_INTEL)) {
++		msr |= FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX;
 +
-+	/* EPT bits are full on scattered and must be manually handled. */
-+	if (ept & VMX_EPT_EXECUTE_ONLY_BIT)
-+		c->vmx_capability[MISC_FEATURES] |= F(EPT_EXECUTE_ONLY);
-+	if (ept & VMX_EPT_AD_BIT)
-+		c->vmx_capability[MISC_FEATURES] |= F(EPT_AD);
-+	if (ept & VMX_EPT_1GB_PAGE_BIT)
-+		c->vmx_capability[MISC_FEATURES] |= F(EPT_1GB);
++		if (tboot_enabled())
++			msr |= FEAT_CTL_VMX_ENABLED_INSIDE_SMX;
++	}
 +
-+	/* Synthetic APIC features that are aggregates of multiple features. */
-+	if ((c->vmx_capability[PRIMARY_PROC_CTLS] & F(VIRTUAL_TPR)) &&
-+	    (c->vmx_capability[SECONDARY_PROC_CTLS] & F(VIRT_APIC_ACCESSES)))
-+		c->vmx_capability[MISC_FEATURES] |= F(FLEXPRIORITY);
-+
-+	if ((c->vmx_capability[PRIMARY_PROC_CTLS] & F(VIRTUAL_TPR)) &&
-+	    (c->vmx_capability[SECONDARY_PROC_CTLS] & F(APIC_REGISTER_VIRT)) &&
-+	    (c->vmx_capability[SECONDARY_PROC_CTLS] & F(VIRT_INTR_DELIVERY)) &&
-+	    (c->vmx_capability[MISC_FEATURES] & F(POSTED_INTR)))
-+		c->vmx_capability[MISC_FEATURES] |= F(APICV);
++	wrmsrl(MSR_IA32_FEAT_CTL, msr);
 +}
-+#endif /* CONFIG_X86_VMX_FEATURE_NAMES */
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 4a900804a023..9129c170ea11 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -755,6 +755,8 @@ static void init_intel(struct cpuinfo_x86 *c)
+ 	/* Work around errata */
+ 	srat_detect_node(c);
  
- #undef pr_fmt
- #define pr_fmt(fmt)	"x86/cpu: " fmt
-@@ -50,5 +116,9 @@ void init_ia32_feat_ctl(struct cpuinfo_x86 *c)
- 		pr_err_once("VMX (%s TXT) disabled by BIOS\n",
- 			    tboot ? "inside" : "outside");
- 		clear_cpu_cap(c, X86_FEATURE_VMX);
-+	} else {
-+#ifdef CONFIG_X86_VMX_FEATURE_NAMES
-+		init_vmx_capabilities(c);
-+#endif
- 	}
- }
++	init_ia32_feat_ctl(c);
++
+ 	if (cpu_has(c, X86_FEATURE_VMX))
+ 		detect_vmx_virtcap(c);
+ 
 -- 
 2.24.0
 
