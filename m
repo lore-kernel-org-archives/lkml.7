@@ -2,40 +2,41 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A4AC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10009C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241972158A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C677C21771
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Ag8+VU/5"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="of56q1rJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfK1QDB (ORCPT
+        id S1726742AbfK1QDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 11:03:01 -0500
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:2478 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726401AbfK1QDA (ORCPT
+        Thu, 28 Nov 2019 11:03:17 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:42238 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726401AbfK1QDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:03:00 -0500
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASFwZug026777;
-        Thu, 28 Nov 2019 11:02:04 -0500
-Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2054.outbound.protection.outlook.com [104.47.41.54])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2whuvq36p5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 11:02:04 -0500
+        Thu, 28 Nov 2019 11:03:17 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASFwoGW019256;
+        Thu, 28 Nov 2019 11:02:31 -0500
+Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2051.outbound.protection.outlook.com [104.47.33.51])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2whv1h37uq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 28 Nov 2019 11:02:30 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WNb5UEJQlhugYZoo0Dwlyi9aXbxd3/qUydDqscnNSntvqHJ7V7hsJQ/WKYZCTONNjD71DMXUNZpOdEnjT7tgAPCCMqQfYSkY2QI6apR6AwypnHUNBsb4iNAU+jumVsCcYwcOsPy/+5qdeC5+CWaH5CCKwUhMjWGk1K/093ERNri8o/SYzEQ8EN7Zx5dnrrHoumx2hD90GUSWMI3xPEZBwjYMgB5BSDoAkEWZLbt4jnMO9C8PtkIBrbNoRhxmFghU2zgVCG1wn/Y6Tp1BPOLchWOJd89OFK0bgmHEk21V+uCBSBbTFSK+d8z/9RROTUbluz6m32/XbqWRt/2JTrJoUw==
+ b=bX378IcoOQihWqYUMIN+MKpFiYB1X2oFKe+CnQ/yucbo45WQbFw6d/WwRMx1Grw3m2jr/VOQabZEIJRwZcfRQzZh8znkVZ+p7kAWszzwuky9ahqqmJx6wOhc/gS23JXjLK3FX1vxPEzo5EpONh+EcUUxJeaLxnFlbydfvipdLq8CsGlXVcuy3vHWvAg8haDiqTGaG1YDDbPG9Lk86/P6vqBh9WgFrEsN8glVR1Ew2TLAq3Qfhs6PXxSUSb/DTWffx/+cCwkmWuIjNv1vdDNzVZqrM20vxogN5ACxZryaWQw5LoR9CpIX8RC7toS/1wMeXt+kgaeeWuhRNew7FZj1FA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXONAl8khotmNpxZIDY9Jtj9dWE9GvxOwxoDyUMVbHw=;
- b=MiksocdMgVy9u3L03pfRLHOu7gck1mqqJVJwuu22b1GlBfknCq2cgqMAX1UWXZKCmDnTb063vadOeSTVdKIEgq1GGrxlvjRYswebBFK59ygz9dVXU9he0vNnsJi0FutEZ8qCPuF3Zu67+kXqzHUQ9XIsgZHld7NPX0CVrmjF8RgKSqToE7n0W1dQUtarKb1ZqVNqeyHlD2zIGGKUNKhfTPP1Rfqc0b2UfYmvgXLJHHJ9jElfN4cZPNvnJoqAiGU/IhVv5uU/FCCgVDjDd6XbYpOczEsZeTqkPMaQllCsTu+zO2Qbo9Xq6fVA2ZCVJqKqa4cPzBxSS/VhYdt00f1hxw==
+ bh=P7qH5Q3FPpfJvyBZLBo5+lIS71LXTYC0j91i9astl8c=;
+ b=XrjjSG6451Ah1H9hdnUes31sjZ4nF6N1kPGOWjCjOTHCCwiag2sHpPgilXvq/fEcovgBYVnhlNFSDdrCV9OzAOXaLLPscqwrDgxOYUWJ54uoPrpW/s0uWRvTL1Sob6c+GA/yrN4G9ep+py4/IDXOOhekmo6g1/P8iK3aI7w94+APAWxM3xUDCtQLXxX9rnuUCn+m4jmV9fd+sgjlVftiM63zozw8tkL/77yhB9A057YY217CO4dSVk2XBevg8dwIDuaTy4TeRDlknvy0qhpNy9Ps5drTehBkIPsmBhXoHc98Durt7wZh95Pbjm/VPF+C6KYKGHRCSFNQ4pwXXdl5OA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  137.71.25.57) smtp.rcpttodomain=baylibre.com smtp.mailfrom=analog.com;
  dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
@@ -43,32 +44,32 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXONAl8khotmNpxZIDY9Jtj9dWE9GvxOwxoDyUMVbHw=;
- b=Ag8+VU/5rPHt4gf1bkJUmJvASx4xVkUxuQ1C3eieD+TmTV+CTDRnOk2ImUnpRjoTejq8HmTntrE4aeGg/vV5FUIqsJYt6tG08dy0rrZSRYIoVTNGt/N0Raa9PCsL4eHVGxedLNPTpstL31pOQQlpP+eJeoSyLC4ShzjIzspfpcE=
-Received: from BYAPR03CA0020.namprd03.prod.outlook.com (2603:10b6:a02:a8::33)
- by MN2PR03MB5232.namprd03.prod.outlook.com (2603:10b6:208:1e5::24) with
+ bh=P7qH5Q3FPpfJvyBZLBo5+lIS71LXTYC0j91i9astl8c=;
+ b=of56q1rJlSbXAV6Qmx2ejIp6scyFIcdHd0c5oNyMM/Abhumd4AZqFMB6kGdnnRzrqHF0r+oLZJuohoB0DJ+RSiMY3REnNb3j8K/LOeHl+KaFTuMr+TYDNwz0B5bJUSN5gR6hrt3VxH1aVp5sI3eGhb4R9vJIEn8PSsbAI8mx4tY=
+Received: from CY4PR03CA0001.namprd03.prod.outlook.com (2603:10b6:903:33::11)
+ by SN6PR03MB3469.namprd03.prod.outlook.com (2603:10b6:805:3f::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.20; Thu, 28 Nov
- 2019 16:02:02 +0000
-Received: from BL2NAM02FT021.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::209) by BYAPR03CA0020.outlook.office365.com
- (2603:10b6:a02:a8::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.16; Thu, 28 Nov
+ 2019 16:02:28 +0000
+Received: from BL2NAM02FT023.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::200) by CY4PR03CA0001.outlook.office365.com
+ (2603:10b6:903:33::11) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18 via Frontend
- Transport; Thu, 28 Nov 2019 16:02:02 +0000
+ Transport; Thu, 28 Nov 2019 16:02:28 +0000
 Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
  137.71.25.57 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
 Received: from nwd2mta2.analog.com (137.71.25.57) by
- BL2NAM02FT021.mail.protection.outlook.com (10.152.77.158) with Microsoft SMTP
+ BL2NAM02FT023.mail.protection.outlook.com (10.152.77.72) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Thu, 28 Nov 2019 16:02:02 +0000
+ via Frontend Transport; Thu, 28 Nov 2019 16:02:27 +0000
 Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id xASG1ol2004457
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id xASG2IrU004638
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 28 Nov 2019 08:01:51 -0800
+        Thu, 28 Nov 2019 08:02:18 -0800
 Received: from btogorean-pc.ad.analog.com (10.48.65.146) by
  NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 28 Nov 2019 11:01:57 -0500
+ 14.3.408.0; Thu, 28 Nov 2019 11:02:27 -0500
 From:   Bogdan Togorean <bogdan.togorean@analog.com>
 To:     <dri-devel@lists.freedesktop.org>
 CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
@@ -80,39 +81,41 @@ CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
         <matt.redfearn@thinci.com>, <robdclark@chromium.org>,
         <wsa+renesas@sang-engineering.com>, <linux-kernel@vger.kernel.org>,
         Bogdan Togorean <bogdan.togorean@analog.com>
-Subject: [PATCH v3 0/2] drm: bridge: adv7511: Add support For ADV7535
-Date:   Thu, 28 Nov 2019 20:00:17 +0200
-Message-ID: <20191128180018.12073-1-bogdan.togorean@analog.com>
+Subject: [PATCH v3 2/2] drm: bridge: adv7511: Add support for ADV7535
+Date:   Thu, 28 Nov 2019 20:00:20 +0200
+Message-ID: <20191128180018.12073-3-bogdan.togorean@analog.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191128180018.12073-1-bogdan.togorean@analog.com>
+References: <20191128180018.12073-1-bogdan.togorean@analog.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(376002)(39860400002)(189003)(199004)(8936002)(44832011)(186003)(6666004)(7636002)(2351001)(106002)(4744005)(86362001)(2870700001)(107886003)(356004)(54906003)(8676002)(305945005)(50466002)(316002)(47776003)(26005)(50226002)(70206006)(246002)(70586007)(2906002)(7416002)(5660300002)(4326008)(6916009)(36756003)(336012)(426003)(7696005)(2616005)(1076003)(48376002)(478600001)(51416003)(16060500001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR03MB5232;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(346002)(376002)(39860400002)(396003)(199004)(189003)(11346002)(6916009)(50466002)(48376002)(26005)(51416003)(5660300002)(47776003)(7636002)(305945005)(44832011)(7416002)(70586007)(446003)(2616005)(336012)(7696005)(70206006)(86362001)(76176011)(54906003)(2870700001)(316002)(1076003)(186003)(426003)(106002)(36756003)(246002)(356004)(4326008)(2351001)(478600001)(8936002)(50226002)(6666004)(5024004)(14444005)(8676002)(2906002)(107886003)(16060500001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR03MB3469;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f463fd5c-ecd2-4ad1-ce26-08d7741c4e98
-X-MS-TrafficTypeDiagnostic: MN2PR03MB5232:
-X-Microsoft-Antispam-PRVS: <MN2PR03MB5232B601996C94195F302BB49B470@MN2PR03MB5232.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-MS-Office365-Filtering-Correlation-Id: 63d9f575-280c-4a82-8cbe-08d7741c5df7
+X-MS-TrafficTypeDiagnostic: SN6PR03MB3469:
+X-Microsoft-Antispam-PRVS: <SN6PR03MB34692BD2645E5066345EADA59B470@SN6PR03MB3469.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
 X-Forefront-PRVS: 0235CBE7D0
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bwdVYN6gDbz8/38h807ztExhIqE7xq8dBngmwFpzvZ3LjnAZzrSjb0eoJ5n+hnNG6f1IeFlQQAV6JJQ4TSdP17c//hBDplQBmvYvaNNXe9yMmjcPYgf5jvDhsIRDacMg+0nOe5MthIiiE4zuJQ9a/W9kioW6TnHHDMFtAG0sZjp5ugJewwtKTp1iPHsAIA7vQILl+NjTJtA8doHx3Geux8/Yx5JS11peEhy/0+H+22PtAVphlHCoDuKVLgSlzhbZOp7czA2gA9ZBEUgQFELVhKA9fnJyYtVv+cJ2xIhkpT48mGQpO1VycJW9eLaxcRxsEJ8qHHdUdKsSmZGjtTI1fFVV32nJ/0XrYeGgKCA6Qt80QQVba2b3Jzo8Rfqkim/4mdcZeKq6hbtXObYdx4LVx1kBg/GfR6ZiSFAHjWos/mZykmfSg1WvvecU4WlHvJ4f
+X-Microsoft-Antispam-Message-Info: qgP1zyX7zD87DDoGC8lSw+QM+gnFZAWNtj47qpbPwOkJdIPOhsMA0J/Y0Mm2XzwlXihLDD1RChPemyGYbL/CTGGlPCWWs7W+8L80Y8CBdTe1FFX8jmfZfbxz6c2AR7uWp8rJCPCdSTmsZ1jJf2ri4J9grMq4ZdTq3xfm0qQUS4ct5Fz7kdtvpo1VvMxRZQaeXjW+YMuizsUBGyPNH4gUQwWhl2eOyTJ9USUoXwT5nRE/ArZcl1+o6u9mqaMRkqMUT2ZVNLMdC6K2a7jycmh2KOPslIzwwafIKM6ViBG2oyGPJovM26C5LPMw9mln0E0xitDN0PLyG5mVYkhh5wEYRhYM0zVZlhBiBLkpjVeiqmyX58/lx64g32TseQHo1dRY3G9EmICfz6bJeRGMMJtj8AzBwiIGisXN7Dl6wjAMvR/tfc2ECl1w3dq54n2MBz8s
 X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2019 16:02:02.2007
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2019 16:02:27.9974
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f463fd5c-ecd2-4ad1-ce26-08d7741c4e98
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63d9f575-280c-4a82-8cbe-08d7741c5df7
 X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB5232
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR03MB3469
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-11-28_04:2019-11-28,2019-11-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- impostorscore=0 mlxscore=0 suspectscore=1 mlxlogscore=807 bulkscore=0
- malwarescore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ spamscore=0 priorityscore=1501 mlxscore=0 adultscore=0 impostorscore=0
+ clxscore=1015 lowpriorityscore=0 suspectscore=1 mlxlogscore=999
  phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-1911280134
 Sender: linux-kernel-owner@vger.kernel.org
@@ -120,29 +123,265 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set add support for ADV7535 part in ADV7511 driver.
+ADV7535 is a DSI to HDMI bridge chip like ADV7533 but it allows
+1080p@60Hz. v1p2 is fixed to 1.8V on ADV7535 but on ADV7533 can be 1.2V
+or 1.8V and is configurable in a register.
 
-ADV7535 and ADV7533 are pin to pin compatible parts but ADV7535
-support TMDS clock upto 148.5Mhz and resolutions up to 1080p@60Hz.
-
+Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
 ---
-Changes in v3:
- - remove CONFIG_DRM_I2C_ADV7533 from Kconfig. Now driver support
-all chip versions
- - create macros for v1p2 config registers
- - remove dummy functions from header
+ drivers/gpu/drm/bridge/adv7511/Kconfig       | 13 ++----
+ drivers/gpu/drm/bridge/adv7511/Makefile      |  3 +-
+ drivers/gpu/drm/bridge/adv7511/adv7511.h     | 44 +++-----------------
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 35 ++++++++++------
+ 4 files changed, 32 insertions(+), 63 deletions(-)
 
-Bogdan Togorean (2):
-  dt-bindings: drm: bridge: adv7511: Add ADV7535 support
-  drm: bridge: adv7511: Add support for ADV7535
-
- .../bindings/display/bridge/adi,adv7511.txt   | 23 +++++-----
- drivers/gpu/drm/bridge/adv7511/Kconfig        | 13 ++----
- drivers/gpu/drm/bridge/adv7511/Makefile       |  3 +-
- drivers/gpu/drm/bridge/adv7511/adv7511.h      | 44 +++----------------
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c  | 35 ++++++++++-----
- 5 files changed, 44 insertions(+), 74 deletions(-)
-
+diff --git a/drivers/gpu/drm/bridge/adv7511/Kconfig b/drivers/gpu/drm/bridge/adv7511/Kconfig
+index 8a56ff81f4fb..47d4eb9e845d 100644
+--- a/drivers/gpu/drm/bridge/adv7511/Kconfig
++++ b/drivers/gpu/drm/bridge/adv7511/Kconfig
+@@ -4,8 +4,9 @@ config DRM_I2C_ADV7511
+ 	depends on OF
+ 	select DRM_KMS_HELPER
+ 	select REGMAP_I2C
++	select DRM_MIPI_DSI
+ 	help
+-	  Support for the Analog Device ADV7511(W) and ADV7513 HDMI encoders.
++	  Support for the Analog Device ADV7511(W)/13/33/35 HDMI encoders.
+ 
+ config DRM_I2C_ADV7511_AUDIO
+ 	bool "ADV7511 HDMI Audio driver"
+@@ -15,16 +16,8 @@ config DRM_I2C_ADV7511_AUDIO
+ 	  Support the ADV7511 HDMI Audio interface. This is used in
+ 	  conjunction with the AV7511  HDMI driver.
+ 
+-config DRM_I2C_ADV7533
+-	bool "ADV7533 encoder"
+-	depends on DRM_I2C_ADV7511
+-	select DRM_MIPI_DSI
+-	default y
+-	help
+-	  Support for the Analog Devices ADV7533 DSI to HDMI encoder.
+-
+ config DRM_I2C_ADV7511_CEC
+-	bool "ADV7511/33 HDMI CEC driver"
++	bool "ADV7511/33/35 HDMI CEC driver"
+ 	depends on DRM_I2C_ADV7511
+ 	select CEC_CORE
+ 	default y
+diff --git a/drivers/gpu/drm/bridge/adv7511/Makefile b/drivers/gpu/drm/bridge/adv7511/Makefile
+index b46ebeb35fd4..d8ceb534b51f 100644
+--- a/drivers/gpu/drm/bridge/adv7511/Makefile
++++ b/drivers/gpu/drm/bridge/adv7511/Makefile
+@@ -1,6 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-adv7511-y := adv7511_drv.o
++adv7511-y := adv7511_drv.o adv7533.o
+ adv7511-$(CONFIG_DRM_I2C_ADV7511_AUDIO) += adv7511_audio.o
+ adv7511-$(CONFIG_DRM_I2C_ADV7511_CEC) += adv7511_cec.o
+-adv7511-$(CONFIG_DRM_I2C_ADV7533) += adv7533.o
+ obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511.o
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511.h b/drivers/gpu/drm/bridge/adv7511/adv7511.h
+index 52b2adfdc877..ed9cfd944098 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511.h
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511.h
+@@ -220,6 +220,10 @@
+ 
+ #define ADV7533_REG_CEC_OFFSET		0x70
+ 
++#define ADV7533_REG_SUPPLY_SELECT	0xe4
++
++#define ADV7533_V1P2_ENABLE		BIT(7)
++
+ enum adv7511_input_clock {
+ 	ADV7511_INPUT_CLOCK_1X,
+ 	ADV7511_INPUT_CLOCK_2X,
+@@ -320,6 +324,7 @@ struct adv7511_video_config {
+ enum adv7511_type {
+ 	ADV7511,
+ 	ADV7533,
++	ADV7535,
+ };
+ 
+ #define ADV7511_MAX_ADDRS 3
+@@ -393,7 +398,6 @@ static inline int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511)
+ }
+ #endif
+ 
+-#ifdef CONFIG_DRM_I2C_ADV7533
+ void adv7533_dsi_power_on(struct adv7511 *adv);
+ void adv7533_dsi_power_off(struct adv7511 *adv);
+ void adv7533_mode_set(struct adv7511 *adv, const struct drm_display_mode *mode);
+@@ -402,44 +406,6 @@ int adv7533_patch_cec_registers(struct adv7511 *adv);
+ int adv7533_attach_dsi(struct adv7511 *adv);
+ void adv7533_detach_dsi(struct adv7511 *adv);
+ int adv7533_parse_dt(struct device_node *np, struct adv7511 *adv);
+-#else
+-static inline void adv7533_dsi_power_on(struct adv7511 *adv)
+-{
+-}
+-
+-static inline void adv7533_dsi_power_off(struct adv7511 *adv)
+-{
+-}
+-
+-static inline void adv7533_mode_set(struct adv7511 *adv,
+-				    const struct drm_display_mode *mode)
+-{
+-}
+-
+-static inline int adv7533_patch_registers(struct adv7511 *adv)
+-{
+-	return -ENODEV;
+-}
+-
+-static inline int adv7533_patch_cec_registers(struct adv7511 *adv)
+-{
+-	return -ENODEV;
+-}
+-
+-static inline int adv7533_attach_dsi(struct adv7511 *adv)
+-{
+-	return -ENODEV;
+-}
+-
+-static inline void adv7533_detach_dsi(struct adv7511 *adv)
+-{
+-}
+-
+-static inline int adv7533_parse_dt(struct device_node *np, struct adv7511 *adv)
+-{
+-	return -ENODEV;
+-}
+-#endif
+ 
+ #ifdef CONFIG_DRM_I2C_ADV7511_AUDIO
+ int adv7511_audio_init(struct device *dev, struct adv7511 *adv7511);
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index 9e13e466e72c..35595472e771 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -367,7 +367,7 @@ static void adv7511_power_on(struct adv7511 *adv7511)
+ 	 */
+ 	regcache_sync(adv7511->regmap);
+ 
+-	if (adv7511->type == ADV7533)
++	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+ 		adv7533_dsi_power_on(adv7511);
+ 	adv7511->powered = true;
+ }
+@@ -387,7 +387,7 @@ static void __adv7511_power_off(struct adv7511 *adv7511)
+ static void adv7511_power_off(struct adv7511 *adv7511)
+ {
+ 	__adv7511_power_off(adv7511);
+-	if (adv7511->type == ADV7533)
++	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+ 		adv7533_dsi_power_off(adv7511);
+ 	adv7511->powered = false;
+ }
+@@ -761,7 +761,7 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
+ 	regmap_update_bits(adv7511->regmap, 0x17,
+ 		0x60, (vsync_polarity << 6) | (hsync_polarity << 5));
+ 
+-	if (adv7511->type == ADV7533)
++	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+ 		adv7533_mode_set(adv7511, adj_mode);
+ 
+ 	drm_mode_copy(&adv7511->curr_mode, adj_mode);
+@@ -874,7 +874,7 @@ static int adv7511_bridge_attach(struct drm_bridge *bridge)
+ 				 &adv7511_connector_helper_funcs);
+ 	drm_connector_attach_encoder(&adv->connector, bridge->encoder);
+ 
+-	if (adv->type == ADV7533)
++	if (adv->type == ADV7533 || adv->type == ADV7535)
+ 		ret = adv7533_attach_dsi(adv);
+ 
+ 	if (adv->i2c_main->irq)
+@@ -903,6 +903,7 @@ static const char * const adv7511_supply_names[] = {
+ 	"dvdd-3v",
+ };
+ 
++/* The order of entries is important. If changed update hardcoded indices */
+ static const char * const adv7533_supply_names[] = {
+ 	"avdd",
+ 	"dvdd",
+@@ -952,7 +953,7 @@ static bool adv7511_cec_register_volatile(struct device *dev, unsigned int reg)
+ 	struct i2c_client *i2c = to_i2c_client(dev);
+ 	struct adv7511 *adv7511 = i2c_get_clientdata(i2c);
+ 
+-	if (adv7511->type == ADV7533)
++	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+ 		reg -= ADV7533_REG_CEC_OFFSET;
+ 
+ 	switch (reg) {
+@@ -994,7 +995,7 @@ static int adv7511_init_cec_regmap(struct adv7511 *adv)
+ 		goto err;
+ 	}
+ 
+-	if (adv->type == ADV7533) {
++	if (adv->type == ADV7533 || adv->type == ADV7535) {
+ 		ret = adv7533_patch_cec_registers(adv);
+ 		if (ret)
+ 			goto err;
+@@ -1094,8 +1095,9 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
+ 	struct adv7511_link_config link_config;
+ 	struct adv7511 *adv7511;
+ 	struct device *dev = &i2c->dev;
++	struct regulator *reg_v1p2;
+ 	unsigned int val;
+-	int ret;
++	int ret, reg_v1p2_uV;
+ 
+ 	if (!dev->of_node)
+ 		return -EINVAL;
+@@ -1163,6 +1165,17 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
+ 	if (ret)
+ 		goto uninit_regulators;
+ 
++	if (adv7511->type == ADV7533) {
++		reg_v1p2 = adv7511->supplies[5].consumer;
++		reg_v1p2_uV = regulator_get_voltage(reg_v1p2);
++
++		if (reg_v1p2_uV == 1200000) {
++			regmap_update_bits(adv7511->regmap,
++				ADV7533_REG_SUPPLY_SELECT, ADV7533_V1P2_ENABLE,
++				ADV7533_V1P2_ENABLE);
++		}
++	}
++
+ 	adv7511_packet_disable(adv7511, 0xffff);
+ 
+ 	adv7511->i2c_edid = i2c_new_ancillary_device(i2c, "edid",
+@@ -1242,7 +1255,7 @@ static int adv7511_remove(struct i2c_client *i2c)
+ {
+ 	struct adv7511 *adv7511 = i2c_get_clientdata(i2c);
+ 
+-	if (adv7511->type == ADV7533)
++	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+ 		adv7533_detach_dsi(adv7511);
+ 	i2c_unregister_device(adv7511->i2c_cec);
+ 	if (adv7511->cec_clk)
+@@ -1266,9 +1279,8 @@ static const struct i2c_device_id adv7511_i2c_ids[] = {
+ 	{ "adv7511", ADV7511 },
+ 	{ "adv7511w", ADV7511 },
+ 	{ "adv7513", ADV7511 },
+-#ifdef CONFIG_DRM_I2C_ADV7533
+ 	{ "adv7533", ADV7533 },
+-#endif
++	{ "adv7535", ADV7535 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, adv7511_i2c_ids);
+@@ -1277,9 +1289,8 @@ static const struct of_device_id adv7511_of_ids[] = {
+ 	{ .compatible = "adi,adv7511", .data = (void *)ADV7511 },
+ 	{ .compatible = "adi,adv7511w", .data = (void *)ADV7511 },
+ 	{ .compatible = "adi,adv7513", .data = (void *)ADV7511 },
+-#ifdef CONFIG_DRM_I2C_ADV7533
+ 	{ .compatible = "adi,adv7533", .data = (void *)ADV7533 },
+-#endif
++	{ .compatible = "adi,adv7535", .data = (void *)ADV7535 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, adv7511_of_ids);
 -- 
 2.23.0
 
