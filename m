@@ -2,213 +2,109 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37125C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0133C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10CD321787
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BC921781
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 15:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ghfm9r4D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfK1PRs (ORCPT
+        id S1727047AbfK1PSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 10:17:48 -0500
-Received: from mga12.intel.com ([192.55.52.136]:39027 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbfK1PRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 10:17:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 07:17:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,253,1571727600"; 
-   d="scan'208";a="199551689"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.104])
-  by orsmga007.jf.intel.com with ESMTP; 28 Nov 2019 07:17:30 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [RFC PATCH 5/8] perf/x86/lbr: Fix shorter LBRs call stacks for system-wide mode
-Date:   Thu, 28 Nov 2019 07:14:28 -0800
-Message-Id: <1574954071-6321-5-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
-References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
+        Thu, 28 Nov 2019 10:18:34 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34761 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbfK1PSd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 10:18:33 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n13so13307792pff.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 07:18:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=Vz09qS99hyvV+5cErCqS+LojQyYSm3WMnbpZQwjAQlI=;
+        b=ghfm9r4DFsb5fHfnc7g/ko5YJHWygsZv/hcBNlfcXpfFlyQiVMMlre6OpoJDyEbw8K
+         Q4sx8HPS+CiM/ZpJ+APk4eKAqEJdDWSNmB43GmpDJ2+LW2A6DEpKnbHxBp3ijXaGOWv1
+         sktDV5DC+ccHnARwl9EStR4Br0fwqX9bBHQ3155uy+xUB+yjfSKRPk+OXL9F4r2zywkW
+         P8unVis3ScqzW8ZAzsZjRCAwHisRBGEVzMhrlcVt0djct49hzEi8VnFkkOzL13FVWu8Z
+         /Xf0LC/h6I0YVUE+R5LoIKId8sa2tAaRzgk8TFvP5/nwRTjhbQ1Q7OZyviiab8oW8gJb
+         JCOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Vz09qS99hyvV+5cErCqS+LojQyYSm3WMnbpZQwjAQlI=;
+        b=ao1kjdzs7wyDa4Rh/U803K/ciwQyu5Fgxh5cVbM2fjZKwIoStMAoqySSIvc0I6uxLA
+         S9yl4Zo/2WXUY/extYWbhGkLfJZ/T5eXRqWW+k8RV53k1LFie6VjIx8dGldg/y4Qfhz9
+         hNW+O6nIVZHeJGJW90Z85s4oi7O4iI48961/I3ySiELNjlLDws37ejzt5WRT35pYfriU
+         CyVw9mrY32CwUakDrOFdeivx0ca5ee9Zv8f8lYWO62f7QumQv9SyEWP5vrbzI895gryO
+         LV3CKj0P2Y2ZbGCR+POlOlR02dMwA6ioWNTQfilAZjy9WXqUVw0USdtnSJd0OxwGKS59
+         e8lA==
+X-Gm-Message-State: APjAAAXLLzhBX3CJndad+XpzCJPQb/uUBVj2FvHjtu4INp6DAEmRWRbe
+        p8p2Tqg+Rk8BTxy9/ykEwMjnpzEG2l5mvw==
+X-Google-Smtp-Source: APXvYqzDYfEjpOkxYsikOF3AlK0ttrBHAuqSaebABsl7aoIPyBRlEbusIMhiOewSWE05ceC8nHS3UA==
+X-Received: by 2002:a65:6815:: with SMTP id l21mr11337032pgt.283.1574954312463;
+        Thu, 28 Nov 2019 07:18:32 -0800 (PST)
+Received: from ?IPv6:2605:e000:100e:8c61:bc69:2e63:573c:4afd? ([2605:e000:100e:8c61:bc69:2e63:573c:4afd])
+        by smtp.gmail.com with ESMTPSA id w2sm21460471pgm.18.2019.11.28.07.18.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Nov 2019 07:18:31 -0800 (PST)
+Subject: Re: INFO: trying to register non-static key in
+ io_cqring_overflow_flush
+To:     syzbot <syzbot+be9e13497969768c0e6e@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <0000000000009f46d4059863fdea@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <71b86056-944f-c5e1-b4cf-35833a82761c@kernel.dk>
+Date:   Thu, 28 Nov 2019 07:18:28 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <0000000000009f46d4059863fdea@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On 11/28/19 12:35 AM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    d7688697 Merge tag 'for-linus' of git://git.kernel.org/pub..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=145e5fcee00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=12f2051e3d8cdb3f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=be9e13497969768c0e6e
+> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146c517ae00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16550b12e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+be9e13497969768c0e6e@syzkaller.appspotmail.com
 
-In system-wide mode, LBR callstacks are shorter in comparison to
-per-process mode.
+This is the same as:
 
-LBR MSRs are reset during context switch in system-wide mode. For LBR
-call stack, the LBRs should be always saved/restored during context
-switch.
+syzbot+0d818c0d39399188f393@syzkaller.appspotmail.com
 
-Use the space in task_struct to save/restore the LBR call stack data.
+which is fixed by eb065d301e8c83643367bdb0898becc364046bda in my
+for-5.5/io_uring-post branch, which will go upstream soon. Letting
+you know so we don't have duplicate entries for this one.
 
-For system-wide event, it's unnecessagy to update the
-lbr_callstack_users for each threads. Add a variable in x86_pmu to
-indicate if the system-wide event is active.
-
-Fixes: 76cb2c617f12 ("perf/x86/intel: Save/restore LBR stack during context switch")
-Reported-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Debugged-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/intel/lbr.c  | 57 ++++++++++++++++++++++++++++++++++----------
- arch/x86/events/perf_event.h |  1 +
- 2 files changed, 45 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index dbf31f9..855628a 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -337,6 +337,12 @@ static inline u64 rdlbr_to(unsigned int idx)
- 	return val;
- }
- 
-+static bool has_lbr_callstack_users(struct x86_perf_task_context *task_ctx)
-+{
-+	return task_ctx->lbr_callstack_users ||
-+	       x86_pmu.lbr_callstack_users;
-+}
-+
- static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-@@ -344,7 +350,7 @@ static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
- 	unsigned lbr_idx, mask;
- 	u64 tos;
- 
--	if (task_ctx->lbr_callstack_users == 0 ||
-+	if (!has_lbr_callstack_users(task_ctx) ||
- 	    task_ctx->lbr_stack_state == LBR_NONE) {
- 		intel_pmu_lbr_reset();
- 		return;
-@@ -392,7 +398,7 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
- 	u64 tos, from;
- 	int i;
- 
--	if (task_ctx->lbr_callstack_users == 0) {
-+	if (!has_lbr_callstack_users(task_ctx)) {
- 		task_ctx->lbr_stack_state = LBR_NONE;
- 		return;
- 	}
-@@ -445,6 +451,7 @@ void intel_pmu_lbr_sched_task(struct perf_event_context *ctx,
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct x86_perf_task_context *task_ctx;
-+	struct perf_ctx_data *ctx_data;
- 
- 	if (!cpuc->lbr_users)
- 		return;
-@@ -454,15 +461,18 @@ void intel_pmu_lbr_sched_task(struct perf_event_context *ctx,
- 	 * the task was scheduled out, restore the stack. Otherwise flush
- 	 * the LBR stack.
- 	 */
--	task_ctx = ctx ? ctx->task_ctx_data : NULL;
-+	rcu_read_lock();
-+	ctx_data = rcu_dereference(task->perf_ctx_data);
-+	task_ctx = ctx_data ? (struct x86_perf_task_context *) ctx_data->data : NULL;
- 	if (task_ctx) {
- 		if (sched_in)
- 			__intel_pmu_lbr_restore(task_ctx);
- 		else
- 			__intel_pmu_lbr_save(task_ctx);
-+		rcu_read_unlock();
- 		return;
- 	}
--
-+	rcu_read_unlock();
- 	/*
- 	 * Since a context switch can flip the address space and LBR entries
- 	 * are not tagged with an identifier, we need to wipe the LBR, even for
-@@ -481,16 +491,27 @@ static inline bool branch_user_callstack(unsigned br_sel)
- void intel_pmu_lbr_add(struct perf_event *event)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--	struct x86_perf_task_context *task_ctx;
- 
- 	if (!x86_pmu.lbr_nr)
- 		return;
- 
- 	cpuc->br_sel = event->hw.branch_reg.reg;
- 
--	if (branch_user_callstack(cpuc->br_sel) && event->ctx->task_ctx_data) {
--		task_ctx = event->ctx->task_ctx_data;
--		task_ctx->lbr_callstack_users++;
-+	if (branch_user_callstack(cpuc->br_sel)) {
-+		if (event->attach_state & PERF_ATTACH_TASK) {
-+			struct x86_perf_task_context *task_ctx;
-+			struct task_struct *task = event->hw.target;
-+			struct perf_ctx_data *ctx_data;
-+
-+			rcu_read_lock();
-+			ctx_data = rcu_dereference(task->perf_ctx_data);
-+			if (ctx_data) {
-+				task_ctx = (struct x86_perf_task_context *)ctx_data->data;
-+				task_ctx->lbr_callstack_users++;
-+			}
-+			rcu_read_unlock();
-+		} else
-+			x86_pmu.lbr_callstack_users++;
- 	}
- 
- 	/*
-@@ -522,15 +543,25 @@ void intel_pmu_lbr_add(struct perf_event *event)
- void intel_pmu_lbr_del(struct perf_event *event)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--	struct x86_perf_task_context *task_ctx;
- 
- 	if (!x86_pmu.lbr_nr)
- 		return;
- 
--	if (branch_user_callstack(cpuc->br_sel) &&
--	    event->ctx->task_ctx_data) {
--		task_ctx = event->ctx->task_ctx_data;
--		task_ctx->lbr_callstack_users--;
-+	if (branch_user_callstack(cpuc->br_sel)) {
-+		if (event->attach_state & PERF_ATTACH_TASK) {
-+			struct task_struct *task = event->hw.target;
-+			struct x86_perf_task_context *task_ctx;
-+			struct perf_ctx_data *ctx_data;
-+
-+			rcu_read_lock();
-+			ctx_data = rcu_dereference(task->perf_ctx_data);
-+			if (ctx_data) {
-+				task_ctx = (struct x86_perf_task_context *)ctx_data->data;
-+				task_ctx->lbr_callstack_users--;
-+			}
-+			rcu_read_unlock();
-+		} else
-+			x86_pmu.lbr_callstack_users--;
- 	}
- 
- 	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 55c4812..b8b7280 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -674,6 +674,7 @@ struct x86_pmu {
- 	int		lbr_nr;			   /* hardware stack size */
- 	u64		lbr_sel_mask;		   /* LBR_SELECT valid bits */
- 	const int	*lbr_sel_map;		   /* lbr_select mappings */
-+	u64		lbr_callstack_users;	   /* lbr callstack system wide users */
- 	bool		lbr_double_abort;	   /* duplicated lbr aborts */
- 	bool		lbr_pt_coexist;		   /* (LBR|BTS) may coexist with PT */
- 
 -- 
-2.7.4
+Jens Axboe
 
