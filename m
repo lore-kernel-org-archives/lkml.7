@@ -2,130 +2,148 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2D3C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4DBC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D5621775
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BED21781
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 10:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574937187;
-	bh=XkkZY50Ku/fTTkcm9Gj5G8wbLDZLo31fHLtFpoOVYCw=;
+	s=default; t=1574937322;
+	bh=hItJyUF8hUfjd0/rGoU4MIjVuZJ5u4q7RJPGnKhD4DQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vcGdTi5WZMVQ9au0a3zArdex0buBMpyJDF9DdrK7Wjz47E/wB3G4i5sA8294OY8Ed
-	 vHLvG///hlw2puQK6WCig0/8gUU9t6yuuxfCLcqB87g69Qp0UHaJnUtzumeNESuWtm
-	 Tg/ilPLu/UsPBqPFtjUz8rYbUzt0j8T/mczeflSk=
+	b=umL8sQykNtf2puO5ZWf84f2B7O/Oxx4yQe+pnQcnw/g6UImVjsX7q/55M9KfQLjOx
+	 Yd/F1cPL240VaBqgAFJsikSBlO9TNnGnCwwcJH7H61JFGw/ZeirdU5aJBPfKah9fLM
+	 VnXo+9CoXABQ6ussByBALYOpnjOYwu5gr/6MJfEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfK1KdG (ORCPT
+        id S1726594AbfK1KfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:33:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46782 "EHLO mail.kernel.org"
+        Thu, 28 Nov 2019 05:35:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfK1KdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:33:05 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        id S1726191AbfK1KfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 05:35:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A8F821774;
-        Thu, 28 Nov 2019 10:33:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C6021774;
+        Thu, 28 Nov 2019 10:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574937185;
-        bh=XkkZY50Ku/fTTkcm9Gj5G8wbLDZLo31fHLtFpoOVYCw=;
+        s=default; t=1574937320;
+        bh=hItJyUF8hUfjd0/rGoU4MIjVuZJ5u4q7RJPGnKhD4DQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=13OFpcdb2oyl0G7fXdFH5DZQWxrcTEN4M4cMy0d8sc/zcZH7aOvPlsOmKKejf7uSK
-         GxuhBUi83tUboyJjztTNa5pya+hTY07JhVN3nZ2DhT4kl6XVhttuXcXguqPZEavXYM
-         eiHgzMrc1GjyRG/8pmyOhbMzQnQv6JU6eeqVScEM=
-Date:   Thu, 28 Nov 2019 11:33:01 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/1] arm64: dts: allwinner: a64: olinuxino: Add VCC-PG
- supply
-Message-ID: <20191128103301.vjpkvjscy45ycgwg@gilmour.lan>
-References: <20191126110508.15264-1-stefan@olimex.com>
- <20191126162721.qi7scp3vadxn7k2i@gilmour.lan>
- <0c1d7377-7064-f509-ffc5-bd1e8f2fbaa8@olimex.com>
+        b=1bpz61K8W31vQA+wq84WRHnL3qDZsEdf7JM+xzGz2lGCNJK4WPETlhgWwqxNzPBQl
+         mH2E5+zddm9eNEPLQMHgD3qc5PEOqi1SZXmz39rbB9qmZ92oMfoGeGeN8Yxlq5/rgZ
+         PdoOTbFkZJ8+8pN2XoPE39ZQVKVrl2wizVWtMz6M=
+Date:   Thu, 28 Nov 2019 11:35:18 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
+Message-ID: <20191128103518.GA3399855@kroah.com>
+References: <20191122134131.GA2050590@kroah.com>
+ <20191122134627.GB2050590@kroah.com>
+ <9f976044-2dbc-6c19-11e7-210cd7ab35ea@nvidia.com>
+ <a5d68f07-5f9a-2809-404d-bcd8ca593d70@roeck-us.net>
+ <7edc9531-347e-9ac7-2583-5efb49acffdb@nvidia.com>
+ <20191125094116.GA2340170@kroah.com>
+ <a6830303-ff96-f7df-b504-ab226aefddca@nvidia.com>
+ <20191125160305.GD2683321@kroah.com>
+ <013aa2b3-9a68-6227-36bc-093d03547fce@nvidia.com>
+ <b93b699e-35d9-1082-b46b-a2c7400b7b48@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="stx4a5zlstsyhhjb"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <0c1d7377-7064-f509-ffc5-bd1e8f2fbaa8@olimex.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b93b699e-35d9-1082-b46b-a2c7400b7b48@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 28, 2019 at 09:26:25AM +0000, Jon Hunter wrote:
+> 
+> On 25/11/2019 22:45, Jon Hunter wrote:
+> > 
+> > On 25/11/2019 16:03, Greg Kroah-Hartman wrote:
+> >> On Mon, Nov 25, 2019 at 01:22:58PM +0000, Jon Hunter wrote:
+> >>>
+> >>> On 25/11/2019 09:41, Greg Kroah-Hartman wrote:
+> >>>> On Sun, Nov 24, 2019 at 08:31:46PM +0000, Jon Hunter wrote:
+> >>>>>
+> >>>>> On 23/11/2019 15:46, Guenter Roeck wrote:
+> >>>>>> On 11/22/19 6:48 AM, Jon Hunter wrote:
+> >>>>>>
+> >>>>>> [ ... ]
+> >>>>>>
+> >>>>>>> Error: arch/arm/boot/dts/omap5-board-common.dtsi:636.1-6 Label or path
+> >>>>>>> dwc3 not found
+> >>>>>>> FATAL ERROR: Syntax error parsing input tree
+> >>>>>>> scripts/Makefile.lib:293: recipe for target
+> >>>>>>> 'arch/arm/boot/dts/omap5-igep0050.dtb' failed
+> >>>>>>> make[1]: *** [arch/arm/boot/dts/omap5-igep0050.dtb] Error 1
+> >>>>>>> arch/arm/Makefile:338: recipe for target 'dtbs' failed
+> >>>>>>> make: *** [dtbs] Error 2
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> This is caused by the following commit ...
+> >>>>>>>
+> >>>>>>> commit d0abc07b3d752cbe2a8d315f662c53c772caed0f
+> >>>>>>> Author: H. Nikolaus Schaller <hns@goldelico.com>
+> >>>>>>> Date:   Fri Sep 28 17:54:00 2018 +0200
+> >>>>>>>
+> >>>>>>>      ARM: dts: omap5: enable OTG role for DWC3 controller
+> >>>>>>>
+> >>>>>>
+> >>>>>> On top of the breakage caused by this patch, I would also argue
+> >>>>>> that it is not a bug fix and should not have been included
+> >>>>>> in the first place.
+> >>>>>>
+> >>>>>> The dwc3 label was added with commit 4c387984618fe ("ARM: dts: omap5:
+> >>>>>> Add l4 interconnect hierarchy and ti-sysc data"). Given the size of
+> >>>>>> that patch, I highly doubt that a backport to 4.4 would work.
+> >>>>
+> >>>> Good catch, I have now dropped both of these patches and pushed out a
+> >>>> -rc3
+> >>>>
+> >>>>> FYI ... I am still seeing a build failure because of this with -rc2 ...
+> >>>>
+> >>>> Can you see if -rc3 is also giving you problems?
+> >>>
+> >>> Better, but I appear to be seeing some random suspend failures with this
+> >>> now on one board. I will try to bisect this.
+> >>>
+> >>> Test results for stable-v4.4:
+> >>>     6 builds:	6 pass, 0 fail
+> >>>     12 boots:	12 pass, 0 fail
+> >>>     19 tests:	18 pass, 1 fail
+> >>>
+> >>> Linux version:	4.4.203-rc3-g2576206c30b5
+> >>> Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+> >>>                 tegra30-cardhu-a04
+> >>
+> >> Odd.  If you find anything interesting, please let me know.
+> > 
+> > Yes will do. Bisect has not found anything yet, so will keeping looking
+> > to see if this is a false-positive or not.
+> 
+> I have been doing some more testing and it appears that I see
+> intermittent suspend failures on Tegra124 with linux-4.4.y. Apparently
+> this issue has always been there and appears to be fixed in v4.5. I am
+> still trying to find a way to fix this. The changes in v4.5 that appear
+> to resolve this are too complex for stable (several patches in Tegra clk
+> drivers). Anyway, ignore this for now, I will see how we can fix or
+> workaround for linux-4.4.y.
 
---stx4a5zlstsyhhjb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok, thanks for letting us know and good luck with it.
 
-Hi Stefan,
-
-On Wed, Nov 27, 2019 at 09:07:40AM +0200, Stefan Mavrodiev wrote:
-> On 11/26/19 6:27 PM, Maxime Ripard wrote:
-> > Hi Stefan,
-> >
-> > On Tue, Nov 26, 2019 at 01:05:08PM +0200, Stefan Mavrodiev wrote:
-> > > On A64-OLinuXino boards, PG9 is used for USB1 enable/disable. The
-> > > port is supplied by DLDO4, which is disabled by default. The patch
-> > > adds the regulator as vcc-pg, which is later used by the pinctrl.
-> > >
-> > > Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> > > ---
-> > >   arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 4 ++++
-> > >   1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> > > index 01a9a52edae4..c9d8c9c4ef20 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> > > @@ -163,6 +163,10 @@
-> > >   	status = "okay";
-> > >   };
-> > >
-> > > +&pio {
-> > > +	vcc-pg-supply=<&reg_dldo4>;
-> > The equal sign should have spaces around it.
-> >
-> > Also, can you please list all the bank supplies while you're at it?
->
-> Sure. Should the supplies defined as regulators names be added also to the
-> pio node?
-> For example reg_aldo1 is named "vcc-pe".
-
-As far as I can tell, the A64 has regulators for PC, PD, PE, PG and
-PL, so you should list those (PL being under r_pio)
-
-> Also, since the commit message will be different for better representation
-> of the changes, should I send the next
-> patch as v2 or as a new one?
-
-Either way works for me as long as the commit message matches the changes.
-
-Thanks!
-Maxime
-
---stx4a5zlstsyhhjb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXd+iXQAKCRDj7w1vZxhR
-xcehAP963qGMNNtuK9UziU1syhhW7rH4N5zmtnS3s2iN4Mp0JwD/d4k4t/rtURBA
-Lpwkgow4mIPRk/bmMRu8JfSG0GizbQY=
-=1Rzz
------END PGP SIGNATURE-----
-
---stx4a5zlstsyhhjb--
+greg k-h
