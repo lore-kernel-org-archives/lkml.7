@@ -2,100 +2,108 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A91C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4332DC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3171217AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574943093;
-	bh=+edHaavfcI2d0p1hLYiOCm2vHG7MmTychmzkrPlksXU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KK81+CFycnLSJs2kQGHaJJNKUxm5s301QgR7SD91p8/0/x3Yjz8O+It9YXWbw04wW
-	 M7IhRDe4cvdafJ+aFZRyCG2CadrqCgWLG7d4tWbStWMNgPugqD8BTAdTTgBS/mrSVw
-	 1jndXBs5cMMw4DTQcBlK3qq/kVxEx8uc9D7sYft4=
+	by mail.kernel.org (Postfix) with ESMTP id 1B7F3217BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 12:11:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="DN5/xHz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfK1MLc (ORCPT
+        id S1726593AbfK1MLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 07:11:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:34504 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfK1MLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 07:11:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D810C30E;
-        Thu, 28 Nov 2019 04:11:30 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 559613F6C4;
-        Thu, 28 Nov 2019 04:11:30 -0800 (PST)
-Date:   Thu, 28 Nov 2019 12:11:28 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH] ASoC: tlv320aic31xx: Add HP output driver pop reduction
- controls
-Message-ID: <20191128121128.GA4210@sirena.org.uk>
-References: <20191128093955.29567-1-nikita.yoush@cogentembedded.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
-Content-Disposition: inline
-In-Reply-To: <20191128093955.29567-1-nikita.yoush@cogentembedded.com>
-X-Cookie: Do not dry clean.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 28 Nov 2019 07:11:46 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:34210 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfK1MLp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 07:11:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574943103;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=DfCgOl5Ov657fyN9M2leKFqz1WkUc5AmijR2gH7rong=;
+        b=DN5/xHz6GzN780lqwr77QS5pAPmIC7Qb6V7r5o1wlh532hLAIEc6WASVYrJTNCrnNx
+        YNgTFUAfYCrqjPsNGG43hQ8Ot1BajkqNyt/LKoDK8E6S6bU7IuiWnZ5gD/nLyOIZlcrY
+        lZGgxj5JypKPdew3QahHby8WqF2Nr/TJGWPm/05quN9aCtnanyfRDKzQputY/zugUo8v
+        4PC+C0B0rCmR4xKjyE+p5sqW4LERjshxs4DzENP/lrjiiBW5OUlbjU+S1hSIF2ISj5WX
+        vI9G3sBJVEINk+KABCqNVmNPyCestzPh1/zAOH/QK5RaCE+f/5siOL/eHEMB3B4cWsFB
+        9Frw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw43upSE="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
+        with ESMTPSA id y07703vASCBZJOe
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Thu, 28 Nov 2019 13:11:35 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <dbf536da-77a6-30a0-a380-9463f604d1a8@arm.com>
+Date:   Thu, 28 Nov 2019 13:11:35 +0100
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        MIPS Creator CI20 Development 
+        <mips-creator-ci20-dev@googlegroups.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AD919A0B-2629-4E8A-8A7A-1E4A868F8BC4@goldelico.com>
+References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com> <703DC004-96E8-463D-8870-3CC410FE1C5E@goldelico.com> <3190d1a4-96c4-1843-3ae1-bae3a97af9fb@arm.com> <8D151C34-41A1-4DFE-92D6-D1B27AEC8730@goldelico.com> <dbf536da-77a6-30a0-a380-9463f604d1a8@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Am 28.11.2019 um 12:51 schrieb Vincenzo Frascino =
+<vincenzo.frascino@arm.com>:
+>=20
+> Hi Nikolaus,
+>=20
+> On 27/11/2019 13:53, H. Nikolaus Schaller wrote:
+> [...]
+>=20
+>>> vdso_data and mips_vdso_data before are not part of the ABI hence =
+they are not
+>>> bind by a contract with the userspace.
+>>>=20
+>>> This means that they can change at any point and if a userspace =
+software relies
+>>> on a specific layout of these data structures is doing something =
+wrong.
+>>=20
+>> Maybe the libs are clever enough to find that out dynamically but I =
+have no
+>> idea about how gettimeofday() and user-space VDSO is implemented to =
+handle such
+>> changes.
+>>=20
+> As I said userspace applications and libraries should not rely on the =
+layout of
+> vdso_data because this is not part of the ABI.
+>=20
+> The only thing that userspace requires is to "know" that =
+gettimeofday() exists,
+> than it is gettimeofday() that internally accesses the data structure.
 
-On Thu, Nov 28, 2019 at 12:39:55PM +0300, Nikita Yushchenko wrote:
+Well, with user-space I include the lib that provides the gettimeofday() =
+syscall
+and reads out the memory region where the VDSO data structure is =
+provided by the
+kernel. And that part comes from Debian. Somehow it does differently =
+with 4.19
+than 5.4. So I summarise all non-kernel code with the term "user-space".
 
-> +static const char * const hp_poweron_time_text[] = {
-> +	"0us", "15.3us", "153us", "1.53ms", "15.3ms", "76.2ms",
-> +	"153ms", "304ms", "610ms", "1.22s", "3.04s", "6.1s" };
-> +
-> +static SOC_ENUM_SINGLE_DECL(hp_poweron_time_enum, AIC31XX_HPPOP, 3,
-> +	hp_poweron_time_text);
-> +
-> +static const char * const hp_rampup_step_text[] = {
-> +	"0ms", "0.98ms", "1.95ms", "3.9ms" };
-> +
-> +static SOC_ENUM_SINGLE_DECL(hp_rampup_step_enum, AIC31XX_HPPOP, 1,
-> +	hp_rampup_step_text);
+BR,
+Nikolaus
 
-I'm not seeing any integration with DAPM here, I'd expect to see that so
-we don't cut off the start of audio especially with the longer times
-available (which I'm frankly not sure are seriously usable).
-
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3fuW8ACgkQJNaLcl1U
-h9D+5Qf/QFKjJasickPKQCEdE/PrbvW/Mm+6dtmuvmnV9hvdQeCMwT37eyE3TFlE
-+hlqcPYoBxVuscGPCTbS+PgplsAB7++PcLBp1gQwcrU3FGg/kbOQiF0AeV/8456X
-hJD1fdSlIMnzV5QXMbKz0iAO6G2uxLJUHreXOGybQS3PYvFFplPs/2Sog4GIcnWt
-94QrFkgRVccIIjVDCbisZngy1WK919xWYrQDCdg/MGKJiCKENfqUuwKSck6Cy+Z6
-GDMCaDw9PNCCfeYW27GIt1DKqrdcL97+J29WsXqTxqth8WOwEM/UmpuMtvhX2nip
-/4l2Iu4vwMmdpgsGwcLLJs+pPbi4Lg==
-=bIgM
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
