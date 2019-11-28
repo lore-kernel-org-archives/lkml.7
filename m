@@ -2,154 +2,203 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC958C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB448C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFFA2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A711E2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 21:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oX2zn5k3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kZeh47RN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfK1VnT (ORCPT
+        id S1726692AbfK1Vnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 16:43:19 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:57904 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfK1VnT (ORCPT
+        Thu, 28 Nov 2019 16:43:46 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46455 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfK1Vnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 16:43:19 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xASLe2Ti055828;
-        Thu, 28 Nov 2019 21:40:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=RDlUvdHx7bP3fhej6PPw6iFvdRiOK+n8uLYu5RZA6Wo=;
- b=oX2zn5k3BmCcgDl/3j7J84yRrPIvrAuufkNnxD1idCwELsblCla0nEHs0+I5/3aj0zvs
- 8J7gyV/Z0CZdeMn3lVo1cKmS8Zkq1eQlhlioAFlBGrdl4GXG2wMY7IiZX+yFNrkf13aM
- Czwno+dEeQQErb24EgPTNdU4VGv5P5th2eWIZI+07jHvI/qGzfvRqx1fxVoPnkZA4LTA
- cpeLVz+7iTcYY11HxM9wD23FKO/TMoIKfRpxp4Ull62ft7Y/X6ykvR8iYN09blJP3NnE
- QPTsB1myN5irpyr97z6mioRMfjESethNW1ZcM6DiMQlHRC7adUF6uV83UY0pxhTQ3wj7 Zg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2wev6un6ws-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Nov 2019 21:40:02 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xASLcIbw050234;
-        Thu, 28 Nov 2019 21:40:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2wjh0kmq2j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Nov 2019 21:40:01 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xASLe1b3030098;
-        Thu, 28 Nov 2019 21:40:01 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 Nov 2019 13:40:00 -0800
-Subject: Re: [PATCH v2 0/2] xen/gntdev: sanitize user interface handling
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     Stefano Stabellini <sstabellini@kernel.org>
-References: <20191107111546.26579-1-jgross@suse.com>
- <442417bc-ec65-0864-0a99-59583a52f866@suse.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <38f8733d-f94f-e10f-0291-4d198f327d56@oracle.com>
-Date:   Thu, 28 Nov 2019 16:39:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 28 Nov 2019 16:43:46 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k1so5046758pga.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 13:43:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K9FrLAOFp0g+hrdsabPVchjdViFjj8h0GNkeqZ4HQlM=;
+        b=kZeh47RNC2BtHUa2wCS8rsZONatpvYYLR3K646pyo72NUYaJ/cDpbMeVmz5Yvj0lCo
+         1g50TyX6V1STK60yAw+cgJZzEYfha6eRSBmYJKBnzZxOAzADErDowc173BZOHaPbENxU
+         6XEK3SKBHCw4edPwidyFtxBU1GPm2Fc8/d6gF9GtscAYtRINmE3LoMEADij0to1zXv/u
+         FDHww8EWCZu4DbibNnBJyYzbZkmBFEpKsZesGrvC9mPqVDMSsSLkonwZ+WIsJUl0grPT
+         fpQubcqqSy7C7c9k6rCEm4zTvqF7lbdNMowTyWWA8U6O6FQ1eYS//74MurZ87a9CHWGH
+         dCwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K9FrLAOFp0g+hrdsabPVchjdViFjj8h0GNkeqZ4HQlM=;
+        b=cHOmDq0plKbOHyYMKEBk4UizkhfyDJfEFFEQefsPqsdNpC5fd/kabXnSj0j/a7yhll
+         wCKTN/z73nKqOEWjKFuIvWn5Zv9NJ61NisNOCdDMln4u0W9xaCsHtn1l96r+N5CJ/tQd
+         qhFjnYAjPWBS9wIXM5f9kDaRXpVfP3rBPT2hBmNM0nhSwDLOgwh8HaobNdPmg5J/IAck
+         BWFnDdQZ+wW3WnHw/OmbuBxBaOrF79Snh5Hl5c2cMOf5bIlZLeJ3Kh0Fghpqtkjd7M+7
+         h9NG9YSKzr7Jftg4fhR8asTIvZ/KpNneC4/kTdrVl7+U/2n0BC1WKoSG26Vk4otTLbj4
+         t9jg==
+X-Gm-Message-State: APjAAAVXpfuwCw8QDM1Hw2QYQman45srNX+RSxxZzMSnQJXCKxThDw2t
+        CkdG79PmdZDmds4ZPqcyXlP+4A==
+X-Google-Smtp-Source: APXvYqxXK5VlxZHgjn3ehpw/1a/UvQMzGfyMHy3vxqme3i6QHac5tFm6KotaQWcLg7ThtP7KXY6L6w==
+X-Received: by 2002:aa7:90d0:: with SMTP id k16mr55284524pfk.131.1574977423508;
+        Thu, 28 Nov 2019 13:43:43 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id o23sm21753750pgj.90.2019.11.28.13.43.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 13:43:42 -0800 (PST)
+Date:   Thu, 28 Nov 2019 13:43:39 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH 1/3] drivers: thermal: tsens: Add critical interrupt
+ support
+Message-ID: <20191128214339.GL82109@yoga>
+References: <cover.1573499020.git.amit.kucheria@linaro.org>
+ <4b949a4f401a7f9d403ed0f0c16c7feb083f3524.1573499020.git.amit.kucheria@linaro.org>
+ <20191112193852.GC3140946@builder>
+ <CAHLCerN1VXhU0VQWN15PB2R16mkCV0i6Mn3+LW=xXtB5_7Z6JQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <442417bc-ec65-0864-0a99-59583a52f866@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9455 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911280189
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9455 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911280189
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHLCerN1VXhU0VQWN15PB2R16mkCV0i6Mn3+LW=xXtB5_7Z6JQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/28/19 3:48 AM, Jürgen Groß wrote:
-> On 07.11.19 12:15, Juergen Gross wrote:
->> The Xen gntdev driver's checking of the number of allowed mapped pages
->> is in need of some sanitizing work.
->>
->> Changes in V2:
->> - enhanced commit message of patch 1 (Andrew Cooper)
->>
->> Juergen Gross (2):
->>    xen/gntdev: replace global limit of mapped pages by limit per call
->>    xen/gntdev: switch from kcalloc() to kvcalloc()
->>
->>   drivers/xen/gntdev-common.h |  2 +-
->>   drivers/xen/gntdev-dmabuf.c | 11 +++------
->>   drivers/xen/gntdev.c        | 55
->> +++++++++++++++++++--------------------------
->>   3 files changed, 27 insertions(+), 41 deletions(-)
->>
->
-> Boris, could you please comment on the patches?
+On Thu 28 Nov 10:46 PST 2019, Amit Kucheria wrote:
 
-Sure, both look good (and so R-b). I haven't commented since Oleksandr
-already gave you his.
+> On Wed, Nov 13, 2019 at 1:08 AM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > On Mon 11 Nov 11:21 PST 2019, Amit Kucheria wrote:
+> >
+> > > TSENS IP v2.x adds critical threshold interrupt support for each sensor
+> > > in addition to the upper/lower threshold interrupt. Add support in the
+> > > driver.
+> > >
+> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > ---
+> > >  drivers/thermal/qcom/tsens-common.c | 129 ++++++++++++++++++++++++++--
+> > >  drivers/thermal/qcom/tsens-v2.c     |   8 +-
+> > >  drivers/thermal/qcom/tsens.c        |  21 +++++
+> > >  drivers/thermal/qcom/tsens.h        |  73 ++++++++++++++++
+> > >  4 files changed, 220 insertions(+), 11 deletions(-)
+> > >
+> > > diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> > > index 4359a4247ac3..2989cb952cdb 100644
+> > > --- a/drivers/thermal/qcom/tsens-common.c
+> > > +++ b/drivers/thermal/qcom/tsens-common.c
+> > > @@ -23,6 +23,10 @@
+> > >   * @low_thresh:     lower threshold temperature value
+> > >   * @low_irq_mask:   mask register for lower threshold irqs
+> > >   * @low_irq_clear:  clear register for lower threshold irqs
+> > > + * @crit_viol:      critical threshold violated
+> >
+> > "violated" as in "temperature is above crit_thresh"?
+> 
+> Yes.
+> 
+> >
+> > > + * @crit_thresh:    critical threshold temperature value
+> > > + * @crit_irq_mask:  mask register for critical threshold irqs
+> > > + * @crit_irq_clear: clear register for critical threshold irqs
+> > >   *
+> > [..]
+> > > diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> > > index 7d317660211e..784c4976c4f9 100644
+> > > --- a/drivers/thermal/qcom/tsens.c
+> > > +++ b/drivers/thermal/qcom/tsens.c
+> > > @@ -121,6 +121,27 @@ static int tsens_register(struct tsens_priv *priv)
+> > >
+> > >       enable_irq_wake(irq);
+> > >
+> > > +     if (tsens_version(priv) > VER_1_X) {
+> > > +             irq = platform_get_irq_byname(pdev, "critical");
+> > > +             if (irq < 0) {
+> >
+> > Treating this as a fatal error breaks backwards compatibility with
+> > current devicetree; and even within your patch series, tsens should fail
+> > to probe between this patch and the application of patch 3.
+> 
+> Good catch.
+> 
+> > Please flip this around and do:
+> >
+> > irq = platform_get_irq_byname(pdev, "critical");
+> > if (irq >= 0 && tsens_version(priv) > VER_1_X) {
+> >         request_irq()...
+> > }
+> 
+> Won't this still break with current devicetree since irq < 0 until
+> patch 3? Or are you saying we shouldn't check for
+> platform_get_irq_byname() failure?
+> 
 
+I'm trying to say that dtsi without "critical" defined should cause the
+driver to simply skip this segment, not fail to initialize.
 
--boris
+> I can see two ways out:
+> 1. We patch the dtsi before the code change.
+
+You're expected to maintain backwards compatibility with existing dtb
+files out there. The support for critical interrupt is an additional
+feature, so you should be able to do this by detecting if "critical" is
+defined (e.g. by checking the return value of
+platform_get_irq_byname()).
+
+> 2. We make critical interrupt failure non-fatal by just printing some
+> messages and still returning success.
+> 
+
+Try to make it as specific as possible (without adding a bunch of code)
+and throw in a dev_info() if no "critical" is found.
+
+Regards,
+Bjorn
+
+> Regards,
+> Amit
+> 
+> 
+> > > +                     ret = irq;
+> > > +                     goto err_put_device;
+> > > +             }
+> > > +
+> > > +             ret = devm_request_threaded_irq(&pdev->dev, irq,
+> > > +                                             NULL, tsens_critical_irq_thread,
+> > > +                                             IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> > > +                                             dev_name(&pdev->dev), priv);
+> > > +             if (ret) {
+> > > +                     dev_err(&pdev->dev, "%s: failed to get critical irq\n", __func__);
+> > > +                     goto err_put_device;
+> > > +             }
+> > > +
+> > > +             enable_irq_wake(irq);
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +
+> > >  err_put_device:
+> > >       put_device(&pdev->dev);
+> > >       return ret;
+> >
+> > Regards,
+> > Bjorn
