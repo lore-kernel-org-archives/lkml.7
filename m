@@ -2,250 +2,190 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6429C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 20:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB45C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 20:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A491721774
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 20:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E0321775
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 20:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/b0Zkjs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="daj/EdjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbfK1UTW (ORCPT
+        id S1726663AbfK1UYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 15:19:22 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39134 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfK1UTV (ORCPT
+        Thu, 28 Nov 2019 15:24:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27979 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726558AbfK1UYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 15:19:21 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so29387459wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 12:19:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xwfbITtTKZf6U4UKVcFswXjKlWYF5vruKcu6KmOu+jE=;
-        b=R/b0ZkjsDQkkCZ2RZ77zpVd2zqx00vWlOhSSe39JfmVB29SGL5khb6sgtzq/KvnSZX
-         /Zg7XMrhbcPnBhi5h+EW2Gb2NQAWjujMAw1eet1+WzpN1bAATd2BJeq8ImuWHGN2J+MQ
-         FYtISt7ks+N+Nyd1JVUSkyUPVDX9i7mZ5EDwT61JeojrfyW0B/wzFNeUm/NXEl9lvxIS
-         1h2oFx37NpAeuMemhPnQkd+JR3ZZ/hzBVo0uQV4hPZ0o1OTwZ9JGlhm41yhfsEDiWkUt
-         TKDNzMIuYoHJBMsZBOq1QV9aRkHG5SwFdNIJD36uVOhX7cGEd0FKq6eIoCKcKYZRPtJt
-         oysw==
+        Thu, 28 Nov 2019 15:24:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574972640;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=XqTwc5ebz6tenvnG6zkONwdSyh0ZcAJ7/GPADSmX7as=;
+        b=daj/EdjYZyauOID1QtsTH6Bw5IeoGciF4aqx6kxqUUi+1fyUlrX/ZSyUOAbs5BOVkN/24T
+        +u4PeeZYCPhA8rgl0LCAYGQigo8Pyj96oPiYgoc5Khmbl4Fx00UqaB8jxjc2tnTcwZmOX/
+        ug1agBcZRNtQNttTHz4vwLWEcTecZBA=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-55-4HYKBWAIPWOm1m0PzMr3Kw-1; Thu, 28 Nov 2019 15:23:57 -0500
+Received: by mail-pl1-f199.google.com with SMTP id s7so515703plp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 12:23:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xwfbITtTKZf6U4UKVcFswXjKlWYF5vruKcu6KmOu+jE=;
-        b=i+0BPiGM6+P2B/QU2zKmdlzDJqUColRRpH7a8EkiBSmxkhbpf4WJaW4/ivR0yUlrrc
-         y4Gv/M0zbQIg+1s5xmrR8LFYemI78ryQw5kelhkk9+NviZjrRjFarVdiRtPUp488WFCU
-         D2PouaBO4YFxhGbjObx68XNxH59Z8hc/X09XFj4+8PO+Vn5UnbkRkuVDxoQ7IpuVWj3h
-         qqLXA6qj7ZByJvtktD5zj5VI6LE5qiXFxuFTwJ+jk1+fN0j+vz7jlSQqTkb6GXvIuUaY
-         DaoF81NHvLsbuKsnBO2F89Xg1LDbPm2viR9pKAOS3ziacpiAyd74Gx8vIUjRkvye259f
-         tWTw==
-X-Gm-Message-State: APjAAAUoVZK6ghWRN/ewo4g5H77fSbUWSEGUNDJRpGBfdwO9CHKLznTX
-        WlE/D66qNM/e2Kcwx4X6GlezdM3ieltFHc4CtSyn7A==
-X-Google-Smtp-Source: APXvYqynieOBcZ8Zilip2yTJnXgPUsKF3Z1rCvcfJjq3jGJ71IFLcZaiJgkovL+bo7Y/Bk3FTD9F4jUJmIpa9U+JPk4=
-X-Received: by 2002:a5d:46c1:: with SMTP id g1mr29005289wrs.200.1574972358213;
- Thu, 28 Nov 2019 12:19:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20191126162902.16788-1-ardb@kernel.org> <CAGETcx8SftK_=-Z374AzQ7vy2RGWqvF3ry+q9Y+cQ5dUhgNEew@mail.gmail.com>
-In-Reply-To: <CAGETcx8SftK_=-Z374AzQ7vy2RGWqvF3ry+q9Y+cQ5dUhgNEew@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 28 Nov 2019 21:19:07 +0100
-Message-ID: <CAKv+Gu_-1b=3_hUq41T_RNDtaUWBbFquDWQK64sZKGNdMseHGQ@mail.gmail.com>
-Subject: Re: [PATCH] efi: arm: defer probe of PCIe backed efifb on DT systems
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GPEyz/IHgt6mAW0R3tmNHtqBX2Y5bDBhF2H/Q45W8jA=;
+        b=sgOfOEH6Z5QeFVNW9Wd5YsbJ1rjrAybjItPg5hRSabYnpQkNLnPKp5jQ/SjgI8T0FN
+         mYHkQx+aAhkYT99rNbOFhWgZHvm14sunscwBcMu7gHeKJQF0OgEefQVFlhGnPb9rR16I
+         KrMZPfF/yXB/zfMCJpuIGt+y5oj9Hv5Pgaz7n2WYAseezFyNWrrLsGrjm69CuG4eE70K
+         zOluC+1CIYopX+PKcJM7PrJQXDCi2g5YbQoYmWFJRl2Fz/8Zh5+vH7oSQu7I8OhnAKWr
+         hXNRxjZpdCUxrY/S0dtqm1zspk++Xp6hc8X8ws40RAkWeRPEP99jXO6Vh8JDKN4QPV5d
+         n4mA==
+X-Gm-Message-State: APjAAAWKeVh+NJ6geotzdDX+vdRUIvLgrvDAtpBBB2yVA+NQrJy55Xpf
+        GCp//IWDIHvzPUKeA+2GL+bEjguFrk3WLlEchZt/Xw4KKPyq60wYtgAmhNkhXMyc8E8moY/gWDf
+        baPps7lVMkU7b6ghr0hEY9weq
+X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr9966535pjb.30.1574972636141;
+        Thu, 28 Nov 2019 12:23:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwLgmQBIVDgB8JTDBBuFEwN/117Vx9qIR4Jgevr8C1kD585Wc5/+quQsfVlRjSD579x56aJyQ==
+X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr9966493pjb.30.1574972635767;
+        Thu, 28 Nov 2019 12:23:55 -0800 (PST)
+Received: from localhost ([122.177.85.74])
+        by smtp.gmail.com with ESMTPSA id a15sm2778299pfh.169.2019.11.28.12.23.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Nov 2019 12:23:54 -0800 (PST)
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     bhsharma@redhat.com, bhupesh.linux@gmail.com, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, Boris Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Steve Capper <steve.capper@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dave Anderson <anderson@redhat.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: [PATCH v5 0/5] Append new variables to vmcoreinfo (TCR_EL1.T1SZ for arm64 and MAX_PHYSMEM_BITS for all archs)
+Date:   Fri, 29 Nov 2019 01:53:36 +0530
+Message-Id: <1574972621-25750-1-git-send-email-bhsharma@redhat.com>
+X-Mailer: git-send-email 2.7.4
+X-MC-Unique: 4HYKBWAIPWOm1m0PzMr3Kw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Nov 2019 at 20:29, Saravana Kannan <saravanak@google.com> wrote:
->
-> On Tue, Nov 26, 2019 at 8:30 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > The new of_devlink support breaks PCIe probing on ARM platforms booting
-> > via UEFI if the firmware exposes a EFI framebuffer that is backed by a
-> > PCI device.
->
-> Thanks for testing with of_devlink enabled!
->
+Changes since v4:
+----------------
+- v4 can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-November/023961.html
+- Addressed comments from Dave and added patches for documenting
+  new variables appended to vmcoreinfo documentation.
+- Added testing report shared by Akashi for PATCH 2/5.
 
-Sure, no trouble at all.
+Changes since v3:
+----------------
+- v3 can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-March/022590.html
+- Addressed comments from James and exported TCR_EL1.T1SZ in vmcoreinfo
+  instead of PTRS_PER_PGD.
+- Added a new patch (via [PATCH 3/3]), which fixes a simple typo in
+  'Documentation/arm64/memory.rst'
 
-> > The reason is that the probing order gets reversed,
-> > resulting in a resource conflict on the framebuffer memory window when
-> > the PCIe probes last, causing it to give up entirely.
->
-> Just so I understand it clearly, the probe order reversal is only
-> between this efi-framebuffer device and the PCIe device right? Not all
-> PCI devices or something like that, right? Do you have any info on
-> what dependency causes this reversal? Just curious.
->
+Changes since v2:
+----------------
+- v2 can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
+- Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEMEM
+  ifdef sections, as suggested by Kazu.
+- Updated vmcoreinfo documentation to add description about
+  'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
 
-It is the probe reversal between the efi-framebuffer on the one hand
-and the entire PCIe hierarchy on the other.
+Changes since v1:
+----------------
+- v1 was sent out as a single patch which can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
 
-For some reason, PCIe host controllers are usually probed very early,
-and I wouldn't be surprised if deferring that may cause other issues
-as well. However, of_devlink is presumably specific to DT systems,
-where PCIe does not play such a fundamental role like it does on x86,
-for instance.
+- v2 breaks the single patch into two independent patches:
+  [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
+  [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code =
+(all archs)
 
-> > Given that we rely on PCI quirks to deal with EFI framebuffers that get
-> > moved around in memory, we cannot simply drop the memory reservation, so
-> > instead, let's use the device link infrastructure to register this
-> > dependency, and force the probing to occur in the expected order.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Saravana Kannan <saravanak@google.com>
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  drivers/firmware/efi/arm-init.c | 66 ++++++++++++++++++--
-> >  1 file changed, 61 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-> > index 311cd349a862..617226d50774 100644
-> > --- a/drivers/firmware/efi/arm-init.c
-> > +++ b/drivers/firmware/efi/arm-init.c
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/memblock.h>
-> >  #include <linux/mm_types.h>
-> >  #include <linux/of.h>
-> > +#include <linux/of_address.h>
-> >  #include <linux/of_fdt.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/screen_info.h>
-> > @@ -267,15 +268,70 @@ void __init efi_init(void)
-> >                 efi_memmap_unmap();
-> >  }
-> >
-> > +static bool __init efifb_overlaps_pci_range(const struct of_pci_range *range)
-> > +{
-> > +       u64 fb_base = screen_info.lfb_base;
-> > +
-> > +       if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-> > +               fb_base |= (u64)(unsigned long)screen_info.ext_lfb_base << 32;
-> > +
-> > +       return fb_base >= range->cpu_addr &&
-> > +              fb_base < (range->cpu_addr + range->size);
-> > +}
-> > +
-> >  static int __init register_gop_device(void)
-> >  {
-> > -       void *pd;
-> > +       struct platform_device *pd;
-> > +       struct device_node *np;
-> > +       bool found = false;
-> > +       int err;
-> >
-> >         if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI)
-> >                 return 0;
-> >
-> > -       pd = platform_device_register_data(NULL, "efi-framebuffer", 0,
-> > -                                          &screen_info, sizeof(screen_info));
-> > -       return PTR_ERR_OR_ZERO(pd);
-> > +       pd = platform_device_alloc("efi-framebuffer", 0);
-> > +       if (!pd)
-> > +               return -ENOMEM;
-> > +
-> > +       err = platform_device_add_data(pd, &screen_info, sizeof(screen_info));
-> > +       if (err)
-> > +               return err;
-> > +
-> > +       /*
-> > +        * If the efifb framebuffer is backed by a PCI graphics controller, we
-> > +        * have to ensure that this relation is expressed using a device link
-> > +        * when running in DT mode, or the probe order may be reversed,
-> > +        * resulting in a resource reservation conflict on the memory window
-> > +        * that the efifb framebuffer steals from the PCIe host bridge.
-> > +        */
-> > +       for_each_node_by_type(np, "pci") {
-> > +               struct of_pci_range_parser parser;
-> > +               struct of_pci_range range;
-> > +               struct device *sup_dev;
-> > +
-> > +               if (found) {
-> > +                       of_node_put(np);
-> > +                       break;
-> > +               }
->
-> It looks like you are doing this here because you can't break out of
-> two loops when you set found = true. Is that right? If so, I think
-> doing this at the end of the loop would make it more obvious on what's
-> going on.
->
+This patchset primarily fixes the regression reported in user-space
+utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
+with the availability of 52-bit address space feature in underlying
+kernel. These regressions have been reported both on CPUs which don't
+support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
+and also on prototype platforms (like ARMv8 FVP simulator model) which
+support ARMv8.2 extensions and are running newer kernels.
 
-Yeah, I realized that after I posted it.
+The reason for these regressions is that right now user-space tools
+have no direct access to these values (since these are not exported
+from the kernel) and hence need to rely on a best-guess method of
+determining value of 'vabits_actual' and 'MAX_PHYSMEM_BITS' supported
+by underlying kernel.
 
-> > +
-> > +               err = of_pci_range_parser_init(&parser, np);
-> > +               if (err) {
-> > +                       pr_warn("of_pci_range_parser_init() failed: %d\n", err);
-> > +                       continue;
-> > +               }
-> > +
-> > +               sup_dev = get_dev_from_fwnode(&np->fwnode);
-> > +
-> > +               for_each_of_pci_range(&parser, &range) {
-> > +                       if (efifb_overlaps_pci_range(&range)) {
-> > +                               found = true;
-> > +                               if (!device_link_add(&pd->dev, sup_dev, 0))
-> > +                                       pr_warn("device_link_add() failed\n");
->
-> I think dev_warn(&pd->dev,...) might make the message more useful.
-> Otherwise, it's so confusing.
->
+Exporting these values via vmcoreinfo will help user-land in such cases.
+In addition, as per suggestion from makedumpfile maintainer (Kazu),
+it makes more sense to append 'MAX_PHYSMEM_BITS' to
+vmcoreinfo in the core code itself rather than in arm64 arch-specific
+code, so that the user-space code for other archs can also benefit from
+this addition to the vmcoreinfo and use it as a standard way of
+determining 'SECTIONS_SHIFT' value in user-land.
 
-OK
+Cc: Boris Petkov <bp@alien8.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Steve Capper <steve.capper@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Dave Anderson <anderson@redhat.com>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: x86@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: kexec@lists.infradead.org
 
-> > +                               break;
-> > +                       }
-> > +               }
-> > +               put_device(sup_dev);
->
-> Can't you do the if (found) here? Another option is to simply do a
-> "goto out;" at the end of the if block where you set found = true.
->
+Bhupesh Sharma (5):
+  crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+  arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+  Documentation/arm64: Fix a simple typo in memory.rst
+  Documentation/vmcoreinfo: Add documentation for 'MAX_PHYSMEM_BITS'
+  Documentation/vmcoreinfo: Add documentation for 'TCR_EL1.T1SZ'
 
-Indeed.
+ Documentation/admin-guide/kdump/vmcoreinfo.rst | 11 +++++++++++
+ Documentation/arm64/memory.rst                 |  2 +-
+ arch/arm64/include/asm/pgtable-hwdef.h         |  1 +
+ arch/arm64/kernel/crash_core.c                 |  9 +++++++++
+ kernel/crash_core.c                            |  1 +
+ 5 files changed, 23 insertions(+), 1 deletion(-)
 
-> > +       }
-> > +       return platform_device_add(pd);
-> >  }
-> > -subsys_initcall(register_gop_device);
-> > +device_initcall(register_gop_device);
->
-> Looks like you are doing this so that this efi-framebuffer device gets
-> added after the PCIe device? So that device_add_link() succeeds?
->
+--=20
+2.7.4
 
-I should have mentioned this in the commit log, I suppose: I copied
-this from the x86 code that registers the efifb platform device, it
-also uses device_initcall() to prevent probing too early.
-
-> I'm wondering if it would be better to implement this as a
-> fwnode_operations.add_links(). Since this efi-framebuffer device won't have any
-> fwnode, you can create your own fwnode and implement the add_links()
-> property. Not a strong opinion on this, but some food for thought.
->
-
-I have no idea how that would look, Could you elaborate? I'd prefer it
-if we could have a solution where this logic is only invoked when
-necessary, i.e., when we are using device links in the first place.
-
-Thanks,
-Ard.
