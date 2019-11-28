@@ -2,136 +2,134 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAC1C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F314BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21CF52176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BED422176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 08:59:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLy9OlMf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SqLbd+9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfK1I5I (ORCPT
+        id S1727502AbfK1I73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 03:57:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45814 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726656AbfK1I5H (ORCPT
+        Thu, 28 Nov 2019 03:59:29 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43657 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfK1I73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:57:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574931426;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UTqyxfqplr5cCVGYbvk1+6dr+xn0FSeXRHiQCzbM5Do=;
-        b=gLy9OlMfaMj5GVvF5/GIc3JFmn9VlDnDDzCGMETRVFHDBgwHwyw+NDQgXrVB2QWM5QZwHV
-        kwqhyYHvVmQ9b08JPAA44jEpVJ0xLLJUjNyj/YTN+EZ9qHIlNOT8i+sTQj2fjeqxXRLBvh
-        ApAYcVboUsuv3v5B+RgsboaMkeruG68=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-223-tdG362LsNXq1vxkm-wtRyA-1; Thu, 28 Nov 2019 03:57:04 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5381018B9FC1;
-        Thu, 28 Nov 2019 08:57:02 +0000 (UTC)
-Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B57B600C8;
-        Thu, 28 Nov 2019 08:56:56 +0000 (UTC)
-Subject: Re: [PATCH] KVM: arm64: eliminate unnecessary var err and jump label
- in set_core_reg()
-To:     linmiaohe <linmiaohe@huawei.com>, maz@kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, catalin.marinas@arm.com,
-        gregkh@linuxfoundation.org, will@kernel.org,
-        andre.przywara@arm.com, tglx@linutronix.de
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <1574910598-14468-1-git-send-email-linmiaohe@huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <7210b73f-66a0-e276-74b4-83d011b57d21@redhat.com>
-Date:   Thu, 28 Nov 2019 09:56:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Nov 2019 03:59:29 -0500
+Received: by mail-qk1-f193.google.com with SMTP id q28so3135816qkn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 00:59:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wZDOmo+mPfnPdaN//xLxORxFeLKUGqLr+J7G6xlCcv0=;
+        b=SqLbd+9oTES7vGoU6eGRMkOpdFNV40HLc8s+9TAEtizxbar9kUpZ2tYAOwvaCY1zJ+
+         h2RoTvo57zIm/phFl00V8pNUu++Ie3H2YdWs5duONa6ZKlqZcd3g5I+xw9BtKTc+uUCg
+         mkSzYl/52v0L6ZFbszaSXtmAE+0/SOnzVv8g/2TvaZz1fGjnWDca/ilGBsMv/qxl8KSL
+         xQAZnM9roykuNy0O/hXzxcFl4RG9lANGbs8Syy6W6Bf5a02XsRcE9w5/+oZcjCQaB01w
+         hwiQPa9y/o5RMKSE8pPl9j5Evo2S4Nyk5RdMnwDFqxg8avw58AnnFNmJXvs343DJaTt9
+         oMtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wZDOmo+mPfnPdaN//xLxORxFeLKUGqLr+J7G6xlCcv0=;
+        b=dvdrjWwTgfctOjc8Z+/EvJzfy9z39D7NHi2nj801X9xGovhEZ14UDLFsBXbLSM/FeC
+         cg2G/BVY+EdnyNQ4B00gmZ+oLEewe3lNuGF0eAQhNBj9E/qVeT2MW3k8xSo7BPF+1vL4
+         EzB73Qiej2VlWHF0Rc4f6NNx5P1rGhv10A0Z2LwGIi7TlMDjqlTk0rA6g62rHJzSYJaL
+         syr6/2vuoem/lUSWkQhRfUZHO+uJRBeMU1huECCnoiQHZdUdtspHoRyPG3yu4N+4nY/8
+         WpSsOrsWeL/kA3/qp1kalIWRCxMOyFAcXnXvaMmaYq9sYFAqePKGPTc1XxNCCVqTJeqH
+         efVg==
+X-Gm-Message-State: APjAAAUT98ceYAnVrzMmHz7lXwKKPuJ0z4qiCkd+gImxO0A20jyzFjfN
+        oJHaigTl+ogdZK7FpLtGH+4YIylZySaet+V6UFha+0cm
+X-Google-Smtp-Source: APXvYqxQ8DtLmeAzs+5VWeB2Gdz5ZzKRF7gLOdRvhy2DWqwJIHm23YKNcX22+xkzBrqhwZiFwlBokOtLC2TXudHDan0=
+X-Received: by 2002:a37:e312:: with SMTP id y18mr5456024qki.250.1574931134398;
+ Thu, 28 Nov 2019 00:52:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1574910598-14468-1-git-send-email-linmiaohe@huawei.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: tdG362LsNXq1vxkm-wtRyA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+References: <201911262053.C6317530@keescook> <00000000000085ce5905984f2c8b@google.com>
+ <201911271124.F01A0B37@keescook>
+In-Reply-To: <201911271124.F01A0B37@keescook>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 28 Nov 2019 09:52:03 +0100
+Message-ID: <CACT4Y+aEeUaTQioc85nPXG9GM_ODojdoywNoVEOf5b6yXXU0cg@mail.gmail.com>
+Subject: Re: WARNING in generic_make_request_checks
+To:     Kees Cook <keescook@chromium.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Cc:     syzbot <syzbot+21cfe1f803e0e158acf1@syzkaller.appspotmail.com>,
+        00moses.alexander00@gmail.com, Jens Axboe <axboe@kernel.dk>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ilya Dryomov <idryomov@gmail.com>, joseph.qi@linux.alibaba.com,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Mike Snitzer <snitzer@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Tejun Heo <tj@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, wgh@torlan.ru,
+        zkabelac@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Nov 27, 2019 at 8:26 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Tue, Nov 26, 2019 at 11:45:00PM -0800, syzbot wrote:
+> > Hello,
+> >
+> > syzbot has tested the proposed patch and the reproducer did not trigger
+> > crash:
+> >
+> > Reported-and-tested-by:
+> > syzbot+21cfe1f803e0e158acf1@syzkaller.appspotmail.com
+> >
+> > Tested on:
+> >
+> > commit:         8b2ded1c block: don't warn when doing fsync on read-only d..
+> > git tree:
+> > git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d727e10a28207217
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=21cfe1f803e0e158acf1
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Note: testing is done by a robot and is best-effort only.
+>
+> It seems for successful tests, I still need to tell syzbot that this is
+> fixed?
 
-On 11/28/19 4:09 AM, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> The var err and jump label out isn't really needed in
-> set_core_reg(). Clean them up.
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
++syzkaller mailing list for syzbot discussion
 
-Thanks
+Yes.
+You used a commit. But patch testing may work with raw attached
+patches, or on trees that are not merged, or it may just a trial run
+on HEAD or run with additional debugging only and it may incidentally
+succeed; or may be not incidentally but the patch disables part of
+functionality just to check if it affects the crash or not, but it's
+totally not a fix for the bug.
+Nobody ever figured out how all of this could work; allocate time to
+write a complete proposal for the workflow and implement this.
+So at the moment patch testing functionality is completely unrelated
+to the rest of the workflow. It's a convenience feature.
 
-Eric
 
-> ---
->  arch/arm64/kvm/guest.c | 13 ++++---------
->  1 file changed, 4 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-> index 3b836c91609e..88eb6e5399ed 100644
-> --- a/arch/arm64/kvm/guest.c
-> +++ b/arch/arm64/kvm/guest.c
-> @@ -159,7 +159,6 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
->  	__uint128_t tmp;
->  	void *valp = &tmp;
->  	u64 off;
-> -	int err = 0;
->  
->  	/* Our ID is an index into the kvm_regs struct. */
->  	off = core_reg_offset_from_id(reg->id);
-> @@ -173,10 +172,8 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
->  	if (KVM_REG_SIZE(reg->id) > sizeof(tmp))
->  		return -EINVAL;
->  
-> -	if (copy_from_user(valp, uaddr, KVM_REG_SIZE(reg->id))) {
-> -		err = -EFAULT;
-> -		goto out;
-> -	}
-> +	if (copy_from_user(valp, uaddr, KVM_REG_SIZE(reg->id)))
-> +		return -EFAULT;
->  
->  	if (off == KVM_REG_ARM_CORE_REG(regs.pstate)) {
->  		u64 mode = (*(u64 *)valp) & PSR_AA32_MODE_MASK;
-> @@ -200,14 +197,12 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
->  				return -EINVAL;
->  			break;
->  		default:
-> -			err = -EINVAL;
-> -			goto out;
-> +			return -EINVAL;
->  		}
->  	}
->  
->  	memcpy((u32 *)regs + off, valp, KVM_REG_SIZE(reg->id));
-> -out:
-> -	return err;
-> +	return 0;
->  }
->  
->  #define vq_word(vq) (((vq) - SVE_VQ_MIN) / 64)
-> 
-
+> #syz fix: block: don't warn when doing fsync on read-only devices
+>
+> --
+> Kees Cook
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/201911271124.F01A0B37%40keescook.
