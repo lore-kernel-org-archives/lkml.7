@@ -2,79 +2,106 @@ Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E703C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13232C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFA1217BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E071B217BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 16:17:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A159b5Ql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfK1QQ4 (ORCPT
+        id S1726859AbfK1QRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 11:16:56 -0500
-Received: from sauhun.de ([88.99.104.3]:43868 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbfK1QQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:16:56 -0500
-Received: from localhost (p54B33127.dip0.t-ipconnect.de [84.179.49.39])
-        by pokefinder.org (Postfix) with ESMTPSA id 37F4A2C039E;
-        Thu, 28 Nov 2019 17:16:54 +0100 (CET)
-Date:   Thu, 28 Nov 2019 17:16:53 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Max Staudt <max@enpas.org>,
+        Thu, 28 Nov 2019 11:17:08 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46448 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfK1QRH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 11:17:07 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a124so48750oii.13;
+        Thu, 28 Nov 2019 08:17:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vQgXjttamt9llcJdFuZZy9/ek6RDUMBgmhmqoE3xlXM=;
+        b=A159b5Ql0aiWYACd6UDbG66P9PhBJMq9D9O/BW5RcYaCAaZOLcKjYtjgHk3YW9iZIH
+         W4v389V4CE24NxXoqwoJQ9X71vOE239UPS/WgNjDqDoceg3q5S58spIEMfJUNwj9VjMM
+         x2YRwSVzbpRLUIO8ia+7kJvbkruv8GFsxIexrp4xjc/nwcII1rwTWr9QvBoGFvrSBexD
+         1ZmcjmiDipg/5j0pFAryZjTR2jjremAuYazibufGXpCoSSj4tJHKAtZ2wafaDxh44mMo
+         88jk4+dnyyWDA9asuluaK+TpzmC0LVH3v9VNY+qFrwPiuP+T72h3fBNvG+lNaNjv4bQG
+         Pa0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vQgXjttamt9llcJdFuZZy9/ek6RDUMBgmhmqoE3xlXM=;
+        b=CgM3jzBSRjkXDEYDMvMxT2dR1oE/69hFPzb9iv907PDDm/3KIP8eMH/GI6Fgmfderg
+         jxbmNTsVm+Oy5gljYgmgz0EIWUhVqUN5bBVLjFLK3ZurSP+sFvOFfPAbmNIEaXcRVd0a
+         JLi7Re1D93idjlLXUQTMDbTAJpEtkyb0MRm3KuF5eKbzkeHD9qudrht9iROO98Qe3r61
+         GYKkpDtaI4aZK0u31PL3m9nqXgC23IZ/3fRJMwLIDpVldv7i6mtWXRTvBULKDfsoXLwX
+         qDOzFfPSqtmNJXWH/Va9oNrEcAeZAkXONwSTpsk5F6Y3/TUUXhO6Sj4lIluRKP3dDZCE
+         17/w==
+X-Gm-Message-State: APjAAAVbOuU1ANR/jm2EJOTEm8FuaCC8ZzQHosJFrdJb2awBomV5uqUI
+        AI0mUZrpqMJwyv5nBx9pszMk8sxD
+X-Google-Smtp-Source: APXvYqxT3Ofy+B0ktM/9qs3vhMMbSj+A2ZXMBZx66BcBmccC1XEPmrnCDZQKdwwVknhim81a8v5ftA==
+X-Received: by 2002:aca:57d4:: with SMTP id l203mr497238oib.113.1574957826263;
+        Thu, 28 Nov 2019 08:17:06 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l3sm1515074oie.6.2019.11.28.08.17.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Nov 2019 08:17:05 -0800 (PST)
+Subject: Re: [PATCH 4.19 000/306] 4.19.87-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 02/12] i2c: icy: convert to i2c_new_scanned_device
-Message-ID: <20191128161653.GD5412@kunai>
-References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
- <20191106095033.25182-3-wsa+renesas@sang-engineering.com>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191127203114.766709977@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <b099012b-abef-0991-7153-93f7c75e9e08@roeck-us.net>
+Date:   Thu, 28 Nov 2019 08:17:04 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cQXOx3fnlpmgJsTP"
-Content-Disposition: inline
-In-Reply-To: <20191106095033.25182-3-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191127203114.766709977@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/27/19 12:27 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.87 release.
+> There are 306 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
+> Anything received after that time might be too late.
+> 
 
---cQXOx3fnlpmgJsTP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Build results:
+	total: 156 pass: 151 fail: 5
+Failed builds:
+	i386:defconfig
+	i386:allyesconfig
+	i386:allmodconfig
+	i386:allnoconfig
+	i386:tinyconfig
+Qemu test results:
+	total: 390 pass: 365 fail: 25
+Failed tests:
+	<all i386>
 
-On Wed, Nov 06, 2019 at 10:50:20AM +0100, Wolfram Sang wrote:
-> Move from the deprecated i2c_new_probed_device() to the new
-> i2c_new_scanned_device(). Make use of the new ERRPTR if suitable.
->=20
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+As already reported.
 
-Applied to for-next, thanks!
-
-
---cQXOx3fnlpmgJsTP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3f8vUACgkQFA3kzBSg
-Kba7yxAAsICe1NUvua6JDJZFMY/3aWdeA1/tg0vM+UDd7IAnznquKXaA1kAcuO9U
-pkvn7D5q4E79qmkamMlfpejuzapjlfeM8o0u7gRneXiSVG0z/NcEb5R8muOd7msc
-QIF9yv1l9bJjia3oomLIF+kBut5CY8JjCgGTr8SKuMe3LgX9zfyZH+WNU4I4mzRm
-qfeME8R0ktINtZMXS10zSJenOhAjJe4SRWfNk1uUgmkU+j3QLgQrd0CUaq+XJ+Pi
-DoKvm9FDs3bbYFOkgpCLhJpf9pN7HTF3rTsmaY+aU+ZHAhVD4uM0APPiMFVTcXiN
-T4LI6V4tghiRCQJPSg8cMP65krty5VaDRKUjNedZhJpfr8aT9/xftOesCuhcfS1Q
-vTAKaEdcSlZNbc9L835m8zEIidvT1Nn+XvIiqvKau9EqiiUMDAhLsmbobW5RyGl0
-ZJg189414vB7fFGQymW5pjcNmBtVnB9Ij7t0gE4vmjHJlr4vmJWfxuOxnYGDsD63
-xIcPLRKjdu+ZgTGAI2seloYOyCwttTKT91zOS/kc7OWj4v5Dcqc32r5dGWAeP1ng
-HRRDww3rpVGRCJUmkBiWFSjS/0Dy4yXNFdoMp6wYp6p6bhBMtzolHewzZNgbXYD3
-/EuhBLDDkDZ+/tXD4K6jMr/2QhkboueNm+UwNnD5iDrgTZ0yJKA=
-=6A6V
------END PGP SIGNATURE-----
-
---cQXOx3fnlpmgJsTP--
+Guenter
