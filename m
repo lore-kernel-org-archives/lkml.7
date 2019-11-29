@@ -2,110 +2,172 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122D9C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753D7C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FEF2158A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C980216F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575050173;
+	bh=NB5Gf1Q3vSZTblBj+r+anX1Gd6+985MhbvLhEw+wH68=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=es7wbeiaQ3Nwn0aEVcJ3wYRCkjZxJMY3xCZ5I8h38duKRXxZtG3sKfBCUBfABcaov
+	 2MJniDug2Bb70Q2tdyPVjOX854F5nJo1A3gQr1epRYp98wenUhT+MujjD6s/KKfOm1
+	 IpEyvnsG3au2ZFyJzyPRDrq62CGsvT9v1tIQjrLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfK2Rl2 (ORCPT
+        id S1727043AbfK2R4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 12:41:28 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52169 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbfK2Rl1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 12:41:27 -0500
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iakGi-0005XR-JC; Fri, 29 Nov 2019 17:41:25 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     gregkh@linuxfoundation.org
-Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v2 2/2] USB: core: Attempt power cycle port when it's in eSS.Disabled state
-Date:   Sat, 30 Nov 2019 01:41:15 +0800
-Message-Id: <20191129174115.31683-2-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191129174115.31683-1-kai.heng.feng@canonical.com>
-References: <20191129174115.31683-1-kai.heng.feng@canonical.com>
+        Fri, 29 Nov 2019 12:56:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726970AbfK2R4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 12:56:12 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B69242158A;
+        Fri, 29 Nov 2019 17:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575050170;
+        bh=NB5Gf1Q3vSZTblBj+r+anX1Gd6+985MhbvLhEw+wH68=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SRXGlV5RVcc+XmFeQm3pDrl7JXNeolayQezj9ZbtKE0XVQBPKE7YLSYtvNXvLEWqI
+         zJuURxnHYvQT7mewsRGOYFJu2UHO2Lrzg4E9KZmEeEuYRNwfRgJLyGITiHQCLyt3h0
+         jF4+weFrW/rmQdpVPFVBBqUMajzeyfaKARGv6Pio=
+Date:   Fri, 29 Nov 2019 17:56:05 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, bsingharora@gmail.com,
+        dvyukov@google.com, elver@google.com, parri.andrea@gmail.com,
+        stable@vger.kernel.org,
+        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v6] taskstats: fix data-race
+Message-ID: <20191129175604.GA29789@willie-the-truck>
+References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+ <20191021113327.22365-1-christian.brauner@ubuntu.com>
+ <efaecf5d-b528-24ba-1955-e1b190ece98c@rasmusvillemoes.dk>
+ <20191021130417.5yi7pxpigsydz5po@wittgenstein>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021130417.5yi7pxpigsydz5po@wittgenstein>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Dell TB16, Realtek USB ethernet (r8152) connects to an SMSC hub which
-then connects to ASMedia xHCI's root hub:
+On Mon, Oct 21, 2019 at 03:04:18PM +0200, Christian Brauner wrote:
+> On Mon, Oct 21, 2019 at 02:19:01PM +0200, Rasmus Villemoes wrote:
+> > On 21/10/2019 13.33, Christian Brauner wrote:
+> > > The first approach used smp_load_acquire() and smp_store_release().
+> > > However, after having discussed this it seems that the data dependency
+> > > for kmem_cache_alloc() would be fixed by WRITE_ONCE().
+> > > Furthermore, the smp_load_acquire() would only manage to order the stats
+> > > check before the thread_group_empty() check. So it seems just using
+> > > READ_ONCE() and WRITE_ONCE() will do the job and I wanted to bring this
+> > > up for discussion at least.
+> > > 
+> > > /* v6 */
+> > > - Christian Brauner <christian.brauner@ubuntu.com>:
+> > >   - bring up READ_ONCE()/WRITE_ONCE() approach for discussion
+> > > ---
+> > >  kernel/taskstats.c | 26 +++++++++++++++-----------
+> > >  1 file changed, 15 insertions(+), 11 deletions(-)
+> > > 
+> > > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+> > > index 13a0f2e6ebc2..111bb4139aa2 100644
+> > > --- a/kernel/taskstats.c
+> > > +++ b/kernel/taskstats.c
+> > > @@ -554,25 +554,29 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
+> > >  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+> > >  {
+> > >  	struct signal_struct *sig = tsk->signal;
+> > > -	struct taskstats *stats;
+> > > +	struct taskstats *stats_new, *stats;
+> > >  
+> > > -	if (sig->stats || thread_group_empty(tsk))
+> > > -		goto ret;
+> > > +	/* Pairs with WRITE_ONCE() below. */
+> > > +	stats = READ_ONCE(sig->stats);
+> > > +	if (stats || thread_group_empty(tsk))
+> > > +		return stats;
+> > >  
+> > >  	/* No problem if kmem_cache_zalloc() fails */
+> > > -	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+> > > +	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+> > >  
+> > >  	spin_lock_irq(&tsk->sighand->siglock);
+> > > -	if (!sig->stats) {
+> > > -		sig->stats = stats;
+> > > -		stats = NULL;
+> > > +	if (!stats) {
+> > > +		stats = stats_new;
+> > > +		/* Pairs with READ_ONCE() above. */
+> > > +		WRITE_ONCE(sig->stats, stats_new);
+> > > +		stats_new = NULL;
+> > 
+> > No idea about the memory ordering issues, but don't you need to
+> > load/check sig->stats again? Otherwise it seems that two threads might
+> > both see !sig->stats, both allocate a stats_new, and both
+> > unconditionally in turn assign their stats_new to sig->stats. Then the
+> > first assignment ends up becoming a memory leak (and any writes through
+> > that pointer done by the caller end up in /dev/null...)
+> 
+> Trigger hand too fast. I guess you're thinking sm like:
+> 
+> diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+> index 13a0f2e6ebc2..c4e1ed11e785 100644
+> --- a/kernel/taskstats.c
+> +++ b/kernel/taskstats.c
+> @@ -554,25 +554,27 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
+>  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+>  {
+>  	struct signal_struct *sig = tsk->signal;
+> -	struct taskstats *stats;
+> +	struct taskstats *stats_new, *stats;
+>  
+> -	if (sig->stats || thread_group_empty(tsk))
+> -		goto ret;
+> +	stats = READ_ONCE(sig->stats);
 
-/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
-    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
-            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
+This probably wants to be an acquire, since both the memcpy() later on
+in taskstats_exit() and the accesses in {b,x}acct_add_tsk() appear to
+read from the taskstats structure without the sighand->siglock held and
+therefore may miss zeroed allocation from the zalloc() below, I think.
 
-Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp. USB5537B
-Bus 004 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
+> +	if (stats || thread_group_empty(tsk))
+> +		return stats;
+>  
+> -	/* No problem if kmem_cache_zalloc() fails */
+> -	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+> +	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+>  
+>  	spin_lock_irq(&tsk->sighand->siglock);
+> -	if (!sig->stats) {
+> -		sig->stats = stats;
+> -		stats = NULL;
+> +	stats = READ_ONCE(sig->stats);
 
-The SMSC hub may disconnect after system resume from suspend. When this
-happens, the reset resume attempt fails, and the last resort to disable
-the port and see something comes up later, also fails.
+You hold the spinlock here, so I don't think you need the READ_ONCE().
 
-When the issue occurs, the link state stays in eSS.Disabled state
-despite the warm reset attempts. Accoding to spec this can be caused by
-invalid VBus, after some expiremets, the SMSC hub can be brought back
-after a powercycle.
+> +	if (!stats) {
+> +		stats = stats_new;
+> +		WRITE_ONCE(sig->stats, stats_new);
 
-So let's power cycle the port at the end of reset resume attempt, if
-it's in eSS.Disabled state.
+You probably want a release here to publish the zeroes from the zalloc()
+(back to my first comment). With those changes:
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v2:
-- Lower dev_info() to dev_dbg().
+Reviewed-by: Will Deacon <will@kernel.org>
 
- drivers/usb/core/hub.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+However, this caused me to look at do_group_exit() and we appear to have
+racy accesses on sig->flags there thanks to signal_group_exit(). I worry
+that might run quite deep, and can probably be looked at separately.
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 6b6cd76ac5e6..a2e6001046f5 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -2739,6 +2739,18 @@ static bool hub_port_warm_reset_required(struct usb_hub *hub, int port1,
- 		|| link_state == USB_SS_PORT_LS_COMP_MOD;
- }
- 
-+static bool hub_port_power_cycle_required(struct usb_hub *hub, int port1,
-+		u16 portstatus)
-+{
-+	u16 link_state;
-+
-+	if (!hub_is_superspeed(hub->hdev))
-+		return false;
-+
-+	link_state = portstatus & USB_PORT_STAT_LINK_STATE;
-+	return link_state == USB_SS_PORT_LS_SS_DISABLED;
-+}
-+
- static void hub_port_power_cycle(struct usb_hub *hub, int port1)
- {
- 	struct usb_port *port_dev = hub->ports[port1  - 1];
-@@ -3601,6 +3613,10 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
- 	if (status < 0) {
- 		dev_dbg(&udev->dev, "can't resume, status %d\n", status);
- 		hub_port_logical_disconnect(hub, port1);
-+		if (hub_port_power_cycle_required(hub, port1, portstatus)) {
-+			dev_dbg(&udev->dev, "device in disabled state, attempt power cycle\n");
-+			hub_port_power_cycle(hub, port1);
-+		}
- 	} else  {
- 		/* Try to enable USB2 hardware LPM */
- 		usb_enable_usb2_hardware_lpm(udev);
--- 
-2.17.1
-
+Will
