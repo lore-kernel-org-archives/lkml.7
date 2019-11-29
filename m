@@ -2,107 +2,240 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB45C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E657C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F94217AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAF720869
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vp5Bqqo+"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="ccO+pIaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfK2Mqc (ORCPT
+        id S1726847AbfK2MtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 07:46:32 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37759 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfK2Mqb (ORCPT
+        Fri, 29 Nov 2019 07:49:12 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38482 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfK2MtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 07:46:31 -0500
-Received: by mail-lj1-f193.google.com with SMTP id u17so4513911lja.4
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 04:46:28 -0800 (PST)
+        Fri, 29 Nov 2019 07:49:12 -0500
+Received: by mail-wr1-f68.google.com with SMTP id i12so35143134wro.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 04:49:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GljEEZ+qFQlAnuGdwSfhc8MmhbIqcq8xLrjdn0h36QY=;
-        b=vp5Bqqo+zzlmJdEsceF0oP8x+cm0xaQ78+bK1cSLSofUgaBUY+daNYjZv50BNeUqzy
-         VPoScXNlv7s+O6pt4L8RrqkDzjvtzPyTXpWRnSWQ1gbrYISHNc3E6H9d2yrNUA9bX8oN
-         S908OXqpM1+w8NXQRQbBaIOTvink9NETDj8Rs/fx4oHC5gnZTixojHL0aO6w5Up3F8io
-         BfHP2p13LOoHcy+JMOAhumbeEJPiv0yqRoBqvar2kQcglUOLFpo9NxyVhlUHbQ+orw5m
-         ux7lApGMEXt4Z3I/XjfPzDZuXOlhw7UN3iSUnjoAzLDexwfPVT7OoBWZJthSPnyClyFC
-         3GOQ==
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=KQ41C7hYMna6sAbU8EUfQ5iT34umDLjP3M5diwe3VPg=;
+        b=ccO+pIaE1Nan91mX03P5otmQNMI5uWGFVLAoA1tm1Q441nRDItfcdCouoMOqWmzDPc
+         t0ZzOHAC6vcrUpG1bFEniw9PfJ35K99a4kfmFvJNRrDTWm934meTqbCR1mni/GQt9ky/
+         bQTZJ8Wn2n/2UHM2jKWKS5zP6/HAD9hiM/7lojPl0e2psF/7yzB0BHwQAh1I88c6a8cX
+         0Qdq3tYO3cjkO/Q0laovjzyS6UHaL2Cq/ufDyPYcIGQu27epEf/vwUKnOm63mXGM6wQQ
+         Hzl3fo6Tvpb6VDa0GDSWGzgIXHdCiE612OfeZ+bmDdfJzRjpwEX6NmFRG2F0oiKrG2wi
+         0f3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GljEEZ+qFQlAnuGdwSfhc8MmhbIqcq8xLrjdn0h36QY=;
-        b=IITFan1x1BTy/45mWgqLqG+oKkoZwAR3FZgrjoPi/3RUVFSZK2M8GB6ggU/ievSC2R
-         Ppp4s9DrIe77J/YsMh8QR1vKZUwKvOwbxHpRM2nko7XBXv0y2oARRdpKVB+LMWmNdG0U
-         oK3RjSJwISeHbDNnRg7APomw10dTlgJGIp4/yVBZMVDEcLHM27YDikLKGo1bO86RZHHb
-         HGRP61/lEnfWZbZGQNgFR+AJ+gtiFTyaQ8NpAFrfMJaDL0LB4VPXJqgxY9Q3YBU3rBQD
-         hzsWxK49GIj0Ar0YlYx065FD/uqyfP839J3IuIVQzjRgwlMWGD0q6cH58pTiT1ZMXJat
-         I+8Q==
-X-Gm-Message-State: APjAAAVPNBdgzeCZ6yhRrkM2Ew/5vT1PA0JaaWbkpSsUoM8fgb8+jLCO
-        d7ONq/uAvzjVnuU/0Ftrxpl28zWBKYuR3J8AhPoz2Q==
-X-Google-Smtp-Source: APXvYqx6hPdvTl5RnE6kxUresU0OdGBbsEJEaEYsWpqaEmCS8XABYG3HsFp5vttj/Tt4ZuLXzaLHmZknQKP70/j3B1w=
-X-Received: by 2002:a2e:9a12:: with SMTP id o18mr37680939lji.191.1575031587982;
- Fri, 29 Nov 2019 04:46:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127135932.7223-1-m.felsch@pengutronix.de>
- <20191127135932.7223-2-m.felsch@pengutronix.de> <CACRpkdbG=XiQHNZa+zBqdyTDRhyXD5rLxbLjp3qqGbcQeTX26Q@mail.gmail.com>
- <20191129101542.drtcn44twcyzxqmm@pengutronix.de> <CACRpkda-mYbzxL9u-U9AHrFihtAQBaZajrQ-SN=WQH6=bg4swg@mail.gmail.com>
- <20191129113600.phbhqudrgtm2egpf@pengutronix.de>
-In-Reply-To: <20191129113600.phbhqudrgtm2egpf@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 29 Nov 2019 13:46:16 +0100
-Message-ID: <CACRpkdYV=8sxisJkvov3KmfLDFRPt2Pva06XORz8tJUhuCU5Cg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] gpio: add support to get local gpio number
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, stwiss.opensource@diasemi.com,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=KQ41C7hYMna6sAbU8EUfQ5iT34umDLjP3M5diwe3VPg=;
+        b=M4cvwX8KR6c+xnooLAXaCMOPwIGwsS7Sx0PGcpNV2k3WrQf/RZQjJIJYoFkYytEKnc
+         rFFQpcSAHqKKpbj4VnpBdKcqTLCp02nbJqrAFVhRJTBGfSm6+irl/H8QkPC8hwBqOhNg
+         6FHufQ/x5qiagnelzBXCvrq3F0mlWo3qIuG3T1IWgiKIM4SF3kKdKjU2yybhnL474DDZ
+         V26b8UV9yvnSYpCB7TPzsLCbzewJ2fEl/TwH+2Wr2zvyYXKAY4TJpY72NvQyNLooEgWZ
+         BbQvfb4L39hB5PikaDWtgAcgqPLY9lQss5ZgL9yQ+UnnXuq1Vah9qGRYxH7gOYYsH4yV
+         rJww==
+X-Gm-Message-State: APjAAAUPUC4aWNxEflIUE3hK+I0aFWoHDn8Ui3I57nfl1KCNDwvU5kPu
+        sju97NL10f2IyAz/e9OgU68bwA==
+X-Google-Smtp-Source: APXvYqz5+q05loCQK47HPJR4wppd+hkrJRomxmQlQyEkw7Xu5Ad6/ecJvVocI3z94dpPi67+nVVHOg==
+X-Received: by 2002:adf:b645:: with SMTP id i5mr963634wre.347.1575031749330;
+        Fri, 29 Nov 2019 04:49:09 -0800 (PST)
+Received: from [10.83.36.220] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id l10sm29695601wrg.90.2019.11.29.04.49.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Nov 2019 04:49:08 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: [PATCH v4 1/2] PCI: Add parameter nr_devfns to pci_add_dma_alias
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
+Date:   Fri, 29 Nov 2019 12:49:07 +0000
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
+References: <20191120193228.GA103670@google.com>
+ <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+ <20191126173833.GA16069@infradead.org>
+ <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
+ <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
+To:     linux-pci@vger.kernel.org
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 12:36 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> On 19-11-29 11:19, Linus Walleij wrote:
-> > On Fri, Nov 29, 2019 at 11:15 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> >
-> > > > What about renaming gpio_chip_hwgpio() everywhere
-> > > > to gpiod_to_offet(), remove it from drivers/gpio/gpiolib.h
-> > > > and export it in <linux/gpio/consumer.h> instead?
-> > >
-> > > That's also possible but then we have to include the consumer.h header
-> > > within the gpiolib.c and this seems to be wrong. But since I'm not the
-> > > maintainer it is up to you and Bart. Both ways are possible,
-> >
-> > What about following the pattern by the clk subsystem and
-> > create <linux/gpio/private.h> and put it there?
-> >
-> > It should be an indication to people to not use these features
-> > lightly. We can decorate the header file with some warnings.
->
-> That's a good idea. So the following points should be done:
->   - rename gpio_chip_hwgpio() to gpiod_to_offset() or gpiod_to_local_offset()
->   - move the new helper to <linux/gpio/private.h>
->   - add kerneldoc
->   - add warnings into the header
+pci_add_dma_alias can now be used to create a dma alias for a range of
+devfns.
 
-Ack!
+Signed-off-by: James Sewart <jamessewart@arista.com>
+---
+ drivers/pci/pci.c    | 23 ++++++++++++++++++-----
+ drivers/pci/quirks.c | 14 +++++++-------
+ include/linux/pci.h  |  2 +-
+ 3 files changed, 26 insertions(+), 13 deletions(-)
 
-Linus
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a97e2571a527..9b0e3481fe17 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool =
+decode,
+ /**
+  * pci_add_dma_alias - Add a DMA devfn alias for a device
+  * @dev: the PCI device for which alias is added
+- * @devfn: alias slot and function
++ * @devfn_from: alias slot and function
++ * @nr_devfns: Number of subsequent devfns to alias
+  *
+  * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
+  * which is used to program permissible bus-devfn source addresses for =
+DMA
+@@ -5873,8 +5874,14 @@ int pci_set_vga_state(struct pci_dev *dev, bool =
+decode,
+  * cannot be left as a userspace activity).  DMA aliases should =
+therefore
+  * be configured via quirks, such as the PCI fixup header quirk.
+  */
+-void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
++void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned =
+nr_devfns)
+ {
++	int devfn_to;
++
++	if (nr_devfns > U8_MAX+1)
++		nr_devfns =3D U8_MAX+1;
++	devfn_to =3D devfn_from + nr_devfns - 1;
++
+ 	if (!dev->dma_alias_mask)
+ 		dev->dma_alias_mask =3D bitmap_zalloc(U8_MAX, =
+GFP_KERNEL);
+ 	if (!dev->dma_alias_mask) {
+@@ -5882,9 +5889,15 @@ void pci_add_dma_alias(struct pci_dev *dev, u8 =
+devfn)
+ 		return;
+ 	}
+=20
+-	set_bit(devfn, dev->dma_alias_mask);
+-	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+-		 PCI_SLOT(devfn), PCI_FUNC(devfn));
++	bitmap_set(dev->dma_alias_mask, devfn_from, nr_devfns);
++
++	if (nr_devfns =3D=3D 1)
++		pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
++				PCI_SLOT(devfn_from), =
+PCI_FUNC(devfn_from));
++	else if(nr_devfns > 1)
++		pci_info(dev, "Enabling fixed DMA alias for devfn range =
+from %02x.%d to %02x.%d\n",
++				PCI_SLOT(devfn_from), =
+PCI_FUNC(devfn_from),
++				PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
+ }
+=20
+ bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev =
+*dev2)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 320255e5e8f8..0f3f5afc73fd 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3932,7 +3932,7 @@ int pci_dev_specific_reset(struct pci_dev *dev, =
+int probe)
+ static void quirk_dma_func0_alias(struct pci_dev *dev)
+ {
+ 	if (PCI_FUNC(dev->devfn) !=3D 0)
+-		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), =
+0));
++		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), =
+0), 1);
+ }
+=20
+ /*
+@@ -3946,7 +3946,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, =
+0xe476, quirk_dma_func0_alias);
+ static void quirk_dma_func1_alias(struct pci_dev *dev)
+ {
+ 	if (PCI_FUNC(dev->devfn) !=3D 1)
+-		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), =
+1));
++		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), =
+1), 1);
+ }
+=20
+ /*
+@@ -4031,7 +4031,7 @@ static void quirk_fixed_dma_alias(struct pci_dev =
+*dev)
+=20
+ 	id =3D pci_match_id(fixed_dma_alias_tbl, dev);
+ 	if (id)
+-		pci_add_dma_alias(dev, id->driver_data);
++		pci_add_dma_alias(dev, id->driver_data, 1);
+ }
+=20
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ADAPTEC2, 0x0285, =
+quirk_fixed_dma_alias);
+@@ -4073,9 +4073,9 @@ DECLARE_PCI_FIXUP_HEADER(0x8086, 0x244e, =
+quirk_use_pcie_bridge_dma_alias);
+  */
+ static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
+ {
+-	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0));
+-	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0));
+-	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3));
++	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0), 1);
++	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0), 1);
++	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3), 1);
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, =
+quirk_mic_x200_dma_alias);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, =
+quirk_mic_x200_dma_alias);
+@@ -5273,7 +5273,7 @@ static void quirk_switchtec_ntb_dma_alias(struct =
+pci_dev *pdev)
+ 			pci_dbg(pdev,
+ 				"Aliasing Partition %d Proxy ID =
+%02x.%d\n",
+ 				pp, PCI_SLOT(devfn), PCI_FUNC(devfn));
+-			pci_add_dma_alias(pdev, devfn);
++			pci_add_dma_alias(pdev, devfn, 1);
+ 		}
+ 	}
+=20
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 1a6cf19eac2d..84a8d4c2b24e 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2323,7 +2323,7 @@ static inline struct eeh_dev =
+*pci_dev_to_eeh_dev(struct pci_dev *pdev)
+ }
+ #endif
+=20
+-void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
++void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned =
+nr_devfns);
+ bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev =
+*dev2);
+ int pci_for_each_dma_alias(struct pci_dev *pdev,
+ 			   int (*fn)(struct pci_dev *pdev,
+--=20
+2.24.0
+
