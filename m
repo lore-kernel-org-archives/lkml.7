@@ -4,137 +4,339 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E51C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC63C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80103217C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CFFF217BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfK2JEb (ORCPT
+        id S1726968AbfK2JFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:04:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54006 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725892AbfK2JE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 04:04:26 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B8F0EB259;
-        Fri, 29 Nov 2019 09:04:23 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     stable@vger.kernel.org
-Cc:     Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ajay Kaher <akaher@vmware.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH STABLE 4.9 1/1] mm, gup: add missing refcount overflow checks on x86 and s390
-Date:   Fri, 29 Nov 2019 10:03:49 +0100
-Message-Id: <20191129090351.3507-2-vbabka@suse.cz>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191129090351.3507-1-vbabka@suse.cz>
-References: <20191129090351.3507-1-vbabka@suse.cz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 29 Nov 2019 04:05:51 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:52382 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbfK2JFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 04:05:51 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F089C200233;
+        Fri, 29 Nov 2019 10:05:47 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7F340200784;
+        Fri, 29 Nov 2019 10:05:40 +0100 (CET)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 67AD6402DE;
+        Fri, 29 Nov 2019 17:05:31 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, wsa@the-dreams.de,
+        leoyang.li@nxp.com, aisheng.dong@nxp.com, xiaoning.wang@nxp.com,
+        o.rempel@pengutronix.de
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, laurentiu.tudor@nxp.com,
+        jiafei.pan@nxp.com, xiaobo.xie@nxp.com, Biwen Li <biwen.li@nxp.com>
+Subject: [v5] i2c: imx: support slave mode for imx I2C driver
+Date:   Fri, 29 Nov 2019 17:05:13 +0800
+Message-Id: <20191129090513.2150-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mainline commit 8fde12ca79af ("mm: prevent get_user_pages() from
-overflowing page refcount") was backported to 4.9.y stable as commit
-2ed768cfd895. The backport however missed that in 4.9, there are several
-arch-specific gup.c versions with fast gup implementations, so these do not
-prevent refcount overflow.
+The patch supports slave mode for imx I2C driver
 
-This is partially fixed for x86 in stable-only commit d73af79742e7 ("x86, mm,
-gup: prevent get_page() race with munmap in paravirt guest"). This stable-only
-commit adds missing parts to x86 version, as well as s390 version, both taken
-from the SUSE SLES/openSUSE 4.12-based kernels.
-
-The remaining architectures with own gup.c are sparc, mips, sh. It's unlikely
-the known overflow scenario based on FUSE, which needs 140GB of RAM, is a
-problem for those architectures, and I don't feel confident enough to patch
-them.
-
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
- arch/s390/mm/gup.c |  9 ++++++---
- arch/x86/mm/gup.c  | 10 ++++++++--
- 2 files changed, 14 insertions(+), 5 deletions(-)
+Change in v5:
+	- fix a bug that cannot determine in what mode(master mode or
+	  slave mode)
 
-diff --git a/arch/s390/mm/gup.c b/arch/s390/mm/gup.c
-index 97fc449a7470..33a940389a6d 100644
---- a/arch/s390/mm/gup.c
-+++ b/arch/s390/mm/gup.c
-@@ -38,7 +38,8 @@ static inline int gup_pte_range(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
- 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
- 		page = pte_page(pte);
- 		head = compound_head(page);
--		if (!page_cache_get_speculative(head))
-+		if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
-+		    || !page_cache_get_speculative(head)))
- 			return 0;
- 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
- 			put_page(head);
-@@ -76,7 +77,8 @@ static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
+Change in v4:
+	- add MACRO CONFIG_I2C_SLAVE to fix compilation issue
+
+Change in v3:
+	- support layerscape and i.mx platform
+
+Change in v2:
+	- remove MACRO CONFIG_I2C_SLAVE
+
+
+ drivers/i2c/busses/i2c-imx.c | 216 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 198 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index a3b61336fe55..52f70de16900 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -203,6 +203,9 @@ struct imx_i2c_struct {
+ 	struct pinctrl_state *pinctrl_pins_gpio;
  
--	if (!page_cache_add_speculative(head, refs)) {
-+	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
-+	    || !page_cache_add_speculative(head, refs))) {
- 		*nr -= refs;
- 		return 0;
- 	}
-@@ -150,7 +152,8 @@ static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
+ 	struct imx_i2c_dma	*dma;
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++	struct i2c_client	*slave;
++#endif
+ };
  
--	if (!page_cache_add_speculative(head, refs)) {
-+	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
-+	    || !page_cache_add_speculative(head, refs))) {
- 		*nr -= refs;
- 		return 0;
- 	}
-diff --git a/arch/x86/mm/gup.c b/arch/x86/mm/gup.c
-index d7db45bdfb3b..551fc7fea046 100644
---- a/arch/x86/mm/gup.c
-+++ b/arch/x86/mm/gup.c
-@@ -202,10 +202,12 @@ static int __gup_device_huge_pmd(pmd_t pmd, unsigned long addr,
- 			undo_dev_pagemap(nr, nr_start, pages);
- 			return 0;
- 		}
-+		if (unlikely(!try_get_page(page))) {
-+			put_dev_pagemap(pgmap);
-+			return 0;
+ static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
+@@ -279,6 +282,14 @@ static inline unsigned char imx_i2c_read_reg(struct imx_i2c_struct *i2c_imx,
+ 	return readb(i2c_imx->base + (reg << i2c_imx->hwdata->regshift));
+ }
+ 
++/* Set up i2c controller register and i2c status register to default value. */
++static void i2c_imx_reset_regs(struct imx_i2c_struct *i2c_imx)
++{
++	imx_i2c_write_reg(i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN,
++			i2c_imx, IMX_I2C_I2CR);
++	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx, IMX_I2C_I2SR);
++}
++
+ /* Functions for DMA support */
+ static void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
+ 						dma_addr_t phy_addr)
+@@ -588,23 +599,33 @@ static void i2c_imx_stop(struct imx_i2c_struct *i2c_imx)
+ 	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+ }
+ 
+-static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
++/* Clear interrupt flag bit */
++static void i2c_imx_clr_if_bit(unsigned int status, struct imx_i2c_struct *i2c_imx)
+ {
+-	struct imx_i2c_struct *i2c_imx = dev_id;
+-	unsigned int temp;
++	status &= ~I2SR_IIF;
++	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
++	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
++}
+ 
+-	temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+-	if (temp & I2SR_IIF) {
+-		/* save status register */
+-		i2c_imx->i2csr = temp;
+-		temp &= ~I2SR_IIF;
+-		temp |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
+-		imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2SR);
+-		wake_up(&i2c_imx->queue);
+-		return IRQ_HANDLED;
+-	}
++/* Clear arbitration lost bit */
++static void i2c_imx_clr_al_bit(unsigned int status, struct imx_i2c_struct *i2c_imx)
++{
++	status &= ~I2SR_IAL;
++	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IAL);
++	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
++}
+ 
+-	return IRQ_NONE;
++static irqreturn_t i2c_imx_master_isr(struct imx_i2c_struct *i2c_imx)
++{
++	unsigned int status;
++
++	/* Save status register */
++	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
++	i2c_imx->i2csr = status | I2SR_IIF;
++
++	wake_up(&i2c_imx->queue);
++
++	return IRQ_HANDLED;
+ }
+ 
+ static int i2c_imx_dma_write(struct imx_i2c_struct *i2c_imx,
+@@ -900,6 +921,13 @@ static int i2c_imx_xfer(struct i2c_adapter *adapter,
+ 
+ 	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
+ 
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++	if (i2c_imx->slave) {
++		dev_err(&i2c_imx->adapter.dev, "Please not do operations of master mode in slave mode");
++		return -EBUSY;
++	}
++#endif
++
+ 	result = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
+ 	if (result < 0)
+ 		goto out;
+@@ -1048,11 +1076,166 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
+ 		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
+ }
+ 
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++static int i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
++{
++	int temp;
++
++	/* Resume */
++	temp = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
++	if (temp < 0) {
++		dev_err(&i2c_imx->adapter.dev, "failed to resume i2c controller");
++		return temp;
++	}
++
++	/* Set slave addr. */
++	imx_i2c_write_reg((i2c_imx->slave->addr << 1), i2c_imx, IMX_I2C_IADR);
++
++	i2c_imx_reset_regs(i2c_imx);
++
++	/* Enable module */
++	temp = i2c_imx->hwdata->i2cr_ien_opcode;
++	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
++
++	/* Enable interrupt from i2c module */
++	temp |= I2CR_IIEN;
++	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
++
++	/* Wait controller to be stable */
++	usleep_range(50, 150);
++	return 0;
++}
++
++static irqreturn_t i2c_imx_slave_isr(struct imx_i2c_struct *i2c_imx)
++{
++	unsigned int status, ctl;
++	u8 value;
++
++	if (!i2c_imx->slave) {
++		dev_err(&i2c_imx->adapter.dev, "cannot deal with slave irq,i2c_imx->slave is null");
++		return IRQ_NONE;
++	}
++
++	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
++	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
++	if (status & I2SR_IAL) { /* Arbitration lost */
++		i2c_imx_clr_al_bit(status, i2c_imx);
++	} else if (status & I2SR_IAAS) { /* Addressed as a slave */
++		if (status & I2SR_SRW) { /* Master wants to read from us*/
++			dev_dbg(&i2c_imx->adapter.dev, "read requested");
++			i2c_slave_event(i2c_imx->slave, I2C_SLAVE_READ_REQUESTED, &value);
++
++			/* Slave transmit */
++			ctl |= I2CR_MTX;
++			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
++
++			/* Send data */
++			imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
++		} else { /* Master wants to write to us */
++			dev_dbg(&i2c_imx->adapter.dev, "write requested");
++			i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_REQUESTED, &value);
++
++			/* Slave receive */
++			ctl &= ~I2CR_MTX;
++			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
++			/* Dummy read */
++			imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
 +		}
- 		SetPageReferenced(page);
- 		pages[*nr] = page;
--		get_page(page);
--		put_dev_pagemap(pgmap);
- 		(*nr)++;
- 		pfn++;
- 	} while (addr += PAGE_SIZE, addr != end);
-@@ -230,6 +232,8 @@ static noinline int gup_huge_pmd(pmd_t pmd, unsigned long addr,
++	} else if (!(ctl & I2CR_MTX)) { /* Receive mode */
++			if (status & I2SR_IBB) { /* No STOP signal detected */
++				ctl &= ~I2CR_MTX;
++				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
++
++				value = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
++				i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_RECEIVED, &value);
++			} else { /* STOP signal is detected */
++				dev_dbg(&i2c_imx->adapter.dev,
++					"STOP signal detected");
++				i2c_slave_event(i2c_imx->slave, I2C_SLAVE_STOP, &value);
++			}
++	} else if (!(status & I2SR_RXAK)) {	/* Transmit mode received ACK */
++		ctl |= I2CR_MTX;
++		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
++
++		i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_READ_PROCESSED, &value);
++
++		imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
++	} else { /* Transmit mode received NAK */
++		ctl &= ~I2CR_MTX;
++		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
++		imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
++	}
++	return IRQ_HANDLED;
++}
++
++static int i2c_imx_reg_slave(struct i2c_client *client)
++{
++	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
++	int ret;
++	if (i2c_imx->slave)
++		return -EBUSY;
++
++	i2c_imx->slave = client;
++
++	ret = i2c_imx_slave_init(i2c_imx);
++	if (ret < 0)
++		dev_err(&i2c_imx->adapter.dev, "failed to switch to slave mode");
++
++	return ret;
++}
++
++static int i2c_imx_unreg_slave(struct i2c_client *client)
++{
++	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
++	int ret;
++
++	if (!i2c_imx->slave)
++		return -EINVAL;
++
++	/* Reset slave address. */
++	imx_i2c_write_reg(0, i2c_imx, IMX_I2C_IADR);
++
++	i2c_imx_reset_regs(i2c_imx);
++
++	i2c_imx->slave = NULL;
++
++	/* Suspend */
++	ret = pm_runtime_put_sync(i2c_imx->adapter.dev.parent);
++	if (ret < 0)
++		dev_err(&i2c_imx->adapter.dev, "failed to suspend i2c controller");
++
++	return ret;
++}
++#endif
++
+ static const struct i2c_algorithm i2c_imx_algo = {
+ 	.master_xfer	= i2c_imx_xfer,
+ 	.functionality	= i2c_imx_func,
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++	.reg_slave	= i2c_imx_reg_slave,
++	.unreg_slave	= i2c_imx_unreg_slave,
++#endif
+ };
  
- 	refs = 0;
- 	head = pmd_page(pmd);
-+	if (WARN_ON_ONCE(page_ref_count(head) <= 0))
-+		return 0;
- 	page = head + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
- 	do {
- 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
-@@ -289,6 +293,8 @@ static noinline int gup_huge_pud(pud_t pud, unsigned long addr,
++static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
++{
++	struct imx_i2c_struct *i2c_imx = dev_id;
++	unsigned int status;
++
++	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
++
++	if (status & I2SR_IIF) {
++		i2c_imx_clr_if_bit(status, i2c_imx);
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++		if (i2c_imx->slave)
++			return i2c_imx_slave_isr(i2c_imx);
++#endif
++		return i2c_imx_master_isr(i2c_imx);
++	}
++
++	return IRQ_NONE;
++}
++
+ static int i2c_imx_probe(struct platform_device *pdev)
+ {
+ 	struct imx_i2c_struct *i2c_imx;
+@@ -1148,10 +1331,7 @@ static int i2c_imx_probe(struct platform_device *pdev)
+ 	clk_notifier_register(i2c_imx->clk, &i2c_imx->clk_change_nb);
+ 	i2c_imx_set_clk(i2c_imx, clk_get_rate(i2c_imx->clk));
  
- 	refs = 0;
- 	head = pud_page(pud);
-+	if (WARN_ON_ONCE(page_ref_count(head) <= 0))
-+		return 0;
- 	page = head + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
- 	do {
- 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+-	/* Set up chip registers to defaults */
+-	imx_i2c_write_reg(i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN,
+-			i2c_imx, IMX_I2C_I2CR);
+-	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx, IMX_I2C_I2SR);
++	i2c_imx_reset_regs(i2c_imx);
+ 
+ 	/* Init optional bus recovery function */
+ 	ret = i2c_imx_init_recovery_info(i2c_imx, pdev);
 -- 
-2.24.0
+2.17.1
 
