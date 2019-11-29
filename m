@@ -2,135 +2,108 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	TRACKER_ID autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FD1C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D07C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4803221736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584C2216F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="HolJ9iGS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Uxyrhx29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfK2PIG (ORCPT
+        id S1727034AbfK2PJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 10:08:06 -0500
-Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:48227 "EHLO
-        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfK2PIF (ORCPT
+        Fri, 29 Nov 2019 10:09:54 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:31896 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfK2PJx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 10:08:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1575040085;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ho3w6fMZjQMUAdMfY9OmFcWJIQUD8dpZ768y2Og+acw=;
-  b=HolJ9iGS7WZs4rN6xLzGGsZHqvPPITgZEuxp4PE7hgdIc40SN2YpUh9/
-   NTFqtA3yRl6lCF8ODeZ17a0UBBYEMsl6ZwA8+7e26N+jdkoD/8th+/hRa
-   oDhPoiJmYfmBDbjgacFWCatKBDv+mjhDiwaNkporQCsKkMlSCAk1bx6Yl
-   Y=;
-Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: uo7ZQ6Lhm9qvElxVUxtjDCKkJouk31rqD+rniiFpA7qeDLbFelo86ONL8Ao+T2vpe7Q5KKvu3N
- MHj2KGcYc+pYAmemTK88J6d6U4NiRU6LiCvGxnuArztHn/OZSyMyTF1YrFr2EFWNKkB2KaUZ52
- xqsDgt3eZArNqBtFUy/LH7j+kTQUevajZMOxXOrQSTm2XtIv6G74/ANKHwA3IHWHnwlYCptasq
- AjOT0aicg377FQ4uVE0v6D+5FeLxp1D+lWSyJZypSwTwpCRMouYa/Nk3wMA5KFlcFrThzFKuxE
- 6Sk=
-X-SBRS: 2.7
-X-MesageID: 9402212
-X-Ironport-Server: esa6.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,257,1571716800"; 
-   d="scan'208";a="9402212"
-Date:   Fri, 29 Nov 2019 16:07:57 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     "Durrant, Paul" <pdurrant@amazon.com>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Juergen Gross <jgross@suse.com>,
-        <boris.ostrovsky@oracle.com>
-Subject: Re: [PATCH v2 2/2] block/xen-blkback: allow module to be cleanly
- unloaded
-Message-ID: <20191129150757.GA980@Air-de-Roger>
-References: <20191129134306.2738-1-pdurrant@amazon.com>
- <20191129134306.2738-3-pdurrant@amazon.com>
- <20191129150006.GZ980@Air-de-Roger>
- <f06bf1967bdf43ca9b218f9b5c5202a6@EX13D32EUC003.ant.amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f06bf1967bdf43ca9b218f9b5c5202a6@EX13D32EUC003.ant.amazon.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+        Fri, 29 Nov 2019 10:09:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1575040192;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=0WKSQYG0YP5GIwNWknC0InKQVJvBVr74yYBpeas3RNM=;
+        b=Uxyrhx294kdS1ofE8vxCwKw+LJs9d7S++dU237OTHePzyLZ2MVdQvl8yob9IU6SfCm
+        2Hx7rerm+w72XgfBH/VZP0pryXdVbZYrhXKlf5WLEU8quc1v9BLYN5757sNh1LLvuCoB
+        //Wv3A6+agIuojUt6jUKYmt9Garp2rsFAunWJHLdeyq5BTOIq+RKr7IciQ9dGfV8XxBK
+        +HHNeTfkvrBEq9DZzpFYEr0sRjHXJUuBomTU3pKewL9eoSYK6TUviOWOCODC+d7nvvZw
+        s+rOPuNGDZzBbIhO50pLW6JSN89iJIRfsVUuA0bh858IC5RHrGJ8RgdCMUNWrQPJRyfj
+        nAnQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vgwDeoHw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
+        with ESMTPSA id y07703vATF9pTbf
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 29 Nov 2019 16:09:51 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH] mips: Fix gettimeofday() in the vdso library
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <0b64c6bb-ffc7-059d-3cb3-012092e0fcf0@arm.com>
+Date:   Fri, 29 Nov 2019 16:09:51 +0100
+Cc:     Paul Burton <paulburton@kernel.org>,
+        mips-creator-ci20-dev@googlegroups.com,
+        letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <DCD7A17F-B045-440E-AB66-7F8AB72A19CA@goldelico.com>
+References: <20191129143658.12224-1-vincenzo.frascino@arm.com> <307717BD-3233-4313-BAA8-7431F4C78773@goldelico.com> <0b64c6bb-ffc7-059d-3cb3-012092e0fcf0@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 03:02:37PM +0000, Durrant, Paul wrote:
-> > -----Original Message-----
-> > From: Roger Pau Monné <roger.pau@citrix.com>
-> > Sent: 29 November 2019 15:00
-> > To: Durrant, Paul <pdurrant@amazon.com>
-> > Cc: linux-block@vger.kernel.org; linux-kernel@vger.kernel.org; xen-
-> > devel@lists.xenproject.org; Konrad Rzeszutek Wilk
-> > <konrad.wilk@oracle.com>; Jens Axboe <axboe@kernel.dk>
-> > Subject: Re: [PATCH v2 2/2] block/xen-blkback: allow module to be cleanly
-> > unloaded
-> > 
-> > On Fri, Nov 29, 2019 at 01:43:06PM +0000, Paul Durrant wrote:
-> > > Add a module_exit() to perform the necessary clean-up.
-> > >
-> > > Signed-off-by: Paul Durrant <pdurrant@amazon.com>
-> > 
-> > LGTM:
-> > 
-> > Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
-> > 
-> 
-> Thanks.
-> 
-> > AFAICT we should make sure this is not committed before patch 1, or
-> > else you could unload a blkback module that's still in use?
-> > 
-> 
-> Yes, that's correct.
 
-Given this is a very small change, and not really block related I
-think it would be better for both patches to be committed from the Xen
-tree, if Jens, Juergen and Boris agree.
+> Am 29.11.2019 um 15:58 schrieb Vincenzo Frascino =
+<vincenzo.frascino@arm.com>:
+>=20
+> On 11/29/19 2:52 PM, H. Nikolaus Schaller wrote:
+>>=20
+>>> Am 29.11.2019 um 15:36 schrieb Vincenzo Frascino =
+<vincenzo.frascino@arm.com>:
+>>>=20
+>>> The libc provides a discovery mechanism for vDSO library and its
+>>> symbols. When a symbol is not exposed by the vDSOs the libc falls =
+back
+>>> on the system calls.
+>>>=20
+>>> With the introduction of the unified vDSO library on mips this =
+behavior
+>>> is not honored anymore by the kernel in the case of gettimeofday().
+>>>=20
+>>> The issue has been noticed and reported due to a dhclient failure on =
+the
+>>> CI20 board:
+>>>=20
+>>> root@letux:~# dhclient
+>>> ../../../../lib/isc/unix/time.c:200: Operation not permitted
+>>> root@letux:~#
+>>>=20
+>>> Restore the original behavior fixing gettimeofday() in the vDSO =
+library.
+>>>=20
+>>> Cc: Paul Burton <paulburton@kernel.org>
+>>> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>> Testes-by: H. Nikolaus Schaller <hns@goldelico.com> # CI20 with =
+JZ4780
+>> ^^^ funny typo... -> Tested-by:
+>=20
+> Ops, I copy-pasted it from your email ;) Can't trust you ;)
 
-Thanks, Roger.
+No :)
+
+Well, typos happen and nobody seems to notice. My favourite:
+
+5f9e832c137075045d15cd6899ab0505cfb2ca4b
+
+BR,
+Nikolaus
+
