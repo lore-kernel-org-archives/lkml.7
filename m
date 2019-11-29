@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C017C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A25AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5801D217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29905217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfK2NwC (ORCPT
+        id S1727022AbfK2NwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:52:02 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:53145 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfK2NwC (ORCPT
+        Fri, 29 Nov 2019 08:52:14 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:63849 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfK2NwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:52:02 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+        Fri, 29 Nov 2019 08:52:13 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
   Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="Claudiu.Beznea@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -31,30 +31,30 @@ Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: GxaVsQIFk2v9N+32Yaf/dZwtFt3bo5SeNrykirVRzWos8SH6VPMBkgo18GYWd8DqdwJCviB7EJ
- cE6sDzLWR+gWNweT05/o5X501D66IxHHrHj7/qWYsnumIALOCQR3mJMO40yHLYsDyuyGETLiiJ
- m2I+Ier/f5FW8yJGWnxZcZu1+oN168fOnFYrMXq5zMFqNWjazDJYyfqXA7iljCey2cjOaqidjI
- Doupf6UrTsLx0f5wMn3VB4wHHactd/Fg6Dc5S9Lv0t1egm3liUmay+ear0MSoM+j7/pBt2gSWi
- b/U=
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: VLjiEHMhVooaEJZvUCF+u5HVW70oJT3m9hfrMVv4n9tp2g523C0+R3e05P0z/pWOpuTBQVFSZC
+ A5QG5BdFJTEHJ25WxxavC2G+5H2a3X+zq+qkEU08Vx64/ovuDT6Ds+RrwTg2jgbe9LORfJUQ3b
+ +j6Q/ZqIdhwXgNF6XaNCSsRfX+xrMawLTsRzoyLVSVwisxb3txme9BP/IyBap9QWa8Z558Kkt3
+ mSoZmHBPxGzWHHcfcFbd+kjLPRy2qHT+gZshfovhL6VP8PYY15SatAzRFqh4V5DwI7uLP0v7uG
+ +5k=
 X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="60119974"
+   d="scan'208";a="58778681"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Nov 2019 06:52:01 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Nov 2019 06:52:12 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 29 Nov 2019 06:51:55 -0700
+ 15.1.1713.5; Fri, 29 Nov 2019 06:52:07 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 29 Nov 2019 06:51:53 -0700
+ 15.1.1713.5 via Frontend Transport; Fri, 29 Nov 2019 06:52:04 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
         <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
@@ -62,9 +62,9 @@ To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v3 1/9] ARM: at91: Kconfig: add sam9x60 pll config flag
-Date:   Fri, 29 Nov 2019 15:51:37 +0200
-Message-ID: <1575035505-6310-2-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v3 5/9] power: reset: Kconfig: select POWER_RESET_AT91_RESET for sam9x60
+Date:   Fri, 29 Nov 2019 15:51:41 +0200
+Message-ID: <1575035505-6310-6-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575035505-6310-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1575035505-6310-1-git-send-email-claudiu.beznea@microchip.com>
@@ -75,28 +75,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SAM9X60's pll config flag. It was first used in
-commit a436c2a447e5 ("clk: at91: add sam9x60 PLL driver").
+Select POWER_RESET_AT91_RESET for SAM9X60 SoC.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/mach-at91/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/power/reset/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-index af41725fcc72..262b550d7329 100644
---- a/arch/arm/mach-at91/Kconfig
-+++ b/arch/arm/mach-at91/Kconfig
-@@ -154,6 +154,9 @@ config HAVE_AT91_AUDIO_PLL
- config HAVE_AT91_I2S_MUX_CLK
- 	bool
- 
-+config HAVE_AT91_SAM9X60_PLL
-+	bool
-+
- config SOC_SAM_V4_V5
- 	bool
- 
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index c721939767eb..886e60017f4d 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -26,7 +26,7 @@ config POWER_RESET_AT91_POWEROFF
+ config POWER_RESET_AT91_RESET
+ 	tristate "Atmel AT91 reset driver"
+ 	depends on ARCH_AT91
+-	default SOC_AT91SAM9 || SOC_SAMA5
++	default SOC_AT91SAM9 || SOC_SAM9X60 || SOC_SAMA5
+ 	help
+ 	  This driver supports restart for Atmel AT91SAM9 and SAMA5
+ 	  SoCs
 -- 
 2.7.4
 
