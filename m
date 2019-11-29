@@ -2,229 +2,138 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5DBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468F6C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F3A21774
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE9321774
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:25:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ktkDtU+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfK2JWx (ORCPT
+        id S1726819AbfK2JZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:22:53 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:41938 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbfK2JWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 04:22:52 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5779C200346;
-        Fri, 29 Nov 2019 10:22:50 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 68A292002AE;
-        Fri, 29 Nov 2019 10:22:46 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7E0D0402DB;
-        Fri, 29 Nov 2019 17:22:41 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: [v6,2/3] i2c: mux: pca954x: support property idle-state
-Date:   Fri, 29 Nov 2019 17:22:21 +0800
-Message-Id: <20191129092222.2706-2-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191129092222.2706-1-biwen.li@nxp.com>
-References: <20191129092222.2706-1-biwen.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 29 Nov 2019 04:25:13 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45697 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfK2JZM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 04:25:12 -0500
+Received: by mail-lj1-f193.google.com with SMTP id d20so1423760ljc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 01:25:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mg1s2q4SGEIjUen50+yfiIskGrnLGRT7vDezP+iB3ek=;
+        b=ktkDtU+MQ2A0ntvCYC85sCMclaO55zFflKLdsI6avwawIIlmHsDcE4mn8nJ3AztMEv
+         /Cby7GoxYXup1ExYM3BQmgQXwwmBRJn6aVro0IWVoTMqa0JghFRIhtQsJ/lqSJ5qA3zr
+         MehV1JylaHRE3qimaRKxr9uZSvY7MsCMlu/rzHFHBqy5wxIpyLk0W/JtJwv5UNsLEhqI
+         Dxw3WCwOkkXy8sbssqn2378Js68tUCcht+TUwnuLI8DQO1mDdhR/OHeESiGR+5Za+VlW
+         WTUCQFExToy0WVEcC2iYO6SGwBoaXe6KQGnXu/YWd18dToXPpJUkn+mjZ46/ACfLFkxV
+         A/tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mg1s2q4SGEIjUen50+yfiIskGrnLGRT7vDezP+iB3ek=;
+        b=TyXHXbeAR/cc6B4paAF+3etPBqkzhL5hB2MAdev183ab9MT+lqLPqOshZDl/3v8FGr
+         p6VB7wdLF62u6HxGXfnHoZ9PNDr6f1k5VHYqQQ5Y0a2Hxv9FPDrYjvUK4alE8tDeocTG
+         7/cOD3yo2TQQJ5ilF8W53OstpOdO17bLi/cGXCYzO4CoRmLw8dJSfBZT0uBqbZ0tO2ER
+         IYpKJsGMYcu0wi8KLyVmmAFVi6CiTyPvez06XVXzLQhvwYRdveM+7CXZEcalUJMwxVr7
+         atjZ7cwEKDDuAkrQQ9DsFnLKMuL4PcldE1I2hJ8wR3widAF3BsAeNSJCCd+oBojr00Se
+         7pYQ==
+X-Gm-Message-State: APjAAAVUBrDAySl1gVv4bSNaK35l2F3QHzqJmsIS2CYdBm30PEvbDSUC
+        BFxAo/wHZWz9QPOoMnivNzbxWagIgNtiHUN1VMIYyw==
+X-Google-Smtp-Source: APXvYqzTv0ijDNJAizgamXHOcidWYTyrultraC4Zuh5XFuR7VO2T4//KTaO/9/IsP5Sukin50F6jt4XGVFDVmELqfPI=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr16086638ljm.233.1575019510217;
+ Fri, 29 Nov 2019 01:25:10 -0800 (PST)
+MIME-Version: 1.0
+References: <20191128155438.325738-1-paul.kocialkowski@bootlin.com> <20191128155438.325738-6-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20191128155438.325738-6-paul.kocialkowski@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 29 Nov 2019 10:24:58 +0100
+Message-ID: <CACRpkdaSLsq-oA7t8OL6_6L+ivZE+a83M4JbTZ2HW5E1E7c6yw@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This supports property idle-state,if present,
-overrides i2c-mux-idle-disconnect.
+Hi Paul,
 
-My use cases:
-	- Use the property idle-state to fix
-	  an errata on LS2085ARDB and LS2088ARDB.
-	- Errata id: E-00013(board LS2085ARDB and
-	  LS2088ARDB revision on Rev.B, Rev.C and Rev.D).
-	- About E-00013:
-	  - Description: I2C1 and I2C3 buses
-	    are missing pull-up.
-	  - Impact: When the PCA954x device is tri-stated, the I2C bus
-	    will float. This makes the I2C bus and its associated
-	    downstream devices inaccessible.
-	  - Hardware fix: Populate resistors R189 and R190 for I2C1
-	    and resistors R228 and R229 for I2C3.
-	  - Software fix: Remove the tri-state option from the PCA954x
-	    driver(PCA954x always on enable status, specify a
-	    channel zero in dts to fix the errata E-00013).
+thanks for your patch!
 
-Tested-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v6:
-	- adjust log
+On Thu, Nov 28, 2019 at 4:54 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
 
-Change in v5:
-	- add extra precaution for pca954x_init 	
+> The LogiCVC display hardware block comes with GPIO capabilities
+> that must be exposed separately from the main driver (as GPIOs) for
+> use with regulators and panels. A syscon is used to share the same
+> regmap across the two drivers.
+>
+> Since the GPIO capabilities are pretty simple, add them to the syscon
+> GPIO driver.
+>
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+(...)
+> +#define LOGICVC_CTRL_REG               0x40
+> +#define LOGICVC_CTRL_GPIO_SHIFT                11
+> +#define LOGICVC_CTRL_GPIO_BITS         5
+> +
+> +#define LOGICVC_POWER_CTRL_REG         0x78
+> +#define LOGICVC_POWER_CTRL_GPIO_SHIFT  0
+> +#define LOGICVC_POWER_CTRL_GPIO_BITS   4
+> +
+> +static void logicvc_gpio_offset(struct syscon_gpio_priv *priv,
+> +                               unsigned offset, unsigned int *reg,
+> +                               unsigned int *bit)
+> +{
+> +       if (offset >= LOGICVC_CTRL_GPIO_BITS) {
+> +               *reg = LOGICVC_POWER_CTRL_REG;
+> +
+> +               /* To the (virtual) power ctrl offset. */
+> +               offset -= LOGICVC_CTRL_GPIO_BITS;
+> +               /* To the actual bit offset in reg. */
+> +               offset += LOGICVC_POWER_CTRL_GPIO_SHIFT;
+> +       } else {
+> +               *reg = LOGICVC_CTRL_REG;
+> +
+> +               /* To the actual bit offset in reg. */
+> +               offset += LOGICVC_CTRL_GPIO_SHIFT;
+> +       }
+> +
+> +       *bit = BIT(offset);
+> +}
 
-Change in v4:
-	- rename function
-	  pca954x_calculate_chan -> pca954x_regval
+The gpio-syscon.c is for simple syscons where the lines
+you want to affect are nicely ordered in the registers.
+It is intended to be generic.
 
-Change in v3:
-	- update subject and description
-	- add a helper function pca954x_calculate_chan()
+This is kind of shoehorning a special case into the generic
+code.
 
-Change in v2:
-	- update subject and description
-	- add property idle-state
+Isn't it more appropriate to create a specific driver for this
+hardware?
 
- drivers/i2c/muxes/i2c-mux-pca954x.c | 69 +++++++++++++++++++----------
- 1 file changed, 46 insertions(+), 23 deletions(-)
+Special get/set quirks for any possible quirky offset is
+certainly not the way to go, if this should be supported
+we need generic properties in struct syscon_gpio_data
+to indicate the valid bits and offsets.
 
-diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-index cd8753b29a63..6577ec873f59 100644
---- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-@@ -87,7 +87,7 @@ struct pca954x {
- 
- 	u8 last_chan;		/* last register value */
- 	/* MUX_IDLE_AS_IS, MUX_IDLE_DISCONNECT or >= 0 for channel */
--	s8 idle_state;
-+	s32 idle_state;
- 
- 	struct i2c_client *client;
- 
-@@ -237,20 +237,23 @@ static int pca954x_reg_write(struct i2c_adapter *adap,
- 				I2C_SMBUS_BYTE, &dummy);
- }
- 
-+static u8 pca954x_regval(struct pca954x *data, u8 chan)
-+{
-+	/* We make switches look like muxes, not sure how to be smarter. */
-+	if (data->chip->muxtype == pca954x_ismux)
-+		return chan | data->chip->enable;
-+	else
-+		return 1 << chan;
-+}
-+
- static int pca954x_select_chan(struct i2c_mux_core *muxc, u32 chan)
- {
- 	struct pca954x *data = i2c_mux_priv(muxc);
- 	struct i2c_client *client = data->client;
--	const struct chip_desc *chip = data->chip;
- 	u8 regval;
- 	int ret = 0;
- 
--	/* we make switches look like muxes, not sure how to be smarter */
--	if (chip->muxtype == pca954x_ismux)
--		regval = chan | chip->enable;
--	else
--		regval = 1 << chan;
--
-+	regval = pca954x_regval(data, chan);
- 	/* Only select the channel if its different from the last channel */
- 	if (data->last_chan != regval) {
- 		ret = pca954x_reg_write(muxc->parent, client, regval);
-@@ -264,7 +267,7 @@ static int pca954x_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
- {
- 	struct pca954x *data = i2c_mux_priv(muxc);
- 	struct i2c_client *client = data->client;
--	s8 idle_state;
-+	s32 idle_state;
- 
- 	idle_state = READ_ONCE(data->idle_state);
- 	if (idle_state >= 0)
-@@ -410,6 +413,22 @@ static void pca954x_cleanup(struct i2c_mux_core *muxc)
- 	i2c_mux_del_adapters(muxc);
- }
- 
-+static int pca954x_init(struct i2c_client *client, struct pca954x *data)
-+{
-+	int ret;
-+	if (data->idle_state >= 0) {
-+		data->last_chan = pca954x_regval(data, data->idle_state);
-+	} else {
-+		/* Disconnect multiplexer */
-+		data->last_chan = 0;
-+	}
-+	ret = i2c_smbus_write_byte(client, data->last_chan);
-+	if (ret < 0)
-+		data->last_chan = 0;
-+
-+	return ret;
-+}
-+
- /*
-  * I2C init/probing/exit functions
-  */
-@@ -419,7 +438,6 @@ static int pca954x_probe(struct i2c_client *client,
- 	struct i2c_adapter *adap = client->adapter;
- 	struct device *dev = &client->dev;
- 	struct device_node *np = dev->of_node;
--	bool idle_disconnect_dt;
- 	struct gpio_desc *gpio;
- 	struct i2c_mux_core *muxc;
- 	struct pca954x *data;
-@@ -470,23 +488,24 @@ static int pca954x_probe(struct i2c_client *client,
- 		}
- 	}
- 
--	/* Write the mux register at addr to verify
-+	data->idle_state = MUX_IDLE_AS_IS;
-+	if (of_property_read_u32(np, "idle-state", &data->idle_state)) {
-+		if (np && of_property_read_bool(np, "i2c-mux-idle-disconnect"))
-+			data->idle_state = MUX_IDLE_DISCONNECT;
-+	}
-+
-+	/*
-+	 * Write the mux register at addr to verify
- 	 * that the mux is in fact present. This also
--	 * initializes the mux to disconnected state.
-+	 * initializes the mux to a channel
-+	 * or disconnected state.
- 	 */
--	if (i2c_smbus_write_byte(client, 0) < 0) {
-+	ret = pca954x_init(client, data);
-+	if (ret < 0) {
- 		dev_warn(dev, "probe failed\n");
- 		return -ENODEV;
- 	}
- 
--	data->last_chan = 0;		   /* force the first selection */
--	data->idle_state = MUX_IDLE_AS_IS;
--
--	idle_disconnect_dt = np &&
--		of_property_read_bool(np, "i2c-mux-idle-disconnect");
--	if (idle_disconnect_dt)
--		data->idle_state = MUX_IDLE_DISCONNECT;
--
- 	ret = pca954x_irq_setup(muxc);
- 	if (ret)
- 		goto fail_cleanup;
-@@ -538,9 +557,13 @@ static int pca954x_resume(struct device *dev)
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
- 	struct pca954x *data = i2c_mux_priv(muxc);
-+	int ret;
- 
--	data->last_chan = 0;
--	return i2c_smbus_write_byte(client, 0);
-+	ret = pca954x_init(client, data);
-+	if (ret < 0)
-+		dev_err(&client->dev, "failed to verify the mux, the mux maybe not present in fact\n");
-+
-+	return ret;
- }
- #endif
- 
--- 
-2.17.1
-
+Yours,
+Linus Walleij
