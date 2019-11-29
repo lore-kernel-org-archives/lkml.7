@@ -2,105 +2,73 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A8CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E3AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3A8208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:32:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CSjQyz1v"
+	by mail.kernel.org (Postfix) with ESMTP id 719AA2158A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfK2RcY (ORCPT
+        id S1727073AbfK2Rgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 12:32:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26078 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726909AbfK2RcX (ORCPT
+        Fri, 29 Nov 2019 12:36:40 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52102 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbfK2Rgk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 12:32:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575048742;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lu1iN71LokIjGtjpqlGVpx9UlOqCL6Wwu7KcbuyxTxI=;
-        b=CSjQyz1vUprYkf3yZ0DAXnqetQqzvpxJB4Ge6QQrPLg+pSZb87NQxfPVqBay0OweO8t17q
-        68acDyPYJhGyB2liSDQD2ranoj5mp1kV7rYjsOYG998gnMATkbPwMkqQSR90Llrm0mvMrM
-        QV+ldLzWCACnA9nd0wPjKEMYcqov2u0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-413-jnDybVVFNViIOLXnnOZleA-1; Fri, 29 Nov 2019 12:32:21 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 511391005502;
-        Fri, 29 Nov 2019 17:32:19 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A26F610013A1;
-        Fri, 29 Nov 2019 17:32:14 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 29 Nov 2019 18:32:19 +0100 (CET)
-Date:   Fri, 29 Nov 2019 18:32:13 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Jan Kratochvil <jan.kratochvil@redhat.com>,
-        Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH] ptrace/x86: introduce TS_COMPAT_RESTART to fix
- get_nr_restart_syscall()
-Message-ID: <20191129173213.GB3992@redhat.com>
-References: <CAHk-=whA1h-7MKGdzyViwJR4_rqYKMP91FwuObWneBZE0yH81A@mail.gmail.com>
- <EB7AF2AE-6CA3-4395-AA37-BF92EE308A42@amacapital.net>
+        Fri, 29 Nov 2019 12:36:40 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iakC4-0005JJ-20; Fri, 29 Nov 2019 17:36:36 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-bluetooth@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Bluetooth: btusb: fix memory leak on fw
+Date:   Fri, 29 Nov 2019 17:36:35 +0000
+Message-Id: <20191129173635.87479-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <EB7AF2AE-6CA3-4395-AA37-BF92EE308A42@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: jnDybVVFNViIOLXnnOZleA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/28, Andy Lutomirski wrote:
->
-> I think this doesn=E2=80=99t work for x32.
+From: Colin Ian King <colin.king@canonical.com>
 
-Why? get_nr_restart_syscall() can still rely on the "orig_ax & __X32_SYSCAL=
-L_BIT"
-check, debugger should restore regs->orig_ax correctly.
+Currently the error return path when the call to btusb_mtk_hci_wmt_sync
+fails does not free fw.  Fix this by returning via the error_release_fw
+label that performs the free'ing.
 
-> Let=E2=80=99s either save the result of syscall_get_arch()
+Addresses-Coverity: ("Resource leak")
+Fixes: a1c49c434e15 ("Bluetooth: btusb: Add protocol support for MediaTek MT7668U USB devices")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/bluetooth/btusb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We can save the result of syscall_get_arch(), but it doesn't distinguish
-x32/x86_64 tasks, so it doesn't really differ from TS_COMPAT.
-
-> or just actually calculate and save the restart_syscall nr here.
-
-sure, we we can do this.
-
-> Before we commit to this, Kees, do you think we can manage to just renumb=
-er
-> restart_syscall()?  That=E2=80=99s a much better solution if we can pull =
-it off.
-
-Agreed.
-
-Oleg.
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 9b587e662b48..d9cd0677d41c 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2867,7 +2867,7 @@ static int btusb_mtk_setup_firmware(struct hci_dev *hdev, const char *fwname)
+ 	err = btusb_mtk_hci_wmt_sync(hdev, &wmt_params);
+ 	if (err < 0) {
+ 		bt_dev_err(hdev, "Failed to send wmt rst (%d)", err);
+-		return err;
++		goto err_release_fw;
+ 	}
+ 
+ 	/* Wait a few moments for firmware activation done */
+-- 
+2.24.0
 
