@@ -2,191 +2,418 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7AFC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5F8C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA46215F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F022215A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:49:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="N56SRiA1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfK2HsW (ORCPT
+        id S1726909AbfK2HtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 02:48:22 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:55590 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfK2HsV (ORCPT
+        Fri, 29 Nov 2019 02:49:13 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25806 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfK2HtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 02:48:21 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-5f-5de0cd42b140
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 00.DB.08102.24DC0ED5; Fri, 29 Nov 2019 08:48:18 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Fri, 29 Nov 2019 08:48:14 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Topic: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Index: AQHVndzxthsd4Y8wKkm7W/92Uslk+KeRDPcAgAAbkICAAZUNgIAACqYAgAAMmACADvFigA==
-Date:   Fri, 29 Nov 2019 07:48:13 +0000
-Message-ID: <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191118162502.GJ9761@sirena.org.uk>
-         <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
-         <20191119181325.GD3634@sirena.org.uk>
-         <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
-         <20191119193636.GH3634@sirena.org.uk>
-In-Reply-To: <20191119193636.GH3634@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4A7012CE0C8B984CBF9A799F6553634D@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Fri, 29 Nov 2019 02:49:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1575013702; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=KDSy1+WrAh6dXP5Xz0wj2NajCaVNY+F+wLSMKWiSFgsLU8PQwkYyMtn24zSP8NMJbdx+pHKHbNkMj3p3vHFy/QjXQ7itqMXLDwns0+cDhailFXCVsw+K0yoDbiIdNkw+iwJxXQXj5KFsrtxBq2+ujAeMwlatilgSOqZYsCNXY5Y=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1575013702; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=tDKlRM2OnSa/bddPc0RH20mW/Nz7ORXjS9zi/ab2gcg=; 
+        b=F8XqSbjS4s4Zu4c36wApOp+5Y5q0NJqrrdMzbEe4pNFB1OpVTu+v5Vr6SLLM0yk+wURRdgevwkgEAxRtI9Mm8h4Nuaa/DlVZBgVdc5I+8dGk3f1dOXK6qYfTHl43fwlGuoP/BV3GOrOP8LNC2Ic33m5DFPhDxVDwWuc6AmCx+v8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=Hbn3OYrHKYm2Js3p92I8nrDFRrSpzw5FO23UumEOLQSZp13l1eGRiovpTdjvgVAks43KoTTABIxu
+    GnjbREmAQDitiyL/u5CpLic4gnunzpba5eNCYarA7fOIVpxBnwtq  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1575013702;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=tDKlRM2OnSa/bddPc0RH20mW/Nz7ORXjS9zi/ab2gcg=;
+        b=N56SRiA1tTNl/iMHEMExaTWQyPwZwWYnrPd8QuRNKsEttz3ihOU+5S6YFKGgYD75
+        YDLldHbabdpdHion6QGMeZu2R5HUzggvxG7w09YMNECPzUJ1naHcbxroWY0UBnasOhI
+        9IonG7nFY72nAi7fEDj5Mj4Zh0Eiuco0VfiaIAIM=
+Received: from [192.168.88.130] (117.136.62.83 [117.136.62.83]) by mx.zohomail.com
+        with SMTPS id 1575013699957475.9849040704013; Thu, 28 Nov 2019 23:48:19 -0800 (PST)
+Subject: Re: [PATCH v4 4/6] MIPS: Ingenic: Initial YSH & ATIL CU Neo board
+ support.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
+ <1574787974-58040-5-git-send-email-zhouyanjie@zoho.com>
+ <1574873873.3.1@crapouillou.net> <5DDF5711.9050008@zoho.com>
+ <1574944293.3.0@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DE0CD34.6070504@zoho.com>
+Date:   Fri, 29 Nov 2019 15:48:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TW0wUVxjOmTlz4TJmXBb3dG1Nuq29IQjWtifGtKSpceiDJaE1adMtDmVk
-        0WWXzO5aL21CYi0sINF0rbpyc7mKVGSBVDdoDUVEQJGIiuKKRGqEEmkRMSDFzjBVeDpf/u/2
-        P/yHJXXVjJFNtzkl2SZaTXQoPFf9tD7640t3zbGeiVhc3nONwdkPKxk8UdQB8YHBIRoPncsG
-        uKT1MoXzOhsp7Bs7RGG3O4fC/U0nIW5vGAB44PF5gCd7cwjsmaki8D/5dyh89KdyiBtKZgC+
-        GiikcdPoCYDbjvfS+NfWIIMrbvQQuLCiHeKxcTeBezrW4WDHeRrv7ukj8Z4zrQyevV4PccHl
-        9fHLhNriWiCM9e1hhOLaXcJpb5ARypqHCcFf46aF29ebaaGs4GdKeJD/BxQmu/ZDoaCxBgj3
-        j9ZB4ULfb4RwsHiKEKqPP2GER/5lifxXYWtTROe2pPQ028oPN4VZHvf+DjI9q7cX/70XZoEH
-        q3IByyJ+NTpZacgFIayOvwaQ58g3uSBUwe0AdZ/Og6qG5tei3JuMqtHz0ejAdBmtakj+cDgq
-        vOSnVSKC34Qa/7oHNZGISiefEhreiHzBIVLNgfxyNJ3vVMccvwGVBkZJrauGRP7AjTlNCL8K
-        1d/iVA3gX0HurIdzMSRvQP77TygVI55H5c3dpIYj0fC92f/nJnRmanBuZZJ/G9UFVmrWeJRd
-        u5fS8KvIkzfIaCssRhcPD8F9YIl3QYN33u1d4PYucHsXuEsBVQNQhphuTROdUlyMLLliZLsl
-        Q3m+tWf4gXZ5E6fAs5aEFkCwoAW8xBKmSG5RyYBZtyjFnrrDIjosybLLKjlaAGJJk55LKVI4
-        LlXcsVOS7c+ppSw0Gbg3B/ebdbzatVWSMiX5Ofsyy5oQ90XnXbNusSylSds3p1ud8zTBhqjh
-        oUa9Q7KlSrLoclqS1eNIdijXoVLhSu+Pqp1zZIoZylSzdoAodt9wkY9kW4sqfKQO2uw2yWjg
-        7F2KlFelFpftRdEIMLDAFMGtUNlw5fu9yBlRKgil4mzBHbXCKc5TxixQdiXs9Snp1K3hyq83
-        Nvzp2hnIORbxb1L/zDHX+8HX2HdzRqIix/1N9pjls7EcmeDebE66uP6XQFXc1bMfXZkO8SfG
-        dn6aqU/68rtu4+cnrB+gIxcSXD98tmbJhrb4N7p841veSvQl9m+zRjcsfa8tSq87+P3uNY9W
-        rPskdFddfcx41czoMxN0WMS4d0jZIf4Hc3Z7HDsEAAA=
+In-Reply-To: <1574944293.3.0@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQWdhaW4gTWFyaywNCg0KU29ycnkgZm9yIGxvbmcgZGVsYXkgLSBJIGFtIHJlYWxseSBo
-YXZpbmcgdG9vIG1hbnkgdGhpbmdzIG9uIG15IHRhYmxlDQpyaWdodCBub3cgOi8NCg0KT24gVHVl
-LCAyMDE5LTExLTE5IGF0IDE5OjM2ICswMDAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBPbiBUdWUs
-IE5vdiAxOSwgMjAxOSBhdCAwNjo1MTozN1BNICswMDAwLCBWYWl0dGluZW4sIE1hdHRpIHdyb3Rl
-Og0KPiA+IE9uIFR1ZSwgMjAxOS0xMS0xOSBhdCAxODoxMyArMDAwMCwgTWFyayBCcm93biB3cm90
-ZToNCj4gPiA+IEFoLCBPSy4gIEkgZGlkbid0IGV2ZW4gbm90aWNlIHRoYXQgcGF0Y2ggd2hlbiBJ
-IHNjYW5uZWQgdGhlDQo+ID4gPiBzZXJpZXMuDQo+ID4gPiBJJ2xsIGxvb2sgb3V0IGZvciB0aGlz
-IG5leHQgdGltZSBhcm91bmQgYnV0IHRoYXQgc291bmRzIGxpa2UgaXQncw0KPiA+ID4gZ2VuZXJh
-bGx5IGdvaW5nIGluIHRoZSByaWdodCBkaXJlY3Rpb24sIGVzcGVjaWFsbHkgaWYgaXQncw0KPiA+
-ID4gaW50ZWdyYXRlZA0KPiA+ID4gd2l0aCB0aGUgc3VzcGVuZCBtb2RlIHJlZ3VsYXRvciBiaW5k
-aW5ncyB0aGF0IENodW55YW4gZGlkLg0KPiA+IFByb2JhYmx5IGl0IGlzIG5vdCBhcyBJIGFtIG5v
-dCBmYW1pbGlhciB3aXRoIENodW55YW4ncyB3b3JrLiBJJ2xsDQo+ID4gdHJ5DQo+ID4gbG9va2lu
-ZyB3aGF0IGhhcyBiZWVuIGRvbmUgb24gdGhhdCBmcm9udCA6KSBBbmQgSSBhbSBwcmV0dHkgc3Vy
-ZQ0KPiA+IHlvdQ0KPiA+IG1pZ2h0IG5vdCBiZSBoYXBweSB3aXRoIHRoYXQgcGF0Y2ggLSBidXQg
-cGVyaGFwcyB5b3UgY2FuIGdpdmUgbWUgYQ0KPiA+IG51ZGdlIHRvIGJldHRlciBkaXJlY3Rpb24u
-Li4NCj4gDQo+IFRoZSBkcml2ZXIgaW50ZXJmYWNlIHdhcyBhZGRlZCBpbiAicmVndWxhdG9yOiBh
-ZGQgUE0gc3VzcGVuZCBhbmQNCj4gcmVzdW1lDQo+IGhvb2tzIi4NCg0KSSBsb29rZWQgdGhyb3Vn
-aCB0aGUgc2V0IGJ1dCBkaWRuJ3Qgc3BvdCBhbnkgbmV3IGludGVyZmFjZSB0b3dhcmRzIHRoZQ0K
-cmVndWxhdG9yIGRyaXZlciAod2hpY2ggYWNjZXNzZXMgdGhlIEhXKS4gSSBzYXcgaW50ZXJmYWNl
-IHRvd2FyZHMNCnJlZ3VsYXRvciBjb25zdW1lciBkcml2ZXIgd2hpY2ggY2FuIGJlIHVzZWQgdG8g
-c2V0IHRoZSBjb25zdHJhaW5zDQp0aG91Z2guDQoNClNwZWNpZmljYWxseSwgSSBkb24ndCBzZWUg
-dm9sdGFnZSBzZXR0aW5nIGNhbGxiYWNrIGZvciBkaWZmZXJlbnQgcnVuLQ0KbW9kZXMuIE5vciBk
-byBJIHNlZSB2b2x0YWdlIHNldHRpbmcgKG9yIGRpZmZlcmVudGlhdGlvbikgb2YgbW9yZSB0aGFu
-DQpvbmUgc3VzcGVuZCBzdGF0ZS4NCg0KVG8gZXhwbGFpbiBpdCBmdXJ0aGVyIC0gbXkgYXNzdW1w
-dGlvbiBpcyB0aGF0IHRoZSBCRDcxODI4ICdydW4tbGV2ZWxzJw0KKFJVTjAsIC4uLiBSVU4zKSBj
-b3VsZCBiZSBtYXBwZWQgdG8gcmVndWxhdG9yIG1vZGVzDQpSRUdVTEFUT1JfTU9ERV9GQVNULCBS
-RUdVTEFUT1JfTU9ERV9OT1JNQUwsIFJFR1VMQVRPUl9NT0RFX0lETEUgYW5kIA0KUkVHVUxBVE9S
-X01PREVfU1RBTkRCWS4gQnV0IHJlZ3VsYXRvcnMgd2hpY2ggYXJlIGNvbnRyb2xsZWQgYnkgdGhl
-c2UNCnJ1bi1sZXZlbHMsIGNhbid0IGJlIGluZGl2aWR1YWxseSBjb250cm9sbGVkLiBJZiBzdGF0
-ZSBmb3Igb25lIGlzDQpjaGFuZ2VkLCB0aGUgc3RhdGUgaXMgY2hhbmdlZCBmb3IgYWxsIG9mIHRo
-ZW0uIFRoZSBEVlMgYnVja3MgMSwyLDYgYW5kDQo3IHN1cHBvcnQgdGhpcy4gUmVzdCBvZiB0aGUg
-TERPcyBhbmQgQlVDS3MgKGFuZCBhbHNvIHRob3NlIERWUyBidWNrcw0Kd2hpY2ggYXJlIG5vdCBj
-b25maWd1cmVkIHRvIGJlIGNvbnRyb2xsZWQgYnkgcnVuLWxldmVscykgaGF2ZSBtb2RlcyBSVU4N
-CmFuZCBJRExFLCB3aGVyZSB0aGUgcHJvY2Vzc29yIHN0YXlzIHBvd2VyZWQuDQoNCkluIGFkZGl0
-aW9uIHRvIHRoZXNlIChhY3RpdmUpIG1vZGVzL3N0YXRlcywgdGhlcmUgaXMgZmV3IHN0YXRlcyB3
-aGVyZQ0KcHJvY2Vzc29yIGlzIG5vdCBwb3dlcmVkLiBJIGd1ZXNzIHRoZXNlIGNvdWxkIGJlIG1h
-cHBlZCB0byAnZGlmZmVyZW50Jw0Kc3VzcGVuZCBzdGF0ZXMuIEF0IGxlYXN0IExQU1IsIEhCTlQg
-YW5kIFNISVAgc3RhdGVzIGFyZSBzdWNoLiBUaGVzZSBhcmUNCmFnYWluIGdsb2JhbCBQTUlDIHN0
-YXRlcyAtIG5vdCBwZXIgcmVndWxhdG9yIHN0YXRlcy4gVGhleSBjYW4gYmUgZWl0aGVyDQpjb250
-cm9sbGVkIGJ5IGRyaXZpbmcgYSBwaW4gb24gUE1JQyAtIG9yIGJ5IEkyQyByZWdpc3RlciBzZXR0
-aW5nLiBJDQpkb24ndCBzZWUgaG93IEkgY291bGQgZGlmZmVyZW50aWF0ZSB0aGVzZSBzdGF0ZXMg
-d2hlbiB1c2luZyBzdGFuZGFyZA0KQVBJcyAtIG5vciBkbyBJIGtub3cgaWYgdGhlc2Ugc2hvdWxk
-IGJlIGNoYW5nZWQgdmlhIHJlZ3VsYXRvcg0KaW50ZXJmYWNlcyBhdCBhbGwuDQoNCkFsbCBpbiBh
-bGwgLSBJIGFtIGFsc28gYSBiaXQgdW5zdXJlIGhvdyBJIHNob3VsZCBkbyB0aGUgbWFwcGluZyBv
-ZiB0aGUNClBNSUMgbG93LXBvd2VyIG1vZGVzIHRvIHRoZSBtb2RlcyB1c2VkIGJ5IExpbnV4IC0g
-dGhlIGN1cnNlIG9mIHdvcmtpbmcNCmZvciBjb21wb25lbnQgdmVuZG9yIGlzIHRoYXQgSSBoYXZl
-IGxpbWl0ZWQgdmlzaWJpbGl0eSB0byBhY3R1YWwgZW5kLQ0KcHJvZHVjdHMgLSBpZiB0aGV5IGFy
-ZSBub3QgaW4tdHJlZS4gOiggQW5kIEkgZG9uJ3QgdGhpbmsgd2UgaGF2ZSBhbnkNCmluLXRyZWUg
-Ym9hcmRzIHdoaWNoIHVzZSB0aGVzZSBsb3ctcG93ZXIgc3RhdGVzIChhdCBsZWFzdCBmb3Igbm93
-KSAtIFNvDQppZiB5b3Ugb3IgUm9iIGRvIG5vdCBvYmplY3QgLSBJIHdpbGwgbGVhdmUgdGhlc2Ug
-YmluZGluZ3MgaW4gdGhpcyBkb2MgLQ0KYnV0IEkgbmVlZCB0byBjb25zaWRlciB0aGUgdmFsdWUg
-b2YgYWRkaW5nIHN0dWZmIHByZXNlbnRlZCBpbiBwYXRjaCAxMg0KaW4tdHJlZSBrZXJuZWwuLi4g
-R3Vlc3MgSSdsbCBkcm9wIGl0IG91dCB1bmxlc3MgSSBnZXQgc29tZSBiZXR0ZXINCnVuZGVyc3Rh
-bmRpbmcgaG93IHJ1bi1sZXZlbHMgYW5kIGxvdy1wb3dlciBtb2RlcyBhcmUgaGFuZGxlZCBpbiBz
-b21lIG9mDQp0aGUgYWN0dWFsIGRldmljZXMuIFdlIGNhbiBhbHdheXMgYWRkIHRoaXMgc3VwcG9y
-dCBsYXRlciA6KQ0KDQo+ID4gPiBZZXMsIEkgdGhpbmsgdGhpcyBuZWVkcyBjbGFyaWZpY2F0aW9u
-IGFzIEkgY29tcGxldGVseSBmYWlsZWQgdG8NCj4gPiA+IHBpY2sNCj4gPiA+IHVwDQo+ID4gPiBv
-biB0aGlzIGFuZCBkaWQgaW5kZWVkIHJlYWQgdGhpcyBhcyByZWZlcnJpbmcgdG8gdGhlDQo+ID4g
-PiBtb2Rlcy4gICJWb2x0YWdlcw0KPiA+ID4gdGhhdCBjYW4gYmUgc2V0IGluIFJVTiBtb2RlIiBv
-ciBzb21ldGhpbmc/ICBJIHRha2UgaXQgdGhlc2UNCj4gPiA+IHZvbHRhZ2VzDQo+ID4gPiBhcmUN
-Cj4gPiA+IGZpeGVkIGFuZCB0aGUgT1MgY2FuJ3QgY2hhbmdlIHRoZW0/DQo+ID4gVW5mb3J0dW5h
-dGVseSB0aGV5IGFyZSBub3QuIFZvbHRhZ2VzIGFuZCBlbmFibGUvZGlzYWJsZSBzdGF0dXNlcw0K
-PiA+IGZvcg0KPiA+IGVhY2ggcnVuLWxldmVsIChhbmQgaW5kaXZpZHVhbGx5IGZvciBlYWNoIHJ1
-bi1sZXZlbCBjYXBhYmxlIGJ1Y2spDQo+ID4gY2FuDQo+ID4gYmUgY2hhbmdlZCBhdCBydW50aW1l
-IHZpYSBJMkMuIEFuZCBhIGN1c3RvbWVyIHJlcXVlc3RlZCBtZSBhbHNvIHRvDQo+ID4gc3VwcG9y
-dCB0aGlzIC0gaGVuY2UgdGhlIGluLWtlcm5lbCBBUEkgLSBidXQgSSBhbSBzdXJlIHlvdSBoYXZl
-DQo+ID4gc29tZQ0KPiA+IG5pY2Ugd29yZHMgd2hlbiB5b3UgY2hlY2sgdGhlIHBhdGNoIDEyLiA6
-XQ0KPiANCj4gQWgsIHRoYXQncyBhY3R1YWxseSBiZXR0ZXIuICBJdCBvcGVucyB1cCBwb3NzaWJs
-aXRpZXMgZm9yIG1ha2luZyB1c2UNCj4gb2YNCj4gdGhlIGZlYXR1cmUgd2l0aG91dCBlbmNvZGlu
-ZyB2b2x0YWdlcyBpbiBEVC4gIEZvciBleGFtcGxlLCB5b3UgY2FuDQo+IGNhY2hlDQo+IHRoZSBs
-YXN0IGhvd2V2ZXIgbWFueSB2b2x0YWdlcyB0aGF0IHdlcmUgc2V0IGFuZCBqdW1wIHF1aWNrbHkg
-dG8gdGhlbQ0KPiBvcg0KPiBkbyBzb21ldGhpbmcgbGlrZSBwdXQgdGhlIHRvcCBvZiB0aGUgY29u
-c3RyYWludHMgaW4gdG8gaGVscCB3aXRoDQo+IGdvdmVybm9ycyBsaWtlIG9uZGVtYW5kLiAgSSdk
-IHJlY29tbWVuZCB0cnlpbmcgZm9yIHNvbWV0aGluZyBsaWtlDQo+IHRoYXQNCj4gcmF0aGVyIHRo
-YW4gZW5jb2RpbmcgaW4gRFQsIGl0J2xsIHByb2JhYmx5IGJlIG1vcmUgcm9idXN0IHdpdGggdGhp
-bmdzDQo+IGxpa2UgY3B1ZnJlcSBjaGFuZ2luZy4NCg0KSSB3aXNoIEkgd2FzIHdvcmtpbmcgd2l0
-aCB0aGUgZnVsbCBwcm9kdWN0IHNvIHRoYXQgSSBjb3VsZCBzZWUgYW5kDQpsZWFybiBhIHByb3Bl
-ciBleGFtcGxlIG9uIGhvdyB0aGUgY3B1ZnJlcSBhY3R1YWxseSB1c2VzIHRoZXNlDQppbnRlcmZh
-Y2VzIDopIEknZCByZWFsbHkgbGlrZSB0byB1bmRlcnN0YW5kIHRoaXMgbXVjaCBiZXR0ZXIuIE1h
-eWJlDQp0aGlzIGNvdWxkIGJlIGEgdG9waWMgZm9yIHlvdSB0byBwcmVzZW50IGluIHNvbWUgTGlu
-dXggY29uZmVyZW5jZSA7KQ0KSnVzdCBwbGVhc2UgcGluZyBtZSB3aGVuIHlvdSBhcmUgZG9pbmcg
-dGhhdCBhbmQgSSdsbCBiZSBsaXN0ZW5pbmcgdGhlcmUNCmZvciBzdXJlIDspDQoNCkFueXdheXMs
-IG15IGlkZWEgd2FzIHRvIHNldCB0aGUgaW5pdGFsIHZvbHRhZ2UgdmFsdWVzIGZvciB0aGVzZSBz
-dGF0ZXMNCnZpYSBEVCAtIGJ1dCBhbGxvdyB0aGUgdm9sdGFnZXMgdG8gYmUgY2hhbmdlZCBhdCBy
-dW4tdGltZSB0b28gKEkgZ3Vlc3MNCnRoaXMgaWRlYSBpcyB2aXNpYmxlIGluIHRoZSBwYXRjaCAx
-MikuDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0KDQo=
+Hi Paul,
+
+On 2019=E5=B9=B411=E6=9C=8828=E6=97=A5 20:31, Paul Cercueil wrote:
+> Hi Zhou,
+>
+>
+> Le jeu., nov. 28, 2019 at 13:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+> =C3=A9crit :
+>> Hi Paul,
+>>
+>> On 2019=E5=B9=B411=E6=9C=8828=E6=97=A5 00:57, Paul Cercueil wrote:
+>>> Hi Zhou,
+>>>
+>>>
+>>> Le mer., nov. 27, 2019 at 01:06, Zhou Yanjie <zhouyanjie@zoho.com>=20
+>>> a =7F=C3=A9crit :
+>>>> Add a device tree for the Ingenic X1000 based YSH & ATIL CU Neo board.
+>>>> Note that this is unselectable via Kconfig until the X1000 SoC is made
+>>>> selectable in a later commit.
+>>>>
+>>>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>>>> ---
+>>>>
+>>>> Notes:
+>>>>     v1->v2:
+>>>>     Rebase on top of mips-next, use TCU for system timer and=20
+>>>> =7F=7Fclocksource.
+>>>>
+>>>>     v2->v3:
+>>>>     No change.
+>>>>
+>>>>     v3->v4:
+>>>>     1.Adjust "model" in "cu1000.dts" to match the description in=20
+>>>> =7F=7F"devices.yaml".
+>>>>     2.Adjust "bool" in "Kconfig" to avoid duplicate names with=20
+>>>> =7F=7Fsubsequent boards.
+>>>>
+>>>>  arch/mips/boot/dts/ingenic/Makefile   |   1 +
+>>>>  arch/mips/boot/dts/ingenic/cu1000.dts |  52 ++++++++++++++++++
+>>>>  arch/mips/configs/cu1000_defconfig    | 100=20
+>>>> =7F=7F++++++++++++++++++++++++++++++++++
+>>>>  arch/mips/jz4740/Kconfig              |   4 ++
+>>>>  4 files changed, 157 insertions(+)
+>>>>  create mode 100644 arch/mips/boot/dts/ingenic/cu1000.dts
+>>>>  create mode 100644 arch/mips/configs/cu1000_defconfig
+>>>>
+>>>> diff --git a/arch/mips/boot/dts/ingenic/Makefile=20
+>>>> =7F=7Fb/arch/mips/boot/dts/ingenic/Makefile
+>>>> index 9cc4844..f6db7bb 100644
+>>>> --- a/arch/mips/boot/dts/ingenic/Makefile
+>>>> +++ b/arch/mips/boot/dts/ingenic/Makefile
+>>>> @@ -2,5 +2,6 @@
+>>>>  dtb-$(CONFIG_JZ4740_QI_LB60)    +=3D qi_lb60.dtb
+>>>>  dtb-$(CONFIG_JZ4770_GCW0)    +=3D gcw0.dtb
+>>>>  dtb-$(CONFIG_JZ4780_CI20)    +=3D ci20.dtb
+>>>> +dtb-$(CONFIG_X1000_CU1000)    +=3D cu1000.dtb
+>>>>
+>>>>  obj-$(CONFIG_BUILTIN_DTB)    +=3D $(addsuffix .o, $(dtb-y))
+>>>> diff --git a/arch/mips/boot/dts/ingenic/cu1000.dts=20
+>>>> =7F=7Fb/arch/mips/boot/dts/ingenic/cu1000.dts
+>>>> new file mode 100644
+>>>> index 00000000..f92f6af
+>>>> --- /dev/null
+>>>> +++ b/arch/mips/boot/dts/ingenic/cu1000.dts
+>>>> @@ -0,0 +1,52 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/dts-v1/;
+>>>> +
+>>>> +#include "x1000.dtsi"
+>>>> +#include <dt-bindings/gpio/gpio.h>
+>>>> +#include <dt-bindings/clock/ingenic,tcu.h>
+>>>> +
+>>>> +/ {
+>>>> +    compatible =3D "yna,cu1000", "ingenic,x1000";
+>>>> +    model =3D "YSH & ATIL General Board CU Neo";
+>>>> +
+>>>> +    aliases {
+>>>> +        serial2 =3D &uart2;
+>>>> +    };
+>>>> +
+>>>> +    chosen {
+>>>> +        stdout-path =3D &uart2;
+>>>> +    };
+>>>> +
+>>>> +    memory {
+>>>> +        device_type =3D "memory";
+>>>> +        reg =3D <0x0 0x04000000>;
+>>>> +    };
+>>>> +};
+>>>> +
+>>>> +&exclk {
+>>>> +    clock-frequency =3D <24000000>;
+>>>> +};
+>>>> +
+>>>> +&tcu {
+>>>> +    /* 1500 kHz for the system timer and clocksource */
+>>>> +    assigned-clocks =3D <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
+>>>> +    assigned-clock-rates =3D <1500000>, <1500000>;
+>>>> +
+>>>> +    /* Use channel #1 for the system timer channel #2 for the=20
+>>>> =7F=7Fclocksource */
+>>>> +    ingenic,pwm-channels-mask =3D <0xfa>;
+>>>
+>>> From the mask used, I'm gessing that you're reserving channels #0=20
+>>> and =7F#2, not #1 and #2.
+>>>
+>>
+>> My fault, you are right, it use channels #0 and #2.
+>>
+>>>> +};
+>>>> +
+>>>> +&uart2 {
+>>>> +    status =3D "okay";
+>>>> +
+>>>> +    pinctrl-names =3D "default";
+>>>> +    pinctrl-0 =3D <&pins_uart2>;
+>>>> +};
+>>>> +
+>>>> +&pinctrl {
+>>>> +    pins_uart2: uart2 {
+>>>> +        function =3D "uart2";
+>>>> +        groups =3D "uart2-data-d";
+>>>> +        bias-disable;
+>>>> +    };
+>>>> +};
+>>>> diff --git a/arch/mips/configs/cu1000_defconfig=20
+>>>> =7F=7Fb/arch/mips/configs/cu1000_defconfig
+>>>> new file mode 100644
+>>>> index 00000000..88729ee
+>>>> --- /dev/null
+>>>> +++ b/arch/mips/configs/cu1000_defconfig
+>>>> @@ -0,0 +1,100 @@
+>>>> +CONFIG_LOCALVERSION_AUTO=3Dy
+>>>> +CONFIG_KERNEL_GZIP=3Dy
+>>>> +CONFIG_SYSVIPC=3Dy
+>>>> +CONFIG_NO_HZ_IDLE=3Dy
+>>>> +CONFIG_HIGH_RES_TIMERS=3Dy
+>>>> +CONFIG_PREEMPT=3Dy
+>>>> +CONFIG_IKCONFIG=3Dy
+>>>> +CONFIG_IKCONFIG_PROC=3Dy
+>>>> +CONFIG_LOG_BUF_SHIFT=3D14
+>>>> +CONFIG_CGROUPS=3Dy
+>>>> +CONFIG_MEMCG=3Dy
+>>>> +CONFIG_MEMCG_KMEM=3Dy
+>>>> +CONFIG_CGROUP_SCHED=3Dy
+>>>> +CONFIG_CGROUP_FREEZER=3Dy
+>>>> +CONFIG_CGROUP_DEVICE=3Dy
+>>>> +CONFIG_CGROUP_CPUACCT=3Dy
+>>>> +CONFIG_NAMESPACES=3Dy
+>>>> +CONFIG_USER_NS=3Dy
+>>>> +CONFIG_BLK_DEV_INITRD=3Dy
+>>>> +CONFIG_INITRAMFS_SOURCE=3D"arch/mips/boot/ramdisk.cpio.gz"
+>>>> +CONFIG_CC_OPTIMIZE_FOR_SIZE=3Dy
+>>>> +CONFIG_SYSCTL_SYSCALL=3Dy
+>>>> +CONFIG_KALLSYMS_ALL=3Dy
+>>>> +CONFIG_EMBEDDED=3Dy
+>>>> +# CONFIG_VM_EVENT_COUNTERS is not set
+>>>> +# CONFIG_COMPAT_BRK is not set
+>>>> +CONFIG_SLAB=3Dy
+>>>> +CONFIG_MACH_INGENIC=3Dy
+>>>> +CONFIG_X1000_CU1000=3Dy
+>>>> +CONFIG_HIGHMEM=3Dy
+>>>> +CONFIG_HZ_100=3Dy
+>>>> +CONFIG_HZ=3D100
+>>>
+>>> This line looks malformed.
+>>
+>> Ok, I'll remove it in v7.
+>>
+>>>
+>>>> +# CONFIG_SECCOMP is not set
+>>>> +# CONFIG_SUSPEND is not set
+>>>> +# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+>>>> +# CONFIG_COMPACTION is not set
+>>>> +CONFIG_CMA=3Dy
+>>>> +CONFIG_CMA_AREAS=3D7
+>>>> +CONFIG_UEVENT_HELPER=3Dy
+>>>> +CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
+>>>> +CONFIG_DEVTMPFS=3Dy
+>>>> +# CONFIG_FW_LOADER is not set
+>>>> +# CONFIG_ALLOW_DEV_COREDUMP is not set
+>>>> +# CONFIG_INPUT_MOUSEDEV is not set
+>>>> +# CONFIG_INPUT_KEYBOARD is not set
+>>>> +# CONFIG_INPUT_MOUSE is not set
+>>>> +# CONFIG_SERIO is not set
+>>>> +CONFIG_VT_HW_CONSOLE_BINDING=3Dy
+>>>> +CONFIG_LEGACY_PTY_COUNT=3D2
+>>>> +CONFIG_SERIAL_EARLYCON=3Dy
+>>>> +CONFIG_SERIAL_8250=3Dy
+>>>> +CONFIG_SERIAL_8250_CONSOLE=3Dy
+>>>> +CONFIG_SERIAL_8250_NR_UARTS=3D3
+>>>> +CONFIG_SERIAL_8250_RUNTIME_UARTS=3D3
+>>>> +CONFIG_SERIAL_8250_INGENIC=3Dy
+>>>> +CONFIG_SERIAL_OF_PLATFORM=3Dy
+>>>> +# CONFIG_HW_RANDOM is not set
+>>>> +CONFIG_GPIO_SYSFS=3Dy
+>>>> +# CONFIG_HWMON is not set
+>>>> +# CONFIG_LCD_CLASS_DEVICE is not set
+>>>> +# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
+>>>> +# CONFIG_VGA_CONSOLE is not set
+>>>> +# CONFIG_HID is not set
+>>>> +# CONFIG_USB_SUPPORT is not set
+>>>> +# CONFIG_IOMMU_SUPPORT is not set
+>>>> +CONFIG_NVMEM=3Dy
+>>>> +CONFIG_NVMEM_SYSFS=3Dy
+>>>> +CONFIG_EXT4_FS=3Dy
+>>>> +# CONFIG_DNOTIFY is not set
+>>>> +CONFIG_PROC_KCORE=3Dy
+>>>> +# CONFIG_PROC_PAGE_MONITOR is not set
+>>>> +CONFIG_TMPFS=3Dy
+>>>> +CONFIG_CONFIGFS_FS=3Dy
+>>>> +CONFIG_NLS=3Dy
+>>>> +CONFIG_NLS_CODEPAGE_936=3Dy
+>>>> +CONFIG_NLS_CODEPAGE_950=3Dy
+>>>> +CONFIG_NLS_ASCII=3Dy
+>>>> +CONFIG_NLS_ISO8859_1=3Dy
+>>>> +CONFIG_NLS_UTF8=3Dy
+>>>> +CONFIG_CRYPTO_ECHAINIV=3Dy
+>>>> +CONFIG_CRYPTO_AES=3Dy
+>>>> +CONFIG_CRYPTO_DEFLATE=3Dy
+>>>> +CONFIG_CRYPTO_LZO=3Dy
+>>>> +CONFIG_PRINTK_TIME=3Dy
+>>>> +CONFIG_CONSOLE_LOGLEVEL_DEFAULT=3D15
+>>>> +CONFIG_CONSOLE_LOGLEVEL_QUIET=3D15
+>>>> +CONFIG_MESSAGE_LOGLEVEL_DEFAULT=3D7
+>>>> +CONFIG_DEBUG_INFO=3Dy
+>>>> +CONFIG_STRIP_ASM_SYMS=3Dy
+>>>> +CONFIG_DEBUG_FS=3Dy
+>>>> +CONFIG_MAGIC_SYSRQ=3Dy
+>>>> +CONFIG_PANIC_ON_OOPS=3Dy
+>>>> +CONFIG_PANIC_TIMEOUT=3D10
+>>>> +# CONFIG_SCHED_DEBUG is not set
+>>>> +# CONFIG_DEBUG_PREEMPT is not set
+>>>> +CONFIG_STACKTRACE=3Dy
+>>>> +# CONFIG_FTRACE is not set
+>>>> +CONFIG_CMDLINE_BOOL=3Dy
+>>>> +CONFIG_CMDLINE=3D"console=3DttyS2,115200n8 mem=3D32M@0x0 earlycon=20
+>>>> =7F=7Fclk_ignore_unused"
+>>>
+>>> You already specify the stdout-path in the devicetree, no need to=20
+>>> pass =7Fthe "console" parameter.
+>>>
+>>
+>> According the test log , if remove "console=3DttyS2,115200n8", serial=20
+>> will not
+>> initialized and will stuck after:
+>>
+>> [    0.016815] printk: bootconsole [x1000_uart0] disabled
+>>
+>> if remove both "console=3DttyS2,115200n8" and "earlycon" it will stuck=
+=20
+>> after:
+>>
+>> Starting kernel ...
+>>
+>> So I think both the "earlycon" and the "console=3DttyS2,115200n8=20
+>> earlycon" should be retained.
+>
+> There must be something wrong with your kernel config. It works here.
+>
+> Use this as your stdout-path: "serial2:115200n8", unset=20
+> CONFIG_CMDLINE_OVERRIDE, enable MIPS_CMDLINE_DTB_EXTEND, and just use=20
+> "earlycon clk_ignore_unused" in the devicetree's bootargs. That should=20
+> do it.
+>
+
+It works, I will change it in v6.
+
+>>
+>>> For the "mem" parameter, it's already set in the devicetree, so no=20
+>>> =7Fneed to set it again here.
+>>> Besides, in the devicetree it is set to 64 MiB.
+>>
+>> Ok, I'll remove them in v7.
+>>
+>>>
+>>> Why is clk_ignore_unused needed?
+>>
+>> In fact, I also don't know why "clk_ignore_unused" needed.
+>> This part of the parameter is copied from ci20_defconfig,
+>> but according to the test, if remove "clk_ignore_unused",
+>> it will stuck after :
+>>
+>> [    0.374361] printk: bootconsole [x1000_uart0] disabled
+>>
+>> Differeent from the case where "console=3DttyS2,115200n8" is removed,
+>> the serial is successfully initialized this time.
+>>
+>> So I think "clk_ignore_unused" should be retained.
+>
+> It locks up because Linux disables a clock that is required for the=20
+> system. This clock should be requested and enabled by a client driver.=20
+> Could you investigate which clock is the problem?
+>
+
+I also don't have any good ideas now, but I will try to investigate it.
+
+Thanks and best regards!
+
+> @Paul Burton: do you remember why it was needed on CI20?
+>
+> In the meantime I suppose "clk_ignore_unused" is fine.
+>
+> Cheers,
+> -Paul
+>
+>>>
+>>>> +CONFIG_CMDLINE_OVERRIDE=3Dy
+>>>> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+>>>> index 6b96844..ccaf507 100644
+>>>> --- a/arch/mips/jz4740/Kconfig
+>>>> +++ b/arch/mips/jz4740/Kconfig
+>>>> @@ -16,6 +16,10 @@ config JZ4780_CI20
+>>>>      bool "MIPS Creator CI20"
+>>>>      select MACH_JZ4780
+>>>>
+>>>> +config X1000_CU1000
+>>>> +    bool "YSH & ATIL General Module CU1000"
+>>>> +    select MACH_X1000
+>>>> +
+>>>>  endchoice
+>>>>
+>>>>  config MACH_JZ4740
+>>>> --=20
+>>>> 2.7.4
+>>>>
+>>>>
+>>>
+>>>
+>>
+>>
+>>
+>
+>
+
+
+
