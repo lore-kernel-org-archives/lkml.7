@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC0EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6B2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA548217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954A4217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfK2Nwr (ORCPT
+        id S1727187AbfK2Nwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:52:47 -0500
+        Fri, 29 Nov 2019 08:52:46 -0500
 Received: from esa5.microchip.iphmx.com ([216.71.150.166]:53553 "EHLO
         esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbfK2Nwp (ORCPT
+        with ESMTP id S1726834AbfK2Nwo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:52:45 -0500
+        Fri, 29 Nov 2019 08:52:44 -0500
 Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
   Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
@@ -39,22 +39,22 @@ Received-SPF: None (esa5.microchip.iphmx.com: no sender
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
 Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: vDs07NM9Rv/0ASGXI7k+bqfyRXNiWtc4rLdQH9CADz+6xGxttqLAl1tF4/91TEgpyStygnZH4U
- M9dwT7sRbWaXEK8WcfayobvaUMc92by7N5i/1gMp0TBi82gr7tAnwDXJ6d44WcEy8ZYgzSLTlK
- 9IRE/WgxLuSiyXqkxDMk1pxnBiu5hVSGTaR2BKT0MshhL1lowaRljUTIQGg/3h+S1u8fQxHnQN
- Nx1k2Us0jNeGrD9chnR+62dT7vfqVtDhXCrWyRgTF1YinmxkaAFBycae2X8k7E7DkotmX4NHA8
- 8ro=
+IronPort-SDR: gi6gKv0Jy6czqFCl0WjZVgcDQ499Aa3/h3EjUzzrZez1IE6PbTWM94oAncjvD76Om+miz113i1
+ xv47CSEWKLYWZgVg37+LNEQqPI7unZjOnkFDi0WOyHX/45D+aXi4zHq0Oj5gqwWcDCSgg8is9i
+ EF6YPCYW4ZiUtsU+9+w36rgWXj1AVqtRNcVNO9GRnNU5ZA4AicQFkx7zJdF1n4OM6QEOcehm3R
+ I1lvyGayzMWJtKPwCj33pW1f0XtknB5GlAl1SUUwx3NxxOJA8I1x5av/T0g801zmomzZfi99pR
+ wBY=
 X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="57288017"
+   d="scan'208";a="57288008"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Nov 2019 06:52:28 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Nov 2019 06:52:25 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 29 Nov 2019 06:52:09 -0700
+ 15.1.1713.5; Fri, 29 Nov 2019 06:52:04 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 29 Nov 2019 06:52:07 -0700
+ 15.1.1713.5 via Frontend Transport; Fri, 29 Nov 2019 06:52:01 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
         <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
@@ -62,9 +62,9 @@ To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v3 6/9] drivers: soc: atmel: select POWER_RESET_AT91_SAMA5D2_SHDWC for sam9x60
-Date:   Fri, 29 Nov 2019 15:51:42 +0200
-Message-ID: <1575035505-6310-7-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v3 4/9] drivers: soc: atmel: move sam9x60 under its own config flag
+Date:   Fri, 29 Nov 2019 15:51:40 +0200
+Message-ID: <1575035505-6310-5-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575035505-6310-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1575035505-6310-1-git-send-email-claudiu.beznea@microchip.com>
@@ -75,26 +75,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Select POWER_RESET_AT91_SAMA5D2_SHDWC for SAM9X60 SoC.
+Move SAM9X60 under its own config flag.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- drivers/power/reset/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/atmel/soc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index 886e60017f4d..ff81d02740c2 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -34,7 +34,7 @@ config POWER_RESET_AT91_RESET
- config POWER_RESET_AT91_SAMA5D2_SHDWC
- 	tristate "Atmel AT91 SAMA5D2-Compatible shutdown controller driver"
- 	depends on ARCH_AT91
--	default SOC_SAMA5
-+	default SOC_SAM9X60 || SOC_SAMA5
- 	help
- 	  This driver supports the alternate shutdown controller for some Atmel
- 	  SAMA5 SoCs. It is present for example on SAMA5D2 SoC.
+diff --git a/drivers/soc/atmel/soc.c b/drivers/soc/atmel/soc.c
+index 096a83cf0caf..55a1f57a4d8c 100644
+--- a/drivers/soc/atmel/soc.c
++++ b/drivers/soc/atmel/soc.c
+@@ -66,8 +66,9 @@ static const struct at91_soc __initconst socs[] = {
+ 	AT91_SOC(AT91SAM9XE128_CIDR_MATCH, 0, "at91sam9xe128", "at91sam9xe128"),
+ 	AT91_SOC(AT91SAM9XE256_CIDR_MATCH, 0, "at91sam9xe256", "at91sam9xe256"),
+ 	AT91_SOC(AT91SAM9XE512_CIDR_MATCH, 0, "at91sam9xe512", "at91sam9xe512"),
+-	AT91_SOC(SAM9X60_CIDR_MATCH, SAM9X60_EXID_MATCH,
+-		 "sam9x60", "sam9x60"),
++#endif
++#ifdef CONFIG_SOC_SAM9X60
++	AT91_SOC(SAM9X60_CIDR_MATCH, SAM9X60_EXID_MATCH, "sam9x60", "sam9x60"),
+ #endif
+ #ifdef CONFIG_SOC_SAMA5
+ 	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D21CU_EXID_MATCH,
 -- 
 2.7.4
 
