@@ -2,229 +2,208 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7DEC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614B6C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A995E20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A3D21774
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="GKwPlM0V"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q1QlqQj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfK2NVw (ORCPT
+        id S1726920AbfK2NXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:21:52 -0500
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:47326 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726608AbfK2NVw (ORCPT
+        Fri, 29 Nov 2019 08:23:02 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19963 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfK2NXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:21:52 -0500
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id B3C3B2E147E;
-        Fri, 29 Nov 2019 16:21:47 +0300 (MSK)
-Received: from iva4-c987840161f8.qloud-c.yandex.net (iva4-c987840161f8.qloud-c.yandex.net [2a02:6b8:c0c:3da5:0:640:c987:8401])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id WVdThNk2bC-Lko8mbA5;
-        Fri, 29 Nov 2019 16:21:47 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1575033707; bh=jRi6N5+4AEBul8ckE0my3E31N2e5qWBXeGfURkjwdqw=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=GKwPlM0VJuneSyS6ItckX4GQB3y2+YyunBe5XsL2iWgKyP5W1/6KVMQLtmd6k4XVT
-         mIclMrp/M93HO73Ls3vGMVE8kOXjFkaiVmp+Wb7/O75lWtQKB8hSVB5CUwjL2t5h9M
-         o9mYjZYo7zG7Zb2Yz4UdWeIF9XVlmerlX07p8Dys=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:1009:4fae:ad87:4eae])
-        by iva4-c987840161f8.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id tYrfCbqUNY-LkWG38D3;
-        Fri, 29 Nov 2019 16:21:46 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH 1/2] kernel: set taint flag 'L' at any kind of lockup
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     Sasha Levin <sashal@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rcu@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Date:   Fri, 29 Nov 2019 16:21:46 +0300
-Message-ID: <157503370645.8187.6335564487789994134.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 29 Nov 2019 08:23:01 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de11bb20000>; Fri, 29 Nov 2019 05:22:58 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 29 Nov 2019 05:22:54 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 29 Nov 2019 05:22:54 -0800
+Received: from [10.25.75.74] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 Nov
+ 2019 13:22:50 +0000
+Subject: Re: [PATCH 3/6] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191126213718.GA185422@google.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <7298f15d-1745-e5c9-2d08-1235a27244ae@nvidia.com>
+Date:   Fri, 29 Nov 2019 18:52:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191126213718.GA185422@google.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575033778; bh=7gO/CXj0wvWwogWev3Z+fNC4tNy+uDv47vsz0nrrl5w=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Q1QlqQj9jsPpnd6pf7C27/BelCW4RWZRzBi2KaiDdVgmQRtcmInnvBKkDE6Iq/jDa
+         3eEtcoGbjwFqH0XNmV+7oElfREV+vkp/uQUYaFN8MjIiVD/X1ZjwDEQWOShO+R+Krd
+         s0ELF/Yf578H0G6uMulK4hnMAXda5t1DwKz4j+AyJA5/sbYgIY6KVH82ppVtNN3ybN
+         MfmKAM5lE7RX5Q85hZMaus6bD4MIEM+bTbL5jSUereIJm5FxCXk9FLvlqSi6B8mzHc
+         KblxQObo77nRmb3bfFCnDhQUKusMgt67Q1Qdqvaia3kHhyOEpzmxYR5NVWzR0n67XT
+         YH7xjnMHHJ/JA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any lockup or stall notifies about unexpected lack of progress.
-It's better to know about them for further problem investigations.
+On 11/27/2019 3:07 AM, Bjorn Helgaas wrote:
+> On Fri, Nov 22, 2019 at 04:15:02PM +0530, Vidya Sagar wrote:
+>> Add support for the endpoint mode of Synopsys DesignWare core based
+>> dual mode PCIe controllers present in Tegra194 SoC.
+> 
+>> +static irqreturn_t tegra_pcie_ep_irq_handler(struct tegra_pcie_dw *pcie)
+>> +{
+>> +	struct dw_pcie_ep *ep = &pcie->pci.ep;
+>> +	u32 val, tmp;
+>> +
+>> +	val = appl_readl(pcie, APPL_INTR_STATUS_L0);
+>> +	if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
+>> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_0_0);
+>> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_0_0);
+>> +		if (val & APPL_INTR_STATUS_L1_0_0_HOT_RESET_DONE) {
+>> +			/* clear any stale PEX_RST interrupt */
+>> +			if (!kfifo_put(&pcie->event_fifo, EP_HOT_RST_DONE)) {
+>> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
+>> +				return IRQ_HANDLED;
+>> +			}
+>> +			wake_up(&pcie->wq);
+>> +		}
+>> +		if (val & APPL_INTR_STATUS_L1_0_0_RDLH_LINK_UP_CHGED) {
+>> +			tmp = appl_readl(pcie, APPL_LINK_STATUS);
+>> +			if (tmp & APPL_LINK_STATUS_RDLH_LINK_UP) {
+>> +				dev_info(pcie->dev, "Link is up with Host\n");
+>> +				dw_pcie_ep_linkup(ep);
+>> +			}
+>> +		}
+>> +	} else if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
+> 
+> Is it really the case that only one of
+> APPL_INTR_STATUS_L0_LINK_STATE_INT and
+> APPL_INTR_STATUS_L0_PCI_CMD_EN_INT can be set?
+Not really.
 
-Right now only softlockup has own taint flag. Let's generalize it.
+> 
+> If it's possible that both could be set, maybe this should be
+> something like this?
+> 
+>    int spurious = 1;
+> 
+>    if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
+>      ...
+>      spurious = 0;
+>    }
+>    if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
+>      ...
+>      spurious = 0;
+>    }
+> 
+>    if (spurious) {
+>      dev_warn(...)
+>    }
+I'll take care of this in the next patch series.
 
-This patch renames TAINT_SOFTLOCKUP into TAINT_LOCKUP at sets it for:
-- softlockup
-- hardlockup
-- RCU stalls
-- stuck in workqueues
-- detected task hung
+> 
+>> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_15);
+>> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_15);
+>> +		if (val & APPL_INTR_STATUS_L1_15_CFG_BME_CHGED) {
+>> +			if (!kfifo_put(&pcie->event_fifo, EP_BME_CHANGE)) {
+>> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
+>> +				return IRQ_HANDLED;
+>> +			}
+>> +			wake_up(&pcie->wq);
+>> +		}
+>> +	} else {
+>> +		dev_warn(pcie->dev, "Random interrupt (STATUS = 0x%08X)\n",
+>> +			 val);
+>> +		appl_writel(pcie, val, APPL_INTR_STATUS_L0);
+>> +	}
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+> 
+>> +static int tegra_pcie_ep_work_thread(void *p)
+>> +{
+>> +	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
+>> +	u32 event;
+>> +
+>> +	while (true) {
+>> +		wait_event_interruptible(pcie->wq,
+>> +					 !kfifo_is_empty(&pcie->event_fifo));
+>> +
+>> +		if (kthread_should_stop())
+>> +			break;
+>> +
+>> +		if (!kfifo_get(&pcie->event_fifo, &event)) {
+>> +			dev_warn(pcie->dev, "EVENT FIFO is empty\n");
+>> +			continue;
+>> +		}
+>> +
+>> +		switch (event) {
+>> +		case EP_PEX_RST_DEASSERT:
+>> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
+>> +			pex_ep_event_pex_rst_deassert(pcie);
+>> +			break;
+>> +
+>> +		case EP_PEX_RST_ASSERT:
+>> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
+>> +			pex_ep_event_pex_rst_assert(pcie);
+>> +			break;
+>> +
+>> +		case EP_HOT_RST_DONE:
+>> +			dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
+>> +			pex_ep_event_hot_rst_done(pcie);
+>> +			break;
+>> +
+>> +		case EP_BME_CHANGE:
+>> +			dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
+>> +			pex_ep_event_bme_change(pcie);
+>> +			break;
+>> +
+>> +		case EP_EVENT_EXIT:
+>> +			dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
+>> +			return 0;
+>> +
+>> +		default:
+>> +			dev_warn(pcie->dev, "Invalid PCIe EP event\n");
+> 
+> Maybe include the invalid event value in the message?
+I'll take care of this in the next patch series
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- Documentation/admin-guide/sysctl/kernel.rst   |    2 +-
- Documentation/admin-guide/tainted-kernels.rst |    8 ++++++--
- include/linux/kernel.h                        |    2 +-
- kernel/hung_task.c                            |    2 ++
- kernel/panic.c                                |    2 +-
- kernel/rcu/tree_stall.h                       |    1 +
- kernel/watchdog.c                             |    2 +-
- kernel/watchdog_hld.c                         |    1 +
- kernel/workqueue.c                            |    1 +
- tools/debugging/kernel-chktaint               |    2 +-
- 10 files changed, 16 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 032c7cd3cede..60867ec525a4 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -1082,7 +1082,7 @@ ORed together. The letters are seen in "Tainted" line of Oops reports.
-   2048  `(I)`  workaround for bug in platform firmware applied
-   4096  `(O)`  externally-built ("out-of-tree") module was loaded
-   8192  `(E)`  unsigned module was loaded
-- 16384  `(L)`  soft lockup occurred
-+ 16384  `(L)`  lockup occurred
-  32768  `(K)`  kernel has been live patched
-  65536  `(X)`  Auxiliary taint, defined and used by for distros
- 131072  `(T)`  The kernel was built with the struct randomization plugin
-diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
-index 71e9184a9079..fc76d0aad9f5 100644
---- a/Documentation/admin-guide/tainted-kernels.rst
-+++ b/Documentation/admin-guide/tainted-kernels.rst
-@@ -96,7 +96,7 @@ Bit  Log  Number  Reason that got the kernel tainted
-  11  _/I    2048  workaround for bug in platform firmware applied
-  12  _/O    4096  externally-built ("out-of-tree") module was loaded
-  13  _/E    8192  unsigned module was loaded
-- 14  _/L   16384  soft lockup occurred
-+ 14  _/L   16384  lockup occurred
-  15  _/K   32768  kernel has been live patched
-  16  _/X   65536  auxiliary taint, defined for and used by distros
-  17  _/T  131072  kernel was built with the struct randomization plugin
-@@ -152,7 +152,11 @@ More detailed explanation for tainting
-  13) ``E`` if an unsigned module has been loaded in a kernel supporting
-      module signature.
- 
-- 14) ``L`` if a soft lockup has previously occurred on the system.
-+ 14) ``L`` if some kind of lockup has previously occurred on the system:
-+     - soft/hardlockup, see Documentation/admin-guide/lockup-watchdogs.rst
-+     - RCU stall, see Documentation/RCU/stallwarn.txt
-+     - hung task detected, see CONFIG_DETECT_HUNG_TASK
-+     - kernel workqueue lockup, see CONFIG_WQ_WATCHDOG
- 
-  15) ``K`` if the kernel has been live patched.
- 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index d83d403dac2e..e8a6808e4f2f 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -591,7 +591,7 @@ extern enum system_states {
- #define TAINT_FIRMWARE_WORKAROUND	11
- #define TAINT_OOT_MODULE		12
- #define TAINT_UNSIGNED_MODULE		13
--#define TAINT_SOFTLOCKUP		14
-+#define TAINT_LOCKUP			14
- #define TAINT_LIVEPATCH			15
- #define TAINT_AUX			16
- #define TAINT_RANDSTRUCT		17
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index 14a625c16cb3..521eb2fbf5fc 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -139,6 +139,8 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 		hung_task_show_lock = true;
- 	}
- 
-+	add_taint(TAINT_LOCKUP, LOCKDEP_STILL_OK);
-+
- 	touch_nmi_watchdog();
- }
- 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index f470a038b05b..d7750a45ca8d 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -372,7 +372,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
- 	[ TAINT_FIRMWARE_WORKAROUND ]	= { 'I', ' ', false },
- 	[ TAINT_OOT_MODULE ]		= { 'O', ' ', true },
- 	[ TAINT_UNSIGNED_MODULE ]	= { 'E', ' ', true },
--	[ TAINT_SOFTLOCKUP ]		= { 'L', ' ', false },
-+	[ TAINT_LOCKUP ]		= { 'L', ' ', false },
- 	[ TAINT_LIVEPATCH ]		= { 'K', ' ', true },
- 	[ TAINT_AUX ]			= { 'X', ' ', true },
- 	[ TAINT_RANDSTRUCT ]		= { 'T', ' ', true },
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index c0b8c458d8a6..181495efff80 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -74,6 +74,7 @@ early_initcall(check_cpu_stall_init);
- /* If so specified via sysctl, panic, yielding cleaner stall-warning output. */
- static void panic_on_rcu_stall(void)
- {
-+	add_taint(TAINT_LOCKUP, LOCKDEP_STILL_OK);
- 	if (sysctl_panic_on_rcu_stall)
- 		panic("RCU Stall\n");
- }
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index f41334ef0971..d60b195708f7 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -466,7 +466,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 			smp_mb__after_atomic();
- 		}
- 
--		add_taint(TAINT_SOFTLOCKUP, LOCKDEP_STILL_OK);
-+		add_taint(TAINT_LOCKUP, LOCKDEP_STILL_OK);
- 		if (softlockup_panic)
- 			panic("softlockup: hung tasks");
- 		__this_cpu_write(soft_watchdog_warn, true);
-diff --git a/kernel/watchdog_hld.c b/kernel/watchdog_hld.c
-index 247bf0b1582c..f77256f47422 100644
---- a/kernel/watchdog_hld.c
-+++ b/kernel/watchdog_hld.c
-@@ -152,6 +152,7 @@ static void watchdog_overflow_callback(struct perf_event *event,
- 				!test_and_set_bit(0, &hardlockup_allcpu_dumped))
- 			trigger_allbutself_cpu_backtrace();
- 
-+		add_taint(TAINT_LOCKUP, LOCKDEP_STILL_OK);
- 		if (hardlockup_panic)
- 			nmi_panic(regs, "Hard LOCKUP");
- 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index bc2e09a8ea61..825a92893882 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -5741,6 +5741,7 @@ static void wq_watchdog_timer_fn(struct timer_list *unused)
- 			pr_cont_pool_info(pool);
- 			pr_cont(" stuck for %us!\n",
- 				jiffies_to_msecs(jiffies - pool_ts) / 1000);
-+			add_taint(TAINT_LOCKUP, LOCKDEP_STILL_OK);
- 		}
- 	}
- 
-diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-chktaint
-index 2240cb56e6e5..9f24719d8c80 100755
---- a/tools/debugging/kernel-chktaint
-+++ b/tools/debugging/kernel-chktaint
-@@ -168,7 +168,7 @@ if [ `expr $T % 2` -eq 0 ]; then
- 	addout " "
- else
- 	addout "L"
--	echo " * soft lockup occurred (#14)"
-+	echo " * lockup occurred (#14)"
- fi
- 
- T=`expr $T / 2`
+> 
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
 
