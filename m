@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7A0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E770C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F24821781
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526C6207FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:21:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Ni3txJBX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="GPtAJH36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfK2VVP (ORCPT
+        id S1727236AbfK2VV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:21:15 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:51784 "EHLO mail.andi.de1.cc"
+        Fri, 29 Nov 2019 16:21:28 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:52126 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727073AbfK2VVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 16:21:14 -0500
+        id S1727073AbfK2VV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 16:21:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KnTIFpprYxj1x8gRYnELMEWP/eBeq5J1t/H2JuM0iHU=; b=Ni3txJBXi3BVD6XE8xjJ7nFzcw
-        uMKHDs8DxDjDYP9Fi3m/pWBovEacfj0c7qF8sv8aeub2EvT/eiUf5srp5hQfcn5/3dkKYTqf813Kn
-        w2nbRUWLzhwTWlFMuvlc4JGF+iyuR+NozOwUhdrmEOShbznkx3WSUMFP4eGojvSg1i3Y=;
+        bh=DSUQtlTA++8PBBCrpKNlIubjy8u8hmzgB0nADb0un0k=; b=GPtAJH36BX5+F4IUx7wTVfDxgZ
+        fDDDVsBDjpnYgGuiUfCEEMEdGOSwyVTt3Tl+Z/tow74mnMFkEcvwEOP01uiv0tArgTAQLc+fsoItK
+        GLU16hgFdQNQjRsrOrJrcKEKG843DFAN68u7ljOnn8nwctHn1sa/W4E2Ira45o7Fu19s=;
 Received: from p200300ccff0871001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff08:7100:1a3d:a2ff:febf:d33a] helo=aktux)
         by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <andreas@kemnade.info>)
-        id 1ianhM-0001xs-BJ; Fri, 29 Nov 2019 22:21:08 +0100
+        id 1ianhb-0001yK-2L; Fri, 29 Nov 2019 22:21:23 +0100
 Received: from andi by aktux with local (Exim 4.92)
         (envelope-from <andreas@kemnade.info>)
-        id 1ianhM-0004mS-2a; Fri, 29 Nov 2019 22:21:08 +0100
+        id 1ianha-0004mW-Ps; Fri, 29 Nov 2019 22:21:22 +0100
 From:   Andreas Kemnade <andreas@kemnade.info>
 To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         a.zummo@towertech.it, alexandre.belloni@bootlin.com,
@@ -46,9 +46,9 @@ To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
         phh@phh.me, letux-kernel@openphoenux.org
 Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v3 1/6] dt-bindings: mfd: rn5t618: Document optional property interrupts
-Date:   Fri, 29 Nov 2019 22:20:40 +0100
-Message-Id: <20191129212045.18325-2-andreas@kemnade.info>
+Subject: [PATCH v3 2/6] mfd: rn5t618: prepare for irq handling
+Date:   Fri, 29 Nov 2019 22:20:41 +0100
+Message-Id: <20191129212045.18325-3-andreas@kemnade.info>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191129212045.18325-1-andreas@kemnade.info>
 References: <20191129212045.18325-1-andreas@kemnade.info>
@@ -59,34 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These chips use interrupts for various things like rtc alarm.
+rn5t618 currently lacks irq handling. To prepare implementation
+in a rn5t618-irq.c, move main file to rn5t618-core.c
 
 Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
- Documentation/devicetree/bindings/mfd/rn5t618.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mfd/Makefile                      | 2 ++
+ drivers/mfd/{rn5t618.c => rn5t618-core.c} | 0
+ 2 files changed, 2 insertions(+)
+ rename drivers/mfd/{rn5t618.c => rn5t618-core.c} (100%)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rn5t618.txt b/Documentation/devicetree/bindings/mfd/rn5t618.txt
-index b74e5e94d1cb..05650e1ab28a 100644
---- a/Documentation/devicetree/bindings/mfd/rn5t618.txt
-+++ b/Documentation/devicetree/bindings/mfd/rn5t618.txt
-@@ -15,6 +15,7 @@ Required properties:
-  - reg: the I2C slave address of the device
- 
- Optional properties:
-+ - interrupts: interrupt mapping for IRQ
-  - system-power-controller:
-    See Documentation/devicetree/bindings/power/power-controller.txt
- 
-@@ -32,6 +33,8 @@ Example:
- 	pmic@32 {
- 		compatible = "ricoh,rn5t618";
- 		reg = <0x32>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
- 		system-power-controller;
- 
- 		regulators {
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index c1067ea46204..110ea700231b 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -216,6 +216,8 @@ obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+ obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+ obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+ obj-$(CONFIG_MFD_RK808)		+= rk808.o
++
++rn5t618-objs			:= rn5t618-core.o
+ obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
+ obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
+ obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618-core.c
+similarity index 100%
+rename from drivers/mfd/rn5t618.c
+rename to drivers/mfd/rn5t618-core.c
 -- 
 2.20.1
 
