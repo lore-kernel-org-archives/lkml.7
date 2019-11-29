@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C9FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97ADC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32797217C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5BD217C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:04:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfK2JE1 (ORCPT
+        id S1726856AbfK2JE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:04:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54002 "EHLO mx1.suse.de"
+        Fri, 29 Nov 2019 04:04:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54004 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726702AbfK2JEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726215AbfK2JEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Nov 2019 04:04:25 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C2EAAB27A;
+        by mx1.suse.de (Postfix) with ESMTP id B91E6B271;
         Fri, 29 Nov 2019 09:04:23 +0000 (UTC)
 From:   Vlastimil Babka <vbabka@suse.cz>
 To:     stable@vger.kernel.org
@@ -29,9 +29,9 @@ Cc:     Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Matthew Wilcox <willy@infradead.org>,
         Ajay Kaher <akaher@vmware.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH STABLE 4.19] mm, gup: add missing refcount overflow checks on s390
-Date:   Fri, 29 Nov 2019 10:03:51 +0100
-Message-Id: <20191129090351.3507-4-vbabka@suse.cz>
+Subject: [PATCH STABLE 4.14] mm, gup: add missing refcount overflow checks on s390
+Date:   Fri, 29 Nov 2019 10:03:50 +0100
+Message-Id: <20191129090351.3507-3-vbabka@suse.cz>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191129090351.3507-1-vbabka@suse.cz>
 References: <20191129090351.3507-1-vbabka@suse.cz>
@@ -43,8 +43,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 The mainline commit 8fde12ca79af ("mm: prevent get_user_pages() from
-overflowing page refcount") was backported to 4.19.y stable as commit
-d972ebbf42ba. The backport however missed that in 4.19, there are several
+overflowing page refcount") was backported to 4.14.y stable as commit
+04198de24771. The backport however missed that in 4.14, there are several
 arch-specific gup.c versions with fast gup implementations, so these do not
 prevent refcount overflow.
 
@@ -62,7 +62,7 @@ Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/arch/s390/mm/gup.c b/arch/s390/mm/gup.c
-index 2809d11c7a28..9b5b866d8adf 100644
+index 05c8abd864f1..9bce54eac0b0 100644
 --- a/arch/s390/mm/gup.c
 +++ b/arch/s390/mm/gup.c
 @@ -39,7 +39,8 @@ static inline int gup_pte_range(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
