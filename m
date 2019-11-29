@@ -2,189 +2,207 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	ZIPFILE autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F60C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE131C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C73217AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:41:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="oQRm0AlH"
+	by mail.kernel.org (Postfix) with ESMTP id C3BB1217AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfK2OlI (ORCPT
+        id S1727092AbfK2Olt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:41:08 -0500
-Received: from mail-wm1-f51.google.com ([209.85.128.51]:36635 "EHLO
-        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbfK2OlH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:41:07 -0500
-Received: by mail-wm1-f51.google.com with SMTP id p17so9442902wma.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 06:41:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unipv-it.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=ZfM3GovPXzN4SKlLoN9sS3h6HAqKDeCW7nRc1sCilh8=;
-        b=oQRm0AlHFMiZ4UNhJ4OAPY98dzpKCaf4jdTuY1b92ZKXEWbO82fDgPns6BFK7Krhcw
-         fULlRHHrnz9uFT+hFnHyA6P/DK0ygLE+PkiAVUs+3xa4/fI6FX8s130Q1zCOI4BSE96A
-         82Ynb8noyaBtEtrlmIPFwlhqHHcrtOF6u/vayy3R87MxP9FTWk1AUMtXhXDxhC+TOtgD
-         DJJ0NkMV4PukiW5FjU5hK2N6AdDAwYmvBw7doeAiAXWNkPdP5EZVSbEDNQZkLGO3zV6/
-         0b2ZYqTBOV1dUSP0j95vDto7+IGAD0NwmUhlG31vYeddvQw95f9gggcqb2cMRJcMIDme
-         U8XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=ZfM3GovPXzN4SKlLoN9sS3h6HAqKDeCW7nRc1sCilh8=;
-        b=XzKOQA0ZHooLU2xUPyO7rdP4jZEp+KPfIl4MYxG4la/K7A/Uo2N4THtelmTFf3UNjX
-         9dL/mNASHZZFb69xleWohq7eLqiP6n8/14vX/smkXIIKuaEEqxTQgGys5Nk36jnlcy68
-         P9z1gZTDOSgYvO2nOc4LNW+wtnws+D8P1h+hk2oPcYbUBho8EY7FefjmuOaLs4T4JF8v
-         Q5juJ/c9oWS/YJDYO4pN7PgzIhH51Tosb0a4XGwknx9iRYNXPXk+twyEKaaHC66BKiMT
-         vCy/UINE/cR4lKmmeq7K28p4B4B8/UpNT3gQDYxWmvMYqivKRASmPq01smKDk5GvECdZ
-         imDg==
-X-Gm-Message-State: APjAAAWLvrNluiIx9ENMcxy0gtgbl8kQOJeuPI/3fXGyN9g0TMciT5uA
-        tSIFFGV1MCJIAHMS62d6KBN4sQ==
-X-Google-Smtp-Source: APXvYqzHd7/v31vJYF6fqLZilk5NEJtU4jsvxvMsbZLpASuasxWvkHojZ7vYtZ5TtWmMa+5eTc4TPg==
-X-Received: by 2002:a7b:cb59:: with SMTP id v25mr14908984wmj.159.1575038463923;
-        Fri, 29 Nov 2019 06:41:03 -0800 (PST)
-Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
-        by smtp.gmail.com with ESMTPSA id n188sm9216845wme.14.2019.11.29.06.41.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 06:41:02 -0800 (PST)
-Message-ID: <320b315b9c87543d4fb919ecbdf841596c8fbcea.camel@unipv.it>
-Subject: Re: AW: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-From:   Andrea Vai <andrea.vai@unipv.it>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Date:   Fri, 29 Nov 2019 15:41:01 +0100
-In-Reply-To: <20191129023555.GA8620@ming.t460p>
-References: <20191125151535.GA8044@ming.t460p>
-         <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>
-         <20191126023253.GA24501@ming.t460p>
-         <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
-         <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
-         <cb6e84781c4542229a3f31572cef19ab@SVR-IES-MBX-03.mgc.mentorg.com>
-         <c1358b840b3a4971aa35a25d8495c2c8953403ea.camel@unipv.it>
-         <20191128091712.GD15549@ming.t460p>
-         <f82fd5129e3dcacae703a689be60b20a7fedadf6.camel@unipv.it>
-         <20191129005734.GB1829@ming.t460p> <20191129023555.GA8620@ming.t460p>
-Content-Type: multipart/mixed; boundary="=-HIAul2oAsNr1EC1inCjc"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Fri, 29 Nov 2019 09:41:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58284 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726889AbfK2Ols (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 09:41:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4E0BFB21C;
+        Fri, 29 Nov 2019 14:41:45 +0000 (UTC)
+Subject: Re: WARNING in unaccount_page_cache_page
+To:     syzbot <syzbot+fe601f9e887449d40112@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, amir73il@gmail.com,
+        darrick.wong@oracle.com, dchinner@redhat.com, hannes@cmpxchg.org,
+        josef@toxicpanda.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com,
+        willy@infradead.org, Jan Kara <jack@suse.cz>
+References: <00000000000046fd2f059877e20e@google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <edf89577-ff58-4085-ecb4-40e1e4588206@suse.cz>
+Date:   Fri, 29 Nov 2019 15:41:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <00000000000046fd2f059877e20e@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-HIAul2oAsNr1EC1inCjc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-Il giorno ven, 29/11/2019 alle 10.35 +0800, Ming Lei ha scritto:
-> On Fri, Nov 29, 2019 at 08:57:34AM +0800, Ming Lei wrote:
+On 11/29/19 9:19 AM, syzbot wrote:
+> Hello,
 > 
-> > [...]
+> syzbot found the following crash on:
 > 
-> > Andrea, can you collect the following log when running the test
-> > on current new(bad) kernel?
-> > 
-> > 	/usr/share/bcc/tools/stackcount  -K blk_mq_make_request
+> HEAD commit:    089cf7f6 Linux 5.3-rc7
+
+Ugh, why test previous cycle's rc7 now? Typo for 5.4?
+
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1210a761600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=b89bb446a3faaba4
+> dashboard link: https://syzkaller.appspot.com/bug?extid=fe601f9e887449d40112
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 > 
-> Instead, please run the following trace, given insert may be
-> called from other paths, such as flush plug:
+> Unfortunately, I don't have any reproducer for this crash yet.
 > 
-> 	/usr/share/bcc/tools/stackcount -K t:block:block_rq_insert
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+fe601f9e887449d40112@syzkaller.appspotmail.com
+> 
+> WARNING: CPU: 0 PID: 12560 at mm/filemap.c:220  
+> unaccount_page_cache_page+0x65b/0xda0 mm/filemap.c:220
 
-Attached, for new (patched) bad kernel.
+That's this warning:
 
-Produced by: start the trace script (with the pendrive already
-plugged), wait some seconds, run the test (1 trial, 1 GB), wait for
-the test to finish, stop the trace.
+        /*
+         * At this point page must be either written or cleaned by
+         * truncate.  Dirty page here signals a bug and loss of
+         * unwritten data.
+         *
+         * This fixes dirty accounting after removing the page entirely
+         * but leaves PageDirty set: it has no effect for truncated
+         * page and anyway will be cleared before returning page into
+         * buddy allocator.
+         */
+        if (WARN_ON_ONCE(PageDirty(page)))
+                account_page_cleaned(page, mapping,
+inode_to_wb(mapping->host));
 
-The copy took ~1700 seconds.
+CC Jan
 
-Thanks,
-Andrea
-
---=-HIAul2oAsNr1EC1inCjc
-Content-Type: application/zip; name="log_ming_20191129_150609.zip"
-Content-Disposition: attachment; filename="log_ming_20191129_150609.zip"
-Content-Transfer-Encoding: base64
-
-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
-
-
---=-HIAul2oAsNr1EC1inCjc--
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 12560 Comm: syz-executor.2 Not tainted 5.3.0-rc7 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>   panic+0x2dc/0x755 kernel/panic.c:219
+>   __warn.cold+0x20/0x4c kernel/panic.c:576
+>   report_bug+0x263/0x2b0 lib/bug.c:186
+>   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+>   do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+>   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+> RIP: 0010:unaccount_page_cache_page+0x65b/0xda0 mm/filemap.c:220
+> Code: 00 0f 85 be 06 00 00 49 8b 5d 00 31 ff 48 c1 eb 03 83 e3 01 48 89 de  
+> e8 c3 25 e4 ff 48 85 db 0f 84 c0 fb ff ff e8 15 24 e4 ff <0f> 0b 48 b8 00  
+> 00 00 00 00 fc ff df 48 8b 55 d0 48 c1 ea 03 80 3c
+> RSP: 0018:ffff888060b7f9b8 EFLAGS: 00010016
+> RAX: 0000000000040000 RBX: 0000000000000001 RCX: ffffc9000a781000
+> RDX: 0000000000001dcb RSI: ffffffff818e513b RDI: 0000000000000007
+> RBP: ffff888060b7f9f8 R08: ffff8880584de400 R09: fffff940003f9169
+> R10: fffff940003f9168 R11: ffffea0001fc8b47 R12: ffffea0001fc8b40
+> R13: ffffea0001fc8b40 R14: ffffea0001fc8b40 R15: ffffea0001fc8b88
+>   delete_from_page_cache_batch+0x1e9/0x1170 mm/filemap.c:350
+>   truncate_inode_pages_range+0x622/0x1740 mm/truncate.c:366
+>   blkdev_fallocate+0x23a/0x410 fs/block_dev.c:2081
+>   vfs_fallocate+0x4aa/0xa50 fs/open.c:309
+>   ksys_fallocate+0x58/0xa0 fs/open.c:332
+>   __do_sys_fallocate fs/open.c:340 [inline]
+>   __se_sys_fallocate fs/open.c:338 [inline]
+>   __x64_sys_fallocate+0x97/0xf0 fs/open.c:338
+>   do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x459879
+> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fd75e4bfc78 EFLAGS: 00000246 ORIG_RAX: 000000000000011d
+> RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000459879
+> RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000004
+> RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
+> R10: 00000000369e5d84 R11: 0000000000000246 R12: 00007fd75e4c06d4
+> R13: 00000000004bffbd R14: 00000000004d1fc0 R15: 00000000ffffffff
+> Shutting down cpus with NMI
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
 
