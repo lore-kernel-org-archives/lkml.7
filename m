@@ -2,134 +2,122 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC61C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB9EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6252082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575011640;
-	bh=aVoLB0jj9IWQogUH848B/rnub9gft6NXe1dXWqgepiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dW+CCpMboy5BxoHD0zi39rEn4eF4tCKGEyQn1N1lF43Pn1REYNJuv3uzoskYr3qxO
-	 p3O/NZ3hYlDvWCbn04APwhv1Kva1EABtf9833Hw+MM8FZX6SorXRL5YLB5MCNgYqsu
-	 W7MnAOHRzZK285I1N3Q9YXpw+JbHWCy3Kjmi/Q7U=
+	by mail.kernel.org (Postfix) with ESMTP id AF5BD2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfK2HN7 (ORCPT
+        id S1726785AbfK2HWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 02:13:59 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45170 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfK2HN7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 02:13:59 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j42so7885360wrj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 23:13:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hEdB8A1QZNWZj9z83ENJsdnWjos+n/eZeUXuwfkddEM=;
-        b=ZFV8N2ipgVxTAJLhZP8jt4y5uTxL77EoccTNtegkYSdCPrvAwCLELu6rIN3DMbzGva
-         aZNb7kiStUo9cK6H5AOZ66QWBQD9FgvGUPlWNHnJnxTFCaaS119YPKDI2gFY0nuZieKS
-         pUMRRgI8PED1ZF0YIMDJbIZkx++1u/WGkmk2Gy40C71zcDDMW1Igwlf9ldzjVVu1zHRY
-         04sAkHzyvaAJybZDyu0BzktnxyWZIpxy/sxUTYtLJg+ndkSo5G+UR4/fablOMEqJOFmC
-         7j167r7qQ+U/94/VJK5b1L/xtYPiZMhZx0XfwieDDIh8mwFL0ABycQargxpvcHWabA8H
-         z6GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=hEdB8A1QZNWZj9z83ENJsdnWjos+n/eZeUXuwfkddEM=;
-        b=NsqSgYva7P1GtXikug4YMzsFIKGcJHAcoGNg1gWxSqD8HcBaSaVKZLSlKDrVH/x5MH
-         uKt0A4YjZdZySrs2+rM3Wdi8FDFkSj/k4Uei9F6KMuhjc+CJZvGFDSBPuWfdgxYJuvbI
-         dPivyl3mBjCkVRxhMVSpfsIv68enrKfjwzJcbCACnAI1QV5/OlvlHq9VcsU3X4MeNDVR
-         fIuNecizr6nnnnze5+spW2HVrlPACicRMQMofyhHdojIuUuf98ZDFT1YK+F0f9VkJZSD
-         S8jJQf52Wi5P59vBTNe94gWM6IM4MZfGOXkI4kgyCW607HUzg9i71HvefF1lHHLUyuj7
-         rZ3g==
-X-Gm-Message-State: APjAAAWLEQorm6JeUK1BNifH1UC3oaW2gqPbOK782mTDKfTRsIKyGAic
-        +Z01JVuH5zQUTv8guQ7+1R4=
-X-Google-Smtp-Source: APXvYqwbgOhfZ+qlZ18owYZ7Lkrn2IOX9+2kl3GL7J2MpfKiQGQi9pse6tMZk33CoOUnqrm9jHXEIA==
-X-Received: by 2002:adf:df03:: with SMTP id y3mr32730138wrl.260.1575011635286;
-        Thu, 28 Nov 2019 23:13:55 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id q15sm13408933wmq.0.2019.11.28.23.13.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 23:13:54 -0800 (PST)
-Date:   Fri, 29 Nov 2019 08:13:52 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Tom Rix <trix@redhat.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched: remove noop function task_fork_dl
-Message-ID: <20191129071352.GA29046@gmail.com>
-References: <56b066c2-90fd-4263-cf31-0a08ea44fd53@redhat.com>
+        Fri, 29 Nov 2019 02:22:14 -0500
+Received: from olimex.com ([184.105.72.32]:47448 "EHLO olimex.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfK2HWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 02:22:13 -0500
+Received: from 94.155.250.134 ([94.155.250.134])
+        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 23:22:04 -0800
+Subject: Re: [PATCH 1/1] arm64: dts: allwinner: a64: olinuxino: Add VCC-PG
+ supply
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Stefan Mavrodiev <stefan@olimex.com>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-sunxi@googlegroups.com
+References: <20191126110508.15264-1-stefan@olimex.com>
+ <20191126162721.qi7scp3vadxn7k2i@gilmour.lan>
+ <0c1d7377-7064-f509-ffc5-bd1e8f2fbaa8@olimex.com>
+ <20191128103301.vjpkvjscy45ycgwg@gilmour.lan>
+From:   Stefan Mavrodiev <stefan@olimex.com>
+Message-ID: <1e0509cc-4afc-d46f-84a9-5e54c60c9d7b@olimex.com>
+Date:   Fri, 29 Nov 2019 09:22:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <56b066c2-90fd-4263-cf31-0a08ea44fd53@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191128103301.vjpkvjscy45ycgwg@gilmour.lan>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Tom Rix <trix@redhat.com> wrote:
+On 11/28/19 12:33 PM, Maxime Ripard wrote:
+Hi Maxime,
+> Hi Stefan,
+>
+> On Wed, Nov 27, 2019 at 09:07:40AM +0200, Stefan Mavrodiev wrote:
+>> On 11/26/19 6:27 PM, Maxime Ripard wrote:
+>>> Hi Stefan,
+>>>
+>>> On Tue, Nov 26, 2019 at 01:05:08PM +0200, Stefan Mavrodiev wrote:
+>>>> On A64-OLinuXino boards, PG9 is used for USB1 enable/disable. The
+>>>> port is supplied by DLDO4, which is disabled by default. The patch
+>>>> adds the regulator as vcc-pg, which is later used by the pinctrl.
+>>>>
+>>>> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+>>>> ---
+>>>>    arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 4 ++++
+>>>>    1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+>>>> index 01a9a52edae4..c9d8c9c4ef20 100644
+>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+>>>> @@ -163,6 +163,10 @@
+>>>>    	status = "okay";
+>>>>    };
+>>>>
+>>>> +&pio {
+>>>> +	vcc-pg-supply=<&reg_dldo4>;
+>>> The equal sign should have spaces around it.
+>>>
+>>> Also, can you please list all the bank supplies while you're at it?
+>> Sure. Should the supplies defined as regulators names be added also to the
+>> pio node?
+>> For example reg_aldo1 is named "vcc-pe".
+> As far as I can tell, the A64 has regulators for PC, PD, PE, PG and
+> PL, so you should list those (PL being under r_pio)
 
-> 
-> task_fork_dl is an empty function used only for dl's
-> sched_class.task_fork.  Removing it cleans up the code a bit
-> and saves a function call in sched_fork.
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->  kernel/sched/deadline.c | 10 ----------
->  1 file changed, 10 deletions(-)
-> 
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index a8a08030a8f7..fbafd97d883a 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -1821,14 +1821,6 @@ static void task_tick_dl(struct rq *rq, struct task_struct *p, int queued)
->          start_hrtick_dl(rq, p);
->  }
->  
-> -static void task_fork_dl(struct task_struct *p)
-> -{
-> -    /*
-> -     * SCHED_DEADLINE tasks cannot fork and this is achieved through
-> -     * sched_fork()
-> -     */
-> -}
-> -
->  #ifdef CONFIG_SMP
->  
->  /* Only try algorithms three times */
-> @@ -2451,8 +2443,6 @@ const struct sched_class dl_sched_class = {
->  #endif
->  
->      .task_tick        = task_tick_dl,
-> -    .task_fork              = task_fork_dl,
-> -
->      .prio_changed           = prio_changed_dl,
->      .switched_from        = switched_from_dl,
->      .switched_to        = switched_to_dl,
+After quick check I've found a bug (maybe?). It's not possible to specify
+vcc-pl-supply, because of this:
 
-Patch got whitespace-damaged - please see Documentation/process/email-clients.rst
-of how to send patches with your mail client.
+https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/sunxi/pinctrl-sunxi.c#L778
 
-Your patch looks good otherwise.
+During the probe of the pmu, the pinctrl tries to get a regulator, that 
+doesn't exist yet.
+Because of this the system doesn't start (as expected).
 
-Thanks,
+I've tried to ignore -EPROBE_DEFER. This seems to work, but only because 
+the regulator for
+PL is defined as "regulator-always-on". The problem is that the refcount 
+is not incremented.
+So if you export one gpio and the unexport it, the regulator will be 
+disabled. I'm not sure
+how this can be resolved.
 
-	Ingo
+Should I skip vcc-pl-supply for now and list the other bank supplies?
+
+
+Stefan
+
+>
+>> Also, since the commit message will be different for better representation
+>> of the changes, should I send the next
+>> patch as v2 or as a new one?
+> Either way works for me as long as the commit message matches the changes.
+>
+> Thanks!
+> Maxime
