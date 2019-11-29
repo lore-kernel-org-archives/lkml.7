@@ -6,76 +6,65 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C64C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC15C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D813520833
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0ECD20833
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfK2Iyu (ORCPT
+        id S1727228AbfK2IzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:54:50 -0500
-Received: from foss.arm.com ([217.140.110.172]:44820 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbfK2Iys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:54:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 742A730E;
-        Fri, 29 Nov 2019 00:54:46 -0800 (PST)
-Received: from [192.168.1.18] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27BA23F68E;
-        Fri, 29 Nov 2019 00:54:45 -0800 (PST)
-Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        mips-creator-ci20-dev@googlegroups.com,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com>
- <7b6275c7-ab2b-a647-6bf7-d5e1c4523c98@arm.com>
- <D1CE4D1E-9A42-4FAE-90A9-615C38B979C0@goldelico.com>
- <4807842.gtHLO0kk0V@hyperion>
- <01D75E67-EC2E-4C74-B9BB-752773C481A9@goldelico.com>
- <20191128150721.GA20142@alpha.franken.de>
- <4F75970F-81DA-4727-8ADC-17CF6D77829B@goldelico.com>
- <04b509b4-b1ef-3bcb-433e-8eed5772288f@arm.com>
- <BF04DB35-9DBA-4297-8FCA-BB422A56DFEC@goldelico.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <9ee8cbab-0655-f4d5-6699-fbe34fbe4d60@arm.com>
-Date:   Fri, 29 Nov 2019 08:57:13 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 29 Nov 2019 03:55:08 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:54355 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfK2IzH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 03:55:07 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-1-1480-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id D64D020004;
+        Fri, 29 Nov 2019 08:55:03 +0000 (UTC)
+Date:   Fri, 29 Nov 2019 09:55:00 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     lee.jones@linaro.org, a.zummo@towertech.it,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        phh@phh.me, b.galvani@gmail.com, stefan@agner.ch,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH v2 5/5] rtc: rtc-rc5t619: add ricoh rc5t619 RTC driver
+Message-ID: <20191129085500.GV299836@piout.net>
+References: <20191031213835.11390-1-andreas@kemnade.info>
+ <20191031213835.11390-6-andreas@kemnade.info>
+ <20191128105751.GM299836@piout.net>
+ <20191129075940.3b1c2631@kemnade.info>
 MIME-Version: 1.0
-In-Reply-To: <BF04DB35-9DBA-4297-8FCA-BB422A56DFEC@goldelico.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129075940.3b1c2631@kemnade.info>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/28/19 4:47 PM, H. Nikolaus Schaller wrote:
-> Well, it does not immediately compile because CONFIG_MIPS_CLOCK_VSYSCALL is not
-> set and can not be configured by normal means:
+On 29/11/2019 07:59:40+0100, Andreas Kemnade wrote:
+> > > +	/* disable interrupt */
+> > > +	err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
+> > > +	if (err)
+> > > +		return err;  
+> > 
+> > Is it really useful to disable the alarm to reenable them later?
+> > 
+> Well, yes, seems to be nonsense.
+> Am I right that I do not need to prevent alarm irqs between
+> alloc() and register()?
 > 
-> Error:
-> 
-> /Volumes/CaseSensitive/master/lib/vdso/gettimeofday.c: In function '__cvdso_gettimeofday':
-> /Volumes/CaseSensitive/master/lib/vdso/gettimeofday.c:152:4: error: implicit declaration of function 'gettimeofday_fallback' [-Werror=implicit-function-declaration]
->     return gettimeofday_fallback(tv, tz);
 
-Oops, I just realized that I had other changes not committed that's why it does
-not build for you directly. Sometimes I get so excited for fixing a problem that
-I forget bits and peaces :) Sorry about that.
+That's fine, the core will be ready to handle alarms after alloc()
 
-I am happy to hear that this sorts out the issue though. I will send out a new
-series to test.
 
 -- 
-Regards,
-Vincenzo
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
