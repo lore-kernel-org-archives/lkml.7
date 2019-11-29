@@ -2,133 +2,156 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953DCC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1650DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6993221736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6FA215A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:08:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hrUHVKWM"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="x9QOTCRR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfK2UFz (ORCPT
+        id S1727133AbfK2UIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 15:05:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59637 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726926AbfK2UFz (ORCPT
+        Fri, 29 Nov 2019 15:08:20 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46125 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfK2UIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 15:05:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575057953;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RP2PHwp5wZl3ztgeJTb35J2c98KyKZ9pDDlofVv46EI=;
-        b=hrUHVKWMIHROTUGhPXm+0v868zAudvzVEXurJaR8hifulObOGO+9qc+KjZkIE5ewHMg7p3
-        usJEIHYqXDz4rf8yt3yzHBMiHSLk1XL/zskhK6NN3eMSjM5uPGq5BVB//B7sup8LVlVNh+
-        Vdhq1aslXHmCjzECr9NT2GZ9x2gzbNQ=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-gag-o1OlNwOMuEHnQhiwSw-1; Fri, 29 Nov 2019 15:05:52 -0500
-Received: by mail-lf1-f72.google.com with SMTP id j16so6446259lfk.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 12:05:51 -0800 (PST)
+        Fri, 29 Nov 2019 15:08:19 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k1so6520344pga.13
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 12:08:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DvDMSJKpd/DCMvLbsXJa6FXI7w1LfpYRNLVlppSW228=;
+        b=x9QOTCRRFsFpPM5tf9H9+SF7dl2x8ogdtGQkav0LCZ0gi2gK0qMJT0rbIJFu4lIK1p
+         Zh/Ii2/xMNQmi2umqA5Kk77RZbQusCI2BkSxYRl5qfLKJPqHjp9xk6Tn589u9KhvD8JU
+         AZ7jnj87ZDoUyKZUyiAv4YABp/QEa0kvjrrP4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zCyHxNb/EFCllk+iZMx0l93yQzrOq+uBxpToCPQHS9k=;
-        b=DUqiIv6QOaYBcUj6lANGWAEN7j9e6Lm/zP6WNxsot0RenxHC13Hg8nonjYu/30O2z1
-         lJQ5skj02cpxc0N+1wwgbqfVhy7NH544FY3krwqHluwxMUYIrkJZIj3YE7/C2AZD7vRN
-         ITinlmZHWXevEiAHYgUiIqih0d91Vbhr6xIkl4dZkpMRtkX6TbicxaIN9XKGvwWtg+dg
-         GLVU/pI1ZtQc93tTwGTIJs+HvMVHlc2GKdR3Ix5Vnskqv5DdWl8CEZLFmncmVAR3T/tx
-         UCHuUg7BnlsVwZ1Lbj49FJXnqHsbu6ylGP/jXfKa2BKxqEwGcnlptFPHk9Ma4iGDDixn
-         NLpQ==
-X-Gm-Message-State: APjAAAXbB3hLZGNYwC6TI5Sspso0Mc3XPHRS/SzEQ8RcURbJA1KMk5Sw
-        xsViQ/jPPxO8ZkHEF4L7ni33AYYZt1MBRbOR8F6BfdVnxO4V2V2gAvxxjgxXS+cZ7U8PiIWL1Sn
-        sdajLEdyEKJ0eGHEFgG2xLQ0wOlrlSQKyoaOnDNYL
-X-Received: by 2002:a2e:9a41:: with SMTP id k1mr12682048ljj.235.1575057949817;
-        Fri, 29 Nov 2019 12:05:49 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz0eILOnKMVbbahC3Rp/NyuV7+7BmZiagne10VkRMygf99/om+7iSrw3qCYWoCJXV2cv5Un/9KS0XCSQp5JswM=
-X-Received: by 2002:a2e:9a41:: with SMTP id k1mr12682025ljj.235.1575057949585;
- Fri, 29 Nov 2019 12:05:49 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DvDMSJKpd/DCMvLbsXJa6FXI7w1LfpYRNLVlppSW228=;
+        b=rD/kZuqrEh0Wa8aiG5OmQdhC441n/tX35XeFemq/b1XnhtVnUmVh42LsRrhD7xBFM2
+         eEzi3QuoU2yASI5kCZOS4VDK4w3w+uAFJTUwe+R6VpyXtxaq/CeArpqOPKyglAjvbhp+
+         wg17a2lkhoHaZffQLTKPdN5wYyJqNMEdp1zRHcCDh5BXK4jTmsf4/4b4QsRiRB94jlAa
+         FOxmscTGIMVnaQiHspIN33c1ahJJl4NGf++8uLmOUGZc/AqgBAgpRqwC5YzJiDTLvmzs
+         ZUplewENKntii4KrHEzXobvFsKOKkg1Lnq9FWeRO7SDs3OJACgL2K450HLfAKZMblWv+
+         GJbg==
+X-Gm-Message-State: APjAAAW3YsPJN7Gz0HkfD7yOyvOJk0SEz8Z5Y+zqTjlTIEtuAFpBrgt7
+        tGDFk/oVScoNhwHbCXqVnXfeBg==
+X-Google-Smtp-Source: APXvYqyvHDa6weyYNMuYF7suMbcRmWdL7aPk8WE9JYrA5LAZ4jm/TAuWpWHyle/hpFduKHzrIZi9mA==
+X-Received: by 2002:a63:d544:: with SMTP id v4mr18283741pgi.288.1575058098939;
+        Fri, 29 Nov 2019 12:08:18 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id y6sm23937455pfm.12.2019.11.29.12.08.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2019 12:08:18 -0800 (PST)
+Date:   Fri, 29 Nov 2019 15:08:17 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>, linux-audit@redhat.com,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kernel: audit.c: Add __rcu notation to RCU pointer
+Message-ID: <20191129200817.GB239292@google.com>
+References: <20191126172723.GA12759@workstation-kernel-dev>
+ <20191127022925.GB157739@google.com>
+ <20191127052827.GA9782@workstation-portable>
+ <CAEXW_YS=eDhmv+MaKLoRTCcPknscxqfHa2TyrjAEXpug1g67jw@mail.gmail.com>
+ <20191128150949.GA30181@workstation-portable>
 MIME-Version: 1.0
-References: <1574972621-25750-1-git-send-email-bhsharma@redhat.com> <20191129102421.GA28322@willie-the-truck>
-In-Reply-To: <20191129102421.GA28322@willie-the-truck>
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-Date:   Sat, 30 Nov 2019 01:35:36 +0530
-Message-ID: <CACi5LpNQPw41kGsW+d0PyZaC7gSrbgwT2VxwyO5r3j83h-mkEQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
- for arm64 and MAX_PHYSMEM_BITS for all archs)
-To:     Will Deacon <will@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bhupesh SHARMA <bhupesh.linux@gmail.com>, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Steve Capper <steve.capper@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Anderson <anderson@redhat.com>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-X-MC-Unique: gag-o1OlNwOMuEHnQhiwSw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128150949.GA30181@workstation-portable>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+On Thu, Nov 28, 2019 at 08:39:49PM +0530, Amol Grover wrote:
+> On Wed, Nov 27, 2019 at 10:25:57AM -0500, Joel Fernandes wrote:
+> > On Wed, Nov 27, 2019 at 12:29 AM Amol Grover <frextrite@gmail.com> wrote:
+> > >
+> > > On Tue, Nov 26, 2019 at 09:29:25PM -0500, Joel Fernandes wrote:
+> > > > On Tue, Nov 26, 2019 at 10:57:23PM +0530, Amol Grover wrote:
+> > > > > add __rcu notation to RCU protected global pointer auditd_conn
+> > > > >
+> > > > > Fixes multiple instances of sparse error:
+> > > > > error: incompatible types in comparison expression
+> > > > > (different address spaces)
+> > > > >
+> > > > > Signed-off-by: Amol Grover <frextrite@gmail.com>
+> > > > > ---
+> > > > >  kernel/audit.c | 6 ++++--
+> > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > > > index da8dc0db5bd3..30e7fc9b8da2 100644
+> > > > > --- a/kernel/audit.c
+> > > > > +++ b/kernel/audit.c
+> > > > > @@ -102,12 +102,14 @@ struct audit_net {
+> > > > >   * This struct is RCU protected; you must either hold the RCU lock for reading
+> > > > >   * or the associated spinlock for writing.
+> > > > >   */
+> > > > > -static struct auditd_connection {
+> > > > > +struct auditd_connection {
+> > > > >     struct pid *pid;
+> > > > >     u32 portid;
+> > > > >     struct net *net;
+> > > > >     struct rcu_head rcu;
+> > > > > -} *auditd_conn = NULL;
+> > > > > +};
+> > > > > +static struct auditd_connection __rcu *auditd_conn;
+> > > > > +RCU_INIT_POINTER(auditd_conn);
+> > > >
+> > > > Looks like this causes a build error. Always please build test your patches
+> > > > in the very least. And I also did not understand how RCU_INIT_POINTER can
+> > > > even be used outside of a function. In C, executable code cannot be outside
+> > > > functions.
+> > > >
+> > > > Is doing the following not sufficient to fix the sparse issue?
+> > > >
+> > > > thanks,
+> > > >
+> > > >  - Joel
+> > > >
+> > > > ---8<-----------------------
+> > > >
+> > > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > > index 49b6049b26ac..c5d4b5a2dea1 100644
+> > > > --- a/kernel/audit.c
+> > > > +++ b/kernel/audit.c
+> > > > @@ -108,8 +108,8 @@ struct auditd_connection {
+> > > >       struct net *net;
+> > > >       struct rcu_head rcu;
+> > > >  };
+> > > > -static struct auditd_connection __rcu *auditd_conn;
+> > > > -RCU_INIT_POINTER(auditd_conn);
+> > > > +static struct auditd_connection __rcu *auditd_conn = NULL;
+> > >
+> > > I ran a quick checkpatch and it gave me this error:
+> > > ERROR: do not initialise statics to NULL
+> > >
+> > > So in order to fix it I decided to INIT the pointer (and failed)
+> > 
+> > Well, try to understand the checkpatch error then, and do the right thing :)
+> 
+> I read-up a few articles about this. I think I've understood the problem. I'm
+> sending in the ammended patch now. Sorry for this. Won't happen again.
 
-On Fri, Nov 29, 2019 at 3:54 PM Will Deacon <will@kernel.org> wrote:
->
-> On Fri, Nov 29, 2019 at 01:53:36AM +0530, Bhupesh Sharma wrote:
-> > Changes since v4:
-> > ----------------
-> > - v4 can be seen here:
-> >   http://lists.infradead.org/pipermail/kexec/2019-November/023961.html
-> > - Addressed comments from Dave and added patches for documenting
-> >   new variables appended to vmcoreinfo documentation.
-> > - Added testing report shared by Akashi for PATCH 2/5.
->
-> Please can you fix your mail setup? The last two times you've sent this
-> series it seems to get split into two threads, which is really hard to
-> track in my inbox:
->
-> First thread:
->
-> https://lore.kernel.org/lkml/1574972621-25750-1-git-send-email-bhsharma@r=
-edhat.com/
->
-> Second thread:
->
-> https://lore.kernel.org/lkml/1574972716-25858-1-git-send-email-bhsharma@r=
-edhat.com/
+Oh, no need apology. You are learning. But yeah always do a thorough job
+before sending patches.
 
-There seems to be some issue with my server's msmtp settings. I have
-tried resending the v5 (see
-<http://lists.infradead.org/pipermail/linux-arm-kernel/2019-November/696833=
-.html>).
+thanks,
 
-I hope the threading is ok this time.
-
-Thanks for your patience.
-
-Regards,
-Bhupesh
+ - Joel
 
