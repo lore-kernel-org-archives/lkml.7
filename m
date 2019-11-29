@@ -2,97 +2,125 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210E5C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7604C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD53217BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:51:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575035508;
-	bh=6mTBmHOkgYoU66N77ixO5qyx7HGDewnxPCqy4o6vmz0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AAlSU31BKaj35tV7nlBERkMgbNV9ohfi/kqGLRYF1u22L9khb1+XVnDfY1byj5trR
-	 3Gvr4exrgcNL65OZaOWyd3lAUaLweHCORfo71/L5KlnH3EcSr/x/ZILTN2MXVi9MtR
-	 WjQPfheCF/B/Ny/aHmW0c65E4apw+q3mP2PstQt8=
+	by mail.kernel.org (Postfix) with ESMTP id 96914217BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfK2Nvq (ORCPT
+        id S1726934AbfK2Nv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:51:46 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42408 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfK2Nvq (ORCPT
+        Fri, 29 Nov 2019 08:51:58 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:53483 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfK2Nv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:51:46 -0500
-Received: by mail-lj1-f195.google.com with SMTP id e28so7911055ljo.9;
-        Fri, 29 Nov 2019 05:51:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r/Fi0MEV5r+tBjNoZsXiqWGS8fmABPhyE3GLMwdmTOs=;
-        b=A9aOx9cEixFVBs4U7f43jObb7HqMvxNxX9koUHd5bYC48PoJUB5V9r+aDgdAOTSXTS
-         QqT9/+g50Dx4MlMHWN4mMXAlli+XgrGnUEq36CVd90f8F8VRQoeODYPUIXUHUAsxSkBy
-         Y9IlQfTCdxmXDVbR7vyVugDCb1PbnvIMaz9KhvU3w+bmbsM+6X8EQ8DAi8KCbW7Sl8C4
-         IYKaeHxOQGs6NoT/fWVrb4QoX4mZylE+p79c5Sevz4FTAHHVv4/GJjjqPda6MgarT6Od
-         IYAmUV5WSGyoT/iYdp387sCXEwGLfWFbwVBQHm/WNq/C5vGUHH3pvwf7PTj58VugzYmG
-         L5kw==
-X-Gm-Message-State: APjAAAUFkfW0LtN7xEplIoLpYE4BTwtOgqOprObUGvWq1Rof8zvBf4bA
-        3w+jhLloJb5vEsnOk57ST4I=
-X-Google-Smtp-Source: APXvYqzYOIhahw5q4/27xdaWNr1ynP0NYIT6X4+7RsS/yjJYtt4WrdyvUoYMvOR/STunO0LIzBZ0Kg==
-X-Received: by 2002:a2e:7013:: with SMTP id l19mr38235479ljc.201.1575035504338;
-        Fri, 29 Nov 2019 05:51:44 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id u7sm3157258lfn.31.2019.11.29.05.51.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 05:51:43 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1iaggT-0005iP-Ue; Fri, 29 Nov 2019 14:51:46 +0100
-Date:   Fri, 29 Nov 2019 14:51:45 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 0/4] staging: gigaset: fix crashes on probe
-Message-ID: <20191129135145.GJ29518@localhost>
-References: <20191129101753.9721-1-johan@kernel.org>
- <20191129133239.GA3703941@kroah.com>
+        Fri, 29 Nov 2019 08:51:58 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: h5SHTUUGrFynw3OqVDljNloPVDJf/ril5qn86YWzvZhV88T2PkE3APvVIe3R3c8x5aSbdTnqrU
+ mgjnM1YxoiD4WNtamkfpsRja3cx4qIe/4dimTNcD1gGX5QDi8VoWWAExUdbR23GM5rZPA8Xb2d
+ f78itzV5tPXN8cjFiYPEE1b9kTgzLMGjcUZqjln4NVaEdYcB1yC7CupdrUKUCZtyvjPN6FmEaC
+ zVHqk4tt7U+kWJDsG7CVfiXUaF5mWJ1L2iBcY1jT1jKDZJrNNpUJ2jam+VkJJugINPjsflkr1W
+ 7Os=
+X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
+   d="scan'208";a="57287972"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Nov 2019 06:51:53 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 29 Nov 2019 06:51:53 -0700
+Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 29 Nov 2019 06:51:50 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        <sre@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v3 0/9] SoC and defconfig support for SAM9X60
+Date:   Fri, 29 Nov 2019 15:51:36 +0200
+Message-ID: <1575035505-6310-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129133239.GA3703941@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 02:32:39PM +0100, Greg Kroah-Hartman wrote: > On Fri, Nov 29, 2019 at 11:17:49AM +0100, Johan Hovold wrote:
-> > Syzbot has been reporting a GPF on probe in the gigaset ISDN driver,
-> > which have since been moved to staging.
-> > 
-> > The first patch fixes that issue, and the next one fixes a second crash
-> > found during testing.
-> > 
-> > The third patch addresses a benign warning in USB core which syzbot is
-> > bound to report once the crashes have been fixed.
-> > 
-> > And while I hate playing checkpatch games, the final patch addresses a
-> > checkpatch warning introduced on purpose by the third patch.
-> 
-> I'll take these after 5.5-rc1, but then it is time to just delete all of
-> drivers/staging/isdn/ from my tree, so don't worry about them after that
-> :)
+Hi,
 
-Sounds good to me. :)
+This series enables proper support for SAM9X60 in Kconfig and
+defconfig.
 
-But we should probably get these backported before dropping
-staging/isdn. Not sure if syzbot is run against older stable trees as
-well, but if so, you may want to consider adding a stable-tag also to
-patch 3/4.
+Thank you,
+Claudiu Beznea
 
-Johan
+Changes in v3:
+- move patch "ARM: at91: Kconfig: add config flag for SAM9X60 SoC" before
+  the patches that uses CONFIG_SOC_SAM9X60
+- sqash defconfig patches (except the savedefconfig one)
+
+Changes in v2:
+- cahnged cover letter title; previously it was:
+  "add defconfig support for SAM9X60"
+- have new entry in arch/arm/mach-at91/Kconfig for SOC_SAM9X60
+  independent of SOC_AT91SAM9 to be able to select only necessary
+  config flags for SAM9X60 (patches 02/17, 03/17)
+- select POWER_RESET_AT91_RESET and POWER_RESET_AT91_SAMA5D2_SHDWC
+  as for SAMA5D2 (patches 04/17, 05/17)
+- select DEBUG_AT91_RM9200_DBGU (patch 06/17)
+- shaped a bit the patches titles and commit desciptions for defconfig
+  patches (patches 09-17/17)
+
+Claudiu Beznea (9):
+  ARM: at91: Kconfig: add sam9x60 pll config flag
+  ARM: at91: Kconfig: add config flag for SAM9X60 SoC
+  ARM: at91: pm: move SAM9X60's PM under its own SoC config flag
+  drivers: soc: atmel: move sam9x60 under its own config flag
+  power: reset: Kconfig: select POWER_RESET_AT91_RESET for sam9x60
+  drivers: soc: atmel: select POWER_RESET_AT91_SAMA5D2_SHDWC for sam9x60
+  ARM: debug-ll: select DEBUG_AT91_RM9200_DBGU for sam9x60
+  ARM: at91/defconfig: use savedefconfig
+  ARM: at91/defconfig: enable config flags for sam9x60 SoC
+
+ arch/arm/Kconfig.debug             |  6 ++---
+ arch/arm/configs/at91_dt_defconfig | 55 ++++++++++++++++++--------------------
+ arch/arm/mach-at91/Kconfig         | 24 +++++++++++++++--
+ arch/arm/mach-at91/Makefile        |  1 +
+ arch/arm/mach-at91/at91sam9.c      | 18 -------------
+ arch/arm/mach-at91/pm.c            |  2 +-
+ arch/arm/mach-at91/sam9x60.c       | 34 +++++++++++++++++++++++
+ drivers/power/reset/Kconfig        |  4 +--
+ drivers/soc/atmel/soc.c            |  5 ++--
+ 9 files changed, 92 insertions(+), 57 deletions(-)
+ create mode 100644 arch/arm/mach-at91/sam9x60.c
+
+-- 
+2.7.4
+
