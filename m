@@ -2,150 +2,135 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC02CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300B3C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7744A216F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FD820869
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:21:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZADPzVbX"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="0wOIp5DU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfK2NJz (ORCPT
+        id S1726889AbfK2NVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:09:55 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31305 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726360AbfK2NJz (ORCPT
+        Fri, 29 Nov 2019 08:21:54 -0500
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:54416 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726785AbfK2NVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:09:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575032993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EXQRsFdfLYOm/MUUyIhSeoAXYv2SBvvANDEs00Y3qns=;
-        b=ZADPzVbXMRB47SUG6iCE5OQK3JWCNqkYzkV/QeTfDvfUI+u9qyppBY1GY7R+rjAhl44LXJ
-        63TY7nSxoe+ytn2hGewKcfHMDjRiuQzdf2pXTnL8rWM3K2n21c4Q1263yLvplNtSImpGfO
-        nsCyn6kwRwVSmC9/pYxjAO2XLam9sGk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-dmcG5Go5PVmnxMR5lf7-tw-1; Fri, 29 Nov 2019 08:09:49 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DAA2911A4;
-        Fri, 29 Nov 2019 13:09:48 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id EA7B85D9E1;
-        Fri, 29 Nov 2019 13:09:46 +0000 (UTC)
-Date:   Fri, 29 Nov 2019 14:09:46 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] perf mmap: declare type for cpu mask of arbitrary
- length
-Message-ID: <20191129130946.GC14169@krava>
-References: <908dbe98-7d8d-0ec1-d4ae-242f3e104979@linux.intel.com>
- <446c4345-cb20-d0ad-3b3d-b34683b1c1e0@linux.intel.com>
+        Fri, 29 Nov 2019 08:21:53 -0500
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 1C5CE2E14B7;
+        Fri, 29 Nov 2019 16:21:50 +0300 (MSK)
+Received: from myt4-4db2488e778a.qloud-c.yandex.net (myt4-4db2488e778a.qloud-c.yandex.net [2a02:6b8:c00:884:0:640:4db2:488e])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id Jn2OmG20Ag-Ln3aK9dY;
+        Fri, 29 Nov 2019 16:21:50 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1575033710; bh=R2z27gs6Da33rqKnA4TD3aOyyj12Jol0aRE9ZSW7rhI=;
+        h=In-Reply-To:Message-ID:References:Date:To:From:Subject:Cc;
+        b=0wOIp5DUInJNy36A3asVYaNzza+EBbDHX3q3S1gZpNdscSu3VccvhTdA8m0YfYVhi
+         sQn8IDQbljJkS7RE8g0ScCPGbtLrkoRQdcAG5b6nXvwfoDq3PxJ/KlelKX2pbrW+TM
+         5PUAZgd+v+SIzTNfl1y/R73dcQuCrj5YKDhH5DHg=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:1009:4fae:ad87:4eae])
+        by myt4-4db2488e778a.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 0j5FWt6wbj-LnWiL4t9;
+        Fri, 29 Nov 2019 16:21:49 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH 2/2] kernel: add sysctl kernel.nr_taints
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     Sasha Levin <sashal@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rcu@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Date:   Fri, 29 Nov 2019 16:21:48 +0300
+Message-ID: <157503370887.8187.1663761929323284758.stgit@buzz>
+In-Reply-To: <157503370645.8187.6335564487789994134.stgit@buzz>
+References: <157503370645.8187.6335564487789994134.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <446c4345-cb20-d0ad-3b3d-b34683b1c1e0@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: dmcG5Go5PVmnxMR5lf7-tw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 01:04:37PM +0300, Alexey Budankov wrote:
->=20
-> Declare a dedicated struct map_cpu_mask type for cpu masks of
-> arbitrary length. Mask is available thru bits pointer and the
-> mask length is kept in nbits field. MMAP_CPU_MASK_BYTES() macro
-> returns mask storage size in bytes. perf_mmap__print_cpu_mask()
-> function can be used to log text representation of the mask.
->=20
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
->  tools/perf/util/mmap.c | 12 ++++++++++++
->  tools/perf/util/mmap.h | 11 +++++++++++
->  2 files changed, 23 insertions(+)
->=20
-> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-> index 063d1b93c53d..30ff7aef06f2 100644
-> --- a/tools/perf/util/mmap.c
-> +++ b/tools/perf/util/mmap.c
-> @@ -23,6 +23,18 @@
->  #include "mmap.h"
->  #include "../perf.h"
->  #include <internal/lib.h> /* page_size */
-> +#include <linux/bitmap.h>
-> +
-> +#define MASK_SIZE 1023
-> +void perf_mmap__print_cpu_mask(struct mmap_cpu_mask *mask, const char *t=
-ag)
+Once taint flag is set it's never cleared. Following taint could be detected
+only via parsing kernel log messages which are different for each occasion.
+For repeatable taints like TAINT_MACHINE_CHECK, TAINT_BAD_PAGE, TAINT_DIE,
+TAINT_WARN, TAINT_LOCKUP it would be good to know count to see their rate.
 
-'mmap_cpu_mask__scnprintf' name follows the name logic we try to use
+This patch adds sysctl with vector of counters. One for each taint flag.
+Counters are non-atomic in favor of simplicity. Exact count doesn't matter.
+Writing vector of zeroes resets counters.
 
-jirka
+This is useful for detecting frequent problems with automatic monitoring.
 
-> +{
-> +=09char buf[MASK_SIZE + 1];
-> +=09size_t len;
-> +
-> +=09len =3D bitmap_scnprintf(mask->bits, mask->nbits, buf, MASK_SIZE);
-> +=09buf[len] =3D '\0';
-> +=09pr_debug("%p: %s mask[%ld]: %s\n", mask, tag, mask->nbits, buf);
-> +}
-> =20
->  size_t mmap__mmap_len(struct mmap *map)
->  {
-> diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-> index bee4e83f7109..598e2def8a48 100644
-> --- a/tools/perf/util/mmap.h
-> +++ b/tools/perf/util/mmap.h
-> @@ -15,6 +15,15 @@
->  #include "event.h"
-> =20
->  struct aiocb;
-> +
-> +struct mmap_cpu_mask {
-> +=09unsigned long *bits;
-> +=09size_t nbits;
-> +};
-> +
-> +#define MMAP_CPU_MASK_BYTES(m) \
-> +=09(BITS_TO_LONGS(((struct mmap_cpu_mask *)m)->nbits) * sizeof(unsigned =
-long))
-> +
->  /**
->   * struct mmap - perf's ring buffer mmap details
->   *
-> @@ -52,4 +61,6 @@ int perf_mmap__push(struct mmap *md, void *to,
-> =20
->  size_t mmap__mmap_len(struct mmap *map);
-> =20
-> +void perf_mmap__print_cpu_mask(struct mmap_cpu_mask *mask, const char *t=
-ag);
-> +
->  #endif /*__PERF_MMAP_H */
-> --=20
-> 2.20.1
->=20
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ include/linux/kernel.h |    1 +
+ kernel/panic.c         |    2 ++
+ kernel/sysctl.c        |    9 +++++++++
+ 3 files changed, 12 insertions(+)
+
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index e8a6808e4f2f..900d02167bbd 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -604,6 +604,7 @@ struct taint_flag {
+ };
+ 
+ extern const struct taint_flag taint_flags[TAINT_FLAGS_COUNT];
++extern int sysctl_nr_taints[TAINT_FLAGS_COUNT];
+ 
+ extern const char hex_asc[];
+ #define hex_asc_lo(x)	hex_asc[((x) & 0x0f)]
+diff --git a/kernel/panic.c b/kernel/panic.c
+index d7750a45ca8d..a3df00ebcba2 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -39,6 +39,7 @@
+ int panic_on_oops = CONFIG_PANIC_ON_OOPS_VALUE;
+ static unsigned long tainted_mask =
+ 	IS_ENABLED(CONFIG_GCC_PLUGIN_RANDSTRUCT) ? (1 << TAINT_RANDSTRUCT) : 0;
++int sysctl_nr_taints[TAINT_FLAGS_COUNT];
+ static int pause_on_oops;
+ static int pause_on_oops_flag;
+ static DEFINE_SPINLOCK(pause_on_oops_lock);
+@@ -434,6 +435,7 @@ void add_taint(unsigned flag, enum lockdep_ok lockdep_ok)
+ 		pr_warn("Disabling lock debugging due to kernel taint\n");
+ 
+ 	set_bit(flag, &tainted_mask);
++	sysctl_nr_taints[flag]++;
+ }
+ EXPORT_SYMBOL(add_taint);
+ 
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index b6f2f35d0bcf..5d9727556cef 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -553,6 +553,15 @@ static struct ctl_table kern_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_taint,
+ 	},
++	{
++		.procname	= "nr_taints",
++		.data		= &sysctl_nr_taints,
++		.maxlen		= sizeof(sysctl_nr_taints),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ZERO,
++	},
+ 	{
+ 		.procname	= "sysctl_writes_strict",
+ 		.data		= &sysctl_writes_strict,
 
