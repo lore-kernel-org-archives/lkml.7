@@ -2,143 +2,145 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1A7C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2046C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72252217C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76FA921736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:17:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p0zaQXg/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfK2PRg (ORCPT
+        id S1727175AbfK2PRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 10:17:36 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52394 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726893AbfK2PRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 10:17:36 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A6C11B463;
-        Fri, 29 Nov 2019 15:17:33 +0000 (UTC)
-Subject: Re: [PATCH] mm/zsmalloc.c: fix the migrated zspage statistics.
-To:     Chanho Min <chanho.min@lge.com>, Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        seungho1.park@lge.com, Inkyu Hwang <inkyu.hwang@lge.com>,
-        Jinsuk Choi <jjinsuk.choi@lge.com>
-References: <1574990967-23391-1-git-send-email-chanho.min@lge.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <43d28728-2cc2-7978-633a-fbae48433b87@suse.cz>
-Date:   Fri, 29 Nov 2019 16:17:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 29 Nov 2019 10:17:39 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43690 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbfK2PRi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 10:17:38 -0500
+Received: by mail-qk1-f193.google.com with SMTP id q28so6859878qkn.10;
+        Fri, 29 Nov 2019 07:17:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U1LwTXtTJwMx/Gf3bAA/rzMwkaawHZhe6MpIRKU1ETs=;
+        b=p0zaQXg/QH1tViOwvoFBuFxpcYjAVLYFuFsY6eGC06Zev4iIvs4xWstyELAG6XVbYX
+         3FFmumMAbLTjuJX1g1RTolJx3LtIOuISlDLBcCD2kFlzekivV6S9GFnQrXklOvWpBZ1I
+         6ViPU9K7hcPkxiLbm5QWaIg18pfsSah98RtwTTGWjnPhaYkYQM8GBaX2LuC/exFLUdG+
+         kFKsW4XviraxsTlMTqTKELMFsHJnDYx8+dSaAGKQF6HCRCYLqPrcz0EfBsUgQOYvYD8u
+         5HIFKS1MLw3aAzPJNYzI/qsSbdDCrnoc/JDCUot+2HFpoIUrtHIZVgSrriyz/2tfef6Y
+         MyKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U1LwTXtTJwMx/Gf3bAA/rzMwkaawHZhe6MpIRKU1ETs=;
+        b=o3G+L+3KclU2KUUIhcfsmtMdMraz5XaGDDrtIlDErczL1o0f8Yk0ENGU9U4CIQVdUq
+         JMWKa1ZfqWLnEEHX9okJ/qQIFSCH5kbyVb15OHyOd2t+EdqsXjpFss2Rfx92IEH/52Sc
+         qBKQz2HHQNm1OhjY/nlmZl9IjCImDHlZinMpyV0sfxeel9OXPn4GEJZomReWz7/ArTqU
+         E6ajuTP7PKSl9fzSj7u8fT+DZVzqnKvSwoKRjm/HbsA5Bl63ZAzF9Ja4HuMcZN5MmjOl
+         nZAC8aHtamWnp9m0SR0jrWHuxsuZ0J+Dg7P/xQC9DUQunv6F8fsvQ7hRwGHLP9B6NfKi
+         iNYw==
+X-Gm-Message-State: APjAAAU0uoERtCuYaKGA3QYTsq05X+K/4qHlLfUVQysd2TPM8BXLBCZL
+        GaPxP+46MAwYhI83+9KGRCE=
+X-Google-Smtp-Source: APXvYqwCkzOCf7m9eLmcpJCrljKxYKRw1sPitU6OrvYXjVgFVw6bLg4Q2YsTGt1SVitBbMZ6jtcHAw==
+X-Received: by 2002:a05:620a:1209:: with SMTP id u9mr4820532qkj.248.1575040656295;
+        Fri, 29 Nov 2019 07:17:36 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id w76sm5465878qkb.8.2019.11.29.07.17.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2019 07:17:35 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 682A1405B6; Fri, 29 Nov 2019 12:17:33 -0300 (-03)
+Date:   Fri, 29 Nov 2019 12:17:33 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 04/15] perf tools: Add map_groups to 'struct
+ addr_location'
+Message-ID: <20191129151733.GC26963@kernel.org>
+References: <20191112183757.28660-1-acme@kernel.org>
+ <20191112183757.28660-5-acme@kernel.org>
+ <20191129134056.GE14169@krava>
 MIME-Version: 1.0
-In-Reply-To: <1574990967-23391-1-git-send-email-chanho.min@lge.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129134056.GE14169@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/29/19 2:29 AM, Chanho Min wrote:
-> When zspage is migrated to the other zone, the zone page state should
-> be updated as well.
-
-What are the user visible effects? I assume NR_ZSPAGES accounting can go
-wrong otherwise? Has it been observed in practice?
-Should we Cc stable and identify a Fixes: commit?
-
-Thanks,
-Vlastimil
-
-> Signed-off-by: Chanho Min <chanho.min@lge.com>
-> Signed-off-by: Jinsuk Choi <jjinsuk.choi@lge.com>
-> ---
->  mm/zsmalloc.c | 5 +++++
->  1 file changed, 5 insertions(+)
+Em Fri, Nov 29, 2019 at 02:40:56PM +0100, Jiri Olsa escreveu:
+> On Tue, Nov 12, 2019 at 03:37:46PM -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > From there we can get al->mg->machine, so replace that field with the
+> > more useful 'struct map_groups' that for now we're obtaining from
+> > al->map->groups, and that is one thing getting into the way of maps
+> > being fully shareable.
+> > 
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Andi Kleen <ak@linux.intel.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Link: https://lkml.kernel.org/n/tip-4qdducrm32tgrjupcp0kjh1e@git.kernel.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/callchain.c                          |  6 +++---
+> >  tools/perf/util/db-export.c                          | 12 ++++++------
+> >  tools/perf/util/event.c                              |  6 +++---
+> >  .../perf/util/scripting-engines/trace-event-python.c |  2 +-
+> >  tools/perf/util/symbol.h                             |  2 +-
+> >  5 files changed, 14 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> > index 9a9b56ed3f0a..89faa644b0bc 100644
+> > --- a/tools/perf/util/callchain.c
+> > +++ b/tools/perf/util/callchain.c
+> > @@ -1119,8 +1119,8 @@ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *
+> >  			goto out;
+> >  	}
+> >  
+> > -	if (al->map->groups == &al->machine->kmaps) {
+> > -		if (machine__is_host(al->machine)) {
+> > +	if (al->mg == &al->mg->machine->kmaps) {
 > 
-> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-> index 2b2b9aa..22d17ec 100644
-> --- a/mm/zsmalloc.c
-> +++ b/mm/zsmalloc.c
-> @@ -2069,6 +2069,11 @@ static int zs_page_migrate(struct address_space *mapping, struct page *newpage,
->  		zs_pool_dec_isolated(pool);
->  	}
->  
-> +	if (page_zone(newpage) != page_zone(page)) {
-> +		dec_zone_page_state(page, NR_ZSPAGES);
-> +		inc_zone_page_state(newpage, NR_ZSPAGES);
-> +	}
-> +
->  	reset_page(page);
->  	put_page(page);
->  	page = newpage;
+> heya, I'm getting segfault because of this change
 > 
+> perf record --call-graph dwarf ./ex
+> 
+> 	(gdb) r report --stdio
+> 	Program received signal SIGSEGV, Segmentation fault.
+> 	fill_callchain_info (al=0x7fffffffa1b0, node=0xcd2bd0, hide_unresolved=false) at util/callchain.c:1122
+> 	1122            if (al->maps == &al->maps->machine->kmaps) {
+> 	(gdb) p al->maps
+> 	$1 = (struct maps *) 0x0
+> 
+> I wish all those map changes would go through some review,
+> I have no idea how the code works now ;-)
 
+ouch, I did tons of tests, obviously some more, and reviewing, would
+catch these, my bad, will try and fix this...
+
+And yeah, I reproduced the problem, working on a fix.
+
+- Arnaldo
