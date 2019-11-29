@@ -2,137 +2,92 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7725BC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4602FC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54461216F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B8D7215F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:51:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1sUJA6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfK2Huc (ORCPT
+        id S1726943AbfK2HvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 02:50:32 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51741 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfK2Huc (ORCPT
+        Fri, 29 Nov 2019 02:51:03 -0500
+Received: from mail-lj1-f180.google.com ([209.85.208.180]:43042 "EHLO
+        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfK2HvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 02:50:32 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iab2s-0003x1-FL; Fri, 29 Nov 2019 08:50:30 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iab2r-0002eU-Fz; Fri, 29 Nov 2019 08:50:29 +0100
-Date:   Fri, 29 Nov 2019 08:50:29 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        kernel@pengutronix.de, Adam.Thomson.Opensource@diasemi.com,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/5] gpio: add support to get local gpio number
-Message-ID: <20191129075029.gs42pdwehjarem6y@pengutronix.de>
-References: <20191127135932.7223-1-m.felsch@pengutronix.de>
- <20191127135932.7223-2-m.felsch@pengutronix.de>
- <CAMpxmJXzBphmW7SWD05wtLjSAR7VBzVAgnYJYd3Sd49Bp6AmgQ@mail.gmail.com>
- <20191128124942.4ddyi5eeclvxmqbg@pengutronix.de>
- <20191129074524.dipo37u6lv7vzfhc@pengutronix.de>
+        Fri, 29 Nov 2019 02:51:02 -0500
+Received: by mail-lj1-f180.google.com with SMTP id a13so7765913ljm.10;
+        Thu, 28 Nov 2019 23:50:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=G7htS148MLHne5gcdg1L2MpYQYz/l/iKEwv8PYFcG2E=;
+        b=F1sUJA6CQo0FU6YJTe8zF3XS9wn1GdYIGYKKW0FkH1WZjpFUNLduWY7619x4knvYuL
+         II29bxpBYNCe1WTppKZPD3gWAjLNZvPN8OYY+bRDbydx8UvRceDBEacyqW7eHUDwYexn
+         TeX/cu4QgfvFSzOQo2tyqLXKl6WzzWLcts+u+DBj+apKQ0DLv2jyN1R6JN4TwG89ZHNM
+         yuCv43rlcM8ImNJ/JymVpNIGiWmBNW8ivSjHfB+WQ3C8K+rDH6OoA1h1H+YcuX6fiPn1
+         8ODbdSJiZdXp3rJ/vf1zqTG3Tv7a/o7gxl+QC/JTulZCeDkOil1FNdS/SAYXzfr5txH9
+         wiYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=G7htS148MLHne5gcdg1L2MpYQYz/l/iKEwv8PYFcG2E=;
+        b=WERmLLP1De0aqa6XNds/ch61d1gpqSQQNwVWrJGYNYCWOu1JlPyyJBH91vY1Hwz0rp
+         NMClHvRIS1g6vAi1YgkRQDeQmrQIWV3LY6Pw6kWGJppulS+LBuF8gkstqbG/qBoGu6kU
+         FcyIWpkg/FuTCfTNaPd/EiE8bWpvevtx3WV698FuTXhLtmeDU5+GAfp8kPcxRivTs6w3
+         U8gkul+4SHcnwVAYsA6QBXZQTkJQqHwmKNXTMZ2Dt3zl1cSbybqSYZFGW+unM+fOsZ6x
+         Ak67SX3VGMD4N6tdCndXDU5xKBu894V648qE05TlyvQSvupjwHFrCY8OUF0h6ueWyMnF
+         ranw==
+X-Gm-Message-State: APjAAAUSY7cg+zu+RC7eR0R9ZY1yYwn49HTcSGUQrlkwr/ldhyM+FuRB
+        DOMlkrueBErC0sUeEZINRgWYGM6rYBZTIVIMdCc3pujz
+X-Google-Smtp-Source: APXvYqzTIyrUoGUmL075z/BU7X+QXiOWAeMrU+mvmklSZUzJDlwkcaucXHnotp5Tm7JwlrZBFFBcw/VvT1SXB0VSACM=
+X-Received: by 2002:a2e:984f:: with SMTP id e15mr36803147ljj.109.1575013858719;
+ Thu, 28 Nov 2019 23:50:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191129074524.dipo37u6lv7vzfhc@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:49:56 up 13 days, 23:08, 28 users,  load average: 0.00, 0.04,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+From:   Jason Xing <kerneljasonxing@gmail.com>
+Date:   Fri, 29 Nov 2019 15:50:22 +0800
+Message-ID: <CAL+tcoD8o5A4vgLHHp8dyFV5PmJVL5tu0h-XQavLOiAexmVLRQ@mail.gmail.com>
+Subject: About whether we should support the alignment in the
+ generic_file_splice_read() ?
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-11-29 08:45, Uwe Kleine-König wrote:
-> On Thu, Nov 28, 2019 at 01:49:42PM +0100, Marco Felsch wrote:
-> > On 19-11-28 11:46, Bartosz Golaszewski wrote:
-> > > śr., 27 lis 2019 o 14:59 Marco Felsch <m.felsch@pengutronix.de> napisał(a):
-> > > >
-> > > > Sometimes consumers needs to know the gpio-chip local gpio number of a
-> > > > 'struct gpio_desc' for further configuration. This is often the case for
-> > > > mfd devices.
-> > > >
-> > > 
-> > > We already have this support. It's just a matter of exporting it, so
-> > > maybe adjust the commit message to not be confusing.
-> > 
-> > Therefore I mentioned the consumers.
-> > 
-> > > That being said: I'm not really a fan of this - the whole idea of gpio
-> > > descriptors was to make them opaque and their hardware offsets
-> > > irrelevant. :(
-> > 
-> > I know therefore I added a driver local helper but this wasn't the way
-> > Linus wanted to go..
-> > 
-> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > ---
-> > > >  drivers/gpio/gpiolib.c        |  6 ++++++
-> > > >  include/linux/gpio/consumer.h | 10 ++++++++++
-> > > >  2 files changed, 16 insertions(+)
-> > > >
-> > > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > > > index 104ed299d5ea..7709648313fc 100644
-> > > > --- a/drivers/gpio/gpiolib.c
-> > > > +++ b/drivers/gpio/gpiolib.c
-> > > > @@ -4377,6 +4377,12 @@ int gpiod_count(struct device *dev, const char *con_id)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(gpiod_count);
-> > > >
-> > > > +int gpiod_to_offset(struct gpio_desc *desc)
-> > > 
-> > > Maybe call it: gpiod_desc_to_offset()?
-> > 
-> > The function name is proposed by Linus too so Linus what's your
-> > oppinion?
-> 
-> INAL (I'm not a Linus) but I wonder what the 'd' in gpiod stands for.
-> Assuming it already meand "desc" I'd prefer gpiod_to_offset.
+Hi all,
 
-Yes, that was my assumption too.
+Sorry to send this email to you all. I recently noticed there're some
+incompatibilities existing in the generic_file_splice_read() function
+between 3.X and 4.X kernel. The result will goes wrong if we're using
+sendfile() with unaligned offset in 4.X/5.X kernel. But if we do the
+same in 3.X kernel, it will surely return success.
 
-Regards,
-  Marco
+Here is the call trace:
+1. Using sendfile() with unaligned offset
+2. Then it runs into the kernel:
+sendfile64()->do_sendfile()->do_splice_direct()->splice_direct_to_actor()->do_splice_to()->splice_read()
+3. splice_read() calls the __generic_file_splice_read() in 3.X kernel,
+generic_file_splice_read() in 4.X kernel.
 
-> Best regards
-> Uwe
-> 
-> -- 
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-> 
+In 3.X kernel, this function handles the alignment by using the
+PAGE_SHIFT and PAGE_MASK. However, after applying this
+commit(82c156f853840645604acd7c2cebcb75ed1b6652) the 4.X no longer
+supports the unaligned data.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+I'm wondering should we add the alignment process code back again?
+Does anyone have idea about why this part got removed? Any information
+and suggestions are welcome:-)
+
+Thanks,
+Jason
