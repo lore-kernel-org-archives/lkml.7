@@ -2,145 +2,88 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1547EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44D3C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC0442464A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5EB2464C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="P515JTdy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+Urcqkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfK2Vro (ORCPT
+        id S1727187AbfK2V4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:47:44 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:6093 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfK2Vro (ORCPT
+        Fri, 29 Nov 2019 16:56:54 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39310 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfK2V4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 16:47:44 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de192010000>; Fri, 29 Nov 2019 13:47:46 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 29 Nov 2019 13:47:42 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 29 Nov 2019 13:47:42 -0800
-Received: from [10.2.169.205] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 Nov
- 2019 21:47:41 +0000
-Subject: Re: [PATCH v2 17/19] powerpc: book3s64: convert to pin_user_pages()
- and put_user_page()
-To:     Jan Kara <jack@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191125231035.1539120-1-jhubbard@nvidia.com>
- <20191125231035.1539120-18-jhubbard@nvidia.com>
- <20191129112315.GB1121@quack2.suse.cz>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <cb3e2acc-0a83-4053-fbcc-6d75dc47f174@nvidia.com>
-Date:   Fri, 29 Nov 2019 13:44:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 29 Nov 2019 16:56:53 -0500
+Received: by mail-lf1-f65.google.com with SMTP id q6so563405lfb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 13:56:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9LD4rQhoJx4ZWspvu75ddE3vIc7NmBG4blVspw65+Ak=;
+        b=h+UrcqkvvN9oJJUK//cTB3MxoQBX/E+7ZKK7ZuLVAqkSaZ8unS864P1OMcS1vg2a3Q
+         +4hoafy8DD/IG50/pEM2wJK6aDj54jKpzntXyDmHkwT0XCSKMnhW5wXqQHwU5iySfKyI
+         GLHLk/7hxanv+rwdJB71FGUDdvqK97cyLo0aXVEddkXDmk27Ea0GYFzpktLN/T0aDRkY
+         TMdWqD1JB/lj55gA5rZtU8T9+fd8UNhzgnpdWdjo8z5fUCGleC1y/5GGEhn307QxsjgH
+         +lwUR/Zz4+wufbCuGvtgMx41MPXI2I0K7PC7na1MIoQA4ppYUzHnpljncGPzRU7HKyMX
+         9ccw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9LD4rQhoJx4ZWspvu75ddE3vIc7NmBG4blVspw65+Ak=;
+        b=Ry1MXLJgAEdoOnpzj9hfiACjE88NWBMzCcKlhZoKNz55Ja9wVTsJ5qLwcOmClUDpNW
+         ipOcohaAw9Q+GItmlwYQgm5P9OzgiUex86HQj9jksMEouaFkW9gJcOUgSV4HAJ3H8kyX
+         cFNPOhBaTpLW+f8NkDPatRFu7pSEtx8J/fXtieFD9oq2mhF/RjXwPEwpisuIYwKCfs57
+         5fgP3Nsx4CTIA74vt4Fj7XT7s2t/Ofre2wOQ9Nir+VLFt1gADQRbZS0puvEL6k2xYzrn
+         Ic+sQ9o5hCwbMv3WlWDUYHYYbddnVfMUrRpgRXjT5VkitSlDyfef1ecGEDVi9R3p+/AP
+         WIag==
+X-Gm-Message-State: APjAAAWTP0Lomjb5Y02TECOH2gs/aa/8xRaRGB4xOIYICUiAJeHc4yYq
+        NFtHuUa8t4iHJ7TuuFGXMtFbc8/kLtnqP+f+WcE=
+X-Google-Smtp-Source: APXvYqzr4BSwRZNjxhOAWUVDRbfg2dtVgVWBqnqcRA37vtO1uegkRbcP0hHi7H8HMy5Gjx8/7y0dzxANy2cw7iFxak4=
+X-Received: by 2002:a05:6512:1cf:: with SMTP id f15mr5449017lfp.12.1575064611401;
+ Fri, 29 Nov 2019 13:56:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191129112315.GB1121@quack2.suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575064066; bh=tMvn6asqZgJ/8yczcC9lnf1pHEf7TJzCvRVZqLzUEIk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=P515JTdy70KP3oimNK/fSAtObgW4JDQsh/LN+dj31w7qtgH6JUdGJYKS3j5J8enBM
-         oN04vymJSqszX58P75QNc1cW3k/Ll0LB9zwNlmlBWaR7zw2qd7/o9t2Cy3EugW3wgY
-         XBlQyEsBEMcfywkDPj201lclcvfOCs5gFzs/O+2QmSmHzciD31eTMBkNB0W6VGXEOL
-         BbnrGM91l0GAwjLm+XJmL4eoGQAce5JVCz6FfueQA4/sc24hO2mmz2R1mloKHyP2Ej
-         3q1StOVbP0t0OEBFEGay8puwUyC8jwyLEftGIYNcVrkaz5szmNasFETh2Ir0Xi5Q1g
-         8xDwDUM/1ii9A==
+References: <20191128223802.18228-1-michael@walle.cc>
+In-Reply-To: <20191128223802.18228-1-michael@walle.cc>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 29 Nov 2019 18:57:04 -0300
+Message-ID: <CAOMZO5CP6ohaHqv5qy=RAisjiYQ6pO9xqGfKbHDzQ77gsm=CwA@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: fsl_sai: add IRQF_SHARED
+To:     Michael Walle <michael@walle.cc>
+Cc:     Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/29/19 3:23 AM, Jan Kara wrote:
-> On Mon 25-11-19 15:10:33, John Hubbard wrote:
->> 1. Convert from get_user_pages() to pin_user_pages().
->>
->> 2. As required by pin_user_pages(), release these pages via
->> put_user_page(). In this case, do so via put_user_pages_dirty_lock().
->>
->> That has the side effect of calling set_page_dirty_lock(), instead
->> of set_page_dirty(). This is probably more accurate.
-> 
-> Maybe more accurate but it doesn't work for mm_iommu_unpin(). As I'm
-> checking mm_iommu_unpin() gets called from RCU callback which is executed
-> interrupt context and you cannot lock pages from such context. So you need
-> to queue work from the RCU callback and then do the real work from the
-> workqueue...
-> 
-> 								Honza
+Hi Michael,
 
-ah yes, fixed locally. (In order to avoid  distracting people during the merge
-window, I won't post any more versions of the series until the merge window is
-over, unless a maintainer tells me that any of these patches are desired for
-5.5.)
+On Thu, Nov 28, 2019 at 7:38 PM Michael Walle <michael@walle.cc> wrote:
+>
+> The LS1028A SoC uses the same interrupt line for adjacent SAIs. Use
+> IRQF_SHARED to be able to use these SAIs simultaneously.
 
-With that, we are back to a one-line diff for this part:
+On i.MX8M SAI5 and SAI6 share the same interrupt number too:
 
-@@ -215,7 +214,7 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
-                 if (mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY)
-                         SetPageDirty(page);
-  
--               put_page(page);
-+               put_user_page(page);
-                 mem->hpas[i] = 0;
-         }
-  }
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-btw, I'm also working on your feedback for patch 17 (mm/gup: track FOLL_PIN pages [1]),
-from a few days earlier, it's not being ignored, I'm just trying to avoid distracting
-people during the merge window.
-
-[1] https://lore.kernel.org/r/20191121093941.GA18190@quack2.suse.cz
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Thanks
