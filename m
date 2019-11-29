@@ -2,111 +2,102 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A2FC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9346DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D243A2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64AE0216F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="F6l+2IHT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I8QMcDwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfK2MQY (ORCPT
+        id S1726768AbfK2MZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 07:16:24 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:65463 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfK2MQY (ORCPT
+        Fri, 29 Nov 2019 07:25:02 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21081 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726215AbfK2MZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 07:16:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575029784; x=1606565784;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=cee/yOjh6ZpBwyeLFaKQzceF1KatF6QwJve14+TGWNg=;
-  b=F6l+2IHTQNhih3lajidzmk/Z4xgZkSjyvJCrNqD6y1i5NoS/Qh6ARgpx
-   FF8gl8pTlRV3vMZtAKUcrD0XNIiL+c98nfriNaKLyLVj5wOuFmqrYzQUU
-   zYPr4CnnXN9vc4qMv3JD1/0xdKU1xacdsB1mYPXaAR7znSDYRBydMraME
-   U=;
-IronPort-SDR: 03H6+KTATpQtNuUJZiHQWwcjgAVizRaKlU/7thzxfNrxwyQyfelQAuODRiV6OHHyFJb6MkjXl+
- LXJ4onVuKF2g==
-X-IronPort-AV: E=Sophos;i="5.69,257,1571702400"; 
-   d="scan'208";a="6854910"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 29 Nov 2019 12:16:22 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id 7713DA2777;
-        Fri, 29 Nov 2019 12:16:20 +0000 (UTC)
-Received: from EX13D32EUC004.ant.amazon.com (10.43.164.121) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 29 Nov 2019 12:16:20 +0000
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13D32EUC004.ant.amazon.com (10.43.164.121) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 29 Nov 2019 12:16:19 +0000
-Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
- EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
- Fri, 29 Nov 2019 12:16:18 +0000
-From:   "Durrant, Paul" <pdurrant@amazon.com>
-To:     Jan Beulich <jbeulich@suse.com>
-CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?Um9nZXIgUGF1IE1vbm7DqQ==?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: RE: [PATCH] xen-blkback: allow module to be cleanly unloaded
-Thread-Topic: [PATCH] xen-blkback: allow module to be cleanly unloaded
-Thread-Index: AQHVpqiPN+OVVFahFEu3tG0tj9ZAZ6eiCq+AgAAFMRA=
-Date:   Fri, 29 Nov 2019 12:16:18 +0000
-Message-ID: <783331c9c731497490f537318fafadd0@EX13D32EUC003.ant.amazon.com>
-References: <20191129113131.1954-1-pdurrant@amazon.com>
- <6d0a90f6-3def-a970-6dca-8d1f3eb66c1c@suse.com>
-In-Reply-To: <6d0a90f6-3def-a970-6dca-8d1f3eb66c1c@suse.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.165.244]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 29 Nov 2019 07:25:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575030301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dRF9j5r9muNuE8Iv0Fr4lQhKRYCXnS9axqA6mDzv1bw=;
+        b=I8QMcDwbnptasY5OTyuCl6SYyMk83MbxKUB2c2sPGB14GbE3hf/EoCTE1UHiDfo3ApgJJV
+        WcGiavP4IoXuRUe8giiWHV3X/0qmTrC7eyz67l+h1oLKiSiJEJRM7sAdEygNwp42rjXrM/
+        SXcBV5OHLC309UZqsBkfLJOcjINNnBg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-415-sgoxaXQMP4mQM1KCcoQ-RA-1; Fri, 29 Nov 2019 07:25:00 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B748780183C;
+        Fri, 29 Nov 2019 12:24:56 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ED9D7600C8;
+        Fri, 29 Nov 2019 12:24:55 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id E808711AB5; Fri, 29 Nov 2019 13:24:54 +0100 (CET)
+Date:   Fri, 29 Nov 2019 13:24:54 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     dri-devel@lists.freedesktop.org, spice-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        Anton Vasilyev <vasilyev@ispras.ru>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Dave Airlie <airlied@redhat.com>,
+        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>
+Subject: Re: [PATCH] drm/qxl: Complete exception handling in qxl_device_init()
+Message-ID: <20191129122454.2xoi43kaowmqppm5@sirius.home.kraxel.org>
+References: <5e5ef9c4-4d85-3c93-cf28-42cfcb5b0649@web.de>
 MIME-Version: 1.0
+In-Reply-To: <5e5ef9c4-4d85-3c93-cf28-42cfcb5b0649@web.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: sgoxaXQMP4mQM1KCcoQ-RA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYW4gQmV1bGljaCA8amJldWxp
-Y2hAc3VzZS5jb20+DQo+IFNlbnQ6IDI5IE5vdmVtYmVyIDIwMTkgMTE6NTYNCj4gVG86IER1cnJh
-bnQsIFBhdWwgPHBkdXJyYW50QGFtYXpvbi5jb20+DQo+IENjOiB4ZW4tZGV2ZWxAbGlzdHMueGVu
-cHJvamVjdC5vcmc7IGxpbnV4LWJsb2NrQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IFJvZ2VyIFBhdSBNb25uw6kgPHJvZ2VyLnBhdUBjaXRyaXguY29t
-PjsgSmVucyBBeGJvZQ0KPiA8YXhib2VAa2VybmVsLmRrPjsgS29ucmFkIFJ6ZXN6dXRlayBXaWxr
-IDxrb25yYWQud2lsa0BvcmFjbGUuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSB4ZW4tYmxr
-YmFjazogYWxsb3cgbW9kdWxlIHRvIGJlIGNsZWFubHkgdW5sb2FkZWQNCj4gDQo+IE9uIDI5LjEx
-LjIwMTkgMTI6MzEsIFBhdWwgRHVycmFudCB3cm90ZToNCj4gPiAtLS0gYS9kcml2ZXJzL2Jsb2Nr
-L3hlbi1ibGtiYWNrL3hlbmJ1cy5jDQo+ID4gKysrIGIvZHJpdmVycy9ibG9jay94ZW4tYmxrYmFj
-ay94ZW5idXMuYw0KPiA+IEBAIC0xNzMsNiArMTczLDggQEAgc3RhdGljIHN0cnVjdCB4ZW5fYmxr
-aWYgKnhlbl9ibGtpZl9hbGxvYyhkb21pZF90DQo+IGRvbWlkKQ0KPiA+ICAJaW5pdF9jb21wbGV0
-aW9uKCZibGtpZi0+ZHJhaW5fY29tcGxldGUpOw0KPiA+ICAJSU5JVF9XT1JLKCZibGtpZi0+ZnJl
-ZV93b3JrLCB4ZW5fYmxraWZfZGVmZXJyZWRfZnJlZSk7DQo+ID4NCj4gPiArCV9fbW9kdWxlX2dl
-dChUSElTX01PRFVMRSk7DQo+ID4gKw0KPiA+ICAJcmV0dXJuIGJsa2lmOw0KPiA+ICB9DQo+ID4N
-Cj4gPiBAQCAtMzIwLDYgKzMyMiw4IEBAIHN0YXRpYyB2b2lkIHhlbl9ibGtpZl9mcmVlKHN0cnVj
-dCB4ZW5fYmxraWYgKmJsa2lmKQ0KPiA+DQo+ID4gIAkvKiBNYWtlIHN1cmUgZXZlcnl0aGluZyBp
-cyBkcmFpbmVkIGJlZm9yZSBzaHV0dGluZyBkb3duICovDQo+ID4gIAlrbWVtX2NhY2hlX2ZyZWUo
-eGVuX2Jsa2lmX2NhY2hlcCwgYmxraWYpOw0KPiA+ICsNCj4gPiArCW1vZHVsZV9wdXQoVEhJU19N
-T0RVTEUpOw0KPiA+ICB9DQo+IA0KPiBJIHJlYWxpemUgdGhlcmUgYXJlIHZhcmlvdXMgZXhhbXBs
-ZSBvZiB0aGlzIGluIHRoZSB0cmVlLCBidXQNCj4gaXNuJ3QgdGhpcyBhIGZsYXdlZCBhcHByb2Fj
-aD8gX19tb2R1bGVfZ2V0KCkgKG5vciBldmVuDQo+IHRyeV9tb2R1bGVfZ2V0KCkpIHdpbGwgcHJl
-dmVudCBhbiB1bmxvYWQgYXR0ZW1wdCBhaGVhZCBvZiBpdA0KPiBnZXR0aW5nIGludm9rZWQsIHdo
-aWxlIGV4ZWN1dGlvbiBpcyBhbHJlYWR5IGluIHRoaXMgbW9kdWxlJ3MNCj4gLnRleHQgc2VjdGlv
-bi4NCg0KR29vZCBwb2ludC4gVGhhdCBkb2VzIGFwcGVhciB0byBiZSBhIHJhY2UuDQoNCj4gSSB0
-aGluayB0aGUgeGVuYnVzIGRyaXZlciBzaG91bGQgZG8gdGhpcw0KPiBiZWZvcmUgY2FsbGluZyAt
-PnByb2JlKCksIGluIGNhc2Ugb2YgaXRzIGZhaWx1cmUsIGFuZCBhZnRlcg0KPiBhIHN1Y2Nlc3Nm
-dWwgY2FsbCB0byAtPnJlbW92ZSgpLg0KPiANCg0KVGhhdCBkb2VzIHNvdW5kIGJldHRlci4gSSds
-bCBzZWUgaWYgSSBjYW4gcGljayB1cCBvdGhlciBvY2N1cnJlbmNlcyAoY2VydGFpbmx5IG5ldGJh
-Y2spIGFuZCBmaXguDQoNCiAgUGF1bA0K
+On Thu, Nov 07, 2019 at 06:18:14PM +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Thu, 7 Nov 2019 18:05:08 +0100
+>=20
+> A coccicheck run provided information like the following.
+>=20
+> drivers/gpu/drm/qxl/qxl_kms.c:295:1-7: ERROR: missing iounmap;
+> ioremap on line 178 and execution via conditional on line 185
+>=20
+> Generated by: scripts/coccinelle/free/iounmap.cocci
+>=20
+> A jump target was specified in an if branch. The corresponding function
+> call did not release the desired system resource then.
+> Thus use the label =E2=80=9Crom_unmap=E2=80=9D instead to fix the excepti=
+on handling
+> for this function implementation.
+>=20
+> Fixes: 5043348a4969ae1661c008efe929abd0d76e3792 ("drm: qxl: Fix error han=
+dling at qxl_device_init")
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+
+Pushed to drm-misc-next.
+
+thanks,
+  Gerd
+
