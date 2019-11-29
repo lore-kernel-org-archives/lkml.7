@@ -2,151 +2,101 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A40C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C236C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DF421736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6085421736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="elg/vqNg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfK2OhO (ORCPT
+        id S1727009AbfK2Oj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:37:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:48610 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfK2OhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:37:13 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CA971FB;
-        Fri, 29 Nov 2019 06:37:13 -0800 (PST)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C2A93F6C4;
-        Fri, 29 Nov 2019 06:37:11 -0800 (PST)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     vincenzo.frascino@arm.com, paulburton@kernel.org, hns@goldelico.com
-Cc:     mips-creator-ci20-dev@googlegroups.com,
-        letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mips: Fix gettimeofday() in the vdso library
-Date:   Fri, 29 Nov 2019 14:36:58 +0000
-Message-Id: <20191129143658.12224-1-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 29 Nov 2019 09:39:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46475 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726902AbfK2Oj5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 09:39:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575038396;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FfyXChrBe1vZ1PcTn0iTJTc7p7Xm2eml7LrBbaxtCas=;
+        b=elg/vqNgJ+rb/wtIyZZ85hW+vYZrqHnSjleBcfJjlNs696glr/7Z5LWjWnSMHPnCtCQFM/
+        dj7UWfAu49NarHZH8UN5YBH5HeFvwaTXN++o99lr+l8DDhhH8Rf+ksb3Gs7qzX7UaQ86oP
+        iQ0+rr19Q4qIj8vgxfnYH8qTh6s3v5w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-frV0228iPLGX0XOTTtzT5g-1; Fri, 29 Nov 2019 09:39:55 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A06A9800D41;
+        Fri, 29 Nov 2019 14:39:53 +0000 (UTC)
+Received: from elisabeth (ovpn-200-40.brq.redhat.com [10.40.200.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 939A4600C8;
+        Fri, 29 Nov 2019 14:39:51 +0000 (UTC)
+Date:   Fri, 29 Nov 2019 15:39:45 +0100
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        davem@davemloft.net
+Subject: Re: [PATCH] selftests: pmtu: use -oneline for ip route list cache
+Message-ID: <20191129153945.03836fea@elisabeth>
+In-Reply-To: <20191128185806.23706-1-cascardo@canonical.com>
+References: <20191128185806.23706-1-cascardo@canonical.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: frV0228iPLGX0XOTTtzT5g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The libc provides a discovery mechanism for vDSO library and its
-symbols. When a symbol is not exposed by the vDSOs the libc falls back
-on the system calls.
+Hi,
 
-With the introduction of the unified vDSO library on mips this behavior
-is not honored anymore by the kernel in the case of gettimeofday().
+On Thu, 28 Nov 2019 15:58:06 -0300
+Thadeu Lima de Souza Cascardo <cascardo@canonical.com> wrote:
 
-The issue has been noticed and reported due to a dhclient failure on the
-CI20 board:
+> Some versions of iproute2 will output more than one line per entry, which
+> will cause the test to fail, like:
+> 
+> TEST: ipv6: list and flush cached exceptions                        [FAIL]
+>   can't list cached exceptions
+> 
+> That happens, for example, with iproute2 4.15.0. When using the -oneline
+> option, this will work just fine:
+> 
+> TEST: ipv6: list and flush cached exceptions                        [ OK ]
+> 
+> This also works just fine with a more recent version of iproute2, like
+> 5.4.0.
+> 
+> For some reason, two lines are printed for the IPv4 test no matter what
+> version of iproute2 is used. Use the same -oneline parameter there instead
+> of counting the lines twice.
 
-root@letux:~# dhclient
-../../../../lib/isc/unix/time.c:200: Operation not permitted
-root@letux:~#
+Thanks, it looks definitely more robust this way.
 
-Restore the original behavior fixing gettimeofday() in the vDSO library.
+Fixes: b964641e9925 ("selftests: pmtu: Make list_flush_ipv6_exception test more demanding")
 
-Cc: Paul Burton <paulburton@kernel.org>
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Testes-by: H. Nikolaus Schaller <hns@goldelico.com> # CI20 with JZ4780
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- arch/mips/include/asm/vdso/gettimeofday.h | 13 -------------
- arch/mips/vdso/vgettimeofday.c            | 20 ++++++++++++++++++++
- 2 files changed, 20 insertions(+), 13 deletions(-)
+> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/include/asm/vdso/gettimeofday.h
-index b08825531e9f..0ae9b4cbc153 100644
---- a/arch/mips/include/asm/vdso/gettimeofday.h
-+++ b/arch/mips/include/asm/vdso/gettimeofday.h
-@@ -26,8 +26,6 @@
- 
- #define __VDSO_USE_SYSCALL		ULLONG_MAX
- 
--#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
--
- static __always_inline long gettimeofday_fallback(
- 				struct __kernel_old_timeval *_tv,
- 				struct timezone *_tz)
-@@ -48,17 +46,6 @@ static __always_inline long gettimeofday_fallback(
- 	return error ? -ret : ret;
- }
- 
--#else
--
--static __always_inline long gettimeofday_fallback(
--				struct __kernel_old_timeval *_tv,
--				struct timezone *_tz)
--{
--	return -1;
--}
--
--#endif
--
- static __always_inline long clock_gettime_fallback(
- 					clockid_t _clkid,
- 					struct __kernel_timespec *_ts)
-diff --git a/arch/mips/vdso/vgettimeofday.c b/arch/mips/vdso/vgettimeofday.c
-index 6ebdc37c89fc..6b83b6376a4b 100644
---- a/arch/mips/vdso/vgettimeofday.c
-+++ b/arch/mips/vdso/vgettimeofday.c
-@@ -17,12 +17,22 @@ int __vdso_clock_gettime(clockid_t clock,
- 	return __cvdso_clock_gettime32(clock, ts);
- }
- 
-+#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
-+
-+/*
-+ * This is behind the ifdef so that we don't provide the symbol when there's no
-+ * possibility of there being a usable clocksource, because there's nothing we
-+ * can do without it. When libc fails the symbol lookup it should fall back on
-+ * the standard syscall path.
-+ */
- int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
- 			struct timezone *tz)
- {
- 	return __cvdso_gettimeofday(tv, tz);
- }
- 
-+#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
-+
- int __vdso_clock_getres(clockid_t clock_id,
- 			struct old_timespec32 *res)
- {
-@@ -43,12 +53,22 @@ int __vdso_clock_gettime(clockid_t clock,
- 	return __cvdso_clock_gettime(clock, ts);
- }
- 
-+#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
-+
-+/*
-+ * This is behind the ifdef so that we don't provide the symbol when there's no
-+ * possibility of there being a usable clocksource, because there's nothing we
-+ * can do without it. When libc fails the symbol lookup it should fall back on
-+ * the standard syscall path.
-+ */
- int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
- 			struct timezone *tz)
- {
- 	return __cvdso_gettimeofday(tv, tz);
- }
- 
-+#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
-+
- int __vdso_clock_getres(clockid_t clock_id,
- 			struct __kernel_timespec *res)
- {
+Acked-by: Stefano Brivio <sbrivio@redhat.com>
+
 -- 
-2.24.0
+Stefano
 
