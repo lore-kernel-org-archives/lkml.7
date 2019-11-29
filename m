@@ -2,138 +2,129 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B493C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 22:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DCCC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 23:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486D92086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 22:52:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WtdYzZSg"
+	by mail.kernel.org (Postfix) with ESMTP id 986C820880
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 23:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfK2Wwe (ORCPT
+        id S1727208AbfK2XBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 17:52:34 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39185 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfK2Wwe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 17:52:34 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a67so8514351oib.6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 14:52:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=KmlKmmT0etYCADZ8Ax0Q+YIHnJREMaeSktPwKEyQ4xc=;
-        b=WtdYzZSgyrqAOpVsdcCIvWuYbBSyTTULLDQVnIkGGUHFQe0oUsBWKbPPX12pH8HFrP
-         9qkgo1C/ZjmkHfu8S+QGtpuv4NstP8x817Jbtk2NerhHWADQoadM+WGfTieOWLeUsUdk
-         7dMW3jFlprkPNDcV+pUE39AZz1DyIYpdD3b2a5nCGm1YSJls02o4fy+hycoFnVuH//gR
-         8Se4kq++Ww+JE/Z00lAjlZKlMIYQp+wLv2vYJToKlVZN32XPSsAR0Dz1MhmVx/cdqs3y
-         SyaUJBY+xZd0Wg4xucVSjgyM2X/SxDqBrflfFcyjkoinXelghnfz9Q9usiltz+oIBIZQ
-         s4yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=KmlKmmT0etYCADZ8Ax0Q+YIHnJREMaeSktPwKEyQ4xc=;
-        b=ACScyy7CN5tPgwU53eqxyg0bd6If85dxlET9O+5hzYV02thh1ON77Z7Wwt2k04SrSV
-         vE8oBpjJyNtHDIXaHFBkearqsUQuAl2B81c8f6cIFlmCtqH6RGEHuDE8HdvhdH6UHXgY
-         WH4Lk/o7rGv7AmKiFhJngmnKjTEEuIEoe0Pl8muG2eFxquWXNuwDk96L9VrsHhZsJVmd
-         iPEsQ0pfwXlo34QrrwfNRq5b1veQ3NjPSEDtMYhUC/R/3G55fi+xjRwiLSSRy/TtCUh/
-         RJX97BtD0FBqvRgjOJKq7ZoghHSpWRFqJ+zy78OR2nXr6k2SjUycU2jeHdQnoS3OGvpX
-         BIxg==
-X-Gm-Message-State: APjAAAWPTgTlIBVRefo6VZrbzoQdUYBhnujoLbvVWwn3PKqFvt0cBV1s
-        0JwbehOkb6dJd3e0cuAz9NnaEgOAh+5KYIicoFI7U72M
-X-Google-Smtp-Source: APXvYqzJy3DqTapxe8UYY5jPQ08GcLUBwAM1mPKA/eMIQi7diLc4se/ViHwxhxuf11jt6e16ow7AFdYZ6ygLCh3jauM=
-X-Received: by 2002:a05:6808:3ab:: with SMTP id n11mr2589367oie.5.1575067952824;
- Fri, 29 Nov 2019 14:52:32 -0800 (PST)
+        Fri, 29 Nov 2019 18:01:54 -0500
+Received: from mga05.intel.com ([192.55.52.43]:5392 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727073AbfK2XBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 18:01:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 15:01:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,259,1571727600"; 
+   d="scan'208";a="212413270"
+Received: from gamanzi-mobl4.ger.corp.intel.com (HELO localhost) ([10.252.3.126])
+  by orsmga006.jf.intel.com with ESMTP; 29 Nov 2019 15:01:48 -0800
+Date:   Sat, 30 Nov 2019 01:01:46 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     "Zhao, Shirley" <shirley.zhao@intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        'Mauro Carvalho Chehab' <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: Re: One question about trusted key of keyring in Linux kernel.
+Message-ID: <20191129230146.GB15726@linux.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+ <1573659978.17949.83.camel@linux.ibm.com>
+ <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+ <1574796456.4793.248.camel@linux.ibm.com>
 MIME-Version: 1.0
-From:   Radu Rendec <radu.rendec@gmail.com>
-Date:   Fri, 29 Nov 2019 17:52:22 -0500
-Message-ID: <CAD5jUk_E516CvKGUWcfZ7chRjv=8fgSBHppNX7YTpSLf0wk_4Q@mail.gmail.com>
-Subject: RCU stall on 4.9.191/CONFIG_PREEMPT, single CPU
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1574796456.4793.248.camel@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Everyone,
+On Tue, Nov 26, 2019 at 02:27:36PM -0500, Mimi Zohar wrote:
+> On Tue, 2019-11-26 at 07:32 +0000, Zhao, Shirley wrote:
+> > Thanks for your feedback, Mimi. 
+> > But the document of dracut can't solve my problem. 
+> > 
+> > I did more test these days and try to descript my question in more detail. 
+> > 
+> > In my scenario, the trusted key will be sealed into TPM with PCR policy. 
+> > And there are some related options in manual like 
+> >        hash=         hash algorithm name as a string. For TPM 1.x the only
+> >                      allowed value is sha1. For TPM 2.x the allowed values
+> >                      are sha1, sha256, sha384, sha512 and sm3-256.
+> >        policydigest= digest for the authorization policy. must be calculated
+> >                      with the same hash algorithm as specified by the 'hash='
+> >                      option.
+> >        policyhandle= handle to an authorization policy session that defines the
+> >                      same policy and with the same hash algorithm as was used to
+> >                      seal the key. 
+> > 
+> > Here is my test step. 
+> > Firstly, the pcr policy is generated as below: 
+> > $ tpm2_createpolicy --policy-pcr --pcr-list sha256:7 --policy pcr7_bin.policy > pcr7.policy
+> > 
+> > Pcr7.policy is the ascii hex of policy:
+> > $ cat pcr7.policy
+> > 321fbd28b60fcc23017d501b133bd5dbf2889814588e8a23510fe10105cb2cc9
+> > 
+> > Then generate the trusted key and configure policydigest and get the key ID: 
+> > $ keyctl add trusted kmk "new 32 keyhandle=0x81000001 hash=sha256 policydigest=`cat pcr7.policy`" @u
+> > 874117045
+> > 
+> > Save the trusted key. 
+> > $ keyctl pipe 874117045 > kmk.blob
+> > 
+> > Reboot and load the key. 
+> > Start a auth session to generate the policy:
+> > $ tpm2_startauthsession -S session.ctx
+> > session-handle: 0x3000000
+> > $ tpm2_pcrlist -L sha256:7 -o pcr7.sha256
+> > $ tpm2_policypcr -S session.ctx -L sha256:7 -F pcr7.sha256 -f pcr7.policy
+> > policy-digest: 0x321FBD28B60FCC23017D501B133BD5DBF2889814588E8A23510FE10105CB2CC9
+> > 
+> > Input the policy handle to load trusted key:
+> > $ keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001 policyhandle=0x3000000" @u
+> > add_key: Operation not permitted
+> > 
+> > The error should be policy check failed, because I use TPM command to unseal directly with error of policy check failed. 
+> > $ tpm2_unseal -c 0x81000001 -L sha256:7
+> > ERROR on line: "81" in file: "./lib/log.h": Tss2_Sys_Unseal(0x99D) - tpm:session(1):a policy check failed
+> > ERROR on line: "213" in file: "tools/tpm2_unseal.c": Unseal failed!
+> > ERROR on line: "166" in file: "tools/tpm2_tool.c": Unable to run tpm2_unseal
+> > 
+> > So my question is:
+> > 1. How to use the option, policydigest, policyhandle?? Is there any example? 
+> > 2. What's wrong with my test step? 
+> 
+> When reporting a problem please state which kernel is experiencing
+> this problem.  Recently there was a trusted key regression.  Refer to
+> commit e13cd21ffd50 "tpm: Wrap the buffer from the caller to tpm_buf
+> in tpm_send()" for the details.
+> 
+> Before delving into this particular problem, first please make sure
+> you are able to create, save, remove, and then reload a trusted key
+> not sealed to a PCR.
 
-I'm experiencing what appears to be a complete system freeze on a single
-CPU embedded system (PowerPC, MPC8378) running Linux 4.9.191 with
-CONFIG_PREEMPT enabled.
+Please re-test with rc1 when available.
 
-Enabling all lockup detection in the kernel config revealed RCU stalls,
-detected by rcu_preempt (sample included below). These occur every 30
-seconds, give or take.
-
-At that point the network stack is hosed (no replies to ARP requests).
-Softirqs seem to be hosed as well - I added a test module that logs a
-message every 0.5 seconds from a timer callback and, once the "freeze"
-occurs, these messages are never printed.
-
-I simply do not understand the RCU and scheduler implementation well
-enough to figure this out on my own, so any idea or suggestion would be
-helpful.
-
-Looking at Documentation/RCU/stallwarn.txt, I found this among the
-potential causes for an RCU stall:
-
-    A CPU-bound real-time task in a CONFIG_PREEMPT kernel, which might
-    happen to preempt a low-priority task in the middle of an RCU
-    read-side critical section.   This is especially damaging if
-    that low-priority task is not permitted to run on any other CPU,
-    in which case the next RCU grace period can never complete
-
-In my case all tasks are CPU-bound, simply because there is only one
-CPU. And yes, I do have realtime tasks (many of them), so any of them
-can potentially preempt a low-priority task in the middle of an RCU read
-critical section. Does that mean it's a bad idea to run a fully
-preemptible kernel on a single CPU? If that were the case, I would
-expect to see this kind of problems much sooner/more often, but they are
-only triggered by a very specific activity of the application that runs
-on top.
-
-Thanks,
-Radu Rendec
-
-[  902.232175] INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  902.237847]  (detected by 0, t=21002 jiffies, g=8316, c=8315, q=210)
-[  902.244203] All QSes seen, last rcu_preempt kthread activity 21002
-(602030-581028), jiffies_till_next_fqs=3, root ->qsmask 0x0
-[  902.255586] backupRestore   R  running task        0  1525   1254 0x00000000
-[  902.262633] Call Trace:
-[  902.265093] [9ac0fc60] [8005b2f4] rcu_check_callbacks+0x848/0x860
-(unreliable)
-[  902.272319] [9ac0fcd0] [8005e878] update_process_times+0x30/0x60
-[  902.278328] [9ac0fce0] [8007046c] tick_sched_timer+0x58/0xb4
-[  902.283985] [9ac0fd10] [8005f844]
-__hrtimer_run_queues.constprop.34+0x100/0x18c
-[  902.291291] [9ac0fd50] [8005fae0] hrtimer_interrupt+0xc0/0x290
-[  902.297122] [9ac0fda0] [8000a3c8] __timer_interrupt+0x15c/0x20c
-[  902.303038] [9ac0fdb0] [8000a610] timer_interrupt+0x9c/0xc8
-[  902.308614] [9ac0fdd0] [8000f678] ret_from_except+0x0/0x14
-[  902.314106] --- interrupt: 901 at timespec64_add_safe+0x108/0x12c
-[  902.314106]     LR = poll_select_set_timeout+0x94/0x110
-[  902.325404] [9ac0fe90] [111294e8] 0x111294e8 (unreliable)
-[  902.330804] [9ac0feb0] [800e8a1c] poll_select_set_timeout+0x50/0x110
-[  902.337155] [9ac0ff10] [800e9d70] SyS_poll+0x68/0x114
-[  902.342205] [9ac0ff40] [8000ef6c] ret_from_syscall+0x0/0x38
-[  902.347773] --- interrupt: c01 at 0xe5855f8
-[  902.347773]     LR = 0xe5855e0
-[  902.354994] rcu_preempt kthread starved for 21002 jiffies! g8316
-c8315 f0x2 RCU_GP_WAIT_FQS(3) ->state=0x0
-[  902.364638] rcu_preempt     R  running task        0     7      2 0x00000800
-[  902.371686] Call Trace:
-[  902.374126] [9f043d00] [9ac08080] 0x9ac08080 (unreliable)
-[  902.379526] [9f043dc0] [80415ca4] __schedule+0x278/0x490
-[  902.384835] [9f043e10] [8041608c] schedule+0x3c/0xac
-[  902.389799] [9f043e20] [80418e9c] schedule_timeout+0x128/0x240
-[  902.395630] [9f043e60] [8005a0d4] rcu_gp_kthread+0x3dc/0xa6c
-[  902.401289] [9f043ef0] [80038b7c] kthread+0xbc/0xd0
-[  902.406164] [9f043f40] [8000f094] ret_from_kernel_thread+0x5c/0x64
+/Jarkko
