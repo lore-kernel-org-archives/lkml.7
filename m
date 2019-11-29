@@ -4,68 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680D2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97389C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDAB215A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F08521774
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfK2JOT (ORCPT
+        id S1726793AbfK2JWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:14:19 -0500
-Received: from olimex.com ([184.105.72.32]:35326 "EHLO olimex.com"
+        Fri, 29 Nov 2019 04:22:51 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:55190 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbfK2JOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 04:14:19 -0500
-Received: from localhost.localdomain ([94.155.250.134])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 01:14:09 -0800
-From:   Stefan Mavrodiev <stefan@olimex.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Cc:     linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH 3/3] arm64: dts: allwinner: a64: olinuxino: Fix SDIO supply regulator
-Date:   Fri, 29 Nov 2019 11:13:36 +0200
-Message-Id: <20191129091336.13104-4-stefan@olimex.com>
+        id S1725892AbfK2JWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 04:22:51 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 40F9C1A0407;
+        Fri, 29 Nov 2019 10:22:49 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 81E491A03FE;
+        Fri, 29 Nov 2019 10:22:45 +0100 (CET)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8DAA2402A7;
+        Fri, 29 Nov 2019 17:22:40 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+Subject: [v6,1/3] dt-bindings: i2c: support property idle-state
+Date:   Fri, 29 Nov 2019 17:22:20 +0800
+Message-Id: <20191129092222.2706-1-biwen.li@nxp.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191129091336.13104-1-stefan@olimex.com>
-References: <20191129091336.13104-1-stefan@olimex.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A64-OLinuXino uses DCDC1 (VCC-IO) for MMC1 supply. In the dts
-ALDO2 is set, which is VCC-PL. Since DCDC1 is always present, the boards
-are working without a problem.
+This supports property idle-state
 
-THis pacth sets the correct regulator.
-
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Change in v6:
+	- none
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index ad3559c576dd..869bb146a9ff 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -140,7 +140,7 @@
- &mmc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	vmmc-supply = <&reg_aldo2>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	vqmmc-supply = <&reg_dldo4>;
- 	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
+Change in v5:
+	- none
+
+Change in v4:
+	- none
+
+Change in v3:
+	- update subject and description
+	- add some information for property idle-state
+
+Change in v2:
+	- update subject and description
+	- add property idle-state
+
+ Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+index 30ac6a60f041..7abda506b828 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+@@ -25,6 +25,8 @@ Required Properties:
+ Optional Properties:
+ 
+   - reset-gpios: Reference to the GPIO connected to the reset input.
++  - idle-state: if present, overrides i2c-mux-idle-disconnect,
++    Please refer to Documentation/devicetree/bindings/mux/mux-controller.txt
+   - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
+     children in idle state. This is necessary for example, if there are several
+     multiplexers on the bus and the devices behind them use same I2C addresses.
 -- 
 2.17.1
 
