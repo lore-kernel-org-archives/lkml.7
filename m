@@ -2,112 +2,149 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B23DC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F286C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2D3217BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4B9206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfK2KGo (ORCPT
+        id S1726915AbfK2KHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 05:06:44 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35702 "EHLO mx1.suse.de"
+        Fri, 29 Nov 2019 05:07:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36022 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725892AbfK2KGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 05:06:44 -0500
+        id S1725892AbfK2KHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 05:07:11 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D7179B1AD;
-        Fri, 29 Nov 2019 10:06:41 +0000 (UTC)
-Date:   Fri, 29 Nov 2019 11:06:39 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH v2 1/3] sched/numa: advanced per-cgroup numa statistic
-Message-ID: <20191129100639.GI831@blackbody.suse.cz>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <9354ffe8-81ba-9e76-e0b3-222bc942b3fc@linux.alibaba.com>
- <20191127101932.GN28938@suse.de>
- <3ff78d18-fa29-13f3-81e5-a05537a2e344@linux.alibaba.com>
- <20191128123924.GD831@blackbody.suse.cz>
- <e008fef6-06d2-28d3-f4d3-229f4b181b4f@linux.alibaba.com>
- <20191128155818.GE831@blackbody.suse.cz>
- <b97ce489-c5c5-0670-a553-0e45d593de2c@linux.alibaba.com>
- <f9da5ce8-519e-62b4-36f7-8e5bbf0485fd@linux.alibaba.com>
+        by mx1.suse.de (Postfix) with ESMTP id C1F82B430;
+        Fri, 29 Nov 2019 10:07:08 +0000 (UTC)
+Subject: Re: [PATCH 1/3] blk-mq: optimise rq sort function
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1574974577.git.asml.silence@gmail.com>
+ <a21e91fff1abe201ebbc010d596b034f7b5123de.1574974577.git.asml.silence@gmail.com>
+ <0124910c-4dcf-2143-0ec6-32dad123067c@suse.com>
+ <7b1a16db-287f-bba0-fca0-cc7f85f69ec6@gmail.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ad9caf39-f935-6619-5ed0-1939690b94a1@suse.com>
+Date:   Fri, 29 Nov 2019 12:07:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tctmm6wHVGT/P6vA"
-Content-Disposition: inline
-In-Reply-To: <f9da5ce8-519e-62b4-36f7-8e5bbf0485fd@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7b1a16db-287f-bba0-fca0-cc7f85f69ec6@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---tctmm6wHVGT/P6vA
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 29, 2019 at 01:19:33PM +0800, =E7=8E=8B=E8=B4=87 <yun.wang@linu=
-x.alibaba.com> wrote:
-> I did some research regarding cpuacct, and find cpuacct_charge() is a good
-> place to do hierarchical update, however, what we get there is the execut=
-ion
-> time delta since last update_curr().
-I wouldn't extend cpuacct, I'd like to look into using the rstat
-mechanism for per-CPU runtime collection. (Most certainly I won't get
-down to this until mid December though.)
+On 29.11.19 г. 11:45 ч., Pavel Begunkov wrote:
+> On 11/29/2019 11:28 AM, Nikolay Borisov wrote:
+>> On 28.11.19 г. 23:11 ч., Pavel Begunkov wrote:
+>>> Check "!=" in multi-layer comparisons. The same memory usage, fewer
+>>> instructions, and 2 from 4 jumps are replaced with SETcc.
+>>>
+>>> Note, that list_sort() doesn't differ 0 and <0.
+>>>
+>>> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+>>
+>> My first reaction was this is wrong since you no longer return negative
+>> values. But then I looked into list_sort/merge and this branch
+>> 'if (cmp(priv, a, b) <= 0) {' clearly shows this is correct.
+> 
+> Yes, that's why there is a note in the patch description. The same is
+> told by list_sort() description.
 
-> I'm afraid we can't just do local/remote accumulation since the sample pe=
-riod
-> now is changing, still have to accumulate the execution time into locality
-> regions.
-My idea was to decouple time from the locality counters completely. It'd
-be up to the monitoring application to normalize differences wrt
-sampling rate (and handle wrap arounds).
+And of course I have missed your remark in the changelog :)
 
-
-Michal
-
---tctmm6wHVGT/P6vA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl3g7aoACgkQia1+riC5
-qSj6ihAAjGL+AfasV1mBclWNhpl6+ocgSIbO11onVPt4IbQHizY925prKB3WfEqc
-n/rv5OykoWSLCtZsSQAzqN7th9XYzqaALVJ7/CDfQP4QBIlPxBQ/nSQvE1mg5f5e
-Dyon80A94xAxWScMCXhpL1BgmNJH9PxgI/1rVq0RuAn2OE5XN/95xzesZh89SWLa
-A8iJ/4rvUwF7aQZLpG75U03Kejo16aBPcaSh8M9dqCPTa9R0/iXMc20bzVBhpqZq
-GvT+V5NjgOmM4mxwa1atcOXdsb5w+J3NRTxl4fl8rwr01WTwR6OiU2ZTV3+OMqwe
-DK0UaLdwKc9X7uzioPiVZlICOz8lBccd19ZvmMUVPgZdwIfXLT52S30dp38gq6vd
-RVOGf68MWI0swndpgnVcSHpSyIgMOvQBdWaA0Yv8GkfIcADwCceeFQ0joyhm+SbU
-wnhfEB6/gwWn5CU9bhhNJF2yILxxmQYfjE4hgkMg4fvdddisAvha7AVDYS5dXadW
-xSnvCXgI1gRXm4SmF8SmuLDVsLdmFJf2OIjKBbOZ2lY1yxnO66bc/cSKQZlYGyVg
-7cFZDhjUCKPEys1sn7SwV4KGpa9AQVBL18D6AvAAwnWRxJxPdSJP2lKB0u4sIDJQ
-kqGtI30Ny4C8ClB1XqB1YAMHYjObuuGfBG0NtCLap6bOxI0hdc0=
-=+0n3
------END PGP SIGNATURE-----
-
---tctmm6wHVGT/P6vA--
+> 
+>>
+>> So :
+>>
+>> Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+> 
+> Thanks for taking a look
+> 
+>>
+>>> ---
+>>>  block/blk-mq.c | 12 ++++--------
+>>>  1 file changed, 4 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/block/blk-mq.c b/block/blk-mq.c
+>>> index 323c9cb28066..f32a3cfdd34e 100644
+>>> --- a/block/blk-mq.c
+>>> +++ b/block/blk-mq.c
+>>> @@ -1668,14 +1668,10 @@ static int plug_rq_cmp(void *priv, struct list_head *a, struct list_head *b)
+>>>  	struct request *rqa = container_of(a, struct request, queuelist);
+>>>  	struct request *rqb = container_of(b, struct request, queuelist);
+>>>  
+>>> -	if (rqa->mq_ctx < rqb->mq_ctx)
+>>> -		return -1;
+>>> -	else if (rqa->mq_ctx > rqb->mq_ctx)
+>>> -		return 1;
+>>> -	else if (rqa->mq_hctx < rqb->mq_hctx)
+>>> -		return -1;
+>>> -	else if (rqa->mq_hctx > rqb->mq_hctx)
+>>> -		return 1;
+>>> +	if (rqa->mq_ctx != rqb->mq_ctx)
+>>> +		return rqa->mq_ctx > rqb->mq_ctx;
+>>> +	if (rqa->mq_hctx != rqb->mq_hctx)
+>>> +		return rqa->mq_hctx > rqb->mq_hctx;
+>>>  
+>>>  	return blk_rq_pos(rqa) > blk_rq_pos(rqb);
+>>>  }
+>>>
+> 
