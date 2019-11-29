@@ -2,98 +2,130 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C005C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80013C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFAE02086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E0221736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:41:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ark2WRET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfK2NeF (ORCPT
+        id S1726824AbfK2NlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:34:05 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2141 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726785AbfK2NeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:34:05 -0500
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id AF5A731C83F1C5CE58D3;
-        Fri, 29 Nov 2019 13:34:04 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 29 Nov 2019 13:34:04 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 29 Nov
- 2019 13:34:04 +0000
-Subject: Re: [Patch v2 3/3] iommu: avoid taking iova_rbtree_lock twice
-To:     Cong Wang <xiyou.wangcong@gmail.com>,
-        <iommu@lists.linux-foundation.org>
-CC:     <linux-kernel@vger.kernel.org>
-References: <20191129004855.18506-1-xiyou.wangcong@gmail.com>
- <20191129004855.18506-4-xiyou.wangcong@gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <dea0de02-cedc-7817-5b04-3888e0e86812@huawei.com>
-Date:   Fri, 29 Nov 2019 13:34:03 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 29 Nov 2019 08:41:06 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49443 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726741AbfK2NlG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 08:41:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575034865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/3X8Mo2LacIErqf895aJZHB4pRGhzQ2jkuaJinfm0VE=;
+        b=ark2WRET03tj05EtuGbZ6g1M9NUvaZgvfL4O0ZxteUqFKVBdcuD9T/lE3xUV5GdAI9JN7v
+        BBNczNoUIAZPs4DuPODtmLu8claf6T87t+ttEnvha206fk043hoRlZkRNfrak3xy22ZPbk
+        v0eeoIeslNq8aXQcfO5LDWZhNpeibL8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-u8blKExWNIOKM8tb8tiPpw-1; Fri, 29 Nov 2019 08:41:00 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9D51DB23;
+        Fri, 29 Nov 2019 13:40:58 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B44FA60BF1;
+        Fri, 29 Nov 2019 13:40:56 +0000 (UTC)
+Date:   Fri, 29 Nov 2019 14:40:56 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 04/15] perf tools: Add map_groups to 'struct
+ addr_location'
+Message-ID: <20191129134056.GE14169@krava>
+References: <20191112183757.28660-1-acme@kernel.org>
+ <20191112183757.28660-5-acme@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191129004855.18506-4-xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191112183757.28660-5-acme@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: u8blKExWNIOKM8tb8tiPpw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/11/2019 00:48, Cong Wang wrote:
-> Both find_iova() and __free_iova() take iova_rbtree_lock,
-> there is no reason to take and release it twice inside
-> free_iova().
-> 
-> Fold them into the critical section by calling the unlock
-> versions instead.
-
-Since generally the iova would be non-NULL, this seems a reasonable 
-change (which could be mentioned in the commit log)
-
-John
-
-> 
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+On Tue, Nov 12, 2019 at 03:37:46PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> From there we can get al->mg->machine, so replace that field with the
+> more useful 'struct map_groups' that for now we're obtaining from
+> al->map->groups, and that is one thing getting into the way of maps
+> being fully shareable.
+>=20
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lkml.kernel.org/n/tip-4qdducrm32tgrjupcp0kjh1e@git.kernel.o=
+rg
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
->   drivers/iommu/iova.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-> index 184d4c0e20b5..f46f8f794678 100644
-> --- a/drivers/iommu/iova.c
-> +++ b/drivers/iommu/iova.c
-> @@ -390,10 +390,14 @@ EXPORT_SYMBOL_GPL(__free_iova);
->   void
->   free_iova(struct iova_domain *iovad, unsigned long pfn)
->   {
-> -	struct iova *iova = find_iova(iovad, pfn);
-> +	unsigned long flags;
-> +	struct iova *iova;
->   
-> +	spin_lock_irqsave(&iovad->iova_rbtree_lock, flags);
-> +	iova = private_find_iova(iovad, pfn);
->   	if (iova)
-> -		__free_iova(iovad, iova);
-> +		private_free_iova(iovad, iova);
-> +	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
->   
->   }
->   EXPORT_SYMBOL_GPL(free_iova);
-> 
+>  tools/perf/util/callchain.c                          |  6 +++---
+>  tools/perf/util/db-export.c                          | 12 ++++++------
+>  tools/perf/util/event.c                              |  6 +++---
+>  .../perf/util/scripting-engines/trace-event-python.c |  2 +-
+>  tools/perf/util/symbol.h                             |  2 +-
+>  5 files changed, 14 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index 9a9b56ed3f0a..89faa644b0bc 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -1119,8 +1119,8 @@ int fill_callchain_info(struct addr_location *al, s=
+truct callchain_cursor_node *
+>  =09=09=09goto out;
+>  =09}
+> =20
+> -=09if (al->map->groups =3D=3D &al->machine->kmaps) {
+> -=09=09if (machine__is_host(al->machine)) {
+> +=09if (al->mg =3D=3D &al->mg->machine->kmaps) {
+
+heya, I'm getting segfault because of this change
+
+perf record --call-graph dwarf ./ex
+
+=09(gdb) r report --stdio
+=09Program received signal SIGSEGV, Segmentation fault.
+=09fill_callchain_info (al=3D0x7fffffffa1b0, node=3D0xcd2bd0, hide_unresolv=
+ed=3Dfalse) at util/callchain.c:1122
+=091122            if (al->maps =3D=3D &al->maps->machine->kmaps) {
+=09(gdb) p al->maps
+=09$1 =3D (struct maps *) 0x0
+
+I wish all those map changes would go through some review,
+I have no idea how the code works now ;-)
+
+thanks,
+jirka
 
