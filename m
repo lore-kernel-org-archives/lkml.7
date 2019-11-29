@@ -1,135 +1,89 @@
-Return-Path: <SRS0=QHyQ=ZU=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29980C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 23:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88068C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 00:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E595321741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Nov 2019 23:59:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="SzvDGgqD"
+	by mail.kernel.org (Postfix) with ESMTP id 5384A21781
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 00:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574985697;
+	bh=DDrt+6WXuS97tQYR/4Q/h8R5qJM3HjTiZZLEeud8OIA=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=rK9EFmq6jeYh8ckhrT8x3XIkZ3QhSrXLxCMBApE7HVFq/f19qphLjOeu8JB/JO7/m
+	 +wyabA2zVlKfEu7+f78RJNiJAzpTOLupEznS7q568BJ5P9IA9u7nqmNXAjL+xbZhtm
+	 YnrRVK4qX2ojZH7w0bZhcMXcd5rrA2GFG4obDhgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfK1X7t (ORCPT
+        id S1726722AbfK2ABg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 18:59:49 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42125 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfK1X7s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 18:59:48 -0500
-Received: by mail-qt1-f196.google.com with SMTP id j5so5536785qtq.9;
-        Thu, 28 Nov 2019 15:59:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hQwL4adBgXITc3PkYkwHn1sVmJQxAI5c44/ZAMQ909k=;
-        b=SzvDGgqDbhXRLCNx2yAvCitr/MeJnBLqu0VZWKbEKIIM6e/tradTFioO2kNcvyLsDS
-         N1GjfKiKATmESqzIG7MV0zf+Ge17s3lu8rITgQzXVgMQDvZ7/L80K/eSJeNsAmbp7g6C
-         Rp5dEWUc98LpgXd+0f6qCXoBTHbIhl2BKWCIo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hQwL4adBgXITc3PkYkwHn1sVmJQxAI5c44/ZAMQ909k=;
-        b=dt318LtLLdBMtoneHQtMnKSbW+2Kpt+ioUQOtfRRvH1Bae0otyKNPD+kFhgOGNVymk
-         wgnJsFbtNPHJfH+KqGg0BbWqDJzzoJUpthATYKDZ03GaAEKENm2RekZXAZvo3JtYhUPh
-         dkge/z588b9oTr69wSev/nz9fQmQ78u5E50PCImiP3w/5aTvgKgmcePS1FzEwcPg/Vb4
-         mssbDua1P7rwP4s3rGbpW18aZFDq+7u7ftMfhXz3Cqw/vcPE7AnonIzrRDGLQdx6sqep
-         g5LobTXEjrd4NHNuJ/5tE3JmobM3iLZHRlmbaqZzIvra+7qmAKSMm7G/pFkNHlfxAHji
-         0/Fg==
-X-Gm-Message-State: APjAAAWIuzw5be8bS/naqRqw6OCjP0vk92Kxlb8oCXN9SAzciqyyONfc
-        VpmcwUlTyrkIA6Rc1SSlOuTePqvSu3k5hOnHZRg=
-X-Google-Smtp-Source: APXvYqzXePwMmNs55hixBu4+IfrZ4gkETYPVrExEHD2UWD0h2FOIELUjUmdNdLDG9KQCXq8x8FQZdxVZh7rv0QNJ1Yc=
-X-Received: by 2002:ac8:7292:: with SMTP id v18mr1945327qto.169.1574985585624;
- Thu, 28 Nov 2019 15:59:45 -0800 (PST)
+        Thu, 28 Nov 2019 19:01:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbfK2ABg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 19:01:36 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41CE821774;
+        Fri, 29 Nov 2019 00:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574985695;
+        bh=DDrt+6WXuS97tQYR/4Q/h8R5qJM3HjTiZZLEeud8OIA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WnFb/UvEIC5pf6Fush02BNm4BqdJAh4xRlWSJsianHPHMF2WklxF2Wz4y7o5eBaBs
+         mrHkfP3Fw0dmGgpdNVS2lrrD0sP4+WM/bcqqIt4Qe6a0GCwY7sZ0PwMWMfdtNvfnEc
+         mJ9PStRnPDY7jkkcZ4vG4U/3pL4AQON6JCOOsJWk=
+Subject: Re: [PATCH 4.14 000/211] 4.14.157-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191127203049.431810767@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <f88055c6-f0cf-fa83-c2a9-69f7e364b0b5@kernel.org>
+Date:   Thu, 28 Nov 2019 17:01:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <156950767876.30879.17024491763471689960.stgit@warthog.procyon.org.uk>
- <f34aaf61-955a-7867-ef93-f22d3d8732c3@cogentembedded.com> <CA+EcR22=7F7X-9qYXb94dAp6w0_3FoKJPMRhFht+VWgKonoing@mail.gmail.com>
- <2758feea-8d6e-c690-5cac-d42213f2024b@huawei.com>
-In-Reply-To: <2758feea-8d6e-c690-5cac-d42213f2024b@huawei.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 28 Nov 2019 23:59:33 +0000
-Message-ID: <CACPK8Xcv=sm94jA7+g144TMUpy=t=0juKochCvkb2AcG9e-u-g@mail.gmail.com>
-Subject: Re: [PATCH] jffs2: Fix mounting under new mount API
-To:     Hou Tao <houtao1@huawei.com>
-Cc:     Han Xu <xhnjupt@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        viro@zeniv.linux.org.uk,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191127203049.431810767@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 at 12:05, Hou Tao <houtao1@huawei.com> wrote:
->
-> Hi,
->
-> On 2019/11/14 4:38, Han Xu wrote:
-> > Tested the JFFS2 on 5.4 kernel as the instruction said, still got some
-> > errors, any ideas?
-> >
->
-> >
-> > With the patch,
-> >
-> > root@imx8mmevk:~# cat /proc/mtd
-> > dev:    size   erasesize  name
-> > mtd0: 00400000 00020000 "mtdram test device"
-> > mtd1: 04000000 00020000 "5d120000.spi"
-> > root@imx8mmevk:~# mtd_debug info /dev/mtd0
-> > mtd.type = MTD_RAM
-> > mtd.flags = MTD_CAP_RAM
-> > mtd.size = 4194304 (4M)
-> > mtd.erasesize = 131072 (128K)
-> > mtd.writesize = 1
-> > mtd.oobsize = 0
-> > regions = 0
-> >
-> > root@imx8mmevk:~# flash_erase /dev/mtd0 0 0
-> > Erasing 128 Kibyte @ 3e0000 -- 100 % complete
-> > root@imx8mmevk:~# mount -t jffs2 /dev/mtdblock0 test_dir/
-> > root@imx8mmevk:~# mount
-> > /dev/mtdblock0 on /home/root/test_dir type jffs2 (rw,relatime)
-> >
-> > BUT, it's not writable.
->
-> You should revert the following commit to make it work:
->
-> commit f2538f999345405f7d2e1194c0c8efa4e11f7b3a
-> Author: Jia-Ju Bai <baijiaju1990@gmail.com>
-> Date:   Wed Jul 24 10:46:58 2019 +0800
->
->     jffs2: Fix possible null-pointer dereferences in jffs2_add_frag_to_fragtree()
->
-> The revert needs to get into v5.4. Maybe Richard has forget about it ?
+On 11/27/19 1:28 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.157 release.
+> There are 211 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.157-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-I hit this today. The error I saw was:
+rc2 doesn't boot. I am seeing a different panic. I didn't get a chance
+to bisect yet.
 
-[    4.975868] jffs2: error: (77) jffs2_build_inode_fragtree: Add node
-to tree failed -22
-[    4.983923] jffs2: error: (77) jffs2_do_read_inode_internal: Failed
-to build final fragtree for inode #5377: error -22
-[    4.994709] jffs2: Returned error for crccheck of ino #5377. Expect
-badness...
-
-Reverting the f2538f999345 commit fixed things.
-
-Is the revert queued for stable?
-
-Cheers,
-
-Joel
+thanks,
+-- Shuah
