@@ -2,151 +2,114 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AF4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F58C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416BD217BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ECF9217AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:04:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LtOv8jPC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfK2KDB (ORCPT
+        id S1726857AbfK2KEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 05:03:01 -0500
-Received: from mga09.intel.com ([134.134.136.24]:43356 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726881AbfK2KC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 05:02:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 02:02:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="217758797"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Nov 2019 02:02:58 -0800
-Received: from [10.125.252.110] (abudanko-mobl.ccr.corp.intel.com [10.125.252.110])
-        by linux.intel.com (Postfix) with ESMTP id D614F5802E4;
-        Fri, 29 Nov 2019 02:02:55 -0800 (PST)
-Subject: [PATCH v3 1/3] tools bitmap: implement bitmap_equal() operation at
- bitmap API
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <908dbe98-7d8d-0ec1-d4ae-242f3e104979@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <e6e9a088-7421-a6fc-8024-2c30e1c54129@linux.intel.com>
-Date:   Fri, 29 Nov 2019 13:02:54 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 29 Nov 2019 05:04:36 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39568 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfK2KEf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 05:04:35 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e10so22165346ljj.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 02:04:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HF4UdVCwi1c1BKIgz/FESLhrgzjX9oNjO8/KjUNWsfk=;
+        b=LtOv8jPCyXyB1wKB9sWSvMTFb/tuSMW7v8P5uDbv/o9y8q5F/5Dr9e2DE4jrD3A4vZ
+         dAimauptihuec8YSuN8eVIwYruZG/G2wblAhcLl5bfHWDGElLo7ZlJ3jNhkxiqI0Tdl7
+         O2o5TSxbMBN8vQN8jlS27uptf5xuVVx3QCR1zPGnR0gHORk6MnRixVGuP8hsb3xN7zAn
+         o32WLEO6bm/VKjqRUNpigbmRvDuPvx05Z1o18j2Os2jR4dk7FFWYuSqcTCHvEE++r+Gj
+         zqJb47XOrvk2ac3sEKJzh8Vb2VLiin4/KTvuNT0DQpZkD948ZGRPpTRPeygeZY5q55mu
+         RvHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HF4UdVCwi1c1BKIgz/FESLhrgzjX9oNjO8/KjUNWsfk=;
+        b=o+TfW6r6ZGp4vYJY2n6sCrmb5L6O4iE/C/VXQ6fWI3imQRPbLt6u/81fG8Va6IYtGI
+         ISiL7yz/Xapm96FaiLFoIVT8lzc9AR89sj/R/IItkHqy2iSxBQY33ChGPNs2955jkmhT
+         xjvEVS8K+6T6hvMI76KR/qtsAuPxtK0bQ5gJP1vpoAPvFipXX3m9KzKUENvrL9BOnWFk
+         eqiSaFqOvYLrmKNU51Y7tRYxcL2rk1RmIGXw+idS7vhvomTRPlUf5b9+kqI40nm/KW6m
+         G6HfCdC4odJnLhcACeCRXoyyNYeOrqmfYbo+dF/szVPj8TB6lVC5YmfPFluqDxgG5CxN
+         V9pQ==
+X-Gm-Message-State: APjAAAWy3SK+Kv+DT3jI2KTgyo19wlaQ3+furFgZfoSKW2jLNr8puOA7
+        N4qRfs031SNNPYP3Qql1vGGSjIdo5yfgL6I9m9Z6k0kH1sk=
+X-Google-Smtp-Source: APXvYqyWUPquNS0/lFgTEe0/fd2x2+iJyXgSYa6NuJgsEAJeld4LWgXwroBpwc1JXb3Ppg/6aXesmROTqEJkRma/wbc=
+X-Received: by 2002:a2e:9699:: with SMTP id q25mr37212398lji.251.1575021873761;
+ Fri, 29 Nov 2019 02:04:33 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <908dbe98-7d8d-0ec1-d4ae-242f3e104979@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191127133510.10614-1-brgl@bgdev.pl>
+In-Reply-To: <20191127133510.10614-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 29 Nov 2019 11:04:22 +0100
+Message-ID: <CACRpkdZ6e0GaE9KBJ1-E+cS_KnPY-EKLNxJFqjArr28hYMQqOg@mail.gmail.com>
+Subject: Re: [PATCH 0/8] gpiolib: add an ioctl() for monitoring line status changes
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 27, 2019 at 2:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Extend tools bitmap API with bitmap_equal() implementation.
-The implementation has been derived from the kernel.
+> This series adds a new ioctl() that allows user-space to retrieve a
+> file-descriptor which can then be polled for events emitted by the kernel
+> when the line is requested, released or its status changed. This of course
+> doesn't require the line to be requested. Multiple user-space processes
+> can watch the same lines.
 
-Extend tools bitmap API with bitmap_free() implementation for
-symmetry with bitmap_alloc() function.
+So if I understand correctly all the series do is expose metadata about
+all GPIO lines to userspace?
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/include/linux/bitmap.h | 30 ++++++++++++++++++++++++++++++
- tools/lib/bitmap.c           | 15 +++++++++++++++
- 2 files changed, 45 insertions(+)
+I think up until now the use case assumptions have been:
 
-diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
-index 05dca5c203f3..477a1cae513f 100644
---- a/tools/include/linux/bitmap.h
-+++ b/tools/include/linux/bitmap.h
-@@ -15,6 +15,8 @@ void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
- 		 const unsigned long *bitmap2, int bits);
- int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
- 		 const unsigned long *bitmap2, unsigned int bits);
-+int __bitmap_equal(const unsigned long *bitmap1,
-+		   const unsigned long *bitmap2, unsigned int bits);
- void bitmap_clear(unsigned long *map, unsigned int start, int len);
- 
- #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
-@@ -123,6 +125,15 @@ static inline unsigned long *bitmap_alloc(int nbits)
- 	return calloc(1, BITS_TO_LONGS(nbits) * sizeof(unsigned long));
- }
- 
-+/*
-+ * bitmap_free - Free bitmap
-+ * @bitmap: pointer to bitmap
-+ */
-+static inline void bitmap_free(unsigned long *bitmap)
-+{
-+	free(bitmap);
-+}
-+
- /*
-  * bitmap_scnprintf - print bitmap list into buffer
-  * @bitmap: bitmap
-@@ -148,4 +159,23 @@ static inline int bitmap_and(unsigned long *dst, const unsigned long *src1,
- 	return __bitmap_and(dst, src1, src2, nbits);
- }
- 
-+#ifdef __LITTLE_ENDIAN
-+#define BITMAP_MEM_ALIGNMENT 8
-+#else
-+#define BITMAP_MEM_ALIGNMENT (8 * sizeof(unsigned long))
-+#endif
-+#define BITMAP_MEM_MASK (BITMAP_MEM_ALIGNMENT - 1)
-+#define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
-+
-+static inline int bitmap_equal(const unsigned long *src1,
-+			const unsigned long *src2, unsigned int nbits)
-+{
-+	if (small_const_nbits(nbits))
-+		return !((*src1 ^ *src2) & BITMAP_LAST_WORD_MASK(nbits));
-+	if (__builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
-+	    IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
-+		return !memcmp(src1, src2, nbits / 8);
-+	return __bitmap_equal(src1, src2, nbits);
-+}
-+
- #endif /* _PERF_BITOPS_H */
-diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
-index 38494782be06..5043747ef6c5 100644
---- a/tools/lib/bitmap.c
-+++ b/tools/lib/bitmap.c
-@@ -71,3 +71,18 @@ int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
- 			   BITMAP_LAST_WORD_MASK(bits));
- 	return result != 0;
- }
-+
-+int __bitmap_equal(const unsigned long *bitmap1,
-+		const unsigned long *bitmap2, unsigned int bits)
-+{
-+	unsigned int k, lim = bits/BITS_PER_LONG;
-+	for (k = 0; k < lim; ++k)
-+		if (bitmap1[k] != bitmap2[k])
-+			return 0;
-+
-+	if (bits % BITS_PER_LONG)
-+		if ((bitmap1[k] ^ bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
-+			return 0;
-+
-+	return 1;
-+}
--- 
-2.20.1
+- The kernel will pick off some GPIO lines, mostly during boot but
+  occasionally at runtime (by users such as kernel modules or
+  hotlugged devices).
 
+- Userspace will pick some lines from those that are available,
+  after the kernel picked those it wants. If it tries to pick one of
+  those that the kernel already picked, the request will be denied.
 
+The assumption (at least in my head) was that the GPIOs the
+kernel picks will not be a very dynamic business.
+
+So this appears to be dealing with this very dynamic business.
+
+Is the *main* use case different userspace processes trying
+to use the same pins and getting denied? Because in that
+case we might be putting a bit too much userspace plumbing
+into the kernel and we need to think about that for a while.
+(Binder and kdbus etc comes to mind.)
+
+So there is some feature growth happening here and I want
+to be aware of the whole picture.
+
+On a side track:
+
+There is a bit about policy that needs to happen here I suppose,
+like for example what if the kernel actually wants one of the
+lines that userspace has picked? Should userspace be kicked
+out and kernel get what it wants? (Arguably yes.)
+
+Yours,
+Linus Walleij
