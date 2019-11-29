@@ -6,83 +6,113 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46966C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28468C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2253E215A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BE921736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfK2HFM (ORCPT
+        id S1726957AbfK2HFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 02:05:12 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7177 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726845AbfK2HFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 02:05:14 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:26664 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726360AbfK2HFL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Nov 2019 02:05:11 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 53DBF9292813DBDE57C3;
-        Fri, 29 Nov 2019 15:05:09 +0800 (CST)
-Received: from huawei.com (10.67.189.2) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 29 Nov 2019
- 15:04:55 +0800
-From:   Lexi Shao <shaolexi@huawei.com>
-To:     <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <mpe@ellerman.id.au>, <christophe.leroy@c-s.fr>
-CC:     <liucheng32@huawei.com>, <yi.zhang@huawei.com>,
-        <wangkefeng.wang@huawei.com>, <shaolexi@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
-Subject: [PATCH] powerpc/kasan: KASAN is not supported on RELOCATABLE && FSL_BOOKE
-Date:   Fri, 29 Nov 2019 15:04:55 +0800
-Message-ID: <20191129070455.62084-1-shaolexi@huawei.com>
-X-Mailer: git-send-email 2.12.3
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.2]
-X-CFilter-Loop: Reflected
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Nov 2019 12:35:08 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.147])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Nov 2019 12:35:07 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id CBBCC2346; Fri, 29 Nov 2019 12:35:06 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org
+Subject: [PATCH v1] drm/msm: add support for 2.4.1 DSI version for sc7180 soc
+Date:   Fri, 29 Nov 2019 12:35:05 +0530
+Message-Id: <1575011105-28172-1-git-send-email-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_RELOCATABLE and CONFIG_KASAN cannot be enabled at the same time
-on ppce500 fsl_booke. All functions called before kasan_early_init()
-should be disabled with kasan check. When CONFIG_RELOCATABLE is enabled
-on ppce500 fsl_booke, relocate_init() is called before kasan_early_init()
-which triggers kasan check and results in boot failure.
-Call trace and functions which triggers kasan check(*):
-  - _start
-   - set_ivor
-    - relocate_init(*)
-     - early_get_first_memblock_info(*)
-      - of_scan_flat_dt(*)
-	...
-    - kasan_early_init
+Changes in v1:
+	-Modify commit text to indicate DSI version and SOC detail(Jeffrey Hugo).
+	-Splitting visionox panel driver code out into a
+	 different patch(set), since panel drivers are merged into
+	 drm-next via a different tree(Rob Clark).
 
-Potential solutions could be 1. implement relocate_init and all its children
-function in a seperate file or 2. introduce a global vairable in KASAN, only
-enable KASAN check when init is done.
-
-Disable KASAN when RELOCATABLE is selected on fsl_booke for now until
-it is supported.
-
-Signed-off-by: Lexi Shao <shaolexi@huawei.com>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 ---
- arch/powerpc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+ 2 files changed, 22 insertions(+)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 3e56c9c2f16e..14f3da63c088 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -171,7 +171,7 @@ config PPC
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_HUGE_VMAP		if PPC_BOOK3S_64 && PPC_RADIX_MMU
- 	select HAVE_ARCH_JUMP_LABEL
--	select HAVE_ARCH_KASAN			if PPC32
-+	select HAVE_ARCH_KASAN			if PPC32 && !(RELOCATABLE && FSL_BOOKE)
- 	select HAVE_ARCH_KGDB
- 	select HAVE_ARCH_MMAP_RND_BITS
- 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+index b7b7c1a..7b967dd 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+@@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
+ 	"iface", "bus",
+ };
+ 
++static const char * const dsi_sc7180_bus_clk_names[] = {
++	"iface", "bus",
++};
++
+ static const struct msm_dsi_config sdm845_dsi_cfg = {
+ 	.io_offset = DSI_6G_REG_SHIFT,
+ 	.reg_cfg = {
+@@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
+ 	.num_dsi = 2,
+ };
+ 
++static const struct msm_dsi_config sc7180_dsi_cfg = {
++	.io_offset = DSI_6G_REG_SHIFT,
++	.reg_cfg = {
++		.num = 1,
++		.regs = {
++			{"vdda", 21800, 4 },	/* 1.2 V */
++		},
++	},
++	.bus_clk_names = dsi_sc7180_bus_clk_names,
++	.num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
++	.io_start = { 0xae94000 },
++	.num_dsi = 1,
++};
++
+ const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
+ 	.link_clk_enable = dsi_link_clk_enable_v2,
+ 	.link_clk_disable = dsi_link_clk_disable_v2,
+@@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+ 		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+ 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
++	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
++		&sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
++
+ };
+ 
+ const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+index e2b7a7d..9919536 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+@@ -19,6 +19,7 @@
+ #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
+ #define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
+ #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
++#define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
+ 
+ #define MSM_DSI_V2_VER_MINOR_8064	0x0
+ 
 -- 
-2.12.3
+2.7.4
 
