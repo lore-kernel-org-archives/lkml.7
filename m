@@ -2,41 +2,42 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F443C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E5AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012A12176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5380A208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfK2RZe (ORCPT
+        id S1727234AbfK2RZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 12:25:34 -0500
-Received: from mga14.intel.com ([192.55.52.115]:64167 "EHLO mga14.intel.com"
+        Fri, 29 Nov 2019 12:25:40 -0500
+Received: from mga14.intel.com ([192.55.52.115]:64172 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbfK2RZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 12:25:30 -0500
+        id S1727188AbfK2RZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 12:25:36 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 09:25:29 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 09:25:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="241108957"
+   d="scan'208";a="241108986"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Nov 2019 09:25:28 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 29 Nov 2019 09:25:34 -0800
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, jmattson@google.com,
         sean.j.christopherson@intel.com
 Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
         edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v8 01/10] Documentation: Introduce EPT based Subpage Protection and related APIs
-Date:   Sat, 30 Nov 2019 01:27:00 +0800
-Message-Id: <20191129172709.11347-2-weijiang.yang@intel.com>
+Subject: [PATCH v8 05/10] x86: spp: Introduce user-space SPP IOCTLs
+Date:   Sat, 30 Nov 2019 01:27:04 +0800
+Message-Id: <20191129172709.11347-6-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20191129172709.11347-1-weijiang.yang@intel.com>
 References: <20191129172709.11347-1-weijiang.yang@intel.com>
@@ -45,250 +46,313 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Co-developed-by: yi.z.zhang@linux.intel.com
-Signed-off-by: yi.z.zhang@linux.intel.com
+User application, e.g., QEMU or VMI, must initialize SPP
+before gets/sets SPP subpages, the dynamic initialization is to
+reduce the extra storage cost if the SPP feature is not not used.
+
+Co-developed-by: He Chen <he.chen@linux.intel.com>
+Signed-off-by: He Chen <he.chen@linux.intel.com>
+Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- Documentation/virt/kvm/api.txt        |  38 ++++++
- Documentation/virtual/kvm/spp_kvm.txt | 180 ++++++++++++++++++++++++++
- 2 files changed, 218 insertions(+)
- create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+ arch/x86/include/asm/kvm_host.h |  4 ++
+ arch/x86/kvm/mmu/spp.c          | 44 +++++++++++++++
+ arch/x86/kvm/mmu/spp.h          |  9 ++++
+ arch/x86/kvm/vmx/vmx.c          | 15 ++++++
+ arch/x86/kvm/x86.c              | 95 ++++++++++++++++++++++++++++++++-
+ include/uapi/linux/kvm.h        |  3 ++
+ 6 files changed, 169 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
-index 2d067767b617..78580e287c93 100644
---- a/Documentation/virt/kvm/api.txt
-+++ b/Documentation/virt/kvm/api.txt
-@@ -4111,6 +4111,44 @@ Valid values for 'action':
- #define KVM_PMU_EVENT_ALLOW 0
- #define KVM_PMU_EVENT_DENY 1
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index a30cff333033..0869ece49dbf 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1216,6 +1216,10 @@ struct kvm_x86_ops {
+ 	uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
  
-+4.121 KVM_SUBPAGES_GET_ACCESS
+ 	bool (*need_emulation_on_page_fault)(struct kvm_vcpu *vcpu);
 +
-+Architectures: x86
-+Type: vm ioctl
-+Parameters: struct kvm_subpage_info (in/out)
-+Returns: 0 on success, < 0 on error
-+
-+#define KVM_SUBPAGE_MAX_PAGES   512
-+struct kvm_subpage_info {
-+	__u64 gfn;    /* the first page gfn of the contiguous pages */
-+	__u32 npages; /* number of 4K pages */
-+	__u32 flags;  /* reserved to 0 now */
-+	__u32 access_map[0]; /* start place of bitmap array */
-+};
-+
-+This ioctl fetches subpage permission from contiguous pages starting with
-+gfn. npages is the number of contiguous pages to fetch. access_map contains permission
-+vectors fetched for all the pages.
-+
-+4.122 KVM_SUBPAGES_SET_ACCESS
-+
-+Architectures: x86
-+Type: vm ioctl
-+Parameters: struct kvm_subpage_info (in/out)
-+Returns: 0 on success, < 0 on error
-+
-+#define KVM_SUBPAGE_MAX_PAGES   512
-+struct kvm_subpage_info {
-+	__u64 gfn;    /* the first page gfn of the contiguous pages */
-+	__u32 npages; /* number of 4K pages */
-+	__u32 flags;  /* reserved to 0 now */
-+	__u32 access_map[0]; /* start place of bitmap array */
-+};
-+
-+This ioctl sets subpage permission for contiguous pages starting with gfn. npages is
-+the number of contiguous pages to set. access_map contains permission vectors for all the
-+pages. Since during execution of the ioctl, it holds mmu_lock, so limits the MAX pages
-+to 512 to reduce the impact to EPT.
++	int (*init_spp)(struct kvm *kvm);
++	int (*flush_subpages)(struct kvm *kvm, u64 gfn, u32 npages);
++	int (*get_inst_len)(struct kvm_vcpu *vcpu);
+ };
  
- 5. The kvm_run structure
- ------------------------
-diff --git a/Documentation/virtual/kvm/spp_kvm.txt b/Documentation/virtual/kvm/spp_kvm.txt
-new file mode 100644
-index 000000000000..2b49846c0722
---- /dev/null
-+++ b/Documentation/virtual/kvm/spp_kvm.txt
-@@ -0,0 +1,180 @@
-+EPT-Based Sub-Page Protection (SPP) for KVM
-+====================================================
+ struct kvm_arch_async_pf {
+diff --git a/arch/x86/kvm/mmu/spp.c b/arch/x86/kvm/mmu/spp.c
+index c06831b9027a..578ca56e493d 100644
+--- a/arch/x86/kvm/mmu/spp.c
++++ b/arch/x86/kvm/mmu/spp.c
+@@ -510,3 +510,47 @@ inline u64 construct_spptp(unsigned long root_hpa)
+ }
+ EXPORT_SYMBOL_GPL(construct_spptp);
+ 
++int kvm_vm_ioctl_get_subpages(struct kvm *kvm,
++			      u64 gfn,
++			      u32 npages,
++			      u32 *access_map)
++{
++	int ret;
 +
-+1.Overview
-+  EPT-based Sub-Page Protection(SPP) allows VMM to specify
-+  fine-grained(128byte per sub-page) write-protection for guest physical
-+  memory. When it's enabled, the CPU enforces write-access permission
-+  for the sub-pages within a 4KB page, if corresponding bit is set in
-+  permission vector, write to sub-page region is allowed, otherwise,
-+  it's prevented with a EPT violation.
++	mutex_lock(&kvm->slots_lock);
++	ret = kvm_spp_get_permission(kvm, gfn, npages, access_map);
++	mutex_unlock(&kvm->slots_lock);
 +
-+  *Note*: In current implementation, SPP is exclusive with nested flag,
-+  if it's on, SPP feature won't work.
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kvm_vm_ioctl_get_subpages);
 +
-+2.SPP Operation
-+  Sub-Page Protection Table (SPPT) is introduced to manage sub-page
-+  write-access permission.
++int kvm_vm_ioctl_set_subpages(struct kvm *kvm,
++			      u64 gfn,
++			      u32 npages,
++			      u32 *access_map)
++{
++	int ret;
 +
-+  It is active when:
-+  a) nested flag is turned off.
-+  b) "sub-page write protection" VM-execution control is 1.
-+  c) SPP is initialized with KVM_INIT_SPP ioctl.
-+  d) Sub-page permissions are set with KVM_SUBPAGES_SET_ACCESS ioctl.
-+     see below sections for details.
++	if (!kvm_x86_ops->flush_subpages)
++		return -EINVAL;
 +
-+  __________________________________________________________________________
++	spin_lock(&kvm->mmu_lock);
++	ret = kvm_x86_ops->flush_subpages(kvm, gfn, npages);
++	spin_unlock(&kvm->mmu_lock);
 +
-+  How SPP hardware works:
-+  __________________________________________________________________________
++	if (ret < 0)
++		return ret;
 +
-+  Guest write access --> GPA --> Walk EPT --> EPT leaf entry -----|
-+  |---------------------------------------------------------------|
-+  |-> if VMexec_control.spp && ept_leaf_entry.spp_bit (bit 61)
-+       |
-+       |-> <false> --> EPT legacy behavior
-+       |
-+       |
-+       |-> <true>  --> if ept_leaf_entry.writable
-+                        |
-+                        |-> <true>  --> Ignore SPP
-+                        |
-+                        |-> <false> --> GPA --> Walk SPP 4-level table--|
-+                                                                        |
-+  |------------<----------get-the-SPPT-point-from-VMCS-field-----<------|
-+  |
-+  Walk SPP L4E table
-+  |
-+  |---> if-entry-misconfiguration ------------>-------|-------<---------|
-+   |                                                  |                 |
-+  else                                                |                 |
-+   |                                                  |                 |
-+   |   |------------------SPP VMexit<-----------------|                 |
-+   |   |                                                                |
-+   |   |-> exit_qualification & sppt_misconfig --> sppt misconfig       |
-+   |   |                                                                |
-+   |   |-> exit_qualification & sppt_miss --> sppt miss                 |
-+   |---|                                                                |
-+       |                                                                |
-+  walk SPPT L3E--|--> if-entry-misconfiguration------------>------------|
-+                 |                                                      |
-+                else                                                    |
-+                 |                                                      |
-+                 |                                                      |
-+          walk SPPT L2E --|--> if-entry-misconfiguration-------->-------|
-+                          |                                             |
-+                         else                                           |
-+                          |                                             |
-+                          |                                             |
-+                   walk SPPT L1E --|-> if-entry-misconfiguration--->----|
-+                                   |
-+                                 else
-+                                   |
-+                                   |-> if sub-page writable
-+                                   |-> <true>  allow, write access
-+                                   |-> <false> disallow, EPT violation
-+  ______________________________________________________________________________
++	mutex_lock(&kvm->slots_lock);
++	spin_lock(&kvm->mmu_lock);
 +
-+3.IOCTL Interfaces
++	ret = kvm_spp_set_permission(kvm, gfn, npages, access_map);
 +
-+    KVM_INIT_SPP:
-+    Allocate storage for sub-page permission vectors and SPPT root page.
++	spin_unlock(&kvm->mmu_lock);
++	mutex_unlock(&kvm->slots_lock);
 +
-+    KVM_SUBPAGES_GET_ACCESS:
-+    Get sub-page write permission vectors for given contiguous guest pages.
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kvm_vm_ioctl_set_subpages);
 +
-+    KVM_SUBPAGES_SET_ACCESS
-+    Set SPP bit in EPT leaf entries for given contiguous guest pages. The
-+    actual SPPT setup is triggered when SPP miss vm-exit is handled.
+diff --git a/arch/x86/kvm/mmu/spp.h b/arch/x86/kvm/mmu/spp.h
+index a636d09f6db0..370a6b71e143 100644
+--- a/arch/x86/kvm/mmu/spp.h
++++ b/arch/x86/kvm/mmu/spp.h
+@@ -3,6 +3,7 @@
+ #define __KVM_X86_VMX_SPP_H
+ 
+ #define FULL_SPP_ACCESS		((u32)((1ULL << 32) - 1))
++#define KVM_SUBPAGE_MAX_PAGES   512
+ 
+ int kvm_spp_get_permission(struct kvm *kvm, u64 gfn, u32 npages,
+ 			   u32 *access_map);
+@@ -11,6 +12,14 @@ int kvm_spp_set_permission(struct kvm *kvm, u64 gfn, u32 npages,
+ int kvm_spp_mark_protection(struct kvm *kvm, u64 gfn, u32 access);
+ bool is_spp_spte(struct kvm_mmu_page *sp);
+ inline u64 construct_spptp(unsigned long root_hpa);
++int kvm_vm_ioctl_get_subpages(struct kvm *kvm,
++			      u64 gfn,
++			      u32 npages,
++			      u32 *access_map);
++int kvm_vm_ioctl_set_subpages(struct kvm *kvm,
++			      u64 gfn,
++			      u32 npages,
++			      u32 *access_map);
+ int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
+ 			    u32 access_map, gfn_t gfn);
+ int vmx_spp_flush_sppt(struct kvm *kvm, u64 gfn_base, u32 npages);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 9d1a7e624c5b..6214d76e0426 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1338,6 +1338,11 @@ static bool emulation_required(struct kvm_vcpu *vcpu)
+ 	return emulate_invalid_guest_state && !guest_state_valid(vcpu);
+ }
+ 
++static int vmx_get_inst_len(struct kvm_vcpu *vcpu)
++{
++	return vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
++}
 +
-+    #define SUBPAGE_MAX_BITMAP   64
-+    /* for KVM_SUBPAGES_GET_ACCESS and KVM_SUBPAGES_SET_ACCESS */
-+    struct kvm_subpage_info {
-+       __u64 gfn;    /* the first page gfn of the contiguous pages */
-+       __u64 npages; /* number of 4K pages */
-+       __u32 access_map[SUBPAGE_MAX_BITMAP]; /* sub-page write-access bitmap array */
-+    };
+ static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu);
+ 
+ unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
+@@ -7596,6 +7601,12 @@ static __init int hardware_setup(void)
+ 		kvm_x86_ops->enable_log_dirty_pt_masked = NULL;
+ 	}
+ 
++	if (!spp_supported) {
++		kvm_x86_ops->flush_subpages = NULL;
++		kvm_x86_ops->init_spp = NULL;
++		kvm_x86_ops->get_inst_len = NULL;
++	}
 +
-+    #define KVM_SUBPAGES_GET_ACCESS   _IOR(KVMIO,  0x49, __u64)
-+    #define KVM_SUBPAGES_SET_ACCESS   _IOW(KVMIO,  0x4a, __u64)
-+    #define KVM_INIT_SPP              _IOW(KVMIO,  0x4b, __u64)
+ 	if (!cpu_has_vmx_preemption_timer())
+ 		enable_preemption_timer = false;
+ 
+@@ -7808,6 +7819,10 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 	.nested_enable_evmcs = NULL,
+ 	.nested_get_evmcs_version = NULL,
+ 	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
++	
++	.flush_subpages = vmx_spp_flush_sppt,
++	.init_spp = vmx_spp_init,
++	.get_inst_len = vmx_get_inst_len,
+ };
+ 
+ static void vmx_cleanup_l1d_flush(void)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 91602d310a3f..270f0ea83f08 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -26,6 +26,7 @@
+ #include "cpuid.h"
+ #include "pmu.h"
+ #include "hyperv.h"
++#include "mmu/spp.h"
+ 
+ #include <linux/clocksource.h>
+ #include <linux/interrupt.h>
+@@ -3183,6 +3184,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		r = kvm_x86_ops->get_nested_state ?
+ 			kvm_x86_ops->get_nested_state(NULL, NULL, 0) : 0;
+ 		break;
++	case KVM_CAP_X86_SPP:
++		r = KVM_SUBPAGE_MAX_PAGES;
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -3957,7 +3961,6 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
+ 				r = -EFAULT;
+ 		}
+ 		return r;
+-
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -4670,6 +4673,9 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		kvm->arch.exception_payload_enabled = cap->args[0];
+ 		r = 0;
+ 		break;
++	case KVM_CAP_X86_SPP:
++		r =  kvm_x86_ops->init_spp(kvm);
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+@@ -4977,6 +4983,93 @@ long kvm_arch_vm_ioctl(struct file *filp,
+ 	case KVM_SET_PMU_EVENT_FILTER:
+ 		r = kvm_vm_ioctl_set_pmu_event_filter(kvm, argp);
+ 		break;
++	case KVM_SUBPAGES_GET_ACCESS: {
++		struct kvm_subpage spp_info, *pinfo;
++		u32 total;
 +
-+4.Set Sub-Page Permission
++		r = -ENODEV;
++		if (!kvm->arch.spp_active)
++			goto out;
 +
-+  * To enable SPP protection, KVM user-space application sets sub-page permission
-+    via KVM_SUBPAGES_SET_ACCESS ioctl:
-+    (1) It first stores the access permissions in bitmap array.
++		r = -EFAULT;
++		if (copy_from_user(&spp_info, argp, sizeof(spp_info)))
++			goto out;
 +
-+    (2) Then, if the target 4KB pages are mapped as PT_PAGE_TABLE_LEVEL entry in EPT,
-+	it sets SPP bit of the corresponding entry to mark sub-page protection.
-+	If the 4KB pages are mapped within PT_DIRECTORY_LEVEL or PT_PDPE_LEVEL entry,
-+	it first zaps the hugepage entries so as to let following memory access to trigger
-+	EPT violation, there the gfn is check against SPP permission bitmap and
-+	proper level is selected to set up EPT entry.
++		r = -EINVAL;
++		if (spp_info.flags != 0 ||
++		    spp_info.npages > KVM_SUBPAGE_MAX_PAGES)
++			goto out;
++		r = 0;
++		if (!spp_info.npages)
++			goto out;
 +
++		total = sizeof(spp_info) +
++			sizeof(spp_info.access_map[0])*spp_info.npages;
++		pinfo = kvzalloc(total, GFP_KERNEL_ACCOUNT);
 +
-+   The SPPT paging structure format is as below:
++		r = -ENOMEM;
++		if (!pinfo)
++			goto out;
 +
-+   Format of the SPPT L4E, L3E, L2E:
-+   | Bit    | Contents                                                                 |
-+   | :----- | :------------------------------------------------------------------------|
-+   | 0      | Valid entry when set; indicates whether the entry is present             |
-+   | 11:1   | Reserved (0)                                                             |
-+   | N-1:12 | Physical address of 4KB aligned SPPT LX-1 Table referenced by this entry |
-+   | 51:N   | Reserved (0)                                                             |
-+   | 63:52  | Reserved (0)                                                             |
-+   Note: N is the physical address width supported by the processor. X is the page level
++		r = -EFAULT;
++		if (copy_from_user(pinfo, argp, total))
++			goto out;
 +
-+   Format of the SPPT L1E:
-+   | Bit   | Contents                                                          |
-+   | :---- | :---------------------------------------------------------------- |
-+   | 0+2i  | Write permission for i-th 128 byte sub-page region.               |
-+   | 1+2i  | Reserved (0).                                                     |
-+   Note: 0<=i<=31
++		r = kvm_vm_ioctl_get_subpages(kvm,
++					      pinfo->gfn_base,
++					      pinfo->npages,
++					      pinfo->access_map);
++		if (r != pinfo->npages)
++			goto out;
 +
-+5.SPPT-induced VM exit
++		r = -EFAULT;
++		if (copy_to_user(argp, pinfo, total))
++			goto out;
 +
-+  * SPPT miss and misconfiguration induced VM exit
++		kfree(pinfo);
++		r = pinfo->npages;
++		break;
++	}
++	case KVM_SUBPAGES_SET_ACCESS: {
++		struct kvm_subpage spp_info, *pinfo;
++		u32 total;
 +
-+    A SPPT missing VM exit occurs when walk the SPPT, there is no SPPT
-+    misconfiguration but a paging-structure entry is not
-+    present in any of L4E/L3E/L2E entries.
++		r = -ENODEV;
++		if (!kvm->arch.spp_active)
++			goto out;
 +
-+    A SPPT misconfiguration VM exit occurs when reserved bits or unsupported values
-+    are set in SPPT entry.
++		r = -EFAULT;
++		if (copy_from_user(&spp_info, argp, sizeof(spp_info)))
++			goto out;
 +
-+    *NOTE* SPPT miss and SPPT misconfigurations can occur only due to
-+    "eligible" memory write, this excludes, e.g., guest paging structure,
-+    please refer to SDM 28.2 for details of "non-eligible" cases.
++		r = -EINVAL;
++		if (spp_info.flags != 0 ||
++		    spp_info.npages > KVM_SUBPAGE_MAX_PAGES)
++			goto out;
 +
-+  * SPP permission induced VM exit
-+    SPP sub-page permission induced violation is reported as EPT violation
-+    therefore causes VM exit.
++		r = 0;
++		if (!spp_info.npages)
++			goto out;
 +
-+6.SPPT-induced VM exit handling
++		total = sizeof(spp_info) +
++			sizeof(spp_info.access_map[0])*spp_info.npages;
++		pinfo = kvzalloc(total, GFP_KERNEL_ACCOUNT);
 +
-+  #define EXIT_REASON_SPP                 66
++		r = -ENOMEM;
++		if (!pinfo)
++			goto out;
 +
-+  static int (*const kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
-+    ...
-+    [EXIT_REASON_SPP]                     = handle_spp,
-+    ...
-+  };
++		r = -EFAULT;
++		if (copy_from_user(pinfo, argp, total))
++			goto out;
 +
-+  New exit qualification for SPPT-induced vmexits.
-+
-+  | Bit   | Contents                                                          |
-+  | :---- | :---------------------------------------------------------------- |
-+  | 10:0  | Reserved (0).                                                     |
-+  | 11    | SPPT VM exit type. Set for SPPT Miss, cleared for SPPT Misconfig. |
-+  | 12    | NMI unblocking due to IRET                                        |
-+  | 63:13 | Reserved (0)                                                      |
-+
-+  In addition to the exit qualification, guest linear address and guest
-+  physical address fields will be reported.
-+
-+  * SPPT miss and misconfiguration induced VM exit
-+    Set up SPPT entries correctly.
-+
-+  * SPP permission induced VM exit
-+    This kind of VM exit is left to VMI tool to handle.
++		r = kvm_vm_ioctl_set_subpages(kvm,
++					      pinfo->gfn_base,
++					      pinfo->npages,
++					      pinfo->access_map);
++		kfree(pinfo);
++		break;
++	}
+ 	default:
+ 		r = -ENOTTY;
+ 	}
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 8d59848b3451..36832c7eba9b 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1005,6 +1005,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
+ #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
+ #define KVM_CAP_PMU_EVENT_FILTER 173
++#define KVM_CAP_X86_SPP 176
+ 
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
+@@ -1257,6 +1258,8 @@ struct kvm_vfio_spapr_tce {
+ 					struct kvm_userspace_memory_region)
+ #define KVM_SET_TSS_ADDR          _IO(KVMIO,   0x47)
+ #define KVM_SET_IDENTITY_MAP_ADDR _IOW(KVMIO,  0x48, __u64)
++#define KVM_SUBPAGES_GET_ACCESS   _IOR(KVMIO,  0x49, __u64)
++#define KVM_SUBPAGES_SET_ACCESS   _IOW(KVMIO,  0x4a, __u64)
+ 
+ /* enable ucontrol for s390 */
+ struct kvm_s390_ucas_mapping {
 -- 
 2.17.2
 
