@@ -2,418 +2,145 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6C3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1547EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94282464A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0442464A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:47:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="P515JTdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfK2VqT (ORCPT
+        id S1727266AbfK2Vro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:46:19 -0500
-Received: from relay.sw.ru ([185.231.240.75]:55174 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727130AbfK2VqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 16:46:18 -0500
-Received: from [192.168.15.202] (helo=snorch.sw.ru)
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ptikhomirov@virtuozzo.com>)
-        id 1iao5C-0000P5-Md; Sat, 30 Nov 2019 00:45:46 +0300
-From:   Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Subject: [PATCH] mm: fix hanging shrinker management on long do_shrink_slab
-Date:   Sat, 30 Nov 2019 00:45:41 +0300
-Message-Id: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 29 Nov 2019 16:47:44 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:6093 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfK2Vro (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 16:47:44 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de192010000>; Fri, 29 Nov 2019 13:47:46 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 29 Nov 2019 13:47:42 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 29 Nov 2019 13:47:42 -0800
+Received: from [10.2.169.205] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 Nov
+ 2019 21:47:41 +0000
+Subject: Re: [PATCH v2 17/19] powerpc: book3s64: convert to pin_user_pages()
+ and put_user_page()
+To:     Jan Kara <jack@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191125231035.1539120-1-jhubbard@nvidia.com>
+ <20191125231035.1539120-18-jhubbard@nvidia.com>
+ <20191129112315.GB1121@quack2.suse.cz>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <cb3e2acc-0a83-4053-fbcc-6d75dc47f174@nvidia.com>
+Date:   Fri, 29 Nov 2019 13:44:53 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191129112315.GB1121@quack2.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575064066; bh=tMvn6asqZgJ/8yczcC9lnf1pHEf7TJzCvRVZqLzUEIk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=P515JTdy70KP3oimNK/fSAtObgW4JDQsh/LN+dj31w7qtgH6JUdGJYKS3j5J8enBM
+         oN04vymJSqszX58P75QNc1cW3k/Ll0LB9zwNlmlBWaR7zw2qd7/o9t2Cy3EugW3wgY
+         XBlQyEsBEMcfywkDPj201lclcvfOCs5gFzs/O+2QmSmHzciD31eTMBkNB0W6VGXEOL
+         BbnrGM91l0GAwjLm+XJmL4eoGQAce5JVCz6FfueQA4/sc24hO2mmz2R1mloKHyP2Ej
+         3q1StOVbP0t0OEBFEGay8puwUyC8jwyLEftGIYNcVrkaz5szmNasFETh2Ir0Xi5Q1g
+         8xDwDUM/1ii9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a problem that shrinker_rwsem can be held for a long time for
-read in shrink_slab, at the same time any process which is trying to
-manage shrinkers hangs.
+On 11/29/19 3:23 AM, Jan Kara wrote:
+> On Mon 25-11-19 15:10:33, John Hubbard wrote:
+>> 1. Convert from get_user_pages() to pin_user_pages().
+>>
+>> 2. As required by pin_user_pages(), release these pages via
+>> put_user_page(). In this case, do so via put_user_pages_dirty_lock().
+>>
+>> That has the side effect of calling set_page_dirty_lock(), instead
+>> of set_page_dirty(). This is probably more accurate.
+> 
+> Maybe more accurate but it doesn't work for mm_iommu_unpin(). As I'm
+> checking mm_iommu_unpin() gets called from RCU callback which is executed
+> interrupt context and you cannot lock pages from such context. So you need
+> to queue work from the RCU callback and then do the real work from the
+> workqueue...
+> 
+> 								Honza
 
-The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
-It tries to shrink something on nfs (hard) but nfs server is dead at
-these moment already and rpc will never succeed. Generally any shrinker
-can take significant time to do_shrink_slab, so it's a bad idea to hold
-the list lock here.
+ah yes, fixed locally. (In order to avoid  distracting people during the merge
+window, I won't post any more versions of the series until the merge window is
+over, unless a maintainer tells me that any of these patches are desired for
+5.5.)
 
-We have a similar problem in shrink_slab_memcg, except that we are
-traversing shrinker_map+shrinker_idr there.
+With that, we are back to a one-line diff for this part:
 
-The idea of the patch is to inc a refcount to the chosen shrinker so it
-won't disappear and release shrinker_rwsem while we are in
-do_shrink_slab, after that we will reacquire shrinker_rwsem, dec
-the refcount and continue the traversal.
+@@ -215,7 +214,7 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
+                 if (mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY)
+                         SetPageDirty(page);
+  
+-               put_page(page);
++               put_user_page(page);
+                 mem->hpas[i] = 0;
+         }
+  }
 
-We also need a wait_queue so that unregister_shrinker can wait for the
-refcnt to become zero. Only after these we can safely remove the
-shrinker from list and idr, and free the shrinker.
+btw, I'm also working on your feedback for patch 17 (mm/gup: track FOLL_PIN pages [1]),
+from a few days earlier, it's not being ignored, I'm just trying to avoid distracting
+people during the merge window.
 
-I've reproduced the nfs hang in do_shrink_slab with the patch applied on
-ms kernel, all other mount/unmount pass fine without any hang.
+[1] https://lore.kernel.org/r/20191121093941.GA18190@quack2.suse.cz
 
-Here is a reproduction on kernel without patch:
-
-1) Setup nfs on server node with some files in it (e.g. 200)
-
-[server]# cat /etc/exports
-/vz/nfs2 *(ro,no_root_squash,no_subtree_check,async)
-
-2) Hard mount it on client node
-
-[client]# mount -ohard 10.94.3.40:/vz/nfs2 /mnt
-
-3) Open some (e.g. 200) files on the mount
-
-[client]# for i in $(find /mnt/ -type f | head -n 200); \
-  do setsid sleep 1000 &>/dev/null <$i & done
-
-4) Kill all openers
-
-[client]# killall sleep -9
-
-5) Put your network cable out on client node
-
-6) Drop caches on the client, it will hang on nfs while holding
-  shrinker_rwsem lock for read
-
-[client]# echo 3 > /proc/sys/vm/drop_caches
-
-  crash> bt ...
-  PID: 18739  TASK: ...  CPU: 3   COMMAND: "bash"
-   #0 [...] __schedule at ...
-   #1 [...] schedule at ...
-   #2 [...] rpc_wait_bit_killable at ... [sunrpc]
-   #3 [...] __wait_on_bit at ...
-   #4 [...] out_of_line_wait_on_bit at ...
-   #5 [...] _nfs4_proc_delegreturn at ... [nfsv4]
-   #6 [...] nfs4_proc_delegreturn at ... [nfsv4]
-   #7 [...] nfs_do_return_delegation at ... [nfsv4]
-   #8 [...] nfs4_evict_inode at ... [nfsv4]
-   #9 [...] evict at ...
-  #10 [...] dispose_list at ...
-  #11 [...] prune_icache_sb at ...
-  #12 [...] super_cache_scan at ...
-  #13 [...] do_shrink_slab at ...
-  #14 [...] shrink_slab at ...
-  #15 [...] drop_slab_node at ...
-  #16 [...] drop_slab at ...
-  #17 [...] drop_caches_sysctl_handler at ...
-  #18 [...] proc_sys_call_handler at ...
-  #19 [...] vfs_write at ...
-  #20 [...] ksys_write at ...
-  #21 [...] do_syscall_64 at ...
-  #22 [...] entry_SYSCALL_64_after_hwframe at ...
-
-7) All other mount/umount activity now hangs with no luck to take
-  shrinker_rwsem for write.
-
-[client]# mount -t tmpfs tmpfs /tmp
-
-  crash> bt ...
-  PID: 5464   TASK: ...  CPU: 3   COMMAND: "mount"
-   #0 [...] __schedule at ...
-   #1 [...] schedule at ...
-   #2 [...] rwsem_down_write_slowpath at ...
-   #3 [...] prealloc_shrinker at ...
-   #4 [...] alloc_super at ...
-   #5 [...] sget at ...
-   #6 [...] mount_nodev at ...
-   #7 [...] legacy_get_tree at ...
-   #8 [...] vfs_get_tree at ...
-   #9 [...] do_mount at ...
-  #10 [...] ksys_mount at ...
-  #11 [...] __x64_sys_mount at ...
-  #12 [...] do_syscall_64 at ...
-  #13 [...] entry_SYSCALL_64_after_hwframe at ...
-
-That is on almost clean and almost mainstream Fedora kernel:
-
-[client]# uname -a
-Linux snorch 5.3.8-200.snorch.fc30.x86_64 #1 SMP Mon Nov 11 16:01:15 MSK
-  2019 x86_64 x86_64 x86_64 GNU/Linux
-
-Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
----
- include/linux/memcontrol.h |   6 +++
- include/linux/shrinker.h   |   6 +++
- mm/memcontrol.c            |  16 ++++++
- mm/vmscan.c                | 107 ++++++++++++++++++++++++++++++++++++-
- 4 files changed, 134 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index ae703ea3ef48..3717b94b6aa5 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1348,6 +1348,8 @@ extern int memcg_expand_shrinker_maps(int new_id);
- 
- extern void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
- 				   int nid, int shrinker_id);
-+extern void memcg_clear_shrinker_bit(struct mem_cgroup *memcg,
-+				     int nid, int shrinker_id);
- #else
- #define mem_cgroup_sockets_enabled 0
- static inline void mem_cgroup_sk_alloc(struct sock *sk) { };
-@@ -1361,6 +1363,10 @@ static inline void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
- 					  int nid, int shrinker_id)
- {
- }
-+static inline void memcg_clear_shrinker_bit(struct mem_cgroup *memcg,
-+					    int nid, int shrinker_id)
-+{
-+}
- #endif
- 
- struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep);
-diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
-index 0f80123650e2..dd3bb43ed58d 100644
---- a/include/linux/shrinker.h
-+++ b/include/linux/shrinker.h
-@@ -2,6 +2,9 @@
- #ifndef _LINUX_SHRINKER_H
- #define _LINUX_SHRINKER_H
- 
-+#include <linux/refcount.h>
-+#include <linux/wait.h>
-+
- /*
-  * This struct is used to pass information from page reclaim to the shrinkers.
-  * We consolidate the values for easier extention later.
-@@ -75,6 +78,9 @@ struct shrinker {
- #endif
- 	/* objs pending delete, per node */
- 	atomic_long_t *nr_deferred;
-+
-+	refcount_t refcnt;
-+	wait_queue_head_t wq;
- };
- #define DEFAULT_SEEKS 2 /* A good number if you don't know better. */
- 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 01f3f8b665e9..81f45124feb7 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -442,6 +442,22 @@ void memcg_set_shrinker_bit(struct mem_cgroup *memcg, int nid, int shrinker_id)
- 	}
- }
- 
-+void memcg_clear_shrinker_bit(struct mem_cgroup *memcg,
-+			      int nid, int shrinker_id)
-+{
-+	struct memcg_shrinker_map *map;
-+
-+	/*
-+	 * The map for refcounted memcg can only be freed in
-+	 * memcg_free_shrinker_map_rcu so we can safely protect
-+	 * map with rcu_read_lock.
-+	 */
-+	rcu_read_lock();
-+	map = rcu_dereference(memcg->nodeinfo[nid]->shrinker_map);
-+	clear_bit(shrinker_id, map->map);
-+	rcu_read_unlock();
-+}
-+
- /**
-  * mem_cgroup_css_from_page - css of the memcg associated with a page
-  * @page: page of interest
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index ee4eecc7e1c2..59e46d65e902 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -393,6 +393,13 @@ int prealloc_shrinker(struct shrinker *shrinker)
- 	if (!shrinker->nr_deferred)
- 		return -ENOMEM;
- 
-+	/*
-+	 * Shrinker is not yet visible through shrinker_idr or shrinker_list,
-+	 * so no locks required for initialization.
-+	 */
-+	refcount_set(&shrinker->refcnt, 1);
-+	init_waitqueue_head(&shrinker->wq);
-+
- 	if (shrinker->flags & SHRINKER_MEMCG_AWARE) {
- 		if (prealloc_memcg_shrinker(shrinker))
- 			goto free_deferred;
-@@ -411,6 +418,9 @@ void free_prealloced_shrinker(struct shrinker *shrinker)
- 	if (!shrinker->nr_deferred)
- 		return;
- 
-+	/* The shrinker shouldn't be used at these point. */
-+	WARN_ON(!refcount_dec_and_test(&shrinker->refcnt));
-+
- 	if (shrinker->flags & SHRINKER_MEMCG_AWARE)
- 		unregister_memcg_shrinker(shrinker);
- 
-@@ -447,6 +457,15 @@ void unregister_shrinker(struct shrinker *shrinker)
- {
- 	if (!shrinker->nr_deferred)
- 		return;
-+
-+	/*
-+	 * If refcnt is not zero we need to wait these shrinker to finish all
-+	 * it's do_shrink_slab() calls.
-+	 */
-+	if (!refcount_dec_and_test(&shrinker->refcnt))
-+		wait_event(shrinker->wq,
-+			   (refcount_read(&shrinker->refcnt) == 0));
-+
- 	if (shrinker->flags & SHRINKER_MEMCG_AWARE)
- 		unregister_memcg_shrinker(shrinker);
- 	down_write(&shrinker_rwsem);
-@@ -454,6 +473,9 @@ void unregister_shrinker(struct shrinker *shrinker)
- 	up_write(&shrinker_rwsem);
- 	kfree(shrinker->nr_deferred);
- 	shrinker->nr_deferred = NULL;
-+
-+	/* Pairs with rcu_read_lock in put_shrinker() */
-+	synchronize_rcu();
- }
- EXPORT_SYMBOL(unregister_shrinker);
- 
-@@ -589,6 +611,42 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
- 	return freed;
- }
- 
-+struct shrinker *get_shrinker(struct shrinker *shrinker)
-+{
-+	/*
-+	 * Pairs with refcnt dec in unregister_shrinker(), if refcnt is zero
-+	 * these shrinker is already in the middle of unregister_shrinker() and
-+	 * we can't use it.
-+	 */
-+	if (!refcount_inc_not_zero(&shrinker->refcnt))
-+		shrinker = NULL;
-+	return shrinker;
-+}
-+
-+void put_shrinker(struct shrinker *shrinker)
-+{
-+	/*
-+	 * The rcu_read_lock pairs with synchronize_rcu() in
-+	 * unregister_shrinker(), so that the shrinker is not freed
-+	 * before the wake_up.
-+	 */
-+	rcu_read_lock();
-+	if (!refcount_dec_and_test(&shrinker->refcnt)) {
-+		/*
-+		 * Pairs with smp_mb in
-+		 * wait_event()->prepare_to_wait()
-+		 */
-+		smp_mb();
-+		/*
-+		 * If refcnt becomes zero, we already have an
-+		 * unregister_shrinker() waiting for us to finish.
-+		 */
-+		if (waitqueue_active(&shrinker->wq))
-+			wake_up(&shrinker->wq);
-+	}
-+	rcu_read_unlock();
-+}
-+
- #ifdef CONFIG_MEMCG
- static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 			struct mem_cgroup *memcg, int priority)
-@@ -628,9 +686,23 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 		    !(shrinker->flags & SHRINKER_NONSLAB))
- 			continue;
- 
-+		/*
-+		 * Take a refcnt on a shrinker so that it can't be freed or
-+		 * removed from shrinker_idr (and shrinker_list). These way we
-+		 * can safely release shrinker_rwsem.
-+		 *
-+		 * We need to release shrinker_rwsem here as do_shrink_slab can
-+		 * take too much time to finish (e.g. on nfs). And holding
-+		 * global shrinker_rwsem can block registring and unregistring
-+		 * of shrinkers.
-+		 */
-+		if (!get_shrinker(shrinker))
-+			continue;
-+		up_read(&shrinker_rwsem);
-+
- 		ret = do_shrink_slab(&sc, shrinker, priority);
- 		if (ret == SHRINK_EMPTY) {
--			clear_bit(i, map->map);
-+			memcg_clear_shrinker_bit(memcg, nid, i);
- 			/*
- 			 * After the shrinker reported that it had no objects to
- 			 * free, but before we cleared the corresponding bit in
-@@ -655,6 +727,22 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 		}
- 		freed += ret;
- 
-+		/*
-+		 * Re-aquire shrinker_rwsem, put refcount and reload
-+		 * shrinker_map as it can be modified in
-+		 * memcg_expand_one_shrinker_map if new shrinkers
-+		 * were registred in the meanwhile.
-+		 */
-+		if (!down_read_trylock(&shrinker_rwsem)) {
-+			freed = freed ? : 1;
-+			put_shrinker(shrinker);
-+			return freed;
-+		}
-+		put_shrinker(shrinker);
-+		map = rcu_dereference_protected(
-+				memcg->nodeinfo[nid]->shrinker_map,
-+				true);
-+
- 		if (rwsem_is_contended(&shrinker_rwsem)) {
- 			freed = freed ? : 1;
- 			break;
-@@ -719,10 +807,27 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
- 			.memcg = memcg,
- 		};
- 
-+		/* See comment in shrink_slab_memcg. */
-+		if (!get_shrinker(shrinker))
-+			continue;
-+		up_read(&shrinker_rwsem);
-+
- 		ret = do_shrink_slab(&sc, shrinker, priority);
- 		if (ret == SHRINK_EMPTY)
- 			ret = 0;
- 		freed += ret;
-+
-+		/*
-+		 * We can safely continue traverse of the shrinker_list as
-+		 * our shrinker is still on the list due to refcount.
-+		 */
-+		if (!down_read_trylock(&shrinker_rwsem)) {
-+			freed = freed ? : 1;
-+			put_shrinker(shrinker);
-+			goto out;
-+		}
-+		put_shrinker(shrinker);
-+
- 		/*
- 		 * Bail out if someone want to register a new shrinker to
- 		 * prevent the regsitration from being stalled for long periods
+thanks,
 -- 
-2.21.0
-
+John Hubbard
+NVIDIA
