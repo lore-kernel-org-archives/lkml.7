@@ -2,96 +2,99 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8625C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F231C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF382215A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0545215A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfK2JNt (ORCPT
+        id S1726876AbfK2JOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:13:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:45060 "EHLO foss.arm.com"
+        Fri, 29 Nov 2019 04:14:10 -0500
+Received: from olimex.com ([184.105.72.32]:49778 "EHLO olimex.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbfK2JNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 04:13:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB2BE30E;
-        Fri, 29 Nov 2019 01:13:48 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C57BB3F68E;
-        Fri, 29 Nov 2019 01:13:47 -0800 (PST)
-Date:   Fri, 29 Nov 2019 09:13:45 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 12/14] torture: Replace cpu_up/down with
- device_online/offline
-Message-ID: <20191129091344.hf5demtjytv5dw5q@e107158-lin.cambridge.arm.com>
-References: <20191125112754.25223-1-qais.yousef@arm.com>
- <20191125112754.25223-13-qais.yousef@arm.com>
- <20191127214725.GG2889@paulmck-ThinkPad-P72>
- <20191128165611.7lmjaszjl4gbo7u2@e107158-lin.cambridge.arm.com>
- <20191128170025.ii3vqbj4jpcyghut@e107158-lin.cambridge.arm.com>
- <20191128210246.GJ2889@paulmck-ThinkPad-P72>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191128210246.GJ2889@paulmck-ThinkPad-P72>
-User-Agent: NeoMutt/20171215
+        id S1726360AbfK2JOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 04:14:09 -0500
+Received: from localhost.localdomain ([94.155.250.134])
+        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 01:14:04 -0800
+From:   Stefan Mavrodiev <stefan@olimex.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Cc:     linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
+Subject: [PATCH 2/3] arm64: dts: allwinner: a64: olinuxino: Add bank supply regulators
+Date:   Fri, 29 Nov 2019 11:13:35 +0200
+Message-Id: <20191129091336.13104-3-stefan@olimex.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191129091336.13104-1-stefan@olimex.com>
+References: <20191129091336.13104-1-stefan@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/28/19 13:02, Paul E. McKenney wrote:
-> On Thu, Nov 28, 2019 at 05:00:26PM +0000, Qais Yousef wrote:
-> > On 11/28/19 16:56, Qais Yousef wrote:
-> > > On 11/27/19 13:47, Paul E. McKenney wrote:
-> > > > On Mon, Nov 25, 2019 at 11:27:52AM +0000, Qais Yousef wrote:
-> > > > > The core device API performs extra housekeeping bits that are missing
-> > > > > from directly calling cpu_up/down.
-> > > > > 
-> > > > > See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
-> > > > > serialization during LPM") for an example description of what might go
-> > > > > wrong.
-> > > > > 
-> > > > > This also prepares to make cpu_up/down a private interface for anything
-> > > > > but the cpu subsystem.
-> > > > > 
-> > > > > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> > > > > CC: Davidlohr Bueso <dave@stgolabs.net>
-> > > > > CC: "Paul E. McKenney" <paulmck@kernel.org>
-> > > > > CC: Josh Triplett <josh@joshtriplett.org>
-> > > > > CC: linux-kernel@vger.kernel.org
-> > > > 
-> > > > Looks fine from an rcutorture viewpoint, but why not provide an API
-> > > > that pulled lock_device_hotplug() and unlock_device_hotplug() into the
-> > > > online/offline calls?
-> > > 
-> > > I *think* the right way to do what you say is by doing lock_device_hotplug()
-> > > inside device_{online, offline}() - which affects all drivers not just the CPU.
-> 
-> Or there could be a CPU-specific wrapper function that did the needed
-> locking.  (Whether this is worth it or not of course depends on the
-> number of invocations.)
+Allwinner A64 SoC has separate supplies for PC, PD, PE, PG and PL. This
+patch adds regulators for them to the pinctrl node.
 
-Okay I see what you mean now. driver/base/memory.c have {add,remove}_memory()
-that does what you say. I think we can replicate this in driver/base/cpu.c too.
+Exception is PL which is used by the RSB bus. To avoid circular
+dependencies, VCC-PL is omitted.
 
-I can certainly do that, better as an improvement on top as I need to audit the
-code to make sure the critical sections weren't relying on this lock to protect
-something else beside the online/offline operation.
+On boards with eMMC, VCC-PC is supplied by ELDO1, instead of DCDC1.
 
-Thanks!
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+---
+ .../dts/allwinner/sun50i-a64-olinuxino-emmc.dts  |  4 ++++
+ .../boot/dts/allwinner/sun50i-a64-olinuxino.dts  | 16 ++++++++++++++++
+ 2 files changed, 20 insertions(+)
 
---
-Qais Yousef
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
+index 7d135decbd53..75f101d9cd3e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
+@@ -21,3 +21,7 @@
+ 	cap-mmc-hw-reset;
+ 	status = "okay";
+ };
++
++&pio {
++	vcc-pc-supply = <&reg_eldo1>;
++};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+index 01a9a52edae4..ad3559c576dd 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+@@ -163,6 +163,22 @@
+ 	status = "okay";
+ };
+ 
++&pio {
++	vcc-pc-supply = <&reg_dcdc1>;
++	vcc-pd-supply = <&reg_dcdc1>;
++	vcc-pe-supply = <&reg_aldo1>;
++	vcc-pg-supply = <&reg_dldo4>;
++};
++
++&r_pio {
++	/**
++	 * Do not add vcc-pl-supply, since PL0 and PL1 are used
++	 * by the RSB bus.
++	 *
++	 * vcc-pl-supply = <&reg_aldo2>;
++	 */
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
+-- 
+2.17.1
+
