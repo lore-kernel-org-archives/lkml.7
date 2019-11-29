@@ -2,140 +2,99 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6275AC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F76C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B65F2176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A2D21736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfK2Sdp (ORCPT
+        id S1727043AbfK2Sra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 13:33:45 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40054 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfK2Sdp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 13:33:45 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 0AED228C03C
-Received: by earth.universe (Postfix, from userid 1000)
-        id 40A483C0C78; Fri, 29 Nov 2019 19:33:40 +0100 (CET)
-Date:   Fri, 29 Nov 2019 19:33:40 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        lee.jones@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/5] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-Message-ID: <20191129183340.hsjddxot7ocnxran@earth.universe>
-References: <20191117141335.23404-1-matheus@castello.eng.br>
- <20191117141335.23404-5-matheus@castello.eng.br>
- <20191126145200.xqtvfrm6qc6yuutb@earth.universe>
- <c5bb4962-10f7-0877-0c99-c2dad5bb53cf@castello.eng.br>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xcuscrzzo6oezrpv"
+        Fri, 29 Nov 2019 13:47:30 -0500
+Received: from gate.crashing.org ([63.228.1.57]:56566 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbfK2Sra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 13:47:30 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id xATIkxwn003148;
+        Fri, 29 Nov 2019 12:47:00 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id xATIkw6Y003147;
+        Fri, 29 Nov 2019 12:46:58 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Fri, 29 Nov 2019 12:46:58 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 2/2] powerpc/irq: inline call_do_irq() and call_do_softirq()
+Message-ID: <20191129184658.GR9491@gate.crashing.org>
+References: <f12fb9a6cc52d83ee9ddf15a36ee12ac77e6379f.1570684298.git.christophe.leroy@c-s.fr> <5ca6639b7c1c21ee4b4138b7cfb31d6245c4195c.1570684298.git.christophe.leroy@c-s.fr> <877e3tbvsa.fsf@mpe.ellerman.id.au> <20191121101552.GR16031@gate.crashing.org> <87y2w49rgo.fsf@mpe.ellerman.id.au> <20191125142556.GU9491@gate.crashing.org> <5fdb1c92-8bf4-01ca-f81c-214870c33be3@c-s.fr> <20191127145958.GG9491@gate.crashing.org> <2072e066-1ffb-867e-60ec-04a6bb9075c1@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <c5bb4962-10f7-0877-0c99-c2dad5bb53cf@castello.eng.br>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2072e066-1ffb-867e-60ec-04a6bb9075c1@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi!
 
---xcuscrzzo6oezrpv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Nov 27, 2019 at 04:15:15PM +0100, Christophe Leroy wrote:
+> Le 27/11/2019 à 15:59, Segher Boessenkool a écrit :
+> >On Wed, Nov 27, 2019 at 02:50:30PM +0100, Christophe Leroy wrote:
+> >>So what do we do ? We just drop the "r2" clobber ?
+> >
+> >You have to make sure your asm code works for all ABIs.  This is quite
+> >involved if you do a call to an external function.  The compiler does
+> >*not* see this call, so you will have to make sure that all that the
+> >compiler and linker do will work, or prevent some of those things (say,
+> >inlining of the function containing the call).
+> 
+> But the whole purpose of the patch is to inline the call to __do_irq() 
+> in order to avoid the trampoline function.
 
-Hi,
+Yes, so you call __do_irq.  You have to make sure that what you tell the
+compiler -- and what you *don't tell the compiler -- works with what the
+ABIs require, and what the called function expects and provides.
 
-On Wed, Nov 27, 2019 at 10:06:47PM -0300, Matheus Castello wrote:
-> [...]
-> > > @@ -256,14 +303,26 @@ static int max17040_probe(struct i2c_client *cl=
-ient,
-> > >=20
-> > >   	/* check interrupt */
-> > >   	if (client->irq) {
-> > > -		int ret;
-> > > -
-> > > -		ret =3D max17040_enable_alert_irq(chip);
-> > > -
-> > > -		if (ret) {
-> > > -			client->irq =3D 0;
-> > > +		if (of_device_is_compatible(client->dev.of_node,
-> > > +					    "maxim,max77836-battery")) {
-> > > +			ret =3D max17040_set_low_soc_alert(client,
-> > > +							 chip->low_soc_alert);
-> > > +			if (ret) {
-> > > +				dev_err(&client->dev,
-> > > +					"Failed to set low SOC alert: err %d\n",
-> > > +					ret);
-> > > +				return ret;
-> > > +			}
-> > > +
-> > > +			ret =3D max17040_enable_alert_irq(chip);
-> > > +			if (ret) {
-> > > +				client->irq =3D 0;
-> > > +				dev_warn(&client->dev,
-> > > +					 "Failed to get IRQ err %d\n", ret);
-> > > +			}
-> > > +		} else {
-> > >   			dev_warn(&client->dev,
-> > > -				 "Failed to get IRQ err %d\n", ret);
-> > > +				 "Device not compatible for IRQ");
-> >=20
-> > Something is odd here. Either this should be part of the first
-> > patch ("max17040: Add IRQ handler for low SOC alert"), or both
-> > device types support the IRQ and this check should be removed.
->=20
-> The first patch add the IRQ without the configuration of the low SoC aler=
-t,
-> using the default state of charge level. This patch is working with
-> registers to config the low state of charge level, so it was proposed to
-> just try to write registers in the models compatible with that
-> (maxim,max77836-battery).
->=20
-> Maybe join the first patch to this one, and let DT binding be the first
-> patch on the series so we can already test compatible here, let me know w=
-hat
-> you think about it.
+> >That does not fix everything.  The called function requires a specific
+> >value in r2 on entry.
+> 
+> Euh ... but there is nothing like that when using existing 
+> call_do_irq().
 
-Assuming the !max77836 do not have any interrupt support, you can
-just add the OF check in the first patch in "if (client->irq)", so
-that it reads=20
+> How does GCC know that call_do_irq() has same TOC as __do_irq() ?
 
-if (client->irq && of_device_is_compatible(...)) {
-    ...
-}
+The existing call_do_irq isn't C code.  It doesn't do anything with r2,
+as far as I can see; __do_irq just gets whatever the caller of call_do_irq
+has.
 
--- Sebastian
+So I guess all the callers of call_do_irq have the correct r2 value always
+already?  In that case everything Just Works.
 
---xcuscrzzo6oezrpv
-Content-Type: application/pgp-signature; name="signature.asc"
+> >So all this needs verification.  Hopefully you can get away with just
+> >not clobbering r2 (and not adding a nop after the bl), sure.  But this
+> >needs to be checked.
+> >
+> >Changing control flow inside inline assembler always is problematic.
+> >Another problem in this case (on all ABIs) is that the compiler does
+> >not see you call __do_irq.  Again, you can probably get away with that
+> >too, but :-)
+> 
+> Anyway it sees I reference it, as it is in input arguments. Isn't it 
+> enough ?
 
------BEGIN PGP SIGNATURE-----
+It is enough for some things, sure.  But not all.
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3hZIAACgkQ2O7X88g7
-+pqwQQ/+JvYfTlob8QpLMuveqR4F7Jz+118C4j8H6w4xx8uCSp/xPQSxGSQ7zSIg
-mrAm5+YQnm12m4e2nZwdLNAkePuW++O+U9was7s0TUsjVFRC4tQhtwo+LIAbirBz
-RjqOm7tzZnTGu2w6Bhfoe3iyIRvNxELaEl4jk1iEV1qgn6G+z55p6Z6KpbMKWxKu
-8PKEtmZdeN9s9fZQdkyukjvPAs23E2pUB8a++mc7Y5kML6xMMwqnR6Wn+MzaJgq9
-7jL1dNZJ///rH/3JtOr/F237jAZdFdocwIhzS+uDYIU2FxC3WYu3/lD8TMXmWeBb
-kYwOUHDvSx2sh1Bx52UyKvLT1rAtSIbp/u2NbOj9w3zB7k+cl9ePqw7HqiJlZ11d
-V8T93H6bQvCXbftcSAvtRUA8HKh1HSO8o1U8+RMtBxz1y6B2LqNfD4dFT+wltWSj
-Q+HyuzGfz6mrFQ3owFmohyeOSOC1FHJa6Fc1Z40obR3XKYBBMrO+8qXckTim9/dk
-SsPF7E0O6UNJyqthzw9HL1R99F7AX9JX2fjOMAsWpVvoaDEqDkt3Ebt96Gl/YvRL
-x+/+cWQSwGxikSHdDg6drOOYQri/jzySqwFJJhCtvnjqXGRUCRFxgluAIzy4qDBf
-+67VS9ef6Xd2QDlxOPjxRAeqOYbCz6Z8v91q2s0FfS/uC5r7jCo=
-=+2/E
------END PGP SIGNATURE-----
 
---xcuscrzzo6oezrpv--
+Segher
