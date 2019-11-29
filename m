@@ -2,253 +2,120 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840E3C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FA8C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC2B217AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53B31217BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:05:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TIne5VQg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cOYbbdG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfK2OAw (ORCPT
+        id S1726916AbfK2OFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:00:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52655 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726770AbfK2OAv (ORCPT
+        Fri, 29 Nov 2019 09:05:36 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53278 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbfK2OFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:00:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575036049;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+b1qvJKJMmgAGkM2d8KkALdWXaJTGyaCyZOeDvMEs3E=;
-        b=TIne5VQgFbTwGC4vDB8AMmUexEEx/atuHlZ9Bt7dq0K9QdkoWWhsntxLOU4RMNGI6ZeYLY
-        tOoc1awdYeo59xw/mBQRSSscjiwAmoYm/2wTOfanXJiInpWXbTdr+GyFyFni1gcl67s1Qz
-        D/nOb0gqHbz1Y+r8HOrvGDrxOr6qVYU=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-U9lMvnUiMxyo48S5VRgpFw-1; Fri, 29 Nov 2019 09:00:44 -0500
-Received: by mail-lf1-f69.google.com with SMTP id u17so6269939lfl.9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 06:00:44 -0800 (PST)
+        Fri, 29 Nov 2019 09:05:36 -0500
+Received: by mail-wm1-f65.google.com with SMTP id u18so14313076wmc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 06:05:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=iPGXcngV7gc8XOhdKzAAwDcDJ65rcOda9DJ67kLXj4k=;
+        b=cOYbbdG1IlRBWl2RJ0R8oige9Y+cIW9lbyUGtDErNupd+VWfdoeeQnlPAa/Ksg5TJl
+         NRFd/VcHwUFD9B59CKzW7HF7G+f8KXBsgw/FzUNheIlNwa8SM/Lmzpve/nTJ4VSDs61v
+         /LhfUSy30og1Fgssip616rTKzqv5nxFFo0iWnKemwGuqknMTwYiBhZtfbEoAlBZD/iuc
+         vNH7lrUqpn4wSVjQA3obtwBMh0kqrJg5ByWb5/VOiqgFmNUmgP4JMGzAeXMef47ZGsfS
+         HRCiEqQXpggkzqFiuoYL/RgZHgwDPz1IGeYNz+hXxMpLX0JX+1DwBF1OsHegD2wjtO83
+         AT9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=nznlG+jEmJBUCeGnvKlHOT18vQFcrvM/gSvDwhtrSfY=;
-        b=f+P6pMQwQGGAu5llg5XgxFWE1pwUuJzAb764IfVRuMMWAhfXFlaH4WGGOqSsp2r9jO
-         EgC/Z8B1qgGW/ak6sxUgYTE7v9iFnuJf+3W9TNyFZHJAd3Yi4Qohp6U+lZbnoJOI+iea
-         5J67IwN/DN3iF0pSoy8fp97xEhQNYUEMK8Sd7QqlDlHPVJUK648Mp9mIqfFyHKcOdSM1
-         L4fI+s468McU06ObfZZZ/IDV1axAju3SjzrXBbkQEXGNKRWorafXvw77sIk6qFf7bxR7
-         A4H8M/h4aZ05CmNkpnn0TTTLFb4tXFk9CP7do4a73dPOPSKcRJ4V25iFBAlnXfkhIaON
-         LOuA==
-X-Gm-Message-State: APjAAAXyoqhCWmMz4laU3PHcnm1iQU9NzFvegJGKOW0q55dtGacduGKS
-        5fKh+XpyasrQK+SMVQLTdkx6qPxgx30uBLz7tdiy52fqlSC61ZV7/iz1q/jEMD3EGUgo7VoKg0p
-        W2UKvIbINJYGZ7PfOWn8OEeex
-X-Received: by 2002:a2e:8855:: with SMTP id z21mr39422142ljj.212.1575036043050;
-        Fri, 29 Nov 2019 06:00:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz28Bd8f/J7BOBAW2B1uN/PHxldgbyIJWg1HRDOQRKNKQNE9kOVrRrKRXQ/FeMftWLjXGZeSA==
-X-Received: by 2002:a2e:8855:: with SMTP id z21mr39422099ljj.212.1575036042728;
-        Fri, 29 Nov 2019 06:00:42 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id m9sm1211958lfj.57.2019.11.29.06.00.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 06:00:41 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 4ACC9181923; Fri, 29 Nov 2019 15:00:40 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>, kubakici@wp.pl
-Subject: Re: [PATCH bpf v3] bpftool: Allow to link libbpf dynamically
-In-Reply-To: <f6e8f6d2-6155-3b20-9975-81e29e460915@iogearbox.net>
-References: <20191128160712.1048793-1-toke@redhat.com> <f6e8f6d2-6155-3b20-9975-81e29e460915@iogearbox.net>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 29 Nov 2019 15:00:40 +0100
-Message-ID: <87a78evl2v.fsf@toke.dk>
-MIME-Version: 1.0
-X-MC-Unique: U9lMvnUiMxyo48S5VRgpFw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iPGXcngV7gc8XOhdKzAAwDcDJ65rcOda9DJ67kLXj4k=;
+        b=G62Fhwp5xRDyvHw3MwKcirdX2b/CYmJLGkiq67ATKaBszfwr6zOAh+mtqymUek77R9
+         xx4TEEV5efwUKsnl3ciLN6cE/jd4Q1X1SR6/rPb/8cbeq1VDEzXsCV3IeIighSe2Ej1w
+         z8iYnREgXZc4mVgeX9QL16le05vGGD208egA3+1U5xzqrQcicf26cfPt+o5H/AsQGuO9
+         p41BQ/j679lbeJBcb5qI/7NAIOGJtle5RlCaiZ5IBVdJr1B8v2+xPGzdjEagY3q80tYs
+         wgOzHTa3ld2oQfSR9epd/tNSLuFySlUBGrnhByJtZYl6xCYoS/0NbNt/UH6v6je5GPvz
+         zX8A==
+X-Gm-Message-State: APjAAAUDb5mXFktQ+wvLPsFVR5vpXWm/PmKq+WXJteNgSMxsXi/UBisv
+        jNbQQk9dbg0j8q+nOtsYnRsPZQ==
+X-Google-Smtp-Source: APXvYqzisM4NdYBySYEo3Oyrfqbq8ztBVcGPXGh1S6vXO3M81mAduCnizeer69MBt4ara4u+3cKzHw==
+X-Received: by 2002:a05:600c:2549:: with SMTP id e9mr14431487wma.177.1575036332011;
+        Fri, 29 Nov 2019 06:05:32 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:7d72:5485:2a04:b211])
+        by smtp.gmail.com with ESMTPSA id k20sm12838804wmj.10.2019.11.29.06.05.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 29 Nov 2019 06:05:29 -0800 (PST)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] sched/cfs: fix spurious active migration
+Date:   Fri, 29 Nov 2019 15:04:47 +0100
+Message-Id: <1575036287-6052-1-git-send-email-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Borkmann <daniel@iogearbox.net> writes:
+The load balance can fail to find a suitable task during the periodic check
+because  the imbalance is smaller than half of the load of the waiting
+tasks. This results in the increase of the number of failed load balance,
+which can end up to start an active migration. This active migration is
+useless because the current running task is not a better choice than the
+waiting ones. In fact, the current task was probably not running but
+waiting for the CPU during one of the previous attempts and it had already
+not been selected.
 
-> On 11/28/19 5:07 PM, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
->> From: Jiri Olsa <jolsa@kernel.org>
->>=20
->> Currently we support only static linking with kernel's libbpf
->> (tools/lib/bpf). This patch adds LIBBPF_DYNAMIC compile variable
->> that triggers libbpf detection and bpf dynamic linking:
->>=20
->>    $ make -C tools/bpf/bpftool make LIBBPF_DYNAMIC=3D1
->>=20
->> If libbpf is not installed, build (with LIBBPF_DYNAMIC=3D1) stops with:
->>=20
->>    $ make -C tools/bpf/bpftool LIBBPF_DYNAMIC=3D1
->>      Auto-detecting system features:
->>      ...                        libbfd: [ on  ]
->>      ...        disassembler-four-args: [ on  ]
->>      ...                          zlib: [ on  ]
->>      ...                        libbpf: [ OFF ]
->>=20
->>    Makefile:102: *** Error: No libbpf devel library found, please instal=
-l libbpf-devel or libbpf-dev.
->>=20
->> Adding LIBBPF_DIR compile variable to allow linking with
->> libbpf installed into specific directory:
->>=20
->>    $ make -C tools/lib/bpf/ prefix=3D/tmp/libbpf/ install_lib install_he=
-aders
->>    $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/tmp/lib=
-bpf/
->>=20
->> It might be needed to clean build tree first because features
->> framework does not detect the change properly:
->>=20
->>    $ make -C tools/build/feature clean
->>    $ make -C tools/bpf/bpftool/ clean
->>=20
->> Since bpftool uses bits of libbpf that are not exported as public API in
->> the .so version, we also pass in libbpf.a to the linker, which allows it=
- to
->> pick up the private functions from the static library without having to
->> expose them as ABI.
->>=20
->> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
->> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->> ---
->> v3:
->>    - Keep $(LIBBPF) in $LIBS, and just add -lbpf on top
->>    - Fix typo in error message
->> v2:
->>    - Pass .a file to linker when dynamically linking, so bpftool can use
->>      private functions from libbpf without exposing them as API.
->>=20
->>   tools/bpf/bpftool/Makefile | 34 ++++++++++++++++++++++++++++++++++
->>   1 file changed, 34 insertions(+)
->>=20
->> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
->> index 39bc6f0f4f0b..15052dcaa39b 100644
->> --- a/tools/bpf/bpftool/Makefile
->> +++ b/tools/bpf/bpftool/Makefile
->> @@ -1,6 +1,15 @@
->>   # SPDX-License-Identifier: GPL-2.0-only
->> +# LIBBPF_DYNAMIC to enable libbpf dynamic linking.
->> +
->>   include ../../scripts/Makefile.include
->>   include ../../scripts/utilities.mak
->> +include ../../scripts/Makefile.arch
->> +
->> +ifeq ($(LP64), 1)
->> +  libdir_relative =3D lib64
->> +else
->> +  libdir_relative =3D lib
->> +endif
->>  =20
->>   ifeq ($(srctree),)
->>   srctree :=3D $(patsubst %/,%,$(dir $(CURDIR)))
->> @@ -63,6 +72,19 @@ RM ?=3D rm -f
->>   FEATURE_USER =3D .bpftool
->>   FEATURE_TESTS =3D libbfd disassembler-four-args reallocarray zlib
->>   FEATURE_DISPLAY =3D libbfd disassembler-four-args zlib
->> +ifdef LIBBPF_DYNAMIC
->> +  FEATURE_TESTS   +=3D libbpf
->> +  FEATURE_DISPLAY +=3D libbpf
->> +
->> +  # for linking with debug library run:
->> +  # make LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/opt/libbpf
->
-> The Makefile already has BPF_DIR which points right now to
-> '$(srctree)/tools/lib/bpf/' and LIBBPF_PATH for the final one and
-> where $(LIBBPF_PATH)libbpf.a is expected to reside. Can't we improve
-> the Makefile to reuse and work with these instead of adding yet
-> another LIBBPF_DIR var which makes future changes in this area more
-> confusing? The libbpf build spills out libbpf.{a,so*} by default
-> anyway.
+When load balance fails too many times to migrate a task, we should relax
+the contraint on the maximum load of the tasks that can be migrated
+similarly to what is done with cache hotness.
 
-I see what you mean; however, LIBBPF_DIR is meant to be specifically an
-override for the dynamic library, not just the path to libbpf.
+Before the rework, load balance used to set the imbalance to the average
+load_per_task in order to mitigate such situation. This increased the
+likelihood of migrating a task but also of selecting a larger task than
+needed while more appropriate ones were in the list.
 
-Would it be less confusing to overload the LIBBPF_DYNAMIC variable
-instead? I.e.,
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
 
-make LIBBPF_DYNAMIC=3D1
+I haven't seen any noticable performance changes on the benchmarks that I
+usually run but the problem can be easily highlight with a simple test
+with 9 always running tasks on 8 cores.
 
-would dynamically link against the libbpf installed in the system, but
+ kernel/sched/fair.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-make LIBBPF_DYNAMIC=3D/opt/libbpf
-
-would override that and link against whatever is in /opt/libbpf instead?
-WDYT?
-
-> Was wondering whether we could drop LIBBPF_DYNAMIC altogether and have
-> some sort of auto detection, but given for perf the `make
-> LIBBPF_DYNAMIC=3D1` option was just applied to perf tree it's probably
-> better to stay consistent plus static linking would stay as-is for
-> preferred method for bpftool, so that part seems fine.
-
-When adding LIBBPF_DYNAMIC in a packaging script, we *want* the build to
-fail if it doesn't work, instead of just silently falling back to a
-statically linked version. Also, for something in the kernel tree like
-bpftool, I think it makes more sense to default to the in-tree version
-and make dynamic linking explicitly opt-in.
-
->> +  ifdef LIBBPF_DIR
->> +    LIBBPF_CFLAGS  :=3D -I$(LIBBPF_DIR)/include
->> +    LIBBPF_LDFLAGS :=3D -L$(LIBBPF_DIR)/$(libdir_relative)
->> +    FEATURE_CHECK_CFLAGS-libbpf  :=3D $(LIBBPF_CFLAGS)
->> +    FEATURE_CHECK_LDFLAGS-libbpf :=3D $(LIBBPF_LDFLAGS)
->> +  endif
->> +endif
->>  =20
->>   check_feat :=3D 1
->>   NON_CHECK_FEAT_TARGETS :=3D clean uninstall doc doc-clean doc-install =
-doc-uninstall
->> @@ -88,6 +110,18 @@ ifeq ($(feature-reallocarray), 0)
->>   CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
->>   endif
->>  =20
->> +ifdef LIBBPF_DYNAMIC
->> +  ifeq ($(feature-libbpf), 1)
->> +    # bpftool uses non-exported functions from libbpf, so just add the =
-dynamic
->> +    # version of libbpf and let the linker figure it out
->> +    LIBS    :=3D -lbpf $(LIBS)
->
-> Seems okay as a workaround for bpftool and avoids getting into the
-> realm of declaring libbpf as another half-baked netlink library if
-> we'd have exposed these. Ideally the netlink symbols shouldn't be
-> needed at all from libbpf, but I presume the rationale back then was
-> that given it's used internally in libbpf for some of the APIs and was
-> needed in bpftool's net subcommand as well later on, it avoided
-> duplicating the code given statically linked and both are in-tree
-> anyway.
-
-Yeah, I do think it's a little odd that bpftool is using "private" parts
-of libbpf, but since we can solve it like this I think that is OK.
-
--Toke
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index e0d662a..d1b4fa7 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7433,7 +7433,14 @@ static int detach_tasks(struct lb_env *env)
+ 			    load < 16 && !env->sd->nr_balance_failed)
+ 				goto next;
+ 
+-			if (load/2 > env->imbalance)
++			/*
++			 * Make sure that we don't migrate too much load.
++			 * Nevertheless, let relax the constraint if
++			 * scheduler fails to find a good waiting task to
++			 * migrate.
++			 */
++			if (load/2 > env->imbalance &&
++			    env->sd->nr_balance_failed <= env->sd->cache_nice_tries)
+ 				goto next;
+ 
+ 			env->imbalance -= load;
+-- 
+2.7.4
 
