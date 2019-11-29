@@ -2,176 +2,191 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB13C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE13C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B357821774
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:49:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pY9tvyaz"
+	by mail.kernel.org (Postfix) with ESMTP id 307EE208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:50:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfK2Qsv (ORCPT
+        id S1727124AbfK2Que (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 11:48:51 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33443 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfK2Qsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 11:48:50 -0500
-Received: by mail-ed1-f68.google.com with SMTP id a24so26228950edt.0;
-        Fri, 29 Nov 2019 08:48:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UufnYlf2GsYCPyzbkkHk/dTVOPXtueY9E5VYzdhLqUs=;
-        b=pY9tvyazS85bTfSIan9LQaMzwCiangviUqIczyltzkqih6hrGj2G5d8O0oWBBg2DVo
-         YKL90Vfw4gTHQYAwP3UzR3vqm8iE1gjZADNDnRVnfzBsdv7S2hS7H4QX3kkiPzhGnmzY
-         4wVayL16J93zLdJ15b7j5ISMap+5xu91iJFnxOgsNWTBlyKkzkb0JON4vI+PZXXNupXi
-         PhYlFRfJpxg07Skq3LYOGnO4bnMpne6RmIJFZKxdNwJ0Ycwf0YsGBmfrefQDDtfIGyM3
-         taNJpZYsFQkWfAI3yksn8Bv0Z/bQeLW6vRY8dZnZlZyeMd3MJHGO6Idu2N0NWjYEbmSU
-         9u4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UufnYlf2GsYCPyzbkkHk/dTVOPXtueY9E5VYzdhLqUs=;
-        b=BgRrdsTE+YYd25k8RU1bZuTcqyoEY2cXqsJjNfWhFuKVmCZAn7PXhn7rdnsca8aM57
-         d1ylgStbPm0NKBQ4me2pbPJqp9Pi1TDCTtOi4+XMwzhg0wZzzsB9sfVnoPo/hudBp8Cn
-         KFYHHXXWw4HSo27aWUD/p1hJ6tS+pnx2xSw3bZtQOxeCP8IATbx32gcWLAks1K79Weu6
-         Xr3yCz8i0LMYLsAvz4xu1aSpllDaKyH5A681pnHiLNfgSxmuptsZelEIV2T7gaD+unnW
-         NO0MSwhKd64xrSgucAYkpwoeGHWo0rHFRuox3TYqiq/Pr6PjItvlLm9xeDNdaNZJHwDH
-         sbzg==
-X-Gm-Message-State: APjAAAWhvl/a04HDuFN9vnTNWXtHbOouAl7B7lLanNNiVokSDihQC5Pp
-        F53FRU1Zzb1uSyC30G6hXWjrRk+5blRrWbvXzeQfarY2
-X-Google-Smtp-Source: APXvYqxMCZ12ZTAFseqpRkfanwT5QgN0HgMTMYKPNJBhwzpA+ToKqjaShI3w7o9le0g6Sk6wWYbkA/1kj05qoecE0lo=
-X-Received: by 2002:a50:9fcb:: with SMTP id c69mr46409317edf.163.1575046127828;
- Fri, 29 Nov 2019 08:48:47 -0800 (PST)
+        Fri, 29 Nov 2019 11:50:34 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:35114 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbfK2Qud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 11:50:33 -0500
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iajTD-0007PZ-KQ; Fri, 29 Nov 2019 09:50:16 -0700
+To:     James Sewart <jamessewart@arista.com>, linux-pci@vger.kernel.org
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <20191120193228.GA103670@google.com>
+ <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+ <20191126173833.GA16069@infradead.org>
+ <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
+ <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
+ <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
+Date:   Fri, 29 Nov 2019 09:50:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1575010545-25971-1-git-send-email-harigovi@codeaurora.org> <1575010545-25971-2-git-send-email-harigovi@codeaurora.org>
-In-Reply-To: <1575010545-25971-2-git-send-email-harigovi@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 29 Nov 2019 08:48:34 -0800
-Message-ID: <CAF6AEGt8zuKWz-e_yRS_hbn6HV6DAXDvK4zwjJ-naQtEoe7uuA@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH v1 1/2] dt-bindings: display: add sc7180 panel variant
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, alex.williamson@redhat.com, dima@arista.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, 0x7f454c46@gmail.com, hch@infradead.org, linux-pci@vger.kernel.org, jamessewart@arista.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v4 1/2] PCI: Add parameter nr_devfns to pci_add_dma_alias
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 10:56 PM Harigovindan P <harigovi@codeaurora.org> wrote:
->
-> Add a compatible string to support sc7180 panel version.
->
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+
+
+On 2019-11-29 5:49 a.m., James Sewart wrote:
+> pci_add_dma_alias can now be used to create a dma alias for a range of
+> devfns.
+> 
+> Signed-off-by: James Sewart <jamessewart@arista.com>
 > ---
->  .../bindings/display/visionox,rm69299.txt          | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100755 Documentation/devicetree/bindings/display/visionox,rm69299.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/visionox,rm69299.txt b/Documentation/devicetree/bindings/display/visionox,rm69299.txt
-> new file mode 100755
-> index 0000000..4622191
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/visionox,rm69299.txt
-> @@ -0,0 +1,68 @@
-> +Visionox model RM69299 DSI display driver
+>  drivers/pci/pci.c    | 23 ++++++++++++++++++-----
+>  drivers/pci/quirks.c | 14 +++++++-------
+>  include/linux/pci.h  |  2 +-
+>  3 files changed, 26 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index a97e2571a527..9b0e3481fe17 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>  /**
+>   * pci_add_dma_alias - Add a DMA devfn alias for a device
+>   * @dev: the PCI device for which alias is added
+> - * @devfn: alias slot and function
+> + * @devfn_from: alias slot and function
+> + * @nr_devfns: Number of subsequent devfns to alias
+>   *
+>   * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
+>   * which is used to program permissible bus-devfn source addresses for DMA
+> @@ -5873,8 +5874,14 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>   * cannot be left as a userspace activity).  DMA aliases should therefore
+>   * be configured via quirks, such as the PCI fixup header quirk.
+>   */
+> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
+>  {
+> +	int devfn_to;
 > +
-> +The Visionox RM69299 is a generic display driver, currently only configured
-> +for use in the 1080p display on the Qualcomm SC7180 MTP board.
-> +
-> +Required properties:
-> +- compatible: should be "visionox,rm69299-1080p-display"
-> +- vdda-supply: phandle of the regulator that provides the supply voltage
-> +  Power IC supply
-> +- vdd3p3-supply: phandle of the regulator that provides the supply voltage
-> +  Power IC supply
-> +- reset-gpios: phandle of gpio for reset line
-> +  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
-> +  (active low)
-> +- mode-gpios: phandle of the gpio for choosing the mode of the display
-> +  for single DSI
-> +- ports: This device has one video port driven by one DSI. Their connections
-> +  are modeled using the OF graph bindings specified in
-> +  Documentation/devicetree/bindings/graph.txt.
-> +  - port@0: DSI input port driven by master DSI
-> +
-> +Example:
-> +
-> +       dsi@ae94000 {
-> +               panel@0 {
-> +                       compatible = "visionox,rm69299-1080p-display";
-> +                       reg = <0>;
-> +
-> +                       vdda-supply = <&src_pp1800_l8c>;
-> +                       vdd3p3-supply = <&src_pp2800_l18a>;
-> +
-> +                       pinctrl-names = "default", "suspend";
-> +                       pinctrl-0 = <&disp_pins_default>;
-> +                       pinctrl-1 = <&disp_pins_default>;
-> +
-> +                       reset-gpios = <&pm6150l_gpios 3 0>;
-> +
-> +                       display-timings {
-> +                               timing0: timing-0 {
-> +                                       /* originally
-> +                                        * 268316160 Mhz,
-> +                                        * but value below fits
-> +                                        * better w/ downstream
-> +                                        */
-> +                                       clock-frequency = <158695680>;
-> +                                       hactive = <1080>;
-> +                                       vactive = <2248>;
-> +                                       hfront-porch = <26>;
-> +                                       hback-porch = <36>;
-> +                                       hsync-len = <2>;
-> +                                       vfront-porch = <56>;
-> +                                       vback-porch = <4>;
-> +                                       vsync-len = <4>;
-> +                               };
+> +	if (nr_devfns > U8_MAX+1)
+> +		nr_devfns = U8_MAX+1;
 
-why do we specify timings in dt?  Would the panel use different
-timings on a different board?
+Why +1? That doesn't seem right to me....
 
-BR,
--R
-
-> +                       };
+> +	devfn_to = devfn_from + nr_devfns - 1;
 > +
-> +                       ports {
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +                               port@0 {
-> +                                       reg = <0>;
-> +                                       panel0_in: endpoint {
-> +                                               remote-endpoint = <&dsi0_out>;
-> +                                       };
-> +                               };
-> +                       };
-> +               };
-> +       };
-> --
-> 2.7.4
->
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+>  	if (!dev->dma_alias_mask)
+>  		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
+>  	if (!dev->dma_alias_mask) {
+> @@ -5882,9 +5889,15 @@ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+>  		return;
+>  	}
+>  
+> -	set_bit(devfn, dev->dma_alias_mask);
+> -	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+> -		 PCI_SLOT(devfn), PCI_FUNC(devfn));
+> +	bitmap_set(dev->dma_alias_mask, devfn_from, nr_devfns);
+> +
+> +	if (nr_devfns == 1)
+> +		pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+> +				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from));
+> +	else if(nr_devfns > 1)
+> +		pci_info(dev, "Enabling fixed DMA alias for devfn range from %02x.%d to %02x.%d\n",
+> +				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from),
+> +				PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
+>  }
+>  
+>  bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2)
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 320255e5e8f8..0f3f5afc73fd 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3932,7 +3932,7 @@ int pci_dev_specific_reset(struct pci_dev *dev, int probe)
+>  static void quirk_dma_func0_alias(struct pci_dev *dev)
+>  {
+>  	if (PCI_FUNC(dev->devfn) != 0)
+> -		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
+> +		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 0), 1);
+>  }
+>  
+>  /*
+> @@ -3946,7 +3946,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe476, quirk_dma_func0_alias);
+>  static void quirk_dma_func1_alias(struct pci_dev *dev)
+>  {
+>  	if (PCI_FUNC(dev->devfn) != 1)
+> -		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 1));
+> +		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 1), 1);
+>  }
+>  
+>  /*
+> @@ -4031,7 +4031,7 @@ static void quirk_fixed_dma_alias(struct pci_dev *dev)
+>  
+>  	id = pci_match_id(fixed_dma_alias_tbl, dev);
+>  	if (id)
+> -		pci_add_dma_alias(dev, id->driver_data);
+> +		pci_add_dma_alias(dev, id->driver_data, 1);
+>  }
+>  
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ADAPTEC2, 0x0285, quirk_fixed_dma_alias);
+> @@ -4073,9 +4073,9 @@ DECLARE_PCI_FIXUP_HEADER(0x8086, 0x244e, quirk_use_pcie_bridge_dma_alias);
+>   */
+>  static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
+>  {
+> -	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0));
+> -	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0));
+> -	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3));
+> +	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0), 1);
+> +	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0), 1);
+> +	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3), 1);
+>  }
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, quirk_mic_x200_dma_alias);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, quirk_mic_x200_dma_alias);
+> @@ -5273,7 +5273,7 @@ static void quirk_switchtec_ntb_dma_alias(struct pci_dev *pdev)
+>  			pci_dbg(pdev,
+>  				"Aliasing Partition %d Proxy ID %02x.%d\n",
+>  				pp, PCI_SLOT(devfn), PCI_FUNC(devfn));
+> -			pci_add_dma_alias(pdev, devfn);
+> +			pci_add_dma_alias(pdev, devfn, 1);
+>  		}
+>  	}
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 1a6cf19eac2d..84a8d4c2b24e 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2323,7 +2323,7 @@ static inline struct eeh_dev *pci_dev_to_eeh_dev(struct pci_dev *pdev)
+>  }
+>  #endif
+>  
+> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
+> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns);
+>  bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2);
+>  int pci_for_each_dma_alias(struct pci_dev *pdev,
+>  			   int (*fn)(struct pci_dev *pdev,
+> 
