@@ -2,125 +2,105 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C4CC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A8CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933612176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3A8208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CSjQyz1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfK2R1E (ORCPT
+        id S1727022AbfK2RcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 12:27:04 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:35734 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726957AbfK2R1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 12:27:04 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1iak2k-0008Lo-N5; Fri, 29 Nov 2019 10:26:59 -0700
-To:     James Sewart <jamessewart@arista.com>
-Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20191120193228.GA103670@google.com>
- <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
- <20191126173833.GA16069@infradead.org>
- <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
- <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
- <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
- <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
- <F26CC19F-66C2-466B-AE30-D65E10BA3022@arista.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <d811576e-0f89-2303-a554-2701af5c5647@deltatee.com>
-Date:   Fri, 29 Nov 2019 10:26:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 29 Nov 2019 12:32:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26078 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726909AbfK2RcX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 12:32:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575048742;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lu1iN71LokIjGtjpqlGVpx9UlOqCL6Wwu7KcbuyxTxI=;
+        b=CSjQyz1vUprYkf3yZ0DAXnqetQqzvpxJB4Ge6QQrPLg+pSZb87NQxfPVqBay0OweO8t17q
+        68acDyPYJhGyB2liSDQD2ranoj5mp1kV7rYjsOYG998gnMATkbPwMkqQSR90Llrm0mvMrM
+        QV+ldLzWCACnA9nd0wPjKEMYcqov2u0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-413-jnDybVVFNViIOLXnnOZleA-1; Fri, 29 Nov 2019 12:32:21 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 511391005502;
+        Fri, 29 Nov 2019 17:32:19 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A26F610013A1;
+        Fri, 29 Nov 2019 17:32:14 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 29 Nov 2019 18:32:19 +0100 (CET)
+Date:   Fri, 29 Nov 2019 18:32:13 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Jan Kratochvil <jan.kratochvil@redhat.com>,
+        Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH] ptrace/x86: introduce TS_COMPAT_RESTART to fix
+ get_nr_restart_syscall()
+Message-ID: <20191129173213.GB3992@redhat.com>
+References: <CAHk-=whA1h-7MKGdzyViwJR4_rqYKMP91FwuObWneBZE0yH81A@mail.gmail.com>
+ <EB7AF2AE-6CA3-4395-AA37-BF92EE308A42@amacapital.net>
 MIME-Version: 1.0
-In-Reply-To: <F26CC19F-66C2-466B-AE30-D65E10BA3022@arista.com>
+In-Reply-To: <EB7AF2AE-6CA3-4395-AA37-BF92EE308A42@amacapital.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: jnDybVVFNViIOLXnnOZleA-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: helgaas@kernel.org, alex.williamson@redhat.com, dima@arista.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, 0x7f454c46@gmail.com, hch@infradead.org, linux-pci@vger.kernel.org, jamessewart@arista.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v4 1/2] PCI: Add parameter nr_devfns to pci_add_dma_alias
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/28, Andy Lutomirski wrote:
+>
+> I think this doesn=E2=80=99t work for x32.
 
+Why? get_nr_restart_syscall() can still rely on the "orig_ax & __X32_SYSCAL=
+L_BIT"
+check, debugger should restore regs->orig_ax correctly.
 
-On 2019-11-29 10:19 a.m., James Sewart wrote:
-> 
-> 
->> On 29 Nov 2019, at 16:50, Logan Gunthorpe <logang@deltatee.com> wrote:
->>
->>
->>
->> On 2019-11-29 5:49 a.m., James Sewart wrote:
->>> pci_add_dma_alias can now be used to create a dma alias for a range of
->>> devfns.
->>>
->>> Signed-off-by: James Sewart <jamessewart@arista.com>
->>> ---
->>> drivers/pci/pci.c    | 23 ++++++++++++++++++-----
->>> drivers/pci/quirks.c | 14 +++++++-------
->>> include/linux/pci.h  |  2 +-
->>> 3 files changed, 26 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>> index a97e2571a527..9b0e3481fe17 100644
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->>> /**
->>>  * pci_add_dma_alias - Add a DMA devfn alias for a device
->>>  * @dev: the PCI device for which alias is added
->>> - * @devfn: alias slot and function
->>> + * @devfn_from: alias slot and function
->>> + * @nr_devfns: Number of subsequent devfns to alias
->>>  *
->>>  * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
->>>  * which is used to program permissible bus-devfn source addresses for DMA
->>> @@ -5873,8 +5874,14 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->>>  * cannot be left as a userspace activity).  DMA aliases should therefore
->>>  * be configured via quirks, such as the PCI fixup header quirk.
->>>  */
->>> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
->>> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
->>> {
->>> +	int devfn_to;
->>> +
->>> +	if (nr_devfns > U8_MAX+1)
->>> +		nr_devfns = U8_MAX+1;
->>
->> Why +1? That doesn't seem right to me….
-> 
-> U8_MAX is the max number U8 can represent(255) but is one less than the number 
-> of values it can represent(256). devfns can be 0.0 to 1f.7 inclusive(I think) 
-> so the number of possible devfns is 256. Thinking about it, maybe the 
-> zalloc should be U8_MAX+1 too?
-> 
-> I might be wrong though, what do you reckon?
+> Let=E2=80=99s either save the result of syscall_get_arch()
 
-Right, yes, but I actually think the original code is wrong. It's only
-allocating a bitmap that holds 255 values and you're trying to insert
-256 ones into that bitmap. It's probably ok, because there's no way to
-allocate an odd sized bitmap, but it's probably worth fixing for clarity.
+We can save the result of syscall_get_arch(), but it doesn't distinguish
+x32/x86_64 tasks, so it doesn't really differ from TS_COMPAT.
 
-It also looks wrong in pci_for_each_dma_alias() as well, so I'd probably
-fix both those up in a separate prep-patch.
+> or just actually calculate and save the restart_syscall nr here.
 
-Logan
+sure, we we can do this.
+
+> Before we commit to this, Kees, do you think we can manage to just renumb=
+er
+> restart_syscall()?  That=E2=80=99s a much better solution if we can pull =
+it off.
+
+Agreed.
+
+Oleg.
+
