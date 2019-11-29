@@ -2,71 +2,68 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600F0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 00:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2105DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 00:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360852158A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 00:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B342176D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 00:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bv85t85R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJSvsdf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfK2ATx (ORCPT
+        id S1726700AbfK2AtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 19:19:53 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39564 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbfK2ATw (ORCPT
+        Thu, 28 Nov 2019 19:49:19 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37947 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfK2AtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 19:19:52 -0500
-Received: by mail-pj1-f67.google.com with SMTP id v93so9233577pjb.6;
-        Thu, 28 Nov 2019 16:19:52 -0800 (PST)
+        Thu, 28 Nov 2019 19:49:19 -0500
+Received: by mail-pg1-f194.google.com with SMTP id t3so13147570pgl.5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 16:49:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=h53cQjZSibuH3tAJSYGep55eMe8Vd0lhXfafS/71YMc=;
-        b=Bv85t85R3UvENEoNM1z9LUb+cWEgsm9+BUi6Z6TY45q7P4tPHrTkzmbq19ZyKt3gaY
-         4Y7b1GC07f6G3J9lhtrt1nyCJUz91Vr1W2Zz7WfhKYP89Y1e+CepLYa/Fd3ILNkgJBYm
-         HXkFZ33yEKBBype4wxBkYrsItVCCwAL4ez8pa2iagti25qmNm1/7arPwnqs0LjBvPk/a
-         HcOWyYq2ZMG0wlTN87SrVWqCrlFKwRYxUDQ1pE9TplPwkhzvnEg5teYfGGf3zSega9/A
-         2n83v1OcpOZr1pKNmtVs5LQQ3sLA7oD9FUEar9wbLLo7EXJLaDtOv+EpKnCuO6o92m7i
-         Udsw==
+        bh=Er0BveApuGpZcCQ7MJvTFXGgSFZgN3u+8yAIisXO87k=;
+        b=KJSvsdf/0VvkENZRJVgDMQrRC+eIsYDs5/nOxYRpDi/NLvNxd3TKM324hYHW/yrlWl
+         4JsY9BDUGZtjvXHId+SaDNc4pVBQ+Gmi0v8mswcl6zDhYkEDK4gFRkbNwhe8SXNoe6P0
+         heiQSIcALpjL3aVz1ZVdTvvsHgLrjJBOplBQXSX8BikLjuAlkLoBHcjdi49J/52uWfOs
+         nXRQUCSm3c4BXU+7SRY8pL1rGg3zxcayX1oxs8KRnBF/yROeKJVHEP/xkPRA4LihuRkY
+         aCeWiHbhJuG1ZfEw84K4aHjUwVmDQ8VToBfJ87kQROx4bgG7/ouUjJjuSzVYHzqiXO8h
+         88JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=h53cQjZSibuH3tAJSYGep55eMe8Vd0lhXfafS/71YMc=;
-        b=Hbc8GTR+F11fK97IH198Du+vIq0CbVSZQ4h3RYE46wCQuPEfqDoCXejrwQOUFx5bq2
-         0T/7dwBMyKnHlyVESVwXiQ5VH2XFdOYqAmyn1HJ0WkoxwtJHsXCTe1tPkZq9q/ir/779
-         3Cx90518HkSfCOD1O7OsdLoUUPNGMVoMn4ht5d3L4Krg0bljfSFB+3ckvljRm2Bkxmyr
-         gvAAu+qSZ0laG6u5LrbiB/Jr2niqjc2gRPcor76pwHut4hCswrhCdsWxTNpHVaSDxcmj
-         exm3vy5ccNj0qY35zBBegBJUggu6vNkJT9X2jZ7Nth5dzNyEvTfV9hRl6fdGYrMo4OaD
-         Nn+g==
-X-Gm-Message-State: APjAAAWbvCYNVYuzUFawhyVTX/ma2N2BVtfnqtRAPQATA1hrPBEIodz3
-        cbv1x35OW/GgzMkBY9XxO+w=
-X-Google-Smtp-Source: APXvYqydSlcywgyu28ko3Or1LMj946GqVhi84pXtfb+mGorPFT5tefwcV+ieBvVCZA+weqO0Y7JsjQ==
-X-Received: by 2002:a17:902:a408:: with SMTP id p8mr12227465plq.266.1574986791930;
-        Thu, 28 Nov 2019 16:19:51 -0800 (PST)
-Received: from localhost.localdomain ([45.124.203.14])
-        by smtp.gmail.com with ESMTPSA id c2sm21717929pfn.55.2019.11.28.16.19.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Er0BveApuGpZcCQ7MJvTFXGgSFZgN3u+8yAIisXO87k=;
+        b=GR4ldHIoSRL4Waw1RKfFpaMHos4gQr+z371nqzvjadgQDZQ2TcWeVrTse5ff4pQ9Fk
+         uapoZGp/Tnl29cqdSUzFfdNOjwTF4BlvLfuyKprtGYa/j5Oa3CYVu04ISkFgZ21mTUUK
+         XQQ0PSwKhbGymxlUMeK5hLAjzYHioR/z8KkK/N+GLzd6kWuetyUmZP6T7+SHeKwvOiYn
+         WyG0NtnwO+u4jUpd5VAYivd0SZZxzDn7sz21Vbog1P8maGBd4Druc7Xld5AoQ7CB4INT
+         l6bHQj0sa3WFaGx3ho2rcti494iEOHtH5Bdu0z62nnEFFSSZtDjezL1xLl/Vk1tbmaBR
+         iKqA==
+X-Gm-Message-State: APjAAAWHInoxd7YdKngwDgR5waeFupdGLCk7cOUfk/aBxgeJ9TsKp02e
+        Dhm3KZOcdFx3UudmG0rKwFM=
+X-Google-Smtp-Source: APXvYqyApdPpftN+vV2nvmBBowUli4X7V/J8sYEkkUmC4LcmBfkr4EU4ECpWEHmh1EQEAxffn9W5nQ==
+X-Received: by 2002:a63:334f:: with SMTP id z76mr13701756pgz.277.1574988558791;
+        Thu, 28 Nov 2019 16:49:18 -0800 (PST)
+Received: from tw-172-25-31-76.office.twttr.net ([8.25.197.24])
+        by smtp.gmail.com with ESMTPSA id 64sm22418202pfe.147.2019.11.28.16.49.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 16:19:50 -0800 (PST)
-From:   Joel Stanley <joel@jms.id.au>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, openbmc@lists.ozlabs.org,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>
-Subject: [PATCH] Revert "jffs2: Fix possible null-pointer dereferences in jffs2_add_frag_to_fragtree()"
-Date:   Fri, 29 Nov 2019 10:49:30 +1030
-Message-Id: <20191129001930.651128-1-joel@jms.id.au>
-X-Mailer: git-send-email 2.24.0
+        Thu, 28 Nov 2019 16:49:18 -0800 (PST)
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+To:     iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, joro@8bytes.org,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Subject: [Patch v2 0/3] iommu: reduce spinlock contention on fast path
+Date:   Thu, 28 Nov 2019 16:48:52 -0800
+Message-Id: <20191129004855.18506-1-xiyou.wangcong@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,40 +71,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit f2538f999345405f7d2e1194c0c8efa4e11f7b3a. The patch
-stopped JFFS2 from being able to mount an existing filesystem with the
-following errors:
+This patchset contains three small optimizations for the global spinlock
+contention in IOVA cache. Our memcache perf test shows this reduced its
+p999 latency down by 45% on AMD when IOMMU is enabled.
 
- jffs2: error: (77) jffs2_build_inode_fragtree: Add node to tree failed -22
- jffs2: error: (77) jffs2_do_read_inode_internal: Failed to build final fragtree for inode #5377: error -22
+Cong Wang (3):
+  iommu: match the original algorithm
+  iommu: optimize iova_magazine_free_pfns()
+  iommu: avoid taking iova_rbtree_lock twice
 
-Fixes: f2538f999345 ("jffs2: Fix possible null-pointer dereferences...")
-Cc: stable@vger.kernel.org
-Suggested-by: Hou Tao <houtao1@huawei.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
-5.4 cannot mount (some?) jffs2 filesystems without this fix. Hou pointed
-this out[1] a while back but the fix didn't make it in. It's still
-broken in -next.
+ drivers/iommu/iova.c | 75 ++++++++++++++++++++++++++------------------
+ 1 file changed, 45 insertions(+), 30 deletions(-)
 
-[1] https://lore.kernel.org/lkml/2758feea-8d6e-c690-5cac-d42213f2024b@huawei.com/
-
- fs/jffs2/nodelist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/jffs2/nodelist.c b/fs/jffs2/nodelist.c
-index 021a4a2190ee..b86c78d178c6 100644
---- a/fs/jffs2/nodelist.c
-+++ b/fs/jffs2/nodelist.c
-@@ -226,7 +226,7 @@ static int jffs2_add_frag_to_fragtree(struct jffs2_sb_info *c, struct rb_root *r
- 		lastend = this->ofs + this->size;
- 	} else {
- 		dbg_fragtree2("lookup gave no frag\n");
--		return -EINVAL;
-+		lastend = 0;
- 	}
- 
- 	/* See if we ran off the end of the fragtree */
 -- 
-2.24.0
+2.21.0
 
