@@ -2,127 +2,189 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7DDC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 22:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD083C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 22:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2AB42464D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 22:02:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t7YKNY5W"
+	by mail.kernel.org (Postfix) with ESMTP id 9894024650
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 22:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575065774;
+	bh=j+bKOIsad76sTky3hjFksMbLTifq+SjBpSOr2Rgsw6c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y85p5eoMnU1p4Cfiv1ASyRYYJqodrl2aXsEigf/0l03CyfEoxn1EGsAsw8zHKzsWf
+	 mGLOXnQMqDiMjiKGGv+0t/UZeMNWNIEgnVKI+IPqaya1Ks7/BOBLpuxk2ZBvMh+zl1
+	 cwFKjKlF5w9doIPU5VqU3kC1/2FQm8pB5zTbCIn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387399AbfK2WCv (ORCPT
+        id S1727207AbfK2WQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 17:02:51 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:41093 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbfK2WCu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 17:02:50 -0500
-Received: by mail-yb1-f196.google.com with SMTP id d95so12025459ybi.8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 14:02:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gBFfyve4zeh4DVhdr4q4ORn0Yl45pSjl2PrBaMrz/4E=;
-        b=t7YKNY5WqMWU/jvRye+X2w55JXFkqSZaPNDtaeQ0Uc469ILUEST4j4sCN/RfDUVJRt
-         WpHgyhgG/L6zG7v/G6NjTZ9+A5ME+lSZDvvJx/EWm0BiPFe5QbtohCKnSaQJJOXl8oRN
-         WW1oSZC9jFwjD8CqbpWQoGsGJdvDfgkAKDJjWltMV5iNBkecIhw0JMBFfXA20A1TzHxW
-         pbwS6XJtOcjbTrqjLjU7/on7XogtzX1Wb5yaUCml5v0+PvbByZsqDF/HFsevw8Qo7LCZ
-         st79wvz+Mraflp10AvIyoI6pAjMKAHeFWzTfnCgivIPLoomMAwzdW6MswGGhH/AudVMj
-         yM9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gBFfyve4zeh4DVhdr4q4ORn0Yl45pSjl2PrBaMrz/4E=;
-        b=co1wZurA6ZmBnnM3xAMC3LcrO3tMg0vTXBkySCSZJPTvq7c6w1jg57NrXoKLj9NeNw
-         owMhi83CfX+AmUbhtZhgB5IJspNuzqsuwdqL4KVO9P0ENNpZzd9U/SqH9EHG7WvBLFxk
-         wPb0Wk+jNinj9KDFBQAbthdKBDg/YmpfdGVfe7yhab6dqfhpCdCd/MXFgIm0LlkyqAk8
-         bDiI32tjHG9krfavQYcPEK58v5xHm2Wd5qaWeJ7wMosu5Uul31BaTCvTofGNRbjyFNza
-         dhKoMRjfXt+a2MbW8azf5oJiLZTvZar5Yo2oxNEtu7EdWmBahPNWLZuqCS9yz72RYu4l
-         3qYA==
-X-Gm-Message-State: APjAAAWaEfBLT9Ye0j6etVXiRP+CR577m8enQfOxJoWZU+47uvoNJdsX
-        seg4agokGnnB2v42M39Wc53WYV1oBylX9KH/5MzRFoUx
-X-Google-Smtp-Source: APXvYqz2Ccri7VdLSl/UfTzXKgElMvDMOdBy89g3NxMW9dTyG3JrmQhReCS5tL2MvOv1tFmZmyUE7EFFLE1wpugCSwA=
-X-Received: by 2002:a25:1909:: with SMTP id 9mr11484703ybz.61.1575064968117;
- Fri, 29 Nov 2019 14:02:48 -0800 (PST)
+        Fri, 29 Nov 2019 17:16:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727116AbfK2WQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 17:16:13 -0500
+Received: from localhost (unknown [46.255.181.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 423992464F;
+        Fri, 29 Nov 2019 22:16:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575065771;
+        bh=j+bKOIsad76sTky3hjFksMbLTifq+SjBpSOr2Rgsw6c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E4wxu5SE7QT85+05b6exOWm0mMDOcr5N1LU1MIPOonlrhdvXeIRUur4RFiJ4qHG/Y
+         9BTuH53xx3Z0S+wIkuE7oD52ZJXNlxy3XpqNSqTo4K0i+bIG/qEwbOuQ7mN0ENCfQ5
+         MQ1kLfuOTmE5220IN/ueRej2jAn3vavBG+WxJE3k=
+Date:   Fri, 29 Nov 2019 23:16:09 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next 3/3] debugfs: introduce debugfs_create_seq[,_data]
+Message-ID: <20191129221609.GA3710566@kroah.com>
+References: <20191129092752.169902-1-wangkefeng.wang@huawei.com>
+ <20191129092752.169902-4-wangkefeng.wang@huawei.com>
+ <20191129142212.GB3708031@kroah.com>
+ <35da2509-1dc4-699d-e209-b534691f6e37@huawei.com>
 MIME-Version: 1.0
-References: <20191129215916.17105-1-enric.balletbo@collabora.com>
-In-Reply-To: <20191129215916.17105-1-enric.balletbo@collabora.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Fri, 29 Nov 2019 14:02:37 -0800
-Message-ID: <CABXOdTef5QAmZosDFF0Av8=9etj46O6aoxM3k9M9YBJmJynASA@mail.gmail.com>
-Subject: Re: [PATCH] power: supply: cros_usbpd: Remove dev_err() getting the
- number of ports
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>, fparent@baylibre.com,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35da2509-1dc4-699d-e209-b534691f6e37@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 1:59 PM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> When a device has no support to get the charger number of ports, it
-> doesn't have to result in a dev_err(), print saying "Could not get
-> charger port count" using a dev_info() would suffice. In such case,
-> the dev_info() message is already printed but the dev_err() is annoying,
-> specially, on those devices that doesn't support the command. So remove
-> the dev_err().
->
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+On Fri, Nov 29, 2019 at 11:03:47PM +0800, Kefeng Wang wrote:
+> 
+> 
+> On 2019/11/29 22:22, Greg KH wrote:
+> > On Fri, Nov 29, 2019 at 05:27:52PM +0800, Kefeng Wang wrote:
+> >> Like proc_create_seq[,_data] in procfs, introduce a similar
+> >> debugfs_create_seq[,_data] function, which could drastically
+> >> reduces the boilerplate code.
+> >>
+> >> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> >> ---
+> >>  fs/debugfs/file.c       | 62 ++++++++++++++++++++++++++++++++++++++++-
+> >>  include/linux/debugfs.h | 16 +++++++++++
+> >>  2 files changed, 77 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+> >> index 68f0c4b19bef..77522717c9fb 100644
+> >> --- a/fs/debugfs/file.c
+> >> +++ b/fs/debugfs/file.c
+> >> @@ -1107,7 +1107,10 @@ EXPORT_SYMBOL_GPL(debugfs_create_regset32);
+> >>  #endif /* CONFIG_HAS_IOMEM */
+> >>  
+> >>  struct debugfs_entry {
+> >> -	int (*read)(struct seq_file *seq, void *data);
+> >> +	union {
+> >> +		const struct seq_operations *seq_ops;
+> >> +		int (*read)(struct seq_file *seq, void *data);
+> >> +	};
+> >>  	void *data;
+> >>  };
+> >>  
+> >> @@ -1196,3 +1199,60 @@ struct dentry *debugfs_create_single_data(const char *name, umode_t mode,
+> >>  				   &debugfs_entry_ops);
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(debugfs_create_single_data);
+> >> +
+> >> +static int debugfs_entry_seq_open(struct inode *inode, struct file *file)
+> >> +{
+> >> +	struct debugfs_entry *entry = inode->i_private;
+> >> +	int ret;
+> >> +
+> >> +	entry = debugfs_clear_lowest_bit(entry);
+> >> +
+> >> +	ret = seq_open(file, entry->seq_ops);
+> >> +	if (!ret && entry->data) {
+> >> +		struct seq_file *seq = file->private_data;
+> >> +		seq->private = entry->data;
+> >> +	}
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static const struct file_operations debugfs_seq_fops = {
+> >> +	.open		= debugfs_entry_seq_open,
+> >> +	.read		= seq_read,
+> >> +	.llseek		= seq_lseek,
+> >> +	.release	= seq_release,
+> >> +};
+> >> +
+> >> +/**
+> >> + * debugfs_create_seq_data - create a file in the debugfs filesystem
+> >> + * @name: a pointer to a string containing the name of the file to create.
+> >> + * @mode: the permission that the file should have.
+> >> + * @parent: a pointer to the parent dentry for this file.  This should be a
+> >> + *          directory dentry if set.  If this parameter is NULL, then the
+> >> + *          file will be created in the root of the debugfs filesystem.
+> >> + * @data: a pointer to something that the caller will want to get to later
+> >> + *        on.  The inode.i_private pointer will point to this value on
+> >> + *        the open() call.
+> >> + * @seq_ops: seq_operations pointer of the seqfile.
+> >> + *
+> >> + * This function creates a file in debugfs with the extra data and a seq_ops.
+> >> + */
+> >> +struct dentry *debugfs_create_seq_data(const char *name, umode_t mode,
+> >> +				       struct dentry *parent, void *data,
+> >> +				       const struct seq_operations *seq_ops)
+> >> +{
+> >> +	struct debugfs_entry *entry;
+> >> +
+> >> +	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
+> >> +	if (!entry)
+> >> +		return ERR_PTR(-ENOMEM);
+> >> +
+> >> +	entry->seq_ops = seq_ops;
+> >> +	entry->data = data;
+> >> +
+> >> +	entry = debugfs_set_lowest_bit(entry);
+> >> +
+> >> +	return debugfs_create_file(name, mode, parent, entry,
+> >> +				   &debugfs_seq_fops);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(debugfs_create_seq_data);
+> >> diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
+> >> index 82171f183e93..d32d49983547 100644
+> >> --- a/include/linux/debugfs.h
+> >> +++ b/include/linux/debugfs.h
+> >> @@ -147,6 +147,10 @@ struct dentry *debugfs_create_single_data(const char *name, umode_t mode,
+> >>  					  int (*read_fn)(struct seq_file *s,
+> >>  							 void *data));
+> >>  
+> >> +struct dentry *debugfs_create_seq_data(const char *name, umode_t mode,
+> >> +				       struct dentry *parent, void *data,
+> >> +				       const struct seq_operations *seq_ops);
+> >> +
+> >>  bool debugfs_initialized(void);
+> >>  
+> >>  ssize_t debugfs_read_file_bool(struct file *file, char __user *user_buf,
+> > 
+> > If you notice, I have been removing the return value of the
+> > debugfs_create_* functions over the past few kernel versions (look at
+> > 5.5-rc1 for a lot more).  Please don't add any new functions that also
+> > return a dentry that I then need to go and remove.
+> 
+> Hi Greg, see function debugfs_create_seq_data()and debugfs_create_single_data(),
+> they are wrapper function of debugfs_create_file(), when remove the debugfs file
+> called debugfs_remove(), some drivers could do such thing, we must return a dentry
+> to the caller.
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Again, no, we should not return a dentry.  Files should go in
+directories and then removed all at once if they need to, which is why I
+have been making these types of changes.
 
-> ---
->
->  drivers/power/supply/cros_usbpd-charger.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
-> index 6cc7c3910e09..ffad9ee03a68 100644
-> --- a/drivers/power/supply/cros_usbpd-charger.c
-> +++ b/drivers/power/supply/cros_usbpd-charger.c
-> @@ -132,11 +132,8 @@ static int cros_usbpd_charger_get_num_ports(struct charger_data *charger)
->         ret = cros_usbpd_charger_ec_command(charger, 0,
->                                             EC_CMD_CHARGE_PORT_COUNT,
->                                             NULL, 0, &resp, sizeof(resp));
-> -       if (ret < 0) {
-> -               dev_err(charger->dev,
-> -                       "Unable to get the number of ports (err:0x%x)\n", ret);
-> +       if (ret < 0)
->                 return ret;
-> -       }
->
->         return resp.port_count;
->  }
-> @@ -148,11 +145,8 @@ static int cros_usbpd_charger_get_usbpd_num_ports(struct charger_data *charger)
->
->         ret = cros_usbpd_charger_ec_command(charger, 0, EC_CMD_USB_PD_PORTS,
->                                             NULL, 0, &resp, sizeof(resp));
-> -       if (ret < 0) {
-> -               dev_err(charger->dev,
-> -                       "Unable to get the number or ports (err:0x%x)\n", ret);
-> +       if (ret < 0)
->                 return ret;
-> -       }
->
->         return resp.num_ports;
->  }
-> --
-> 2.20.1
->
+Yes, for some existing files that does not work, but again, please do
+not create a new api that does this.  Only use it for the files that do
+not need their dentries saved.
+
+thanks,
+
+greg k-h
