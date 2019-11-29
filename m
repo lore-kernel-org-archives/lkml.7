@@ -2,305 +2,226 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5994DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31236C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBE2207FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FEE206B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="JzHeBySM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YIJ7zRms"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfK2VVk (ORCPT
+        id S1727175AbfK2Vct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:21:40 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:52446 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfK2VVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 16:21:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8sxzWMs2V/OQllfVDvsR445cEGiGCVgLHfjx3hHukdw=; b=JzHeBySMGvM0hbKkzWPIr9bvsE
-        EiuaeRIpoy9CbMaT6fI5ZmWyQ/lNVV6Q/fsIJA/k4eBEPonBK1jDjcyuT6zfkQfCeDTPKrqvT5I+s
-        Wkf2gdm/ZAxHFFY7KHxH+0UtcQSDJIdcnCOKtN4niTDtRS82c4PmvZnLBCm31LoAwp6A=;
-Received: from p200300ccff0871001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff08:7100:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ianhc-0001yX-ER; Fri, 29 Nov 2019 22:21:24 +0100
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ianhc-0004mZ-6F; Fri, 29 Nov 2019 22:21:24 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me, letux-kernel@openphoenux.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v3 3/6] mfd: rn5t618: add irq support
-Date:   Fri, 29 Nov 2019 22:20:42 +0100
-Message-Id: <20191129212045.18325-4-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191129212045.18325-1-andreas@kemnade.info>
-References: <20191129212045.18325-1-andreas@kemnade.info>
+        Fri, 29 Nov 2019 16:32:49 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20874 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727073AbfK2Vct (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 16:32:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575063167;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=peI3w5GhWEX1JieJHH29KyaSX4w2AsTjOin5SLB/5Gw=;
+        b=YIJ7zRmsPXQFH+2eN/+Aji+11/IoCO5xwgtBsxw4VK1pwNXnOwWkRPut/KfBaK9BHs6QqN
+        MVKOoYJelD+Ng4tMnkXR2qyI+J7Fa/uV1l1bKqx9Xgf2mtZhCPP6AyMfIRQptgGzzUZJNk
+        U6iqKRQwoms1ZDD33nPUjhwX3mwanso=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-y8RH9lZqM-mT44LQjoAKFQ-1; Fri, 29 Nov 2019 16:32:45 -0500
+Received: by mail-qv1-f70.google.com with SMTP id bt18so2769268qvb.19
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 13:32:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cn7j7/8SJgeM/ER61fZ1AdZGSd2mYCJ7pUgcBKPF2KQ=;
+        b=ZTlHubTVRQq6C7dndRNhjYY7UNgmmSzz6b7h4SLnI6DkR0EFpgShldAdnTIYhqGyMu
+         cd2kLGV5qimb5H6Au7X1Zt9wypKTCmXyivjbw1A6MlOwVfU19FQbkDKV92SlJa0ulF4u
+         se+TUSY8V/GOdWsOtAOT5wwigjpkygHhLAxIJuqkT41pTatr5HAgLI5gjcFTaY2VeffB
+         C0JmmcDECRPybLkOJn6W3GFyFqHvGFm1EnJTS0ATet7TbZcm7Wfw0kdQ5mBiKx0b4I93
+         29JL5aWWARnX3PAweyYWlQ59ChI9NpVSrDzdO9uwcziaVH3qv1mAaW4UG93vaqE5wMpZ
+         qZsA==
+X-Gm-Message-State: APjAAAWsVVVG+7BnkyTMOdHYIlOF72G/EDLmQIPjTpBzFxwraOseGIE9
+        IAaFoqaWuweBvCJ9oK20rnQsgTs1n3d1ooP7qF0Jh6VmzZo2pM1xIJQOpQW5m4+0xm26zxF1FNl
+        5DUTumBvlUNXcd2s0WQOINIAd
+X-Received: by 2002:ad4:588d:: with SMTP id dz13mr19982301qvb.86.1575063164828;
+        Fri, 29 Nov 2019 13:32:44 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy5eIATWxerwmd03ez0vmrXtvk2z5PAQi557Z+8gFzf+IEvRetJH80wrZlItjYLRMnxc+PPpA==
+X-Received: by 2002:ad4:588d:: with SMTP id dz13mr19982258qvb.86.1575063164469;
+        Fri, 29 Nov 2019 13:32:44 -0800 (PST)
+Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id n5sm10634817qkf.48.2019.11.29.13.32.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2019 13:32:43 -0800 (PST)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, Cao Lei <Lei.Cao@stratus.com>,
+        peterx@redhat.com, "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH RFC 00/15] KVM: Dirty ring interface
+Date:   Fri, 29 Nov 2019 16:32:27 -0500
+Message-Id: <20191129213242.17144-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: y8RH9lZqM-mT44LQjoAKFQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for irq handling in the rc5t619 which is required
-for properly implementing subdevices like rtc.
-For now only definitions for the variant rc5t619 are included.
+Branch is here: https://github.com/xzpeter/linux/tree/kvm-dirty-ring
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-Changes in v3:
-alignment cleanup
+Overview
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-Changes in v2:
-- no dead code, did some more testing and thinking for that
-- remove extra empty lines
+This is a continued work from Lei Cao <lei.cao@stratus.com> and Paolo
+on the KVM dirty ring interface.  To make it simple, I'll still start
+with version 1 as RFC.
 
- drivers/mfd/Kconfig         |  1 +
- drivers/mfd/Makefile        |  2 +-
- drivers/mfd/rn5t618-core.c  | 34 ++++++++++++++-
- drivers/mfd/rn5t618-irq.c   | 85 +++++++++++++++++++++++++++++++++++++
- include/linux/mfd/rn5t618.h | 16 +++++++
- 5 files changed, 136 insertions(+), 2 deletions(-)
- create mode 100644 drivers/mfd/rn5t618-irq.c
+The new dirty ring interface is another way to collect dirty pages for
+the virtual machine, but it is different from the existing dirty
+logging interface in a few ways, majorly:
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index ae24d3ea68ea..522e068d0082 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1057,6 +1057,7 @@ config MFD_RN5T618
- 	depends on OF
- 	select MFD_CORE
- 	select REGMAP_I2C
-+	select REGMAP_IRQ
- 	help
- 	  Say yes here to add support for the Ricoh RN5T567,
- 	  RN5T618, RC5T619 PMIC.
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 110ea700231b..2906d5db67d0 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -217,7 +217,7 @@ obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
- obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
- obj-$(CONFIG_MFD_RK808)		+= rk808.o
- 
--rn5t618-objs			:= rn5t618-core.o
-+rn5t618-objs			:= rn5t618-core.o rn5t618-irq.o
- obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
- obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
- obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
-diff --git a/drivers/mfd/rn5t618-core.c b/drivers/mfd/rn5t618-core.c
-index da5cd9c92a59..1e2326217681 100644
---- a/drivers/mfd/rn5t618-core.c
-+++ b/drivers/mfd/rn5t618-core.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/delay.h>
- #include <linux/i2c.h>
-+#include <linux/interrupt.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/rn5t618.h>
- #include <linux/module.h>
-@@ -105,7 +106,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 
- 	i2c_set_clientdata(i2c, priv);
- 	priv->variant = (long)of_id->data;
--
-+	priv->chip_irq = i2c->irq;
-+	priv->dev = &i2c->dev;
- 	priv->regmap = devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
- 	if (IS_ERR(priv->regmap)) {
- 		ret = PTR_ERR(priv->regmap);
-@@ -137,6 +139,11 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
-+	if (priv->chip_irq > 0) {
-+		if (rn5t618_irq_init(priv))
-+			priv->chip_irq = 0;
-+	}
-+
- 	return 0;
- }
- 
-@@ -154,15 +161,40 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
- 	return 0;
- }
- 
-+static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
-+{
-+	struct rn5t618 *priv = dev_get_drvdata(dev);
-+
-+	if (priv->chip_irq)
-+		disable_irq(priv->chip_irq);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
-+{
-+	struct rn5t618 *priv = dev_get_drvdata(dev);
-+
-+	if (priv->chip_irq)
-+		enable_irq(priv->chip_irq);
-+
-+	return 0;
-+}
-+
- static const struct i2c_device_id rn5t618_i2c_id[] = {
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
- 
-+static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
-+			rn5t618_i2c_suspend,
-+			rn5t618_i2c_resume);
-+
- static struct i2c_driver rn5t618_i2c_driver = {
- 	.driver = {
- 		.name = "rn5t618",
- 		.of_match_table = of_match_ptr(rn5t618_of_match),
-+		.pm = &rn5t618_i2c_dev_pm_ops,
- 	},
- 	.probe = rn5t618_i2c_probe,
- 	.remove = rn5t618_i2c_remove,
-diff --git a/drivers/mfd/rn5t618-irq.c b/drivers/mfd/rn5t618-irq.c
-new file mode 100644
-index 000000000000..8a4c56429768
---- /dev/null
-+++ b/drivers/mfd/rn5t618-irq.c
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2019 Andreas Kemnade
-+ */
-+#include <linux/device.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/mfd/rn5t618.h>
-+
-+static const struct regmap_irq rc5t619_irqs[] = {
-+	[RN5T618_IRQ_SYS] = {
-+		.reg_offset = 0,
-+		.mask = (0 << 1)
-+	},
-+	[RN5T618_IRQ_DCDC] = {
-+		.reg_offset = 0,
-+		.mask = (1 << 1)
-+	},
-+	[RN5T618_IRQ_RTC]  = {
-+		.reg_offset = 0,
-+		.mask = (1 << 2)
-+	},
-+	[RN5T618_IRQ_ADC] = {
-+		.reg_offset = 0,
-+		.mask = (1 << 3)
-+	},
-+	[RN5T618_IRQ_GPIO] = {
-+		.reg_offset = 0,
-+		.mask = (1 << 4)
-+	},
-+	[RN5T618_IRQ_CHG] = {
-+		.reg_offset = 0,
-+		.mask = (1 << 6),
-+	}
-+};
-+
-+static const struct regmap_irq_chip rc5t619_irq_chip = {
-+	.name = "rc5t619",
-+	.irqs = rc5t619_irqs,
-+	.num_irqs = ARRAY_SIZE(rc5t619_irqs),
-+	.num_regs = 1,
-+	.status_base = RN5T618_INTMON,
-+	.mask_base = RN5T618_INTEN,
-+	.mask_invert = true,
-+};
-+
-+int rn5t618_irq_init(struct rn5t618 *rn5t618)
-+{
-+	const struct regmap_irq_chip *irq_chip;
-+	int ret;
-+
-+	if (!rn5t618->chip_irq)
-+		return 0;
-+
-+	switch (rn5t618->variant) {
-+	case RC5T619:
-+		irq_chip = &rc5t619_irq_chip;
-+		break;
-+
-+		/* TODO: check irq definitions for other variants */
-+
-+	default:
-+		irq_chip = NULL;
-+		break;
-+	}
-+
-+	if (!irq_chip) {
-+		dev_err(rn5t618->dev, "no IRQ definition known for variant\n");
-+		return -ENOENT;
-+	}
-+
-+	ret = devm_regmap_add_irq_chip(rn5t618->dev, rn5t618->regmap,
-+				       rn5t618->chip_irq,
-+				       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+				       0, irq_chip, &rn5t618->irq_data);
-+	if (ret != 0) {
-+		dev_err(rn5t618->dev, "Failed to register IRQ chip\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
-index d62ef48060b5..edd2b6485e3b 100644
---- a/include/linux/mfd/rn5t618.h
-+++ b/include/linux/mfd/rn5t618.h
-@@ -242,9 +242,25 @@ enum {
- 	RC5T619,
- };
- 
-+/* RN5T618 IRQ definitions */
-+enum {
-+	RN5T618_IRQ_SYS,
-+	RN5T618_IRQ_DCDC,
-+	RN5T618_IRQ_RTC,
-+	RN5T618_IRQ_ADC,
-+	RN5T618_IRQ_GPIO,
-+	RN5T618_IRQ_CHG,
-+	RN5T618_NR_IRQS,
-+};
-+
- struct rn5t618 {
- 	struct regmap *regmap;
-+	struct device *dev;
- 	long variant;
-+
-+	int chip_irq;
-+	struct regmap_irq_chip_data *irq_data;
- };
- 
-+extern int rn5t618_irq_init(struct rn5t618 *rn5t618);
- #endif /* __LINUX_MFD_RN5T618_H */
--- 
-2.20.1
+  - Data format: The dirty data was in a ring format rather than a
+    bitmap format, so the size of data to sync for dirty logging does
+    not depend on the size of guest memory any more, but speed of
+    dirtying.  Also, the dirty ring is per-vcpu (currently plus
+    another per-vm ring, so total ring number is N+1), while the dirty
+    bitmap is per-vm.
+
+  - Data copy: The sync of dirty pages does not need data copy any more,
+    but instead the ring is shared between the userspace and kernel by
+    page sharings (mmap() on either the vm fd or vcpu fd)
+
+  - Interface: Instead of using the old KVM_GET_DIRTY_LOG,
+    KVM_CLEAR_DIRTY_LOG interfaces, the new ring uses a new interface
+    called KVM_RESET_DIRTY_RINGS when we want to reset the collected
+    dirty pages to protected mode again (works like
+    KVM_CLEAR_DIRTY_LOG, but ring based)
+
+And more.
+
+I would appreciate if the reviewers can start with patch "KVM:
+Implement ring-based dirty memory tracking", especially the document
+update part for the big picture.  Then I'll avoid copying into most of
+them into cover letter again.
+
+I marked this series as RFC because I'm at least uncertain on this
+change of vcpu_enter_guest():
+
+        if (kvm_check_request(KVM_REQ_DIRTY_RING_FULL, vcpu)) {
+                vcpu->run->exit_reason =3D KVM_EXIT_DIRTY_RING_FULL;
+                /*
+                        * If this is requested, it means that we've
+                        * marked the dirty bit in the dirty ring BUT
+                        * we've not written the date.  Do it now.
+                        */
+                r =3D kvm_emulate_instruction(vcpu, 0);
+                r =3D r >=3D 0 ? 0 : r;
+                goto out;
+        }
+
+I did a kvm_emulate_instruction() when dirty ring reaches softlimit
+and want to exit to userspace, however I'm not really sure whether
+there could have any side effect.  I'd appreciate any comment of
+above, or anything else.
+
+Tests
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+I wanted to continue work on the QEMU part, but after I noticed that
+the interface might still prone to change, I posted this series first.
+However to make sure it's at least working, I've provided unit tests
+together with the series.  The unit tests should be able to test the
+series in at least three major paths:
+
+  (1) ./dirty_log_test -M dirty-ring
+
+      This tests async ring operations: this should be the major work
+      mode for the dirty ring interface, say, when the kernel is
+      queuing more data, the userspace is collecting too.  Ring can
+      hardly reaches full when working like this, because in most
+      cases the collection could be fast.
+
+  (2) ./dirty_log_test -M dirty-ring -c 1024
+
+      This set the ring size to be very small so that ring soft-full
+      always triggers (soft-full is a soft limit of the ring state,
+      when the dirty ring reaches the soft limit it'll do a userspace
+      exit and let the userspace to collect the data).
+
+  (3) ./dirty_log_test -M dirty-ring-wait-queue
+
+      This sololy test the extreme case where ring is full.  When the
+      ring is completely full, the thread (no matter vcpu or not) will
+      be put onto a per-vm waitqueue, and KVM_RESET_DIRTY_RINGS will
+      wake the threads up (assuming until which the ring will not be
+      full any more).
+
+Thanks,
+
+Cao, Lei (2):
+  KVM: Add kvm/vcpu argument to mark_dirty_page_in_slot
+  KVM: X86: Implement ring-based dirty memory tracking
+
+Paolo Bonzini (1):
+  KVM: Move running VCPU from ARM to common code
+
+Peter Xu (12):
+  KVM: Add build-time error check on kvm_run size
+  KVM: Implement ring-based dirty memory tracking
+  KVM: Make dirty ring exclusive to dirty bitmap log
+  KVM: Introduce dirty ring wait queue
+  KVM: selftests: Always clear dirty bitmap after iteration
+  KVM: selftests: Sync uapi/linux/kvm.h to tools/
+  KVM: selftests: Use a single binary for dirty/clear log test
+  KVM: selftests: Introduce after_vcpu_run hook for dirty log test
+  KVM: selftests: Add dirty ring buffer test
+  KVM: selftests: Let dirty_log_test async for dirty ring test
+  KVM: selftests: Add "-c" parameter to dirty log test
+  KVM: selftests: Test dirty ring waitqueue
+
+ Documentation/virt/kvm/api.txt                | 116 +++++
+ arch/arm/include/asm/kvm_host.h               |   2 -
+ arch/arm64/include/asm/kvm_host.h             |   2 -
+ arch/x86/include/asm/kvm_host.h               |   5 +
+ arch/x86/include/uapi/asm/kvm.h               |   1 +
+ arch/x86/kvm/Makefile                         |   3 +-
+ arch/x86/kvm/mmu/mmu.c                        |   6 +
+ arch/x86/kvm/vmx/vmx.c                        |   7 +
+ arch/x86/kvm/x86.c                            |  12 +
+ include/linux/kvm_dirty_ring.h                |  67 +++
+ include/linux/kvm_host.h                      |  37 ++
+ include/linux/kvm_types.h                     |   1 +
+ include/uapi/linux/kvm.h                      |  36 ++
+ tools/include/uapi/linux/kvm.h                |  47 ++
+ tools/testing/selftests/kvm/Makefile          |   2 -
+ .../selftests/kvm/clear_dirty_log_test.c      |   2 -
+ tools/testing/selftests/kvm/dirty_log_test.c  | 452 ++++++++++++++++--
+ .../testing/selftests/kvm/include/kvm_util.h  |   6 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 103 ++++
+ .../selftests/kvm/lib/kvm_util_internal.h     |   5 +
+ virt/kvm/arm/arm.c                            |  29 --
+ virt/kvm/arm/perf.c                           |   6 +-
+ virt/kvm/arm/vgic/vgic-mmio.c                 |  15 +-
+ virt/kvm/dirty_ring.c                         | 156 ++++++
+ virt/kvm/kvm_main.c                           | 315 +++++++++++-
+ 25 files changed, 1329 insertions(+), 104 deletions(-)
+ create mode 100644 include/linux/kvm_dirty_ring.h
+ delete mode 100644 tools/testing/selftests/kvm/clear_dirty_log_test.c
+ create mode 100644 virt/kvm/dirty_ring.c
+
+--=20
+2.21.0
 
