@@ -2,46 +2,52 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E56C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 23:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2BEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 23:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3A0206BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 23:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA4D2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 23:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfK2Xvi (ORCPT
+        id S1727213AbfK2Xx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 18:51:38 -0500
-Received: from mga03.intel.com ([134.134.136.65]:16353 "EHLO mga03.intel.com"
+        Fri, 29 Nov 2019 18:53:27 -0500
+Received: from mga12.intel.com ([192.55.52.136]:39376 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbfK2Xvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 18:51:37 -0500
+        id S1727097AbfK2Xx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 18:53:27 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 15:51:34 -0800
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 15:53:26 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,259,1571727600"; 
-   d="scan'208";a="241184315"
+   d="scan'208";a="241184629"
 Received: from gamanzi-mobl4.ger.corp.intel.com (HELO localhost) ([10.252.3.126])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Nov 2019 15:51:32 -0800
-Date:   Sat, 30 Nov 2019 01:51:31 +0200
+  by fmsmga002.fm.intel.com with ESMTP; 29 Nov 2019 15:53:23 -0800
+Date:   Sat, 30 Nov 2019 01:53:22 +0200
 From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v4] tpm: Add tpm_version_major sysfs file
-Message-ID: <20191129235131.GA21546@linux.intel.com>
-References: <20191030225843.23366-1-jsnitsel@redhat.com>
- <20191128010826.w4ixlix3s3ovta3m@cantor>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, James Morris <jmorris@namei.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [GIT PULL] tpmdd updates for Linux v5.4
+Message-ID: <20191129235322.GB21546@linux.intel.com>
+References: <20190902143121.pjnykevzlajlcrh6@linux.intel.com>
+ <CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com>
+ <20191127205800.GA14290@linux.intel.com>
+ <20191127205912.GB14290@linux.intel.com>
+ <20191128012055.f3a6gq7bjpvuierx@cantor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191128010826.w4ixlix3s3ovta3m@cantor>
+In-Reply-To: <20191128012055.f3a6gq7bjpvuierx@cantor>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,37 +55,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 06:08:26PM -0700, Jerry Snitselaar wrote:
-> On Wed Oct 30 19, Jerry Snitselaar wrote:
-> > Easily determining what TCG version a tpm device implements
-> > has been a pain point for userspace for a long time, so
-> > add a sysfs file to report the TCG major version of a tpm device.
-> > 
-> > Also add an entry to Documentation/ABI/stable/sysfs-class-tpm
-> > describing the new file.
-> > 
-> > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Cc: Mimi Zohar <zohar@linux.ibm.com>
-> > Cc: Peter Huewe <peterhuewe@gmx.de>
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: linux-integrity@vger.kernel.org
-> > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > ---
-> > v4: - Change file name to tpm_version_major
-> >    - Actually display just the major version.
-> >    - change structs to tpm1_* & tpm2_*
-> >      instead of tpm12_* tpm20_*.
-> > v3: - Change file name to version_major.
-> > v2: - Fix TCG usage in commit message.
-> >    - Add entry to sysfs-class-tpm in Documentation/ABI/stable
-> > 
-> > Documentation/ABI/stable/sysfs-class-tpm | 11 ++++++++
-> > drivers/char/tpm/tpm-sysfs.c             | 34 +++++++++++++++++++-----
-> > 2 files changed, 38 insertions(+), 7 deletions(-)
-> > 
-> 
-> Anyone else have feedback?
+On Wed, Nov 27, 2019 at 06:20:55PM -0700, Jerry Snitselaar wrote:
+> There also was that other issue reported on the list about
+> tpm_tis_core_init failing when calling tpm_get_timeouts due to the
+> power gating changes.
 
-I can apply this after the issues on hand have been sorted out.
+Please add a (lore.ko) link for reference to this thread.
 
 /Jarkko
