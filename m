@@ -2,341 +2,132 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CEAC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92690C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC4D21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6399721736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:09:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DLyoqFRu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhAZFgn/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfK2TGX (ORCPT
+        id S1727076AbfK2TJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 14:06:23 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44604 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbfK2TGV (ORCPT
+        Fri, 29 Nov 2019 14:09:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39807 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726970AbfK2TJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 14:06:21 -0500
-Received: by mail-pl1-f194.google.com with SMTP id az9so13204410plb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 11:06:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fdZGEeUOCOwh+tX8/OT2YL+SDadPhoIQm08hQY5lXJA=;
-        b=DLyoqFRu3dgnqsh/DNd7rk+3gNqmfCTN678B52BIcIHxdPk8dW0Ri8BJeIulTGzgo5
-         Pt7qDTHCAtvjZ4+jheGnLPVjzdEzVD0S2tSzCTSayQoefdlg8VHZPHEiJ74dNttre7YH
-         cxcaZapqq7rnMchfs13eqEX3k+IykwZk6Tgb1comLduiImT8ItmpiRpMpVX7vRf14ppR
-         F4YpTSqZIdn7rIoqdp4zBeZJDTGa6FGXSLhQhGHr1fQNPSAjASF0AbZL/D0Og3bGEYai
-         jvMIEfFfhnjirODlfsHBbS35p/6Dx00v7GNIBHoNVwUpOM0ieqMIXA3JB3oKTPwP7TE6
-         5N4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fdZGEeUOCOwh+tX8/OT2YL+SDadPhoIQm08hQY5lXJA=;
-        b=h2sYVBgcLbEle461G/jk4J6/cQETtrsy7ebfc0JBPSTuFqY00eTTXw+4rxt6tE4Dij
-         wVKL5X6whquYhceRnbUXVcOE/KkT7tSIx81Vkfvs6fP7lY6S7C0mGmZKMlC8K5lNnJah
-         CHnTwg3wfrm39T4fHuc2x3iq+EaWTi7C2SKr9TOVg08ThYYMms9PkC3U9OD4H84GfadG
-         1oszzUPP2XK7HxSvXn6zESIe3VhRfJUMS4PM8Fk+FLQ4tEQmSbtyFAMJFQsoWoHcCpdi
-         nVDXqAEGMG9NR8ug5yuABvVqF/scQfsbG50asCTET9K2medgt7P+8yAxhPEz8MK6BDJw
-         qchg==
-X-Gm-Message-State: APjAAAWabU0ZxFa7NC5Qir+H9ibeOQPC9AAAbPX6F7vCi3Xu3uRx/hIC
-        SCjsuBMIMt50zdMBVpvXpFj0vZ4+JQ==
-X-Google-Smtp-Source: APXvYqwa2yD9PgxAesmGNDxQ4uHt51wtgQZHPOeScSZhP4oPWUUXfmBV8Y+mzTIvkQKxIEu5czflog==
-X-Received: by 2002:a17:902:8a8a:: with SMTP id p10mr15855387plo.283.1575054380525;
-        Fri, 29 Nov 2019 11:06:20 -0800 (PST)
-Received: from localhost.localdomain ([2409:4072:638d:cc55:d006:f721:cde2:1059])
-        by smtp.gmail.com with ESMTPSA id h9sm25159974pgk.84.2019.11.29.11.06.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 11:06:19 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     mchehab@kernel.org, sakari.ailus@iki.fi
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 5/5] media: i2c: imx290: Add configurable link frequency and pixel rate
-Date:   Sat, 30 Nov 2019 00:35:41 +0530
-Message-Id: <20191129190541.30315-6-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
-References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
+        Fri, 29 Nov 2019 14:09:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575054570;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4fCtB9CMx04qJznBMfhWf+dMljcILc+IbA1Q6R+vWks=;
+        b=DhAZFgn/Wlpx4gplnj16z99xEYpj0ZVOMWKBKpk7p+Ns4X6Nf1WXoQirbG3Zgo4Y6muujJ
+        E5mWNaan/8NLkUGQXfOYSpnU7reSzpsrJgyK2e3k3XWqh66PF+ixWDTcibKO62GXxw2y8U
+        fFrLcz7UDiABouSjryMheCWCKRCc98Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-37-ivfxNWiRMgKItK2Qq72pew-1; Fri, 29 Nov 2019 14:09:27 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE3E2DB20;
+        Fri, 29 Nov 2019 19:09:24 +0000 (UTC)
+Received: from krava (ovpn-204-101.brq.redhat.com [10.40.204.101])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 58DF360BF4;
+        Fri, 29 Nov 2019 19:09:22 +0000 (UTC)
+Date:   Fri, 29 Nov 2019 20:09:21 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 04/15] perf tools: Add map_groups to 'struct
+ addr_location'
+Message-ID: <20191129190921.GC26903@krava>
+References: <20191112183757.28660-1-acme@kernel.org>
+ <20191112183757.28660-5-acme@kernel.org>
+ <20191129134056.GE14169@krava>
+ <20191129151733.GC26963@kernel.org>
+ <20191129160631.GD26963@kernel.org>
+ <20191129180354.GB26903@krava>
+ <20191129185914.GE4063@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20191129185914.GE4063@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: ivfxNWiRMgKItK2Qq72pew-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IMX290 operates with multiple link frequency and pixel rate combinations.
-The initial driver used a single setting for both but since we now have
-the lane count support in place, let's add configurable link frequency
-and pixel rate.
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/media/i2c/imx290.c | 155 +++++++++++++++++++++----------------
- 1 file changed, 89 insertions(+), 66 deletions(-)
-
-diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index f26c4a0ee0a0..d794ade26609 100644
---- a/drivers/media/i2c/imx290.c
-+++ b/drivers/media/i2c/imx290.c
-@@ -45,8 +45,6 @@
- #define IMX290_HMAX_2_720 0x19C8
- #define IMX290_HMAX_4_720 0x0CE4
- 
--#define IMX290_DEFAULT_LINK_FREQ 445500000
--
- static const char * const imx290_supply_name[] = {
- 	"vdda",
- 	"vddd",
-@@ -63,8 +61,6 @@ struct imx290_regval {
- struct imx290_mode {
- 	u32 width;
- 	u32 height;
--	u32 pixel_rate;
--	u32 link_freq_index;
- 
- 	const struct imx290_regval *data;
- 	u32 data_size;
-@@ -281,7 +277,10 @@ static const struct imx290_regval imx290_12bit_settings[] = {
- 
- /* supported link frequencies */
- static const s64 imx290_link_freq[] = {
--	IMX290_DEFAULT_LINK_FREQ,
-+	891000000, /* 1920x1080 -  2 lane */
-+	445500000, /* 1920x1080 -  4 lane */
-+	594000000, /* 1280x720  -  2 lane */
-+	297000000, /* 1280x720  -  4 lane */
- };
- 
- /* Mode configs */
-@@ -291,16 +290,12 @@ static const struct imx290_mode imx290_modes[] = {
- 		.height = 1080,
- 		.data = imx290_1080p_settings,
- 		.data_size = ARRAY_SIZE(imx290_1080p_settings),
--		.pixel_rate = 178200000,
--		.link_freq_index = 0,
- 	},
- 	{
- 		.width = 1280,
- 		.height = 720,
- 		.data = imx290_720p_settings,
- 		.data_size = ARRAY_SIZE(imx290_720p_settings),
--		.pixel_rate = 178200000,
--		.link_freq_index = 0,
- 	},
- };
- 
-@@ -509,6 +504,73 @@ static int imx290_get_fmt(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
-+static s64 imx290_get_link_freq_index(struct imx290 *imx290)
-+{
-+	const struct imx290_mode *cur_mode = imx290->current_mode;
-+	u8 index;
-+
-+	if (cur_mode->width == 1920)
-+		index = imx290->nlanes / 4;
-+	else
-+		index = (imx290->nlanes / 4) + 2;
-+
-+	return index;
-+}
-+
-+static s64 imx290_get_link_freq(struct imx290 *imx290)
-+{
-+	u8 index = imx290_get_link_freq_index(imx290);
-+
-+	return imx290_link_freq[index];
-+}
-+
-+static u64 imx290_calc_pixel_rate(struct imx290 *imx290)
-+{
-+	s64 link_freq = imx290_get_link_freq(imx290);
-+	u8 nlanes = imx290->nlanes;
-+
-+	/* pixel rate = link_freq * 2 * nr_of_lanes / bits_per_sample */
-+	return (link_freq * 2 * nlanes / imx290->bpp);
-+}
-+
-+static int imx290_write_current_format(struct imx290 *imx290,
-+				       struct v4l2_mbus_framefmt *format)
-+{
-+	int ret;
-+
-+	switch (format->code) {
-+	case MEDIA_BUS_FMT_SRGGB10_1X10:
-+		ret = imx290_set_register_array(imx290, imx290_10bit_settings,
-+						ARRAY_SIZE(
-+							imx290_10bit_settings));
-+		if (ret < 0) {
-+			dev_err(imx290->dev, "Could not set format registers\n");
-+			return ret;
-+		}
-+
-+		imx290->bpp = 10;
-+
-+		break;
-+	case MEDIA_BUS_FMT_SRGGB12_1X12:
-+		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
-+						ARRAY_SIZE(
-+							imx290_12bit_settings));
-+		if (ret < 0) {
-+			dev_err(imx290->dev, "Could not set format registers\n");
-+			return ret;
-+		}
-+
-+		imx290->bpp = 12;
-+
-+		break;
-+	default:
-+		dev_err(imx290->dev, "Unknown pixel format\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int imx290_set_fmt(struct v4l2_subdev *sd,
- 			  struct v4l2_subdev_pad_config *cfg,
- 		      struct v4l2_subdev_format *fmt)
-@@ -517,6 +579,7 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
- 	const struct imx290_mode *mode;
- 	struct v4l2_mbus_framefmt *format;
- 	unsigned int i;
-+	int ret = 0;
- 
- 	mutex_lock(&imx290->lock);
- 
-@@ -542,17 +605,27 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
- 		format = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
- 	} else {
- 		format = &imx290->current_format;
--		__v4l2_ctrl_s_ctrl(imx290->link_freq, mode->link_freq_index);
--		__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate, mode->pixel_rate);
--
- 		imx290->current_mode = mode;
-+
-+		/* Set current frame format */
-+		ret = imx290_write_current_format(imx290, &fmt->format);
-+		if (ret < 0) {
-+			dev_err(imx290->dev, "Could not set frame format\n");
-+			goto err_out;
-+		}
-+
-+		__v4l2_ctrl_s_ctrl(imx290->link_freq,
-+				   imx290_get_link_freq_index(imx290));
-+		__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate,
-+					 imx290_calc_pixel_rate(imx290));
- 	}
- 
- 	*format = fmt->format;
- 
-+err_out:
- 	mutex_unlock(&imx290->lock);
- 
--	return 0;
-+	return ret;
- }
- 
- static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
-@@ -569,44 +642,6 @@ static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
- 	return 0;
- }
- 
--static int imx290_write_current_format(struct imx290 *imx290,
--				       struct v4l2_mbus_framefmt *format)
--{
--	int ret;
--
--	switch (format->code) {
--	case MEDIA_BUS_FMT_SRGGB10_1X10:
--		ret = imx290_set_register_array(imx290, imx290_10bit_settings,
--						ARRAY_SIZE(
--							imx290_10bit_settings));
--		if (ret < 0) {
--			dev_err(imx290->dev, "Could not set format registers\n");
--			return ret;
--		}
--
--		imx290->bpp = 10;
--
--		break;
--	case MEDIA_BUS_FMT_SRGGB12_1X12:
--		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
--						ARRAY_SIZE(
--							imx290_12bit_settings));
--		if (ret < 0) {
--			dev_err(imx290->dev, "Could not set format registers\n");
--			return ret;
--		}
--
--		imx290->bpp = 12;
--
--		break;
--	default:
--		dev_err(imx290->dev, "Unknown pixel format\n");
--		return -EINVAL;
--	}
--
--	return 0;
--}
--
- static int imx290_set_hmax(struct imx290 *imx290, u32 val)
+On Fri, Nov 29, 2019 at 03:59:14PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Nov 29, 2019 at 07:03:54PM +0100, Jiri Olsa escreveu:
+> > On Fri, Nov 29, 2019 at 01:06:31PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > Em Fri, Nov 29, 2019 at 12:17:33PM -0300, Arnaldo Carvalho de Melo es=
+creveu:
+> > > > Em Fri, Nov 29, 2019 at 02:40:56PM +0100, Jiri Olsa escreveu:
+> > > > > > +++ b/tools/perf/util/callchain.c
+> > > > > > @@ -1119,8 +1119,8 @@ int fill_callchain_info(struct addr_locat=
+ion *al, struct callchain_cursor_node *
+> > > > > >  =09=09=09goto out;
+> > > > > >  =09}
+> > > > > > =20
+> > > > > > -=09if (al->map->groups =3D=3D &al->machine->kmaps) {
+> > > > > > -=09=09if (machine__is_host(al->machine)) {
+> > > > > > +=09if (al->mg =3D=3D &al->mg->machine->kmaps) {
+> > >=20
+> > > > > heya, I'm getting segfault because of this change
+> > >=20
+> > > > > perf record --call-graph dwarf ./ex
+> > >=20
+> > > > > =09(gdb) r report --stdio
+> > > > > =09Program received signal SIGSEGV, Segmentation fault.
+> > > > > =09fill_callchain_info (al=3D0x7fffffffa1b0, node=3D0xcd2bd0, hid=
+e_unresolved=3Dfalse) at util/callchain.c:1122
+> > > > > =091122            if (al->maps =3D=3D &al->maps->machine->kmaps)=
  {
- 	int ret;
-@@ -640,13 +675,6 @@ static int imx290_start_streaming(struct imx290 *imx290)
- 		return ret;
- 	}
- 
--	/* Set current frame format */
--	ret = imx290_write_current_format(imx290, &imx290->current_format);
--	if (ret < 0) {
--		dev_err(imx290->dev, "Could not set frame format\n");
--		return ret;
--	}
--
- 	/* Apply default values of current mode */
- 	ret = imx290_set_register_array(imx290, imx290->current_mode->data,
- 					imx290->current_mode->data_size);
-@@ -901,12 +929,6 @@ static int imx290_probe(struct i2c_client *client)
- 		goto free_err;
- 	}
- 
--	if (imx290->ep.link_frequencies[0] != IMX290_DEFAULT_LINK_FREQ) {
--		dev_err(dev, "Unsupported link frequency\n");
--		ret = -EINVAL;
--		goto free_err;
--	}
--
- 	/* Only CSI2 is supported for now */
- 	if (imx290->ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
- 		dev_err(dev, "Unsupported bus type, should be CSI2\n");
-@@ -973,14 +995,15 @@ static int imx290_probe(struct i2c_client *client)
- 				       &imx290_ctrl_ops,
- 				       V4L2_CID_LINK_FREQ,
- 				       ARRAY_SIZE(imx290_link_freq) - 1,
--				       0, imx290_link_freq);
-+				       (imx290->nlanes / 4),
-+				       imx290_link_freq);
- 	if (imx290->link_freq)
- 		imx290->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
- 
- 	imx290->pixel_rate = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
- 					       V4L2_CID_PIXEL_RATE, 1,
- 					       INT_MAX, 1,
--					       imx290_modes[0].pixel_rate);
-+					       imx290_calc_pixel_rate(imx290));
- 
- 	v4l2_ctrl_new_std_menu_items(&imx290->ctrls, &imx290_ctrl_ops,
- 				     V4L2_CID_TEST_PATTERN,
--- 
-2.17.1
+> > > > > =09(gdb) p al->maps
+> > > > > =09$1 =3D (struct maps *) 0x0
+>=20
+> > > > > I wish all those map changes would go through some review,
+> > > > > I have no idea how the code works now ;-)
+>=20
+> > > > ouch, I did tons of tests, obviously some more, and reviewing, woul=
+d
+> > > > catch these, my bad, will try and fix this...
+>=20
+> > > > And yeah, I reproduced the problem, working on a fix.
+>=20
+> > > Can you try with this one-liner?
+>=20
+> > yep, it fixes the issue for me
+>=20
+> Thanks, I'm taking that as a Tested-by: you, in addition to the
+> Reported-by,
+>=20
+
+sure, thanks
+
+jirka
 
