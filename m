@@ -2,124 +2,108 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC1BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B337C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 522EB2158A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:58:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zC2MmyuI"
+	by mail.kernel.org (Postfix) with ESMTP id 749912158A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfK2R6U (ORCPT
+        id S1727232AbfK2R60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 12:58:20 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58620 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbfK2R6U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 12:58:20 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xATHwDjG058044;
-        Fri, 29 Nov 2019 11:58:13 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575050293;
-        bh=P1uSBoJmDQ8Q5hjwiJepbv6UkgzRKi6n7TO9FbhvtSs=;
-        h=From:To:CC:Subject:Date;
-        b=zC2MmyuIkoRw3U2qRpJjMXjPe6NJEWZ985i7CfqBhv6IRXMIKjwZr72sU9naqOL9e
-         XFB0d2SV79b8BpNXutvRnMncDCvAKmJMx2me8HFwjJIR4LfA5+hBr58E2nUWiyHcwb
-         KxMtCK1Wva0CCwOQa7uat3MmPbukrv5MeLrmgxQ8=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xATHwDmg059290
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 Nov 2019 11:58:13 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 29
- Nov 2019 11:58:13 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 29 Nov 2019 11:58:13 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xATHwCfi110240;
-        Fri, 29 Nov 2019 11:58:12 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     <netdev@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>
-CC:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, Sekhar Nori <nsekhar@ti.com>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v2] net: ethernet: ti: ale: ensure vlan/mdb deleted when no members
-Date:   Fri, 29 Nov 2019 19:58:09 +0200
-Message-ID: <20191129175809.815-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 29 Nov 2019 12:58:26 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:36434 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727050AbfK2R6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 12:58:25 -0500
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iakX3-0000J2-H1; Fri, 29 Nov 2019 10:58:18 -0700
+To:     James Sewart <jamessewart@arista.com>, linux-pci@vger.kernel.org
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <20191120193228.GA103670@google.com>
+ <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+ <20191126173833.GA16069@infradead.org>
+ <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
+ <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
+ <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
+ <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
+ <F26CC19F-66C2-466B-AE30-D65E10BA3022@arista.com>
+ <d811576e-0f89-2303-a554-2701af5c5647@deltatee.com>
+ <9DD82D05-6B9E-4AF5-9A3C-D459B75C0089@arista.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <20f1dbe3-0349-86b6-ca98-f284d34753b7@deltatee.com>
+Date:   Fri, 29 Nov 2019 10:58:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <9DD82D05-6B9E-4AF5-9A3C-D459B75C0089@arista.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, alex.williamson@redhat.com, dima@arista.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, 0x7f454c46@gmail.com, hch@infradead.org, linux-pci@vger.kernel.org, jamessewart@arista.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v5 1/3] PCI: Fix off by one in dma_alias_mask allocation
+ size
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recently updated ALE APIs cpsw_ale_del_mcast() and
-cpsw_ale_del_vlan_modify() have an issue and will not delete ALE entry even
-if VLAN/mcast group has no more members. Hence fix it here and delete ALE
-entry if !port_mask.
 
-The issue affected only new cpsw switchdev driver.
 
-Fixes: e85c14370783 ("net: ethernet: ti: ale: modify vlan/mdb api for switchdev")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw_ale.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+On 2019-11-29 10:56 a.m., James Sewart wrote:
+> The number of possible devfns is 256 so the size of the bitmap for
+> allocations should be U8_MAX+1.
+> 
+> Signed-off-by: James Sewart <jamessewart@arista.com>
 
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 929f3d3354e3..ecdbde539eb7 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -384,7 +384,7 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
- 		       int flags, u16 vid)
- {
- 	u32 ale_entry[ALE_ENTRY_WORDS] = {0, 0, 0};
--	int mcast_members;
-+	int mcast_members = 0;
- 	int idx;
- 
- 	idx = cpsw_ale_match_addr(ale, addr, (flags & ALE_VLAN) ? vid : 0);
-@@ -397,11 +397,13 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
- 		mcast_members = cpsw_ale_get_port_mask(ale_entry,
- 						       ale->port_mask_bits);
- 		mcast_members &= ~port_mask;
-+	}
-+
-+	if (mcast_members)
- 		cpsw_ale_set_port_mask(ale_entry, mcast_members,
- 				       ale->port_mask_bits);
--	} else {
-+	else
- 		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
--	}
- 
- 	cpsw_ale_write(ale, idx, ale_entry);
- 	return 0;
-@@ -478,6 +480,10 @@ static void cpsw_ale_del_vlan_modify(struct cpsw_ale *ale, u32 *ale_entry,
- 	members = cpsw_ale_get_vlan_member_list(ale_entry,
- 						ale->vlan_field_bits);
- 	members &= ~port_mask;
-+	if (!members) {
-+		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
-+		return;
-+	}
- 
- 	untag = cpsw_ale_get_vlan_untag_force(ale_entry,
- 					      ale->vlan_field_bits);
--- 
-2.17.1
+Looks good to me. Thanks! For the whole series:
 
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+> ---
+>  drivers/pci/pci.c    | 2 +-
+>  drivers/pci/search.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index a97e2571a527..0a4449a30ace 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5876,7 +5876,7 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>  void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+>  {
+>  	if (!dev->dma_alias_mask)
+> -		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
+> +		dev->dma_alias_mask = bitmap_zalloc(U8_MAX+1, GFP_KERNEL);
+>  	if (!dev->dma_alias_mask) {
+>  		pci_warn(dev, "Unable to allocate DMA alias mask\n");
+>  		return;
+> diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+> index bade14002fd8..b3633af1743b 100644
+> --- a/drivers/pci/search.c
+> +++ b/drivers/pci/search.c
+> @@ -43,7 +43,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
+>  	if (unlikely(pdev->dma_alias_mask)) {
+>  		u8 devfn;
+>  
+> -		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX) {
+> +		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX+1) {
+>  			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
+>  				 data);
+>  			if (ret)
+> 
