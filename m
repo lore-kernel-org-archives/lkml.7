@@ -2,176 +2,210 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C882DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 02:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5150FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 02:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D24921736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 02:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF7421736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 02:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="b5CQBs8B";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UQUPJALb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JaVKfBEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfK2C2V (ORCPT
+        id S1726917AbfK2CgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 21:28:21 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:19546 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726835AbfK2C2V (ORCPT
+        Thu, 28 Nov 2019 21:36:19 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45349 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726723AbfK2CgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 21:28:21 -0500
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAT2POtt021994;
-        Thu, 28 Nov 2019 18:28:13 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=Hac4yaRUAl1bTmfBxT72QSOIpouor4147tq7KQt5fec=;
- b=b5CQBs8B9WfozQq8WzIQBD0YHySXoT8PbKe4248ihwxoopYkVmXFX9gd8LApRWPPJBAw
- /fYkZFbIfkefeeJN4ekynqXdczLfkwdBzUE6omRRtvMCF0Tb6ikQedWijHGiOBPxt5eX
- pgOa3Ds8c47ox58km28M4PPdmh3dy+qaNXQ= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2wjfj02hty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 18:28:13 -0800
-Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
- prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 28 Nov 2019 18:28:12 -0800
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 28 Nov 2019 18:28:12 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PinezhyeVKLqEqAntIFOrFmREV0ax9GXeNwgoUUYWVYoMeYj4FccoO7hBa7pi80KXW9xhF+VaIAeUJmgxFahGTbXdyJ+5Nfyveauq9A+62WY3qffQ0PyplkNGxvCAOORP9sCGvtqaoKnFNMeNVoujzifBFgljiVDVrNWJfUQjtCnqQiF0p2wYB1tZUp2jHMbY7nUQqYShCg/hgk8s3ath2MRJAtxE3rfGzJ5nZIJOssRxRwaV6/kxMnbTtV6I1iYcRqYLijXbQaSmdX1LoTLGzT4TR5/xhdl5L0SCLYGPGRivNpXYrvVHJLyHf+NvRC1lsfi+U4DRoiJoLPGM6rW+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hac4yaRUAl1bTmfBxT72QSOIpouor4147tq7KQt5fec=;
- b=OlXTGtOvdtatYtnIBsr/MNoioyapZguUDUmLbj/LWXpCX1jBtK/2FL+PMZLHCLYaYL5EWRHmSzYkLwVmIou4tNKKBd1s7DcW4xrZC0DAVXD3rjuOPlu2xuSXDa8FVaUmp1YDljML+31v+hx7eXnEsQ3REvb6CLjpNgpnSudKMSiB2vl52iTsKJj770vs7z2jJI8J/rJM5XX1AqCVxdX3Zdk/+h91eBZ/8FwEXO9DMUiCBg7ivaEgkTa3GNNkpGwcAlaMZm0msQjR1iOhOZWrFBwoaK3i7+z43tcE+chTeSJh7bxzVAL9oABl0XT6VBiVGk+1QY0xE76xKNeERgu3uA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hac4yaRUAl1bTmfBxT72QSOIpouor4147tq7KQt5fec=;
- b=UQUPJALbpLSnx7OzGSx++tbuWnf+1GRwtOMzRbvDgNVFuuEDTNVmHPR7PyJduR3xfY79I3pEk3Eu6dtHea39pmBtRglnslh6YEcx7KewPp+0NijjJjngWgE9tzs/pZxPV9vNeLLH9AUVpeYexqTduFlTIsXldk+xJnSTFLsBwMM=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
- BYAPR15MB2533.namprd15.prod.outlook.com (20.179.154.214) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.20; Fri, 29 Nov 2019 02:28:11 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::8cc8:bdb1:a9c7:7f60]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::8cc8:bdb1:a9c7:7f60%3]) with mapi id 15.20.2495.014; Fri, 29 Nov 2019
- 02:28:11 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] mm: memcg/slab: wait for !root kmem_cache refcnt killing
- on root kmem_cache destruction
-Thread-Topic: [PATCH] mm: memcg/slab: wait for !root kmem_cache refcnt killing
- on root kmem_cache destruction
-Thread-Index: AQHVo8HY/WnVvAZSgEqkb7BHNOXmHaedMHAAgACaToCAASswgIAAUmsAgAEQogCAARjFAA==
-Date:   Fri, 29 Nov 2019 02:28:11 +0000
-Message-ID: <20191129022806.GB68299@localhost.localdomain>
-References: <20191125185453.278468-1-guro@fb.com>
- <20191126092918.GB20912@dhcp22.suse.cz>
- <20191126184135.GA66034@localhost.localdomain>
- <20191127123225.GR20912@dhcp22.suse.cz>
- <20191127172724.GA67742@localhost.localdomain>
- <20191128094312.GF26807@dhcp22.suse.cz>
-In-Reply-To: <20191128094312.GF26807@dhcp22.suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR19CA0089.namprd19.prod.outlook.com
- (2603:10b6:320:1f::27) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:150::19)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:180::32b2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6fc1e111-d149-4bc2-2248-08d77473c747
-x-ms-traffictypediagnostic: BYAPR15MB2533:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB25332D766431709865850E43BE460@BYAPR15MB2533.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:345;
-x-forefront-prvs: 0236114672
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(39860400002)(376002)(366004)(54534003)(199004)(189003)(51914003)(54906003)(4326008)(71190400001)(6512007)(6246003)(11346002)(229853002)(6436002)(6486002)(186003)(316002)(71200400001)(102836004)(2906002)(446003)(46003)(52116002)(25786009)(8676002)(6506007)(386003)(8936002)(6916009)(256004)(14444005)(81156014)(76176011)(81166006)(9686003)(86362001)(6116002)(66556008)(66476007)(5660300002)(33656002)(99286004)(66446008)(66946007)(478600001)(1076003)(64756008)(14454004)(7736002)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2533;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8qjl39BLNuNSx9Qpy5Nb1l9PuC7yN0ZPjfpKOCqJzm1GVtwGRK7GbdYZtlSrP2OxQ5dp+PwwsdY5Yyk4vpJmNzddx50GHl3lzIitWIOpyQASQWVbHrqRfJSrqcVxlQFIQ3UDgVUP3m9tNguzqzBSE00JLdWXmsBQEJgEzO+60Pl3cF3AiWbp1nhp0EznDLxMApxqZHan1C6A+Rl5kjE3Vv6yds6oVOxJcKFpHYbjQCaCXROflLhxF2dFki9GH1/18c/O3Pyezh9Jw1/H7IN5+7eJN2jG0Z5rFfsDTyvLpKGRVd1IcnAHAIVrXiXqIvFfHyFwqLxYiVPaWwQffH3x9ZEXQ6N6FTEzAuJKJe3tDqThWprsx6aanHOsNG5u+Zxtm+YbNo76a1ihwKM3aevdIpgwdzLAR/kFhoEXUzsX5TNg2CRFzldI5s0bX9uScoPD
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DB1BC2F78181D048A0C267B99C83F661@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 28 Nov 2019 21:36:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574994977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jDF7Q7V50OQ37uKqyTz79/2jEQE/f9lemxhgikNLHpM=;
+        b=JaVKfBEtG+qH5ZeuGI3L27IMT0IJYgdZ20K1WaLPpFeTk/AgSHHaxYlMMXAsYNV8CUhus7
+        UbAZ61EkvE0CY3jU14cc5bXOsi2MNTAdubZszTrqfba3ifIDAy7h9YjLVZj4awWS4/EbgI
+        9c+m3Tr6gqgjpGOPhPNNJTU+xLyBK9I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-306-CZ9IrU96NzK7m1UWnHMAlQ-1; Thu, 28 Nov 2019 21:36:14 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5EAC10054E3;
+        Fri, 29 Nov 2019 02:36:11 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3922910013A7;
+        Fri, 29 Nov 2019 02:36:00 +0000 (UTC)
+Date:   Fri, 29 Nov 2019 10:35:55 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>
+Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191129023555.GA8620@ming.t460p>
+References: <20191125151535.GA8044@ming.t460p>
+ <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>
+ <20191126023253.GA24501@ming.t460p>
+ <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
+ <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
+ <cb6e84781c4542229a3f31572cef19ab@SVR-IES-MBX-03.mgc.mentorg.com>
+ <c1358b840b3a4971aa35a25d8495c2c8953403ea.camel@unipv.it>
+ <20191128091712.GD15549@ming.t460p>
+ <f82fd5129e3dcacae703a689be60b20a7fedadf6.camel@unipv.it>
+ <20191129005734.GB1829@ming.t460p>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fc1e111-d149-4bc2-2248-08d77473c747
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Nov 2019 02:28:11.2132
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M/5hMK9D6sp4IunSy7BTSl32m+rB5GR2SvgFHj36Zxh/KYZt5YJCoG8JslXGSuO2
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2533
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_08:2019-11-28,2019-11-28 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- spamscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 bulkscore=0 phishscore=0 suspectscore=0 adultscore=0
- mlxlogscore=616 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911290019
-X-FB-Internal: deliver
+In-Reply-To: <20191129005734.GB1829@ming.t460p>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: CZ9IrU96NzK7m1UWnHMAlQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 10:43:12AM +0100, Michal Hocko wrote:
-> On Wed 27-11-19 17:27:29, Roman Gushchin wrote:
-> > On Wed, Nov 27, 2019 at 01:32:25PM +0100, Michal Hocko wrote:
-> > > On Tue 26-11-19 18:41:41, Roman Gushchin wrote:
-> > > > On Tue, Nov 26, 2019 at 10:29:18AM +0100, Michal Hocko wrote:
-> > > > > On Mon 25-11-19 10:54:53, Roman Gushchin wrote:
-> > > [...]
-> > > > > > So in a rare case when not all children kmem_caches are destroy=
-ed
-> > > > > > at the moment when the root kmem_cache is about to be gone, we =
-need
-> > > > > > to wait another rcu grace period before destroying the root
-> > > > > > kmem_cache.
+On Fri, Nov 29, 2019 at 08:57:34AM +0800, Ming Lei wrote:
+> On Thu, Nov 28, 2019 at 06:34:32PM +0100, Andrea Vai wrote:
+> > Il giorno gio, 28/11/2019 alle 17.17 +0800, Ming Lei ha scritto:
+> > > On Thu, Nov 28, 2019 at 08:46:57AM +0100, Andrea Vai wrote:
+> > > > Il giorno mer, 27/11/2019 alle 08.14 +0000, Schmid, Carsten ha
+> > > > scritto:
+> > > > > >=20
+> > > > > > > Then I started another set of 100 trials and let them run
+> > > > > tonight, and
+> > > > > > > the first 10 trials were around 1000s, then gradually
+> > > decreased
+> > > > > to
+> > > > > > > ~300s, and finally settled around 200s with some trials
+> > > below
+> > > > > 70-80s.
+> > > > > > > This to say, times are extremely variable and for the first
+> > > time
+> > > > > I
+> > > > > > > noticed a sort of "performance increase" with time.
+> > > > > > >
+> > > > > >=20
+> > > > > > The sheer volume of testing (probably some terabytes by now)
+> > > would
+> > > > > > exercise the wear leveling algorithm in the FTL.
+> > > > > >=20
+> > > > > But with "old kernel" the copy operation still is "fast", as far
+> > > as
+> > > > > i understood.
+> > > > > If FTL (e.g. wear leveling) would slow down, we would see that
+> > > also
+> > > > > in
+> > > > > the old kernel, right?
 > > > > >=20
-> > > > > Could you explain how rare this really is please?
+> > > > > Andrea, can you confirm that the same device used with the old
+> > > fast
+> > > > > kernel is still fast today?
 > > > >=20
-> > > > It seems that we don't destroy root kmem_caches with enabled memcg
-> > > > accounting that often, but maybe I'm biased here.
+> > > > Yes, it is still fast. Just ran a 100 trials test and got an
+> > > average
+> > > > of 70 seconds with standard deviation =3D 6 seconds, aligned with
+> > > the
+> > > > past values of the same kernel.
 > > >=20
-> > > So this happens each time a root kmem_cache is destroyed? Which would
-> > > imply that only dynamically created ones?
+> > > Then can you collect trace on the old kernel via the previous
+> > > script?
+> > >=20
+> > > #!/bin/sh
+> > >=20
+> > > MAJ=3D$1
+> > > MIN=3D$2
+> > > MAJ=3D$(( $MAJ << 20 ))
+> > > DEV=3D$(( $MAJ | $MIN ))
+> > >=20
+> > > /usr/share/bcc/tools/trace -t -C \
+> > >     't:block:block_rq_issue (args->dev =3D=3D '$DEV') "%s %d %d", arg=
+s-
+> > > >rwbs, args->sector, args->nr_sector' \
+> > >     't:block:block_rq_insert (args->dev =3D=3D '$DEV') "%s %d %d", ar=
+gs-
+> > > >rwbs, args->sector, args->nr_sector'
+> > >=20
+> > > Both the two trace points and bcc should be available on the old
+> > > kernel.
+> > >=20
 > >=20
-> > Yes, only dynamically created and only in those cases when destruction
-> > of the root cache happens immediately after the deactivation of the
-> > non-root cache.
-> > Tbh I can't imagine any other case except rmmod after
-> > removing the cgroup.
+> > Trace attached. Produced by: start the trace script
+> > (with the pendrive already plugged), wait some seconds, run the test
+> > (1 trial, 1 GB), wait for the test to finish, stop the trace.
+> >=20
+> > The copy took 73 seconds, roughly as already seen before with the fast
+> > old kernel.
 >=20
-> Thanks for the confirmation! Could you please make this explicit in the
-> changelog please? Maybe it is obvious to you but it took me quite some
-> time to grasp what the hell is going on here. Both memcg and kmem_cache
-> destruction are quite complex and convoluted.
+> This trace shows a good write IO order because the writeback IOs are
+> queued to block layer serially from the 'cp' task and writeback wq.
+>=20
+> However, writeback IO order is changed in current linus tree because
+> the IOs are queued to block layer concurrently from the 'cp' task
+> and writeback wq. It might be related with killing queue_congestion
+> by blk-mq.
+>=20
+> The performance effect could be not only on this specific USB drive,
+> but also on all HDD., I guess.
+>=20
+> However, I still can't reproduce it in my VM even though I built it
+> with similar setting of Andrea's test machine. Maybe the emulated disk
+> is too fast than Andrea's.
+>=20
+> Andrea, can you collect the following log when running the test
+> on current new(bad) kernel?
+>=20
+> =09/usr/share/bcc/tools/stackcount  -K blk_mq_make_request
 
-Sure, will send v2 shorty.
+Instead, please run the following trace, given insert may be
+called from other paths, such as flush plug:
 
-Thanks!
+=09/usr/share/bcc/tools/stackcount -K t:block:block_rq_insert
+
+If you are using python3, the following failure may be triggered:
+
+=09"cannot use a bytes pattern on a string-like object"
+
+Then apply the following fix on /usr/lib/python3.7/site-packages/bcc/__init=
+__.py
+
+diff --git a/src/python/bcc/__init__.py b/src/python/bcc/__init__.py
+index 6f114de8..bff5f282 100644
+--- a/src/python/bcc/__init__.py
++++ b/src/python/bcc/__init__.py
+@@ -769,7 +769,7 @@ class BPF(object):
+                 evt_dir =3D os.path.join(cat_dir, event)
+                 if os.path.isdir(evt_dir):
+                     tp =3D ("%s:%s" % (category, event))
+-                    if re.match(tp_re, tp):
++                    if re.match(tp_re.decode(), tp):
+                         results.append(tp)
+         return results
+
+Thanks,
+Ming
+
