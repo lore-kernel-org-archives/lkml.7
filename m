@@ -2,93 +2,147 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816DEC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE6BC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580EE217AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734C420833
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="qMZUtX6f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sLGJCHQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfK2MF6 (ORCPT
+        id S1726853AbfK2MIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 07:05:58 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33815 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbfK2MF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 07:05:58 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47PYB84LcQz9sR2;
-        Fri, 29 Nov 2019 23:05:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1575029155;
-        bh=RgqQ6J3nCEijMroo3dPDXfMcTSuhbY20fzV//BwrQ7Q=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=qMZUtX6f1gYjXhiwAf5QzK9IPtW2/Vrc6yE30o1jdtSlV/smWKBUhG/6e9ZZ5SbaC
-         J45fHBly2fsIc2h4Oc6lDi5krivAxvNvIhzG28SfIl0F55x4er9ArJ4FGupcJkGvGJ
-         ycFQMcbfHd8aiOX4SmKofGPa3GjY6MllAavbp+tUGh/cKIJ2O7WKeDJBySB5eQL/kC
-         3gWTlBoSiY/o2Sh1WRqB/Ol6c+anbsqMYOs3V6rjqKTo0ErDTHMrfPghBBk3jaUE+H
-         VEB3pAZ48nDzWYDSl9Nm7KJYpz83z5cIOGChkENINOcChDUUYZQWNMm5xjPZFZF5gO
-         tsL3i85GXvRuQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     YueHaibing <yuehaibing@huawei.com>, jmorris@namei.org,
-        serge@hallyn.com, nayna@linux.ibm.com, zohar@linux.ibm.com,
-        dhowells@redhat.com, jwboyer@fedoraproject.org,
-        yuehaibing@huawei.com
-Cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] x86/efi: remove unused variables
-In-Reply-To: <20191115130830.13320-1-yuehaibing@huawei.com>
-References: <20191115130830.13320-1-yuehaibing@huawei.com>
-Date:   Fri, 29 Nov 2019 23:05:49 +1100
-Message-ID: <87a78ega5e.fsf@mpe.ellerman.id.au>
+        Fri, 29 Nov 2019 07:08:12 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35882 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfK2MIM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 07:08:12 -0500
+Received: by mail-ed1-f67.google.com with SMTP id j17so9183467edp.3;
+        Fri, 29 Nov 2019 04:08:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pYh4OF7fVecpJQShy7dlLTgKEjADRLBZ2wMKeIZnp+c=;
+        b=sLGJCHQh1Ii00vfaWvxz8zLwdfABNxTItE+up4RY4ik3cKyLshn4OlAOTXbemurpTg
+         S8xxiFrVKISJPTDbFVqFgE8KyiCPlEFXizAzNK7lrtxtOFyAmG+9OfLl2erO0zijnBCo
+         5zWqTsJiz4sOzngC0wSe18Lzn/HMBG+V+c9Sr9b8ZPlIgExtaSxbdw+jcgEAVzwT3tFO
+         +bW1uMMRWrHEg4sBhJ582rYkW0GyDfXn0FWn0H2bQseX79SXZbxMe9ZlA+s5mW5EkgUv
+         2iyToHoCYRW8uUHFUgRdyR4QBo14hjtJcEbiKDT4i96Y2WIFflnPzYLFwsMad6VsWwdJ
+         94YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pYh4OF7fVecpJQShy7dlLTgKEjADRLBZ2wMKeIZnp+c=;
+        b=fodT1VWHIoAPtAajtEte6OFnuTXhWwZ0SOarQ5TUYnJFby+hNZMyiBSnVpu811g1l1
+         OQjUGr6vedqEe9TnNwmgwO5+dxPcrbvO7RljqF51BFlfiMfUQ17GsjXGKTX3TA08m4Oj
+         eTIFmu7DlXg0spwbELiziQ02g2/ovOhYQZKcsTV0RTjGoYOV8ExBwJ9qs4hwM+RK/I+r
+         HWFZJeV41YLakxhNBVZTs80z+FlKb8280St8iJkqL0kv9DLT4g2ObTNejkvQSX3QyOiR
+         VLFJZCXujgL84LaP8qFpl+uZ59Ze90IkdL4M7tF8tKMuJA3yAI39QTbQ5bfLhIuj80vN
+         SQuw==
+X-Gm-Message-State: APjAAAUactJQSRuiZoBE9TGGo80B9hiJ3KnHC2T28Ld7J4Ccaz5RW+Ig
+        oATkbVu8U4DypkzC+dG3PnWidL58g/yqoCEGmZ8=
+X-Google-Smtp-Source: APXvYqzfF1cK0U5U4Uai+ex5wb5S/gF/3ZFT9boQhMY2iqy9QLvZz4J6Rmjpttfz4SalMl4mp+5Jg61VsKdLCcxqE78=
+X-Received: by 2002:a17:907:2099:: with SMTP id pv25mr40555706ejb.144.1575029289991;
+ Fri, 29 Nov 2019 04:08:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <cover.1574922435.git.shubhrajyoti.datta@xilinx.com>
+ <d9277db2692bb77a41dfed927cfb791bdcced17d.1574922435.git.shubhrajyoti.datta@xilinx.com>
+ <20191128074505.GC1781@kadam>
+In-Reply-To: <20191128074505.GC1781@kadam>
+From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date:   Fri, 29 Nov 2019 17:37:57 +0530
+Message-ID: <CAKfKVtHpP4j32CNA8ioET=wqYPWtzrQvH-A+4n-pcvj1KZy=fg@mail.gmail.com>
+Subject: Re: [PATCH v3 08/10] clk: clock-wizard: Make the output names unique
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-clk@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devel@driverdev.osuosl.org, Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> writes:
-> commit ad723674d675 ("x86/efi: move common keyring
-> handler functions to new file") leave this unused.
+On Thu, Nov 28, 2019 at 1:15 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 >
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  security/integrity/platform_certs/load_uefi.c | 5 -----
->  1 file changed, 5 deletions(-)
+> On Thu, Nov 28, 2019 at 12:06:15PM +0530, shubhrajyoti.datta@gmail.com wrote:
+> > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> >
+> > Incase there are more than one instance of the clocking wizard.
+> > And if the output name given is the same then the probe fails.
+> > Fix the same by appending the device name to the output name to
+> > make it unique.
+> >
+> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> > ---
+> >  drivers/clk/clk-xlnx-clock-wizard.c | 13 ++++++++-----
+> >  1 file changed, 8 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/clk/clk-xlnx-clock-wizard.c b/drivers/clk/clk-xlnx-clock-wizard.c
+> > index 75ea745..9993543 100644
+> > --- a/drivers/clk/clk-xlnx-clock-wizard.c
+> > +++ b/drivers/clk/clk-xlnx-clock-wizard.c
+> > @@ -555,6 +555,9 @@ static int clk_wzrd_probe(struct platform_device *pdev)
+> >               ret = -ENOMEM;
+> >               goto err_disable_clk;
+> >       }
+> > +     outputs = of_property_count_strings(np, "clock-output-names");
+> > +     if (outputs == 1)
+> > +             flags = CLK_SET_RATE_PARENT;
+> >       clk_wzrd->clks_internal[wzrd_clk_mul] = clk_register_fixed_factor
+> >                       (&pdev->dev, clk_name,
+> >                        __clk_get_name(clk_wzrd->clk_in1),
+> > @@ -566,9 +569,6 @@ static int clk_wzrd_probe(struct platform_device *pdev)
+> >               goto err_disable_clk;
+> >       }
+> >
+> > -     outputs = of_property_count_strings(np, "clock-output-names");
+> > -     if (outputs == 1)
+> > -             flags = CLK_SET_RATE_PARENT;
+> >       clk_name = kasprintf(GFP_KERNEL, "%s_mul_div", dev_name(&pdev->dev));
+> >       if (!clk_name) {
+> >               ret = -ENOMEM;
+> > @@ -591,6 +591,7 @@ static int clk_wzrd_probe(struct platform_device *pdev)
+> >       /* register div per output */
+> >       for (i = outputs - 1; i >= 0 ; i--) {
+> >               const char *clkout_name;
+> > +             const char *clkout_name_wiz;
+> >
+> >               if (of_property_read_string_index(np, "clock-output-names", i,
+> >                                                 &clkout_name)) {
+> > @@ -599,9 +600,11 @@ static int clk_wzrd_probe(struct platform_device *pdev)
+> >                       ret = -EINVAL;
+> >                       goto err_rm_int_clks;
+> >               }
+> > +             clkout_name_wiz = kasprintf(GFP_KERNEL, "%s_%s",
+> > +                                         dev_name(&pdev->dev), clkout_name);
+>
+> If this kasprintf() crashes then clk_wzrd_register_divf() will fail.
+> But that was a headache to review.  Just add a check for NULL.  We need
+> a kfree() as well.
+>
+> One alternative would be to just declare a buffer on the stack and use
+> snprintf().  We don't need to keep the name around after the call to
+> clk_wzrd_register_divf().
 
-Thanks for spotting this, my x86 test builds did trigger it, but I
-didn't notice the new warnings.
+Will fix in next version.
 
-I've picked this up into the powerpc tree, as that's where the offending
-commit is.
-
-cheers
-
-> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-> index 4369204..111898a 100644
-> --- a/security/integrity/platform_certs/load_uefi.c
-> +++ b/security/integrity/platform_certs/load_uefi.c
-> @@ -11,11 +11,6 @@
->  #include "../integrity.h"
->  #include "keyring_handler.h"
->  
-> -static efi_guid_t efi_cert_x509_guid __initdata = EFI_CERT_X509_GUID;
-> -static efi_guid_t efi_cert_x509_sha256_guid __initdata =
-> -	EFI_CERT_X509_SHA256_GUID;
-> -static efi_guid_t efi_cert_sha256_guid __initdata = EFI_CERT_SHA256_GUID;
-> -
->  /*
->   * Look to see if a UEFI variable called MokIgnoreDB exists and return true if
->   * it does.
-> -- 
-> 2.7.4
+>
+> regards,
+> dan carpenter
+>
