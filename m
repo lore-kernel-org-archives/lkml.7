@@ -2,375 +2,126 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B884EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40413C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76EF6206B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132C0206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S9YH7tZu"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="fJLIScTj";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="pZw+3rec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfK2Vcv (ORCPT
+        id S1727258AbfK2Vd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:32:51 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34670 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727111AbfK2Vcu (ORCPT
+        Fri, 29 Nov 2019 16:33:27 -0500
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:57750 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727227AbfK2Vd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 16:32:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575063168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eAG5Jn3OuAFdTylu6pJu+NV01EXcH/0EJLHVxQXwkPc=;
-        b=S9YH7tZujrtEQyHEghhDA3tjthsgH6nvi9VaLLR26VYGxlXXdt9MX+AU4S46er0eWZIMzc
-        3B6Cw3/JfCC0cKE3cw6Swc7RAinBg/3cIdDrKtZHQhk00hHQ2/PWSy9zlRxG9ohETbX6xo
-        vcF2o+gFWTOd6RRXhLxP1LWpp0wPGxc=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-vb71_ve5MLm4Vv2LormZKg-1; Fri, 29 Nov 2019 16:32:46 -0500
-Received: by mail-qt1-f199.google.com with SMTP id v92so19632378qtd.18
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 13:32:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1QV5ryCIGq2QV/eZOsMqVJWdaldoWJG8mcfxAcgQq7Q=;
-        b=d2B751u5X6BwE4i04y/AFH6Bd5AKV7VREUxNAKEFRAenn3WJUJla1YRpqdneacwyRg
-         Itt2JRg0trSi5POEOQFsTkekzmPAwGANN/Jw+7tqiQ+pLcZtMZJBKLGfIPXQq6jPIrP0
-         PDonSU3k2Xr9EX6S6kVuiMp4rRqiFJ1RyQj94xhPTKamGxQ4Z3xvgtQCIwsPSpgL71T3
-         Zj1pbWj6POqYhzle+8JnvZC3sSz20KWIxoufdW5GBWDY3oVCIXEGPaEB+UxsjVDIJbIj
-         CyKy0uuxwg2BvZQczCxDrkCETtpp/McBLqMQAdYeur2gA65GF2pX1ypf5/KfEolwU+hM
-         KkOA==
-X-Gm-Message-State: APjAAAU4/nt+CcJDhJNI+deHhLW/xPdHthCxKgvARfCJVR4ENFCopy6I
-        Bo5h5Sl/QxID4MZUhcEciMQdjkyaEdYQCbhn/86HeKAr95O50ywfSH2/IcWb+LIFv8QbJMB7341
-        VqeYhIi6NMlKPT6iDAe6oS77R
-X-Received: by 2002:ac8:163c:: with SMTP id p57mr34693389qtj.106.1575063165961;
-        Fri, 29 Nov 2019 13:32:45 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw+c4hSEAWhEg5Qw6P8scV1dsSyfnHKBqTlu0/32I1c4Invo+lKJ5rpxZioPxQcpCt/V/UY5Q==
-X-Received: by 2002:ac8:163c:: with SMTP id p57mr34693345qtj.106.1575063165630;
-        Fri, 29 Nov 2019 13:32:45 -0800 (PST)
-Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id n5sm10634817qkf.48.2019.11.29.13.32.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 13:32:45 -0800 (PST)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, Cao Lei <Lei.Cao@stratus.com>,
-        peterx@redhat.com, "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH RFC 01/15] KVM: Move running VCPU from ARM to common code
-Date:   Fri, 29 Nov 2019 16:32:28 -0500
-Message-Id: <20191129213242.17144-2-peterx@redhat.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191129213242.17144-1-peterx@redhat.com>
-References: <20191129213242.17144-1-peterx@redhat.com>
+        Fri, 29 Nov 2019 16:33:27 -0500
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id E7AA594B11;
+        Fri, 29 Nov 2019 16:33:21 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=qsjoBcgCxyaID9uJZoXhE7gN8Qg=; b=fJLISc
+        TjHDSD+xsDF7WgIN09KBQuxcjL2q2WDxtjlsKM8Fy0bSe/QuB8fih8zzQyw+xh3R
+        DgnVQWJQ5mpSq5tXB6PwrBOGDjrXc4+2LBWoBN12nmFkGYninZDaFnR2wXqSQG1y
+        Yed3wiffysE99y78dqQzOGhcpQY6yMvLFKeEo=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id CD3B694B10;
+        Fri, 29 Nov 2019 16:33:21 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=7emamvWS9iC1jKWQznUYgA1WdYW41jXGMGz2oY925AQ=; b=pZw+3rec2kggzCeUe1aDsbNeZvMmmxD/Z3NNp2tZRa5P2lFgQ/RkKwSliuLBNHB19ndlPDnwVSLUqNHeOIG41azWE8DzmPkCRV8u6GxNO8kEQfum3e2s1aqZI6a75mct+kBuSGcsEANCBNlAeQx/W0tkUPAL/hKEjA//lfAC1vc=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id C152294B0F;
+        Fri, 29 Nov 2019 16:33:18 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id E396D2DA01D7;
+        Fri, 29 Nov 2019 16:33:16 -0500 (EST)
+Date:   Fri, 29 Nov 2019 16:33:16 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        clang-built-linux@googlegroups.com, manojgupta@google.com,
+        natechancellor@gmail.com, Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm: explicitly place .fixup in .text
+In-Reply-To: <20191122185522.20582-1-ndesaulniers@google.com>
+Message-ID: <nycvar.YSQ.7.76.1911291614480.8537@knanqh.ubzr>
+References: <20191122185522.20582-1-ndesaulniers@google.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-X-MC-Unique: vb71_ve5MLm4Vv2LormZKg-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+X-Pobox-Relay-ID: DC23B8F4-12EF-11EA-9534-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+On Fri, 22 Nov 2019, Nick Desaulniers wrote:
 
-For ring-based dirty log tracking, it will be more efficient to account
-writes during schedule-out or schedule-in to the currently running VCPU.
-We would like to do it even if the write doesn't use the current VCPU's
-address space, as is the case for cached writes (see commit 4e335d9e7ddb,
-"Revert "KVM: Support vCPU-based gfn->hva cache"", 2017-05-02).
+> From: Kees Cook <keescook@chromium.org>
+> 
+> There's an implicit dependency on the section ordering of the orphaned
+> section .fixup that can break arm_copy_from_user if the linker places
+> the .fixup section before the .text section. Since .fixup is not
+> explicitly placed in the existing ARM linker scripts, the linker is free
+> to order it anywhere with respect to the rest of the sections.
+> 
+> Multiple users from different distros (Raspbian, CrOS) reported kernel
+> panics executing seccomp() syscall with Linux kernels linked with LLD.
+> 
+> Documentation/x86/exception-tables.rst alludes to the ordering
+> dependency. The relevant quote:
+> 
+> ```
+> NOTE:
+> Due to the way that the exception table is built and needs to be ordered,
+> only use exceptions for code in the .text section.  Any other section
+> will cause the exception table to not be sorted correctly, and the
+> exceptions will fail.
+> 
+> Things changed when 64-bit support was added to x86 Linux. Rather than
+> double the size of the exception table by expanding the two entries
+> from 32-bits to 64 bits, a clever trick was used to store addresses
+> as relative offsets from the table itself. The assembly code changed
+> from::
+> 
+>     .long 1b,3b
+>   to:
+>           .long (from) - .
+>           .long (to) - .
+> 
+> and the C-code that uses these values converts back to absolute addresses
+> like this::
+> 
+>         ex_insn_addr(const struct exception_table_entry *x)
+>         {
+>                 return (unsigned long)&x->insn + x->insn;
+>         }
+> ```
+> 
+> Since the addresses stored in the __ex_table are RELATIVE offsets and
+> not ABSOLUTE addresses, ordering the fixup anywhere that's not
+> immediately preceding .text causes the relative offset of the faulting
+> instruction to be wrong, causing the wrong (or no) address of the fixup
+> handler to looked up in __ex_table.
 
-Therefore, add a mechanism to track the currently-loaded kvm_vcpu struct.
-There is already something similar in KVM/ARM; one important difference
-is that kvm_arch_vcpu_{load,put} have two callers in virt/kvm/kvm_main.c:
-we have to update both the architecture-independent vcpu_{load,put} and
-the preempt notifiers.
+This explanation makes no sense.
 
-Another change made in the process is to allow using kvm_get_running_vcpu()
-in preemptible code.  This is allowed because preempt notifiers ensure
-that the value does not change even after the VCPU thread is migrated.
+The above is valid only when ARCH_HAS_RELATIVE_EXTABLE is defined. On 
+ARM32 it is not, nor would it make sense to be.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/arm/include/asm/kvm_host.h   |  2 --
- arch/arm64/include/asm/kvm_host.h |  2 --
- include/linux/kvm_host.h          |  3 +++
- virt/kvm/arm/arm.c                | 29 -----------------------------
- virt/kvm/arm/perf.c               |  6 +++---
- virt/kvm/arm/vgic/vgic-mmio.c     | 15 +++------------
- virt/kvm/kvm_main.c               | 25 ++++++++++++++++++++++++-
- 7 files changed, 33 insertions(+), 49 deletions(-)
 
-diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_hos=
-t.h
-index 556cd818eccf..abc3f6f3ad76 100644
---- a/arch/arm/include/asm/kvm_host.h
-+++ b/arch/arm/include/asm/kvm_host.h
-@@ -284,8 +284,6 @@ int kvm_arm_copy_reg_indices(struct kvm_vcpu *vcpu, u64=
- __user *indices);
- int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
- int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
-=20
--struct kvm_vcpu *kvm_arm_get_running_vcpu(void);
--struct kvm_vcpu __percpu **kvm_get_running_vcpus(void);
- void kvm_arm_halt_guest(struct kvm *kvm);
- void kvm_arm_resume_guest(struct kvm *kvm);
-=20
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm=
-_host.h
-index b36dae9ee5f9..d97855e41469 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -446,8 +446,6 @@ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva=
-, pte_t pte);
- int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
- int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
-=20
--struct kvm_vcpu *kvm_arm_get_running_vcpu(void);
--struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void);
- void kvm_arm_halt_guest(struct kvm *kvm);
- void kvm_arm_resume_guest(struct kvm *kvm);
-=20
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 7ed1e2f8641e..498a39462ac1 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1342,6 +1342,9 @@ static inline void kvm_vcpu_set_dy_eligible(struct kv=
-m_vcpu *vcpu, bool val)
- }
- #endif /* CONFIG_HAVE_KVM_CPU_RELAX_INTERCEPT */
-=20
-+struct kvm_vcpu *kvm_get_running_vcpu(void);
-+struct kvm_vcpu __percpu **kvm_get_running_vcpus(void);
-+
- #ifdef CONFIG_HAVE_KVM_IRQ_BYPASS
- bool kvm_arch_has_irq_bypass(void);
- int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *,
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index 12e0280291ce..1df9c39024fa 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -51,9 +51,6 @@ __asm__(".arch_extension=09virt");
- DEFINE_PER_CPU(kvm_host_data_t, kvm_host_data);
- static DEFINE_PER_CPU(unsigned long, kvm_arm_hyp_stack_page);
-=20
--/* Per-CPU variable containing the currently running vcpu. */
--static DEFINE_PER_CPU(struct kvm_vcpu *, kvm_arm_running_vcpu);
--
- /* The VMID used in the VTTBR */
- static atomic64_t kvm_vmid_gen =3D ATOMIC64_INIT(1);
- static u32 kvm_next_vmid;
-@@ -62,31 +59,8 @@ static DEFINE_SPINLOCK(kvm_vmid_lock);
- static bool vgic_present;
-=20
- static DEFINE_PER_CPU(unsigned char, kvm_arm_hardware_enabled);
--
--static void kvm_arm_set_running_vcpu(struct kvm_vcpu *vcpu)
--{
--=09__this_cpu_write(kvm_arm_running_vcpu, vcpu);
--}
--
- DEFINE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
-=20
--/**
-- * kvm_arm_get_running_vcpu - get the vcpu running on the current CPU.
-- * Must be called from non-preemptible context
-- */
--struct kvm_vcpu *kvm_arm_get_running_vcpu(void)
--{
--=09return __this_cpu_read(kvm_arm_running_vcpu);
--}
--
--/**
-- * kvm_arm_get_running_vcpus - get the per-CPU array of currently running =
-vcpus.
-- */
--struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
--{
--=09return &kvm_arm_running_vcpu;
--}
--
- int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
- {
- =09return kvm_vcpu_exiting_guest_mode(vcpu) =3D=3D IN_GUEST_MODE;
-@@ -406,7 +380,6 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- =09vcpu->cpu =3D cpu;
- =09vcpu->arch.host_cpu_context =3D &cpu_data->host_ctxt;
-=20
--=09kvm_arm_set_running_vcpu(vcpu);
- =09kvm_vgic_load(vcpu);
- =09kvm_timer_vcpu_load(vcpu);
- =09kvm_vcpu_load_sysregs(vcpu);
-@@ -432,8 +405,6 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- =09kvm_vcpu_pmu_restore_host(vcpu);
-=20
- =09vcpu->cpu =3D -1;
--
--=09kvm_arm_set_running_vcpu(NULL);
- }
-=20
- static void vcpu_power_off(struct kvm_vcpu *vcpu)
-diff --git a/virt/kvm/arm/perf.c b/virt/kvm/arm/perf.c
-index 918cdc3839ea..d45b8b9a4415 100644
---- a/virt/kvm/arm/perf.c
-+++ b/virt/kvm/arm/perf.c
-@@ -13,14 +13,14 @@
-=20
- static int kvm_is_in_guest(void)
- {
--        return kvm_arm_get_running_vcpu() !=3D NULL;
-+        return kvm_get_running_vcpu() !=3D NULL;
- }
-=20
- static int kvm_is_user_mode(void)
- {
- =09struct kvm_vcpu *vcpu;
-=20
--=09vcpu =3D kvm_arm_get_running_vcpu();
-+=09vcpu =3D kvm_get_running_vcpu();
-=20
- =09if (vcpu)
- =09=09return !vcpu_mode_priv(vcpu);
-@@ -32,7 +32,7 @@ static unsigned long kvm_get_guest_ip(void)
- {
- =09struct kvm_vcpu *vcpu;
-=20
--=09vcpu =3D kvm_arm_get_running_vcpu();
-+=09vcpu =3D kvm_get_running_vcpu();
-=20
- =09if (vcpu)
- =09=09return *vcpu_pc(vcpu);
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-index 0d090482720d..d656ebd5f9d4 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -190,15 +190,6 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *=
-vcpu,
-  * value later will give us the same value as we update the per-CPU variab=
-le
-  * in the preempt notifier handlers.
-  */
--static struct kvm_vcpu *vgic_get_mmio_requester_vcpu(void)
--{
--=09struct kvm_vcpu *vcpu;
--
--=09preempt_disable();
--=09vcpu =3D kvm_arm_get_running_vcpu();
--=09preempt_enable();
--=09return vcpu;
--}
-=20
- /* Must be called with irq->irq_lock held */
- static void vgic_hw_irq_spending(struct kvm_vcpu *vcpu, struct vgic_irq *i=
-rq,
-@@ -221,7 +212,7 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
- =09=09=09      gpa_t addr, unsigned int len,
- =09=09=09      unsigned long val)
- {
--=09bool is_uaccess =3D !vgic_get_mmio_requester_vcpu();
-+=09bool is_uaccess =3D !kvm_get_running_vcpu();
- =09u32 intid =3D VGIC_ADDR_TO_INTID(addr, 1);
- =09int i;
- =09unsigned long flags;
-@@ -274,7 +265,7 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- =09=09=09      gpa_t addr, unsigned int len,
- =09=09=09      unsigned long val)
- {
--=09bool is_uaccess =3D !vgic_get_mmio_requester_vcpu();
-+=09bool is_uaccess =3D !kvm_get_running_vcpu();
- =09u32 intid =3D VGIC_ADDR_TO_INTID(addr, 1);
- =09int i;
- =09unsigned long flags;
-@@ -335,7 +326,7 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vc=
-pu, struct vgic_irq *irq,
- =09=09=09=09    bool active)
- {
- =09unsigned long flags;
--=09struct kvm_vcpu *requester_vcpu =3D vgic_get_mmio_requester_vcpu();
-+=09struct kvm_vcpu *requester_vcpu =3D kvm_get_running_vcpu();
-=20
- =09raw_spin_lock_irqsave(&irq->irq_lock, flags);
-=20
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 00268290dcbd..fac0760c870e 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -108,6 +108,7 @@ struct kmem_cache *kvm_vcpu_cache;
- EXPORT_SYMBOL_GPL(kvm_vcpu_cache);
-=20
- static __read_mostly struct preempt_ops kvm_preempt_ops;
-+static DEFINE_PER_CPU(struct kvm_vcpu *, kvm_running_vcpu);
-=20
- struct dentry *kvm_debugfs_dir;
- EXPORT_SYMBOL_GPL(kvm_debugfs_dir);
-@@ -197,6 +198,8 @@ bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
- void vcpu_load(struct kvm_vcpu *vcpu)
- {
- =09int cpu =3D get_cpu();
-+
-+=09__this_cpu_write(kvm_running_vcpu, vcpu);
- =09preempt_notifier_register(&vcpu->preempt_notifier);
- =09kvm_arch_vcpu_load(vcpu, cpu);
- =09put_cpu();
-@@ -208,6 +211,7 @@ void vcpu_put(struct kvm_vcpu *vcpu)
- =09preempt_disable();
- =09kvm_arch_vcpu_put(vcpu);
- =09preempt_notifier_unregister(&vcpu->preempt_notifier);
-+=09__this_cpu_write(kvm_running_vcpu, NULL);
- =09preempt_enable();
- }
- EXPORT_SYMBOL_GPL(vcpu_put);
-@@ -4304,8 +4308,8 @@ static void kvm_sched_in(struct preempt_notifier *pn,=
- int cpu)
- =09WRITE_ONCE(vcpu->preempted, false);
- =09WRITE_ONCE(vcpu->ready, false);
-=20
-+=09__this_cpu_write(kvm_running_vcpu, vcpu);
- =09kvm_arch_sched_in(vcpu, cpu);
--
- =09kvm_arch_vcpu_load(vcpu, cpu);
- }
-=20
-@@ -4319,6 +4323,25 @@ static void kvm_sched_out(struct preempt_notifier *p=
-n,
- =09=09WRITE_ONCE(vcpu->ready, true);
- =09}
- =09kvm_arch_vcpu_put(vcpu);
-+=09__this_cpu_write(kvm_running_vcpu, NULL);
-+}
-+
-+/**
-+ * kvm_get_running_vcpu - get the vcpu running on the current CPU.
-+ * Thanks to preempt notifiers, this can also be called from
-+ * preemptible context.
-+ */
-+struct kvm_vcpu *kvm_get_running_vcpu(void)
-+{
-+        return __this_cpu_read(kvm_running_vcpu);
-+}
-+
-+/**
-+ * kvm_get_running_vcpus - get the per-CPU array of currently running vcpu=
-s.
-+ */
-+struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
-+{
-+        return &kvm_running_vcpu;
- }
-=20
- static void check_processor_compat(void *rtn)
---=20
-2.21.0
-
+Nicolas
