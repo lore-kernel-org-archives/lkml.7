@@ -2,129 +2,125 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE629C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB016C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9CE2075C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A528421736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfK2Pqd (ORCPT
+        id S1726970AbfK2Pt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 10:46:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:49556 "EHLO foss.arm.com"
+        Fri, 29 Nov 2019 10:49:29 -0500
+Received: from mga11.intel.com ([192.55.52.93]:45899 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfK2Pqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 10:46:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A832C30E;
-        Fri, 29 Nov 2019 07:46:32 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 214B93F68E;
-        Fri, 29 Nov 2019 07:46:31 -0800 (PST)
-Date:   Fri, 29 Nov 2019 15:46:30 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        mbrugger@suse.com, phil@raspberrypi.org, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 5/7] PCI: brcmstb: add MSI capability
-Message-ID: <20191129154629.GF43905@e119886-lin.cambridge.arm.com>
-References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
- <20191126091946.7970-6-nsaenzjulienne@suse.de>
+        id S1726608AbfK2Pt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 10:49:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 07:49:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
+   d="scan'208";a="234742526"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Nov 2019 07:49:28 -0800
+Received: from [10.252.8.148] (abudanko-mobl.ccr.corp.intel.com [10.252.8.148])
+        by linux.intel.com (Postfix) with ESMTP id 686C45802B9;
+        Fri, 29 Nov 2019 07:49:26 -0800 (PST)
+Subject: Re: [PATCH v3 3/3] perf record: adapt affinity to machines with #CPUs
+ > 1K
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <908dbe98-7d8d-0ec1-d4ae-242f3e104979@linux.intel.com>
+ <21bc3ad7-e1f2-68da-f004-36354a6e40ea@linux.intel.com>
+ <20191129130710.GB14169@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <d11eb388-2a66-c791-3ad3-40eed930480a@linux.intel.com>
+Date:   Fri, 29 Nov 2019 18:49:25 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126091946.7970-6-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191129130710.GB14169@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 10:19:43AM +0100, Nicolas Saenz Julienne wrote:
-> From: Jim Quinlan <james.quinlan@broadcom.com>
-> 
-> This adds MSI support to the Broadcom STB PCIe host controller. The MSI
-> controller is physically located within the PCIe block, however, there
-> is no reason why the MSI controller could not be moved elsewhere in the
-> future. MSIX is not supported by the HW.
-> 
-> Since the internal Brcmstb MSI controller is intertwined with the PCIe
-> controller, it is not its own platform device but rather part of the
-> PCIe platform device.
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Marc Zyngier <maz@kernel.org>
-> 
-> ---
-> 
-> Changes since v2 (kept Marc's Reviewed-by as changes didn't affect irq
-> subsystem stuff or seem petty enough):
->   - Use standard APIs on register operations
->   - Get rid of revision code
 
-Do any RPI4's have a HW revision of less than 33?
-
-
->   - Update rules to msi_target_addr selection
->   - Remove unwarranted MSI_FLAG_PCI_MSIX
->   - Small cosmetic changes
+On 29.11.2019 16:07, Jiri Olsa wrote:
+> On Fri, Nov 29, 2019 at 01:05:26PM +0300, Alexey Budankov wrote:
 > 
-> Changes since v1:
->   - Move revision code and some registers to this patch
->   - Use PCIE_MSI_IRQ_DOMAIN in Kconfig
->   - Remove redundant register read from ISR
->   - Fail probe on MSI init error
->   - Get rid of msi_internal
->   - Use bitmap family of functions
->   - Use edge triggered setup
->   - Add comment regarding MultiMSI
->   - Simplify compose_msi_msg to avoid reg read
+> SNIP
 > 
-> This is based on Jim's original submission[1] with some slight changes
-> regarding how pcie->msi_target_addr is decided.
+>>  # undef REASON
+>>  #endif
+>>  
+>> -	CPU_ZERO(&rec->affinity_mask);
+>>  	rec->opts.affinity = PERF_AFFINITY_SYS;
+>>  
+>>  	rec->evlist = evlist__new();
+>> @@ -2499,6 +2504,14 @@ int cmd_record(int argc, const char **argv)
+>>  
+>>  	symbol__init(NULL);
+>>  
+>> +	rec->affinity_mask.nbits = cpu__max_cpu();
+>> +	rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
+>> +	if (!rec->affinity_mask.bits) {
+>> +		pr_err("Failed to allocate thread mask for %ld cpus\n", rec->affinity_mask.nbits);
+>> +		return -ENOMEM;
+>> +	}
+>> +	pr_debug2("thread mask[%ld]: empty\n", rec->affinity_mask.nbits);
 > 
-> [1] https://patchwork.kernel.org/patch/10605955/
-> 
->  drivers/pci/controller/Kconfig        |   1 +
->  drivers/pci/controller/pcie-brcmstb.c | 261 +++++++++++++++++++++++++-
->  2 files changed, 261 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 27504f108ee5..918e283bbff1 100644
+> above can be done only for (rec->opts.affinity != PERF_AFFINITY_SYS)
 
+Indeed. Corrected in v4.
 
-> +
-> +static void brcm_msi_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-> +{
-> +	struct brcm_msi *msi = irq_data_get_irq_chip_data(data);
-> +
-> +	msg->address_lo = lower_32_bits(msi->target_addr);
-> +	msg->address_hi = upper_32_bits(msi->target_addr);
-> +	msg->data = 0x6540 | data->hwirq;
+> 
+> 
+>> +
+>>  	err = record__auxtrace_init(rec);
+>>  	if (err)
+>>  		goto out;
+>> @@ -2613,6 +2626,8 @@ int cmd_record(int argc, const char **argv)
+>>  
+>>  	err = __cmd_record(&record, argc, argv);
+>>  out:
+>> +	if (rec->affinity_mask.bits)
+>> +		bitmap_free(rec->affinity_mask.bits);
+>>  	evlist__delete(rec->evlist);
+>>  	symbol__exit();
+>>  	auxtrace_record__free(rec->itr);
+>> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+>> index 30ff7aef06f2..615d05870849 100644
+>> --- a/tools/perf/util/mmap.c
+>> +++ b/tools/perf/util/mmap.c
+>> @@ -219,6 +219,9 @@ static void perf_mmap__aio_munmap(struct mmap *map __maybe_unused)
+>>  
+>>  void mmap__munmap(struct mmap *map)
+>>  {
+>> +	if (map->affinity_mask.bits)
+>> +		bitmap_free(map->affinity_mask.bits);
+> 
+> you don't need to check map->affinity_mask.bits, it's checked in free
 
-NIT: Perhaps this 0x6540 can be a define - just in the same way we have a define
-for PCIE_MISC_MSI_DATA_CONFIG_VAL.
+Makes sense. Corrected in v4.
+
+> 
+> jirka
 
 Thanks,
-
-Andrew Murray
-
-> +}
-> +
-> -- 
-> 2.24.0
-> 
+Alexey
