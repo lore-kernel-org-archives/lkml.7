@@ -2,126 +2,303 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92B6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 04:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775FCC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 05:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCB42176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 04:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE7821787
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 05:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575004707;
+	bh=8TDfWpKo7ujSp4Fi/bzPRzCEStOkz2GptZ0MFqjFvOI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=V78aWtcXAHJvn0l/IHIHx8AA/VJirmv6QIM0lmj1UfI7xau5m4HL9BhBziVY0u6gH
+	 TasQqns3iLKKrsdzHm60ThrYMokfsUGgoWVT6LfVZ905227bjCMI7rv4DQlutHM6th
+	 IimEmuANcYj3kWoNdtGV2d+CtqBvKOwVud2BxlDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfK2E7h (ORCPT
+        id S1726763AbfK2FS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 23:59:37 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36087 "EHLO ozlabs.org"
+        Fri, 29 Nov 2019 00:18:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbfK2E7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 23:59:37 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725812AbfK2FS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 00:18:26 -0500
+Received: from localhost (unknown [171.76.96.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47PMk93X45z9sPj;
-        Fri, 29 Nov 2019 15:59:29 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1575003574;
-        bh=19pJP6vUr4t2D8dTKyATaMi+48+ZIdMKG/tYr/jD0V4=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=XUCEc+EWpMdNAtEBbV6Q+/egdrVh/W32IvexKmcHnYsjLD0xi16QwSbsLC4qYb7b4
-         A1VJXiTd99K0L0/6tJzeKQVUY6D9EillQpyWjbLFOzBx0zaM5esGAtny4tJeLzHllH
-         iTcEWCOA0BV8wDCCYwZbfXYy4+lQFR5nCPv82NbrwoVCx7BRZAJJbZFEvEPoB0W+c9
-         jk2hIV6o4DHGjqVs4DqFm5cb4sgoKKehvLdMGOnEmgzwCElzoV+epn1wEqm8+fYWdy
-         RvtmHbSPilqsK9i+E83E2TLZehSShpi/OVLrshGEkBfoPJ+QTte4t7H1pqgY/Ac/A7
-         qbwrGIau+nrjg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk
-Cc:     akash.goel@intel.com, ajd@linux.ibm.com,
-        Daniel Axtens <dja@axtens.net>,
-        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
-        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
-        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
-        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
-Subject: Re: [PATCH] relay: handle alloc_percpu returning NULL in relay_open
-In-Reply-To: <20191129013745.7168-1-dja@axtens.net>
-References: <20191129013745.7168-1-dja@axtens.net>
-Date:   Fri, 29 Nov 2019 15:59:27 +1100
-Message-ID: <87d0dbffbk.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1605A21736;
+        Fri, 29 Nov 2019 05:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575004704;
+        bh=8TDfWpKo7ujSp4Fi/bzPRzCEStOkz2GptZ0MFqjFvOI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ES4VZCMad9YM16JleW+dCY6yBR5Gc95NeoL4fdz05TUCaXas0ggJUrjCohWj87kxk
+         79NUK5OFfTaxx+YkFJqHUW8S5LQTIE+IrqqRXNt3DGGK5W/5BerdLS26cmDRb6X0Iq
+         SKIlrlCWcFHMEeJ51vavPsPxd+0Rry2kN1zm38GU=
+Date:   Fri, 29 Nov 2019 10:48:19 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] dmaengine updates for v5.5-rc1
+Message-ID: <20191129051819.GX82508@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hYooF8G/hrfVAmum"
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Axtens <dja@axtens.net> writes:
-> alloc_percpu() may return NULL, which means chan->buf may be set to
-> NULL. In that case, when we do *per_cpu_ptr(chan->buf, ...), we
-> dereference an invalid pointer:
->
-> BUG: Unable to handle kernel data access at 0x7dae0000
-> Faulting instruction address: 0xc0000000003f3fec
-> ...
-> NIP [c0000000003f3fec] relay_open+0x29c/0x600
-> LR [c0000000003f3fc0] relay_open+0x270/0x600
-> Call Trace:
-> [c000000054353a70] [c0000000003f3fb4] relay_open+0x264/0x600 (unreliable)
-> [c000000054353b00] [c000000000451764] __blk_trace_setup+0x254/0x600
-> [c000000054353bb0] [c000000000451b78] blk_trace_setup+0x68/0xa0
-> [c000000054353c10] [c0000000010da77c] sg_ioctl+0x7bc/0x2e80
-> [c000000054353cd0] [c000000000758cbc] do_vfs_ioctl+0x13c/0x1300
-> [c000000054353d90] [c000000000759f14] ksys_ioctl+0x94/0x130
-> [c000000054353de0] [c000000000759ff8] sys_ioctl+0x48/0xb0
-> [c000000054353e20] [c00000000000bcd0] system_call+0x5c/0x68
->
-> Check if alloc_percpu returns NULL. Because we can readily catch and
-> handle this situation, switch to alloc_cpu_gfp and pass in __GFP_NOWARN.
->
-> This was found by syzkaller both on x86 and powerpc, and the reproducer
-> it found on powerpc is capable of hitting the issue as an unprivileged
-> user.
->
-> Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
-> Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
-> Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
-> Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
-> Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
-> Cc: Akash Goel <akash.goel@intel.com>
-> Cc: Andrew Donnellan <ajd@linux.ibm.com> # syzkaller-ppc64
-> Cc: stable@vger.kernel.org # v4.10+
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
-...
-> diff --git a/kernel/relay.c b/kernel/relay.c
-> index ade14fb7ce2e..a376cc6b54ec 100644
-> --- a/kernel/relay.c
-> +++ b/kernel/relay.c
-> @@ -580,7 +580,13 @@ struct rchan *relay_open(const char *base_filename,
->  	if (!chan)
->  		return NULL;
->  
-> -	chan->buf = alloc_percpu(struct rchan_buf *);
-> +	chan->buf = alloc_percpu_gfp(struct rchan_buf *,
-> +				     GFP_KERNEL | __GFP_NOWARN);
-> +	if (!chan->buf) {
-> +		kfree(chan);
-> +		return NULL;
-> +	}
-> +
->  	chan->version = RELAYFS_CHANNEL_VERSION;
->  	chan->n_subbufs = n_subbufs;
->  	chan->subbuf_size = subbuf_size;
 
-This looks right to me. The kfree + direct return is correct, there's
-nothing else that needs tear down in this function.
+--hYooF8G/hrfVAmum
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think I'm 50/50 on the __GFP_NOWARN. We're only asking for 8 bytes per
-cpu, and if that fails the system is pretty sick, so a warning could be
-helpful. There's also logic in the percpu allocator to limit the number
-of warnings printed. But see what others think.
+Hello Linus,
 
-Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+Here are the changes this time around, couple of new drivers and updates
+to few more. This time the changes are based on dmaengine-fix-5.4-rc6 as
+I had to merge fixes to next for a dependency. The below commit is
+dmaengine-fix-5.4-rc6 already in you tree.
 
-cheers
+The following changes since commit bacdcb6675e170bb2e8d3824da220e10274f42a7:
+
+  dmaengine: cppi41: Fix cppi41_dma_prep_slave_sg() when idle (2019-10-23 2=
+1:15:21 +0530)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.5-rc1
+
+for you to fetch changes up to 67805a4b3c924927d9e064bca235461941f89e4a:
+
+  dmaengine: Fix Kconfig indentation (2019-11-22 11:16:26 +0530)
+
+----------------------------------------------------------------
+dmaengine updates for v5.5-rc1
+
+ - New drivers for SiFive PDMA, Socionext Milbeaut HDMAC and XDMAC,
+   Freescale dpaa2 qDMA
+ - Support for X1000 in JZ4780
+ - Xilinx dma updates and support for Xilinx AXI MCDM controller
+ - New bindings for rcar R8A774B1
+ - Minor updates to dw, dma-jz4780, ti-edma, sprd drivers
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      dmaengine: dw: platform: Mark 'hclk' clock optional
+
+Baolin Wang (1):
+      dmaengine: sprd: Change to use devm_platform_ioremap_resource()
+
+Biju Das (1):
+      dt-bindings: dmaengine: rcar-dmac: Document R8A774B1 bindings
+
+Chuhong Yuan (4):
+      dmaengine: dma-jz4780: add missed clk_disable_unprepare in remove
+      dmaengine: mmp_tdma: add missed of_dma_controller_free
+      dmaengine: mmp_pdma: add missed of_dma_controller_free
+      dmaengine: ti: edma: fix missed failure handling
+
+Colin Ian King (2):
+      dmaengine: iop-adma: make array 'handler' static const, makes object =
+smaller
+      dmaengine: iop-adma: clean up an indentation issue
+
+Eric Long (1):
+      dmaengine: sprd: Add wrap address support for link-list mode
+
+Green Wan (5):
+      dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+      dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00
+      MAINTAINERS: Add Green as SiFive PDMA driver maintainer
+      dmaengine: sf-pdma: replace /** with /* for non-function comment
+      dmaengine: sf-pdma: move macro to header file
+
+Jassi Brar (4):
+      dt-bindings: milbeaut-m10v-hdmac: Add Socionext Milbeaut HDMAC bindin=
+gs
+      dmaengine: milbeaut-hdmac: Add HDMAC driver for Milbeaut platforms
+      dt-bindings: milbeaut-m10v-xdmac: Add Socionext Milbeaut XDMAC bindin=
+gs
+      dmaengine: milbeaut-xdmac: Add XDMAC driver for Milbeaut platforms
+
+Krzysztof Kozlowski (2):
+      dmaengine: fsl-qdma: Handle invalid qdma-queue0 IRQ
+      dmaengine: Fix Kconfig indentation
+
+Markus Elfring (7):
+      dmaengine: at_xdmac: Use devm_platform_ioremap_resource() in at_xdmac=
+_probe()
+      dmaengine: jz4780: Use devm_platform_ioremap_resource() in jz4780_dma=
+_probe()
+      dmaengine: k3dma: Use devm_platform_ioremap_resource() in k3_dma_prob=
+e()
+      dmaengine: mediatek: Use devm_platform_ioremap_resource() in mtk_cqdm=
+a_probe()
+      dmaengine: mediatek: Use devm_platform_ioremap_resource() in mtk_uart=
+_apdma_probe()
+      dmaengine: owl: Use devm_platform_ioremap_resource() in owl_dma_probe=
+()
+      dmaengine: zx: Use devm_platform_ioremap_resource() in zx_dma_probe()
+
+Masahiro Yamada (1):
+      dmaengine: uniphier-mdmac: use devm_platform_ioremap_resource()
+
+Nathan Chancellor (1):
+      dmaengine: fsl-dpaa2-qdma: Remove unnecessary local variables in DPDM=
+AI_CMD_CREATE macro
+
+Nicholas Graumann (5):
+      dmaengine: xilinx_dma: Merge get_callback and _invoke
+      dmaengine: xilinx_dma: Introduce xilinx_dma_get_residue
+      dmaengine: xilinx_dma: Add callback_result support
+      dmaengine: xilinx_dma: Print debug message when no free tx segments
+      dmaengine: xilinx_dma: Clear desc_pendingcount in xilinx_dma_reset
+
+Peng Ma (3):
+      dmaengine: fsl-dpaa2-qdma: Add the DPDMAI(Data Path DMA Interface) su=
+pport
+      dmaengine: fsl-dpaa2-qdma: Add NXP dpaa2 qDMA controller driver for L=
+ayerscape SoCs
+      dmaengine: fsl-dpaa2-qdma: export the symbols
+
+Peter Ujfalusi (3):
+      dt-bindings: dmaengine: dma-common: Change dma-channel-mask to uint32=
+-array
+      dt-bindings: dma: ti-edma: Document dma-channel-mask for EDMA
+      dmaengine: ti: edma: Add support for handling reserved channels
+
+Radhey Shyam Pandey (10):
+      dmaengine: xilinx_dma: use devm_platform_ioremap_resource()
+      dmaengine: xilinx_dma: Remove clk_get error message for probe defer
+      dmaengine: xilinx_dma: Remove desc_callback_valid check
+      dmaengine: xilinx_dma: Remove residue from channel data
+      dt-bindings: dmaengine: xilinx_dma: Remove axidma multichannel support
+      dt-bindings: dmaengine: xilinx_dma: Fix formatting and style
+      dt-bindings: dmaengine: xilinx_dma: Add binding for Xilinx MCDMA IP
+      dmaengine: xilinx_dma: Remove axidma multichannel mode support
+      dmaengine: xilinx_dma: Extend dma_config struct to store irq routine =
+handle
+      dmaengine: xilinx_dma: Add Xilinx AXI MCDMA Engine driver support
+
+Satendra Singh Thakur (2):
+      dmaengine: mediatek: hsdma_probe: fixed a memory leak when devm_reque=
+st_irq fails
+      dmaengine: zx: remove: removed dmam_pool_destroy
+
+Vinod Koul (3):
+      dmaengine: milbeaut-hdmac: remove redundant error log
+      dmaengine: milbeaut-xdmac: remove redundant error log
+      Merge branch 'fixes' into next
+
+Yoshihiro Shimoda (3):
+      dmaengine: rcar-dmac: Use of_data values instead of a macro
+      dmaengine: rcar-dmac: Use devm_platform_ioremap_resource()
+      dmaengine: rcar-dmac: Add dma-channel-mask property support
+
+YueHaibing (1):
+      dmaengine: ti: edma: remove unused code
+
+Zhou Yanjie (2):
+      dt-bindings: dmaengine: Add X1000 bindings.
+      dmaengine: JZ4780: Add support for the X1000.
+
+ .../devicetree/bindings/dma/dma-common.yaml        |   9 +-
+ .../devicetree/bindings/dma/jz4780-dma.txt         |   3 +-
+ .../bindings/dma/milbeaut-m10v-hdmac.txt           |  32 +
+ .../bindings/dma/milbeaut-m10v-xdmac.txt           |  24 +
+ .../devicetree/bindings/dma/renesas,rcar-dmac.txt  |   1 +
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml       |  55 ++
+ Documentation/devicetree/bindings/dma/ti-edma.txt  |   8 +
+ .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |  24 +-
+ MAINTAINERS                                        |   6 +
+ drivers/dma/Kconfig                                |  88 ++-
+ drivers/dma/Makefile                               |   4 +
+ drivers/dma/at_xdmac.c                             |   7 +-
+ drivers/dma/dma-jz4780.c                           |  16 +-
+ drivers/dma/dw/platform.c                          |   2 +-
+ drivers/dma/fsl-dpaa2-qdma/Kconfig                 |   9 +
+ drivers/dma/fsl-dpaa2-qdma/Makefile                |   3 +
+ drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c            | 825 +++++++++++++++++=
+++++
+ drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.h            | 153 ++++
+ drivers/dma/fsl-dpaa2-qdma/dpdmai.c                | 376 ++++++++++
+ drivers/dma/fsl-dpaa2-qdma/dpdmai.h                | 177 +++++
+ drivers/dma/fsl-qdma.c                             |   3 +
+ drivers/dma/iop-adma.c                             |  10 +-
+ drivers/dma/k3dma.c                                |   7 +-
+ drivers/dma/mediatek/mtk-cqdma.c                   |  10 +-
+ drivers/dma/mediatek/mtk-hsdma.c                   |   4 +-
+ drivers/dma/mediatek/mtk-uart-apdma.c              |   9 +-
+ drivers/dma/milbeaut-hdmac.c                       | 578 +++++++++++++++
+ drivers/dma/milbeaut-xdmac.c                       | 415 +++++++++++
+ drivers/dma/mmp_pdma.c                             |   2 +
+ drivers/dma/mmp_tdma.c                             |   3 +
+ drivers/dma/owl-dma.c                              |   7 +-
+ drivers/dma/sf-pdma/Kconfig                        |   6 +
+ drivers/dma/sf-pdma/Makefile                       |   1 +
+ drivers/dma/sf-pdma/sf-pdma.c                      | 620 ++++++++++++++++
+ drivers/dma/sf-pdma/sf-pdma.h                      | 124 ++++
+ drivers/dma/sh/rcar-dmac.c                         |  47 +-
+ drivers/dma/sprd-dma.c                             |  17 +-
+ drivers/dma/ti/edma.c                              |  77 +-
+ drivers/dma/uniphier-mdmac.c                       |   4 +-
+ drivers/dma/xilinx/xilinx_dma.c                    | 649 ++++++++++++----
+ drivers/dma/zx_dma.c                               |   8 +-
+ include/dt-bindings/dma/x1000-dma.h                |  40 +
+ include/linux/dma/sprd-dma.h                       |   4 +
+ 43 files changed, 4198 insertions(+), 269 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdm=
+ac.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-xdm=
+ac.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000=
+-pdma.yaml
+ create mode 100644 drivers/dma/fsl-dpaa2-qdma/Kconfig
+ create mode 100644 drivers/dma/fsl-dpaa2-qdma/Makefile
+ create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+ create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.h
+ create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+ create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpdmai.h
+ create mode 100644 drivers/dma/milbeaut-hdmac.c
+ create mode 100644 drivers/dma/milbeaut-xdmac.c
+ create mode 100644 drivers/dma/sf-pdma/Kconfig
+ create mode 100644 drivers/dma/sf-pdma/Makefile
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.c
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.h
+ create mode 100644 include/dt-bindings/dma/x1000-dma.h
+
+Thanks
+--=20
+~Vinod
+
+--hYooF8G/hrfVAmum
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl3gqhsACgkQfBQHDyUj
+g0d3Ng/+MzKni7+oB7/vEy69MEssbwPyfTrORMMpsYcc5bNr0jsb1ECSVbwvstZp
+mYm/MbtrF/21zjmTb1fZV1fn3gQCCA/wUrugj1m0xg0Ydpg/wAjUJE1yaRMNwm7z
+/II2b4KT8MJcOAuhevHcBFfpJsVeztApEFDHelKloxU8VWtEuCFGyeKKCw0Oxev4
+RZUW9Ubl0EDjpVB3DSwGAnwazm1NSfnisifAsQyZwaLjLij0fGCaeBZYShsMwsmc
+T/26YOfenGum2VBh5uMtiZ2V3qP514xVSMyiU8SL7iivye0lGzJySSw2DZeOmvSg
+939GGhxQXyRzVcMDLGnTEVUn6Si/MCaQJ84l71sebL3F/1jP7cKtvZFNIa7cj7Xi
+7Cvpev9nBmmbBz5OdCOgnJOBfl/7XKSRCL8bSd7tjtjSxm0gwDrGBY8KVZjhtKP8
+mQgIAZDiS+4T6nxueVCT19RSeBuycmQEp/zx3ZHreTg1MuwY10F8yjeRVl2DI4K6
+E7WOx9ESRpIg80Nap6qArXaklALYJ3DK78uomE5gS720kXSjp04S/IZ9e9xQLwQY
+SwVjiZn36rq43Tm6rLWTYUHiHzqGKgUzxLf1CIw/Tf/rmOTD2hD103kso74ahc+P
+ih563WxycjgW0yr7HO2vxzwEP2OTdhFlCFeN5Jq7KQ/oxD3bVg8=
+=Z2Yk
+-----END PGP SIGNATURE-----
+
+--hYooF8G/hrfVAmum--
