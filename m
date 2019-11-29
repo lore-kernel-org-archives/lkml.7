@@ -2,96 +2,121 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7960C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCAEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2A2215A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:53:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hMUZ4aXd"
+	by mail.kernel.org (Postfix) with ESMTP id 9C42F217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfK2OxN (ORCPT
+        id S1726957AbfK2O4H convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:53:13 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:14388 "EHLO pegase1.c-s.fr"
+        Fri, 29 Nov 2019 09:56:07 -0500
+Received: from mga17.intel.com ([192.55.52.151]:32456 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727004AbfK2OxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:53:13 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47PcvB6MnFzB09Zt;
-        Fri, 29 Nov 2019 15:53:10 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=hMUZ4aXd; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id XnpC7onj2i1L; Fri, 29 Nov 2019 15:53:10 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47PcvB52GTzB09Zq;
-        Fri, 29 Nov 2019 15:53:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1575039190; bh=C9qHRC2OmRsVO674EVzJC8ZRALO7qDaNoXi/6fn9Hv0=;
-        h=To:Cc:From:Subject:Date:From;
-        b=hMUZ4aXdvBS/0nRJH7MNGSgFKVDU/FPm1rUFedtxjbTOi060NfFdy8ouu8c7Eh5RI
-         ku9P+IGf6U/4bSXMaYifdoFxMl229B4jZrmpMpdKsCgS+Bj9xbc5BKnSwoVwShCIf+
-         DCF8P08TYsOZpBX2/TyaSGyIMuqRnaX0WZhVv54Q=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E14B78B8DE;
-        Fri, 29 Nov 2019 15:53:11 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 1lPhm1XL-pIn; Fri, 29 Nov 2019 15:53:11 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.103])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9894A8B8DC;
-        Fri, 29 Nov 2019 15:53:11 +0100 (CET)
-To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: Build failure on latest powerpc/merge (311ae9e159d8 io_uring: fix
- dead-hung for non-iter fixed rw)
-Message-ID: <71cf82d5-5986-43b7-cf1c-acba429a89d6@c-s.fr>
-Date:   Fri, 29 Nov 2019 14:53:10 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        id S1726608AbfK2O4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 09:56:07 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 06:56:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
+   d="scan'208";a="212303680"
+Received: from irsmsx152.ger.corp.intel.com ([163.33.192.66])
+  by orsmga003.jf.intel.com with ESMTP; 29 Nov 2019 06:56:04 -0800
+Received: from irsmsx104.ger.corp.intel.com ([169.254.5.252]) by
+ IRSMSX152.ger.corp.intel.com ([169.254.6.76]) with mapi id 14.03.0439.000;
+ Fri, 29 Nov 2019 14:56:03 +0000
+From:   "Metzger, Markus T" <markus.t.metzger@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>, "luto@kernel.org" <luto@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Pedro Alves" <palves@redhat.com>, Simon Marchi <simark@simark.ca>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: RE: [PATCH v9 00/17] Enable FSGSBASE instructions
+Thread-Topic: [PATCH v9 00/17] Enable FSGSBASE instructions
+Thread-Index: AQHVm+iTbaIQs/3oqE+UcwYHBKDTgKeiRc1Q
+Date:   Fri, 29 Nov 2019 14:56:03 +0000
+Message-ID: <A78C989F6D9628469189715575E55B236B50834A@IRSMSX104.ger.corp.intel.com>
+References: <1570212969-21888-1-git-send-email-chang.seok.bae@intel.com>
+ <alpine.DEB.2.21.1911151926380.28787@nanos.tec.linutronix.de>
+ <20191115191200.GD22747@tassilo.jf.intel.com>
+In-Reply-To: <20191115191200.GD22747@tassilo.jf.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [163.33.239.182]
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-   CC      fs/io_uring.o
-fs/io_uring.c: In function ‘loop_rw_iter’:
-fs/io_uring.c:1628:21: error: implicit declaration of function ‘kmap’ 
-[-Werror=implicit-function-declaration]
-     iovec.iov_base = kmap(iter->bvec->bv_page)
-                      ^
-fs/io_uring.c:1628:19: warning: assignment makes pointer from integer 
-without a cast [-Wint-conversion]
-     iovec.iov_base = kmap(iter->bvec->bv_page)
-                    ^
-fs/io_uring.c:1643:4: error: implicit declaration of function ‘kunmap’ 
-[-Werror=implicit-function-declaration]
-     kunmap(iter->bvec->bv_page);
-     ^
+> On Fri, Nov 15, 2019 at 07:29:17PM +0100, Thomas Gleixner wrote:
+> > On Fri, 4 Oct 2019, Chang S. Bae wrote:
+> > >
+> > > Updates from v8 [10]:
+> > > * Internalized the interrupt check in the helper functions (Andy L.)
+> > > * Simplified GS base helper functions (Tony L.)
+> > > * Changed the patch order to put the paranoid path changes before the
+> > >   context switch changes (Tony L.)
+> > > * Fixed typos (Randy D.) and massaged a few sentences in the documentation
+> > > * Massaged the FSGSBASE enablement message
+> >
+> > That still lacks what Andy requested quite some time ago in the V8 thread:
+> >
+> >      https://lore.kernel.org/lkml/034aaf3a-a93d-ec03-0bbd-
+> 068e1905b774@kernel.org/
+> >
+> >   "I also think that, before this series can have my ack, it needs an
+> >    actual gdb maintainer to chime in, publicly, and state that they have
+> >    thought about and tested the ABI changes and that gdb still works on
+> >    patched kernels with and without FSGSBASE enabled.  I realize that there
+> >    were all kinds of discussions, but they were all quite theoretical, and
+> >    I think that the actual patches need to be considered by people who
+> >    understand the concerns.  Specific test cases would be nice, too."
+> >
+> > What's the state of this?
 
+On branch users/mmetzger/fsgs in sourceware.org/git/binutils-gdb.git,
+there's a GDB test covering the behavior discussed theoretically back then.
 
-Reverting commit 311ae9e159d8 ("io_uring: fix dead-hung for non-iter 
-fixed rw") clears the failure.
+It covers modifying the selector as well as the base from GDB and using
+the modified values for inferior calls as well as for resuming the inferior.
 
-Most likely an #include is missing.
+Current kernels allow changing the selector and provide the resulting
+base back to the ptracer.  They also allow changing the base as long as
+the selector is zero.  That's the behavior we wanted to preserve IIRC.
 
+The patch series on branch fsgs_tip_5.4-rc1_100319 at
+github.com/changbae/Linux-kernel.git breaks tests that modify the
+selector and expect that to change the base.
 
-Christophe
+That kernel allows changing the base via ptrace but ignores changes
+to the selector.
+
+Regards,
+Markus.
+Intel Deutschland GmbH
+Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
+Tel: +49 89 99 8853-0, www.intel.de
+Managing Directors: Christin Eisenschmid, Gary Kershaw
+Chairperson of the Supervisory Board: Nicole Lau
+Registered Office: Munich
+Commercial Register: Amtsgericht Muenchen HRB 186928
 
