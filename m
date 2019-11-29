@@ -2,184 +2,162 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156B7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B5FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE32621736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B647C21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:56:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jZ7BIhgm"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Q1+qt9qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfK2Ssd (ORCPT
+        id S1727072AbfK2S4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 13:48:33 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35565 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfK2Ssc (ORCPT
+        Fri, 29 Nov 2019 13:56:34 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44634 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfK2S4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 13:48:32 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j6so23935416lja.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 10:48:29 -0800 (PST)
+        Fri, 29 Nov 2019 13:56:34 -0500
+Received: by mail-oi1-f193.google.com with SMTP id d62so1957980oia.11
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 10:56:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QcqoECSYUxhYpSdN4wxMXBNEGCg39mo2IFh0nw6OKSQ=;
-        b=jZ7BIhgm8UD72PSplPNHz0eyDEVCVP5JMySvDokGjNSX+z5vDPQmPoeDGTLjwXiV9F
-         EFnZgkvXyj6Qpq0NfPlBPKTwf2Le3DGB7/40nlUQ1m5BTk1+jeNbqXMWaFErdAVXl+gk
-         9ILn86Uv/Mt7uH6h+6yxEyoI3mhdm8CnnfYFjh9hI+zADEerHm8n/28lIiXMWLIL0UF3
-         KMzh14KuX1CieIVz+uYIsMy9O3iN6O4Boo+kAs8gawbAjRWeHtgfcDwtxjyioFdEXS+G
-         /Tip0pH9AUYIWDGDcp9iZpCYbFFNn6MyWMje7rWqedlJnVMSY2f+vkf3SgXdKPO2dQvg
-         7xFA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=xboj7F00bLbKnatedgQze9i2APMnPtQy1LrQNkM7FYQ=;
+        b=Q1+qt9qmF/rLkAGqDYkEHYeW6EPQtxzZ+8NtolvjMgoSovWm13CTHenqOgKWRP4D4f
+         aKXtgJD3mrzRgeFkX4xXtZZU7Tdp+RyHrJh2Cs5RgQvLZ4qveq/M2BTUPg1q7EfeQAVw
+         lVGygT+Pwk34HBtkoZLFR+TF2OmaHYuV/8l+eJJCQwlE3ZOt6U/fTUUIwPhaZU5STa0e
+         quHtjFQJVApCTJ9Cl5pvi3VW+Ts1WpNYNTuKfsnptFQciYz3CLt+VGAkAr5hxfFJ07W4
+         S906t//NGSvk1EVk2cIcfrb2jweYPzanpDN9XPOBJVtzBuizrtYc+UHNa+DFFutxL+j5
+         Lb8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QcqoECSYUxhYpSdN4wxMXBNEGCg39mo2IFh0nw6OKSQ=;
-        b=t2ysBzS5By7QyC8v5mILj05aL0dt41FR8gtuFEk7exIXudNQyK2sB+4IYXiduhGUAt
-         wguxaPFZ3PjaMDkNhV6LO9ty6PuiaOarLwIvUTpzYD/UbLyva/mT1DiyXsxJSgukRyk1
-         Zjk8rWknYo1Ub28Oz8vEsX6pU8pAeXGugLV6A+WbX5EZneBY8Dm6zeE5CB6y3HQvx/x/
-         obTJlNGm+5PUlxjExrH667tO1E6XPzcu1bQvHDHJAc/Qd8GxVYAsaFekvv3JsjBtCThU
-         DjDFL//YzG+5iopX98jQz6Ll9SkuoLSkHS5Enj9Dd65WU32qvFHa2eGkvXzu/b+SzEf9
-         gopw==
-X-Gm-Message-State: APjAAAXgejg4r44LklZ6BCxrorWfgW2H97Natd0pLkxl2Xtmt1lUt+HE
-        xYtTHz4PSnHY+xMvkrej75caxEPmO56TzAlomnvrbg==
-X-Google-Smtp-Source: APXvYqyvVrld8vyHgVdXiWcIMSoaNJOGFRE9mApbWiRASu/dsO82pQLDOtIdNyuCNYdsR7YSY+JdGmc1XpHxEIio6Hg=
-X-Received: by 2002:a2e:9b8f:: with SMTP id z15mr10137lji.20.1575053309059;
- Fri, 29 Nov 2019 10:48:29 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=xboj7F00bLbKnatedgQze9i2APMnPtQy1LrQNkM7FYQ=;
+        b=TLQgkoFd8gxZpeYJdsalmu7HGwi4UauHLBrm1WZG5lXFl0DMcZPQqc3VtVSf5KaJNc
+         tZcmM5PHz1JPc9FLLvcf30XPWo8RR1ZSJ4KdLhzr7l1V17rWQvu4lf16XpR9Qi0BnOM+
+         MY1k0DR3DKiSuVOUlbZiqgbPHmLIQrzbgsYXPiaN7sFGLebrtJz6TW0Ya1o/tQ/b1djx
+         /XwlRCZSIIvT5DoqzoAH6DA7F/UZyomqfEGnJQd1BW4+PoPWNHh4eRmc+Eb8+Utkrmn6
+         qfZ3hUMm9aGwEUTVMCLGDV9sbNd1SNFX7Rg9IaDJGLeJqHyBgYzYyvvHBljTRMSBIvku
+         tUeA==
+X-Gm-Message-State: APjAAAXxHSIlm2XBDQNZF5qSkx/Nz4jM14WbMF0kARwgHVmIoRP4ii6g
+        HSdAHNLjKlpKj2kmXUX3m0LcBZwdVjX9XKitgWvk417rzYE=
+X-Google-Smtp-Source: APXvYqzd57f2wxECF4fesi3hhXmvOo40o4Zq2olC+h0RWJ9X7eKDf4fWTmQ75AQmTV7EkFg6r5iSKXRdJRJrI8ZfR34=
+X-Received: by 2002:a54:468e:: with SMTP id k14mr1852547oic.105.1575053793229;
+ Fri, 29 Nov 2019 10:56:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127203049.431810767@linuxfoundation.org> <20191129103637.GA3692623@kroah.com>
-In-Reply-To: <20191129103637.GA3692623@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 30 Nov 2019 00:18:17 +0530
-Message-ID: <CA+G9fYsUTrzt+q+D-wFagqVQFn+voP4dM7HdY+F+UxQx7c1pXg@mail.gmail.com>
-Subject: Re: [PATCH 4.14 000/211] 4.14.157-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 29 Nov 2019 10:56:22 -0800
+Message-ID: <CAPcyv4jftz7mN=4zNPo1tGZfcXxfKunTUF4Owof6pJ108GYk=g@mail.gmail.com>
+Subject: [GIT PULL] libnvdimm for v5.5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 Nov 2019 at 16:06, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Nov 27, 2019 at 09:28:53PM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.14.157 release.
-> > There are 211 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >       https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.157-rc1.gz
-> > or in the git tree and branch at:
-> >       git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> > and the diffstat can be found below.
->
-> I have released a -rc3 version now:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.157-rc1.gz
+Hi Linus, please pull from:
 
-you mean -rc3 link,
-https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.157-r=
-c3.gz
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-for-5.5
 
-> that should have the i386 issues fixed, as well as all other reported
-> issues.
+...to receive the libnvdimm update for this cycle. The highlight this
+cycle is continuing integration fixes for PowerPC and some resulting
+optimizations. These commits have appeared in -next with no reported
+issues.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+---
 
-Summary
-------------------------------------------------------------------------
+The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
 
-kernel: 4.14.157-rc3
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 36dea990ac35ede053b2c69d91cc480b19fbb7dd
-git describe: v4.14.156-205-g36dea990ac35
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.156-205-g36dea990ac35
+  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
 
-No regressions (compared to build v4.14.156)
+are available in the Git repository at:
 
-No fixes (compared to build v4.14.156)
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-for-5.5
 
+for you to fetch changes up to 0dfbb932bb67dc76646e579ec5cd21a12125a458:
 
-Ran 24559 total tests in the following environments and test suites.
+  MAINTAINERS: Remove Keith from NVDIMM maintainers (2019-11-25 15:45:08 -0800)
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+----------------------------------------------------------------
+libnvdimm for 5.5
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
+- Updates to better support vmalloc space restrictions on PowerPC platforms.
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+- Cleanups to move common sysfs attributes to core 'struct device_type'
+  objects.
+
+- Export the 'target_node' attribute (the effective numa node if pmem is
+  marked online) for regions and namespaces.
+
+- Miscellaneous fixups and optimizations.
+
+----------------------------------------------------------------
+Alastair D'Silva (1):
+      libnvdimm: Remove prototypes for nonexistent functions
+
+Aneesh Kumar K.V (2):
+      libnvdimm/pfn_dev: Don't clear device memmap area during generic
+namespace probe
+      libnvdimm/namespace: Differentiate between probe mapping and
+runtime mapping
+
+Dan Williams (14):
+      libnvdimm/pmem: Delete include of nd-core.h
+      libnvdimm: Move attribute groups to device type
+      libnvdimm: Move region attribute group definition
+      libnvdimm: Move nd_device_attribute_group to device_type
+      libnvdimm: Move nd_numa_attribute_group to device_type
+      libnvdimm: Move nd_region_attribute_group to device_type
+      libnvdimm: Move nd_mapping_attribute_group to device_type
+      libnvdimm: Move nvdimm_attribute_group to device_type
+      libnvdimm: Move nvdimm_bus_attribute_group to device_type
+      dax: Create a dax device_type
+      dax: Simplify root read-only definition for the 'resource' attribute
+      libnvdimm: Simplify root read-only definition for the 'resource' attribute
+      dax: Add numa_node to the default device-dax attributes
+      libnvdimm: Export the target_node attribute for regions and namespaces
+
+Ira Weiny (2):
+      libnvdimm/namsepace: Don't set claim_class on error
+      libnvdimm: Trivial comment fix
+
+Keith Busch (1):
+      MAINTAINERS: Remove Keith from NVDIMM maintainers
+
+Qian Cai (1):
+      libnvdimm/btt: fix variable 'rc' set but not used
+
+ MAINTAINERS                               |   2 -
+ arch/powerpc/platforms/pseries/papr_scm.c |  25 +---
+ drivers/acpi/nfit/core.c                  |   7 -
+ drivers/dax/bus.c                         |  22 ++-
+ drivers/dax/pmem/core.c                   |   6 +-
+ drivers/nvdimm/btt.c                      |  18 ++-
+ drivers/nvdimm/btt_devs.c                 |  24 +--
+ drivers/nvdimm/bus.c                      |  44 +++++-
+ drivers/nvdimm/claim.c                    |  14 +-
+ drivers/nvdimm/core.c                     |   8 +-
+ drivers/nvdimm/dax_devs.c                 |  27 ++--
+ drivers/nvdimm/dimm_devs.c                |  30 ++--
+ drivers/nvdimm/e820.c                     |  13 --
+ drivers/nvdimm/namespace_devs.c           | 114 +++++++++------
+ drivers/nvdimm/nd-core.h                  |  21 ++-
+ drivers/nvdimm/nd.h                       |  27 ++--
+ drivers/nvdimm/of_pmem.c                  |  13 --
+ drivers/nvdimm/pfn_devs.c                 |  64 ++++----
+ drivers/nvdimm/pmem.c                     |  18 ++-
+ drivers/nvdimm/region_devs.c              | 235 +++++++++++++++---------------
+ include/linux/libnvdimm.h                 |   7 -
+ include/linux/nd.h                        |   2 +-
+ 22 files changed, 387 insertions(+), 354 deletions(-)
