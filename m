@@ -2,194 +2,275 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDECC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD9EC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBF02158A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA9D2075C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzYNtaj2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilvO4/oh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfK2SIO (ORCPT
+        id S1727175AbfK2SJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 13:08:14 -0500
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:47081 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbfK2SIO (ORCPT
+        Fri, 29 Nov 2019 13:09:10 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44440 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbfK2SJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 13:08:14 -0500
-Received: by mail-wr1-f43.google.com with SMTP id z7so32772698wrl.13;
-        Fri, 29 Nov 2019 10:08:11 -0800 (PST)
+        Fri, 29 Nov 2019 13:09:09 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q10so58306wrm.11;
+        Fri, 29 Nov 2019 10:09:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=clniEQS47FGgd7NfiLKoYACJnRe08zxZ0y8JHSOO35k=;
-        b=lzYNtaj2KkWEw8fMfV5x3ouiKh0F7QUe/pAfiytYJjDtbiuxr2E/df1mRImTtl/WTy
-         cLmVMKdM2jCOL2n67pzj+7J15bDdpcK0X3PUAxJqBacaS99QvFbHhdx+OW73uja0DlT1
-         Rhk1DllHD255Wpmk8eeFDFe3PUUikG31vx9/MAEmfQBQHpLxTU55GJeWMuJj1h0d0DGk
-         qL+VfjSMTfbA5uAAq6tstf9HUNZGYXJ0BF90D4vxvf8eqHFbkfHSxadMTLLqAH1aliEe
-         Orl31o4NjkfNUWnzYwiXHlBA1rWOpD4BJA1BL91Y5jy946GvNB8ZKbWqmZotJVbZFTw3
-         LNiA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=A8BBTCh7Z5SUBQ8oJ0POteAZnsyMwTvihIgr863aRzM=;
+        b=ilvO4/ohQ5EKn06jG04H9aEbA+ZRbdAXt2XbgC88/OEo4MXzMV4csJsjuXeQ0rn0Pv
+         zjPfEu32K3DU553jdsqYwCKNngV7UnJQ7LdvdDtBRvKsQUpi5kTLKZ7qoDZYpL3n70lk
+         Ct7pySH8KTYuFFd6HvRboK4jK12/pk5wY+L4C6iOoQWVdErdyoWrcxyikO+G0UELSkkD
+         dulQ4I29xipIAW6zpsmxefWseVTyvS8iv8v8sOzZFXeYB0QzdholCzwYk1mfi5TaacuO
+         rX41w2++6Uvg7MrOZ36EmHz1TDtlYeecfC+mR5RaL438nOLE6AiXIaThkXVk7VhEO+SY
+         C64Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=clniEQS47FGgd7NfiLKoYACJnRe08zxZ0y8JHSOO35k=;
-        b=HQs8sFMnsLi4Zfha4xEeFK/l/33N/w010ESliPAVMUfqR3mpByQ2tXwOmAyIW5dUhi
-         6uxz9iL2fShFBVlMP/VeU3b9cU6Ns3aBfdGr8w7dYBX8hdOFPm4gQDq47ET5J+Qrflw/
-         P/FJX/xeOHVVVghZGNv99s5gAUe3M3dySXkAcvCjJdDG6LPGStH3HTksWSGjbfGec+sg
-         isi9megOzTPoke0udEjNPFRf9rSdOaU8/ZcUw82M5nIMmt4wu8afGiK+vTO1IbnX9xiN
-         XsJog75ppac43z8EM5tbPtElEGJFRBCFxGvp/ev8ruSSzUgvSkuCu/T992jlruTTGBjz
-         QEhQ==
-X-Gm-Message-State: APjAAAUw97UQCn7zMiXWyLi7oOBjWHQsKw0M4IVorkmmHFCMbe9A+HZn
-        P2xOvlnAg5NDJezKNMK7LegK3hgAEs8=
-X-Google-Smtp-Source: APXvYqxhVPDcD/eraU8bit12aebDhkH0gXkz2I8GI1ngujbRENP7TJHJBHuSpfHBvMvATODdsFBkGw==
-X-Received: by 2002:a5d:4645:: with SMTP id j5mr23223185wrs.329.1575050890964;
-        Fri, 29 Nov 2019 10:08:10 -0800 (PST)
-Received: from [192.168.43.161] ([109.126.143.74])
-        by smtp.gmail.com with ESMTPSA id y2sm15141095wmy.2.2019.11.29.10.08.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Nov 2019 10:08:10 -0800 (PST)
-To:     Jens Axboe <axboe@kernel.dk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <71cf82d5-5986-43b7-cf1c-acba429a89d6@c-s.fr>
- <3a95d445-1f5c-7750-f0de-ddc427800b3b@kernel.dk>
- <4ef71e74-848f-59d4-6b0b-d3a3c52095a0@c-s.fr>
- <5389b43a-259d-997c-41e6-5e84a91b012a@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: Build failure on latest powerpc/merge (311ae9e159d8 io_uring: fix
- dead-hung for non-iter fixed rw)
-Message-ID: <38cb2865-d887-d46d-94ef-4ebccff4dc60@gmail.com>
-Date:   Fri, 29 Nov 2019 21:07:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=A8BBTCh7Z5SUBQ8oJ0POteAZnsyMwTvihIgr863aRzM=;
+        b=pOQl+E5R4oV8BnhfkPIASNyf+2Q6Ec3bqsaPDFgjm2pM5C4gX+6iop0/weSxbAet6z
+         iBr/T5bE7PfRWPfMwH0F6bZQYBr1u2cXVVbChKV6NJjapji380ZJY0f72q48CMuuFhNI
+         xQX490zHLeNWDmRuY3eADeJDWjrn2QeAZFmfQI/DUUhWWiPs1WSCgC3CJ63kWmgT6J2u
+         y7Rm51F1iAi3AWghHg43VvWkoobIhmdqqSQrrsR+onmqTRh0hleNNrxbEn4NRKJSOWIb
+         5VDSIybgZKrpLqZ+XVdHFf9ABjlellizxThhG32m6bOnEITyraWMldbdiquuqJRWAgft
+         bwLw==
+X-Gm-Message-State: APjAAAUrckLwwXKJM9fPOezwoSybwTSxWG4EIDW+dIg5fMYXXvIeQScb
+        34KrjWU/YrN1TTOF1mqHRhDanxyo
+X-Google-Smtp-Source: APXvYqx9U2z1d41ggR6ne6crpp3jg8ForKlRHcGtgDe1ts3iZlp7JG9tLKp7dLDFREBEr5Cerlmjug==
+X-Received: by 2002:a5d:5704:: with SMTP id a4mr35018658wrv.198.1575050945380;
+        Fri, 29 Nov 2019 10:09:05 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:5015:4c4c:42e9:e517])
+        by smtp.gmail.com with ESMTPSA id b17sm3701042wrx.15.2019.11.29.10.09.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Nov 2019 10:09:04 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
+To:     paulmck@kernel.org, will@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        notify@kernel.org, SeongJae Park <sjpark@amazon.de>
+Subject: [PATCH v2] Documentation/barriers/kokr: Remove references to [smp_]read_barrier_depends()
+Date:   Fri, 29 Nov 2019 19:08:37 +0100
+Message-Id: <20191129180837.7233-1-sjpark@amazon.de>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191121193209.15687-1-sj38.park@gmail.com>
+References: <20191121193209.15687-1-sj38.park@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <5389b43a-259d-997c-41e6-5e84a91b012a@kernel.dk>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="9PFTxigMb0Dzg01fL4pO7DziHyOQQo2gf"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---9PFTxigMb0Dzg01fL4pO7DziHyOQQo2gf
-Content-Type: multipart/mixed; boundary="C9XQpoNGHYZUOjscc1yNOyFigP0yqGbZw";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, Christophe Leroy <christophe.leroy@c-s.fr>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Message-ID: <38cb2865-d887-d46d-94ef-4ebccff4dc60@gmail.com>
-Subject: Re: Build failure on latest powerpc/merge (311ae9e159d8 io_uring: fix
- dead-hung for non-iter fixed rw)
-References: <71cf82d5-5986-43b7-cf1c-acba429a89d6@c-s.fr>
- <3a95d445-1f5c-7750-f0de-ddc427800b3b@kernel.dk>
- <4ef71e74-848f-59d4-6b0b-d3a3c52095a0@c-s.fr>
- <5389b43a-259d-997c-41e6-5e84a91b012a@kernel.dk>
-In-Reply-To: <5389b43a-259d-997c-41e6-5e84a91b012a@kernel.dk>
+Paul, thank you for waiting long.  I got reviewed by another Korean
+hacker, Yunjae.
 
---C9XQpoNGHYZUOjscc1yNOyFigP0yqGbZw
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Changes from v1 (https://lore.kernel.org/lkml/20191121193209.15687-1-sj38.park@gmail.com/)
+- Get a review from Yunjae
+- Minor wordsmith based on the review comment
+- Rebased on git://git.lwn.net/linux.git tags/docs-5.5
+- Update author's email address
 
-On 29/11/2019 20:16, Jens Axboe wrote:
-> On 11/29/19 8:14 AM, Christophe Leroy wrote:
->>>>
->>>> Reverting commit 311ae9e159d8 ("io_uring: fix dead-hung for non-iter=
+--------------------------------- >8 -----------------------------------------
 
->>>> fixed rw") clears the failure.
->>>>
->>>> Most likely an #include is missing.
->>>
->>> Huh weird how the build bots didn't catch that. Does the below work?
->>
->> Yes it works, thanks.
->=20
-> Thanks for reporting and testing, I've queued it up with your reported
-> and tested-by.
->=20
-My bad, thanks for the report and fixing.
+This commit translates commit 8088616d4ca6 ("Documentation/barriers:
+Remove references to [smp_]read_barrier_depends()") of Will's tree[1]
+into Korean.
 
---=20
-Pavel Begunkov
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/commit/Documentation/memory-barriers.txt?h=lto&id=8088616d4ca61cd6b770225f30fec66c6f6767fb
 
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Reviewed-by: Yunjae Lee <lyj7694@gmail.com>
 
---C9XQpoNGHYZUOjscc1yNOyFigP0yqGbZw--
+---
+ .../translations/ko_KR/memory-barriers.txt    | 146 +-----------------
+ 1 file changed, 3 insertions(+), 143 deletions(-)
 
---9PFTxigMb0Dzg01fL4pO7DziHyOQQo2gf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+diff --git a/Documentation/translations/ko_KR/memory-barriers.txt b/Documentation/translations/ko_KR/memory-barriers.txt
+index f07c40a068b5..a8d26df9360b 100644
+--- a/Documentation/translations/ko_KR/memory-barriers.txt
++++ b/Documentation/translations/ko_KR/memory-barriers.txt
+@@ -577,7 +577,7 @@ ACQUIRE 는 해당 오퍼레이션의 로드 부분에만 적용되고 RELEASE 
+ 데이터 의존성 배리어 (역사적)
+ -----------------------------
+ 
+-리눅스 커널 v4.15 기준으로, smp_read_barrier_depends() 가 READ_ONCE() 에
++리눅스 커널 v4.15 기준으로, smp_mb() 가 DEC Alpha 용 READ_ONCE() 코드에
+ 추가되었는데, 이는 이 섹션에 주의를 기울여야 하는 사람들은 DEC Alpha 아키텍쳐
+ 전용 코드를 만드는 사람들과 READ_ONCE() 자체를 만드는 사람들 뿐임을 의미합니다.
+ 그런 분들을 위해, 그리고 역사에 관심 있는 분들을 위해, 여기 데이터 의존성
+@@ -2661,144 +2661,6 @@ CPU 코어는 프로그램의 인과성이 유지된다고만 여겨진다면 
+ 수도 있습니다.
+ 
+ 
+-캐시 일관성
+------------
+-
+-하지만 삶은 앞에서 이야기한 것처럼 단순하지 않습니다: 캐시들은 일관적일 것으로
+-기대되지만, 그 일관성이 순서에도 적용될 거라는 보장은 없습니다.  한 CPU 에서
+-만들어진 변경 사항은 최종적으로는 시스템의 모든 CPU 에게 보여지게 되지만, 다른
+-CPU 들에게도 같은 순서로 보이게 될 거라는 보장은 없다는 뜻입니다.
+-
+-
+-두개의 CPU (1 & 2) 가 달려 있고, 각 CPU 에 두개의 데이터 캐시(CPU 1 은 A/B 를,
+-CPU 2 는 C/D 를 갖습니다)가 병렬로 연결되어 있는 시스템을 다룬다고 생각해
+-봅시다:
+-
+-	            :
+-	            :                          +--------+
+-	            :      +---------+         |        |
+-	+--------+  : +--->| Cache A |<------->|        |
+-	|        |  : |    +---------+         |        |
+-	|  CPU 1 |<---+                        |        |
+-	|        |  : |    +---------+         |        |
+-	+--------+  : +--->| Cache B |<------->|        |
+-	            :      +---------+         |        |
+-	            :                          | Memory |
+-	            :      +---------+         | System |
+-	+--------+  : +--->| Cache C |<------->|        |
+-	|        |  : |    +---------+         |        |
+-	|  CPU 2 |<---+                        |        |
+-	|        |  : |    +---------+         |        |
+-	+--------+  : +--->| Cache D |<------->|        |
+-	            :      +---------+         |        |
+-	            :                          +--------+
+-	            :
+-
+-이 시스템이 다음과 같은 특성을 갖는다 생각해 봅시다:
+-
+- (*) 홀수번 캐시라인은 캐시 A, 캐시 C 또는 메모리에 위치할 수 있음;
+-
+- (*) 짝수번 캐시라인은 캐시 B, 캐시 D 또는 메모리에 위치할 수 있음;
+-
+- (*) CPU 코어가 한개의 캐시에 접근하는 동안, 다른 캐시는 - 더티 캐시라인을
+-     메모리에 내리거나 추측성 로드를 하거나 하기 위해 - 시스템의 다른 부분에
+-     액세스 하기 위해 버스를 사용할 수 있음;
+-
+- (*) 각 캐시는 시스템의 나머지 부분들과 일관성을 맞추기 위해 해당 캐시에
+-     적용되어야 할 오퍼레이션들의 큐를 가짐;
+-
+- (*) 이 일관성 큐는 캐시에 이미 존재하는 라인에 가해지는 평범한 로드에 의해서는
+-     비워지지 않는데, 큐의 오퍼레이션들이 이 로드의 결과에 영향을 끼칠 수 있다
+-     할지라도 그러함.
+-
+-이제, 첫번째 CPU 에서 두개의 쓰기 오퍼레이션을 만드는데, 해당 CPU 의 캐시에
+-요청된 순서로 오퍼레이션이 도달됨을 보장하기 위해 두 오퍼레이션 사이에 쓰기
+-배리어를 사용하는 상황을 상상해 봅시다:
+-
+-	CPU 1		CPU 2		COMMENT
+-	===============	===============	=======================================
+-					u == 0, v == 1 and p == &u, q == &u
+-	v = 2;
+-	smp_wmb();			v 의 변경이 p 의 변경 전에 보일 것을
+-					 분명히 함
+-	<A:modify v=2>			v 는 이제 캐시 A 에 독점적으로 존재함
+-	p = &v;
+-	<B:modify p=&v>			p 는 이제 캐시 B 에 독점적으로 존재함
+-
+-여기서의 쓰기 메모리 배리어는 CPU 1 의 캐시가 올바른 순서로 업데이트 된 것으로
+-시스템의 다른 CPU 들이 인지하게 만듭니다.  하지만, 이제 두번째 CPU 가 그 값들을
+-읽으려 하는 상황을 생각해 봅시다:
+-
+-	CPU 1		CPU 2		COMMENT
+-	===============	===============	=======================================
+-	...
+-			q = p;
+-			x = *q;
+-
+-위의 두개의 읽기 오퍼레이션은 예상된 순서로 일어나지 못할 수 있는데, 두번째 CPU
+-의 한 캐시에 다른 캐시 이벤트가 발생해 v 를 담고 있는 캐시라인의 해당 캐시에의
+-업데이트가 지연되는 사이, p 를 담고 있는 캐시라인은 두번째 CPU 의 다른 캐시에
+-업데이트 되어버렸을 수 있기 때문입니다.
+-
+-	CPU 1		CPU 2		COMMENT
+-	===============	===============	=======================================
+-					u == 0, v == 1 and p == &u, q == &u
+-	v = 2;
+-	smp_wmb();
+-	<A:modify v=2>	<C:busy>
+-			<C:queue v=2>
+-	p = &v;		q = p;
+-			<D:request p>
+-	<B:modify p=&v>	<D:commit p=&v>
+-			<D:read p>
+-			x = *q;
+-			<C:read *q>	캐시에 업데이트 되기 전의 v 를 읽음
+-			<C:unbusy>
+-			<C:commit v=2>
+-
+-기본적으로, 두개의 캐시라인 모두 CPU 2 에 최종적으로는 업데이트 될 것이지만,
+-별도의 개입 없이는, 업데이트의 순서가 CPU 1 에서 만들어진 순서와 동일할
+-것이라는 보장이 없습니다.
+-
+-
+-여기에 개입하기 위해선, 데이터 의존성 배리어나 읽기 배리어를 로드 오퍼레이션들
+-사이에 넣어야 합니다 (v4.15 부터는 READ_ONCE() 매크로에 의해 무조건적으로
+-그렇게 됩니다).  이렇게 함으로써 캐시가 다음 요청을 처리하기 전에 일관성 큐를
+-처리하도록 강제하게 됩니다.
+-
+-	CPU 1		CPU 2		COMMENT
+-	===============	===============	=======================================
+-					u == 0, v == 1 and p == &u, q == &u
+-	v = 2;
+-	smp_wmb();
+-	<A:modify v=2>	<C:busy>
+-			<C:queue v=2>
+-	p = &v;		q = p;
+-			<D:request p>
+-	<B:modify p=&v>	<D:commit p=&v>
+-			<D:read p>
+-			smp_read_barrier_depends()
+-			<C:unbusy>
+-			<C:commit v=2>
+-			x = *q;
+-			<C:read *q>	캐시에 업데이트 된 v 를 읽음
+-
+-
+-이런 부류의 문제는 DEC Alpha 계열 프로세서들에서 발견될 수 있는데, 이들은
+-데이터 버스를 좀 더 잘 사용해 성능을 개선할 수 있는, 분할된 캐시를 가지고 있기
+-때문입니다.  대부분의 CPU 는 하나의 읽기 오퍼레이션의 메모리 액세스가 다른 읽기
+-오퍼레이션에 의존적이라면 데이터 의존성 배리어를 내포시킵니다만, 모두가 그런건
+-아니기 때문에 이점에 의존해선 안됩니다.
+-
+-다른 CPU 들도 분할된 캐시를 가지고 있을 수 있지만, 그런 CPU 들은 평범한 메모리
+-액세스를 위해서도 이 분할된 캐시들 사이의 조정을 해야만 합니다.  Alpha 는 가장
+-약한 메모리 순서 시맨틱 (semantic) 을 선택함으로써 메모리 배리어가 명시적으로
+-사용되지 않았을 때에는 그런 조정이 필요하지 않게 했으며, 이는 Alpha 가 당시에
+-더 높은 CPU 클락 속도를 가질 수 있게 했습니다.  하지만, (다시 말하건대, v4.15
+-이후부터는) Alpha 아키텍쳐 전용 코드와 READ_ONCE() 매크로 내부에서를 제외하고는
+-smp_read_barrier_depends() 가 사용되지 않아야 함을 알아두시기 바랍니다.
+-
+-
+ 캐시 일관성 VS DMA
+ ------------------
+ 
+@@ -2959,10 +2821,8 @@ Alpha CPU 의 일부 버전은 분할된 데이터 캐시를 가지고 있어서
+ 데이터의 발견을 올바른 순서로 일어나게 하기 때문입니다.
+ 
+ 리눅스 커널의 메모리 배리어 모델은 Alpha 에 기초해서 정의되었습니다만, v4.15
+-부터는 리눅스 커널이 READ_ONCE() 내에 smp_read_barrier_depends() 를 추가해서
+-Alpha 의 메모리 모델로의 영향력이 크게 줄어들긴 했습니다.
+-
+-위의 "캐시 일관성" 서브섹션을 참고하세요.
++부터는 Alpha 용 READ_ONCE() 코드 내에 smp_mb() 가 추가되어서 메모리 모델로의
++Alpha 의 영향력이 크게 줄어들었습니다.
+ 
+ 
+ 가상 머신 게스트
+-- 
+2.17.2
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl3hXngACgkQWt5b1Glr
-+6WZww//Xz8lsz3NVq/0HukBD+hfL/dmeHL1XlDu1WPpnO1tgUAm6gvGHYBxF7fL
-50YY+cipbSKd2VHydGRjDnAlNxWa5bJu/vqsJSioSZnpEIMr03Hv0uLXYnFfxWW/
-RY7/IaVNNljQchiBU8cA9y0TaRZdjQ15HuQcB6EQZeZi/2KKXSMHhlsrcGkJ//i6
-aJTuAV3S+q24CbMLyq8Rlf82TPCxAsjkmiuI1MlD0o0/FHcwj9RRHJa53+lliFIJ
-MikJUYiVjZINy63FRBW9EX+7Yul7nLcvBrJ8WbQj/naWBgfoxSLlwLnzVVk4Zsxf
-RNigt4pah47x6yYXe/oPCJUT6ILlfzBr5/eH0k/8Aacyo6SAYeS3OH0wKFQGjqZj
-mYkz8ye1sthtjSVZPT6WC+ELGjRa9eFTYJcNYtFcwGsoWaCd98+ubEUK/JUucPLA
-DSr2CuHdNcyziW17kQ18+IUFHaRSsyft/04fiT/v23y82/S8jBmDnt7W7hi5BApS
-8TcgXIn/8ClCPpmMrDfnGy8rPWqZaL0xnIFkNFxNGv+qmD8VlhLVaOB4LgXVDPMm
-R/XGY8HX/7AXbJgla3hNGjo7+mFGo+y1UC+Ziu+m9DN06rfiD/D74S7cvltUWQuK
-IHjK4snDRSIZX44IjtVgcOVOFqcOSVGxlyrzhe+F8BsRA2vSOFo=
-=dTBF
------END PGP SIGNATURE-----
-
---9PFTxigMb0Dzg01fL4pO7DziHyOQQo2gf--
